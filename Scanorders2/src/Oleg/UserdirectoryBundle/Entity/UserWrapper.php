@@ -114,6 +114,7 @@ class UserWrapper extends ListAbstract {
 
         if( $this->getUser() ) {
             $fullName = $fullName . $this->getUser()."";
+            return $fullName;
         }
 
         if( $this->getName() ) {
@@ -124,6 +125,7 @@ class UserWrapper extends ListAbstract {
             }
         }
 
+        //echo "fullName=".$fullName."<br>";
         return $fullName;
     }
 

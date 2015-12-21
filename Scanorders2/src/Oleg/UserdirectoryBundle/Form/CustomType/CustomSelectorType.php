@@ -49,7 +49,7 @@ class CustomSelectorType extends AbstractType {
         $username = $this->sc->getToken()->getUser();
         
         $classtype = $options['classtype'];
-         
+
         switch( $classtype ) {
             case "institution":
                 $params = array('type'=>'Medical');

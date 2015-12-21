@@ -59,7 +59,7 @@ class UserWrapperTransformer implements DataTransformerInterface
      */
     public function transform( $entities )
     {
-        //echo $entities->first()."<br>";
+        //echo "first entity=".$entities->first()."<br>";
         //echo "transform: entities=".$entities."<br>";
         //echo $this->className.": transform: count=".count($entities)."<br>";
         //var_dump($entities);

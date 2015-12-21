@@ -848,29 +848,9 @@ class ScanUtilController extends UtilController {
 
         $em = $this->getDoctrine()->getManager();
 
-        //get all users
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:User', 'list')
-            ->leftJoin("list.infos", "infos")
-            ->leftJoin("list.employmentStatus", "employmentStatus")
-            ->leftJoin("employmentStatus.employmentType", "employmentType")
-            ->select("list")
-            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL")
-            //->select("infos.displayName as id, infos.displayName as text")
-            ->orderBy("infos.displayName","ASC");
-
-        $users = $query->getQuery()->getResult();
-
         $output = array();
 
-        foreach( $users as $user ) {
-            $element = array('id'=>$user."", 'text'=>$user."");
-            if( !$this->in_complex_array($user."",$output) ) {
-                $output[] = $element;
-            }
-        }
-
-        //get all wrapper users
+        ///////////// get all wrapper users /////////////
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
             ->leftJoin("list.user", "user")
@@ -887,8 +867,33 @@ class ScanUtilController extends UtilController {
                 'id'        => $userWrapper->getId(),
                 'text'      => $userWrapper.""
             );
-            $output[] = $element;
+            if( !$this->in_complex_array($userWrapper."",$output) ) {
+                $output[] = $element;
+            }
         }
+        ///////////// EOF get all wrapper users /////////////
+
+        ///////////// get all users /////////////
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->leftJoin("list.infos", "infos")
+            ->leftJoin("list.employmentStatus", "employmentStatus")
+            ->leftJoin("employmentStatus.employmentType", "employmentType")
+            ->select("list")
+            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL")
+            //->select("infos.displayName as id, infos.displayName as text")
+            ->orderBy("infos.displayName","ASC");
+
+        $users = $query->getQuery()->getResult();
+
+        foreach( $users as $user ) {
+            $element = array('id'=>$user."", 'text'=>$user."");
+            if( !$this->in_complex_array($user."",$output) ) {
+                $output[] = $element;
+            }
+        }
+        ///////////// EOF get all users /////////////
+
         //$output = array_merge($users,$output);
 
         $response = new Response();
