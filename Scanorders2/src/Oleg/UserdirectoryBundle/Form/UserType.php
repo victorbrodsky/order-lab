@@ -208,7 +208,7 @@ class UserType extends AbstractType
     public function userPassword($builder) {
 
         //show password only for a new user or for an existing user with keytype 'local-user'
-        if( !$this->subjectUser->getId() || ($this->subjectUser->getId() && $this->subjectUser->getKeytype()->getAbbreviation() == 'local-user') ) {
+        if( !$this->subjectUser->getId() || ($this->subjectUser->getId() && $this->subjectUser->getKeytype() && $this->subjectUser->getKeytype()->getAbbreviation() == 'local-user') ) {
             //continue
         } else {
             //echo "no password";

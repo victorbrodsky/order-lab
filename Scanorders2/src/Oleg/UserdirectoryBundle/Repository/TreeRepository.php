@@ -11,7 +11,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 class TreeRepository extends NestedTreeRepository {
 
     //check if node belongs to the parentNode tree. For example, 1wcmc6->2path5->3inf4 => if inf.lft > wcmc.lft AND inf.rgt < wcmc.rgt => return true.
-    public function isNodeUnderParentnode( $parentNode, $node, $className="Institution" ) {
+    public function isNodeUnderParentnode( $parentNode, $node ) {
 
         //the node is the parentNode
         if( $parentNode->getId() == $node->getId() ) {

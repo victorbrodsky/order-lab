@@ -78,11 +78,11 @@ class SecurityUtil extends UserSecurityUtil {
         //permittedInstitutionalPHIScope - institutions
         $permittedInstitutions = $this->getUserPermittedInstitutions($user);
 
-        $parentNode = $entity->getInstitution();
-        foreach( $permittedInstitutions as $allowedInstitution ) {
-            $node = $allowedInstitution;
-            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentNode, $node) ) {
-                //echo "parentNode=".$parentNode." has a node".$node." <br>";
+        $entityInstitution = $entity->getInstitution();
+        foreach( $permittedInstitutions as $permittedInstitution ) {
+            //echo "permittedInstitution=".$permittedInstitution."<br>";
+            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($entityInstitution, $permittedInstitution) ) {
+                //echo "entityInstitution=".$entityInstitution." has a node ".$permittedInstitution."<br>";
                 $hasInst = true;
                 //return true;
                 break;
@@ -95,6 +95,8 @@ class SecurityUtil extends UserSecurityUtil {
 //            $hasInst = true;
 //            //return true; //testing
 //        }
+
+        //echo "hasInst=".$hasInst."<br>";
 
         //if user's permitted institution is not enough to access this entity => check for collaboration
         if( $hasInst == false ) {

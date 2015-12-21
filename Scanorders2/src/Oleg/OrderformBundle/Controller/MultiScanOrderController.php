@@ -196,12 +196,12 @@ class MultiScanOrderController extends Controller {
 //        //echo "order patient=".$entity->getPatient()->first();
 
         //oleg_orderformbundle_messagetype_equipment
-        echo "equipmentForm=".$form["equipment"]->getData()."<br>";
-        echo "Equipment=".$entity->getEquipment()->getId().":".$entity->getEquipment()->getName()."<br>";
+        //echo "equipmentForm=".$form["equipment"]->getData()."<br>";
+        //echo "Equipment=".$entity->getEquipment()->getId().":".$entity->getEquipment()->getName()."<br>";
         //oleg_orderformbundle_messagetype_institution
-        $institutionForm = $form["institution"]->getData();
-        echo "institutionForm=".$institutionForm."<br>";
-        echo "permittedInstitution=".$entity->getInstitution()->getId().":".$entity->getInstitution()->getName()."<br>";
+        //$institutionForm = $form["institution"]->getData();
+        //echo "institutionForm=".$institutionForm."<br>";
+        //echo "permittedInstitution=".$entity->getInstitution()->getId().":".$entity->getInstitution()->getName()."<br>";
         //exit("controller exit");
 
         if( $form->isValid() ) {
@@ -657,14 +657,20 @@ class MultiScanOrderController extends Controller {
 
                     //accession
                     foreach( $procedure->getAccession() as $accession ) {
+
+                        //echo "accession".$accession."<br>";
+
                         if( !$this->hasMessage($accession,$id) ) {
                             $procedure->removeAccession($accession);
                             continue;
                         }
 
-                        if( !$securityUtil->hasUserPermission($accession, $user) ) {
+                        if( !$securityUtil->hasUserPermission($accession, $user, array("Union","Intersection")) ) {
+                            //echo "accession permission not ok!!! <br>";
                             $procedure->removeChildren($accession);
                             continue;
+                        } else {
+                            //echo "accession permission ok <br>";
                         }
 
                         if( $datastructure ) {
