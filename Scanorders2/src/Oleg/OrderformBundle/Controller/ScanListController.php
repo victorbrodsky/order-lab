@@ -150,6 +150,7 @@ class ScanListController extends ListController
      * @Route("/disease-origins/", name="diseaseorigins-list")
      * @Route("/laboratory-test-id-types/", name="labtesttype-list")
      * @Route("/part-titles/", name="parttitle-list")
+     * @Route("/permissions/", name="permission-list")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
@@ -199,6 +200,7 @@ class ScanListController extends ListController
      * @Route("/disease-origins/", name="diseaseorigins_create")
      * @Route("/laboratory-test-id-types/", name="labtesttype_create")
      * @Route("/part-titles/", name="parttitle_create")
+     * @Route("/permissions/", name="permission_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -248,6 +250,7 @@ class ScanListController extends ListController
      * @Route("/disease-origins/new", name="diseaseorigins_new")
      * @Route("/laboratory-test-id-types/new", name="labtesttype_new")
      * @Route("/part-titles/new", name="parttitle_new")
+     * @Route("/permissions/new", name="permission_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -297,6 +300,7 @@ class ScanListController extends ListController
      * @Route("/disease-origins/{id}", name="diseaseorigins_show")
      * @Route("/laboratory-test-id-types/{id}", name="labtesttype_show")
      * @Route("/part-titles/{id}", name="parttitle_show")
+     * @Route("/permissions/{id}", name="permission_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -346,6 +350,7 @@ class ScanListController extends ListController
      * @Route("/disease-origins/{id}/edit", name="diseaseorigins_edit")
      * @Route("/laboratory-test-id-types/{id}/edit", name="labtesttype_edit")
      * @Route("/part-titles/{id}/edit", name="parttitle_edit")
+     * @Route("/permissions/{id}/edit", name="permission_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -395,6 +400,7 @@ class ScanListController extends ListController
      * @Route("/disease-origins/{id}", name="diseaseorigins_update")
      * @Route("/laboratory-test-id-types/{id}", name="labtesttype_update")
      * @Route("/part-titles/{id}", name="parttitle_update")
+     * @Route("/permissions/{id}", name="permission_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -546,7 +552,10 @@ class ScanListController extends ListController
             $className = "ParttitleList";
             $displayName = "Part Titles";
             break;
-
+        case "permission":
+            $className = "PermissionList";
+            $displayName = "Permissions";
+            break;
 
         default:
             $className = null;
@@ -601,6 +610,7 @@ class ScanListController extends ListController
      * @Route("/disease-origins/{id}", name="diseaseorigins_delete")
      * @Route("/laboratory-test-id-types/{id}", name="labtesttype_delete")
      * @Route("/part-titles/{id}", name="parttitle_delete")
+     * @Route("/permissions/{id}", name="permission_delete")
      *
      * @Method("DELETE")
      */

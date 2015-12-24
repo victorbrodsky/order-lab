@@ -611,8 +611,11 @@ class MultiScanOrderController extends Controller {
                 $entity->removePatient($patient);
                 continue;
             }
-            
+
+            //$viewGranted = $this->denyAccessUnlessGranted('view', $patient);
+            //echo "viewGranted=".$viewGranted."<br>";
             if( !$securityUtil->hasUserPermission($patient, $user) ) {
+            //if( !$this->denyAccessUnlessGranted('view', $patient) ) { // check for "view" access: calls all voters
                 $entity->removePatient($patient);
                 continue;
             }

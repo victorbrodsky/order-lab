@@ -9,15 +9,33 @@
 namespace Oleg\OrderformBundle\Security\Voter;
 
 
+use Oleg\OrderformBundle\Entity\Accession;
+use Oleg\OrderformBundle\Entity\Block;
+use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\Imaging;
+use Oleg\OrderformBundle\Entity\Part;
+use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\Procedure;
+use Oleg\OrderformBundle\Entity\Slide;
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 
-class PatientVoter extends Voter {
 
-    // these strings are just invented: you can use anything
+class PatientHierarchyVoter extends Voter {
+
+    //you can use anything
     const VIEW = 'view';
     const EDIT = 'edit';
+
+    private $decisionManager;
+
+    public function __construct(AccessDecisionManagerInterface $decisionManager)
+    {
+        $this->decisionManager = $decisionManager;
+    }
 
     protected function supports($attribute, $subject)
     {
@@ -26,14 +44,24 @@ class PatientVoter extends Voter {
             return false;
         }
 
-        // only vote on Post objects inside this voter
-        if (!$subject instanceof Post) {
+        // only vote on Patient hierarchy objects inside this voter
+        if(
+            !$subject instanceof Patient &&
+            !$subject instanceof Encounter &&
+            !$subject instanceof Procedure &&
+            !$subject instanceof Accession &&
+            !$subject instanceof Part &&
+            !$subject instanceof Block &&
+            !$subject instanceof Slide &&
+            !$subject instanceof Imaging
+        ) {
             return false;
         }
 
         return true;
     }
 
+    //if return false it redirect to main page (access_denied_url?): "You don't have permission to visit this page on Scan Order site. If you already applied for access, then try to Re-Login"
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $user = $token->getUser();
@@ -43,37 +71,61 @@ class PatientVoter extends Voter {
             return false;
         }
 
-        // you know $subject is a Post object, thanks to supports
-        /** @var Post $post */
-        $post = $subject;
-
         switch($attribute) {
             case self::VIEW:
-                return $this->canView($post, $user);
+                return $this->canView($subject, $user);
             case self::EDIT:
-                return $this->canEdit($post, $user);
+                return $this->canEdit($subject, $user);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(Post $post, User $user)
+    private function canView($subject, User $user)
     {
+        echo "canView <br>";
         // if they can edit, they can view
-        if ($this->canEdit($post, $user)) {
+        if( $this->canEdit($subject, $user) ) {
+            echo "user can edit <br>";
             return true;
         }
 
-        // the Post object could have, for example, a method isPrivate()
+        // the object could have, for example, a method isPrivate()
         // that checks a boolean $private property
-        return !$post->isPrivate();
+        //return !$subject->isPrivate();
+
+        //TODO:
+        //1) find roles with permissions related to Patient, Encounter ...
+        //2) check for each roles if user hasRole
+
+        return false;
     }
 
-    private function canEdit(Post $post, User $user)
+    private function canEdit($subject, User $user)
     {
+        echo "canEdit <br>";
+
         // this assumes that the data object has a getOwner() method
         // to get the entity of the user who owns this data object
-        return $user === $post->getOwner();
+        //return $user === $subject->getOwner();
+
+        if( $subject->getProvider()->getId() === $user->getId() ) {
+            echo "user is provider <br>";
+            return true;
+        }
+
+//        if( in_array('ROLE_SCANORDER_ADMIN', $user->getRoles()) ) {
+//            return true;
+//        }
+
+        // ROLE_SCANORDER_ADMIN can do anything
+        if ($this->decisionManager->decide($user, array('ROLE_SCANORDER_ADMIN'))) {
+            return true;
+        }
+
+        echo "can not Edit! <br>";
+
+        return false;
     }
 
 } 

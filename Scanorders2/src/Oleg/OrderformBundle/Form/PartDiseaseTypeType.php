@@ -22,6 +22,19 @@ class PartDiseaseTypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        //New in Symfony 2.8: choices is array
+        //get array of diseaseTypes
+        $repository = $this->params['em']->getRepository('OlegOrderformBundle:DiseaseTypeList');
+        $dql = $repository->createQueryBuilder("list")->orderBy("list.orderinlist","ASC");
+        $query = $this->params['em']->createQuery($dql);
+        $items = $query->getResult();
+        $diseaseTypesArr = array();
+        foreach( $items as $item ) {
+            $diseaseTypesArr[] = $item;
+        }
+        //echo "count items=".count($diseaseTypesArr)."<br>";
+        //exit();
+
         $builder->add( 'diseaseTypes', 'entity', array(
             'class' => 'OlegOrderformBundle:DiseaseTypeList',
             'label'=>'Type of Disease:',
@@ -29,11 +42,32 @@ class PartDiseaseTypeType extends AbstractType
             'multiple' => true,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type diseaseType'), //'required' => '0', 'disabled'
-            'choices' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->orderBy("list.orderinlist","ASC");
-                },
+            'choices' => $diseaseTypesArr
+//            'choices' => function(EntityRepository $er) {
+//                    //return $er->createQueryBuilder('list')
+//                    //    ->orderBy("list.orderinlist","ASC");
+//                    $query = $er->createQueryBuilder('list')
+//                        ->orderBy("list.orderinlist","ASC");
+//                    $items = $query->getResult();
+//                    $itemsArr = array();
+//                    foreach( $items as $item ) {
+//                        $itemsArr[] = $item;
+//                    }
+//                    echo "count items=".count($itemsArr)."<br>";
+//                    exit();
+//                    return $itemsArr;
+//                },
         ));
+
+        //get array of diseaseTypes
+        $repository = $this->params['em']->getRepository('OlegOrderformBundle:DiseaseOriginList');
+        $dql = $repository->createQueryBuilder("list")->orderBy("list.orderinlist","ASC");
+        $query = $this->params['em']->createQuery($dql);
+        $items = $query->getResult();
+        $DiseaseOriginListArr = array();
+        foreach( $items as $item ) {
+            $DiseaseOriginListArr[] = $item;
+        }
 
         $builder->add( 'diseaseOrigins', 'entity', array(
             'class' => 'OlegOrderformBundle:DiseaseOriginList',
@@ -42,10 +76,11 @@ class PartDiseaseTypeType extends AbstractType
             'multiple' => true,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type origin-checkboxes'), //'required' => '0', 'disabled'
-            'choices' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->orderBy("list.orderinlist","ASC");
-                },
+            'choices' => $DiseaseOriginListArr
+//            'choices' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->orderBy("list.orderinlist","ASC");
+//                },
         ));
 
         $builder->add('primaryOrgan', 'custom_selector', array(
