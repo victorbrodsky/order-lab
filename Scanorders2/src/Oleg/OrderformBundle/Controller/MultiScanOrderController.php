@@ -571,6 +571,8 @@ class MultiScanOrderController extends Controller {
             $actions = array('edit');
         }
 
+        $collaborationTypesStrArr = array("Union");
+
         $datastructure = null;
         if( $routeName == "scan_datastructure") {
             $actions = array('edit'); //show extra fields
@@ -579,7 +581,7 @@ class MultiScanOrderController extends Controller {
         }
 
         if( $entity && !$securityUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
-            //exit('isUserAllowOrderActions false');
+            exit('isUserAllowOrderActions false');
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -614,8 +616,9 @@ class MultiScanOrderController extends Controller {
 
             //$viewGranted = $this->denyAccessUnlessGranted('view', $patient);
             //echo "viewGranted=".$viewGranted."<br>";
-            if( !$securityUtil->hasUserPermission($patient, $user) ) {
-            //if( !$this->denyAccessUnlessGranted('view', $patient) ) { // check for "view" access: calls all voters
+            //$actions = array('show111');
+            if( !$securityUtil->hasUserPermission( $patient, $user, $collaborationTypesStrArr, $actions ) ) {
+            //if( false === $this->get('security.context')->isGranted('view', $patient) ) { // check for "view" access: calls all voters
                 $entity->removePatient($patient);
                 continue;
             }
@@ -632,7 +635,7 @@ class MultiScanOrderController extends Controller {
                     continue;
                 }
 
-                if( !$securityUtil->hasUserPermission($encounter, $user) ) {
+                if( !$securityUtil->hasUserPermission($encounter, $user, $collaborationTypesStrArr, $actions) ) {
                     $patient->removeChildren($encounter);
                     continue;
                 }
@@ -649,7 +652,7 @@ class MultiScanOrderController extends Controller {
                         continue;
                     }
 
-                    if( !$securityUtil->hasUserPermission($procedure, $user) ) {
+                    if( !$securityUtil->hasUserPermission($procedure, $user, $collaborationTypesStrArr, $actions) ) {
                         $encounter->removeChildren($procedure);
                         continue;
                     }
@@ -668,7 +671,7 @@ class MultiScanOrderController extends Controller {
                             continue;
                         }
 
-                        if( !$securityUtil->hasUserPermission($accession, $user, array("Union","Intersection")) ) {
+                        if( !$securityUtil->hasUserPermission($accession, $user, $collaborationTypesStrArr, $actions) ) {
                             //echo "accession permission not ok!!! <br>";
                             $procedure->removeChildren($accession);
                             continue;
@@ -687,7 +690,7 @@ class MultiScanOrderController extends Controller {
                                 continue;
                             }
 
-                            if( !$securityUtil->hasUserPermission($part, $user) ) {
+                            if( !$securityUtil->hasUserPermission($part, $user, $collaborationTypesStrArr, $actions) ) {
                                 $accession->removeChildren($part);
                                 continue;
                             }
@@ -701,7 +704,7 @@ class MultiScanOrderController extends Controller {
                                     continue;
                                 }
 
-                                if( ! $securityUtil->hasUserPermission($block, $user) ) {
+                                if( ! $securityUtil->hasUserPermission($block, $user, $collaborationTypesStrArr, $actions) ) {
                                     $part->removeChildren($block);
                                     continue;
                                 }
@@ -713,7 +716,7 @@ class MultiScanOrderController extends Controller {
 
                                     //check if this slides can be viewed by this user
                                     $permission = true;
-                                    if( !$securityUtil->hasUserPermission($slide, $user) ) {
+                                    if( !$securityUtil->hasUserPermission($slide, $user, $collaborationTypesStrArr, $actions) ) {
                                         //echo " (".$slide->getProvider()->getId().") ?= (".$user->getId().") => ";
                                         if( $slide->getProvider()->getId() != $user->getId() ) {
                                             $permission = false;

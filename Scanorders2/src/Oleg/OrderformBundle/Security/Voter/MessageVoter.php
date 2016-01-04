@@ -9,15 +9,7 @@
 namespace Oleg\OrderformBundle\Security\Voter;
 
 
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\Imaging;
 use Oleg\OrderformBundle\Entity\Message;
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -25,7 +17,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 
 
-class PatientHierarchyVoter extends BaseVoter {
+class MessageVoter extends BaseVoter {
 
     //you can use anything
 //    const VIEW = 'view';
@@ -39,27 +31,19 @@ class PatientHierarchyVoter extends BaseVoter {
 //    const CREATE = 'create';
 //    const CHANGESTATUS = 'changestatus';
 
+    const SIGN = 'sign';
 
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::SHOW, self::EDIT, self::AMEND, self::DELETE, self::CREATE, self::CHANGESTATUS))) {
-            //exit("Not supported attribute=".$attribute."<br>");
+        if (!in_array($attribute, array(self::VIEW, self::SHOW, self::EDIT, self::AMEND, self::DELETE, self::CREATE, self::SIGN, self::CHANGESTATUS))) {
+            //exit("Message Voter: Not supported attribute=".$attribute."<br>");
             return false;
         }
 
         // only vote on Patient hierarchy objects inside this voter
-        if(
-            !$subject instanceof Patient &&
-            !$subject instanceof Encounter &&
-            !$subject instanceof Procedure &&
-            !$subject instanceof Accession &&
-            !$subject instanceof Part &&
-            !$subject instanceof Block &&
-            !$subject instanceof Slide &&
-            !$subject instanceof Imaging
-        ) {
-            //exit("Not supported subject=".$subject."<br>");
+        if( !$subject instanceof Message ) {
+            //exit("Message Voter: Not supported subject=".$subject."<br>");
             return false;
         }
 
@@ -102,6 +86,12 @@ class PatientHierarchyVoter extends BaseVoter {
         if( $subject->getProvider()->getId() === $user->getId() ) {
             //echo "user is provider <br>";
             return true;
+        }
+
+        foreach( $subject->getProxyuser() as $proxyuser ) {
+            if( $proxyuser->getUser() && $proxyuser->getUser()->getId() === $user->getId() ) {
+                return true;
+            }
         }
 
         return false;

@@ -57,8 +57,9 @@ class SecurityUtil extends UserSecurityUtil {
     // they can not see each other's orders/patient data/etc.
     //$entity is object: message or patient, accession, part ...
     //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"); if null - ignore collaboration.
+    //$actionStrArr: array("show","edit","amend"); if null - ignore (allow) all actions; if not supported action - allow this action.
     //Used by: CheckController (check button on patient hierarchy), MultiScanOrderController (show patient hierarchy in the order)
-    public function hasUserPermission( $entity, $user, $collaborationTypesStrArr=array("Union") ) {
+    public function hasUserPermission( $entity, $user, $collaborationTypesStrArr=array("Union"), $actionStrArr=array("show") ) {
         //echo "hasUserPermission <br>";
         if( $entity == null ) {
             return true;
@@ -107,7 +108,7 @@ class SecurityUtil extends UserSecurityUtil {
 
             $bruteForce = true;
             if( !$bruteForce ) {
-                //check collaboration by one query. Might be need it for performance optimization?
+                //check collaboration by one query. Might need it for performance optimization?
                 if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeHasCollaborationWithUserPermittedInstitutions($entity->getInstitution(), $permittedInstitutions) ) {
                     //echo "Collaboration: true <br>";
                     $hasCollaborationInst = true;
@@ -159,7 +160,7 @@ class SecurityUtil extends UserSecurityUtil {
 //        }
 
         if( $hasInst == false ) {
-            //echo "hasInst == false <br>";
+            //exit("hasInst == false");
             return false;
         }
 
@@ -167,20 +168,26 @@ class SecurityUtil extends UserSecurityUtil {
 
 
         ///////////////// 2) check if the user is processor or service, division chief /////////////////
-        if(
-            $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ||
-            $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') ||
-            $this->sc->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ||
-            $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF')
-        ){
-            return true;
-        }
+//        if(
+//            $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ||
+//            $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') ||
+//            $this->sc->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ||
+//            $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF')
+//        ){
+//            return true;
+//        }
         ///////////////// EOF 2) /////////////////
 
-        ///////////////// 3) submitters  /////////////////
-        if( $this->sc->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+        ///////////////// check if logged in user is granted given action for a given object $entity /////////////////
+        if( $this->isLoggedUserGrantedObjectActions($entity,$actionStrArr) ) {
             return true;
         }
+        ///////////////// EOF /////////////////
+
+        ///////////////// 3) submitters  /////////////////
+//        if( $this->sc->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+//            return true;
+//        }
         ///////////////// EOF 3) /////////////////
 
         ///////////////// 4) pathology members  /////////////////
@@ -194,7 +201,22 @@ class SecurityUtil extends UserSecurityUtil {
         ///////////////// EOF 4) /////////////////
 
         return false;
+    }
 
+    //check user actions
+    private function isLoggedUserGrantedObjectActions( $entity, $actionStrArr ) {
+        if( !$actionStrArr ) {
+            return true;
+        }
+        foreach( $actionStrArr as $action ) {
+            //echo "check action=".$action."<br>";
+            if( false === $this->sc->isGranted($action, $entity) ) {
+                return false;
+            }
+        }
+
+        //echo "Logged in user can perform action=".$action." on object=".$entity."<br>";
+        return true;
     }
 
 
@@ -206,8 +228,8 @@ class SecurityUtil extends UserSecurityUtil {
 
     //check if the given user can perform given actions on the content of the given order
     public function isUserAllowOrderActions( $order, $user, $actions=null ) {
-
-        if( !$this->hasUserPermission( $order, $user ) ) {
+        //echo "is User Allow OrderActions <br>";
+        if( !$this->hasUserPermission( $order, $user, array("Union"), $actions ) ) {
             //exit('has permission false');
             return false;
         }
