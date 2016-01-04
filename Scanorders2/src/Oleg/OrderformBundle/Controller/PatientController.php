@@ -210,7 +210,7 @@ class PatientController extends Controller
         }
 
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -277,7 +277,7 @@ class PatientController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union")) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union"),array("edit")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -310,7 +310,7 @@ class PatientController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union")) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union"),array("edit")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 

@@ -149,7 +149,7 @@ class CheckController extends Controller {
         //$user = $this->get('security.context')->getToken()->getUser();
         //$userUtil = new UserUtil();
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             //echo "no permission ";
             $entity = null;
             //$entity->filterArrayFields($user,true);
@@ -307,7 +307,7 @@ class CheckController extends Controller {
         $element = array();
 
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             $entity = null;
         }
 
@@ -559,7 +559,7 @@ class CheckController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
+        if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             $entity = null;
         }
 
@@ -698,7 +698,7 @@ class CheckController extends Controller {
 
             $user = $this->get('security.context')->getToken()->getUser();
             $securityUtil = $this->get('order_security_utility');
-            if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
+            if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
                 $entity = null;
             }
 

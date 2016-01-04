@@ -591,7 +591,7 @@ class SlideReturnRequestController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $message = $entity->getMessage();
         $securityUtil = $this->get('order_security_utility');
-        if( $message && !$securityUtil->hasUserPermission($message,$user) ) {
+        if( $message && !$securityUtil->hasUserPermission($message,$user,array("Union"),array("changestatus")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 

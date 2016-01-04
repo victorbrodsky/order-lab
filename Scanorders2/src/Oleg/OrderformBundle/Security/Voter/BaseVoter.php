@@ -53,14 +53,12 @@ abstract class BaseVoter extends Voter {
             return true;
         }
 
-        // the object could have, for example, a method isPrivate()
-        // that checks a boolean $private property
-        //return !$subject->isPrivate();
-
         //TODO:
         //1) find roles with permissions related to Patient, Encounter ...
         //2) check for each roles if user hasRole
 
+        echo "can not view subject=".$subject."<br>";
+        //exit('can not View exit');
         return false;
     }
 
@@ -92,6 +90,8 @@ abstract class BaseVoter extends Voter {
         if ($this->decisionManager->decide($token, array('ROLE_SCANORDER_ADMIN'))) {
             return true;
         }
+
+        $user = $token->getUser();
 
         //order's institution
         $orderInstitution = $subject->getInstitution();

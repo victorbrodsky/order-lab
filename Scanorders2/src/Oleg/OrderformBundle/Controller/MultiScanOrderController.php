@@ -581,7 +581,7 @@ class MultiScanOrderController extends Controller {
         }
 
         if( $entity && !$securityUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
-            exit('isUserAllowOrderActions false');
+            //exit('isUserAllowOrderActions false');
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
