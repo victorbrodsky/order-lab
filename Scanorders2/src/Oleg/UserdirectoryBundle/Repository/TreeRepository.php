@@ -27,6 +27,32 @@ class TreeRepository extends NestedTreeRepository {
         return false;
     }
 
+    public function isNodeUnderParentnodes( $parentNodes, $node ) {
+        foreach( $parentNodes as $parentNode ) {
+            if( $this->isNodeUnderParentnode($parentNode, $node) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+//    public function selectStrNodesUnderParentNode( Institution $parentNode, Institution $node ) {
+//
+//        $criteriastr = "";
+//        $criteriastr .= $node->getRoot() . " = " . $parentNode->getRoot();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= $node->getLft() . " >= " . $parentNode->getLft();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= $node->getRgt() . " =< " . $parentNode->getRgt();
+//        //$criteriastr .= " OR ";
+//        $criteriastr .= $node->getId() . " = " . $parentNode->getId();
+//
+//        $criteriastr = "(".$criteriastr.")";
+//
+//        return $criteriastr;
+//    }
+
     public function selectNodesUnderParentNode( Institution $parentNode, $field, $default=true ) {
 
         if( $default ) {
@@ -51,62 +77,42 @@ class TreeRepository extends NestedTreeRepository {
         return $criteriastr;
     }
 
-    //check if an institution node belongs to the same collaboration as user's permitted institutions
-    //select collaboration table to find existing collaborations similarly as in findCollaborationsByNode with join
-    //$node - institution of the entity being verified
-    public function isNodeHasCollaborationWithUserPermittedInstitutions( $node, $permittedInstitutions ) {
-        //return true; //testing
-
-        $res = false;
-
-        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
-        $dql = $repository->createQueryBuilder("collaboration");
-        $dql->select("collaboration");
-        $dql->leftJoin("collaboration.institutions","institutions");
-        $criteriastr = "";
-
-        foreach( $permittedInstitutions as $permittedInstitution ) {
-            if( $criteriastr != "" ) {
-                $criteriastr = $criteriastr . " OR ";
-            }
-//            $criteriastr .= "(";
-//            $criteriastr .= "institutions.root = " . $permittedInstitution->getRoot();
-//            $criteriastr .= " AND ";
-//            $criteriastr .= "institutions.lft < " . $permittedInstitution->getLft();
-//            $criteriastr .= " AND ";
-//            $criteriastr .= "institutions.rgt > " . $permittedInstitution->getRgt();
-//            $criteriastr .= " OR ";
-//            $criteriastr .= "institutions.id = " . $permittedInstitution->getId();
-            $criteriastr .= $this->selectNodesUnderParentNode( $permittedInstitution, "institutions" );
-//            $criteriastr .= ")";
-        }
-
-//        $criteriastr .= " AND ";
-//        $criteriastr .= "institutions.root = " . $node->getRoot();
-//        $criteriastr .= " AND ";
-//        $criteriastr .= "institutions.lft < " . $node->getLft();
-//        $criteriastr .= " AND ";
-//        $criteriastr .= "institutions.rgt > " . $node->getRgt();
-//        $criteriastr .= " OR ";
-//        $criteriastr .= "institutions.id = " . $node->getId();
-        $criteriastr .= " AND " . $this->selectNodesUnderParentNode( $node, "institutions" );
-
-
-        //echo "criteriastr=".$criteriastr."<br>";
-
-        $dql->where($criteriastr);
-        $query = $this->_em->createQuery($dql);
-        $collaborations = $query->getResult();
-
-        //echo "single query count(collaborations)=".count($collaborations)."<br>";
-        //exit();
-
-        if( count($collaborations) > 0 ) {
-            $res = true;
-        }
-
-        return $res;
-    }
+    //check if an institution node under permitted institutions and collaboration institutions
+//    public function isNodeUnderPermittedInstitutions( $node, $permittedInstitutions, $collaborationTypesStrArr=array("Union") ) {
+//
+//        $res = false;
+//
+//        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
+//        $dql = $repository->createQueryBuilder("collaboration");
+//        $dql->select("collaboration");
+//        $dql->leftJoin("collaboration.institutions","institutions");
+//
+//        //$criteriastr = "";
+//        $criteriastr = "collaboration.type != 'disabled' AND collaboration.type != 'draft'";
+//
+//        //permitted institutions
+//        foreach( $permittedInstitutions as $permittedInstitution ) {
+//            if( $criteriastr != "" ) {
+//                $criteriastr = $criteriastr . " OR ";
+//            }
+//            $criteriastr .= $this->selectStrNodesUnderParentNode( $permittedInstitution, $node );
+//        }
+//
+//        //echo "criteriastr=".$criteriastr."<br>";
+//
+//        $dql->where($criteriastr);
+//        $query = $this->_em->createQuery($dql);
+//        $collaborations = $query->getResult();
+//
+//        //echo "single query count(collaborations)=".count($collaborations)."<br>";
+//        //exit();
+//
+//        if( count($collaborations) > 0 ) {
+//            $res = true;
+//        }
+//
+//        return $res;
+//    }
 
     //check collaboration with given node
     //$collaborationTypesStrArr: array("Union","Intersection"), if null - ignore collaborations

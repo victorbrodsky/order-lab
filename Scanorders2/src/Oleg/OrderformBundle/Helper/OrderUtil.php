@@ -1128,15 +1128,27 @@ class OrderUtil {
 
     //Used in new order field: "Order data visible to members of (Institutional PHI Scope)"
     public function getAllScopeInstitutions( $originalPermittedInstitutions, $message ) {
+
+        $permittedInstitutions = $this->getPermittedScopeCollaborationInstitutions($originalPermittedInstitutions,array("Union","Intersection","Untrusted Intersection"));
+
+        //include current message institution to the $permittedInstitutions
+        $permittedInstitutions = $this->addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message);
+
+        return $permittedInstitutions;
+    }
+
+    public function getPermittedScopeCollaborationInstitutions( $originalPermittedInstitutions, $collaborationTypesStrArr, $withOriginal=true ) {
         $permittedInstitutions = new ArrayCollection();
         //include collaboration (any type) institutions by user
         //permittedInstitutionalPHIScope - institutions
         foreach( $originalPermittedInstitutions as $originalPermittedInstitution ) {
-            $permittedInstitutions->add($originalPermittedInstitution);
+            if( $withOriginal ) {
+                $permittedInstitutions->add($originalPermittedInstitution);
+            }
             //echo "### permittedInstitution=".$permittedInstitution->getId().":".$permittedInstitution->getName()."<br>";
             //get all collaboration to show them in the Order's Institutional PHI Scope
             $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
-                findCollaborationsByNode( $originalPermittedInstitution, array("Union","Intersection","Untrusted Intersection") );
+                findCollaborationsByNode( $originalPermittedInstitution, $collaborationTypesStrArr );
             foreach( $collaborations as $collaboration ) {
                 foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
                     //echo "collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";
@@ -1148,18 +1160,12 @@ class OrderUtil {
             }
         }//foreach
 
-        //include current message institution to the $permittedInstitutions
-        $permittedInstitutions = $this->addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message);
-//        foreach( $permittedInstitutions as $permittedInstitution ) {
-//            echo "permittedInstitution=".$permittedInstitution->getId().":".$permittedInstitution->getName()."<br>";
-//        }
-
         return $permittedInstitutions;
     }
 
     public function addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message) {
         //include current message institution to the $permittedInstitutions
-        if( $message->getInstitution() && !$permittedInstitutions->contains($message->getInstitution()) ) {
+        if( $message && $message->getInstitution() && !$permittedInstitutions->contains($message->getInstitution()) ) {
             //echo "add permittedInstitutions=".$message->getInstitution()->getName()."<br>";
             $permittedInstitutions->add($message->getInstitution());
         }

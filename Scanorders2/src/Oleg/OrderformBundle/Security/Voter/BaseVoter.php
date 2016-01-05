@@ -53,11 +53,19 @@ abstract class BaseVoter extends Voter {
             return true;
         }
 
+        $user = $token->getUser();
+        $securityUtil = $this->container->get('order_security_utility');
+
+        //minimum requirement: subject must be under user's permitted/collaborated institutions
+        if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions( $subject, $user, array("Union") ) == false ) {
+            return false;
+        }
+
         //TODO:
         //1) find roles with permissions related to Patient, Encounter ...
         //2) check for each roles if user hasRole
 
-        echo "can not view subject=".$subject."<br>";
+        //echo "can not view subject=".$subject."<br>";
         //exit('can not View exit');
         return false;
     }
@@ -82,32 +90,37 @@ abstract class BaseVoter extends Voter {
             return true;
         }
 
-//        if( in_array('ROLE_SCANORDER_ADMIN', $user->getRoles()) ) {
-//            return true;
-//        }
-
-        // ROLE_SCANORDER_ADMIN can do anything
-        if ($this->decisionManager->decide($token, array('ROLE_SCANORDER_ADMIN'))) {
+        //ROLE_PLATFORM_DEPUTY_ADMIN can do anything
+        if( $this->decisionManager->decide($token, array('ROLE_PLATFORM_DEPUTY_ADMIN')) ) {
             return true;
         }
 
         $user = $token->getUser();
-
-        //order's institution
-        $orderInstitution = $subject->getInstitution();
-
-        //service chief can perform any actions for all orders under his/her service scope
         $securityUtil = $this->container->get('order_security_utility');
+
+        //minimum requirement: subject must be under user's permitted/collaborated institutions
+        if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions( $subject, $user, array("Union") ) == false ) {
+            return false;
+        }
+
+        //subject's institution
+        $subjectInstitution = $subject->getInstitution();
+
+        //service chief can perform any actions if the objects under his/her service scope
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $userChiefServices = $userSiteSettings->getChiefServices();
-        foreach( $userChiefServices as $userChiefService ) {
-            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($userChiefService, $orderInstitution) ) {
-                return true;
-            }
+        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes( $userChiefServices, $subjectInstitution ) ) {
+            return true;
+        }
+
+        //ROLE_SCANORDER_ADMIN can do anything if object is under his permitted institutions
+        if( $this->decisionManager->decide($token, array('ROLE_SCANORDER_ADMIN')) ) {
+            return true;
         }
 
         //echo "can not Edit! <br>";
         return false;
     }
 
-} 
+
+}
