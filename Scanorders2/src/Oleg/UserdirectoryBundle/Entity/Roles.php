@@ -48,11 +48,16 @@ class Roles extends ListAbstract {
      */
     private $fellowshipSubspecialty;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Permission", mappedBy="role", cascade={"persist","remove"})
+     */
+    private $permissions;
 
 
     public function __construct() {
         $this->attributes = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     /**
@@ -123,7 +128,21 @@ class Roles extends ListAbstract {
         return $this->institution;
     }
 
-
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+    public function addPermission($item)
+    {
+        if( $item && !$this->permissions->contains($item) ) {
+            $this->permissions->add($item);
+            $item->setUser($this);
+        }
+    }
+    public function removePermission($item)
+    {
+        $this->permissions->removeElement($item);
+    }
 
 
 

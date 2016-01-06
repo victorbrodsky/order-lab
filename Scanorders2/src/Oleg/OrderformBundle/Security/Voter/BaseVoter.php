@@ -62,7 +62,7 @@ abstract class BaseVoter extends Voter {
         }
 
         //TODO:
-        //1) find roles with permissions related to Patient, Encounter ...
+        //1) find roles with permissions related to a subject (Patient, Encounter ...)
         //2) check for each roles if user hasRole
 
         //echo "can not view subject=".$subject."<br>";

@@ -87,6 +87,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency-list")
      * @Route("/collaborations/", name="collaborations-list")
      * @Route("/collaboration-types/", name="collaborationtypes-list")
+     * @Route("/permissions/", name="permission-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -276,6 +277,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency_create")
      * @Route("/collaborations/", name="collaborations_create")
      * @Route("/collaboration-types/", name="collaborationtypes_create")
+     * @Route("/permissions/", name="permission_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -424,6 +426,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-language-proficiencies/new", name="fellapplanguageproficiency_new")
      * @Route("/collaborations/new", name="collaborations_new")
      * @Route("/collaboration-types/new", name="collaborationtypes_new")
+     * @Route("/permissions/new", name="permission_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -543,6 +546,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_show")
      * @Route("/collaborations/{id}", name="collaborations_show")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_show")
+     * @Route("/permissions/{id}", name="permission_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -652,6 +656,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-language-proficiencies/{id}/edit", name="fellapplanguageproficiency_edit")
      * @Route("/collaborations/{id}/edit", name="collaborations_edit")
      * @Route("/collaboration-types/{id}/edit", name="collaborationtypes_edit")
+     * @Route("/permissions/{id}/edit", name="permission_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -793,6 +798,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_update")
      * @Route("/collaborations/{id}", name="collaborations_update")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_update")
+     * @Route("/permissions/{id}", name="permission_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1197,7 +1203,10 @@ class ListController extends Controller
                 $className = "CollaborationTypeList";
                 $displayName = "Collaboration Types";
                 break;
-
+            case "permission":
+                $className = "PermissionList";
+                $displayName = "Permissions List";
+                break;
 
             default:
                 $className = null;
@@ -1292,6 +1301,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_delete")
      * @Route("/collaborations/{id}", name="collaborations_delete")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_delete")
+     * @Route("/permissions/{id}", name="permission_delete")
      *
      *
      * @Method("DELETE")

@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_permission")
+ * @ORM\Table(name="user_permission")
  */
 class Permission
 {
@@ -36,7 +36,7 @@ class Permission
 
     /**
      * If institution is not provided then this permission is for all institutions
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToMany(targetEntity="Institution")
      * @ORM\JoinTable(name="user_permission_institution",
      *      joinColumns={@ORM\JoinColumn(name="permission_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
@@ -45,17 +45,16 @@ class Permission
     private $institutions;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Roles")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Roles", inversedBy="permissions")
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $role;
+    protected $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="permissions")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $user;
-
+    protected $user;
 
 
     public function __construct() {
@@ -147,8 +146,6 @@ class Permission
     {
         $this->institutions->removeElement($institution);
     }
-
-
 
 
 }

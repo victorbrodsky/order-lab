@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_permissionList")
+ * @ORM\Table(name="user_permissionList")
  */
 class PermissionList extends ListAbstract {
 

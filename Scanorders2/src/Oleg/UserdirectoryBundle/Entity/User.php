@@ -218,7 +218,10 @@ class User extends BaseUser {
      **/
     private $avatar;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="Permission", mappedBy="user", cascade={"persist","remove"})
+     */
+    private $permissions;
 
 
 
@@ -237,6 +240,7 @@ class User extends BaseUser {
         $this->publications = new ArrayCollection();
         $this->books = new ArrayCollection();
         $this->lectures = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
 
         $this->privateComments = new ArrayCollection();
         $this->publicComments = new ArrayCollection();
@@ -787,6 +791,22 @@ class User extends BaseUser {
     public function getLectures()
     {
         return $this->lectures;
+    }
+
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+    public function addPermission($item)
+    {
+        if( $item && !$this->permissions->contains($item) ) {
+            $this->permissions->add($item);
+            $item->setUser($this);
+        }
+    }
+    public function removePermission($item)
+    {
+        $this->permissions->removeElement($item);
     }
 
 
