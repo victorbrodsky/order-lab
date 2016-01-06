@@ -95,8 +95,8 @@ class FellAppApplicantController extends Controller {
 
         $fellappType = $entity->getFellowshipSubspecialty();
 
-        $startDate = $entity->getStartDate();
-        $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+        //$startDate = $entity->getStartDate();
+        //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
         //$startDateStr = $transformer->transform($startDate);
 
 //        $applicants = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
@@ -113,6 +113,7 @@ class FellAppApplicantController extends Controller {
 
         $dql->where("fellowshipSubspecialty.id = " . $fellappType->getId() );
 
+        $startDate = $entity->getStartDate();
         $startDateStr = $startDate->format('Y');
         $bottomDate = "01-01-".$startDateStr;
         $topDate = "12-31-".$startDateStr;

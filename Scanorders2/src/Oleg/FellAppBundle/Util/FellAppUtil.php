@@ -1441,7 +1441,10 @@ class FellAppUtil {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
                     if( $felltypeid == $fellowshipSubspecialty->getId() ) {
-                        return true;
+                        //it is safer to check also for fellowshipSubspecialty's institution is under roleObject's institution
+                        if( $em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode( $roleObject->getInstitution(), $fellowshipSubspecialty->getInstitution() ) ) {
+                            return true;
+                        }
                     }
                 }
             }

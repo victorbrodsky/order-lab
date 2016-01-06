@@ -36,7 +36,7 @@ class Roles extends ListAbstract {
     protected $original;
 
 
-    //institution
+    //institution: currently used to check if the user can view fellowship application (FellAppUtil.php)
     /**
      * @ORM\ManyToOne(targetEntity="Institution")
      */
