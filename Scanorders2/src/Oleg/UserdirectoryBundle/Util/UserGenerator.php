@@ -881,7 +881,7 @@ class UserGenerator {
         //exit('1');
 
         if( count($InstitutionArr) != 0 && count($InstitutionArr) != count($titleArr) ) {
-            throw new \Exception('Title count='.count($titleArr).' is not equal to Institution count=' . count($InstitutionArr));
+            throw new \Exception($holderClassName.': Title count='.count($titleArr).' is not equal to Institution count=' . count($InstitutionArr));
         }
 
 //        //lead can be title or institution

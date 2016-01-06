@@ -1317,7 +1317,7 @@ class User extends BaseUser {
         if( $type == null || $type == "MedicalTitle" ) {
             foreach( $this->getMedicalTitles() as $medicalTitles ) {
                 if( $medicalTitles->getInstitution() && $medicalTitles->getInstitution()->getId() && $medicalTitles->getInstitution()->getName() != "" )
-                    if( !$institutions->contains($appTitles->getInstitution()) ) {
+                    if( !$institutions->contains($medicalTitles->getInstitution()) ) {
                         if( $status == null || $medicalTitles->getStatus() == $status ) {
                             $institutions->add($medicalTitles->getInstitution());
                         }
