@@ -1443,7 +1443,6 @@ class FellAppUtil {
                     if( $felltypeid == $fellowshipSubspecialty->getId() ) {
                         //it is safer to check also for fellowshipSubspecialty's institution is under roleObject's institution
                         if( $em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode( $roleObject->getInstitution(), $fellowshipSubspecialty->getInstitution() ) ) {
-                            exit("fellsubspecialty inst is under role inst");
                             return true;
                         }
                     }
