@@ -881,24 +881,46 @@ class ListController extends Controller
             /////////// remove permissions ///////////
             if( method_exists($entity,'getPermissions') ) {
 
+                /////////////// Process Removed Collections ///////////////
+                $removedCollections = array();
+
+                $removedInfo = $this->removeCollection($originalPermissions,$entity->getPermissions(),$entity);
+                if( $removedInfo ) {
+                    $removedCollections[] = $removedInfo;
+                }
+                /////////////// EOF Process Removed Collections ///////////////
+
                 /////////////// Add event log on edit (edit or add collection) ///////////////
                 /////////////// Must run before removeCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
-                //$changedInfoArr = $this->setEventLogChanges($entity);
+                $changedInfoArr = $this->setEventLogChanges($entity);
 
-                foreach( $originalPermissions as $originalPermission ) {
-                    if( false === $entity->getPermissions()->contains($originalPermission) ) {
-                        // remove the Task from the Tag
-                        $entity->removePermission($originalPermission);
-
-                        // if it was a many-to-one relationship, remove the relationship like this
-                        $originalPermission->setRole(null);
-
-                        $em->persist($originalPermission);
-
-                        // if you wanted to delete the Tag entirely, you can also do that
-                        $em->remove($originalPermission);
-                    }
+                //set Edit event log for removed collection and changed fields or added collection
+                if( count($changedInfoArr) > 0 || count($removedCollections) > 0 ) {
+                    $event = "Permission of the Role ".$entity->getId()." has been changed by ".$user.":"."<br>";
+                    $event = $event . implode("<br>", $changedInfoArr);
+                    $event = $event . "<br>" . implode("<br>", $removedCollections);
+                    $userSecUtil = $this->get('user_security_utility');
+                    //echo "event=".$event."<br>";
+                    //print_r($removedCollections);
+                    //exit();
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$user,$entity,$request,'Entity Updated');
                 }
+                //exit();
+
+//                foreach( $originalPermissions as $originalPermission ) {
+//                    if( false === $entity->getPermissions()->contains($originalPermission) ) {
+//                        // remove the Task from the Tag
+//                        $entity->removePermission($originalPermission);
+//
+//                        // if it was a many-to-one relationship, remove the relationship like this
+//                        $originalPermission->setRole(null);
+//
+//                        $em->persist($originalPermission);
+//
+//                        // if you wanted to delete the Tag entirely, you can also do that
+//                        $em->remove($originalPermission);
+//                    }
+//                }
             }
             /////////// EOF remove permissions ///////////
 
@@ -917,6 +939,105 @@ class ListController extends Controller
     }
 
 
+    ////////////////////////////////////
+    public function setEventLogChanges($entity) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $uow = $em->getUnitOfWork();
+        $uow->computeChangeSets(); // do not compute changes if inside a listener
+
+        $eventArr = array();
+
+        //log simple fields
+        $changeset = $uow->getEntityChangeSet($entity);
+        $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
+
+        //interviews
+        foreach( $entity->getPermissions() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."permission ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        return $eventArr;
+    }
+    public function removeCollection($originalArr,$currentArr,$entity) {
+        $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
+
+        foreach( $originalArr as $element ) {
+            if( false === $currentArr->contains($element) ) {
+                $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
+                $entity->removePermission($element);
+                $element->setRole(NULL);
+                $em->persist($element);
+                $em->remove($element);
+            }
+        } //foreach
+
+        return implode("<br>", $removeArr);
+    }
+    public function addChangesToEventLog( $eventArr, $changeset, $text="" ) {
+
+        $changeArr = array();
+
+        //process $changeset: author, subjectuser, oldvalue, newvalue
+        foreach( $changeset as $key => $value ) {
+            if( $value[0] != $value[1] ) {
+
+                if( is_object($key) ) {
+                    //if $key is object then skip it, because we don't want to have non-informative record such as: credentials(stateLicense New): old value=, new value=Credentials
+                    continue;
+                }
+
+                $field = $key;
+
+                $oldValue = $value[0];
+                $newValue = $value[1];
+
+                if( $oldValue instanceof \DateTime ) {
+                    $oldValue = $this->convertDateTimeToStr($value[0]);
+                }
+                if( $newValue instanceof \DateTime ) {
+                    $newValue = $this->convertDateTimeToStr($value[1]);
+                }
+
+                if( is_array($oldValue) ) {
+                    $oldValue = implode(",",$oldValue);
+                }
+                if( is_array($newValue) ) {
+                    $newValue = implode(",",$newValue);
+                }
+
+                $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;
+                //echo "event=".$event."<br>";
+                //exit();
+
+                $changeArr[] = $event;
+            }
+        }
+
+        if( count($changeArr) > 0 ) {
+            $eventArr[] = implode("<br>", $changeArr);
+        }
+
+        return $eventArr;
+
+    }
+
+    public function convertDateTimeToStr($datetime) {
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        $dateStr = $transformer->transform($datetime);
+        return $dateStr;
+    }
+    public function getEntityId($entity) {
+        if( $entity->getId() ) {
+            return "ID=".$entity->getId();
+        }
+        return "New";
+    }
+    ////////////////////////////////////
 
 
 

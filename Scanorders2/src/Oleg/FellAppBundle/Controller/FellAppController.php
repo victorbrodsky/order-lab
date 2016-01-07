@@ -645,7 +645,7 @@ class FellAppController extends Controller {
 
 
             /////////////// Add event log on edit (edit or add collection) ///////////////
-            /////////////// Must run before removeCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
             $changedInfoArr = $this->setEventLogChanges($entity);
 
             //set Edit event log for removed collection and changed fields or added collection

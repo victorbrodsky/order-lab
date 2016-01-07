@@ -385,6 +385,7 @@ class UserSecurityUtil {
         $eventLog->setEventType($eventtype);
 
         if( $subjectEntity ) {
+            //echo "subjectEntity=".$subjectEntity."<br>";
             //get classname, entity name and id of subject entity
             $class = new \ReflectionClass($subjectEntity);
             $className = $class->getShortName();

@@ -166,4 +166,20 @@ class Permission
     }
 
 
+    public function __toString() {
+        $res = "Permission ID " . $this->getId();
+
+        if( $this->getPermission() ) {
+            $res .= " - '" . $this->getPermission() . "'";
+        }
+
+        if( count($this->getInstitutions()) > 0 ) {
+            $res .= "; Institutions: ";
+            foreach( $this->getInstitutions() as $inst ) {
+                $res .= $inst." ";
+            }
+        }
+
+        return $res;
+    }
 }

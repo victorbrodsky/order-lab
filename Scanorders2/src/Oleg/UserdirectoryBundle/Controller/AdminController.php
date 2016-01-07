@@ -2029,6 +2029,7 @@ class AdminController extends Controller
             'User Created',
             'User Updated',
             'Search',
+            'Entity Updated',
 
             'Import of Fellowship Applications',
             'Populate of Fellowship Applications',
