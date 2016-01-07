@@ -1003,6 +1003,12 @@
 {% macro permissions( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
     {% else %}
@@ -1011,7 +1017,7 @@
 
     <div class="well {{ classname }}">
 
-        {% if cycle != 'show_user' %}
+        {% if not showFlag %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
