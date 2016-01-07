@@ -237,6 +237,14 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
                 'required' => false,
             ));
+
+            //permissions: show list of
+            $builder->add('permissions', new PermissionType($this->params), array(
+                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Permission',
+                'label' => false,
+                'required' => false,
+            ));
+
         }
 
         //Role Attributes

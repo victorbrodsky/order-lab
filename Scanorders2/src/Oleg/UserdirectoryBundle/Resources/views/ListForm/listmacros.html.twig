@@ -443,6 +443,14 @@
     {#additional attributes#}
     {{ listmacros.additionalRelationships( edit_form ) }}
 
+    {#role's permissions#}
+    {% if edit_form.permissions is defined %}
+        {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+        {#{{ userform.employmentStatuses(employmentStatus,cycle,'user-employmentStatus','noprototype') }}#}
+        {% for permission in edit_form.permissions %}
+            {{ userform.permissions( permission, cycle, 'role-permission', 'noprototype' ) }}
+        {% endfor %}
+    {% endif %}
 
     {% if edit_form.submit is defined %}
         <br />
@@ -535,3 +543,7 @@
     {% endif %}
 
 {% endmacro %}
+
+
+
+

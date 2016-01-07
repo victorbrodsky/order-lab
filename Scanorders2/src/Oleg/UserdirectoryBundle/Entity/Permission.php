@@ -28,19 +28,19 @@ class Permission
      */
     private $id;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="PermissionList")
-//     * @ORM\JoinColumn(name="permission", referencedColumnName="id", nullable=true)
-//     */
-//    private $permission;
     /**
-     * @ORM\ManyToMany(targetEntity="PermissionList")
-     * @ORM\JoinTable(name="user_permission_permissionList",
-     *      joinColumns={@ORM\JoinColumn(name="permission_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="permissionList_id", referencedColumnName="id")}
-     *      )
+     * @ORM\ManyToOne(targetEntity="PermissionList")
+     * @ORM\JoinColumn(name="permission", referencedColumnName="id", nullable=true)
      */
-    private $permissions;
+    private $permission;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="PermissionList")
+//     * @ORM\JoinTable(name="user_permission_permissionList",
+//     *      joinColumns={@ORM\JoinColumn(name="permission_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="permissionList_id", referencedColumnName="id")}
+//     *      )
+//     */
+//    private $permissions;
 
     /**
      * If institution is not provided then this permission is for all institutions
@@ -67,7 +67,7 @@ class Permission
 
     public function __construct() {
         $this->institutions = new ArrayCollection();
-        $this->permissions = new ArrayCollection();
+        //$this->permissions = new ArrayCollection();
     }
 
 
@@ -88,13 +88,13 @@ class Permission
         return $this->id;
     }
 
-//    /**
-//     * @param mixed $permission
-//     */
-//    public function setPermission($permission)
-//    {
-//        $this->permission = $permission;
-//    }
+    /**
+     * @param mixed $permission
+     */
+    public function setPermission($permission)
+    {
+        $this->permission = $permission;
+    }
     /**
      * @return mixed
      */
@@ -102,16 +102,16 @@ class Permission
     {
         return $this->permissions;
     }
-    public function addPermission($item)
-    {
-        if( $item && !$this->permissions->contains($item) ) {
-            $this->permissions->add($item);
-        }
-    }
-    public function removePermission($item)
-    {
-        $this->permissions->removeElement($item);
-    }
+//    public function addPermission($item)
+//    {
+//        if( $item && !$this->permissions->contains($item) ) {
+//            $this->permissions->add($item);
+//        }
+//    }
+//    public function removePermission($item)
+//    {
+//        $this->permissions->removeElement($item);
+//    }
 
     /**
      * @param mixed $role

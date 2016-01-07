@@ -49,6 +49,10 @@ class Roles extends ListAbstract {
     private $fellowshipSubspecialty;
 
     /**
+     * Each single role page should show the whole associated list of the answered
+     * permissions list items ("Submit Orders", "Add a New Slide", etc) and
+     * the answers themselves for each (WCMC, NYP) in a Select2 box for each permission.
+     *
      * @ORM\OneToMany(targetEntity="Permission", mappedBy="role", cascade={"persist","remove"})
      */
     private $permissions;
