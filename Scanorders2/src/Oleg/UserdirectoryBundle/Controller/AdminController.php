@@ -16,6 +16,7 @@ use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
+use Oleg\UserdirectoryBundle\Entity\PermissionList;
 use Oleg\UserdirectoryBundle\Entity\PositionTrackTypeList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
@@ -233,6 +234,7 @@ class AdminController extends Controller
         $count_LanguageProficiency = $this->generateLanguageProficiency();
 
         $collaborationtypes = $this->generateCollaborationtypes();
+        $count_Permissions = $this->generatePermissions();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -289,6 +291,7 @@ class AdminController extends Controller
             'FellApp Statuses='.$count_FellAppStatus.', '.
             'FellApp Ranks='.$count_FellAppRank.', '.
             'Language Proficiency='.$count_LanguageProficiency.', '.
+            'Permissions ='.$count_Permissions.', '.
             'Collaboration Types='.$collaborationtypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -3686,6 +3689,59 @@ class AdminController extends Controller
 
         return round($count/10);
 
+    }
+
+    public function generatePermissions() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "View Patient Data for a given patient", //(our "check" button AND our "Test Patient" view page)
+            "Add Patient Data",
+            "Modify Patient Data",
+            "Delete Patient Data", //(or mark it inactive/invalid since we don't delete; this and 3 above are for Data Quality role)
+            "Add a New Patient",
+            "Add a New Encounter",
+            "Add a New Procedure",
+            "Add a New Accession",
+            "Add a New Part",
+            "Add a New Block",
+            "Add a New Slide",
+            "Add a New Image",
+            "Submit Orders",
+            "Sign Orders",      //(if it is a two-step process - submit into a queue then someone else signs)
+            "Submit Results",
+            "Sign Results",     //(if it is a two-step process - submit into a queue then someone else signs)
+            "Change the status of an order",
+            "Change a status of a result",
+            "Browse/search incoming orders for a given organizational group",
+            "Browse/search outgoing orders for a given organizational group",
+            "Browse/search incoming results for a given organizational group",
+            "Browse/search outgoing results for a given organizational group",
+            "Browse/search patients that 'belong' to a given organizational group",
+            "Browse/search accessions that 'belong' to a given organizational group"
+        );
+
+        $count = 10;
+        foreach( $types as $type ) {
+
+            $listEntity = new PermissionList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
     }
 
     ////////////////// Employee Tree Util //////////////////////

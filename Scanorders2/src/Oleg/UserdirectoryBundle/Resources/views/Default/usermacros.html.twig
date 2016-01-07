@@ -1844,7 +1844,13 @@
 
 
 {% macro addNewObjectBtn( cycle, classname, title, addClass ) %}
-    {% if cycle != 'show_user' %}
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if not showFlag %}
 
         {% set addClassStr = "" %}
         {% if addClass is defined and addClass %}

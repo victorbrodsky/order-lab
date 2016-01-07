@@ -268,7 +268,6 @@ function collapseObject( button ) {
 
 
 function getNextElementCount( holder, elclass ) {
-
     //console.log(holder);
     //console.log('elclass='+elclass);
 
@@ -278,14 +277,20 @@ function getNextElementCount( holder, elclass ) {
     var maxCount = 0;
 
     elements.each( function(){
-
+        //console.log("this:");
         //console.log($(this));
-
         //find valid input field with valid id
         var inputEl = null;
-        var inputElements = $(this).find('input[type=text]').not("*[id^='s2id_']");
+        //var inputElements = $(this).find('input[type=text]').not("*[id^='s2id_']");
+        //use hidden id input field to calculate id
+        var inputElements = $(this).find('input[type=text],input[type=hidden]').not("*[id^='s2id_']");
+        //console.log("inputElements count="+inputElements.length);
 
         inputElements.each( function(){
+
+            //console.log("inputElement:");
+            //console.log($(this));
+
             var id = $(this).attr('id');
             //console.log("id="+id);
             if( id ) {
@@ -305,6 +310,10 @@ function getNextElementCount( holder, elclass ) {
         if( parseInt(counter) > parseInt(maxCount) ) {
             maxCount = counter;
         }
+//        if( counter == null ) {
+//            //console.log("maxCount++ ="+maxCount);
+//            maxCount++;
+//        }
     });
 
     var elementCount = parseInt(maxCount) + 1;
@@ -327,6 +336,7 @@ function getElementCounter( element ) {
     //  0           1           2       3          4
     //oleg_userdirectorybundle_user_publicComments_0
     //oleg_userdirectorybundle_user_credentials_identifiers_1_link
+    //oleg_userdirectorybundle_roles_permissions_1_id
 
     var idArr = id.split("_");
 

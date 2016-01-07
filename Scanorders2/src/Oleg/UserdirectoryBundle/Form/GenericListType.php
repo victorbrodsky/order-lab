@@ -239,10 +239,15 @@ class GenericListType extends AbstractType
             ));
 
             //permissions: show list of
-            $builder->add('permissions', new PermissionType($this->params), array(
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Permission',
+            $builder->add('permissions', 'collection', array(
+                'type' => new PermissionType($this->params),
                 'label' => false,
                 'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__permissions__',
             ));
 
         }

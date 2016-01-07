@@ -964,11 +964,47 @@
 {% endmacro %}
 
 
+
+
+{% macro permissionSection( permissions, cycle, sitename ) %}
+
+    {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% set collapsein = "in" %}
+
+    {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+    <div id="form-prototype-data"
+         data-prototype-user-permissions = "{{ userform.permissions(permissions,cycle,'user-permissions','prototype', sitename)|e }}"
+    ></div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#permissions">
+                    Permission(s)
+                </a>
+            </h4>
+        </div>
+        <div id="permissions" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                <div class="user-permissions-holder">
+                    {% for permission in permissions %}
+                        {{ userform.permissions( permission, cycle, 'user-permissions', 'noprototype' ) }}
+                    {% endfor %}
+                    {{ usermacros.addNewObjectBtn(cycle,'user-permissions','Add Permission') }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro permissions( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
-        {#{% set formfield = field.vars.prototype %}#}
+        {% set formfield = field.vars.prototype %}
     {% else %}
         {% set formfield = field %}
     {% endif %}
@@ -982,11 +1018,9 @@
         {% endif %}
 
         {#{{ formmacros.field_notempty(formfield.country,cycle) }}#}
-        {#{{ formmacros.field(formfield.state) }}#}
-        {#{{ formmacros.field(formfield.licenseNumber) }}#}
-        {#{{ formmacros.fieldDateLabel(formfield.licenseIssuedDate,'allow-future-date') }}#}
-        {#{{ formmacros.fieldDateLabel(formfield.licenseExpirationDate,'allow-future-date') }}#}
-        {#{{ formmacros.field(formfield.active) }}#}
+        {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.permission) }}
+        {{ formmacros.field(formfield.institutions) }}
 
     </div>
 {% endmacro %}

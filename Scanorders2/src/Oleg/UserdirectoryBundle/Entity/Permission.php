@@ -98,9 +98,9 @@ class Permission
     /**
      * @return mixed
      */
-    public function getPermissions()
+    public function getPermission()
     {
-        return $this->permissions;
+        return $this->permission;
     }
 //    public function addPermission($item)
 //    {

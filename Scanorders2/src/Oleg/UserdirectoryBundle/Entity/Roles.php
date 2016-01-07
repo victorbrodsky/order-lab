@@ -140,7 +140,7 @@ class Roles extends ListAbstract {
     {
         if( $item && !$this->permissions->contains($item) ) {
             $this->permissions->add($item);
-            $item->setUser($this);
+            $item->setRole($this);
         }
     }
     public function removePermission($item)

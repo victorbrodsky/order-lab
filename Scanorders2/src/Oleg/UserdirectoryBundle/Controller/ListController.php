@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use Oleg\UserdirectoryBundle\Entity\Permission;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -669,7 +670,7 @@ class ListController extends Controller
 
         return $this->editList($request,$id);
     }
-    function editList($request,$id) {
+    public function editList($request,$id) {
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -684,6 +685,9 @@ class ListController extends Controller
             throw $this->createNotFoundException('Unable to find '.$mapper['fullClassName'].' entity.');
         }
 
+        //add permissions
+        //$this->addPermissions($entity);
+
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit');
         $deleteForm = $this->createDeleteForm($id,$pathbase);
 
@@ -694,6 +698,14 @@ class ListController extends Controller
             'displayName' => $mapper['displayName'],
             'pathbase' => $pathbase
         );
+    }
+
+    private function addPermissions($entity) {
+        if( method_exists($entity,'getPermissions') ) {
+            //echo "add permission for ".$entity."<br>";
+            $permission = new Permission();
+            $entity->addPermission($permission);
+        }
     }
 
     /**
@@ -829,6 +841,14 @@ class ListController extends Controller
             throw $this->createNotFoundException('Unable to find '.$mapper['fullClassName'].' entity.');
         }
 
+        //remove permissions: original permissions
+        if( method_exists($entity,'getPermissions') ) {
+            $originalPermissions = array();
+            foreach( $entity->getPermissions() as $permission ) {
+                $originalPermissions[] = $permission;
+            }
+        }
+
         $deleteForm = $this->createDeleteForm($id,$pathbase);
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit_put_list');
         $editForm->handleRequest($request);
@@ -857,6 +877,30 @@ class ListController extends Controller
             foreach( $entity->getSynonyms() as $syn ) {
                 $syn->setOriginal($entity);
             }
+
+            /////////// remove permissions ///////////
+            if( method_exists($entity,'getPermissions') ) {
+
+                /////////////// Add event log on edit (edit or add collection) ///////////////
+                /////////////// Must run before removeCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+                //$changedInfoArr = $this->setEventLogChanges($entity);
+
+                foreach( $originalPermissions as $originalPermission ) {
+                    if( false === $entity->getPermissions()->contains($originalPermission) ) {
+                        // remove the Task from the Tag
+                        $entity->removePermission($originalPermission);
+
+                        // if it was a many-to-one relationship, remove the relationship like this
+                        $originalPermission->setRole(null);
+
+                        $em->persist($originalPermission);
+
+                        // if you wanted to delete the Tag entirely, you can also do that
+                        $em->remove($originalPermission);
+                    }
+                }
+            }
+            /////////// EOF remove permissions ///////////
 
             $em->flush();
 

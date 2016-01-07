@@ -13,7 +13,6 @@ use Oleg\OrderformBundle\Entity\DiseaseTypeList;
 use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
-use Oleg\OrderformBundle\Entity\PermissionList;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -151,7 +150,6 @@ class ScanAdminController extends AdminController
         $count_DiseaseOriginList = $this->generateDiseaseOriginList();
         $count_ResearchGroupType = $this->generateResearchGroupType();
         $count_CourseGroupType = $this->generateCourseGroupType();
-        $count_Permissions = $this->generatePermissions();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -180,8 +178,7 @@ class ScanAdminController extends AdminController
             'Embedder Instructions ='.$count_EmbedderInstructionList.', '.
             'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.', '.
             'Research Group Types='.$count_ResearchGroupType.', '.
-            'Educational Group Types='.$count_CourseGroupType.', '.
-            'Permissions ='.$count_Permissions.', '.
+            'Educational Group Types='.$count_CourseGroupType.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1768,60 +1765,6 @@ class ScanAdminController extends AdminController
         return round($count/10);
 
     }
-
-    public function generatePermissions() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:PermissionList')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $types = array(
-            "View Patient Data for a given patient", //(our "check" button AND our "Test Patient" view page)
-            "Add Patient Data",
-            "Modify Patient Data",
-            "Delete Patient Data", //(or mark it inactive/invalid since we don't delete; this and 3 above are for Data Quality role)
-            "Add a New Patient",
-            "Add a New Encounter",
-            "Add a New Procedure",
-            "Add a New Accession",
-            "Add a New Part",
-            "Add a New Block",
-            "Add a New Slide",
-            "Add a New Image",
-            "Submit Orders",
-            "Sign Orders",      //(if it is a two-step process - submit into a queue then someone else signs)
-            "Submit Results",
-            "Sign Results",     //(if it is a two-step process - submit into a queue then someone else signs)
-            "Change the status of an order",
-            "Change a status of a result",
-            "Browse/search incoming orders for a given organizational group",
-            "Browse/search outgoing orders for a given organizational group",
-            "Browse/search incoming results for a given organizational group",
-            "Browse/search outgoing results for a given organizational group",
-            "Browse/search patients that 'belong' to a given organizational group",
-            "Browse/search accessions that 'belong' to a given organizational group"
-        );
-
-        $count = 10;
-        foreach( $types as $type ) {
-
-            $listEntity = new PermissionList();
-            $this->setDefaultList($listEntity,$count,$username,$type);
-
-            $em->persist($listEntity);
-            $em->flush();
-
-            $count = $count + 10;
-        }
-
-        return round($count/10);
-    }
-
 
 
 

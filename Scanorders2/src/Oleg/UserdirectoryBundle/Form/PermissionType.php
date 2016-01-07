@@ -31,6 +31,11 @@ class PermissionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $builder->add('id','hidden',array(
+            'label'=>false,
+            'attr' => array('class'=>'user-object-id-field')
+        ));
+
         $builder->add( 'permission', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:PermissionList',
             'label'=> "Permission:",
@@ -52,9 +57,8 @@ class PermissionType extends AbstractType
 
         $builder->add( 'institutions', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
-            //'property' => 'name',
             'property' => 'getTreeName',
-            'label'=>'Only show this profile to members of the following institution(s):',
+            'label'=>'Institution(s):',
             'required'=> false,
             'multiple' => true,
             //'empty_value' => false,
