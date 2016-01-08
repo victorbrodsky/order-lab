@@ -574,10 +574,10 @@ function researchLabListener( holder ) {
 
         var labObject = labName.select2('data');
 
-        console.log(labObject);
+        //console.log(labObject);
 
         if( labObject ) {
-            console.log("id="+labObject.id+", text="+labObject.text+', user_id='+user_id);
+            //console.log("id="+labObject.id+", text="+labObject.text+', user_id='+user_id);
 
             var url = getCommonBaseUrl("util/common/researchlab/"+labObject.id+"/"+user_id,"employees");
 

@@ -10,7 +10,7 @@
 //prevent exit modified form
 function windowCloseAlert() {
 
-    if( cycle == "show" ) {
+    if( _cycleShow ) {
         return;
     }
 
@@ -719,7 +719,7 @@ function purposeOption() {
 //remove null or "remove"
 function processDatepicker( element, remove ) {
 
-    if( cycle != "show" ) {
+    if( !_cycleShow ) {
 
         //replace element (input field) by a parent with class .input-group .date
         if( !element ) {

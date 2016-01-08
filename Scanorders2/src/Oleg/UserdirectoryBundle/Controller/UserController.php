@@ -2404,7 +2404,7 @@ class UserController extends Controller
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
                 $userSecUtil = $this->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($sitename,$event,$user,$entity,$request);
+                $userSecUtil->createUserEditEvent($sitename,$event,$user,$entity,$request,'User Updated');
             }
 
             //echo "user=".$entity."<br>";
@@ -2875,7 +2875,7 @@ class UserController extends Controller
         $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
         $event = $event . "User status changed to ".$status;
         $userSecUtil = $this->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($sitename,$event,$userAdmin,$user,$request);
+        $userSecUtil->createUserEditEvent($sitename,$event,$userAdmin,$user,$request,'User Updated');
 
         $em->persist($user);
         $em->flush();

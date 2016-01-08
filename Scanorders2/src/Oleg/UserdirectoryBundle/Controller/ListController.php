@@ -893,7 +893,7 @@ class ListController extends Controller
                 /////////////// Add event log on edit (edit or add collection) ///////////////
                 /////////////// Must run before removeCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
                 $changedInfoArr = $this->setEventLogChanges($entity);
-
+                //exit('1');
                 //set Edit event log for removed collection and changed fields or added collection
                 if( count($changedInfoArr) > 0 || count($removedCollections) > 0 ) {
                     $event = "Permission of the Role ".$entity->getId()." has been changed by ".$user.":"."<br>";
@@ -953,11 +953,16 @@ class ListController extends Controller
         $changeset = $uow->getEntityChangeSet($entity);
         $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
 
-        //interviews
+        //permission list
         foreach( $entity->getPermissions() as $subentity ) {
+            //echo "subentity=".$subentity."<br>";
             $changeset = $uow->getEntityChangeSet($subentity);
             $text = "("."permission ".$this->getEntityId($subentity).")";
+            //print_r($changeset);
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+
+            //add current object state
+            $eventArr[] = "Final state: " . $subentity;
         }
 
         return $eventArr;

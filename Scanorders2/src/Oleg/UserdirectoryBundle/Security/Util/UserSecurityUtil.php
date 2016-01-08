@@ -367,7 +367,7 @@ class UserSecurityUtil {
     }
 
 
-    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='User Updated') {
+    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='Entity Updated') {
 
         if( !$user ) {
             return null;
@@ -380,8 +380,10 @@ class UserSecurityUtil {
         $eventLog->setEvent($event);
 
         //set Event Type
-
         $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
+        if( !$eventtype ) {
+            $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Entity Updated');
+        }
         $eventLog->setEventType($eventtype);
 
         if( $subjectEntity ) {

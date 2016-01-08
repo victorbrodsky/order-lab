@@ -340,7 +340,7 @@
     {#role's permissions#}
     {% if form.permissions is defined %}
         {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
-        {{ userform.permissionSection(form.permissions, cycle, employees_sitename) }}
+        {{ userform.permissionSection(form.permissions, 'new', employees_sitename) }}
     {% endif %}
 
     {{ form_widget(form.submit) }}
@@ -366,6 +366,8 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as listmacros %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
     {{ form_start(edit_form) }}
 
