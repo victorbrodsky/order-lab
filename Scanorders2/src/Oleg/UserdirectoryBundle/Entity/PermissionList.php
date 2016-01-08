@@ -25,4 +25,53 @@ class PermissionList extends ListAbstract {
      **/
     protected $original;
 
+    //Objects: Patient, Encounter, Procedure, Accession, Part, Block, Slide, Image, Image Analysis, Order, Report, Patient Attributes, Patient Birth Date, etc
+    /**
+     * @ORM\ManyToOne(targetEntity="PermissionObjectList")
+     */
+    private $permissionObjectList;
+
+    //Actions: create, retrieve, update, delete
+    /**
+     * @ORM\ManyToOne(targetEntity="PermissionActionList")
+     */
+    private $permissionActionList;
+
+
+
+
+
+
+    /**
+     * @param mixed $permissionActionList
+     */
+    public function setPermissionActionList($permissionActionList)
+    {
+        $this->permissionActionList = $permissionActionList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPermissionActionList()
+    {
+        return $this->permissionActionList;
+    }
+
+    /**
+     * @param mixed $permissionObjectList
+     */
+    public function setPermissionObjectList($permissionObjectList)
+    {
+        $this->permissionObjectList = $permissionObjectList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPermissionObjectList()
+    {
+        return $this->permissionObjectList;
+    }
+
 }

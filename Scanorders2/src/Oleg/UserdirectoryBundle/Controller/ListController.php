@@ -89,6 +89,8 @@ class ListController extends Controller
      * @Route("/collaborations/", name="collaborations-list")
      * @Route("/collaboration-types/", name="collaborationtypes-list")
      * @Route("/permissions/", name="permission-list")
+     * @Route("/permission-objects/", name="permissionobject-list")
+     * @Route("/permission-actions/", name="permissionaction-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -155,6 +157,15 @@ class ListController extends Controller
         if( method_exists($entityClass,'getAttributes') ) {
             $dql->leftJoin("ent.attributes", "attributes");
             $dql->addGroupBy('attributes');
+        }
+
+        if( method_exists($entityClass,'getPermissionObjectList') ) {
+            $dql->leftJoin("ent.permissionObjectList", "permissionObjectList");
+            $dql->addGroupBy('permissionObjectList');
+        }
+        if( method_exists($entityClass,'getPermissionActionList') ) {
+            $dql->leftJoin("ent.permissionActionList", "permissionActionList");
+            $dql->addGroupBy('permissionActionList');
         }
 
         if( method_exists($entityClass,'getInstitution') ) {
@@ -279,6 +290,8 @@ class ListController extends Controller
      * @Route("/collaborations/", name="collaborations_create")
      * @Route("/collaboration-types/", name="collaborationtypes_create")
      * @Route("/permissions/", name="permission_create")
+     * @Route("/permission-objects/", name="permissionobject_create")
+     * @Route("/permission-actions/", name="permissionaction_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -428,6 +441,8 @@ class ListController extends Controller
      * @Route("/collaborations/new", name="collaborations_new")
      * @Route("/collaboration-types/new", name="collaborationtypes_new")
      * @Route("/permissions/new", name="permission_new")
+     * @Route("/permission-objects/new", name="permissionobject_new")
+     * @Route("/permission-actions/new", name="permissionaction_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -548,6 +563,8 @@ class ListController extends Controller
      * @Route("/collaborations/{id}", name="collaborations_show")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_show")
      * @Route("/permissions/{id}", name="permission_show")
+     * @Route("/permission-objects/{id}", name="permissionobject_show")
+     * @Route("/permission-actions/{id}", name="permissionaction_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -658,6 +675,8 @@ class ListController extends Controller
      * @Route("/collaborations/{id}/edit", name="collaborations_edit")
      * @Route("/collaboration-types/{id}/edit", name="collaborationtypes_edit")
      * @Route("/permissions/{id}/edit", name="permission_edit")
+     * @Route("/permission-objects/{id}/edit", name="permissionobject_edit")
+     * @Route("/permission-actions/{id}/edit", name="permissionaction_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -811,6 +830,8 @@ class ListController extends Controller
      * @Route("/collaborations/{id}", name="collaborations_update")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_update")
      * @Route("/permissions/{id}", name="permission_update")
+     * @Route("/permission-objects/{id}", name="permissionobject_update")
+     * @Route("/permission-actions/{id}", name="permissionaction_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1377,6 +1398,14 @@ class ListController extends Controller
                 $className = "PermissionList";
                 $displayName = "Permissions List";
                 break;
+            case "permissionobject":
+                $className = "PermissionObjectList";
+                $displayName = "Permission Objects List";
+                break;
+            case "permissionaction":
+                $className = "PermissionActionList";
+                $displayName = "Permission Actions List";
+                break;
 
             default:
                 $className = null;
@@ -1472,6 +1501,8 @@ class ListController extends Controller
      * @Route("/collaborations/{id}", name="collaborations_delete")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_delete")
      * @Route("/permissions/{id}", name="permission_delete")
+     * @Route("/permission-objects/{id}", name="permissionobject_delete")
+     * @Route("/permission-actions/{id}", name="permissionaction_delete")
      *
      *
      * @Method("DELETE")

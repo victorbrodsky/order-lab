@@ -16,7 +16,9 @@ use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
+use Oleg\UserdirectoryBundle\Entity\PermissionActionList;
 use Oleg\UserdirectoryBundle\Entity\PermissionList;
+use Oleg\UserdirectoryBundle\Entity\PermissionObjectList;
 use Oleg\UserdirectoryBundle\Entity\PositionTrackTypeList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
@@ -235,6 +237,8 @@ class AdminController extends Controller
 
         $collaborationtypes = $this->generateCollaborationtypes();
         $count_Permissions = $this->generatePermissions();
+        $count_PermissionObjects = $this->generatePermissionObjects();
+        $count_PermissionActions = $this->generatePermissionActions();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -292,6 +296,8 @@ class AdminController extends Controller
             'FellApp Ranks='.$count_FellAppRank.', '.
             'Language Proficiency='.$count_LanguageProficiency.', '.
             'Permissions ='.$count_Permissions.', '.
+            'PermissionObjects ='.$count_PermissionObjects.', '.
+            'PermissionActions ='.$count_PermissionActions.', '.
             'Collaboration Types='.$collaborationtypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -3734,6 +3740,81 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $listEntity = new PermissionList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generatePermissionObjects() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Patient",
+            "Patient Data",
+            "Encounter",
+            "Procedure",
+            "Accession",
+            "Part",
+            "Block",
+            "Slide",
+            "Image",
+            "Image Analysis",
+            "Order",
+            "Report",
+        );
+
+        $count = 10;
+        foreach( $types as $type ) {
+
+            $listEntity = new PermissionObjectList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generatePermissionActions() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "create",
+            "read",
+            "update",
+            "delete",
+            "changestatus"
+        );
+
+        $count = 10;
+        foreach( $types as $type ) {
+
+            $listEntity = new PermissionActionList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

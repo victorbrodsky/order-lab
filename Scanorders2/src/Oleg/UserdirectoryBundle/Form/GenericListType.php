@@ -224,6 +224,24 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //PermissionList
+        if( strtolower($this->mapper['className']) == strtolower("PermissionList") ) {
+            $builder->add('permissionObjectList','entity',array(
+                'class' => 'OlegUserdirectoryBundle:PermissionObjectList',
+                'label' => "Object:",
+                'multiple' => false,
+                'required' => false,
+                'attr' => array('class'=>'combobox'),
+            ));
+            $builder->add('permissionActionList','entity',array(
+                'class' => 'OlegUserdirectoryBundle:PermissionActionList',
+                'label' => "Action:",
+                'multiple' => false,
+                'required' => false,
+                'attr' => array('class'=>'combobox'),
+            ));
+        }
+
         //Roles
         if( strtolower($this->mapper['className']) == strtolower("Roles") ) {
             $builder->add('alias',null,array(

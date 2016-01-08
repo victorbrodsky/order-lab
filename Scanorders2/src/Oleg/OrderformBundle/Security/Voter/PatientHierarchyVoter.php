@@ -42,8 +42,10 @@ class PatientHierarchyVoter extends BaseVoter {
 
     protected function supports($attribute, $subject)
     {
+        $attribute = $this->convertAttribute($attribute);
+
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::SHOW, self::EDIT, self::AMEND, self::DELETE, self::CREATE, self::CHANGESTATUS))) {
+        if (!in_array($attribute, array(self::CREATE, self::READ, self::UPDATE, self::DELETE, self::CHANGESTATUS))) {
             //exit("Not supported attribute=".$attribute."<br>");
             return false;
         }
@@ -70,6 +72,8 @@ class PatientHierarchyVoter extends BaseVoter {
     //if return false it redirect to main page (access_denied_url?): "You don't have permission to visit this page on Scan Order site. If you already applied for access, then try to Re-Login"
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
+        $attribute = $this->convertAttribute($attribute);
+
         $user = $token->getUser();
 
         if (!$user instanceof User) {
@@ -79,12 +83,10 @@ class PatientHierarchyVoter extends BaseVoter {
 
         switch($attribute) {
 
-            case self::VIEW:
-            case self::SHOW:
+            case self::READ:
                 return $this->canView($subject, $token);
 
-            case self::EDIT:
-            case self::AMEND:
+            case self::UPDATE:
                 return $this->canEdit($subject, $token);
 
             case self::CHANGESTATUS:

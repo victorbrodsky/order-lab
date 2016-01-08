@@ -19,15 +19,17 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 abstract class BaseVoter extends Voter {
 
-    const VIEW = 'view';
-    const SHOW = 'show';
+    const CREATE = 'create';
+    const READ = 'read';
+    //const VIEW = 'view';
+    //const SHOW = 'show';
 
-    const EDIT = 'edit';
-    const AMEND = 'amend';
+    const UPDATE = 'update';
+    //const EDIT = 'edit';
+    //const AMEND = 'amend';
 
     const DELETE = 'delete'; //mark it inactive/invalid since we don't delete; this and 3 above are for Data Quality role
 
-    const CREATE = 'create';
     const CHANGESTATUS = 'changestatus';
 
     protected $decisionManager;
@@ -39,6 +41,26 @@ abstract class BaseVoter extends Voter {
         $this->decisionManager = $decisionManager;
         $this->em = $em;
         $this->container = $container;
+    }
+
+    protected function convertAttribute($attribute)
+    {
+        switch($attribute) {
+
+            case 'view':
+            case 'show':
+                return self::READ;
+
+            case 'edit':
+            case 'amend':
+                return self::UPDATE;
+
+            default:
+                return $attribute;
+
+        }
+
+        return $attribute;
     }
 
     protected function canView($subject, TokenInterface $token)

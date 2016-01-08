@@ -63,6 +63,13 @@
                 <th>{{ knp_pagination_sortable(entities, 'Action', 'ent.action') }}</th>
             {% endif %}
 
+            {% if entities|first.permissionObjectList is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Object', 'permissionObjectList.name') }}</th>
+            {% endif %}
+            {% if entities|first.permissionActionList is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Action', 'permissionActionList.name') }}</th>
+            {% endif %}
+
             {% if entities|first.alias is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Alias', 'ent.alias') }}</th>
             {% endif %}
@@ -78,6 +85,7 @@
             {% if entities|first.synonyms is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
             {% endif %}
+
 
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
@@ -174,6 +182,13 @@
 
                 {% if entity.action is defined %}
                     <td>{{ entity.action }}</td>
+                {% endif %}
+
+                {% if entity.permissionObjectList is defined %}
+                    <td>{{ entity.permissionObjectList }}</td>
+                {% endif %}
+                {% if entity.permissionActionList is defined %}
+                    <td>{{ entity.permissionActionList }}</td>
                 {% endif %}
 
                 {% if entity.alias is defined %}
@@ -337,6 +352,9 @@
     {#additional attributes#}
     {{ listmacros.additionalRelationships( form ) }}
 
+    {#permissionList attributes#}
+    {{ listmacros.permissionListAttributes( form ) }}
+
     {#role's permissions#}
     {% if form.permissions is defined %}
         {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
@@ -450,6 +468,9 @@
     {#additional attributes#}
     {{ listmacros.additionalRelationships( edit_form ) }}
 
+    {#permissionList attributes#}
+    {{ listmacros.permissionListAttributes( edit_form ) }}
+
     {#role's permissions#}
     {% if edit_form.permissions is defined %}
         {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
@@ -548,6 +569,20 @@
 
 {% endmacro %}
 
+{#permissionList attributes#}
+{% macro permissionListAttributes( form ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+    <hr>
+
+    {% if form.permissionObjectList is defined %}
+        {{ formmacros.field(form.permissionObjectList) }}
+    {% endif %}
+
+    {% if form.permissionActionList is defined %}
+        {{ formmacros.field(form.permissionActionList) }}
+    {% endif %}
+
+{% endmacro %}
 
 

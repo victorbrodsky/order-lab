@@ -19,27 +19,18 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class MessageVoter extends BaseVoter {
 
-    //you can use anything
-//    const VIEW = 'view';
-//    const SHOW = 'show';
-//
-//    const EDIT = 'edit';
-//    const AMEND = 'amend';
-//
-//    const DELETE = 'delete'; //mark it inactive/invalid since we don't delete; this and 3 above are for Data Quality role
-//
-//    const CREATE = 'create';
-//    const CHANGESTATUS = 'changestatus';
-
     const SIGN = 'sign';
 
     protected function supports($attribute, $subject)
     {
+        $attribute = $this->convertAttribute($attribute);
+
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::SHOW, self::EDIT, self::AMEND, self::DELETE, self::CREATE, self::SIGN, self::CHANGESTATUS))) {
+        if (!in_array($attribute, array(self::CREATE, self::READ, self::UPDATE, self::DELETE, self::SIGN, self::CHANGESTATUS))) {
             //exit("Message Voter: Not supported attribute=".$attribute."<br>");
             return false;
         }
+        //echo 'attribute='.$attribute."<br>";
 
         // only vote on Patient hierarchy objects inside this voter
         if( !$subject instanceof Message ) {
@@ -54,6 +45,9 @@ class MessageVoter extends BaseVoter {
     //if return false it redirect to main page (access_denied_url?): "You don't have permission to visit this page on Scan Order site. If you already applied for access, then try to Re-Login"
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
+
+        $attribute = $this->convertAttribute($attribute);
+
         $user = $token->getUser();
 
         if (!$user instanceof User) {
@@ -63,12 +57,10 @@ class MessageVoter extends BaseVoter {
 
         switch($attribute) {
 
-            case self::VIEW:
-            case self::SHOW:
+            case self::READ:
                 return $this->canView($subject, $token);
 
-            case self::EDIT:
-            case self::AMEND:
+            case self::UPDATE:
                 return $this->canEdit($subject, $token);
 
             case self::CHANGESTATUS:
