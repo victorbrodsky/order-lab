@@ -132,5 +132,39 @@ class UserRepository extends EntityRepository {
         return $query->getQuery()->getResult();
     }
 
+    public function isUserHasPermissionObjectAction( $user, $object, $action ) {
+
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Roles', 'list')
+            ->select("list")
+            ->leftJoin("list.permissions","permissions")
+            ->leftJoin("permissions.permission","permission")
+            ->leftJoin("permission.permissionObjectList","permissionObjectList")
+            ->leftJoin("permission.permissionActionList","permissionActionList")
+            ->where("permissionObjectList.name = :permissionObject AND permissionActionList.name = :permissionAction")
+            ->orderBy("list.id","ASC")
+            ->setParameters( array(
+                'permissionObject' => $object,
+                'permissionAction' => $action
+            ));
+            //->setParameter('permissionAction', $action);
+
+        //echo "sql=".$query->getQuery()->getSql()."<br>";
+
+        $roles = $query->getQuery()->getResult();
+        //echo "roles count=".count($roles)."<br>";
+        //exit('exit');
+
+        //check if user has one of roles
+        foreach( $roles as $role ) {
+            //echo "role=".$role."<br>";
+            if( $user->hasRole($role) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
 

@@ -87,8 +87,24 @@ abstract class BaseVoter extends Voter {
         //1) find roles with permissions related to a subject (Patient, Encounter ...)
         //2) check for each roles if user hasRole
 
+        //get object class name
+        $class = new \ReflectionClass($subject);
+        $className = $class->getShortName();
+
+        if( $className == "Message" ) {
+            $className = "Order";
+        }
+        echo "className ".$className."<br>";
+
+        //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
+        if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
+            return true;
+        } else {
+            echo "can not view ".$className."<br>";
+        }
+
         //echo "can not view subject=".$subject."<br>";
-        //exit('can not View exit');
+        exit('can not View exit');
         return false;
     }
 
