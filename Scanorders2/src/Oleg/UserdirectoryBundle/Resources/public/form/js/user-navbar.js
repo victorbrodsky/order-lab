@@ -89,11 +89,25 @@ function setNavBar(sitename) {
     else if( sitename == "fellowship-applications" ){
         setFellappNavBar();
     }
+    else if( sitename == "deidentifier" ){
+        setDeidentificatorNavBar();
+    }
     else {
         setDirectoryNavBar();
     }
 }
 
+function setDeidentificatorNavBar() {
+
+    var id = 'deidentifierhome';
+
+    var full = window.location.pathname;
+
+    id = commonNavBar(full,id)
+
+
+    $('#nav-bar-'+id).addClass('active');
+}
 
 function setFellappNavBar() {
 

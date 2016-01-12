@@ -32,6 +32,10 @@ security:
         ROLE_FELLAPP_OBSERVER: [ROLE_FELLAPP_USER]
         ROLE_FELLAPP_USER: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
 
+        # Deidentifier roles
+        ROLE_DEIDENTIFICATOR_ADMIN: [ROLE_DEIDENTIFICATOR_USER]
+        ROLE_DEIDENTIFICATOR_USER: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
+
         # General roles
 #        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
 #        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED]
@@ -41,7 +45,7 @@ security:
 
 #        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
         #impersonate user: ?_switch_user=thomas
-        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_ALLOWED_TO_SWITCH, ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN]
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
 
@@ -141,6 +145,28 @@ security:
                 lifetime: 604800 # 1 week in seconds
                 path:     / #fellowship-applications
 #                always_remember_me: true
+
+        ldap_deidentifier_firewall:
+            pattern: ^/deidentifier
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: deidentifier_authentication_handler
+                failure_handler: deidentifier_authentication_handler
+                check_path: /deidentifier/login_check
+                login_path: /deidentifier/login
+            logout:
+                path:   /deidentifier/logout
+                target: /deidentifier/login
+            anonymous:  true
+            access_denied_url: /deidentifier/access-requests/new/create
+            remember_me:
+                key:      "%secret%"
+                lifetime: 604800 # 1 week in seconds
+                path:     / #fellowship-applications
+#                always_remember_me: true
         
 
     #Note: first match is used, the later would be ignored
@@ -223,3 +249,8 @@ security:
      - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
 
 
+     ############################## Deidentifier SITE SETTINGS ##############################
+     - { path: ^/deidentifier/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/deidentifier/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/deidentifier/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }

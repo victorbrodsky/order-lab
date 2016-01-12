@@ -1,0 +1,15 @@
+parameters:
+  deidentifier.sitename: deidentifier
+
+twig:
+    globals:
+        deidentifier_sitename: %deidentifier.sitename%
+
+services:
+#    oleg_deidentifier.example:
+#        class: Oleg\DeidentifierBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+    deidentifier_authentication_handler:
+        class: Oleg\DeidentifierBundle\Security\Authentication\DeidentifierLoginSuccessHandler
+        arguments: [@service_container, @security.context, @doctrine.orm.entity_manager]

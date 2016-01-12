@@ -50,6 +50,9 @@ class SecurityController extends Controller
         if( $routename == "fellapp_login" ) {
             $sitename = $this->container->getParameter('fellapp.sitename');
         }
+        if( $routename == "deidentifier_login" ) {
+            $sitename = $this->container->getParameter('deidentifier.sitename');
+        }
 
         //$sitename = $this->container->getParameter('employees.sitename');
         $formArr = $this->loginPage($sitename);
@@ -146,6 +149,9 @@ class SecurityController extends Controller
         if( $routename == "fellapp_idlelogout" ) {
             $sitename = $this->container->getParameter('fellapp.sitename');
         }
+        if( $routename == "deidentifier_idlelogout" ) {
+            $sitename = $this->container->getParameter('deidentifier.sitename');
+        }
 
         $userSecUtil = $this->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
@@ -169,6 +175,9 @@ class SecurityController extends Controller
         }
         if( $routename == "fellapp_setloginvisit" ) {
             $options['sitename'] = $this->container->getParameter('fellapp.sitename');
+        }
+        if( $routename == "deidentifier_setloginvisit" ) {
+            $options['sitename'] = $this->container->getParameter('deidentifier.sitename');
         }
 
         $options['eventtype'] = "Login Page Visit";

@@ -30,6 +30,7 @@ class AppKernel extends Kernel
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
             new Oleg\FellAppBundle\OlegFellAppBundle(),
+            new Oleg\DeidentifierBundle\OlegDeidentifierBundle(),
 
             new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
 

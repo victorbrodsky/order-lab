@@ -9,6 +9,11 @@ oleg_orderform:
     type:     annotation
     prefix:   /scan
 
+oleg_deidentifier:
+    resource: "@OlegDeidentifierBundle/Controller/"
+    type:     annotation
+    prefix:   /deidentifier
+
 oleg_fell_app:
     resource: "@OlegFellAppBundle/Controller/"
     type:     annotation
@@ -56,6 +61,11 @@ fellapp_login_check:
     path:   /fellowship-applications/login_check
 fellapp_logout:
     path:   /fellowship-applications/logout
+
+deidentifier_login_check:
+    path:   /deidentifier/login_check
+deidentifier_logout:
+    path:   /deidentifier/logout
 
 
 #fos user bundle

@@ -542,6 +542,11 @@ class AdminController extends Controller
             //Fellowship Observer
             "ROLE_FELLAPP_OBSERVER" => array("Fellowship Program Observer Role","Access to Fellowship Application as Observer (able to view a particular (assigned) application)"),
 
+            //////////// Deidentifier roles ////////////
+            "ROLE_DEIDENTIFICATOR_ADMIN" => array("Deidentifier Administrator","Full access for Deidentifier site"),
+            "ROLE_DEIDENTIFICATOR_USER" => array("Deidentifier User","Allow to view the Deidentifier site"),
+            "ROLE_DEIDENTIFICATOR_BANNED" => array("Deidentifier Banned User","Does not allow to visit Deidentifier site"),
+            "ROLE_DEIDENTIFICATOR_UNAPPROVED" => array("Deidentifier Unapproved User","Does not allow to visit Deidentifier site"),
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -553,6 +558,10 @@ class AdminController extends Controller
             $description = $aliasDescription[1];
 
             $entity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName(trim($role));
+
+            if( $entity ) {
+                continue;
+            }
 
             if( !$entity ) {
                 $entity = new Roles();

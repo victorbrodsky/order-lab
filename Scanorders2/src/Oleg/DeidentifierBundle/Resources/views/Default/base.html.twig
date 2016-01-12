@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    {% stylesheets
+        'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
+        'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% block errorwatchjs %}
+        {% javascripts
+            '@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endblock %}
+
+    {% block maincss %}
+
+        {#jasny is used for clickable rows#}
+
+        {% stylesheets
+        'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+        {% stylesheets
+        'bundles/oleguserdirectory/datepicker/css/datepicker3.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+        {% stylesheets
+        'bundles/oleguserdirectory/dropzone/css/dropzone.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+        {% stylesheets
+        'bundles/oleguserdirectory/vakata-jstree/themes/default/style.min.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+    {% endblock %}
+
+    {% block additionalcss %}{% endblock %}
+
+
+    {% block ie8fixjs %}
+
+        {#http://www.telegraphicsinc.com/2013/10/using-bootstrap-3-with-internet-explorer-8-ie8/#}
+        {#{% javascripts#}
+        {#'@OlegOrderformBundle/Resources/public/html5-bootstrap-fix/css3-mediaqueries.js'#}
+        {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+        {#{% endjavascripts %}#}
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        {% javascripts
+        '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
+        '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <![endif]-->
+
+    {% endblock %}
+
+
+    <title>
+        {% block title %}
+            Scan Order
+        {% endblock %}
+    </title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- we want to force people to click a button, so hide the close link in the toolbar -->
+    {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+</head>
+
+
+<body>
+
+    <div class="container col-xs-12">
+
+        <div class="header col-xs-12">
+
+            {% block header %}
+                {% include 'OlegDeidentifierBundle:Default:navbar.html.twig' %}
+            {% endblock %}
+
+        </div>
+
+
+        <div class="text-center col-xs-12">
+
+            {% include 'OlegUserdirectoryBundle::Security/idle_timeout.html.twig' %}
+            
+            <div class="browser-notice alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
+
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ flashMessage }}</p>
+            {% endfor %}
+
+            {% for flashMessage in app.session.flashbag.get('status-changed') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-success center-block" align="middle" style="width: 70%;">{{ flashMessage }}</p>
+            {% endfor %}
+
+            {% for flashMessage in app.session.flashbag.get('warning') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+            {% endfor %}
+
+            {% if app.security.getToken().getUser() is defined %}
+                <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+                <input type="hidden" id="user-preferences-tooltip" value="{{ order_security_utility.getTooltip(app.security.getToken().getUser()) }}" />
+            {% endif %}
+            <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
+			<input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
+
+        </div>
+
+        <div>
+            {% block contentleft %}{% endblock %}
+        </div>
+
+        <div class="order-content text-center col-xs-12">
+            {% block content %}{% endblock %}
+
+            <!-- footer -->
+            {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+        </div>
+
+
+        {% block mainjs %}
+
+            {% javascripts
+                '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+                '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+                '@OlegUserdirectoryBundle/Resources/public/ladda/spin.min.js'
+                '@OlegUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
+                '@OlegUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
+                '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
+                '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+                '@OlegUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
+                '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
+
+                '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+
+                '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'               
+                '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
+                '@OlegUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-jstree.js'
+
+                '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+                '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
+                '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
+                '@OlegOrderformBundle/Resources/public/form/js/partCheckboxes.js'
+                '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+                '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
+                '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
+                '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+                '@OlegOrderformBundle/Resources/public/form/js/form.js'
+                '@OlegOrderformBundle/Resources/public/form/js/formReady.js'
+
+                '@OlegOrderformBundle/Resources/public/form/js/modal.js'
+                '@OlegOrderformBundle/Resources/public/form/js/tooltips.js'
+
+
+
+            %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+
+            {#FOSJsRoutingBundle#}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+            {#dropzone#}
+            {#{% javascripts#}
+            {#'@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'#}
+            {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'#}
+            {#%}#}
+            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+            {#{% endjavascripts %}#}
+
+        {% endblock %}
+
+
+        {% block additionaljs %}{% endblock %}
+
+
+
+    </div>
+
+</body>
+         
+</html>
