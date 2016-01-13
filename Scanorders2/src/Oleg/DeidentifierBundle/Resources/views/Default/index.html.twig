@@ -1,15 +1,81 @@
 {% extends "OlegDeidentifierBundle::Default/base.html.twig" %}
 
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
 {% block title %}
     Deidentifier System
 {% endblock %}
 
 
-
 {% block content %}
 
+    {#{{ form_enctype(form) }} method="get"#}
+    <form action="{{ path('deidentifier_home') }}" class="well form-search">
 
-    Hello!
+        {{ formmacros.field(form.accessionType) }}
+        {{ formmacros.field(form.accessionNumber) }}
+        {#<p>#}
+            <button type="submit" class="btn btn-sm btn-default order-filter-btn"><i class="icon-search"></i>Search</button>
+        {#</p>#}
 
+        {#<div class="row">#}
+            {#<div class="col-xs-2">#}
+            {#</div>#}
+            {#<div class="col-xs-6">#}
+                {#{{ formmacros.field(form.accessionType) }}#}
+                {#{{ formmacros.field(form.accessionNumber) }}#}
+                {#&#123;&#35;{{ form_widget(form.filter) }}&#35;&#125;#}
+            {#</div>#}
+            {#<div class="col-xs-2">#}
+                {#<div class="btn-group btn-group-justified">#}
+                    {#<div class="btn-group">#}
+                        {#<button type="submit" class="btn btn-sm btn-default order-filter-btn"><i class="icon-search"></i>Search</button>#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+            {#<div class="col-xs-2">#}
+            {#</div>#}
+        {#</div>#}
+
+        {{ form_rest(form) }}
+
+    </form>
+
+
+    {% if pagination is defined and pagination|length > 0 %}
+        <table class="table table-hover table-condensed text-left">
+            <thead>
+                <tr>
+                    <th>{{ knp_pagination_sortable(pagination, 'Accession Number', 'accession.field') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Accession Type', 'keytype.name') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Author', 'accession.provider') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Creation Date', 'accession.creationdate') }}</th>
+
+                    {#<th>Accession Number}</th>#}
+                    {#<th>Accession Type</th>#}
+                    {#<th>Author</th>#}
+                    {#<th>Creation Date</th>#}
+                </tr>
+            </thead>
+
+            <tbody class="rowlink" data-link="row">
+                {% for entitycomplex in pagination  %}
+
+                    {% set entity = entitycomplex|first %}
+
+                    <td>{{ entity.field }}</td>
+                    <td>{{ entity.keytype }}</td>
+                    <td>{{ entity.provider }}</td>
+                    <td>{{ entity.creationdate|date('m/d/Y H:i') }}</td>
+
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    {% endif %}
 
 {% endblock %}
