@@ -50,7 +50,7 @@
     </form>
 
 
-    {% if pagination is defined and pagination|length > 0 %}
+    {% if pagination is defined and pagination is not null and pagination|length > 0 %}
 
         {% for accession in pagination  %}
 
@@ -97,9 +97,9 @@
 
         {% endfor %}
 
-        {#<div class="navigation">#}
-            {#{{ knp_pagination_render(pagination) }}#}
-        {#</div>#}
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
 
     {% endif %}
 

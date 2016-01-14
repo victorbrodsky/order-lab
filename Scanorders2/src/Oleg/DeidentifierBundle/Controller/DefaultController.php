@@ -113,7 +113,6 @@ class DefaultController extends Controller
                 }
 
                 //create a new accession object
-                $accession = $this->
                 //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
                     $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(
                         $wcmc->getId(),     //institution

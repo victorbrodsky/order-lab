@@ -1848,7 +1848,8 @@ class AdminController extends Controller
             'NYH Paper Requisition',
             'Written or oral referral',
             'Aperio eSlide Manager on C.MED.CORNELL.EDU',
-            'Indica HALO'
+            'Indica HALO',
+            'Deidentifier'
         );
 
 
