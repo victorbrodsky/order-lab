@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_partPartname")
+ * @ORM\Table(name="scan_partPartname",
+ *   uniqueConstraints={@ORM\UniqueConstraint(name="part_unique", columns={"part_id", "field"})}
+ * )
  */
 class PartPartname extends PartArrayFieldAbstract
 {

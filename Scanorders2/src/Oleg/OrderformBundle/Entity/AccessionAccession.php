@@ -13,7 +13,8 @@ use Oleg\OrderformBundle\Entity\AccessionArrayFieldAbstract;
  *  indexes={
  *      @ORM\Index( name="accession_field_idx", columns={"field"} ),
  *      @ORM\Index( name="accession_keytype_idx", columns={"keytype_id"} )
- *  }
+ *  },
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="accession_unique", columns={"accession_id", "field", "keytype_id"})}
  * )
  */
 class AccessionAccession extends AccessionArrayFieldAbstract

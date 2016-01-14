@@ -7,7 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_procedureNumber")
+ * @ORM\Table(name="scan_procedureNumber",
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="procedure_unique", columns={"procedure_id", "field", "keytype_id"})}
+ * )
  */
 class ProcedureNumber extends ProcedureArrayFieldAbstract
 {

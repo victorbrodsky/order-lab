@@ -7,7 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_encounterNumber")
+ * @ORM\Table(name="scan_encounterNumber",
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="encounter_unique", columns={"encounter_id", "field", "keytype_id"})}
+ * )
  */
 class EncounterNumber extends EncounterArrayFieldAbstract
 {

@@ -6,7 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_blockBlockname")
+ * @ORM\Table(name="scan_blockBlockname",
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="block_unique", columns={"block_id", "field"})}
+ * )
  */
 class BlockBlockname extends BlockArrayFieldAbstract
 {

@@ -13,7 +13,8 @@ use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
  *  indexes={
  *      @ORM\Index( name="patient_field_idx", columns={"field"} ),
  *      @ORM\Index( name="patient_keytype_idx", columns={"keytype_id"} )
- *  }
+ *  },
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="patient_unique", columns={"patient_id", "field", "keytype_id"})}
  * )
  */
 class PatientMrn extends PatientArrayFieldAbstract
