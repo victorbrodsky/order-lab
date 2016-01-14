@@ -114,17 +114,31 @@ class DefaultController extends Controller
 
                 //create a new accession object
                 //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
-                    $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(
-                        $wcmc->getId(),     //institution
-                        "valid",            //status. if null => STATUS_RESERVED
-                        $user,              //provider
-                        "Accession",        //$className
-                        "accession",        //$fieldName
-                        null,               //$parent
-                        $accessionNumber,   //$fieldValue
-                        $extra,             //$extra
-                        false               //$withfields
-                    );
+                $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(
+                    $wcmc->getId(),     //institution
+                    "valid",            //status. if null => STATUS_RESERVED
+                    $user,              //provider
+                    "Accession",        //$className
+                    "accession",        //$fieldName
+                    null,               //$parent
+                    $accessionNumber,   //$fieldValue
+                    $extra,             //$extra
+                    false               //$withfields
+                );
+
+                if( !$accession ) {
+                    throw $this->createNotFoundException('Unable to create a new Accession with Accession Number='.$accessionNumber);
+                }
+
+                //set source
+                $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("Deidentifier");
+                if( !$source ) {
+                    throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."Deidentifier");
+                }
+                $accession->setSource($source);
+
+                $em->persist($accession);
+                $em->flush($accession);
 
             }
 
@@ -135,6 +149,12 @@ class DefaultController extends Controller
             }
 
             $accession = $this->addNewDeidentifier($accession->getId(),$deidentifier);
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'New generated Deidentifier Number: <strong>' . $deidentifier . '</strong>' . '<br>'.
+                'New generated Accession <strong>' . $accession->obtainFullObjectName() . '</strong>'
+            );
 
             $pathParams = $this->getPathParams($accession);
             return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
@@ -348,7 +368,11 @@ class DefaultController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $status = 'deidentifier';
-        $source = null; //SourceSystemList
+        //$source = null; //SourceSystemList
+        $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("Deidentifier");
+        if( !$source ) {
+            throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."Deidentifier");
+        }
 
         $accessionAccession = new AccessionAccession($status,$user,$source);
 
