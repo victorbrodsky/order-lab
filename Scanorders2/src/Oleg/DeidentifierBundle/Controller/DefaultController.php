@@ -1,5 +1,10 @@
 <?php
 
+//To initialize this bundle make sure:
+//1) add a new source to SourceSystemList "Deidentifier"
+//2) add a new AccessionType "Deidentifier ID"
+//3) add new roles by running "Populate All Lists With Default Values" in user directory list manager
+
 namespace Oleg\DeidentifierBundle\Controller;
 
 use Oleg\DeidentifierBundle\Form\DeidentifierSearchType;
@@ -304,7 +309,8 @@ class DefaultController extends Controller
         //use something like: SELECT MAX(CAST(SUBSTRING(invoice_number, 4, length(invoice_number)-3) AS UNSIGNED))
         //$dql->select('MAX(CAST(accessionAccession.original AS UNSIGNED)) as maxDeidentifier'); //working correct with cast and original field
         //DID-10 => start at index 5
-        $dql->select('MAX(CAST(SUBSTRING(accessionAccession.field, 5) AS UNSIGNED)) as maxDeidentifier');
+        //UNSIGNED is not defined in SQL server version used in Aperio => use INTEGER
+        $dql->select('MAX(CAST(SUBSTRING(accessionAccession.field, 5) AS INTEGER)) as maxDeidentifier');
 
         //$dql->where("accessionAccession.accession = :accessionId AND accessionAccession.keytype = :accessionType");
         $dql->where("accessionAccession.keytype = :accessionType");
