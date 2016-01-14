@@ -124,6 +124,9 @@ doctrine:
                 hydrators:
                      SimpleHydrator: \Oleg\UserdirectoryBundle\Hydrator\SimpleHydrator
                      StainHydrator: \Oleg\OrderformBundle\Hydrator\StainHydrator
+                dql:
+                     string_functions:
+                        CAST: Oleg\UserdirectoryBundle\Query\CastFunction
             aperio:
                 connection: aperio
 #                mappings:

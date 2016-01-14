@@ -1173,6 +1173,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                     getCriterionStrForCollaborationsByNode($entity->getInstitution(),"institution",array("Union","Intersection")) .
                 ")";
 
+        //TODO (here and in Block and Part repository): fix string max: '9' is greater than '10'.
         $queryStr = 'SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.
                     ' c'.
                     ' JOIN c.'.$fieldName.' cfield'.

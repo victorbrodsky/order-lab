@@ -108,7 +108,8 @@ class DefaultController extends Controller
             if( !$accession ) {
 
                 if( !$accessionNumber ) {
-                    exit("No accessionNumber=".$accessionNumber);
+                    //exit("No accessionNumber=".$accessionNumber);
+                    throw $this->createNotFoundException("Generate a new deidentifier: No accession number is provided. accessionNumber=".$accessionNumber);
                 }
 
                 //create a new accession object
@@ -281,10 +282,10 @@ class DefaultController extends Controller
         $repository = $em->getRepository('OlegOrderformBundle:AccessionAccession');
         $dql =  $repository->createQueryBuilder("accessionAccession");
 
-        //SELECT MAX(CAST(SUBSTRING(invoice_number, 4, length(invoice_number)-3) AS UNSIGNED))
-        //$dql->select('MAX(SUBSTRING(accessionAccession.field, 5, length(accessionAccession.field)-4)) as maxDeidentifier');
-
-        $dql->select('MAX(accessionAccession.original) as maxDeidentifier');
+        //use something like: SELECT MAX(CAST(SUBSTRING(invoice_number, 4, length(invoice_number)-3) AS UNSIGNED))
+        //$dql->select('MAX(CAST(accessionAccession.original AS UNSIGNED)) as maxDeidentifier'); //working correct with cast and original field
+        //DID-10 => start at index 5
+        $dql->select('MAX(CAST(SUBSTRING(accessionAccession.field, 5) AS UNSIGNED)) as maxDeidentifier');
 
         //$dql->where("accessionAccession.accession = :accessionId AND accessionAccession.keytype = :accessionType");
         $dql->where("accessionAccession.keytype = :accessionType");
@@ -309,7 +310,7 @@ class DefaultController extends Controller
 //            echo "<br>";
 
             $maxDeidentifier = $accessionAccession['maxDeidentifier'];
-            echo "maxDeidentifier=".$maxDeidentifier."<br>";
+            //echo "maxDeidentifier=".$maxDeidentifier."<br>";
 
             if( !$maxDeidentifier ) {
                 $deidentifier = $defaultDeidentifier;
@@ -324,7 +325,7 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('Unable to find a single Accession entity.');
         }
 
-        exit('deidentifier='.$deidentifier);
+        //exit('deidentifier='.$deidentifier);
         return $deidentifier;
     }
 
