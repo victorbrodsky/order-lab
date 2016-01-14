@@ -53,6 +53,16 @@ class DeidentifierSearchType extends AbstractType
             'required'=>false,
             'attr' => array('class'=>'form-control submit-on-enter-field'),
         ));
+
+        $builder->add('generate', 'submit', array(
+            'label' => "Generate a New Deidentifier",
+            'attr' => array('class' => 'btn btn-sm btn-primary')
+        ));
+
+        $builder->add('search', 'submit', array(
+            'label' => "Search",
+            'attr' => array('class' => 'btn btn-sm btn-default')
+        ));
         
     }
 

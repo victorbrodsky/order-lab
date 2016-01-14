@@ -114,12 +114,12 @@
 
             {% for flashMessage in app.session.flashbag.get('notice') %}
                 <div style="height: 1%;">&nbsp;</div>
-                <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ flashMessage }}</p>
+                <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
             {% endfor %}
 
             {% for flashMessage in app.session.flashbag.get('status-changed') %}
                 <div style="height: 1%;">&nbsp;</div>
-                <p class="alert alert-success center-block" align="middle" style="width: 70%;">{{ flashMessage }}</p>
+                <p class="alert alert-success center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
             {% endfor %}
 
             {% for flashMessage in app.session.flashbag.get('warning') %}

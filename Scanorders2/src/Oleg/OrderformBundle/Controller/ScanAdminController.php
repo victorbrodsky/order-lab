@@ -1195,7 +1195,8 @@ class ScanAdminController extends AdminController
             'Specify Another Specimen ID Issuer',
             'TMA Slide',
             'Auto-generated Accession Number',
-            'Existing Auto-generated Accession Number'
+            'Existing Auto-generated Accession Number',
+            'Deidentifier ID'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

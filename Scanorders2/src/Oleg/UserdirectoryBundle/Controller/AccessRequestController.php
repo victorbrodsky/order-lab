@@ -49,38 +49,6 @@ class AccessRequestController extends Controller
     {
 
         return $this->accessRequestCreatePlain();
-//        $userSecUtil = $this->get('user_security_utility');
-//
-//        $user = $this->get('security.context')->getToken()->getUser();
-//
-//        //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
-//        if( false === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
-//            $user->addRole($this->roleUnapproved);
-//        }
-//
-////        if( true === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
-////            return $this->redirect($this->generateUrl('employees-nopermission'));
-////        }
-//
-//        if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
-//
-//            //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
-//            //return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
-//
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have permission to visit this page on ".$this->siteNameStr." site."."<br>".
-//                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->siteName.'_logout',true).">Re-Login</a>"
-//            );
-//            return $this->redirect( $this->generateUrl('main_common_home') );
-//        }
-//
-//        $roles = array(
-//            "unnaproved" => $this->roleUnapproved,
-//            "banned" => $this->roleBanned,
-//        );
-//
-//        return $this->accessRequestCreateNew($user->getId(),$this->siteName,$roles);
     }
     public function accessRequestCreatePlain()
     {
@@ -167,12 +135,6 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
-//        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-//            $sitenameFull = "Employee Directory";
-//        }
-//        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-//            $sitenameFull = "Scan Orders";
-//        }
         $sitenameFull = $this->siteNameStr;
 
         // Case 1: user has active accreq
@@ -266,12 +228,6 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
-//        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-//            $sitenameFull = "Employee Directory";
-//        }
-//        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-//            $sitenameFull = "Scan Orders";
-//        }
         $sitenameFull = $this->siteNameStr;
 
         //echo "sitename=".$sitename."<br>";
@@ -429,12 +385,6 @@ class AccessRequestController extends Controller
             $limit/*limit per page*/
         );
 
-//        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-//            $sitenameFull = "Employee Directory";
-//        }
-//        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-//            $sitenameFull = "Scan Orders";
-//        }
         $sitenameFull = $this->siteNameStr;
 
         return array(
@@ -521,12 +471,6 @@ class AccessRequestController extends Controller
 
     public function createAccessRequestUserNotification( $subjectUser, $status, $sitename ) {
 
-//        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-//            $sitenameFull = "Employee Directory";
-//        }
-//        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-//            $sitenameFull = "Scan Orders";
-//        }
         $sitenameFull = $this->siteNameStr;
 
         $user = $this->get('security.context')->getToken()->getUser();

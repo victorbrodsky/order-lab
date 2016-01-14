@@ -44,8 +44,7 @@ class DeidentifierLoginSuccessHandler extends LoginSuccessHandler {
         return parent::onAuthenticationSuccess($request,$token);
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
-    {
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
         return parent::onAuthenticationFailure($request,$exception);
     }
 

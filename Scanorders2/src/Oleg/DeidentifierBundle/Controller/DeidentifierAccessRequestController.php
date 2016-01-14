@@ -20,7 +20,7 @@ class DeidentifierAccessRequestController extends AccessRequestController
 
     public function __construct() {
         $this->siteName = 'deidentifier';
-        $this->siteNameShowuser = 'deidentifier';
+        $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Deidentifier';
         $this->roleBanned = 'ROLE_DEIDENTIFICATOR_BANNED';
         $this->roleUser = 'ROLE_DEIDENTIFICATOR_USER';
@@ -39,7 +39,7 @@ class DeidentifierAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/access-requests/new", name="scan_access_request_new")
+     * @Route("/access-requests/new", name="deidentifier_access_request_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
