@@ -52,7 +52,7 @@
 
     {% if pagination is defined and pagination is not null and pagination|length > 0 %}
 
-        {% for accession in pagination  %}
+        {#{% for accession in pagination  %}#}
 
             {#<div class="well">#}
 
@@ -60,7 +60,7 @@
                     <thead>
                     <tr>
                         {#<th>{{ knp_pagination_sortable(pagination, 'Status', 'accessionAccession.status') }}</th>#}
-                        <th>{{ knp_pagination_sortable(pagination, 'Deidentifier ID', 'accessionAccession.field') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Deidentifier ID', 'accessionAccession.id') }}</th> {#fix for sort deidentifier number as string#}
                         {#<th>{{ knp_pagination_sortable(pagination, 'Deidentifier Type', 'keytype.name') }}</th>#}
                         <th>{{ knp_pagination_sortable(pagination, 'Author', 'accessionAccession.provider') }}</th>
                         <th>{{ knp_pagination_sortable(pagination, 'Creation Date', 'accessionAccession.creationdate') }}</th>
@@ -75,7 +75,7 @@
 
                     <tbody>
 
-                    {% for accessionAccession in accession.accession if accessionAccession.keytype.name == 'Deidentifier ID' %}
+                    {% for accessionAccession in pagination if accessionAccession.keytype.name == 'Deidentifier ID' %}
                         <tr>
                             {#<td>{{ accessionAccession.status }}</td>#}
                             <td>{{ accessionAccession.field }}</td>
@@ -89,13 +89,13 @@
                 </table>
 
                 {#generate#}
-                <form action="{{ path('deidentifier_generate',{'accessionId':accession.id}) }}">
+                <form action="{{ path('deidentifier_generate',{'accessionId':pagination|first.accession.id}) }}">
                     <button type="submit" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>
                 </form>
 
             {#</div>#}
 
-        {% endfor %}
+        {#{% endfor %}#}
 
         <div class="navigation">
             {{ knp_pagination_render(pagination) }}

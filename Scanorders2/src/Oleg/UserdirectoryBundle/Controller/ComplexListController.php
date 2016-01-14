@@ -100,10 +100,10 @@ class ComplexListController extends Controller
 
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
-        $postData = $request->query->all();
-        if( isset($postData['sort']) ) {
-            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
-        }
+//        $postData = $request->query->all();
+//        if( isset($postData['sort']) ) {
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
 
         //echo "dql=".$dql."<br>";
 

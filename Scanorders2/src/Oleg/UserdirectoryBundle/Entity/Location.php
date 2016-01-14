@@ -846,4 +846,10 @@ class Location extends ListAbstract
         //echo "set room suite floor building <br>";
     }
 
+
+    public function createFullTitle()
+    {
+        return $this->getNameFull();
+    }
+
 }

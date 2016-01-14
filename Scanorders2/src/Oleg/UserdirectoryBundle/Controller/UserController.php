@@ -502,9 +502,9 @@ class UserController extends Controller
         $dql->where($totalcriteriastr);
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
-        if( $sort ) {
-            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
-        }
+//        if( $sort ) {
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
 
         //echo "dql=".$dql."<br>";
 

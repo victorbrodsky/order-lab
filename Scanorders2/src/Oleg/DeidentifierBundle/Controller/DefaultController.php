@@ -67,6 +67,7 @@ class DefaultController extends Controller
 
         }
 
+        /////////////////////// Search ///////////////////////
         if( !$error && ($form->get('search')->isClicked() || ($accessionNumber && $accessionType) ) ) {
 
             //get accession numbers by number and type
@@ -80,7 +81,7 @@ class DefaultController extends Controller
 
             //$pagination = $this->searchAccession($accessionType,$accessionNumber,$wcmc);
 
-            $query = $this->getAccessionQuery($accessionType,$accessionNumber,$wcmc);
+            $query = $this->getAccessionQuery($accessionType,$accessionNumber,$wcmc,$request);
             //echo "sql=".$query->getSql()."<br>";
             //$pagination = $query->getResult(); //accessions
 
@@ -89,12 +90,15 @@ class DefaultController extends Controller
             $pagination = $paginator->paginate(
                 $query,
                 $this->get('request')->query->get('page', 1),   /*page number*/
-                $limit                                          /*limit per page*/
+                $limit,                                         /*limit per page*/
+                array('defaultSortFieldName' => 'accessionAccession.id', 'defaultSortDirection' => 'asc')
             );
 
-            //echo "pagination count=" . count($pagination) . "<br>";
+            echo "pagination count=" . count($pagination) . "<br>";
         }
+        /////////////////////// EOF Search ///////////////////////
 
+        /////////////////////// Generate ///////////////////////
         if( !$error && $form->get('generate')->isClicked() ) {
 
             $single = true;
@@ -163,20 +167,8 @@ class DefaultController extends Controller
 
             $pathParams = $this->getPathParams($accession);
             return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
-
-            //$pagination = $this->searchAccession($accessionType,$accessionNumber,$wcmc);
-            //$pagination = array($accession);
-
-//            $query = $this->getAccessionQuery($accessionType,$accessionNumber,$wcmc);
-//            //echo "sql=".$query->getSql()."<br>";
-//            $limit = 20;
-//            $paginator  = $this->get('knp_paginator');
-//            $pagination = $paginator->paginate(
-//                $query,
-//                $this->get('request')->query->get('page', 1),   /*page number*/
-//                $limit                                          /*limit per page*/
-//            );
         }
+        /////////////////////// EOF Generate ///////////////////////
 
         return array(
             'accessreqs' => count($accessreqs),
@@ -185,10 +177,8 @@ class DefaultController extends Controller
         );
     }
 
-    public function searchAccession($accessionType,$accessionNumber,$inst) {
+    public function searchAccession($accessionType,$accessionNumber,$inst,$single=false) {
         $em = $this->getDoctrine()->getManager();
-
-        $single = false;
 
         $extra = array();
         $extra["keytype"] = $accessionType->getId();
@@ -254,7 +244,46 @@ class DefaultController extends Controller
         return $pathParams;
     }
 
-    public function getAccessionQuery($accessionType,$accessionNumber,$institution) {
+    public function getAccessionQuery($accessionType,$accessionNumber,$institution,$request) {
+        $em = $this->getDoctrine()->getManager();
+
+        //first get accession
+        $accession = $this->searchAccession($accessionType,$accessionNumber,$institution,true);
+        if( !$accession ) {
+            exit("accession is not found; accessionType=" . $accessionType . ", accessionNumber=" . $accessionNumber . ", institution=" . $institution);
+        }
+        //echo "accession=".$accession."<br>";
+
+        $repository = $em->getRepository('OlegOrderformBundle:AccessionAccession');
+        $dql =  $repository->createQueryBuilder("accessionAccession");
+        $dql->select('accessionAccession');
+        $dql->leftJoin("accessionAccession.accession", "accession");
+        //$dql->leftJoin("accession.accession", "accessionAccession");
+        $dql->leftJoin("accessionAccession.keytype", "keytype");
+
+        $dql->where("accession = :accession"); // AND keytype.id = :accessionType
+
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+        $postData = $request->query->all();
+        if( isset($postData['sort']) ) {
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters( array(
+                'accession' => $accession->getId(),
+                //'accessionNumber' => '%'.$accessionNumber.'%',
+                //'accessionType' => $accessionType->getId()
+            )
+        );
+
+        //echo "sql=".$query->getSql()."<br>";
+
+        return $query;
+    }
+
+    public function getAccessionQuery_ORIG_ACCESSION($accessionType,$accessionNumber,$institution,$request) {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('OlegOrderformBundle:Accession');
         $dql =  $repository->createQueryBuilder("accession");
@@ -263,6 +292,12 @@ class DefaultController extends Controller
         $dql->leftJoin("accessionAccession.keytype", "keytype");
 
         $dql->where("accessionAccession.field = :accessionNumber AND keytype.id = :accessionType AND accession.institution = :institution");
+
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+        $postData = $request->query->all();
+        if( isset($postData['sort']) ) {
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
 
         $query = $em->createQuery($dql);
 
@@ -310,7 +345,11 @@ class DefaultController extends Controller
         //$dql->select('MAX(CAST(accessionAccession.original AS UNSIGNED)) as maxDeidentifier'); //working correct with cast and original field
         //DID-10 => start at index 5
         //UNSIGNED is not defined in SQL server version used in Aperio => use INTEGER
-        $dql->select('MAX(CAST(SUBSTRING(accessionAccession.field, 5) AS INTEGER)) as maxDeidentifier');
+        $castAs = "INTEGER";
+        if( $this->getParameter('database_driver') == 'pdo_mysql' ) {
+            $castAs = "UNSIGNED";
+        }
+        $dql->select('MAX(CAST(SUBSTRING(accessionAccession.field, 5) AS '.$castAs.')) as maxDeidentifier');
 
         //$dql->where("accessionAccession.accession = :accessionId AND accessionAccession.keytype = :accessionType");
         $dql->where("accessionAccession.keytype = :accessionType");
@@ -373,7 +412,7 @@ class DefaultController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $status = 'deidentifier';
+        $status = 'deidentified-valid';
         //$source = null; //SourceSystemList
         $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("Deidentifier");
         if( !$source ) {

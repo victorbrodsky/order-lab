@@ -107,7 +107,7 @@ class SearchUtil {
         }
 
         if( $sort ) {
-            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+            //$dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
         } else {
             $dql->orderBy($object.".id","DESC");
         }

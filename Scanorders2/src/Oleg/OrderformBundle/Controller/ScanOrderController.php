@@ -177,10 +177,10 @@ class ScanOrderController extends Controller {
         }
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
-        if( $sort && $sort != '' ) {
-            $postData = $request->query->all();
-            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
-        }
+//        if( $sort && $sort != '' ) {
+//            $postData = $request->query->all();
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
 
         //echo "order List Action: dql=".$dql;
 
@@ -1221,7 +1221,7 @@ class ScanOrderController extends Controller {
 
         $dql->leftJoin("message.destinations", "destinations");
         $dql->leftJoin("message.scanorder", "scanorder");
-        //$dql->leftJoin("destinations.location", "destinationlocation");
+        $dql->leftJoin("destinations.location", "destinationlocation");
 
         $dql->leftJoin("message.institution", "institution");
 
