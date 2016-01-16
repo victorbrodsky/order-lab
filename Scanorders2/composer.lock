@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e6f8025f07eef72e77f283dfac7c3355",
-    "content-hash": "1d9e4e004e177f2006e51cd74b932b8d",
+    "hash": "2c18e274d6e231576df9dec24bbf2dcd",
+    "content-hash": "aa3164f67c9363d5f42a4701c4fe8278",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1442,16 +1442,16 @@
         },
         {
             "name": "knplabs/knp-components",
-            "version": "1.2.1",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/knp-components.git",
-                "reference": "cbec129a693e7d450e2fab4e9e2bf1e122d940a6"
+                "reference": "ae454fb43473127a7bdc0a777f962f64f94e2795"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/knp-components/zipball/cbec129a693e7d450e2fab4e9e2bf1e122d940a6",
-                "reference": "cbec129a693e7d450e2fab4e9e2bf1e122d940a6",
+                "url": "https://api.github.com/repos/KnpLabs/knp-components/zipball/ae454fb43473127a7bdc0a777f962f64f94e2795",
+                "reference": "ae454fb43473127a7bdc0a777f962f64f94e2795",
                 "shasum": ""
             },
             "require": {
@@ -1499,7 +1499,7 @@
                 "pager",
                 "paginator"
             ],
-            "time": "2013-02-19 14:50:25"
+            "time": "2013-12-23 13:48:48"
         },
         {
             "name": "knplabs/knp-paginator-bundle",
@@ -3620,16 +3620,16 @@
         },
         {
             "name": "symfony/swiftmailer-bundle",
-            "version": "v2.3.10",
+            "version": "v2.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/swiftmailer-bundle.git",
-                "reference": "de5a2ddcaf91d2e44c19161e0fe8ed88022ceb51"
+                "reference": "5e1a90f28213231ceee19c953bbebc5b5b95c690"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/de5a2ddcaf91d2e44c19161e0fe8ed88022ceb51",
-                "reference": "de5a2ddcaf91d2e44c19161e0fe8ed88022ceb51",
+                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/5e1a90f28213231ceee19c953bbebc5b5b95c690",
+                "reference": "5e1a90f28213231ceee19c953bbebc5b5b95c690",
                 "shasum": ""
             },
             "require": {
@@ -3673,20 +3673,20 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2016-01-14 10:25:38"
+            "time": "2016-01-15 16:41:20"
         },
         {
             "name": "symfony/symfony",
-            "version": "2.8.x-dev",
+            "version": "v2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "4ff05e0e5e555dbd76be0a2d57f67dde3fe05a56"
+                "reference": "f3e6a82bcbea4db3b56df08e491e20a1faae82b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/4ff05e0e5e555dbd76be0a2d57f67dde3fe05a56",
-                "reference": "4ff05e0e5e555dbd76be0a2d57f67dde3fe05a56",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/f3e6a82bcbea4db3b56df08e491e20a1faae82b5",
+                "reference": "f3e6a82bcbea4db3b56df08e491e20a1faae82b5",
                 "shasum": ""
             },
             "require": {
@@ -3806,7 +3806,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-01-14 13:31:24"
+            "time": "2016-01-14 12:01:11"
         },
         {
             "name": "twig/twig",

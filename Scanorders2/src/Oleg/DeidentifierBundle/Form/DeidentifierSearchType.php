@@ -34,7 +34,7 @@ class DeidentifierSearchType extends AbstractType
             'required'=> true,
             'multiple' => false,
             'property' => 'name',
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width accessiontype-combobox skip-server-populate'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         //->where("(list.type = :typedef OR list.type = :typeadd) AND list.name='NYH CoPath Anatomic Pathology Accession Number'")
@@ -51,7 +51,7 @@ class DeidentifierSearchType extends AbstractType
             'label'=>'Accession Number:',
             'mapped' => false,
             'required'=>false,
-            'attr' => array('class'=>'form-control submit-on-enter-field'),
+            'attr' => array('class'=>'form-control form-control-modif accession-mask'), //submit-on-enter-field
         ));
 
         $builder->add('generate', 'submit', array(
@@ -59,10 +59,10 @@ class DeidentifierSearchType extends AbstractType
             'attr' => array('class' => 'btn btn-sm btn-primary')
         ));
 
-        $builder->add('search', 'submit', array(
-            'label' => "Search",
-            'attr' => array('class' => 'btn btn-sm btn-default')
-        ));
+//        $builder->add('search', 'submit', array(
+//            'label' => "Search",
+//            'attr' => array('class' => 'btn btn-sm btn-default')
+//        ));
         
     }
 
@@ -75,6 +75,7 @@ class DeidentifierSearchType extends AbstractType
 
     public function getName()
     {
+        //return null;
         return 'deidentifier_search_box';
     }
 }

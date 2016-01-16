@@ -365,6 +365,11 @@ function getComboboxAccessionType(holder,force) {
     var targetid = ".accessiontype-combobox";
     targetid = getElementTargetByHolder(holder,targetid);
 
+    //console.log($(targetid));
+    if( $(targetid).hasClass("skip-server-populate") ) {
+        return;
+    }
+
     if( typeof force === 'undefined' ) {
         force = false;
     }

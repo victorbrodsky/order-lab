@@ -289,15 +289,19 @@ function getAccessionAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
-    //console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    //printF(accField,"Set Accession Mask:")
+    printF(accField,"Set Accession Mask:")
 
-    var value = elem.select2("val");
+    //var value = elem.select2("val");
     //console.log("value=" + value);
-    var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    if( elem.hasClass("combobox") ) {
+        var text = elem.select2("data").text;
+    } else {
+        var text = elem.val();
+    }
+    console.log("text=" + text);
 
     //clear input field
     if( clean ) {
@@ -347,6 +351,7 @@ function setAccessiontypeMask(elem,clean) {
             accField.inputmask( { "mask": repeatStr } );
             break;
         default:
+            console.log('default => remove');
             accField.inputmask('remove');
     }
 }

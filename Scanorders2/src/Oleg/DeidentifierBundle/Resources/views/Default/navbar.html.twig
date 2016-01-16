@@ -43,6 +43,65 @@
 
             <ul class="nav navbar-nav navbar-right">
 
+
+                {#Search in navbar available for WCMC-NYP Deidentifier Enquirer#}
+                {% if is_granted('ROLE_DEIDENTIFICATOR_ENQUIRER') %}
+                    <li id="nav-bar-ordersearch">
+
+                        <form class="navbar-form navbar-left" role="search" id="deidentifiersearchform" name="deidentifiersearchform" action="{{ path('deidentifier_search') }}" method="get">
+
+                            <input type="hidden" id="accessionTypeId" name="accessionType" value="{{ accessiontypes|first.id }}">
+
+                            <div class="form-group">
+
+                            <div class="input-group">
+                            <div class="input-group-btn singlemessage">
+
+                                {% if accessionTypeStr is defined %}
+                                    {% set accessionTypeIdBtn = accessionTypeId %}
+                                    {% set accessionTypeStrBtn = accessionTypeStr %}
+                                {% else %}
+                                    {% set accessionTypeIdBtn = accessiontypes|first.id %}
+                                    {% set accessionTypeStrBtn = accessiontypes|first %}
+                                {% endif %}
+
+                                {% if accessionNumber is not defined %}
+                                    {% set accessionNumber = "" %}
+                                {% endif %}
+
+                                <button id="deidentifier-searchtype-button"
+                                        data-id="{{accessionTypeIdBtn}}" type="button"
+                                        class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown" aria-expanded="false"
+                                >
+                                    {{accessionTypeStrBtn}} <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu" role="menu">
+                                {% for accessiontype in accessiontypes %}
+                                        <li>
+                                            <a
+                                                href="#" onclick="setDeidentifierSearchtypeAction({{accessiontype.id}},'{{accessiontype}}'); return false;">{{accessiontype}}
+                                            </a>
+                                        </li>
+                                {% endfor %}
+                                </ul>
+                            </div><!-- /btn-group -->
+                            <div class="form-group has-feedback">
+                                <input type="text" class="form-control form-control-modif accession-mask" aria-label="" name="accessionNumber" value="{{ accessionNumber }}" placeholder="">
+                                <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" aria-hidden="true" onclick="$('#deidentifiersearchform').submit();"></span>
+                            </div>
+                        </div><!-- /input-group -->
+
+                        </div>
+                        </form>
+
+
+
+                    </li>
+                {% endif %}
+
+
                 {% if is_granted('ROLE_DEIDENTIFICATOR_USER') %}
 
                     <li id="nav-bar-admin" class="dropdown">

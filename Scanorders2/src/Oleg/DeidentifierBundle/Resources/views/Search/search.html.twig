@@ -4,7 +4,7 @@
 
 
 {% block title %}
-    Deidentifier System
+    Deidentifier Search
 {% endblock %}
 
 
@@ -12,48 +12,6 @@
 
     <input type="hidden" id="orderformtype" value="single" />
     <input type="hidden" id="formcycle" value="new" />
-
-
-    {#{{ form_enctype(form) }} method="get"#}
-    <form action="{{ path('deidentifier_home') }}">
-
-        <div id="accession_" class="form-element-holder collapse in singlemessage">
-        {{ formmacros.field(form.accessionType) }}
-        {{ formmacros.field(form.accessionNumber) }}
-        </div>
-
-        {#<button type="submit" name="search" class="btn btn-sm btn-default">Search</button>#}
-        {#{{ form_widget(form.search) }}#}
-
-        {% if pagination is null or pagination|length == 0 %}
-            {#<button type="submit" name="generate" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>#}
-            {{ form_widget(form.generate) }}
-        {% else %}
-            {% do form.generate.setRendered %}
-        {% endif %}
-
-        {#<div class="row">#}
-            {#<div class="col-xs-2">#}
-            {#</div>#}
-            {#<div class="col-xs-6">#}
-                {#{{ formmacros.field(form.accessionType) }}#}
-                {#{{ formmacros.field(form.accessionNumber) }}#}
-                {#&#123;&#35;{{ form_widget(form.filter) }}&#35;&#125;#}
-            {#</div>#}
-            {#<div class="col-xs-2">#}
-                {#<div class="btn-group btn-group-justified">#}
-                    {#<div class="btn-group">#}
-                        {#<button type="submit" class="btn btn-sm btn-default order-filter-btn"><i class="icon-search"></i>Search</button>#}
-                    {#</div>#}
-                {#</div>#}
-            {#</div>#}
-            {#<div class="col-xs-2">#}
-            {#</div>#}
-        {#</div>#}
-
-        {{ form_rest(form) }}
-
-    </form>
 
 
     {% if pagination is defined and pagination is not null and pagination|length > 0 %}
@@ -107,6 +65,14 @@
             {{ knp_pagination_render(pagination) }}
         </div>
 
+    {% else %}
+
+        <h4>
+            No matching IDs found
+        </h4>
+
     {% endif %}
+
+
 
 {% endblock %}

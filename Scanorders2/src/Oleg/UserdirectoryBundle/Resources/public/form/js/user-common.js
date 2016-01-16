@@ -140,6 +140,7 @@ function getElementTargetByHolder(holder,target) {
     if( holder && typeof holder !== 'undefined' && holder.length > 0 ) {
         target = holder.find(target);
     }
+
     return target;
 }
 

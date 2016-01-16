@@ -58,6 +58,34 @@ function setSearchtypeAction(searchType) {
     window.location = searchUrl;
 }
 
+function setDeidentifierSearchtypeAction(searchTypeId,searchTypeStr) {
+
+    //console.log('searchtype='+key);
+
+    if( typeof searchTypeStr === 'undefined' || searchTypeStr == "" ) {
+        searchTypeId = $('#deidentifier-searchtype-button').attr("data-id");
+        searchTypeStr = $('#deidentifier-searchtype-button').val();
+    }
+
+    //override searchtype in dropdown menu
+    var searchtypeButton = $('#deidentifier-searchtype-button');
+    searchtypeButton.html(searchTypeStr+' <span class="caret"></span>');
+    $('#accessionTypeId').val(searchTypeId);
+
+    //console.log('searchType='+searchType);
+
+    //change masking
+    //changeDeidentifierNavbarMask($('#deidentifier-searchtype-button'))''
+    setAccessiontypeMask( $('#deidentifier-searchtype-button'), true );
+
+    return false;
+}
+
+//function changeDeidentifierNavbarMask(btn) {
+//    console.log("changeDeidentifierNavbarMask: accession type listener!!!");
+//    setAccessiontypeMask($(btn),true);
+//}
+
 
 //function getSearchType_TODEL() {
 //    var searchType = $('#ordersearch-searchtype-button').html();

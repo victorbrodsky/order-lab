@@ -51,7 +51,7 @@ class DefaultController extends Controller
         $error = null;
         $pagination = null;
 
-        if( $form->get('search')->isClicked() || $form->get('generate')->isClicked() ) {
+        if( $form->get('generate')->isClicked() ) {
 
             if( !$accessionNumber ) {
                 $error = new FormError("Please specify Accession Number");
@@ -66,37 +66,6 @@ class DefaultController extends Controller
             //exit('new generate!');
 
         }
-
-        /////////////////////// Search ///////////////////////
-        if( !$error && ($form->get('search')->isClicked() || ($accessionNumber && $accessionType) ) ) {
-
-            //get accession numbers by number and type
-
-//            $accessions = $em->getRepository('OlegOrderformBundle:AccessionAccession')->findBy(
-//                array('field' => $accessionNumber, 'keytype' => $accessionType),
-//                array('creationdate' => 'DESC')
-//            );
-
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-
-            //$pagination = $this->searchAccession($accessionType,$accessionNumber,$wcmc);
-
-            $query = $this->getAccessionQuery($accessionType,$accessionNumber,$wcmc,$request);
-            //echo "sql=".$query->getSql()."<br>";
-            //$pagination = $query->getResult(); //accessions
-
-            $limit = 20;
-            $paginator  = $this->get('knp_paginator');
-            $pagination = $paginator->paginate(
-                $query,
-                $this->get('request')->query->get('page', 1),   /*page number*/
-                $limit,                                         /*limit per page*/
-                array('defaultSortFieldName' => 'accessionAccession.id', 'defaultSortDirection' => 'asc')
-            );
-
-            echo "pagination count=" . count($pagination) . "<br>";
-        }
-        /////////////////////// EOF Search ///////////////////////
 
         /////////////////////// Generate ///////////////////////
         if( !$error && $form->get('generate')->isClicked() ) {
@@ -170,18 +139,96 @@ class DefaultController extends Controller
         }
         /////////////////////// EOF Generate ///////////////////////
 
+        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+
+
         return array(
+            'accessiontypes' => $accessionTypes,
             'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
             'pagination' => $pagination //accessions
         );
     }
 
-    public function searchAccession($accessionType,$accessionNumber,$inst,$single=false) {
+
+
+
+
+    /**
+     * @Route("/re-identify/", name="deidentifier_search")
+     * @Template("OlegDeidentifierBundle:Search:search.html.twig")
+     * @Method("GET")
+     */
+    public function searchAction( Request $request ) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
+            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //get search string
+        $accessionNumber = $request->query->get('accessionNumber');
+        $accessionType = $request->query->get('accessionType');
+
+        echo "accessionNumber=".$accessionNumber."<br>";
+        echo "accessionType=".$accessionType."<br>";
+
+        $error = null;
+        $pagination = null;
+
+
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+
+        //$pagination = $this->searchAccession($accessionType,$accessionNumber,$wcmc);
+
+        $query = $this->getAccessionQuery($accessionType,$accessionNumber,$wcmc,$request);
+        //echo "sql=".$query->getSql()."<br>";
+
+        //$pagination = $query->getResult(); //accessions
+        //echo "pagination count=" . count($pagination) . "<br>";
+        //exit();
+
+        if( $query ) {
+
+            $limit = 20;
+            $paginator  = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $query,
+                $this->get('request')->query->get('page', 1),   /*page number*/
+                $limit,                                         /*limit per page*/
+                array('defaultSortFieldName' => 'accessionAccession.id', 'defaultSortDirection' => 'asc')
+            );
+
+            echo "pagination count=" . count($pagination) . "<br>";
+        }
+
+
+        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+
+        $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionType);
+
+        return array(
+            'accessionTypeId' => $accessionTypeObj->getId(),
+            'accessionTypeStr' => $accessionTypeObj."",
+            'accessionNumber' => $accessionNumber,
+            'accessiontypes' => $accessionTypes,
+            'pagination' => $pagination //accessions
+        );
+    }
+
+
+
+
+
+
+    public function searchAccession($accessionTypeId,$accessionNumber,$inst,$single=false) {
         $em = $this->getDoctrine()->getManager();
 
         $extra = array();
-        $extra["keytype"] = $accessionType->getId();
+        $extra["keytype"] = $accessionTypeId;
 
         $validity = array('valid');
 
@@ -244,13 +291,14 @@ class DefaultController extends Controller
         return $pathParams;
     }
 
-    public function getAccessionQuery($accessionType,$accessionNumber,$institution,$request) {
+    public function getAccessionQuery($accessionTypeId,$accessionNumber,$institution,$request) {
         $em = $this->getDoctrine()->getManager();
 
         //first get accession
-        $accession = $this->searchAccession($accessionType,$accessionNumber,$institution,true);
+        $accession = $this->searchAccession($accessionTypeId,$accessionNumber,$institution,true);
         if( !$accession ) {
-            exit("accession is not found; accessionType=" . $accessionType . ", accessionNumber=" . $accessionNumber . ", institution=" . $institution);
+            return null;
+            exit("accession is not found; accessionType=" . $accessionTypeId . ", accessionNumber=" . $accessionNumber . ", institution=" . $institution);
         }
         //echo "accession=".$accession."<br>";
 
