@@ -34,10 +34,16 @@
             {#{% do form.generate.setRendered %}#}
         {#{% endif %}#}
 
-        <button type="button" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>
-        {#onclick="$('#deidentifiersearchform').submit();"#}
+        {#<button type="button" class="btn btn-sm btn-primary" onclick="$('#deidentifier-generate').submit();">Generate a New Deidentifier</button>#}
+        <button type="submit" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>
 
         {{ form_rest(form) }}
+
+        {% if msg is defined %}
+            <br>
+            <br>
+            <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ msg|raw }}</p>
+        {% endif %}
 
     </form>
 

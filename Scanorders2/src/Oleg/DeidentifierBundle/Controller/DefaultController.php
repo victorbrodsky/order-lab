@@ -33,24 +33,26 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.context')->getToken()->getUser();
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
 
-        //permittedInstitutions for generation
-        $securityUtil = $this->get('order_security_utility');
-        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
-        $orderUtil = $this->get('scanorder_utility');
-        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
-        $params = array(
-            'permittedInstitutions' => $permittedInstitutions,
-        );
+//        //permittedInstitutions for generation
+//        $securityUtil = $this->get('order_security_utility');
+//        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+//        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+//        $orderUtil = $this->get('scanorder_utility');
+//        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
+//        $params = array(
+//            'permittedInstitutions' => $permittedInstitutions,
+//        );
+//
+//        //search box
+//        $form = $this->createForm(new DeidentifierSearchType($params), null);
 
-        //search box
-        $form = $this->createForm(new DeidentifierSearchType($params), null);
+        $form = $this->createSearchForm();
 
 //        //get search string
 //        $form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
@@ -154,12 +156,29 @@ class DefaultController extends Controller
         $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         return array(
-            //'permittedInstitutions' => $permittedInstitutions,
             'accessiontypes' => $accessionTypes,
             'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
-            //'pagination' => $pagination //accessions
+            //'msg' => "test test test test"
         );
+    }
+
+    public function createSearchForm() {
+        //permittedInstitutions for generation
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        $orderUtil = $this->get('scanorder_utility');
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
+        $params = array(
+            'permittedInstitutions' => $permittedInstitutions,
+        );
+
+        //search box
+        $form = $this->createForm(new DeidentifierSearchType($params), null);
+
+        return $form;
     }
 
 //    public function getAccessionTypesAction() {
@@ -199,29 +218,13 @@ class DefaultController extends Controller
         $accessionNumber = $request->query->get('accessionNumber');
         $accessionType = $request->query->get('accessionType');
 
-        echo "accessionNumber=".$accessionNumber."<br>";
-        echo "accessionType=".$accessionType."<br>";
+        //echo "accessionNumber=".$accessionNumber."<br>";
+        //echo "accessionType=".$accessionType."<br>";
 
         $error = null;
         $pagination = null;
 
         //Search across all institutions that are listed in PHI Scope of the user by default
-//        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-//        $collaborations = $em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $wcmc, $collaborationTypesStrArr=array("Union","Intersection") );
-//        $institutionIds = array();
-////        foreach( $institutions as $institution ) {
-////            $institutionIds[] = $institution->getId();
-////            echo "institution=".$institution->getName()."<br>";
-////        }
-//        $collaborationCriterionArr = array();
-//        foreach( $collaborations as $collaboration ) {
-//            foreach( $collaboration->getInstitutions() as $collaborationNode ) {
-//                echo "institution=".$collaborationNode->getId()."<br>";
-//                $institutionIds[] = $collaborationNode->getId();
-//            }
-//        }
-        //$pagination = $this->searchAccession($accessionType,$accessionNumber,$wcmc);
-
         $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
@@ -264,11 +267,6 @@ class DefaultController extends Controller
         );
     }
 
-
-
-
-
-
     public function searchAccession($accessionTypeId,$accessionNumber,$institutions,$single=false) {
         $em = $this->getDoctrine()->getManager();
 
@@ -287,6 +285,9 @@ class DefaultController extends Controller
     }
 
 
+
+
+
     /**
      * @Route("/generate/", name="deidentifier_generate")
      * @Template("OlegDeidentifierBundle:Default:index.html.twig")
@@ -298,19 +299,52 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         //get search string
         $institution = $request->query->get('institution');
         $accessionNumber = $request->query->get('accessionNumber');
         $accessionTypeId = $request->query->get('accessionType');
 
-        echo "institution=".$institution."<br>";
-        echo "accessionNumber=".$accessionNumber."<br>";
-        echo "accessionType=".$accessionTypeId."<br>";
+        //echo "institution=".$institution."<br>";
+        //echo "accessionNumber=".$accessionNumber."<br>";
+        //echo "accessionType=".$accessionTypeId."<br>";
         //exit();
+
+        if( !$accessionNumber ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Accession Number is not provided.'
+            );
+            return $this->redirect( $this->generateUrl('deidentifier_home') );
+        }
+
+        if( !$accessionTypeId ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Accession Type is not provided.'
+            );
+            return $this->redirect( $this->generateUrl('deidentifier_home') );
+        }
+
+        if( !$institution ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Institution is not provided.'
+            );
+            return $this->redirect( $this->generateUrl('deidentifier_home') );
+        }
 
         $institutions = array($institution);
 
         $accession = $this->searchAccession($accessionTypeId,$accessionNumber,$institutions,true);
+
+        $msg = '';
+        if( !$accession ) {
+            $accession = $this->createNewAccession($accessionTypeId,$accessionNumber,$institution);
+            $msg = 'New generated Accession <strong>' . $accession->obtainFullObjectName() . '</strong>';
+        }
+
         $accessionId = $accession->getId();
 
         echo "generateAction: accessionId=".$accessionId."<br>";
@@ -322,13 +356,83 @@ class DefaultController extends Controller
 
         $accession = $this->addNewDeidentifier($accessionId,$deidentifier);
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            '<strong>' . $deidentifier . '</strong>' . ' generated for ' . $accession->obtainFullValidKeyName()
+        $msg = '<strong>' . $deidentifier . '</strong>' . ' generated for ' . $accession->obtainFullValidKeyName() . $msg;
+
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $msg
+//        );
+
+        //$pathParams = $this->getPathParams($accession);
+        //return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
+
+        $form = $this->createSearchForm();
+        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+
+        //check for active access requests
+        $accessreqs = $this->getActiveAccessReq();
+
+        return array(
+            //'permittedInstitutions' => $permittedInstitutions,
+            'accessiontypes' => $accessionTypes,
+            'accessreqs' => count($accessreqs),
+            'form' => $form->createView(),
+            'msg' => $msg
+            //'pagination' => $pagination //accessions
+        );
+    }
+
+    private function createNewAccession($accessionType,$accessionNumber,$institution) {
+
+        if( !$accessionNumber ) {
+            throw $this->createNotFoundException("Generate a new deidentifier: No accession number is provided. accessionNumber=".$accessionNumber);
+        }
+
+        if( !$accessionType ) {
+            throw $this->createNotFoundException("Generate a new deidentifier: No accession type is provided. accessionType=".$accessionType);
+        }
+
+        if( !$institution ) {
+            throw $this->createNotFoundException("Generate a new deidentifier: No institution is provided. institution=".$institution);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //parameters
+        $extra = array();
+        $extra["keytype"] = $accessionType;
+
+        //create a new accession object
+        //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
+        $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(
+            $institution,       //institution
+            "valid",            //status. if null => STATUS_RESERVED
+            $user,              //provider
+            "Accession",        //$className
+            "accession",        //$fieldName
+            null,               //$parent
+            $accessionNumber,   //$fieldValue
+            $extra,             //$extra
+            false               //$withfields
         );
 
-        $pathParams = $this->getPathParams($accession);
-        return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
+        if( !$accession ) {
+            throw $this->createNotFoundException('Unable to create a new Accession with Accession Number='.$accessionNumber);
+        }
+
+        //set source
+        $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("Deidentifier");
+        if( !$source ) {
+            throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."Deidentifier");
+        }
+        $accession->setSource($source);
+
+        $em->persist($accession);
+        $em->flush($accession);
+
+        return $accession;
     }
 
     public function getPathParams($accession) {
