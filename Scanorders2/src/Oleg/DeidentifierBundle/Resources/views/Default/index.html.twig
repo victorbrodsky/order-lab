@@ -10,14 +10,14 @@
 
 {% block content %}
 
-    <input type="hidden" id="orderformtype" value="single" />
+    <input type="hidden" id="orderformtype" value="deidentifier" />
     <input type="hidden" id="formcycle" value="new" />
 
 
     {#{{ form_enctype(form) }} method="get"#}
     <form action="{{ path('deidentifier_home') }}">
 
-        <div id="accession_" class="form-element-holder collapse in singlemessage">
+        <div id="accession_" class="form-element-holder collapse in accession-holder">
         {{ formmacros.field(form.accessionType) }}
         {{ formmacros.field(form.accessionNumber) }}
         </div>

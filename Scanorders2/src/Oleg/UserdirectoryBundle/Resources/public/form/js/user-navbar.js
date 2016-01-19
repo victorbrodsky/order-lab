@@ -58,13 +58,14 @@ function setSearchtypeAction(searchType) {
     window.location = searchUrl;
 }
 
-function setDeidentifierSearchtypeAction(searchTypeId,searchTypeStr) {
+//DeidentifierNavbarSearch
+function setDeidentifierNavbarSearchtypeAction(searchTypeId,searchTypeStr) {
 
     //console.log('searchtype='+key);
 
     if( typeof searchTypeStr === 'undefined' || searchTypeStr == "" ) {
         searchTypeId = $('#deidentifier-searchtype-button').attr("data-id");
-        searchTypeStr = $('#deidentifier-searchtype-button').val();
+        searchTypeStr = $('#deidentifier-searchtype-button').attr("data-str");
     }
 
     //override searchtype in dropdown menu
@@ -75,16 +76,33 @@ function setDeidentifierSearchtypeAction(searchTypeId,searchTypeStr) {
     //console.log('searchType='+searchType);
 
     //change masking
-    //changeDeidentifierNavbarMask($('#deidentifier-searchtype-button'))''
-    setAccessiontypeMask( $('#deidentifier-searchtype-button'), true );
+    //setAccessiontypeMask( $('#deidentifier-searchtype-button'), true );
+    //manual change mask
+    var parent = $('#deidentifier-searchtype-button').closest('.accession-holder');
+    var accField = parent.find('.accession-mask');
+    //console.log(accField);
+    //clean field
+    accField.val('');
+    clearErrorField(accField);
+    //assign new mask
+    swicthMaskAccessionTypeText(null,accField,searchTypeStr);
 
     return false;
 }
-
-//function changeDeidentifierNavbarMask(btn) {
-//    console.log("changeDeidentifierNavbarMask: accession type listener!!!");
-//    setAccessiontypeMask($(btn),true);
-//}
+function initDeidentifierNavbarSearchMask() {
+    var parent = $('#deidentifier-searchtype-button').closest('.accession-holder');
+    var accField = parent.find('.accession-mask');
+    //console.log(accField);
+    //console.log("accField.val()="+accField.val());
+    //searchTypeStr
+    var searchTypeStr = $('#deidentifier-searchtype-button').attr("data-str");
+    //console.log("searchTypeStr="+searchTypeStr);
+    //assign new mask
+    swicthMaskAccessionTypeText(null,accField,searchTypeStr);
+    //set original accessionNumber
+    var accessionNumber = accField.attr("data-accessionNumber");
+    accField.val(accessionNumber);
+}
 
 
 //function getSearchType_TODEL() {

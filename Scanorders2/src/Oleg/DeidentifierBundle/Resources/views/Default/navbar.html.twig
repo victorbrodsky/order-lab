@@ -52,48 +52,50 @@
 
                             <input type="hidden" id="accessionTypeId" name="accessionType" value="{{ accessiontypes|first.id }}">
 
-                            <div class="form-group">
+                            <div class="form-group accession-holder">
 
                             <div class="input-group">
-                            <div class="input-group-btn singlemessage">
+                                <div class="input-group-btn">
 
-                                {% if accessionTypeStr is defined %}
-                                    {% set accessionTypeIdBtn = accessionTypeId %}
-                                    {% set accessionTypeStrBtn = accessionTypeStr %}
-                                {% else %}
-                                    {% set accessionTypeIdBtn = accessiontypes|first.id %}
-                                    {% set accessionTypeStrBtn = accessiontypes|first %}
-                                {% endif %}
+                                    {% if accessionTypeStr is defined %}
+                                        {% set accessionTypeIdBtn = accessionTypeId %}
+                                        {% set accessionTypeStrBtn = accessionTypeStr %}
+                                    {% else %}
+                                        {% set accessionTypeIdBtn = accessiontypes|first.id %}
+                                        {% set accessionTypeStrBtn = accessiontypes|first %}
+                                    {% endif %}
 
-                                {% if accessionNumber is not defined %}
-                                    {% set accessionNumber = "" %}
-                                {% endif %}
+                                    {% if accessionNumber is not defined %}
+                                        {% set accessionNumber = "" %}
+                                    {% endif %}
 
-                                <button id="deidentifier-searchtype-button"
-                                        data-id="{{accessionTypeIdBtn}}" type="button"
-                                        class="btn btn-default dropdown-toggle"
-                                        data-toggle="dropdown" aria-expanded="false"
-                                >
-                                    {{accessionTypeStrBtn}} <span class="caret"></span>
-                                </button>
+                                    <button id="deidentifier-searchtype-button"
+                                            data-id="{{accessionTypeIdBtn}}"
+                                            data-str="{{accessionTypeStrBtn}}"
+                                            type="button"
+                                            class="btn btn-default dropdown-toggle"
+                                            data-toggle="dropdown" aria-expanded="false"
+                                    >
+                                        {{accessionTypeStrBtn}} <span class="caret"></span>
+                                    </button>
 
-                                <ul class="dropdown-menu" role="menu">
-                                {% for accessiontype in accessiontypes %}
+                                    <ul class="dropdown-menu" role="menu">
+                                    {% for accessiontype in accessiontypes %}
                                         <li>
                                             <a
-                                                href="#" onclick="setDeidentifierSearchtypeAction({{accessiontype.id}},'{{accessiontype}}'); return false;">{{accessiontype}}
+                                                href="#" onclick="setDeidentifierNavbarSearchtypeAction({{accessiontype.id}},'{{accessiontype}}'); return false;">{{accessiontype}}
                                             </a>
                                         </li>
-                                {% endfor %}
-                                </ul>
-                            </div><!-- /btn-group -->
-                            <div class="form-group has-feedback">
-                                <input type="text" class="form-control form-control-modif accession-mask" aria-label="" name="accessionNumber" value="{{ accessionNumber }}" placeholder="">
-                                <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" aria-hidden="true" onclick="$('#deidentifiersearchform').submit();"></span>
-                            </div>
-                        </div><!-- /input-group -->
+                                    {% endfor %}
+                                    </ul>
+                                </div><!-- /btn-group -->
+                                <div class="form-group has-feedback">
+                                    <input type="text" class="form-control form-control-modif accession-mask" aria-label="" name="accessionNumber" data-accessionNumber="{{accessionNumber}}" value="{{ accessionNumber }}" placeholder="">
+                                    <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" aria-hidden="true" onclick="$('#deidentifiersearchform').submit();"></span>
+                                </div>
+                            </div><!-- /input-group -->
 
-                        </div>
+                            </div>
                         </form>
 
 
