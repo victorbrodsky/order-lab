@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    <input type="hidden" id="orderformtype" value="single" />
+    <input type="hidden" id="orderformtype" value="deidentifier" />
     <input type="hidden" id="formcycle" value="new" />
 
 
@@ -28,6 +28,7 @@
                         {#<th>{{ knp_pagination_sortable(pagination, 'Deidentifier Type', 'keytype.name') }}</th>#}
                         <th>{{ knp_pagination_sortable(pagination, 'Author', 'accessionAccession.provider') }}</th>
                         <th>{{ knp_pagination_sortable(pagination, 'Creation Date', 'accessionAccession.creationdate') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Organizational Group', 'institution.fulltitle') }}</th>
 
                         {#<th>Type</th>#}
                         {#<th>Accession Number</th>#}
@@ -46,6 +47,7 @@
                             {#<td>{{ accessionAccession.keytype }}</td>#}
                             <td>{{ accessionAccession.provider }}</td>
                             <td>{{ accessionAccession.creationdate|date('m/d/Y H:i') }}</td>
+                            <td>{{ accessionAccession.accession.institution.fulltitle }}</td>
                         </tr>
                     {% endfor %}
 
@@ -53,9 +55,9 @@
                 </table>
 
                 {#generate#}
-                <form action="{{ path('deidentifier_generate',{'accessionId':pagination|first.accession.id}) }}">
-                    <button type="submit" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>
-                </form>
+                {#<form action="{{ path('deidentifier_generate',{'accessionId':pagination|first.accession.id}) }}">#}
+                    {#<button type="submit" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>#}
+                {#</form>#}
 
             {#</div>#}
 

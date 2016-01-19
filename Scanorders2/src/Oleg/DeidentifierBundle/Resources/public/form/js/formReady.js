@@ -10,6 +10,8 @@ $(document).ready(function() {
 
     customCombobox();
 
+    regularCombobox();
+
     initConvertEnterToTab();
 
     initDatetimepicker();

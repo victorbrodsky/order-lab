@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -37,121 +38,146 @@ class DefaultController extends Controller
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
+
+        //permittedInstitutions for generation
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        $orderUtil = $this->get('scanorder_utility');
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
+        $params = array(
+            'permittedInstitutions' => $permittedInstitutions,
+        );
+
         //search box
-        $form = $this->createForm(new DeidentifierSearchType(), null);
+        $form = $this->createForm(new DeidentifierSearchType($params), null);
 
-        //get search string
-        $form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
-        $accessionNumber = $form->get('accessionNumber')->getData();
-        $accessionType = $form->get('accessionType')->getData();
-
-        //echo "accessionNumber=".$accessionNumber."<br>";
-        //echo "accessionType=".$accessionType."<br>";
-
-        $error = null;
-        $pagination = null;
-
-        if( $form->get('generate')->isClicked() ) {
-
-            if( !$accessionNumber ) {
-                $error = new FormError("Please specify Accession Number");
-                $form->get('accessionNumber')->addError($error);
-            }
-
-            if( !$accessionType ) {
-                $error = new FormError("Please specify Accession Type");
-                $form->get('accessionType')->addError($error);
-            }
-
-            //exit('new generate!');
-
-        }
-
-        /////////////////////// Generate ///////////////////////
-        if( !$error && $form->get('generate')->isClicked() ) {
-
-            $single = true;
-
-            $extra = array();
-            $extra["keytype"] = $accessionType->getId();
-
-            $validity = array('valid','deidentifier-valid','deidentifier');
-
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-            $institutions = array();
-            $institutions[] = $wcmc->getId();
-
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($institutions,$accessionNumber,"Accession","accession",$validity,$single,$extra);
-
-            if( !$accession ) {
-
-                if( !$accessionNumber ) {
-                    //exit("No accessionNumber=".$accessionNumber);
-                    throw $this->createNotFoundException("Generate a new deidentifier: No accession number is provided. accessionNumber=".$accessionNumber);
-                }
-
-                //create a new accession object
-                //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
-                $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(
-                    $wcmc->getId(),     //institution
-                    "valid",            //status. if null => STATUS_RESERVED
-                    $user,              //provider
-                    "Accession",        //$className
-                    "accession",        //$fieldName
-                    null,               //$parent
-                    $accessionNumber,   //$fieldValue
-                    $extra,             //$extra
-                    false               //$withfields
-                );
-
-                if( !$accession ) {
-                    throw $this->createNotFoundException('Unable to create a new Accession with Accession Number='.$accessionNumber);
-                }
-
-                //set source
-                $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("Deidentifier");
-                if( !$source ) {
-                    throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."Deidentifier");
-                }
-                $accession->setSource($source);
-
-                $em->persist($accession);
-                $em->flush($accession);
-
-            }
-
-            $deidentifier = $this->getNewDeidentificator($accession->getId());
-
-            if( !$deidentifier ) {
-                throw $this->createNotFoundException('Unable to calculate a new Deidentifier Number.');
-            }
-
-            $accession = $this->addNewDeidentifier($accession->getId(),$deidentifier);
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'New generated Deidentifier Number: <strong>' . $deidentifier . '</strong>' . '<br>'.
-                'New generated Accession <strong>' . $accession->obtainFullObjectName() . '</strong>'
-            );
-
-            $pathParams = $this->getPathParams($accession);
-            return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
-        }
-        /////////////////////// EOF Generate ///////////////////////
+//        //get search string
+//        $form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
+//        $accessionNumber = $form->get('accessionNumber')->getData();
+//        $accessionType = $form->get('accessionType')->getData();
+//
+//        //echo "accessionNumber=".$accessionNumber."<br>";
+//        //echo "accessionType=".$accessionType."<br>";
+//
+//        $error = null;
+//        $pagination = null;
+//
+//        if( $form->get('generate')->isClicked() ) {
+//
+//            if( !$accessionNumber ) {
+//                $error = new FormError("Please specify Accession Number");
+//                $form->get('accessionNumber')->addError($error);
+//            }
+//
+//            if( !$accessionType ) {
+//                $error = new FormError("Please specify Accession Type");
+//                $form->get('accessionType')->addError($error);
+//            }
+//
+//            //exit('new generate!');
+//
+//        }
+//
+//        /////////////////////// Generate ///////////////////////
+//        if( !$error && $form->get('generate')->isClicked() ) {
+//
+//            $single = true;
+//
+//            $extra = array();
+//            $extra["keytype"] = $accessionType->getId();
+//
+//            $validity = array('valid','deidentifier-valid','deidentifier');
+//
+//            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//            $institutions = array();
+//            $institutions[] = $wcmc->getId();
+//
+//            $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($institutions,$accessionNumber,"Accession","accession",$validity,$single,$extra);
+//
+//            if( !$accession ) {
+//
+//                if( !$accessionNumber ) {
+//                    //exit("No accessionNumber=".$accessionNumber);
+//                    throw $this->createNotFoundException("Generate a new deidentifier: No accession number is provided. accessionNumber=".$accessionNumber);
+//                }
+//
+//                //create a new accession object
+//                //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
+//                $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(
+//                    $wcmc->getId(),     //institution
+//                    "valid",            //status. if null => STATUS_RESERVED
+//                    $user,              //provider
+//                    "Accession",        //$className
+//                    "accession",        //$fieldName
+//                    null,               //$parent
+//                    $accessionNumber,   //$fieldValue
+//                    $extra,             //$extra
+//                    false               //$withfields
+//                );
+//
+//                if( !$accession ) {
+//                    throw $this->createNotFoundException('Unable to create a new Accession with Accession Number='.$accessionNumber);
+//                }
+//
+//                //set source
+//                $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("Deidentifier");
+//                if( !$source ) {
+//                    throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."Deidentifier");
+//                }
+//                $accession->setSource($source);
+//
+//                $em->persist($accession);
+//                $em->flush($accession);
+//
+//            }
+//
+//            $deidentifier = $this->getNewDeidentificator($accession->getId());
+//
+//            if( !$deidentifier ) {
+//                throw $this->createNotFoundException('Unable to calculate a new Deidentifier Number.');
+//            }
+//
+//            $accession = $this->addNewDeidentifier($accession->getId(),$deidentifier);
+//
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                'New generated Deidentifier Number: <strong>' . $deidentifier . '</strong>' . '<br>'.
+//                'New generated Accession <strong>' . $accession->obtainFullObjectName() . '</strong>'
+//            );
+//
+//            $pathParams = $this->getPathParams($accession);
+//            return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
+//        }
+//        /////////////////////// EOF Generate ///////////////////////
 
         $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
-
         return array(
+            //'permittedInstitutions' => $permittedInstitutions,
             'accessiontypes' => $accessionTypes,
             'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
-            'pagination' => $pagination //accessions
+            //'pagination' => $pagination //accessions
         );
     }
 
-
-
+//    public function getAccessionTypesAction() {
+//        $em = $this->getDoctrine()->getManager();
+//        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+//
+//        $accessionTypeArr = array();
+//        foreach( $accessionTypes as $accessionType) {
+//            $accessionTypeObject = array('id'=>$accessionType->getId(),'text'=>$accessionType."");
+//            $accessionTypeArr[] = $accessionTypeObject;
+//        }
+//
+//        //return $accessionTypes;
+//
+//        $response = new Response();
+//        $response->setContent($accessionTypeArr);
+//        return $response;
+//    }
 
 
     /**
@@ -179,12 +205,31 @@ class DefaultController extends Controller
         $error = null;
         $pagination = null;
 
-
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-
+        //Search across all institutions that are listed in PHI Scope of the user by default
+//        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//        $collaborations = $em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $wcmc, $collaborationTypesStrArr=array("Union","Intersection") );
+//        $institutionIds = array();
+////        foreach( $institutions as $institution ) {
+////            $institutionIds[] = $institution->getId();
+////            echo "institution=".$institution->getName()."<br>";
+////        }
+//        $collaborationCriterionArr = array();
+//        foreach( $collaborations as $collaboration ) {
+//            foreach( $collaboration->getInstitutions() as $collaborationNode ) {
+//                echo "institution=".$collaborationNode->getId()."<br>";
+//                $institutionIds[] = $collaborationNode->getId();
+//            }
+//        }
         //$pagination = $this->searchAccession($accessionType,$accessionNumber,$wcmc);
 
-        $query = $this->getAccessionQuery($accessionType,$accessionNumber,$wcmc,$request);
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        $institutionIds = array();
+        foreach( $permittedInstitutions as $permittedInstitution ) {
+            $institutionIds[] = $permittedInstitution->getId();
+        }
+        $query = $this->getAccessionQuery($accessionType,$accessionNumber,$institutionIds,$request);
         //echo "sql=".$query->getSql()."<br>";
 
         //$pagination = $query->getResult(); //accessions
@@ -202,7 +247,7 @@ class DefaultController extends Controller
                 array('defaultSortFieldName' => 'accessionAccession.id', 'defaultSortDirection' => 'asc')
             );
 
-            echo "pagination count=" . count($pagination) . "<br>";
+            //echo "pagination count=" . count($pagination) . "<br>";
         }
 
 
@@ -224,7 +269,7 @@ class DefaultController extends Controller
 
 
 
-    public function searchAccession($accessionTypeId,$accessionNumber,$inst,$single=false) {
+    public function searchAccession($accessionTypeId,$accessionNumber,$institutions,$single=false) {
         $em = $this->getDoctrine()->getManager();
 
         $extra = array();
@@ -232,9 +277,10 @@ class DefaultController extends Controller
 
         $validity = array('valid','deidentifier-valid','deidentifier');
 
-        $institutions = array();
-        $institutions[] = $inst->getId();
+        //$institutions = array();
+        //$institutions[] = $inst->getId();
 
+        //findOneByIdJoinedToField already include collaboration based on the provided permitted $institutions
         $accessions = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($institutions,$accessionNumber,"Accession","accession",$validity,$single,$extra);
 
         return $accessions;
@@ -242,17 +288,32 @@ class DefaultController extends Controller
 
 
     /**
-     * @Route("/generate/{accessionId}", name="deidentifier_generate")
+     * @Route("/generate/", name="deidentifier_generate")
      * @Template("OlegDeidentifierBundle:Default:index.html.twig")
      * @Method("GET")
      */
-    public function generateAction( Request $request, $accessionId ) {
+    public function generateAction( Request $request ) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
-        //echo "generateAction: accessionId=".$accessionId."<br>";
+        //get search string
+        $institution = $request->query->get('institution');
+        $accessionNumber = $request->query->get('accessionNumber');
+        $accessionTypeId = $request->query->get('accessionType');
+
+        echo "institution=".$institution."<br>";
+        echo "accessionNumber=".$accessionNumber."<br>";
+        echo "accessionType=".$accessionTypeId."<br>";
+        //exit();
+
+        $institutions = array($institution);
+
+        $accession = $this->searchAccession($accessionTypeId,$accessionNumber,$institutions,true);
+        $accessionId = $accession->getId();
+
+        echo "generateAction: accessionId=".$accessionId."<br>";
 
         //get a new deidentifier number
 
@@ -263,7 +324,7 @@ class DefaultController extends Controller
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'New generated Deidentifier Number: <strong>' . $deidentifier . '</strong>'
+            '<strong>' . $deidentifier . '</strong>' . ' generated for ' . $accession->obtainFullValidKeyName()
         );
 
         $pathParams = $this->getPathParams($accession);
@@ -279,8 +340,8 @@ class DefaultController extends Controller
                 $accessionNumber = $key->getField();
 
                 $pathParams = array(
-                    'deidentifier_search_box[accessionType]' => $accessionType,
-                    'deidentifier_search_box[accessionNumber]' => $accessionNumber
+                    'accessionType' => $accessionType,
+                    'accessionNumber' => $accessionNumber
                 );
 
             } else {
@@ -291,25 +352,32 @@ class DefaultController extends Controller
         return $pathParams;
     }
 
-    public function getAccessionQuery($accessionTypeId,$accessionNumber,$institution,$request) {
+    public function getAccessionQuery($accessionTypeId,$accessionNumber,$institutions,$request) {
         $em = $this->getDoctrine()->getManager();
 
         //first get accession
-        $accession = $this->searchAccession($accessionTypeId,$accessionNumber,$institution,true);
-        if( !$accession ) {
+        $accessions = $this->searchAccession($accessionTypeId,$accessionNumber,$institutions,false);
+        if( !$accessions || count($accessions) == 0 ) {
             return null;
-            exit("accession is not found; accessionType=" . $accessionTypeId . ", accessionNumber=" . $accessionNumber . ", institution=" . $institution);
+            //exit("accession is not found; accessionType=" . $accessionTypeId . ", accessionNumber=" . $accessionNumber . ", institution=" . $institution);
         }
-        //echo "accession=".$accession."<br>";
+        //echo "accession count=".count($accessions)."<br>";
 
         $repository = $em->getRepository('OlegOrderformBundle:AccessionAccession');
         $dql =  $repository->createQueryBuilder("accessionAccession");
         $dql->select('accessionAccession');
         $dql->leftJoin("accessionAccession.accession", "accession");
-        //$dql->leftJoin("accession.accession", "accessionAccession");
+        $dql->leftJoin("accession.institution", "institution");
         $dql->leftJoin("accessionAccession.keytype", "keytype");
 
-        $dql->where("accession = :accession"); // AND keytype.id = :accessionType
+        //$dql->where("accession = :accession"); // AND keytype.id = :accessionType
+
+        $accessionIdArr = array();
+        foreach( $accessions as $accession ) {
+            $accessionIdArr[] = "accession = " . $accession->getId();
+        }
+        $accessionIdStr = implode(" OR ", $accessionIdArr);
+        $dql->where($accessionIdStr);
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
         $postData = $request->query->all();
@@ -319,48 +387,48 @@ class DefaultController extends Controller
 
         $query = $em->createQuery($dql);
 
-        $query->setParameters( array(
-                'accession' => $accession->getId(),
-                //'accessionNumber' => '%'.$accessionNumber.'%',
-                //'accessionType' => $accessionType->getId()
-            )
-        );
+//        $query->setParameters( array(
+//                'accession' => $accession->getId(),
+//                //'accessionNumber' => '%'.$accessionNumber.'%',
+//                //'accessionType' => $accessionType->getId()
+//            )
+//        );
 
         //echo "sql=".$query->getSql()."<br>";
 
         return $query;
     }
 
-    public function getAccessionQuery_ORIG_ACCESSION($accessionType,$accessionNumber,$institution,$request) {
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('OlegOrderformBundle:Accession');
-        $dql =  $repository->createQueryBuilder("accession");
-        $dql->select('accession');
-        $dql->leftJoin("accession.accession", "accessionAccession");
-        $dql->leftJoin("accessionAccession.keytype", "keytype");
-
-        $dql->where("accessionAccession.field = :accessionNumber AND keytype.id = :accessionType AND accession.institution = :institution");
-
-        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
-        $postData = $request->query->all();
-        if( isset($postData['sort']) ) {
-            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
-        }
-
-        $query = $em->createQuery($dql);
-
-        $query->setParameters( array(
-                'accessionNumber' => $accessionNumber,
-                //'accessionNumber' => '%'.$accessionNumber.'%',
-                'accessionType' => $accessionType->getId(),
-                'institution' => $institution->getId()
-            )
-        );
-
-        //echo "sql=".$query->getSql()."<br>";
-
-        return $query;
-    }
+//    public function get_AccessionQuery_ORIG_ACCESSION($accessionType,$accessionNumber,$institution,$request) {
+//        $em = $this->getDoctrine()->getManager();
+//        $repository = $em->getRepository('OlegOrderformBundle:Accession');
+//        $dql =  $repository->createQueryBuilder("accession");
+//        $dql->select('accession');
+//        $dql->leftJoin("accession.accession", "accessionAccession");
+//        $dql->leftJoin("accessionAccession.keytype", "keytype");
+//
+//        $dql->where("accessionAccession.field = :accessionNumber AND keytype.id = :accessionType AND accession.institution = :institution");
+//
+//        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+//        $postData = $request->query->all();
+//        if( isset($postData['sort']) ) {
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
+//
+//        $query = $em->createQuery($dql);
+//
+//        $query->setParameters( array(
+//                'accessionNumber' => $accessionNumber,
+//                //'accessionNumber' => '%'.$accessionNumber.'%',
+//                'accessionType' => $accessionType->getId(),
+//                'institution' => $institution->getId()
+//            )
+//        );
+//
+//        //echo "sql=".$query->getSql()."<br>";
+//
+//        return $query;
+//    }
 
     //get a new deidentifier number
     public function getNewDeidentificator($accessionId) {

@@ -184,6 +184,9 @@ class TreeRepository extends NestedTreeRepository {
 //        $criteriastr .= $field.".rgt > " . $node->getRgt();
 //        $criteriastr .= " OR ";
 //        $criteriastr .= $field.".id = " . $node->getId();
+        $addedNodes = array();
+
+        $addedNodes[] = $node->getId();
         $institutionalCriteriaStr = $this->selectNodesUnderParentNode( $node, $field, $instDefault );
 
         //collaborations
@@ -191,7 +194,10 @@ class TreeRepository extends NestedTreeRepository {
         $collaborationCriterionArr = array();
         foreach( $collaborations as $collaboration ) {
             foreach( $collaboration->getInstitutions() as $collaborationNode ) {
-                $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );
+                if( !in_array($collaborationNode->getId(), $addedNodes) ) {
+                    //echo "collaborationNode=".$collaborationNode->getId()."<br>";
+                    $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );
+                }
             }
         }
 

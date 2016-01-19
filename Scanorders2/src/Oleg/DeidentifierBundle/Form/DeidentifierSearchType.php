@@ -54,10 +54,22 @@ class DeidentifierSearchType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif accession-mask'), //submit-on-enter-field
         ));
 
-        $builder->add('generate', 'submit', array(
-            'label' => "Generate a New Deidentifier",
-            'attr' => array('class' => 'btn btn-sm btn-primary')
+        $builder->add('institution', 'entity', array(
+            'label' => 'Organizational Group (Institutional PHI Scope):',
+            'mapped' => false,
+            'property' => 'getNodeNameWithRoot',
+            'required' => true,
+            'multiple' => false,
+            'empty_value' => false,
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'choices' => $this->params['permittedInstitutions'],
+            'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
+
+//        $builder->add('generate', 'submit', array(
+//            'label' => "Generate a New Deidentifier",
+//            'attr' => array('class' => 'btn btn-sm btn-primary')
+//        ));
 
 //        $builder->add('search', 'submit', array(
 //            'label' => "Search",
@@ -75,7 +87,7 @@ class DeidentifierSearchType extends AbstractType
 
     public function getName()
     {
-        //return null;
+        return null;
         return 'deidentifier_search_box';
     }
 }

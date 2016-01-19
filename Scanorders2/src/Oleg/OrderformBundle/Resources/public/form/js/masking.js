@@ -292,8 +292,8 @@ function setAccessiontypeMask(elem,clean) {
     //console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    //printF(accField,"Set Accession Mask:");
-    //console.log(accField);
+    printF(accField,"Set Accession Mask:");
+    console.log(accField);
 
     //var value = elem.select2("val");
     //console.log("value=" + value);
@@ -302,7 +302,7 @@ function setAccessiontypeMask(elem,clean) {
     } else {
         var text = elem.val();
     }
-    //console.log("text=" + text);
+    console.log("text=" + text);
 
     //clear input field
     if( clean ) {
@@ -607,7 +607,7 @@ function getKeyGroupParent(elem) {
     //printF(elem, "@@@@@@@@@@@@@ Get parent for element:");
     if( orderformtype == "single" && elem.attr('class').indexOf("mrn") == -1) {
         var parent = $('.singlemessage');
-    } else if( orderformtype == "deidentifie" ) {
+    } else if( orderformtype == "deidentifier" ) {
         var parent = elem.closest('.accession-holder');
     } else {
         var parent = elem.closest('.row');

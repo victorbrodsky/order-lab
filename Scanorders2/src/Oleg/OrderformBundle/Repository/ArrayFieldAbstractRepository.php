@@ -891,23 +891,33 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //add institution conditions: institutions are order ids
         //the object must be under provided institutional scope or under collaboration scope
+        $addedInst = array();
         $instStr = "";
         if( $institutions && is_array($institutions) && count($institutions)>0 ) {
             $instStr = " AND (";
             $count = 1;
             foreach( $institutions as $inst ) {
-                //$instStr .= "c.institution=".$inst."";
-                $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($inst);
-                $instStr .= $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
-                    getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
-                if( $count < count($institutions) ) {
-                    $instStr .= " OR ";
+                //echo "inst=".$inst." => ";
+                if( !in_array($inst, $addedInst) ) {
+                    //echo "not in array<br>";
+                    //$instStr .= "c.institution=".$inst."";
+                    $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($inst);
+                    $instStrNew = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                        getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
+                    //echo "instStrNew=".$instStrNew."<br>";
+                    $instStr .= $instStrNew;
+                    if( $count < count($institutions) ) {
+                        $instStr .= " OR ";
+                    }
+                    $addedInst[] = $inst;
+                    $count++;
+                } else {
+                    //echo "in array<br>";
                 }
-                $count++;
             }
             $instStr .= ")";
         }
-        //echo "instStr=".$instStr." ==> ";
+        //echo "instStr=".$instStr." ==> <br>";
 
         $dql = 'SELECT c FROM OlegOrderformBundle:'.$className.' c
                 JOIN c.'.$fieldName.' cfield
@@ -917,7 +927,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $query = $this->getEntityManager()
             ->createQuery($dql)->setParameter('field', $fieldStr."");
 
-        //echo "dql=".$dql." ==> ";
+        //echo "<br>dql=".$dql." ==> <br>";
         //echo "field=".$fieldStr." <br> ";
 
         try {

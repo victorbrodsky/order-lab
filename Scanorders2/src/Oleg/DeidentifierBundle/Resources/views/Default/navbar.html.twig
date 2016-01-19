@@ -47,6 +47,8 @@
                 {#Search in navbar available for WCMC-NYP Deidentifier Enquirer#}
                 {% if is_granted('ROLE_DEIDENTIFICATOR_ENQUIRER') %}
 
+                    {#{% set accessiontypes = render(controller("OlegDeidentifierBundle:Default:getAccessionTypes")) %}#}
+
                     {% if accessionTypeStr is defined %}
                         {% set accessionTypeIdBtn = accessionTypeId %}
                         {% set accessionTypeStrBtn = accessionTypeStr %}
