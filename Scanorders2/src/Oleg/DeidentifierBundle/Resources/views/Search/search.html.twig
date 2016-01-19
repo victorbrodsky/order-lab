@@ -39,7 +39,7 @@
 
                     <tbody>
 
-                    {% for accessionAccession in pagination if accessionAccession.keytype.name == 'Deidentifier ID' %}
+                    {% for accessionAccession in pagination %}
                         <tr>
                             {#<td>{{ accessionAccession.status }}</td>#}
                             <td>{{ accessionAccession.field }}</td>

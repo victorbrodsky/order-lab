@@ -866,7 +866,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //add validity conditions
         $validityStr = "";
         if( $validities && is_array($validities) && count($validities)>0 ) {
-            $validityStr = " AND cfield.status='".self::STATUS_VALID."' AND (";
+            //$validityStr = " AND cfield.status='".self::STATUS_VALID."' AND (";
+            $validityStr = " AND (";
             $count = 1;
             foreach( $validities as $validity ) {
                 $validityStr .= "c.status='".$validity."'";

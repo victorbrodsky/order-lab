@@ -75,7 +75,7 @@ class DefaultController extends Controller
             $extra = array();
             $extra["keytype"] = $accessionType->getId();
 
-            $validity = array('valid');
+            $validity = array('valid','deidentifier-valid','deidentifier');
 
             $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
             $institutions = array();
@@ -211,7 +211,7 @@ class DefaultController extends Controller
         $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionType);
 
         return array(
-            'accessionTypeId' => $accessionTypeObj->getId(),
+            'accessionTypeId' => $accessionType,
             'accessionTypeStr' => $accessionTypeObj."",
             'accessionNumber' => $accessionNumber,
             'accessiontypes' => $accessionTypes,
@@ -230,7 +230,7 @@ class DefaultController extends Controller
         $extra = array();
         $extra["keytype"] = $accessionTypeId;
 
-        $validity = array('valid');
+        $validity = array('valid','deidentifier-valid','deidentifier');
 
         $institutions = array();
         $institutions[] = $inst->getId();
