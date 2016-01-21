@@ -236,7 +236,6 @@ class UserUtil {
         return $count;
     }
 
-    //TODO: check if this function causes login delay.
     public function setLoginAttempt( $request, $security_content, $em, $options ) {
 
         //return;

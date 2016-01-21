@@ -61,9 +61,11 @@ class ScanSecurityController extends SecurityController
      */
     public function idlelogoutAction( Request $request, $flag = null )
     {
-        $userSecUtil = $this->get('user_security_utility');
-        $sitename = $this->container->getParameter('scan.sitename');
-        return $userSecUtil->idleLogout( $request, $sitename, $flag );
+        return parent::idlelogoutAction($request,$flag);
+
+//        $userSecUtil = $this->get('user_security_utility');
+//        $sitename = $this->container->getParameter('scan.sitename');
+//        return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
 
 
@@ -73,19 +75,21 @@ class ScanSecurityController extends SecurityController
      */
     public function setAjaxLoginVisit( Request $request )
     {
-        //echo "height=".$request->get('display_width').", width=".$request->get('display_height')." ";
-        $options = array();
-        $em = $this->getDoctrine()->getManager();
-        $userUtil = new UserUtil();
-        $options['sitename'] = $this->container->getParameter('scan.sitename');
-        $options['eventtype'] = "Login Page Visit";
-        $options['event'] = "Scan Order login page visit";
-        $options['serverresponse'] = "";
-        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+        return parent::setAjaxLoginVisit($request);
 
-        $response = new Response();
-        $response->setContent('OK');
-        return $response;
+//        //echo "height=".$request->get('display_width').", width=".$request->get('display_height')." ";
+//        $options = array();
+//        $em = $this->getDoctrine()->getManager();
+//        $userUtil = new UserUtil();
+//        $options['sitename'] = $this->container->getParameter('scan.sitename');
+//        $options['eventtype'] = "Login Page Visit";
+//        $options['event'] = "Scan Order login page visit";
+//        $options['serverresponse'] = "";
+//        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+//
+//        $response = new Response();
+//        $response->setContent('OK');
+//        return $response;
     }
 
 

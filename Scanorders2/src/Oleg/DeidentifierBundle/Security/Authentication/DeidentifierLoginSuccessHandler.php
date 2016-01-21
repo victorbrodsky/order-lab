@@ -33,7 +33,7 @@ class DeidentifierLoginSuccessHandler extends LoginSuccessHandler {
         $this->security = $security;
         $this->em = $em;
         $this->siteName = $container->getParameter('deidentifier.sitename');
-        $this->siteNameStr = 'Fellowship Applications';
+        $this->siteNameStr = 'Deidentifier System';
         $this->roleBanned = 'ROLE_DEIDENTIFICATOR_BANNED';
         $this->roleUser = 'ROLE_DEIDENTIFICATOR_USER';
         $this->roleUnapproved = 'ROLE_DEIDENTIFICATOR_UNAPPROVED';

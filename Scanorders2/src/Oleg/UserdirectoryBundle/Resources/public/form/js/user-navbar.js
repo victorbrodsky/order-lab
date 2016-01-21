@@ -163,6 +163,9 @@ function setDeidentificatorNavBar() {
 
     id = commonNavBar(full,id)
 
+    if( full.indexOf("/deidentifier/re-identify") !== -1 ) {
+        id = null;
+    }
 
     $('#nav-bar-'+id).addClass('active');
 }

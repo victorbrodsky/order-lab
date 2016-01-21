@@ -152,6 +152,9 @@ class SecurityController extends Controller
         if( $routename == "deidentifier_idlelogout" ) {
             $sitename = $this->container->getParameter('deidentifier.sitename');
         }
+        if( $routename == "scan_idlelogout" ) {
+            $sitename = $this->container->getParameter('scan.sitename');
+        }
 
         $userSecUtil = $this->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
@@ -172,16 +175,24 @@ class SecurityController extends Controller
         $routename = $request->get('_route');
         if( $routename == "employees_setloginvisit" ) {
             $options['sitename'] = $this->container->getParameter('employees.sitename');
+            $options['event'] = "Employee Directory login page visit";
         }
         if( $routename == "fellapp_setloginvisit" ) {
             $options['sitename'] = $this->container->getParameter('fellapp.sitename');
+            $options['event'] = "Fellowship Applications login page visit";
         }
         if( $routename == "deidentifier_setloginvisit" ) {
             $options['sitename'] = $this->container->getParameter('deidentifier.sitename');
+            $options['event'] = "Deidentifier System login page visit";
+        }
+        if( $routename == "scan_setloginvisit" ) {
+            //scan uses its own setLoginAttempt
+            $options['sitename'] = $this->container->getParameter('scan.sitename');
+            $options['event'] = "Scan Order login page visit";
         }
 
+
         $options['eventtype'] = "Login Page Visit";
-        $options['event'] = "Employee Directory login page visit";
         $options['serverresponse'] = "";
         $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
 

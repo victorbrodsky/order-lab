@@ -53,8 +53,20 @@
                         {% set accessionTypeIdBtn = accessionTypeId %}
                         {% set accessionTypeStrBtn = accessionTypeStr %}
                     {% else %}
-                        {% set accessionTypeIdBtn = accessiontypes|first.id %}
-                        {% set accessionTypeStrBtn = accessiontypes|first %}
+
+                        {#Deidentifier ID should be the default selected choice #}
+                        {% set defaultAccessiontypeId = accessiontypes|first.id %}
+                        {% set defaultAccessiontypeStr = accessiontypes|first.name %}
+                        {% for accessiontype in accessiontypes %}
+                            {% if accessiontype.name == "Deidentifier ID" %}
+                                {% set defaultAccessiontypeId = accessiontype.id %}
+                                {% set defaultAccessiontypeStr = accessiontype.name %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% set accessionTypeIdBtn = defaultAccessiontypeId %}
+                        {% set accessionTypeStrBtn = defaultAccessiontypeStr %}
+
                     {% endif %}
 
                     {% if accessionNumber is not defined %}
@@ -63,7 +75,7 @@
 
                     <li id="nav-bar-ordersearch">
 
-                        <form class="navbar-form navbar-left" role="search" id="deidentifiersearchform" name="deidentifiersearchform" action="{{ path('deidentifier_search') }}" method="get">
+                        <form class="navbar-form navbar-left" role="search" id="deidentifiersearchform" name="deidentifiersearchform" action="{{ path(deidentifier_sitename~'_search') }}" method="get">
 
                             <input type="hidden" id="accessionTypeId" name="accessionType" value="{{ accessionTypeIdBtn }}">
 
@@ -113,12 +125,12 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
                         <ul class="dropdown-menu">
 
-                            <li><a href="{{ path(employees_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(deidentifier_sitename~'_accessrequest_list') }}">Access Requests</a></li>
                             {#<li><a href="{{ path('accountrequest') }}">Account Requests</a></li>#}
 
                             {% if is_granted('ROLE_DEIDENTIFICATOR_ADMIN') %}
                                 <li class="divider"></li>
-                                <li><a href="{{ path(employees_sitename~'_logger') }}">Event Log</a></li>
+                                <li><a href="{{ path(deidentifier_sitename~'_logger') }}">Event Log</a></li>
                             {% endif %}
 
                         </ul>
@@ -133,14 +145,14 @@
                         <ul class="dropdown-menu">
 
                             {% if pendinguser is not defined %}
-                                <li><a href="{{ path(employees_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
+                                <li><a href="{{ path(scan_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
                             {% endif %}
 
                             {% if pendinguser is not defined %}
-                                <li><a href="{{ path(employees_sitename~'_about_page') }}">About</a></li>
+                                <li><a href="{{ path(scan_sitename~'_about_page') }}">About</a></li>
                             {% endif %}
 
-                            <li><a href="{{ path(employees_sitename~'_logout') }}">Log Out</a></li>
+                            <li><a href="{{ path(deidentifier_sitename~'_logout') }}">Log Out</a></li>
 
                         </ul>
                     </li>
