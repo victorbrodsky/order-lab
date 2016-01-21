@@ -19,6 +19,7 @@ $(document).ready(function() {
     initDeidentifierNavbarSearchMask();
 
     setOriginalSearchParameters();
+    //setTimeout(setOriginalSearchParameters, 4000);
 
 });
 
@@ -27,7 +28,7 @@ function setOriginalSearchParameters() {
     var dataholder = $('#deidentifier-data-holder');
 
     console.log("dataholder.length="+dataholder.length);
-    if( dataholder.length > 0 ) {
+    if( dataholder.length == 0 ) {
         return;
     }
 

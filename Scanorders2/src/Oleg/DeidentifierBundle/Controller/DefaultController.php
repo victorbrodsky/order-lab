@@ -308,8 +308,12 @@ class DefaultController extends Controller
         $accessionNumber = $request->query->get('accessionNumber');
         $accessionTypeId = $request->query->get('accessionType');
 
+        $institution = trim($institution);
+        $accessionNumber = trim($accessionNumber);
+        $accessionTypeId = trim($accessionTypeId);
+
         //echo "institution=".$institution."<br>";
-        //echo "accessionNumber=".$accessionNumber."<br>";
+        //echo "accessionNumber=(".$accessionNumber.")<br>";
         //echo "accessionType=".$accessionTypeId."<br>";
         //exit();
 
