@@ -194,12 +194,12 @@ class ListController extends Controller
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        //$limit = 30;
+        //$limit = 5;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
+            $request->query->get('page', 1), /*page number*/
             $limit /*limit per page*/
         );
 

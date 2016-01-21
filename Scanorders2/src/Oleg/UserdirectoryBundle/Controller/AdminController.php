@@ -2125,7 +2125,9 @@ class AdminController extends Controller
             'Banned User Login Attempt',
             'User Created',
             'User Updated',
+
             'Search',
+            'Generate',
             'Entity Updated',
 
             'Import of Fellowship Applications',

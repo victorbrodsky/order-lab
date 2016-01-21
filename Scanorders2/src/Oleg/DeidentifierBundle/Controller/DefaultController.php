@@ -143,10 +143,14 @@ class DefaultController extends Controller
             //echo "pagination count=" . count($pagination) . "<br>";
         }
 
-
         $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionType);
+
+        //Event Log
+        $event = "Deidentifier Search with Accession Type " . $accessionTypeObj ." and  Accession Number " . $accessionNumber;
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,null,$request,'Search');
 
         return array(
             'accessionTypeId' => $accessionType,
@@ -190,6 +194,7 @@ class DefaultController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         //get search string
         $institution = $request->query->get('institution');
@@ -262,6 +267,13 @@ class DefaultController extends Controller
 
         $form = $this->createSearchForm();
         $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+
+        //Event Log
+        $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionTypeId);
+        $institutionObj = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution);
+        $event = "Deidentifier Generate with Accession Type " . $accessionTypeObj .",  Accession Number " . $accessionNumber . " and Institution " . $institutionObj;
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,$accession,$request,'Generated');
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
@@ -575,5 +587,44 @@ class DefaultController extends Controller
         $userSecUtil = $this->get('user_security_utility');
         $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('deidentifier.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
+    }
+
+
+    public function createDeidentifierEvent($sitename,$event,$user,$subjectEntity,$request,$action='Entity Updated') {
+
+        if( !$user ) {
+            return null;
+        }
+
+        $em = $this->em;
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+
+        $eventLog = $this->constructEventLog($sitename,$user,$request);
+        $eventLog->setEvent($event);
+
+        //set Event Type
+        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
+        if( !$eventtype ) {
+            $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Entity Updated');
+        }
+        $eventLog->setEventType($eventtype);
+
+        if( $subjectEntity ) {
+            //echo "subjectEntity=".$subjectEntity."<br>";
+            //get classname, entity name and id of subject entity
+            $class = new \ReflectionClass($subjectEntity);
+            $className = $class->getShortName();
+            $classNamespace = $class->getNamespaceName();
+
+            //set classname, entity name and id of subject entity
+            $eventLog->setEntityNamespace($classNamespace);
+            $eventLog->setEntityName($className);
+            $eventLog->setEntityId($subjectEntity->getId());
+        }
+
+        $em->persist($eventLog);
+        $em->flush($eventLog);
+
+        return $eventLog;
     }
 }
