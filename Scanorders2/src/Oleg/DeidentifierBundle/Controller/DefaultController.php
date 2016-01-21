@@ -22,6 +22,26 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
+
+    /**
+     * @Route("/navbar", name="deidentifier_navbar")
+     * @Template("OlegDeidentifierBundle:Default:navbar.html.twig")
+     * @Method("GET")
+     */
+    public function deidentifierNavbarAction( Request $request ) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
+            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+
+        return array(
+            'accessiontypes' => $accessionTypes,
+        );
+    }
+
     /**
      * @Route("/", name="deidentifier_home")
      * @Template("OlegDeidentifierBundle:Default:index.html.twig")
@@ -43,10 +63,10 @@ class DefaultController extends Controller
         $form = $this->createSearchForm();
 
 
-        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+        //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         return array(
-            'accessiontypes' => $accessionTypes,
+            //'accessiontypes' => $accessionTypes,
             'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
             //'msg' => "test test test test"
@@ -135,15 +155,15 @@ class DefaultController extends Controller
             $paginator  = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,
-                $this->get('request')->query->get('page', 1),   /*page number*/
-                $limit,                                         /*limit per page*/
+                $request->query->get('page', 1),   /*page number*/
+                $limit,                            /*limit per page*/
                 array('defaultSortFieldName' => 'accessionAccession.id', 'defaultSortDirection' => 'asc')
             );
 
             //echo "pagination count=" . count($pagination) . "<br>";
         }
 
-        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+        //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionType);
 
@@ -156,7 +176,7 @@ class DefaultController extends Controller
             'accessionTypeId' => $accessionType,
             'accessionTypeStr' => $accessionTypeObj."",
             'accessionNumber' => $accessionNumber,
-            'accessiontypes' => $accessionTypes,
+            //'accessiontypes' => $accessionTypes,
             'pagination' => $pagination //accessions
         );
     }
@@ -266,7 +286,7 @@ class DefaultController extends Controller
         //return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
 
         $form = $this->createSearchForm();
-        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+        //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         //Event Log
         $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionTypeId);
@@ -280,7 +300,7 @@ class DefaultController extends Controller
 
         return array(
             //'permittedInstitutions' => $permittedInstitutions,
-            'accessiontypes' => $accessionTypes,
+            //'accessiontypes' => $accessionTypes,
             'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
             'msg' => $msg,
@@ -590,41 +610,5 @@ class DefaultController extends Controller
     }
 
 
-    public function createDeidentifierEvent($sitename,$event,$user,$subjectEntity,$request,$action='Entity Updated') {
 
-        if( !$user ) {
-            return null;
-        }
-
-        $em = $this->em;
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
-
-        $eventLog = $this->constructEventLog($sitename,$user,$request);
-        $eventLog->setEvent($event);
-
-        //set Event Type
-        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
-        if( !$eventtype ) {
-            $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Entity Updated');
-        }
-        $eventLog->setEventType($eventtype);
-
-        if( $subjectEntity ) {
-            //echo "subjectEntity=".$subjectEntity."<br>";
-            //get classname, entity name and id of subject entity
-            $class = new \ReflectionClass($subjectEntity);
-            $className = $class->getShortName();
-            $classNamespace = $class->getNamespaceName();
-
-            //set classname, entity name and id of subject entity
-            $eventLog->setEntityNamespace($classNamespace);
-            $eventLog->setEntityName($className);
-            $eventLog->setEntityId($subjectEntity->getId());
-        }
-
-        $em->persist($eventLog);
-        $em->flush($eventLog);
-
-        return $eventLog;
-    }
 }

@@ -103,7 +103,7 @@ class ListController extends Controller
 
         return $this->getList($request);
     }
-    public function getList($request, $limit=30) {
+    public function getList($request, $limit=50) {
 
         $type = $request->get('_route');
 
@@ -186,21 +186,22 @@ class ListController extends Controller
         //$dql->orderBy("ent.createdate","DESC");
 		
 		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       		
-		//$postData = $request->query->all();
-		//if( isset($postData['sort']) ) {
-            //$dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
-        //}
+//		$postData = $request->query->all();
+//		if( isset($postData['sort']) ) {
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
 
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        //$limit = 5;
+        $limit = 5000; //TODO: fix navigation
         $query = $em->createQuery($dql);
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
-            $limit /*limit per page*/
+            $limit,                          /*limit per page*/
+            array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
         );
 
         ///////////// check if show "create a new entity" link //////////////

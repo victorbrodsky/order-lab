@@ -19,7 +19,7 @@
 
 
     {#WCMC-NYP Deidentifier Generator: can generate, but not search#}
-    {% if is_granted('ROLE_DEIDENTIFICATOR_GENERATOR') %}
+    {#{% if is_granted('ROLE_DEIDENTIFICATOR_GENERATOR') %}#}
 
         <form id="deidentifier-generate" action="{{ path('deidentifier_generate') }}" method="get">
 
@@ -53,7 +53,7 @@
 
         </form>
 
-    {% endif %}
+    {#{% endif %}#}
 
 
 

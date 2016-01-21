@@ -550,9 +550,9 @@ class AdminController extends Controller
             "ROLE_DEIDENTIFICATOR_USER" => array("Deidentifier User","Allow to view the Deidentifier site"),
             "ROLE_DEIDENTIFICATOR_BANNED" => array("Deidentifier Banned User","Does not allow to visit Deidentifier site"),
             "ROLE_DEIDENTIFICATOR_UNAPPROVED" => array("Deidentifier Unapproved User","Does not allow to visit Deidentifier site"),
-            "ROLE_DEIDENTIFICATOR_GENERATOR" => array("Deidentifier Generator","Can generate, but not search"),
-            "ROLE_DEIDENTIFICATOR_ENQUIRER" => array("Deidentifier Enquirer","Can search, but not generate"),
-            "ROLE_DEIDENTIFICATOR_HONEST_BROKER" => array("Deidentifier Honest Broker","Can search and generate"),
+            "ROLE_DEIDENTIFICATOR_WCMC_NYP_GENERATOR" => array("WCMC-NYP Deidentifier Generator","Can generate, but not search"),
+            "ROLE_DEIDENTIFICATOR_WCMC_NYP_ENQUIRER" => array("WCMC-NYP Deidentifier Enquirer","Can search, but not generate"),
+            "ROLE_DEIDENTIFICATOR_WCMC_NYP_HONEST_BROKER" => array("WCMC-NYP Deidentifier Honest Broker","Can search and generate"),
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

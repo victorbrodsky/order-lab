@@ -19,7 +19,6 @@ $(document).ready(function() {
     initDeidentifierNavbarSearchMask();
 
     setOriginalSearchParameters();
-    //setTimeout(setOriginalSearchParameters, 4000);
 
 });
 

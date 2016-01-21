@@ -357,6 +357,14 @@ function swicthMaskAccessionTypeText(elem,accField,text) {
             var repeatStr = getRepeatMask(_repeatBig,"m");
             accField.inputmask( { "mask": repeatStr } );
             break;
+        case "Deidentifier ID":
+            //console.log('Deidentifier ID accession type');
+            var placeholderStr = "DID-";
+            var repeatnum = getRepeatNum( placeholderStr, _repeatBig );
+            var placeholderStr = getCleanMaskStr( placeholderStr );
+            var repeatStr = getRepeatMask(repeatnum,"m");
+            accField.inputmask( { "mask": placeholderStr+repeatStr } );
+            break;
         default:
             //console.log('default => remove');
             //console.log(accField);

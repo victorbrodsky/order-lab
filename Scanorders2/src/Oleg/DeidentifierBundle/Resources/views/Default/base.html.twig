@@ -100,7 +100,8 @@
         <div class="header col-xs-12">
 
             {% block header %}
-                {% include 'OlegDeidentifierBundle:Default:navbar.html.twig' %}
+                {#{% include 'OlegDeidentifierBundle:Default:navbar.html.twig' %}#}
+                {{ render(controller('OlegDeidentifierBundle:Default:deidentifierNavbar')) }}
             {% endblock %}
 
         </div>

@@ -47,7 +47,10 @@
                             {#<td>{{ accessionAccession.status }}</td>#}
                             <td>{{ accessionAccession.field }}</td>
                             <td>{{ accessionAccession.keytype }}</td>
-                            <td>{{ accessionAccession.provider }}</td>
+                            <td>
+                                {#{{ accessionAccession.provider }}#}
+                                <a href="{{ path(employees_sitename~'_showuser', { 'id': accessionAccession.provider.id }) }}">{{ accessionAccession.provider }}</a>
+                            </td>
                             <td>{{ accessionAccession.creationdate|date('m/d/Y H:i') }}</td>
                             <td>{{ accessionAccession.accession.institution.fulltitle }}</td>
 
