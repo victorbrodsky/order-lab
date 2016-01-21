@@ -49,8 +49,9 @@
                 {#{% if is_granted('ROLE_DEIDENTIFICATOR_ENQUIRER') %}#}
 
                     {#{% set accessiontypes = render(controller("OlegDeidentifierBundle:Default:getAccessionTypes")) %}#}
+                    {#{% set accessiontypes = controller("OlegDeidentifierBundle:Default:getAccessionTypes") %}#}
 
-                    {% if accessionTypeStr is defined %}
+                    {% if accessionTypeStr is defined and accessionTypeStr %}
                         {% set accessionTypeIdBtn = accessionTypeId %}
                         {% set accessionTypeStrBtn = accessionTypeStr %}
                     {% else %}

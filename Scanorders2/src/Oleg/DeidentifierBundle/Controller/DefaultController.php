@@ -24,11 +24,11 @@ class DefaultController extends Controller
 {
 
     /**
-     * @Route("/navbar", name="deidentifier_navbar")
+     * @Route("/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}", name="deidentifier_navbar")
      * @Template("OlegDeidentifierBundle:Default:navbar.html.twig")
      * @Method("GET")
      */
-    public function deidentifierNavbarAction( Request $request ) {
+    public function deidentifierNavbarAction( Request $request, $accessionTypeStr, $accessionTypeId, $accessionNumber ) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
@@ -37,8 +37,24 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
+
+        $accessionTypeStr = trim($accessionTypeStr);
+        $accessionTypeId = trim($accessionTypeId);
+        $accessionNumber = trim($accessionNumber);
+
+        //echo "accessionNumber=".$accessionNumber."<br>";
+        //echo "accessionTypeStr=".$accessionTypeStr."<br>";
+        //echo "accessionTypeId=".$accessionTypeId."<br>";
+
+//        if( $accessionTypeId ) {
+//            $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionTypeId);
+//        }
+
         return array(
             'accessiontypes' => $accessionTypes,
+            'accessionTypeId' => $accessionTypeId,
+            'accessionTypeStr' => $accessionTypeStr,    //$accessionTypeObj."",
+            'accessionNumber' => $accessionNumber,
         );
     }
 
@@ -58,7 +74,7 @@ class DefaultController extends Controller
         //$user = $this->get('security.context')->getToken()->getUser();
 
         //check for active access requests
-        $accessreqs = $this->getActiveAccessReq();
+        //$accessreqs = $this->getActiveAccessReq();
 
         $form = $this->createSearchForm();
 
@@ -67,7 +83,7 @@ class DefaultController extends Controller
 
         return array(
             //'accessiontypes' => $accessionTypes,
-            'accessreqs' => count($accessreqs),
+            //'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
             //'msg' => "test test test test"
         );
@@ -127,6 +143,9 @@ class DefaultController extends Controller
         //get search string
         $accessionNumber = $request->query->get('accessionNumber');
         $accessionType = $request->query->get('accessionType');
+
+        $accessionNumber = trim($accessionNumber);
+        $accessionType = trim($accessionType);
 
         //echo "accessionNumber=".$accessionNumber."<br>";
         //echo "accessionType=".$accessionType."<br>";
@@ -296,12 +315,12 @@ class DefaultController extends Controller
         $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,$accession,$request,'Generated');
 
         //check for active access requests
-        $accessreqs = $this->getActiveAccessReq();
+        //$accessreqs = $this->getActiveAccessReq();
 
         return array(
             //'permittedInstitutions' => $permittedInstitutions,
             //'accessiontypes' => $accessionTypes,
-            'accessreqs' => count($accessreqs),
+            //'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
             'msg' => $msg,
             'institutionGen' => $institution,

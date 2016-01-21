@@ -100,8 +100,18 @@
         <div class="header col-xs-12">
 
             {% block header %}
+                {#Simpler way: find out how to pass array from controller to twig#}
                 {#{% include 'OlegDeidentifierBundle:Default:navbar.html.twig' %}#}
-                {{ render(controller('OlegDeidentifierBundle:Default:deidentifierNavbar')) }}
+                {% if accessionTypeStr is not defined %}
+                    {% set accessionTypeStr = null %}
+                {% endif %}
+                {% if accessionTypeId is not defined %}
+                    {% set accessionTypeId = null %}
+                {% endif %}
+                {% if accessionNumber is not defined %}
+                    {% set accessionNumber = null %}
+                {% endif %}
+                {{ render(controller('OlegDeidentifierBundle:Default:deidentifierNavbar', {'accessionTypeStr': accessionTypeStr, 'accessionTypeId': accessionTypeId, 'accessionNumber': accessionNumber})) }}
             {% endblock %}
 
         </div>
