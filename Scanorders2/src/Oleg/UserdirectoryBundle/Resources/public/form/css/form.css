@@ -376,7 +376,7 @@
 }
 
 /* ordersearch */
-#ordersearchform-search {
+#ordersearchform-search, #deidentifiersearchform-searchtype {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-top-right-radius: 4px;

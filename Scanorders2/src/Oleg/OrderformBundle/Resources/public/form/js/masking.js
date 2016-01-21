@@ -319,11 +319,13 @@ function swicthMaskAccessionTypeText(elem,accField,text) {
     {
         case "Auto-generated Accession Number":
             accField.inputmask( getAccessionAutoGenMask() );
-            var checkbtn = elem.closest('.accessionaccession').find('#check_btn');
-            var inputValue = getButtonParent(elem).find('.keyfield').val();
-            //console.log("in value="+inputValue);
-            if( checkbtn.hasClass('checkbtn') && inputValue == '' ) {
-                checkbtn.trigger("click");
+            if( elem ) {
+                var checkbtn = elem.closest('.accessionaccession').find('#check_btn');
+                var inputValue = getButtonParent(elem).find('.keyfield').val();
+                //console.log("in value="+inputValue);
+                if( checkbtn.hasClass('checkbtn') && inputValue == '' ) {
+                    checkbtn.trigger("click");
+                }
             }
             //console.log('Auto-generated Accession !!!');
             //printF(checkbtn,"checkbtn to click:");

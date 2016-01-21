@@ -4,6 +4,8 @@
 //1) add a new source to SourceSystemList "Deidentifier"
 //2) add a new AccessionType "Deidentifier ID"
 //3) add new roles by running "Populate All Lists With Default Values" in user directory list manager
+//4) add permission "Generate new Deidentifier ID" (Object:Accession, Action:create)
+//5) add permission "Search by Deidentifier ID" (Object:Accession, Action:read)
 
 namespace Oleg\DeidentifierBundle\Controller;
 
@@ -347,7 +349,7 @@ class DefaultController extends Controller
 
         $accessionId = $accession->getId();
 
-        echo "generateAction: accessionId=".$accessionId."<br>";
+        //echo "generateAction: accessionId=".$accessionId."<br>";
 
         //get a new deidentifier number
 
@@ -356,7 +358,7 @@ class DefaultController extends Controller
 
         $accession = $this->addNewDeidentifier($accessionId,$deidentifier);
 
-        $msg = '<strong>' . $deidentifier . '</strong>' . ' generated for ' . $accession->obtainFullValidKeyName() . $msg;
+        $msg = '<strong>' . $deidentifier . '</strong>' . ' generated for ' . $accession->obtainFullValidKeyName() . '<br>' . $msg;
 
 //        $this->get('session')->getFlashBag()->add(
 //            'notice',
@@ -377,7 +379,11 @@ class DefaultController extends Controller
             'accessiontypes' => $accessionTypes,
             'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
-            'msg' => $msg
+            'msg' => $msg,
+            'institutionGen' => $institution,
+            'accessionNumberGen' => $accessionNumber,
+            'accessionTypeGen' => $accessionTypeId,
+
             //'pagination' => $pagination //accessions
         );
     }
@@ -473,6 +479,11 @@ class DefaultController extends Controller
         $dql->leftJoin("accessionAccession.accession", "accession");
         $dql->leftJoin("accession.institution", "institution");
         $dql->leftJoin("accessionAccession.keytype", "keytype");
+
+        $dql->leftJoin("accession.procedure", "procedure");
+        $dql->leftJoin("procedure.encounter", "encounter");
+        $dql->leftJoin("encounter.patient", "patient");
+        $dql->leftJoin("patient.lastname", "lastname");
 
         //$dql->where("accession = :accession"); // AND keytype.id = :accessionType
 

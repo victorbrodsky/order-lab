@@ -13,39 +13,47 @@
     <input type="hidden" id="orderformtype" value="deidentifier" />
     <input type="hidden" id="formcycle" value="new" />
 
+    {% if institutionGen is defined and accessionTypeGen is defined and accessionNumberGen is defined %}
+        <div id="deidentifier-data-holder" data-institution="{{institutionGen}}" data-accessionType="{{accessionTypeGen}}" data-accessionNumber="{{accessionNumberGen}}"></div>
+    {% endif %}
 
-    {#{{ form_enctype(form) }} method="get"#}
-    <form id="deidentifier-generate" action="{{ path('deidentifier_generate') }}" method="get">
 
-        <div class="form-element-holder collapse in accession-holder">
-            {{ formmacros.field(form.institution) }}
-            {{ formmacros.field(form.accessionType) }}
-            {{ formmacros.field(form.accessionNumber) }}
-        </div>
+    {#WCMC-NYP Deidentifier Generator: can generate, but not search#}
+    {% if is_granted('ROLE_DEIDENTIFICATOR_GENERATOR') %}
 
-        {#<button type="submit" name="search" class="btn btn-sm btn-default">Search</button>#}
-        {#{{ form_widget(form.search) }}#}
-        {#{{ form_widget(form.generate) }}#}
+        <form id="deidentifier-generate" action="{{ path('deidentifier_generate') }}" method="get">
 
-        {#{% if pagination is null or pagination|length == 0 %}#}
-            {#&#123;&#35;<button type="submit" name="generate" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>&#35;&#125;#}
+            <div class="form-element-holder collapse in accession-holder">
+                {{ formmacros.field(form.institution) }}
+                {{ formmacros.field(form.accessionType) }}
+                {{ formmacros.field(form.accessionNumber) }}
+            </div>
+
+            {#<button type="submit" name="search" class="btn btn-sm btn-default">Search</button>#}
+            {#{{ form_widget(form.search) }}#}
             {#{{ form_widget(form.generate) }}#}
-        {#{% else %}#}
-            {#{% do form.generate.setRendered %}#}
-        {#{% endif %}#}
 
-        {#<button type="button" class="btn btn-sm btn-primary" onclick="$('#deidentifier-generate').submit();">Generate a New Deidentifier</button>#}
-        <button type="submit" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>
+            {#{% if pagination is null or pagination|length == 0 %}#}
+                {#&#123;&#35;<button type="submit" name="generate" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>&#35;&#125;#}
+                {#{{ form_widget(form.generate) }}#}
+            {#{% else %}#}
+                {#{% do form.generate.setRendered %}#}
+            {#{% endif %}#}
 
-        {{ form_rest(form) }}
+            {#<button type="button" class="btn btn-sm btn-primary" onclick="$('#deidentifier-generate').submit();">Generate a New Deidentifier</button>#}
+            <button type="submit" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>
 
-        {% if msg is defined %}
-            <br>
-            <br>
-            <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ msg|raw }}</p>
-        {% endif %}
+            {{ form_rest(form) }}
 
-    </form>
+            {% if msg is defined %}
+                <br>
+                <br>
+                <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ msg|raw }}</p>
+            {% endif %}
+
+        </form>
+
+    {% endif %}
 
 
 

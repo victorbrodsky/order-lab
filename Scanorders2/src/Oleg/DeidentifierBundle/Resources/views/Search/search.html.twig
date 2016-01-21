@@ -24,11 +24,13 @@
                     <thead>
                     <tr>
                         {#<th>{{ knp_pagination_sortable(pagination, 'Status', 'accessionAccession.status') }}</th>#}
-                        <th>{{ knp_pagination_sortable(pagination, 'Deidentifier ID', 'accessionAccession.id') }}</th> {#fix for sort deidentifier number as string#}
-                        {#<th>{{ knp_pagination_sortable(pagination, 'Deidentifier Type', 'keytype.name') }}</th>#}
+                        <th>{{ knp_pagination_sortable(pagination, 'Accession ID', 'accessionAccession.id') }}</th> {#fix for sort deidentifier number as string#}
+                        <th>{{ knp_pagination_sortable(pagination, 'Accession Type', 'keytype.name') }}</th>
                         <th>{{ knp_pagination_sortable(pagination, 'Author', 'accessionAccession.provider') }}</th>
                         <th>{{ knp_pagination_sortable(pagination, 'Creation Date', 'accessionAccession.creationdate') }}</th>
                         <th>{{ knp_pagination_sortable(pagination, 'Organizational Group', 'institution.fulltitle') }}</th>
+
+                        <th>{{ knp_pagination_sortable(pagination, 'Patient', 'lastname.field') }}</th>
 
                         {#<th>Type</th>#}
                         {#<th>Accession Number</th>#}
@@ -44,10 +46,16 @@
                         <tr>
                             {#<td>{{ accessionAccession.status }}</td>#}
                             <td>{{ accessionAccession.field }}</td>
-                            {#<td>{{ accessionAccession.keytype }}</td>#}
+                            <td>{{ accessionAccession.keytype }}</td>
                             <td>{{ accessionAccession.provider }}</td>
                             <td>{{ accessionAccession.creationdate|date('m/d/Y H:i') }}</td>
                             <td>{{ accessionAccession.accession.institution.fulltitle }}</td>
+
+                            <td>
+                                {% if accessionAccession.accession.procedure.encounter.patient %}
+                                    {{ accessionAccession.accession.procedure.encounter.patient.obtainFullObjectName|raw }}
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
 

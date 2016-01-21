@@ -80,6 +80,11 @@ class Institution extends BaseCompositeNode {
     private $administrativeTitles;
 
 
+    /**
+     * @ORM\OneToMany(targetEntity="Collaboration", mappedBy="institution", cascade={"persist"})
+     **/
+    private $collaborations;
+
     //dummy field not linked to DB
     //private $institutionspositiontypes;
 
@@ -93,6 +98,7 @@ class Institution extends BaseCompositeNode {
 
         $this->buildings = new ArrayCollection();
         $this->administrativeTitles = new ArrayCollection();
+        $this->collaborations = new ArrayCollection();
     }
 
 
@@ -149,6 +155,24 @@ class Institution extends BaseCompositeNode {
         $this->administrativeTitles->removeElement($item);
     }
 
+    //collaborations
+    public function getCollaborations()
+    {
+        return $this->collaborations;
+    }
+    public function addCollaboration($item)
+    {
+        if( !$this->collaborations->contains($item) ) {
+            $this->collaborations->add($item);
+            //$item->setInstitution($this);
+        }
+
+        return $this;
+    }
+    public function removeCollaboration($item)
+    {
+        $this->collaborations->removeElement($item);
+    }
 
 
     public function addType($type)
@@ -181,7 +205,9 @@ class Institution extends BaseCompositeNode {
         //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
         if( $parent && count($parent->getChildren()) > 0 ) {
             $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
-            $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
+            if( $firstSiblingOrgGroupType ) {
+                $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
+            }
         }
     }
 

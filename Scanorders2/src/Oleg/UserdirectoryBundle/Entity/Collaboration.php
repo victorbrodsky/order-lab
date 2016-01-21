@@ -26,6 +26,8 @@ class Collaboration extends ListAbstract
     protected $original;
 
     /**
+     * Collaboration Institutions
+     *
      * @ORM\ManyToMany(targetEntity="Institution")
      * @ORM\JoinTable(name="user_collaboration_institution",
      *      joinColumns={@ORM\JoinColumn(name="collaboration_id", referencedColumnName="id")},
@@ -39,6 +41,14 @@ class Collaboration extends ListAbstract
      * @ORM\JoinColumn(name="collaborationType_id", referencedColumnName="id", nullable=true)
      */
     private $collaborationType;
+
+
+    /**
+     * Used only for Collaboration nodes under the Institutional tree.
+     *
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="collaborations")
+     */
+    protected $institution;
 
 
     public function __construct() {
@@ -79,6 +89,23 @@ class Collaboration extends ListAbstract
     {
         return $this->collaborationType;
     }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
 
 
 

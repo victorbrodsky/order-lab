@@ -25,7 +25,6 @@ function ordersearchNavbarBoxInit() {
             setSearchtypeAction();
         }
     });
-
 }
 
 //get search input field with id=ordersearchform-search and redirect to path /patients/search?searchtype=search
@@ -90,6 +89,19 @@ function setDeidentifierNavbarSearchtypeAction(searchTypeId,searchTypeStr) {
     return false;
 }
 function initDeidentifierNavbarSearchMask() {
+
+    //init search span btn on enter press
+    //console.log('ordersearchNavbarBoxInit');
+    $("#deidentifiersearchform-searchtype").on( "keydown", function(event) {
+        //console.log('event.which='+event.which);
+        if(event.which == 13) {
+            event.preventDefault();
+            //click on span btn
+            $(this).parent().find('span').click();
+        }
+    });
+
+    //init accession mask
     var parent = $('#deidentifier-searchtype-button').closest('.accession-holder');
     var accField = parent.find('.accession-mask');
     //console.log(accField);

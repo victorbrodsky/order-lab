@@ -51,7 +51,7 @@ class DeidentifierSearchType extends AbstractType
             'label'=>'Accession Number:',
             'mapped' => false,
             'required'=>false,
-            'attr' => array('class'=>'form-control form-control-modif accession-mask'), //submit-on-enter-field
+            'attr' => array('class'=>'form-control accession-mask submit-on-enter-field', ), //submit-on-enter-field
         ));
 
         $builder->add('institution', 'entity', array(

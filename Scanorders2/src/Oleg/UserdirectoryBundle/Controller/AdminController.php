@@ -9,6 +9,7 @@ use Oleg\FellAppBundle\Entity\LanguageProficiency;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
+use Oleg\UserdirectoryBundle\Entity\Collaboration;
 use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
@@ -159,6 +160,7 @@ class AdminController extends Controller
         $count_institutiontypes = $this->generateInstitutionTypes();         //must be first
         $count_OrganizationalGroupType = $this->generateOrganizationalGroupType();                  //must be first
         $count_institution = $this->generateInstitutions();                  //must be first
+        $count_auxinstitution = $this->generateAuxiliaryInstitutions();
         $count_appTitlePositions = $this->generateAppTitlePositions();
 
         $count_CommentGroupType = $this->generateCommentGroupType();
@@ -249,6 +251,7 @@ class AdminController extends Controller
             'Institution Types='.$count_institutiontypes.', '.
             'Organizational Group Types='.$count_OrganizationalGroupType.', '.
             'Institutions='.$count_institution.', '.
+            'Auxiliary Institutions='.$count_auxinstitution.', '.
             'Appointment Title Positions='.$count_appTitlePositions.', '.
             //'Users='.$count_users.', '.
             'Test Users='.$count_testusers.', '.
@@ -547,6 +550,9 @@ class AdminController extends Controller
             "ROLE_DEIDENTIFICATOR_USER" => array("Deidentifier User","Allow to view the Deidentifier site"),
             "ROLE_DEIDENTIFICATOR_BANNED" => array("Deidentifier Banned User","Does not allow to visit Deidentifier site"),
             "ROLE_DEIDENTIFICATOR_UNAPPROVED" => array("Deidentifier Unapproved User","Does not allow to visit Deidentifier site"),
+            "ROLE_DEIDENTIFICATOR_GENERATOR" => array("Deidentifier Generator","Can generate, but not search"),
+            "ROLE_DEIDENTIFICATOR_ENQUIRER" => array("Deidentifier Enquirer","Can search, but not generate"),
+            "ROLE_DEIDENTIFICATOR_HONEST_BROKER" => array("Deidentifier Honest Broker","Can search and generate"),
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -1334,7 +1340,7 @@ class AdminController extends Controller
         );
 
         $institutions = array(
-            'Weill Cornell Medical College'=>$wcmc,
+            "Weill Cornell Medical College"=>$wcmc,
             "New York-Presbyterian Hospital"=>$nyh,
             "Weill Cornell Medical College Qatar"=>$wcmcq,
             "Memorial Sloan Kettering Cancer Center"=>$msk,
@@ -1424,6 +1430,81 @@ class AdminController extends Controller
         return round($treeCount/10);
     }
 
+    public function generateAuxiliaryInstitutions() {
+
+        $em = $this->getDoctrine()->getManager();
+        $username = $this->get('security.context')->getToken()->getUser();
+        $count = 0;
+
+        //echo 'generate Auxiliary Institutions <br>';
+
+        //All Institution
+        //echo 'All Institution <br>';
+        $allInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Institution");
+        if( !$allInst ) {
+            $allInst = new Institution();
+            $this->setDefaultList($allInst,1,$username,"All Institution");
+            $allInst->setAbbreviation("All Institution");
+            //$allInst->addType($medicalType);
+            //$allInst->setOrganizationalGroupType($levelInstitution);
+
+            $em->persist($allInst);
+            $em->flush();
+            $count++;
+        }
+
+        //All Collaboration
+        //echo 'All Collaboration <br>';
+        $allCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaboration");
+        if( !$allCollaborationInst ) {
+            $allCollaborationInst = new Institution();
+            $this->setDefaultList($allCollaborationInst,2,$username,"All Collaboration");
+            $allCollaborationInst->setAbbreviation("All Collaboration");
+            //$allCollaborationInst->addType($medicalType);
+            //$allCollaborationInst->setOrganizationalGroupType($levelInstitution);
+
+            //add 'WCMC-NYP'
+            $wcmcnypCollaborationInst = new Institution();
+            $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCMC-NYP");
+            $wcmcnypCollaborationInst->setAbbreviation("WCMC-NYP");
+            $allCollaborationInst->addChild($wcmcnypCollaborationInst);
+
+            //add WCMC-NYP collaboration object to this "WCMC-NYP" institution above
+            $wcmcnypCollaboration = $em->getRepository('OlegUserdirectoryBundle:Collaboration')->findOneByName("WCMC-NYP");
+            if( !$wcmcnypCollaboration ) {
+                $wcmcnypCollaboration = new Collaboration();
+                $this->setDefaultList($wcmcnypCollaboration,10,$username,"WCMC-NYP");
+
+                //add institutions
+                //WCMC
+                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCMC");
+                if( !$wcmc ) {
+                    exit('No Institution: "WCMC"');
+                }
+                $wcmcnypCollaboration->addInstitution($wcmc);
+                //NYP
+                $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("NYP");
+                if( !$nyp ) {
+                    exit('No Institution: "NYP"');
+                }
+                $wcmcnypCollaboration->addInstitution($nyp);
+
+                //set type
+                $collaborationType = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
+                if( !$collaborationType ) {
+                    exit('No CollaborationTypeList: "Union"');
+                }
+                $wcmcnypCollaboration->setCollaborationType($collaborationType);
+            }
+            $wcmcnypCollaborationInst->addCollaboration($wcmcnypCollaboration);
+
+            $em->persist($allCollaborationInst);
+            $em->flush();
+            $count++;
+        }
+
+        return $count;
+    }
 
     public function generateStates() {
 
