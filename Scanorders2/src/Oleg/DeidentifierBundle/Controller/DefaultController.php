@@ -76,7 +76,7 @@ class DefaultController extends Controller
         //check for active access requests
         //$accessreqs = $this->getActiveAccessReq();
 
-        $form = $this->createSearchForm();
+        $form = $this->createGenerateForm();
 
 
         //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
@@ -89,7 +89,7 @@ class DefaultController extends Controller
         );
     }
 
-    public function createSearchForm() {
+    public function createGenerateForm() {
         //permittedInstitutions for generation
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
@@ -157,6 +157,8 @@ class DefaultController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        $orderUtil = $this->get('scanorder_utility');
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
         $institutionIds = array();
         foreach( $permittedInstitutions as $permittedInstitution ) {
             $institutionIds[] = $permittedInstitution->getId();
@@ -304,7 +306,7 @@ class DefaultController extends Controller
         //$pathParams = $this->getPathParams($accession);
         //return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
 
-        $form = $this->createSearchForm();
+        $form = $this->createGenerateForm();
         //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         //Event Log

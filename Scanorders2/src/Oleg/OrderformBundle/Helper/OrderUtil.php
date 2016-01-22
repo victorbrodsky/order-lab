@@ -1140,29 +1140,25 @@ class OrderUtil {
     //get collaborations in the Institutional tree (i.e. "WCMC-NYP Collaboration")
     public function getPermittedScopeCollaborations( $originalPermittedInstitutions, $collaborationTypesStrArr, $withOriginal=true ) {
         $permittedInstitutions = new ArrayCollection();
+
         //include collaboration (any type) institutions by user
         //permittedInstitutionalPHIScope - institutions
         foreach( $originalPermittedInstitutions as $originalPermittedInstitution ) {
+
+            //add collaborations
+            foreach( $originalPermittedInstitution->getCollaborations() as $collaboration ) {
+                $collaborationObjType = $collaboration->getCollaborationType()."";
+                if( $collaborationObjType && in_array($collaborationObjType, $collaborationTypesStrArr) ) {
+                    if( $collaboration && !$permittedInstitutions->contains($collaboration)  ) {
+                        $permittedInstitutions->add($collaboration);
+                    }
+                }
+            }
 
             //add original permitted intsitutions
             if( $withOriginal ) {
                 if( $originalPermittedInstitution && !$permittedInstitutions->contains($originalPermittedInstitution)  ) {
                     $permittedInstitutions->add($originalPermittedInstitution);
-                }
-            }
-
-            //add collaborations
-            foreach( $originalPermittedInstitution->getCollaborations() as $collaborationObj ) {
-                echo "collaborationObj=".$collaborationObj."<br>";
-                $collaborationObjType = $collaborationObj->getCollaborationType()."";
-                echo "collaborationObjType=".$collaborationObjType."<br>";
-                if( in_array($collaborationObjType, $collaborationTypesStrArr) ) {
-                    foreach( $collaborationObj->getInstitutions() as $collaborationInst ) {
-                        //echo "collaborationInst=".$collaborationInst."<br>";
-                        if( $collaborationInst && !$permittedInstitutions->contains($collaborationInst)  ) {
-                            $permittedInstitutions->add($collaborationInst);
-                        }
-                    }
                 }
             }
 

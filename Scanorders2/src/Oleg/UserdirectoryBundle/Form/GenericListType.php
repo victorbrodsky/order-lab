@@ -183,48 +183,103 @@ class GenericListType extends AbstractType
 
         //Show Collaborations in the Institution object
         if( method_exists($this->params['entity'],'getCollaborations') ) {
-            $builder->add( 'collaborations', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:Collaboration',
-                //'read_only' => true,
-                //'property' => 'getTreeName',
-                'label'=>'Collaborations:',
-                'required'=> false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            //->leftJoin("list.children","children")
-                            ->where("list.type = :typedef OR list.type = :typeadd")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
-                    },
-            ));
+
+
+            ///////////////////////// tree node /////////////////////////
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $title = $event->getData();
+                $form = $event->getForm();
+
+                //check if this Institution is under "All Collaboration" tree
+                $allCollaborationInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaboration");
+                if( $title->getRoot() != $allCollaborationInst->getRoot() ) {
+                    return;
+                }
+
+                //echo "show Collaboration institutions<br>";
+
+                $form->add( 'collaborationInstitutions', 'entity', array(
+                    'class' => 'OlegUserdirectoryBundle:Institution',
+                    'property' => 'getTreeName',
+                    'label'=>'Institutions:',
+                    'required'=> false,
+                    'multiple' => true,
+                    'attr' => array('class'=>'combobox combobox-width'),
+                    'query_builder' => function(EntityRepository $er) {
+                            return $er->createQueryBuilder('list')
+                                ->leftJoin("list.children","children")
+                                ->where("list.type = :typedef OR list.type = :typeadd")
+                                ->orderBy("list.orderinlist","ASC")
+                                ->setParameters( array(
+                                    'typedef' => 'default',
+                                    'typeadd' => 'user-added',
+                                ));
+                        },
+                ));
+
+                $form->add( 'collaborationType', 'entity', array(
+                    'class' => 'OlegUserdirectoryBundle:CollaborationTypeList',
+                    'property' => 'name',
+                    'label'=>'Collaboration Type:',
+                    'required'=> false,
+                    'multiple' => false,
+                    'attr' => array('class'=>'combobox combobox-width'),
+                    'query_builder' => function(EntityRepository $er) {
+                            return $er->createQueryBuilder('list')
+                                ->where("list.type = :typedef OR list.type = :typeadd")
+                                ->orderBy("list.orderinlist","ASC")
+                                ->setParameters( array(
+                                    'typedef' => 'default',
+                                    'typeadd' => 'user-added',
+                                ));
+                        },
+                ));
+
+            });
+            ///////////////////////// EOF tree node /////////////////////////
+
+//            $builder->add( 'collaborations', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:Collaboration',
+//                //'read_only' => true,
+//                //'property' => 'getTreeName',
+//                'label'=>'Collaborations:',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('list')
+//                            //->leftJoin("list.children","children")
+//                            ->where("list.type = :typedef OR list.type = :typeadd")
+//                            ->orderBy("list.orderinlist","ASC")
+//                            ->setParameters( array(
+//                                'typedef' => 'default',
+//                                'typeadd' => 'user-added',
+//                            ));
+//                    },
+//            ));
         }
 
         //Collaboration
-        if( method_exists($this->params['entity'],'getCollaborationType') ) {
-            //echo "add institutions <br>";
-            $builder->add( 'collaborationType', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:CollaborationTypeList',
-                'property' => 'name',
-                'label'=>'Collaboration Type:',
-                'required'=> false,
-                'multiple' => false,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->where("list.type = :typedef OR list.type = :typeadd")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
-                    },
-            ));
-        }
+//        if( method_exists($this->params['entity'],'getCollaborationType') ) {
+//            //echo "add institutions <br>";
+//            $builder->add( 'collaborationType', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:CollaborationTypeList',
+//                'property' => 'name',
+//                'label'=>'Collaboration Type:',
+//                'required'=> false,
+//                'multiple' => false,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('list')
+//                            ->where("list.type = :typedef OR list.type = :typeadd")
+//                            ->orderBy("list.orderinlist","ASC")
+//                            ->setParameters( array(
+//                                'typedef' => 'default',
+//                                'typeadd' => 'user-added',
+//                            ));
+//                    },
+//            ));
+//        }
 
         //tree: add group title
         if( method_exists($this->params['entity'],'getOrganizationalGroupType') ) {

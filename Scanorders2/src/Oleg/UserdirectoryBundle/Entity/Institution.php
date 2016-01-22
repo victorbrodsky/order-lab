@@ -84,11 +84,50 @@ class Institution extends BaseCompositeNode {
 //     * @ORM\OneToMany(targetEntity="Collaboration", mappedBy="institution", cascade={"persist"})
 //     **/
 //    private $collaborations;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="collaborations")
+//     * @ORM\JoinTable(name="user_institutions_collaborations")
+//     **/
+//    private $collaborationInstitutions;
+
+    //Collaboration
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="collaborations")
+//     */
+//    private $collaborationInstitutions;
+//
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="collaborationInstitutions")
+//     * @ORM\JoinTable(name="user_collaboration_institution",
+//     *      joinColumns={@ORM\JoinColumn(name="collaboration_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+//     *      )
+//     */
+//    private $collaborations;
     /**
-     * @ORM\ManyToMany(targetEntity="Collaboration", mappedBy="institutions")
-     * @ORM\JoinTable(name="user_institutions_collaborations")
-     **/
+     * Mapped reference to the Collaboration node
+     *
+     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="collaborationInstitutions")
+     */
     private $collaborations;
+
+    /**
+     * Collaboration Institutions under this Collaboration node
+     *
+     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="collaborations")
+     * @ORM\JoinTable(name="user_collaborationInstitution_collaboration",
+     *      joinColumns={@ORM\JoinColumn(name="collaborationInstitution_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="collaboration_id", referencedColumnName="id")}
+     *      )
+     */
+    private $collaborationInstitutions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CollaborationTypeList")
+     * @ORM\JoinColumn(name="collaborationType_id", referencedColumnName="id", nullable=true)
+     */
+    private $collaborationType;
+
 
     //dummy field not linked to DB
     //private $institutionspositiontypes;
@@ -103,6 +142,8 @@ class Institution extends BaseCompositeNode {
 
         $this->buildings = new ArrayCollection();
         $this->administrativeTitles = new ArrayCollection();
+
+        $this->collaborationInstitutions = new ArrayCollection();
         $this->collaborations = new ArrayCollection();
     }
 
@@ -177,6 +218,40 @@ class Institution extends BaseCompositeNode {
     {
         $this->collaborations->removeElement($item);
     }
+    //collaborationInstitutions
+    public function getCollaborationInstitutions()
+    {
+        return $this->collaborationInstitutions;
+    }
+    public function addCollaborationInstitution($item)
+    {
+        if( !$this->collaborationInstitutions->contains($item) ) {
+            $this->collaborationInstitutions->add($item);
+        }
+
+        return $this;
+    }
+    public function removeCollaborationInstitution($item)
+    {
+        $this->collaborationInstitutions->removeElement($item);
+    }
+
+    /**
+     * @param mixed $collaborationType
+     */
+    public function setCollaborationType($collaborationType)
+    {
+        $this->collaborationType = $collaborationType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollaborationType()
+    {
+        return $this->collaborationType;
+    }
+
 
 
     public function addType($type)

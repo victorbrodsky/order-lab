@@ -3,6 +3,7 @@
 
 namespace Oleg\UserdirectoryBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Oleg\UserdirectoryBundle\Entity\Institution;
@@ -125,50 +126,84 @@ class TreeRepository extends NestedTreeRepository {
             return array();
         }
         if( count($collaborationTypesStrArr) == 0 ) {
-            $msg = "Collaboration is ignored. Collaboration type is invalid ".print_r($collaborationTypesStrArr);
+            $msg = "Collaboration is ignored. Collaboration type array is null count=".count($collaborationTypesStrArr);
             //exit($msg);
             throw new \Exception($msg);
             return array();
         }
 
-        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
-        $dql = $repository->createQueryBuilder("collaboration");
-        $dql->select("collaboration");
-        $dql->leftJoin("collaboration.institutions","institutions");
-        $dql->leftJoin("collaboration.collaborationType","collaborationType");
-
-        ///// replaced by getCriterionStrForCollaborationsByNode /////
-        $criteriastr = "collaboration.type != 'disabled' AND collaboration.type != 'draft'"; //->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
-
-//        $criteriastr .= "institutions.root = " . $node->getRoot();
-//        $criteriastr .= " AND ";
-//        $criteriastr .= "institutions.lft < " . $node->getLft();
-//        $criteriastr .= " AND ";
-//        $criteriastr .= "institutions.rgt > " . $node->getRgt();
-//        $criteriastr .= " OR ";
-//        $criteriastr .= "institutions.id = " . $node->getId();
-        $criteriastr = $criteriastr . " AND " . $this->selectNodesUnderParentNode( $node, "institutions" );
-
-        if( $collaborationTypesStrArr && count($collaborationTypesStrArr) > 0 ) {
-            $collaborationTypeCriterionArr = array();
-            foreach( $collaborationTypesStrArr as $collaborationTypesStr ) {
-                $collaborationTypeCriterionArr[] = "collaborationType.name = '" . $collaborationTypesStr . "'";
+        //get collaborations with type $collaborationTypesStrArr
+        $collaborations = new ArrayCollection();
+        foreach( $node->getCollaborations() as $collaboration ) {
+            $collaborationObjType = $collaboration->getCollaborationType()."";
+            if( $collaborationObjType && in_array($collaborationObjType, $collaborationTypesStrArr) ) {
+                if( $collaboration && !$collaborations->contains($collaboration)  ) {
+                    $collaborations->add($collaboration);
+                }
             }
-
-            $criteriastr .= " AND " . implode( " OR ", $collaborationTypeCriterionArr );
         }
-        ///// EOF replaced by getCriterionStrForCollaborationsByNode /////
-
-        //echo "criteriastr=".$criteriastr."<br>";
-
-        $dql->where($criteriastr);
-        $query = $this->_em->createQuery($dql);
-        $collaborations = $query->getResult();
 
         //echo "count(collaborations)=".count($collaborations)."<br>";
 
         return $collaborations;
     }
+
+
+//    //check collaboration with given node
+//    //$collaborationTypesStrArr: array("Union","Intersection"), if null - ignore collaborations
+//    public function findCollaborationsByNode( $node, $collaborationTypesStrArr=array("Union") ) {
+//
+//        if( !$collaborationTypesStrArr ) {
+//            $msg = "Collaboration is ignored. Collaboration type is null.";
+//            //exit($msg);
+//            throw new \Exception($msg);
+//            return array();
+//        }
+//        if( count($collaborationTypesStrArr) == 0 ) {
+//            $msg = "Collaboration is ignored. Collaboration type is invalid ".print_r($collaborationTypesStrArr);
+//            //exit($msg);
+//            throw new \Exception($msg);
+//            return array();
+//        }
+//
+//        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
+//        $dql = $repository->createQueryBuilder("collaboration");
+//        $dql->select("collaboration");
+//        $dql->leftJoin("collaboration.institutions","institutions");
+//        $dql->leftJoin("collaboration.collaborationType","collaborationType");
+//
+//        ///// replaced by getCriterionStrForCollaborationsByNode /////
+//        $criteriastr = "collaboration.type != 'disabled' AND collaboration.type != 'draft'"; //->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
+//
+////        $criteriastr .= "institutions.root = " . $node->getRoot();
+////        $criteriastr .= " AND ";
+////        $criteriastr .= "institutions.lft < " . $node->getLft();
+////        $criteriastr .= " AND ";
+////        $criteriastr .= "institutions.rgt > " . $node->getRgt();
+////        $criteriastr .= " OR ";
+////        $criteriastr .= "institutions.id = " . $node->getId();
+//        $criteriastr = $criteriastr . " AND " . $this->selectNodesUnderParentNode( $node, "institutions" );
+//
+//        if( $collaborationTypesStrArr && count($collaborationTypesStrArr) > 0 ) {
+//            $collaborationTypeCriterionArr = array();
+//            foreach( $collaborationTypesStrArr as $collaborationTypesStr ) {
+//                $collaborationTypeCriterionArr[] = "collaborationType.name = '" . $collaborationTypesStr . "'";
+//            }
+//
+//            $criteriastr .= " AND " . implode( " OR ", $collaborationTypeCriterionArr );
+//        }
+//        ///// EOF replaced by getCriterionStrForCollaborationsByNode /////
+//
+//        //echo "criteriastr=".$criteriastr."<br>";
+//
+//        $dql->where($criteriastr);
+//        $query = $this->_em->createQuery($dql);
+//        $collaborations = $query->getResult();
+//
+//        //echo "count(collaborations)=".count($collaborations)."<br>";
+//
+//        return $collaborations;
+//    }
 
     //$node - institution of the search entity
     //$field = "institutions"
@@ -193,7 +228,7 @@ class TreeRepository extends NestedTreeRepository {
         $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
         $collaborationCriterionArr = array();
         foreach( $collaborations as $collaboration ) {
-            foreach( $collaboration->getInstitutions() as $collaborationNode ) {
+            foreach( $collaboration->getCollaborationInstitutions() as $collaborationNode ) {
                 if( !in_array($collaborationNode->getId(), $addedNodes) ) {
                     //echo "collaborationNode=".$collaborationNode->getId()."<br>";
                     $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );

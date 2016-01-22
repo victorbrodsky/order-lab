@@ -86,7 +86,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-statuses/", name="fellappstatuses-list")
      * @Route("/fellowship-application-ranks/", name="fellappranks-list")
      * @Route("/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency-list")
-     * @Route("/collaborations/", name="collaborations-list")
+//     * @Route("/collaborations/", name="collaborations-list")
      * @Route("/collaboration-types/", name="collaborationtypes-list")
      * @Route("/permissions/", name="permission-list")
      * @Route("/permission-objects/", name="permissionobject-list")
@@ -288,7 +288,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-statuses/", name="fellappstatuses_create")
      * @Route("/fellowship-application-ranks/", name="fellappranks_create")
      * @Route("/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency_create")
-     * @Route("/collaborations/", name="collaborations_create")
+//     * @Route("/collaborations/", name="collaborations_create")
      * @Route("/collaboration-types/", name="collaborationtypes_create")
      * @Route("/permissions/", name="permission_create")
      * @Route("/permission-objects/", name="permissionobject_create")
@@ -439,7 +439,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-statuses/new", name="fellappstatuses_new")
      * @Route("/fellowship-application-ranks/new", name="fellappranks_new")
      * @Route("/fellowship-application-language-proficiencies/new", name="fellapplanguageproficiency_new")
-     * @Route("/collaborations/new", name="collaborations_new")
+//     * @Route("/collaborations/new", name="collaborations_new")
      * @Route("/collaboration-types/new", name="collaborationtypes_new")
      * @Route("/permissions/new", name="permission_new")
      * @Route("/permission-objects/new", name="permissionobject_new")
@@ -561,7 +561,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_show")
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_show")
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_show")
-     * @Route("/collaborations/{id}", name="collaborations_show")
+//     * @Route("/collaborations/{id}", name="collaborations_show")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_show")
      * @Route("/permissions/{id}", name="permission_show")
      * @Route("/permission-objects/{id}", name="permissionobject_show")
@@ -673,7 +673,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-statuses/{id}/edit", name="fellappstatuses_edit")
      * @Route("/fellowship-application-ranks/{id}/edit", name="fellappranks_edit")
      * @Route("/fellowship-application-language-proficiencies/{id}/edit", name="fellapplanguageproficiency_edit")
-     * @Route("/collaborations/{id}/edit", name="collaborations_edit")
+//     * @Route("/collaborations/{id}/edit", name="collaborations_edit")
      * @Route("/collaboration-types/{id}/edit", name="collaborationtypes_edit")
      * @Route("/permissions/{id}/edit", name="permission_edit")
      * @Route("/permission-objects/{id}/edit", name="permissionobject_edit")
@@ -828,7 +828,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_update")
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_update")
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_update")
-     * @Route("/collaborations/{id}", name="collaborations_update")
+//     * @Route("/collaborations/{id}", name="collaborations_update")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_update")
      * @Route("/permissions/{id}", name="permission_update")
      * @Route("/permission-objects/{id}", name="permissionobject_update")
@@ -1387,10 +1387,10 @@ class ListController extends Controller
                 $displayName = "Fellowship Application Language Proficiencies";
                 $bundleName = "FellAppBundle";
                 break;
-            case "collaborations":
-                $className = "Collaboration";
-                $displayName = "Collaborations";
-                break;
+//            case "collaborations":
+//                $className = "Collaboration";
+//                $displayName = "Collaborations";
+//                break;
             case "collaborationtypes":
                 $className = "CollaborationTypeList";
                 $displayName = "Collaboration Types";
@@ -1499,7 +1499,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_delete")
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_delete")
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_delete")
-     * @Route("/collaborations/{id}", name="collaborations_delete")
+//     * @Route("/collaborations/{id}", name="collaborations_delete")
      * @Route("/collaboration-types/{id}", name="collaborationtypes_delete")
      * @Route("/permissions/{id}", name="permission_delete")
      * @Route("/permission-objects/{id}", name="permissionobject_delete")

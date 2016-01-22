@@ -1451,7 +1451,8 @@ class AdminController extends Controller
             $allInst = new Institution();
             $this->setDefaultList($allInst,1,$username,"All Institution");
             $allInst->setAbbreviation("All Institution");
-            //$allInst->addType($medicalType);
+            $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+            $allInst->addType($medicalType);
             //$allInst->setOrganizationalGroupType($levelInstitution);
 
             $em->persist($allInst);
@@ -1460,6 +1461,7 @@ class AdminController extends Controller
         }
 
         //All Collaboration
+        $collaborationType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Collaboration');
         //echo 'All Collaboration <br>';
         $allCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaboration");
         if( !$allCollaborationInst ) {
@@ -1468,48 +1470,68 @@ class AdminController extends Controller
             $allCollaborationInst->setAbbreviation("All Collaboration");
             $allCollaborationInst->addType($collaborationType);
             //$allCollaborationInst->setOrganizationalGroupType($levelInstitution);
+            $em->persist($allCollaborationInst);
+            $em->flush();
+            $count++;
+        }
 
-            //add 'WCMC-NYP Collaboration'
-            $collaborationType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Collaboration');
+        //add 'WCMC-NYP Collaboration'
+        $wcmcnypCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('WCMC-NYP Collaboration');
+        if( !$wcmcnypCollaborationInst ) {
             $wcmcnypCollaborationInst = new Institution();
             $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCMC-NYP Collaboration");
             $wcmcnypCollaborationInst->setAbbreviation("WCMC-NYP Collaboration");
             $wcmcnypCollaborationInst->addType($collaborationType);
+
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCMC");
+            $wcmcnypCollaborationInst->addCollaborationInstitution($wcmc);
+
+            $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("NYP");
+            $wcmcnypCollaborationInst->addCollaborationInstitution($nyp);
+
+            $unionCollaborationType = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
+            $wcmcnypCollaborationInst->setCollaborationType($unionCollaborationType);
+
             $allCollaborationInst->addChild($wcmcnypCollaborationInst);
-
-            //add WCMC-NYP collaboration object to this "WCMC-NYP" institution above
-            $wcmcnypCollaboration = $em->getRepository('OlegUserdirectoryBundle:Collaboration')->findOneByName("WCMC-NYP");
-            if( !$wcmcnypCollaboration ) {
-                $wcmcnypCollaboration = new Collaboration();
-                $this->setDefaultList($wcmcnypCollaboration,10,$username,"WCMC-NYP");
-
-                //add institutions
-                //WCMC
-                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCMC");
-                if( !$wcmc ) {
-                    exit('No Institution: "WCMC"');
-                }
-                $wcmcnypCollaboration->addInstitution($wcmc);
-                //NYP
-                $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("NYP");
-                if( !$nyp ) {
-                    exit('No Institution: "NYP"');
-                }
-                $wcmcnypCollaboration->addInstitution($nyp);
-
-                //set type
-                $collaborationType = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
-                if( !$collaborationType ) {
-                    exit('No CollaborationTypeList: "Union"');
-                }
-                $wcmcnypCollaboration->setCollaborationType($collaborationType);
-            }
-            $wcmcnypCollaborationInst->addCollaboration($wcmcnypCollaboration);
 
             $em->persist($allCollaborationInst);
             $em->flush();
             $count++;
         }
+
+//            //add WCMC-NYP collaboration object to this "WCMC-NYP" institution above
+//            $wcmcnypCollaboration = $em->getRepository('OlegUserdirectoryBundle:Collaboration')->findOneByName("WCMC-NYP");
+//            if( !$wcmcnypCollaboration ) {
+//                $wcmcnypCollaboration = new Collaboration();
+//                $this->setDefaultList($wcmcnypCollaboration,10,$username,"WCMC-NYP");
+//
+//                //add institutions
+//                //WCMC
+//                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCMC");
+//                if( !$wcmc ) {
+//                    exit('No Institution: "WCMC"');
+//                }
+//                $wcmcnypCollaboration->addInstitution($wcmc);
+//                //NYP
+//                $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("NYP");
+//                if( !$nyp ) {
+//                    exit('No Institution: "NYP"');
+//                }
+//                $wcmcnypCollaboration->addInstitution($nyp);
+//
+//                //set type
+//                $collaborationType = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
+//                if( !$collaborationType ) {
+//                    exit('No CollaborationTypeList: "Union"');
+//                }
+//                $wcmcnypCollaboration->setCollaborationType($collaborationType);
+//            }
+//            $wcmcnypCollaborationInst->addCollaboration($wcmcnypCollaboration);
+//
+//            $em->persist($allCollaborationInst);
+//            $em->flush();
+//            $count++;
+
 
         return $count;
     }

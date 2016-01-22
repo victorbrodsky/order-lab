@@ -553,10 +553,6 @@
         {{ formmacros.field(form.institutions) }}
     {% endif %}
 
-    {% if form.collaborationType is defined %}
-        {{ formmacros.field(form.collaborationType) }}
-    {% endif %}
-
     {% if form.root is defined %}
         {{ formmacros.field(form.root) }}
     {% endif %}
@@ -565,6 +561,14 @@
     {% endif %}
     {% if form.rgt is defined %}
         {{ formmacros.field(form.rgt) }}
+    {% endif %}
+
+    <hr>
+    {% if form.collaborationType is defined %}
+        {{ formmacros.field(form.collaborationType) }}
+    {% endif %}
+    {% if form.collaborationInstitutions is defined %}
+        {{ formmacros.field(form.collaborationInstitutions) }}
     {% endif %}
 
 {% endmacro %}
