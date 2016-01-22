@@ -2,6 +2,37 @@
 
     <h3 class="text-info">{{ eventlog_title }}</h3>
 
+
+    <p>
+    <form action="{{ path(sitename~'_logger') }}" method="get" {{ form_enctype(loggerfilter) }} class="well form-search">
+
+        <div class="row">
+            <div class="col-xs-2">
+                {{ form_row(loggerfilter.creationdate, {'attr': {'placeholder': 'Creation Date'}}) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_row(loggerfilter.user,{'attr': {'placeholder': 'User'}}) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_row(loggerfilter.eventType, {'attr': {'placeholder': 'Event Type'}}) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_row(loggerfilter.search, {'attr': {'placeholder': 'Event Search'}}) }}
+            </div>
+            <div class="col-xs-2">
+                <div class="btn-group btn-group-justified">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-sm btn-default fellapp-filter-btn"><i class="icon-search"></i>Filter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_rest(loggerfilter) }}
+    </form>
+    </p>
+
+
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
             <tr>

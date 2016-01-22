@@ -26,12 +26,12 @@ class FellAppLoggerController extends LoggerController
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $params = array(
             'sitename'=>$this->container->getParameter('fellapp.sitename')
         );
-        return $this->listLogger($params);
+        return $this->listLogger($params,$request);
     }
 
 

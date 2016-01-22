@@ -203,6 +203,7 @@ class ListController extends Controller
             $limit,                          /*limit per page*/
             array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
         );
+        //echo "list count=".count($entities)."<br>";
 
         ///////////// check if show "create a new entity" link //////////////
         $createNew = true;

@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Form\LoggerFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -47,7 +48,7 @@ class LoggerController extends Controller
             'onlyheader'=>true
         );
 
-        $logger =  $this->listLogger($params);
+        $logger =  $this->listLogger($params,$request);
 
         return $logger;
     }
@@ -78,7 +79,7 @@ class LoggerController extends Controller
             'allsites'=>true
         );
 
-        $logger =  $this->listLogger($params);
+        $logger =  $this->listLogger($params,$request);
 
         return $logger;
     }
@@ -91,16 +92,16 @@ class LoggerController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $params = array(
             'sitename'=>$this->container->getParameter('employees.sitename')
         );
-        return $this->listLogger($params);
+        return $this->listLogger($params,$request);
     }
 
 
-    protected function listLogger( $params ) {
+    protected function listLogger( $params, $request ) {
 
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
         $allsites = ( array_key_exists('allsites', $params) ? $params['allsites'] : null);
@@ -128,6 +129,8 @@ class LoggerController extends Controller
         if( $allsites == null || $allsites == false ) {
             $dql->where("logger.siteName = '".$sitename."'");
         }
+
+        $filterform = $this->processLoggerFilter($dql,$request);
 
         $createLogger = null;
         $updateLogger = null;
@@ -222,6 +225,7 @@ class LoggerController extends Controller
 
 
         return array(
+            'loggerfilter' => $filterform->createView(),
             'pagination' => $pagination,
             'roles' => $rolesArr,
             'sitename' => $sitename,
@@ -233,7 +237,25 @@ class LoggerController extends Controller
 
 
 
+    public function processLoggerFilter( $dql, $request ) {
 
+        $params = array();
+
+        //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
+        $filterform = $this->createForm(new LoggerFilterType($params), null);
+
+        $filterform->bind($request);
+
+        $creationdate = $filterform['creationdate']->getData();
+        $search = $filterform['search']->getData();
+        $user = $filterform['user']->getData();
+        $eventType = $filterform['eventType']->getData();
+
+        //echo "user=".$user."<br>";
+        //echo "search=".$search."<br>";
+
+        return $filterform;
+    }
 
 
 

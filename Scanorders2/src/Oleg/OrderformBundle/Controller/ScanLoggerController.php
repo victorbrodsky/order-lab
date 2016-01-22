@@ -28,10 +28,10 @@ class ScanLoggerController extends LoggerController
      * @Method("GET")
      * @Template("OlegOrderformBundle:Logger:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
 		$params = array('sitename'=>$this->container->getParameter('scan.sitename'));
-        return $this->listLogger($params);
+        return $this->listLogger($params,$request);
     }
 
 
@@ -61,7 +61,7 @@ class ScanLoggerController extends LoggerController
             'allsites'=>true
         );
 
-        $logger =  $this->listLogger($params);
+        $logger =  $this->listLogger($params,$request);
 
         return $logger;
     }
