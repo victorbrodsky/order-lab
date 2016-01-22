@@ -1129,7 +1129,7 @@ class OrderUtil {
     //Used in new order field: "Order data visible to members of (Institutional PHI Scope)"
     public function getAllScopeInstitutions( $originalPermittedInstitutions, $message ) {
 
-        $permittedInstitutions = $this->getPermittedScopeCollaborationInstitutions($originalPermittedInstitutions,array("Union","Intersection","Untrusted Intersection"));
+        $permittedInstitutions = $this->getPermittedScopeCollaborations($originalPermittedInstitutions,array("Union","Intersection","Untrusted Intersection"));
 
         //include current message institution to the $permittedInstitutions
         $permittedInstitutions = $this->addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message);
@@ -1137,6 +1137,41 @@ class OrderUtil {
         return $permittedInstitutions;
     }
 
+    //get collaborations in the Institutional tree (i.e. "WCMC-NYP Collaboration")
+    public function getPermittedScopeCollaborations( $originalPermittedInstitutions, $collaborationTypesStrArr, $withOriginal=true ) {
+        $permittedInstitutions = new ArrayCollection();
+        //include collaboration (any type) institutions by user
+        //permittedInstitutionalPHIScope - institutions
+        foreach( $originalPermittedInstitutions as $originalPermittedInstitution ) {
+
+            //add original permitted intsitutions
+            if( $withOriginal ) {
+                if( $originalPermittedInstitution && !$permittedInstitutions->contains($originalPermittedInstitution)  ) {
+                    $permittedInstitutions->add($originalPermittedInstitution);
+                }
+            }
+
+            //add collaborations
+            foreach( $originalPermittedInstitution->getCollaborations() as $collaborationObj ) {
+                echo "collaborationObj=".$collaborationObj."<br>";
+                $collaborationObjType = $collaborationObj->getCollaborationType()."";
+                echo "collaborationObjType=".$collaborationObjType."<br>";
+                if( in_array($collaborationObjType, $collaborationTypesStrArr) ) {
+                    foreach( $collaborationObj->getInstitutions() as $collaborationInst ) {
+                        //echo "collaborationInst=".$collaborationInst."<br>";
+                        if( $collaborationInst && !$permittedInstitutions->contains($collaborationInst)  ) {
+                            $permittedInstitutions->add($collaborationInst);
+                        }
+                    }
+                }
+            }
+
+        }//foreach
+
+        return $permittedInstitutions;
+    }
+
+    //get collaborations as single institutions
     public function getPermittedScopeCollaborationInstitutions( $originalPermittedInstitutions, $collaborationTypesStrArr, $withOriginal=true ) {
         $permittedInstitutions = new ArrayCollection();
         //include collaboration (any type) institutions by user

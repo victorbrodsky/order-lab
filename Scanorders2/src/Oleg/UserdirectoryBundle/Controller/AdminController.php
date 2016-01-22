@@ -993,15 +993,16 @@ class AdminController extends Controller
     public function generateInstitutionTypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $elements = array(
             'Medical',
-            'Educational'
+            'Educational',
+            'Collaboration'
         );
 
 
@@ -1009,6 +1010,11 @@ class AdminController extends Controller
 
         $count = 10;
         foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
 
             $entity = new InstitutionType();
             $this->setDefaultList($entity,$count,$username,$name);
@@ -1460,13 +1466,15 @@ class AdminController extends Controller
             $allCollaborationInst = new Institution();
             $this->setDefaultList($allCollaborationInst,2,$username,"All Collaboration");
             $allCollaborationInst->setAbbreviation("All Collaboration");
-            //$allCollaborationInst->addType($medicalType);
+            $allCollaborationInst->addType($collaborationType);
             //$allCollaborationInst->setOrganizationalGroupType($levelInstitution);
 
-            //add 'WCMC-NYP'
+            //add 'WCMC-NYP Collaboration'
+            $collaborationType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Collaboration');
             $wcmcnypCollaborationInst = new Institution();
-            $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCMC-NYP");
-            $wcmcnypCollaborationInst->setAbbreviation("WCMC-NYP");
+            $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCMC-NYP Collaboration");
+            $wcmcnypCollaborationInst->setAbbreviation("WCMC-NYP Collaboration");
+            $wcmcnypCollaborationInst->addType($collaborationType);
             $allCollaborationInst->addChild($wcmcnypCollaborationInst);
 
             //add WCMC-NYP collaboration object to this "WCMC-NYP" institution above

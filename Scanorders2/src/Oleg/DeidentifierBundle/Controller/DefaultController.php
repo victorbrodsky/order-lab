@@ -310,7 +310,8 @@ class DefaultController extends Controller
         //Event Log
         $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionTypeId);
         $institutionObj = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution);
-        $event = "Deidentifier Generate with Accession Type " . $accessionTypeObj .",  Accession Number " . $accessionNumber . " and Institution " . $institutionObj;
+        //$event = "Deidentifier Generate with Accession Type " . $accessionTypeObj .",  Accession Number " . $accessionNumber . " and Institution " . $institutionObj;
+        $event = "Deidentifier ID ".$deidentifier." generated for ".$accessionTypeObj." ".$accessionNumber." (Institution: ".$institutionObj.")";
         $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,$accession,$request,'Generated');
 

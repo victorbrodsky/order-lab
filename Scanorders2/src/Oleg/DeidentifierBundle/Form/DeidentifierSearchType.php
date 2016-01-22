@@ -56,13 +56,13 @@ class DeidentifierSearchType extends AbstractType
 
         $builder->add('institution', 'entity', array(
             'label' => 'Organizational Group (Institutional PHI Scope):',
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'choices' => $this->params['permittedInstitutions'],
             'mapped' => false,
             'property' => 'getNodeNameWithRoot',
             'required' => true,
             'multiple' => false,
             'empty_value' => false,
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $this->params['permittedInstitutions'],
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 

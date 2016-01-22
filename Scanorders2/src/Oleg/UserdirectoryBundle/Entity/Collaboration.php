@@ -28,13 +28,14 @@ class Collaboration extends ListAbstract
     /**
      * Collaboration Institutions
      *
-     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="collaborations")
      * @ORM\JoinTable(name="user_collaboration_institution",
      *      joinColumns={@ORM\JoinColumn(name="collaboration_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      *      )
      */
     private $institutions;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="CollaborationTypeList")
@@ -43,12 +44,12 @@ class Collaboration extends ListAbstract
     private $collaborationType;
 
 
-    /**
-     * Used only for Collaboration nodes under the Institutional tree.
-     *
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="collaborations")
-     */
-    protected $institution;
+//    /**
+//     * Used only for Collaboration nodes under the Institutional tree.
+//     *
+//     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="collaborations")
+//     */
+//    protected $institution;
 
 
     public function __construct() {
@@ -61,6 +62,7 @@ class Collaboration extends ListAbstract
     {
         if( !$this->institutions->contains($institution) ) {
             $this->institutions->add($institution);
+            //$institution->addCollaboration($this);
         }
     }
 
@@ -90,21 +92,21 @@ class Collaboration extends ListAbstract
         return $this->collaborationType;
     }
 
-    /**
-     * @param mixed $institution
-     */
-    public function setInstitution($institution)
-    {
-        $this->institution = $institution;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
-    }
+//    /**
+//     * @param mixed $institution
+//     */
+//    public function setInstitution($institution)
+//    {
+//        $this->institution = $institution;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getInstitution()
+//    {
+//        return $this->institution;
+//    }
 
 
 

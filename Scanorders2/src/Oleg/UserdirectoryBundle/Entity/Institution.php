@@ -80,8 +80,13 @@ class Institution extends BaseCompositeNode {
     private $administrativeTitles;
 
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="Collaboration", mappedBy="institution", cascade={"persist"})
+//     **/
+//    private $collaborations;
     /**
-     * @ORM\OneToMany(targetEntity="Collaboration", mappedBy="institution", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Collaboration", mappedBy="institutions")
+     * @ORM\JoinTable(name="user_institutions_collaborations")
      **/
     private $collaborations;
 
@@ -164,7 +169,6 @@ class Institution extends BaseCompositeNode {
     {
         if( !$this->collaborations->contains($item) ) {
             $this->collaborations->add($item);
-            //$item->setInstitution($this);
         }
 
         return $this;
