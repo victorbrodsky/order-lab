@@ -3828,11 +3828,10 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $types = array(
             "View Patient Data for a given patient", //(our "check" button AND our "Test Patient" view page)
@@ -3858,11 +3857,19 @@ class AdminController extends Controller
             "Browse/search incoming results for a given organizational group",
             "Browse/search outgoing results for a given organizational group",
             "Browse/search patients that 'belong' to a given organizational group",
-            "Browse/search accessions that 'belong' to a given organizational group"
+            "Browse/search accessions that 'belong' to a given organizational group",
+            "Search by Deidentifier ID",
+            "Generate new Deidentifier ID"
+
         );
 
         $count = 10;
         foreach( $types as $type ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findOneByName($type);
+            if( $listEntity ) {
+                return -1;
+            }
 
             $listEntity = new PermissionList();
             $this->setDefaultList($listEntity,$count,$username,$type);
