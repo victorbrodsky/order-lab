@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Form\LoggerFilterType;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -130,8 +131,6 @@ class LoggerController extends Controller
             $dql->where("logger.siteName = '".$sitename."'");
         }
 
-        $filterform = $this->processLoggerFilter($dql,$request);
-
         $createLogger = null;
         $updateLogger = null;
 
@@ -143,6 +142,8 @@ class LoggerController extends Controller
             //echo "entityNamespace=".$entityNamespace."<br>";
             //echo "0=".$namepartsArr[0]."<br>";
             //$subjectUser = $em->getRepository($repName.':'.$entityName)->find($entityId);
+
+            $queryParameters = array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId );
 
             $dql->andWhere('logger.entityNamespace = :entityNamespace');
             $dql->andWhere('logger.entityName = :entityName');
@@ -157,7 +158,7 @@ class LoggerController extends Controller
                 //echo "dql2=".$dql2."<br>";
 
                 $query2 = $em->createQuery($dql2);
-                $query2->setParameters( array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId ) );
+                $query2->setParameters( $queryParameters );
                 $query2->setMaxResults(1);
 
                 $loggers = $query2->getResult();
@@ -175,7 +176,7 @@ class LoggerController extends Controller
                 //echo "dql2=".$dql3."<br>";
 
                 $query3 = $em->createQuery($dql3);
-                $query3->setParameters( array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId ) );
+                $query3->setParameters( $queryParameters );
                 $query3->setMaxResults(1);
                 $loggers = $query3->getResult();
                 //echo "logger count=".count($loggers)."<br>";
@@ -203,6 +204,11 @@ class LoggerController extends Controller
 			$dql->orderBy("logger.creationdate","DESC");
 		}
 
+        $filterRes = $this->processLoggerFilter($dql,$request);
+        $filterform = $filterRes['form'];
+        $dqlParameters = $filterRes['dqlParameters'];
+        //print_r($dqlParameters);
+
 		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       
 //		if( isset($postData['sort']) ) {
 //            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
@@ -211,8 +217,16 @@ class LoggerController extends Controller
         $limit = 30;
         $query = $em->createQuery($dql);
 
+        //echo "dql=".$query->getSql();
+
         if( $entityNamespace && $entityName && $entityId ) {
-            $query->setParameters( array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId ) );
+            //$query->setParameters( $queryParameters );
+            //add parameters
+            $dqlParameters = array_merge($queryParameters, $dqlParameters);
+        }
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
         }
 
         $paginator  = $this->get('knp_paginator');
@@ -240,23 +254,70 @@ class LoggerController extends Controller
     public function processLoggerFilter( $dql, $request ) {
 
         $params = array();
+        $dqlParameters = array();
+        $filterRes = array();
 
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
         $filterform = $this->createForm(new LoggerFilterType($params), null);
 
         $filterform->bind($request);
 
-        $creationdate = $filterform['creationdate']->getData();
+        $startdate = $filterform['startdate']->getData();
+        $enddate = $filterform['enddate']->getData();
         $search = $filterform['search']->getData();
         $user = $filterform['user']->getData();
         $eventType = $filterform['eventType']->getData();
 
         //echo "user=".$user."<br>";
         //echo "search=".$search."<br>";
+        //exit();
 
-        return $filterform;
+        if( $search ) {
+            $dql->andWhere("logger.event LIKE :searchEvent");
+            $dqlParameters['searchEvent'] = '%'.$search.'%';
+        }
+
+        if( $user ) {
+            $dql->andWhere("logger.user = :user");
+            $dqlParameters['user'] = $user;
+        }
+
+        if( $eventType ) {
+            $dql->andWhere("eventType.id = :eventTypeId");
+            $dqlParameters['eventTypeId'] = $eventType;
+        }
+
+        if( $startdate ) {
+            //date_default_timezone_set('America/New_York');
+            //date_default_timezone_set('UTC');
+            //DB: 2016-01-25 20:23:39
+            //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d H:m:s'); //MM/dd/yyyy H:m
+            //$startdateStr = $transformer->transform($startdate);
+            //echo "enddate=".$startdateStr."<br>";
+            //$startdate = \DateTime::createFromFormat( "Y-m-d H:i:s", $startdateStr );
+
+            $dql->andWhere("logger.creationdate >= :startdate");
+            //$dqlParameters['startdate'] = "'" . $startdateStr . "'";
+            //$dqlParameters['startdate'] = $startdateStr;
+            //$dql->andWhere("logger.creationdate >= '2016-01-25'");
+            $dqlParameters['startdate'] = $startdate;
+        }
+
+        if( $enddate ) {
+            //date_default_timezone_set('America/New_York');
+            //date_default_timezone_set('UTC');
+            //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y H:m'); //MM/dd/yyyy H:m
+            //$enddateStr = $transformer->transform($enddate);
+            //echo "enddate=".$enddateStr."<br>";
+            $dql->andWhere("logger.creationdate <= :enddate");
+            $dqlParameters['enddate'] = $enddate;
+        }
+
+        $filterRes['form'] = $filterform;
+        $filterRes['dqlParameters'] = $dqlParameters;
+
+        return $filterRes;
     }
-
 
 
 

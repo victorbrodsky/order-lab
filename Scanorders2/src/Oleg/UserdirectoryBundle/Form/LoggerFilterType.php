@@ -21,17 +21,17 @@ class LoggerFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('creationdate', 'datetime', array(
-            'label' => false, //'Start Date',
-            'widget' => 'single_text',
-            //'placeholder' => 'Start Date',
-            'required' => false,
-            //'format' => 'MM/dd/yyyy',
-            'format' => 'yyyy',
-            //'attr' => array('class' => 'datepicker form-control'),
-            //'attr' => array('class' => 'datepicker-only-year form-control'),
-            'attr' => array('class'=>'datepicker-only-year form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
-        ));
+//        $builder->add('creationdate', 'datetime', array(
+//            'label' => false, //'Start Date',
+//            'widget' => 'single_text',
+//            //'placeholder' => 'Start Date',
+//            'required' => false,
+//            //'format' => 'MM/dd/yyyy',
+//            'format' => 'yyyy',
+//            //'attr' => array('class' => 'datepicker form-control'),
+//            //'attr' => array('class' => 'datepicker-only-year form-control'),
+//            'attr' => array('class'=>'datepicker-only-year form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
+//        ));
 
         $builder->add('user', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -88,6 +88,22 @@ class LoggerFilterType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
+
+        $builder->add('startdate','datetime',array(
+            'label' => false, //'Start Date/Time:',
+            'required'=>false,
+            'widget' => 'single_text',
+            'format' => 'MM/dd/yyyy H:m',
+            'attr' => array('class'=>'form-control datetimepicker', 'placeholder' => 'Start Date/Time')
+        ));
+
+        $builder->add('enddate','datetime',array(
+            'label' => false, //'End Date/Time:',
+            'required'=>false,
+            'widget' => 'single_text',
+            'format' => 'MM/dd/yyyy H:m',
+            'attr' => array('class'=>'form-control datetimepicker', 'placeholder' => 'End Date/Time')
+        ));
 
 
         

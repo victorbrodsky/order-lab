@@ -24,6 +24,8 @@ class LoggerType extends AbstractType
             ->add('height')
             ->add('event')
             ->add('eventType')
+            ->add('entityId')
+            ->add('entityName')
             ->add('user')
             ->add('serverresponse','textarea',array('attr' => array('class'=>'textarea form-control')))
         ;

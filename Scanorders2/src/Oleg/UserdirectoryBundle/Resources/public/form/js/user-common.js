@@ -323,15 +323,16 @@ var filterDisabledOptions = function(data,target) {
 
 function initDatetimepicker() {
 
-    var datetimepicker = $('.form_datetime');
-    //console.log('initDatetimepicker datetimepicker.length='+datetimepicker.length);
-    if( datetimepicker.length > 0 ) {
-        //printF(datetimepicker,"init:");
-        datetimepicker.datetimepicker({
-            //format: 'mm-dd-yyyy hh:i'
-            format: 'mm/dd/yyyy hh:i'
+    $('.form_datetime').each( function() {
+
+        //printF($(this),"init:");
+        $(this).datetimepicker({
+            format: 'mm/dd/yyyy hh:i',
+            autoclose: true,
+            todayBtn: true
         });
-    }
+
+    });
 }
 
 
