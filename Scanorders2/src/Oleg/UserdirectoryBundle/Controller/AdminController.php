@@ -1444,19 +1444,19 @@ class AdminController extends Controller
 
         //echo 'generate Auxiliary Institutions <br>';
 
-        //All Institution
-        //echo 'All Institution <br>';
-        $allInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Institution");
+        //All Institutions
+        //echo 'All Institutions <br>';
+        $allInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Institutions");
         if( !$allInst ) {
             $allInst = new Institution();
-            $this->setDefaultList($allInst,1,$username,"All Institution");
-            $allInst->setAbbreviation("All Institution");
+            $this->setDefaultList($allInst,1,$username,"All Institutions");
+            $allInst->setAbbreviation("All Institutions");
             $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
             $allInst->addType($medicalType);
             //$allInst->setOrganizationalGroupType($levelInstitution);
 
             $em->persist($allInst);
-            $em->flush();
+            $em->flush($allInst);
             $count++;
         }
 
@@ -1471,7 +1471,7 @@ class AdminController extends Controller
             $allCollaborationInst->addType($collaborationType);
             //$allCollaborationInst->setOrganizationalGroupType($levelInstitution);
             $em->persist($allCollaborationInst);
-            $em->flush();
+            $em->flush($allCollaborationInst);
             $count++;
         }
 
@@ -1481,12 +1481,13 @@ class AdminController extends Controller
             $wcmcnypCollaborationInst = new Institution();
             $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCMC-NYP Collaboration");
             $wcmcnypCollaborationInst->setAbbreviation("WCMC-NYP Collaboration");
+
             $wcmcnypCollaborationInst->addType($collaborationType);
 
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
             $wcmcnypCollaborationInst->addCollaborationInstitution($wcmc);
 
-            $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("NYP");
+            $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
             $wcmcnypCollaborationInst->addCollaborationInstitution($nyp);
 
             $unionCollaborationType = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
@@ -1495,6 +1496,7 @@ class AdminController extends Controller
             $allCollaborationInst->addChild($wcmcnypCollaborationInst);
 
             $em->persist($allCollaborationInst);
+            $em->persist($wcmcnypCollaborationInst);
             $em->flush();
             $count++;
         }
