@@ -58,7 +58,7 @@ class DeidentifierSearchType extends AbstractType
             'label' => 'Organizational Group (Institutional PHI Scope):',
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $this->params['permittedInstitutions'],
-            //'read_only' => true,
+            'read_only' => true,
             'mapped' => false,
             'property' => 'getNodeNameWithRoot',
             'required' => true,
