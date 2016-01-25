@@ -88,14 +88,18 @@ function fieldInputMask( holder ) {
             makeErrorField($(this),false);
         },
         placeholder: " ",
-        clearMaskOnLostFocus: true
+        clearMaskOnLostFocus: false //true //show mask after hovering over the field
     });
 
     if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
-        $(":input").inputmask();
+        var maskField = $(":input");
+        maskField.inputmask();
     } else {
-        holder.find(":input").inputmask();
+        var maskField = holder.find(":input");
+        maskField.inputmask();
+
     }
+
 
     if( cycle == "new" || cycle == "create" ) {
 
@@ -292,8 +296,8 @@ function setAccessiontypeMask(elem,clean) {
     //console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    printF(accField,"Set Accession Mask:");
-    console.log(accField);
+    //printF(accField,"Set Accession Mask:");
+    //console.log(accField);
 
     //var value = elem.select2("val");
     //console.log("value=" + value);
@@ -302,7 +306,7 @@ function setAccessiontypeMask(elem,clean) {
     } else {
         var text = elem.val();
     }
-    console.log("text=" + text);
+    //console.log("text=" + text);
 
     //clear input field
     if( clean ) {

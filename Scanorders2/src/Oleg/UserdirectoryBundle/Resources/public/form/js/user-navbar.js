@@ -86,6 +86,9 @@ function setDeidentifierNavbarSearchtypeAction(searchTypeId,searchTypeStr) {
     //assign new mask
     swicthMaskAccessionTypeText(null,accField,searchTypeStr);
 
+    //"DID-" in the search box in nav bar is invisible unless you hover the cursor over it - it should be visible without hovering.
+    focusMaskField(accField);
+
     return false;
 }
 function initDeidentifierNavbarSearchMask() {
@@ -111,9 +114,26 @@ function initDeidentifierNavbarSearchMask() {
     //console.log("searchTypeStr="+searchTypeStr);
     //assign new mask
     swicthMaskAccessionTypeText(null,accField,searchTypeStr);
+
     //set original accessionNumber
     var accessionNumber = accField.attr("data-accessionNumber");
     accField.val(accessionNumber);
+
+    //"DID-" in the search box in nav bar is invisible unless you hover the cursor over it - it should be visible without hovering.
+    focusMaskField(accField);
+}
+function focusMaskField(field) {
+    //printF(field,"focus Mask Field:");
+    //field.hover();
+    field.mouseover();
+}
+function setDIDPlaceholder(accField,searchTypeStr) {
+    //"DID-" in the search box in nav bar is invisible unless you hover the cursor over it - it should be visible without hovering.
+    if( searchTypeStr == "Deidentifier ID" ) {
+        accField.attr("placeholder","DID-");
+    } else {
+        accField.attr("placeholder","");
+    }
 }
 
 
