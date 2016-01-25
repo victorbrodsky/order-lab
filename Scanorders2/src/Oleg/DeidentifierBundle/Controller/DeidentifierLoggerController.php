@@ -28,10 +28,10 @@ class DeidentifierLoggerController extends LoggerController
      * @Method("GET")
      * @Template("OlegDeidentifierBundle:Logger:index.html.twig")
      */
-    public function indexAction(Request $reques)
+    public function indexAction(Request $request)
     {
 		$params = array('sitename'=>$this->container->getParameter('deidentifier.sitename'));
-        return $this->listLogger($params,$reques);
+        return $this->listLogger($params,$request);
     }
 
 

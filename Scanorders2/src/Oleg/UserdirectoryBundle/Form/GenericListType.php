@@ -190,8 +190,8 @@ class GenericListType extends AbstractType
                 $title = $event->getData();
                 $form = $event->getForm();
 
-                //check if this Institution is under "All Collaboration" tree
-                $allCollaborationInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaboration");
+                //check if this Institution is under "All Collaborations" tree
+                $allCollaborationInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaborations");
                 if( $title->getRoot() != $allCollaborationInst->getRoot() ) {
                     return;
                 }

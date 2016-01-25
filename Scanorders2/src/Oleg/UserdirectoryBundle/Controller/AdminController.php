@@ -1460,14 +1460,14 @@ class AdminController extends Controller
             $count++;
         }
 
-        //All Collaboration
+        //All Collaborations
         $collaborationType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Collaboration');
-        //echo 'All Collaboration <br>';
-        $allCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaboration");
+        //echo 'All Collaborations <br>';
+        $allCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaborations");
         if( !$allCollaborationInst ) {
             $allCollaborationInst = new Institution();
-            $this->setDefaultList($allCollaborationInst,2,$username,"All Collaboration");
-            $allCollaborationInst->setAbbreviation("All Collaboration");
+            $this->setDefaultList($allCollaborationInst,2,$username,"All Collaborations");
+            $allCollaborationInst->setAbbreviation("All Collaborations");
             $allCollaborationInst->addType($collaborationType);
             //$allCollaborationInst->setOrganizationalGroupType($levelInstitution);
             $em->persist($allCollaborationInst);
