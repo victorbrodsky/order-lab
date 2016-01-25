@@ -3868,7 +3868,7 @@ class AdminController extends Controller
 
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findOneByName($type);
             if( $listEntity ) {
-                return -1;
+                continue;
             }
 
             $listEntity = new PermissionList();
