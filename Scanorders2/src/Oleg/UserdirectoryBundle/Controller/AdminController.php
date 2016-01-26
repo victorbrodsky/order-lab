@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Entity\PermissionObjectList;
 use Oleg\UserdirectoryBundle\Entity\PositionTrackTypeList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
+use Oleg\UserdirectoryBundle\Entity\SiteList;
 use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Oleg\UserdirectoryBundle\Entity\TrainingTypeList;
@@ -155,7 +156,9 @@ class AdminController extends Controller
         //$max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes; it will set back to original value after execution of this script
 
-        $default_time_zone = $this->container->getParameter('default_time_zone');
+        //$default_time_zone = $this->container->getParameter('default_time_zone');
+
+        $count_sitenameList = $this->generateSitenameList();
 
         $count_institutiontypes = $this->generateInstitutionTypes();         //must be first
         $count_OrganizationalGroupType = $this->generateOrganizationalGroupType();                  //must be first
@@ -242,9 +245,11 @@ class AdminController extends Controller
         $count_PermissionObjects = $this->generatePermissionObjects();
         $count_PermissionActions = $this->generatePermissionActions();
 
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
+            'Sitenames='.$count_sitenameList.', '.
             'Source Systems='.$count_sourcesystems.', '.
             'Roles='.$count_roles.', '.
             'Site Settings='.$count_siteParameters.', '.
@@ -989,6 +994,45 @@ class AdminController extends Controller
     }
 
 
+
+
+    public function generateSitenameList() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            'directory' => 'employees',
+            'scan' => 'scan',
+            'fellowship-applications' => 'fellapp',
+            'deidentifier' => 'deidentifier'
+        );
+
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name => $abbreviation ) {
+
+            $entity = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new SiteList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $entity->setAbbreviation($abbreviation);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
     public function generateInstitutionTypes() {
 

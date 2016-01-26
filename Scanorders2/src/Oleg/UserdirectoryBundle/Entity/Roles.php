@@ -57,11 +57,21 @@ class Roles extends ListAbstract {
      */
     private $permissions;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="SiteList")
+     * @ORM\JoinTable(name="user_roles_sites",
+     *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $sites;
+
 
     public function __construct() {
         $this->attributes = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
         $this->permissions = new ArrayCollection();
+        $this->sites = new ArrayCollection();
     }
 
     /**
@@ -149,5 +159,19 @@ class Roles extends ListAbstract {
     }
 
 
+    public function getSites()
+    {
+        return $this->sites;
+    }
+    public function addSite($item)
+    {
+        if( $item && !$this->sites->contains($item) ) {
+            $this->sites->add($item);
+        }
+    }
+    public function removeSite($item)
+    {
+        $this->sites->removeElement($item);
+    }
 
 }

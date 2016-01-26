@@ -91,6 +91,7 @@ class ListController extends Controller
      * @Route("/permissions/", name="permission-list")
      * @Route("/permission-objects/", name="permissionobject-list")
      * @Route("/permission-actions/", name="permissionaction-list")
+     * @Route("/sites/", name="sites-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -132,6 +133,8 @@ class ListController extends Controller
         $dql->leftJoin("ent.original", "original");
         $dql->addGroupBy('original.name');
 
+        $dql->leftJoin("ent.sites", "sites");
+        $dql->addGroupBy('sites.name');
 
 //        if( method_exists($entityClass,'getResearchlab') ) {
 //            $dql->leftJoin("ent.researchlab", "researchlab");
@@ -200,10 +203,11 @@ class ListController extends Controller
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
-            $limit,                          /*limit per page*/
-            array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
+            $limit                           /*limit per page*/
+            //array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
         );
         //echo "list count=".count($entities)."<br>";
+        //exit();
 
         ///////////// check if show "create a new entity" link //////////////
         $createNew = true;
@@ -294,6 +298,7 @@ class ListController extends Controller
      * @Route("/permissions/", name="permission_create")
      * @Route("/permission-objects/", name="permissionobject_create")
      * @Route("/permission-actions/", name="permissionaction_create")
+     * @Route("/sites/", name="sites_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -445,6 +450,7 @@ class ListController extends Controller
      * @Route("/permissions/new", name="permission_new")
      * @Route("/permission-objects/new", name="permissionobject_new")
      * @Route("/permission-actions/new", name="permissionaction_new")
+     * @Route("/sites/new", name="sites_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -567,6 +573,7 @@ class ListController extends Controller
      * @Route("/permissions/{id}", name="permission_show")
      * @Route("/permission-objects/{id}", name="permissionobject_show")
      * @Route("/permission-actions/{id}", name="permissionaction_show")
+     * @Route("/sites/{id}", name="sites_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -679,6 +686,7 @@ class ListController extends Controller
      * @Route("/permissions/{id}/edit", name="permission_edit")
      * @Route("/permission-objects/{id}/edit", name="permissionobject_edit")
      * @Route("/permission-actions/{id}/edit", name="permissionaction_edit")
+     * @Route("/sites/{id}/edit", name="sites_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -834,6 +842,7 @@ class ListController extends Controller
      * @Route("/permissions/{id}", name="permission_update")
      * @Route("/permission-objects/{id}", name="permissionobject_update")
      * @Route("/permission-actions/{id}", name="permissionaction_update")
+     * @Route("/sites/{id}", name="sites_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1408,6 +1417,10 @@ class ListController extends Controller
                 $className = "PermissionActionList";
                 $displayName = "Permission Actions List";
                 break;
+            case "sites":
+                $className = "SiteList";
+                $displayName = "Sites List";
+                break;
 
             default:
                 $className = null;
@@ -1505,6 +1518,7 @@ class ListController extends Controller
      * @Route("/permissions/{id}", name="permission_delete")
      * @Route("/permission-objects/{id}", name="permissionobject_delete")
      * @Route("/permission-actions/{id}", name="permissionaction_delete")
+     * @Route("/sites/{id}", name="sites_delete")
      *
      *
      * @Method("DELETE")

@@ -316,10 +316,8 @@ class LoggerController extends Controller
         $user_tz = $user->getPreferences()->getTimezone();
 
         //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
-
-        $schedule_date = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone($user_tz) );
-        $datetimeUTC = $schedule_date->setTimeZone(new \DateTimeZone('UTC'));
-
+        $datetimeTz = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone($user_tz) );
+        $datetimeUTC = $datetimeTz->setTimeZone(new \DateTimeZone('UTC'));
         //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";
 
         return $datetimeUTC;

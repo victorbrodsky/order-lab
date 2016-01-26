@@ -323,6 +323,7 @@ class GenericListType extends AbstractType
 
         //Roles
         if( strtolower($this->mapper['className']) == strtolower("Roles") ) {
+
             $builder->add('alias',null,array(
                 'label'=>'Alias:',
                 'attr' => array('class' => 'form-control')
@@ -345,6 +346,14 @@ class GenericListType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__permissions__',
+            ));
+
+            $builder->add('sites','entity',array(
+                'class' => 'OlegUserdirectoryBundle:SiteList',
+                'label' => "Site(s):",
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false,
             ));
 
         }

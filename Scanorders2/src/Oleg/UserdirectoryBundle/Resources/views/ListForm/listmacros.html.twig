@@ -89,6 +89,7 @@
 
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
@@ -213,6 +214,12 @@
 
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.orderinlist }}</td>
+
+                <td>
+                    {% for site in entity.sites %}
+                        <p>{{ site.name }}</p>
+                    {% endfor %}
+                </td>
 
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
@@ -517,6 +524,10 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <hr>
+
+    {% if form.sites is defined %}
+        {{ formmacros.field(form.sites) }}
+    {% endif %}
 
     {#floors display for: suites, rooms#}
     {% if form.floors is defined %}
