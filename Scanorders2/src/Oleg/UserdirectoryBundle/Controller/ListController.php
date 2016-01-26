@@ -185,6 +185,7 @@ class ListController extends Controller
 
         if( method_exists($entityClass,'getSites') ) {
             $dql->leftJoin("ent.sites", "sites");
+            $dql->addGroupBy('sites.name');
         }
 
         //$dql->orderBy("ent.createdate","DESC");
