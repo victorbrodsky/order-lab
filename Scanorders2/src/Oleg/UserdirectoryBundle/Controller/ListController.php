@@ -133,9 +133,6 @@ class ListController extends Controller
         $dql->leftJoin("ent.original", "original");
         $dql->addGroupBy('original.name');
 
-        $dql->leftJoin("ent.sites", "sites");
-        $dql->addGroupBy('sites.name');
-
 //        if( method_exists($entityClass,'getResearchlab') ) {
 //            $dql->leftJoin("ent.researchlab", "researchlab");
 //            $dql->leftJoin("researchlab.user", "user");
@@ -184,6 +181,10 @@ class ListController extends Controller
         if( method_exists($entityClass,'getCollaborationType') ) {
             $dql->leftJoin("ent.collaborationType", "collaborationType");
             $dql->addGroupBy('collaborationType');
+        }
+
+        if( method_exists($entityClass,'getSites') ) {
+            $dql->leftJoin("ent.sites", "sites");
         }
 
         //$dql->orderBy("ent.createdate","DESC");
