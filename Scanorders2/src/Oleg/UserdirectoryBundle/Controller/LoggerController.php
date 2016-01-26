@@ -268,6 +268,8 @@ class LoggerController extends Controller
         $user = $filterform['user']->getData();
         $eventType = $filterform['eventType']->getData();
 
+        $currentUser = $this->get('security.context')->getToken()->getUser();
+
         //echo "user=".$user."<br>";
         //echo "search=".$search."<br>";
         //exit();
@@ -288,28 +290,16 @@ class LoggerController extends Controller
         }
 
         if( $startdate ) {
-            //date_default_timezone_set('America/New_York');
-            //date_default_timezone_set('UTC');
-            //DB: 2016-01-25 20:23:39
-            //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d H:m:s'); //MM/dd/yyyy H:m
-            //$startdateStr = $transformer->transform($startdate);
-            //echo "enddate=".$startdateStr."<br>";
-            //$startdate = \DateTime::createFromFormat( "Y-m-d H:i:s", $startdateStr );
-
             $dql->andWhere("logger.creationdate >= :startdate");
-            //$dqlParameters['startdate'] = "'" . $startdateStr . "'";
-            //$dqlParameters['startdate'] = $startdateStr;
-            //$dql->andWhere("logger.creationdate >= '2016-01-25'");
+
+            $startdate = $this->convertFromUserTimezonetoUTC($startdate,$currentUser);
             $dqlParameters['startdate'] = $startdate;
         }
 
         if( $enddate ) {
-            //date_default_timezone_set('America/New_York');
-            //date_default_timezone_set('UTC');
-            //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y H:m'); //MM/dd/yyyy H:m
-            //$enddateStr = $transformer->transform($enddate);
-            //echo "enddate=".$enddateStr."<br>";
             $dql->andWhere("logger.creationdate <= :enddate");
+
+            $enddate = $this->convertFromUserTimezonetoUTC($enddate,$currentUser);
             $dqlParameters['enddate'] = $enddate;
         }
 
@@ -319,6 +309,21 @@ class LoggerController extends Controller
         return $filterRes;
     }
 
+    //convert given datetime from user's timezone to UTC. Use UTC in DB query. 12:00 => 17:00 +5
+    public function convertFromUserTimezonetoUTC($datetime,$user) {
+
+        //$user_tz = 'America/New_York';
+        $user_tz = $user->getPreferences()->getTimezone();
+
+        //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
+
+        $schedule_date = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone($user_tz) );
+        $datetimeUTC = $schedule_date->setTimeZone(new \DateTimeZone('UTC'));
+
+        //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";
+
+        return $datetimeUTC;
+    }
 
 
 

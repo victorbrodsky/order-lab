@@ -124,17 +124,16 @@ function initDeidentifierNavbarSearchMask() {
 }
 function focusMaskField(field) {
     //printF(field,"focus Mask Field:");
-    //field.hover();
     field.mouseover();
 }
-function setDIDPlaceholder(accField,searchTypeStr) {
-    //"DID-" in the search box in nav bar is invisible unless you hover the cursor over it - it should be visible without hovering.
-    if( searchTypeStr == "Deidentifier ID" ) {
-        accField.attr("placeholder","DID-");
-    } else {
-        accField.attr("placeholder","");
-    }
-}
+//function setDIDPlaceholder(accField,searchTypeStr) {
+//    //"DID-" in the search box in nav bar is invisible unless you hover the cursor over it - it should be visible without hovering.
+//    if( searchTypeStr == "Deidentifier ID" ) {
+//        accField.attr("placeholder","DID-");
+//    } else {
+//        accField.attr("placeholder","");
+//    }
+//}
 
 
 //function getSearchType_TODEL() {
