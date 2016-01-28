@@ -65,3 +65,4 @@ services:
                 - { name: security.voter }
             # small performance boost
             public: false
+

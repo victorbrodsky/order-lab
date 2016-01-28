@@ -1,4 +1,9 @@
 security:
+
+    # unanimous - This only grants access once all voters grant access. affirmative, consensus or unanimous
+    access_decision_manager:
+        strategy: unanimous
+
     encoders:
         FOS\UserBundle\Model\UserInterface:
             id: security.encoder.scrypt
@@ -35,9 +40,6 @@ security:
         # Deidentifier roles
         ROLE_DEIDENTIFICATOR_ADMIN: [ROLE_DEIDENTIFICATOR_USER]
         ROLE_DEIDENTIFICATOR_USER: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
-#        ROLE_DEIDENTIFICATOR_HONEST_BROKER: [ROLE_DEIDENTIFICATOR_ENQUIRER, ROLE_DEIDENTIFICATOR_GENERATOR]
-#        ROLE_DEIDENTIFICATOR_ENQUIRER: [ROLE_DEIDENTIFICATOR_USER]
-#        ROLE_DEIDENTIFICATOR_GENERATOR: [ROLE_DEIDENTIFICATOR_USER]
 
         # General roles
 #        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
@@ -146,7 +148,7 @@ security:
             remember_me:
                 key:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
-                path:     / #fellowship-applications
+                path:     /fellowship-applications
 #                always_remember_me: true
 
         ldap_deidentifier_firewall:
@@ -168,96 +170,96 @@ security:
             remember_me:
                 key:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
-                path:     / #fellowship-applications
+                path:     /deidentifier
 #                always_remember_me: true
         
 
     #Note: first match is used, the later would be ignored
     access_control:
 
-     - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
+       - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
 
-     ############################## common idle time out logic ##############################
-     - { path: ^/directory/common/, role: ROLE_USER }
-     ############################## common institution tree ##############################
-     - { path: ^/directory/util/common/, role: ROLE_USER }
-     ################################# common download file ####################################
-     - { path: ^/directory/file-download/, role: ROLE_USER }
-     - { path: ^/directory/file-delete/, role: ROLE_USER }
+       ############################## common idle time out logic ##############################
+       - { path: ^/directory/common/, role: ROLE_USER }
+       ############################## common institution tree ##############################
+       - { path: ^/directory/util/common/, role: ROLE_USER }
+       ################################# common download file ####################################
+       - { path: ^/directory/file-download/, role: ROLE_USER }
+       - { path: ^/directory/file-delete/, role: ROLE_USER }
 
-     ############################## EMPLOYEES SITE SETTINGS ##############################
-     - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/directory/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       ############################## EMPLOYEES SITE SETTINGS ##############################
+       - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-     - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-     - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
-     - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
-     - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-     - { path: ^/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
-     - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
-     - { path: ^/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+       - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
-    #tree hierarchy: need for all users for public user access request page
-     - { path: ^/directory/tree-util/common/composition-tree/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+      #tree hierarchy: need for all users for public user access request page
+       - { path: ^/directory/tree-util/common/composition-tree/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-     #All other urls: make all /employees accessible only limited special roles
-     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
+       #All other urls: make all /employees accessible only limited special roles
+  #     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
+       - { path: ^/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
 
+       ############################## SCAN SITE SETTINGS ##############################
+       - { path: ^/scan/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-     ############################## SCAN SITE SETTINGS ##############################
-     - { path: ^/scan/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/scan/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/admin/populate-all-lists-with-default-values, role: ROLE_SCANORDER_ADMIN }
+       - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
+  #     - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
+  #     - { path: ^/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
-     - { path: ^/scan/admin/populate-all-lists-with-default-values, role: ROLE_SCANORDER_ADMIN }
-     - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
-#     - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
-#     - { path: ^/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+       - { path: ^/scan/users/previous, role: ROLE_SCANORDER_ADMIN }
+       - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+       - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/account-requests, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/event-log, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/incoming-slide-return-requests, role: [ROLE_SCANORDER_PROCESSOR]}
 
-     - { path: ^/scan/users/previous, role: ROLE_SCANORDER_ADMIN }
-     - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
-     - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
-     - { path: ^/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
-     - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
-     - { path: ^/scan/account-requests, role: ROLE_SCANORDER_PROCESSOR }
-     - { path: ^/scan/event-log, role: ROLE_SCANORDER_PROCESSOR }
-     - { path: ^/scan/incoming-slide-return-requests, role: [ROLE_SCANORDER_PROCESSOR]}
+       - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
+       - { path: ^/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
 
-     - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
-     - { path: ^/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
+       - { path: ^/scan/scan-order, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+       - { path: ^/scan/my-scan-orders, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
 
-     - { path: ^/scan/scan-order, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
-     - { path: ^/scan/my-scan-orders, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+       - { path: ^/scan/slide-return-request, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+       - { path: ^/scan/my-slide-return-requests, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
 
-     - { path: ^/scan/slide-return-request, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
-     - { path: ^/scan/my-slide-return-requests, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+       - { path: ^/scan/image-viewer/, role: [ROLE_SCANORDER_SUBMITTER] }
 
-     - { path: ^/scan/image-viewer/, role: [ROLE_SCANORDER_SUBMITTER] }
-
-     #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
-     - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED') and !has_role('ROLE_SCANORDER_BANNED')" }
-
-
-    ############################## Fellowship Applications SITE SETTINGS ##############################     
-     - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
-
-     - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
-     - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
-
-     - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
+       #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
+       - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED') and !has_role('ROLE_SCANORDER_BANNED')" }
 
 
-     ############################## Deidentifier SITE SETTINGS ##############################
-     - { path: ^/deidentifier/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/deidentifier/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/deidentifier/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/deidentifier/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#     - { path: ^/deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
-     - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
-#    - { path: ^/deidentifier/, allow_if: "is_granted('ROLE_DEIDENTIFICATOR_USER')" }
+      ############################## Fellowship Applications SITE SETTINGS ##############################
+       - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+  #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
+
+       - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
+
+       - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
+
+
+       ############################## Deidentifier SITE SETTINGS ##############################
+       - { path: ^/deidentifier/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
+  #     - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
+  #    - { path: ^/deidentifier/, allow_if: "is_granted('ROLE_DEIDENTIFICATOR_USER')" }
 

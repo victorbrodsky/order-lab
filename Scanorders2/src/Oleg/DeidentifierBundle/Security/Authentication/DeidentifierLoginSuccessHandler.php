@@ -41,10 +41,17 @@ class DeidentifierLoginSuccessHandler extends LoginSuccessHandler {
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
+
+//        $user = $token->getUser();
+//        echo "user ok=".$user."<br>";
+//        print_r($user->getRoles());
+        //exit("auth ok");
+
         return parent::onAuthenticationSuccess($request,$token);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
+        //exit("auth failed");
         return parent::onAuthenticationFailure($request,$exception);
     }
 

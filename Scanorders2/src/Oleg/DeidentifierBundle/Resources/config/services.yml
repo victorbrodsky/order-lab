@@ -13,3 +13,12 @@ services:
     deidentifier_authentication_handler:
         class: Oleg\DeidentifierBundle\Security\Authentication\DeidentifierLoginSuccessHandler
         arguments: [@service_container, @security.context, @doctrine.orm.entity_manager]
+
+    deidentifier_voter:
+        class: Oleg\DeidentifierBundle\Security\Voter\DeidentifierVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+

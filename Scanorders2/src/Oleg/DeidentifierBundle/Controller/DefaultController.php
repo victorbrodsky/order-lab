@@ -92,6 +92,7 @@ class DefaultController extends Controller
     public function createGenerateForm() {
         //permittedInstitutions for generation
         $user = $this->get('security.context')->getToken()->getUser();
+        //echo "user=".$user."<br>";
         $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
@@ -494,7 +495,7 @@ class DefaultController extends Controller
     //get a new deidentifier number
     public function getNewDeidentificator($accessionId) {
 
-        if( !$this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN') ) {
+        if( !$this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
             return null;
         }
 

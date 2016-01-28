@@ -35,6 +35,7 @@ class DeidentifierAccessRequestController extends AccessRequestController
      */
     public function accessRequestCreatePlainAction()
     {
+        //exit('accessRequestCreatePlainAction');
         return parent::accessRequestCreatePlain();
     }
 

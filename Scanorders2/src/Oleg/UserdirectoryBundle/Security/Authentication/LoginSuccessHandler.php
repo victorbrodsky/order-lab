@@ -84,7 +84,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options['eventtype'] = 'Banned User Login Attempt';
             $options['event'] = 'Banned user login attempt to '.$this->siteNameStr.' site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
-
+            //exit('banned user');
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
         }
 
@@ -99,10 +99,11 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options['eventtype'] = 'Unapproved User Login Attempt';
             $options['event'] = 'Unapproved user login attempt to '.$this->siteNameStr.' site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
-
+            //exit('Unapproved user');
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
         }
 
+        //exit('user ok');
         $options['eventtype'] = "Successful Login";
         $options['event'] = 'Successful login to '.$this->siteNameStr.' site';
 
@@ -130,12 +131,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $fileid = $lastRouteArr[count($lastRouteArr)-1];
             $referer_url = $this->router->generate($this->siteName.'_thankfordownloading',array('id'=>$fileid,'sitename'=>$this->siteName));
             $response = new RedirectResponse($referer_url);
+            //exit('thankfordownloading');
             return $response;
         }
 
 
         //echo "keepalive=".$keepalive."<br>";
-        echo "lastRoute=".$lastRoute."<br>";
+        //echo "lastRoute=".$lastRoute."<br>";
 
 
         if( 
