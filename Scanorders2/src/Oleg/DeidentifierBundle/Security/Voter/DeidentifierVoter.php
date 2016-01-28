@@ -39,12 +39,13 @@ class DeidentifierVoter extends Voter
         //echo 'subject='.$subject."<br>";
 
         //does not support UNAPPROVED and BANNED roles for this voter
-        if( strpos($attribute, '_UNAPPROVED') !== false || strpos($attribute, '_BANNED') !== false ) {
-            //exit('do not support _UNAPPROVED roles');
-            return false;
-        }
+//        if( strpos($attribute, '_UNAPPROVED') !== false || strpos($attribute, '_BANNED') !== false ) {
+//            //exit('do not support _UNAPPROVED roles');
+//            return false;
+//        }
 
-        if( strpos($attribute, 'ROLE_DEIDENTIFICATOR_ADMIN') !== false ) {
+        //all general roles are checked by a default voter using role hierarchy in security.yml
+        if( $attribute == 'ROLE_DEIDENTIFICATOR_ADMIN' ) {
             return false;
         }
 
@@ -56,6 +57,7 @@ class DeidentifierVoter extends Voter
         return false;
     }
 
+    //evaluate if this user has this role (attribute)
     public function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         //echo 'attribute='.$attribute."<br>";
@@ -69,32 +71,34 @@ class DeidentifierVoter extends Voter
             return false;
         }
 
-//        //ignore banned role in this voter
-//        if( $attribute == 'ROLE_DEIDENTIFICATOR_BANNED' ) {
-//            if( $user->hasRole($attribute) ) {
-//                exit('user is banned');
-//                return false;
-//            } else {
-//                return true;
-//            }
-//        }
-//
-//        //ignore banned role in this voter
-//        if( $attribute == 'ROLE_DEIDENTIFICATOR_UNAPPROVED' ) {
-//            if( $user->hasRole($attribute) ) {
-//                exit('user is unaproved');
-//                return false;
-//            } else {
-//                return true;
-//            }
-//        }
+        //ignore banned role in this voter
+        if( $attribute == 'ROLE_DEIDENTIFICATOR_BANNED' ) {
+            //echo 'banned attribute='.$attribute."<br>";
+            if( $user->hasRole($attribute) ) {
+                //exit('user is banned');
+                return true;
+            } else {
+                return false;
+            }
+        }
 
-        echo 'attribute='.$attribute."<br>";
+        //ignore banned role in this voter
+        if( $attribute == 'ROLE_DEIDENTIFICATOR_UNAPPROVED' ) {
+            if( $user->hasRole($attribute) ) {
+                //exit('user is unaproved: attribute='.$attribute);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //echo 'attribute='.$attribute."<br>";
         //echo 'subject='.$subject."<br>";
 
         //ROLE_DEIDENTIFICATOR_ADMIN can do anything
         if( $this->decisionManager->decide($token, array('ROLE_DEIDENTIFICATOR_ADMIN')) ) {
-            return VoterInterface::ACCESS_GRANTED;
+            //exit('admin!');
+            return true;
         }
 
         //check if user has this role including hiearchy roles
@@ -106,15 +110,23 @@ class DeidentifierVoter extends Voter
 
         //check for general dummy role ROLE_DEIDENTIFICATOR_USER
         if( $attribute == 'ROLE_DEIDENTIFICATOR_USER' ) {
-
+            //exit('check general user role='.$attribute);
             if( $this->hasGeneralSiteRole($user,'deidentifier') ) {
-                echo 'hasGeneralSiteRole yes <br>';
+                //echo 'hasGeneralSiteRole yes <br>';
                 //exit('hasGeneralSiteRole');
+
+                //check if user has ROLE_DEIDENTIFICATOR_BANNED or ROLE_DEIDENTIFICATOR_UNAPPROVED
+                if( $user->hasRole("ROLE_DEIDENTIFICATOR_BANNED") || $user->hasRole("ROLE_DEIDENTIFICATOR_UNAPPROVED") ) {
+                    return false;
+                }
+
                 return true;
                 //return VoterInterface::ACCESS_GRANTED;
             }
 
         }
+
+        //exit('uknown dummy user role='.$attribute);
 
         //Dummy unknown role: check if this role has appropriate site name
         $roleObject = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($attribute);
@@ -127,7 +139,7 @@ class DeidentifierVoter extends Voter
             }
         }
 
-        exit('no access');
+        //exit('no access');
         return false;
 
         //throw new \LogicException('This code should not be reached!');

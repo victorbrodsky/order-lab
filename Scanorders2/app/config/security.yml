@@ -1,8 +1,9 @@
 security:
 
+    # affirmative (default) - This grants access as soon as there is one voter granting access;
     # unanimous - This only grants access once all voters grant access. affirmative, consensus or unanimous
     access_decision_manager:
-        strategy: unanimous
+        strategy: affirmative
 
     encoders:
         FOS\UserBundle\Model\UserInterface:

@@ -92,6 +92,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //all users must have at least an OBSERVER role
         if( !$this->security->isGranted($this->roleUser)  ) {
             //echo "assign role UNAPPROVED user <br>";
+            //exit('UNAPPROVED user');
             $user->addRole($this->roleUnapproved);
         }
 
