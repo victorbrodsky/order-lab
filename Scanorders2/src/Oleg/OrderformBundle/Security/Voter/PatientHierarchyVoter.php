@@ -65,7 +65,7 @@ class PatientHierarchyVoter extends BaseVoter {
             return false;
         }
 
-        echo "Supported subject=".$subject."<br>";
+        //echo "Supported subject=".$subject."<br>";
         return true;
     }
 
@@ -81,9 +81,12 @@ class PatientHierarchyVoter extends BaseVoter {
             return false;
         }
 
-        echo "attribute=".$attribute."<br>";
+        //echo "attribute=".$attribute."<br>";
 
         switch($attribute) {
+
+            case self::CREATE:
+                return $this->canCreate($subject, $token);
 
             case self::READ:
                 return $this->canView($subject, $token);

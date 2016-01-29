@@ -86,10 +86,12 @@
 
     {% endif %}
 
-    <br>
-    <p>
-        <a href="{{ path(deidentifier_sitename~'_home') }}">Generate a Deidentifier ID</a>
-    </p>
+    {% if is_granted("read", "Accession") %}
+        <br>
+        <p>
+            <a href="{{ path(deidentifier_sitename~'_home') }}">Generate a Deidentifier ID</a>
+        </p>
+    {% endif %}
 
 
 

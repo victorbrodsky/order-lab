@@ -79,6 +79,7 @@ abstract class BaseVoter extends Voter {
         $securityUtil = $this->container->get('order_security_utility');
         //exit('1');
         //minimum requirement: subject must be under user's permitted/collaborated institutions
+        //don't perform this check for dummy, empty objects
         if( $subject->getId() && $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions( $subject, $user, array("Union") ) == false ) {
             return false;
         }
@@ -102,13 +103,14 @@ abstract class BaseVoter extends Voter {
 
             //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
             if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
+                //exit('can View! exit');
                 return true;
             } else {
                 echo "can not view ".$className."<br>";
             }
 
             //echo "can not view subject=".$subject."<br>";
-            exit('can not View exit');
+            //exit('can not View exit');
         }
 
 
@@ -172,5 +174,9 @@ abstract class BaseVoter extends Voter {
         return false;
     }
 
+    protected function canCreate($subject, TokenInterface $token)
+    {
+        exit("Create is not supported for subject=" . $subject);
+    }
 
 }

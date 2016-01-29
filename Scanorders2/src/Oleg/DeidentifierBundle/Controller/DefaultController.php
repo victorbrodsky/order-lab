@@ -137,9 +137,8 @@ class DefaultController extends Controller
 //        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ENQUIRER') ){
 //            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
 //        }
-        $dummyAccession = new Accession();
-        if( false == $this->get('security.context')->isGranted("read", $dummyAccession) ){
-            exit('nopermission');
+        if( false == $this->get('security.context')->isGranted("read", "Accession") ){
+            //exit('nopermission');
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
@@ -237,7 +236,11 @@ class DefaultController extends Controller
      */
     public function generateAction( Request $request ) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_GENERATOR') ){
+//        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_GENERATOR') ){
+//            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+//        }
+        if( false == $this->get('security.context')->isGranted("create", "Accession") ){
+            exit('generate nopermission');
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
