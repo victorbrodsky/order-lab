@@ -18,6 +18,16 @@ use Oleg\UserdirectoryBundle\Controller\AccessRequestController;
 class ScanAccessRequestController extends AccessRequestController
 {
 
+    public function __construct() {
+        $this->siteName = 'scan';
+        $this->siteNameShowuser = 'scan';
+        $this->siteNameStr = 'Scan Order';
+        $this->roleBanned = 'ROLE_SCANORDER_BANNED';
+        $this->roleUser = 'ROLE_SCANORDER_SUBMITTER';
+        $this->roleUnapproved = 'ROLE_SCANORDER_UNAPPROVED';
+        $this->roleEditor = 'ROLE_SCANORDER_PROCESSOR';
+    }
+
     /**
      * @Route("/access-requests/new/create", name="scan_access_request_new_plain")
      * @Method("GET")
@@ -195,5 +205,15 @@ class ScanAccessRequestController extends AccessRequestController
 
         return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_accessrequest_list'));
     }
-    
+
+
+    /**
+     * @Route("/access-requests/{id}", name="fellapp_accessrequest_management", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function accessRequestManagementAction($id )
+    {
+        return parent::accessRequestManagementAction($id);
+    }
 }

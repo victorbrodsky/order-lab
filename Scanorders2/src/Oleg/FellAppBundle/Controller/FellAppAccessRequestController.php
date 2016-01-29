@@ -80,5 +80,14 @@ class FellAppAccessRequestController extends AccessRequestController
         return parent::accessRequestChangeAction($id, $status);
     }
 
+    /**
+     * @Route("/access-requests/{id}", name="fellapp_accessrequest_management", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function accessRequestManagementAction($id )
+    {
+        return parent::accessRequestManagementAction($id);
+    }
 
 }

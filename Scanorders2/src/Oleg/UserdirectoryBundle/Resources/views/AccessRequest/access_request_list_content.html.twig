@@ -77,24 +77,28 @@
 
                         <li class="divider"></li>
 
-                        {% if entity.getStatusStr|lower != 'declined' %}
-                            <li><a general-data-confirm="Are you sure you want to decline?"
-                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'declined' }) }}">Decline</a>
-                            </li>
-                        {% endif %}
+                        {#{% if entity.getStatusStr|lower != 'declined' %}#}
+                            {#<li><a general-data-confirm="Are you sure you want to decline?"#}
+                                   {#href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'declined' }) }}">Decline</a>#}
+                            {#</li>#}
+                        {#{% endif %}#}
 
-                        {% if entity.getStatusStr|lower == 'declined' or entity.getStatusStr|lower == 'active' %}
-                            <li><a general-data-confirm="Are you sure you want to approve?"
-                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'approved' }) }}">Approve</a>
-                            </li>
-                        {% endif %}
+                        {#{% if entity.getStatusStr|lower == 'declined' or entity.getStatusStr|lower == 'active' %}#}
+                            {#<li><a general-data-confirm="Are you sure you want to approve?"#}
+                                   {#href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'approved' }) }}">Approve</a>#}
+                            {#</li>#}
+                        {#{% endif %}#}
 
-                        {% if entity.getStatusStr|lower != 'active' %}
-                            <li><a general-data-confirm="Are you sure you want to Revert status to Active?"
-                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'active' }) }}">Revert status to Active</a>
-                            </li>
-                        {% endif %}
+                        {#{% if entity.getStatusStr|lower != 'active' %}#}
+                            {#<li><a general-data-confirm="Are you sure you want to Revert status to Active?"#}
+                                   {#href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'active' }) }}">Revert status to Active</a>#}
+                            {#</li>#}
+                        {#{% endif %}#}
 
+
+                        <li>
+                            <a href="{{ path(sitename~'_accessrequest_management', { 'id': entity.user.id }) }}">Access Request Management</a>
+                        </li>
 
                     </ul>
 

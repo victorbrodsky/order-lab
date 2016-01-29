@@ -307,6 +307,10 @@ class UserSecurityUtil {
                 $roles = array("ROLE_FELLAPP_COORDINATOR");
             }
 
+            if( $sitename == $this->container->getParameter('deidentifier.sitename') ) {
+                $roles = array("ROLE_DEIDENTIFICATOR_ADMIN");
+            }
+
         } else {
             return null;
         }

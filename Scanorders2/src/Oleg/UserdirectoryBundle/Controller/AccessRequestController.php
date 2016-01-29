@@ -3,6 +3,8 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Form\AccessRequestManagementType;
+use Oleg\UserdirectoryBundle\Form\AccessRequestUserType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -513,5 +515,50 @@ class AccessRequestController extends Controller
         }
     }
 
+
+    //access request management page with the process to force the admin to select the "PHI Scope" Institution(s) and "Role(s)"
+    /**
+     * @Route("/access-requests/{id}", name="employees_accessrequest_management", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function accessRequestManagementAction( $id )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        $userSecUtil = $this->get('user_security_utility');
+        $accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
+
+        if( !$accReq ) {
+            throw new \Exception( 'AccessRequest is not found by id=' . $id );
+        }
+
+
+        $params = array(
+            //'institutions' => $institutions,
+            'sitename' => $this->siteName,
+        );
+        $form = $this->createForm(new AccessRequestUserType($params), $entity);
+
+        return array(
+            'form' => $form->createView(),
+            'accreq' => $accReq,
+            'entity' => $entity,
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull'=>$this->siteNameStr
+        );
+    }
 
 }

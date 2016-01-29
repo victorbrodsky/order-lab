@@ -1,4 +1,14 @@
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% elseif sitename == 'fellapp' %}
+    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+{% elseif sitename == 'deidentifier' %}
+    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% extends extendStr%}
 
 {% block title %}
     Access Requests for {{ sitenamefull }}

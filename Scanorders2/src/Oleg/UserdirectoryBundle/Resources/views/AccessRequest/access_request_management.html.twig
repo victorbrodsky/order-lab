@@ -1,0 +1,55 @@
+{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% elseif sitename == 'fellapp' %}
+    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+{% elseif sitename == 'deidentifier' %}
+    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% extends extendStr%}
+
+{% block title %}
+    Access Request for {{ entity.getUsernameOptimal() }} for site {{ sitenamefull }}
+{% endblock %}
+
+
+
+{% block content %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <br>
+    <p>
+        <a href="{{ path(sitenameshowuser~'_showuser',{ 'id': entity.id }) }}">View User Details</a>
+    </p>
+    <br>
+
+    <hr>
+
+    {{ formmacros.simplefield( "Request ID:", accreq.id, "", "disabled" ) }}
+    {{ formmacros.simplefield( "Request Date:", accreq.createdate|date('Y-m-d H:i:s'), "", "disabled" ) }}
+    {{ formmacros.simplefield( "Request Status:", accreq.getStatusStr|capitalize, "", "disabled" ) }}
+    {{ formmacros.simplefield( "Full Name:", entity.getUsernameOptimal(), "", "disabled" ) }}
+    {{ formmacros.simplefield( "User ID Type:", entity.keytype, "", "disabled" ) }}
+    {{ formmacros.simplefield( "User ID:", entity.primaryPublicUserId, "", "disabled" ) }}
+    {{ formmacros.simplefield( "Email:", entity.primaryPublicUserId, "", "disabled" ) }}
+    {{ formmacros.simplefield( "Phone Number:", entity.preferredPhone, "", "disabled" ) }}
+    {{ formmacros.simplefield( "Last Login:", entity.lastLogin|date('Y-m-d H:i'), "", "disabled" ) }}
+    {{ formmacros.simplefield( "Status Updated On:", accreq.updatedate|date('Y-m-d H:i'), "", "disabled" ) }}
+
+    <hr>
+
+    {{ form_start(form) }}
+
+        {{ formmacros.field(form.roles) }}
+
+    {{ form_end(form) }}
+
+
+    <br>
+
+
+
+{% endblock %}
