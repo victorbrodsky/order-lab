@@ -65,7 +65,7 @@ abstract class BaseVoter extends Voter {
 
     protected function canView($subject, TokenInterface $token)
     {
-        //echo "canView? <br>";
+        echo "canView? <br>";
 
         //return false; //test
 
@@ -77,14 +77,14 @@ abstract class BaseVoter extends Voter {
 
         $user = $token->getUser();
         $securityUtil = $this->container->get('order_security_utility');
-
+        //exit('1');
         //minimum requirement: subject must be under user's permitted/collaborated institutions
-        if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions( $subject, $user, array("Union") ) == false ) {
+        if( $subject->getId() && $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions( $subject, $user, array("Union") ) == false ) {
             return false;
         }
 
-        //TODO:
-        if(0) {
+        //TODO: implement the permission: find out if the user has a role for corresponding to the given subject and 'read' action.
+        if(1) {
             //1) find roles with permissions related to a subject (Patient, Encounter ...)
             //2) check for each roles if user hasRole
 
@@ -96,6 +96,7 @@ abstract class BaseVoter extends Voter {
                 $className = "Order";
             }
             echo "className ".$className."<br>";
+            //exit('1');
 
             //TODO: we need to define what is "Order", "Patient" and "Patient Data" permissions. Patient has a Procedure, Encounter, Accession etc.
 
@@ -128,6 +129,11 @@ abstract class BaseVoter extends Voter {
     protected function canEdit($subject, TokenInterface $token)
     {
         //echo "canEdit? <br>";
+
+        //dummy object just created with as new => can not edit dummy object
+        if( !$subject->getId() ) {
+            return false;
+        }
 
         if( $this->isOwner($subject, $token) ) {
             //echo "user is provider <br>";

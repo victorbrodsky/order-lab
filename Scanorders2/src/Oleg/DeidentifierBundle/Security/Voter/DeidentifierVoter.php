@@ -39,10 +39,10 @@ class DeidentifierVoter extends Voter
         //echo 'subject='.$subject."<br>";
 
         //does not support UNAPPROVED and BANNED roles for this voter
-//        if( strpos($attribute, '_UNAPPROVED') !== false || strpos($attribute, '_BANNED') !== false ) {
-//            //exit('do not support _UNAPPROVED roles');
-//            return false;
-//        }
+        if( strpos($attribute, '_UNAPPROVED') !== false || strpos($attribute, '_BANNED') !== false ) {
+            //exit('do not support _UNAPPROVED roles');
+            return false;
+        }
 
         //all general roles are checked by a default voter using role hierarchy in security.yml
         if( $attribute == 'ROLE_DEIDENTIFICATOR_ADMIN' ) {
@@ -71,26 +71,26 @@ class DeidentifierVoter extends Voter
             return false;
         }
 
-        //ignore banned role in this voter
-        if( $attribute == 'ROLE_DEIDENTIFICATOR_BANNED' ) {
-            //echo 'banned attribute='.$attribute."<br>";
-            if( $user->hasRole($attribute) ) {
-                //exit('user is banned');
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        //ignore banned role in this voter
-        if( $attribute == 'ROLE_DEIDENTIFICATOR_UNAPPROVED' ) {
-            if( $user->hasRole($attribute) ) {
-                //exit('user is unaproved: attribute='.$attribute);
-                return true;
-            } else {
-                return false;
-            }
-        }
+//        //ignore banned role in this voter
+//        if( $attribute == 'ROLE_DEIDENTIFICATOR_BANNED' ) {
+//            //echo 'banned attribute='.$attribute."<br>";
+//            if( $user->hasRole($attribute) ) {
+//                //exit('user is banned');
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
+//
+//        //ignore banned role in this voter
+//        if( $attribute == 'ROLE_DEIDENTIFICATOR_UNAPPROVED' ) {
+//            if( $user->hasRole($attribute) ) {
+//                //exit('user is unaproved: attribute='.$attribute);
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
 
         //echo 'attribute='.$attribute."<br>";
         //echo 'subject='.$subject."<br>";
@@ -111,6 +111,25 @@ class DeidentifierVoter extends Voter
         //check for general dummy role ROLE_DEIDENTIFICATOR_USER
         if( $attribute == 'ROLE_DEIDENTIFICATOR_USER' ) {
             //exit('check general user role='.$attribute);
+            if( $this->hasGeneralSiteRole($user,'deidentifier') ) {
+                //echo 'hasGeneralSiteRole yes <br>';
+                //exit('hasGeneralSiteRole');
+
+                //check if user has ROLE_DEIDENTIFICATOR_BANNED or ROLE_DEIDENTIFICATOR_UNAPPROVED
+                if( $user->hasRole("ROLE_DEIDENTIFICATOR_BANNED") || $user->hasRole("ROLE_DEIDENTIFICATOR_UNAPPROVED") ) {
+                    return false;
+                }
+
+                return true;
+                //return VoterInterface::ACCESS_GRANTED;
+            }
+
+        }
+
+        //check for enquirer dummy role ROLE_DEIDENTIFICATOR_ENQUIRER
+        if( $attribute == 'ROLE_DEIDENTIFICATOR_ENQUIRER' ) {
+
+            //check for permission this time: object: accession, action: read
             if( $this->hasGeneralSiteRole($user,'deidentifier') ) {
                 //echo 'hasGeneralSiteRole yes <br>';
                 //exit('hasGeneralSiteRole');

@@ -65,7 +65,7 @@ class PatientHierarchyVoter extends BaseVoter {
             return false;
         }
 
-        //echo "Supported subject=".$subject."<br>";
+        echo "Supported subject=".$subject."<br>";
         return true;
     }
 
@@ -80,6 +80,8 @@ class PatientHierarchyVoter extends BaseVoter {
             // the user must be logged in; if not, deny access
             return false;
         }
+
+        echo "attribute=".$attribute."<br>";
 
         switch($attribute) {
 
@@ -98,6 +100,10 @@ class PatientHierarchyVoter extends BaseVoter {
 
 
     protected function isOwner($subject, TokenInterface $token) {
+
+        if( !$subject->getId() || !$subject->getProvider() ) {
+            return false;
+        }
 
         $user = $token->getUser();
 

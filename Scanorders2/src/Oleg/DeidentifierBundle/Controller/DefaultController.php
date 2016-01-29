@@ -10,6 +10,7 @@
 namespace Oleg\DeidentifierBundle\Controller;
 
 use Oleg\DeidentifierBundle\Form\DeidentifierSearchType;
+use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\AccessionAccession;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -133,7 +134,12 @@ class DefaultController extends Controller
      */
     public function searchAction( Request $request ) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
+//        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ENQUIRER') ){
+//            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+//        }
+        $dummyAccession = new Accession();
+        if( false == $this->get('security.context')->isGranted("read", $dummyAccession) ){
+            exit('nopermission');
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
@@ -231,7 +237,7 @@ class DefaultController extends Controller
      */
     public function generateAction( Request $request ) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
+        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_GENERATOR') ){
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
