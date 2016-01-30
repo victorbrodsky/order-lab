@@ -3,6 +3,8 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Controller\ScanUserController;
+use Oleg\OrderformBundle\Form\PerSiteSettingsType;
 use Oleg\UserdirectoryBundle\Form\AccessRequestManagementType;
 use Oleg\UserdirectoryBundle\Form\AccessRequestUserType;
 use Symfony\Component\HttpFoundation\Request;
@@ -551,7 +553,7 @@ class AccessRequestController extends Controller
         );
         $form = $this->createForm(new AccessRequestUserType($params), $entity);
 
-        return array(
+        $userViewArr = array(
             'form' => $form->createView(),
             'accreq' => $accReq,
             'entity' => $entity,
@@ -559,6 +561,57 @@ class AccessRequestController extends Controller
             'sitenameshowuser' => $this->siteNameShowuser,
             'sitenamefull'=>$this->siteNameStr
         );
+
+
+        //add scan user site setting form
+        $res = $this->getScanSettingsForm($id,'edit');
+        $form = $res['form'];
+        $userViewArr['form_scansettings'] = $form->createView();
+
+        return $userViewArr;
+    }
+
+    public function getScanSettingsForm($id,$cycle) {
+        $secUtil = $this->get('order_security_utility');
+
+        $disabled = true;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        if (!$subjectuser) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        $entity = $secUtil->getUserPerSiteSettings($id);
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( !$entity ) {
+
+            $entity = new PerSiteSettings();
+            $entity->setUser($subjectuser);
+            $entity->setAuthor($user);
+            //$entity->setType(PerSiteSettings::TYPE_RESTRICTED);
+        }
+
+        if( $cycle == 'edit' ) {
+            $disabled = false;
+        }
+
+        $params = array('em' => $em );
+        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN'),$params), $entity, array(
+            'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
+            'method' => 'PUT',
+            'disabled' => $disabled
+        ));
+
+        $res = array();
+        $res['entity'] = $entity;
+        $res['form'] = $form;
+        $res['subjectuser'] = $subjectuser;
+
+        return $res;
     }
 
 }

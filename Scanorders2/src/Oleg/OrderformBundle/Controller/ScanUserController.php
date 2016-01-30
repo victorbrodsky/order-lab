@@ -175,7 +175,7 @@ class ScanUserController extends UserController
 
             //check if insts were changed and user is not admin
             if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-                $currentInsts = $entity->getpermittedInstitutionalPHIScope();
+                $currentInsts = $entity->getPermittedInstitutionalPHIScope();
                 if( count($currentInsts) != count($originalInsts) ) {
                     $this->setSessionForbiddenNote("Change Institutions");
                     throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions");

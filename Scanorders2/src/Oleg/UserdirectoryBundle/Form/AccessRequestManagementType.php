@@ -35,18 +35,6 @@ class AccessRequestManagementType extends AbstractType
             'label' => false
         ));
 
-
-//        $builder->add('role', 'date', array(
-//            'label' => "Grant Support Start Date:",
-//            'widget' => 'single_text',
-//            'required' => false,
-//            'format' => 'MM/dd/yyyy',    //'MM/dd/yyyy',
-//            'attr' => array('class' => 'datepicker form-control grant-startDate-field'),
-//        ));
-
-
-
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -44,8 +44,8 @@ class AccessRequestUserType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:Roles',
             //'property' => 'name',
             'label' => 'Role(s):',
-            'required' => true,
-            'multiple' => false,
+            //'required' => true,
+            'multiple' => true,
             'attr' => array('class'=>'combobox'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')

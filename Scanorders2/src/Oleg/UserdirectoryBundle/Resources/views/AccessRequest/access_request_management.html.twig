@@ -10,8 +10,10 @@
 
 {% extends extendStr%}
 
+
+
 {% block title %}
-    Access Request for {{ entity.getUsernameOptimal() }} for site {{ sitenamefull }}
+    Access Request for {{ sitenamefull }}
 {% endblock %}
 
 
@@ -19,23 +21,24 @@
 {% block content %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+
+    <h3 class="text-info">Access Requests for <a href="{{ path(sitenameshowuser~'_showuser',{ 'id': entity.id }) }}">{{ entity.getUsernameOptimal() }}</a> ( {{ sitenamefull }} )</h3>
 
     <br>
-    <p>
-        <a href="{{ path(sitenameshowuser~'_showuser',{ 'id': entity.id }) }}">View User Details</a>
-    </p>
-    <br>
+
+    {{ userform.snapshot_steve(entity,sitenameshowuser,'edit') }}
 
     <hr>
 
     {{ formmacros.simplefield( "Request ID:", accreq.id, "", "disabled" ) }}
     {{ formmacros.simplefield( "Request Date:", accreq.createdate|date('Y-m-d H:i:s'), "", "disabled" ) }}
     {{ formmacros.simplefield( "Request Status:", accreq.getStatusStr|capitalize, "", "disabled" ) }}
-    {{ formmacros.simplefield( "Full Name:", entity.getUsernameOptimal(), "", "disabled" ) }}
-    {{ formmacros.simplefield( "User ID Type:", entity.keytype, "", "disabled" ) }}
-    {{ formmacros.simplefield( "User ID:", entity.primaryPublicUserId, "", "disabled" ) }}
-    {{ formmacros.simplefield( "Email:", entity.primaryPublicUserId, "", "disabled" ) }}
-    {{ formmacros.simplefield( "Phone Number:", entity.preferredPhone, "", "disabled" ) }}
+    {#{{ formmacros.simplefield( "Full Name:", entity.getUsernameOptimal(), "", "disabled" ) }}#}
+    {#{{ formmacros.simplefield( "User ID Type:", entity.keytype, "", "disabled" ) }}#}
+    {#{{ formmacros.simplefield( "User ID:", entity.primaryPublicUserId, "", "disabled" ) }}#}
+    {#{{ formmacros.simplefield( "Email:", entity.primaryPublicUserId, "", "disabled" ) }}#}
+    {#{{ formmacros.simplefield( "Phone Number:", entity.preferredPhone, "", "disabled" ) }}#}
     {{ formmacros.simplefield( "Last Login:", entity.lastLogin|date('Y-m-d H:i'), "", "disabled" ) }}
     {{ formmacros.simplefield( "Status Updated On:", accreq.updatedate|date('Y-m-d H:i'), "", "disabled" ) }}
 
@@ -43,13 +46,42 @@
 
     {{ form_start(form) }}
 
+        {{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}
+
         {{ formmacros.field(form.roles) }}
 
     {{ form_end(form) }}
 
 
+    <hr>
+
     <br>
 
 
+    <div class="row">
 
+        <div class="col-xs-6" align="right">
+            <button type='button' class="btn btn-info btn-sm" data-toggle="button" onClick="">Approve</button>
+        </div>
+
+        <div class="col-xs-6" align="left">
+            <button type='button' class="btn btn-danger btn-sm" data-toggle="button" onClick="">Deny</button>
+        </div>
+
+    </div>
+
+    {#<p><button type='button' class="btn btn-info btn-sm" data-toggle="button" onClick="">Approve</button></p>#}
+    {#<p><button type='button' class="btn btn-danger btn-sm" data-toggle="button" onClick="">Deny</button></p>#}
+
+
+
+{% endblock %}
+
+{#Snapshot css#}
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/oleguserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}

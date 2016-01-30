@@ -49,7 +49,6 @@ services:
         class: Oleg\OrderformBundle\Helper\SearchUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container", "@security.context"]
 
-
     app.patient_hierarchy_voter:
         class: Oleg\OrderformBundle\Security\Voter\PatientHierarchyVoter
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
