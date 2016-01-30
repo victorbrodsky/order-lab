@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\OrderformBundle\Controller\ScanUserController;
+use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Form\PerSiteSettingsType;
 use Oleg\UserdirectoryBundle\Form\AccessRequestManagementType;
 use Oleg\UserdirectoryBundle\Form\AccessRequestUserType;
