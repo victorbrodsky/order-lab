@@ -761,8 +761,8 @@ class UserController extends Controller
 
         //Academic Appointment Title not exists + Admin Title exists
         if( $filter && $filter == "WCMC Pathology Staff" ) {
-            //echo "wcmc filter=".$filter."<br>";
-            $criteriastr .= "(appointmentInstitution IS NULL)";
+            echo "wcmc filter=".$filter."<br>";
+            $criteriastr .= "(appointmentInstitution.id IS NULL)";
             $criteriastr .= " AND ";
 //            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College')";
 //            $criteriastr .= " AND ";

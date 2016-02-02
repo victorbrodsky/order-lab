@@ -1384,9 +1384,7 @@ class User extends BaseUser {
             $sitename = 'userdirectory';
         }
 
-        foreach( $this->getRoles() as $role ) {
-            $roles[] = $role;
-        }
+        return $this->getRoles();
 
 //        foreach( $this->getRoles() as $role ) {
 //            if( stristr($role, $sitename) ) {
@@ -1400,8 +1398,8 @@ class User extends BaseUser {
 //                $originalRoles[] = $role;
 //            }
 //        }
-
-        return $roles;
+//
+//        return $roles;
     }
 
     //Preferred: (646) 555-5555

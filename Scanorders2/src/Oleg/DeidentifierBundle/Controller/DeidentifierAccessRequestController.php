@@ -3,6 +3,7 @@
 namespace Oleg\DeidentifierBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Controller\AuthorizedUserController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -109,6 +110,16 @@ class DeidentifierAccessRequestController extends AccessRequestController
     public function accessRequestRemoveAction($userId )
     {
         return parent::accessRequestRemoveAction($userId);
+    }
+
+    /**
+     * @Route("/authorized-users/", name="deidentifier_authorized_users")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     */
+    public function authorizedUsersAction(Request $request )
+    {
+        return parent::authorizedUsersAction($request);
     }
 
 }

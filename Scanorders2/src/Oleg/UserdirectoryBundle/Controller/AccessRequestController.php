@@ -895,4 +895,138 @@ class AccessRequestController extends Controller
 
         return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
     }
+
+
+
+    /**
+     * @Route("/authorized-users/", name="employees_authorized_users")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     */
+    public function authorizedUsersAction( Request $request )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        //echo "sitename=".$this->siteName."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $this->getQueryUserBySite( $this->siteName );
+
+        //echo "query=".$query->getSql()."<br>";
+        //$users = $query->getResult();
+        //echo "users count=".count($users)."<br>";
+        //exit('1');
+
+        $limit = 20;
+        $paginator  = $this->get('knp_paginator');
+        $users = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),   /*page number*/
+            $limit                             /*limit per page*/
+            //array('defaultSortFieldName' => 'infos.displayName', 'defaultSortDirection' => 'asc')
+        );
+
+
+        return array(
+            //'form' => $form->createView(),
+            'users' => $users,
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull'=>$this->siteNameStr
+        );
+
+    }
+
+    public function getQueryUserBySite( $sitename ) {
+        $em = $this->getDoctrine()->getManager();
+
+        //roles with sitename
+        $roles = $this->getRolesBySite($sitename);
+        //echo "roles count=".count($roles)."<br>";
+        //print_r($roles);
+        //exit('1');
+
+        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos", "infos");
+        $dql->leftJoin("user.keytype", "keytype");
+
+        //roles where
+        $whereArr = array();
+        $where = "";
+        $count = 0;
+        foreach( $roles as $role ) {
+            //$whereArr[] = "'".$role['name']."'";
+            if( $count > 0 ) {
+                $where .= " OR ";
+            }
+            $where .= "user.roles LIKE " . "'%".$role['name']."%'";
+            $count++;
+        }
+        //$where = implode(" OR user.roles LIKE ", $whereArr);
+        //echo "where=".$where."<br>";
+
+        $dql->where($where);
+
+        //echo "dql=".$dql."<br>";
+
+        $query = $em->createQuery($dql);
+
+        //$users = $query->getResult();
+        //echo "users count=".count($users)."<br>";
+        //exit('1');
+
+        return $query;
+    }
+    public function getRolesBySite($sitename) {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Roles');
+        $dql =  $repository->createQueryBuilder("roles");
+        $dql->select('roles.name as name');
+        $dql->leftJoin("roles.sites", "sites");
+        $dql->where("sites.name = :sitename");
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters(array(
+            "sitename" => $sitename
+        ));
+
+        $roles = $query->getResult();
+
+        return $roles;
+    }
+    public function getQueryUserBySite_SingleQuery( $sitename ) {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos", "infos");
+
+        //$dql->leftJoin('OlegUserdirectoryBundle:Roles', 'roles');
+        $dql->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
+        //$dql->leftJoin("OlegUserdirectoryBundle:SiteList", "sitelist", "WITH", "sitelist.id = sites.id");
+        $dql->leftJoin("roles.sites", "sites");
+
+        $dql->where("sites.name LIKE :sitename");
+        //$dql->where("sites IS NULL");
+        //$dql->where("sites.id=4");
+        //$dql->where("roles.name = 'ROLE_DEIDENTIFICATOR_WCMC_NYP_ENQUIRER'");
+
+        //echo "dql=".$dql."<br>";
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters(array(
+            "sitename" => "'%".$this->siteName."%'"
+        ));
+
+        return $query;
+    }
+
 }
