@@ -91,4 +91,24 @@ class DeidentifierAccessRequestController extends AccessRequestController
         return parent::accessRequestManagementAction($id);
     }
 
+    /**
+     * @Route("/access-requests/submit/{id}", name="deidentifier_accessrequest_management_submit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function accessRequestManagementSubmitAction(Request $request, $id )
+    {
+        return parent::accessRequestManagementSubmitAction($request,$id);
+    }
+
+    /**
+     * @Route("/access-requests-remove/{userId}", name="deidentifier_accessrequest_remove", requirements={"userId" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function accessRequestRemoveAction($userId )
+    {
+        return parent::accessRequestRemoveAction($userId);
+    }
+
 }

@@ -44,31 +44,37 @@
 
     <hr>
 
-    {{ form_start(form) }}
+    {#{{ form_start(form) }}#}
+    <form id="accessrequest_management" action="{{ path(sitename~'_accessrequest_management_submit',{'id':accreq.id}) }}" method="POST">
 
+
+        {#{{ formmacros.field(form.permittedInstitutionalPHIScope) }}#}
         {{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}
 
         {{ formmacros.field(form.roles) }}
 
-    {{ form_end(form) }}
 
+        <hr>
 
-    <hr>
+        <br>
 
-    <br>
+        <div class="row">
 
+            <div class="col-xs-6" align="right">
+                <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Approve</button>
+            </div>
 
-    <div class="row">
+            <div class="col-xs-6" align="left">
+                <button name="accessrequest-decline" type='submit' class="btn btn-danger btn-sm">Deny</button>
+            </div>
 
-        <div class="col-xs-6" align="right">
-            <button type='button' class="btn btn-info btn-sm" data-toggle="button" onClick="">Approve</button>
         </div>
 
-        <div class="col-xs-6" align="left">
-            <button type='button' class="btn btn-danger btn-sm" data-toggle="button" onClick="">Deny</button>
-        </div>
+    {#{{ form_end(form) }}#}
+    </form>
 
-    </div>
+
+
 
     {#<p><button type='button' class="btn btn-info btn-sm" data-toggle="button" onClick="">Approve</button></p>#}
     {#<p><button type='button' class="btn btn-danger btn-sm" data-toggle="button" onClick="">Deny</button></p>#}

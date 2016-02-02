@@ -292,16 +292,23 @@ class AccessRequestController extends Controller
         $subject = "[O R D E R] Access request for ".$sitenameFull." received from ".$user->getUsernameOptimal();
         $msg = $user->getUsernameOptimal()." submitted a request to access ".$sitenameFull.". Please visit ".$incomingReqPage." to approve or deny it.";
 
-        $approveDelineMsg = "the access request from ".$user->getUsernameOptimal()." to access ".$sitenameFull.", visit the following link:";
-        //add approve link
-        $approvedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"approve"), true );
-        $approvedMsg = "To approve " . $approveDelineMsg . "\r\n" . $approvedLink;
+        $approveDeclineMsg = "the access request from ".$user->getUsernameOptimal()." to access ".$sitenameFull.", visit the following link:";
 
-        //add decline link
-        $declinedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"decline"), true );
-        $declinedMsg = "To decline " . $approveDelineMsg . "\r\n" . $declinedLink;
+//        //add approve link
+//        $approvedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"approve"), true );
+//        $approvedMsg = "To approve " . $approveDeclineMsg . "\r\n" . $approvedLink;
+//
+//        //add decline link
+//        $declinedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"decline"), true );
+//        $declinedMsg = "To decline " . $approveDeclineMsg . "\r\n" . $declinedLink;
+//
+//        $msg = $msg . "\r\n"."\r\n" . $approvedMsg . "\r\n"."\r\n" . $declinedMsg;
 
-        $msg = $msg . "\r\n"."\r\n" . $approvedMsg . "\r\n"."\r\n" . $declinedMsg;
+        //add access request management link
+        $managementLink = $this->generateUrl( $sitename.'_accessrequest_management', array("id"=>$accReq->getId()), true );
+        $managementMsg = "To Approve or Decline " . $approveDeclineMsg . "\r\n" . $managementLink;
+
+        $msg = $msg . "\r\n"."\r\n" . $managementMsg;
 
         $userSecUtil = $this->get('user_security_utility');
         $emails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
@@ -430,12 +437,65 @@ class AccessRequestController extends Controller
             throw new \Exception( 'AccessRequest is not found by id=' . $id );
         }
 
+//        if( $status == "approved" || $status == "approve" ) {
+//            //$entity->setRoles(array());
+//            $entity->removeRole($this->roleUnapproved);
+//            $entity->removeRole($this->roleBanned);
+//
+//            $entity->addRole($this->roleUser);
+//            if( $accReq )
+//                $accReq->setStatus(AccessRequest::STATUS_APPROVED);
+//        }
+//
+//        if( $status == "declined" || $status == "decline" ) {
+//            //$entity->setRoles(array());
+//            $entity->removeRole($this->roleUser);
+//
+//            $entity->addRole($this->roleBanned);
+//            if( $accReq )
+//                $accReq->setStatus(AccessRequest::STATUS_DECLINED);
+//        }
+//
+//        if( $status == "active" ) {
+//            //$entity->setRoles(array());
+//            $entity->removeRole($this->roleUser);
+//
+//            $entity->addRole($this->roleUnapproved);
+//            if( $accReq )
+//                $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
+//        }
+//
+//        //set updated by and updated author roles
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        $accReq->setUpdatedby($user);
+//        $accReq->setUpdateAuthorRoles($user->getRoles());
+//
+//        $em->persist($entity);
+//        $em->persist($accReq);
+//        $em->flush();
+//
+//        //////// When the user's Access Request has been approved, send an email to the user from the email address in Site Settings with... ////
+//        $this->createAccessRequestUserNotification( $entity, $status, $this->siteName );
+//        //////////////////// EOF ////////////////////
+
+        $this->changeStatus( $accReq, $status, $entity );
+
+        return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
+    }
+
+    public function changeStatus( $accReq, $status, $entity ) {
+
+        $em = $this->getDoctrine()->getManager();
+
         if( $status == "approved" || $status == "approve" ) {
             //$entity->setRoles(array());
             $entity->removeRole($this->roleUnapproved);
             $entity->removeRole($this->roleBanned);
 
-            $entity->addRole($this->roleUser);
+            if( $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($this->roleUser) ) {
+                $entity->addRole($this->roleUser);
+            }
+
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
@@ -470,8 +530,6 @@ class AccessRequestController extends Controller
         //////// When the user's Access Request has been approved, send an email to the user from the email address in Site Settings with... ////
         $this->createAccessRequestUserNotification( $entity, $status, $this->siteName );
         //////////////////// EOF ////////////////////
-
-        return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
     }
 
     public function createAccessRequestUserNotification( $subjectUser, $status, $sitename ) {
@@ -534,23 +592,42 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
+        if (!$accReq) {
+            throw $this->createNotFoundException('Unable to find Access Request entity with ID ' . $id);
         }
 
-        $userSecUtil = $this->get('user_security_utility');
-        $accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
+        //$userSecUtil = $this->get('user_security_utility');
+        //$accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
 
-        if( !$accReq ) {
-            throw new \Exception( 'AccessRequest is not found by id=' . $id );
+        $entity = $accReq->getUser();
+        if( !$entity ) {
+            throw new \Exception( 'User is not found in Access Request with ID' . $id );
         }
 
+        //User's roles associated with this site
+//        $originalRoles = array();
+//        foreach( $entity->getRoles() as $role ) {
+//            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+//            if( $roleObject && $roleObject->hasSite( $this->siteName ) ) {
+//                $originalRoles[] = $role;
+//            }
+//        }
+//        if( count($originalRoles) == 0 ) {
+//            //add lowest role for this site
+//            $lowestRole = ?; //What is the lowest role now? "WCMC-NYP Deidentifier Generator" is the institution specific role.
+//            $entity->addRole($lowestRole);
+//        }
+
+        //Roles
+        $rolesArr = $this->getUserRoles($this->siteName);
 
         $params = array(
             //'institutions' => $institutions,
             'sitename' => $this->siteName,
+            'roles' => $rolesArr
         );
         $form = $this->createForm(new AccessRequestUserType($params), $entity);
 
@@ -565,11 +642,135 @@ class AccessRequestController extends Controller
 
 
         //add scan user site setting form
-        $res = $this->getScanSettingsForm($id,'edit');
+        $res = $this->getScanSettingsForm($entity->getId(),'edit');
         $form = $res['form'];
         $userViewArr['form_scansettings'] = $form->createView();
 
         return $userViewArr;
+    }
+
+    /**
+     * @Route("/access-requests/submit/{id}", name="employees_accessrequest_management_submit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function accessRequestManagementSubmitAction( Request $request, $id )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->find($id);
+
+        if (!$accReq) {
+            throw $this->createNotFoundException('Unable to find Access Request entity with ID ' . $id);
+        }
+
+        $entity = $accReq->getUser();
+        if( !$entity ) {
+            throw new \Exception( 'User is not found in Access Request with ID' . $id );
+        }
+
+        //Original Roles not associated with this site
+        $originalRoles = array();
+        foreach( $entity->getRoles() as $role ) {
+            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+            if( $roleObject && !$roleObject->hasSite( $this->siteName ) ) {
+                $originalRoles[] = $role;
+            }
+        }
+        //echo "Original roles:<br>";
+        //print_r($originalRoles);
+
+        $rolesArr = $this->getUserRoles($this->siteName);
+
+        $params = array(
+            //'institutions' => $institutions,
+            'sitename' => $this->siteName,
+            'roles' => $rolesArr
+        );
+        $form = $this->createForm(new AccessRequestUserType($params), $entity);
+
+        $userViewArr = array(
+            'form' => $form->createView(),
+            'accreq' => $accReq,
+            'entity' => $entity,
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull'=>$this->siteNameStr
+        );
+
+
+        //add scan user site setting form
+        $res = $this->getScanSettingsForm($entity->getId(),'edit');
+        $form_scansettings = $res['form'];
+        //$subjectUser = $res['entity'];
+
+        $form->bind($request);
+        $form_scansettings->bind($request);
+
+        if( $form->isValid() ) {
+
+            ///////////////// update roles /////////////////
+            //$subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($entity->getId());
+//            $roles = $entity->getRoles();
+//            echo "<br>new roles:<br>";
+//            print_r($roles);
+//            echo "<br><br>";
+            //exit('update roles');
+
+            //add original roles not associated with this site
+            foreach( $originalRoles as $role ) {
+                $entity->addRole($role);
+            }
+
+//            $roles = $entity->getRoles();
+//            echo "<br><br>After roles:<br>";
+//            print_r($roles);
+//            exit('update roles');
+
+            $em->persist($entity);
+            $em->flush($entity);
+            ///////////////// EOF update roles /////////////////
+
+            ///////////////// update permittedInstitutions /////////////////
+            $securityUtil = $this->get('order_security_utility');
+            $userSiteSettings = $securityUtil->getUserPerSiteSettings($entity);
+            $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+
+            //$permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
+            //$permittedInstitutions = $form_scansettings->get('permittedInstitutionalPHIScope')->getData();
+            //echo "permittedInstitutions count=".count($permittedInstitutions)."<br>";
+            //foreach( $permittedInstitutions as $permittedInstitution ) {
+            //    echo "permittedInstitution=".$permittedInstitution."<br>";
+            //}
+            $em->persist($userSiteSettings);
+            $em->flush($userSiteSettings);
+            ///////////////// EOF update permittedInstitutions /////////////////
+
+            /////////////// update status //////////////////////
+            if( $request->request->has('accessrequest-approve') ) {
+                $this->changeStatus( $accReq, "approve", $entity );
+                $em->persist($accReq);
+                $em->flush($accReq);
+            }
+
+            if( $request->request->has('accessrequest-decline') ) {
+                $this->changeStatus( $accReq, "decline", $entity );
+                $em->persist($accReq);
+                $em->flush($accReq);
+            }
+            /////////////// EOF update status //////////////////////
+
+            //exit('valid');
+        }
+        //exit('not valid');
+
+        //return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_management',array('id'=>$id)));
+        return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
     }
 
     public function getScanSettingsForm($id,$cycle) {
@@ -594,6 +795,12 @@ class AccessRequestController extends Controller
             $entity->setUser($subjectuser);
             $entity->setAuthor($user);
             //$entity->setType(PerSiteSettings::TYPE_RESTRICTED);
+
+            //set default addPermittedInstitutionalPHIScope "WCMC" and "NYP"
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $entity->addPermittedInstitutionalPHIScope($wcmc);
+            $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+            $entity->addPermittedInstitutionalPHIScope($nyp);
         }
 
         if( $cycle == 'edit' ) {
@@ -615,4 +822,77 @@ class AccessRequestController extends Controller
         return $res;
     }
 
+    public function getUserRoles( $siteName ) {
+        $rolesArr = array();
+        $em = $this->getDoctrine()->getManager();
+
+//        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(
+//            array('sites.name' => $siteName),
+//            array('orderinlist' => 'ASC')
+//        );  //findAll();
+        //exit($siteName);
+
+        if( $siteName == "employees" ) {
+            $siteName = "directory";
+        }
+
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Roles');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin('list.sites','sites');
+        $dql->where("sites.name = :sitename" );
+
+        $query = $em->createQuery($dql);
+        $query->setParameter('sitename',$siteName);
+
+        $roles = $query->getResult();
+
+        foreach( $roles as $role ) {
+            $rolesArr[$role->getName()] = $role->getAlias();
+        }
+        return $rolesArr;
+    }
+
+
+    /**
+     * @Route("/access-requests-remove/{userId}", name="employees_accessrequest_remove", requirements={"userId" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function accessRequestRemoveAction($userId )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+        if (!$subjectuser) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+//        //find all user's roles with sitename only and remove them from the user
+//        foreach( $subjectuser->getRoles() as $role ) {
+//            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+//            if( $roleObject && $roleObject->hasSite( $this->siteName ) ) {
+//                $subjectuser->removeRole($role);
+//            }
+//        }
+//        $userSecUtil = $this->get('user_security_utility');
+//        $accReq = $userSecUtil->getUserAccessRequest($userId,$this->siteName);
+//        $accReq->setStatus(AccessRequest::STATUS_DECLINED);
+//        $em->persist($subjectuser);
+//        $em->persist($accReq);
+//        $em->flush();
+
+        //Previously Remove access authorization was working by adding Banned role
+        $userSecUtil = $this->get('user_security_utility');
+        $accReq = $userSecUtil->getUserAccessRequest($userId,$this->siteName);
+        $this->changeStatus( $accReq, "decline", $subjectuser );
+
+
+        return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
+    }
 }

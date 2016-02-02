@@ -1375,7 +1375,7 @@ class User extends BaseUser {
         return $res;
     }
 
-
+    //TODO: fix this by getting roles with appropriate site. Fosuser bundle keep roles as string, not an object
     public function getSiteRoles($sitename) {
 
         $roles = array();
@@ -1385,10 +1385,21 @@ class User extends BaseUser {
         }
 
         foreach( $this->getRoles() as $role ) {
-            if( stristr($role, $sitename) ) {
-                $roles[] = $role;
-            }
+            $roles[] = $role;
         }
+
+//        foreach( $this->getRoles() as $role ) {
+//            if( stristr($role, $sitename) ) {
+//                $roles[] = $role;
+//            }
+//        }
+
+//        foreach( $this->getRoles() as $role ) {
+//            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+//            if( $roleObject && $roleObject->hasSite( $this->siteName ) ) {
+//                $originalRoles[] = $role;
+//            }
+//        }
 
         return $roles;
     }

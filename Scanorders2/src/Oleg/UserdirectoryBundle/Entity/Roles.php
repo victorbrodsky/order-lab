@@ -174,4 +174,13 @@ class Roles extends ListAbstract {
         $this->sites->removeElement($item);
     }
 
+    public function hasSite( $sitename ) {
+        foreach( $this->getSites() as $site ) {
+            if( $site->getName()."" == $sitename ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
