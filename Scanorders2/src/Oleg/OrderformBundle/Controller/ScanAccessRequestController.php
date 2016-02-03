@@ -208,12 +208,42 @@ class ScanAccessRequestController extends AccessRequestController
 
 
     /**
-     * @Route("/access-requests/{id}", name="fellapp_accessrequest_management", requirements={"id" = "\d+"})
+     * @Route("/access-requests/{id}", name="scan_accessrequest_management", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function accessRequestManagementAction($id )
     {
         return parent::accessRequestManagementAction($id);
+    }
+
+    /**
+     * @Route("/access-requests/submit/{id}", name="scan_accessrequest_management_submit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function accessRequestManagementSubmitAction(Request $request, $id )
+    {
+        return parent::accessRequestManagementSubmitAction($request,$id);
+    }
+
+    /**
+     * @Route("/access-requests-remove/{userId}", name="scan_accessrequest_remove", requirements={"userId" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function accessRequestRemoveAction($userId )
+    {
+        return parent::accessRequestRemoveAction($userId);
+    }
+
+    /**
+     * @Route("/authorized-users/", name="scan_authorized_users")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     */
+    public function authorizedUsersAction(Request $request )
+    {
+        return parent::authorizedUsersAction($request);
     }
 }

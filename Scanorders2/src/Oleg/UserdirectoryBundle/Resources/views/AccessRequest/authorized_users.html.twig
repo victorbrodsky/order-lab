@@ -6,6 +6,8 @@
     {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
 {% elseif sitename == 'deidentifier' %}
     {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% elseif sitename == 'scan' %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% extends extendStr%}
@@ -16,7 +18,9 @@
 
 {% block content %}
 
-    <h3 class="text-info">Access Requests for {{ sitenamefull }}</h3>
+    <h3 class="text-info">Authorized Users for {{ sitenamefull }}</h3>
+
+    <br>
 
     <table class="table table-hover table-condensed text-left">
         <thead>

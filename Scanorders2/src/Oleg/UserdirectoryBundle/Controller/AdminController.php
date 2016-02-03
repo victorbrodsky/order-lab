@@ -548,7 +548,7 @@ class AdminController extends Controller
             ),
 
             //Fellowship Observer
-            "ROLE_FELLAPP_OBSERVER" => array("Fellowship Program Observer Role","Access to Fellowship Application as Observer (able to view a particular (assigned) application)"),
+            "ROLE_FELLAPP_OBSERVER" => array("Fellowship Program Observer","Access to Fellowship Application as Observer (able to view a particular (assigned) application)"),
 
             //////////// Deidentifier roles ////////////
             "ROLE_DEIDENTIFICATOR_ADMIN" => array("Deidentifier Administrator","Full access for Deidentifier site"),

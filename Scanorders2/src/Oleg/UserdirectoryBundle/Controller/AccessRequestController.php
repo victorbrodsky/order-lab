@@ -741,8 +741,16 @@ class AccessRequestController extends Controller
             $userSiteSettings = $securityUtil->getUserPerSiteSettings($entity);
             if( $userSiteSettings ) {
                 $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
-                $em->persist($userSiteSettings);
-                $em->flush($userSiteSettings);
+            } else {
+                $user = $this->get('security.context')->getToken()->getUser();
+                $persitesettings = new PerSiteSettings();
+                $persitesettings->setAuthor($user);
+                $persitesettings->setUser($entity);
+                foreach( $permittedInstitutions as $permittedInstitution ) {
+                    echo "permittedInstitution=".$permittedInstitution."<br>";
+                }
+                //$persitesettings->addPermittedInstitutionalPHIScope($inst);
+                //$em->persist($persitesettings);
             }
 
             //$permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
@@ -751,8 +759,9 @@ class AccessRequestController extends Controller
             //foreach( $permittedInstitutions as $permittedInstitution ) {
             //    echo "permittedInstitution=".$permittedInstitution."<br>";
             //}
-            //$em->persist($userSiteSettings);
-            //$em->flush($userSiteSettings);
+
+            $em->persist($userSiteSettings);
+            $em->flush($userSiteSettings);
             ///////////////// EOF update permittedInstitutions /////////////////
 
             /////////////// update status //////////////////////
@@ -972,8 +981,11 @@ class AccessRequestController extends Controller
             $where .= "user.roles LIKE " . "'%".$role['name']."%'";
             $count++;
         }
-        //$where = implode(" OR user.roles LIKE ", $whereArr);
         //echo "where=".$where."<br>";
+
+        if( !$where ) {
+            $where = "1=0";
+        }
 
         $dql->where($where);
 
@@ -993,7 +1005,7 @@ class AccessRequestController extends Controller
         $dql =  $repository->createQueryBuilder("roles");
         $dql->select('roles.name as name');
         $dql->leftJoin("roles.sites", "sites");
-        $dql->where("sites.name = :sitename");
+        $dql->where("sites.name = :sitename OR sites.abbreviation = :sitename");
 
         $query = $em->createQuery($dql);
 
@@ -1005,6 +1017,7 @@ class AccessRequestController extends Controller
 
         return $roles;
     }
+    //NOT working. Not used.
     public function getQueryUserBySite_SingleQuery( $sitename ) {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('OlegUserdirectoryBundle:User');

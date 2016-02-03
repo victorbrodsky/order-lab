@@ -90,4 +90,34 @@ class FellAppAccessRequestController extends AccessRequestController
         return parent::accessRequestManagementAction($id);
     }
 
+    /**
+     * @Route("/access-requests/submit/{id}", name="fellapp_accessrequest_management_submit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function accessRequestManagementSubmitAction(Request $request, $id )
+    {
+        return parent::accessRequestManagementSubmitAction($request,$id);
+    }
+
+    /**
+     * @Route("/access-requests-remove/{userId}", name="fellapp_accessrequest_remove", requirements={"userId" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function accessRequestRemoveAction($userId )
+    {
+        return parent::accessRequestRemoveAction($userId);
+    }
+
+    /**
+     * @Route("/authorized-users/", name="fellapp_authorized_users")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     */
+    public function authorizedUsersAction(Request $request )
+    {
+        return parent::authorizedUsersAction($request);
+    }
+
 }
