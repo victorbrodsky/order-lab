@@ -739,7 +739,11 @@ class AccessRequestController extends Controller
             ///////////////// update permittedInstitutions /////////////////
             $securityUtil = $this->get('order_security_utility');
             $userSiteSettings = $securityUtil->getUserPerSiteSettings($entity);
-            $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+            if( $userSiteSettings ) {
+                $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+                $em->persist($userSiteSettings);
+                $em->flush($userSiteSettings);
+            }
 
             //$permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
             //$permittedInstitutions = $form_scansettings->get('permittedInstitutionalPHIScope')->getData();
@@ -747,8 +751,8 @@ class AccessRequestController extends Controller
             //foreach( $permittedInstitutions as $permittedInstitution ) {
             //    echo "permittedInstitution=".$permittedInstitution."<br>";
             //}
-            $em->persist($userSiteSettings);
-            $em->flush($userSiteSettings);
+            //$em->persist($userSiteSettings);
+            //$em->flush($userSiteSettings);
             ///////////////// EOF update permittedInstitutions /////////////////
 
             /////////////// update status //////////////////////
