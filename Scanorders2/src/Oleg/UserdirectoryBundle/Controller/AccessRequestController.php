@@ -743,14 +743,18 @@ class AccessRequestController extends Controller
                 $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
             } else {
                 $user = $this->get('security.context')->getToken()->getUser();
-                $persitesettings = new PerSiteSettings();
-                $persitesettings->setAuthor($user);
-                $persitesettings->setUser($entity);
+                $userSiteSettings = new PerSiteSettings();
+                $userSiteSettings->setAuthor($user);
+                $userSiteSettings->setUser($entity);
+
+                //add permittedInstitutions
+                $permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
                 foreach( $permittedInstitutions as $permittedInstitution ) {
                     echo "permittedInstitution=".$permittedInstitution."<br>";
+                    $userSiteSettings->addPermittedInstitutionalPHIScope($permittedInstitution);
+                    $em->persist($userSiteSettings);
                 }
-                //$persitesettings->addPermittedInstitutionalPHIScope($inst);
-                //$em->persist($persitesettings);
+
             }
 
             //$permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
