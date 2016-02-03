@@ -28,6 +28,10 @@ class EmailUtil {
             $headers = 'Cc: ' . $ccs . "\r\n";
         }
 
+        //echo "email=".$email."<br>";
+        //echo "headers=".$headers."<br>";
+        //exit('1');
+
         // Send
         mail($email, $subject, $message, $headers);
 

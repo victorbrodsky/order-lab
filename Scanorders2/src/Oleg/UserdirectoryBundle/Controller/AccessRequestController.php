@@ -290,7 +290,8 @@ class AccessRequestController extends Controller
         ///////////////// Send an email to the preferred emails of the users who have Administrator role for a given site and CC the users with Platform Administrator role when an access request is submitted
         $incomingReqPage = $this->generateUrl( $sitename.'_home', array(), true );
         $subject = "[O R D E R] Access request for ".$sitenameFull." received from ".$user->getUsernameOptimal();
-        $msg = $user->getUsernameOptimal()." submitted a request to access ".$sitenameFull.". Please visit ".$incomingReqPage." to approve or deny it.";
+        $msg = $user->getUsernameOptimal()." submitted a request to access ".$sitenameFull.".";
+        //$msg = $msg . " Please visit ".$incomingReqPage." to approve or deny it.";
 
         $approveDeclineMsg = "the access request from ".$user->getUsernameOptimal()." to access ".$sitenameFull.", visit the following link:";
 
@@ -306,7 +307,7 @@ class AccessRequestController extends Controller
 
         //add access request management link
         $managementLink = $this->generateUrl( $sitename.'_accessrequest_management', array("id"=>$accReq->getId()), true );
-        $managementMsg = "To Approve or Decline " . $approveDeclineMsg . "\r\n" . $managementLink;
+        $managementMsg = "To review " . $approveDeclineMsg . "\r\n" . $managementLink;
 
         $msg = $msg . "\r\n"."\r\n" . $managementMsg;
 
@@ -319,6 +320,7 @@ class AccessRequestController extends Controller
             $headers = null;
         }
 
+        //$emails = "oli2002@med.cornell.edu";
         //echo "user emails=".$emails."<br>";
         //echo "user headers=".$headers."<br>";
         //exit('1');

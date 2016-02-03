@@ -328,7 +328,10 @@ class UserSecurityUtil {
             foreach( $users as $user ) {
                 //echo "user=".$user."<br>";
                 if( $user->getEmail() ) {
-                    $emails[] = $user->getEmail();
+                    //echo "email=".$user->getEmail()."<br>";
+                    if( $user->getEmail() != "-1" ) {
+                        $emails[] = $user->getEmail();
+                    }
                 }
             }
 
