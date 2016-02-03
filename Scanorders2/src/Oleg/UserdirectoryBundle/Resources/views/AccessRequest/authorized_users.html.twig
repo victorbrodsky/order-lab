@@ -40,7 +40,7 @@
         {% for user in users %}
 
             <td>
-                <a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.id }) }}">{{ user }}</a>
+                <a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.id }) }}" target="_blank">{{ user }}</a>
             </td>
             <td>{{ user.keytype }}</td>
             <td>{{ user.primaryPublicUserId }}</td>
@@ -66,7 +66,7 @@
                     <ul class="dropdown-menu dropdown-menu-right">
 
                         <li>
-                            <a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.id }) }}" target="_blank">View User Details</a>
+                            <a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.id }) }}">View User Details</a>
                         </li>
 
                         <li class="divider"></li>
