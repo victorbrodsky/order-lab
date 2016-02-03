@@ -7,6 +7,18 @@
     Deidentifier System
 {% endblock %}
 
+{% block contentleft %}
+    {% if is_granted('ROLE_DEIDENTIFICATOR_ADMIN') and accessreqs is defined and accessreqs and accessreqs > 0 %}
+        <p>
+            There are:
+            <ul>
+                <li>
+                    <a href="{{ path(deidentifier_sitename~'_accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s)</a>
+                </li>
+            </ul>
+        </p>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 
@@ -16,7 +28,6 @@
     {% if institutionGen is defined and accessionTypeGen is defined and accessionNumberGen is defined %}
         <div id="deidentifier-data-holder" data-institution="{{institutionGen}}" data-accessionType="{{accessionTypeGen}}" data-accessionNumber="{{accessionNumberGen}}"></div>
     {% endif %}
-
 
     {#WCMC-NYP Deidentifier Generator: can generate, but not search#}
     {% if is_granted("create", "Accession") %}

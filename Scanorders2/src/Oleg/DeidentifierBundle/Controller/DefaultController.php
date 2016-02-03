@@ -75,7 +75,8 @@ class DefaultController extends Controller
         //$user = $this->get('security.context')->getToken()->getUser();
 
         //check for active access requests
-        //$accessreqs = $this->getActiveAccessReq();
+        $accessreqs = $this->getActiveAccessReq();
+        //echo "accessreq count=".count($accessreqs)."<br>";
 
         $form = $this->createGenerateForm();
 
@@ -84,7 +85,7 @@ class DefaultController extends Controller
 
         return array(
             //'accessiontypes' => $accessionTypes,
-            //'accessreqs' => count($accessreqs),
+            'accessreqs' => count($accessreqs),
             'form' => $form->createView(),
             //'msg' => "test test test test"
         );
