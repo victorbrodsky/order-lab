@@ -41,30 +41,30 @@ class AccessRequestUserType extends AbstractType
         ));
 
 
-        if(0) {
-            $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
-                'mapped' => false,
-                //'property' => 'name',
-                'property' => 'getTreeName',
-                'label'=>'Institutional PHI Scope:',
-                'required' => false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.types","institutiontype")
-                            //->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
-                            ->where("list.type = :typedef OR list.type = :typeadd")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                                //'medicalInstitution' => 'Medical'
-                            ));
-                    },
-            ));
-        }
+//        if(0) {
+//            $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:Institution',
+//                'mapped' => false,
+//                //'property' => 'name',
+//                'property' => 'getTreeName',
+//                'label'=>'Institutional PHI Scope:',
+//                'required' => false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('list')
+//                            ->leftJoin("list.types","institutiontype")
+//                            //->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
+//                            ->where("list.type = :typedef OR list.type = :typeadd")
+//                            ->orderBy("list.orderinlist","ASC")
+//                            ->setParameters( array(
+//                                'typedef' => 'default',
+//                                'typeadd' => 'user-added',
+//                                //'medicalInstitution' => 'Medical'
+//                            ));
+//                    },
+//            ));
+//        }
 
     }
 

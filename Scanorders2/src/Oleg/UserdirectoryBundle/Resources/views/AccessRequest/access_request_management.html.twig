@@ -6,14 +6,20 @@
     {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
 {% elseif sitename == 'deidentifier' %}
     {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% elseif sitename == 'scan' %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% extends extendStr%}
 
-
+{#This form is used for access request and authorization management#}
 
 {% block title %}
-    Access Request for {{ sitenamefull }}
+    {% if accreq is defined %}
+        Access Request for {{ sitenamefull }}
+    {% else %}
+        Authorization Management for {{ sitenamefull }}
+    {% endif %}
 {% endblock %}
 
 
@@ -23,7 +29,13 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
 
-    <h3 class="text-info">Access Request for {{ sitenamefull }}</h3>
+    <h3 class="text-info">
+        {% if accreq is defined %}
+            Access Request for {{ sitenamefull }}
+        {% else %}
+            Authorization Management for {{ sitenamefull }}
+        {% endif %}
+    </h3>
 
     <br>
 
@@ -31,21 +43,33 @@
 
     <hr>
 
-    {{ formmacros.simplefield( "Request ID:", accreq.id, "", "disabled" ) }}
-    {{ formmacros.simplefield( "Request Date:", accreq.createdate|date('Y-m-d H:i:s'), "", "disabled" ) }}
-    {{ formmacros.simplefield( "Request Status:", accreq.getStatusStr|capitalize, "", "disabled" ) }}
-    {#{{ formmacros.simplefield( "Full Name:", entity.getUsernameOptimal(), "", "disabled" ) }}#}
-    {#{{ formmacros.simplefield( "User ID Type:", entity.keytype, "", "disabled" ) }}#}
-    {#{{ formmacros.simplefield( "User ID:", entity.primaryPublicUserId, "", "disabled" ) }}#}
-    {#{{ formmacros.simplefield( "Email:", entity.primaryPublicUserId, "", "disabled" ) }}#}
-    {#{{ formmacros.simplefield( "Phone Number:", entity.preferredPhone, "", "disabled" ) }}#}
-    {{ formmacros.simplefield( "Last Login:", entity.lastLogin|date('Y-m-d H:i'), "", "disabled" ) }}
-    {{ formmacros.simplefield( "Status Updated On:", accreq.updatedate|date('Y-m-d H:i'), "", "disabled" ) }}
+    {% if accreq is defined %}
 
-    <hr>
+        {{ formmacros.simplefield( "Request ID:", accreq.id, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Request Date:", accreq.createdate|date('Y-m-d H:i:s'), "", "disabled" ) }}
+        {{ formmacros.simplefield( "Request Status:", accreq.getStatusStr|capitalize, "", "disabled" ) }}
+        {#{{ formmacros.simplefield( "Full Name:", entity.getUsernameOptimal(), "", "disabled" ) }}#}
+        {#{{ formmacros.simplefield( "User ID Type:", entity.keytype, "", "disabled" ) }}#}
+        {#{{ formmacros.simplefield( "User ID:", entity.primaryPublicUserId, "", "disabled" ) }}#}
+        {#{{ formmacros.simplefield( "Email:", entity.primaryPublicUserId, "", "disabled" ) }}#}
+        {#{{ formmacros.simplefield( "Phone Number:", entity.preferredPhone, "", "disabled" ) }}#}
+        {{ formmacros.simplefield( "Last Login:", entity.lastLogin|date('Y-m-d H:i'), "", "disabled" ) }}
+        {{ formmacros.simplefield( "Status Updated On:", accreq.updatedate|date('Y-m-d H:i'), "", "disabled" ) }}
 
-    {#{{ form_start(form) }}#}
-    <form id="accessrequest_management" action="{{ path(sitename~'_accessrequest_management_submit',{'id':accreq.id}) }}" method="POST">
+        {% set updatedby = '<a href="'~path(sitenameshowuser~'_showuser', { 'id': entity.updatedby.id })~'">'~entity.updatedby~'</a>' %}
+        {{ formmacros.simplefield( "Status Updated By:", updatedby, "", "disabled" ) }}
+
+        <hr>
+    {% endif %}
+
+    {% if accreq is defined %}
+        {% set actionPath = path(sitename~'_accessrequest_management_submit',{'id':accreq.id}) %}
+    {% else %}
+        {% set actionPath = path(sitename~'_authorization_user_management_submit',{'id':entity.id}) %}
+    {% endif %}
+
+
+    <form id="accessrequest_management" action="{{ actionPath }}" method="POST">
 
 
         {#{{ formmacros.field(form.permittedInstitutionalPHIScope) }}#}
@@ -60,27 +84,27 @@
 
         <div class="row">
 
-            <div class="col-xs-6" align="right">
-                <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Approve</button>
-            </div>
+            {% if accreq is defined %}
+                <div class="col-xs-6" align="right">
+                    <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Approve</button>
+                </div>
 
-            <div class="col-xs-6" align="left">
-                <button name="accessrequest-decline" type='submit' class="btn btn-danger btn-sm">Deny</button>
-            </div>
+                <div class="col-xs-6" align="left">
+                    <button name="accessrequest-decline" type='submit' class="btn btn-danger btn-sm">Deny</button>
+                </div>
+            {% else %}
+                <div class="col-xs-6" align="right">
+                    <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Update</button>
+                </div>
+
+                <div class="col-xs-6" align="left">
+                    <a class="btn btn-danger btn-sm" href="{{ path(sitename~'_authorized_users') }}">Cancel</a>
+                </div>
+            {% endif %}
 
         </div>
 
-    {#{{ form_end(form) }}#}
     </form>
-
-
-    {#<br>#}
-    {#<p>#}
-        {#<a class="btn btn-info btn-sm" href="{{ path(sitename~'_authorized_users') }}">Authorized Users</a>#}
-    {#</p>#}
-
-    {#<p><button type='button' class="btn btn-info btn-sm" data-toggle="button" onClick="">Approve</button></p>#}
-    {#<p><button type='button' class="btn btn-danger btn-sm" data-toggle="button" onClick="">Deny</button></p>#}
 
 
 

@@ -47,11 +47,9 @@
             <td>{{ user.email }}</td>
             <td>{{ user.preferredPhone }}</td>
             <td>
-                {#TODO: use user repository to get roles for this site {{ oCatRepo.getProducts(category.id, location) }}#}
-                {% for role in user.getSiteRoles(sitename) %}
-                    {% if role != "ROLE_USER" %}
-                        {#"{{ attribute(roles, role) }}"#}
-                        "{{ role }}"
+                {% for role in user_security_utility.getUserRolesBySite(user, sitename, true) %}
+                    {% if role.name != "ROLE_USER" %}
+                        "{{ role.alias }}"
                     {% endif %}
                 {% endfor %}
             </td>
@@ -67,17 +65,19 @@
 
                     <ul class="dropdown-menu dropdown-menu-right">
 
-                        <li><a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.id }) }}">View User Details</a></li>
+                        <li>
+                            <a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.id }) }}" target="_blank">View User Details</a>
+                        </li>
 
                         <li class="divider"></li>
 
                         <li>
-                            <a href="{{ path(sitename~'_accessrequest_management', { 'id': user.id }) }}">Authorization Management</a>
+                            <a href="{{ path(sitename~'_authorization_user_management', { 'id': user.id }) }}">Authorization Management</a>
                         </li>
 
                         <li>
-                            <a general-data-confirm="Are you sure you want to remove access authorization from {{ user }}?"
-                               href="{{ path(sitename~'_accessrequest_remove', { 'userId': user.id }) }}">Remove access authorization
+                            <a general-data-confirm="Are you sure you would like to stop {{ user }} from being able to access {{ sitenamefull }}?"
+                               href="{{ path(sitename~'_accessrequest_remove', { 'userId': user.id }) }}">Deny access request
                             </a>
                         </li>
 

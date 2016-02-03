@@ -503,10 +503,19 @@ class AccessRequestController extends Controller
         }
 
         if( $status == "declined" || $status == "decline" ) {
-            //$entity->setRoles(array());
-            $entity->removeRole($this->roleUser);
+            //1 way) remove general user rolw and add Banned role
+            //$entity->removeRole($this->roleUser);
+            //$entity->addRole($this->roleBanned);
 
-            $entity->addRole($this->roleBanned);
+            //2 way) New: If "Yes" is pressed, all roles belonging to this user and attached to this site should be removed.
+            $userSecUtil = $this->get('user_security_utility');
+            $roles = $userSecUtil->getUserRolesBySite( $entity, $this->siteName );
+            foreach( $roles as $role ) {
+                //echo "role=".$role->getName()."<br>";
+                $entity->removeRole($role->getName());
+            }
+            //exit('1');
+
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_DECLINED);
         }
@@ -609,20 +618,6 @@ class AccessRequestController extends Controller
             throw new \Exception( 'User is not found in Access Request with ID' . $id );
         }
 
-        //User's roles associated with this site
-//        $originalRoles = array();
-//        foreach( $entity->getRoles() as $role ) {
-//            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
-//            if( $roleObject && $roleObject->hasSite( $this->siteName ) ) {
-//                $originalRoles[] = $role;
-//            }
-//        }
-//        if( count($originalRoles) == 0 ) {
-//            //add lowest role for this site
-//            $lowestRole = ?; //What is the lowest role now? "WCMC-NYP Deidentifier Generator" is the institution specific role.
-//            $entity->addRole($lowestRole);
-//        }
-
         //Roles
         $rolesArr = $this->getUserRoles($this->siteName);
 
@@ -636,6 +631,53 @@ class AccessRequestController extends Controller
         $userViewArr = array(
             'form' => $form->createView(),
             'accreq' => $accReq,
+            'entity' => $entity,
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull'=>$this->siteNameStr
+        );
+
+
+        //add scan user site setting form
+        $res = $this->getScanSettingsForm($entity->getId(),'edit');
+        $form = $res['form'];
+        $userViewArr['form_scansettings'] = $form->createView();
+
+        return $userViewArr;
+    }
+
+    /**
+     * @Route("/authorization-user-manager/{id}", name="employees_authorization_user_management", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function authorizationManagementAction( $id )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Usert entity with ID ' . $id);
+        }
+
+        //Roles
+        $rolesArr = $this->getUserRoles($this->siteName);
+
+        $params = array(
+            //'institutions' => $institutions,
+            'sitename' => $this->siteName,
+            'roles' => $rolesArr
+        );
+        $form = $this->createForm(new AccessRequestUserType($params), $entity);
+
+        $userViewArr = array(
+            'form' => $form->createView(),
             'entity' => $entity,
             'sitename' => $this->siteName,
             'sitenameshowuser' => $this->siteNameShowuser,
@@ -677,15 +719,8 @@ class AccessRequestController extends Controller
         }
 
         //Original Roles not associated with this site
-        $originalRoles = array();
-        foreach( $entity->getRoles() as $role ) {
-            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
-            if( $roleObject && !$roleObject->hasSite( $this->siteName ) ) {
-                $originalRoles[] = $role;
-            }
-        }
-        //echo "Original roles:<br>";
-        //print_r($originalRoles);
+        $securityUtil = $this->get('order_security_utility');
+        $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
 
         $rolesArr = $this->getUserRoles($this->siteName);
 
@@ -716,59 +751,65 @@ class AccessRequestController extends Controller
 
         if( $form->isValid() ) {
 
-            ///////////////// update roles /////////////////
-            //$subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($entity->getId());
-//            $roles = $entity->getRoles();
-//            echo "<br>new roles:<br>";
-//            print_r($roles);
-//            echo "<br><br>";
-            //exit('update roles');
+//            ///////////////// update roles /////////////////
+//            //$subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($entity->getId());
+////            $roles = $entity->getRoles();
+////            echo "<br>new roles:<br>";
+////            print_r($roles);
+////            echo "<br><br>";
+//            //exit('update roles');
+//
+//            //add original roles not associated with this site
+//            foreach( $originalRoles as $role ) {
+//                //echo "add original not associated role=".$role->getName()."<br>";
+//                $entity->addRole($role);
+////                if( false === in_array($role, $entity->getRoles()) ) {
+////                    $entity->removeRole($role);
+////                }
+//            }
+//
+//            //$roles = $entity->getRoles();
+//            //echo "<br><br>After roles:<br>";
+//            //print_r($roles);
+//            //exit('update roles');
+//
+//            $em->persist($entity);
+//            $em->flush($entity);
+//            ///////////////// EOF update roles /////////////////
+//
+//            ///////////////// update permittedInstitutions /////////////////
+//            $securityUtil = $this->get('order_security_utility');
+//            $userSiteSettings = $securityUtil->getUserPerSiteSettings($entity);
+//            if( $userSiteSettings ) {
+//                $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+//            } else {
+//                $user = $this->get('security.context')->getToken()->getUser();
+//                $userSiteSettings = new PerSiteSettings();
+//                $userSiteSettings->setAuthor($user);
+//                $userSiteSettings->setUser($entity);
+//
+//                //add permittedInstitutions
+//                $permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
+//                foreach( $permittedInstitutions as $permittedInstitution ) {
+//                    echo "permittedInstitution=".$permittedInstitution."<br>";
+//                    $userSiteSettings->addPermittedInstitutionalPHIScope($permittedInstitution);
+//                    $em->persist($userSiteSettings);
+//                }
+//
+//            }
+//
+//            //$permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
+//            //$permittedInstitutions = $form_scansettings->get('permittedInstitutionalPHIScope')->getData();
+//            //echo "permittedInstitutions count=".count($permittedInstitutions)."<br>";
+//            //foreach( $permittedInstitutions as $permittedInstitution ) {
+//            //    echo "permittedInstitution=".$permittedInstitution."<br>";
+//            //}
+//
+//            $em->persist($userSiteSettings);
+//            $em->flush($userSiteSettings);
+//            ///////////////// EOF update permittedInstitutions /////////////////
 
-            //add original roles not associated with this site
-            foreach( $originalRoles as $role ) {
-                $entity->addRole($role);
-            }
-
-//            $roles = $entity->getRoles();
-//            echo "<br><br>After roles:<br>";
-//            print_r($roles);
-//            exit('update roles');
-
-            $em->persist($entity);
-            $em->flush($entity);
-            ///////////////// EOF update roles /////////////////
-
-            ///////////////// update permittedInstitutions /////////////////
-            $securityUtil = $this->get('order_security_utility');
-            $userSiteSettings = $securityUtil->getUserPerSiteSettings($entity);
-            if( $userSiteSettings ) {
-                $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
-            } else {
-                $user = $this->get('security.context')->getToken()->getUser();
-                $userSiteSettings = new PerSiteSettings();
-                $userSiteSettings->setAuthor($user);
-                $userSiteSettings->setUser($entity);
-
-                //add permittedInstitutions
-                $permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
-                foreach( $permittedInstitutions as $permittedInstitution ) {
-                    echo "permittedInstitution=".$permittedInstitution."<br>";
-                    $userSiteSettings->addPermittedInstitutionalPHIScope($permittedInstitution);
-                    $em->persist($userSiteSettings);
-                }
-
-            }
-
-            //$permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
-            //$permittedInstitutions = $form_scansettings->get('permittedInstitutionalPHIScope')->getData();
-            //echo "permittedInstitutions count=".count($permittedInstitutions)."<br>";
-            //foreach( $permittedInstitutions as $permittedInstitution ) {
-            //    echo "permittedInstitution=".$permittedInstitution."<br>";
-            //}
-
-            $em->persist($userSiteSettings);
-            $em->flush($userSiteSettings);
-            ///////////////// EOF update permittedInstitutions /////////////////
+            $this->processUserAuthorization( $request, $entity, $form_scansettings, $originalOtherRoles );
 
             /////////////// update status //////////////////////
             if( $request->request->has('accessrequest-approve') ) {
@@ -790,6 +831,117 @@ class AccessRequestController extends Controller
 
         //return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_management',array('id'=>$id)));
         return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
+    }
+
+    /**
+     * @Route("/authorization-user-manager/submit/{id}", name="employees_authorization_user_management_submit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function authorizationManagementSubmitAction( Request $request, $id )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity with ID ' . $id);
+        }
+
+        //user's original not associated with this site
+        $securityUtil = $this->get('order_security_utility');
+        $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
+
+        $rolesArr = $this->getUserRoles($this->siteName);
+
+        $params = array(
+            'sitename' => $this->siteName,
+            'roles' => $rolesArr
+        );
+        $form = $this->createForm(new AccessRequestUserType($params), $entity);
+
+        $userViewArr = array(
+            'form' => $form->createView(),
+            //'accreq' => $accReq,
+            'entity' => $entity,
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull'=>$this->siteNameStr
+        );
+
+
+        //add scan user site setting form
+        $res = $this->getScanSettingsForm($entity->getId(),'edit');
+        $form_scansettings = $res['form'];
+        //$subjectUser = $res['entity'];
+
+        $form->bind($request);
+        $form_scansettings->bind($request);
+
+        if( $form->isValid() ) {
+            $this->processUserAuthorization( $request, $entity, $form_scansettings, $originalOtherRoles );
+        }
+
+        return $this->redirect($this->generateUrl($this->siteName.'_authorized_users'));
+    }
+
+    public function processUserAuthorization( $request, $entity, $form_scansettings, $originalOtherRoles ) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        ///////////////// update roles /////////////////
+        //add original roles not associated with this site
+        foreach( $originalOtherRoles as $role ) {
+            $entity->addRole($role);
+        }
+
+        $em->persist($entity);
+        $em->flush($entity);
+        ///////////////// EOF update roles /////////////////
+
+        ///////////////// update permittedInstitutions /////////////////
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($entity);
+        if( $userSiteSettings ) {
+            $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        } else {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $userSiteSettings = new PerSiteSettings();
+            $userSiteSettings->setAuthor($user);
+            $userSiteSettings->setUser($entity);
+
+            //add permittedInstitutions
+            $permittedInstitutions = $form_scansettings["permittedInstitutionalPHIScope"]->getData();
+            foreach( $permittedInstitutions as $permittedInstitution ) {
+                echo "permittedInstitution=".$permittedInstitution."<br>";
+                $userSiteSettings->addPermittedInstitutionalPHIScope($permittedInstitution);
+                $em->persist($userSiteSettings);
+            }
+
+        }
+
+        $em->persist($userSiteSettings);
+        $em->flush($userSiteSettings);
+        ///////////////// EOF update permittedInstitutions /////////////////
+
+//        /////////////// update status //////////////////////
+//        if( $request->request->has('accessrequest-approve') ) {
+//            $this->changeStatus( $accReq, "approve", $entity );
+//            $em->persist($accReq);
+//            $em->flush($accReq);
+//        }
+//
+//        if( $request->request->has('accessrequest-decline') ) {
+//            $this->changeStatus( $accReq, "decline", $entity );
+//            $em->persist($accReq);
+//            $em->flush($accReq);
+//        }
+//        /////////////// EOF update status //////////////////////
     }
 
     public function getScanSettingsForm($id,$cycle) {
@@ -874,7 +1026,7 @@ class AccessRequestController extends Controller
 
 
     /**
-     * @Route("/access-requests-remove/{userId}", name="employees_accessrequest_remove", requirements={"userId" = "\d+"})
+     * @Route("/deny-access-request/{userId}", name="employees_accessrequest_remove", requirements={"userId" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -931,9 +1083,8 @@ class AccessRequestController extends Controller
 
         //echo "sitename=".$this->siteName."<br>";
 
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $this->getQueryUserBySite( $this->siteName );
+        $userSecUtil = $this->get('user_security_utility');
+        $query = $userSecUtil->getQueryUserBySite( $this->siteName );
 
         //echo "query=".$query->getSql()."<br>";
         //$users = $query->getResult();
@@ -960,96 +1111,6 @@ class AccessRequestController extends Controller
 
     }
 
-    public function getQueryUserBySite( $sitename ) {
-        $em = $this->getDoctrine()->getManager();
 
-        //roles with sitename
-        $roles = $this->getRolesBySite($sitename);
-        //echo "roles count=".count($roles)."<br>";
-        //print_r($roles);
-        //exit('1');
-
-        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
-        $dql =  $repository->createQueryBuilder("user");
-        $dql->select('user');
-        $dql->leftJoin("user.infos", "infos");
-        $dql->leftJoin("user.keytype", "keytype");
-
-        //roles where
-        $whereArr = array();
-        $where = "";
-        $count = 0;
-        foreach( $roles as $role ) {
-            //$whereArr[] = "'".$role['name']."'";
-            if( $count > 0 ) {
-                $where .= " OR ";
-            }
-            $where .= "user.roles LIKE " . "'%".$role['name']."%'";
-            $count++;
-        }
-        //echo "where=".$where."<br>";
-
-        if( !$where ) {
-            $where = "1=0";
-        }
-
-        $dql->where($where);
-
-        //echo "dql=".$dql."<br>";
-
-        $query = $em->createQuery($dql);
-
-        //$users = $query->getResult();
-        //echo "users count=".count($users)."<br>";
-        //exit('1');
-
-        return $query;
-    }
-    public function getRolesBySite($sitename) {
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Roles');
-        $dql =  $repository->createQueryBuilder("roles");
-        $dql->select('roles.name as name');
-        $dql->leftJoin("roles.sites", "sites");
-        $dql->where("sites.name = :sitename OR sites.abbreviation = :sitename");
-
-        $query = $em->createQuery($dql);
-
-        $query->setParameters(array(
-            "sitename" => $sitename
-        ));
-
-        $roles = $query->getResult();
-
-        return $roles;
-    }
-    //NOT working. Not used.
-    public function getQueryUserBySite_SingleQuery( $sitename ) {
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
-        $dql =  $repository->createQueryBuilder("user");
-        $dql->select('user');
-        $dql->leftJoin("user.infos", "infos");
-
-        //$dql->leftJoin('OlegUserdirectoryBundle:Roles', 'roles');
-        $dql->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
-        //$dql->leftJoin("OlegUserdirectoryBundle:SiteList", "sitelist", "WITH", "sitelist.id = sites.id");
-        $dql->leftJoin("roles.sites", "sites");
-
-        $dql->where("sites.name LIKE :sitename");
-        //$dql->where("sites IS NULL");
-        //$dql->where("sites.id=4");
-        //$dql->where("roles.name = 'ROLE_DEIDENTIFICATOR_WCMC_NYP_ENQUIRER'");
-
-        //echo "dql=".$dql."<br>";
-
-        $query = $em->createQuery($dql);
-
-        $query->setParameters(array(
-            "sitename" => "'%".$this->siteName."%'"
-        ));
-
-        return $query;
-    }
 
 }

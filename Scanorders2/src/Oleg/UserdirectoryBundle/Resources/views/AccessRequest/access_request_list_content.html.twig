@@ -36,7 +36,7 @@
 
             {#hidden clickable link#}
             <td style="display: none">
-                <a href="{{ path(sitename~'_accessrequest_management', { 'id': entity.id }) }}" target="_blank">Access Request Management</a>
+                <a href="{{ path(sitename~'_accessrequest_management', { 'id': entity.id }) }}" target="_blank">Review and approve access request</a>
             </td>
 
             <td class="rowlink-skip">
@@ -50,9 +50,9 @@
             <td>{{ entity.user.email }}</td>
             <td>{{ entity.user.preferredPhone }}</td>
             <td>
-                {% for role in entity.user.getSiteRoles(sitename) %}
-                    {% if role != "ROLE_USER" %}
-                        "{{ attribute(roles, role) }}"
+                {% for role in user_security_utility.getUserRolesBySite(entity.user, sitename, true) %}
+                    {% if role.name != "ROLE_USER" %}
+                        "{{ role.alias }}"
                     {% endif %}
                 {% endfor %}
             </td>
@@ -104,15 +104,17 @@
 
 
                         <li>
-                            <a href="{{ path(sitename~'_accessrequest_management', { 'id': entity.id }) }}">Access Request Management</a>
+                            <a href="{{ path(sitename~'_accessrequest_management', { 'id': entity.id }) }}">Review and approve access request</a>
                         </li>
 
-                        <li>
-                            <a
-                                general-data-confirm="Are you sure you want to remove access authorization from {{ entity.user }}?"
-                                href="{{ path(sitename~'_accessrequest_remove', { 'userId': entity.user.id }) }}">Remove access authorization
-                            </a>
-                        </li>
+                        {% if entity.getStatusStr|lower != 'declined' %}
+                            <li>
+                                <a
+                                    general-data-confirm="Are you sure you would like to stop {{ entity.user }} from being able to access {{ sitenamefull }}?"
+                                    href="{{ path(sitename~'_accessrequest_remove', { 'userId': entity.user.id }) }}">Deny access request
+                                </a>
+                            </li>
+                        {% endif %}
 
 
                     </ul>

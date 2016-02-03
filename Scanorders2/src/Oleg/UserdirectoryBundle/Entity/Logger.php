@@ -297,22 +297,22 @@ class Logger
         return $this;
     }
 
-    public function getSiteRoles($sitename) {
-
-        $roles = array();
-
-        if( $sitename == 'employees' ) {
-            $sitename = 'userdirectory';
-        }
-
-        foreach( $this->getRoles() as $role ) {
-            if( stristr($role, $sitename) ) {
-                $roles[] = $role;
-            }
-        }
-
-        return $roles;
-    }
+//    public function getSiteRoles($sitename) {
+//
+//        $roles = array();
+//
+//        if( $sitename == 'employees' ) {
+//            $sitename = 'userdirectory';
+//        }
+//
+//        foreach( $this->getRoles() as $role ) {
+//            if( stristr($role, $sitename) ) {
+//                $roles[] = $role;
+//            }
+//        }
+//
+//        return $roles;
+//    }
 
     /**
      * @param mixed $useragent

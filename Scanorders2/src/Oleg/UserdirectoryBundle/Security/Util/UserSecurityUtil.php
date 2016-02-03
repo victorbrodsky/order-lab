@@ -565,4 +565,129 @@ class UserSecurityUtil {
     }
 
 
+
+
+    ///////////////////////// User Role methods /////////////////////////
+    public function getUserRolesBySite( $user, $sitename, $associated=true ) {
+        $userSiteRoles = array();
+
+        $roles = $this->getRolesBySite($sitename,$associated);
+
+        foreach( $roles as $roleObject ) {
+            //echo "roleObject=".$roleObject."<br>";
+//            if( !$roleObject ) {
+//                continue;
+//            }
+//            if( $associated ) {
+//                if( $roleObject && $user->hasRole($roleObject->getName()) ) {
+//                    $userSiteRoles[] = $roleObject;
+//                }
+//            } else {
+//                //echo "not associated <br>";
+//                if( $roleObject && !$user->hasRole($roleObject->getName()) ) {
+//                    $userSiteRoles[] = $roleObject;
+//                }
+//            }
+            if( $roleObject && $user->hasRole($roleObject->getName()) ) {
+                $userSiteRoles[] = $roleObject;
+            }
+        }
+
+        return $userSiteRoles;
+    }
+
+    public function getQueryUserBySite( $sitename ) {
+        $dql = $this->getDqlUserBySite($sitename);
+        $query = $this->em->createQuery($dql);
+        return $query;
+    }
+
+    public function getDqlUserBySite( $sitename ) {
+
+        //roles with sitename
+        $roles = $this->getRolesBySite($sitename);
+        //echo "roles count=".count($roles)."<br>";
+        //print_r($roles);
+        //exit('1');
+
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos", "infos");
+        $dql->leftJoin("user.keytype", "keytype");
+
+        //roles where
+        $whereArr = array();
+        $where = "";
+        $count = 0;
+        foreach( $roles as $role ) {
+            //$whereArr[] = "'".$role['name']."'";
+            if( $count > 0 ) {
+                $where .= " OR ";
+            }
+            $where .= "user.roles LIKE " . "'%".$role->getName()."%'";
+            $count++;
+        }
+        //echo "where=".$where."<br>";
+
+        if( !$where ) {
+            $where = "1=0";
+        }
+
+        $dql->where($where);
+        //echo "dql=".$dql."<br>";
+
+        return $dql;
+    }
+    public function getRolesBySite($sitename,$associated=true) {
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Roles');
+        $dql =  $repository->createQueryBuilder("roles");
+        $dql->select('roles');
+        $dql->leftJoin("roles.sites", "sites");
+
+        if( $associated ) {
+            $dql->where("sites.name = :sitename OR sites.abbreviation = :sitename");
+        } else {
+            $dql->where("sites.name != :sitename AND sites.abbreviation != :sitename");
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(array(
+            "sitename" => $sitename
+        ));
+
+        $roles = $query->getResult();
+
+        return $roles;
+    }
+    //NOT working. Not used.
+    public function getQueryUserBySite_SingleQuery( $sitename ) {
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos", "infos");
+
+        //$dql->leftJoin('OlegUserdirectoryBundle:Roles', 'roles');
+        $dql->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
+        //$dql->leftJoin("OlegUserdirectoryBundle:SiteList", "sitelist", "WITH", "sitelist.id = sites.id");
+        $dql->leftJoin("roles.sites", "sites");
+
+        $dql->where("sites.name LIKE :sitename");
+        //$dql->where("sites IS NULL");
+        //$dql->where("sites.id=4");
+        //$dql->where("roles.name = 'ROLE_DEIDENTIFICATOR_WCMC_NYP_ENQUIRER'");
+
+        //echo "dql=".$dql."<br>";
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(array(
+            "sitename" => "'%".$this->siteName."%'"
+        ));
+
+        return $query;
+    }
+    ///////////////////////// EOF User Role methods /////////////////////////
+
 }

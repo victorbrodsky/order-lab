@@ -55,6 +55,9 @@ twig:
 #        underlogin_msg_user: %underlogin_msg_user%
 #        underlogin_msg_scan: %underlogin_msg_scan%
 
+        #service
+        user_security_utility: "@user_security_utility"
+
 #    form:
 #      resources: ['form_table_layout.html.twig']
 

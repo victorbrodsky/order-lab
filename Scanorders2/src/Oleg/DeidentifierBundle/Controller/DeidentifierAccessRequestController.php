@@ -103,7 +103,7 @@ class DeidentifierAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/access-requests-remove/{userId}", name="deidentifier_accessrequest_remove", requirements={"userId" = "\d+"})
+     * @Route("/deny-access-request/{userId}", name="deidentifier_accessrequest_remove", requirements={"userId" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -120,6 +120,26 @@ class DeidentifierAccessRequestController extends AccessRequestController
     public function authorizedUsersAction(Request $request )
     {
         return parent::authorizedUsersAction($request);
+    }
+
+    /**
+     * @Route("/authorization-user-manager/{id}", name="deidentifier_authorization_user_management", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function authorizationManagementAction( $id )
+    {
+        return parent::authorizationManagementAction($id);
+    }
+
+    /**
+     * @Route("/authorization-user-manager/submit/{id}", name="deidentifier_authorization_user_management_submit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function authorizationManagementSubmitAction( Request $request, $id )
+    {
+        return parent::authorizationManagementSubmitAction($request,$id);
     }
 
 }

@@ -228,7 +228,7 @@ class ScanAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/access-requests-remove/{userId}", name="scan_accessrequest_remove", requirements={"userId" = "\d+"})
+     * @Route("/deny-access-request/{userId}", name="scan_accessrequest_remove", requirements={"userId" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -246,4 +246,25 @@ class ScanAccessRequestController extends AccessRequestController
     {
         return parent::authorizedUsersAction($request);
     }
+
+    /**
+     * @Route("/authorization-user-manager/{id}", name="scan_authorization_user_management", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function authorizationManagementAction( $id )
+    {
+        return parent::authorizationManagementAction($id);
+    }
+
+    /**
+     * @Route("/authorization-user-manager/submit/{id}", name="scan_authorization_user_management_submit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function authorizationManagementSubmitAction( Request $request, $id )
+    {
+        return parent::authorizationManagementSubmitAction($request,$id);
+    }
+
 }

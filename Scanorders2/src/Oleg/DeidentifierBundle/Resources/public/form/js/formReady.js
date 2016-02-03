@@ -20,6 +20,8 @@ $(document).ready(function() {
 
     setOriginalSearchParameters();
 
+    generalConfirmAction();
+
 });
 
 //only used to set generated parameters on the index.html.twig page /generate/
