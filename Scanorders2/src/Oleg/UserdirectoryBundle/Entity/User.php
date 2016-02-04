@@ -223,6 +223,10 @@ class User extends BaseUser {
      */
     private $permissions;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Oleg\OrderformBundle\Entity\PerSiteSettings", inversedBy="user", cascade={"persist","remove"})
+     */
+    private $perSiteSettings;
 
 
     function __construct( $addobjects=true )
@@ -1177,6 +1181,23 @@ class User extends BaseUser {
         }
         return $value;
     }
+
+    /**
+     * @param mixed $perSiteSettings
+     */
+    public function setPerSiteSettings($perSiteSettings)
+    {
+        $this->perSiteSettings = $perSiteSettings;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPerSiteSettings()
+    {
+        return $this->perSiteSettings;
+    }
+
     /////////////////////////////////////////////////////////////////
 
 

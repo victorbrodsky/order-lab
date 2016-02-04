@@ -52,33 +52,6 @@ class PerSiteSettingsType extends AbstractType
                 },
             ));
 
-//            $builder->add('defaultInstitution', new InstitutionType(), array(
-//                'required' => false,
-//                'label' => false    //'Institution:'
-//            ));
-
-//            $builder->add( 'scanOrdersServicesScope', null, array(
-//                'label'=>'Service(s) Scope:',
-//                'required'=>false,
-//                'multiple' => true,
-//                'attr' => array('class'=>'combobox combobox-width')
-//            ));
-            //service. User should be able to add institution to administrative or appointment titles
-//            $builder->add('scanOrdersServicesScope', 'employees_custom_selector', array(
-//                'label' => "Service(s) Scope:",
-//                'required' => false,
-//                'attr' => array('class' => 'combobox combobox-width ajax-combobox-service', 'type' => 'hidden'),
-//                'classtype' => 'service'
-//            ));
-
-//            $builder->add( 'chiefServices', null, array(
-//                'label'=>'Chief of the following Service(s) for Scope:',
-//                'required'=>false,
-//                'multiple' => true,
-//                'attr' => array('class'=>'combobox combobox-width')
-//            ));
-
-
         } //roleAdmin
 
 

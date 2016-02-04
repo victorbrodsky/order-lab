@@ -319,8 +319,57 @@
         </div>
 
 
+        {#per site settings#}
+        {#Per Site User Settings by User#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title text-left">
+                    <a data-toggle="collapse" href="#persiteusersettings">
+                        Per Site User Settings Editable by User {{ entity.getUserNameShortStr() }} - User ID {{ entity.id }}
+                    </a>
+                </h4>
+            </div>
+            <div id="persiteusersettings" class="panel-collapse collapse {{ collapsein }}">
+                <div class="panel-body">
+
+                    <div class="user-collection-holder">
+                        {% if form.defaultInstitution is defined %}
+                            {{ treemacros.compositeTreeNode(form.defaultInstitution,cycle,'') }}
+                        {% endif %}
+                    </div>
+
+                    {{ formmacros.checkbox(form.perSiteSettings.tooltip) }}
+
+                </div>
+            </div>
+        </div>
+
+        {% if is_granted('ROLE_SCANORDER_ADMIN') or is_granted('ROLE_USERDIRECTORY_EDITOR') %}
+            {#Per Site User Settings by Admin#}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-left">
+                        <a data-toggle="collapse" href="#persiteadminsettings">
+                            Per Site User Settings Editable by Administrator
+                        </a>
+                    </h4>
+                </div>
+                <div id="persiteadminsettings" class="panel-collapse collapse {{ collapsein }}">
+                    <div class="panel-body">
+
+                        {{ formmacros.field(form.perSiteSettings.permittedInstitutionalPHIScope) }}
+                        {{ formmacros.field(form.perSiteSettings.scanOrdersServicesScope) }}
+                        {{ formmacros.field(form.perSiteSettings.chiefServices) }}
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {#EOF per site settings#}
+
+
         {#{% block addcontent %}{% endblock %}#}
-        {% if addcontent %}
+        {% if addcontent is defined and addcontent %}
             {{ addcontent|raw }}
         {% endif %}
 
