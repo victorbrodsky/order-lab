@@ -1161,8 +1161,8 @@ class AccessRequestController extends Controller
         $primaryPublicUserId = $request->query->get('primaryPublicUserId');
 
         //echo "sitename=".$this->siteName."<br>";
-        echo "usertype=".$keytype."<br>";
-        echo "userid=".$primaryPublicUserId."<br>";
+        //echo "usertype=".$keytype."<br>";
+        //echo "userid=".$primaryPublicUserId."<br>";
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1188,8 +1188,7 @@ class AccessRequestController extends Controller
             //$subjectUser = new User();
         }
 
-        echo "subjectUser=".$subjectUser."<br>";
-
+        //echo "subjectUser=".$subjectUser."<br>";
 
         return $this->redirect( $this->generateUrl($this->siteName."_authorization_user_management", array('id'=>$subjectUser->getId())) );
 

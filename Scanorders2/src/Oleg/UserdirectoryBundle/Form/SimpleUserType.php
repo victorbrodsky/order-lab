@@ -23,7 +23,7 @@ class SimpleUserType extends UserType {
 
         $this->cycle = $params['cycle'];
         $this->readonly = $params['readonly'];
-        $this->sc = $params['sc'];
+        //$this->sc = $params['sc'];
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
