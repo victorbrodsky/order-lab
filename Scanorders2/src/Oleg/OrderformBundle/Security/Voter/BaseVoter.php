@@ -65,7 +65,7 @@ abstract class BaseVoter extends Voter {
 
     protected function canView($subject, TokenInterface $token)
     {
-        echo "canView? <br>";
+        //echo "canView? <br>";
 
         //return false; //test
 

@@ -32,7 +32,7 @@ class ProcedureNumberType extends AbstractType
             'class' => 'OlegOrderformBundle:ProcedureType',
             'label'=>false,
             'required' => true,
-            'data' => 1,
+            //'data' => 1,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')

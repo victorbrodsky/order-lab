@@ -88,7 +88,7 @@ class PatientController extends Controller
     /**
      * New Patient.
      *
-     * @Route("/datastructure", name="scan-patient-new")
+     * @Route("/data-structure", name="scan-patient-new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -355,7 +355,7 @@ class PatientController extends Controller
 
     //create Test Patient
     /**
-     * @Route("/datastructure/new-test-patient", name="scan_testpatient_new")
+     * @Route("/data-structure/new-test-patient", name="scan_testpatient_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */

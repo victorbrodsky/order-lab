@@ -21,13 +21,12 @@ class EncounterNumberType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             $builder->add('keytype', 'entity', array(
                 'class' => 'OlegOrderformBundle:EncounterType',
                 'label' => 'Encounter Type:',
                 'required' => true,
-                'data' => 1,
+                //'data' => 1,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('list')
