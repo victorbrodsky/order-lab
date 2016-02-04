@@ -1183,7 +1183,7 @@ class AccessRequestController extends Controller
                 'notice',
                 'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'
             );
-            return $this->redirect( $this->generateUrl($this->siteNameShowuser."_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
+            return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
             //exit("User not found; TODO: Create a new user?");
             //$subjectUser = new User();
         }
