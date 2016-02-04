@@ -12,13 +12,37 @@
 
 {% extends extendStr%}
 
+
+
 {% block title %}
     Authorized Users for {{ sitenamefull }}
 {% endblock %}
 
+
+
 {% block content %}
 
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
     <h3 class="text-info">Authorized Users for {{ sitenamefull }}</h3>
+
+    {#<p>#}
+        {#<a class="btn btn-default btn-info" href="{{ path(sitenameshowuser~'_add_authorized_user') }}">Add Authorized User</a>#}
+    {#</p>#}
+
+    <hr>
+
+    <form id="add_authorized_user_form" action="{{ path(sitename~'_add_authorized_user') }}" method="GET">
+
+        {{ formmacros.field(form.keytype) }}
+        {{ formmacros.field(form.primaryPublicUserId) }}
+
+        <p>
+            <button type='submit' class="btn btn-info btn-sm">Add Authorized User</button>
+        </p>
+    </form>
+
+    <hr>
 
     <br>
 
@@ -77,7 +101,7 @@
 
                         <li>
                             <a general-data-confirm="Are you sure you would like to stop {{ user }} from being able to access {{ sitenamefull }}?"
-                               href="{{ path(sitename~'_accessrequest_remove', { 'userId': user.id }) }}">Deny access request
+                               href="{{ path(sitename~'_authorization_remove', { 'userId': user.id }) }}">Deny access request
                             </a>
                         </li>
 

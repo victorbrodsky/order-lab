@@ -1,0 +1,68 @@
+{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% elseif sitename == 'fellapp' %}
+    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+{% elseif sitename == 'deidentifier' %}
+    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% elseif sitename == 'scan' %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% extends extendStr%}
+
+{#This form is used for access request and authorization management#}
+
+{% block title %}
+    Add a New Authorized User for {{ sitenamefull }}
+{% endblock %}
+
+
+
+{% block content %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+
+    <h3 class="text-info">
+        Add a New Authorized User for {{ sitenamefull }}
+    </h3>
+
+    <br>
+
+
+    <hr>
+
+
+    <form id="add_authorized_user_form" action="{{ path(sitename~'_add_authorized_user_submit') }}" method="POST">
+
+
+        {#{{ formmacros.field(form.permittedInstitutionalPHIScope) }}#}
+        {#{{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}#}
+
+        {#{{ formmacros.field(form.roles) }}#}
+
+
+        <hr>
+
+        <br>
+
+        <div class="row">
+
+            <div class="col-xs-6" align="right">
+                <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Update</button>
+            </div>
+
+            <div class="col-xs-6" align="left">
+                <a class="btn btn-danger btn-sm" href="{{ path(sitename~'_authorized_users') }}">Cancel</a>
+            </div>
+
+        </div>
+
+    </form>
+
+
+
+{% endblock %}
+

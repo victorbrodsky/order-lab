@@ -6,8 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\OrderformBundle\Controller\ScanUserController;
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Form\PerSiteSettingsType;
-use Oleg\UserdirectoryBundle\Form\AccessRequestManagementType;
-use Oleg\UserdirectoryBundle\Form\AccessRequestUserType;
+use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Form\AuthorizitaionUserType;
+use Oleg\UserdirectoryBundle\Form\SimpleUserType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -626,58 +627,11 @@ class AccessRequestController extends Controller
             'sitename' => $this->siteName,
             'roles' => $rolesArr
         );
-        $form = $this->createForm(new AccessRequestUserType($params), $entity);
+        $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
 
         $userViewArr = array(
             'form' => $form->createView(),
             'accreq' => $accReq,
-            'entity' => $entity,
-            'sitename' => $this->siteName,
-            'sitenameshowuser' => $this->siteNameShowuser,
-            'sitenamefull'=>$this->siteNameStr
-        );
-
-
-        //add scan user site setting form
-        $res = $this->getScanSettingsForm($entity->getId(),'edit');
-        $form = $res['form'];
-        $userViewArr['form_scansettings'] = $form->createView();
-
-        return $userViewArr;
-    }
-
-    /**
-     * @Route("/authorization-user-manager/{id}", name="employees_authorization_user_management", requirements={"id" = "\d+"})
-     * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
-     */
-    public function authorizationManagementAction( $id )
-    {
-
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
-            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-
-        if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find Usert entity with ID ' . $id);
-        }
-
-        //Roles
-        $rolesArr = $this->getUserRoles($this->siteName);
-
-        $params = array(
-            //'institutions' => $institutions,
-            'sitename' => $this->siteName,
-            'roles' => $rolesArr
-        );
-        $form = $this->createForm(new AccessRequestUserType($params), $entity);
-
-        $userViewArr = array(
-            'form' => $form->createView(),
             'entity' => $entity,
             'sitename' => $this->siteName,
             'sitenameshowuser' => $this->siteNameShowuser,
@@ -729,7 +683,7 @@ class AccessRequestController extends Controller
             'sitename' => $this->siteName,
             'roles' => $rolesArr
         );
-        $form = $this->createForm(new AccessRequestUserType($params), $entity);
+        $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
 
         $userViewArr = array(
             'form' => $form->createView(),
@@ -831,63 +785,6 @@ class AccessRequestController extends Controller
 
         //return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_management',array('id'=>$id)));
         return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
-    }
-
-    /**
-     * @Route("/authorization-user-manager/submit/{id}", name="employees_authorization_user_management_submit", requirements={"id" = "\d+"})
-     * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
-     */
-    public function authorizationManagementSubmitAction( Request $request, $id )
-    {
-
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
-            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity with ID ' . $id);
-        }
-
-        //user's original not associated with this site
-        $securityUtil = $this->get('order_security_utility');
-        $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
-
-        $rolesArr = $this->getUserRoles($this->siteName);
-
-        $params = array(
-            'sitename' => $this->siteName,
-            'roles' => $rolesArr
-        );
-        $form = $this->createForm(new AccessRequestUserType($params), $entity);
-
-        $userViewArr = array(
-            'form' => $form->createView(),
-            //'accreq' => $accReq,
-            'entity' => $entity,
-            'sitename' => $this->siteName,
-            'sitenameshowuser' => $this->siteNameShowuser,
-            'sitenamefull'=>$this->siteNameStr
-        );
-
-
-        //add scan user site setting form
-        $res = $this->getScanSettingsForm($entity->getId(),'edit');
-        $form_scansettings = $res['form'];
-        //$subjectUser = $res['entity'];
-
-        $form->bind($request);
-        $form_scansettings->bind($request);
-
-        if( $form->isValid() ) {
-            $this->processUserAuthorization( $request, $entity, $form_scansettings, $originalOtherRoles );
-        }
-
-        return $this->redirect($this->generateUrl($this->siteName.'_authorized_users'));
     }
 
     public function processUserAuthorization( $request, $entity, $form_scansettings, $originalOtherRoles ) {
@@ -1030,13 +927,36 @@ class AccessRequestController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function accessRequestRemoveAction($userId )
+    public function accessRequestRemoveAction($userId)
     {
 
         if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
+        $this->authorizationRemove($userId);
+
+        return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
+    }
+
+    /**
+     * @Route("/deny-authorization/{userId}", name="employees_authorization_remove", requirements={"userId" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function authorizationRemoveAction($userId)
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $this->authorizationRemove($userId);
+
+        return $this->redirect($this->generateUrl($this->siteName.'_authorized_users'));
+    }
+
+    public function authorizationRemove($userId) {
         $em = $this->getDoctrine()->getManager();
 
         $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
@@ -1062,11 +982,116 @@ class AccessRequestController extends Controller
         $userSecUtil = $this->get('user_security_utility');
         $accReq = $userSecUtil->getUserAccessRequest($userId,$this->siteName);
         $this->changeStatus( $accReq, "decline", $subjectuser );
-
-
-        return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
     }
 
+
+
+
+
+
+    /**
+     * @Route("/authorization-user-manager/{id}", name="employees_authorization_user_management", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function authorizationManagementAction( $id )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Usert entity with ID ' . $id);
+        }
+
+        //Roles
+        $rolesArr = $this->getUserRoles($this->siteName);
+
+        $params = array(
+            //'institutions' => $institutions,
+            'sitename' => $this->siteName,
+            'roles' => $rolesArr
+        );
+        $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
+
+        $userViewArr = array(
+            'form' => $form->createView(),
+            'entity' => $entity,
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull'=>$this->siteNameStr
+        );
+
+
+        //add scan user site setting form
+        $res = $this->getScanSettingsForm($entity->getId(),'edit');
+        $form = $res['form'];
+        $userViewArr['form_scansettings'] = $form->createView();
+
+        return $userViewArr;
+    }
+
+    /**
+     * @Route("/authorization-user-manager/submit/{id}", name="employees_authorization_user_management_submit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     */
+    public function authorizationManagementSubmitAction( Request $request, $id )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity with ID ' . $id);
+        }
+
+        //user's original not associated with this site
+        $securityUtil = $this->get('order_security_utility');
+        $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
+
+        $rolesArr = $this->getUserRoles($this->siteName);
+
+        $params = array(
+            'sitename' => $this->siteName,
+            'roles' => $rolesArr
+        );
+        $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
+
+        $userViewArr = array(
+            'form' => $form->createView(),
+            //'accreq' => $accReq,
+            'entity' => $entity,
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull'=>$this->siteNameStr
+        );
+
+
+        //add scan user site setting form
+        $res = $this->getScanSettingsForm($entity->getId(),'edit');
+        $form_scansettings = $res['form'];
+        //$subjectUser = $res['entity'];
+
+        $form->bind($request);
+        $form_scansettings->bind($request);
+
+        if( $form->isValid() ) {
+            $this->processUserAuthorization( $request, $entity, $form_scansettings, $originalOtherRoles );
+        }
+
+        return $this->redirect($this->generateUrl($this->siteName.'_authorized_users'));
+    }
 
 
     /**
@@ -1082,6 +1107,14 @@ class AccessRequestController extends Controller
         }
 
         //echo "sitename=".$this->siteName."<br>";
+
+        //new simple user form: user type, user id
+        $params = array(
+            'cycle' => 'create',
+            'readonly' => false,
+            //'sc' => $this->get('security.context')
+        );
+        $form = $this->createForm(new SimpleUserType($params));
 
         $userSecUtil = $this->get('user_security_utility');
         $query = $userSecUtil->getQueryUserBySite( $this->siteName );
@@ -1102,7 +1135,7 @@ class AccessRequestController extends Controller
 
 
         return array(
-            //'form' => $form->createView(),
+            'form' => $form->createView(),
             'users' => $users,
             'sitename' => $this->siteName,
             'sitenameshowuser' => $this->siteNameShowuser,
@@ -1112,5 +1145,72 @@ class AccessRequestController extends Controller
     }
 
 
+    /**
+     * @Route("/add-authorized-user/", name="employees_add_authorized_user")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     */
+    public function addAuthorizedUserAction( Request $request )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        $keytype = $request->query->get('keytype');
+        $primaryPublicUserId = $request->query->get('primaryPublicUserId');
+
+        //echo "sitename=".$this->siteName."<br>";
+        echo "usertype=".$keytype."<br>";
+        echo "userid=".$primaryPublicUserId."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+
+        //find user in DB
+        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
+
+        if( count($users) > 1 ) {
+            throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
+        }
+
+        if( count($users) == 1 ) {
+            $subjectUser = $users[0];
+        }
+
+        if( count($users) == 0 ) {
+            $keytypeStr = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
+            $this->get('session')->getFlashBag()->set(
+                'notice',
+                'User ' . $primaryPublicUserId . ' (' . $keytypeStr . ')' . ' not found. Please use the form below to add a new user.'
+            );
+            return $this->redirect( $this->generateUrl($this->siteNameShowuser."_new_user") );
+            //exit("User not found; TODO: Create a new user?");
+            //$subjectUser = new User();
+        }
+
+        echo "subjectUser=".$subjectUser."<br>";
+
+
+        return $this->redirect( $this->generateUrl($this->siteName."_authorization_user_management", array('id'=>$subjectUser->getId())) );
+
+    }
+
+    /**
+     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit")
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     */
+    public function addAuthorizedUserSubmitAction( Request $request )
+    {
+
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        //echo "sitename=".$this->siteName."<br>";
+
+        exit("submit a new autorized user");
+
+    }
 
 }

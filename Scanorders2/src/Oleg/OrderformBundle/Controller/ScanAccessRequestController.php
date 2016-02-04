@@ -267,4 +267,34 @@ class ScanAccessRequestController extends AccessRequestController
         return parent::authorizationManagementSubmitAction($request,$id);
     }
 
+    /**
+     * @Route("/deny-authorization/{userId}", name="scan_authorization_remove", requirements={"userId" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function authorizationRemoveAction($userId)
+    {
+        return parent::authorizationRemoveAction($userId);
+    }
+
+    /**
+     * @Route("/add-authorized-user/", name="scan_add_authorized_user")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     */
+    public function addAuthorizedUserAction( Request $request )
+    {
+        return parent::addAuthorizedUserAction($request);
+    }
+
+    /**
+     * @Route("/add-authorized-user/submit/", name="scan_add_authorized_user_submit")
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     */
+    public function addAuthorizedUserSubmitAction( Request $request )
+    {
+        return parent::addAuthorizedUserSubmitAction($request);
+    }
+
 }

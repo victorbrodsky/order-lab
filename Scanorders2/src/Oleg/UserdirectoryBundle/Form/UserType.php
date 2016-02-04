@@ -254,8 +254,8 @@ class UserType extends AbstractType
 
 
 
-    public function addKeytype($builder) {
-        $attr = array('class'=>'combobox combobox-width user-keytype-field');
+    public function addKeytype($builder,$label='* Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field') {
+        $attr = array('class'=>$class);
         if( $this->readonly ) {
             $attr['readonly'] = 'readonly';
         }
@@ -263,7 +263,7 @@ class UserType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:UsernameType',
             'read_only' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'property' => 'name',
-            'label' => '* Primary Public User ID Type:',
+            'label' => $label,
             'required' => true,
             'multiple' => false,
             'attr' => $attr,    //array('class'=>'combobox combobox-width user-keytype-field','readonly'=>$readonlyAttr ),

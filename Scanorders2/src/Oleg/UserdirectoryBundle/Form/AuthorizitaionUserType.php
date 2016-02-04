@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 
-class AccessRequestUserType extends AbstractType
+class AuthorizitaionUserType extends AbstractType
 {
 
     protected $params;
