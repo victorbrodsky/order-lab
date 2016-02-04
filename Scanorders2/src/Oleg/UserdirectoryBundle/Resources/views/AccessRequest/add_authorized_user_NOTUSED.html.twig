@@ -1,4 +1,3 @@
-{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
 
 {% if sitename == 'employees' %}
     {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
@@ -23,7 +22,6 @@
 {% block content %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
 
     <h3 class="text-info">
         Add a New Authorized User for {{ sitenamefull }}
@@ -40,8 +38,6 @@
 
         {#{{ formmacros.field(form.permittedInstitutionalPHIScope) }}#}
         {#{{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}#}
-
-        {#{{ formmacros.field(form.roles) }}#}
 
 
         <hr>

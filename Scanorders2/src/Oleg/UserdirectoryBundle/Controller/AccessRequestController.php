@@ -1178,12 +1178,12 @@ class AccessRequestController extends Controller
         }
 
         if( count($users) == 0 ) {
-            $keytypeStr = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
+            $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
             $this->get('session')->getFlashBag()->set(
                 'notice',
-                'User ' . $primaryPublicUserId . ' (' . $keytypeStr . ')' . ' not found. Please use the form below to add a new user.'
+                'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'
             );
-            return $this->redirect( $this->generateUrl($this->siteNameShowuser."_new_user") );
+            return $this->redirect( $this->generateUrl($this->siteNameShowuser."_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
             //exit("User not found; TODO: Create a new user?");
             //$subjectUser = new User();
         }
@@ -1194,22 +1194,22 @@ class AccessRequestController extends Controller
 
     }
 
-    /**
-     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit")
-     * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
-     */
-    public function addAuthorizedUserSubmitAction( Request $request )
-    {
-
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
-            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
-        }
-
-        //echo "sitename=".$this->siteName."<br>";
-
-        exit("submit a new autorized user");
-
-    }
+//    /**
+//     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit")
+//     * @Method("POST")
+//     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+//     */
+//    public function addAuthorizedUserSubmitAction( Request $request )
+//    {
+//
+//        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+//            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+//        }
+//
+//        //echo "sitename=".$this->siteName."<br>";
+//
+//        exit("submit a new autorized user");
+//
+//    }
 
 }

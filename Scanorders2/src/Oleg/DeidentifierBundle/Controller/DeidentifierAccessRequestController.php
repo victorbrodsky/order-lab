@@ -163,14 +163,14 @@ class DeidentifierAccessRequestController extends AccessRequestController
         return parent::addAuthorizedUserAction($request);
     }
 
-    /**
-     * @Route("/add-authorized-user/submit/", name="deidentifier_add_authorized_user_submit")
-     * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
-     */
-    public function addAuthorizedUserSubmitAction( Request $request )
-    {
-        return parent::addAuthorizedUserSubmitAction($request);
-    }
+//    /**
+//     * @Route("/add-authorized-user/submit/", name="deidentifier_add_authorized_user_submit")
+//     * @Method("POST")
+//     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+//     */
+//    public function addAuthorizedUserSubmitAction( Request $request )
+//    {
+//        return parent::addAuthorizedUserSubmitAction($request);
+//    }
 
 }

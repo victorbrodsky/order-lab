@@ -1393,6 +1393,18 @@ class UserController extends Controller
 
         $user->setPassword("");
 
+        //set optional user-type and user-name
+        $userType = $request->query->get('user-type');
+        if( $userType ) {
+            $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($userType);
+            $user->setKeytype($keytypeObj);
+        }
+
+        $userName = $request->query->get('user-name');
+        if( $userName ) {
+            $user->setPrimaryPublicUserId($userName);
+        }
+
         //Only show this profile to members of the following institution(s): default preset choices WCMC, NYP
         $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
         $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
