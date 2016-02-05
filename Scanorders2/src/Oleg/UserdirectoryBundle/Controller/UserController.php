@@ -2166,6 +2166,19 @@ class UserController extends Controller
         //echo "count=".count($originalAdminTitles)."<br>";
         //exit();
 
+        $originalInsts = new ArrayCollection();
+        foreach( $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
+            $originalInsts->add($item);
+        }
+        $originalScanOrdersServicesScope = new ArrayCollection();
+        foreach( $entity->getPerSiteSettings()->getScanOrdersServicesScope() as $item) {
+            $originalScanOrdersServicesScope->add($item);
+        }
+        $originalChiefServices = new ArrayCollection();
+        foreach( $entity->getPerSiteSettings()->getChiefServices() as $item) {
+            $originalChiefServices->add($item);
+        }
+
         //Roles
         $rolesArr = $this->getUserRoles();
 
@@ -2235,7 +2248,9 @@ class UserController extends Controller
             if( count($resultRoles) > 0 ) {
                 if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
                     false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
-                    false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')
+                    false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') &&
+                    false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN') &&
+                    false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN')
                 ) {
                     $this->setSessionForbiddenNote("Change Role(s) ".join(",",$resultRoles));
                     //throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Role ".$role);
@@ -2252,7 +2267,6 @@ class UserController extends Controller
                     }
                 }
             }
-
             
             $currentPrimaryPublicUsername = $entity->getPrimaryPublicUserId();
             if( $currentPrimaryPublicUsername != $originalPrimaryPublicUsername ) {
@@ -2264,8 +2278,30 @@ class UserController extends Controller
                     $entity->setUsernameForce($uniqueUsername);
                 }
             }
-            
-            
+
+
+            //check if insts were changed and user is not admin
+            if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
+                false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
+                false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') &&
+                false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
+            ) {
+                $currentInsts = $entity->getPermittedInstitutionalPHIScope();
+                if( count($currentInsts) != count($originalInsts) ) {
+                    $this->setSessionForbiddenNote("Change Institutions");
+                    throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions");
+                    //return $this->redirect( $this->generateUrl('logout') );
+                }
+                foreach( $currentInsts as $inst ) {
+                    if( !$originalInsts->contains($inst) ) {
+                        $this->setSessionForbiddenNote("Change Institutions");
+                        throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions");
+                        //return $this->redirect( $this->generateUrl('logout') );
+                    }
+                }
+            }
+
+
             //exit('before processing');
 
             //set parents for institution tree for Administrative and Academical Titles
@@ -2407,6 +2443,20 @@ class UserController extends Controller
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
+
+            //PerSiteSettings
+            $removedInfo = $this->recordToEvenLogDiffCollection($originalInsts,$entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope(),"PermittedInstitutionalPHIScope");
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+            $removedInfo = $this->recordToEvenLogDiffCollection($originalScanOrdersServicesScope,$entity->getPerSiteSettings()->getScanOrdersServicesScope(),"ScanOrdersServicesScope");
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+            $removedInfo = $this->recordToEvenLogDiffCollection($originalChiefServices,$entity->getPerSiteSettings()->getChiefServices(),"ChiefServices");
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
             /////////////// EOF Process Removed Collections ///////////////
 
             //set Edit event log for removed collection and changed fields or added collection
@@ -2432,9 +2482,9 @@ class UserController extends Controller
             $this->processDeleteOldAvatar($entity,$oldAvatarId);
 
             //redirect only if this was called by the same controller class
-            if( $sitename == $this->container->getParameter('employees.sitename') ) {
+            //if( $sitename == $this->container->getParameter('employees.sitename') ) {
                 return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
-            }
+            //}
         }
 
         //echo "form is not valid<br>";

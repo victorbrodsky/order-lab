@@ -69,9 +69,9 @@ class ScanUserController extends UserController
         }
 
         //add scan user site setting form
-        $res = $this->getScanSettingsForm($id,'show');
-        $form = $res['form'];
-        $userViewArr['form_scansettings'] = $form->createView();
+//        $res = $this->getScanSettingsForm($id,'show');
+//        $form = $res['form'];
+//        $userViewArr['form_scansettings'] = $form->createView();
 
         //add research projects
         $projects = $this->getResearchProjects($id);
@@ -102,10 +102,10 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        //add scan user site setting form
-        $res = $this->getScanSettingsForm($id,'edit');
-        $form = $res['form'];
-        $userViewArr['form_scansettings'] = $form->createView();
+//        //add scan user site setting form
+//        $res = $this->getScanSettingsForm($id,'edit');
+//        $form = $res['form'];
+//        $userViewArr['form_scansettings'] = $form->createView();
 
         //add research projects
         $projects = $this->getResearchProjects($id);
@@ -130,6 +130,11 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
+        //$userViewArr = $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
+        return $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
+
+
+        ///////////////////////// moved to general user controller /////////////////////////
         $scanSecUtil = $this->get('order_security_utility');
         $scanSiteSettings = $scanSecUtil->getUserPerSiteSettings($id);
 
@@ -154,15 +159,19 @@ class ScanUserController extends UserController
 
 
         $userViewArr = $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
+        return $this->redirect($this->generateUrl('scan_showuser', array('id' => $id)));
 
         //get scan user site setting form
-        $res = $this->getScanSettingsForm($id,'edit');
-        $form = $res['form'];
-        $entity = $res['entity'];
+//        $res = $this->getScanSettingsForm($id,'edit');
+//        $form = $res['form'];
+//        $entity = $res['entity'];
+//
+//        $form->handleRequest($request);
 
-        $form->handleRequest($request);
+        $form = $userViewArr['form'];
+        $entity = $userViewArr['entity'];
 
-        if( count($entity->getPermittedInstitutionalPHIScope()) == 0 && $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')) { //&& $entity->getUser()->getUsername() != 'system'
+        if( count($entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope()) == 0 && $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')) { //&& $entity->getUser()->getUsername() != 'system'
             //exit('no inst');
             $instLink = '<a href="'.$this->generateUrl('institutions-list').'">add the new institution name directly.</a>';
             $error = new FormError("Please add at least one permitted institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
@@ -171,7 +180,7 @@ class ScanUserController extends UserController
 
         //var_dump( $form->getErrors() );
 
-        if( $form->isValid() ) {
+        if( 0==1 && $form->isValid() ) { //test: remove permittedInstitutionalPHIScope processing from scan and move it to user controller
 
             //check if insts were changed and user is not admin
             if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
@@ -238,7 +247,7 @@ class ScanUserController extends UserController
             return $this->redirect($this->generateUrl('scan_showuser', array('id' => $id)));
         }
 
-        $userViewArr['form_scansettings'] = $form->createView();
+        //$userViewArr['form_scansettings'] = $form->createView();
 
         //add research projects
         $projects = $this->getResearchProjects($id);
@@ -249,6 +258,7 @@ class ScanUserController extends UserController
         $userViewArr['courses'] = $courses;
 
         return $userViewArr;
+        ///////////////////////// EOF moved to general user controller /////////////////////////
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\UserdirectoryBundle\Form;
 
 //use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
@@ -127,6 +127,8 @@ class PerSiteSettingsType extends AbstractType
                     $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null);
                 }
 
+                //echo "show defaultInstitution label=".$label."<br>";
+
                 $form->add('defaultInstitution', 'employees_custom_selector', array(
                     'label' => 'Default ' . $label . ':',
                     'read_only' => !$this->roleAdmin,
@@ -179,13 +181,13 @@ class PerSiteSettingsType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PerSiteSettings',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
             'csrf_protection' => false,
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_persitesettings';
+        return 'oleg_userdirectorybundle_persitesettings';
     }
 }
