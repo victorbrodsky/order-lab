@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
-use Oleg\OrderformBundle\Entity\PerSiteSettings;
+use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 
 
 // Note for institution permissions:
@@ -430,12 +430,9 @@ class SecurityUtil extends UserSecurityUtil {
     }
 
     public function getUserPerSiteSettings($user) {
-//        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
-//            array('user' => $user, 'siteName' => 'scanorder')
-//        );
-        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneByUser($user);
-
-        return $entity;
+        return $user->getPerSiteSettings();
+        //$entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneByUser($user);
+        //return $entity;
     }
 
 //    public function getDefaultDepartmentDivision($message,$userSiteSettings) {

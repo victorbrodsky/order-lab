@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
-use Oleg\OrderformBundle\Entity\PerSiteSettings;
-use Oleg\OrderformBundle\Form\PerSiteSettingsType;
+use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
+use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 
 use Oleg\UserdirectoryBundle\Controller\UserController;
 

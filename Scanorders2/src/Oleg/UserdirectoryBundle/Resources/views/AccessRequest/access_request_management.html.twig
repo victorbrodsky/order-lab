@@ -71,9 +71,7 @@
 
     <form id="accessrequest_management" action="{{ actionPath }}" method="POST">
 
-
-        {#{{ formmacros.field(form.permittedInstitutionalPHIScope) }}#}
-        {{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}
+        {{ formmacros.field(form.perSiteSettings.permittedInstitutionalPHIScope) }}
 
         {{ formmacros.field(form.roles) }}
 

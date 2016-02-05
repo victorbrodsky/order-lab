@@ -10,7 +10,7 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 
 use Oleg\OrderformBundle\Entity\Educational;
-use Oleg\OrderformBundle\Entity\PerSiteSettings;
+use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Oleg\UserdirectoryBundle\Entity\AdminComment;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;

@@ -12,7 +12,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\OrderformBundle\Form\PerSiteSettingsType;
+use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -41,30 +41,11 @@ class AuthorizitaionUserType extends AbstractType
         ));
 
 
-//        if(0) {
-//            $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:Institution',
-//                'mapped' => false,
-//                //'property' => 'name',
-//                'property' => 'getTreeName',
-//                'label'=>'Institutional PHI Scope:',
-//                'required' => false,
-//                'multiple' => true,
-//                'attr' => array('class'=>'combobox combobox-width'),
-//                'query_builder' => function(EntityRepository $er) {
-//                        return $er->createQueryBuilder('list')
-//                            ->leftJoin("list.types","institutiontype")
-//                            //->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
-//                            ->where("list.type = :typedef OR list.type = :typeadd")
-//                            ->orderBy("list.orderinlist","ASC")
-//                            ->setParameters( array(
-//                                'typedef' => 'default',
-//                                'typeadd' => 'user-added',
-//                                //'medicalInstitution' => 'Medical'
-//                            ));
-//                    },
-//            ));
-//        }
+        $builder->add('perSiteSettings', new PerSiteSettingsType(null, true, $this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
+            'label' => false,
+            'required' => false,
+        ));
 
     }
 

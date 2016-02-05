@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,7 @@ class PerSiteSettings extends BaseUserAttributes
 {
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToMany(targetEntity="Institution")
      * @ORM\JoinTable(name="scan_perSiteSettings_institution",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
@@ -34,7 +34,7 @@ class PerSiteSettings extends BaseUserAttributes
      * Service scope: service means one of the node of the institutional tree.
      * This scope allows to view only an existing order by url
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToMany(targetEntity="Institution")
      * @ORM\JoinTable(name="scan_perSiteSettings_service",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
@@ -45,7 +45,7 @@ class PerSiteSettings extends BaseUserAttributes
     /**
      * This scope allows to view, cancel or amend an existing order by order url.
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToMany(targetEntity="Institution")
      * @ORM\JoinTable(name="scan_chiefServices_service",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
@@ -54,7 +54,7 @@ class PerSiteSettings extends BaseUserAttributes
     private $chiefServices;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="Institution")
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
      **/
     private $defaultInstitution;
@@ -88,7 +88,7 @@ class PerSiteSettings extends BaseUserAttributes
 //    private $defaultService;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User", inversedBy="perSiteSettings")
+     * @ORM\OneToOne(targetEntity="User", inversedBy="perSiteSettings")
      * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $user;

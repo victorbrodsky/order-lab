@@ -12,7 +12,6 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\OrderformBundle\Form\PerSiteSettingsType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -318,7 +317,7 @@ class UserType extends AbstractType
 
     public function addPerSiteSettings($builder) {
         $builder->add('perSiteSettings', new PerSiteSettingsType(null, $this->roleAdmin, $this->params), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PerSiteSettings',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
             'label' => false,
             'required' => false,
         ));

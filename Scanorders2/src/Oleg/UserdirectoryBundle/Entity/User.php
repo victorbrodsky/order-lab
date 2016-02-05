@@ -224,7 +224,7 @@ class User extends BaseUser {
     private $permissions;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\OrderformBundle\Entity\PerSiteSettings", mappedBy="user", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="PerSiteSettings", mappedBy="user", cascade={"persist","remove"})
      */
     private $perSiteSettings;
 

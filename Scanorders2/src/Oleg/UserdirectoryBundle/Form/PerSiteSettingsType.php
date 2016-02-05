@@ -55,96 +55,99 @@ class PerSiteSettingsType extends AbstractType
         } //roleAdmin
 
 
-        $builder->add('tooltip', 'checkbox', array(
-            'required' => false,
-            'label' => 'Show tool tips for locked fields:',
-            'attr' => array('class'=>'form-control', 'style'=>'margin:0')
-        ));
+        if( !array_key_exists('simple-form', $this->params) || !$this->params['simple-form'] ) {
+
+            $builder->add('tooltip', 'checkbox', array(
+                'required' => false,
+                'label' => 'Show tool tips for locked fields:',
+                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+            ));
 
 
-        //ScanOrdersServicesScope
-        $builder->add( 'scanOrdersServicesScope', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            //'property' => 'name',
-            'property' => 'getTreeName',
-            'label'=>'Service(s) Scope:',
-            'required'=> false,
-            'multiple' => true,
-            //'empty_value' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.parent","department")
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'pname' => 'Pathology and Laboratory Medicine'
-                            //'medicalInstitution' => 'Medical'
-                        ));
-                },
-        ));
+            //ScanOrdersServicesScope
+            $builder->add( 'scanOrdersServicesScope', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                //'property' => 'name',
+                'property' => 'getTreeName',
+                'label'=>'Service(s) Scope:',
+                'required'=> false,
+                'multiple' => true,
+                //'empty_value' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.parent","department")
+                            ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                                'pname' => 'Pathology and Laboratory Medicine'
+                                //'medicalInstitution' => 'Medical'
+                            ));
+                    },
+            ));
 
-        //chiefServices
-        $builder->add( 'chiefServices', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            //'property' => 'name',
-            'property' => 'getTreeName',
-            'label'=>'Chief of the following Service(s) for Scope:',
-            'required'=> false,
-            'multiple' => true,
-            //'empty_value' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.parent","department")
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'pname' => 'Pathology and Laboratory Medicine'
-                            //'medicalInstitution' => 'Medical'
-                        ));
-                },
-        ));
+            //chiefServices
+            $builder->add( 'chiefServices', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                //'property' => 'name',
+                'property' => 'getTreeName',
+                'label'=>'Chief of the following Service(s) for Scope:',
+                'required'=> false,
+                'multiple' => true,
+                //'empty_value' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.parent","department")
+                            ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                                'pname' => 'Pathology and Laboratory Medicine'
+                                //'medicalInstitution' => 'Medical'
+                            ));
+                    },
+            ));
 
-        if( array_key_exists('em', $this->params) ) {
-            //defaultInstitution
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-                $title = $event->getData();
-                $form = $event->getForm();
+            if( array_key_exists('em', $this->params) ) {
+                //defaultInstitution
+                $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                    $title = $event->getData();
+                    $form = $event->getForm();
 
-                $label = null;
-                if( $title ) {
-                    $institution = $title->getDefaultInstitution();
-                    if( $institution ) {
-                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution);
+                    $label = null;
+                    if( $title ) {
+                        $institution = $title->getDefaultInstitution();
+                        if( $institution ) {
+                            $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution);
+                        }
                     }
-                }
-                if( !$label ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null);
-                }
+                    if( !$label ) {
+                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null);
+                    }
 
-                //echo "show defaultInstitution label=".$label."<br>";
+                    //echo "show defaultInstitution label=".$label."<br>";
 
-                $form->add('defaultInstitution', 'employees_custom_selector', array(
-                    'label' => 'Default ' . $label . ':',
-                    'read_only' => !$this->roleAdmin,
-                    'required' => false,
-                    'attr' => array(
-                        'class' => 'ajax-combobox-compositetree',
-                        'type' => 'hidden',
-                        'data-compositetree-bundlename' => 'UserdirectoryBundle',
-                        'data-compositetree-classname' => 'Institution',
-                        'data-label-prefix' => 'Default'
-                    ),
-                    'classtype' => 'institution'
-                ));
-            });
-        }
+                    $form->add('defaultInstitution', 'employees_custom_selector', array(
+                        'label' => 'Default ' . $label . ':',
+                        'read_only' => !$this->roleAdmin,
+                        'required' => false,
+                        'attr' => array(
+                            'class' => 'ajax-combobox-compositetree',
+                            'type' => 'hidden',
+                            'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                            'data-compositetree-classname' => 'Institution',
+                            'data-label-prefix' => 'Default'
+                        ),
+                        'classtype' => 'institution'
+                    ));
+                });
+            }
 
+        } //if simple form
 
 //        $builder->add('institution', 'employees_custom_selector', array(
 //            'label' => 'Default Institution:',

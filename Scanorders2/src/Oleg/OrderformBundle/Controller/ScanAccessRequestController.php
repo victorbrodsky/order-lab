@@ -136,74 +136,90 @@ class ScanAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template()
      */
-    public function accessRequestChangeAction($id, $status)
+    public function accessRequestChangeAction(Request $request, $id, $status)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
-        }
+        return parent::accessRequestChangeAction($request, $id, $status);
 
-        $em = $this->getDoctrine()->getManager();
+//        ///////////////////////////
+//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+//            return $this->redirect( $this->generateUrl('scan-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+//
+//        if (!$entity) {
+//            throw $this->createNotFoundException('Unable to find User entity.');
+//        }
+//
+//        //$accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneByUser($id);
+//        $userSecUtil = $this->get('user_security_utility');
+//        $accReq = $userSecUtil->getUserAccessRequest($id,$this->container->getParameter('scan.sitename'));
+//
+//        if( !$accReq ) {
+//            throw new \Exception( 'AccessRequest is not found by id=' . $id );
+//        }
+//
+//        if( $status == "approved" ) {
+//
+//            $entity->removeRole('ROLE_SCANORDER_UNAPPROVED');
+//            $entity->removeRole('ROLE_SCANORDER_BANNED');
+//
+//            $entity->addRole('ROLE_SCANORDER_SUBMITTER');
+//            $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
+//
+//            //add WCMC institional scope to Aperio created users
+//            $creator = $this->get('security.context')->getToken()->getUser();
+//            $orderSecUtil = $this->container->get('order_security_utility');
+//            $orderSecUtil->addInstitutionalPhiScopeWCMC($entity,$creator);
+//
+//            if( $accReq )
+//                $accReq->setStatus(AccessRequest::STATUS_APPROVED);
+//        }
+//
+//        if( $status == "declined" ) {
+//
+//            $entity->removeRole('ROLE_SCANORDER_SUBMITTER');
+//            $entity->removeRole('ROLE_SCANORDER_ORDERING_PROVIDER');
+//
+//            $entity->addRole('ROLE_SCANORDER_BANNED');
+//
+//            if( $accReq )
+//                $accReq->setStatus(AccessRequest::STATUS_DECLINED);
+//        }
+//
+//        if( $status == "active" ) {
+//
+//            $entity->removeRole('ROLE_SCANORDER_SUBMITTER');
+//            $entity->removeRole('ROLE_SCANORDER_ORDERING_PROVIDER');
+//
+//            $entity->addRole('ROLE_SCANORDER_UNAPPROVED');
+//            if( $accReq )
+//                $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
+//        }
+//
+//        $em->persist($entity);
+//        $em->persist($accReq);
+//        $em->flush();
+//
+//        $this->createAccessRequestUserNotification( $entity, $status, $this->container->getParameter('scan.sitename') );
+//
+//        return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_accessrequest_list'));
+    }
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+    //overwrite parent class methods
+    public function addOptionalApproveRoles($entity) {
+        $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
-        }
-
-        //$accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneByUser($id);
-        $userSecUtil = $this->get('user_security_utility');
-        $accReq = $userSecUtil->getUserAccessRequest($id,$this->container->getParameter('scan.sitename'));
-
-        if( !$accReq ) {
-            throw new \Exception( 'AccessRequest is not found by id=' . $id );
-        }
-
-        if( $status == "approved" ) {
-
-            $entity->removeRole('ROLE_SCANORDER_UNAPPROVED');
-            $entity->removeRole('ROLE_SCANORDER_BANNED');
-
-            $entity->addRole('ROLE_SCANORDER_SUBMITTER');
-            $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
-
-            //add WCMC institional scope to Aperio created users
-            $creator = $this->get('security.context')->getToken()->getUser();
-            $orderSecUtil = $this->container->get('order_security_utility');
-            $orderSecUtil->addInstitutionalPhiScopeWCMC($entity,$creator);
-
-            if( $accReq )
-                $accReq->setStatus(AccessRequest::STATUS_APPROVED);
-        }
-
-        if( $status == "declined" ) {
-
-            $entity->removeRole('ROLE_SCANORDER_SUBMITTER');
-            $entity->removeRole('ROLE_SCANORDER_ORDERING_PROVIDER');
-
-            $entity->addRole('ROLE_SCANORDER_BANNED');
-
-            if( $accReq )
-                $accReq->setStatus(AccessRequest::STATUS_DECLINED);
-        }
-
-        if( $status == "active" ) {
-
-            $entity->removeRole('ROLE_SCANORDER_SUBMITTER');
-            $entity->removeRole('ROLE_SCANORDER_ORDERING_PROVIDER');
-
-            $entity->addRole('ROLE_SCANORDER_UNAPPROVED');
-            if( $accReq )
-                $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
-        }
-
-        $em->persist($entity);
-        $em->persist($accReq);
-        $em->flush();
-
-        $this->createAccessRequestUserNotification( $entity, $status, $this->container->getParameter('scan.sitename') );
-
-        return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_accessrequest_list'));
+        //add WCMC institional scope to Aperio created users
+        $creator = $this->get('security.context')->getToken()->getUser();
+        $orderSecUtil = $this->container->get('order_security_utility');
+        $orderSecUtil->addInstitutionalPhiScopeWCMC($entity,$creator);
+    }
+    public function removeOptionalDeclineRoles($entity) {
+        $entity->removeRole('ROLE_SCANORDER_ORDERING_PROVIDER');
     }
 
 
@@ -232,9 +248,9 @@ class ScanAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template()
      */
-    public function accessRequestRemoveAction($userId )
+    public function accessRequestRemoveAction(Request $request, $userId )
     {
-        return parent::accessRequestRemoveAction($userId);
+        return parent::accessRequestRemoveAction($request,$userId);
     }
 
     /**
@@ -272,9 +288,9 @@ class ScanAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template()
      */
-    public function authorizationRemoveAction($userId)
+    public function authorizationRemoveAction(Request $request,$userId)
     {
-        return parent::authorizationRemoveAction($userId);
+        return parent::authorizationRemoveAction($request,$userId);
     }
 
     /**

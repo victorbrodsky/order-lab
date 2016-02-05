@@ -236,8 +236,6 @@ class LoggerController extends Controller
             $limit/*limit per page*/
         );
 
-
-
         return array(
             'loggerfilter' => $filterform->createView(),
             'pagination' => $pagination,

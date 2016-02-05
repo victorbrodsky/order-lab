@@ -75,9 +75,9 @@ class FellAppAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template()
      */
-    public function accessRequestChangeAction($id, $status)
+    public function accessRequestChangeAction(Request $request, $id, $status)
     {
-        return parent::accessRequestChangeAction($id, $status);
+        return parent::accessRequestChangeAction($request, $id, $status);
     }
 
     /**
@@ -105,9 +105,9 @@ class FellAppAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template()
      */
-    public function accessRequestRemoveAction($userId )
+    public function accessRequestRemoveAction(Request $reques, $userId )
     {
-        return parent::accessRequestRemoveAction($userId);
+        return parent::accessRequestRemoveAction($reques, $userId);
     }
 
     /**
@@ -145,9 +145,9 @@ class FellAppAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template()
      */
-    public function authorizationRemoveAction($userId)
+    public function authorizationRemoveAction(Request $request, $userId)
     {
-        return parent::authorizationRemoveAction($userId);
+        return parent::authorizationRemoveAction($request,$userId);
     }
 
     /**

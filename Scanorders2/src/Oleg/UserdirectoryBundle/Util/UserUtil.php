@@ -11,7 +11,7 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Oleg\OrderformBundle\Entity\PerSiteSettings;
+use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\User;

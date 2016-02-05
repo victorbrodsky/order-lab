@@ -15,7 +15,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Oleg\OrderformBundle\Form\PerSiteSettingsType;
+use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 
 use Oleg\UserdirectoryBundle\Form\UserType;
 
