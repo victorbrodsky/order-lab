@@ -73,7 +73,7 @@
             <td>
                 {% for role in user_security_utility.getUserRolesBySite(user, sitename, true) %}
                     {% if role.name != "ROLE_USER" %}
-                        "{{ role.alias }}"
+                        <p>"{{ role.alias }}"</p>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -95,13 +95,13 @@
 
                         <li class="divider"></li>
 
-                        <li>
-                            <a href="{{ path(sitename~'_authorization_user_management', { 'id': user.id }) }}">Authorization Management</a>
-                        </li>
+                        {#<li>#}
+                            {#<a href="{{ path(sitename~'_authorization_user_management', { 'id': user.id }) }}">Authorization Management</a>#}
+                        {#</li>#}
 
                         <li>
                             <a general-data-confirm="Are you sure you would like to stop {{ user }} from being able to access {{ sitenamefull }}?"
-                               href="{{ path(sitename~'_authorization_remove', { 'userId': user.id }) }}">Deny access request
+                               href="{{ path(sitename~'_authorization_remove', { 'userId': user.id }) }}">Revoke Access Authorization
                             </a>
                         </li>
 

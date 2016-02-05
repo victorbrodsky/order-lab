@@ -66,6 +66,11 @@ class Roles extends ListAbstract {
      **/
     private $sites;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $level;
+
 
     public function __construct() {
         $this->attributes = new ArrayCollection();
@@ -107,7 +112,21 @@ class Roles extends ListAbstract {
         return $this->attributes;
     }
 
+    /**
+     * @param mixed $level
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
 
 
     /**

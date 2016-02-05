@@ -352,12 +352,23 @@ function commonNavBar(full,id) {
     if( full.indexOf("/settings") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/authorized-users/") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/authorization-user-manager/") !== -1 ) {
+        id = 'admin';
+    }
+
     if( full.indexOf("/users") !== -1 ) {
         id = 'userlist';
     }
     if( full.indexOf("/about") !== -1 ) {
         id = 'user';
     }
+    if( full.indexOf("/about") !== -1 ) {
+        id = 'user';
+    }
+
 
     //no toggle if download
     if( full.indexOf("/thanks-for-downloading/") !== -1 ) {

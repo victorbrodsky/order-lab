@@ -18,7 +18,7 @@
     {% if accreq is defined %}
         Access Request for {{ sitenamefull }}
     {% else %}
-        Authorization Management for {{ sitenamefull }}
+        Specify role and accessible data for the user being authorized to access {{ sitenamefull }}
     {% endif %}
 {% endblock %}
 
@@ -33,7 +33,7 @@
         {% if accreq is defined %}
             Access Request for {{ sitenamefull }}
         {% else %}
-            Authorization Management for {{ sitenamefull }}
+            Specify role and accessible data for the user being authorized to access {{ sitenamefull }}
         {% endif %}
     </h3>
 
@@ -75,6 +75,7 @@
 
         {{ formmacros.field(form.roles) }}
 
+        {{ formmacros.checkbox(form.emailNotification) }}
 
         <hr>
 

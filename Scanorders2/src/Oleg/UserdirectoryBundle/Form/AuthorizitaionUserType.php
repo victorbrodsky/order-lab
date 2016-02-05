@@ -47,6 +47,13 @@ class AuthorizitaionUserType extends AbstractType
             'required' => false,
         ));
 
+        $builder->add('emailNotification','checkbox', array(
+            'label' => 'Inform authorized user by email:',
+            'mapped' => false,
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+
     }
 
     /**

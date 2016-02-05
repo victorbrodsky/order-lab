@@ -639,7 +639,7 @@ class UserSecurityUtil {
 
         return $dql;
     }
-    public function getRolesBySite($sitename,$associated=true) {
+    public function getRolesBySite( $sitename, $associated=true, $levelOnly=false ) {
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:Roles');
         $dql =  $repository->createQueryBuilder("roles");
         $dql->select('roles');
@@ -649,6 +649,10 @@ class UserSecurityUtil {
             $dql->where("sites.name = :sitename OR sites.abbreviation = :sitename");
         } else {
             $dql->where("sites.name != :sitename AND sites.abbreviation != :sitename");
+        }
+
+        if( $levelOnly !== false ) {
+            $dql->andWhere("roles.level = " . $levelOnly);
         }
 
         $query = $this->em->createQuery($dql);
@@ -687,6 +691,22 @@ class UserSecurityUtil {
         ));
 
         return $query;
+    }
+
+    public function getSiteRolesKeyValue( $sitename ) {
+        $rolesArr = array();
+
+        $roles = $this->getRolesBySite($sitename);
+
+        foreach( $roles as $role ) {
+            $rolesArr[$role->getName()] = $role->getAlias();
+        }
+        return $rolesArr;
+    }
+
+    //lowest level role == roles with level = 1
+    public function getLowestRolesBySite( $sitename ) {
+        return $this->getRolesBySite($sitename, true, 1);
     }
     ///////////////////////// EOF User Role methods /////////////////////////
 

@@ -513,6 +513,7 @@ class AccessRequestController extends Controller
         $em->persist($accReq);
         $em->flush();
 
+        //TODO: send email if emailNotification checked
         //////// When the user's Access Request has been approved, send an email to the user from the email address in Site Settings with... ////
         $this->createAccessRequestUserNotification( $entity, $status, $this->siteName );
         //////////////////// EOF ////////////////////
@@ -605,8 +606,24 @@ class AccessRequestController extends Controller
             throw new \Exception( 'User is not found in Access Request with ID' . $id );
         }
 
+        ////////////////// lowest roles /////////////////////
+//        //if a user does not have any siteroles => pre-populate the Role with a role that has the lowest permissions on this site
+//        //user's roles associated with this site
+//        $securityUtil = $this->get('order_security_utility');
+//        $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
+//        if( count($siteRoles) == 0 ) {
+//            //pre-populate the Role with a role that has the lowest permissions on this site
+//            $lowestSiteRoles = $securityUtil->getLowestRolesBySite( $this->siteName );
+//            foreach( $lowestSiteRoles as $lowestSiteRole ) {
+//                $entity->addRole($lowestSiteRole);
+//            }
+//        }
+        $this->addLowestRolesToUser( $entity, $this->siteName );
+        ////////////////// EOF lowest roles /////////////////////
+
         //Roles
-        $rolesArr = $this->getUserRoles($this->siteName);
+        $securityUtil = $this->get('order_security_utility');
+        $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
 
         $params = array(
             //'institutions' => $institutions,
@@ -658,7 +675,7 @@ class AccessRequestController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
 
-        $rolesArr = $this->getUserRoles($this->siteName);
+        $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
 
         $params = array(
             //'institutions' => $institutions,
@@ -730,38 +747,6 @@ class AccessRequestController extends Controller
         $em->persist($entity);
         $em->flush($entity);
         ///////////////// EOF update roles /////////////////
-    }
-
-
-    public function getUserRoles( $siteName ) {
-        $rolesArr = array();
-        $em = $this->getDoctrine()->getManager();
-
-//        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(
-//            array('sites.name' => $siteName),
-//            array('orderinlist' => 'ASC')
-//        );  //findAll();
-        //exit($siteName);
-
-        if( $siteName == "employees" ) {
-            $siteName = "directory";
-        }
-
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Roles');
-        $dql =  $repository->createQueryBuilder("list");
-        $dql->select('list');
-        $dql->leftJoin('list.sites','sites');
-        $dql->where("sites.name = :sitename" );
-
-        $query = $em->createQuery($dql);
-        $query->setParameter('sitename',$siteName);
-
-        $roles = $query->getResult();
-
-        foreach( $roles as $role ) {
-            $rolesArr[$role->getName()] = $role->getAlias();
-        }
-        return $rolesArr;
     }
 
 
@@ -853,8 +838,12 @@ class AccessRequestController extends Controller
             throw $this->createNotFoundException('Unable to find Usert entity with ID ' . $id);
         }
 
+        $this->addLowestRolesToUser( $entity, $this->siteName );
+
+        $securityUtil = $this->get('order_security_utility');
+
         //Roles
-        $rolesArr = $this->getUserRoles($this->siteName);
+        $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
 
         $params = array(
             //'institutions' => $institutions,
@@ -865,7 +854,6 @@ class AccessRequestController extends Controller
         $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
 
         //user's roles associated with this site
-        $securityUtil = $this->get('order_security_utility');
         $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
 
         $userViewArr = array(
@@ -904,7 +892,7 @@ class AccessRequestController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
 
-        $rolesArr = $this->getUserRoles($this->siteName);
+        $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
 
         $params = array(
             'sitename' => $this->siteName,
@@ -939,6 +927,17 @@ class AccessRequestController extends Controller
             $em->flush();
 
             $this->logAuthorizationChanges($request,$this->siteName,$entity,$originalInsts,$originalRoles);
+
+            //TODO: send email if emailNotification checked
+            $emailNotification = $form['emailNotification']->getData();
+            if( $emailNotification ) {
+                //echo "emailNotification !";
+                //$this->createAccessRequestUserNotification( $entity, $status, $this->siteName );
+            } else {
+                //echo "no emailNotification";
+            }
+            //exit('1');
+
         }
 
         return $this->redirect($this->generateUrl($this->siteName.'_authorized_users'));
@@ -1088,6 +1087,20 @@ class AccessRequestController extends Controller
             $resArr[] = $item."";
         }
         return $resArr;
+    }
+
+    public function addLowestRolesToUser( $user, $sitename ) {
+        //if a user does not have any siteroles => pre-populate the Role with a role that has the lowest permissions on this site
+        //user's roles associated with this site
+        $securityUtil = $this->get('order_security_utility');
+        $siteRoles = $securityUtil->getUserRolesBySite( $user, $sitename );
+        if( count($siteRoles) == 0 ) {
+            //pre-populate the Role with a role that has the lowest permissions on this site
+            $lowestSiteRoles = $securityUtil->getLowestRolesBySite( $sitename );
+            foreach( $lowestSiteRoles as $lowestSiteRole ) {
+                $user->addRole($lowestSiteRole);
+            }
+        }
     }
 
 //    /**

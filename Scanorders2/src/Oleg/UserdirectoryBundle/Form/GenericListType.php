@@ -356,6 +356,12 @@ class GenericListType extends AbstractType
                 'required' => false,
             ));
 
+            $builder->add('level',null,array(
+                'label' => "Level:",
+                'attr' => array('class'=>'form-control'),
+                'required' => false,
+            ));
+
         }
 
         //Role Attributes
@@ -380,12 +386,12 @@ class GenericListType extends AbstractType
 //            strtolower($this->mapper['className']) == strtolower("ResearchGroupType") ||
 //            strtolower($this->mapper['className']) == strtolower("CourseGroupType")
 //        ) {
-        if( method_exists($this->params['entity'],'getLevel') ) {
-            $builder->add('level',null,array(
-                'label'=>'Default Tree Level Association:',
-                'attr' => array('class' => 'form-control')
-            ));
-        }
+//        if( method_exists($this->params['entity'],'getLevel') ) {
+//            $builder->add('level',null,array(
+//                'label'=>'Default Tree Level Association:',
+//                'attr' => array('class' => 'form-control')
+//            ));
+//        }
 
         //fields for Tree implements CompositeNodeInterface
         if( $this->params['entity'] instanceof CompositeNodeInterface ) {
