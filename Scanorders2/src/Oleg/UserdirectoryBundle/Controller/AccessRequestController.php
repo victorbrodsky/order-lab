@@ -549,7 +549,8 @@ class AccessRequestController extends Controller
             $subject = "Your request to access ".$sitenameFull." has been approved";  //"Access granted to site: ".$sitenameFull;
 
             $msg = $subjectUser->getUsernameOptimal().",".$newline.$newline.
-                "Your request to access ".$sitenameFull.": ".$siteLink." has been approved. You can now log in.".$newline.$newline.
+                "Your request to access ".$sitenameFull.": ".$siteLink." has been approved. You can now log in using the user name ".
+                $subjectUser->getPrimaryUseridKeytypeStr()." and your password.".$newline.$newline.
                 $user->getUsernameOptimal().$adminEmailStr;
         }
 
@@ -863,12 +864,17 @@ class AccessRequestController extends Controller
         );
         $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
 
+        //user's roles associated with this site
+        $securityUtil = $this->get('order_security_utility');
+        $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
+
         $userViewArr = array(
             'form' => $form->createView(),
             'entity' => $entity,
             'sitename' => $this->siteName,
             'sitenameshowuser' => $this->siteNameShowuser,
-            'sitenamefull'=>$this->siteNameStr
+            'sitenamefull'=>$this->siteNameStr,
+            'siteRoles'=>$siteRoles
         );
 
         return $userViewArr;

@@ -91,8 +91,14 @@
                     <button name="accessrequest-decline" type='submit' class="btn btn-danger btn-sm">Deny</button>
                 </div>
             {% else %}
+
+                {% set updateBtnName = "Authorize User's Access" %}
+                {% if siteRoles|length > 0 %}
+                    {% set updateBtnName = "Update" %}
+                {% endif %}
+
                 <div class="col-xs-6" align="right">
-                    <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Update</button>
+                    <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">{{ updateBtnName }}</button>
                 </div>
 
                 <div class="col-xs-6" align="left">
