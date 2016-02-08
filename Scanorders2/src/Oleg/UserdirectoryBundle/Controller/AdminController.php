@@ -2187,11 +2187,11 @@ class AdminController extends Controller
             'Unsuccessful Login Attempt',
             'Unapproved User Login Attempt',
             'Banned User Login Attempt',
-            'User Created',
-            'User Updated',
+            'New user record added',
+            'User record updated',
 
-            'Import of Fellowship Applications',
-            'Populate of Fellowship Applications',
+            'Import of Fellowship Applications Spreadsheet',
+            'Import of Fellowship Application data to DB',
             'Fellowship Application Created',
             'Fellowship Application Creation Failed',
             'Fellowship Application Updated',
@@ -2948,7 +2948,7 @@ class AdminController extends Controller
 
             //record user log create
             $event = "User ".$user." has been created by ".$systemuser."<br>";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
 
             $em->persist($user);
             $em->flush();

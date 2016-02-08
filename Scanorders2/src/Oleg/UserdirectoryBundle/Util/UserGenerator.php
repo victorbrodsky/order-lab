@@ -717,7 +717,7 @@ class UserGenerator {
 
             //record user log create
             $event = "User ".$user." has been created by ".$systemuser."<br>";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
 //            }
 
             //exit('eof user');

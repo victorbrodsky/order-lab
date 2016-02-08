@@ -1574,7 +1574,7 @@ class UserController extends Controller
             $userAdmin = $this->get('security.context')->getToken()->getUser();
             $event = "User ".$user." has been created by ".$userAdmin."<br>";
             $userSecUtil = $this->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'User Created');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'New user record added');
 
             return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_showuser',array('id' => $user->getId())));
         }
@@ -2466,7 +2466,7 @@ class UserController extends Controller
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
                 $userSecUtil = $this->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($sitename,$event,$user,$entity,$request,'User Updated');
+                $userSecUtil->createUserEditEvent($sitename,$event,$user,$entity,$request,'User record updated');
             }
 
             //echo "user=".$entity."<br>";
@@ -2532,7 +2532,7 @@ class UserController extends Controller
     }
 
 
-//    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='User Updated') {
+//    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='User record updated') {
 //        $userSecUtil = $this->get('user_security_utility');
 //        $eventLog = $userSecUtil->constructEventLog($sitename,$user,$request);
 //        $eventLog->setEvent($event);
@@ -2937,7 +2937,7 @@ class UserController extends Controller
         $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
         $event = $event . "User status changed to ".$status;
         $userSecUtil = $this->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($sitename,$event,$userAdmin,$user,$request,'User Updated');
+        $userSecUtil->createUserEditEvent($sitename,$event,$userAdmin,$user,$request,'User record updated');
 
         $em->persist($user);
         $em->flush();

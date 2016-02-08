@@ -153,7 +153,7 @@ class LoggerController extends Controller
 
                 /////////////// get created info ///////////////
                 $dql2 = clone $dql;
-                $dql2->andWhere("eventType.name = 'User Created'");
+                $dql2->andWhere("eventType.name = 'New user record added'");
                 $dql2->orderBy("logger.id","ASC");
                 //echo "dql2=".$dql2."<br>";
 
@@ -171,7 +171,7 @@ class LoggerController extends Controller
 
                 /////////////// get updated info ///////////////
                 $dql3 = clone $dql;
-                $dql3->andWhere("eventType.name = 'User Updated'");
+                $dql3->andWhere("eventType.name = 'User record updated'");
                 $dql3->orderBy("logger.id","DESC");
                 //echo "dql2=".$dql3."<br>";
 

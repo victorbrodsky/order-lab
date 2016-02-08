@@ -105,7 +105,7 @@ class FellAppUtil {
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
             }
 
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Applications');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Applications Spreadsheet');
 
         }
 
@@ -154,8 +154,8 @@ class FellAppUtil {
 
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
-        $event = "Populated ".$populatedCount." Fellowship Applications.";
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Populate of Fellowship Applications');
+        $event = "Populated ".$populatedCount." Fellowship Applications from Spreadsheets to DB.";
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Application data to DB');
 
         //call tryRun() asynchronous
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');

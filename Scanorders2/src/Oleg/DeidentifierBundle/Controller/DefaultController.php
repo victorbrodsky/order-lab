@@ -6,6 +6,11 @@
 //3) add new roles by running "Populate All Lists With Default Values" in user directory list manager
 //4) add permission "Generate new Deidentifier ID" (Object:Accession, Action:create)
 //5) add permission "Search by Deidentifier ID" (Object:Accession, Action:read)
+//6) change Event Log Types:
+//User Created -> New user record adde
+//User Updated -> User record updated
+//Populate of Fellowship Applications -> Import of Fellowship Application data to DB
+//Import of Fellowship Applications -> Import of Fellowship Applications Spreadsheet
 
 namespace Oleg\DeidentifierBundle\Controller;
 

@@ -1087,7 +1087,7 @@ class AccessRequestController extends Controller
             $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
             $event = $event . "<br>" . implode("<br>", $removedCollections);
             $userSecUtil = $this->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($sitename,$event,$user,$entity,$request,'User Updated');
+            $userSecUtil->createUserEditEvent($sitename,$event,$user,$entity,$request,'User record updated');
         }
     }
     //record if different: old values, new values
