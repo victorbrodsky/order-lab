@@ -63,7 +63,10 @@
         <tbody data-link="row" class="rowlink">
         {% for user in users %}
 
-            <td>
+            <td style="display: none">
+                <a href="{{ path(sitename~'_authorization_user_management', { 'id': user.id }) }}" target="_blank">Authorization Management</a>
+            </td>
+            <td class="rowlink-skip">
                 <a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.id }) }}" target="_blank">{{ user }}</a>
             </td>
             <td>{{ user.keytype }}</td>
