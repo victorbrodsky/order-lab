@@ -51,6 +51,7 @@ class AuthorizitaionUserType extends AbstractType
             'label' => 'Inform authorized user by email:',
             'mapped' => false,
             'required' => false,
+            'data' => true,
             'attr' => array('class' => 'form-control'),
         ));
 

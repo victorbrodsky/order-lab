@@ -444,7 +444,7 @@ class AccessRequestController extends Controller
         return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
     }
 
-    public function changeStatus( $accReq, $status, $entity, $request ) {
+    public function changeStatus( $accReq, $status, $entity, $request, $sendEmail=true ) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -513,9 +513,11 @@ class AccessRequestController extends Controller
         $em->persist($accReq);
         $em->flush();
 
-        //TODO: send email if emailNotification checked
         //////// When the user's Access Request has been approved, send an email to the user from the email address in Site Settings with... ////
-        $this->createAccessRequestUserNotification( $entity, $status, $this->siteName );
+        if( $sendEmail ) {
+            //echo "emailNotification !";
+            $this->createAccessRequestUserNotification( $entity, $status, $this->siteName );
+        }
         //////////////////// EOF ////////////////////
 
 
@@ -564,6 +566,19 @@ class AccessRequestController extends Controller
                 $user->getUsernameOptimal().$adminEmailStr;
         }
 
+        if( $status == "updated" || $status == "update" ) {
+
+            $userSecUtil = $this->get('user_security_utility');
+            $roles = $userSecUtil->getUserRolesBySite( $subjectUser, $sitename );
+
+            $subject = "Your access for ".$sitenameFull." has been updated";
+
+            $msg = $subjectUser->getUsernameOptimal().",".$newline.$newline.
+                "Your access for ".$sitenameFull.": ".$siteLink." has been updated.".$newline.
+                "Current roles: " . implode(",",$roles).$newline.
+                "For additional details please email ".$user->getUsernameOptimal().$adminEmailStr.".".$newline.$newline.
+                $user->getUsernameOptimal().$adminEmailStr;
+        }
 
         if( $msg != "" ) {
             $email = $subjectUser->getEmail();
@@ -711,14 +726,21 @@ class AccessRequestController extends Controller
             $this->processUserAuthorization( $request, $entity, $originalOtherRoles );
 
             /////////////// update status //////////////////////
+            $emailNotification = $form['emailNotification']->getData();
+            if( $emailNotification ) {
+                $sendEmail = true;
+            } else {
+                $sendEmail = false;
+            }
+
             if( $request->request->has('accessrequest-approve') ) {
-                $this->changeStatus( $accReq, "approve", $entity, $request );
+                $this->changeStatus( $accReq, "approve", $entity, $request, $sendEmail );
                 $em->persist($accReq);
                 $em->flush($accReq);
             }
 
             if( $request->request->has('accessrequest-decline') ) {
-                $this->changeStatus( $accReq, "decline", $entity, $request );
+                $this->changeStatus( $accReq, "decline", $entity, $request, $sendEmail );
                 $em->persist($accReq);
                 $em->flush($accReq);
             }
@@ -928,11 +950,10 @@ class AccessRequestController extends Controller
 
             $this->logAuthorizationChanges($request,$this->siteName,$entity,$originalInsts,$originalRoles);
 
-            //TODO: send email if emailNotification checked
             $emailNotification = $form['emailNotification']->getData();
             if( $emailNotification ) {
                 //echo "emailNotification !";
-                //$this->createAccessRequestUserNotification( $entity, $status, $this->siteName );
+                $this->createAccessRequestUserNotification( $entity, "updated", $this->siteName );
             } else {
                 //echo "no emailNotification";
             }
