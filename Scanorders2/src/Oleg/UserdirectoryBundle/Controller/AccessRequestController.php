@@ -1035,9 +1035,8 @@ class AccessRequestController extends Controller
         $primaryPublicUserId = trim($primaryPublicUserId);
 
         //echo "sitename=".$this->siteName."<br>";
-        echo "usertype=(".$keytype.")<br>";
-        echo "userid=(".$primaryPublicUserId.")<br>";
-        exit('1');
+        //echo "usertype=(".$keytype.")<br>";
+        //echo "userid=(".$primaryPublicUserId.")<br>";
 
         $em = $this->getDoctrine()->getManager();
 
