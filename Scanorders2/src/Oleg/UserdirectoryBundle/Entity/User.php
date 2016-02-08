@@ -1211,13 +1211,18 @@ class User extends BaseUser {
         return $this->createCleanUsername( $this->getUsername() );
     }
 
+    //show user's FirstName LastName - userName (userNameType)
     public function getUserNameStr() {
 
         $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
         $displayName = $this->getDisplayName();
 
+        if( !$displayName ) {
+            $displayName = $this->getFirstName() . " " . $this->getLastName();
+        }
+
         if( $displayName && $primaryUseridKeytypeStr ) {
-            return $primaryUseridKeytypeStr." - ".$displayName;
+            return $displayName . " - " . $this->getPrimaryUseridKeytypeStr();
         }
 
         if( $primaryUseridKeytypeStr && !$displayName ){
@@ -1227,7 +1232,24 @@ class User extends BaseUser {
         if( $displayName && !$primaryUseridKeytypeStr ){
             return $displayName."";
         }
+
+        //Old user name string representation
+//        $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
+//        $displayName = $this->getDisplayName();
+//
+//        if( $displayName && $primaryUseridKeytypeStr ) {
+//            return $primaryUseridKeytypeStr." - ".$displayName;
+//        }
+//
+//        if( $primaryUseridKeytypeStr && !$displayName ){
+//            return $primaryUseridKeytypeStr."";
+//        }
+//
+//        if( $displayName && !$primaryUseridKeytypeStr ){
+//            return $displayName."";
+//        }
     }
+
 
     public function getUserNameShortStr() {
         return $this->getPrimaryPublicUserId();

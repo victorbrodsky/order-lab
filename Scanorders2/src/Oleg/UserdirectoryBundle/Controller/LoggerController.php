@@ -217,7 +217,7 @@ class LoggerController extends Controller
         $limit = 30;
         $query = $em->createQuery($dql);
 
-        //echo "dql=".$query->getSql();
+        //echo "dql=".$query->getSql()."<br>";
 
         if( $entityNamespace && $entityName && $entityId ) {
             //$query->setParameters( $queryParameters );
@@ -235,6 +235,7 @@ class LoggerController extends Controller
             $this->get('request')->query->get('page', 1), /*page number*/
             $limit/*limit per page*/
         );
+        //echo "<br>pagination=".count($pagination)."<br>";
 
         return array(
             'loggerfilter' => $filterform->createView(),
@@ -263,12 +264,14 @@ class LoggerController extends Controller
         $startdate = $filterform['startdate']->getData();
         $enddate = $filterform['enddate']->getData();
         $search = $filterform['search']->getData();
-        $user = $filterform['user']->getData();
-        $eventType = $filterform['eventType']->getData();
+        $users = $filterform['user']->getData();
+        $eventTypes = $filterform['eventType']->getData();
 
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
-        //echo "user=".$user."<br>";
+//        foreach( $users as $user ) {
+//            echo "user=".$user."<br>";
+//        }
         //echo "search=".$search."<br>";
         //exit();
 
@@ -277,14 +280,32 @@ class LoggerController extends Controller
             $dqlParameters['searchEvent'] = '%'.$search.'%';
         }
 
-        if( $user ) {
-            $dql->andWhere("logger.user = :user");
-            $dqlParameters['user'] = $user;
+        if( $users && count($users) > 0 ) {
+            $where = "";
+            foreach( $users as $user ) {
+                if( $user->getId() ) {
+                    if( $where != "" ) {
+                        $where .= " OR ";
+                    }
+                    $where .= "logger.user=".$user->getId();
+                }
+            }
+            $dql->andWhere($where);
         }
 
-        if( $eventType ) {
-            $dql->andWhere("eventType.id = :eventTypeId");
-            $dqlParameters['eventTypeId'] = $eventType;
+        if( $eventTypes && count($eventTypes) ) {
+            //$dql->andWhere("eventType.id = :eventTypeId");
+            //$dqlParameters['eventTypeId'] = $eventType;
+            $where = "";
+            foreach( $eventTypes as $eventType ) {
+                if( $eventType->getId() ) {
+                    if( $where != "" ) {
+                        $where .= " OR ";
+                    }
+                    $where .= "eventType.id=".$eventType->getId();
+                }
+            }
+            $dql->andWhere($where);
         }
 
         if( $startdate ) {

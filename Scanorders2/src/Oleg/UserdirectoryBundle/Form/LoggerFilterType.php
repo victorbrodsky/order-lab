@@ -36,19 +36,16 @@ class LoggerFilterType extends AbstractType
         $builder->add('user', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
             //'placeholder' => 'Fellowship Type',
-            //'property' => 'name',
+            'property' => 'getUserNameStr',
             'label' => false,
             'required'=> false,
-            'multiple' => false,
+            'multiple' => true,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list');
-//                        ->where("list.type = :typedef OR list.type = :typeadd")
-//                        ->orderBy("list.orderinlist","ASC")
-//                        ->setParameters( array(
-//                            'typedef' => 'default',
-//                            'typeadd' => 'user-added',
-//                        ));
+                    return $er->createQueryBuilder('list')
+                        ->leftJoin("list.infos","infos")
+                        ->where("list.keytype IS NOT NULL")
+                        ->orderBy("infos.lastName","ASC");
                 },
         ));
 
@@ -59,7 +56,7 @@ class LoggerFilterType extends AbstractType
             'property' => 'name',
             'label' => false,
             'required'=> false,
-            'multiple' => false,
+            'multiple' => true,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
