@@ -1052,7 +1052,8 @@ class AccessRequestController extends Controller
             $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
             $this->get('session')->getFlashBag()->set(
                 'notice',
-                'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'
+                'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
+                "Please use the 'Create New User' form to add a new user."
             );
             return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
             //exit("User not found; TODO: Create a new user?");
