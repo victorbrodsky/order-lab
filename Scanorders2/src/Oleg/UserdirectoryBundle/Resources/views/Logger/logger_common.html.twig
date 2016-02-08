@@ -99,9 +99,14 @@
                 {% endif %}
 
                 <td>
-                    {% for role in entity.roles %}
-                        {% if role != "ROLE_USER" %}
-                            "{{ attribute(roles, role) }}"<br>
+                    {#{% for role in entity.roles %}#}
+                        {#{% if role != "ROLE_USER" %}#}
+                            {#"{{ attribute(roles, role) }}"<br>#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+                    {% for role in user_security_utility.getObjectRolesBySite(entity, sitename, true) %}
+                        {% if role.name != "ROLE_USER" %}
+                            "{{ role.alias }}"<br>
                         {% endif %}
                     {% endfor %}
                 </td>

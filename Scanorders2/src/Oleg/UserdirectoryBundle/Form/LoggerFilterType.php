@@ -61,7 +61,7 @@ class LoggerFilterType extends AbstractType
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
+                        ->orderBy("list.name","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',

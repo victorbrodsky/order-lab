@@ -297,6 +297,11 @@ class Logger
         return $this;
     }
 
+    public function hasRole($role)
+    {
+        return in_array(strtoupper($role), $this->roles, true);
+    }
+
 //    public function getSiteRoles($sitename) {
 //
 //        $roles = array();

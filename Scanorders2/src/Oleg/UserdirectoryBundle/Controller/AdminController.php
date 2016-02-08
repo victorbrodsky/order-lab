@@ -379,14 +379,6 @@ class AdminController extends Controller
 //////////////////////////////////////////////////////////////////////////////
 
     public function setDefaultList( $entity, $count, $user, $name=null ) {
-//        $entity->setOrderinlist( $count );
-//        $entity->setCreator( $user );
-//        $entity->setCreatedate( new \DateTime() );
-//        $entity->setType('default');
-//        if( $name ) {
-//            $entity->setName( trim($name) );
-//        }
-//        return $entity;
         $userutil = new UserUtil();
         return $userutil->setDefaultList( $entity, $count, $user, $name );
     }
@@ -2198,10 +2190,6 @@ class AdminController extends Controller
             'User Created',
             'User Updated',
 
-            'Search',
-            'Generate',
-            'Entity Updated',
-
             'Import of Fellowship Applications',
             'Populate of Fellowship Applications',
             'Fellowship Application Created',
@@ -2228,6 +2216,11 @@ class AdminController extends Controller
             'Fellowship Application Status changed to Rejected',
             'Fellowship Application Status changed to On Hold',
             'Fellowship Interview Evaluation Updated',
+
+            'Role Permission Updated',
+
+            'Generate Accession Deidentifier ID',
+            'Search by Deidentifier ID conducted',
 
             'Warning',
             'Error'

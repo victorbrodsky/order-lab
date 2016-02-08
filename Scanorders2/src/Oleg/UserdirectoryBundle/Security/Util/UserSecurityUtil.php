@@ -11,6 +11,7 @@ namespace Oleg\UserdirectoryBundle\Security\Util;
 
 
 
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -376,8 +377,17 @@ class UserSecurityUtil {
         return $systemuser;
     }
 
+    //$nameStr: Unknown Event
+    //$bundleName: UserdirectoryBundle
+    //$className: EventTypeList
+    //$params: array('type'=>'Medical')
+    public function getObjectByNameTransformer( $author, $nameStr, $bundleName, $className, $params=null) {
+        $transformer = new GenericTreeTransformer($this->em, $author, $className, $bundleName, $params);
+        $nameStr = trim($nameStr);
+        return $transformer->reverseTransform($nameStr);
+    }
 
-    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='Entity Updated') {
+    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='Unknown Event') {
 
         if( !$user ) {
             return null;
@@ -390,10 +400,22 @@ class UserSecurityUtil {
         $eventLog->setEvent($event);
 
         //set Event Type
-        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
-        if( !$eventtype ) {
-            $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Entity Updated');
-        }
+//        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
+//        if( !$eventtype ) {
+//            //$eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Entity Updated');
+//            $eventtype = new EventTypeList();
+//            $userutil = new UserUtil();
+//            return $userutil->setDefaultList( $eventtype, null, $user, $action );
+//            $em->persist($eventtype);
+//        }
+//        $objectParams = array(
+//            'className' => 'EventTypeList',
+//            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."EventTypeList",
+//            'fullBundleName' => 'UserdirectoryBundle'
+//        );
+//        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->convertStrToObject( $action, $objectParams, $user );
+        $eventtype = $this->getObjectByNameTransformer($user,$action,'UserdirectoryBundle','EventTypeList');
+
         $eventLog->setEventType($eventtype);
 
         if( $subjectEntity ) {
@@ -568,6 +590,20 @@ class UserSecurityUtil {
 
 
     ///////////////////////// User Role methods /////////////////////////
+    public function getObjectRolesBySite( $object, $sitename, $associated=true ) {
+        $objectSiteRoles = array();
+
+        $roles = $this->getRolesBySite($sitename,$associated);
+
+        foreach( $roles as $roleObject ) {
+            if( $roleObject && $object->hasRole($roleObject->getName()) ) {
+                $objectSiteRoles[] = $roleObject;
+            }
+        }
+
+        return $objectSiteRoles;
+    }
+
     public function getUserRolesBySite( $user, $sitename, $associated=true ) {
         $userSiteRoles = array();
 

@@ -116,11 +116,11 @@ class LoggerController extends Controller
 
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        //if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
             }
-        }
+        //}
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
         $dql =  $repository->createQueryBuilder("logger");

@@ -2838,8 +2838,8 @@ class UserController extends Controller
         $diff = array_diff($original, $new);
 
         if( count($original) != count($new) || count($diff) != 0 ) {
-            $removeArr[] = "<strong>"."Original ".$text.": ".implode(",",$original)."</strong>";
-            $removeArr[] = "<strong>"."New ".$text.": ".implode(",",$new)."</strong>";
+            $removeArr[] = "<strong>"."Original ".$text.": ".implode(", ",$original)."</strong>";
+            $removeArr[] = "<strong>"."New ".$text.": ".implode(", ",$new)."</strong>";
         }
 
         return implode("<br>", $removeArr);
@@ -3146,10 +3146,10 @@ class UserController extends Controller
                 }
 
                 if( is_array($oldValue) ) {
-                    $oldValue = implode(",",$oldValue);
+                    $oldValue = implode(", ",$oldValue);
                 }
                 if( is_array($newValue) ) {
-                    $newValue = implode(",",$newValue);
+                    $newValue = implode(", ",$newValue);
                 }
 
                 $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;

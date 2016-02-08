@@ -198,7 +198,7 @@ class DefaultController extends Controller
         //Event Log
         $event = "Deidentifier Search with Accession Type " . $accessionTypeObj ." and  Accession Number " . $accessionNumber;
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,null,$request,'Search');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,null,$request,'Search by Deidentifier ID conducted');
 
         return array(
             'accessionTypeId' => $accessionType,
@@ -326,7 +326,7 @@ class DefaultController extends Controller
         //$event = "Deidentifier Generate with Accession Type " . $accessionTypeObj .",  Accession Number " . $accessionNumber . " and Institution " . $institutionObj;
         $event = "Deidentifier ID ".$deidentifier." generated for ".$accessionTypeObj." ".$accessionNumber." (Institution: ".$institutionObj.")";
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,$accession,$request,'Generated');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,$accession,$request,'Generate Accession Deidentifier ID');
 
         //check for active access requests
         //$accessreqs = $this->getActiveAccessReq();

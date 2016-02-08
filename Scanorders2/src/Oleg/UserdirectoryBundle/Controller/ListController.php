@@ -875,7 +875,7 @@ class ListController extends Controller
             throw $this->createNotFoundException('Unable to find '.$mapper['fullClassName'].' entity.');
         }
 
-        //remove permissions: original permissions
+        //remove permissions: original permissions. Used for roles
         if( method_exists($entity,'getPermissions') ) {
             $originalPermissions = array();
             foreach( $entity->getPermissions() as $permission ) {
@@ -912,7 +912,7 @@ class ListController extends Controller
                 $syn->setOriginal($entity);
             }
 
-            /////////// remove permissions ///////////
+            /////////// remove permissions. Used for roles ///////////
             if( method_exists($entity,'getPermissions') ) {
 
                 /////////////// Process Removed Collections ///////////////
@@ -937,7 +937,7 @@ class ListController extends Controller
                     //echo "event=".$event."<br>";
                     //print_r($removedCollections);
                     //exit();
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$user,$entity,$request,'Entity Updated');
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$user,$entity,$request,'Role Permission Updated');
                 }
                 //exit();
 
@@ -956,7 +956,7 @@ class ListController extends Controller
 //                    }
 //                }
             }
-            /////////// EOF remove permissions ///////////
+            /////////// EOF remove permissions. Used for roles ///////////
 
             $em->flush();
 
