@@ -1030,6 +1030,7 @@ class AccessRequestController extends Controller
 
         $keytype = $request->query->get('keytype');
         $primaryPublicUserId = $request->query->get('primaryPublicUserId');
+        $primaryPublicUserId = trim($primaryPublicUserId);
 
         //echo "sitename=".$this->siteName."<br>";
         //echo "usertype=".$keytype."<br>";
