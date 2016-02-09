@@ -335,7 +335,7 @@ class FellAppApplicantController extends Controller {
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = $event . $emailStr;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellapp,$request,'Fellowship Application Resend Emails');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellapp,$request,'Fellowship Application Rating Invitation Emails Resent');
 
         //return $this->redirect( $this->generateUrl('fellapp_home') );
 

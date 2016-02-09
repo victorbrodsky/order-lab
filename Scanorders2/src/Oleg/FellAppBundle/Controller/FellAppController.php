@@ -343,7 +343,7 @@ class FellAppController extends Controller {
         $userSecUtil = $this->container->get('user_security_utility');
 
         $actionStr = "viewed";
-        $eventType = 'Fellowship Applicant Page Viewed';
+        $eventType = 'Fellowship Application Page Viewed';
 
         //admin can edit
         if( $routeName == "fellapp_edit" ) {

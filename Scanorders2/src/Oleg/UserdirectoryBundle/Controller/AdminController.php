@@ -245,6 +245,8 @@ class AdminController extends Controller
         $count_PermissionObjects = $this->generatePermissionObjects();
         $count_PermissionActions = $this->generatePermissionActions();
 
+        $count_sync = $this->syncActions();
+
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -306,7 +308,8 @@ class AdminController extends Controller
             'Permissions ='.$count_Permissions.', '.
             'PermissionObjects ='.$count_PermissionObjects.', '.
             'PermissionActions ='.$count_PermissionActions.', '.
-            'Collaboration Types='.$collaborationtypes.' '.
+            'Collaboration Types='.$collaborationtypes.', '.
+            'sync count='.$count_sync.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -2195,8 +2198,8 @@ class AdminController extends Controller
             'Fellowship Application Created',
             'Fellowship Application Creation Failed',
             'Fellowship Application Updated',
-            'Fellowship Application Resend Emails',
-            'Fellowship Applicant Page Viewed',
+            'Fellowship Application Rating Invitation Emails Resent',
+            'Fellowship Application Page Viewed',
             'Complete Fellowship Application Downloaded',
             'Fellowship Interview Itinerary Downloaded',
             'Fellowship CV Downloaded',
@@ -3989,6 +3992,46 @@ class AdminController extends Controller
         }
 
         return round($count/10);
+    }
+
+
+    public function syncActions() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $count = 0;
+
+        //User Created -> New user record added
+        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"User Created","New user record added");
+
+        //User Updated -> User record updated
+        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"User Updated","User record updated");
+
+        //Populate of Fellowship Applications -> Import of Fellowship Application data to DB
+        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"Populate of Fellowship Applications","Import of Fellowship Application data to DB");
+
+        //Import of Fellowship Applications -> Import of Fellowship Applications Spreadsheet
+        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"Import of Fellowship Applications","Import of Fellowship Applications Spreadsheet");
+
+        //Fellowship Application Resend Emails -> Fellowship Application Rating Invitation Emails Resent
+        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"Fellowship Application Resend Emails","Fellowship Application Rating Invitation Emails Resent");
+
+        //Fellowship Applicant Page Viewed -> Fellowship Application Page Viewed
+        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"Fellowship Applicant Page Viewed","Fellowship Application Page Viewed");
+
+        return $count;
+    }
+    public function singleSyncAction($repStr,$oldName,$newName) {
+        $em = $this->getDoctrine()->getManager();
+        $listEntity = $em->getRepository($repStr)->findOneByName($oldName);
+        if( $listEntity ) {
+            $listEntity->setName($newName);
+            $em->flush();
+            return 1;
+        }
+        return 0;
     }
 
     ////////////////// Employee Tree Util //////////////////////
