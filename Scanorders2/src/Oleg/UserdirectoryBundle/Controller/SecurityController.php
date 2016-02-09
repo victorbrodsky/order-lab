@@ -194,6 +194,16 @@ class SecurityController extends Controller
 
         $options['eventtype'] = "Login Page Visit";
         $options['serverresponse'] = "";
+
+        //"Login Page Visit" - Object is Site name
+        //echo "sitename=".$options['sitename']."<br>";
+        $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
+        //echo "siteObject=".$siteObject."<br>";
+        //exit();
+        if( $siteObject ) {
+            $options['eventEntity'] = $siteObject;
+        }
+
         $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
 
         $response = new Response();

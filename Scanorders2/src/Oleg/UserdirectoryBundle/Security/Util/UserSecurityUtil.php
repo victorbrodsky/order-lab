@@ -387,7 +387,8 @@ class UserSecurityUtil {
         return $transformer->reverseTransform($nameStr);
     }
 
-    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='Unknown Event') {
+    //$subjectEntities: single object or array of objects
+    public function createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event') {
 
         if( !$user ) {
             return null;
@@ -418,8 +419,27 @@ class UserSecurityUtil {
 
         $eventLog->setEventType($eventtype);
 
-        if( $subjectEntity ) {
-            //echo "subjectEntity=".$subjectEntity."<br>";
+        //set logger entity(s)
+        if( $subjectEntities ) {
+
+            if( method_exists($subjectEntities,'getId') ) {
+
+                $subjectEntity = $subjectEntities;
+                $ids = $subjectEntity->getId();
+
+            } else {
+
+                $idsArr = array();
+
+                foreach( $subjectEntities as $subjectObject ) {
+                    $idsArr[] = $subjectObject->getId();
+                }
+
+                $ids = implode(", ",$idsArr);
+                $subjectEntity = $subjectEntities[0];
+
+            }
+
             //get classname, entity name and id of subject entity
             $class = new \ReflectionClass($subjectEntity);
             $className = $class->getShortName();
@@ -428,7 +448,7 @@ class UserSecurityUtil {
             //set classname, entity name and id of subject entity
             $eventLog->setEntityNamespace($classNamespace);
             $eventLog->setEntityName($className);
-            $eventLog->setEntityId($subjectEntity->getId());
+            $eventLog->setEntityId($ids);
         }
 
         $em->persist($eventLog);

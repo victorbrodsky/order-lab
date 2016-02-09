@@ -273,7 +273,8 @@ class LoggerController extends Controller
 
         $ip = $filterform['ip']->getData();
         $roles = $filterform['roles']->getData();
-        $object = $filterform['object']->getData();
+        $objectName = $filterform['objectName']->getData();
+        $objectId = $filterform['objectId']->getData();
 
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
@@ -345,9 +346,16 @@ class LoggerController extends Controller
             $filtered = true;
         }
 
-        if( $object ) {
-            $dql->andWhere("logger.entityId = :object");
-            $dqlParameters['object'] = $object;
+        if( $objectName ) {
+            $dql->andWhere("logger.entityName = :objectName");
+            $dqlParameters['objectName'] = $objectName;
+
+            $filtered = true;
+        }
+
+        if( $objectId ) {
+            $dql->andWhere("logger.entityId = :objectId");
+            $dqlParameters['objectId'] = $objectId;
 
             $filtered = true;
         }

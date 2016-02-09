@@ -176,7 +176,7 @@ class DefaultController extends Controller
         $query = $this->getAccessionQuery($accessionType,$accessionNumber,$institutionIds,$request);
         //echo "sql=".$query->getSql()."<br>";
 
-        //$pagination = $query->getResult(); //accessions
+        //$objectsFound = $query->getResult(); //accessions
         //echo "pagination count=" . count($pagination) . "<br>";
         //exit();
 
@@ -201,7 +201,7 @@ class DefaultController extends Controller
         //Event Log
         $event = "Deidentifier Search with Accession Type " . $accessionTypeObj ." and  Accession Number " . $accessionNumber;
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,null,$request,'Search by Deidentifier ID conducted');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,$pagination,$request,'Search by Deidentifier ID conducted');
 
         return array(
             'accessionTypeId' => $accessionType,

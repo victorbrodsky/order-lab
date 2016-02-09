@@ -127,7 +127,13 @@ class LoggerFilterType extends AbstractType
                 },
         ));
 
-        $builder->add('object', 'text', array(
+        $builder->add('objectName', 'text', array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+        ));
+
+        $builder->add('objectId', 'text', array(
             'required'=>false,
             'label' => false,
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),

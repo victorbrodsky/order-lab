@@ -271,6 +271,7 @@ class UserUtil {
             $username = $request->get('_username');
 
             $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+            $user = $userDb;
 
             $logger->setUser($userDb);
 
@@ -288,6 +289,30 @@ class UserUtil {
         //set Event Type
         $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
         $logger->setEventType($eventtype);
+
+        //set eventEntity
+        $eventEntity = null;
+
+        if( array_key_exists('eventEntity', $options) && $options['eventEntity'] ) {
+
+            $eventEntity = $options['eventEntity'];
+
+        } elseif( $user && $user instanceof User && $user->getId() ) {
+
+            $eventEntity = $user;
+        }
+
+        if( $eventEntity ) {
+            //get classname, entity name and id of subject entity
+            $class = new \ReflectionClass($eventEntity);
+            $className = $class->getShortName();
+            $classNamespace = $class->getNamespaceName();
+
+            //set classname, entity name and id of subject entity
+            $logger->setEntityNamespace($classNamespace);
+            $logger->setEntityName($className);
+            $logger->setEntityId($eventEntity->getId());
+        }
 
         $em->persist($logger);
         $em->flush($logger);
