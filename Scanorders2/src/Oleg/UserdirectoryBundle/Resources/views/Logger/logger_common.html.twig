@@ -1,4 +1,7 @@
 
+    {% if filtered is defined and filtered %}
+        {% set eventlog_title = eventlog_title ~ " showing " ~ pagination|length ~ " matching events" %}
+    {% endif %}
 
     <h3 class="text-info">{{ eventlog_title }}</h3>
 

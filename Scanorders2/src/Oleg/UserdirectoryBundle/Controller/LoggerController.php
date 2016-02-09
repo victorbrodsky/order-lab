@@ -207,6 +207,7 @@ class LoggerController extends Controller
         $filterRes = $this->processLoggerFilter($dql,$request);
         $filterform = $filterRes['form'];
         $dqlParameters = $filterRes['dqlParameters'];
+        $filtered = $filterRes['filtered'];
         //print_r($dqlParameters);
 
 		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       
@@ -243,7 +244,8 @@ class LoggerController extends Controller
             'roles' => $rolesArr,
             'sitename' => $sitename,
             'createLogger' => $createLogger,
-            'updateLogger' => $updateLogger
+            'updateLogger' => $updateLogger,
+            'filtered' => $filtered
         );
     }
 
@@ -255,6 +257,8 @@ class LoggerController extends Controller
         $params = array();
         $dqlParameters = array();
         $filterRes = array();
+
+        $filtered = false;
 
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
         $filterform = $this->createForm(new LoggerFilterType($params), null);
@@ -278,6 +282,8 @@ class LoggerController extends Controller
         if( $search ) {
             $dql->andWhere("logger.event LIKE :searchEvent");
             $dqlParameters['searchEvent'] = '%'.$search.'%';
+
+            $filtered = true;
         }
 
         if( $users && count($users) > 0 ) {
@@ -291,6 +297,8 @@ class LoggerController extends Controller
                 }
             }
             $dql->andWhere($where);
+
+            $filtered = true;
         }
 
         if( $eventTypes && count($eventTypes) ) {
@@ -306,6 +314,8 @@ class LoggerController extends Controller
                 }
             }
             $dql->andWhere($where);
+
+            $filtered = true;
         }
 
         if( $startdate ) {
@@ -313,6 +323,8 @@ class LoggerController extends Controller
 
             $startdate = $this->convertFromUserTimezonetoUTC($startdate,$currentUser);
             $dqlParameters['startdate'] = $startdate;
+
+            $filtered = true;
         }
 
         if( $enddate ) {
@@ -320,10 +332,13 @@ class LoggerController extends Controller
 
             $enddate = $this->convertFromUserTimezonetoUTC($enddate,$currentUser);
             $dqlParameters['enddate'] = $enddate;
+
+            $filtered = true;
         }
 
         $filterRes['form'] = $filterform;
         $filterRes['dqlParameters'] = $dqlParameters;
+        $filterRes['filtered'] = $filtered;
 
         return $filterRes;
     }
