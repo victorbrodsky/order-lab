@@ -102,8 +102,37 @@ class LoggerFilterType extends AbstractType
             'attr' => array('class'=>'form-control datetimepicker', 'placeholder' => 'End Date/Time')
         ));
 
+        $builder->add('ip', 'text', array(
+            //'placeholder' => 'Search',
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+        ));
 
-        
+        $builder->add('roles', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Roles',
+            'property' => 'alias',
+            'label' => false,
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.name","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
+
+        $builder->add('object', 'text', array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

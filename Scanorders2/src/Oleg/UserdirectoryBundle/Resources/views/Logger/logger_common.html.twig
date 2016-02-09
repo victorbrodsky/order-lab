@@ -11,7 +11,7 @@
 
         <div class="row">
 
-            <div class="col-xs-2">
+            <div class="col-xs-1">
                 {#{{ form_row(loggerfilter.startdate) }}#}
                 <div class="input-group input-group-reg date form_datetime">
                     {{ form_widget(loggerfilter.startdate) }}
@@ -19,7 +19,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-2">
+            <div class="col-xs-1">
                 {#{{ form_row(loggerfilter.enddate) }}#}
                 <div class="input-group input-group-reg date form_datetime">
                     {{ form_widget(loggerfilter.enddate) }}
@@ -30,12 +30,27 @@
             <div class="col-xs-2">
                 {{ form_row(loggerfilter.user,{'attr': {'placeholder': 'Unknown User'}}) }}
             </div>
-            <div class="col-xs-2">
+
+            <div class="col-xs-1">
                 {{ form_row(loggerfilter.eventType, {'attr': {'placeholder': 'Event Type'}}) }}
             </div>
-            <div class="col-xs-3">
+
+            <div class="col-xs-2">
                 {{ form_row(loggerfilter.search, {'attr': {'placeholder': 'Event Search'}}) }}
             </div>
+
+            <div class="col-xs-1">
+                {{ form_row(loggerfilter.ip, {'attr': {'placeholder': 'IP'}}) }}
+            </div>
+
+            <div class="col-xs-2">
+                {{ form_row(loggerfilter.roles, {'attr': {'placeholder': 'Roles'}}) }}
+            </div>
+
+            <div class="col-xs-1">
+                {{ form_row(loggerfilter.object, {'attr': {'placeholder': 'Object'}}) }}
+            </div>
+
             <div class="col-xs-1">
                 <div class="btn-group btn-group-justified">
                     <div class="btn-group">

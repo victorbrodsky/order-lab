@@ -271,6 +271,10 @@ class LoggerController extends Controller
         $users = $filterform['user']->getData();
         $eventTypes = $filterform['eventType']->getData();
 
+        $ip = $filterform['ip']->getData();
+        $roles = $filterform['roles']->getData();
+        $object = $filterform['object']->getData();
+
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
 //        foreach( $users as $user ) {
@@ -301,9 +305,7 @@ class LoggerController extends Controller
             $filtered = true;
         }
 
-        if( $eventTypes && count($eventTypes) ) {
-            //$dql->andWhere("eventType.id = :eventTypeId");
-            //$dqlParameters['eventTypeId'] = $eventType;
+        if( $eventTypes && count($eventTypes)>0 ) {
             $where = "";
             foreach( $eventTypes as $eventType ) {
                 if( $eventType->getId() ) {
@@ -332,6 +334,37 @@ class LoggerController extends Controller
 
             $enddate = $this->convertFromUserTimezonetoUTC($enddate,$currentUser);
             $dqlParameters['enddate'] = $enddate;
+
+            $filtered = true;
+        }
+
+        if( $ip ) {
+            $dql->andWhere("logger.ip LIKE :ip");
+            $dqlParameters['ip'] = '%'.$ip.'%';
+
+            $filtered = true;
+        }
+
+        if( $object ) {
+            $dql->andWhere("logger.entityId = :object");
+            $dqlParameters['object'] = $object;
+
+            $filtered = true;
+        }
+
+        if( $roles && count($roles)>0 ) {
+            $where = "";
+            foreach( $roles as $role ) {
+                if( $role->getId() ) {
+                    if( $where != "" ) {
+                        $where .= " OR ";
+                    }
+                    //$where .= 'eventType.roles LIKE %"'.$role->getName().'"%';
+                    //$where .= "logger.roles LIKE '%land%'";
+                    $where .= "logger.roles LIKE " . "'%".$role->getName()."%'";
+                }
+            }
+            $dql->andWhere($where);
 
             $filtered = true;
         }
