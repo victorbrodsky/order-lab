@@ -158,11 +158,13 @@ class AdminController extends Controller
 
         //$default_time_zone = $this->container->getParameter('default_time_zone');
 
+        $count_sync = $this->syncDb(); //must be the first to update already existing objects. Can run on empty DB
+
         $count_sitenameList = $this->generateSitenameList();
 
-        $count_institutiontypes = $this->generateInstitutionTypes();         //must be first
+        $count_institutiontypes = $this->generateInstitutionTypes();                                //must be first
         $count_OrganizationalGroupType = $this->generateOrganizationalGroupType();                  //must be first
-        $count_institution = $this->generateInstitutions();                  //must be first
+        $count_institution = $this->generateInstitutions();                                         //must be first
         $count_auxinstitution = $this->generateAuxiliaryInstitutions();
         $count_appTitlePositions = $this->generateAppTitlePositions();
 
@@ -244,9 +246,6 @@ class AdminController extends Controller
         $count_Permissions = $this->generatePermissions();
         $count_PermissionObjects = $this->generatePermissionObjects();
         $count_PermissionActions = $this->generatePermissionActions();
-
-        $count_sync = $this->syncActions();
-
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -1511,7 +1510,7 @@ class AdminController extends Controller
         }
 
         //add 'WCMC-NYP Collaboration'
-        $wcmcnypCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('WCMC-NYP Collaboration');
+        $wcmcnypCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('WCMC-NYP Collaboration');
         if( !$wcmcnypCollaborationInst ) {
             $wcmcnypCollaborationInst = new Institution();
             $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCMC-NYP Collaboration");
@@ -2178,11 +2177,6 @@ class AdminController extends Controller
     public function generateEventTypeList() {
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findAll();
-        //if( $entities ) {
-        //    return -1;
-        //}
-
         $elements = array(
             'Login Page Visit',
             'Successful Login',
@@ -2233,11 +2227,10 @@ class AdminController extends Controller
 
         $count = 10;
         foreach( $elements as $value ) {
-
             if( $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($value) ) {
                 continue;
             }
-
+            //echo 'OlegUserdirectoryBundle:EventTypeList' . " name=" . $value . "<br>";
             $entity = new EventTypeList();
             $this->setDefaultList($entity,$count,$username,null);
             $entity->setName( trim($value) );
@@ -2246,7 +2239,7 @@ class AdminController extends Controller
             $em->flush();
 
             $count = $count + 10;
-
+            //echo 'EOF OlegUserdirectoryBundle:EventTypeList' . " name=" . $value . "<br>";
         } //foreach
 
         return round($count/10);
@@ -3995,39 +3988,51 @@ class AdminController extends Controller
     }
 
 
-    public function syncActions() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
+    /**
+     * @Route("/sync-db/", name="user_sync_db")
+     * @Method("GET")
+     */
+    public function syncDbAction()
+    {
+        $count = $this->syncDb();
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'count='.$count
+        );
+        return $this->redirect($this->generateUrl('user_admin_index'));
+    }
+    public function syncDb() {
 
         $count = 0;
 
         //User Created -> New user record added
-        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"User Created","New user record added");
+        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"User Created","New user record added");
 
         //User Updated -> User record updated
-        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"User Updated","User record updated");
+        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"User Updated","User record updated");
 
         //Populate of Fellowship Applications -> Import of Fellowship Application data to DB
-        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"Populate of Fellowship Applications","Import of Fellowship Application data to DB");
+        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"Populate of Fellowship Applications","Import of Fellowship Application data to DB");
 
         //Import of Fellowship Applications -> Import of Fellowship Applications Spreadsheet
-        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"Import of Fellowship Applications","Import of Fellowship Applications Spreadsheet");
+        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"Import of Fellowship Applications","Import of Fellowship Applications Spreadsheet");
 
         //Fellowship Application Resend Emails -> Fellowship Application Rating Invitation Emails Resent
-        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"Fellowship Application Resend Emails","Fellowship Application Rating Invitation Emails Resent");
+        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"Fellowship Application Resend Emails","Fellowship Application Rating Invitation Emails Resent");
 
         //Fellowship Applicant Page Viewed -> Fellowship Application Page Viewed
-        $count = $count + $this->singleSyncAction('OlegUserdirectoryBundle:EventTypeList',"Fellowship Applicant Page Viewed","Fellowship Application Page Viewed");
+        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"Fellowship Applicant Page Viewed","Fellowship Application Page Viewed");
 
         return $count;
     }
-    public function singleSyncAction($repStr,$oldName,$newName) {
+    public function singleSyncDb($repStr,$oldName,$newName) {
         $em = $this->getDoctrine()->getManager();
-        $listEntity = $em->getRepository($repStr)->findOneByName($oldName);
-        if( $listEntity ) {
-            $listEntity->setName($newName);
+        $entity = $em->getRepository($repStr)->findOneByName($oldName);
+        //echo $repStr . " oldName=" . $oldName . "<br>";
+        if( $entity ) {
+            $entity->setName($newName);
+            //echo $repStr . " name=" . $newName . "<br>";
+            $em->persist($entity);
             $em->flush();
             return 1;
         }
