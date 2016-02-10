@@ -6,8 +6,7 @@
 //3) add new roles by running "Populate All Lists With Default Values" in user directory list manager
 //4) add permission "Generate new Deidentifier ID" (Object:Accession, Action:create)
 //5) add permission "Search by Deidentifier ID" (Object:Accession, Action:read)
-//6) run employee "Populate All Lists With Default Values" to sync:
-//EventTypeList
+//6) run employee "Populate All Lists With Default Values" to sync: EventTypeList (method syncEventTypeListDb)
 
 
 namespace Oleg\DeidentifierBundle\Controller;

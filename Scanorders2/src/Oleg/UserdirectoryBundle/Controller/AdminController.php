@@ -158,7 +158,7 @@ class AdminController extends Controller
 
         //$default_time_zone = $this->container->getParameter('default_time_zone');
 
-        $count_sync = $this->syncDb(); //must be the first to update already existing objects. Can run on empty DB
+        //$count_EventTypeListSync = $this->syncEventTypeListDb(); //must be the first to update already existing objects. Can run on empty DB
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -247,6 +247,8 @@ class AdminController extends Controller
         $count_PermissionObjects = $this->generatePermissionObjects();
         $count_PermissionActions = $this->generatePermissionActions();
 
+        $count_syncRolesDb = $this->syncRolesDb();
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
@@ -308,7 +310,8 @@ class AdminController extends Controller
             'PermissionObjects ='.$count_PermissionObjects.', '.
             'PermissionActions ='.$count_PermissionActions.', '.
             'Collaboration Types='.$collaborationtypes.', '.
-            'sync count='.$count_sync.' '.
+            //'EventTypeListSync count='.$count_EventTypeListSync.', '.
+            //'syncRolesDb ='.$count_syncRolesDb.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -3992,16 +3995,23 @@ class AdminController extends Controller
      * @Route("/sync-db/", name="user_sync_db")
      * @Method("GET")
      */
-    public function syncDbAction()
+    public function syncEventTypeListDbAction()
     {
-        $count = $this->syncDb();
+        $count = $this->syncEventTypeListDb();
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'count='.$count
+            'syncEventTypeListDb count='.$count
         );
+
+        $count = $this->syncRolesDb();
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'syncRolesDb count='.$count
+        );
+
         return $this->redirect($this->generateUrl('user_admin_index'));
     }
-    public function syncDb() {
+    public function syncEventTypeListDb() {
 
         $count = 0;
 
@@ -4037,6 +4047,55 @@ class AdminController extends Controller
             return 1;
         }
         return 0;
+    }
+
+    //add sitename to the existing roles using role name
+    public function syncRolesDb() {
+
+        $em = $this->getDoctrine()->getManager();
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+
+        $count = 0;
+
+        foreach( $roles as $role ) {
+
+//            if( strpos($role, '_DEIDENTIFICATOR_') !== false ) {
+//                $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName('deidentifier');
+//                if( $role->getSites() && !$role->getSites()->contains($site) ) {
+//                    $role->addSite($site);
+//                    $count++;
+//                }
+//            }
+            $resCount = 0;
+
+            $resCount = $resCount + $this->addSites( $role, '_DEIDENTIFICATOR_', 'deidentifier' );
+
+            $resCount = $resCount + $this->addSites( $role, '_FELLAPP_', 'fellowship-applications' );
+
+            $resCount = $resCount + $this->addSites( $role, '_SCANORDER_', 'scan' );
+
+            $resCount = $resCount + $this->addSites( $role, '_USERDIRECTORY_', 'directory' );
+
+            if( $resCount > 0 ) {
+                $count++;
+                $em->persist($role);
+                $em->flush();
+            }
+        }
+
+        return $count;
+    }
+    public function addSites( $role, $roleStr, $sitename ) {
+        $count = 0;
+        if( strpos($role, $roleStr) !== false ) {
+            $em = $this->getDoctrine()->getManager();
+            $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName($sitename);
+            if( $role->getSites() && !$role->getSites()->contains($site) ) {
+                $role->addSite($site);
+                $count++;
+            }
+        }
+        return $count;
     }
 
     ////////////////// Employee Tree Util //////////////////////

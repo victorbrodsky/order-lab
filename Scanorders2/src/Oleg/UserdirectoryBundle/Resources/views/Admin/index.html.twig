@@ -341,6 +341,13 @@
                 href="{{ path('generate_users') }}">3) Populate Users From Excel
             </a>
         </p>
+
+
+        <p>
+            <a general-data-confirm="Are you sure? This action will try to synchronise DB with the source code changes."
+               href="{{ path('user_sync_db') }}">4) Synchronise DB with the source code changes
+            </a>
+        </p>
     {% endif %}
 
     <br>
