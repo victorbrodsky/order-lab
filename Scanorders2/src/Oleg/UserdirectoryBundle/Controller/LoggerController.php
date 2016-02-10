@@ -281,7 +281,6 @@ class LoggerController extends Controller
 //        foreach( $users as $user ) {
 //            echo "user=".$user."<br>";
 //        }
-        //echo "search=".$search."<br>";
         //exit();
 
         if( $search ) {
@@ -307,6 +306,8 @@ class LoggerController extends Controller
         }
 
         if( $eventTypes && count($eventTypes)>0 ) {
+            //echo "eventTypes=".$eventTypes[0]."<br>";
+            //exit();
             $where = "";
             foreach( $eventTypes as $eventType ) {
                 if( $eventType->getId() ) {

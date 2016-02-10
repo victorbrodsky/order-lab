@@ -244,7 +244,6 @@ class DefaultController extends Controller
 //            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
 //        }
         if( false == $this->get('security.context')->isGranted("create", "Accession") ){
-            exit('generate nopermission');
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 

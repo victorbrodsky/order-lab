@@ -30,6 +30,10 @@ class DeidentifierLoggerController extends LoggerController
      */
     public function indexAction(Request $request)
     {
+        if( false == $this->get('security.context')->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
+            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+        }
+
 		$params = array('sitename'=>$this->container->getParameter('deidentifier.sitename'));
         return $this->listLogger($params,$request);
     }
@@ -66,5 +70,28 @@ class DeidentifierLoggerController extends LoggerController
         return $logger;
     }
 
+
+    /**
+     * Generation Log with eventTypes = "Generate Accession Deidentifier ID"
+     *
+     * @Route("/generation-log/", name="deidentifier_generation_log")
+     * @Method("GET")
+     * @Template("OlegDeidentifierBundle:Logger:index.html.twig")
+     */
+    public function generationLogAction(Request $request)
+    {
+        if( false == $this->get('security.context')->isGranted("create", "Accession") ){
+            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Generate Accession Deidentifier ID");
+
+        if( !$eventType ) {
+            throw $this->createNotFoundException('EventTypeList is not found by name ' . "Generate Accession Deidentifier ID");
+        }
+
+        return $this->redirect($this->generateUrl('deidentifier_logger', array('filter[eventType][]' => $eventType->getId() )));
+    }
 
 }

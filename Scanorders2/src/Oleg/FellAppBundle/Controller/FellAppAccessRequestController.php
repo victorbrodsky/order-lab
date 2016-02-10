@@ -141,7 +141,7 @@ class FellAppAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/deny-authorization/{userId}", name="fellapp_authorization_remove", requirements={"userId" = "\d+"})
+     * @Route("/revoke-access-authorization/{userId}", name="fellapp_authorization_remove", requirements={"userId" = "\d+"})
      * @Method("GET")
      * @Template()
      */

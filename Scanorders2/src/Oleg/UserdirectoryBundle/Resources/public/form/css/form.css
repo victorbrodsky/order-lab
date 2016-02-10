@@ -76,20 +76,22 @@
 }
 /*end of sign in*/
 
-.form-control {
-    font-size: 18px;
-    color: #313030;
-}
 
-.select2-container .select2-choice {
-    font-size: 18px;
-    color: #313030;
-}
+/*make text larger*/
+/*.form-control {*/
+    /*font-size: 18px;*/
+    /*color: #313030;*/
+/*}*/
 
-.select2-container .select2-choices {
-    font-size: 18px;
-    color: #313030;
-}
+/*.select2-container .select2-choice {*/
+    /*font-size: 18px;*/
+    /*color: #313030;*/
+/*}*/
+
+/*.select2-container .select2-choices {*/
+    /*font-size: 18px;*/
+    /*color: #313030;*/
+/*}*/
 
 /*.form-control-modif {*/
     /*margin: 0;*/

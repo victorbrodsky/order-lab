@@ -790,7 +790,7 @@ class AccessRequestController extends Controller
     }
 
     /**
-     * @Route("/deny-authorization/{userId}", name="employees_authorization_remove", requirements={"userId" = "\d+"})
+     * @Route("/revoke-access-authorization/{userId}", name="employees_authorization_remove", requirements={"userId" = "\d+"})
      * @Method("GET")
      * @Template()
      */

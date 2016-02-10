@@ -143,7 +143,7 @@ class DeidentifierAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/deny-authorization/{userId}", name="deidentifier_authorization_remove", requirements={"userId" = "\d+"})
+     * @Route("/revoke-access-authorization/{userId}", name="deidentifier_authorization_remove", requirements={"userId" = "\d+"})
      * @Method("GET")
      * @Template()
      */

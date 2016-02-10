@@ -35,6 +35,12 @@
                         </a>
                     </li>
 
+                    {% if is_granted('ROLE_DEIDENTIFICATOR_ADMIN') %}
+                        <li>
+                            <a href="{{ path(deidentifier_sitename~'_generation_log') }}">Generation Log</a>
+                        </li>
+                    {% endif %}
+
                 </ul>
 
             {% endif %}
