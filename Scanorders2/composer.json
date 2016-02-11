@@ -21,7 +21,7 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/assetic-bundle": "dev-master",
-        "twig/twig": "~1.12|~2",
+        "twig/twig": "~1.23|~2.0",
 
         "friendsofsymfony/user-bundle": "2.0.*@dev",
         "friendsofsymfony/jsrouting-bundle": "@stable",

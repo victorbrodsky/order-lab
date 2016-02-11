@@ -182,7 +182,7 @@ class ScanOrderController extends Controller {
 //            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
 //        }
 
-        //echo "order List Action: dql=".$dql;
+        echo "order List Action: dql=".$dql;
 
         if( $increaseMaxExecTime ) {
             $max_exec_time = ini_get('max_execution_time');
@@ -1484,7 +1484,7 @@ class ScanOrderController extends Controller {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= $institutionalCriteriaStr;
+                $crituser .= "(" . $institutionalCriteriaStr . ")";
                 echo "crituser=".$crituser."<br>";
 
                 $institution = true;
