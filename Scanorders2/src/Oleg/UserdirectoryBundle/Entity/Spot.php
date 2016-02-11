@@ -134,15 +134,16 @@ class Spot {
      * @param \DateTime $updatedOn
      * @ORM\PrePersist
      */
-    public function setUpdatedOn($updated=null)
+    public function setUpdatedOn() //$updated=null
     {
-        if( $updated ) {
-            $this->updatedOn = $updated;
-        } else {
-            if( $this->id ) {
-                $this->updatedOn = new \DateTime();
-            }
-        }
+//        if( $updated ) {
+//            $this->updatedOn = $updated;
+//        } else {
+//            if( $this->id ) {
+//                $this->updatedOn = new \DateTime();
+//            }
+//        }
+        $this->updatedOn = new \DateTime();
     }
 
     /**

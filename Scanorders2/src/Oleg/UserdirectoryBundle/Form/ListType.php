@@ -104,28 +104,28 @@ class ListType extends AbstractType
         ));
 
 
-        if( array_key_exists('cycle', $this->params) && $this->params['cycle'] != 'new' ) {
-
-                //echo "cycle=".$this->params['cycle']."<br>";
-
-                $builder->add('updatedby',null,array(
-                    'label'=>'Updated by:',
-                    'required'=>false,
-                    'read_only'=>true,
-                    'attr' => array('class'=>'combobox combobox-width select2-list-creator', 'readonly'=>'readonly')
-                ));
-
-                $builder->add( 'updatedon', 'date', array(
-                    'label'=>'Updated on:',
-                    'widget' => 'single_text',
-                    'required'=>false,
-                    'read_only'=>true,
-                    'format' => 'MM/dd/yyyy, H:mm:ss',
-                    'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
-                    'attr' => array('class' => 'form-control'),
-                ));
-
-        }
+//        if( array_key_exists('cycle', $this->params) && $this->params['cycle'] != 'new' ) {
+//
+//                //echo "cycle=".$this->params['cycle']."<br>";
+//
+////                $builder->add('updatedby',null,array(
+////                    'label'=>'Updated by:',
+////                    'required'=>false,
+////                    'read_only'=>true,
+////                    'attr' => array('class'=>'combobox combobox-width select2-list-creator', 'readonly'=>'readonly')
+////                ));
+//
+////                $builder->add( 'updatedon', 'date', array(
+////                    'label'=>'Updated on:',
+////                    'widget' => 'single_text',
+////                    'required'=>false,
+////                    'read_only'=>true,
+////                    'format' => 'MM/dd/yyyy, H:mm:ss',
+////                    'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
+////                    'attr' => array('class' => 'form-control'),
+////                ));
+//
+//        }
 
 
         $builder->add('synonyms', 'entity', array(

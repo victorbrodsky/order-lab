@@ -1006,7 +1006,7 @@ class UtilController extends Controller {
 
         //filter out previous users
         $curdate = date("Y-m-d", time());
-        $criteriastr .= " AND (employmentStatus IS NULL OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')";
+        $criteriastr .= " AND (employmentStatus.id IS NULL OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')";
 
         //filter out users with excludeFromSearch set to true
         if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

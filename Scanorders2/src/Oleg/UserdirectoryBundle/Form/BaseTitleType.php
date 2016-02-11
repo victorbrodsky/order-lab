@@ -231,7 +231,8 @@ class BaseTitleType extends AbstractType
                             ->leftJoin("list.infos", "infos")
                             ->leftJoin("list.employmentStatus", "employmentStatus")
                             ->leftJoin("employmentStatus.employmentType", "employmentType")
-                            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL")
+                            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                             ->orderBy("infos.displayName","ASC");
                     },
             ));

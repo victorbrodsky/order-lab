@@ -1293,7 +1293,7 @@ class UserController extends Controller
         //current_only
         $curdate = date("Y-m-d", time());
         $criteriastr .= " AND (";
-        $criteriastr .= "employmentStatus IS NULL";
+        $criteriastr .= "employmentStatus.id IS NULL";
         $criteriastr .= " OR ";     
         $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
         $criteriastr .= ")";
@@ -1308,7 +1308,7 @@ class UserController extends Controller
             $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
         } 
         
-        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
+        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
         
         $em = $this->getDoctrine()->getManager();  
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');

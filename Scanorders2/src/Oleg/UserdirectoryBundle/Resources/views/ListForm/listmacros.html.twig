@@ -224,8 +224,16 @@
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
-                <td>{{ entity.updatedby }}</td>
-                <td>{% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    {% if entity.updatedby %}
+                        {{ entity.updatedby }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entity.updatedon %}
+                        {{ entity.updatedon|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
 
 
                 {#<td class="rowlink-skip">#}
@@ -347,13 +355,13 @@
 
     {{ formmacros.field(form.list.orderinlist) }}
 
-    {% if form.list.updatedby is defined %}
-        {{ formmacros.field(form.list.updatedby) }}
-    {% endif %}
+    {#{% if form.list.updatedby is defined %}#}
+        {#{{ formmacros.field(form.list.updatedby) }}#}
+    {#{% endif %}#}
 
-    {% if form.list.updatedon is defined %}
-        {{ formmacros.field(form.list.updatedon) }}
-    {% endif %}
+    {#{% if form.list.updatedon is defined %}#}
+        {#{{ formmacros.field(form.list.updatedon) }}#}
+    {#{% endif %}#}
 
 
     {#additional attributes#}
@@ -456,12 +464,17 @@
 
     {{ formmacros.field(edit_form.list.createdate) }}
 
-    {% if edit_form.list.updatedby is defined %}
-        {{ formmacros.field(edit_form.list.updatedby) }}
+    {% if entity.updatedby %}
+        {#{{ formmacros.field(edit_form.list.updatedby) }}#}
+        {{ formmacros.simplefield("Updated by:",entity.updatedby,"","disabled") }}
     {% endif %}
 
-    {% if edit_form.list.updatedon is defined %}
-        {{ formmacros.field(edit_form.list.updatedon) }}
+    {#{% if edit_form.list.updatedon is defined %}#}
+        {#{{ formmacros.field(edit_form.list.updatedon) }}#}
+    {#{% endif %}#}
+    {% if entity.updatedon %}
+        {#{{ entity.updatedon|date('Y-m-d H:i:s') }}#}
+        {{ formmacros.simplefield("Updated on:",entity.updatedon|date('Y-m-d H:i:s'),"","disabled") }}
     {% endif %}
 
     {% if entity.researchlab is defined %}

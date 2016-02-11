@@ -548,7 +548,7 @@ class UserUtil {
                 //Employment Status should have at least one group where Date of Termination is empty
                 if( $searchField == null || $searchField == 'employmentStatus' ) {
                     $criteriastr .= "(";
-                    $criteriastr .= "(employmentStatus IS NULL)";
+                    $criteriastr .= "(employmentStatus.id IS NULL)";
                     $criteriastr .= " OR ";
                     //$criteriastr .= "(employmentStatus.terminationDate IS NULL)";
                     //$criteriastr .= " OR ";
