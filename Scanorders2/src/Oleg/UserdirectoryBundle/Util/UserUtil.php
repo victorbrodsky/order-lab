@@ -587,7 +587,7 @@ class UserUtil {
                 if( $searchField == null || $searchField == 'employmentStatus' ) {
                     //TODO: should the search result display only users with all employment status have a non-empty Date of Termination?
                     $criteriastr .= "(";
-                    $criteriastr .= "employmentStatus IS NOT NULL";
+                    $criteriastr .= "employmentStatus.id IS NOT NULL";
                     $criteriastr .= " AND ";
                     //$criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
                     $criteriastr .= "(employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";

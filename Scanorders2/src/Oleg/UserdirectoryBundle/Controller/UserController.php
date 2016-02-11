@@ -101,10 +101,14 @@ class UserController extends Controller
         $postData = $request->get('postData');
         $subjectUserId = $request->get('subjectUserId');
 
+        //echo "tablename=".$tablename."<br>";
+
         //user search
         $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid,'excludeCurrentUser'=>false,'subjectUserId'=>$subjectUserId);
         $res = $this->indexUser( $params ); //use function getTheSameObject
         $pagination = $res['entities'];
+
+        //echo "pagination count=".count($pagination)."<br>";
 
         if( count($pagination) == 0 ) {
             $response = new Response();
@@ -430,21 +434,22 @@ class UserController extends Controller
         //$dql->leftJoin("user.institutions", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
 
-        if( $sort == null ) {
-            if( $time == 'current_only' ) {
-                $dql->orderBy("infos.lastName","ASC");
-                $dql->addOrderBy("administrativeInstitution.name","ASC");
-                //$dql->addOrderBy("administrativeService.name","ASC");
-                //$dql->addOrderBy("appointmentService.name","ASC");
-               //$dql->addOrderBy("medicalService.name","ASC");
-            } else if( $time == 'past_only' ) {
-                $dql->orderBy("employmentStatus.terminationDate","DESC");
-                $dql->addOrderBy("infos.lastName","ASC");
-            } else {
-                $dql->orderBy("infos.lastName","ASC");
+        if(0) { //TODO: this cause in php 5.4: "Notice: String offset cast occurred" in in vendor\doctrine\dbal\lib\Doctrine\DBAL\Platforms\SQLServerPlatform.php at line 1232:  if ($query[$currentPosition] === '(') {
+            if ($sort == null) {
+                if ($time == 'current_only') {
+                    $dql->orderBy("infos.lastName", "ASC");
+                    $dql->addOrderBy("administrativeInstitution.name", "ASC");
+                    //$dql->addOrderBy("administrativeService.name","ASC");
+                    //$dql->addOrderBy("appointmentService.name","ASC");
+                    //$dql->addOrderBy("medicalService.name","ASC");
+                } else if ($time == 'past_only') {
+                    $dql->orderBy("employmentStatus.terminationDate", "DESC");
+                    $dql->addOrderBy("infos.lastName", "ASC");
+                } else {
+                    $dql->orderBy("infos.lastName", "ASC");
+                }
             }
         }
-
 
         if( $userid ) {
 
