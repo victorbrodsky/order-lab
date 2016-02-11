@@ -182,7 +182,7 @@ class ScanOrderController extends Controller {
 //            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
 //        }
 
-        echo "order List Action: dql=".$dql;
+        //echo "order List Action: dql=".$dql;
 
         if( $increaseMaxExecTime ) {
             $max_exec_time = ini_get('max_execution_time');
@@ -1474,20 +1474,22 @@ class ScanOrderController extends Controller {
 
                 //All Institutions => disregard institutions => show all institutions
                 if( $rootNode == "All Institutions" ) {
-
+                    $institutionalCriteriaStr = "";
                 }
 
                 if( $institutionalCriteriaStr && count($allInstitutionalCriteriaArr) > 0 ) {
                     $institutionalCriteriaStr = $institutionalCriteriaStr . " OR " . implode(" OR ", $allInstitutionalCriteriaArr);
                 }
 
-                if( $crituser != "" ) {
-                    $crituser .= " AND ";
-                }
-                $crituser .= "(" . $institutionalCriteriaStr . ")";
-                echo "crituser=".$crituser."<br>";
+                if( $institutionalCriteriaStr ) {
+                    if ($crituser != "") {
+                        $crituser .= " AND ";
+                    }
+                    $crituser .= "(" . $institutionalCriteriaStr . ")";
+                    //echo "crituser=".$crituser."<br>";
 
-                $institution = true;
+                    $institution = true;
+                }
             }
 
             if( $criteriastr != "" && $crituser != "" ) {
