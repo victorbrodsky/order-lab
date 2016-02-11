@@ -373,7 +373,7 @@
     {#role's permissions#}
     {% if form.permissions is defined %}
         {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
-        {{ userform.permissionSection(form.permissions, 'new', employees_sitename) }}
+        {{ userform.permissionSection(form.permissions, 'new', employees_sitename, "in", "Permission(s)",true) }}
     {% endif %}
 
     {{ form_widget(form.submit) }}
@@ -494,7 +494,7 @@
     {#role's permissions#}
     {% if edit_form.permissions is defined %}
         {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
-        {{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename) }}
+        {{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename, "in", "Permission(s)",true) }}
     {% endif %}
 
     {% if edit_form.submit is defined %}

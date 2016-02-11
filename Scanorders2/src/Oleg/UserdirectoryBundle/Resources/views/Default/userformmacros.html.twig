@@ -966,22 +966,22 @@
 
 
 
-{% macro permissionSection( permissions, cycle, sitename ) %}
+{% macro permissionSection( permissions, cycle, sitename, collapsein, title, usedata ) %}
 
     {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% set collapsein = "in" %}
 
-    {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
-    <div id="form-prototype-data"
-         data-prototype-user-permissions = "{{ userform.permissions(permissions,cycle,'user-permissions','prototype', sitename)|e }}"
-    ></div>
+    {% if usedata %}
+        <div id="form-prototype-data"
+             data-prototype-user-permissions = "{{ userform.permissions(permissions,cycle,'user-permissions','prototype', sitename)|e }}"
+        ></div>
+    {% endif %}
 
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title text-left">
                 <a data-toggle="collapse" href="#permissions">
-                    Permission(s)
+                    {{ title }}
                 </a>
             </h4>
         </div>

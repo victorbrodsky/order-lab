@@ -126,6 +126,7 @@
              data-prototype-user-lectures = "{{ lecturesPrototype|e }}"
              {#data-prototype-documentcontainers = "{{ documentsHtml|e }}"#}
              {#data-prototype-user-userpositions = "{{ userPositionPrototype|e }}"#}
+             data-prototype-user-permissions = "{{ userform.permissions(form.permissions,cycle,'user-permissions','prototype', sitename)|e }}"
 
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
@@ -318,6 +319,12 @@
                 </div>
             </div>
         </div>
+
+
+        {#permissions#}
+        {% if form.permissions is defined %}
+            {{ userform.permissionSection(form.permissions, cycle, sitename, collapsein, "User Permissions, modifiable by Administrator", false) }}
+        {% endif %}
 
 
         {#per site settings#}
