@@ -1463,29 +1463,6 @@ class ScanOrderController extends Controller {
                 $institution = true;
             }
 
-            //TODO: show chosen permitted institution
-            $institution = false;
-            if( strpos($service,'permittedinstitutionkey') !== false ) {
-                $pieces = explode("-", $service);
-                $institutionId = $pieces[1];
-                //echo "collaboration institutionId=".$institutionId."<br>";
-
-                $em = $this->getDoctrine()->getManager();
-                $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
-                echo "inst=".$node."<br>";
-
-                $institutionalCriteriaStr = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $node, "institution", false );
-
-                if( $crituser != "" ) {
-                    $crituser .= " AND ";
-                }
-                $crituser .= $institutionalCriteriaStr;
-                //echo "crituser=".$crituser."<br>";
-
-                $institution = true;
-            }
-            //exit("1");
-
             if( $criteriastr != "" && $crituser != "" ) {
                 $criteriastr = $criteriastr." AND ".$crituser;
             } else {
