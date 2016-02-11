@@ -107,7 +107,6 @@ abstract class BaseVoter extends Voter {
             //exit('can not View exit');
         }
 
-
         return false;
     }
 

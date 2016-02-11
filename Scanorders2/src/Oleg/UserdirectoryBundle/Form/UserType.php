@@ -300,19 +300,19 @@ class UserType extends AbstractType
                 'attr' => $attr,
                 'multiple' => true,
             ));
-        }
 
-        //permissions: show list of
-        $builder->add('permissions', 'collection', array(
-            'type' => new PermissionType($this->params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__permissions__',
-        ));
+            //permissions: show list of
+            $builder->add('permissions', 'collection', array(
+                'type' => new PermissionType($this->params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__permissions__',
+            ));
+        }
 
 
         if( $this->roleAdmin ) {

@@ -620,7 +620,7 @@ class ScanUtilController extends UtilController {
             $query = $em->createQueryBuilder()
                 ->from($prefix.$bundleName.':'.$className, 'list')
                 //->select("userWrappers.id as id, CONCAT(userWrappers.name,CONCAT(' - ',userWrappersUserInfos.displayName)) as text")
-                ->select("userWrappers.id as id, (CASE WHEN userWrappersUser IS NULL THEN userWrappers.name ELSE userWrappers.name+' - '+userWrappersUserInfos.displayName END) as text")
+                ->select("userWrappers.id as id, (CASE WHEN userWrappersUser.id IS NULL THEN userWrappers.name ELSE userWrappers.name+' - '+userWrappersUserInfos.displayName END) as text")
                 //->select("userWrappers.id as id, userWrappers.name as text")
                 ->leftJoin("list.userWrappers","userWrappers")
                 ->leftJoin("userWrappers.user","userWrappersUser")
@@ -793,7 +793,7 @@ class ScanUtilController extends UtilController {
         $query->andWhere($andWhere);
 
         //exclude system user:  "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'"; //"user.email != '-1'"
-        $query->andWhere("user IS NULL OR (user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system')");
+        $query->andWhere("user.id IS NULL OR (user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system')");
 
         //exclude preferred locations (they will be added later)
         $prefLocs = "";

@@ -163,6 +163,8 @@ class UserRepository extends EntityRepository {
             }
         }
 
+        //TODO: check if user has direct permission
+
         return false;
     }
 

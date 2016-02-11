@@ -1328,10 +1328,10 @@ class ScanOrderController extends Controller {
                     $filterStr = " message.priority = 'Stat' AND status.name LIKE '%Filled%'";
                     break;
                 case "No Course Director Link":
-                    $filterStr = " educational IS NOT NULL AND directorUser IS NULL AND status.name != 'Superseded'";
+                    $filterStr = " educational IS NOT NULL AND directorUser.id IS NULL AND status.name != 'Superseded'";
                     break;
                 case "No Principal Investigator Link":
-                    $filterStr = " research IS NOT NULL AND principalUser IS NULL AND status.name != 'Superseded'";
+                    $filterStr = " research IS NOT NULL AND principalUser.id IS NULL AND status.name != 'Superseded'";
                     break;
                 default:
                     ;

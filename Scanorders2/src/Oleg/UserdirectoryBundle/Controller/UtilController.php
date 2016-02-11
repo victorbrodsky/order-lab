@@ -368,7 +368,7 @@ class UtilController extends Controller {
         $query->andWhere($andWhere);
 
         //exclude system user:  "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'"; //"user.email != '-1'"
-        $query->andWhere("user IS NULL OR (user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system')");
+        $query->andWhere("user.id IS NULL OR (user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system')");
 
         //do not show (exclude) all locations that are tied to a user who has no current employment periods (all of whose employment periods have an end date)
         $curdate = date("Y-m-d", time());

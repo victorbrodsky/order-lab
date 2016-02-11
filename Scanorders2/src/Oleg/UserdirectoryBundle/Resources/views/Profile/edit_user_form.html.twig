@@ -42,6 +42,7 @@
         {% set boardcertificationPrototype = null %}
         {% set identifiersPrototype = null %}
         {% set codeNYPHPrototype = null %}
+        {% set permissionsPrototype = null %}
         {#{% set userPositionPrototype = null %}#}
 
         {% if form.publicComments is defined %}
@@ -85,6 +86,9 @@
         {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
             {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cycle,'user-codenyph','prototype') %}
         {% endif %}
+        {% if form.permissions is defined %}
+            {% set permissionsPrototype = userform.permissions(form.permissions,cycle,'user-permissions','prototype', sitename) %}
+        {% endif %}
 
 
         {#{% if form.administrativeTitles is defined %}#}
@@ -126,7 +130,7 @@
              data-prototype-user-lectures = "{{ lecturesPrototype|e }}"
              {#data-prototype-documentcontainers = "{{ documentsHtml|e }}"#}
              {#data-prototype-user-userpositions = "{{ userPositionPrototype|e }}"#}
-             data-prototype-user-permissions = "{{ userform.permissions(form.permissions,cycle,'user-permissions','prototype', sitename)|e }}"
+             data-prototype-user-permissions = "{{ permissionsPrototype|e }}"
 
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
