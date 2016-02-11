@@ -20,14 +20,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 abstract class BaseVoter extends Voter {
 
     const CREATE = 'create';
-    const READ = 'read';
-    //const VIEW = 'view';
-    //const SHOW = 'show';
-
+    const READ   = 'read';
     const UPDATE = 'update';
-    //const EDIT = 'edit';
-    //const AMEND = 'amend';
-
     const DELETE = 'delete'; //mark it inactive/invalid since we don't delete; this and 3 above are for Data Quality role
 
     const CHANGESTATUS = 'changestatus';

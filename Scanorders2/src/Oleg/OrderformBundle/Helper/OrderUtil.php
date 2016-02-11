@@ -755,20 +755,28 @@ class OrderUtil {
             }
 
             //add all collaboration institutions
-            $collaborationInstArr = array();
             $securityUtil = $this->container->get('order_security_utility');
             $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
             foreach( $permittedInstitutions as $permittedInstitution ) {
+
                 $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
                     findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
+
                 foreach( $collaborations as $collaboration ) {
+
                     foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
-                        $key = "collaboration-".$collaborationInstitution->getId();
-                        if( !array_key_exists($key,$collaborationInstArr) ) {
-                            //$collaborationInstArr[] = $collaborationInstitution->getId();
+                        $key = "collaborationkey-".$collaborationInstitution->getId();
+                        if( !array_key_exists($key,$choicesInst) ) {
                             $choicesInst[$key] = "All ".$collaborationInstitution." Orders";
                         }
                     }
+
+                }
+
+                //add all PHI scope institutions, i.e. "All NYP Orders"
+                $key = "permittedinstitutionkey-".$permittedInstitution->getId();
+                if( !array_key_exists($key,$choicesInst) ) {
+                    $choicesInst[$key] = "All ".$permittedInstitution." Orders";
                 }
             }//foreach
 

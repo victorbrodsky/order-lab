@@ -193,11 +193,13 @@ class ScanOrderController extends Controller {
 
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
+
         $pagination = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1),   /*page number*/
+            $request->query->get('page', 1),   /*page number*/
             $limit                                          /*limit per page*/
         );
+        //exit('1');
 
         //testing
 //        echo "<br>";
@@ -1441,7 +1443,7 @@ class ScanOrderController extends Controller {
 
             //show chosen collaboration institution
             $institution = false;
-            if( strpos($service,'collaboration') !== false ) {
+            if( strpos($service,'collaborationkey') !== false ) {
                 $pieces = explode("-", $service);
                 $institutionId = $pieces[1];
                 //echo "collaboration institutionId=".$institutionId."<br>";
@@ -1449,6 +1451,28 @@ class ScanOrderController extends Controller {
                 $em = $this->getDoctrine()->getManager();
                 $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
                 //echo "inst=".$node."<br>";
+
+                $institutionalCriteriaStr = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $node, "institution", false );
+
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= $institutionalCriteriaStr;
+                //echo "crituser=".$crituser."<br>";
+
+                $institution = true;
+            }
+
+            //TODO: show chosen permitted institution
+            $institution = false;
+            if( strpos($service,'permittedinstitutionkey') !== false ) {
+                $pieces = explode("-", $service);
+                $institutionId = $pieces[1];
+                //echo "collaboration institutionId=".$institutionId."<br>";
+
+                $em = $this->getDoctrine()->getManager();
+                $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
+                echo "inst=".$node."<br>";
 
                 $institutionalCriteriaStr = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $node, "institution", false );
 
