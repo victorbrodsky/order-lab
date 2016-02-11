@@ -762,16 +762,12 @@ class OrderUtil {
                 $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
                     findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
 
-                //foreach( $collaborations as $collaboration ) {
-
-                    foreach( $collaborations as $collaborationInstitution ) {
-                        $key = "collaborationkey-".$collaborationInstitution->getId();
-                        if( !array_key_exists($key,$choicesInst) ) {
-                            $choicesInst[$key] = "All ".$collaborationInstitution." Orders";
-                        }
+                foreach( $collaborations as $collaborationInstitution ) {
+                    $key = "collaborationkey-".$collaborationInstitution->getId();
+                    if( !array_key_exists($key,$choicesInst) ) {
+                        $choicesInst[$key] = "All ".$collaborationInstitution." Orders";
                     }
-
-                //}
+                }
 
                 //add all PHI scope institutions, i.e. "All NYP Orders"
                 $key = "collaborationkey-".$permittedInstitution->getId();

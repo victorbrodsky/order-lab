@@ -1454,11 +1454,38 @@ class ScanOrderController extends Controller {
 
                 $institutionalCriteriaStr = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $node, "institution", false );
 
+
+                //add collaboration inst
+                $rootNode = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($node->getRoot());
+                //echo "rootNode=".$rootNode."<br>";
+
+                //All Collaboration => get all children and their institutions
+                $allInstitutionalCriteriaArr = array();
+                if( $rootNode->getName()."" == "All Collaborations" ) {
+                    $childrenNodes = $em->getRepository('OlegUserdirectoryBundle:Institution')->getChildren($rootNode);
+                    //echo "childrenNodes count=".count($childrenNodes)."<br>";
+                    foreach( $childrenNodes as $childrenNode ) {
+                        foreach( $childrenNode->getCollaborationInstitutions() as $collInst ) {
+                            //echo "collInst=".$collInst."<br>";
+                            $allInstitutionalCriteriaArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $collInst, "institution", false );
+                        }
+                    }
+                }
+
+                //All Institutions => disregard institutions => show all institutions
+                if( $rootNode == "All Institutions" ) {
+
+                }
+
+                if( $institutionalCriteriaStr && count($allInstitutionalCriteriaArr) > 0 ) {
+                    $institutionalCriteriaStr = $institutionalCriteriaStr . " OR " . implode(" OR ", $allInstitutionalCriteriaArr);
+                }
+
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
                 $crituser .= $institutionalCriteriaStr;
-                //echo "crituser=".$crituser."<br>";
+                echo "crituser=".$crituser."<br>";
 
                 $institution = true;
             }

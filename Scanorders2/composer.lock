@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cf6f7a0d85ad160a28a8c06277501bfc",
-    "content-hash": "3f1999014d8ed542ce1f59e723af26d3",
+    "hash": "ae9284d6fec27b9455f5b1b136c7797f",
+    "content-hash": "ae6fa71c9062e7514d03c16df813b6a3",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1109,12 +1109,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "140cc28026304d3023c880f441689986f99b913b"
+                "reference": "e770bfa2fd0fc665f55cd7cfeb34bddeffb892f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/140cc28026304d3023c880f441689986f99b913b",
-                "reference": "140cc28026304d3023c880f441689986f99b913b",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/e770bfa2fd0fc665f55cd7cfeb34bddeffb892f4",
+                "reference": "e770bfa2fd0fc665f55cd7cfeb34bddeffb892f4",
                 "shasum": ""
             },
             "require": {
@@ -1170,7 +1170,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2016-02-05 08:53:49"
+            "time": "2016-02-11 16:30:08"
         },
         {
             "name": "gedmo/doctrine-extensions",
