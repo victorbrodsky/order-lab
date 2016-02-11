@@ -858,7 +858,7 @@ class ScanUtilController extends UtilController {
             ->leftJoin("user.employmentStatus", "employmentStatus")
             ->leftJoin("employmentStatus.employmentType", "employmentType")
             ->select("list")
-            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL")
+            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
             //->select("list.id as id, infos.displayName as text")
             ->orderBy("infos.displayName","ASC");
         $userWrappers = $query->getQuery()->getResult();
@@ -880,7 +880,7 @@ class ScanUtilController extends UtilController {
             ->leftJoin("list.employmentStatus", "employmentStatus")
             ->leftJoin("employmentStatus.employmentType", "employmentType")
             ->select("list")
-            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL")
+            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
             //->select("infos.displayName as id, infos.displayName as text")
             ->orderBy("infos.displayName","ASC");
 

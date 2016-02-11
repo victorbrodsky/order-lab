@@ -170,7 +170,7 @@ class UserType extends AbstractType
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)")
+                        ->where("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
                         ->orderBy("user.primaryPublicUserId","ASC");
                 },
         );

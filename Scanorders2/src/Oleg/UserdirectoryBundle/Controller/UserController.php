@@ -517,7 +517,8 @@ class UserController extends Controller
             $pagination = $paginator->paginate(
                 $query,
                 $this->get('request')->query->get('page', 1), /*page number*/
-                $limit/*limit per page*/
+                $limit, /*limit per page*/
+                array('wrap-queries'=>true)
             );
         } else {
             $pagination = $query->getResult();
@@ -761,7 +762,7 @@ class UserController extends Controller
 
         //Academic Appointment Title not exists + Admin Title exists
         if( $filter && $filter == "WCMC Pathology Staff" ) {
-            echo "wcmc filter=".$filter."<br>";
+            //echo "wcmc filter=".$filter."<br>";
             $criteriastr .= "(appointmentInstitution.id IS NULL)";
             $criteriastr .= " AND ";
 //            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College')";
@@ -774,7 +775,7 @@ class UserController extends Controller
         if( $filter && $filter == "NYP Pathology Staff" ) {
             //echo "nyp filter=".$filter."<br>";
             //$criteriastr .= "("; 
-            $criteriastr .= "(appointmentInstitution IS NULL)";
+            $criteriastr .= "(appointmentInstitution.id IS NULL)";
             $criteriastr .= " AND ";
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$nyppathology);
             //$criteriastr .= ")"; 
@@ -886,7 +887,7 @@ class UserController extends Controller
 
             //have Research Lab
             $criteriastr .= " AND ";
-            $criteriastr .= "(researchLabs IS NOT NULL)";
+            $criteriastr .= "(researchLabs.id IS NOT NULL)";
             
             //a checkmark in "Principal Investigator of this Lab:" researchLabsPis.pi = this user
             $criteriastr .= " AND ";
@@ -902,7 +903,7 @@ class UserController extends Controller
             
             //have Research Lab
             $criteriastr .= " AND ";
-            $criteriastr .= "(researchLabs IS NOT NULL)";
+            $criteriastr .= "(researchLabs.id IS NOT NULL)";
         }
 
 
@@ -910,7 +911,7 @@ class UserController extends Controller
         //except they have at least one non-empty "Research Lab Title:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
         if( $filter && $filter == "WCMC or NYP Pathology Staff in Research Labs" ) {
             //echo "wcmc or nyp filter=".$filter."<br>";
-            $criteriastr .= "(appointmentInstitution IS NULL)";
+            $criteriastr .= "(appointmentInstitution.id IS NULL)";
             $criteriastr .= " AND ";
             //$criteriastr .= "administrativeInstitution.name = 'Weill Cornell Medical College' AND administrativeInstitution.name = 'Pathology and Laboratory Medicine'";
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$wcmcpathology);
@@ -921,7 +922,7 @@ class UserController extends Controller
             
             //have Research Lab
             $criteriastr .= " AND ";
-            $criteriastr .= "(researchLabs IS NOT NULL)";
+            $criteriastr .= "(researchLabs.id IS NOT NULL)";
         }
 
 

@@ -41,7 +41,7 @@ class InterviewType extends AbstractType
                             ->leftJoin("user.infos", "infos")
                             ->leftJoin("user.employmentStatus", "employmentStatus")
                             ->leftJoin("employmentStatus.employmentType", "employmentType")
-                            ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)");
+                            ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)");
                             //->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
                             //->setParameters(array('role1' => '%' . 'ROLE_FELLAPP_DIRECTOR' . '%', 'role2' => '%' . 'ROLE_FELLAPP_INTERVIEWER' . '%'));
                     },

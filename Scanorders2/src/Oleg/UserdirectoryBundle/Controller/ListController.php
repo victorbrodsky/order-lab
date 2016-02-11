@@ -199,7 +199,7 @@ class ListController extends Controller
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $limit = 5000; //TODO: fix navigation
+        $limit = 50;
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $entities = $paginator->paginate(

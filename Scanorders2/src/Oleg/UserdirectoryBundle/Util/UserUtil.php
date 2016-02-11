@@ -653,7 +653,7 @@ class UserUtil {
         $criteriastr = "";
 
         //Show ONLY orphaned locations
-        $criteriastr .= "locationuser IS NULL";
+        $criteriastr .= "locationuser.id IS NULL";
 
         switch( $search ) {
             case "Common Locations":
