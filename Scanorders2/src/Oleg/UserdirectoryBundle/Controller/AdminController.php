@@ -247,7 +247,7 @@ class AdminController extends Controller
         $count_PermissionObjects = $this->generatePermissionObjects();
         $count_PermissionActions = $this->generatePermissionActions();
 
-        $count_syncRolesDb = $this->syncRolesDb();
+        //$count_syncRolesDb = $this->syncRolesDb();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
