@@ -212,6 +212,10 @@ function setFellappNavBar() {
         id = 'fellappsettings';
     }
 
+    if( full.indexOf("/fellowship-applications/my-interviewees/") !== -1 ) {
+        id = 'myinterviewees';
+    }
+
     id = commonNavBar(full,id)
 
 

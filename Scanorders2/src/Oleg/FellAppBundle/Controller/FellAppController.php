@@ -34,6 +34,8 @@ class FellAppController extends Controller {
      * Show home page
      *
      * @Route("/", name="fellapp_home")
+     * @Route("/my-interviewees/", name="fellapp_myinterviewees")
+     *
      * @Template("OlegFellAppBundle:Default:home.html.twig")
      */
     public function indexAction(Request $request) {
@@ -225,6 +227,11 @@ class FellAppController extends Controller {
             }
         }
 
+        $route = $request->get('_route');
+        if( $route == "fellapp_myinterviewees" ) {
+            $dql->leftJoin("fellapp.interviews", "interviews");
+            $dql->andWhere("interviews.interviewer.id = " . $user->getId() );
+        }
 
         //echo "dql=".$dql."<br>";
 
@@ -304,7 +311,8 @@ class FellAppController extends Controller {
             'intervieweeTotal' => count($intervieweeTotal),
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "", //date_default_timezone_get(),
-            'fellappids' => implode("-",$idsArr)
+            'fellappids' => implode("-",$idsArr),
+            'route' => $route
         );
     }
 
@@ -1769,7 +1777,9 @@ class FellAppController extends Controller {
         exit();      
     }
 
-        
+
+
+
 
     ///////////////////// un used methods //////////////////////////
     /**
