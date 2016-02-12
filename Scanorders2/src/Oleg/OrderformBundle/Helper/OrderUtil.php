@@ -915,7 +915,7 @@ class OrderUtil {
         $dql->select('message');
         $dql->innerJoin("message.provider", "provider");
         $dql->leftJoin("message.proxyuser", "proxyuser");
-        $dql->where("provider=:user AND proxyuser IS NOT NULL");
+        $dql->where("provider=:user AND proxyuser.id IS NOT NULL");
         $dql->orderBy("message.orderdate","DESC");
         $query = $this->em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
         $lastOrderWithProxies = $query->getResult();
@@ -1133,7 +1133,8 @@ class OrderUtil {
     //Used in new order field: "Order data visible to members of (Institutional PHI Scope)"
     public function getAllScopeInstitutions( $originalPermittedInstitutions, $message ) {
 
-        $permittedInstitutions = $this->getPermittedScopeCollaborations($originalPermittedInstitutions,array("Union","Intersection","Untrusted Intersection"));
+        //$permittedInstitutions = $this->getPermittedScopeCollaborations($originalPermittedInstitutions,array("Union","Intersection","Untrusted Intersection"));
+        $permittedInstitutions = $this->getPermittedScopeCollaborationInstitutions($originalPermittedInstitutions,array("Union","Intersection","Untrusted Intersection"));
 
         //include current message institution to the $permittedInstitutions
         $permittedInstitutions = $this->addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message);
@@ -1141,58 +1142,67 @@ class OrderUtil {
         return $permittedInstitutions;
     }
 
+    //The same as getPermittedScopeCollaborationInstitutions
     //get collaborations in the Institutional tree (i.e. "WCMC-NYP Collaboration")
-    public function getPermittedScopeCollaborations( $originalPermittedInstitutions, $collaborationTypesStrArr, $withOriginal=true ) {
-        $permittedInstitutions = new ArrayCollection();
-
-        //include collaboration (any type) institutions by user
-        //permittedInstitutionalPHIScope - institutions
-        foreach( $originalPermittedInstitutions as $originalPermittedInstitution ) {
-
-            //add collaborations
-            foreach( $originalPermittedInstitution->getCollaborations() as $collaboration ) {
-                $collaborationObjType = $collaboration->getCollaborationType()."";
-                if( $collaborationObjType && in_array($collaborationObjType, $collaborationTypesStrArr) ) {
-                    if( $collaboration && !$permittedInstitutions->contains($collaboration)  ) {
-                        $permittedInstitutions->add($collaboration);
-                    }
-                }
-            }
-
-            //add original permitted intsitutions
-            if( $withOriginal ) {
-                if( $originalPermittedInstitution && !$permittedInstitutions->contains($originalPermittedInstitution)  ) {
-                    $permittedInstitutions->add($originalPermittedInstitution);
-                }
-            }
-
-        }//foreach
-
-        return $permittedInstitutions;
-    }
+//    public function getPermittedScopeCollaborations( $originalPermittedInstitutions, $collaborationTypesStrArr, $withOriginal=true ) {
+//        $permittedInstitutions = new ArrayCollection();
+//
+//        //include collaboration (any type) institutions by user
+//        //permittedInstitutionalPHIScope - institutions
+//        foreach( $originalPermittedInstitutions as $originalPermittedInstitution ) {
+//
+//            //add collaboration institutions
+//            foreach( $originalPermittedInstitution->getCollaborationInstitutions() as $collaborationInstitution ) {
+//                //echo "collaborationInstitution=".$collaborationInstitution."<br>";
+//                $collaborationObjType = $originalPermittedInstitution->getCollaborationType()."";
+//                //echo "collaborationObjType=".$collaborationObjType."<br>";
+//                if( $collaborationObjType && in_array($collaborationObjType, $collaborationTypesStrArr) ) {
+//                    if( $collaborationInstitution && !$permittedInstitutions->contains($collaborationInstitution)  ) {
+//                        $permittedInstitutions->add($collaborationInstitution);
+//                    }
+//                }
+//            }
+//
+//            //add original permitted intsitutions
+//            if( $withOriginal ) {
+//                if( $originalPermittedInstitution && !$permittedInstitutions->contains($originalPermittedInstitution)  ) {
+//                    $permittedInstitutions->add($originalPermittedInstitution);
+//                }
+//            }
+//
+//        }//foreach
+//
+//        return $permittedInstitutions;
+//    }
 
     //get collaborations as single institutions
     public function getPermittedScopeCollaborationInstitutions( $originalPermittedInstitutions, $collaborationTypesStrArr, $withOriginal=true ) {
+
         $permittedInstitutions = new ArrayCollection();
+
         //include collaboration (any type) institutions by user
         //permittedInstitutionalPHIScope - institutions
         foreach( $originalPermittedInstitutions as $originalPermittedInstitution ) {
+
             if( $withOriginal ) {
                 $permittedInstitutions->add($originalPermittedInstitution);
             }
             //echo "### permittedInstitution=".$permittedInstitution->getId().":".$permittedInstitution->getName()."<br>";
+
             //get all collaboration to show them in the Order's Institutional PHI Scope
-            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
-                findCollaborationsByNode( $originalPermittedInstitution, $collaborationTypesStrArr );
-            foreach( $collaborations as $collaboration ) {
-                foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
-                    //echo "collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";
-                    if( $collaborationInstitution && !$permittedInstitutions->contains($collaborationInstitution) ) {
-                        //echo "add collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";
-                        $permittedInstitutions->add($collaborationInstitution);
-                    }
+            $collaborationInstitutions = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                                findCollaborationsByNode( $originalPermittedInstitution, $collaborationTypesStrArr );
+
+            foreach( $collaborationInstitutions as $collaborationInstitution ) {
+                //echo "collaborationInstitution=".$collaborationInstitution."<br>";
+
+                if( $collaborationInstitution && !$permittedInstitutions->contains($collaborationInstitution) ) {
+                    //echo "add collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";
+                    $permittedInstitutions->add($collaborationInstitution);
                 }
+
             }
+
         }//foreach
 
         return $permittedInstitutions;

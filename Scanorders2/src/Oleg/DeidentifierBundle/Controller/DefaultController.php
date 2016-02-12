@@ -131,6 +131,8 @@ class DefaultController extends Controller
 
 
     /**
+     * Search for Accession Number
+     *
      * @Route("/re-identify/", name="deidentifier_search")
      * @Template("OlegDeidentifierBundle:Search:search.html.twig")
      * @Method("GET")

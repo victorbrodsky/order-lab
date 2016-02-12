@@ -134,13 +134,17 @@ class TreeRepository extends NestedTreeRepository {
 
         //get collaborations with type $collaborationTypesStrArr
         $collaborations = new ArrayCollection();
-        foreach( $node->getCollaborations() as $collaboration ) {
-            $collaborationObjType = $collaboration->getCollaborationType()."";
+
+        foreach( $node->getCollaborationInstitutions() as $collaboration ) {
+
+            $collaborationObjType = $node->getCollaborationType()."";
+
             if( $collaborationObjType && in_array($collaborationObjType, $collaborationTypesStrArr) ) {
                 if( $collaboration && !$collaborations->contains($collaboration)  ) {
                     $collaborations->add($collaboration);
                 }
             }
+
         }
 
         //echo "count(collaborations)=".count($collaborations)."<br>";

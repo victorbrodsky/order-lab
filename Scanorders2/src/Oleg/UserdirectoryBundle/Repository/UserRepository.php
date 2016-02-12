@@ -134,6 +134,13 @@ class UserRepository extends EntityRepository {
 
     public function isUserHasPermissionObjectAction( $user, $object, $action ) {
 
+        //check if user has direct permission
+        $permissions = $this->isUserHasDirectPermissionObjectAction( $user, $object, $action );
+        if( $permissions && count($permissions) > 0 ) {
+            return true;
+        }
+
+        //check if user's roles have permission
         $query = $this->_em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Roles', 'list')
             ->select("list")
@@ -163,12 +170,34 @@ class UserRepository extends EntityRepository {
             }
         }
 
-        //TODO: check if user has direct permission
-
         return false;
     }
 
+    //check if user has direct permission
+    public function isUserHasDirectPermissionObjectAction( $user, $object, $action ) {
 
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Permission', 'permissions')
+            ->select("permissions")
+            ->leftJoin("permissions.user","user")
+            ->leftJoin("permissions.permission","permission")
+            ->leftJoin("permission.permissionObjectList","permissionObjectList")
+            ->leftJoin("permission.permissionActionList","permissionActionList")
+            ->where("user.id = :user AND permissionObjectList.name = :permissionObject AND permissionActionList.name = :permissionAction")
+            ->orderBy("permissions.id","ASC")
+            ->setParameters( array(
+                'user' => $user->getId(),
+                'permissionObject' => $object,
+                'permissionAction' => $action
+            ));
+        //->setParameter('permissionAction', $action);
+
+        //echo "sql=".$query->getQuery()->getSql()."<br>";
+
+        $permissions = $query->getQuery()->getResult();
+
+        return $permissions;
+    }
 
 
 
