@@ -90,6 +90,9 @@ class FellAppController extends Controller {
         //echo "<br>search=".$search."<br>";
         //exit('1');
 
+        $route = $request->get('_route');
+        //echo "route".$route."<br>";
+        //exit();
 
         $filterParams = $request->query->all();
 
@@ -101,7 +104,7 @@ class FellAppController extends Controller {
                 //exit();
                 $fellowshipTypeId = key($fellowshipTypes);
             }
-            return $this->redirect( $this->generateUrl('fellapp_home',
+            return $this->redirect( $this->generateUrl($route, //'fellapp_home',
                 array(
                     'filter[startDate]' => $currentYear,
                     'filter[active]' => 1,
@@ -227,10 +230,9 @@ class FellAppController extends Controller {
             }
         }
 
-        $route = $request->get('_route');
         if( $route == "fellapp_myinterviewees" ) {
             $dql->leftJoin("fellapp.interviews", "interviews");
-            $dql->andWhere("interviews.interviewer.id = " . $user->getId() );
+            $dql->andWhere("interviews.interviewer = " . $user->getId() );
         }
 
         //echo "dql=".$dql."<br>";
