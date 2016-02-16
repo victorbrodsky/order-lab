@@ -1039,40 +1039,32 @@ class FellowshipApplication extends BaseUserAttributes {
         }
     }
 
-    public function getInterviewerById( $interviewerId ) {
-        foreach( $this->getInterviews() as $interview ) {
-            if( $interview->getInterviewer()->getId() == $interviewerId ) {
-                return $interview->getInterviewer();
-            }
+    public function getInterviewIdByUser( $interviewer ) {
+        $interview = $this->getInterviewByUser($interviewer);
+        if( $interview ) {
+            return $interview->getId();
         }
         return null;
     }
+    public function getInterviewByUser( $interviewer ) {
+        $interview = null;
 
-    public function getUserInterviewId( $interviewer ) {
-        $interviewId = null;
-        
         $items = $this->getInterviews();
-        
-        //echo "interviewer=".$interviewer."<br>";
-        
+
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("interviewer", $interviewer))
             //->orderBy(array("creationDate" => Criteria::DESC))
         ;
         $itemsFiltered = $items->matching($criteria);
-        
-        //if( count($itemsFiltered) > 1 ) {
-        //    exit('You have more than 1 interview for the same applicant!');
-        //}               
-        
+
         if( count($itemsFiltered) > 0 ) {
-            $itemFiltered = $itemsFiltered->first();           
+            $itemFiltered = $itemsFiltered->first();
             if( $itemFiltered && $itemFiltered->getId() ) {
-                $interviewId = $itemFiltered->getId();              
+                $interview = $itemFiltered;
             }
-        }      
- 
-        return $interviewId;
+        }
+
+        return $interview;
     }
     
     //$trainingTypeName: Medical, Residency, GME

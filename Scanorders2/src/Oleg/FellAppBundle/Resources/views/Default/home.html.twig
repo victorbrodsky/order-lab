@@ -723,7 +723,7 @@
                                     {#This link should only appear if the logged in user is one of the interviewers.#}
                                     {% if is_granted('ROLE_FELLAPP_INTERVIEWER') %}
 
-                                        {% set userInterviewId = entity.getUserInterviewId( app.security.getToken().getUser() ) %}
+                                        {% set userInterviewId = entity.getInterviewIdByUser( app.security.getToken().getUser() ) %}
 
                                         {% if userInterviewId %}
                                             <li>
@@ -750,15 +750,16 @@
 
                         {% if route_path == "fellapp_myinterviewees" %}
 
-                            {% set totalRank = entity.getInterviewerById(app.security.getToken().getUser().getId()).totalRank %}
+                            {% set thisUserInterview = entity.getInterviewByUser(app.security.getToken().getUser()) %}
+                            {% set totalRank = thisUserInterview.totalRank %}
 
                             {% if totalRank and totalRank > 0 %}
                                 <a
-                                    href="{{ path('fellapp_interview_show', { 'id': userInterviewId}) }}" target="_blank">View My Evaluation
+                                    href="{{ path('fellapp_interview_show', { 'id': thisUserInterview.getId()}) }}" target="_blank">View My Evaluation
                                 </a>
                             {% else %}
                                 <a
-                                    href="{{ path('fellapp_interview_edit', { 'id': userInterviewId}) }}" target="_blank">Evaluate
+                                    href="{{ path('fellapp_interview_edit', { 'id': thisUserInterview.getId()}) }}" target="_blank">Evaluate
                                 </a>
 
                             {% endif %}
