@@ -74,6 +74,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
         ));
 
+
         $builder->add('coverLetters', 'collection', array(
             'type' => new DocumentType($this->params),
             'label' => 'Cover Letter(s):',
@@ -97,16 +98,16 @@ class FellowshipApplicationType extends AbstractType
         ));
 
 
-//        $builder->add('reprimand','choice', array(
-//            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
-//            'required' => false,
-//            'choices' => array('Yes'=>'Yes','No'=>'No'),
-//            'attr' => array('class' => 'combobox'),
-//        ));
-        $builder->add('reprimand','checkbox', array(
+    //        $builder->add('reprimand','choice', array(
+    //            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+    //            'required' => false,
+    //            'choices' => array('Yes'=>'Yes','No'=>'No'),
+    //            'attr' => array('class' => 'combobox'),
+    //        ));
+        $builder->add('reprimand', 'checkbox', array(
             'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
             'required' => false,
-            'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick'=>'showHideWell(this)'),
+            'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
         ));
         $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
         $builder->add('reprimandDocuments', 'collection', array(
@@ -120,16 +121,16 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__documents__',
         ));
 
-//        $builder->add('lawsuit','choice', array(
-//            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
-//            'required' => false,
-//            'choices' => array('Yes'=>'Yes','No'=>'No'),
-//            'attr' => array('class' => 'combobox'),
-//        ));
-        $builder->add('lawsuit','checkbox', array(
+    //        $builder->add('lawsuit','choice', array(
+    //            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+    //            'required' => false,
+    //            'choices' => array('Yes'=>'Yes','No'=>'No'),
+    //            'attr' => array('class' => 'combobox'),
+    //        ));
+        $builder->add('lawsuit', 'checkbox', array(
             'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
             'required' => false,
-            'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick'=>'showHideWell(this)'),
+            'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),
         ));
         $builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
         $builder->add('lawsuitDocuments', 'collection', array(

@@ -67,27 +67,35 @@ class InterviewType extends AbstractType
                 'label'=>'End Time:'
             ));
 
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-                $interview = $event->getData();
-                $form = $event->getForm();
-
-                $options = array(
-                    'label' => "Interview Location:",
-                    'required' => false,
-                    'attr' => array('class' => 'combobox combobox-width interview-location'),
-                );
-
-                if( $interview && $interview->getInterviewer() ) {
-
-                    $officeLocation = $interview->getInterviewer()->getMainLocation();
-
-                    if( $officeLocation ) {
-                        $options['data'] = $officeLocation;
-                    }
-
-                }
-                $form->add('location',null,$options);
-            });
+            ///////////////// location //////////////////
+            $builder->add('location',null, array(
+                'label' => "Interview Location:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width interview-location'),
+            ));
+//            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//                $interview = $event->getData();
+//                $form = $event->getForm();
+//
+//                $options = array(
+//                    'label' => "Interview Location:",
+//                    'class' => 'OlegUserdirectoryBundle:Location',
+//                    'required' => false,
+//                    'attr' => array('class' => 'combobox combobox-width interview-location'),
+//                );
+//
+//                if( $interview && $interview->getInterviewer() ) {
+//
+//                    $officeLocation = $interview->getInterviewer()->getMainLocation();
+//                    if( $officeLocation ) {
+//                        $options['data'] = $officeLocation; //this causes: "Entities passed to the choice field must be managed. Maybe persist them in the entity manager?"
+//                    }
+//
+//                }
+//                //$form->add('location','entity',$options);
+//                $form->add('location',null,$options);
+//            });
+            ///////////////// EOF location //////////////////
 
         } //if showFull
 

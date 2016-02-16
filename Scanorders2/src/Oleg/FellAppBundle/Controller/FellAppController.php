@@ -220,12 +220,12 @@ class FellAppController extends Controller {
             //$dateStr = $transformer->transform($startDate);
             //$dql->andWhere("fellapp.startDate >= '".$startDate."'");
             //$dql->andWhere("year(fellapp.startDate) = '".$startDate->format('Y')."'");
-            $startDateStr = $startDate->format('Y');
-            $bottomDate = "01-01-".$startDateStr;
-            $topDate = "12-31-".$startDateStr;
+            $startYearStr = $startDate->format('Y');
+            $bottomDate = $startYearStr."-01-01";
+            $topDate = $startYearStr."-12-31";
             $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
-            if( $startDateStr != $currentYear ) {
+            if( $startYearStr != $currentYear ) {
                 $searchFlag = true;
             }
         }
@@ -520,7 +520,7 @@ class FellAppController extends Controller {
             'em' => $em,
             'user' => $entity->getUser(),
             'cloneuser' => null,
-            'roles' => $user->getRoles(),
+            'roles' => $user->getRoles()
         );
 
         $form = $this->createForm(

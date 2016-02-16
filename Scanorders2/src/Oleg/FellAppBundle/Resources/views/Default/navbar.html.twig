@@ -73,13 +73,12 @@
                     {#currentYear: {{ currentYear }}<br>#}
                     {#fellappTypeId: {{ fellappTypeId }}<br>#}
 
-                    {% if fellappids is defined and currentYear is defined and fellappTypeId is defined %}
+                    {% if fellappids is defined and currentYear is defined and fellappTypeId is defined and fellappids %}
                         <li id="nav-bar-fellappdownload" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Download<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
                                 <li>
-                                    {#<a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}">Displayed Application Summaries in Excel</a>#}
                                     <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
                                        <i class="fa fa-file-excel-o"></i> Displayed Application Summaries in Excel
                                     </a>

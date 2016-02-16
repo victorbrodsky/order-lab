@@ -92,7 +92,7 @@ class Document {
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
-        $this->setCreatedate(new \DateTime());
+        $this->setCreatedate();
     }
 
 
@@ -214,12 +214,13 @@ class Document {
     /**
      * @ORM\PreUpdate
      */
-    public function setCreatedate($date=null)
+    public function setCreatedate()
     {
-        if( !$date ) {
-            $date = new \DateTime();
-        }
-        $this->createdate = $date;
+        $this->createdate = new \DateTime();
+//        if( !$date ) {
+//            $date = new \DateTime();
+//        }
+//        $this->createdate = $date;
     }
     public function getCreatedate()
     {

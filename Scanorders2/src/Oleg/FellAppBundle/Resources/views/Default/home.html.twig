@@ -38,7 +38,7 @@
     
     {% set resStr = "Applications matching search criteria" %}
 
-    {% if lastImportTimestamp %}
+    {% if lastImportTimestamp and fellappids is defined and fellappids %}
         <p>
             <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
             <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}" 
