@@ -3890,9 +3890,11 @@ class AdminController extends Controller
             "Browse/search outgoing results for a given organizational group",
             "Browse/search patients that 'belong' to a given organizational group",
             "Browse/search accessions that 'belong' to a given organizational group",
-            "Search by Deidentifier ID",
-            "Generate new Deidentifier ID"
 
+            "Search by Deidentifier ID",
+            "Generate new Deidentifier ID",
+
+            "Submit an interview evaluation"
         );
 
         $count = 10;
@@ -3920,11 +3922,11 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $types = array(
             "Patient",
@@ -3939,10 +3941,17 @@ class AdminController extends Controller
             "Image Analysis",
             "Order",
             "Report",
+
+            "Interview"
         );
 
         $count = 10;
         foreach( $types as $type ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findOneByName($type);
+            if( $listEntity ) {
+                continue;
+            }
 
             $listEntity = new PermissionObjectList();
             $this->setDefaultList($listEntity,$count,$username,$type);
@@ -4097,6 +4106,7 @@ class AdminController extends Controller
         }
         return $count;
     }
+
 
     ////////////////// Employee Tree Util //////////////////////
     /**

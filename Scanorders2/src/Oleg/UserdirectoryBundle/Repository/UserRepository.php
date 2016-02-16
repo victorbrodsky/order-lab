@@ -3,6 +3,7 @@
 
 namespace Oleg\UserdirectoryBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
 
@@ -140,34 +141,42 @@ class UserRepository extends EntityRepository {
             return true;
         }
 
+//        //check if user's roles have permission
+//        $query = $this->_em->createQueryBuilder()
+//            ->from('OlegUserdirectoryBundle:Roles', 'list')
+//            ->select("list")
+//            ->leftJoin("list.permissions","permissions")
+//            ->leftJoin("permissions.permission","permission")
+//            ->leftJoin("permission.permissionObjectList","permissionObjectList")
+//            ->leftJoin("permission.permissionActionList","permissionActionList")
+//            ->where("permissionObjectList.name = :permissionObject AND permissionActionList.name = :permissionAction")
+//            ->orderBy("list.id","ASC")
+//            ->setParameters( array(
+//                'permissionObject' => $object,
+//                'permissionAction' => $action
+//            ));
+//            //->setParameter('permissionAction', $action);
+//
+//        //echo "sql=".$query->getQuery()->getSql()."<br>";
+//
+//        $roles = $query->getQuery()->getResult();
+//        //echo "roles count=".count($roles)."<br>";
+//        //exit('exit');
+//
+//        //check if user has one of roles
+//        foreach( $roles as $role ) {
+//            //echo "role=".$role."<br>";
+//            if( $user->hasRole($role) ) {
+//                return true;
+//            }
+//        }
+
         //check if user's roles have permission
-        $query = $this->_em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:Roles', 'list')
-            ->select("list")
-            ->leftJoin("list.permissions","permissions")
-            ->leftJoin("permissions.permission","permission")
-            ->leftJoin("permission.permissionObjectList","permissionObjectList")
-            ->leftJoin("permission.permissionActionList","permissionActionList")
-            ->where("permissionObjectList.name = :permissionObject AND permissionActionList.name = :permissionAction")
-            ->orderBy("list.id","ASC")
-            ->setParameters( array(
-                'permissionObject' => $object,
-                'permissionAction' => $action
-            ));
-            //->setParameter('permissionAction', $action);
+        $atLeastOne = true;
+        $roles = $this->findUserRolesByObjectAction($user, $object, $action, $atLeastOne );
 
-        //echo "sql=".$query->getQuery()->getSql()."<br>";
-
-        $roles = $query->getQuery()->getResult();
-        //echo "roles count=".count($roles)."<br>";
-        //exit('exit');
-
-        //check if user has one of roles
-        foreach( $roles as $role ) {
-            //echo "role=".$role."<br>";
-            if( $user->hasRole($role) ) {
-                return true;
-            }
+        if( count($roles) > 0 ) {
+            return true;
         }
 
         return false;
@@ -199,7 +208,46 @@ class UserRepository extends EntityRepository {
         return $permissions;
     }
 
+    public function findUserRolesByObjectAction($user, $object, $action, $atLeastOne=true) {
 
+        $userRoles = new ArrayCollection();
+
+        //check if user's roles have permission
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Roles', 'list')
+            ->select("list")
+            ->leftJoin("list.permissions","permissions")
+            ->leftJoin("permissions.permission","permission")
+            ->leftJoin("permission.permissionObjectList","permissionObjectList")
+            ->leftJoin("permission.permissionActionList","permissionActionList")
+            ->where("permissionObjectList.name = :permissionObject AND permissionActionList.name = :permissionAction")
+            ->orderBy("list.id","ASC")
+            ->setParameters( array(
+                'permissionObject' => $object,
+                'permissionAction' => $action
+            ));
+        //->setParameter('permissionAction', $action);
+
+        //echo "sql=".$query->getQuery()->getSql()."<br>";
+
+        $roles = $query->getQuery()->getResult();
+        //echo "roles count=".count($roles)."<br>";
+        //exit('exit');
+
+        //check if user has one of roles
+        foreach( $roles as $role ) {
+            //echo "role=".$role."<br>";
+            if( $user->hasRole($role) ) {
+                $userRoles->add($role);
+
+                if( $atLeastOne ) {
+                    return $userRoles;
+                }
+            }
+        }
+
+        return $userRoles;
+    }
 
 
 
