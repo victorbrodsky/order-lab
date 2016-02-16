@@ -314,7 +314,7 @@ class FellAppController extends Controller {
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "", //date_default_timezone_get(),
             'fellappids' => implode("-",$idsArr),
-            'route' => $route
+            'route_path' => $route
         );
     }
 

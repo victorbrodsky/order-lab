@@ -1038,7 +1038,16 @@ class FellowshipApplication extends BaseUserAttributes {
             return null;
         }
     }
-    
+
+    public function getInterviewerById( $interviewerId ) {
+        foreach( $this->getInterviews() as $interview ) {
+            if( $interview->getInterviewer()->getId() == $interviewerId ) {
+                return $interview->getInterviewer();
+            }
+        }
+        return null;
+    }
+
     public function getUserInterviewId( $interviewer ) {
         $interviewId = null;
         
