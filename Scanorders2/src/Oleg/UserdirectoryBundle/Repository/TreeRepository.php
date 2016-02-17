@@ -14,6 +14,12 @@ class TreeRepository extends NestedTreeRepository {
     //check if node belongs to the parentNode tree. For example, 1wcmc6->2path5->3inf4 => if inf.lft > wcmc.lft AND inf.rgt < wcmc.rgt => return true.
     public function isNodeUnderParentnode( $parentNode, $node ) {
 
+        //echo "node=".$node."<br>";
+
+        if( !$parentNode || !$node ) {
+            return false;
+        }
+
         //the node is the parentNode
         if( $parentNode->getId() == $node->getId() ) {
             //echo "parentNode:".$parentNode."(".$parentNode->getId().") and node:".$node."(".$node->getId().") are the same <br>";

@@ -33,14 +33,6 @@ class Permission
      * @ORM\JoinColumn(name="permission", referencedColumnName="id", nullable=true)
      */
     private $permission;
-//    /**
-//     * @ORM\ManyToMany(targetEntity="PermissionList")
-//     * @ORM\JoinTable(name="user_permission_permissionList",
-//     *      joinColumns={@ORM\JoinColumn(name="permission_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="permissionList_id", referencedColumnName="id")}
-//     *      )
-//     */
-//    private $permissions;
 
     /**
      * If institution is not provided then this permission is for all institutions

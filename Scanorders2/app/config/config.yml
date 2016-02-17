@@ -8,7 +8,14 @@ imports:
     - { resource: "@OlegDeidentifierBundle/Resources/config/services.yml" }
 
 
-#    - { resource: assets_version.php }
+services:
+    base_voter:
+        class: Oleg\UserdirectoryBundle\Security\Voter\GeneralVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
 
 framework:
     #esi:             ~

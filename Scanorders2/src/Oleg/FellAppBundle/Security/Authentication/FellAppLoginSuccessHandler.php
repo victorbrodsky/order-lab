@@ -52,6 +52,10 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
+        if( $this->security->isGranted(ROLE_FELLAPP_ADMIN) ) {
+            return $redirectResponse;
+        }
+
         $url = $redirectResponse->getTargetUrl();
         //echo "url=".$url."<br>";
 
@@ -59,11 +63,11 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
         // automatically redirect them to the /my-interviewees page after login
         // UNLESS they came to the site via a link from an email to evaluate a specific candidate already.
         if( $url == "/order/fellowship-applications/" && $url != "/order/fellowship-applications/interview-evaluation/") {
-            //exit('redirect to fellapp_myinterviewees');
-            //TODO: check "Fellowship Interviewer" is the highest role into the fellowship site
+
             if( $this->isFellowshipInterviewerHighestRole($token->getUser()) ) {
                 $redirectResponse->setTargetUrl("/order/fellowship-applications/my-interviewees/");
             }
+
         }
 
         return $redirectResponse;

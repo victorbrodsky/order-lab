@@ -17,6 +17,7 @@ use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
+use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Entity\PermissionActionList;
 use Oleg\UserdirectoryBundle\Entity\PermissionList;
 use Oleg\UserdirectoryBundle\Entity\PermissionObjectList;
@@ -407,150 +408,327 @@ class AdminController extends Controller
             //////////// general roles are set by security.yml only ////////////
 
             //general super admin role for all sites
-            "ROLE_PLATFORM_ADMIN" => array("Platform Administrator","Full access for all sites"),
-            "ROLE_PLATFORM_DEPUTY_ADMIN" => array("Deputy Platform Administrator",'The same as "Platform Administrator" role can do except assign or remove "Platform Administrator" or "Deputy Platform Administrator" roles'),
+            "ROLE_PLATFORM_ADMIN" => array(
+                "Platform Administrator",
+                "Full access for all sites",
+                100
+            ),
+            "ROLE_PLATFORM_DEPUTY_ADMIN" => array(
+                "Deputy Platform Administrator",
+                'The same as "Platform Administrator" role can do except assign or remove "Platform Administrator" or "Deputy Platform Administrator" roles',
+                100
+            ),
             //"ROLE_BANNED" => "Banned user for all sites",                 //general super admin role for all sites
             //"ROLE_UNAPPROVED" => "Unapproved User",                       //general unapproved user
 
             //////////// Scanorder roles ////////////
-            "ROLE_SCANORDER_ADMIN" => array("ScanOrder Administrator","Full access for Scan Order site"),
-            "ROLE_SCANORDER_PROCESSOR" => array("ScanOrder Processor","Allow to view all orders and change scan order status"),
+            "ROLE_SCANORDER_ADMIN" => array(
+                "ScanOrder Administrator",
+                "Full access for Scan Order site",
+                90
+            ),
+            "ROLE_SCANORDER_PROCESSOR" => array(
+                "ScanOrder Processor",
+                "Allow to view all orders and change scan order status",
+                50
+            ),
 
-            "ROLE_SCANORDER_DIVISION_CHIEF" => array("ScanOrder Division Chief","Allow to view and amend all orders for this division(institution)"),  //view or modify all orders of the same division(institution)
-            "ROLE_SCANORDER_SERVICE_CHIEF" => array("ScanOrder Service Chief","Allow to view and amend all orders for this service"),    //view or modify all orders of the same service
+            "ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST" => array(
+                "ScanOrder Data Quality Assurance Specialist",
+                "Allow to make data quality modification",
+                50
+            ),
 
-            "ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST" => array("ScanOrder Data Quality Assurance Specialist","Allow to make data quality modification"),
+            "ROLE_SCANORDER_DIVISION_CHIEF" => array(
+                "ScanOrder Division Chief",
+                "Allow to view and amend all orders for this division(institution)",
+                40
+            ),  //view or modify all orders of the same division(institution)
+            "ROLE_SCANORDER_SERVICE_CHIEF" => array(
+                "ScanOrder Service Chief",
+                "Allow to view and amend all orders for this service",
+                30
+            ),
 
-            "ROLE_PLATFORM_DEMO" => array("Platform Demo","The same as ROLE_PLATFORM_DEPUTY_ADMIN but names are replaced by Demo Applicant for Fellowship Application Site"),
 
             //"ROLE_USER" => "User", //this role must be always assigned to the authenticated user. Required by fos user bundle.
 
-            "ROLE_SCANORDER_SUBMITTER" => array("ScanOrder Submitter","Allow submit new orders, amend own order"),
-            "ROLE_SCANORDER_ORDERING_PROVIDER" => array("ScanOrder Ordering Provider","Allow submit new orders, amend own order"),
+            "ROLE_SCANORDER_SUBMITTER" => array(
+                "ScanOrder Submitter",
+                "Allow submit new orders, amend own order",
+                10
+            ),
+            "ROLE_SCANORDER_ORDERING_PROVIDER" => array(
+                "ScanOrder Ordering Provider",
+                "Allow submit new orders, amend own order",
+                10
+            ),
 
-            "ROLE_SCANORDER_PATHOLOGY_FELLOW" => array("ScanOrder Pathology Fellow",""),
-            "ROLE_SCANORDER_PATHOLOGY_FACULTY" => array("ScanOrder Pathology Faculty",""),
+            "ROLE_SCANORDER_PATHOLOGY_FELLOW" => array(
+                "ScanOrder Pathology Fellow",
+                "",
+                10
+            ),
+            "ROLE_SCANORDER_PATHOLOGY_FACULTY" => array(
+                "ScanOrder Pathology Faculty",
+                "",
+                10
+            ),
 
-            "ROLE_SCANORDER_COURSE_DIRECTOR" => array("ScanOrder Course Director","Allow to be a Course Director in Educational orders"),
-            "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => array("ScanOrder Principal Investigator","Allow to be a Principal Investigator in Research orders"),
+            "ROLE_SCANORDER_COURSE_DIRECTOR" => array(
+                "ScanOrder Course Director",
+                "Allow to be a Course Director in Educational orders",
+                10
+            ),
+            "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => array(
+                "ScanOrder Principal Investigator",
+                "Allow to be a Principal Investigator in Research orders",
+                10
+            ),
 
-            "ROLE_SCANORDER_UNAPPROVED" => array("ScanOrder Unapproved User","Does not allow to visit Scan Order site"),
-            "ROLE_SCANORDER_BANNED" => array("ScanOrder Banned User","Does not allow to visit Scan Order site"),
+            "ROLE_SCANORDER_ONCALL_TRAINEE" => array(
+                "OrderPlatform On Call Trainee",
+                "Allow to see the phone numbers & email of Home location",
+                10
+            ),
+            "ROLE_SCANORDER_ONCALL_ATTENDING" => array(
+                "OrderPlatform On Call Attending",
+                "Allow to see the phone numbers & email of Home location",
+                10
+            ),
 
-            "ROLE_SCANORDER_ONCALL_TRAINEE" => array("OrderPlatform On Call Trainee","Allow to see the phone numbers & email of Home location"),
-            "ROLE_SCANORDER_ONCALL_ATTENDING" => array("OrderPlatform On Call Attending","Allow to see the phone numbers & email of Home location"),
+            "ROLE_PLATFORM_DEMO" => array(
+                "Platform Demo",
+                "The same as ROLE_PLATFORM_DEPUTY_ADMIN but names are replaced by Demo Applicant for Fellowship Application Site",
+                5
+            ),
+
+            "ROLE_SCANORDER_UNAPPROVED" => array(
+                "ScanOrder Unapproved User",
+                "Does not allow to visit Scan Order site",
+                0
+            ),
+            "ROLE_SCANORDER_BANNED" => array(
+                "ScanOrder Banned User",
+                "Does not allow to visit Scan Order site",
+                -1
+            ),
+
 
             //////////// EmployeeDirectory roles ////////////
-            "ROLE_USERDIRECTORY_ADMIN" => array("EmployeeDirectory Administrator","Full access for Employee Directory site"),
-            "ROLE_USERDIRECTORY_EDITOR" => array("EmployeeDirectory Editor","Allow to edit all employees; Can not change roles for users, but can grant access via access requests"),
-            "ROLE_USERDIRECTORY_OBSERVER" => array("EmployeeDirectory Observer","Allow to view all employees"),
-            "ROLE_USERDIRECTORY_BANNED" => array("EmployeeDirectory Banned User","Does not allow to visit Employee Directory site"),
-            "ROLE_USERDIRECTORY_UNAPPROVED" => array("EmployeeDirectory Unapproved User","Does not allow to visit Employee Directory site"),
+            "ROLE_USERDIRECTORY_ADMIN" => array(
+                "EmployeeDirectory Administrator",
+                "Full access for Employee Directory site",
+                90
+            ),
+            "ROLE_USERDIRECTORY_EDITOR" => array(
+                "EmployeeDirectory Editor",
+                "Allow to edit all employees; Can not change roles for users, but can grant access via access requests",
+                50
+            ),
+            "ROLE_USERDIRECTORY_OBSERVER" => array(
+                "EmployeeDirectory Observer",
+                "Allow to view all employees",
+                10
+            ),
+            "ROLE_USERDIRECTORY_BANNED" => array(
+                "EmployeeDirectory Banned User",
+                "Does not allow to visit Employee Directory site",
+                -1
+            ),
+            "ROLE_USERDIRECTORY_UNAPPROVED" => array(
+                "EmployeeDirectory Unapproved User",
+                "Does not allow to visit Employee Directory site",
+                0
+            ),
 
 
             //////////// FellApp roles ////////////
-            "ROLE_FELLAPP_ADMIN" => array("Fellowship Applications Administrator","Full access for Fellowship Applications site"),
-            "ROLE_FELLAPP_USER" => array("Fellowship Applications User","Allow to view the Fellowship Applications site"),
-            "ROLE_FELLAPP_BANNED" => array("Fellowship Applications Banned User","Does not allow to visit Fellowship Applications site"),
-            "ROLE_FELLAPP_UNAPPROVED" => array("Fellowship Applications Unapproved User","Does not allow to visit Fellowship Applications site"),
+            "ROLE_FELLAPP_ADMIN" => array(
+                "Fellowship Applications Administrator",
+                "Full access for Fellowship Applications site",
+                90
+            ),
             //Directors (7 types)
-            "ROLE_FELLAPP_DIRECTOR" => array("Fellowship Program General Director Role","Access to Fellowship Application type as Director (edit application,upload new documents)"),
+//            "ROLE_FELLAPP_DIRECTOR" => array(
+//                "Fellowship Program General Director Role",
+//                "Access to Fellowship Application type as Director (edit application,upload new documents)",
+//                50
+//            ),
             "ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Breast Pathology",
-                "Access to specific Fellowship Application type as Director"
+                "Access to specific Fellowship Application type as Director",
+                50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Cytopathology",
-                "Access to specific Fellowship Application type as Director"
+                "Access to specific Fellowship Application type as Director",
+                50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCMC_GYNECOLOGICPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Gynecologic Pathology",
                 "Access to specific Fellowship Application type as Director",
+                50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCMC_GASTROINTESTINALPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Gastrointestinal Pathology",
-                "Access to specific Fellowship Application type as Director"
+                "Access to specific Fellowship Application type as Director",
+                50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCMC_GENITOURINARYPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Genitourinary Pathology",
-                "Access to specific Fellowship Application type as Director"
+                "Access to specific Fellowship Application type as Director",
+                50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Hematopathology",
                 "Access to specific Fellowship Application type as Director",
+                50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Molecular Genetic Pathology",
-                "Access to specific Fellowship Application type as Director"
+                "Access to specific Fellowship Application type as Director",
+                50
             ),
             //Program-Coordinator (7 types)
-            "ROLE_FELLAPP_COORDINATOR" => array("Fellowship Program General Coordinator Role","Access to Fellowship Application type as Coordinator (edit application,upload new documents)"),
+//            "ROLE_FELLAPP_COORDINATOR" => array(
+//                "Fellowship Program General Coordinator Role",
+//                "Access to Fellowship Application type as Coordinator (edit application,upload new documents)",
+//                40
+//            ),
             "ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Breast Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
+                40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Cytopathology",
-                "Access to specific Fellowship Application type as Coordinator"
+                "Access to specific Fellowship Application type as Coordinator",
+                40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Gynecologic Pathology",
-                "Access to specific Fellowship Application type as Coordinator"
+                "Access to specific Fellowship Application type as Coordinator",
+                40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Gastrointestinal Pathology",
-                "Access to specific Fellowship Application type as Coordinator"
+                "Access to specific Fellowship Application type as Coordinator",
+                40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Genitourinary Pathology",
-                "Access to specific Fellowship Application type as Coordinator"
+                "Access to specific Fellowship Application type as Coordinator",
+                40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Hematopathology",
-                "Access to specific Fellowship Application type as Coordinator"
+                "Access to specific Fellowship Application type as Coordinator",
+                40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Molecular Genetic Pathology",
-                "Access to specific Fellowship Application type as Coordinator"
+                "Access to specific Fellowship Application type as Coordinator",
+                40
             ),
             //Fellowship Interviewer
-            "ROLE_FELLAPP_INTERVIEWER" => array("Fellowship Program General Interviewer Role","Access to Fellowship Application type as Interviewer (able to view, create and update the interview form)"),
+//            "ROLE_FELLAPP_INTERVIEWER" => array(
+//                "Fellowship Program General Interviewer Role",
+//                "Access to Fellowship Application type as Interviewer (able to view, create and update the interview form)",
+//                30
+//            ),
             "ROLE_FELLAPP_INTERVIEWER_WCMC_BREASTPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Breast Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
+                30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCMC_CYTOPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Cytopathology",
-                "Access to specific Fellowship Application type as Interviewer"
+                "Access to specific Fellowship Application type as Interviewer",
+                30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCMC_GYNECOLOGICPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Gynecologic Pathology",
-                "Access to specific Fellowship Application type as Interviewer"
+                "Access to specific Fellowship Application type as Interviewer",
+                30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCMC_GASTROINTESTINALPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Gastrointestinal Pathology",
-                "Access to specific Fellowship Application type as Interviewer"
+                "Access to specific Fellowship Application type as Interviewer",
+                30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCMC_GENITOURINARYPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Genitourinary Pathology",
-                "Access to specific Fellowship Application type as Interviewer"
+                "Access to specific Fellowship Application type as Interviewer",
+                30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCMC_HEMATOPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Hematopathology",
-                "Access to specific Fellowship Application type as Interviewer"
+                "Access to specific Fellowship Application type as Interviewer",
+                30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCMC_MOLECULARGENETICPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Molecular Genetic Pathology",
-                "Access to specific Fellowship Application type as Interviewer"
+                "Access to specific Fellowship Application type as Interviewer",
+                30
             ),
 
             //Fellowship Observer
-            "ROLE_FELLAPP_OBSERVER" => array("Fellowship Program Observer","Access to Fellowship Application as Observer (able to view a particular (assigned) application)"),
+//            "ROLE_FELLAPP_OBSERVER" => array(
+//                "Fellowship Program Observer",
+//                "Access to Fellowship Application as Observer (able to view a particular (assigned) application)",
+//                10
+//            ),
+
+//            "ROLE_FELLAPP_USER" => array(
+//                "Fellowship Applications User",
+//                "Allow to view the Fellowship Applications site",
+//                5
+//            ),
+            "ROLE_FELLAPP_BANNED" => array(
+                "Fellowship Applications Banned User",
+                "Does not allow to visit Fellowship Applications site",
+                -1
+            ),
+            "ROLE_FELLAPP_UNAPPROVED" => array(
+                "Fellowship Applications Unapproved User",
+                "Does not allow to visit Fellowship Applications site",
+                0
+            ),
 
             //////////// Deidentifier roles ////////////
-            "ROLE_DEIDENTIFICATOR_ADMIN" => array("Deidentifier Administrator","Full access for Deidentifier site"),
-            "ROLE_DEIDENTIFICATOR_BANNED" => array("Deidentifier Banned User","Does not allow to visit Deidentifier site"),
-            "ROLE_DEIDENTIFICATOR_UNAPPROVED" => array("Deidentifier Unapproved User","Does not allow to visit Deidentifier site"),
+            "ROLE_DEIDENTIFICATOR_ADMIN" => array(
+                "Deidentifier Administrator",
+                "Full access for Deidentifier site",
+                90
+            ),
+
+            "ROLE_DEIDENTIFICATOR_WCMC_NYP_HONEST_BROKER" => array(
+                "WCMC-NYP Deidentifier Honest Broker",
+                "Can search and generate",
+                50
+            ),
+            "ROLE_DEIDENTIFICATOR_WCMC_NYP_ENQUIRER" => array(
+                "WCMC-NYP Deidentifier Enquirer",
+                "Can search, but not generate",
+                40
+            ),
+            "ROLE_DEIDENTIFICATOR_WCMC_NYP_GENERATOR" => array(
+                "WCMC-NYP Deidentifier Generator",
+                "Can generate, but not search",
+                10
+            ),
+
+            "ROLE_DEIDENTIFICATOR_BANNED" => array(
+                "Deidentifier Banned User",
+                "Does not allow to visit Deidentifier site",
+                -1
+            ),
+            "ROLE_DEIDENTIFICATOR_UNAPPROVED" => array(
+                "Deidentifier Unapproved User",
+                "Does not allow to visit Deidentifier site",
+                0
+            ),
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -560,10 +738,16 @@ class AdminController extends Controller
 
             $alias = $aliasDescription[0];
             $description = $aliasDescription[1];
+            $level = $aliasDescription[2];
 
             $entity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName(trim($role));
 
             if( $entity ) {
+                if( !$entity->getLevel() ) {
+                    $entity->setLevel($level);
+                    $em->persist($entity);
+                    $em->flush();
+                }
                 continue;
             }
 
@@ -3894,7 +4078,10 @@ class AdminController extends Controller
             "Search by Deidentifier ID",
             "Generate new Deidentifier ID",
 
-            "Submit an interview evaluation"
+            "Submit an interview evaluation",
+            "Create a New Fellowship Application",
+            "Modify a Fellowship Application",
+            "View a Fellowship Application"
         );
 
         $count = 10;
@@ -3942,7 +4129,8 @@ class AdminController extends Controller
             "Order",
             "Report",
 
-            "Interview"
+            "Interview",
+            "FellowshipApplication"
         );
 
         $count = 10;
@@ -4085,6 +4273,10 @@ class AdminController extends Controller
 
             $resCount = $resCount + $this->addSites( $role, '_USERDIRECTORY_', 'directory' );
 
+
+            $resCount = $resCount + $this->addFellAppPermission( $role );
+
+
             if( $resCount > 0 ) {
                 $count++;
                 $em->persist($role);
@@ -4104,6 +4296,68 @@ class AdminController extends Controller
                 $count++;
             }
         }
+        return $count;
+    }
+
+    public function addFellAppPermission( $role ) {
+        $count = 0;
+
+        //ROLE_FELLAPP_INTERVIEWER: permission="Submit an interview evaluation", object="Interview", action="create"
+        if( strpos($role, "ROLE_FELLAPP_INTERVIEWER") !== false ) {
+            $count = $count + $this->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create");
+        }
+
+        //ROLE_FELLAPP_DIRECTOR:
+        //ROLE_FELLAPP_COORDINATOR:
+        // permission="Create a New Fellowship Application", object="FellowshipApplication", action="create"
+        // permission="Modify a Fellowship Application", object="FellowshipApplication", action="update"
+        if( strpos($role, "ROLE_FELLAPP_COORDINATOR") !== false || strpos($role, "ROLE_FELLAPP_DIRECTOR") !== false ) {
+            $count = $count + $this->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create");
+            $count = $count + $this->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update");
+        }
+
+        //ROLE_FELLAPP_OBSERVER: permission="View a Fellowship Application", object="FellowshipApplication", action="read"
+        if( strpos($role, "ROLE_FELLAPP_OBSERVER") !== false ) {
+            $count = $count + $this->checkAndAddPermissionToRole($role,"View a Fellowship Application","FellowshipApplication","read");
+        }
+
+        return $count;
+    }
+    public function checkAndAddPermissionToRole($role,$permissionListStr,$permissionObjectListStr,$permissionActionListStr) {
+
+        $count = 0;
+        $em = $this->getDoctrine()->getManager();
+        $permission = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findOneByName($permissionListStr);
+
+        //make sure permission is added to role: role->permissions(Permission)->permission(PermissionList)->(PermissionObjectList,PermissionActionList)
+        //check if role has permission (Permission): PermissionList with $permissionListStr
+        $permissionExists = false;
+        foreach( $role->getPermissions() as $rolePermission ) {
+            if( $rolePermission->getPermission() && $rolePermission->getPermission()->getId() == $permission->getId() ) {
+                $permissionExists = true;
+            }
+        }
+        if( !$permissionExists ) {
+            $rolePermission = new Permission();
+            $rolePermission->setPermission($permission);
+            $role->addPermission($rolePermission);
+            $count++;
+        }
+
+        //make sure object is set
+        if( !$permission->getPermissionObjectList() ) {
+            $permissionObject = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findOneByName($permissionObjectListStr);
+            $permission->setPermissionObjectList($permissionObject);
+            $count++;
+        }
+
+        //make sure action is set
+        if( !$permission->getPermissionActionList() ) {
+            $permissionAction = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findOneByName($permissionActionListStr);
+            $permission->setPermissionActionList($permissionAction);
+            $count++;
+        }
+
         return $count;
     }
 
