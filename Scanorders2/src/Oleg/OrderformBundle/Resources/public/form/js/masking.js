@@ -38,10 +38,10 @@ function getAgeDefaultMask() {
 function getAccessionDefaultMask() {
     //console.log('get default accession mask');
     var accessions = [
-//        { "mask": "AA99-f[99999]" },
-//        { "mask": "A99-f[99999]" }
-        { "mask": "AA99-f[9][9][9][9][9]" },
-        { "mask": "A99-f[9][9][9][9][9]" }
+//        { "mask": "AA99-f[9][9][9][9][9]" },
+//        { "mask": "A99-f[9][9][9][9][9]" }
+        { "mask": "AAf9-f[9][9][9][9][9]" }, //SS10 but not SS00
+        { "mask": "Af9-f[9][9][9][9][9]" }   //S10 but not S0
     ];
     return accessions;
 }
@@ -49,6 +49,8 @@ function getAccessionDefaultMask() {
 
 //holder - element holding all fields to apply masking
 function fieldInputMask( holder ) {
+
+    //console.log("field Input Mask");
 
     $.extend($.inputmask.defaults.definitions, {
         'f': {  //masksymbol

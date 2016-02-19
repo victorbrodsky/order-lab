@@ -40,20 +40,6 @@
                 {{ formmacros.field(form.accessionNumber) }}
             </div>
 
-            {#<button type="submit" name="search" class="btn btn-sm btn-default">Search</button>#}
-            {#{{ form_widget(form.search) }}#}
-            {#{{ form_widget(form.generate) }}#}
-
-            {#{% if pagination is null or pagination|length == 0 %}#}
-                {#&#123;&#35;<button type="submit" name="generate" class="btn btn-sm btn-primary">Generate a New Deidentifier</button>&#35;&#125;#}
-                {#{{ form_widget(form.generate) }}#}
-            {#{% else %}#}
-                {#{% do form.generate.setRendered %}#}
-            {#{% endif %}#}
-
-            {#<button type="button" class="btn btn-sm btn-primary" onclick="$('#deidentifier-generate').submit();">Generate a New Deidentifier</button>#}
-            <button type="submit" class="btn btn-sm btn-primary">Generate a New Specimen Deidentifier ID</button>
-
             {{ form_rest(form) }}
 
             {% if msg is defined %}
@@ -62,11 +48,88 @@
                 <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ msg|raw }}</p>
             {% endif %}
 
+            <div id="validationerror" style="padding-top: 2%"></div>
+
         </form>
+
+        {#<button type="button" class="btn btn-sm btn-primary" onclick="$('#deidentifier-generate').submit();">Generate a New Deidentifier</button>#}
+        <button type="button" id="generate-new-deidentifier" class="btn btn-sm btn-primary" onclick="deidentifierValidateAccessionNumber()">Generate a New Specimen Deidentifier ID</button>
+
 
     {% endif %}
 
 
 
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script>
+
+        $(document).ready(function() {
+
+            //check mask error and disable generate button if error
+            isDeidentifierAccessionNumberValid();
+
+            //keyup or input
+            $('.deidentifier-generate-accessionNumber').on("keyup", function(e) {
+                //console.log("change AccessionNumber");
+                isDeidentifierAccessionNumberValid();
+            });
+
+        });
+
+        function deidentifierValidateAccessionNumber() {
+
+            //check mask error again even the button is enabled
+            if( !isDeidentifierAccessionNumberValid() ) {
+                return false;
+            }
+
+            $('#deidentifier-generate').submit();
+        }
+
+        function isDeidentifierAccessionNumberValid() {
+
+            var errors = 0;
+            var element = $('.deidentifier-generate-accessionNumber');
+
+            var accessionNumberValue = element.val();
+            //console.log("accessionNumberValue="+accessionNumberValue);
+
+            var accessionNumberValueClean = accessionNumberValue.replace(/\s/g, '');
+            var accessionNumberValueClean = accessionNumberValueClean.replace(/-/g, '');
+
+            if( !accessionNumberValueClean ) {
+                errors++;
+            }
+            //console.log("errors="+errors);
+
+            //var maskerror = $('.maskerror-added');
+            if( validateMaskFields() > 0 || errors > 0 ) {
+                //console.log("validate Mask Fields => error");
+
+                $("#generate-new-deidentifier").attr("disabled", true);
+
+                //add tooltip saying "Please enter a valid accession number"
+                var msg =  "Valid accession numbers must start with up to two letters followed by two digits, then followed by up to six digits with no leading zeros (e.g. SC14-231956).";
+                element.tooltip({
+                    'title':'Please enter a valid accession number. ' + msg
+                });
+
+                return false;
+            }
+
+            //console.log("no error");
+            //enable button and destroy tooltip
+            $("#generate-new-deidentifier").removeAttr("disabled");
+            element.tooltip('destroy');
+
+            return true;
+        }
+
+    </script>
 
 {% endblock %}

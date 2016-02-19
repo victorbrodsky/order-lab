@@ -273,6 +273,31 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('deidentifier_home') );
         }
 
+        //check if accession number is not empty containing only something like "-"
+        //echo "accessionNumber=".$accessionNumber."<br>";
+        //$accessMaskValid = preg_match('/[A-Za-z]{2,}[1-9]{2,}-[1-9]/',$accessionNumber);
+        $accessMaskValid = preg_match('/^[A-Za-z]{1,2}[1-9][0-9]{0,1}-[1-9][0-9]{0,5}$/',$accessionNumber);
+        if( !$accessMaskValid ) {
+            //exit('mask invalid');
+            $msg =  "Valid accession numbers must start with up to two letters followed by two digits, then followed by up to six digits with no leading zeros (e.g. SC14-231956).";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Accession Number is not valid. ' . $msg
+            );
+            return $this->redirect( $this->generateUrl('deidentifier_home') );
+        }
+        //exit('mask is valid');
+
+        $accessionNumberClean = preg_replace('/\s+/', '', $accessionNumber);
+        $accessionNumberClean = preg_replace('/-/', '', $accessionNumberClean);
+        if( !$accessionNumberClean ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Accession Number is empty.'
+            );
+            return $this->redirect( $this->generateUrl('deidentifier_home') );
+        }
+
         if( !$accessionTypeId ) {
             $this->get('session')->getFlashBag()->add(
                 'warning',

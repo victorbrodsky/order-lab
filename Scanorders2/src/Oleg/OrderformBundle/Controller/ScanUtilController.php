@@ -88,7 +88,7 @@ class ScanUtilController extends UtilController {
             ->from('OlegOrderformBundle:StainList', 'list')
             ->select("list.id as id, list.fulltitle as text")
             ->leftJoin("list.original","original")
-            ->where("original IS NULL")
+            ->where("original.id IS NULL")
             ->groupBy("list")
 //            ->groupBy("list.id")
 //            ->addGroupBy("list.orderinlist")
