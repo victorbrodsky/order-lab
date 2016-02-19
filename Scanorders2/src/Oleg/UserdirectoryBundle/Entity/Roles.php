@@ -58,7 +58,7 @@ class Roles extends ListAbstract {
     private $permissions;
 
     /**
-     * @ORM\ManyToMany(targetEntity="SiteList")
+     * @ORM\ManyToMany(targetEntity="SiteList", inversedBy="roles", cascade={"persist"})
      * @ORM\JoinTable(name="user_roles_sites",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")}

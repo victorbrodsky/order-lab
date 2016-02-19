@@ -103,9 +103,7 @@ class DefaultController extends Controller
         $orderUtil = $this->get('scanorder_utility');
         $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
 
-        //$em = $this->getDoctrine()->getManager();
-        //$defaultInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCMC-NYP Collaboration");
-
+        //set default "WCMC-NYP Collaboration" as institution
         $defaultInstitution = null;;
         foreach( $permittedInstitutions as $permittedInstitution ) {
             //echo "permittedInstitution=".$permittedInstitution."<br>";
