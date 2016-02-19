@@ -102,8 +102,22 @@ class DefaultController extends Controller
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         $orderUtil = $this->get('scanorder_utility');
         $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
+
+        //$em = $this->getDoctrine()->getManager();
+        //$defaultInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCMC-NYP Collaboration");
+
+        $defaultInstitution = null;;
+        foreach( $permittedInstitutions as $permittedInstitution ) {
+            //echo "permittedInstitution=".$permittedInstitution."<br>";
+            if( $permittedInstitution->getName() == "WCMC-NYP Collaboration" ) {
+                $defaultInstitution = $permittedInstitution;
+                break;
+            }
+        }
+
         $params = array(
             'permittedInstitutions' => $permittedInstitutions,
+            'defaultInstitution' => $defaultInstitution
         );
 
         //search box

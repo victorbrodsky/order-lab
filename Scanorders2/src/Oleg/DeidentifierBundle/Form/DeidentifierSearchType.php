@@ -54,11 +54,20 @@ class DeidentifierSearchType extends AbstractType
             'attr' => array('class'=>'form-control accession-mask deidentifier-generate-accessionNumber submit-on-enter-field', ), //submit-on-enter-field
         ));
 
+        //institution
+        //echo "defaultInstitution=".$this->params['defaultInstitution']->getId()."<br>";
+        if( $this->params['defaultInstitution'] ) {
+            $readOnly = true;
+        } else {
+            $readOnly = false;
+        }
+
         $builder->add('institution', 'entity', array(
             'label' => 'Organizational Group (Institutional PHI Scope):',
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $this->params['permittedInstitutions'],
-            'read_only' => true,
+            'data' => $this->params['defaultInstitution'],
+            'read_only' => $readOnly,
             'mapped' => false,
             'property' => 'getNodeNameWithRoot',
             'required' => true,
