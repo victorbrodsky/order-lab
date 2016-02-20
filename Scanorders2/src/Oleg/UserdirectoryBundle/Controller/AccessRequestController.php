@@ -285,7 +285,7 @@ class AccessRequestController extends Controller
 
         $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitenameFull, $emailBody, $em );
 
-        $text = 'Your access request was successfully submitted and and will be reviewed.'.$emailStr;
+        $text = 'Your access request was successfully submitted and will be reviewed.'.$emailStr;
 
         ///////////////// Send an email to the preferred emails of the users who have Administrator role for a given site and CC the users with Platform Administrator role when an access request is submitted
         $incomingReqPage = $this->generateUrl( $sitename.'_home', array(), true );
@@ -327,6 +327,15 @@ class AccessRequestController extends Controller
 
         $emailUtil->sendEmail( $emails, $subject, $msg, $em, $headers );
         ///////////////// EOF /////////////////
+
+        //TODO: Temporary solution for auto-log out after submitting an access request as described in issue #478 (6)
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $text
+        );
+        //exit('sitename='.$sitename);
+        return $this->redirect($this->generateUrl($sitename.'_logout'));
+        //return $this->redirect($this->generateUrl($sitename.'_accreq_logout'));
 
         return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
     }
