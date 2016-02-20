@@ -7,6 +7,10 @@
 //4) add permission "Generate new Deidentifier ID" (Object:Accession, Action:create)
 //5) add permission "Search by Deidentifier ID" (Object:Accession, Action:read)
 //6) run "Synchronise DB with the source code changes" on the "List Manager" page to sync roles (assign site) and sync the code with EventTypeList in DB
+//7) add permissions to ROLE_DEIDENTIFICATOR_WCMC_NYP_ENQUIRER: Search by Deidentifier ID (WCMC,NYP)
+//8) add permissions to ROLE_DEIDENTIFICATOR_WCMC_NYP_GENERATOR: Generate new Deidentifier ID (WCMC,NYP)
+//9) add permissions to ROLE_DEIDENTIFICATOR_WCMC_NYP_HONEST_BROKER: Generate new Deidentifier ID (WCMC,NYP) and Search by Deidentifier ID (WCMC,NYP)
+
 
 
 namespace Oleg\DeidentifierBundle\Controller;
