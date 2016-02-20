@@ -432,44 +432,44 @@ class SecurityController extends Controller
 //    }
 
 
-    /**
-     * @Route("/access-request-logout", name="employees_accreq_logout")
-     * @Template()
-     */
-    public function accreqLogoutAction( Request $request )
-    {
-        //echo "logout Action! <br>";
-        //exit();
-
-
-        $this->get('security.context')->setToken(null);
-        //$this->get('request')->getSession()->invalidate();
-
-
-        $routename = $request->get('_route');
-        //echo "routename=".$routename."<br>";
-
-        if( $routename == "employees_accreq_logout" ) {
-            $sitename = $this->container->getParameter('employees.sitename');
-        }
-        if( $routename == "fellapp_accreq_logout" ) {
-            $sitename = $this->container->getParameter('fellapp.sitename');
-        }
-        if( $routename == "deidentifier_accreq_logout" ) {
-            $sitename = $this->container->getParameter('deidentifier.sitename');
-        }
-        if( $routename == "scan_accreq_logout" ) {
-            $sitename = $this->container->getParameter('scan.sitename');
-        }
-
-        $msg = 'Your access request was successfully submitted and will be reviewed.';
-        $this->container->get('session')->getFlashBag()->add(
-            'notice',
-            $msg
-        );
-
-        return $this->redirect($this->generateUrl($sitename.'_login'));
-    }
+//    /**
+//     * @Route("/access-request-logout", name="employees_accreq_logout")
+//     * @Template()
+//     */
+//    public function accreqLogoutAction( Request $request )
+//    {
+//        //echo "logout Action! <br>";
+//        //exit();
+//
+//
+//        $this->get('security.context')->setToken(null);
+//        //$this->get('request')->getSession()->invalidate();
+//
+//
+//        $routename = $request->get('_route');
+//        //echo "routename=".$routename."<br>";
+//
+//        if( $routename == "employees_accreq_logout" ) {
+//            $sitename = $this->container->getParameter('employees.sitename');
+//        }
+//        if( $routename == "fellapp_accreq_logout" ) {
+//            $sitename = $this->container->getParameter('fellapp.sitename');
+//        }
+//        if( $routename == "deidentifier_accreq_logout" ) {
+//            $sitename = $this->container->getParameter('deidentifier.sitename');
+//        }
+//        if( $routename == "scan_accreq_logout" ) {
+//            $sitename = $this->container->getParameter('scan.sitename');
+//        }
+//
+//        $msg = 'Your access request was successfully submitted and will be reviewed.';
+//        $this->container->get('session')->getFlashBag()->add(
+//            'notice',
+//            $msg
+//        );
+//
+//        return $this->redirect($this->generateUrl($sitename.'_login'));
+//    }
 
 }
 

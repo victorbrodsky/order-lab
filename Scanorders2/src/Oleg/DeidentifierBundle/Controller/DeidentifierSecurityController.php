@@ -66,16 +66,16 @@ class DeidentifierSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/access-request-logout", name="deidentifier_accreq_logout")
-     * @Template()
-     */
-    public function accreqLogoutAction( Request $request )
-    {
-        //echo "logout Action! <br>";
-        //exit();
-        return parent::accreqLogoutAction($request);
-    }
+//    /**
+//     * @Route("/access-request-logout", name="deidentifier_accreq_logout")
+//     * @Template()
+//     */
+//    public function accreqLogoutAction( Request $request )
+//    {
+//        //echo "logout Action! <br>";
+//        //exit();
+//        return parent::accreqLogoutAction($request);
+//    }
 
 
 
