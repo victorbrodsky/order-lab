@@ -333,9 +333,8 @@ class AccessRequestController extends Controller
             'notice',
             $text
         );
-        //exit('sitename='.$sitename);
-        return $this->redirect($this->generateUrl($sitename.'_logout'));
-        //return $this->redirect($this->generateUrl($sitename.'_accreq_logout'));
+        $this->get('security.context')->setToken(null);
+        return $this->redirect($this->generateUrl($sitename.'_login'));
 
         return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
     }
