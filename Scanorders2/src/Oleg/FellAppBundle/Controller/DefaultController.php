@@ -35,4 +35,12 @@ class DefaultController extends Controller
     }
 
 
+    /**
+     * @Route("/about", name="fellapp_about_page")
+     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     */
+    public function aboutAction( Request $request ) {
+        return array('sitename'=>$this->container->getParameter('fellapp.sitename'));
+    }
+
 }

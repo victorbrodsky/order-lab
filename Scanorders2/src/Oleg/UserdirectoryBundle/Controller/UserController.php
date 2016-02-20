@@ -62,7 +62,7 @@ class UserController extends Controller
      * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
-        return array();
+        return array('sitename'=>$this->container->getParameter('employees.sitename'));
     }
 
 

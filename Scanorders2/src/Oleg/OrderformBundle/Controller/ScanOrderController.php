@@ -30,10 +30,10 @@ class ScanOrderController extends Controller {
 
     /**
      * @Route("/about", name="scan_about_page")
-     * @Template("OlegOrderformBundle:Default:about.html.twig")
+     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
-        return array();
+        return array('sitename'=>$this->container->getParameter('scan.sitename'));
     }
 
     /**
@@ -1249,6 +1249,7 @@ class ScanOrderController extends Controller {
         $dql->leftJoin("userWrappers.user", "principalUser");
 
 
+        $institution = false;
 
         //$increaseMaxExecTime = false;
 

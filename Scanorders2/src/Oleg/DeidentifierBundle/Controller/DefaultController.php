@@ -27,6 +27,14 @@ class DefaultController extends Controller
 {
 
     /**
+     * @Route("/about", name="deidentifier_about_page")
+     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     */
+    public function aboutAction( Request $request ) {
+        return array('sitename'=>$this->container->getParameter('deidentifier.sitename'));
+    }
+
+    /**
      * @Route("/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}", name="deidentifier_navbar")
      * @Template("OlegDeidentifierBundle:Default:navbar.html.twig")
      * @Method("GET")
@@ -81,7 +89,6 @@ class DefaultController extends Controller
         //echo "accessreq count=".count($accessreqs)."<br>";
 
         $form = $this->createGenerateForm();
-
 
         //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
