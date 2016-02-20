@@ -205,8 +205,8 @@ class ListController extends Controller
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
-            $limit,                          /*limit per page*/
-            array('wrap-queries'=>true)
+            $limit                          /*limit per page*/
+            //array('wrap-queries'=>true)
             //array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
         );
         //echo "list count=".count($entities)."<br>";
