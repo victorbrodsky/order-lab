@@ -444,6 +444,8 @@ class Message {
         $this->associations = new ArrayCollection();
         $this->backAssociations = new ArrayCollection();
 
+        $this->setOrderdate();
+
         //Initialize specific orders
 //        if( !$this->getScanorder() ) {
 //            $this->setScanorder(new ScanOrder());
@@ -650,9 +652,9 @@ class Message {
     }
 
 
-    /**
-     * @ORM\PrePersist
-     */
+//    /**
+//     * @ORM\PrePersist
+//     */
     public function setOrderdate($date=null) {
         if( $date ) {
             $this->orderdate = $date;

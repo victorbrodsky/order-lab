@@ -19,7 +19,7 @@ class ScanEmailUtil extends EmailUtil {
 
         //get admin email
         $userutil = new UserUtil();
-        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+        $adminemail = $userutil->getSiteSetting($this->em,'siteEmail');
 
         if( $text ) {
             $message = $text;

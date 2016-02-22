@@ -133,6 +133,8 @@ class MultiScanOrderController extends Controller {
 //        echo "patient=".$patient."<br>";
 //        $mrn = $patient->getMrn()->first()->getField();
 //        echo "mrn=".$mrn."<br>";
+        //$dob = $patient->getDob()->first()->getField();
+        //echo "dob=".$dob."<br>";
 //
 //        $accession = $form["patient"][0]["procedure"][0]["accession"][0]->getData();
 //        $accessionNum = $accession->getAccession()->first()->getField();
@@ -183,17 +185,17 @@ class MultiScanOrderController extends Controller {
             $errors = $errorHelper->getErrorMessages($form);
             echo "<br>form errors:<br>";
             print_r($errors);
+
+            //exit("Before validation main entity:<br>");
+            if ($form->isValid()) {
+                echo "form is valid !!! <br>";
+            } else {
+                echo "form is not valid ??? <br>";
+            }
+            echo "<br>errors:<br>" . $form->getErrors() . "<br>";
+            echo "errors as string=" . $form->getErrorsAsString() . "<br>";
+            //echo "order patient=".$entity->getPatient()->first();
         }
-        
-        //exit("Before validation main entity:<br>");
-//       if( $form->isValid() ) {
-//           echo "form is valid !!! <br>";
-//       } else {
-//           echo "form is not valid ??? <br>";
-//       }
-//        echo "<br>errors:<br>".$form->getErrors()."<br>";
-//        echo "errors as string=".$form->getErrorsAsString()."<br>";
-//        //echo "order patient=".$entity->getPatient()->first();
 
         //oleg_orderformbundle_messagetype_equipment
         //echo "equipmentForm=".$form["equipment"]->getData()."<br>";

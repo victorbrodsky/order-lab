@@ -90,7 +90,7 @@ function fieldInputMask( holder ) {
             makeErrorField($(this),false);
         },
         placeholder: " ",
-        clearMaskOnLostFocus: false //true //show mask after hovering over the field
+        clearMaskOnLostFocus: true  //clear mask after hovering over the field
     });
 
     if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {

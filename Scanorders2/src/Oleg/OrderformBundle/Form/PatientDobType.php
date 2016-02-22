@@ -23,6 +23,7 @@ class PatientDobType extends AbstractType
 
         $builder->add('field', 'date', array(
             'label' => "DOB:",
+            //'input'  => 'datetime',
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone

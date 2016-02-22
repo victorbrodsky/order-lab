@@ -563,7 +563,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $methodShortName = $method_name->getShortName();    //getMrn
 
-            if( strpos($methodShortName,'get') !== false ) {    //filter in only "get" methods
+            if( strpos($methodShortName,'get') !== false && strpos($methodShortName,'__') === false ) {    //filter in only "get" methods
 
                 //echo "methodShortName=".$methodShortName."<br>";
 

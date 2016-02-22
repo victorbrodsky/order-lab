@@ -157,7 +157,6 @@ class EducationalResearchController extends Controller {
             $history->setProvider($user);
             $history->setCurrentid($entity->getMessage()->getOid());
             $history->setCurrentstatus($entity->getMessage()->getStatus());
-            $history->setChangedate( new \DateTime() );
             $history->setNote($msg.$reviewLink);
             $history->setRoles($user->getRoles());
             $em->persist($history);

@@ -246,7 +246,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         } else {
             $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Order Submission');
             $history->setEventtype($eventtype);
-            $history->setChangedate($entity->getOrderdate());
+            //$history->setChangedate($entity->getOrderdate());
         }
 
         $em->persist($history);

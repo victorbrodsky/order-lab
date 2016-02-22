@@ -64,9 +64,7 @@ class EmailUtil {
             )
             */
 
-        $this->container->get('mailer')->send($message);
-
-        return true;
+        return $this->container->get('mailer')->send($message);
     }
 
     public function checkEmails($emails) {

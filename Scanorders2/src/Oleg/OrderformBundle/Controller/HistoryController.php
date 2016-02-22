@@ -432,7 +432,6 @@ class HistoryController extends Controller
             //$history->setNewid($id);
             $history->setCurrentstatus($message->getStatus());
             //$history->setNewstatus($message->getStatus());
-            $history->setChangedate( new \DateTime() );
             //$history->setNote($text_value);
             //$history->setSelectednote($selectednote);
             $history->setRoles($user->getRoles());
@@ -504,7 +503,6 @@ class HistoryController extends Controller
             //$history->setNewid($id);
             $history->setCurrentstatus($message->getStatus());
             //$history->setNewstatus($message->getStatus());
-            $history->setChangedate( new \DateTime() );
             $history->setNote($text_value);
             $history->setSelectednote($selectednote);
             $history->setRoles($user->getRoles());
