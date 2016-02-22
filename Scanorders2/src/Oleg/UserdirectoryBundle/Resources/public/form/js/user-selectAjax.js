@@ -239,7 +239,7 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
         //console.log('final treeUrl='+treeUrl);
 
         if( !_ajaxTimeout ) {
-            var _ajaxTimeout = 20000;
+            var _ajaxTimeout = 300000; //300 000 => 300sec
         }
 
 //        console.log('continue:');
