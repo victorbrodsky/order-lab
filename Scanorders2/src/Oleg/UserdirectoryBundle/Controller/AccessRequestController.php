@@ -328,15 +328,22 @@ class AccessRequestController extends Controller
         $emailUtil->sendEmail( $emails, $subject, $msg, $em, $headers );
         ///////////////// EOF /////////////////
 
-        //TODO: Temporary solution for auto-log out after submitting an access request as described in issue #478 (6)
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            $text
-        );
-        $this->get('security.context')->setToken(null);
-        return $this->redirect($this->generateUrl($sitename.'_login'));
-
-        return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
+        //auto-log out after submitting an access request as described in issue #478 (6)
+        //Differentiate between the two situations:
+        //A- User just logged in and requested access
+        //B- User logged in to use another site, then clicked on a site they have no access to and "requested access"...
+        $request = $this->get('request');
+        $session = $request->getSession();
+        if( $session->get('sitename') == $sitename ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $text
+            );
+            $this->get('security.context')->setToken(null);
+            return $this->redirect($this->generateUrl($sitename . '_login'));
+        } else {
+            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig', array('text' => $text, 'sitename' => $sitename, 'pendinguser' => true));
+        }
     }
 
 //    public function reLoginUser($sitename) {
@@ -348,6 +355,22 @@ class AccessRequestController extends Controller
 //        return $this->redirect( $this->generateUrl('main_common_home') );
 //    }
 
+    /**
+     * No, thanks.
+     *
+     * @Route("/no-thanks-access-requests/{sitename}", name="employees_no_thanks_accessrequest")
+     * @Method("GET")
+     * @Template()
+     */
+    public function noThanksAccessRequestAction( Request $request, $sitename )
+    {
+        $session = $request->getSession();
+        if( $session->get('sitename') == $sitename ) {
+            return $this->redirect($this->generateUrl($sitename . '_logout'));
+        } else {
+            return $this->redirect( $this->generateUrl("main_common_home") );
+        }
+    }
 
 
     /**
@@ -1067,7 +1090,7 @@ class AccessRequestController extends Controller
                 "Please use the 'Create New User' form to add a new user."
             );
             return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
-            //exit("User not found; TODO: Create a new user?");
+            //exit("User not found;");
             //$subjectUser = new User();
         }
 

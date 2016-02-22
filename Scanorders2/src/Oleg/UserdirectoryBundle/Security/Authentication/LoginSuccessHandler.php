@@ -78,6 +78,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //set site email
         $siteEmail = $userUtil->getSiteSetting($em,'siteEmail');       
         $session->set('siteEmail',$siteEmail);
+
+        //set original site name
+        $session->set('sitename',$this->siteName);
+
         //////// EOF session //////////////////////////////
 
         if( $this->security->isGranted($this->roleBanned) ) {
