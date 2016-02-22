@@ -87,7 +87,7 @@ class DefaultController extends Controller
 
         //email testing
         $emailUtil = $this->get('user_mailer_utility');
-        $emailUtil->sendEmail( 'cinava@yahoo.com', "Test email !!!", "Test email body !!!" );
+        $emailUtil->sendEmail( 'cinava@yahoo.com', "Test email !!!", "Test email body !!!", "oleg_iv@yahoo.com" );
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();

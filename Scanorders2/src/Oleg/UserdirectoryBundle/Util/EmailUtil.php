@@ -20,7 +20,17 @@ class EmailUtil {
         $this->container = $container;
     }
 
-    public function sendEmail( $email, $subject, $message, $ccs=null, $fromEmail=null ) {
+    //$emails: single or array of emails
+    //$ccs: single or array of emails
+    public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
+
+        if( !$emails || $emails == "" ) {
+            return false;
+        }
+
+        if( !$message || $message == "" ) {
+            return false;
+        }
 
         if( !$fromEmail ) {
             $userutil = new UserUtil();
@@ -30,11 +40,15 @@ class EmailUtil {
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($fromEmail)
-            ->setTo($email)
+            ->setTo($emails)
             ->setBody(
                 $message,
                 'text/plain'
         );
+
+        if( $ccs ) {
+            $message->setCc($ccs);
+        }
 
             /*
              * If you also want to include a plaintext version of the message
