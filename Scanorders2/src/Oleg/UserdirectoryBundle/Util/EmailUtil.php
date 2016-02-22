@@ -37,6 +37,9 @@ class EmailUtil {
             $fromEmail = $userutil->getSiteSetting($this->em,'siteEmail');
         }
 
+        $emails = $this->checkEmails($emails);
+        $ccs = $this->checkEmails($ccs);
+
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($fromEmail)
@@ -66,6 +69,12 @@ class EmailUtil {
         return true;
     }
 
+    public function checkEmails($emails) {
+        if( strpos($emails, ',') !== false ) {
+            $emails = explode(", ", $emails);
+        }
+        return $emails;
+    }
 
     public function sendEmail_orig( $email, $subject, $message, $em, $ccs=null, $fromEmail=null ) {
 
