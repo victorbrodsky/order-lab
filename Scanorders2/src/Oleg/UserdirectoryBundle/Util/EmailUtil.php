@@ -76,6 +76,9 @@ class EmailUtil {
         return $emails;
     }
 
+
+
+    ///////////////// NOT USED: using original php mail  /////////////////
     public function sendEmail_orig( $email, $subject, $message, $em, $ccs=null, $fromEmail=null ) {
 
         if( !$email || $email == "" ) {
@@ -116,6 +119,7 @@ class EmailUtil {
         ini_set( 'sendmail_from', $fromEmail );
         ini_set( "SMTP", $smtp );
     }
+    ///////////////// EOF NOT USED: using original php mail  /////////////////
     
 }
 

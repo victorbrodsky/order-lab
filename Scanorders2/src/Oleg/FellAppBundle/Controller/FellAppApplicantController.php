@@ -19,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Util\EmailUtil;
 
 
 class FellAppApplicantController extends Controller {
@@ -189,7 +188,7 @@ class FellAppApplicantController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        $emailUtil = new EmailUtil();
+        $emailUtil = $this->get('user_mailer_utility');
         $emails = array();
 
         //get all interviews
@@ -234,7 +233,7 @@ class FellAppApplicantController extends Controller {
             throw $this->createNotFoundException('Interviewer can not be found: interviewId='.$interviewId);
         }
 
-        $emailUtil = new EmailUtil();
+        $emailUtil = $this->get('user_mailer_utility');
 
         $email = $this->sendInvitationEmail($interview,$emailUtil);
 
@@ -311,11 +310,11 @@ class FellAppApplicantController extends Controller {
         $logger->notice("sendInvitationEmail: Before send email to " . $email);
 
         if( $emailUtil == null ) {
-            $emailUtil = new EmailUtil();
+            $emailUtil = $this->get('user_mailer_utility');
         }
 
         $cc = null; //"oli2002@med.cornell.edu";
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, $cc, $senderEmail );
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $cc, $senderEmail );
 
         $logger->notice("sendInvitationEmail: Email has been sent to " . $email);
 
@@ -360,18 +359,18 @@ class FellAppApplicantController extends Controller {
             $coordinatorEmails[] = $senderEmail;
         }
 
-        $coordinatorEmails = implode(", ",$coordinatorEmails);
+        //$coordinatorEmails = implode(", ",$coordinatorEmails);
         //print_r($coordinatorEmails);
         //exit('1');
 
         if( $emailUtil == null ) {
-            $emailUtil = new EmailUtil();
+            $emailUtil = $this->get('user_mailer_utility');
         }
 
         $applicant = $fellapp->getUser();
-        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, null, $senderEmail );
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, null, $senderEmail );
 
-        $logger->notice("sendConfirmationEmail: Send confirmation email from " . $senderEmail . " to coordinators:".$coordinatorEmails);
+        $logger->notice("sendConfirmationEmail: Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
     }
 
 
@@ -399,7 +398,7 @@ class FellAppApplicantController extends Controller {
         }
 
         $emails = array();
-        $emailUtil = new EmailUtil();
+        $emailUtil = $this->get('user_mailer_utility');
 
         //get all interviews
         $user = $this->get('security.context')->getToken()->getUser();
@@ -434,7 +433,7 @@ class FellAppApplicantController extends Controller {
 
             $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
-            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, $em, null, $senderEmail );
+            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, null, $senderEmail );
 
             $logger->notice("inviteObserversToRateAction: Send observer invitation email from " . $senderEmail . " to :".$email);
         }

@@ -85,9 +85,9 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
-        //email testing
-        $emailUtil = $this->get('user_mailer_utility');
-        $emailUtil->sendEmail( 'oli2002@med.cornell.edu', "Test email !!!", "Test email body !!!", "oli2002@med.cornell.edu,cinava@yahoo.com" );
+//        //email testing
+//        $emailUtil = $this->get('user_mailer_utility');
+//        $emailUtil->sendEmail( 'oli2002@med.cornell.edu', "Test email !!!", "Test email body !!!", "oli2002@med.cornell.edu,cinava@yahoo.com" );
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();

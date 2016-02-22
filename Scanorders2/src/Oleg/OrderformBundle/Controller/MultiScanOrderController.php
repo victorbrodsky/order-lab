@@ -247,7 +247,7 @@ class MultiScanOrderController extends Controller {
 
                 //email
                 $email = $user->getEmail();
-                $emailUtil = new ScanEmailUtil();
+                $scanEmailUtil = new ScanEmailUtil($em,$this->get('security.context'),$this->container);
 
                 $submitStatusStr = null;
                 if( isset($_POST['btnAmend']) ) {
@@ -259,7 +259,7 @@ class MultiScanOrderController extends Controller {
 
                 $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), true ); //was $entity->getId()
 
-                $emailUtil->sendEmail( $email, $em, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
+                $scanEmailUtil->sendEmail( $email, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
                 if( isset($_POST['btnSaveOnIdleTimeout']) ) {
                     return $this->redirect($this->generateUrl('scan_idlelogout-saveorder',array('flag'=>'saveorder')));

@@ -290,7 +290,7 @@ class UserSecurityUtil {
         return $user->usernameIsValid($username);
     }
 
-    //comma separated emails for Admin users
+    //array of emails for Admin users
     public function getUserEmailsByRole($sitename,$userRole) {
 
         if( $userRole == "Platform Administrator" ) {
@@ -339,7 +339,8 @@ class UserSecurityUtil {
         }
         //print_r($emails);
 
-        return implode(", ", $emails);
+        //return implode(", ", $emails);
+        return $emails;
     }
 
     public function findByRoles($roles) {

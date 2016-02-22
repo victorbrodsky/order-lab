@@ -11,7 +11,7 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
  */
 class ScanEmailUtil extends EmailUtil {
     
-    public function sendEmail( $email, $em, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
+    public function sendEmail( $email, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
 
         if( !$email || $email == "" ) {
             return false;
@@ -20,13 +20,6 @@ class ScanEmailUtil extends EmailUtil {
         //get admin email
         $userutil = new UserUtil();
         $adminemail = $userutil->getSiteSetting($em,'siteEmail');
-
-//        $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
-//        ini_set( 'sendmail_from', $adminemail );
-//        ini_set( "SMTP", $smtp );
-        //ini_set( 'smtp_port', 25 );
-
-        $this->initEmail($em);
 
         if( $text ) {
             $message = $text;
@@ -54,8 +47,10 @@ class ScanEmailUtil extends EmailUtil {
 
         // In case any of our lines are larger than 70 characters, we should use wordwrap()
         $message = wordwrap($message, 70, "\r\n");
+
         // Send
-        mail($email, 'Slide Scan Order #'.$entity->getId().' Confirmation', $message);
+        //mail($email, 'Slide Scan Order #'.$entity->getId().' Confirmation', $message);
+        parent::sendEmail($email, 'Slide Scan Order #'.$entity->getId().' Confirmation', $message);
 
         return true;
     }

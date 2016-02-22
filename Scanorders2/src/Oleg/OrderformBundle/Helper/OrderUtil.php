@@ -17,7 +17,6 @@ use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
 
 use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Util\EmailUtil;
 
 
 class OrderUtil {
@@ -682,8 +681,6 @@ class OrderUtil {
         $sysemail = $this->container->getParameter('default_system_email');
         $flashBag = $this->container->get('session')->getFlashBag();
 
-        $emailUtil = new EmailUtil();
-
         if( $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ) {
 
             $webUserUrl = "<a href=".$userUrl.">profile</a>";
@@ -708,7 +705,8 @@ class OrderUtil {
                         "Virtual Keeper of O R D E R: ".$homeUrl."\r\n".
                         "Weill Cornell Medical College";
 
-            $emailUtil->sendEmail($sysemail, $subject, $message, $this->em);
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->sendEmail($sysemail, $subject, $message);
 
         }
         $flashBag->add(

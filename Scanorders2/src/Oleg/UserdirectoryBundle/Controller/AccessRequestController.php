@@ -274,7 +274,7 @@ class AccessRequestController extends Controller
             $emailStr = "\r\nConfirmation email was sent to ".$email;
         }
 
-        $emailUtil = new EmailUtil();
+        $emailUtil = $this->get('user_mailer_utility');
 
         $siteurl = $this->generateUrl( $sitename.'_home', array(), true );
 
@@ -283,7 +283,7 @@ class AccessRequestController extends Controller
             $sitenameFull . ': ' . $siteurl . ' ' .
             ' was successfully submitted and and will be reviewed.'.$emailStr;
 
-        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitenameFull, $emailBody, $em );
+        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitenameFull, $emailBody );
 
         $text = 'Your access request was successfully submitted and will be reviewed.'.$emailStr;
 
@@ -325,7 +325,7 @@ class AccessRequestController extends Controller
         //echo "user headers=".$headers."<br>";
         //exit('1');
 
-        $emailUtil->sendEmail( $emails, $subject, $msg, $em, $headers );
+        $emailUtil->sendEmail( $emails, $subject, $msg, $headers );
         ///////////////// EOF /////////////////
 
         //auto-log out after submitting an access request as described in issue #478 (6)
@@ -613,11 +613,9 @@ class AccessRequestController extends Controller
 
         if( $msg != "" ) {
             $email = $subjectUser->getEmail();
-            $emailUtil = new EmailUtil();
-            $em = $this->getDoctrine()->getManager();
-
+            $emailUtil = $this->get('user_mailer_utility');
             //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
-            $emailUtil->sendEmail( $email, $subject, $msg, $em, null, $adminEmail );
+            $emailUtil->sendEmail( $email, $subject, $msg, null, $adminEmail );
         }
     }
 

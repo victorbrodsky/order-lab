@@ -360,7 +360,7 @@ class FellAppUtil {
         $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
-        $emailUtil = new EmailUtil();
+        $emailUtil = $this->container->get('user_mailer_utility');
         $userUtil = new UserUtil();
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -789,7 +789,7 @@ class FellAppUtil {
                         $emails = $ccs;
                         $ccs = null;
                     }
-                    $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event, $em, $ccs );
+                    $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event, $ccs );
                 }
 
                 //exit('end applicant');
@@ -819,7 +819,7 @@ class FellAppUtil {
                     //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
                     if( $email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp ) {
                         $logger->notice("Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
-                        $emailUtil->sendEmail( $email, $confirmationSubjectFellApp, $confirmationBodyFellApp, $em, null, $confirmationEmailFellApp );
+                        $emailUtil->sendEmail( $email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp );
                     }
                 }
 
@@ -847,7 +847,7 @@ class FellAppUtil {
                 //email                    
                 $emails = "oli2002@med.cornell.edu";
                 $event = "Error creating fellowship applicant with unique Google Applicant ID=".$googleFormId."; Exception=".$e->getMessage();
-                $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event, $em );
+                $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event );
 
                 //logger
                 $logger->error($event);
