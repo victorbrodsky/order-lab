@@ -71,7 +71,7 @@ class EmailUtil {
 
     public function checkEmails($emails) {
         if( strpos($emails, ',') !== false ) {
-            $emails = explode(", ", $emails);
+            $emails = explode(',', $emails);
         }
         return $emails;
     }
