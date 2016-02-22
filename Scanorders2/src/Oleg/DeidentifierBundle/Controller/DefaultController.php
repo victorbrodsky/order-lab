@@ -85,9 +85,9 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
-
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //email testing
+        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil->sendEmail( 'cinava@yahoo.com', "Test email !!!", "Test email body !!!" );
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();

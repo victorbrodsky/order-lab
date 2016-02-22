@@ -10,8 +10,50 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
  */
 class EmailUtil {
 
+    protected $em;
+    protected $sc;
+    protected $container;
 
-    public function sendEmail( $email, $subject, $message, $em, $ccs=null, $fromEmail=null ) {
+    public function __construct( $em, $sc, $container ) {
+        $this->em = $em;
+        $this->sc = $sc;
+        $this->container = $container;
+    }
+
+    public function sendEmail( $email, $subject, $message, $ccs=null, $fromEmail=null ) {
+
+        if( !$fromEmail ) {
+            $userutil = new UserUtil();
+            $fromEmail = $userutil->getSiteSetting($this->em,'siteEmail');
+        }
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($fromEmail)
+            ->setTo($email)
+            ->setBody(
+                $message,
+                'text/plain'
+        );
+
+            /*
+             * If you also want to include a plaintext version of the message
+            ->addPart(
+                $this->renderView(
+                    'Emails/registration.txt.twig',
+                    array('name' => $name)
+                ),
+                'text/plain'
+            )
+            */
+
+        $this->container->get('mailer')->send($message);
+
+        return true;
+    }
+
+
+    public function sendEmail_orig( $email, $subject, $message, $em, $ccs=null, $fromEmail=null ) {
 
         if( !$email || $email == "" ) {
             return false;

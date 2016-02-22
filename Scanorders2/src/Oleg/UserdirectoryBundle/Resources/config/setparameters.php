@@ -175,6 +175,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $database_password_aperio = $row['aperioeSlideManagerDBPassword'];
         }
 
+        $container->setParameter('mailer_host',$smtpServerAddress);
         $container->setParameter('default_system_email',$defaultSiteEmail);
 
         //footer params

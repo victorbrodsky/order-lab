@@ -164,4 +164,7 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
 
-
+    #user mailer util
+    user_mailer_utility:
+        class: Oleg\UserdirectoryBundle\Util\EmailUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
