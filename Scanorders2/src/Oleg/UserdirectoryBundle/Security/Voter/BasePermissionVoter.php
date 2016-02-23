@@ -15,7 +15,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Oleg\UserdirectoryBundle\Entity\User;
 
 
-abstract class BaseVoter extends Voter {
+//Role have permission objects (Permission);
+//Permission object has one permission (PermissionList);
+//Permission has one PermissionObjectList and one PermissionActionList
+
+
+abstract class BasePermissionVoter extends Voter {
 
     const CREATE = 'create';
     const READ   = 'read';
@@ -36,22 +41,22 @@ abstract class BaseVoter extends Voter {
     }
 
     //isGranted("read", "Accession") or isGranted("read", $accession)
+    //$attribute: string i.e. "read"
     //$subject: string (i.e. "FellowshipApplication") or entity
-    protected function supports($attribute, $subject)
-    {
+    protected function supports($attribute, $subject) {
+        //return false; //testing
 
         $attribute = $this->convertAttribute($attribute);
 
         // if the attribute isn't one we support, return false
-        if( !in_array($attribute, array(self::CREATE, self::READ, self::UPDATE, self::CHANGESTATUS)) ) {
+        if (!in_array($attribute, array(self::CREATE, self::READ, self::UPDATE, self::CHANGESTATUS))) {
             //exit("Not supported attribute=".$attribute."<br>");
             return false;
         }
 
-        $className = $this->getClassName($subject);
-
-        //check if the $attribute (action or ROLE_) is in PermissionObjectList
+        //////////// check if the $subject (className string or object) is in PermissionObjectList ////////////
         //$permissionObjects = $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" );
+        $className = $this->getClassName($subject);
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:PermissionObjectList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
@@ -63,10 +68,12 @@ abstract class BaseVoter extends Voter {
         if( count($permissionObjects) > 0 ) {
             return true;
         }
+        //////////// EOF check if the $subject (className string or object) is in PermissionObjectList ////////////
 
         //echo "Supported subject=".$subject."<br>";
         return false;
     }
+
 
     //if return false it redirect to main page (access_denied_url?): "You don't have permission to visit this page on Scan Order site. If you already applied for access, then try to Re-Login"
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
@@ -108,11 +115,24 @@ abstract class BaseVoter extends Voter {
 
         // if they can edit, they can view
         if( $this->canEdit($subject, $token) ) {
-            //echo "user can edit <br>";
+            echo "user can edit <br>";
             return true;
         }
 
         $user = $token->getUser();
+
+        if( !$user instanceof User ) {
+            return false;
+        }
+
+        $siteRoleBase = $this->getSiteRoleBase();
+        $sitename = $this->getSitename();
+
+        //ROLE_DEIDENTIFICATOR_ADMIN can do anything
+        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
+            //exit('admin!');
+            return true;
+        }
 
         //$subject: string (i.e. "FellowshipApplication") or entity
         if( is_object($subject) ) {
@@ -136,6 +156,7 @@ abstract class BaseVoter extends Voter {
         //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
         if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
             //exit('can View! exit');
+            //echo "isUserHasPermissionObjectAction!!! className=".$className."<br>";
             return true;
         } else {
             //echo "can not view ".$className."<br>";
@@ -164,6 +185,9 @@ abstract class BaseVoter extends Voter {
         //echo "canEdit? <br>";
         //echo "subject=".$subject."<br>";
 
+        $siteRoleBase = $this->getSiteRoleBase();
+        $sitename = $this->getSitename();
+
         $user = $token->getUser();
 
         if( !$user instanceof User ) {
@@ -175,10 +199,16 @@ abstract class BaseVoter extends Voter {
             return false;
         }
 
-        //ROLE_PLATFORM_DEPUTY_ADMIN can do anything
-        if( $this->decisionManager->decide($token, array('ROLE_PLATFORM_DEPUTY_ADMIN')) ) {
+        //ROLE_DEIDENTIFICATOR_ADMIN can do anything
+        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
+            //exit('admin!');
             return true;
         }
+
+//        //ROLE_PLATFORM_DEPUTY_ADMIN can do anything
+//        if( $this->decisionManager->decide($token, array('ROLE_PLATFORM_DEPUTY_ADMIN')) ) {
+//            return true;
+//        }
 
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         if( is_object($subject) ) {
@@ -192,10 +222,53 @@ abstract class BaseVoter extends Voter {
         return false;
     }
 
-    protected function canCreate($subject, TokenInterface $token)
-    {
-        exit("Create is not supported for subject=" . $subject);
+    protected function canCreate($subject, TokenInterface $token) {
+
+        $siteRoleBase = $this->getSiteRoleBase();
+        $sitename = $this->getSitename();
+
+        //echo 'attribute='.$attribute."<br>";
+        //echo 'subject='.$subject."<br>";
+        $user = $token->getUser();
+        //return true;
+
+        if( !$user instanceof User ) {
+            return false;
+        }
+
+        //ROLE_DEIDENTIFICATOR_ADMIN can do anything
+        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
+            //exit('admin!');
+            return true;
+        }
+
+        if( is_object($subject) ) {
+            //get object class name
+            $class = new \ReflectionClass($subject);
+            $className = $class->getShortName();
+        } else {
+            $className = $subject;
+        }
+
+        //echo "className=".$className."<br>";
+
+        //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
+        if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "create" ) ) {
+            //exit('can View! exit');
+            return true;
+        } else {
+            //echo "can not view ".$className."<br>";
+        }
+
+        //exit('no permission');
+        return false;
     }
+
+
+
+
+
+
 
 
     protected function getClassName($subject) {

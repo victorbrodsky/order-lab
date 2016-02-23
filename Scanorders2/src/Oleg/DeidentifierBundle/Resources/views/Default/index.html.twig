@@ -20,12 +20,18 @@
 
     {% endif %}
 
+
+
     <input type="hidden" id="orderformtype" value="deidentifier" />
     <input type="hidden" id="formcycle" value="new" />
+
+
 
     {% if institutionGen is defined and accessionTypeGen is defined and accessionNumberGen is defined %}
         <div id="deidentifier-data-holder" data-institution="{{institutionGen}}" data-accessionType="{{accessionTypeGen}}" data-accessionNumber="{{accessionNumberGen}}"></div>
     {% endif %}
+
+
 
     {#WCMC-NYP Deidentifier Generator: can generate, but not search#}
     {% if is_granted("create", "Accession") %}
@@ -53,13 +59,15 @@
         {#<button type="button" class="btn btn-sm btn-primary" onclick="$('#deidentifier-generate').submit();">Generate a New Deidentifier</button>#}
         <button type="button" id="generate-new-deidentifier" class="btn btn-sm btn-primary" onclick="deidentifierValidateAccessionNumber()">Generate a New Specimen Deidentifier ID</button>
 
-
     {% endif %}
 
 
 
 
 {% endblock %}
+
+
+
 
 
 {% block additionaljs %}
@@ -101,6 +109,10 @@
 
             var accessionNumberValue = element.val();
             //console.log("accessionNumberValue="+accessionNumberValue);
+
+            if( !accessionNumberValue ) {
+                return false;
+            }
 
             var accessionNumberValueClean = accessionNumberValue.replace(/\s/g, '');
             var accessionNumberValueClean = accessionNumberValueClean.replace(/-/g, '');

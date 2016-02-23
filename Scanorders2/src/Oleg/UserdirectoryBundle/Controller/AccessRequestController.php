@@ -64,6 +64,7 @@ class AccessRequestController extends Controller
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
+            //exit('no roleUser=' . $this->roleUser);
             $user->addRole($this->roleUnapproved);
         }
 

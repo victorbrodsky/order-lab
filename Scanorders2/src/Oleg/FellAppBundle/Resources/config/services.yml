@@ -24,3 +24,17 @@ services:
         class: Oleg\FellAppBundle\Util\ReportGenerator
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container", "@templating"]
 
+
+    fellap_role_voter:
+        class: Oleg\FellAppBundle\Security\Voter\FellAppRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    fellap_permission_voter:
+        class: Oleg\FellAppBundle\Security\Voter\FellAppPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }

@@ -261,6 +261,6 @@ security:
        - { path: ^/deidentifier/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/deidentifier/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
-  #     - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
+#       - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
   #    - { path: ^/deidentifier/, allow_if: "is_granted('ROLE_DEIDENTIFICATOR_USER')" }
 

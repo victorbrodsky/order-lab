@@ -138,6 +138,7 @@ class UserRepository extends EntityRepository {
         //check if user has direct permission
         $permissions = $this->isUserHasDirectPermissionObjectAction( $user, $object, $action );
         if( $permissions && count($permissions) > 0 ) {
+            //echo "isUserHasDirectPermissionObjectAction!!! object=".$object."<br>";
             return true;
         }
 
@@ -146,6 +147,7 @@ class UserRepository extends EntityRepository {
         $roles = $this->findUserRolesByObjectAction($user, $object, $action, $atLeastOne );
 
         if( count($roles) > 0 ) {
+            //echo "findUserRolesByObjectAction!!! object=".$object."<br>";
             return true;
         }
 

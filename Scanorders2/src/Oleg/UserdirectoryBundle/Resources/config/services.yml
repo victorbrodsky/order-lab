@@ -168,3 +168,10 @@ services:
     user_mailer_utility:
         class: Oleg\UserdirectoryBundle\Util\EmailUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
+    user_role_voter:
+        class: Oleg\UserdirectoryBundle\Security\Voter\UserRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }

@@ -49,19 +49,19 @@ services:
         class: Oleg\OrderformBundle\Helper\SearchUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container", "@security.context"]
 
-    app.patient_hierarchy_voter:
-        class: Oleg\OrderformBundle\Security\Voter\PatientHierarchyVoter
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
-
-    app.message_voter:
-            class: Oleg\OrderformBundle\Security\Voter\MessageVoter
-            arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
-            tags:
-                - { name: security.voter }
-            # small performance boost
-            public: false
+#    app.patient_hierarchy_voter:
+#        class: Oleg\OrderformBundle\Security\Voter\PatientHierarchyVoter
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        tags:
+#            - { name: security.voter }
+#        # small performance boost
+#        public: false
+#
+#    app.message_voter:
+#            class: Oleg\OrderformBundle\Security\Voter\MessageVoter
+#            arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#            tags:
+#                - { name: security.voter }
+#            # small performance boost
+#            public: false
 

@@ -42,6 +42,9 @@ class PatientHierarchyVoter extends BaseVoter {
 
     protected function supports($attribute, $subject)
     {
+        return false; //testing
+        echo "PatientHierarchyVoter: support <br>";
+
         $attribute = $this->convertAttribute($attribute);
 
         // if the attribute isn't one we support, return false

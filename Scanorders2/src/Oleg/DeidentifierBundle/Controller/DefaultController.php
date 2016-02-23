@@ -46,7 +46,7 @@ class DefaultController extends Controller
      */
     public function deidentifierNavbarAction( Request $request, $accessionTypeStr, $accessionTypeId, $accessionNumber ) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
+        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
@@ -82,6 +82,7 @@ class DefaultController extends Controller
     public function indexAction( Request $request ) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
+            exit('deidentifier: no permission');
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
