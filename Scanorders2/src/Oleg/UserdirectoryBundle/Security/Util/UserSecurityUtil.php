@@ -319,7 +319,7 @@ class UserSecurityUtil {
             return null;
         }
 
-        $users = $this->findByRoles($roles);
+        $users = $this->findByRoles($roles); //supports partial role name
 
         //echo "user count=".count($users)."<br>";
 
@@ -343,6 +343,7 @@ class UserSecurityUtil {
         return $emails;
     }
 
+    //$roles: role or partial role name
     public function findByRoles($roles) {
 
         $whereArr = array();
@@ -712,10 +713,15 @@ class UserSecurityUtil {
             $dql->andWhere("roles.level = " . $levelOnly);
         }
 
+        //only default and user-added types
+        $dql->andWhere("roles.type = :typedef OR roles.type = :typeadd");
+
         $query = $this->em->createQuery($dql);
 
         $query->setParameters(array(
-            "sitename" => $sitename
+            "sitename" => $sitename,
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
         ));
 
         $roles = $query->getResult();

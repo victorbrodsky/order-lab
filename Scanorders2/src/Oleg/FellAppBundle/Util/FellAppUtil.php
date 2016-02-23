@@ -1252,7 +1252,10 @@ class FellAppUtil {
     //check for active access requests
     public function getActiveAccessReq() {
         if( !$this->sc->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
+            //exit('not granted ROLE_FELLAPP_COORDINATOR ???!!!'); //testing
             return null;
+        } else {
+            //exit('granted ROLE_FELLAPP_COORDINATOR !!!'); //testing
         }
         $userSecUtil = $this->container->get('user_security_utility');
         $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('fellapp.sitename'),AccessRequest::STATUS_ACTIVE);

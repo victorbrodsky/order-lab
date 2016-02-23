@@ -12,7 +12,6 @@
 //9) add permissions to ROLE_DEIDENTIFICATOR_WCMC_NYP_HONEST_BROKER: Generate new Deidentifier ID (WCMC,NYP) and Search by Deidentifier ID (WCMC,NYP)
 
 
-
 namespace Oleg\DeidentifierBundle\Controller;
 
 use Oleg\DeidentifierBundle\Form\DeidentifierSearchType;
@@ -82,7 +81,7 @@ class DefaultController extends Controller
     public function indexAction( Request $request ) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
-            exit('deidentifier: no permission');
+            //exit('deidentifier: no permission');
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 

@@ -597,7 +597,7 @@ class UserGenerator {
 
             if( $user->getUsername() == "jep2018_@_wcmc-cwid" ) {
                 $user->addRole('ROLE_USERDIRECTORY_EDITOR');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR');
+                //$user->addRole('ROLE_FELLAPP_COORDINATOR');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY');
@@ -610,55 +610,55 @@ class UserGenerator {
 
             //GI-Rhonda Yantiss: rhy2001
             if( $user->getUsername() == "rhy2001_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_GASTROINTESTINALPATHOLOGY');
             }
 
             //Cyto-Rana Hoda: rhoda
             if( $user->getUsername() == "rhoda_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY');
             }
 
             //Heme-Attilio Orazi: ato9002
             if( $user->getUsername() == "ato9002_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY');
             }
 
             //Heme-Scott Ely: sae2001
             if( $user->getUsername() == "sae2001_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY');
             }
 
             //Mol Gen- Michael Kluk: mik9095
             if( $user->getUsername() == "mik9095_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY');
             }
 
             //Gyn- Lora Ellenson lhellens
             if( $user->getUsername() == "lhellens_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_GYNECOLOGICPATHOLOGY');
             }
 
             //Breast- Sandra Shin: sjshin
             if( $user->getUsername() == "sjshin_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
             }
 
             //Timothy D'Alfonso <tid9007@med.cornell.edu>
             if( $user->getUsername() == "tid9007_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
             }
 
             //Syed A F Hoda <sahoda@med.cornell.edu>
             if( $user->getUsername() == "sahoda_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
             }
 

@@ -674,11 +674,11 @@ class AdminController extends Controller
             ),
 
             //Fellowship Observer
-//            "ROLE_FELLAPP_OBSERVER" => array(
-//                "Fellowship Program Observer",
-//                "Access to Fellowship Application as Observer (able to view a particular (assigned) application)",
-//                10
-//            ),
+            "ROLE_FELLAPP_OBSERVER" => array(
+                "Fellowship Program Observer",
+                "Access to Fellowship Application as Observer (able to view a particular (assigned) application)",
+                10
+            ),
 
 //            "ROLE_FELLAPP_USER" => array(
 //                "Fellowship Applications User",
@@ -4275,6 +4275,16 @@ class AdminController extends Controller
 
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
+
+
+            //disable already existing general roles
+            if(
+                $role == "ROLE_FELLAPP_INTERVIEWER" ||
+                $role == "ROLE_FELLAPP_COORDINATOR" ||
+                $role == "ROLE_FELLAPP_DIRECTOR"
+            ) {
+                $role->setType('disabled');
+            }
 
 
             if( $resCount > 0 ) {

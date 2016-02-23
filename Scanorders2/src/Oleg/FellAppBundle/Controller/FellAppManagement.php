@@ -206,10 +206,10 @@ class FellAppManagement extends Controller {
             if( $user ) {
 
                 //$user->addRole('ROLE_USERDIRECTORY_OBSERVER');
-                $user->addRole('ROLE_FELLAPP_USER');
+                //$user->addRole('ROLE_FELLAPP_USER');
                 
                 //add general role
-                $user->addRole('ROLE_FELLAPP_'.$roleSubstr);
+                //$user->addRole('ROLE_FELLAPP_'.$roleSubstr);
 
                 //add specific interviewer role
                 $user->addRole($interviewerRoleFellType->getName());
@@ -415,16 +415,12 @@ class FellAppManagement extends Controller {
             if( strpos($roleStr,'COORDINATOR') !== false ) {
                 if( !$fellowshipSubspecialty->isUserExistByMethodStr($user, 'getCoordinators') ) {
                     $fellowshipSubspecialty->addCoordinator($user);
-                    //$this->assignFellAppAccessRoles($fellowshipSubspecialty,$fellowshipSubspecialty->getCoordinators(),"COORDINATOR");
-                    //$this->assignFellAppAccessRoles($fellowshipSubspecialty,array($user),"COORDINATOR");
                 }
             }
 
             if( strpos($roleStr,'DIRECTOR') !== false ) {
                 if( !$fellowshipSubspecialty->isUserExistByMethodStr($user, 'getDirectors') ) {
                     $fellowshipSubspecialty->addDirector($user);
-                    //$this->assignFellAppAccessRoles($fellowshipSubspecialty,$fellowshipSubspecialty->getDirectors(),"DIRECTOR");
-                    //$this->assignFellAppAccessRoles($fellowshipSubspecialty,array($user),"DIRECTOR");
                 }
             }
 

@@ -1024,8 +1024,8 @@ class FellAppController extends Controller {
             if( $interviewer ) {
 
                 //add general interviewer role                
-                $interviewer->addRole('ROLE_FELLAPP_USER');
-                $interviewer->addRole('ROLE_FELLAPP_INTERVIEWER');
+                //$interviewer->addRole('ROLE_FELLAPP_USER');
+                //$interviewer->addRole('ROLE_FELLAPP_INTERVIEWER');
 
                 //add specific interviewer role
                 $interviewer->addRole($interviewerRoleFellType->getName());
@@ -1039,7 +1039,7 @@ class FellAppController extends Controller {
         foreach( $application->getObservers() as $observer ) {
             if( $observer ) {
                 //add general observer role
-                $observer->addRole('ROLE_FELLAPP_USER');
+                //$observer->addRole('ROLE_FELLAPP_USER');
                 $observer->addRole('ROLE_FELLAPP_OBSERVER');
             }
         }

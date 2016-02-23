@@ -222,6 +222,42 @@ class UserRepository extends EntityRepository {
     }
 
 
+    public function findUserRolesBySiteAndPartialRoleName( $user, $sitename, $attribute, $atLeastOne=true ) {
+
+        $userRoles = new ArrayCollection();
+
+        //check if user's roles have permission
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Roles', 'list')
+            ->select("list")
+            ->leftJoin("list.sites","sites")
+            ->where("list.name LIKE :roleName AND (sites.name = :sitename OR sites.abbreviation = :sitename)")
+            ->orderBy("list.id","ASC")
+            ->setParameters( array(
+                'sitename' => $sitename,
+                'roleName' => '%' . $attribute . '%'
+            ));
+
+        //echo "sql=".$query->getQuery()->getSql()."<br>";
+
+        $roles = $query->getQuery()->getResult();
+        //echo "roles count=".count($roles)."<br>";
+        //exit('exit');
+
+        //check if user has one of roles
+        foreach( $roles as $role ) {
+            //echo "role=".$role."<br>";
+            if( $user->hasRole($role) ) {
+                $userRoles->add($role);
+
+                if( $atLeastOne ) {
+                    return $userRoles;
+                }
+            }
+        }
+
+        return $userRoles;
+    }
 
 }
 

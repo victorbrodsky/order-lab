@@ -154,7 +154,7 @@ class UserUtil {
             }
 
             if( $user->getUsername() == "jep2018_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_FELLAPP_COORDINATOR');
+                //$user->addRole('ROLE_FELLAPP_COORDINATOR');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY');
