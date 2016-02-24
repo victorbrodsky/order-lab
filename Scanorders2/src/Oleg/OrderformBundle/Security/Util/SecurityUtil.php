@@ -74,152 +74,18 @@ class SecurityUtil extends UserSecurityUtil {
         }
 
         ///////////////// 1) check if the object is under user's permitted institutions /////////////////
-//        if(0) {
-//        $hasInst = false;
-//
-//        //permittedInstitutionalPHIScope - institutions
-//        $permittedInstitutions = $this->getUserPermittedInstitutions($user);
-//
-//        $entityInstitution = $entity->getInstitution();
-//        foreach( $permittedInstitutions as $permittedInstitution ) {
-//            //echo "permittedInstitution=".$permittedInstitution."<br>";
-//            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($entityInstitution, $permittedInstitution) ) {
-//                //echo "entityInstitution=".$entityInstitution." has a node ".$permittedInstitution."<br>";
-//                $hasInst = true;
-//                //return true;
-//                break;
-//            }
-//        }
-//
-//        //echo "hasInst=".$hasInst."<br>";
-//
-//        //if user's permitted institution is not enough to access this entity => check for collaboration
-//        if( $hasInst == false ) {
-//
-//            $hasCollaborationInst = false;
-//
-//            //Check for collaboration (check if the user belongs to an institution that is in collaboration with an institution to which the patient/order/etc belongs).
-//
-//            $bruteForce = true;
-//            if( !$bruteForce ) {
-//                //check collaboration by one query. Might need it for performance optimization?
-//                if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeHasCollaborationWithUserPermittedInstitutions($entity->getInstitution(), $permittedInstitutions) ) {
-//                    //echo "Collaboration: true <br>";
-//                    $hasCollaborationInst = true;
-//                }
-//            } else {
-//                if(1){
-//                    //Brute force method with foreach
-//                    //1) find collaboration for user's institution if exists
-//                    //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
-//                    foreach( $permittedInstitutions as $permittedInstitution ) {
-//                        if( $hasCollaborationInst == false ) {
-//                            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
-//                                findCollaborationsByNode( $permittedInstitution, $collaborationTypesStrArr ); //array("Union","Intersection")
-//                            foreach( $collaborations as $collaboration ) {
-//                                if( $hasCollaborationInst == false ) {
-//                                    foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
-//                                        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($collaborationInstitution,$entity->getInstitution()) ) {
-//                                            //echo "Collaboration: true <br>";
-//                                            $hasCollaborationInst = true;
-//                                            break;
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }//foreach
-//                } else {
-//                    $hasCollaborationInst = true;
-//                }
-//            }//if brute force
-//
-//            if( $hasCollaborationInst ) {
-//                $hasInst = true;
-//            }
-//        }
-//
-////        $parentNode = $entity->getInstitution();
-////        $node = $allowedInstitutions;
-////        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentNode, $node) ) {
-////            $hasInst = true;
-////            return true;
-////        }
-//
-////        foreach( $allowedInstitutions as $inst ) {
-////            //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";
-////            if( $inst->getId() == $entity->getInstitution()->getId() ) {
-////                $hasInst = true;
-////            }
-////        }
-//
-//        if( $hasInst == false ) {
-//            //exit("hasInst == false");
-//            return false;
-//        }
-//        }//if(0)
-
-//        $hasInst = false;
-//        $permittedInstitutions = $this->getUserPermittedInstitutions($user);
-//
-//        //a) check permitted institutions
-//        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($permittedInstitutions,$entity->getInstitution()) ) {
-//            $hasInst = true;
-//        }
-//
-//        //b) if user's permitted institutions are not enough to access this entity => check for collaboration institutions
-//        if( $hasInst == false ) {
-//            $orderUtil = $this->container->get('scanorder_utility');
-//            $collaborationInstitutions = $orderUtil->getPermittedScopeCollaborationInstitutions($permittedInstitutions,$collaborationTypesStrArr,false);
-//            if( false == $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($collaborationInstitutions,$entity->getInstitution()) ) {
-//                $hasInst = true;
-//            }
-//        }
-//
-//        //c) if entity's institution is not under permitted and collaborated institutions => no permission
-//        if( $hasInst == false ) {
-//            return false;
-//        }
-
         //check if entity is under user's permitted and collaborated institutions
         if( $this->isObjectUnderUserPermittedCollaboratedInstitutions( $entity, $user, $collaborationTypesStrArr ) == false ) {
+            //exit("isObjectUnderUserPermittedCollaboratedInstitutions false");
             return false;
         }
         ///////////////// EOF 1) /////////////////
 
-
-        ///////////////// 2) check if the user is processor or service, division chief /////////////////
-//        if(
-//            $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ||
-//            $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') ||
-//            $this->sc->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ||
-//            $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF')
-//        ){
-//            return true;
-//        }
-        ///////////////// EOF 2) /////////////////
-
-        ///////////////// check if logged in user is granted given action for a given object $entity /////////////////
+        ///////////////// 2) check if logged in user is granted given action for a given object $entity (using voter) /////////////////
         if( $this->isLoggedUserGrantedObjectActions($entity,$actionStrArr) ) {
             return true;
         }
         ///////////////// EOF /////////////////
-
-        ///////////////// 3) submitters  /////////////////
-//        if( $this->sc->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
-//            return true;
-//        }
-        ///////////////// EOF 3) /////////////////
-
-        ///////////////// 4) pathology members  /////////////////
-//        if(
-//            $this->sc->isGranted('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
-//            $this->sc->isGranted('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
-//            $this->sc->isGranted('ROLE_SCANORDER_PATHOLOGY_FACULTY')
-//        ) {
-//            return true;
-//        }
-        ///////////////// EOF 4) /////////////////
 
         return false;
     }
@@ -227,7 +93,7 @@ class SecurityUtil extends UserSecurityUtil {
     //check user actions
     private function isLoggedUserGrantedObjectActions( $entity, $actionStrArr ) {
         if( !$actionStrArr ) {
-            return true;
+            return false;
         }
         foreach( $actionStrArr as $action ) {
             //echo "check action=".$action."<br>";
@@ -251,9 +117,16 @@ class SecurityUtil extends UserSecurityUtil {
         //b) if user's permitted institutions are not enough to access this entity => check for collaboration institutions
         $orderUtil = $this->container->get('scanorder_utility');
         $collaborationInstitutions = $orderUtil->getPermittedScopeCollaborationInstitutions($permittedInstitutions,$collaborationTypesStrArr,false);
+
+        //echo "collaborationInstitutions count=".count($collaborationInstitutions)."<br>";
+        foreach( $collaborationInstitutions as $collaborationInstitution ) {
+            //echo "collaborationInstitution=".$collaborationInstitution."<br>";
+        }
+
         if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($collaborationInstitutions,$entity->getInstitution()) ) {
             return true;
         }
+        //exit("no collaboration institutions");
 
         return false;
     }

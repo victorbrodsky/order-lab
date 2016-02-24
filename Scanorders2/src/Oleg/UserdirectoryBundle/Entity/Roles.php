@@ -57,8 +57,9 @@ class Roles extends ListAbstract {
      */
     private $permissions;
 
+    //@ORM\ManyToMany(targetEntity="SiteList", inversedBy="roles", cascade={"persist"})
     /**
-     * @ORM\ManyToMany(targetEntity="SiteList", inversedBy="roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="SiteList", cascade={"persist"})
      * @ORM\JoinTable(name="user_roles_sites",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")}
@@ -195,7 +196,7 @@ class Roles extends ListAbstract {
 
     public function hasSite( $sitename ) {
         foreach( $this->getSites() as $site ) {
-            if( $site->getName()."" == $sitename ) {
+            if( $site->getName()."" == $sitename || $site->getAbbreviation()."" == $sitename ) {
                 return true;
             }
         }

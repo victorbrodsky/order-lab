@@ -46,23 +46,34 @@ abstract class BasePermissionVoter extends Voter {
     protected function supports($attribute, $subject) {
         //return false; //testing
 
+        $siteRoleBase = $this->getSiteRoleBase();
+        $sitename = $this->getSitename();
+
         $attribute = $this->convertAttribute($attribute);
 
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::CREATE, self::READ, self::UPDATE, self::CHANGESTATUS))) {
-            //exit("Not supported attribute=".$attribute."<br>");
+        if( !$this->supportAttribute($attribute, $subject) ) {
             return false;
         }
 
         //////////// check if the $subject (className string or object) is in PermissionObjectList ////////////
         //$permissionObjects = $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" );
         $className = $this->getClassName($subject);
+
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:PermissionObjectList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
-        $dql->where("list.name = :name");
+        $dql->leftJoin('list.sites','sites');
+        $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
         $query = $this->em->createQuery($dql);
-        $query->setParameters( array('name'=>$className) );
+
+        $query->setParameters(
+            array(
+                'objectname'=>$className,
+                'sitename'=>$sitename
+            )
+        );
+
         $permissionObjects = $query->getResult();
 
         if( count($permissionObjects) > 0 ) {
@@ -71,6 +82,15 @@ abstract class BasePermissionVoter extends Voter {
         //////////// EOF check if the $subject (className string or object) is in PermissionObjectList ////////////
 
         //echo "Supported subject=".$subject."<br>";
+        return false;
+    }
+    // if the attribute isn't one we support, return false
+    protected function supportAttribute($attribute, $subject) {
+        $attribute = $this->convertAttribute($attribute);
+        if( in_array($attribute, array(self::CREATE, self::READ, self::UPDATE, self::CHANGESTATUS)) ) {
+            //exit("Not supported attribute=".$attribute."<br>");
+            return true;
+        }
         return false;
     }
 
@@ -108,21 +128,23 @@ abstract class BasePermissionVoter extends Voter {
 
     protected function canView($subject, TokenInterface $token)
     {
-        //echo "canView? <br>";
-        //exit('1');
-
-        //return false; //test
-
-        // if they can edit, they can view
-        if( $this->canEdit($subject, $token) ) {
-            echo "user can edit <br>";
-            return true;
-        }
+        echo "base canView? <br>";
+        //exit('base canView?');
 
         $user = $token->getUser();
 
         if( !$user instanceof User ) {
             return false;
+        }
+
+        if( $this->preViewCheck($subject,$token) == false ) {
+            return false;
+        }
+
+        // if they can edit, they can view
+        if( $this->canEdit($subject, $token) ) {
+            //echo "user can edit <br>";
+            return true;
         }
 
         $siteRoleBase = $this->getSiteRoleBase();
@@ -199,6 +221,10 @@ abstract class BasePermissionVoter extends Voter {
             return false;
         }
 
+        if( !$this->preEditCheck($subject,$token) ) {
+            return false;
+        }
+
         //ROLE_DEIDENTIFICATOR_ADMIN can do anything
         if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
             //exit('admin!');
@@ -211,11 +237,19 @@ abstract class BasePermissionVoter extends Voter {
 //        }
 
         //minimum requirement: subject must be under user's permitted/collaborated institutions
+        //$subject: string (i.e. "FellowshipApplication") or entity
         if( is_object($subject) ) {
             $securityUtil = $this->container->get('order_security_utility');
-            if ($securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false) {
-                return false;
+
+            //don't perform this check for dummy, empty objects
+            if( $subject->getId() && $subject->getInstitution() ) {
+                if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false) {
+                    return false;
+                }
             }
+        } else {
+            //if subject is string, then it must be used only to show a list of entities =>
+            //there is no institution info => skip the institution check
         }
 
         //echo "can not Edit! <br>";
@@ -268,7 +302,13 @@ abstract class BasePermissionVoter extends Voter {
 
 
 
+    protected function preViewCheck($subject,$token) {
+        return true;
+    }
 
+    protected function preEditCheck($subject,$token) {
+        return true;
+    }
 
 
     protected function getClassName($subject) {

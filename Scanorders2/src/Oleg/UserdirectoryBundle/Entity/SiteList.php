@@ -23,35 +23,36 @@ class SiteList extends ListAbstract
      **/
     protected $original;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Roles", mappedBy="sites")
-     **/
-    private $roles;
+
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Roles", mappedBy="sites")
+//     **/
+//    private $roles;
 
 
 
 
-    public function __construct() {
-        parent::__construct();
-        $this->roles = new ArrayCollection();
-    }
+//    public function __construct() {
+//        parent::__construct();
+//        $this->roles = new ArrayCollection();
+//    }
 
 
 
 
-    public function addRole(Roles $role)
-    {
-        if( !$this->roles->contains($role) ) {
-            $this->roles->add($role);
-        }
-    }
-    public function removeRole(Roles $role)
-    {
-        $this->roles->removeElement($role);
-    }
-    public function getRoles()
-    {
-        return $this->roles;
-    }
+//    public function addRole(Roles $role)
+//    {
+//        if( !$this->roles->contains($role) ) {
+//            $this->roles->add($role);
+//        }
+//    }
+//    public function removeRole(Roles $role)
+//    {
+//        $this->roles->removeElement($role);
+//    }
+//    public function getRoles()
+//    {
+//        return $this->roles;
+//    }
 
 }

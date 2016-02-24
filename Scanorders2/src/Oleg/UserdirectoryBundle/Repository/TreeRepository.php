@@ -163,13 +163,13 @@ class TreeRepository extends NestedTreeRepository {
     public function findCollaborationsByNode( $node, $collaborationTypesStrArr=array("Union") ) {
 
         if( !$collaborationTypesStrArr ) {
-            $msg = "Collaboration is ignored. Collaboration type is null.";
+            $msg = "Collaboration is ignored. Collaboration type array is null.";
             //exit($msg);
             throw new \Exception($msg);
             return array();
         }
         if( count($collaborationTypesStrArr) == 0 ) {
-            $msg = "Collaboration is ignored. Collaboration type is invalid ".print_r($collaborationTypesStrArr);
+            $msg = "Collaboration is ignored. Collaboration type array has no elements: ".print_r($collaborationTypesStrArr);
             //exit($msg);
             throw new \Exception($msg);
             return array();
@@ -201,6 +201,17 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where($criteriastr);
         $query = $this->_em->createQuery($dql);
         $collaborations = $query->getResult();
+
+        //TODO: add collaboration institutions if node is collaboration type and has collaboration institutions
+        //i.e. "WCMC_NYP Collaboration" node has "Collaboration" type and has two collaboration institutions - WCMC and NYP
+        //collaborations
+        foreach( $node->getCollaborationInstitutions() as $collaborationNode ) {
+            if( !in_array($collaborationNode, $collaborations) ) {
+                //echo "collaborationNode=".$collaborationNode->getId()."<br>";
+                $collaborations[] = $collaborationNode;
+            }
+        }
+
 
         //echo "count(collaborations)=".count($collaborations)."<br>";
 

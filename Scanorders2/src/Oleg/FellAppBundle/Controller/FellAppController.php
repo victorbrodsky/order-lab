@@ -398,16 +398,18 @@ class FellAppController extends Controller {
         //user who has the same fell type can view or edit
         //TODO: move it to the fellapp voter additional pre-check
         $fellappUtil = $this->container->get('fellapp_util');
-        if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
+        //if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
+        if( false == $this->get('security.context')->isGranted("read",$entity) ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
+        //exit('fellapp permission ok ID:'.$entity->getId());
 
         if( $routeName == "fellapp_edit" ) {
-            if( false == $this->get('security.context')->isGranted("update",$entity) ){
+            if( false == $this->get('security.context')->isGranted("update",$entity) ) {
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         } else {
-            if( false == $this->get('security.context')->isGranted("read",$entity) ){
+            if( false == $this->get('security.context')->isGranted("read",$entity) ) {
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }

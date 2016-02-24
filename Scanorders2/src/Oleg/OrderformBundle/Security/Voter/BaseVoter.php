@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 
-
+//NOT USED ANYMORE
 abstract class BaseVoter extends Voter {
 
     const CREATE = 'create';

@@ -9,7 +9,7 @@
 namespace Oleg\UserdirectoryBundle\Security\Voter;
 
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+//use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 
@@ -20,7 +20,7 @@ class UserRoleVoter extends BaseRoleVoter {
     }
 
     protected function getSitename() {
-        return 'directory';     //Site abbreviation i.e. fellapp, not fellowship-applications
+        return 'employees';     //Site abbreviation (i.e. fellapp), not site name (i.e. fellowship-applications)
     }
 
 //    //isGranted("ROLE_DEIDENTIFICATOR_USER") or isGranted("ROLE_DEIDENTIFICATOR_BANNED")

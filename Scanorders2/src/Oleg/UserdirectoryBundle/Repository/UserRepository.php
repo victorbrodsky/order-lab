@@ -164,7 +164,7 @@ class UserRepository extends EntityRepository {
             ->leftJoin("permissions.permission","permission")
             ->leftJoin("permission.permissionObjectList","permissionObjectList")
             ->leftJoin("permission.permissionActionList","permissionActionList")
-            ->where("user.id = :user AND permissionObjectList.name = :permissionObject AND permissionActionList.name = :permissionAction")
+            ->where("user.id = :user AND (permissionObjectList.name = :permissionObject OR permissionObjectList.abbreviation = :permissionObject) AND permissionActionList.name = :permissionAction")
             ->orderBy("permissions.id","ASC")
             ->setParameters( array(
                 'user' => $user->getId(),
@@ -192,7 +192,7 @@ class UserRepository extends EntityRepository {
             ->leftJoin("permissions.permission","permission")
             ->leftJoin("permission.permissionObjectList","permissionObjectList")
             ->leftJoin("permission.permissionActionList","permissionActionList")
-            ->where("permissionObjectList.name = :permissionObject AND permissionActionList.name = :permissionAction")
+            ->where("(permissionObjectList.name = :permissionObject OR permissionObjectList.abbreviation = :permissionObject) AND permissionActionList.name = :permissionAction")
             ->orderBy("list.id","ASC")
             ->setParameters( array(
                 'permissionObject' => $object,

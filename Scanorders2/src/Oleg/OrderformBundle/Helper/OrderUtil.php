@@ -1185,7 +1185,7 @@ class OrderUtil {
             if( $withOriginal ) {
                 $permittedInstitutions->add($originalPermittedInstitution);
             }
-            //echo "### permittedInstitution=".$permittedInstitution->getId().":".$permittedInstitution->getName()."<br>";
+            //echo "### permittedInstitution=".$originalPermittedInstitution->getId().":".$originalPermittedInstitution->getName()."<br>";
 
             //get all collaboration to show them in the Order's Institutional PHI Scope
             $collaborationInstitutions = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->

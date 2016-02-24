@@ -582,10 +582,13 @@ class MultiScanOrderController extends Controller {
             $system = $securityUtil->getDefaultSourceSystem();
         }
 
+        //Note: can be replaced by voter:
+        //if( $entity && !$this->get('security.context')->isGranted(implode(",",$actions),$entity) ) {
         if( $entity && !$securityUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
             //exit('isUserAllowOrderActions false');
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
+        //exit('isUserAllowOrderActions true');
 
         $messageCategory = $entity->getMessageCategory()->getName()."";
 

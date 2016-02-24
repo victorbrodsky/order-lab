@@ -4116,33 +4116,59 @@ class AdminController extends Controller
 //        }
 
         $types = array(
-            "Patient",
-            "Patient Data",
-            "Encounter",
-            "Procedure",
-            "Accession",
-            "Part",
-            "Block",
-            "Slide",
-            "Image",
-            "Image Analysis",
-            "Order",
-            "Report",
+            "Patient" => array("",array("scan")),
+            "Patient Data" => array("",array("scan")),
+            "Encounter" => array("",array("scan")),
+            "Procedure" => array("",array("scan")),
 
-            "Interview",
-            "FellowshipApplication"
+            "Accession" => array("",array("scan","deidentifier")),
+
+            "Part" => array("",array("scan")),
+            "Block" => array("",array("scan")),
+            "Slide" => array("",array("scan")),
+            "Image" => array("Imaging",array("scan")),
+            "Image Analysis" => array("",array("scan")),
+            "Order" => array("Message",array("scan")),
+            "Report" => array("",array("scan")),
+
+            "Interview" => array("",array("fellapp")),
+            "FellowshipApplication" => array("",array("fellapp")),
         );
 
         $count = 10;
-        foreach( $types as $type ) {
+        foreach( $types as $name => $abbreviationSiteArr ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findOneByName($type);
+            if( !$name || $name == "" ) {
+                continue;
+            }
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findOneByName($name);
             if( $listEntity ) {
+
+                $abbreviation = $abbreviationSiteArr[0];
+                if( $abbreviation && $abbreviation != "" ) {
+                    if( !$listEntity->getAbbreviation() ) {
+                        $listEntity->setAbbreviation($abbreviation);
+                        $em->persist($listEntity);
+                        $em->flush();
+                    }
+                }
+
+                $sites = $abbreviationSiteArr[1];
+                foreach( $sites as $site ) {
+                    $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($site);
+                    if( !$listEntity->getSites()->contains($siteObject) ) {
+                        $listEntity->addSite($siteObject);
+                        $em->persist($listEntity);
+                        $em->flush();
+                    }
+                }
+
                 continue;
             }
 
             $listEntity = new PermissionObjectList();
-            $this->setDefaultList($listEntity,$count,$username,$type);
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);
             $em->flush();
@@ -4279,11 +4305,13 @@ class AdminController extends Controller
 
             //disable already existing general roles
             if(
+                $role == "ROLE_FELLAPP_USER"        ||
                 $role == "ROLE_FELLAPP_INTERVIEWER" ||
                 $role == "ROLE_FELLAPP_COORDINATOR" ||
                 $role == "ROLE_FELLAPP_DIRECTOR"
             ) {
                 $role->setType('disabled');
+                $resCount++;
             }
 
 
