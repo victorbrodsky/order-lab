@@ -46,29 +46,7 @@ class ScanPermissionVoter extends BasePermissionVoter {
         return 'scan';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 
-    protected function supports_ORIG($attribute, $subject) {
 
-        if( !$this->supportAttribute($attribute, $subject) ) {
-            return false;
-        }
-
-        // only vote on Patient hierarchy objects inside this voter
-        if(
-            $subject instanceof Patient ||
-            $subject instanceof Encounter ||
-            $subject instanceof Procedure ||
-            $subject instanceof Accession ||
-            $subject instanceof Part ||
-            $subject instanceof Block ||
-            $subject instanceof Slide ||
-            $subject instanceof Imaging
-        ) {
-            //exit("Not supported subject=".$subject."<br>");
-            return true;
-        }
-
-        return false;
-    }
 
     //TODO: might add additional check:
     //isOwner - owner can perform any actions for this object
@@ -159,85 +137,5 @@ class ScanPermissionVoter extends BasePermissionVoter {
         return false;
     }
 
-
-
-//    //you can use anything
-////    const VIEW = 'view';
-////    const SHOW = 'show';
-////
-////    const EDIT = 'edit';
-////    const AMEND = 'amend';
-////
-////    const DELETE = 'delete'; //mark it inactive/invalid since we don't delete; this and 3 above are for Data Quality role
-////
-////    const CREATE = 'create';
-////    const CHANGESTATUS = 'changestatus';
-//
-//
-//    protected function supports($attribute, $subject)
-//    {
-//        return false; //testing
-//        echo "PatientHierarchyVoter: support <br>";
-//
-//        $attribute = $this->convertAttribute($attribute);
-//
-//        // if the attribute isn't one we support, return false
-//        if (!in_array($attribute, array(self::CREATE, self::READ, self::UPDATE, self::DELETE, self::CHANGESTATUS))) {
-//            //exit("Not supported attribute=".$attribute."<br>");
-//            return false;
-//        }
-//
-//        // only vote on Patient hierarchy objects inside this voter
-//        if(
-//            !$subject instanceof Patient &&
-//            !$subject instanceof Encounter &&
-//            !$subject instanceof Procedure &&
-//            !$subject instanceof Accession &&
-//            !$subject instanceof Part &&
-//            !$subject instanceof Block &&
-//            !$subject instanceof Slide &&
-//            !$subject instanceof Imaging
-//        ) {
-//            //exit("Not supported subject=".$subject."<br>");
-//            return false;
-//        }
-//
-//        //echo "Supported subject=".$subject."<br>";
-//        return true;
-//    }
-//
-//    //if return false it redirect to main page (access_denied_url?): "You don't have permission to visit this page on Scan Order site. If you already applied for access, then try to Re-Login"
-//    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
-//    {
-//        $attribute = $this->convertAttribute($attribute);
-//
-//        $user = $token->getUser();
-//
-//        if (!$user instanceof User) {
-//            // the user must be logged in; if not, deny access
-//            return false;
-//        }
-//
-//        //echo "attribute=".$attribute."<br>";
-//
-//        switch($attribute) {
-//
-//            case self::CREATE:
-//                return $this->canCreate($subject, $token);
-//
-//            case self::READ:
-//                return $this->canView($subject, $token);
-//
-//            case self::UPDATE:
-//                return $this->canEdit($subject, $token);
-//
-//            case self::CHANGESTATUS:
-//                return $this->canChangeStatus($subject, $token);
-//        }
-//
-//        throw new \LogicException('This code should not be reached!');
-//    }
-//
-//
 
 } 

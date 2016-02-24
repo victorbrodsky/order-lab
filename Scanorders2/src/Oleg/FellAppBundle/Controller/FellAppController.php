@@ -396,7 +396,7 @@ class FellAppController extends Controller {
         }
 
         //user who has the same fell type can view or edit
-        //TODO: move it to the fellapp voter additional pre-check
+        //can use hasFellappPermission or isGranted("read",$entity). isGranted("read",$entity) fellapp voter contains hasFellappPermission
         $fellappUtil = $this->container->get('fellapp_util');
         //if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
         if( false == $this->get('security.context')->isGranted("read",$entity) ) {

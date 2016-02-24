@@ -175,3 +175,10 @@ services:
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
+
+    user_permission_voter:
+        class: Oleg\UserdirectoryBundle\Security\Voter\UserPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }

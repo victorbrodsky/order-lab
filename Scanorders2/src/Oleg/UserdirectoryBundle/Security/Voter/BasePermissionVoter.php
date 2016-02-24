@@ -128,16 +128,12 @@ abstract class BasePermissionVoter extends Voter {
 
     protected function canView($subject, TokenInterface $token)
     {
-        echo "base canView? <br>";
+        //echo "base canView? <br>";
         //exit('base canView?');
 
         $user = $token->getUser();
 
         if( !$user instanceof User ) {
-            return false;
-        }
-
-        if( $this->preViewCheck($subject,$token) == false ) {
             return false;
         }
 
@@ -221,10 +217,6 @@ abstract class BasePermissionVoter extends Voter {
             return false;
         }
 
-        if( !$this->preEditCheck($subject,$token) ) {
-            return false;
-        }
-
         //ROLE_DEIDENTIFICATOR_ADMIN can do anything
         if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
             //exit('admin!');
@@ -300,15 +292,6 @@ abstract class BasePermissionVoter extends Voter {
 
 
 
-
-
-    protected function preViewCheck($subject,$token) {
-        return true;
-    }
-
-    protected function preEditCheck($subject,$token) {
-        return true;
-    }
 
 
     protected function getClassName($subject) {

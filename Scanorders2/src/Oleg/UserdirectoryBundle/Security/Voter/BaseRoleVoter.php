@@ -134,16 +134,6 @@ abstract class BaseRoleVoter extends Voter {
         }
 
         //Check if a $user has this role or partial role name ($attribute) with given $sitename
-        //TODO: check by partial role name
-//        $roleObject = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($attribute);
-//        if( $roleObject ) {
-//            foreach( $roleObject->getSites() as $site ) {
-//                if( $site->getName()."" == $sitename || $site->getAbbreviation()."" == $sitename ) {
-//                    exit($attribute.': Dummy unknown site ok');
-//                    return true;
-//                }
-//            }
-//        }
         $roleObjects = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user,$sitename,$attribute);
         //echo $attribute.": roleObjects count=".count($roleObjects)."<br>";
         if( count($roleObjects) > 0 ) {
