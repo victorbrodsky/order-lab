@@ -24,7 +24,7 @@ class FellAppLoggerController extends LoggerController
      *
      * @Route("/", name="fellapp_logger")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
+     * @Template("OlegFellAppBundle:Logger:index.html.twig")
      */
     public function indexAction(Request $request)
     {
