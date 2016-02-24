@@ -372,9 +372,15 @@
                 <div id="persiteadminsettings" class="panel-collapse collapse {{ collapsein }}">
                     <div class="panel-body">
 
-                        {{ formmacros.field(form.perSiteSettings.permittedInstitutionalPHIScope) }}
-                        {{ formmacros.field(form.perSiteSettings.scanOrdersServicesScope) }}
-                        {{ formmacros.field(form.perSiteSettings.chiefServices) }}
+                        {% if form.perSiteSettings.permittedInstitutionalPHIScope is defined %}
+                            {{ formmacros.field(form.perSiteSettings.permittedInstitutionalPHIScope) }}
+                        {% endif %}
+                        {% if form.perSiteSettings.scanOrdersServicesScope is defined %}
+                            {{ formmacros.field(form.perSiteSettings.scanOrdersServicesScope) }}
+                        {% endif %}
+                        {% if form.perSiteSettings.chiefServices is defined %}
+                            {{ formmacros.field(form.perSiteSettings.chiefServices) }}
+                        {% endif %}
 
                     </div>
                 </div>
