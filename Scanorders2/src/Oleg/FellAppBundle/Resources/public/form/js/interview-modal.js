@@ -2,7 +2,7 @@
  * Created by oli2002 on 11/11/15.
  */
 
-console.log('include interview-modal.js');
+//console.log('include interview-modal.js');
 
 function initInterviewModal() {
     $('.btn-interview-info-modal').click(function(ev) {
@@ -15,10 +15,10 @@ function initInterviewModal() {
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
 function interviewModalCreation( btnEl, fellappId ) {
 
-    console.log('interviewModalAction fellappId='+fellappId);
+    //console.log('interviewModalAction fellappId='+fellappId);
 
     var url = getCommonBaseUrl("interview-modal/"+fellappId);
-    console.log('url='+url);
+    //console.log('url='+url);
 
 //    $( "#interview-info-modal" ).load( url, function() {
 //        console.log( "Load was performed. fellappId="+fellappId );
@@ -96,7 +96,7 @@ function interviewModalCreation( btnEl, fellappId ) {
 }
 
 function sendInviteInterviewersToRate(url,confirmMsg) {
-    console.log("inviteinterviewerstorate: url="+url);
+    //console.log("inviteinterviewerstorate: url="+url);
     var r = confirm(confirmMsg);
     if( r == false ) {
         return;
@@ -105,7 +105,7 @@ function sendInviteInterviewersToRate(url,confirmMsg) {
         type: 'GET',
         url: url,
         success: function(response){
-            console.log('response ok');
+            //console.log('response ok');
             if( response == "ok" ) {
                 alert("Invitation email(s) have been successfully sent.");
             }

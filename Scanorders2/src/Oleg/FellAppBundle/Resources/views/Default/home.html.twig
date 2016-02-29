@@ -115,7 +115,7 @@
                 <div class="col-xs-2">
                     <div class="btn-group btn-group-justified">
                         <div class="btn-group">
-                            <button type="submit" class="btn btn-sm btn-default fellapp-filter-btn"><i class="icon-search"></i>Filter</button>
+                            <button type="submit" id="filter-btn" class="btn btn-sm btn-default fellapp-filter-btn"><i class="icon-search"></i>Filter</button>
                         </div>
                     </div>
                 </div>
@@ -830,6 +830,8 @@
 
             initInterviewModal();
 
+            changeFilterColorButton();
+
             //onInterviewModalShow();
 
             /////////// set default year by JS ///////////
@@ -849,6 +851,39 @@
 
         });
 
+        //I think the "Filter" button needs to turn green if any of the fields
+        // in the filter well are modified. When the "Filter" button is pressed
+        // it should become grey again.
+        function changeFilterColorButton() {
+            var filterBtn = $('#filter-btn');
+            var filterForm = filterBtn.closest('.form-search');
+
+            //datepicker
+            filterForm.find('.datepicker-only-year').on('change',function() {
+                chnageBtnColorGreen(filterBtn);
+            });
+
+            //combobox
+            filterForm.find('.combobox').on('change',function() {
+                chnageBtnColorGreen(filterBtn);
+            });
+
+            //text
+            filterForm.find('text').on('input',function() {
+                chnageBtnColorGreen(filterBtn);
+            });
+
+            //input
+            filterForm.find('input').on('input',function() {
+                chnageBtnColorGreen(filterBtn);
+            });
+
+            function chnageBtnColorGreen(filterBtn) {
+                filterBtn.removeClass('btn-default');
+                filterBtn.addClass('btn-success');
+            }
+
+        }
 
 //        function getParameterByName(name) {
 //            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
