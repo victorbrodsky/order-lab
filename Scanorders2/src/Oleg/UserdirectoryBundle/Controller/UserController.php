@@ -2895,7 +2895,10 @@ class UserController extends Controller
     public function getUserRoles() {
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(array(), array('orderinlist' => 'ASC'));  //findAll();
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(
+            array('type' => array('default','user-added')),
+            array('orderinlist' => 'ASC')
+        );  //findAll();
         foreach( $roles as $role ) {
             $rolesArr[$role->getName()] = $role->getAlias();
         }

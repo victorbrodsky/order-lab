@@ -4303,15 +4303,23 @@ class AdminController extends Controller
             $resCount = $resCount + $this->addFellAppPermission( $role );
 
 
-            //disable already existing general roles
+            //disable/remove already existing general roles
             if(
                 $role == "ROLE_FELLAPP_USER"        ||
                 $role == "ROLE_FELLAPP_INTERVIEWER" ||
                 $role == "ROLE_FELLAPP_COORDINATOR" ||
                 $role == "ROLE_FELLAPP_DIRECTOR"
             ) {
-                $role->setType('disabled');
-                $resCount++;
+                //$role->setType('disabled');
+                //remove role
+                foreach( $role->getSites() as $site ) {
+                    $role->removeSite($site);
+                }
+                $em->remove($role);
+                $em->flush();
+                $count++;
+                //$resCount++;
+                continue;
             }
 
 
