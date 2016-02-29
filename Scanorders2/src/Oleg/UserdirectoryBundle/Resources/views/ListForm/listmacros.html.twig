@@ -86,10 +86,13 @@
                 <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
             {% endif %}
 
+            {% if entities|first.sites is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
+            {% endif %}
 
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
+
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
@@ -212,15 +215,16 @@
                     </td>
                 {% endif %}
 
+                {% if entity.sites is defined %}
+                    <td>
+                        {% for site in entity.sites %}
+                            <p>{{ site.name }}</p>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.orderinlist }}</td>
-
-                <td>
-                    {% for site in entity.sites %}
-                        <p>{{ site.name }}</p>
-                    {% endfor %}
-                </td>
-
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
