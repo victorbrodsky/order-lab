@@ -1269,12 +1269,14 @@ class FellAppUtil {
         $dql->select('fellapp');
         $dql->leftJoin("fellapp.appStatus", "appStatus");
 
-        $statusArr = explode("-", $status);
-        $statusStr = $statusArr[0];
-        $statusNot = $statusArr[1];
-        if( $statusNot && $statusNot == 'not' ) {
-            //'interviewee-not' is dummy status which is all statuses but not
-            $dql->where("appStatus.name != '" . $statusStr . "'");
+        if( strpos($status, "-") !== false ) {
+            $statusArr = explode("-", $status);
+            $statusStr = $statusArr[0];
+            $statusNot = $statusArr[1];
+            if( $statusNot && $statusNot == 'not' ) {
+                //'interviewee-not' is dummy status which is all statuses but not
+                $dql->where("appStatus.name != '" . $statusStr . "'");
+            }
         } else {
             $dql->where("appStatus.name = '" . $status . "'");
         }
