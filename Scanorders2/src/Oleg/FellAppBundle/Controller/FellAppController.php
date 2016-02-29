@@ -231,6 +231,8 @@ class FellAppController extends Controller {
             if( $startYearStr != $currentYear ) {
                 $searchFlag = true;
             }
+        } else {
+            $startYearStr = $currentYear;
         }
 
         if( $route == "fellapp_myinterviewees" ) {
@@ -263,25 +265,27 @@ class FellAppController extends Controller {
 
         $accessreqs = $fellappUtil->getActiveAccessReq();
 
-        $complete = $fellappUtil->getFellAppByStatusAndYear('complete',$fellSubspecId,$currentYear);
+        //use date from the filter ($startYearStr) instead of $currentYear
+
+        $complete = $fellappUtil->getFellAppByStatusAndYear('complete',$fellSubspecId,$startYearStr);
         $completeTotal = $fellappUtil->getFellAppByStatusAndYear('complete',$fellSubspecId);
 
-        $hidden = $fellappUtil->getFellAppByStatusAndYear('hide',$fellSubspecId,$currentYear);
+        $hidden = $fellappUtil->getFellAppByStatusAndYear('hide',$fellSubspecId,$startYearStr);
         $hiddenTotal = $fellappUtil->getFellAppByStatusAndYear('hide',$fellSubspecId);
 
-        $archived = $fellappUtil->getFellAppByStatusAndYear('archive',$fellSubspecId,$currentYear);
+        $archived = $fellappUtil->getFellAppByStatusAndYear('archive',$fellSubspecId,$startYearStr);
         $archivedTotal = $fellappUtil->getFellAppByStatusAndYear('archive',$fellSubspecId);
 
-        $active = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId,$currentYear);
+        $active = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId,$startYearStr);
         $activeTotal = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId);
 
-        $interviewee = $fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecId,$currentYear);
+        $interviewee = $fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecId,$startYearStr);
         $intervieweeTotal = $fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecId);
 
-        $reject = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId,$currentYear);
+        $reject = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId,$startYearStr);
         $rejectTotal = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId);
 
-        $onhold = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId,$currentYear);
+        $onhold = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId,$startYearStr);
         $onholdTotal = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId);
 
         //echo "timezone=".date_default_timezone_get()."<br>";
@@ -290,6 +294,17 @@ class FellAppController extends Controller {
         foreach( $fellApps as $fellApp ) {
             $idsArr[] = $fellApp->getId();
         }
+
+        //Showing applications of your interviewees: 25 evaluations received, 10 awaited
+        $awaitedInterviews = null;
+        $receivedInterviews = null;
+        if( $route == "fellapp_myinterviewees" ) {
+            $awaitedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee-not',$fellSubspecId,$startYearStr,$user));
+            $receivedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecId,$startYearStr,$user));
+            //echo "awaitedInterviews=".$awaitedInterviews."<br>";
+            //echo "receivedInterviews=".$receivedInterviews."<br>";
+        }
+
         
         return array(
             'entities' => $fellApps,
@@ -299,7 +314,7 @@ class FellAppController extends Controller {
             'startDate' => $startDate,
             'filter' => $fellSubspecId,
             'accessreqs' => count($accessreqs),
-            'currentYear' => $currentYear,
+            'currentYear' => $startYearStr, //$currentYear,
             'hiddenTotal' => count($hiddenTotal),
             'archivedTotal' => count($archivedTotal),
             'hidden' => count($hidden),
@@ -314,6 +329,8 @@ class FellAppController extends Controller {
             'completeTotal' => count($completeTotal),
             'interviewee' => count($interviewee),
             'intervieweeTotal' => count($intervieweeTotal),
+            'awaitedInterviews' => $awaitedInterviews,
+            'receivedInterviews' => $receivedInterviews,
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "", //date_default_timezone_get(),
             'fellappids' => implode("-",$idsArr),

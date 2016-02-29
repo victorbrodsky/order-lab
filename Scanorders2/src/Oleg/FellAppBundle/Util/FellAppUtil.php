@@ -1262,13 +1262,22 @@ class FellAppUtil {
         return $accessreqs;
     }
 
-    public function getFellAppByStatusAndYear($status,$fellSubspecId,$year=null) {
+    public function getFellAppByStatusAndYear($status,$fellSubspecId,$year=null,$interviewer=null) {
 
         $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
         $dql->leftJoin("fellapp.appStatus", "appStatus");
-        $dql->where("appStatus.name = '" . $status . "'");
+
+        $statusArr = explode("-", $status);
+        $statusStr = $statusArr[0];
+        $statusNot = $statusArr[1];
+        if( $statusNot && $statusNot == 'not' ) {
+            //'interviewee-not' is dummy status which is all statuses but not
+            $dql->where("appStatus.name != '" . $statusStr . "'");
+        } else {
+            $dql->where("appStatus.name = '" . $status . "'");
+        }
 
         if( $fellSubspecId ) {
             $dql->leftJoin("fellapp.fellowshipSubspecialty","fellowshipSubspecialty");
@@ -1276,16 +1285,54 @@ class FellAppUtil {
         }
 
         if( $year ) {
-            $bottomDate = "01-01-".$year;
-            $topDate = "12-31-".$year;
+            $bottomDate = $year."-01-01";
+            $topDate = $year."-12-31";
             $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
         }
+
+        if( $interviewer ) {
+            $dql->leftJoin("fellapp.interviews", "interviews");
+            $dql->leftJoin("interviews.interviewer", "interviewer");
+            $dql->andWhere("interviewer.id=".$interviewer->getId());
+        }
+
+        //echo "dql=".$dql."<br>";
 
         $query = $this->em->createQuery($dql);
         $applicants = $query->getResult();
 
         return $applicants;
     }
+
+//    public function getFellAppByUserAndStatusAndYear($subjectUser, $status,$fellSubspecId,$year=null) {
+//
+//        $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
+//        $dql =  $repository->createQueryBuilder("fellapp");
+//        $dql->select('fellapp');
+//        $dql->leftJoin("fellapp.appStatus", "appStatus");
+//        $dql->where("appStatus.name = '" . $status . "'");
+//
+//        if( $fellSubspecId ) {
+//            $dql->leftJoin("fellapp.fellowshipSubspecialty","fellowshipSubspecialty");
+//            $dql->andWhere("fellowshipSubspecialty.id=".$fellSubspecId);
+//        }
+//
+//        if( $year ) {
+//            $bottomDate = "01-01-".$year;
+//            $topDate = "12-31-".$year;
+//            $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+//        }
+//
+//        if( $subjectUser ) {
+//            $dql->leftJoin("fellapp.interviews", "interviews");
+//            $dql->andWhere("interviews.interviewer=".$subjectUser);
+//        }
+//
+//        $query = $this->em->createQuery($dql);
+//        $applicants = $query->getResult();
+//
+//        return $applicants;
+//    }
 
     //get fellowship types based on the user roles
     public function getFellowshipTypesByUser( $user ) {

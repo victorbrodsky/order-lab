@@ -114,8 +114,8 @@ class FellAppApplicantController extends Controller {
 
         $startDate = $entity->getStartDate();
         $startDateStr = $startDate->format('Y');
-        $bottomDate = "01-01-".$startDateStr;
-        $topDate = "12-31-".$startDateStr;
+        $bottomDate = $startDateStr."-01-01";
+        $topDate = $startDateStr."-12-31";
         $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
         $dql->andWhere("fellapp.interviewScore IS NOT NULL AND fellapp.interviewScore != '0'");

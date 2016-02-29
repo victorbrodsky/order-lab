@@ -41,7 +41,7 @@
     {% if lastImportTimestamp and fellappids is defined and fellappids %}
         <p>
             <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
-            <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}" 
+            <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
                    data-toggle="tooltip" title="Download Displayed Application Summaries in Excel">
                    {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
                     <i class="fa fa-file-excel-o"></i>
@@ -57,6 +57,25 @@
                 <i class="fa fa-file-pdf-o"></i>
             </a>
         </p>
+    {% endif %}
+
+    {% if awaitedInterviews is not null and receivedInterviews is not null %}
+        <p><b>
+            {#"Showing applications of your interviewees: 25 evaluations received, 10 awaited"#}
+            {% if awaitedInterviews > 0 and receivedInterviews > 0 %}
+                Showing applications of your interviewees: {{ receivedInterviews }} evaluations received, {{ awaitedInterviews }} awaited
+            {% endif %}
+
+            {#"Showing applications of your interviewees: all 35 evaluations received, thank you!"#}
+            {% if awaitedInterviews == 0 and receivedInterviews > 0 %}
+                Showing applications of your interviewees: all {{ receivedInterviews }} evaluations received, thank you!
+            {% endif %}
+
+            {#You have not been assigned as an interviewer to any applicants for the selected year: no applications to show#}
+            {% if awaitedInterviews == 0 and receivedInterviews == 0 %}
+                You have not been assigned as an interviewer to any applicants for the selected year: no applications to show
+            {% endif %}
+        </b></p>
     {% endif %}
 
     {#<p>#}
