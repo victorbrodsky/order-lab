@@ -2027,7 +2027,7 @@ function setArrayField(element, dataArr, parent) {
 
         //console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
-        if( validity == 'invalid' && dataArr.length > 1 ) {
+        if( (validity == 'invalid' || validity == 'deidentified-valid' || validity == 'deidentifier') && dataArr.length > 1 ) {
             continue;
         }
 
