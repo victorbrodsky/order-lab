@@ -402,9 +402,9 @@ class AccessRequestController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:AccessRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
-        $dql->innerJoin('accreq.user','user');
-        $dql->innerJoin('user.infos','infos');
-        $dql->innerJoin('user.keytype','keytype');
+        $dql->leftJoin('accreq.user','user');
+        $dql->leftJoin('user.infos','infos');
+        $dql->leftJoin('user.keytype','keytype');
         $dql->leftJoin('accreq.updatedby','updatedby');
         $dql->leftJoin('updatedby.infos','updatedbyinfos');
         $dql->where("accreq.siteName = '" . $sitename . "'" );
@@ -428,7 +428,12 @@ class AccessRequestController extends Controller
         $pagination = $paginator->paginate(
             $query,
             $this->get('request')->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
+            $limit,     /*limit per page*/
+            array(
+                'defaultSortFieldName' => 'accreq.createdate',
+                'defaultSortDirection' => 'DESC',
+                'wrap-queries'=>true
+            )
         );
 
         $sitenameFull = $this->siteNameStr;
@@ -438,7 +443,7 @@ class AccessRequestController extends Controller
             'roles' => $rolesArr,
             'sitename' => $sitename,
             'sitenameshowuser' => $this->siteNameShowuser,
-            'sitenamefull'=>$sitenameFull
+            'sitenamefull' => $sitenameFull
         );
 
     }

@@ -42,7 +42,7 @@
             <td class="rowlink-skip">
                 <a href="{{ path(sitenameshowuser~'_showuser', { 'id': entity.user.id }) }}">{{ entity.id }}</a>
             </td>
-            <td>{{ entity.createdate|date('Y-m-d H:i') }}</td>
+            <td>{{ entity.createdate|date('Y-m-d h:i a') }}</td>
             <td>{{ entity.getStatusStr|capitalize }}</td>
             <td>{{ entity.user }}</td>
             <td>{{ entity.user.keytype }}</td>
@@ -56,11 +56,11 @@
                     {% endif %}
                 {% endfor %}
             </td>
-            <td>{{ entity.user.lastLogin|date('Y-m-d H:i') }}</td>
+            <td>{{ entity.user.lastLogin|date('Y-m-d h:i a') }}</td>
 
             <td>
                 {% if entity.updatedate %}
-                    {{ entity.updatedate|date('Y-m-d H:i') }}
+                    {{ entity.updatedate|date('Y-m-d h:i a') }}
                 {% endif %}
             </td>
 
