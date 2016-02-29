@@ -126,6 +126,7 @@ class LoggerController extends Controller
         $dql =  $repository->createQueryBuilder("logger");
         $dql->select('logger');
         $dql->innerJoin('logger.eventType', 'eventType');
+        $dql->leftJoin('logger.objectType', 'objectType');
 
         if( $allsites == null || $allsites == false ) {
             $dql->where("logger.siteName = '".$sitename."'");
@@ -146,7 +147,7 @@ class LoggerController extends Controller
             $queryParameters = array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId );
 
             $dql->andWhere('logger.entityNamespace = :entityNamespace');
-            $dql->andWhere('logger.entityName = :entityName');
+            $dql->andWhere('logger.objectType = :objectType');
             $dql->andWhere('logger.entityId = :entityId');
 
             if( $onlyheader ) {
@@ -273,7 +274,7 @@ class LoggerController extends Controller
 
         $ip = $filterform['ip']->getData();
         $roles = $filterform['roles']->getData();
-        $objectName = $filterform['objectName']->getData();
+        $objectTypes = $filterform['objectType']->getData();
         $objectId = $filterform['objectId']->getData();
 
         $currentUser = $this->get('security.context')->getToken()->getUser();
@@ -347,9 +348,20 @@ class LoggerController extends Controller
             $filtered = true;
         }
 
-        if( $objectName ) {
-            $dql->andWhere("logger.entityName = :objectName");
-            $dqlParameters['objectName'] = $objectName;
+        if( $objectTypes ) {
+            $objectTypeStr = "";
+            foreach( $objectTypes as $objectType ) {
+                //echo "objectType=".$objectType."<br>";
+                if( $objectTypeStr ) {
+                    $objectTypeStr .= " OR ";
+                }
+                $objectTypeStr .= "logger.objectType = " . $objectType->getId();
+            }
+            if( $objectTypeStr ) {
+                $dql->andWhere($objectTypeStr);
+            }
+            //$dql->andWhere("logger.objectType = :objectType");
+            //$dqlParameters['objectType'] = $objectType;
 
             $filtered = true;
         }

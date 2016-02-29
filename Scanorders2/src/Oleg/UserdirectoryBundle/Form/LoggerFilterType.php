@@ -127,10 +127,29 @@ class LoggerFilterType extends AbstractType
                 },
         ));
 
-        $builder->add('objectName', 'text', array(
-            'required'=>false,
+//        $builder->add('objectName', 'text', array(
+//            'required'=>false,
+//            'label' => false,
+//            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+//        ));
+        //objectType
+        $builder->add('objectType', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:EventObjectTypeList',
+            //'placeholder' => 'Fellowship Type',
+            'property' => 'name',
             'label' => false,
-            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class' => 'combobox'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.name","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
         ));
 
         $builder->add('objectId', 'text', array(

@@ -14,6 +14,7 @@ use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
+use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
@@ -248,7 +249,7 @@ class AdminController extends Controller
         $count_PermissionObjects = $this->generatePermissionObjects();
         $count_PermissionActions = $this->generatePermissionActions();
 
-        //$count_syncRolesDb = $this->syncRolesDb();
+        $count_EventObjectTypeList = $this->generateEventObjectTypeList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -311,8 +312,7 @@ class AdminController extends Controller
             'PermissionObjects ='.$count_PermissionObjects.', '.
             'PermissionActions ='.$count_PermissionActions.', '.
             'Collaboration Types='.$collaborationtypes.', '.
-            //'EventTypeListSync count='.$count_EventTypeListSync.', '.
-            //'syncRolesDb ='.$count_syncRolesDb.' '.
+            'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -4213,6 +4213,60 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+    public function generateEventObjectTypeList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
+        $query = $repository->createQueryBuilder('logger')
+            ->select('logger.entityName')
+            ->distinct()
+            ->getQuery();
+        $types = $query->getResult();
+
+//        if( count($types) == 0 ) {
+//            $types = array(
+//                "User",
+//                "SiteList",
+//                "FellowshipApplication",
+//                "Accession",
+//                "AccessionAccession",
+//                "Roles"
+//            );
+//        }
+
+        $count = 10;
+        foreach( $types as $type ) {
+
+            //print_r($type);
+            //$entityName = $type;    //$type['entityName'];
+            $entityName = $type['entityName'];
+            //echo "entityName=".$entityName."<br>";
+            //exit('1');
+
+            if( !$entityName ) {
+                continue;
+            }
+            //echo "entityName=".$entityName."<br>";
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName($entityName);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new EventObjectTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$entityName);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
     /**
      * @Route("/sync-db/", name="user_sync_db")

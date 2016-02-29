@@ -52,7 +52,7 @@
             </div>
 
             <div class="col-xs-3">
-                {{ form_row(loggerfilter.objectName, {'attr': {'placeholder': 'Object Name'}}) }}
+                {{ form_row(loggerfilter.objectType, {'attr': {'placeholder': 'Object Name'}}) }}
             </div>
 
             <div class="col-xs-3">
@@ -86,7 +86,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'eventType.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Event', 'logger.event') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'AD Server Response', 'logger.serverresponse') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Object Name', 'logger.entityName') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Object Name', 'objectType.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Object ID', 'logger.entityId') }}</th>
                 {#<th>Actions</th>#}
             </tr>
@@ -142,7 +142,7 @@
                         <textarea class="textarea form-control">{{ entity.serverresponse }}</textarea>
                     </div>
                 </td>
-                <td>{{ entity.entityName }}</td>
+                <td>{{ entity.objectType }}</td>
                 <td>{{ entity.entityId }}</td>
             </tr>
         {% endfor %}

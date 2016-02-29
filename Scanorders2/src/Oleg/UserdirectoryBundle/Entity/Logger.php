@@ -100,6 +100,12 @@ class Logger
     private $entityName;
 
     /**
+     * @ORM\ManyToOne(targetEntity="EventObjectTypeList")
+     * @ORM\JoinColumn(name="objectType_id", referencedColumnName="id", nullable=true)
+     **/
+    private $objectType;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $entityId;
@@ -410,6 +416,22 @@ class Logger
     public function getEntityNamespace()
     {
         return $this->entityNamespace;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjectType()
+    {
+        return $this->objectType;
+    }
+
+    /**
+     * @param mixed $objectType
+     */
+    public function setObjectType($objectType)
+    {
+        $this->objectType = $objectType;
     }
 
     /**

@@ -92,6 +92,7 @@ class ListController extends Controller
      * @Route("/permission-objects/", name="permissionobject-list")
      * @Route("/permission-actions/", name="permissionaction-list")
      * @Route("/sites/", name="sites-list")
+     * @Route("/event-object-types/", name="eventobjecttypes-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -302,6 +303,7 @@ class ListController extends Controller
      * @Route("/permission-objects/", name="permissionobject_create")
      * @Route("/permission-actions/", name="permissionaction_create")
      * @Route("/sites/", name="sites_create")
+     * @Route("/event-object-types/", name="eventobjecttypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -454,6 +456,7 @@ class ListController extends Controller
      * @Route("/permission-objects/new", name="permissionobject_new")
      * @Route("/permission-actions/new", name="permissionaction_new")
      * @Route("/sites/new", name="sites_new")
+     * @Route("/event-object-types/new", name="eventobjecttypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -577,6 +580,7 @@ class ListController extends Controller
      * @Route("/permission-objects/{id}", name="permissionobject_show")
      * @Route("/permission-actions/{id}", name="permissionaction_show")
      * @Route("/sites/{id}", name="sites_show")
+     * @Route("/event-object-types/{id}", name="eventobjecttypes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -690,6 +694,7 @@ class ListController extends Controller
      * @Route("/permission-objects/{id}/edit", name="permissionobject_edit")
      * @Route("/permission-actions/{id}/edit", name="permissionaction_edit")
      * @Route("/sites/{id}/edit", name="sites_edit")
+     * @Route("/event-object-types/{id}/edit", name="eventobjecttypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -846,6 +851,7 @@ class ListController extends Controller
      * @Route("/permission-objects/{id}", name="permissionobject_update")
      * @Route("/permission-actions/{id}", name="permissionaction_update")
      * @Route("/sites/{id}", name="sites_update")
+     * @Route("/event-object-types/{id}", name="eventobjecttypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1424,6 +1430,10 @@ class ListController extends Controller
                 $className = "SiteList";
                 $displayName = "Sites List";
                 break;
+            case "eventobjecttypes":
+                $className = "EventObjectTypeList";
+                $displayName = "Event Log Object Types";
+                break;
 
             default:
                 $className = null;
@@ -1522,6 +1532,7 @@ class ListController extends Controller
      * @Route("/permission-objects/{id}", name="permissionobject_delete")
      * @Route("/permission-actions/{id}", name="permissionaction_delete")
      * @Route("/sites/{id}", name="sites_delete")
+     * @Route("/event-object-types/{id}", name="eventobjecttypes_delete")
      *
      *
      * @Method("DELETE")
