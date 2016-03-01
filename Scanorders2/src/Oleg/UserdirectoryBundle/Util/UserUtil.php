@@ -312,6 +312,13 @@ class UserUtil {
             $logger->setEntityNamespace($classNamespace);
             $logger->setEntityName($className);
             $logger->setEntityId($eventEntity->getId());
+
+            //create EventObjectTypeList if not exists
+            $userSecUtil = new UserSecurityUtil($em,null,null);
+            $eventObjectType = $userSecUtil->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
+            if( $eventObjectType ) {
+                $logger->setObjectType($eventObjectType);
+            }
         }
 
         $em->persist($logger);

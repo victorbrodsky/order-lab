@@ -438,6 +438,11 @@ class AccessRequestController extends Controller
 
         $sitenameFull = $this->siteNameStr;
 
+        echo ' => '.date('T')."<br>";
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('America/New_York'));
+        echo " => ".$dateTime->format('T');
+
         return array(
             'entities' => $pagination,
             'roles' => $rolesArr,

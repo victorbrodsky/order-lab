@@ -451,6 +451,13 @@ class UserSecurityUtil {
             $eventLog->setEntityNamespace($classNamespace);
             $eventLog->setEntityName($className);
             $eventLog->setEntityId($ids);
+
+            //create EventObjectTypeList if not exists
+            $eventObjectType = $this->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
+            if( $eventObjectType ) {
+                $eventLog->setObjectType($eventObjectType);
+            }
+
         }
 
         $em->persist($eventLog);
