@@ -84,15 +84,11 @@
 
 
     {#user's snapshot#}
-    {% if fulluser is defined and fulluser %}
-        {% if showFlag %}
-            {{ userform.snapshot_steve(entity,sitename,cycle) }}
-            {#<br>#}
-            {#{{ userform.snapshot(entity,sitename,cycle) }}#}
-        {% else %}
-            {#avatar form modal#}
-            {{ usermacros.avatarForm(entity,cycle) }}
-        {% endif %}
+    {% if showFlag %}
+        {{ userform.snapshot_steve(entity,sitename,cycle) }}
+    {% else %}
+        {#avatar form modal#}
+        {{ usermacros.avatarForm(entity,cycle) }}
     {% endif %}
 
     <br>

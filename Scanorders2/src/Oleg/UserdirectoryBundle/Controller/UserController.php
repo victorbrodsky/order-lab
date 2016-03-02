@@ -3284,6 +3284,7 @@ class UserController extends Controller
 
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($userid) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            echo "employees-nopermission<br>";
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
