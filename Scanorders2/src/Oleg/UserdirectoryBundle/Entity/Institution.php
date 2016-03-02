@@ -291,6 +291,14 @@ class Institution extends BaseCompositeNode {
     }
 
 
+    public function hasInstitutionType($typeStr) {
+        foreach( $this->getTypes() as $type ) {
+            if( $type->getName()."" == $typeStr ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 //    public function getUserPositionsByUseridAndNodeid($user,$institution) {
 //        $positionTypes = $this->getUserPositions();

@@ -147,7 +147,7 @@ class TreeController extends Controller {
 
         $query = $em->createQuery($dql);
         $query->setParameters($params);
-        //echo "dql=".$dql."<br>";
+        //echo "dql=".$dql." <br>";
 
         $entities = $query->getResult();
         //echo "count=".count($entities)."<br>";
@@ -166,10 +166,15 @@ class TreeController extends Controller {
         $output = array();
         foreach( $entities as $entity ) {
 
-            if( $entity->getOrganizationalGroupType() ) {
-                $levelTitle = $entity->getOrganizationalGroupType()->getName()."";
+            if( $entity && $entity->hasInstitutionType("Collaboration") ) {
+                $levelTitle = "Collaboration";// . " (Level " . $entity->getLevel() . ")";
             } else {
-                $levelTitle = $treeRepository->getDefaultLevelLabel($mapper,$entity->getLevel());
+
+                if ($entity->getOrganizationalGroupType()) {
+                    $levelTitle = $entity->getOrganizationalGroupType()->getName() . "";
+                } else {
+                    $levelTitle = $treeRepository->getDefaultLevelLabel($mapper, $entity->getLevel());
+                }
             }
 
             if( !$levelTitles ) {
@@ -250,6 +255,11 @@ class TreeController extends Controller {
                 }
 
                 $defaultOrganizationalGroupType = $treeRepository->getDefaultLevelLabel($mapper,$childLevel);
+
+                if( $parent && $parent->hasInstitutionType("Collaboration") ) {
+                    //$collaborationLevel = $parent->getLevel() + 1;
+                    $defaultOrganizationalGroupType = "Collaboration";// . " (Level " . $collaborationLevel . ")";
+                }
 
                 if( $defaultOrganizationalGroupType ) {
                     $element = array(

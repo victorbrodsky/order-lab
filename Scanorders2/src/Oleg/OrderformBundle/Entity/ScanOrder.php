@@ -25,6 +25,10 @@ class ScanOrder extends OrderBase {
 //     */
 //    private $service;
     /**
+     * Originating Organizational Group Institution; it is for specifying "from" which organization the order is coming.
+     * Described in: https://bitbucket.org/weillcornellpathology/scanorder/issues/467/reminder-complete-blocker-ticket-for
+     * It might be make a sense to have this Originating Organizational Group Institution in the Message object
+     *
      * This serves as default institution to set scan order scope (who can view this order: users from the with the same institutional scope can view this order)
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      */

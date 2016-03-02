@@ -381,23 +381,23 @@ class GenericListType extends AbstractType
         }
 
         //level for OrganizationalGroupType
-//        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ||
-//            strtolower($this->mapper['className']) == strtolower("CommentGroupType") ||
-//            strtolower($this->mapper['className']) == strtolower("ResearchGroupType") ||
-//            strtolower($this->mapper['className']) == strtolower("CourseGroupType")
-//        ) {
+        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ||
+            strtolower($this->mapper['className']) == strtolower("CommentGroupType") ||
+            strtolower($this->mapper['className']) == strtolower("ResearchGroupType") ||
+            strtolower($this->mapper['className']) == strtolower("CourseGroupType")
+        ) {
 //        if( method_exists($this->params['entity'],'getLevel') ) {
-//            $builder->add('level',null,array(
-//                'label'=>'Default Tree Level Association:',
-//                'attr' => array('class' => 'form-control')
-//            ));
-//        }
+            $builder->add('level',null,array(
+                'label'=>'Default Tree Level Association:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
         //fields for Tree implements CompositeNodeInterface
         if( $this->params['entity'] instanceof CompositeNodeInterface ) {
             //always read only - do not allow to change level
             $builder->add('level',null,array(
-                'label'=>'Default Tree Level Association:',
+                'label'=>'Level:',
                 'read_only' => true,
                 'attr' => array('class' => 'form-control')
             ));

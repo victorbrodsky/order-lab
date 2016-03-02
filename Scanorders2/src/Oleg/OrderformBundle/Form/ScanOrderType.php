@@ -63,7 +63,7 @@ class ScanOrderType extends AbstractType
 
             $form->add('scanOrderInstitutionScope', 'employees_custom_selector', array(
                 //'label' => 'ScanOrder' . ' ' . $label . ' Scope' . ':',
-                'label' => $label,
+                'label' => "Originating Organizational Group ".$label,
                 'required' => false,
 
                 'attr' => array(
@@ -73,7 +73,7 @@ class ScanOrderType extends AbstractType
                     'data-compositetree-classname' => 'Institution',
                     //'data-label-prefix' => 'ScanOrder',
                     //'data-label-postfix' => 'Scope'
-                    'data-label-prefix' => '',
+                    'data-label-prefix' => 'Originating Organizational Group',
                     'data-label-postfix' => ''
                 ),
                 'classtype' => 'institution'

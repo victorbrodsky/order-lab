@@ -132,7 +132,7 @@ class PerSiteSettingsType extends AbstractType
                     //echo "show defaultInstitution label=".$label."<br>";
 
                     $form->add('defaultInstitution', 'employees_custom_selector', array(
-                        'label' => 'Default ' . $label . ':',
+                        'label' => 'Organizational Group ' . $label . ':',
                         'read_only' => !$this->roleAdmin,
                         'required' => false,
                         'attr' => array(
@@ -140,7 +140,7 @@ class PerSiteSettingsType extends AbstractType
                             'type' => 'hidden',
                             'data-compositetree-bundlename' => 'UserdirectoryBundle',
                             'data-compositetree-classname' => 'Institution',
-                            'data-label-prefix' => 'Default'
+                            'data-label-prefix' => 'Organizational Group'
                         ),
                         'classtype' => 'institution'
                     ));

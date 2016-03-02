@@ -235,7 +235,7 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
         //employees_get_compositetree
         var treeUrl = Routing.generate('employees_get_composition_tree');
         //console.log('treeUrl='+treeUrl);
-        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&bundlename=' + bundleName + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
+        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&bundlename=' + bundleName + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid + '&type=default';
         //console.log('final treeUrl='+treeUrl);
 
         if( !_ajaxTimeout ) {

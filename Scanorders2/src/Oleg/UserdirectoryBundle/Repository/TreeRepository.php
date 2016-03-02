@@ -499,6 +499,13 @@ class TreeRepository extends NestedTreeRepository {
 
     public function getLevelLabels( $node=null, $mapper=null ) {
 
+        //if node exists and node has only "Collaboration" as Institution Type => return "Collaboration"
+        if( $node ) {
+            if( $node->hasInstitutionType("Collaboration") ) {
+                return "Collaboration";// . " (Level " . $node->getLevel() . ")";
+            }
+        }
+
         $labelsStr = "";
 
         //get labels for all siblings of this node

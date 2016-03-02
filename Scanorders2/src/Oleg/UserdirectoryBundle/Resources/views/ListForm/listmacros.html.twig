@@ -420,19 +420,19 @@
     {{ formmacros.field(edit_form.list.shortname) }}
     {{ formmacros.field(edit_form.list.abbreviation) }}
 
-    {% if entity.level is defined %}
+    {% if edit_form.level is defined %}
         {{ formmacros.field(edit_form.level) }}
     {% endif %}
 
-    {% if entity.organizationalGroupType is defined %}
+    {% if edit_form.organizationalGroupType is defined %}
         {{ formmacros.field(edit_form.organizationalGroupType) }}
     {% endif %}
 
-    {% if entity.nativeName is defined %}
+    {% if edit_form.nativeName is defined %}
         {{ formmacros.field(edit_form.nativeName) }}
     {% endif %}
 
-    {% if entity.value is defined %}
+    {% if edit_form.value is defined %}
         {{ formmacros.field(edit_form.value) }}
     {% endif %}
 
