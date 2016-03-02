@@ -1,5 +1,35 @@
 {% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
 
+{% block header %}
+
+    {% if sitename == 'fellapp' %}
+        {% include 'OlegFellAppBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'scan' %}
+        {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'employees' %}
+        {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'deidentifier' %}
+        {% include 'OlegDeidentifierBundle:Default:navbar.html.twig' %}
+        {#{% if accessionTypeStr is not defined %}#}
+            {#{% set accessionTypeStr = null %}#}
+        {#{% endif %}#}
+        {#{% if accessionTypeId is not defined %}#}
+            {#{% set accessionTypeId = null %}#}
+        {#{% endif %}#}
+        {#{% if accessionNumber is not defined %}#}
+            {#{% set accessionNumber = null %}#}
+        {#{% endif %}#}
+        {#{{ render(controller('OlegDeidentifierBundle:Default:deidentifierNavbar', {'accessionTypeStr': accessionTypeStr, 'accessionTypeId': accessionTypeId, 'accessionNumber': accessionNumber})) }}#}
+    {% endif %}
+
+{% endblock %}
+
 {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
 
 {#Snapshot css#}

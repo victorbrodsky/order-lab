@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\LoggerFilterType;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\Request;
@@ -219,6 +220,7 @@ class LoggerController extends Controller
         $limit = 30;
         $query = $em->createQuery($dql);
 
+        //echo "dql=".$dql."<br>";
         //echo "dql=".$query->getSql()."<br>";
 
         if( $entityNamespace && $entityName && $entityId ) {
@@ -261,6 +263,26 @@ class LoggerController extends Controller
 
         $filtered = false;
 
+        //////////////////// get list of users with "unknown" user ////////////////////
+        $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $dqlFilterUser = $repository->createQueryBuilder('user');
+        $dqlFilterUser->select('user');
+        $dqlFilterUser->leftJoin("user.infos","infos");
+        $dqlFilterUser->where("user.keytype IS NOT NULL");
+        $dqlFilterUser->orderBy("infos.lastName","ASC");
+        $queryFilterUser = $em->createQuery($dqlFilterUser);
+        $filterUsers = $queryFilterUser->getResult();
+        //echo "count=".count($filterUsers)."<br>";
+        //add unknown dummy user
+        $unknown = new User();
+        $unknown->setDisplayName("unknown");
+        $em->persist($unknown);
+        //$filterUsers[] = $unknown;
+        array_unshift($filterUsers, $unknown);
+        $params['filterUsers'] = $filterUsers;
+        //////////////////// EOF get list of users with "unknown" user ////////////////////
+
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
         $filterform = $this->createForm(new LoggerFilterType($params), null);
 
@@ -294,11 +316,13 @@ class LoggerController extends Controller
         if( $users && count($users) > 0 ) {
             $where = "";
             foreach( $users as $user ) {
+                if( $where != "" ) {
+                    $where .= " OR ";
+                }
                 if( $user->getId() ) {
-                    if( $where != "" ) {
-                        $where .= " OR ";
-                    }
                     $where .= "logger.user=".$user->getId();
+                } else {
+                    $where .= "logger.user IS NULL";
                 }
             }
             $dql->andWhere($where);

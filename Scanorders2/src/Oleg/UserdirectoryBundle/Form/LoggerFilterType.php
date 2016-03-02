@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -33,20 +34,29 @@ class LoggerFilterType extends AbstractType
 //            'attr' => array('class'=>'datepicker-only-year form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
 //        ));
 
+//        $builder->add('user', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:User',
+//            //'placeholder' => 'Fellowship Type',
+//            'property' => 'getUserNameStr',
+//            'label' => false,
+//            'required'=> false,
+//            'multiple' => true,
+//            'attr' => array('class' => 'combobox'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.infos","infos")
+//                        ->where("list.keytype IS NOT NULL")
+//                        ->orderBy("infos.lastName","ASC");
+//                },
+//        ));
         $builder->add('user', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            //'placeholder' => 'Fellowship Type',
             'property' => 'getUserNameStr',
             'label' => false,
             'required'=> false,
             'multiple' => true,
             'attr' => array('class' => 'combobox'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.infos","infos")
-                        ->where("list.keytype IS NOT NULL")
-                        ->orderBy("infos.lastName","ASC");
-                },
+            'choices' => $this->params['filterUsers'],
         ));
 
         //Event Type

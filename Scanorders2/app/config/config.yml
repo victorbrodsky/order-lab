@@ -8,6 +8,12 @@ imports:
     - { resource: "@OlegDeidentifierBundle/Resources/config/services.yml" }
 
 
+services:
+    oleg.twig.extension.date:
+        class: Twig_Extensions_Extension_Date
+        tags:
+             - { name: 'twig.extension' }
+
 framework:
     #esi:             ~
     #translator:      { fallback: %locale% }

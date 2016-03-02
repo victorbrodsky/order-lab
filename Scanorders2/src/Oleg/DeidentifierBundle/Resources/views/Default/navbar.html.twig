@@ -52,7 +52,7 @@
 
                 {#Search in navbar available for WCMC-NYP Deidentifier Enquirer#}
                 {#{% if is_granted('ROLE_DEIDENTIFICATOR_USER') %}#}
-                {% if is_granted("read", "Accession") %}
+                {% if is_granted("read", "Accession") and accessiontypes is defined and accessiontypes|length > 0 %}
 
                     {#{% set accessiontypes = render(controller("OlegDeidentifierBundle:Default:getAccessionTypes")) %}#}
                     {#{% set accessiontypes = controller("OlegDeidentifierBundle:Default:getAccessionTypes") %}#}
@@ -154,7 +154,7 @@
                         <ul class="dropdown-menu">
 
                             {% if pendinguser is not defined %}
-                                <li><a href="{{ path(employees_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
+                                <li><a href="{{ path(deidentifier_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
                             {% endif %}
 
                             {% if pendinguser is not defined %}

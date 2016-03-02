@@ -1607,18 +1607,60 @@ class UserController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
      */
-    public function showUserOptimizedAction($id)
+    public function showUserOptimizedAction( Request $request, $id )
+    {
+
+        return $this->showUserOptimized( $request, $id, $this->container->getParameter('employees.sitename') );
+
+//        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+//        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+//
+//        if( !$entity ) {
+//            throw $this->createNotFoundException('Unable to find User entity.');
+//        }
+//
+//        //check if this subject user is visible according to the subject user's preferences
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        $secUtil = $this->get('user_security_utility');
+//        if( !$secUtil->isUserVisible($entity,$user) ) {
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+//
+//        //print_r($entity);
+//        //echo "<br><br>";
+//        //print_r($entity[0]['infos']);
+//
+//        //echo "displayName" . $entity[0]['infos'][0]['displayName'] . "<br>";
+//
+//        return array(
+//            'sitename' => $sitename,
+//            'entity' => $entity,
+//            'cycle' => 'show_user',
+//            'user_id' => $id,
+//            'sitename' => $this->container->getParameter('employees.sitename'),
+//            'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
+//            //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName']
+//            //'title' => 'Employee Profile ' . $entity['displayName23']
+//        );
+    }
+    public function showUserOptimized( Request $request, $id, $sitename )
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
-        
+
         $em = $this->getDoctrine()->getManager();
-        
-        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);                                   
+
+        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-        
+
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
@@ -1633,17 +1675,18 @@ class UserController extends Controller
         //print_r($entity);
         //echo "<br><br>";
         //print_r($entity[0]['infos']);
-        
+
         //echo "displayName" . $entity[0]['infos'][0]['displayName'] . "<br>";
-        
+
         return array(
-            'entity' => $entity,           
+            'sitename' => $sitename,
+            'entity' => $entity,
             'cycle' => 'show_user',
             'user_id' => $id,
-            'sitename' => $this->container->getParameter('employees.sitename'),          
             'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
-            //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName'] 
-            //'title' => 'Employee Profile ' . $entity['displayName23']     
+            //'sitename' => $this->container->getParameter('employees.sitename'),
+            //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName']
+            //'title' => 'Employee Profile ' . $entity['displayName23']
         );
     }
     

@@ -830,10 +830,10 @@ class FellAppController extends Controller {
                 }
 
                 if( is_array($oldValue) ) {
-                    $oldValue = implode(",",$oldValue);
+                    $oldValue = implode(", ",$oldValue);
                 }
                 if( is_array($newValue) ) {
-                    $newValue = implode(",",$newValue);
+                    $newValue = implode(", ",$newValue);
                 }
 
                 $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;

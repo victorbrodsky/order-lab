@@ -438,11 +438,6 @@ class AccessRequestController extends Controller
 
         $sitenameFull = $this->siteNameStr;
 
-        echo ' => '.date('T')."<br>";
-        $dateTime = new \DateTime();
-        $dateTime->setTimeZone(new \DateTimeZone('America/New_York'));
-        echo " => ".$dateTime->format('T');
-
         return array(
             'entities' => $pagination,
             'roles' => $rolesArr,
@@ -617,7 +612,7 @@ class AccessRequestController extends Controller
 
             $msg = $subjectUser->getUsernameOptimal().",".$newline.$newline.
                 "Your access for ".$sitenameFull.": ".$siteLink." has been updated.".$newline.
-                "Current roles: " . implode(",",$roles).$newline.
+                "Current roles: " . implode(", ",$roles).$newline.
                 "For additional details please email ".$user->getUsernameOptimal().$adminEmailStr.".".$newline.$newline.
                 $user->getUsernameOptimal().$adminEmailStr;
         }
@@ -1140,8 +1135,8 @@ class AccessRequestController extends Controller
         $diff = array_diff($original, $new);
 
         if( count($original) != count($new) || count($diff) != 0 ) {
-            $removeArr[] = "<strong>"."Original ".$text.": ".implode(",",$original)."</strong>";
-            $removeArr[] = "<strong>"."New ".$text.": ".implode(",",$new)."</strong>";
+            $removeArr[] = "<strong>"."Original ".$text.": ".implode(", ",$original)."</strong>";
+            $removeArr[] = "<strong>"."New ".$text.": ".implode(", ",$new)."</strong>";
         }
 
         return implode("<br>", $removeArr);

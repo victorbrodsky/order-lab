@@ -27,7 +27,7 @@
 
 
     <p>
-        <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }}</i>
+        <i>Last successful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }} ({{ lastImportTimestamp|time_diff }})</i>
     </p>
 
 
