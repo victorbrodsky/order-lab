@@ -497,23 +497,17 @@ class TreeRepository extends NestedTreeRepository {
 //        return $labelsStr;
 //    }
 
+    //$mapper: if $mapper is null => institution
     public function getLevelLabels( $node=null, $mapper=null ) {
-        if( $node instanceof Institution ) {
-            return $this->getLevelLabelsInstitution($node,$mapper);
-        } else {
-            return $this->getLevelLabelsRegular($node,$mapper);
-        }
+        return $this->getLevelLabelsInstitution($node,$mapper);
+//        if( $node instanceof Institution ) {
+//            return $this->getLevelLabelsInstitution($node,$mapper);
+//        } else {
+//            return $this->getLevelLabelsRegular($node,$mapper);
+//        }
     }
 
     public function getLevelLabelsInstitution( $node=null, $mapper=null ) {
-
-        //if node exists and node has only "Collaboration" as Institution Type => return "Collaboration"
-//        if( $node ) {
-//            //echo "node=".$node."<br>";
-//            if( $node->hasInstitutionType("Collaboration") ) {
-//                return "CollaborationCCC";// . " (Level " . $node->getLevel() . ")";
-//            }
-//        }
 
         $labelsStr = "";
 
@@ -528,13 +522,22 @@ class TreeRepository extends NestedTreeRepository {
             );
         }
 
+        //check if types exists (types exists only for institution)
+        $isInstitution = false;
+        if( $mapper['className'] == "Institution" ) {
+            $isInstitution = true;
+        }
+
         //echo "<br>get labels for ".$mapper['className']."<br>";
 
         $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.organizationalGroupType","organizationalGroupType");
-        $dql->leftJoin("list.types","types");
+
+        if( $isInstitution ) {
+            $dql->leftJoin("list.types", "types");
+        }
 
         $where = "(list.type = :typedef OR list.type = :typeadd)";
         $params = array('typedef' => 'default','typeadd' => 'user-added');
@@ -566,13 +569,14 @@ class TreeRepository extends NestedTreeRepository {
         $labelArr = array();
         foreach( $results as $result ) {
             $label = null;
-            if( $result->hasInstitutionType("Collaboration") ) {
+            if( $isInstitution && $result->hasInstitutionType("Collaboration") ) {
                 $label = "Collaboration";
             } else {
                 if( $result->getOrganizationalGroupType() ) {
                     $label = $result->getOrganizationalGroupType()->getName() . "";
                 }
             }
+            //echo "loop label=".$label."<br>";
             if( $label && !in_array($label, $labelArr) ) {
                 $labelArr[] = $label;
             }
@@ -585,8 +589,7 @@ class TreeRepository extends NestedTreeRepository {
         //Department or Group
         //Department, Group, or Collaboration
         foreach( $labelArr as $label ) {
-            //$label = $result['levelLabel'];
-            //echo "label=".$result['levelLabel']."<br>";
+            //echo "TreeRep: label=".$label."<br>";
 
             if( !$label ) {
                 continue;
