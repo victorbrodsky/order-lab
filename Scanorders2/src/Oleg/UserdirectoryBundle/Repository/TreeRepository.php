@@ -565,12 +565,15 @@ class TreeRepository extends NestedTreeRepository {
 
         $labelArr = array();
         foreach( $results as $result ) {
+            $label = null;
             if( $result->hasInstitutionType("Collaboration") ) {
                 $label = "Collaboration";
             } else {
-                $label = $result->getOrganizationalGroupType()->getName()."";
+                if( $result->getOrganizationalGroupType() ) {
+                    $label = $result->getOrganizationalGroupType()->getName() . "";
+                }
             }
-            if( !in_array($label, $labelArr) ) {
+            if( $label && !in_array($label, $labelArr) ) {
                 $labelArr[] = $label;
             }
         }
