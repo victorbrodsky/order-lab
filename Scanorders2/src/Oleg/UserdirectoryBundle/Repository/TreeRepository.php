@@ -498,13 +498,130 @@ class TreeRepository extends NestedTreeRepository {
 //    }
 
     public function getLevelLabels( $node=null, $mapper=null ) {
+        if( $node instanceof Institution ) {
+            return $this->getLevelLabelsInstitution($node,$mapper);
+        } else {
+            return $this->getLevelLabelsRegular($node,$mapper);
+        }
+    }
+
+    public function getLevelLabelsInstitution( $node=null, $mapper=null ) {
 
         //if node exists and node has only "Collaboration" as Institution Type => return "Collaboration"
+//        if( $node ) {
+//            //echo "node=".$node."<br>";
+//            if( $node->hasInstitutionType("Collaboration") ) {
+//                return "CollaborationCCC";// . " (Level " . $node->getLevel() . ")";
+//            }
+//        }
+
+        $labelsStr = "";
+
+        //get labels for all siblings of this node
+
+        if( !$mapper ) {
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "Institution",
+                'bundleName' => "UserdirectoryBundle",
+                'organizationalGroupType' => "OrganizationalGroupType"
+            );
+        }
+
+        //echo "<br>get labels for ".$mapper['className']."<br>";
+
+        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.organizationalGroupType","organizationalGroupType");
+        $dql->leftJoin("list.types","types");
+
+        $where = "(list.type = :typedef OR list.type = :typeadd)";
+        $params = array('typedef' => 'default','typeadd' => 'user-added');
+
         if( $node ) {
-            if( $node->hasInstitutionType("Collaboration") ) {
-                return "Collaboration";// . " (Level " . $node->getLevel() . ")";
+            $parent = $node->getParent();
+        } else {
+            $parent = null;
+        }
+
+        if( $parent ) {
+            $pid = $parent->getId();
+            $dql->leftJoin("list.parent", "parent");
+            $where = $where . " AND parent.id = :id";
+            $params['id'] = $pid;
+        } else {
+            $dql->leftJoin("list.parent", "parent");
+            $where = $where . " AND parent.id is NULL";
+        }
+
+        $dql->where($where);
+        //echo "dql=".$dql."<br>";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($params);
+
+        $results = $query->getResult();
+
+        $labelArr = array();
+        foreach( $results as $result ) {
+            if( $result->hasInstitutionType("Collaboration") ) {
+                $label = "Collaboration";
+            } else {
+                $label = $result->getOrganizationalGroupType()->getName()."";
+            }
+            if( !in_array($label, $labelArr) ) {
+                $labelArr[] = $label;
             }
         }
+
+        $count = 0;
+
+        //3 cases:
+        //Department
+        //Department or Group
+        //Department, Group, or Collaboration
+        foreach( $labelArr as $label ) {
+            //$label = $result['levelLabel'];
+            //echo "label=".$result['levelLabel']."<br>";
+
+            if( !$label ) {
+                continue;
+            }
+
+            if( $count == 0 ) {
+                $labelsStr = $label;
+                $count++;
+                continue;
+            }
+
+            if( count($labelArr) > $count + 1 ) {
+                $labelsStr = $labelsStr . ", " . $label;
+                //continue;
+            }
+
+            if( count($labelArr) == $count + 1 ) {
+                if( count($labelArr) == 2 ) {
+                    $labelsStr = $labelsStr . " or " . $label;
+                } else {
+                    $labelsStr = $labelsStr . ", or " . $label;
+                }
+                //continue;
+            }
+
+            $count++;
+        }
+        //echo "labelsStr=".$labelsStr."<br>";
+
+        //if not found (no nodes exists), then get default label for 0 level
+        if( !$labelsStr ) {
+            $labelsStr = $this->getDefaultLevelLabel($mapper,0);
+        }
+
+        return $labelsStr;
+    }
+
+    public function getLevelLabelsRegular( $node=null, $mapper=null ) {
 
         $labelsStr = "";
 

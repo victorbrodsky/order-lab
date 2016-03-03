@@ -2335,7 +2335,7 @@ class UserController extends Controller
                 false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') &&
                 false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
             ) {
-                $currentInsts = $entity->getPermittedInstitutionalPHIScope();
+                $currentInsts = $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope();
                 if( count($currentInsts) != count($originalInsts) ) {
                     $this->setSessionForbiddenNote("Change Institutions");
                     throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions");

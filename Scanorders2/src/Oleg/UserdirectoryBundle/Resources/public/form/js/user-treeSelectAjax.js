@@ -121,17 +121,8 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
         var label = treeArr[0].leveltitle;
         //console.log( 'label='+ label );
 
-        //data-label-prefix
-        var prefixData = comboboxEl.data("label-prefix");
-        if( prefixData ) {
-            label = prefixData + ' ' + label;
-        }
-
-        //data-label-postfix
-        var postfixData = comboboxEl.data("label-postfix");
-        if( postfixData ) {
-            label = label + ' ' + postfixData;
-        }
+        //get combobox label
+        label = constructComboboxLabel(comboboxEl,label);
 
         //readonly combobox
         //var readonly = "";
@@ -171,6 +162,21 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
     } //if
 
     return false;
+}
+
+function constructComboboxLabel(comboboxEl,label) {
+    //data-label-prefix
+    var prefixData = comboboxEl.data("label-prefix");
+    if( prefixData ) {
+        label = prefixData + ' ' + label;
+    }
+
+    //data-label-postfix
+    var postfixData = comboboxEl.data("label-postfix");
+    if( postfixData ) {
+        label = label + ' ' + postfixData;
+    }
+    return label;
 }
 
 //modify all id and name by attaching a prefix "newelement_" to all ajax-combobox-compositetree element prior to the last not empty combobox

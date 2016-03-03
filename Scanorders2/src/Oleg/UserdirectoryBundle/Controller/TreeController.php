@@ -167,13 +167,15 @@ class TreeController extends Controller {
         foreach( $entities as $entity ) {
 
             if( $entity && $entity->hasInstitutionType("Collaboration") ) {
-                $levelTitle = "Collaboration";// . " (Level " . $entity->getLevel() . ")";
+                $levelTitle = "Collaboration";  // . " (Level " . $entity->getLevel() . ")";
             } else {
 
-                if ($entity->getOrganizationalGroupType()) {
+                if( $entity->getOrganizationalGroupType() ) {
                     $levelTitle = $entity->getOrganizationalGroupType()->getName() . "";
+                    $levelTitle = $levelTitle;
                 } else {
                     $levelTitle = $treeRepository->getDefaultLevelLabel($mapper, $entity->getLevel());
+                    $levelTitle = $levelTitle;
                 }
             }
 
@@ -202,7 +204,7 @@ class TreeController extends Controller {
                 'text' => $text,
                 'level' => $entity->getLevel(),
                 'type' => 'icon'.$entity->getLevel(),            //set js icon by level title
-                'leveltitle' => $levelTitles,                   //$levelTitle,
+                'leveltitle' => $levelTitles,   //we might have different level names                //$levelTitle,
                 'disabled' => $optionDisabled,
             );
 
