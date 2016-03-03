@@ -603,9 +603,9 @@ class FellAppUtil {
                 //telephoneHome
                 //telephoneMobile
                 //telephoneFax
-                $presentLocation->setPhone($this->getValueByHeaderName('telephoneHome',$rowData,$headers));
-                $presentLocation->setMobile($this->getValueByHeaderName('telephoneMobile',$rowData,$headers));
-                $presentLocation->setFax($this->getValueByHeaderName('telephoneFax',$rowData,$headers));
+                $presentLocation->setPhone($this->getValueByHeaderName('telephoneHome',$rowData,$headers)."");
+                $presentLocation->setMobile($this->getValueByHeaderName('telephoneMobile',$rowData,$headers)."");
+                $presentLocation->setFax($this->getValueByHeaderName('telephoneFax',$rowData,$headers)."");
 
                 //permanentAddress
                 $permanentLocation = new Location($systemUser);
@@ -624,7 +624,7 @@ class FellAppUtil {
                     $workLocation = new Location($systemUser);
                     $workLocation->setName('Fellowship Applicant Work Address');
                     $workLocation->addLocationType($workLocationType);
-                    $workLocation->setPhone($telephoneWork);
+                    $workLocation->setPhone($telephoneWork."");
                     $user->addLocation($workLocation);
                     $fellowshipApplication->addLocation($workLocation);
                 }
