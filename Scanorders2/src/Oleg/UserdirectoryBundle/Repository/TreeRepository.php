@@ -207,7 +207,7 @@ class TreeRepository extends NestedTreeRepository {
         //collaborations
         foreach( $node->getCollaborationInstitutions() as $collaborationNode ) {
             if( !in_array($collaborationNode, $collaborations) ) {
-                //echo "collaborationNode=".$collaborationNode->getId()."<br>";
+                //echo "collaborationNode=".$collaborationNode."<br>";
                 $collaborations[] = $collaborationNode;
             }
         }
@@ -224,14 +224,6 @@ class TreeRepository extends NestedTreeRepository {
     public function getCriterionStrForCollaborationsByNode( $node, $field, $collaborationTypesStrArr=array("Union"), $instDefault=true, $collDefault=true ) {
 
         //institutional scope
-//        $criteriastr = "";
-//        $criteriastr .= $field.".root = " . $node->getRoot();
-//        $criteriastr .= " AND ";
-//        $criteriastr .= $field.".lft < " . $node->getLft();
-//        $criteriastr .= " AND ";
-//        $criteriastr .= $field.".rgt > " . $node->getRgt();
-//        $criteriastr .= " OR ";
-//        $criteriastr .= $field.".id = " . $node->getId();
         $addedNodes = array();
 
         $addedNodes[] = $node->getId();
@@ -243,7 +235,7 @@ class TreeRepository extends NestedTreeRepository {
         foreach( $collaborations as $collaboration ) {
             foreach( $collaboration->getCollaborationInstitutions() as $collaborationNode ) {
                 if( !in_array($collaborationNode->getId(), $addedNodes) ) {
-                    //echo "collaborationNode=".$collaborationNode->getId()."<br>";
+                    //echo "collaborationNode=".$collaborationNode."<br>";
                     $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );
                 }
             }

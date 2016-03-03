@@ -529,6 +529,10 @@ class OrderUtil {
 
         //User's PermittedInstitutions
         $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
+
+        //show institutions including collaborations
+        $permittedInstitutions = $this->getAllScopeInstitutions($permittedInstitutions,null,$collaborationTypesStrArr);
+
         //echo "permittedInstitutions=".count($permittedInstitutions)."<br>";
 
         if( $collaborationTypesStrArr && count($collaborationTypesStrArr) > 0 ) {
@@ -1130,10 +1134,10 @@ class OrderUtil {
     }
 
     //Used in new order field: "Order data visible to members of (Institutional PHI Scope)"
-    public function getAllScopeInstitutions( $originalPermittedInstitutions, $message ) {
+    public function getAllScopeInstitutions( $originalPermittedInstitutions, $message, $collaborationTypesStrArr=array("Union","Intersection","Untrusted Intersection") ) {
 
         //$permittedInstitutions = $this->getPermittedScopeCollaborations($originalPermittedInstitutions,array("Union","Intersection","Untrusted Intersection"));
-        $permittedInstitutions = $this->getPermittedScopeCollaborationInstitutions($originalPermittedInstitutions,array("Union","Intersection","Untrusted Intersection"));
+        $permittedInstitutions = $this->getPermittedScopeCollaborationInstitutions($originalPermittedInstitutions,$collaborationTypesStrArr);
 
         //include current message institution to the $permittedInstitutions
         $permittedInstitutions = $this->addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message);
