@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
 use Oleg\OrderformBundle\Entity\Slide;

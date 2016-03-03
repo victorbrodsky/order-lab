@@ -530,9 +530,6 @@ class TableController extends Controller {
         }
         ////////////////// EOF set previous ScanOrderInstitutionScope from the last order if default is null //////////////////
 
-        //set Institutional PHI Scope
-        $entity->setInstitution($permittedInstitutions->first());
-
         //set default department and division
         //$defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
         //$department = $defaultsDepDiv['department'];
@@ -546,6 +543,13 @@ class TableController extends Controller {
 
         //$permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$entity);
+
+        //set Institutional PHI Scope
+        $entity->setInstitution($permittedInstitutions->first());
+
+        //set Performing organization:
+        //"Weill Cornell Medical College > Department of Pathology and Laboratory Medicine > Pathology Informatics > Scanning Service"
+        $orderUtil->setDefaultPerformingOrganization($entity);
 
         $params = array(
             'type'=>$type,

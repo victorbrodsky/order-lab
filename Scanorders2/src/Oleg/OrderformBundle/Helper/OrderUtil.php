@@ -11,6 +11,7 @@ namespace Oleg\OrderformBundle\Helper;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;
@@ -1196,7 +1197,10 @@ class OrderUtil {
 
                 if( $collaborationInstitution && !$permittedInstitutions->contains($collaborationInstitution) ) {
                     //echo "add collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";
-                    $permittedInstitutions->add($collaborationInstitution);
+                    //add collaboration institution at the first position, so ->first() will auto-set to "WCMC-NYP Collaboration" by default
+                    $firstInst = $permittedInstitutions->first();               //1) save the first element
+                    $permittedInstitutions->set(0,$collaborationInstitution);   //2) set to the first position
+                    $permittedInstitutions->add($firstInst);                    //3) add back the previous first element
                 }
 
             }
@@ -1214,6 +1218,35 @@ class OrderUtil {
         }
 
         return $permittedInstitutions;
+    }
+
+    //set Performing organization:
+    //"Weill Cornell Medical College > Department of Pathology and Laboratory Medicine > Pathology Informatics > Scanning Service"
+    public function setDefaultPerformingOrganization($message) {
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $wcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $pathology = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+        $pathologyInformatcs = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology Informatics",
+            $pathology,
+            $mapper
+        );
+        $scanningService = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Scanning Service",
+            $pathologyInformatcs,
+            $mapper
+        );
+        $organizationRecipient = new InstitutionWrapper();
+        $organizationRecipient->setInstitution($scanningService);
+        $message->addOrganizationRecipient($organizationRecipient);
     }
 
 }

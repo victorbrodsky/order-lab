@@ -785,6 +785,10 @@ class Message {
     {
         $this->organizationRecipients->removeElement($item);
     }
+    public function setOrganizationRecipients($items)
+    {
+        $this->organizationRecipients = $items;
+    }
 
 
     /**

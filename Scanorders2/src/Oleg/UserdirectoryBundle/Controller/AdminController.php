@@ -1456,7 +1456,9 @@ class AdminController extends Controller
                     'Parasitology',
                     'Virology'
                 ),
-                'Pathology Informatics'
+                'Pathology Informatics' => array(
+                    'Scanning Service',
+                )
             ),
             'Pediatrics' => array(
                 'Cardiology',

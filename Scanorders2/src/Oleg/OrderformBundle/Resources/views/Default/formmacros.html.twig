@@ -381,21 +381,30 @@
     {{ formmacros.field(form.proxyuser) }}
 
     <div class="user-collection-holder">
+
         {#Institutional PHI Scope#}
         {% if form.institution is defined %}
             {{ formmacros.field(form.institution) }}
         {% endif %}
-        {#Default Institution#}
+
+        {#Default Originating Institution#}
         {% if form.scanorder.scanOrderInstitutionScope is defined %}
             {{ treemacros.compositeTreeNode(form.scanorder.scanOrderInstitutionScope,'','') }}
         {% endif %}
-        {#{{ formmacros.field(form.institution) }}#}
-        {#not mapped#}
-        {#{% if form.department is defined %}#}
-            {#{{ formmacros.field(form.department) }}#}
-            {#{{ formmacros.field(form.division) }}#}
+
+        {#Default Performing Institution#}
+        {#{% if form.organizationRecipients is defined %}#}
+            {#{{ treemacros.compositeTreeNode(form.organizationRecipients,'','') }}#}
         {#{% endif %}#}
-        {#{{ formmacros.field(form.scanorder.service) }}#}
+        {% if form.organizationRecipients is defined %}
+            {% for organizationRecipient in form.organizationRecipients %}
+                <div class="well well-sm">
+                    <h5>{{ form_label(form.organizationRecipients) }}</h5>
+                    {{ treemacros.compositeTreeNode(organizationRecipient.institution,'','') }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
     </div>
 
     {{ formmacros.field(form.equipment) }}

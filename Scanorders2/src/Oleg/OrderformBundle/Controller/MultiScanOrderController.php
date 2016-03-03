@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -446,10 +447,14 @@ class MultiScanOrderController extends Controller {
         //echo 'default ScanOrderInstitutionScope='.$entity->getScanOrder()->getScanOrderInstitutionScope()."<br>";
         ////////////////// EOF set previous service from the last order if default is null //////////////////
 
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$entity);
+
         //set Institutional PHI Scope
         $entity->setInstitution($permittedInstitutions->first());
 
-        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$entity);
+        //set Performing organization:
+        //"Weill Cornell Medical College > Department of Pathology and Laboratory Medicine > Pathology Informatics > Scanning Service"
+        $orderUtil->setDefaultPerformingOrganization($entity);
 
         //set default department and division
         //TODO: implement it

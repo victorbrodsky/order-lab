@@ -2,7 +2,9 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
+use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -304,41 +306,80 @@ class MessageType extends AbstractType
             'choices' => $institutions,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
-//        if( $this->params['cycle'] != 'show' ) {
+
+        //Performing organization
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $title = $event->getData();
+//            $form = $event->getForm();
 //
-//            if( array_key_exists('department', $this->params) ) {
-//                $departmentId = $this->params['department']->getId();
-//            } else {
-//                $departmentId = null;
+//            $label = null;
+//            if( $title ) {
+//                $institution = $title->getOrganizationRecipients()->first();
+//                if( $institution ) {
+//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+//                }
+//            }
+//            if( !$label ) {
+//                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+//            }
+//            //echo "label=".$label."<br>";
+//
+//            $form->add('organizationRecipients', 'employees_custom_selector', array(
+//                //'label' => 'ScanOrder' . ' ' . $label . ' Scope' . ':',
+//                'label' => "Performing Organization ".$label,
+//                'required' => false,
+//                'attr' => array(
+//                    'class' => 'ajax-combobox-compositetree',
+//                    'type' => 'hidden',
+//                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+//                    'data-compositetree-classname' => 'Institution',
+//                    'data-label-prefix' => 'Performing Organization',
+//                    'data-label-postfix' => ''
+//                ),
+//                'classtype' => 'institution-many'
+//            ));
+//        });
+        $builder->add('organizationRecipients', 'collection', array(
+            'type' => new InstitutionalWrapperType($this->params,$this->entity),
+            'label' => "Organization Recipient(s)",//$this->params['label'],
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__organizationRecipients__',
+        ));
+
+//        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+//
+//            $message = $event->getData();
+//            $form = $event->getForm();
+//
+//            if( !$message ) {
+//                return;
 //            }
 //
-//            //department. User should be able to add institution to administrative or appointment titles
-//            $builder->add('department', 'employees_custom_selector', array(
-//                'label' => "Department:",
-//                "mapped" => false,
-//                'required' => false,
-//                'data' => $departmentId,
-//                'attr' => array('class' => 'combobox combobox-width ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
-//                'classtype' => 'department'
-//            ));
+////            $organizationRecipient = $message['organizationRecipients'];
+////            $message['organizationRecipients'] = array($organizationRecipient);
 //
-//
-//            if( array_key_exists('division', $this->params) ) {
-//                $divisionId = $this->params['division']->getId();
-//            } else {
-//                $divisionId = null;
+//            //$organizationRecipientFirst = $message->getOrganizationRecipients()->first();
+//            //$organizationRecipientEntity = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($organizationRecipient->getId());
+//            $organizationRecipientsEntity = new ArrayCollection();
+//            foreach( $message->getOrganizationRecipients() as $organizationRecipient ) {
+//                $organizationRecipientEntity = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($organizationRecipient->getId());
+//                $message->removeOrganizationRecipient($organizationRecipient);
+//                $organizationRecipientsEntity->add($organizationRecipientEntity);
 //            }
+//            $message->setOrganizationRecipients($organizationRecipientsEntity);
 //
-//            //division. User should be able to add institution to administrative or appointment titles
-//            $builder->add('division', 'employees_custom_selector', array(
-//                'label' => "Division:",
-//                "mapped" => false,
-//                'required' => false,
-//                'data' => $divisionId,
-//                'attr' => array('class' => 'combobox combobox-width ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
-//                'classtype' => 'division'
-//            ));
-//        }
+//            //$message->addOrganizationRecipient($organizationRecipient);
+//
+//            //echo "organizationRecipient=".$organizationRecipient."<br>";
+//            //print_r($message);
+//            //echo "<br>";
+//            //exit('1');
+//
+//        });
 
 
         ////////////////////////// Specific Orders //////////////////////////

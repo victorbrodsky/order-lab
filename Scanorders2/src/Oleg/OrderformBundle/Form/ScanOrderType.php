@@ -45,7 +45,7 @@ class ScanOrderType extends AbstractType
 //            ));
 //        }
 
-        //Default Institution
+        //Default Originating Institution
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $title = $event->getData();
             $form = $event->getForm();

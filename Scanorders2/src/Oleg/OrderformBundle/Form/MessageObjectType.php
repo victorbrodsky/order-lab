@@ -1007,7 +1007,7 @@ if( 1 ) {
     public function addFormOrganizationRecipients( $field, $form, $params ) {
         $form->add($field, 'collection', array(
             'type' => new InstitutionalWrapperType($params,$this->entity),
-            'label' => $this->params['label'],
+            'label' => false,   //$this->params['label'],
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,

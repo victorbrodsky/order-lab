@@ -49,7 +49,7 @@ class GenericManytomanyTransformer implements DataTransformerInterface
     public function transform( $entities )
     {
         //echo $entities->first()->getName()."<br>";
-        //echo "transform: entities=".$entities."<br>";
+        //echo "!!!!!!!!!!!transform: entities=".$entities."<br>";
         //echo $this->className.": transform: count=".count($entities)."<br>";
         //var_dump($entities);
 
@@ -96,7 +96,7 @@ class GenericManytomanyTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        //echo "data reverse transformer text=".$text."<br>";
+        //echo "!!!!!!!!!!!data reverse transformer text=".$text."<br>";
         //exit();
 
         $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
