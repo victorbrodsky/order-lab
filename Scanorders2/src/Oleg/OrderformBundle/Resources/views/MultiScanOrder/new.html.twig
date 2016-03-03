@@ -9,6 +9,8 @@
 {% form_theme form 'OlegOrderformBundle::Default/common_widget.html.twig' %}
 {#{% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}#}
 
+{% set formpath = 'multi_create' %}
+
 {% if formtype == 'One-Slide Scan Order' %}
     {% set formpath = 'singleorder_create' %}
 {% endif %}
@@ -63,7 +65,7 @@
 
     {#<p><button onclick="checkIfOrderWasModified()" type="button">Test Form Modified</button></p>#}
 
-    {#################################### START FORM ######################################}
+    {# ################################### START FORM ##################################### #}
     <form id="scanorderform" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form,{'attr': {'id': 'scanorderform'}}) }}#}
     {#{{ form_start(form) }}#}

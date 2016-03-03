@@ -389,13 +389,13 @@
 
         {#Default Originating Institution#}
         {% if form.scanorder.scanOrderInstitutionScope is defined %}
-            {{ treemacros.compositeTreeNode(form.scanorder.scanOrderInstitutionScope,'','') }}
+            <div class="well well-sm">
+                <h5><label>Originating Organizational Group</label></h5>
+                {{ treemacros.compositeTreeNode(form.scanorder.scanOrderInstitutionScope,'','') }}
+            </div>
         {% endif %}
 
         {#Default Performing Institution#}
-        {#{% if form.organizationRecipients is defined %}#}
-            {#{{ treemacros.compositeTreeNode(form.organizationRecipients,'','') }}#}
-        {#{% endif %}#}
         {% if form.organizationRecipients is defined %}
             {% for organizationRecipient in form.organizationRecipients %}
                 <div class="well well-sm">
@@ -429,7 +429,9 @@
         </div>
     </div>
 
-    {{ formmacros.field(form.scanorder.delivery) }}
+    {% if form.scanorder is defined %}
+        {{ formmacros.field(form.scanorder.delivery) }}
+    {% endif %}
     {% for destination in form.destinations %}
         {{ formmacros.field(destination.location) }}
     {% endfor %}
