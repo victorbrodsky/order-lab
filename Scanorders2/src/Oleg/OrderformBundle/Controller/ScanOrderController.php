@@ -182,7 +182,7 @@ class ScanOrderController extends Controller {
 //            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
 //        }
 
-        //echo "order List Action: dql=".$dql;
+        echo "order List Action: dql=".$dql;
 
         if( $increaseMaxExecTime ) {
             $max_exec_time = ini_get('max_execution_time');
@@ -1255,6 +1255,12 @@ class ScanOrderController extends Controller {
 
         $criteriastr = "";
 
+        //filter by message category
+        $criteriastr .= "(";
+        $criteriastr .= "messageCategory.name LIKE '%Scan Order%'";
+        $criteriastr .= ")";
+
+
         //***************** Pathology Service filetr ***************************//
         $showprovider = 'false';
         $showproxyuser = 'false';
@@ -1648,14 +1654,6 @@ class ScanOrderController extends Controller {
             //$increaseMaxExecTime = true;
         }
         //***************** END of Search filetr ***************************//
-
-        //filter by message category
-        if( $criteriastr != "" ) {
-            $criteriastr .= " AND ";
-            $criteriastr .= " ( ";
-            $criteriastr .= "messageCategory.name LIKE '%Scan Order%'";
-            $criteriastr .= " ) ";
-        }
 
         /////////// institution ///////////
         if( $institution === false ) {
