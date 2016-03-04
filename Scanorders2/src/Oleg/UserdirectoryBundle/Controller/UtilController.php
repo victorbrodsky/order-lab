@@ -30,12 +30,14 @@ class UtilController extends Controller {
      * @Route("/common/generic/{name}", name="employees_get_generic_select2")
      * @Method("GET")
      */
-    public function getGenericAction( $name ) {
+    public function getGenericAction( Request $request, $name ) {
 
-        return $this->getGenericList($name);
+        return $this->getGenericList($request,$name);
     }
 
-    public function getGenericList( $name ) {
+    public function getGenericList( $request, $name ) {
+
+        $cycle = $request->get('cycle');
 
         //echo "name=".$name."<br>";
         $res = $this->getClassBundleByName($name);

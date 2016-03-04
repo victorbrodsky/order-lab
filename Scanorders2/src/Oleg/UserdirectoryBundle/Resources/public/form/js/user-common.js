@@ -168,7 +168,12 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         sitename = "employees";
     }
 
-    var url = getCommonBaseUrl("util/common/"+urlprefix+name,sitename);
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    var cycleStr = "?cycle="+cycle;
+
+    var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr,sitename);
     //console.log('get Combobox Generic: url='+url);
 
     if( globalDataArray.length == 0 ) {

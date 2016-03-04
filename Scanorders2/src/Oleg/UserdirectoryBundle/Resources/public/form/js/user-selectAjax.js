@@ -330,7 +330,12 @@ function getComboboxResidencyspecialty(holder) {
         }
     }
 
-    var url = getCommonBaseUrl("util/common/generic/"+"residencyspecialty","employees");
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    var cycleStr = "?cycle="+cycle;
+
+    var url = getCommonBaseUrl("util/common/generic/"+"residencyspecialty"+cycleStr,"employees");
 
     //console.log('cycle='+cycle);
 

@@ -25,9 +25,9 @@ class ScanUtilController extends UtilController {
      * @Route("/common/generic/{name}", name="scan_get_generic_select2")
      * @Method("GET")
      */
-    public function getGenericAction( $name ) {
+    public function getGenericAction( Request $request, $name ) {
 
-        return $this->getGenericList($name);
+        return $this->getGenericList($request,$name);
     }
 
     public function getClassBundleByName($name) {
