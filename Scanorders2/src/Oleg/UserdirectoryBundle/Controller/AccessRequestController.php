@@ -750,8 +750,10 @@ class AccessRequestController extends Controller
 
         //save original for log
         $originalInsts = new ArrayCollection();
-        foreach( $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
-            $originalInsts->add($item);
+        if( $entity->getPerSiteSettings() ) {
+            foreach ($entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
+                $originalInsts->add($item);
+            }
         }
         $originalRoles = array();
         foreach( $entity->getRoles() as $item) {
@@ -973,8 +975,10 @@ class AccessRequestController extends Controller
 
         //save original for log
         $originalInsts = new ArrayCollection();
-        foreach( $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
-            $originalInsts->add($item);
+        if( $entity->getPerSiteSettings() ) {
+            foreach ($entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
+                $originalInsts->add($item);
+            }
         }
         $originalRoles = array();
         foreach( $entity->getRoles() as $item) {
@@ -1110,7 +1114,10 @@ class AccessRequestController extends Controller
 
     public function logAuthorizationChanges($request,$sitename,$entity,$originalInsts,$originalRoles) {
 
-        $removedInfo = $this->recordToEvenLogDiffCollection($originalInsts,$entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope(),"PermittedInstitutionalPHIScope");
+        $removedInfo = null;
+        if( $entity->getPerSiteSettings() ) {
+            $removedInfo = $this->recordToEvenLogDiffCollection($originalInsts, $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope(), "PermittedInstitutionalPHIScope");
+        }
         if( $removedInfo ) {
             $removedCollections[] = $removedInfo;
         }
