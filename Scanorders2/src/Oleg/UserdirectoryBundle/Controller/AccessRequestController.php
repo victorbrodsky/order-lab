@@ -485,11 +485,15 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //save original for log
+        //save original institutions for log
         $originalInsts = new ArrayCollection();
-        foreach( $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
-            $originalInsts->add($item);
+        if( $entity->getPerSiteSettings() ) {
+            foreach ($entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
+                $originalInsts->add($item);
+            }
         }
+
+        //save original roles for log
         $originalRoles = array();
         foreach( $entity->getRoles() as $item) {
             $originalRoles[] = $item;
