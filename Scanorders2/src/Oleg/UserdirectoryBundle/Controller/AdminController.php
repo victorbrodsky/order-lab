@@ -4503,8 +4503,8 @@ class AdminController extends Controller
 
             //2) remove $researchLab if no user attached to it
             if( count($researchLab->getUser()) == 0 ) {
-                //$em->remove($researchLab);
-                //$em->flush();
+                $em->remove($researchLab);
+                $em->flush();
                 echo $researchLab->getId().": researchLab removed <br>";
                 $count++;
             } else {
