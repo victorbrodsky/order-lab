@@ -1500,8 +1500,6 @@ class UserController extends Controller
 
         $user->setCreatedby('manual');
 
-        //$this->addEmptyCollections($user);
-
         //Roles
         $rolesArr = $this->getUserRoles();
 
@@ -2079,8 +2077,6 @@ class UserController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
-
-        //$this->addEmptyCollections($entity);
 
         //$this->addHookFields($entity);
 

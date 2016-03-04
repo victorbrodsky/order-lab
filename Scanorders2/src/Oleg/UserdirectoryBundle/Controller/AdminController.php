@@ -4288,6 +4288,13 @@ class AdminController extends Controller
             'syncRolesDb count='.$count
         );
 
+        //List of Research Labs clean
+        $count = $this->syncResearchLabsDb();
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Research Labs clean count='.$count
+        );
+
         return $this->redirect($this->generateUrl('user_admin_index'));
     }
     public function syncEventTypeListDb() {
@@ -4460,6 +4467,54 @@ class AdminController extends Controller
             $count++;
         }
 
+        return $count;
+    }
+
+
+    public function syncResearchLabsDb() {
+
+        //check
+        $em = $this->getDoctrine()->getManager();
+        $researchLabs = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findBy(array(),array('name'=>'asc','id'=>'asc'));
+        echo "researchLab count=".count($researchLabs)."<br>";
+
+        $count = 0;
+        $currentResLab = null;
+
+        foreach( $researchLabs as $researchLab ) {
+
+            echo "researchLab:".$researchLab->getId()." => ".$researchLab->getName()."<br>";
+            if( $currentResLab == null || $currentResLab->getName() != $researchLab->getName() ) {
+                //if( $researchLab->getType() != "default" ) {
+                //    exit("researchLab type is not default: type=".$researchLab->getType());
+                //}
+                $currentResLab = $researchLab;
+                continue;
+            }
+
+            //1) re-assign all users from $rgiesearchLab to $currentResLab
+            foreach( $researchLab->getUser() as $user ) {
+                //remove
+                $researchLab->removeUser($user);
+                $user->removeResearchLab($researchLab);
+                //add
+                $user->addResearchLab($currentResLab);
+            }
+
+            //2) remove $researchLab if no user attached to it
+            if( count($researchLab->getUser()) == 0 ) {
+                //$em->remove($researchLab);
+                //$em->flush();
+                echo $researchLab->getId().": researchLab removed <br>";
+                $count++;
+            } else {
+                exit("There are still users attached to researchLab: user count=".count($researchLab->getUser()));
+            }
+
+        }//foreach
+
+        echo "removed count=".$count."<br>";
+        exit('1');
         return $count;
     }
 
