@@ -4476,14 +4476,14 @@ class AdminController extends Controller
         //check
         $em = $this->getDoctrine()->getManager();
         $researchLabs = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findBy(array(),array('name'=>'asc','id'=>'asc'));
-        echo "researchLab count=".count($researchLabs)."<br>";
+        //echo "researchLab count=".count($researchLabs)."<br>";
 
         $count = 0;
         $currentResLab = null;
 
         foreach( $researchLabs as $researchLab ) {
 
-            echo "researchLab:".$researchLab->getId()." => ".$researchLab->getName()."<br>";
+            //echo "researchLab:".$researchLab->getId()." => ".$researchLab->getName()."<br>";
             if( $currentResLab == null || $currentResLab->getName() != $researchLab->getName() ) {
                 //if( $researchLab->getType() != "default" ) {
                 //    exit("researchLab type is not default: type=".$researchLab->getType());
@@ -4505,7 +4505,7 @@ class AdminController extends Controller
             if( count($researchLab->getUser()) == 0 ) {
                 $em->remove($researchLab);
                 $em->flush();
-                echo $researchLab->getId().": researchLab removed <br>";
+                //echo $researchLab->getId().": researchLab removed <br>";
                 $count++;
             } else {
                 exit("There are still users attached to researchLab: user count=".count($researchLab->getUser()));
@@ -4513,8 +4513,8 @@ class AdminController extends Controller
 
         }//foreach
 
-        echo "removed count=".$count."<br>";
-        exit('1');
+        //echo "removed count=".$count."<br>";
+        //exit('1');
         return $count;
     }
 
