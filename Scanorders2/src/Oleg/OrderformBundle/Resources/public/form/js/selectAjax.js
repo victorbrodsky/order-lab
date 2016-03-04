@@ -162,8 +162,13 @@ function getComboboxStain(holder,force) {
 
     var url = getCommonBaseUrl("util/"+"stain");
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "new" || cycle == "create" ) {
-        url = url + "?opt=default";
+        url = url + "&opt=default";
     }
 
     var targetid = ".ajax-combobox-staintype";
@@ -206,8 +211,13 @@ function getComboboxSpecialStain(ids, preset, setId) {
 
     var url = getCommonBaseUrl("util/"+"stain");    //urlCommon+"stain";
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "new" || cycle == "create" ) {
-        url = url + "?opt=default";
+        url = url + "&opt=default";
     }
 
     var targetid = "";
@@ -261,8 +271,13 @@ function getComboboxScanregion(holder,force) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+messageid;
+        url = url + "&opt="+messageid;
     }
 
     if( _scanregion.length == 0 ) {
@@ -302,8 +317,13 @@ function getComboboxOrgan(holder,force) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "new" || cycle == "create" ) {
-        url = url + "?opt=default";
+        url = url + "&opt=default";
     }
 
     if( _organ.length == 0 ) {
@@ -337,8 +357,13 @@ function getComboboxProcedure(holder,force) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "new" || cycle == "create" ) {
-        url = url + "?opt=default";
+        url = url + "&opt=default";
     }
 
     if( _procedure.length == 0 ) {
@@ -378,8 +403,13 @@ function getComboboxAccessionType(holder,force) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "new" || cycle == "create" ) {
-        url = url + "?opt=default&type="+orderformtype;
+        url = url + "&opt=default&type="+orderformtype;
     }
 
     //console.log("run url="+url);
@@ -424,8 +454,13 @@ function getComboboxMrnType(holder,force) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "new" || cycle == "create" ) {
-        url = url + "?opt=default&type="+orderformtype;
+        url = url + "&opt=default&type="+orderformtype;
     }
 
     if( _mrntype.length == 0 ) {
@@ -468,8 +503,13 @@ function getComboboxPartname(holder,force) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+messageid;
+        url = url + "&opt="+messageid;
     }
 
     if( _partname.length == 0 ) {
@@ -521,8 +561,13 @@ function getComboboxBlockname(holder,force) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+messageid;
+        url = url + "&opt="+messageid;
     }
 
     if( _blockname.length == 0 ) {
@@ -552,8 +597,13 @@ function getComboboxDelivery(holder) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+messageid;
+        url = url + "&opt="+messageid;
     }
 
     //console.log("scanregion.length="+organ.length);
@@ -644,7 +694,12 @@ function getUserWrappersByNodeid( nodeid, userComboboxClass, utilUrlString ) {
 
     //var idInArr = getParentSelectId( nodeComboboxClass, _projectTitle, userComboboxClass, true );
 
-    url = url + "?opt=" + nodeid;
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
+    url = url + "&opt=" + nodeid;
     //console.log('get UserWrappers By Nodeid url='+url);
 
     $.ajax({
@@ -673,8 +728,13 @@ function getComboboxAccount(holder) {
         return;
     }
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+messageid;
+        url = url + "&opt="+messageid;
     }
 
     if( _account.length == 0 ) {
@@ -704,6 +764,11 @@ function getComboboxReturnLocations(holder) {
 
     var url = getCommonBaseUrl("util/"+"returnlocation"+"?providerid="+user_id+"&proxyid="+proxyuser_id);
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "&cycle=" + cycle;
+
     if( _returnLocation.length == 0 ) {
         $.ajax({
             url: url,
@@ -728,8 +793,13 @@ function getUrgency() {
 
     var url = getCommonBaseUrl("util/"+"urgency");  //urlCommon+"urgency";
 
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+messageid;
+        url = url + "&opt="+messageid;
     }
 
     //console.log("scanregion.length="+organ.length);

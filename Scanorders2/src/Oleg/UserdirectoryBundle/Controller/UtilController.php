@@ -38,6 +38,10 @@ class UtilController extends Controller {
     public function getGenericList( $request, $name ) {
 
         $cycle = $request->get('cycle');
+        $newCycle = false;
+        if( $cycle && (strpos($cycle, 'new') !== false || strpos($cycle, 'create') !== false) ) {
+            $newCycle = true;
+        }
 
         //echo "name=".$name."<br>";
         $res = $this->getClassBundleByName($name);
@@ -54,9 +58,16 @@ class UtilController extends Controller {
 
             switch( $className ) {
 
+
                 case "FellowshipTitleList": //show this object as "abbreviation - name"
+                    if( $newCycle ) {
+                        $optionArr = array('default');
+                    } else {
+                        $optionArr = array('default','user-added');
+                    }
+
                     $entities = $em->getRepository('Oleg'.$bundleName.':'.$className)->findBy(
-                        array('type' => array('default','user-added'))
+                        array('type' => $optionArr)
                     );
                     foreach( $entities as $entity ) {
                         $element = array('id'=>$entity->getId(), 'text'=>$entity."");
@@ -64,11 +75,19 @@ class UtilController extends Controller {
                     }
                     break;
 
+
                 default:
                     $query = $em->createQueryBuilder()->from('Oleg'.$bundleName.':'.$className, 'list')
                         ->select("list.id as id, list.name as text")
                         ->orderBy("list.orderinlist","ASC");
-                    $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+                    //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+                    if( $newCycle ) {
+                        $query->where("list.type = :typedef")->setParameters(array('typedef' => 'default'));
+                    } else {
+                        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+                    }
+
                     $output = $query->getQuery()->getResult();
 
             } //switch
@@ -153,14 +172,32 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
+        $cycle = $request->get('cycle');
+        $newCycle = false;
+        if( $cycle && (strpos($cycle, 'new') !== false || strpos($cycle, 'create') !== false) ) {
+            $newCycle = true;
+        }
+        //echo "cycle=".$cycle." => newCycle=".$newCycle."<br>";
+
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
             ->leftJoin("list.types","types")
             ->orderBy("list.orderinlist","ASC");
 
-        $query->where("types.name LIKE :instType AND list.level = 0 AND (list.type = :typedef OR list.type = :typeadd)")
-            ->setParameters(array('typedef' => 'default','typeadd' => 'user-added', 'instType' => 'Educational' ));
+        $query->where("types.name LIKE :instType AND list.level = 0");
+        $paramArr = array('instType' => 'Educational');
+
+        if( $newCycle ) {
+            $query->andWhere("(list.type = :typedef)");
+            $paramArr['typedef'] = 'default';
+        } else {
+            $query->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+            $paramArr['typedef'] = 'default';
+            $paramArr['typeadd'] = 'user-added';
+        }
+
+        $query->setParameters($paramArr);
 
         $output = $query->getQuery()->getResult();
 
@@ -320,16 +357,29 @@ class UtilController extends Controller {
         $output = array();
         foreach($buildings as $building) {
             $geoloc = $building->getGeoLocation();
+
+            $street1 = null;
+            $street2 = null;
+            $city = null;
+            $county = null;
+            $zip = null;
+            if( $geoloc ) {
+                $street1 = $geoloc->getStreet1();
+                $street2 = $geoloc->getStreet2();
+                $city = $geoloc->getCity();
+                $county = $geoloc->getCounty();
+                $zip = $geoloc->getZip();
+            }
             $element = array(
                 'id'        => $building->getId(),
                 'text'      => $building."",
-                'street1'   => $geoloc->getStreet1(),
-                'street2'   => $geoloc->getStreet2(),
-                'city'   => $geoloc->getCity(),
-                'county'   => $geoloc->getCounty(),
-                'country'   => ( $geoloc->getCountry() ? $geoloc->getCountry()->getId() : null ),
-                'state'   => ( $geoloc->getState() ? $geoloc->getState()->getId() : null ),
-                'zip'   => $geoloc->getZip(),
+                'street1'   => $street1,
+                'street2'   => $street2,
+                'city'      => $city,
+                'county'    => $county,
+                'country'   => ( $geoloc && $geoloc->getCountry() ? $geoloc->getCountry()->getId() : null ),
+                'state'     => ( $geoloc && $geoloc->getState() ? $geoloc->getState()->getId() : null ),
+                'zip'       => $zip,
             );
             $output[] = $element;
         }
