@@ -563,7 +563,7 @@ function researchLabListener( holder ) {
         //var researchlabUrl = getCommonBaseUrl("list/research-labs/","employees");
         //console.log("researchlabUrl="+researchlabUrl);
         //var tooltipStr = 'This field can be edited in the '+'<a href="'+researchlabUrl+'">Research Lab</a>'+' of the List Manager';
-        var tooltipStr = 'This field can be edited in the Research Lab of the List Manager';
+        var tooltipStr = 'This field can be edited in the Research Lab List of the List Manager';
         //attach tooltip for all locked fields
         attachTooltipForAllFields($('.user-researchlabs-holder'),tooltipStr);
     }
@@ -630,7 +630,7 @@ function populateResearchlabData( data, elementName ) {
     //var researchlabUrl = getCommonBaseUrl("list/research-labs/","employees");
     //console.log("researchlabUrl="+researchlabUrl);
     //var tooltipStr = 'This field can be edited in the '+'<a href="'+researchlabUrl+'">Research Lab</a>'+' of the List Manager';
-    var tooltipStr = 'This field can be edited in the Research Lab of the List Manager';
+    var tooltipStr = 'This field can be edited in the Research Lab List of the List Manager';
 
     if( !data ) {
         //console.log("data is null => empty lab");
@@ -741,18 +741,28 @@ function populateResearchlabData( data, elementName ) {
 }
 
 function attachTooltipForAllFields(holder,tooltipStr) {
-    holder.find('input,select,textarea').each(function( index ) {
+    holder.find('input,select').each(function( index ) { //textarea
         //console.log( index + ": " + $( this ).text() );
         if( $(this).is('[readonly]') ) {
-            $(this).tooltip({
+            if( $(this).hasClass('combobox') ) {
+                var tooltipEl = $(this).parent();
+            } else {
+                var tooltipEl = $(this);
+            }
+            tooltipEl.tooltip({
                 'title':tooltipStr
             });
         }
     });
 }
 function removeTooltipForAllFields(holder) {
-    holder.find('input,select,textarea').each(function( index ) {       
-        $(this).tooltip('destroy');
+    holder.find('input,select,textarea').each(function( index ) {
+        if( $(this).hasClass('combobox') ) {
+            var tooltipEl = $(this).parent();
+        } else {
+            var tooltipEl = $(this);
+        }
+        tooltipEl.tooltip('destroy');
     });
 }
 
