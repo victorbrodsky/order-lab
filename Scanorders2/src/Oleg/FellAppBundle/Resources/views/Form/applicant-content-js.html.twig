@@ -17,10 +17,12 @@
         });
 
 
-        //Training period for which applying
-        var now = new Date();
-        $(".fellapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear()+2,6,1));
-        $(".fellapp-endDate").datepicker().datepicker("setDate", new Date(now.getFullYear()+3,5,30 ));
+        //Pre-set training period for which applying only for new form
+        if( cycle == "new" ) {
+            var now = new Date();
+            $(".fellapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 2, 6, 1));
+            $(".fellapp-endDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 3, 5, 30));
+        }
 
         //add listener on rank change
         listenerFellAppRank(null);
