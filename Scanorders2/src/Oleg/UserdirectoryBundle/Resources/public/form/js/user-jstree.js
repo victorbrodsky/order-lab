@@ -61,8 +61,13 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
         }
 
         var treeUrl = Routing.generate('employees_get_composition_tree');
-        treeUrl = treeUrl + '?'+withlazy+'$opt=none&classname='+entityName+'&bundlename='+bundleName+withtype;
+        treeUrl = treeUrl + '?'+withlazy+'opt=none&classname='+entityName+'&bundlename='+bundleName+withtype; //$opt=
         //console.log('treeUrl='+treeUrl);
+
+        if( typeof cycle === 'undefined' ) {
+            cycle = 'new';
+        }
+        treeUrl = treeUrl + "&cycle="+cycle;
 
         //js tree
         $(targetid).jstree({

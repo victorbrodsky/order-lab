@@ -42,6 +42,7 @@ class TreeController extends Controller {
         //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
         //echo "userid=".$userid."<br>";
+        //echo "opt=".$opt."<br>";
 
         $combobox = false;
         //$userpositions = false;
@@ -80,10 +81,6 @@ class TreeController extends Controller {
         $where = "";
         $params = array();
 
-//        if( $combobox ) {
-//            $where = "(list.type = :typedef OR list.type = :typeadd)";
-//            $params = array('typedef' => 'default','typeadd' => 'user-added');
-//        }
 
         $addwhere = false;
 
@@ -137,9 +134,16 @@ class TreeController extends Controller {
             $addwhere = true;
         }
 
+//        if( $combobox ) {
+//            $where = "(list.type = :typedef OR list.type = :typeadd)";
+//            $params = array('typedef' => 'default','typeadd' => 'user-added');
+//        }
+
         //echo "type=".$type."<br>";
         if( $type ) {
-            $where = $this->addToWhere($where,"list.type='".$type."'");
+            $where = $this->addToWhere($where,"(list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+            $params['user'] = $userid;
+            $params['type'] = $type;
         }
 
         //$query->where($where)->setParameters($params);

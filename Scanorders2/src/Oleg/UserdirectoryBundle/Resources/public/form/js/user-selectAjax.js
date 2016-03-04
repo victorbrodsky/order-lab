@@ -238,6 +238,11 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
         treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&bundlename=' + bundleName + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid + '&type=default';
         //console.log('final treeUrl='+treeUrl);
 
+        if( typeof cycle === 'undefined' ) {
+            cycle = 'new';
+        }
+        treeUrl = treeUrl + "&cycle="+cycle;
+
         if( !_ajaxTimeout ) {
             var _ajaxTimeout = 300000; //300 000 => 300sec
         }

@@ -339,9 +339,15 @@ class UtilController extends Controller {
      * @Route("/common/building", name="employees_get_building")
      * @Method("GET")
      */
-    public function getBuildingsAction() {
+    public function getBuildingsAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
+
+        $cycle = $request->get('cycle');
+        $newCycle = false;
+        if( $cycle && (strpos($cycle, 'new') !== false || strpos($cycle, 'create') !== false) ) {
+            $newCycle = true;
+        }
 
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:BuildingList', 'list')
@@ -350,7 +356,11 @@ class UtilController extends Controller {
 
         //$user = $this->get('security.context')->getToken()->getUser();
 
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        if( $newCycle ) {
+            $query->where("list.type = :typedef")->setParameters(array('typedef' => 'default'));
+        } else {
+            $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        }
 
         $buildings = $query->getQuery()->getResult();
 
