@@ -624,6 +624,11 @@ class FellAppController extends Controller {
             $originalInterviews->add($interview);
         }
 
+        $originalReports = new ArrayCollection();
+        foreach( $entity->getReports() as $report ) {
+            $originalReports->add($report);
+        }
+
         $cycle = 'edit';
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -700,29 +705,41 @@ class FellAppController extends Controller {
             /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
             $changedInfoArr = $this->setEventLogChanges($entity);
 
+            //report (Complete Application PDF) diff
+            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
+            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+            //exit('report');
+
             //set Edit event log for removed collection and changed fields or added collection
-            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 ) {
+            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
                 $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
+                $event = $event . $reportsDiffInfoStr;
                 $userSecUtil = $this->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             }
-
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            //update report if report does not exists
-            //if( count($entity->getReports()) == 0 ) {
+            //don't regenerate report if it was added.
+            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
+            //echo "report count=".count($entity->getReports())."<br>";
+            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
                 $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     'A new Complete Fellowship Application PDF will be generated.'
                 );
-            //}
+                //echo "Regenerate!!!! <br>";
+            } else {
+                //echo "NO Regenerate!!!! <br>";
+            }
+            //exit('report regen');
 
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
@@ -850,6 +867,30 @@ class FellAppController extends Controller {
 
         return $eventArr;
 
+    }
+
+    //record diff
+    public function recordToEvenLogDiffCollection($originalArr,$currentArr,$text) {
+        $removeArr = array();
+
+        $original = $this->listToArray($originalArr);
+        $new = $this->listToArray($currentArr);
+
+        $diff = array_diff($original, $new);
+
+        if( count($original) != count($new) || count($diff) != 0 ) {
+            $removeArr[] = "<strong>"."Original ".$text.": ".implode(", ",$original)."</strong>";
+            $removeArr[] = "<strong>"."New ".$text.": ".implode(", ",$new)."</strong>";
+        }
+
+        return implode("<br>", $removeArr);
+    }
+    public function listToArray($collection) {
+        $resArr = array();
+        foreach( $collection as $item ) {
+            $resArr[] = $item."";
+        }
+        return $resArr;
     }
 
     public function convertDateTimeToStr($datetime) {
@@ -1663,6 +1704,7 @@ class FellAppController extends Controller {
      * https://github.com/devandclick/EnseparHtml2pdfBundle
      *
      * @Route("/download-pdf/{id}", name="fellapp_download_pdf")
+     * @Route("/view-pdf/{id}", name="fellapp_view_pdf")
      * @Method("GET")
      */
     public function downloadReportAction(Request $request, $id) {
@@ -1703,7 +1745,13 @@ class FellAppController extends Controller {
 
         if( $reportDocument ) {
 
-            return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $reportDocument->getId())) );
+            $routeName = $request->get('_route');
+
+            if( $routeName == "fellapp_view_pdf" ) {
+                return $this->redirect( $this->generateUrl('fellapp_file_view',array('id' => $reportDocument->getId())) );
+            } else {
+                return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $reportDocument->getId())) );
+            }
 
         } else {
 

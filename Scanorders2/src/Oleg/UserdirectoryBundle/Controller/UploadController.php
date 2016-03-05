@@ -184,5 +184,41 @@ class UploadController extends Controller {
 
 
 
+    /**
+     * @Route("/file-view/{id}", name="employees_file_view", requirements={"id" = "\d+"})
+     * @Method("GET")
+     */
+    public function viewFileAction(Request $request, $id) {
+        return $this->viewFileMethod($request,$id);
+    }
+
+    public function viewFileMethod($request,$id) {
+        $em = $this->getDoctrine()->getManager();
+        $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
+
+        $response = new Response();
+
+        if( $document ) {
+
+            $originalname = $document->getOriginalname();
+            $abspath = $document->getAbsoluteUploadFullPath();
+            $size = $document->getSize();
+
+            //$downloader = new LargeFileDownloader();
+            ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download"
+            //$downloader->downloadLargeFile($abspath,$originalname,$size,true,"view");
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename='.$originalname);
+            readfile($abspath);
+
+            exit;
+        } else {
+            $response->setContent('error');
+        }
+
+        return $response;
+    }
+
 
 } 

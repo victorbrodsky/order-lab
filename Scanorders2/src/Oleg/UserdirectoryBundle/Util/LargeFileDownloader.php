@@ -27,7 +27,7 @@ class LargeFileDownloader {
 
     //download large files
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/Aperio%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
-    public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true ) {
+    public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download" ) {
 
         $filenameClean = str_replace("\\","/",$filepath);
 
@@ -74,11 +74,17 @@ class LargeFileDownloader {
 
         header('Content-Description: File Transfer');
         header('Content-Type: '.$mimeType);
-        header('Content-Disposition: attachment; filename='.$filename);
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . $size);
+
+        if( $action == "download" ) {
+            header('Content-Disposition: attachment; filename='.$filename);
+        } elseif( $action == "view" ) {
+            header('Content-Disposition: inline; filename='.$filename);
+        }
+
         $this->readfile_chunked($filenameClean);
         return;
     }

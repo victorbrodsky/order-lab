@@ -578,9 +578,12 @@
                             {#<span class="glyphicon glyphicon-file" aria-hidden="true"></span>#}
                         {#</a>#}
                         {% if entity.getRecentReport() %}
-                            <a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">
+                            {#<a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">#}
+                                {#<span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>#}
+                            {#</a>#}
+                            <a href="{{ path('fellapp_view_pdf', { 'id': entity.id}) }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">
                                 <span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>
-                            </a>                            
+                            </a>
                         {% endif %}                                                                       
 
                     </td>

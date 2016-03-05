@@ -33,11 +33,24 @@ class FellAppUploadController extends UploadController {
     }
 
     /**
+     * $id - document id
+     *
      * @Route("/file-download/{id}", name="fellapp_file_download", requirements={"id" = "\d+"})
      * @Method("GET")
      */
     public function downloadFileAction(Request $request,$id) {
         return $this->downloadFileMethod($request,$id);
+    }
+
+
+    /**
+     * $id - document id
+     *
+     * @Route("/file-view/{id}", name="fellapp_file_view", requirements={"id" = "\d+"})
+     * @Method("GET")
+     */
+    public function viewFileAction(Request $request,$id) {
+        return $this->viewFileMethod($request,$id);
     }
 
 
