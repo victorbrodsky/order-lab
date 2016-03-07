@@ -219,13 +219,13 @@ class UploadController extends Controller {
             $abspath = $document->getAbsoluteUploadFullPath();
             $size = $document->getSize();
 
-            //$downloader = new LargeFileDownloader();
+            $downloader = new LargeFileDownloader();
             ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download"
-            //$downloader->downloadLargeFile($abspath,$originalname,$size,true,"view");
+            $downloader->downloadLargeFile($abspath,$originalname,$size,true,"view");
 
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: inline; filename='.$originalname);
-            readfile($abspath);
+//            header('Content-Type: application/pdf');
+//            header('Content-Disposition: inline; filename='.$originalname);
+//            readfile($abspath);
 
             exit;
         } else {

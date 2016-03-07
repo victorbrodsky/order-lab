@@ -43,43 +43,48 @@ class LargeFileDownloader {
             $size = filesize($filenameClean);
         }
 
-        $mimeType = 'application/octet-stream';
-
-        //extension
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-        if( $ext == 'pdf' ) {
-            $mimeType = 'application/pdf';
-        }
-        if( $ext == 'doc' || $ext == 'docx' ) {
-            $mimeType = 'application/msword';
-        }
-        if( $ext == 'xlc' || $ext == 'xls' ) {
-            $mimeType = 'application/vnd.ms-excel';
-        }
-        if( $ext == 'xlsx' ) {
-            $mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        }
-        if( $ext == 'jpe' || $ext == 'jpeg' || $ext == 'jpg' ) {
-            $mimeType = 'image/jpeg';
-        }
-        if( $ext == 'bmp' ) {
-            $mimeType = 'image/bmp';
-        }
-        if( $ext == 'gif' ) {
-            $mimeType = 'image/gif';
-        }
-        if( $ext == 'tif' ) {
-            $mimeType = 'image/tif';
-        }
+//        $mimeType = 'application/octet-stream';
+//
+//        //extension
+//        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+//        if( $ext == 'pdf' ) {
+//            $mimeType = 'application/pdf';
+//        }
+//        if( $ext == 'doc' || $ext == 'docx' ) {
+//            $mimeType = 'application/msword';
+//        }
+//        if( $ext == 'xlc' || $ext == 'xls' ) {
+//            $mimeType = 'application/vnd.ms-excel';
+//        }
+//        if( $ext == 'xlsx' ) {
+//            $mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+//        }
+//        if( $ext == 'jpe' || $ext == 'jpeg' || $ext == 'jpg' ) {
+//            $mimeType = 'image/jpeg';
+//        }
+//        if( $ext == 'bmp' ) {
+//            $mimeType = 'image/bmp';
+//        }
+//        if( $ext == 'gif' ) {
+//            $mimeType = 'image/gif';
+//        }
+//        if( $ext == 'tif' ) {
+//            $mimeType = 'image/tif';
+//        }
+        $mimeType = $this->getMimeType($filename);
 
         header('Content-Description: File Transfer');
         header('Content-Type: '.$mimeType);
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . $size);
+//        header('Expires: 0');
+//        header('Cache-Control: must-revalidate');
+//        header('Pragma: public');
+//        header('Content-Length: ' . $size);
 
         if( $action == "download" ) {
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . $size);
             header('Content-Disposition: attachment; filename='.$filename);
         } elseif( $action == "view" ) {
             header('Content-Disposition: inline; filename='.$filename);
@@ -115,7 +120,44 @@ class LargeFileDownloader {
         return $status;
     }
 
+    public function getMimeType($filename) {
+        $mimeType = 'application/octet-stream';
 
+        //extension
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if( $ext == 'pdf' ) {
+            $mimeType = 'application/pdf';
+        }
+        if( $ext == 'doc' || $ext == 'docx' ) {
+            $mimeType = 'application/msword';
+        }
+        if( $ext == 'xlc' || $ext == 'xls' ) {
+            $mimeType = 'application/vnd.ms-excel';
+        }
+        if( $ext == 'xlsx' ) {
+            $mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        }
+        if( $ext == 'jpe' || $ext == 'jpeg' || $ext == 'jpg' ) {
+            $mimeType = 'image/jpeg';
+        }
+        if( $ext == 'bmp' ) {
+            $mimeType = 'image/bmp';
+        }
+        if( $ext == 'gif' ) {
+            $mimeType = 'image/gif';
+        }
+        if( $ext == 'tif' ) {
+            $mimeType = 'image/tif';
+        }
+
+        return $mimeType;
+    }
+
+
+
+
+
+    ////////////////////// NOT USED BELOW //////////////////////
     //Does not work properly
     //THE DOWNLOAD SCRIPT
     //$filePath = "D:/Software/versions/windows/windows_7.rar"; // set your download file path here.
