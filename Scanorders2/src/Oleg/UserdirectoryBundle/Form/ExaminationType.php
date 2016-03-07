@@ -44,6 +44,10 @@ class ExaminationType extends AbstractType
             'label' => 'Score:',
             'attr' => array('class'=>'form-control')
         ));
+        $builder->add('USMLEStep1Percentile', null, array(
+            'label' => 'Percentile:',
+            'attr' => array('class'=>'form-control')
+        ));
 
 
         $builder->add('USMLEStep2CKDatePassed', null, array(
@@ -55,6 +59,10 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('USMLEStep2CKScore', null, array(
             'label' => 'CK - Score (optional):',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('USMLEStep2CKPercentile', null, array(
+            'label' => 'Percentile:',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -69,6 +77,10 @@ class ExaminationType extends AbstractType
             'label' => 'CS - Score (optional):',
             'attr' => array('class'=>'form-control')
         ));
+        $builder->add('USMLEStep2CSPercentile', null, array(
+            'label' => 'Percentile:',
+            'attr' => array('class'=>'form-control')
+        ));
 
 
         $builder->add('USMLEStep3DatePassed', null, array(
@@ -80,6 +92,10 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('USMLEStep3Score', null, array(
             'label' => 'Score (optional):',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('USMLEStep3Percentile', null, array(
+            'label' => 'Percentile:',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -112,6 +128,10 @@ class ExaminationType extends AbstractType
             'label' => 'Score:',
             'attr' => array('class'=>'form-control')
         ));
+        $builder->add('COMLEXLevel1Percentile', null, array(
+            'label' => 'Percentile:',
+            'attr' => array('class'=>'form-control')
+        ));
 
         $builder->add('COMLEXLevel2DatePassed', null, array(
             'label' => 'Date passed:',
@@ -124,6 +144,10 @@ class ExaminationType extends AbstractType
             'label' => 'Score (optional):',
             'attr' => array('class'=>'form-control')
         ));
+        $builder->add('COMLEXLevel2Percentile', null, array(
+            'label' => 'Percentile:',
+            'attr' => array('class'=>'form-control')
+        ));
 
         $builder->add('COMLEXLevel3DatePassed', null, array(
             'label' => 'Date passed:',
@@ -134,6 +158,10 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('COMLEXLevel3Score', null, array(
             'label' => 'Score (optional):',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('COMLEXLevel3Percentile', null, array(
+            'label' => 'Percentile:',
             'attr' => array('class'=>'form-control')
         ));
 

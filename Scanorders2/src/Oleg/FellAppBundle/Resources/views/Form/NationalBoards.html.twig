@@ -20,15 +20,18 @@
             <div class="well">
                 <label class="col-xs-12 control-label">USMLE Step 1</label>
                 <div class="row withpaddingtop">
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="USMLEStep1DatePassed" class="control-label">Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="USMLEStep1DatePassed" name="USMLEStep1DatePassed" placeholder="Date passed">#}
                         {{ formmacros.fieldDateLabel_vertical(examination.USMLEStep1DatePassed,'allow-future-date') }}
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="USMLEStep1Score" class="control-label">Score</label>#}
                         {#<input type="text" class="form-control" id="USMLEStep1Score" name="USMLEStep1Score" placeholder="Score">#}
                         <p>{{ form_row(examination.USMLEStep1Score) }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>{{ form_row(examination.USMLEStep1Percentile) }}</p>
                     </div>
                 </div>
             </div>
@@ -36,27 +39,33 @@
             <div class="well">
                 <label class="col-xs-12 control-label">USMLE Step 2</label>
                 <div class="row withpaddingtop">
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="USMLEStep2CKDatePassed" class="control-label">CK - Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="USMLEStep2CKDatePassed" name="USMLEStep2CKDatePassed" placeholder="CK - Date passed">#}
                         {{ formmacros.fieldDateLabel_vertical(examination.USMLEStep2CKDatePassed,'allow-future-date') }}
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="USMLEStep2CKScore" class="control-label">CK - Score (optional)</label>#}
                         {#<input type="text" class="form-control" id="USMLEStep2CKScore" name="USMLEStep2CKScore" placeholder="CK - Score (optional)">#}
                         <p>{{ form_row(examination.USMLEStep2CKScore) }}</p>
                     </div>
+                    <div class="col-xs-4">
+                        <p>{{ form_row(examination.USMLEStep2CKPercentile) }}</p>
+                    </div>
                 </div>
                 <div class="row withpaddingtop">
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="USMLEStep2CSDatePassed" class="control-label">CS - Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="USMLEStep2CSDatePassed" name="USMLEStep2CSDatePassed" placeholder="CS - Date passed">#}
                         {{ formmacros.fieldDateLabel_vertical(examination.USMLEStep2CSDatePassed,'allow-future-date') }}
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="USMLEStep2CSScore" class="control-label">CS - Score (optional)</label>#}
                         {#<input type="text" class="form-control" id="USMLEStep2CSScore" name="USMLEStep2CSScore" placeholder="CS - Score (optional)">#}
                         <p>{{ form_row(examination.USMLEStep2CSScore) }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>{{ form_row(examination.USMLEStep2CSPercentile) }}</p>
                     </div>
                 </div>
             </div>
@@ -64,15 +73,18 @@
             <div class="well">
                 <label class="col-xs-12 control-label">USMLE Step 3</label>
                 <div class="row withpaddingtop">
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="USMLEStep3DatePassed" class="control-label">Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="USMLEStep3DatePassed" name="USMLEStep3DatePassed" placeholder="Date passed">#}
                         {{ formmacros.fieldDateLabel_vertical(examination.USMLEStep3DatePassed,'allow-future-date') }}
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="USMLEStep3Score" class="control-label">Score (optional)</label>#}
                         {#<input type="text" class="form-control" id="USMLEStep3Score" name="USMLEStep3Score" placeholder="Score (optional)">#}
                         <p>{{ form_row(examination.USMLEStep3Score) }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>{{ form_row(examination.USMLEStep3Percentile) }}</p>
                     </div>
                 </div>
             </div>
@@ -122,16 +134,19 @@
             <div class="well">
                 <label class="col-xs-12 control-label">COMLEX Level 1</label>
                 <div class="row withpaddingtop">
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="COMLEXLevel1DatePassed" class="control-label">Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="COMLEXLevel1DatePassed" name="COMLEXLevel1DatePassed" placeholder="Date passed">#}
                         {#{{ form_row(examination.COMLEXLevel1DatePassed) }}#}
                         {{ formmacros.fieldDateLabel_vertical(examination.COMLEXLevel1DatePassed,'allow-future-date') }}
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="COMLEXLevel1Score" class="control-label">Score</label>#}
                         {#<input type="text" class="form-control" id="COMLEXLevel1Score" name="COMLEXLevel1Score" placeholder="Score">#}
                         {{ form_row(examination.COMLEXLevel1Score) }}
+                    </div>
+                    <div class="col-xs-4">
+                        <p>{{ form_row(examination.COMLEXLevel1Percentile) }}</p>
                     </div>
                 </div>
             </div>
@@ -139,16 +154,19 @@
             <div class="well">
                 <label class="col-xs-12 control-label">COMLEX Level 2</label>
                 <div class="row withpaddingtop">
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="COMLEXLevel2DatePassed" class="control-label">Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="COMLEXLevel2DatePassed" name="COMLEXLevel2DatePassed" placeholder="Date passed">#}
                         {#{{ form_row(examination.COMLEXLevel2DatePassed) }}#}
                         {{ formmacros.fieldDateLabel_vertical(examination.COMLEXLevel2DatePassed,'allow-future-date') }}
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="COMLEXLevel2Score" class="control-label">Score (optional)</label>#}
                         {#<input type="text" class="form-control" id="COMLEXLevel2Score" name="COMLEXLevel2Score" placeholder="Score (optional)">#}
                         {{ form_row(examination.COMLEXLevel2Score) }}
+                    </div>
+                    <div class="col-xs-4">
+                        <p>{{ form_row(examination.COMLEXLevel2Percentile) }}</p>
                     </div>
                 </div>
             </div>
@@ -156,16 +174,19 @@
             <div class="well">
                 <label class="col-xs-12 control-label">COMLEX Level 3</label>
                 <div class="row withpaddingtop">
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="COMLEXLevel3DatePassed" class="control-label">Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="COMLEXLevel3DatePassed" name="COMLEXLevel3DatePassed" placeholder="Date passed">#}
                         {#{{ form_row(examination.COMLEXLevel3DatePassed) }}#}
                         {{ formmacros.fieldDateLabel_vertical(examination.COMLEXLevel3DatePassed,'allow-future-date') }}
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {#<label for="COMLEXLevel3Score" class="control-label">Score (optional)</label>#}
                         {#<input type="text" class="form-control" id="COMLEXLevel3Score" name="COMLEXLevel3Score" placeholder="Score (optional)">#}
                         {{ form_row(examination.COMLEXLevel3Score) }}
+                    </div>
+                    <div class="col-xs-4">
+                        <p>{{ form_row(examination.COMLEXLevel3Percentile) }}</p>
                     </div>
                 </div>
             </div>
