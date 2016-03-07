@@ -406,7 +406,7 @@
                                     {#&#123;&#35;<embed src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;" type='application/pdf' >&#35;&#125;#}
                                     {#<object data="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>#}
                                     {#{% else %}#}
-                                    {#<img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
+                                    {#<img src="{{ path('fellapp_file_view', { 'id': entity.avatars|last.id}) }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
                                     {#{% endif %}#}
                                     {{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar','') }}
                                 </div>

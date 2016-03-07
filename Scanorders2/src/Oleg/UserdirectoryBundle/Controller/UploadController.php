@@ -32,6 +32,11 @@ class UploadController extends Controller {
     }
 
     public function deleteFileMethod(Request $request) {
+
+        if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
         $documentid = $request->get('documentid');
         $commentid = $request->get('commentid');
         $commentclass = $request->get('commenttype');    //comment class
@@ -143,6 +148,11 @@ class UploadController extends Controller {
     }
 
     public function downloadFileMethod($request,$id) {
+
+        if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
         $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
 
@@ -193,6 +203,11 @@ class UploadController extends Controller {
     }
 
     public function viewFileMethod($request,$id) {
+
+        if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
         $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
 

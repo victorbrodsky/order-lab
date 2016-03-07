@@ -39,6 +39,11 @@ class FellAppUploadController extends UploadController {
      * @Method("GET")
      */
     public function downloadFileAction(Request $request,$id) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         return $this->downloadFileMethod($request,$id);
     }
 
@@ -50,6 +55,11 @@ class FellAppUploadController extends UploadController {
      * @Method("GET")
      */
     public function viewFileAction(Request $request,$id) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         return $this->viewFileMethod($request,$id);
     }
 
