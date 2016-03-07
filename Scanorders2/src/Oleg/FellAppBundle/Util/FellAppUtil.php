@@ -1188,14 +1188,14 @@ class FellAppUtil {
                 $country = trim($country);
                 $transformer = new GenericTreeTransformer($em, $author, 'Countries');
                 $countryEntity = $transformer->reverseTransform($country);
-                $trainingGeo->setCity($countryEntity);
+                $trainingGeo->setCountry($countryEntity);
             }
 
             if( $state ) {
                 $state = trim($state);
                 $transformer = new GenericTreeTransformer($em, $author, 'States');
                 $stateEntity = $transformer->reverseTransform($state);
-                $trainingGeo->setCity($stateEntity);
+                $trainingGeo->setState($stateEntity);
             }
         }
 
