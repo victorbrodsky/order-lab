@@ -223,10 +223,6 @@ class UploadController extends Controller {
             ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download"
             $downloader->downloadLargeFile($abspath,$originalname,$size,true,"view");
 
-//            header('Content-Type: application/pdf');
-//            header('Content-Disposition: inline; filename='.$originalname);
-//            readfile($abspath);
-
             exit;
         } else {
             $response->setContent('error');

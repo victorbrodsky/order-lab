@@ -58,9 +58,8 @@ class LargeFileDownloader {
             header('Content-Disposition: inline; filename='.$filename);
         }
 
-        echo "size=".$size."<br>"; //6 628 965
         if( $size < 10000000 ) {
-            readfile($filenameClean); //use for files less then 10MB
+            readfile($filenameClean); //use for files less than 10MB
         } else {
             $this->readfile_chunked($filenameClean);
         }
