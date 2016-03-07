@@ -40,7 +40,7 @@ class LargeFileDownloader {
         }
 
         if( !$size ) {
-            $size = filesize($filenameClean);
+            $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
         }
 
         $mimeType = $this->getMimeType($filename);
@@ -59,7 +59,7 @@ class LargeFileDownloader {
         }
 
         if( $size < 10000000 ) {
-            readfile($filenameClean); //use for files less than 10MB
+            readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
         } else {
             $this->readfile_chunked($filenameClean);
         }
