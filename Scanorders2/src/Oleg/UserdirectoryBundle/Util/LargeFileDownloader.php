@@ -75,16 +75,16 @@ class LargeFileDownloader {
 
         header('Content-Description: File Transfer');
         header('Content-Type: '.$mimeType);
-//        header('Expires: 0');
-//        header('Cache-Control: must-revalidate');
-//        header('Pragma: public');
-//        header('Content-Length: ' . $size);
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . $size);
 
         if( $action == "download" ) {
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . $size);
+            //header('Expires: 0');
+//            header('Cache-Control: must-revalidate');
+//            header('Pragma: public');
+//            header('Content-Length: ' . $size);
             header('Content-Disposition: attachment; filename='.$filename);
         } elseif( $action == "view" ) {
             header('Content-Disposition: inline; filename='.$filename);
