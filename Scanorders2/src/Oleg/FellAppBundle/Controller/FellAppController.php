@@ -255,7 +255,7 @@ class FellAppController extends Controller {
 
 
         $em = $this->getDoctrine()->getManager();
-        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications");
+        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications Spreadsheet");
         $lastImportTimestamps = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
         if( count($lastImportTimestamps) != 1 ) {
             $lastImportTimestamp = null;
