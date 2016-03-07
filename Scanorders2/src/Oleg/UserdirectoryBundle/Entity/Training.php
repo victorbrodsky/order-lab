@@ -102,6 +102,16 @@ class Training extends BaseUserAttributes
      */
     private $jobTitle;
 
+    /**
+     * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
+     **/
+    private $geoLocation;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
 
 
     public function __construct($author=null) {
@@ -375,6 +385,38 @@ class Training extends BaseUserAttributes
     public function getJobTitle()
     {
         return $this->jobTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeoLocation()
+    {
+        return $this->geoLocation;
+    }
+
+    /**
+     * @param mixed $geoLocation
+     */
+    public function setGeoLocation($geoLocation)
+    {
+        $this->geoLocation = $geoLocation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
 
 

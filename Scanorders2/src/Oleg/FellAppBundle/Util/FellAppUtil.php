@@ -69,7 +69,6 @@ class FellAppUtil {
         if( $maintenance ) {
             return null;
         }
-        
 
         //echo "fellapp import <br>";
 
@@ -77,17 +76,17 @@ class FellAppUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
-
         $service = $this->getGoogleService();
+
         if( !$service ) {
             $event = "Google API service failed!";
             $logger->warning($event);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
         }
 
-        //echo "service ok <br>";
-
         if( $service ) {
+
+            //echo "service ok <br>";
 
             //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
             $excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
@@ -1169,6 +1168,37 @@ class FellAppUtil {
         //End
         $training->setCompletionDate($this->transformDatestrToDate($this->getValueByHeaderName($typeStr.'End',$rowData,$headers)));
 
+        //City, Country, State
+        $city = $this->getValueByHeaderName($typeStr.'City',$rowData,$headers);
+        $country = $this->getValueByHeaderName($typeStr.'Country',$rowData,$headers);
+        $state = $this->getValueByHeaderName($typeStr.'State',$rowData,$headers);
+
+        if( $city || $country || $state ) {
+            $trainingGeo = new GeoLocation();
+            $training->setGeoLocation($trainingGeo);
+
+            if( $city ) {
+                $city = trim($city);
+                $transformer = new GenericTreeTransformer($em, $author, 'CityList');
+                $cityEntity = $transformer->reverseTransform($city);
+                $trainingGeo->setCity($cityEntity);
+            }
+
+            if( $country ) {
+                $country = trim($country);
+                $transformer = new GenericTreeTransformer($em, $author, 'Countries');
+                $countryEntity = $transformer->reverseTransform($country);
+                $trainingGeo->setCity($countryEntity);
+            }
+
+            if( $state ) {
+                $state = trim($state);
+                $transformer = new GenericTreeTransformer($em, $author, 'States');
+                $stateEntity = $transformer->reverseTransform($state);
+                $trainingGeo->setCity($stateEntity);
+            }
+        }
+
         //Name
         $schoolName = $this->getValueByHeaderName($nameMatchString,$rowData,$headers);
         if( $schoolName ) {
@@ -1178,6 +1208,13 @@ class FellAppUtil {
             $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
             $schoolNameEntity = $transformer->reverseTransform($schoolName);
             $training->setInstitution($schoolNameEntity);
+        }
+
+        //Description
+        $schoolDescription = $this->getValueByHeaderName($typeStr.'Description',$rowData,$headers);
+        if( $schoolDescription ) {
+            $schoolDescription = trim($schoolDescription);
+            $training->setDescription($schoolDescription);
         }
 
         //Major
