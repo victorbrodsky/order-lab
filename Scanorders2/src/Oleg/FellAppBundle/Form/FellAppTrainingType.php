@@ -3,6 +3,7 @@
 namespace Oleg\FellAppBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -81,7 +82,17 @@ class FellAppTrainingType extends AbstractType
             'classtype' => 'jobTitle'
         ));
 
+        $builder->add( 'description', 'textarea', array(
+            'label'=>'Description:',
+            'required'=>false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
 
+        $builder->add('geoLocation', new GeoLocationType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'label' => false,
+            'required' => false
+        ));
 
     }
 

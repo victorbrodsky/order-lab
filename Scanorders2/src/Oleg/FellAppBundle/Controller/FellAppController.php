@@ -305,11 +305,15 @@ class FellAppController extends Controller {
             //echo "receivedInterviews=".$receivedInterviews."<br>";
         }
 
+        //allowPopulateFellApp
+        $userUtil = new UserUtil();
+        $allowPopulateFellApp = $userUtil->getSiteSetting($em,'AllowPopulateFellApp');
         
         return array(
             'entities' => $fellApps,
             'pathbase' => 'fellapp',
             'lastImportTimestamp' => $lastImportTimestamp,
+            'allowPopulateFellApp' => $allowPopulateFellApp,
             'fellappfilter' => $filterform->createView(),
             'startDate' => $startDate,
             'filter' => $fellSubspecId,

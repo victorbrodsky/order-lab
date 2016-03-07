@@ -290,7 +290,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
         $builder->add('trainings', 'collection', array(
-            'type' => new FellAppTrainingType(),
+            'type' => new FellAppTrainingType($this->params),
             'label' => false,
             'required' => false,
             'allow_add' => true,
