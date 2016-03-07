@@ -43,34 +43,6 @@ class LargeFileDownloader {
             $size = filesize($filenameClean);
         }
 
-//        $mimeType = 'application/octet-stream';
-//
-//        //extension
-//        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-//        if( $ext == 'pdf' ) {
-//            $mimeType = 'application/pdf';
-//        }
-//        if( $ext == 'doc' || $ext == 'docx' ) {
-//            $mimeType = 'application/msword';
-//        }
-//        if( $ext == 'xlc' || $ext == 'xls' ) {
-//            $mimeType = 'application/vnd.ms-excel';
-//        }
-//        if( $ext == 'xlsx' ) {
-//            $mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-//        }
-//        if( $ext == 'jpe' || $ext == 'jpeg' || $ext == 'jpg' ) {
-//            $mimeType = 'image/jpeg';
-//        }
-//        if( $ext == 'bmp' ) {
-//            $mimeType = 'image/bmp';
-//        }
-//        if( $ext == 'gif' ) {
-//            $mimeType = 'image/gif';
-//        }
-//        if( $ext == 'tif' ) {
-//            $mimeType = 'image/tif';
-//        }
         $mimeType = $this->getMimeType($filename);
 
         header('Content-Description: File Transfer');
@@ -81,16 +53,18 @@ class LargeFileDownloader {
         header('Content-Length: ' . $size);
 
         if( $action == "download" ) {
-            //header('Expires: 0');
-//            header('Cache-Control: must-revalidate');
-//            header('Pragma: public');
-//            header('Content-Length: ' . $size);
             header('Content-Disposition: attachment; filename='.$filename);
         } elseif( $action == "view" ) {
             header('Content-Disposition: inline; filename='.$filename);
         }
 
-        $this->readfile_chunked($filenameClean);
+        echo "size=".$size."<br>"; //6 628 965
+        if( $size < 10000000 ) {
+            readfile($filenameClean); //use for files less then 10MB
+        } else {
+            $this->readfile_chunked($filenameClean);
+        }
+
         return;
     }
 
