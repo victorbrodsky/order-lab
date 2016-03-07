@@ -57,6 +57,11 @@ class Examination
     private $USMLEStep1Score;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $USMLEStep1Percentile;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $USMLEStep1DatePassed;
@@ -65,6 +70,11 @@ class Examination
      * @ORM\Column(type="string", nullable=true)
      */
     private $USMLEStep2CKScore;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $USMLEStep2CKPercentile;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -77,6 +87,11 @@ class Examination
     private $USMLEStep2CSScore;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $USMLEStep2CSPercentile;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $USMLEStep2CSDatePassed;
@@ -85,6 +100,11 @@ class Examination
      * @ORM\Column(type="string", nullable=true)
      */
     private $USMLEStep3Score;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $USMLEStep3Percentile;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -112,6 +132,11 @@ class Examination
     private $COMLEXLevel1Score;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $COMLEXLevel1Percentile;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $COMLEXLevel1DatePassed;
@@ -127,9 +152,19 @@ class Examination
     private $COMLEXLevel2Score;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $COMLEXLevel2Percentile;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $COMLEXLevel3Score;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $COMLEXLevel3Percentile;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -497,6 +532,121 @@ class Examination
     {
         return $this->COMLEXLevel3Score;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUSMLEStep1Percentile()
+    {
+        return $this->USMLEStep1Percentile;
+    }
+
+    /**
+     * @param mixed $USMLEStep1Percentile
+     */
+    public function setUSMLEStep1Percentile($USMLEStep1Percentile)
+    {
+        $this->USMLEStep1Percentile = $USMLEStep1Percentile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUSMLEStep2CKPercentile()
+    {
+        return $this->USMLEStep2CKPercentile;
+    }
+
+    /**
+     * @param mixed $USMLEStep2CKPercentile
+     */
+    public function setUSMLEStep2CKPercentile($USMLEStep2CKPercentile)
+    {
+        $this->USMLEStep2CKPercentile = $USMLEStep2CKPercentile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUSMLEStep2CSPercentile()
+    {
+        return $this->USMLEStep2CSPercentile;
+    }
+
+    /**
+     * @param mixed $USMLEStep2CSPercentile
+     */
+    public function setUSMLEStep2CSPercentile($USMLEStep2CSPercentile)
+    {
+        $this->USMLEStep2CSPercentile = $USMLEStep2CSPercentile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUSMLEStep3Percentile()
+    {
+        return $this->USMLEStep3Percentile;
+    }
+
+    /**
+     * @param mixed $USMLEStep3Percentile
+     */
+    public function setUSMLEStep3Percentile($USMLEStep3Percentile)
+    {
+        $this->USMLEStep3Percentile = $USMLEStep3Percentile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCOMLEXLevel1Percentile()
+    {
+        return $this->COMLEXLevel1Percentile;
+    }
+
+    /**
+     * @param mixed $COMLEXLevel1Percentile
+     */
+    public function setCOMLEXLevel1Percentile($COMLEXLevel1Percentile)
+    {
+        $this->COMLEXLevel1Percentile = $COMLEXLevel1Percentile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCOMLEXLevel2Percentile()
+    {
+        return $this->COMLEXLevel2Percentile;
+    }
+
+    /**
+     * @param mixed $COMLEXLevel2Percentile
+     */
+    public function setCOMLEXLevel2Percentile($COMLEXLevel2Percentile)
+    {
+        $this->COMLEXLevel2Percentile = $COMLEXLevel2Percentile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCOMLEXLevel3Percentile()
+    {
+        return $this->COMLEXLevel3Percentile;
+    }
+
+    /**
+     * @param mixed $COMLEXLevel3Percentile
+     */
+    public function setCOMLEXLevel3Percentile($COMLEXLevel3Percentile)
+    {
+        $this->COMLEXLevel3Percentile = $COMLEXLevel3Percentile;
+    }
+
+
+
 
 
     //interface methods
