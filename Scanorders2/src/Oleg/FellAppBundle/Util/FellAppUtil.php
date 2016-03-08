@@ -534,13 +534,13 @@ class FellAppUtil {
                     $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
                 }
 
-                //institution "Pathology Residency Program"
+                //institution "Pathology Fellowship Programs"
                 $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-                $instPathologyResidencyProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),"Pathology Residency Program");
-                if( !$instPathologyResidencyProgram ) {
-                    throw new EntityNotFoundException('Unable to find Institution by name='."Pathology Residency Program");
+                $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),"Pathology Fellowship Programs");
+                if( !$instPathologyFellowshipProgram ) {
+                    throw new EntityNotFoundException('Unable to find Institution by name='."Pathology Fellowship Programs");
                 }
-                $fellowshipApplication->setInstitution($instPathologyResidencyProgram);
+                $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
 
                 //trainingPeriodStart
                 $fellowshipApplication->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers)));

@@ -1459,7 +1459,7 @@ class AdminController extends Controller
                 'Pathology Informatics' => array(
                     'Scanning Service',
                 ),
-                'Pathology Residency Program'
+                'Pathology Fellowship Programs'
             ),
             'Pediatrics' => array(
                 'Cardiology',
