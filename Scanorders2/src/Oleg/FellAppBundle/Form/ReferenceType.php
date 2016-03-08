@@ -75,6 +75,11 @@ class ReferenceType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('degree', null, array(
+            'label' => 'Degree(s):',
+            'attr' => array('class'=>'form-control')
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
