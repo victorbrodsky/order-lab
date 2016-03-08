@@ -49,9 +49,10 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         //echo "fellapp user ok <br>";
 
-        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 

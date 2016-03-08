@@ -255,12 +255,13 @@ class TreeRepository extends NestedTreeRepository {
 
     public function findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null) {
 
+        $node = null;
+
         if( !$mapper ) {
             $mapper = array(
                 'prefix' => "Oleg",
                 'className' => "Institution",
-                'bundleName' => "UserdirectoryBundle",
-                'organizationalGroupType' => "OrganizationalGroupType"
+                'bundleName' => "UserdirectoryBundle"
             );
         }
 
@@ -272,7 +273,12 @@ class TreeRepository extends NestedTreeRepository {
         $query = $this->_em->createQuery($dql);
         $query->setParameters( array("nameStr"=>$nameStr,"rootNodeId"=>$rootNodeId) );
 
-        $node = $query->getFirstResult();
+        $nodes = $query->getResult();
+        //echo "nodes count=".count($nodes)."<br>";
+
+        if( count($nodes) > 0 ) {
+            $node = $nodes[0];
+        }
 
         return $node;
     }
