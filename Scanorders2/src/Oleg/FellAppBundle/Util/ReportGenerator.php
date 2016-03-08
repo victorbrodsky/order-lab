@@ -546,6 +546,8 @@ class ReportGenerator {
         $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $filename;
         //echo $event."<br>";
         //$logger->notice($event);
+
+        //eventType should be something 'Fellowship Application Report Updated'?
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,null,'Fellowship Application Updated');
 
 
