@@ -40,9 +40,20 @@ class Reference
     private $createdBy;
 
     /**
+     * Last Name
      * @ORM\Column(type="string", nullable=true)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $degree;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -75,6 +86,11 @@ class Reference
      * @ORM\Column(type="string", nullable=true)
      */
     private $email;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $phone;
 
 
 
@@ -184,6 +200,38 @@ class Reference
     }
 
     /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDegree()
+    {
+        return $this->degree;
+    }
+
+    /**
+     * @param mixed $degree
+     */
+    public function setDegree($degree)
+    {
+        $this->degree = $degree;
+    }
+
+    /**
      * @param mixed $title
      */
     public function setTitle($title)
@@ -246,6 +294,22 @@ class Reference
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
     }
 
 

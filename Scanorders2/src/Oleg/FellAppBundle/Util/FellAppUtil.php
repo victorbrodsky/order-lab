@@ -888,29 +888,47 @@ class FellAppUtil {
         //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1
         //recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
 
-        $recommendationName = $this->getValueByHeaderName($typeStr."Name",$rowData,$headers);
-        $recommendationTitle = $this->getValueByHeaderName($typeStr."Title",$rowData,$headers);
+        $recommendationFirstName = $this->getValueByHeaderName($typeStr."FirstName",$rowData,$headers);
+        $recommendationLastName = $this->getValueByHeaderName($typeStr."LastName",$rowData,$headers);
 
-        //echo "recommendationName=".$recommendationName."<br>";
-        //echo "recommendationTitle=".$recommendationTitle."<br>";
+        //echo "recommendationFirstName=".$recommendationFirstName."<br>";
+        //echo "recommendationLastName=".$recommendationLastName."<br>";
 
-        if( !$recommendationName && !$recommendationTitle ) {
+        if( !$recommendationFirstName && !$recommendationLastName ) {
             //echo "no ref<br>";
             return null;
         }
 
         $reference = new Reference($author);
 
-        //recommendation1Name
-        $reference->setName($recommendationName);
+        //recommendation1FirstName
+        $reference->setFirstName($recommendationFirstName);
+
+        //recommendation1LastName
+        $reference->setName($recommendationLastName);
+
+        //recommendation1Degree
+        $recommendationDegree = $this->getValueByHeaderName($typeStr."Degree",$rowData,$headers);
+        if( $recommendationDegree ) {
+            $reference->setDegree($recommendationDegree);
+        }
 
         //recommendation1Title
-        $reference->setTitle($recommendationTitle);
+        $recommendationTitle = $this->getValueByHeaderName($typeStr."Title",$rowData,$headers);
+        if( $recommendationTitle ) {
+            $reference->setTitle($recommendationTitle);
+        }
 
         //Email
         $recommendationEmail = $this->getValueByHeaderName($typeStr."Email",$rowData,$headers);
         if( $recommendationEmail ) {
             $reference->setEmail($recommendationEmail);
+        }
+
+        //Phone
+        $recommendationPhone = $this->getValueByHeaderName($typeStr."Phone",$rowData,$headers);
+        if( $recommendationPhone ) {
+            $reference->setPhone($recommendationPhone);
         }
 
         $instStr = $this->getValueByHeaderName($typeStr."Institution",$rowData,$headers);

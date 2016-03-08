@@ -25,7 +25,12 @@ class ReferenceType extends AbstractType
     {
 
         $builder->add('name', null, array(
-            'label' => 'Name:',
+            'label' => 'Last Name:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('firstName', null, array(
+            'label' => 'First Name:',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -62,6 +67,11 @@ class ReferenceType extends AbstractType
 
         $builder->add('email', 'email', array(
             'label' => 'E-Mail:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('phone', null, array(
+            'label' => 'Phone Number:',
             'attr' => array('class'=>'form-control')
         ));
 
