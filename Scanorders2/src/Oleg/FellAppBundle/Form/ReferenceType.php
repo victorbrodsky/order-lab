@@ -60,6 +60,11 @@ class ReferenceType extends AbstractType
             'prototype_name' => '__documents__',
         ));
 
+        $builder->add('email', 'email', array(
+            'label' => 'E-Mail:',
+            'attr' => array('class'=>'form-control')
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

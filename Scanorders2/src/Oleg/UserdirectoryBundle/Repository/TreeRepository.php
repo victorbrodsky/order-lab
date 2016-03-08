@@ -253,6 +253,30 @@ class TreeRepository extends NestedTreeRepository {
 
 
 
+    public function findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null) {
+
+        if( !$mapper ) {
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "Institution",
+                'bundleName' => "UserdirectoryBundle",
+                'organizationalGroupType' => "OrganizationalGroupType"
+            );
+        }
+
+        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where("list.name = :nameStr AND list.root=:rootNodeId");
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters( array("nameStr"=>$nameStr,"rootNodeId"=>$rootNodeId) );
+
+        $node = $query->getFirstResult();
+
+        return $node;
+    }
+
     public function findChildAtPosition($parent,$position) {
         //$children = $this->children($parent);
         $children = $parent->getChildren();

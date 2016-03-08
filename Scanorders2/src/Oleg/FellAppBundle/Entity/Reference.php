@@ -71,6 +71,11 @@ class Reference
      **/
     private $documents;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $email;
+
 
 
     public function __construct($author=null) {
@@ -225,6 +230,22 @@ class Reference
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
     }
 
 

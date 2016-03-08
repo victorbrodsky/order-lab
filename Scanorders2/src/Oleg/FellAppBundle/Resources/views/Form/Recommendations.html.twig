@@ -42,10 +42,13 @@
     </div>
 
     <div class="row withpaddingtop">
-        <div class="col-xs-12">
+        <div class="col-xs-6">
             {#<label for="recommendation1Institution" class="control-label">Institution</label>#}
             {#<input type="text" class="form-control" id="recommendation1Institution" name="recommendation1Institution" placeholder="Institution">#}
             {{ form_row(reference.institution) }}
+        </div>
+        <div class="col-xs-6">
+            {{ form_row(reference.email) }}
         </div>
     </div>
 

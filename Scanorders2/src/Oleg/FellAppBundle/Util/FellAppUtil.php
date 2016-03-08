@@ -534,6 +534,14 @@ class FellAppUtil {
                     $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
                 }
 
+                //institution "Pathology Residency Program"
+                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+                $instPathologyResidencyProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),"Pathology Residency Program");
+                if( !$instPathologyResidencyProgram ) {
+                    throw new EntityNotFoundException('Unable to find Institution by name='."Pathology Residency Program");
+                }
+                $fellowshipApplication->setInstitution($instPathologyResidencyProgram);
+
                 //trainingPeriodStart
                 $fellowshipApplication->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers)));
 
@@ -898,6 +906,12 @@ class FellAppUtil {
 
         //recommendation1Title
         $reference->setTitle($recommendationTitle);
+
+        //Email
+        $recommendationEmail = $this->getValueByHeaderName($typeStr."Email",$rowData,$headers);
+        if( $recommendationEmail ) {
+            $reference->setEmail($recommendationEmail);
+        }
 
         $instStr = $this->getValueByHeaderName($typeStr."Institution",$rowData,$headers);
         if( $instStr ) {
