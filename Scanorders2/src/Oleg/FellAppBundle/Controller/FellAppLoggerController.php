@@ -35,4 +35,44 @@ class FellAppLoggerController extends LoggerController
     }
 
 
+    /**
+     * Filter by Object Type "FellowshipApplication" and Object ID
+     *
+     * @Route("/application-log/{id}", name="fellapp_application_log")
+     * @Method("GET")
+     * @Template("OlegFellAppBundle:Logger:index.html.twig")
+     */
+    public function applicationLogAction(Request $request,$id) {
+
+//        if(
+//            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+//            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+//            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN')
+//        ) {
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+
+        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fellApp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        if( !$fellApp ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+
+        if( false == $this->get('security.context')->isGranted("read",$fellApp) ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("FellowshipApplication");
+        if( !$objectType ) {
+            throw $this->createNotFoundException('Unable to find EventObjectTypeList by name='."FellowshipApplication");
+        }
+
+        return $this->redirect($this->generateUrl('fellapp_logger', array('filter[objectType][]' => $objectType->getId(), 'filter[objectId]' => $id)));
+    }
+
 }

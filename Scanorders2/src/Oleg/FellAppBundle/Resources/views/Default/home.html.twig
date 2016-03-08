@@ -631,6 +631,13 @@
                                     {% endif %}
 
                                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+
+                                        <li>
+                                            <a
+                                                href="{{ path('fellapp_application_log', { 'id': entity.id}) }}">View Activity Log
+                                            </a>
+                                        </li>
+
                                         {% if entity.appStatus.name != 'active' %}
                                             <li>
                                                 <a
