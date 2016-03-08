@@ -919,13 +919,13 @@ class FellAppUtil {
             $reference->setTitle($recommendationTitle);
         }
 
-        //Email
+        //recommendation1Email
         $recommendationEmail = $this->getValueByHeaderName($typeStr."Email",$rowData,$headers);
         if( $recommendationEmail ) {
             $reference->setEmail($recommendationEmail);
         }
 
-        //Phone
+        //recommendation1Phone
         $recommendationPhone = $this->getValueByHeaderName($typeStr."Phone",$rowData,$headers);
         if( $recommendationPhone ) {
             $reference->setPhone($recommendationPhone);
