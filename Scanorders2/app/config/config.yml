@@ -208,9 +208,9 @@ knp_snappy:
 #        binary:     "\"C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\src\\Oleg\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
 #        binary:     "\"%kernel.root_dir%\\..\\vendor\\olegutil\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         options:
-#            enable-forms: true
-            javascript-delay: 15000    #Wait some milliseconds for javascript finish (default 200)
-#            no-stop-slow-scripts: true
+#            enable-forms: true       #Turn HTML form fields into pdf form fields
+            javascript-delay: 7000    #Wait some milliseconds for javascript finish (default 200)
+
 #    image:
 #        enabled:    true
 #        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
