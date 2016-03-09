@@ -209,6 +209,7 @@ knp_snappy:
 #        binary:     "\"%kernel.root_dir%\\..\\vendor\\olegutil\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         options:
             enable-forms: true
+            javascript-delay: 5000    #Wait some milliseconds for javascript finish (default 200)
 #    image:
 #        enabled:    true
 #        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
