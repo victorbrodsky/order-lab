@@ -112,40 +112,6 @@
 
             <ul class="nav navbar-nav navbar-right">
 
-                {#Search in navbar#}
-                {#{% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}#}
-                    {#{% if urltype is not defined or urltype != "home" %}#}
-                        {#<li id="nav-bar-usersearch">#}
-                        {#&#123;&#35;Search for a name, service, division, etc&#35;&#125;#}
-                        {#{% if search is not defined %}#}
-                            {#{% set search = "" %}#}
-                        {#{% endif %}#}
-                        {#<form class="navbar-form navbar-left" role="search" id="user-typeahead-search-form" name="usertypeaheadsearchform" action="{{ path(employees_sitename~'_home') }}" method="get">#}
-                            {#<div class="form-group">#}
-                                {#<div id="multiple-datasets-typeahead-search">#}
-                                   {##}
-                                    {#<div class="form-group-typeahead">#}
-                                        {#<div class="form-group has-feedback">#}
-                                            {#<input#}
-                                                    {#type="text"#}
-                                                    {#class="typeahead submit-on-enter-field form-control"#}
-                                                    {#name="search" value="{{ search }}"#}
-                                                    {#placeholder="Search"#}
-                                                    {#style="font-size: 14px !important;"#}
-                                                    {#aria-describedby="inputSuccess2Status">#}
-                                            {#<span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeaheadsearchform.submit();" aria-hidden="true"></span>#}
-                                            {#<span id="inputSuccess2Status" class="sr-only">(success)</span>#}
-                                        {#</div>#}
-                                    {#</div>#}
-
-                                {#</div>#}
-                            {#</div>#}
-                        {#</form>#}
-                        {#</li>#}
-                    {#{% endif %}#}
-                {#{% endif %}#}
-
-
                 {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
 
                     <li id="nav-bar-admin" class="dropdown">
@@ -154,26 +120,27 @@
 
                             {#<li><a href="{{ path('accountrequest') }}">Account Requests</a></li>#}
 
-                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-                                <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
-                                <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
-                                <li><a href="{{ path(employees_sitename~'_siteparameters') }}">Site Settings</a></li>
-                                <li class="divider"></li>
+                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                {#<li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>#}
+                                {#<li><a href="{{ path(fellapp_sitename~'_siteparameters') }}">Site Settings</a></li>#}
+                                {#<li class="divider"></li>#}
                                 {#<li><a href="{{ path('fellapp_import') }}">Import from Google</a></li>#}
                                 {#<li><a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a></li>#}
-                            {% endif %}
+                            {#{% endif %}#}
 
 
 
                             {% if is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
                                 <li><a href="{{ path(fellapp_sitename~'_accessrequest_list') }}">Access Requests</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_authorized_users') }}">Authorized Users</a></li>
-                                <li><a href="{{ path('fellapp_import_populate') }}">Check for new applications now</a></li>
+                                <li><a href="{{ path(fellapp_sitename~'_import_populate') }}">Check for new applications now</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_logger') }}">Event Log</a></li>
                             {% endif %}
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <li class="divider"></li>
+                                <li><a href="{{ path(fellapp_sitename~'_siteparameters') }}">Site Settings</a></li>
                                 <li><a
                                         general-data-confirm="Are you sure you want to regenerate all Complete Fellowship Application PDFs? All reports will be replaced by new reports."
                                         href="{{ path('fellapp_regenerate_reports') }}">Regenerate all Complete Application PDFs

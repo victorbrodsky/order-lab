@@ -42,6 +42,7 @@ class FellAppUtil {
     protected $sc;
     protected $container;
     protected $uploadDir;
+    protected $systemEmail;
 
 
     public function __construct( $em, $sc, $container ) {
@@ -53,6 +54,8 @@ class FellAppUtil {
         //fellapp.uploadpath = fellapp
         $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
 
+        $userutil = new UserUtil();
+        $this->systemEmail = $userutil->getSiteSetting($this->em,'siteEmail');
     }
 
 
@@ -82,6 +85,7 @@ class FellAppUtil {
             $event = "Google API service failed!";
             $logger->warning($event);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+            $this->sendEmailToSystemEmail($event, $event);
         }
 
         if( $service ) {
@@ -102,6 +106,7 @@ class FellAppUtil {
                 $event = "Fellowship Application Spreadsheet download failed!";
                 $logger->warning($event);
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+                $this->sendEmailToSystemEmail($event, $event);
             }
 
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Applications Spreadsheet');
@@ -339,7 +344,9 @@ class FellAppUtil {
 
         $service = $this->getGoogleService();
         if( !$service ) {
-            $logger->warning("Google API service failed!");
+            $event = "Google API service failed!";
+            $logger->warning($event);
+            $this->sendEmailToSystemEmail($event, $event);
             return -1;
         }
 
@@ -350,7 +357,9 @@ class FellAppUtil {
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
-            throw new IOException('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+            $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $this->sendEmailToSystemEmail($event, $event);
+            throw new IOException($event);
         }
 
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
@@ -804,6 +813,7 @@ class FellAppUtil {
                         $ccs = null;
                     }
                     $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event, $ccs );
+                    $this->sendEmailToSystemEmail("Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event);
                 }
 
                 //exit('end applicant');
@@ -859,9 +869,12 @@ class FellAppUtil {
         //        }
 
                 //email                    
-                $emails = "oli2002@med.cornell.edu";
-                $event = "Error creating fellowship applicant with unique Google Applicant ID=".$googleFormId."; Exception=".$e->getMessage();
-                $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event );
+                //$emails = "oli2002@med.cornell.edu";
+                //$userutil = new UserUtil();
+                //$emails = $userutil->getSiteSetting($this->em,'siteEmail');
+                //$event = "Error creating fellowship applicant with unique Google Applicant ID=".$googleFormId."; Exception=".$e->getMessage();
+                //$emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event );
+                $this->sendEmailToSystemEmail("Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event);
 
                 //logger
                 $logger->error($event);
@@ -1009,6 +1022,7 @@ class FellAppUtil {
             //throw new \UnexpectedValueException($msg);
             $logger = $this->container->get('logger');
             $logger->error($msg);
+            //$this->sendEmailToSystemEmail("Bad format of datetime string", $msg);
 
             //send email
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1034,6 +1048,7 @@ class FellAppUtil {
             //throw new \UnexpectedValueException($msg);
             $logger = $this->container->get('logger');
             $logger->error($msg);
+            $this->sendEmailToSystemEmail("Bad format of datetime string", $msg);
         }
 
         return $date;
@@ -2086,6 +2101,11 @@ class FellAppUtil {
 
         //exit("ids=".$fellappids);
         return $fellapps;
+    }
+
+    public function sendEmailToSystemEmail($subject, $message) {
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail( $this->systemEmail, $subject, $message );
     }
 
 } 

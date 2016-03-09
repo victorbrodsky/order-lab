@@ -13,8 +13,18 @@
 
 {% block content %}
 
-    <h3 class="text-info">{{ sitesettings_title }}</h3>
-    <br>
+    {#<h3 class="text-info">{{ sitesettings_title }}</h3>#}
+    {#<br>#}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title text-left">
+            <a data-toggle="collapse" href="#platform-settings">
+                Platform Settings
+            </a>
+        </h4>
+    </div>
+<div id="platform-settings" class="panel-collapse collapse">
+    <div class="panel-body">
 
     <table class="records_list table table-bordered table-hover table-condensed text-left">
         <thead>
@@ -429,48 +439,14 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'contentAboutPage'}) }}">Edit</a></td>
             </tr>
 
-            
-            {#Fellowship Application#}
-            <tr>
-                <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Fellowship Application:</h3>
-                </td>
-            </tr>
-            
-            {#AllowPopulateFellApp#}
-            <tr>
-                <td>Allow to populate Fellowship Applications from Google Form by cron job</td>
-                <td>
-                    {% set allowPopulateFellAppStr = 'No' %}
-                    {% if entity.allowPopulateFellApp == true %}
-                        {% set allowPopulateFellAppStr = 'Yes' %}
-                    {% endif %}
-                    {{ allowPopulateFellAppStr }}
-                </td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'allowPopulateFellApp'}) }}">Edit</a></td>
-
-            </tr>
-            
-            <tr>
-                <td>Application Submit Confirmation Email</td>
-                <td>{{ entity.confirmationEmailFellApp }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationEmailFellApp'}) }}">Edit</a></td>
-            </tr>
-            
-            <tr>
-                <td>Application Submit Confirmation Email Subject</td>
-                <td>{{ entity.confirmationSubjectFellApp }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationSubjectFellApp'}) }}">Edit</a></td>
-            </tr>
-            
-            <tr>
-                <td>Application Submit Confirmation Email Body</td>
-                <td>{{ entity.confirmationBodyFellApp }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationBodyFellApp'}) }}">Edit</a></td>
-            </tr>
-
         </tbody>
     </table>
+
+    </div>
+</div>
+</div>
+
+    {% include 'OlegUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
 
     {#<br>#}
     {#<p>#}

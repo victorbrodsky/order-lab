@@ -1,0 +1,31 @@
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% if sitename == 'fellapp' %}
+    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% if sitename == 'scan' %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% if sitename == 'deidentifier' %}
+    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% extends extendStr%}
+
+
+{% block title %}
+    {{ sitesettings_title }}
+{% endblock %}
+
+{% block content %}
+
+    {% if sitename == 'fellapp' %}
+        {% include 'OlegUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
+    {% endif %}
+
+{% endblock %}

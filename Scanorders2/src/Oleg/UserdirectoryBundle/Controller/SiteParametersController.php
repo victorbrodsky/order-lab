@@ -197,7 +197,7 @@ class SiteParametersController extends Controller
         if( !$disabled ) {
             $cycle = 'edit';
         }
-        $params = array('cycle'=>$cycle,'param'=>$param);
+        $params = array('sitename'=>$sitename,'cycle'=>$cycle,'param'=>$param);
 
         $form = $this->createForm(new SiteParametersType($params), $entity, array(
             'action' => $this->generateUrl($sitename.'_siteparameters_update', array('id' => $entity->getId(), 'param' => $param )),

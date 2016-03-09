@@ -201,6 +201,7 @@ stof_doctrine_extensions:
             tree: true
 
 #C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\wkhtmltopdf\bin\wkhtmltopdf.exe
+#Available options as in configure(): https://github.com/KnpLabs/snappy/blob/master/src/Knp/Snappy/Pdf.php
 knp_snappy:
     pdf:
         enabled:    true

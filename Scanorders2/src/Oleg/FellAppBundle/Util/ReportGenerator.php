@@ -935,9 +935,11 @@ class ReportGenerator {
                 //event log
                 $event = "ERROR: 'Complete Application PDF' will not be generated! pdftk failed: " . $cmd;
                 $logger->error($event);
+                $fellappUtil = $this->container->get('fellapp_util');
+                $fellappUtil->sendEmailToSystemEmail("Complete Application PDF will not be generated - pdftk failed", $event);
+
                 $userSecUtil = $this->container->get('user_security_utility');
                 $systemUser = $userSecUtil->findSystemUser();
-                $userSecUtil = $this->container->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
             }
 
@@ -1022,9 +1024,11 @@ class ReportGenerator {
                 //event log
                 $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd;
                 $logger->error($event);
+                $fellappUtil = $this->container->get('fellapp_util');
+                $fellappUtil->sendEmailToSystemEmail("Complete Application PDF will no be generated - GS failed", $event);
+
                 $userSecUtil = $this->container->get('user_security_utility');
                 $systemUser = $userSecUtil->findSystemUser();
-                $userSecUtil = $this->container->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
             }
 
