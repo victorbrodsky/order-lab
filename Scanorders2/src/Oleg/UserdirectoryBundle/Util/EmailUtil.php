@@ -81,28 +81,7 @@ class EmailUtil {
     }
 
 
-    public function hasConnection_new() {
-
-        $result = false;
-
-        $userutil = new UserUtil();
-        $smtp = $userutil->getSiteSetting($this->em,'smtpServerAddress');
-        //echo "smtp=" . $smtp . "<br>";
-
-        try {
-            // [...] your other connection code here
-            $swift = new \Swift_SmtpTransport($smtp);
-            $result = true;
-        } catch (Swift_ConnectionException $e) {
-            // show error
-            print_r($e->getMessage());
-            $result = false;
-        }
-
-        return $result;
-    }
     public function hasConnection() {
-        //return true;
 
         $result = false;
 
@@ -110,16 +89,13 @@ class EmailUtil {
         $smtp = $userutil->getSiteSetting($this->em,'smtpServerAddress');
         //echo "smtp=" . $smtp . "<br>";
 
-        $fp = fsockopen($smtp, 25, $errno, $errstr, 5) ;
+        $fp = fsockopen($smtp, 25, $errno, $errstr, 9) ;
 
         if (!$fp) {
-            //echo "SendEmail server:$smtp; ERROR:$errno - $errstr<br />\n";
             $logger = $this->container->get('logger');
             $logger->error("SendEmail server=$smtp; ERROR:$errno - $errstr");
             $result = false;
         } else {
-            //fwrite($fp, "\n");
-            //echo fread($fp, 26);
             fclose($fp);
             $result = true;
         }

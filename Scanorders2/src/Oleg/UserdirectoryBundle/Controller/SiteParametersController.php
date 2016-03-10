@@ -40,8 +40,8 @@ class SiteParametersController extends Controller
         }
 
         //testing email
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->sendEmail( "oli2002@med.cornell.edu", "testing email", "testing email" );
+        //$emailUtil = $this->container->get('user_mailer_utility');
+        //$emailUtil->sendEmail( "oli2002@med.cornell.edu", "testing email", "testing email" );
 
         $em = $this->getDoctrine()->getManager();
 

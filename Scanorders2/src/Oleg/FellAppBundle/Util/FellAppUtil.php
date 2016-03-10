@@ -200,8 +200,8 @@ class FellAppUtil {
 
         $client = new \Google_Client();
         $client->setAssertionCredentials($credentials);
-        if ($client->getAuth()->isAccessTokenExpired()) {
-            $client->getAuth()->refreshTokenWithAssertion();
+        if( $client->getAuth()->isAccessTokenExpired() ) {
+            $client->getAuth()->refreshTokenWithAssertion(); //causes timeout on localhost
         }
 
         $service = new \Google_Service_Drive($client);
