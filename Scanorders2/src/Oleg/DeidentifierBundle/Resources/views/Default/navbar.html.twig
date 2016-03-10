@@ -142,6 +142,10 @@
                                 <li><a href="{{ path(deidentifier_sitename~'_logger') }}">Event Log</a></li>
                             {% endif %}
 
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                <li><a href="{{ path(deidentifier_sitename~'_siteparameters') }}">Site Settings</a></li>
+                            {% endif %}
+
                         </ul>
                     </li>
 

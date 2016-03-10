@@ -1,9 +1,20 @@
 
 {% if sitename == 'employees' %}
     {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
-{% else %}
+{% endif %}
+
+{% if sitename == 'fellapp' %}
+    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% if sitename == 'scan' %}
     {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
 {% endif %}
+
+{% if sitename == 'deidentifier' %}
+    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% endif %}
+
 {% extends extendStr%}
 
 
@@ -446,7 +457,9 @@
 </div>
 </div>
 
-    {% include 'OlegUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
+    {% if (sitename == "employees" or sitename == "fellapp") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% include 'OlegUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
+    {% endif %}
 
     {#<br>#}
     {#<p>#}

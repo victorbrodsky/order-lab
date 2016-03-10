@@ -1,43 +1,30 @@
 <?php
 
-namespace Oleg\FellAppBundle\Controller;
+namespace Oleg\DeidentifierBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\UserdirectoryBundle\Entity\SiteParameters;
-use Oleg\UserdirectoryBundle\Form\SiteParametersType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
+
+
 
 /**
  * SiteParameters controller.
  *
  * @Route("/settings")
  */
-class FellAppSiteParametersController extends SiteParametersController
+class DeidentifierSiteParametersController extends SiteParametersController
 {
 
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/site-settings/", name="fellapp_sitesettings_siteparameters")
-     * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:site-index.html.twig")
-     */
-    public function indexSiteSettingsAction(Request $request)
-    {
-        return $this->indexParameters($request);
-    }
-
-    /**
-     * Lists all SiteParameters entities.
-     *
-     * @Route("/", name="fellapp_siteparameters")
+     * @Route("/", name="deidentifier_siteparameters")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
      */
@@ -49,7 +36,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * Displays a form to edit an existing SiteParameters entity.
      *
-     * @Route("/{id}/edit", name="fellapp_siteparameters_edit")
+     * @Route("/{id}/edit", name="deidentifier_siteparameters_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
@@ -61,7 +48,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/{id}", name="fellapp_siteparameters_update")
+     * @Route("/{id}", name="deidentifier_siteparameters_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
@@ -69,6 +56,7 @@ class FellAppSiteParametersController extends SiteParametersController
     {
         return $this->updateParameters($request, $id);
     }
+
 
 
 }
