@@ -97,7 +97,7 @@ class EmailUtil {
         } else {
             //fwrite($fp, "\n");
             //echo fread($fp, 26);
-            fclose($fp);
+            //fclose($fp);
         }
 
         return $result;
