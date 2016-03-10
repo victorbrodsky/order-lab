@@ -82,6 +82,7 @@ class EmailUtil {
 
 
     public function hasConnection() {
+        return true;
         $result = false;
 
         $userutil = new UserUtil();
