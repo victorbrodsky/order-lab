@@ -39,6 +39,10 @@ class SiteParametersController extends Controller
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        //testing email
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail( "cinava@yahoo.com", "testing email", "testing email" );
+
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();

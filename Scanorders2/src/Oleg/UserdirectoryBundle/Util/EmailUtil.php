@@ -24,6 +24,12 @@ class EmailUtil {
     //$ccs: single or array of emails
     public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
 
+        if( $this->hasConnection() == false ) {
+            //exit('no connection');
+            return false;
+        }
+        //exit('yes connection');
+
         if( !$emails || $emails == "" ) {
             return false;
         }
@@ -74,6 +80,28 @@ class EmailUtil {
         return $emails;
     }
 
+
+    public function hasConnection() {
+        $result = false;
+
+        $userutil = new UserUtil();
+        $smtp = $userutil->getSiteSetting($this->em,'smtpServerAddress');
+        //echo "smtp=" . $smtp . "<br>";
+
+        $fp = fsockopen($smtp, 25, $errno, $errstr, 5) ;
+
+        if (!$fp) {
+            //echo "SendEmail server:$smtp; ERROR:$errno - $errstr<br />\n";
+            $logger = $this->container->get('logger');
+            $logger->error("SendEmail server=$smtp; ERROR:$errno - $errstr");
+        } else {
+            //fwrite($fp, "\n");
+            //echo fread($fp, 26);
+            fclose($fp);
+        }
+
+        return $result;
+    }
 
 
     ///////////////// NOT USED: using original php mail  /////////////////
