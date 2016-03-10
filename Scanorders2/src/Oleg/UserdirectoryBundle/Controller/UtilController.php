@@ -185,8 +185,8 @@ class UtilController extends Controller {
             ->leftJoin("list.types","types")
             ->orderBy("list.orderinlist","ASC");
 
-        $query->where("types.name LIKE :instType AND list.level = 0");
-        $paramArr = array('instType' => 'Educational');
+        $query->where("(types.name LIKE :instTypeEducational OR types.name LIKE :instTypeMedical) AND list.level = 0");
+        $paramArr = array('instTypeEducational' => 'Educational','instTypeMedical' => 'Medical');
 
         if( $newCycle ) {
             $query->andWhere("(list.type = :typedef)");
