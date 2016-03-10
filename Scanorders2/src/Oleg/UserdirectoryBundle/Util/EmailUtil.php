@@ -102,7 +102,7 @@ class EmailUtil {
         return $result;
     }
     public function hasConnection() {
-        return true;
+        //return true;
 
         $result = false;
 
@@ -116,10 +116,12 @@ class EmailUtil {
             //echo "SendEmail server:$smtp; ERROR:$errno - $errstr<br />\n";
             $logger = $this->container->get('logger');
             $logger->error("SendEmail server=$smtp; ERROR:$errno - $errstr");
+            $result = false;
         } else {
             //fwrite($fp, "\n");
             //echo fread($fp, 26);
-            //fclose($fp);
+            fclose($fp);
+            $result = true;
         }
 
         return $result;
