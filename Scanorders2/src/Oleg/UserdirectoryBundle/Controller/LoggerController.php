@@ -269,7 +269,7 @@ class LoggerController extends Controller
         $dqlFilterUser = $repository->createQueryBuilder('user');
         $dqlFilterUser->select('user');
         $dqlFilterUser->leftJoin("user.infos","infos");
-        $dqlFilterUser->where("user.keytype IS NOT NULL");
+        //$dqlFilterUser->where("user.keytype IS NOT NULL");
         $dqlFilterUser->orderBy("infos.lastName","ASC");
         $queryFilterUser = $em->createQuery($dqlFilterUser);
         $filterUsers = $queryFilterUser->getResult();
