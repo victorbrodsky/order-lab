@@ -35,7 +35,9 @@ class DeidentifierLoggerController extends LoggerController
         }
 
 		$params = array('sitename'=>$this->container->getParameter('deidentifier.sitename'));
-        return $this->listLogger($params,$request);
+        $loggerFormParams = $this->listLogger($params,$request);
+
+        return $loggerFormParams;
     }
 
 
@@ -91,7 +93,105 @@ class DeidentifierLoggerController extends LoggerController
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "Generate Accession Deidentifier ID");
         }
 
-        return $this->redirect($this->generateUrl('deidentifier_logger', array('filter[eventType][]' => $eventType->getId() )));
+        //return $this->redirect($this->generateUrl('deidentifier_logger', array('filter[eventType][]' => $eventType->getId() )));
+        ///////////// make sure eventTypes are set /////////////
+        $eventTypes = array();
+
+        $filter = $request->query->get('filter');
+
+        if( count($filter) > 0 ) {
+            $eventTypes = $filter['eventType'];
+        }
+
+        if( count($eventTypes) == 0 ) {
+            //add eventTypes
+            return $this->redirect($this->generateUrl('deidentifier_generation_log',
+                array(
+                    'filter[eventType][]' => $eventType->getId()
+                )
+            ));
+        }
+        ///////////// EOF make sure eventTypes and users are set /////////////
+
+
+        $params = array(
+            'sitename' => $this->container->getParameter('deidentifier.sitename'),
+            'hideEventType' => true,
+        );
+        $loggerFormParams = $this->listLogger($params,$request);
+
+        $loggerFormParams['hideUserAgent'] = true;
+        $loggerFormParams['hideWidth'] = true;
+        $loggerFormParams['hideHeight'] = true;
+        $loggerFormParams['hideADServerResponse'] = true;
+        //$loggerFormParams['hideObjectType'] = true;
+        //$loggerFormParams['hideObjectId'] = true;
+
+        return $loggerFormParams;
+    }
+
+
+    /**
+     * Generation Log with eventTypes = "Generate Accession Deidentifier ID" and users = current user id
+     *
+     * @Route("/event-log-per-user-per-event-type/", name="deidentifier_my_generation_log")
+     * @Method("GET")
+     * @Template("OlegDeidentifierBundle:Logger:index.html.twig")
+     */
+    public function myGenerationLogAction(Request $request)
+    {
+        if( false == $this->get('security.context')->isGranted("ROLE_DEIDENTIFICATOR_USER") ){
+            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Generate Accession Deidentifier ID");
+
+        if( !$eventType ) {
+            throw $this->createNotFoundException('EventTypeList is not found by name ' . "Generate Accession Deidentifier ID");
+        }
+
+        ///////////// make sure eventTypes and users are set /////////////
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $eventTypes = array();
+        $users = array();
+
+        $filter = $request->query->get('filter');
+
+        if( count($filter) > 0 ) {
+            $eventTypes = $filter['eventType'];
+            $users = $filter['user'];
+        }
+
+        if( count($eventTypes) == 0 || count($users) == 0 ) {
+            //add eventTypes and users
+            return $this->redirect($this->generateUrl('deidentifier_my_generation_log',
+                array(
+                    'filter[eventType][]' => $eventType->getId(),
+                    'filter[user][]' => $user->getId(),
+                )
+            ));
+        }
+        ///////////// EOF make sure eventTypes and users are set /////////////
+
+        $params = array(
+            'sitename' => $this->container->getParameter('deidentifier.sitename'),
+            //'hideObjectType' => true,
+            //'hideObjectId' => true,
+            'hideUser' => true,
+            'hideEventType' => true
+        );
+        $loggerFormParams = $this->listLogger($params,$request);
+
+        $loggerFormParams['hideUserAgent'] = true;
+        $loggerFormParams['hideWidth'] = true;
+        $loggerFormParams['hideHeight'] = true;
+        $loggerFormParams['hideADServerResponse'] = true;
+        //$loggerFormParams['hideObjectType'] = true;
+        //$loggerFormParams['hideObjectId'] = true;
+
+        return $loggerFormParams;
     }
 
 }

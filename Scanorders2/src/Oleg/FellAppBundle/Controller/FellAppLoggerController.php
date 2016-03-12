@@ -28,6 +28,21 @@ class FellAppLoggerController extends LoggerController
      */
     public function indexAction(Request $request)
     {
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+//        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+
+        //TODO: add fellowship type filtering for each object:
+        //1) get fellowship type useing ObjectType and ObjectId
+        //2) keep only objects with fellowship type equal to a fellowship type of the user's role
+
         $params = array(
             'sitename'=>$this->container->getParameter('fellapp.sitename')
         );
@@ -44,17 +59,17 @@ class FellAppLoggerController extends LoggerController
      */
     public function applicationLogAction(Request $request,$id) {
 
-//        if(
-//            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
-//            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
-//            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN')
-//        ) {
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-
-        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN')
+        ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
+
+//        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -72,7 +87,37 @@ class FellAppLoggerController extends LoggerController
             throw $this->createNotFoundException('Unable to find EventObjectTypeList by name='."FellowshipApplication");
         }
 
-        return $this->redirect($this->generateUrl('fellapp_logger', array('filter[objectType][]' => $objectType->getId(), 'filter[objectId]' => $id)));
+        return $this->redirect($this->generateUrl(
+            'fellapp_event-log-per-object_log',
+            array(
+                'filter[objectType][]' => $objectType->getId(),
+                'filter[objectId]' => $id)
+            )
+        );
+    }
+
+    /**
+     * Filter by Object Type "FellowshipApplication" and Object ID
+     *
+     * @Route("/event-log-per-object/", name="fellapp_event-log-per-object_log")
+     * @Method("GET")
+     * @Template("OlegFellAppBundle:Logger:index.html.twig")
+     */
+    public function applicationPerObjectLogAction(Request $request) {
+
+        $params = array(
+            'sitename' => $this->container->getParameter('fellapp.sitename'),
+            'hideObjectType' => true,
+            'hideObjectId' => true,
+        );
+        $loggerFormParams = $this->listLogger($params,$request);
+
+        $loggerFormParams['hideUserAgent'] = true;
+        $loggerFormParams['hideWidth'] = true;
+        $loggerFormParams['hideHeight'] = true;
+        $loggerFormParams['hideADServerResponse'] = true;
+
+        return $loggerFormParams;
     }
 
 }

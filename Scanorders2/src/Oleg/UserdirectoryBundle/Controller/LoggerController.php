@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\UserdirectoryBundle\Entity\Logger;
 use Oleg\UserdirectoryBundle\Form\LoggerType;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Logger controller.
@@ -206,7 +207,7 @@ class LoggerController extends Controller
 			$dql->orderBy("logger.creationdate","DESC");
 		}
 
-        $filterRes = $this->processLoggerFilter($dql,$request);
+        $filterRes = $this->processLoggerFilter($dql,$request,$params);
         $filterform = $filterRes['form'];
         $dqlParameters = $filterRes['dqlParameters'];
         $filtered = $filterRes['filtered'];
@@ -248,16 +249,17 @@ class LoggerController extends Controller
             'sitename' => $sitename,
             'createLogger' => $createLogger,
             'updateLogger' => $updateLogger,
-            'filtered' => $filtered
+            'filtered' => $filtered,
+            'routename' => $request->get('_route')
         );
     }
 
 
 
 
-    public function processLoggerFilter( $dql, $request ) {
+    public function processLoggerFilter( $dql, $request, $params ) {
 
-        $params = array();
+        //$params = array();
         $dqlParameters = array();
         $filterRes = array();
 
@@ -435,6 +437,40 @@ class LoggerController extends Controller
         return $datetimeUTC;
     }
 
+
+    /**
+     * @Route("/find-subject-entity-by-object-type-id/{action}/{objectNamespace}/{objectType}/{objectId}", name="employees_find_subject_entity")
+     * @Method("GET")
+     */
+    public function permissionActionSubjectEntityAction($action, $objectNamespace, $objectType, $objectId) {
+
+        if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //Oleg\UserdirectoryBundle\Entity
+        $objectNamespaceArr = explode("\\",$objectNamespace);
+        $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
+
+        $objectName = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectType);
+        if( !$objectName ) {
+            throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
+        }
+
+        $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+
+        if( $this->get('security.context')->isGranted($action,$subjectEntity) ) {
+            $res = 1;
+        } else {
+            $res = 0;
+        }
+
+        $response = new Response();
+        $response->setContent($res);
+        return $response;
+    }
 
 
 

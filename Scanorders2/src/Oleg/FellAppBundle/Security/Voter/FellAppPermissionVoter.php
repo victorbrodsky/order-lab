@@ -31,27 +31,66 @@ class FellAppPermissionVoter extends BasePermissionVoter
         //exit('fellapp canView');
 
         if( parent::canView($subject,$token) ) {
-
-            //additional check for fellapp permission to access this object: user is Observers or hasSameFellowshipTypeId
-            if( is_object($subject) ) {
-                $user = $token->getUser();
-                $fellappUtil = $this->container->get('fellapp_util');
-                if ($fellappUtil->hasFellappPermission($user, $subject)) {
-                    //exit('fellapp canView true');
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            return true;
+            //exit('fellapp canView parent ok');
+            return $this->fellappAdditionalCheck($subject,$token);
         }
         //exit('fellapp canView false');
 
         return false;
     }
 
+    protected function canEdit($subject, TokenInterface $token) {
+        //exit('fellapp canEdit');
 
+        if( parent::canEdit($subject,$token) ) {
+            return $this->fellappAdditionalCheck($subject,$token);
+        }
+        //exit('fellapp canEdit false');
+
+        return false;
+    }
+
+    //additional check for fellapp permission to access this object: user is Observers or hasSameFellowshipTypeId
+    public function fellappAdditionalCheck($subject,$token) {
+        if( is_object($subject) ) {
+            $user = $token->getUser();
+            $fellappUtil = $this->container->get('fellapp_util');
+            if ($fellappUtil->hasFellappPermission($user, $subject)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+
+
+//    protected function canView($subject, TokenInterface $token) {
+//        //exit('fellapp canView');
+//
+//        if( parent::canView($subject,$token) ) {
+//
+//            //additional check for fellapp permission to access this object: user is Observers or hasSameFellowshipTypeId
+//            if( is_object($subject) ) {
+//                $user = $token->getUser();
+//                $fellappUtil = $this->container->get('fellapp_util');
+//                if ($fellappUtil->hasFellappPermission($user, $subject)) {
+//                    //exit('fellapp canView true');
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//
+//            return true;
+//        }
+//        //exit('fellapp canView false');
+//
+//        return false;
+//    }
 }
 
 

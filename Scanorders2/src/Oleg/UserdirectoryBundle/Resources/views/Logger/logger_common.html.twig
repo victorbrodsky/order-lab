@@ -1,13 +1,46 @@
 
+    {# filtering for each object #}
+    {% set filteredEntities = {} %}
+    {% for entity in pagination %}
+        {#1) get subject entity permission for action 'read'#}
+        {% if entity.objectType and entity.entityId %}
+            {#check permission for event log associated with object#}
+            {% set permissionSubjectEntity = render(
+                controller("OlegUserdirectoryBundle:Logger:permissionActionSubjectEntity",
+                    {
+                        'action':'read',
+                        'objectNamespace':entity.entityNamespace,
+                        'objectType':entity.objectType,
+                        'objectId':entity.entityId
+                    }
+                ))
+            %}
+            {#{% set permissionSubjectEntity = render(controller("OlegUserdirectoryBundle:Logger:permissionActionSubjectEntity",{'action':'read','objectNamespace':entity.entityNamespace,'objectType':entity.objectType,'objectId':entity.entityId})) %}#}
+        {% else %}
+            {#show all event logs which not associated with object#}
+            {% set permissionSubjectEntity = 1 %}
+        {% endif %}
+
+        {#2) check permission for this entity#}
+        {% if permissionSubjectEntity %}
+            {#=> add#}
+            {% set filteredEntities = filteredEntities|merge([entity]) %}
+        {% else %}
+            {#=> don't add#}
+        {% endif %}
+        {#<br>#}
+    {% endfor %}
+    {# EOF filtering for each object #}
+
     {% if filtered is defined and filtered %}
-        {% set eventlog_title = eventlog_title ~ " showing " ~ pagination|length ~ " matching events" %}
+        {% set eventlog_title = eventlog_title ~ " showing " ~ filteredEntities|length ~ " matching events" %}
     {% endif %}
 
     <h3 class="text-info">{{ eventlog_title }}</h3>
 
 
     <p>
-    <form action="{{ path(sitename~'_logger') }}" method="get" {{ form_enctype(loggerfilter) }} class="well form-search">
+    <form action="{{ path(routename) }}" method="get" {{ form_enctype(loggerfilter) }} class="well form-search">
 
         <div class="row">
 
@@ -26,7 +59,7 @@
             </div>
 
             <div class="col-xs-3">
-                {{ form_row(loggerfilter.user,{'attr': {'placeholder': 'Unknown User'}}) }}
+                {{ form_row(loggerfilter.user,{'attr': {'placeholder': 'User'}}) }}
             </div>
 
             <div class="col-xs-3">
@@ -52,7 +85,7 @@
             </div>
 
             <div class="col-xs-3">
-                {{ form_row(loggerfilter.objectType, {'attr': {'placeholder': 'Object Name'}}) }}
+                {{ form_row(loggerfilter.objectType, {'attr': {'placeholder': 'Object Type'}}) }}
             </div>
 
             <div class="col-xs-3">
@@ -78,21 +111,41 @@
                 <th>{{ knp_pagination_sortable(pagination, 'Event ID', 'logger.id') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Timestamp', 'logger.creationdate') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'IP', 'logger.ip') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'User Agent', 'logger.useragent') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Width', 'logger.width') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
+
+                {% if hideUserAgent is not defined or hideUserAgent == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'User Agent', 'logger.useragent') }}</th>
+                {% endif %}
+
+                {% if hideWidth is not defined or hideWidth == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'Width', 'logger.width') }}</th>
+                {% endif %}
+
+                {% if hideHeight is not defined or hideHeight == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
+                {% endif %}
+
+
                 <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'eventType.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Event Title', 'logger.event') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'AD Server Response', 'logger.serverresponse') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Object Type', 'objectType.name') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Object ID', 'logger.entityId') }}</th>
+
+                {% if hideADServerResponse is not defined or hideADServerResponse == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'AD Server Response', 'logger.serverresponse') }}</th>
+                {% endif %}
+
+                {% if hideObjectType is not defined or hideObjectType == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'Object Type', 'objectType.name') }}</th>
+                {% endif %}
+
+                {% if hideObjectId is not defined or hideObjectId == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'Object ID', 'logger.entityId') }}</th>
+                {% endif %}
                 {#<th>Actions</th>#}
             </tr>
         </thead>
         <tbody>
-        {% for entity in pagination %}
+        {% for entity in filteredEntities %}
 
             {% if entity.event == 'Bad Credentials' %}
                 <tr class="order-someattention-status">
@@ -103,13 +156,22 @@
                 <td>{{ entity.id }}</td>
                 <td>{% if entity.creationdate %}{{ entity.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ entity.ip }}</td>
-                <td>
-                    <div class="textarea_widget">
-                        <textarea class="textarea form-control">{{ entity.useragent }}</textarea>
-                    </div>
-                </td>
-                <td>{{ entity.width }}</td>
-                <td>{{ entity.height }}</td>
+
+                {% if hideUserAgent is not defined or hideUserAgent == false %}
+                    <td>
+                        <div class="textarea_widget">
+                            <textarea class="textarea form-control">{{ entity.useragent }}</textarea>
+                        </div>
+                    </td>
+                {% endif %}
+
+                {% if hideWidth is not defined or hideWidth == false %}
+                    <td>{{ entity.width }}</td>
+                {% endif %}
+
+                {% if hideHeight is not defined or hideHeight == false %}
+                    <td>{{ entity.height }}</td>
+                {% endif %}
 
                 {% if entity.username == 'anon.' %}
                     <td>
@@ -137,13 +199,22 @@
                 </td>
                 <td>{{ entity.eventType }}</td>
                 <td>{{ entity.event|raw }}</td>
-                <td>
-                    <div class="textarea_widget">
-                        <textarea class="textarea form-control">{{ entity.serverresponse }}</textarea>
-                    </div>
-                </td>
-                <td>{{ entity.objectType }}</td>
-                <td>{{ entity.entityId }}</td>
+
+                {% if hideADServerResponse is not defined or hideADServerResponse == false %}
+                    <td>
+                        <div class="textarea_widget">
+                            <textarea class="textarea form-control">{{ entity.serverresponse }}</textarea>
+                        </div>
+                    </td>
+                {% endif %}
+
+                {% if hideObjectType is not defined or hideObjectType == false %}
+                    <td>{{ entity.objectType }}</td>
+                {% endif %}
+
+                {% if hideObjectId is not defined or hideObjectId == false %}
+                    <td>{{ entity.entityId }}</td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

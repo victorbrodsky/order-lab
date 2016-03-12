@@ -46,6 +46,7 @@ class FellAppController extends Controller {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
         if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+            exit('1');
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

@@ -160,6 +160,7 @@ abstract class BasePermissionVoter extends Voter {
             //don't perform this check for dummy, empty objects
             if( $subject->getId() && $subject->getInstitution() ) {
                 if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false) {
+                    //exit('isObjectUnderUserPermittedCollaboratedInstitutions false');
                     return false;
                 }
             }
@@ -231,17 +232,29 @@ abstract class BasePermissionVoter extends Voter {
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         //$subject: string (i.e. "FellowshipApplication") or entity
         if( is_object($subject) ) {
+            //echo "subject is object <br>";
             $securityUtil = $this->container->get('order_security_utility');
 
             //don't perform this check for dummy, empty objects
             if( $subject->getId() && $subject->getInstitution() ) {
-                if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false) {
+                if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false ) {
+                    //exit('isObjectUnderUserPermittedCollaboratedInstitutions false');
                     return false;
                 }
             }
         } else {
             //if subject is string, then it must be used only to show a list of entities =>
             //there is no institution info => skip the institution check
+            //echo "subject is string; subject=".$subject."<br>";
+
+            //check if the user has role with a permission $subject class name (i.e. "Patient") and "update"
+            if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $subject, "update" ) ) {
+                //exit('can View! exit');
+                //echo "isUserHasPermissionObjectAction!!! className=".$subject."<br>";
+                return true;
+            } else {
+                //echo "can not view ".$subject."<br>";
+            }
         }
 
         //echo "can not Edit! <br>";
