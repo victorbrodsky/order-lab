@@ -2,6 +2,7 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
+use Doctrine\ORM\Query\ResultSetMapping;
 use Oleg\UserdirectoryBundle\Controller\LoggerController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -187,7 +188,7 @@ class FellAppLoggerController extends LoggerController
 
     //testing fellapp (like by voter)
     //only fellapp with fellowshipSubspecialty equal to Roles fellowshipSubspecialty
-    public function addCustomDql_2($dql) {
+    public function addCustomDql($dql) {
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -201,17 +202,169 @@ class FellAppLoggerController extends LoggerController
         }
         echo "count=" . count($fellowshipTypes) . "<br>";
 
+        $dql->select('logger');
+
         //WHERE logger.entityId IS NOT NULL AND fell.id=logger.entityId IN ('.implode(",", $fellowshipTypes).')
-        $dql->select(
-            'logger,'.
+        $dql->select('logger,F');
+
+        $dql->addSelect(
             '(SELECT F FROM \Oleg\FellAppBundle\Entity\FellowshipApplication F '.
             'LEFT JOIN F.fellowshipSubspecialty fellowshipSubspecialty WHERE '.
             'F.id=logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).')) AS loggerEntity'
         );
 
+        //$dql->addSelect('COUNT(loggerEntity) as loggerEntityCount');
+
         //$dql->leftJoin('loggerEntity.fellowshipSubspecialty', 'fellowshipSubspecialty');
-        //$dql->where("logger.entityId IS NOT NULL AND loggerEntity='' AND loggerEntity IS NULL"); //AND loggerEntity=2
+        //$dql->where("logger.entityName IS NULL OR (logger.entityName='FellowshipApplication' AND loggerEntity IS NOT NULL)"); //AND loggerEntity=2
+
+        $dql->andWhere("logger.entityName IS NULL OR loggerEntity IS NOT NULL");
+
+        //$dql->where("logger.entityName IS NULL OR (logger.entityName='FellowshipApplication' AND loggerEntityCount>0)");
+
+//        $whereSelect = '(SELECT F FROM \Oleg\FellAppBundle\Entity\FellowshipApplication F '.
+//            'LEFT JOIN F.fellowshipSubspecialty fellowshipSubspecialty WHERE '.
+//            'F.id=logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).'))!=""';
+//        $dql->where("(logger.entityName='FellowshipApplication' AND $whereSelect)");
+
+//        $repository = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication');
+//        $dql2 =  $repository->createQueryBuilder("fellapp");
+//        $dql2->leftJoin('fellapp.fellowshipSubspecialty', 'fellowshipSubspecialty');
+//
+//        $dql->where(
+//            $dql->expr()->in(
+//                'logger.id',
+//                $dql2->select('o2.id')
+//                    ->from('Order', 'o2')
+//                    ->join('Item',
+//                        'i2',
+//                        \Doctrine\ORM\Query\Expr\Join::WITH,
+//                        $dql2->expr()->andX(
+//                            $dql2->expr()->eq('i2.order', 'o2'),
+//                            $dql2->expr()->eq('i2.id', '?1')
+//                        )
+//                    )
+//                    ->getDQL()
+//            )
+//        );
 
         return $dql;
     }
+
+
+
+    protected function listLogger( $params, $request ) {
+        $em = $this->getDoctrine()->getManager();
+
+//        $dql =
+//            "SELECT ".
+//            "logger,".
+//            //"(SELECT F.id FROM OlegFellAppBundle:FellowshipApplication F) as loggerEntity ".
+//            "(SELECT COUNT(F.id) FROM OlegFellAppBundle:FellowshipApplication F ". //
+//            "LEFT JOIN F.fellowshipSubspecialty fellowshipSubspecialty ".
+//            "WHERE F.id=logger.entityId AND fellowshipSubspecialty.id IN(37)) AS loggerEntity ".
+//            "FROM OlegUserdirectoryBundle:Logger logger ". //OlegUserdirectoryBundle:Logger
+//            "WHERE logger.siteName='fellapp' AND logger.entityId IS NOT NULL ".
+//            "AND loggerEntity>0";
+        //$query = $em->createQuery($dql);
+
+        //////////////// 2 ///////////////////
+        $subquery = $em->createQueryBuilder()
+        ->select('fellapp.id')
+        ->from('OlegFellAppBundle:FellowshipApplication', 'fellapp')
+        ->leftJoin('fellapp.fellowshipSubspecialty','fellowshipSubspecialty')
+        ->where('fellapp.id = logger.entityId AND fellowshipSubspecialty.id IN(37)') //AND fellowshipSubspecialty.id IN(37)
+        ->getDQL();
+        $subquery = '('.$subquery.')';
+
+        $query = $em->createQueryBuilder();
+        $query->select('logger');
+        $query->from('OlegUserdirectoryBundle:Logger', 'logger');
+        $query->where(
+            $query->expr()->andX(
+                $query->expr()->eq('logger.siteName', "'fellapp'"),
+                //$query->expr()->eq('logger.entityId', $subquery),
+                //$query->expr()->eq('logger.entityName', "'FellowshipApplication'")
+                $query->expr()->eq('logger.entityName', '?1'),
+                $query->expr()->orX(
+                    //$query->expr()->eq('logger.entityName', '?1'),
+                    $query->expr()->andX(
+                        $query->expr()->eq('logger.entityId', $subquery),
+                        $query->expr()->eq('logger.entityName', "'FellowshipApplication'")
+                    )
+                )
+            )
+            //$query->expr()->orX(
+            //    $query->expr()->eq('logger.entityId', $subquery),
+            //    $query->expr()->eq('logger.entityName', "'FellowshipApplication'")
+            //)
+        );
+        $query->setParameter(1, NULL);
+        //$query->andWhere("logger.entityName IS NULL OR (logger.entityName='FellowshipApplication' AND loggerEntity.id IS NOT NULL)");
+        $query = $query->getQuery();
+        //$query->setParameters(array());
+        //////////////// EOF 2 ///////////////////
+
+        //////////////// 3 ///////////////////
+        if(0) {
+            $qb2 = $em->createQueryBuilder();
+            $qb = $em->createQueryBuilder();
+            $qb->select('logger')
+                ->from('OlegUserdirectoryBundle:Logger', 'logger')
+                //->join('i.order', 'o')
+                ->where(
+                    $qb->expr()->eq(
+                        'logger.entityId',
+                        '(' . $qb2->select('fellapp.id')
+                            ->from('OlegFellAppBundle:FellowshipApplication', 'fellapp')
+                            ->join('fellapp.fellowshipSubspecialty',
+                                'fellowshipSubspecialty',
+                                \Doctrine\ORM\Query\Expr\Join::WITH,
+                                $qb2->expr()->in('fellowshipSubspecialty.id', '?1')
+                            )
+                            ->getDQL() . ')'
+                    )
+                )
+                //->andWhere($qb->expr()->neq('i.id', '?2'))
+                //->orderBy('o.orderdate', 'DESC')
+                ->setParameter(1, 37)//->setParameter(2, 5)
+            ;
+            $query = $qb->getQuery();
+        }
+        //////////////// EOF 3 ///////////////////
+
+        echo "dql=".$query->getSql()."<br>";
+
+        //$pagination = $query->getResult();
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            300/*limit per page*/
+        );
+        echo "<br>pagination=".count($pagination)."<br>";
+
+        foreach( $pagination as $logger ) {
+            echo "logger entity = ". $logger->getEntityName() . " " .$logger->getEntityId() . "<br>";
+            //echo "record logger = ". $logger['loggerEntity']['entityName'] . "<br>";
+            //echo "loggerEntity = (". $logger['loggerEntity'] . ")<br>";
+            //print_r($row);
+        }
+        exit('pagination exit');
+
+        return array(
+            'filterform' => $filterform,
+            'loggerfilter' => $filterform->createView(),
+            'pagination' => $pagination,
+            'roles' => $rolesArr,
+            'sitename' => $sitename,
+            'createLogger' => $createLogger,
+            'updateLogger' => $updateLogger,
+            'filtered' => $filtered,
+            'routename' => $request->get('_route'),
+            'titlePostfix' => ""
+        );
+    }
+
 }
