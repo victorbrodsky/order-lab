@@ -362,6 +362,13 @@ class GenericListType extends AbstractType
                 'required' => false,
             ));
 
+            $builder->add('fellowshipSubspecialty','entity',array(
+                'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+                'label' => "FellowshipSubspecialty:",
+                'multiple' => false,
+                'required' => false,
+                'attr' => array('class'=>'combobox combobox-width')
+            ));
         }
 
         //Role Attributes

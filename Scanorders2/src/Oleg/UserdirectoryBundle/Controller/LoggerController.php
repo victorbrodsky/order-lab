@@ -126,12 +126,14 @@ class LoggerController extends Controller
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
         $dql =  $repository->createQueryBuilder("logger");
-        $dql->select('logger');
+
+        $dql = $this->addCustomDql($dql);
+
         $dql->innerJoin('logger.eventType', 'eventType');
         $dql->leftJoin('logger.objectType', 'objectType');
 
         if( $allsites == null || $allsites == false ) {
-            $dql->where("logger.siteName = '".$sitename."'");
+            $dql->andWhere("logger.siteName = '".$sitename."'");
         }
 
         $createLogger = null;
@@ -222,7 +224,7 @@ class LoggerController extends Controller
         $query = $em->createQuery($dql);
 
         //echo "dql=".$dql."<br>";
-        //echo "dql=".$query->getSql()."<br>";
+        echo "dql=".$query->getSql()."<br>";
 
         if( $entityNamespace && $entityName && $entityId ) {
             //$query->setParameters( $queryParameters );
@@ -240,7 +242,13 @@ class LoggerController extends Controller
             $this->get('request')->query->get('page', 1), /*page number*/
             $limit/*limit per page*/
         );
-        //echo "<br>pagination=".count($pagination)."<br>";
+        echo "<br>pagination=".count($pagination)."<br>";
+
+        foreach( $pagination as $row ) {
+            echo "record logger = ". $row['logger'] . "<br>";
+            echo "record fellapp = ". $row['fellapp'] . "<br>";
+            //print_r($row);
+        }
 
         return array(
             'loggerfilter' => $filterform->createView(),
@@ -254,6 +262,10 @@ class LoggerController extends Controller
         );
     }
 
+    public function addCustomDql($dql) {
+        $dql->select('logger');
+        return $dql;
+    }
 
 
 

@@ -120,4 +120,92 @@ class FellAppLoggerController extends LoggerController
         return $loggerFormParams;
     }
 
+
+
+    public function addCustomDql_1($dql) {
+        $em = $this->getDoctrine()->getManager();
+
+        $dql->select(
+            'logger,'.
+            '(SELECT fell FROM OlegFellAppBundle:FellowshipApplication fell '.
+            'WHERE logger.entityId IS NOT NULL AND fell.id=logger.entityId) as fellapp'
+        //',(SELECT fell2 FROM OlegFellAppBundle:FellowshipApplication fell2 WHERE fell2.id=fellapp) as fellappObject'
+        );
+
+        //testing fellapp (like by voter)
+        //only fellapp with fellowshipSubspecialty equal to Roles fellowshipSubspecialty
+        if(1) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $roleObjects = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, $sitename, "ROLE_FELLAPP_");
+            $fellowshipTypes = array();
+            foreach ($roleObjects as $roleObject) {
+                if ($roleObject->getFellowshipSubspecialty()) {
+                    $fellowshipTypes[] = $roleObject->getFellowshipSubspecialty()->getId() . "";  //$roleObject->getFellowshipSubspecialty()."";
+                    echo "role add=" . $roleObject->getFellowshipSubspecialty()->getName() . "<br>";
+                }
+            }
+            echo "count=" . count($fellowshipTypes) . "<br>";
+            if (count($fellowshipTypes) > 0) {
+                //$dql->leftJoin('fellapp.fellowshipSubspecialty', 'fellowshipSubspecialty');
+                //$dql->andWhere("(fellapp IS NOT NULL AND fellowshipSubspecialty.id IN (" . implode(",", $fellowshipTypes) . "))");
+                //$dql->andWhere("(fellapp IS NOT NULL AND fellowshipSubspecialty IS NOT NULL AND fellowshipSubspecialty=" . $fellowshipTypes[0] . "))");
+            }
+            echo "after JOIN<br>";
+        }
+
+        //$dql->select('logger');
+//        //Oleg\UserdirectoryBundle\Entity
+//        $objectNamespaceArr = explode("\\",$objectNamespace);
+//        $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
+//        $objectName = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectType);
+//        if( !$objectName ) {
+//            throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
+//        }
+//        $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+
+        return $dql;
+    }
+
+    public function addCustomDql($dql) {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $roleObjects = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, 'fellapp', "ROLE_FELLAPP_");
+        $fellowshipTypes = array();
+        foreach ($roleObjects as $roleObject) {
+            if ($roleObject->getFellowshipSubspecialty()) {
+                $fellowshipTypes[] = $roleObject->getFellowshipSubspecialty()->getId() . "";  //$roleObject->getFellowshipSubspecialty()."";
+                echo "role add=" . $roleObject->getFellowshipSubspecialty()->getName() . "<br>";
+            }
+        }
+        echo "count=" . count($fellowshipTypes) . "<br>";
+
+        //WHERE logger.entityId IS NOT NULL AND fell.id=logger.entityId IN ('.implode(",", $fellowshipTypes).')
+        $dql->select(
+            'logger,'.
+            '(SELECT F FROM \Oleg\FellAppBundle\Entity\FellowshipApplication F '.
+            'JOIN F.fellowshipSubspecialty fellowshipSubspecialty WHERE F.id=logger.entityId) AS fellapp'
+        );
+
+        if (count($fellowshipTypes) > 0) {
+            //$dql->leftJoin('fellapp.fellowshipSubspecialty', 'fellowshipSubspecialty');
+            //$dql->andWhere("(fellapp IS NOT NULL AND fellowshipSubspecialty.id IN (" . implode(",", $fellowshipTypes) . "))");
+            //$dql->andWhere("(fellapp IS NOT NULL AND fellowshipSubspecialty IS NOT NULL AND fellowshipSubspecialty=" . $fellowshipTypes[0] . "))");
+        }
+
+        //testing fellapp (like by voter)
+        //only fellapp with fellowshipSubspecialty equal to Roles fellowshipSubspecialty
+
+        //$dql->select('logger');
+//        //Oleg\UserdirectoryBundle\Entity
+//        $objectNamespaceArr = explode("\\",$objectNamespace);
+//        $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
+//        $objectName = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectType);
+//        if( !$objectName ) {
+//            throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
+//        }
+//        $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+
+        return $dql;
+    }
 }

@@ -31,6 +31,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Level', 'ent.level') }}</th>
             {% endif %}
 
+            {% if entities|first.fellowshipSubspecialty is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Fellowship Subspecialty', 'fellowshipSubspecialty.name') }}</th>
+            {% endif %}
+
             {% if entities|first.organizationalGroupType is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Organizational Group Type', 'organizationalGroupType.name') }}</th>
             {% endif %}
@@ -134,6 +138,12 @@
                 {% if entity.level is defined %}
                     <td>
                         {{ entity.level }}
+                    </td>
+                {% endif %}
+
+                {% if entity.fellowshipSubspecialty is defined %}
+                    <td>
+                        {{ entity.fellowshipSubspecialty }}
                     </td>
                 {% endif %}
 
@@ -597,6 +607,10 @@
     {% endif %}
     {% if form.collaborationInstitutions is defined %}
         {{ formmacros.field(form.collaborationInstitutions) }}
+    {% endif %}
+
+    {% if form.fellowshipSubspecialty is defined %}
+        {{ formmacros.field(form.fellowshipSubspecialty) }}
     {% endif %}
 
 {% endmacro %}

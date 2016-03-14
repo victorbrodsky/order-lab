@@ -1,39 +1,39 @@
 
     {# filtering for each object #}
-    {% set filteredEntities = {} %}
-    {% for entity in pagination %}
+    {#{% set filteredEntities = {} %}#}
+    {#{% for entity in pagination %}#}
         {#1) get subject entity permission for action 'read'#}
-        {% if entity.objectType and entity.entityId %}
+        {#{% if entity.objectType and entity.entityId %}#}
             {#check permission for event log associated with object#}
-            {% set permissionSubjectEntity = render(
-                controller("OlegUserdirectoryBundle:Logger:permissionActionSubjectEntity",
-                    {
-                        'action':'read',
-                        'objectNamespace':entity.entityNamespace,
-                        'objectType':entity.objectType,
-                        'objectId':entity.entityId
-                    }
-                ))
-            %}
+            {#{% set permissionSubjectEntity = render(#}
+                {#controller("OlegUserdirectoryBundle:Logger:permissionActionSubjectEntity",#}
+                    {#{#}
+                        {#'action':'read',#}
+                        {#'objectNamespace':entity.entityNamespace,#}
+                        {#'objectType':entity.objectType,#}
+                        {#'objectId':entity.entityId#}
+                    {#}#}
+                {#))#}
+            {#%}#}
             {#{% set permissionSubjectEntity = render(controller("OlegUserdirectoryBundle:Logger:permissionActionSubjectEntity",{'action':'read','objectNamespace':entity.entityNamespace,'objectType':entity.objectType,'objectId':entity.entityId})) %}#}
-        {% else %}
+        {#{% else %}#}
             {#show all event logs which not associated with object#}
-            {% set permissionSubjectEntity = 1 %}
-        {% endif %}
+            {#{% set permissionSubjectEntity = 1 %}#}
+        {#{% endif %}#}
 
         {#2) check permission for this entity#}
-        {% if permissionSubjectEntity %}
+        {#{% if permissionSubjectEntity %}#}
             {#=> add#}
-            {% set filteredEntities = filteredEntities|merge([entity]) %}
-        {% else %}
+            {#{% set filteredEntities = filteredEntities|merge([entity]) %}#}
+        {#{% else %}#}
             {#=> don't add#}
-        {% endif %}
+        {#{% endif %}#}
         {#<br>#}
-    {% endfor %}
+    {#{% endfor %}#}
     {# EOF filtering for each object #}
 
     {% if filtered is defined and filtered %}
-        {% set eventlog_title = eventlog_title ~ " showing " ~ filteredEntities|length ~ " matching events" %}
+        {% set eventlog_title = eventlog_title ~ " showing " ~ pagination|length ~ " matching events" %}
     {% endif %}
 
     <h3 class="text-info">{{ eventlog_title }}</h3>
@@ -145,7 +145,9 @@
             </tr>
         </thead>
         <tbody>
-        {% for entity in filteredEntities %}
+        {% for entity in pagination %}
+
+            {% set entity = entity[0] %}
 
             {% if entity.event == 'Bad Credentials' %}
                 <tr class="order-someattention-status">
