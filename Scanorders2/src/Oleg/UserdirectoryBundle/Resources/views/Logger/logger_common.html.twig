@@ -33,7 +33,7 @@
     {# EOF filtering for each object #}
 
     {% if filtered is defined and filtered %}
-        {% set eventlog_title = eventlog_title ~ " showing " ~ pagination|length ~ " matching events" %}
+        {% set eventlog_title = eventlog_title ~ " showing " ~ pagination|length ~ " matching events" ~ titlePostfix%}
     {% endif %}
 
     <h3 class="text-info">{{ eventlog_title }}</h3>
@@ -58,13 +58,19 @@
                 </div>
             </div>
 
-            <div class="col-xs-3">
-                {{ form_row(loggerfilter.user,{'attr': {'placeholder': 'User'}}) }}
-            </div>
+            {% if hideUser is not defined or hideUser == false %}
+                <div class="col-xs-3">
+                    {{ form_row(loggerfilter.user,{'attr': {'placeholder': 'User'}}) }}
+                </div>
+            {% endif %}
+            {% do loggerfilter.user.setRendered %}
 
-            <div class="col-xs-3">
-                {{ form_row(loggerfilter.eventType, {'attr': {'placeholder': 'Event Type'}}) }}
-            </div>
+            {% if hideEventType is not defined or hideEventType == false %}
+                <div class="col-xs-3">
+                    {{ form_row(loggerfilter.eventType, {'attr': {'placeholder': 'Event Type'}}) }}
+                </div>
+            {% endif %}
+            {% do loggerfilter.eventType.setRendered %}
 
             <div class="col-xs-2">
                 {{ form_row(loggerfilter.search, {'attr': {'placeholder': 'Event Title'}}) }}
@@ -76,21 +82,30 @@
 
         <div class="row">
 
-            <div class="col-xs-2">
-                {{ form_row(loggerfilter.ip, {'attr': {'placeholder': 'IP'}}) }}
-            </div>
+            {% if hideIp is not defined or hideIp == false %}
+                <div class="col-xs-2">
+                    {{ form_row(loggerfilter.ip, {'attr': {'placeholder': 'IP'}}) }}
+                </div>
+            {% endif %}
+            {% do loggerfilter.ip.setRendered %}
 
             <div class="col-xs-3">
                 {{ form_row(loggerfilter.roles, {'attr': {'placeholder': 'Roles'}}) }}
             </div>
 
-            <div class="col-xs-3">
-                {{ form_row(loggerfilter.objectType, {'attr': {'placeholder': 'Object Type'}}) }}
-            </div>
+            {% if hideObjectType is not defined or hideObjectType == false %}
+                <div class="col-xs-3">
+                    {{ form_row(loggerfilter.objectType, {'attr': {'placeholder': 'Object Type'}}) }}
+                </div>
+            {% endif %}
+            {% do loggerfilter.objectType.setRendered %}
 
-            <div class="col-xs-3">
-                {{ form_row(loggerfilter.objectId, {'attr': {'placeholder': 'Object ID'}}) }}
-            </div>
+            {% if hideObjectId is not defined or hideObjectId == false %}
+                <div class="col-xs-3">
+                    {{ form_row(loggerfilter.objectId, {'attr': {'placeholder': 'Object ID'}}) }}
+                </div>
+            {% endif %}
+            {% do loggerfilter.objectId.setRendered %}
 
             <div class="col-xs-1">
                 <button type="submit" class="btn btn-sm btn-default">Filter</button>
@@ -108,9 +123,15 @@
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
             <tr>
-                <th>{{ knp_pagination_sortable(pagination, 'Event ID', 'logger.id') }}</th>
+                {% if hideId is not defined or hideId == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'Event ID', 'logger.id') }}</th>
+                {% endif %}
+
                 <th>{{ knp_pagination_sortable(pagination, 'Timestamp', 'logger.creationdate') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'IP', 'logger.ip') }}</th>
+
+                {% if hideIp is not defined or hideIp == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'IP', 'logger.ip') }}</th>
+                {% endif %}
 
                 {% if hideUserAgent is not defined or hideUserAgent == false %}
                     <th>{{ knp_pagination_sortable(pagination, 'User Agent', 'logger.useragent') }}</th>
@@ -126,7 +147,11 @@
 
 
                 <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
+
+                {% if hideRoles is not defined or hideRoles == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
+                {% endif %}
+
                 <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'eventType.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Event Title', 'logger.event') }}</th>
 
@@ -147,7 +172,7 @@
         <tbody>
         {% for entity in pagination %}
 
-            {% set entity = entity[0] %}
+            {#{% set entity = entity[0] %}#}
 
             {% if entity.event == 'Bad Credentials' %}
                 <tr class="order-someattention-status">
@@ -155,9 +180,15 @@
                 <tr>
             {% endif %}
 
-                <td>{{ entity.id }}</td>
+                {% if hideId is not defined or hideId == false %}
+                    <td>{{ entity.id }}</td>
+                {%  endif %}
+
                 <td>{% if entity.creationdate %}{{ entity.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ entity.ip }}</td>
+
+                {% if hideIp is not defined or hideIp == false %}
+                    <td>{{ entity.ip }}</td>
+                {%  endif %}
 
                 {% if hideUserAgent is not defined or hideUserAgent == false %}
                     <td>

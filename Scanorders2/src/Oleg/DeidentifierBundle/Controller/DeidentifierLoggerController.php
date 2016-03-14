@@ -179,8 +179,8 @@ class DeidentifierLoggerController extends LoggerController
             'sitename' => $this->container->getParameter('deidentifier.sitename'),
             //'hideObjectType' => true,
             //'hideObjectId' => true,
-            'hideUser' => true,
-            'hideEventType' => true
+            //'hideUser' => true,
+            //'hideEventType' => true
         );
         $loggerFormParams = $this->listLogger($params,$request);
 
@@ -188,8 +188,19 @@ class DeidentifierLoggerController extends LoggerController
         $loggerFormParams['hideWidth'] = true;
         $loggerFormParams['hideHeight'] = true;
         $loggerFormParams['hideADServerResponse'] = true;
-        //$loggerFormParams['hideObjectType'] = true;
-        //$loggerFormParams['hideObjectId'] = true;
+        $loggerFormParams['hideUser'] = true;
+        $loggerFormParams['hideEventType'] = true;
+
+        //get title postfix: Event Log showing 9 matching “EVENT TYPE” events for user: First Name LastName (CWID)
+        $filterform = $loggerFormParams['filterform'];
+        $eventTypes = $filterform['eventType']->getData();
+        $users = $filterform['user']->getData();
+
+        $em = $this->getDoctrine()->getManager();
+        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($users[0]);
+
+        $loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event for user: ".$user;
 
         return $loggerFormParams;
     }

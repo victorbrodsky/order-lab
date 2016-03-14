@@ -127,10 +127,12 @@ class LoggerController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
         $dql =  $repository->createQueryBuilder("logger");
 
-        $dql = $this->addCustomDql($dql);
-
         $dql->innerJoin('logger.eventType', 'eventType');
         $dql->leftJoin('logger.objectType', 'objectType');
+
+        $dql = $this->addCustomDql($dql);
+
+        //$dql->where("logger.entityId IS NOT NULL AND loggerEntity IS NULL");
 
         if( $allsites == null || $allsites == false ) {
             $dql->andWhere("logger.siteName = '".$sitename."'");
@@ -224,7 +226,7 @@ class LoggerController extends Controller
         $query = $em->createQuery($dql);
 
         //echo "dql=".$dql."<br>";
-        echo "dql=".$query->getSql()."<br>";
+        //echo "dql=".$query->getSql()."<br>";
 
         if( $entityNamespace && $entityName && $entityId ) {
             //$query->setParameters( $queryParameters );
@@ -242,15 +244,16 @@ class LoggerController extends Controller
             $this->get('request')->query->get('page', 1), /*page number*/
             $limit/*limit per page*/
         );
-        echo "<br>pagination=".count($pagination)."<br>";
+        //echo "<br>pagination=".count($pagination)."<br>";
 
-        foreach( $pagination as $row ) {
-            echo "record logger = ". $row['logger'] . "<br>";
-            echo "record fellapp = ". $row['fellapp'] . "<br>";
+        //foreach( $pagination as $row ) {
+            //echo "record logger = ". $row['logger']['entityName'] . "<br>";
+            //echo "loggerEntity = ". $row['loggerEntity'] . "<br>";
             //print_r($row);
-        }
+        //}
 
         return array(
+            'filterform' => $filterform,
             'loggerfilter' => $filterform->createView(),
             'pagination' => $pagination,
             'roles' => $rolesArr,
@@ -258,7 +261,8 @@ class LoggerController extends Controller
             'createLogger' => $createLogger,
             'updateLogger' => $updateLogger,
             'filtered' => $filtered,
-            'routename' => $request->get('_route')
+            'routename' => $request->get('_route'),
+            'titlePostfix' => ""
         );
     }
 

@@ -13,75 +13,61 @@ class LoggerFilterType extends AbstractType
 
     private $params;
 
-    private $hideObjectType;
-    private $hideObjectId;
-    private $hideUser;
-    private $hideEventType;
+//    private $hideObjectType;
+//    private $hideObjectId;
+//    private $hideUser;
+//    private $hideEventType;
+//    private $hideIp;
+//    private $hideRoles;
 
     public function __construct( $params=null )
     {
         $this->params = $params;
 
-        if( array_key_exists('hideObjectType', $params) ) {
-            $this->hideObjectType = $params['hideObjectType'];
-        } else {
-            $this->hideObjectType = false;
-        }
-
-        if( array_key_exists('hideObjectId', $params) ) {
-            $this->hideObjectId = $params['hideObjectId'];
-        } else {
-            $this->hideObjectId = false;
-        }
-
-        if( array_key_exists('hideUser', $params) ) {
-            $this->hideUser = $params['hideUser'];
-        } else {
-            $this->hideUser = false;
-        }
-
-        if( array_key_exists('hideEventType', $params) ) {
-            $this->hideEventType = $params['hideEventType'];
-        } else {
-            $this->hideEventType = false;
-        }
+//        if( array_key_exists('hideObjectType', $params) ) {
+//            $this->hideObjectType = $params['hideObjectType'];
+//        } else {
+//            $this->hideObjectType = false;
+//        }
+//
+//        if( array_key_exists('hideObjectId', $params) ) {
+//            $this->hideObjectId = $params['hideObjectId'];
+//        } else {
+//            $this->hideObjectId = false;
+//        }
+//
+//        if( array_key_exists('hideUser', $params) ) {
+//            $this->hideUser = $params['hideUser'];
+//        } else {
+//            $this->hideUser = false;
+//        }
+//
+//        if( array_key_exists('hideEventType', $params) ) {
+//            $this->hideEventType = $params['hideEventType'];
+//        } else {
+//            $this->hideEventType = false;
+//        }
+//
+//        if( array_key_exists('hideIp', $params) ) {
+//            $this->hideIp = $params['hideIp'];
+//        } else {
+//            $this->hideIp = false;
+//        }
+//
+//        if( array_key_exists('hideRoles', $params) ) {
+//            $this->hideRoles = $params['hideRoles'];
+//        } else {
+//            $this->hideRoles = false;
+//        }
     }
 
     //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add('creationdate', 'datetime', array(
-//            'label' => false, //'Start Date',
-//            'widget' => 'single_text',
-//            //'placeholder' => 'Start Date',
-//            'required' => false,
-//            //'format' => 'MM/dd/yyyy',
-//            'format' => 'yyyy',
-//            //'attr' => array('class' => 'datepicker form-control'),
-//            //'attr' => array('class' => 'datepicker-only-year form-control'),
-//            'attr' => array('class'=>'datepicker-only-year form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
-//        ));
-
-//        $builder->add('user', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:User',
-//            //'placeholder' => 'Fellowship Type',
-//            'property' => 'getUserNameStr',
-//            'label' => false,
-//            'required'=> false,
-//            'multiple' => true,
-//            'attr' => array('class' => 'combobox'),
-//            'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->leftJoin("list.infos","infos")
-//                        ->where("list.keytype IS NOT NULL")
-//                        ->orderBy("infos.lastName","ASC");
-//                },
-//        ));
-
         $builder->add('user', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'read_only' => $this->hideUser,
+            //'read_only' => $this->hideUser,
             'property' => 'getUserNameStr',
             'label' => false,
             'required' => false,
@@ -94,7 +80,7 @@ class LoggerFilterType extends AbstractType
         $builder->add('eventType', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:EventTypeList',
             //'placeholder' => 'Fellowship Type',
-            'read_only' => $this->hideEventType,
+            //'read_only' => $this->hideEventType,
             'property' => 'name',
             'label' => false,
             'required' => false,
@@ -178,7 +164,7 @@ class LoggerFilterType extends AbstractType
         //objectType
         $builder->add('objectType', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:EventObjectTypeList',
-            'read_only' => $this->hideObjectType,
+            //'read_only' => $this->hideObjectType,
             //'placeholder' => 'Fellowship Type',
             'property' => 'name',
             'label' => false,
@@ -197,7 +183,7 @@ class LoggerFilterType extends AbstractType
         ));
 
         $builder->add('objectId', 'text', array(
-            'read_only' => $this->hideObjectId,
+            //'read_only' => $this->hideObjectId,
             'required' => false,
             'label' => false,
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),

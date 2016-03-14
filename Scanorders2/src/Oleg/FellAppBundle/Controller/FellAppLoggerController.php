@@ -107,8 +107,11 @@ class FellAppLoggerController extends LoggerController
 
         $params = array(
             'sitename' => $this->container->getParameter('fellapp.sitename'),
-            'hideObjectType' => true,
-            'hideObjectId' => true,
+//            'hideObjectType' => true,
+//            'hideObjectId' => true,
+//            'hideIp' => true,
+//            'hideRoles' => true,
+            //'hideId' => true
         );
         $loggerFormParams = $this->listLogger($params,$request);
 
@@ -116,6 +119,22 @@ class FellAppLoggerController extends LoggerController
         $loggerFormParams['hideWidth'] = true;
         $loggerFormParams['hideHeight'] = true;
         $loggerFormParams['hideADServerResponse'] = true;
+
+        $loggerFormParams['hideIp'] = true;
+        $loggerFormParams['hideRoles'] = true;
+        $loggerFormParams['hideId'] = true;         //Event ID
+        $loggerFormParams['hideObjectType'] = true;
+        $loggerFormParams['hideObjectId'] = true;
+
+        //get title postfix
+        $filterform = $loggerFormParams['filterform'];
+        $objectTypes = $filterform['objectType']->getData();
+        $objectId = $filterform['objectId']->getData();
+
+        $em = $this->getDoctrine()->getManager();
+        $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
+
+        $loggerFormParams['titlePostfix'] = " for ".$objectType.": ".$objectId;//for FellowshipApplication: 162
 
         return $loggerFormParams;
     }
@@ -166,7 +185,9 @@ class FellAppLoggerController extends LoggerController
         return $dql;
     }
 
-    public function addCustomDql($dql) {
+    //testing fellapp (like by voter)
+    //only fellapp with fellowshipSubspecialty equal to Roles fellowshipSubspecialty
+    public function addCustomDql_2($dql) {
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -175,7 +196,7 @@ class FellAppLoggerController extends LoggerController
         foreach ($roleObjects as $roleObject) {
             if ($roleObject->getFellowshipSubspecialty()) {
                 $fellowshipTypes[] = $roleObject->getFellowshipSubspecialty()->getId() . "";  //$roleObject->getFellowshipSubspecialty()."";
-                echo "role add=" . $roleObject->getFellowshipSubspecialty()->getName() . "<br>";
+                echo "role add=" . $roleObject->getFellowshipSubspecialty()->getId() . ":" . $roleObject->getFellowshipSubspecialty()->getName() . "<br>";
             }
         }
         echo "count=" . count($fellowshipTypes) . "<br>";
@@ -184,27 +205,12 @@ class FellAppLoggerController extends LoggerController
         $dql->select(
             'logger,'.
             '(SELECT F FROM \Oleg\FellAppBundle\Entity\FellowshipApplication F '.
-            'JOIN F.fellowshipSubspecialty fellowshipSubspecialty WHERE F.id=logger.entityId) AS fellapp'
+            'LEFT JOIN F.fellowshipSubspecialty fellowshipSubspecialty WHERE '.
+            'F.id=logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).')) AS loggerEntity'
         );
 
-        if (count($fellowshipTypes) > 0) {
-            //$dql->leftJoin('fellapp.fellowshipSubspecialty', 'fellowshipSubspecialty');
-            //$dql->andWhere("(fellapp IS NOT NULL AND fellowshipSubspecialty.id IN (" . implode(",", $fellowshipTypes) . "))");
-            //$dql->andWhere("(fellapp IS NOT NULL AND fellowshipSubspecialty IS NOT NULL AND fellowshipSubspecialty=" . $fellowshipTypes[0] . "))");
-        }
-
-        //testing fellapp (like by voter)
-        //only fellapp with fellowshipSubspecialty equal to Roles fellowshipSubspecialty
-
-        //$dql->select('logger');
-//        //Oleg\UserdirectoryBundle\Entity
-//        $objectNamespaceArr = explode("\\",$objectNamespace);
-//        $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
-//        $objectName = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectType);
-//        if( !$objectName ) {
-//            throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
-//        }
-//        $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+        //$dql->leftJoin('loggerEntity.fellowshipSubspecialty', 'fellowshipSubspecialty');
+        //$dql->where("logger.entityId IS NOT NULL AND loggerEntity='' AND loggerEntity IS NULL"); //AND loggerEntity=2
 
         return $dql;
     }
