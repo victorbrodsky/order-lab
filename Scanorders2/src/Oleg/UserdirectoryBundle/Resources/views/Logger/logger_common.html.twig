@@ -172,7 +172,7 @@
         <tbody>
         {% for entity in pagination %}
 
-            {% set entity = entity[0] %}
+            {#{% set entity = entity[0] %}#}
 
             {% if entity.event == 'Bad Credentials' %}
                 <tr class="order-someattention-status">

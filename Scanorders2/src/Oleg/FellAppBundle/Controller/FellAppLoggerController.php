@@ -188,7 +188,7 @@ class FellAppLoggerController extends LoggerController
 
     //testing fellapp (like by voter)
     //only fellapp with fellowshipSubspecialty equal to Roles fellowshipSubspecialty
-    public function addCustomDql($dql) {
+    public function addCustomDql_2($dql) {
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -251,9 +251,45 @@ class FellAppLoggerController extends LoggerController
         return $dql;
     }
 
+    public function addCustomDql($dql) {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $roleObjects = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, 'fellapp', "ROLE_FELLAPP_");
+        $fellowshipTypes = array();
+        foreach ($roleObjects as $roleObject) {
+            if ($roleObject->getFellowshipSubspecialty()) {
+                $fellowshipTypes[] = $roleObject->getFellowshipSubspecialty()->getId() . "";  //$roleObject->getFellowshipSubspecialty()."";
+                //echo "role add=" . $roleObject->getFellowshipSubspecialty()->getId() . ":" . $roleObject->getFellowshipSubspecialty()->getName() . "<br>";
+            }
+        }
+        //echo "count=" . count($fellowshipTypes) . "<br>";
+
+        //subquery to get a fellowship application object
+        $subquery = $em->createQueryBuilder()
+            ->select('fellapp.id')
+            ->from('OlegFellAppBundle:FellowshipApplication', 'fellapp')
+            ->leftJoin('fellapp.fellowshipSubspecialty','fellowshipSubspecialty')
+            ->where('fellapp.id = logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).')') //AND fellowshipSubspecialty.id IN(37)
+            ->getDQL();
+        $subquery = '('.$subquery.')';
+
+        //main query to get logger objects
+        $entityName = 'FellowshipApplication';
+        $query = $em->createQueryBuilder();
+        $query->select('logger');
+        $query->from('OlegUserdirectoryBundle:Logger', 'logger');
+
+        $query->andWhere("logger.entityName != '".$entityName."' OR ( logger.entityName = '".$entityName."' AND logger.entityId=".$subquery.")");
+        //$query->andWhere("logger.entityName = '".$entityName."' AND logger.entityId=".$subquery);
+
+        //$query->andWhere("logger.entityName IS NULL OR (logger.entityName='FellowshipApplication' AND loggerEntity.id IS NOT NULL)");
+
+        return $query;
+    }
 
 
-    protected function listLogger( $params, $request ) {
+    protected function listLogger_1( $params, $request ) {
         $em = $this->getDoctrine()->getManager();
 
 //        $dql =
@@ -281,28 +317,32 @@ class FellAppLoggerController extends LoggerController
         $query->select('logger');
         $query->from('OlegUserdirectoryBundle:Logger', 'logger');
         $query->where(
-            $query->expr()->andX(
-                $query->expr()->eq('logger.siteName', "'fellapp'"),
-                //$query->expr()->eq('logger.entityId', $subquery),
-                //$query->expr()->eq('logger.entityName', "'FellowshipApplication'")
-                $query->expr()->eq('logger.entityName', '?1'),
-                $query->expr()->orX(
-                    //$query->expr()->eq('logger.entityName', '?1'),
-                    $query->expr()->andX(
-                        $query->expr()->eq('logger.entityId', $subquery),
-                        $query->expr()->eq('logger.entityName', "'FellowshipApplication'")
-                    )
-                )
-            )
+            "logger.siteName='fellapp'"
+//            $query->expr()->andX(
+//                $query->expr()->eq('logger.siteName', "'fellapp'"),
+//                //$query->expr()->eq('logger.entityId', $subquery),
+//                //$query->expr()->eq('logger.entityName', "'FellowshipApplication'")
+//                $query->expr()->eq('logger.entityName', '?1'),
+//                $query->expr()->orX(
+//                    //$query->expr()->eq('logger.entityName', '?1'),
+//                    $query->expr()->andX(
+//                        $query->expr()->eq('logger.entityId', $subquery),
+//                        $query->expr()->eq('logger.entityName', "'FellowshipApplication'")
+//                    )
+//                )
+//            )
             //$query->expr()->orX(
             //    $query->expr()->eq('logger.entityId', $subquery),
             //    $query->expr()->eq('logger.entityName', "'FellowshipApplication'")
             //)
         );
-        $query->setParameter(1, NULL);
+
+        $query->andWhere("logger.entityName != :entityName OR ( logger.entityName = :entityName AND logger.entityId=".$subquery.")");
+
+        //$query->setParameter(1, NULL);
         //$query->andWhere("logger.entityName IS NULL OR (logger.entityName='FellowshipApplication' AND loggerEntity.id IS NOT NULL)");
         $query = $query->getQuery();
-        //$query->setParameters(array());
+        $query->setParameters(array('entityName'=>'FellowshipApplication'));
         //////////////// EOF 2 ///////////////////
 
         //////////////// 3 ///////////////////

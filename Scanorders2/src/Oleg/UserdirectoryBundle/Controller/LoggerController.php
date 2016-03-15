@@ -222,11 +222,11 @@ class LoggerController extends Controller
 //            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
 //        }
 		
-        $limit = 100;//30;
+        $limit = 30;
         $query = $em->createQuery($dql);
 
         //echo "dql=".$dql."<br>";
-        echo "dql=".$query->getSql()."<br>";
+        //echo "dql=".$query->getSql()."<br>";
 
         if( $entityNamespace && $entityName && $entityId ) {
             //$query->setParameters( $queryParameters );
@@ -244,18 +244,18 @@ class LoggerController extends Controller
             $this->get('request')->query->get('page', 1), /*page number*/
             $limit/*limit per page*/
         );
-        echo "<br>pagination=".count($pagination)."<br>";
+        //echo "<br>pagination=".count($pagination)."<br>";
 
         //echo "pagination[0]:<br>";
         //print_r($pagination[0]['logger']);
         //echo "<br>";
 
-        foreach( $pagination as $logger ) {
-            //echo "logger entity = ". $logger->getEntityName() . " " .$logger->getEntityId() . "<br>";
-            //echo "record logger = ". $logger['loggerEntity']['entityName'] . "<br>";
-            echo "loggerEntity = (". $logger['loggerEntity'] . ")<br>";
-            //print_r($row);
-        }
+//        foreach( $pagination as $logger ) {
+//            echo "logger entity = ". $logger->getEntityName() . " " .$logger->getEntityId() . "<br>";
+//            //echo "record logger = ". $logger['loggerEntity']['entityName'] . "<br>";
+//            //echo "loggerEntity = (". $logger['loggerEntity'] . ")<br>";
+//            //print_r($row);
+//        }
 
         return array(
             'filterform' => $filterform,
