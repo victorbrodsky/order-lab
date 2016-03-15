@@ -178,6 +178,10 @@ class FellAppLoggerController extends LoggerController
         $em = $this->getDoctrine()->getManager();
         $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
 
+        //Camel Case
+        $objectTypeArr = preg_split('/(?=[A-Z])/',$objectType);
+        $objectType = implode(' ', $objectTypeArr);
+
         $loggerFormParams['titlePostfix'] = " for ".$objectType.": ".$objectId;//for FellowshipApplication: 162
 
         return $loggerFormParams;

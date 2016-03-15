@@ -386,13 +386,13 @@ class FellAppController extends Controller {
 
         //admin can edit
         if( $routeName == "fellapp_edit" ) {
-            $actionStr = "updated";
-            $eventType = 'Fellowship Application Updated';
+            $actionStr = "viewed on edit page";
+            $eventType = 'Fellowship Application Page Viewed';
         }
 
         //download: user or localhost
         if( $routeName == 'fellapp_download' ) {
-            $user = $this->get('security.context')->getToken()->getUser();
+            //$user = $this->get('security.context')->getToken()->getUser();
             //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually           
             if( !($user instanceof User) ) {
                 $firewall = 'ldap_fellapp_firewall';               
@@ -445,9 +445,9 @@ class FellAppController extends Controller {
 
 
         //event log
-        //$userEntity = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
-        //$userSecUtil = $this->container->get('user_security_utility');
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
         $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
+
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
@@ -722,6 +722,7 @@ class FellAppController extends Controller {
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
                 $event = $event . $reportsDiffInfoStr;
+                //echo "Diff event=".$event."<br>";
                 $userSecUtil = $this->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             }
@@ -750,9 +751,10 @@ class FellAppController extends Controller {
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
             $systemUser = $userSecUtil->findSystemUser();
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Updated');
-
+            //exit('event='.$event);
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
         }
@@ -860,7 +862,7 @@ class FellAppController extends Controller {
                 }
 
                 $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;
-                //echo "event=".$event."<br>";
+                //echo "event =".$event."<br>";
                 //exit();
 
                 $changeArr[] = $event;

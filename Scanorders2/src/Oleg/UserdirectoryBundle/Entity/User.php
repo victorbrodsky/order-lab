@@ -1256,7 +1256,7 @@ class User extends BaseUser {
     }
 
     public function getPrimaryUseridKeytypeStr() {
-        if( $this->getKeytype() ) {
+        if( $this->getKeytype() && $this->getKeytype()->getName() ) {
             return $this->getPrimaryPublicUserId()." (".$this->getKeytype()->getName().")";
         } else {
             return $this->getPrimaryPublicUserId();
