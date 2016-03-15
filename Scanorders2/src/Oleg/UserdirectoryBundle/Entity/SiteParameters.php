@@ -234,6 +234,7 @@ class SiteParameters {
      */
     private $underLoginMsgScan;
 
+    ///////////////////// FELLAPP /////////////////////
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
@@ -253,7 +254,68 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $confirmationEmailFellApp;
-    
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $clientEmailFellApp;
+
+    /**
+     * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $p12KeyPathFellApp;
+
+    /**
+     * Impersonate user Email: i.e. olegivanov@pathologysystems.org
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $userImpersonateEmailFellApp;
+
+    /**
+     * Id of excel file: i.e. 1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $excelIdFellApp;
+
+    /**
+     * Local Institution to which every imported application is set: Department of Pathology and Laboratory Medicine (under WCMC)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $localInstitutionFellApp;
+
+    /**
+     * [ checkbox ] Delete successfully imported applications from Google Drive
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $deleteImportedAplicationsFellApp;
+
+    /**
+     * checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
+     * (set it at 2) [this is to delete old excel sheets that are downloaded from google drive.
+     * Make sure it is functional and Google/Excel sheets containing applications older than
+     * the amount of years set by this option is auto-deleted along with the linked downloaded documents.
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $deleteOldAplicationsFellApp;
+
+    /**
+     * Path to spreadsheets: i.e. Spreadsheets
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $spreadsheetsPathFellApp;
+
+    /**
+     * Path to upload applicants documents: i.e. FellowshipApplicantUploads
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $applicantsUploadPathFellApp;
+    ///////////////////// EOF FELLAPP /////////////////////
 
     // Co-Path //
     //Production
@@ -365,7 +427,8 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $LISVersionDevelopment;
-    
+
+
 
     /**
      * @param mixed $maxIdleTime
@@ -1451,6 +1514,150 @@ class SiteParameters {
     public function getCoPathDBServerPortTest()
     {
         return $this->coPathDBServerPortTest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientEmailFellApp()
+    {
+        return $this->clientEmailFellApp;
+    }
+
+    /**
+     * @param mixed $clientEmailFellApp
+     */
+    public function setClientEmailFellApp($clientEmailFellApp)
+    {
+        $this->clientEmailFellApp = $clientEmailFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getP12KeyPathFellApp()
+    {
+        return $this->p12KeyPathFellApp;
+    }
+
+    /**
+     * @param mixed $p12KeyPathFellApp
+     */
+    public function setP12KeyPathFellApp($p12KeyPathFellApp)
+    {
+        $this->p12KeyPathFellApp = $p12KeyPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserImpersonateEmailFellApp()
+    {
+        return $this->userImpersonateEmailFellApp;
+    }
+
+    /**
+     * @param mixed $userImpersonateEmailFellApp
+     */
+    public function setUserImpersonateEmailFellApp($userImpersonateEmailFellApp)
+    {
+        $this->userImpersonateEmailFellApp = $userImpersonateEmailFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExcelIdFellApp()
+    {
+        return $this->excelIdFellApp;
+    }
+
+    /**
+     * @param mixed $excelIdFellApp
+     */
+    public function setExcelIdFellApp($excelIdFellApp)
+    {
+        $this->excelIdFellApp = $excelIdFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocalInstitutionFellApp()
+    {
+        return $this->localInstitutionFellApp;
+    }
+
+    /**
+     * @param mixed $localInstitutionFellApp
+     */
+    public function setLocalInstitutionFellApp($localInstitutionFellApp)
+    {
+        $this->localInstitutionFellApp = $localInstitutionFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeleteImportedAplicationsFellApp()
+    {
+        return $this->deleteImportedAplicationsFellApp;
+    }
+
+    /**
+     * @param mixed $deleteImportedAplicationsFellApp
+     */
+    public function setDeleteImportedAplicationsFellApp($deleteImportedAplicationsFellApp)
+    {
+        $this->deleteImportedAplicationsFellApp = $deleteImportedAplicationsFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeleteOldAplicationsFellApp()
+    {
+        return $this->deleteOldAplicationsFellApp;
+    }
+
+    /**
+     * @param mixed $deleteOldAplicationsFellApp
+     */
+    public function setDeleteOldAplicationsFellApp($deleteOldAplicationsFellApp)
+    {
+        $this->deleteOldAplicationsFellApp = $deleteOldAplicationsFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpreadsheetsPathFellApp()
+    {
+        return $this->spreadsheetsPathFellApp;
+    }
+
+    /**
+     * @param mixed $spreadsheetsPathFellApp
+     */
+    public function setSpreadsheetsPathFellApp($spreadsheetsPathFellApp)
+    {
+        $this->spreadsheetsPathFellApp = $spreadsheetsPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicantsUploadPathFellApp()
+    {
+        return $this->applicantsUploadPathFellApp;
+    }
+
+    /**
+     * @param mixed $applicantsUploadPathFellApp
+     */
+    public function setApplicantsUploadPathFellApp($applicantsUploadPathFellApp)
+    {
+        $this->applicantsUploadPathFellApp = $applicantsUploadPathFellApp;
     }
 
 

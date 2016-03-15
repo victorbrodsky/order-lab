@@ -106,6 +106,8 @@ class FellAppLoggerController extends LoggerController
      */
     public function applicationPerObjectLogAction(Request $request) {
 
+        $em = $this->getDoctrine()->getManager();
+
         $params = array(
             'sitename' => $this->container->getParameter('fellapp.sitename'),
 //            'hideObjectType' => true,
@@ -115,6 +117,47 @@ class FellAppLoggerController extends LoggerController
             //'hideId' => true
         );
         $loggerFormParams = $this->listLogger($params,$request);
+
+        ///////////// make sure objectTypes is set /////////////
+        $objectTypes = array();
+        $objectId = null;
+
+        $filter = $request->query->get('filter');
+
+        if( count($filter) > 0 ) {
+            $objectTypes = $filter['objectType'];
+            $objectId = $filter['objectId'];
+        }
+
+        if( $objectId == null ) {
+            throw $this->createNotFoundException('Activity Log fellapp id is not provided');
+        }
+
+        if( count($objectTypes) == 0 ) {
+            $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("FellowshipApplication");
+            if( !$objectType ) {
+                throw $this->createNotFoundException('Unable to find EventObjectTypeList by name='."FellowshipApplication");
+            }
+            //add eventTypes and users
+            return $this->redirect($this->generateUrl('fellapp_event-log-per-object_log',
+                array(
+                    'filter[objectType][]' => $objectType->getId(),
+                    'filter[objectId]' => $objectId,
+                )
+            ));
+        }
+        ///////////// EOF make sure eventTypes and users are set /////////////
+
+
+        $fellApp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($objectId);
+        if( !$fellApp ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$objectId);
+        }
+
+        if( false == $this->get('security.context')->isGranted("read",$fellApp) ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
 
         $loggerFormParams['hideUserAgent'] = true;
         $loggerFormParams['hideWidth'] = true;

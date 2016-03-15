@@ -634,7 +634,8 @@
 
                                         <li>
                                             <a
-                                                href="{{ path('fellapp_application_log', { 'id': entity.id}) }}">View Activity Log
+                                                {#href="{{ path('fellapp_application_log', { 'id': entity.id}) }}">View Activity Log#}
+                                                href="{{ path('fellapp_event-log-per-object_log', { 'filter[objectId]': entity.id}) }}">View Activity Log
                                             </a>
                                         </li>
 
