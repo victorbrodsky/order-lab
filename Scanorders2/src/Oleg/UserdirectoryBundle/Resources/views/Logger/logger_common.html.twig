@@ -56,9 +56,12 @@
             {% endif %}
             {% do loggerfilter.ip.setRendered %}
 
-            <div class="col-xs-3">
-                {{ form_row(loggerfilter.roles, {'attr': {'placeholder': 'Roles'}}) }}
-            </div>
+            {% if hideRoles is not defined or hideRoles == false %}
+                <div class="col-xs-3">
+                    {{ form_row(loggerfilter.roles, {'attr': {'placeholder': 'Roles'}}) }}
+                </div>
+            {% endif %}
+            {% do loggerfilter.roles.setRendered %}
 
             {% if hideObjectType is not defined or hideObjectType == false %}
                 <div class="col-xs-3">
