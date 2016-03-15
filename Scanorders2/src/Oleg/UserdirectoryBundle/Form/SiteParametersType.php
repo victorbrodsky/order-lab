@@ -310,6 +310,67 @@ class SiteParametersType extends AbstractType
 
 
 
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'clientEmailFellApp' )
+            $builder->add('clientEmailFellApp',null,array(
+                'label'=>'Client Email:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'p12KeyPathFellApp' )
+            $builder->add('p12KeyPathFellApp',null,array(
+                'label'=>'Full Path to p12 key file:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'userImpersonateEmailFellApp' )
+            $builder->add('userImpersonateEmailFellApp',null,array(
+                'label'=>'Impersonate user Email:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'excelIdFellApp' )
+            $builder->add('excelIdFellApp',null,array(
+                'label'=>'Id of excel file:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'localInstitutionFellApp' )
+            $builder->add('localInstitutionFellApp',null,array(
+                'label'=>'Local Institution for Import Application (example "Pathology Fellowship Programs (WCMC)"):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteImportedAplicationsFellApp' )
+            $builder->add('deleteImportedAplicationsFellApp',null,array(
+                'label'=>'Delete successfully imported applications from Google Drive:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteOldAplicationsFellApp' )
+            $builder->add('deleteOldAplicationsFellApp',null,array(
+                'label'=>'Automatically delete downloaded applications that are older than [X] year(s):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'yearsOldAplicationsFellApp' )
+            $builder->add('yearsOldAplicationsFellApp',null,array(
+                'label'=>'Number of years after applications are deleted:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'spreadsheetsPathFellApp' )
+            $builder->add('spreadsheetsPathFellApp',null,array(
+                'label'=>'Relative to "Fellowship Application Upload Folder" path to spreadsheets file (example "Spreadsheets"):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'applicantsUploadPathFellApp' )
+            $builder->add('applicantsUploadPathFellApp',null,array(
+                'label'=>'Relative to "Fellowship Application Upload Folder" path to upload applicants documents (example "FellowshipApplicantUploads"):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
         $this->addCoPath($builder);
 
     }

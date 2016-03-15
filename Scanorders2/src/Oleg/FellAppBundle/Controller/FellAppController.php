@@ -760,7 +760,7 @@ class FellAppController extends Controller {
         }
 
         //echo 'form invalid <br>';
-        //exit('form invalid');
+        exit('form invalid');
 
         return array(
             'form' => $form->createView(),

@@ -52,6 +52,82 @@
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationBodyFellApp'}) }}">Edit</a></td>
                     </tr>
 
+
+
+                    <tr>
+                        <td>Client Email</td>
+                        <td>{{ entity.clientEmailFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'clientEmailFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Full Path to p12 key file</td>
+                        <td>{{ entity.p12KeyPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'p12KeyPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Impersonate user Email</td>
+                        <td>{{ entity.userImpersonateEmailFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'userImpersonateEmailFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Id of excel file</td>
+                        <td>{{ entity.excelIdFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'excelIdFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Local Institution for Import Application (example "Pathology Fellowship Programs (WCMC)")</td>
+                        <td>{{ entity.localInstitutionFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'localInstitutionFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Delete successfully imported applications from Google Drive</td>
+                        <td>
+                            {{ entity.deleteImportedAplicationsFellApp }}
+                            {% set deleteImportedAplicationsFellAppStr = 'No' %}
+                            {% if entity.deleteImportedAplicationsFellApp == true %}
+                                {% set deleteImportedAplicationsFellAppStr = 'Yes' %}
+                            {% endif %}
+                            {{ deleteImportedAplicationsFellAppStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'deleteImportedAplicationsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Automatically delete downloaded applications that are older than [X] year(s)</td>
+                        <td>
+                            {{ entity.deleteOldAplicationsFellApp }}
+                            {% set deleteOldAplicationsFellAppStr = 'No' %}
+                            {% if entity.deleteOldAplicationsFellApp == true %}
+                                {% set deleteOldAplicationsFellAppStr = 'Yes' %}
+                            {% endif %}
+                            {{ deleteOldAplicationsFellAppStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'deleteOldAplicationsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Number of years after applications are deleted</td>
+                        <td>{{ entity.yearsOldAplicationsFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'yearsOldAplicationsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Relative to "Fellowship Application Upload Folder" path to spreadsheets file (example "Spreadsheets")</td>
+                        <td>{{ entity.spreadsheetsPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'spreadsheetsPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Relative to "Fellowship Application Upload Folder" path to upload applicants documents (example "FellowshipApplicantUploads")</td>
+                        <td>{{ entity.applicantsUploadPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicantsUploadPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
                 </tbody>
             </table>
 

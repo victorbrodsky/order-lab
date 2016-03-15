@@ -84,7 +84,48 @@
             
         {% if edit_form.confirmationBodyFellApp is defined %}
             {{ formmacros.field(edit_form.confirmationBodyFellApp) }}
-        {% endif %}    
+        {% endif %}
+
+        {% if edit_form.clientEmailFellApp is defined %}
+            {{ formmacros.field(edit_form.clientEmailFellApp) }}
+        {% endif %}
+
+        {% if edit_form.p12KeyPathFellApp is defined %}
+            {{ formmacros.field(edit_form.p12KeyPathFellApp) }}
+        {% endif %}
+
+        {% if edit_form.userImpersonateEmailFellApp is defined %}
+            {{ formmacros.field(edit_form.userImpersonateEmailFellApp) }}
+        {% endif %}
+
+        {% if edit_form.excelIdFellApp is defined %}
+            {{ formmacros.field(edit_form.excelIdFellApp) }}
+        {% endif %}
+
+        {% if edit_form.localInstitutionFellApp is defined %}
+            {{ formmacros.field(edit_form.localInstitutionFellApp) }}
+        {% endif %}
+
+        {% if edit_form.deleteImportedAplicationsFellApp is defined %}
+            {{ formmacros.field(edit_form.deleteImportedAplicationsFellApp) }}
+        {% endif %}
+
+        {% if edit_form.deleteOldAplicationsFellApp is defined %}
+            {{ formmacros.field(edit_form.deleteOldAplicationsFellApp) }}
+        {% endif %}
+
+        {% if edit_form.yearsOldAplicationsFellApp is defined %}
+            {{ formmacros.field(edit_form.yearsOldAplicationsFellApp) }}
+        {% endif %}
+
+        {% if edit_form.spreadsheetsPathFellApp is defined %}
+            {{ formmacros.field(edit_form.spreadsheetsPathFellApp) }}
+        {% endif %}
+
+        {% if edit_form.applicantsUploadPathFellApp is defined %}
+            {{ formmacros.field(edit_form.applicantsUploadPathFellApp) }}
+        {% endif %}
+
 
     {% if cycle == 'show' %}
         <hr>

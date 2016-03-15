@@ -889,13 +889,25 @@ class AdminController extends Controller
             "departmenturl" => "http://www.cornellpathology.com",
             "departmentname" => "Pathology and Laboratory Medicine Department",
 
+            ///////////////////// FELLAPP /////////////////////
             "confirmationEmailFellApp" => "jep2018@med.cornell.edu",
             "confirmationSubjectFellApp" => "Your WCMC/NYP fellowship application has been succesfully received",
             "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
                                          "Once we receive the associated recommendation letters, your application will be reviewed and considered. ". 
                                          "If You have any questions, please do not hesitate to contact me by phone or via email. ".
                                          "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
-            
+            "clientEmailFellApp" => '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com',
+            "p12KeyPathFellApp" => 'E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
+            "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
+            "excelIdFellApp" => "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc",
+            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",
+            "deleteImportedAplicationsFellApp" => false,
+            "deleteOldAplicationsFellApp" => false,
+            "yearsOldAplicationsFellApp" => 2,
+            "spreadsheetsPathFellApp" => "Spreadsheets",
+            "applicantsUploadPathFellApp" => "FellowshipApplicantUploads",
+            ///////////////////// EOF FELLAPP /////////////////////
+
             "maintenance" => false,
             //"maintenanceenddate" => null,
             "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.

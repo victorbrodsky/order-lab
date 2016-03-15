@@ -93,9 +93,12 @@ class FellAppUtil {
             //echo "service ok <br>";
 
             //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
-            $excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
+            //$excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
+            $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
 
-            $path = $this->uploadDir.'/Spreadsheets';
+            //$path = $this->uploadDir.'/Spreadsheets';
+            $path = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'spreadsheetsPathFellApp');
+
             $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'excel', $path);
 
             if( $fileDb ) {
@@ -174,9 +177,16 @@ class FellAppUtil {
 
 
     public function getGoogleService() {
-        $client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
-        $pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
-        $user_to_impersonate = 'olegivanov@pathologysystems.org';
+        //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
+        $userUtil = new UserUtil();
+        $client_email = $userUtil->getSiteSetting($this->em,'clientEmailFellApp');
+
+        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+        $pkey = $userUtil->getSiteSetting($this->em,'p12KeyPathFellApp');
+
+        //$user_to_impersonate = 'olegivanov@pathologysystems.org';
+        $user_to_impersonate = $userUtil->getSiteSetting($this->em,'userImpersonateEmailFellApp');
+
         $res = $this->authenticationP12Key($pkey,$client_email,$user_to_impersonate);
         return $res['service'];
     }
@@ -187,6 +197,7 @@ class FellAppUtil {
     //2) Delegate domain-wide authority to the service account.
     //3) Impersonate a user account.
     public function authenticationP12Key($pkey,$client_email,$user_to_impersonate) {
+        //echo "pkey=".$pkey."<br>";
         $private_key = file_get_contents($pkey); //notasecret
         $scopes = array('https://www.googleapis.com/auth/drive');
         $credentials = new \Google_Auth_AssertionCredentials(
@@ -350,7 +361,9 @@ class FellAppUtil {
             return -1;
         }
 
-        $uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
+        //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
+        $userUtil = new UserUtil();
+        $uploadPath = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'applicantsUploadPathFellApp');
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -437,38 +450,38 @@ class FellAppUtil {
             
             try {
 
-    //            //reopen em after DBALException
-    //            if( !$em->isOpen() ) {
-    //                echo 'em is closed; ID=' . $googleFormId."<br>";
-    //                $em = $em->create(
-    //                $em->getConnection(), $em->getConfiguration());
-    //                $this->em = $em; 
-    //                // reset the EM and all aias
-    ////                $container = $this->container;
-    ////                $container->set('doctrine.orm.entity_manager', null);
-    ////                $container->set('doctrine.orm.default_entity_manager', null);
-    ////                // get a fresh EM
-    ////                $em = $this->container->getDoctrine()->getManager();
-    ////                $this->em = $em;
-    //            }
+                //            //reopen em after DBALException
+                //            if( !$em->isOpen() ) {
+                //                echo 'em is closed; ID=' . $googleFormId."<br>";
+                //                $em = $em->create(
+                //                $em->getConnection(), $em->getConfiguration());
+                //                $this->em = $em;
+                //                // reset the EM and all aias
+                ////                $container = $this->container;
+                ////                $container->set('doctrine.orm.entity_manager', null);
+                ////                $container->set('doctrine.orm.default_entity_manager', null);
+                ////                // get a fresh EM
+                ////                $em = $this->container->getDoctrine()->getManager();
+                ////                $this->em = $em;
+                //            }
 
 
-    //            if( !$em->isOpen() ) {
-    //                exit('em is still closed; ID=' . $googleFormId);            
-    //            }
+                //            if( !$em->isOpen() ) {
+                //                exit('em is still closed; ID=' . $googleFormId);
+                //            }
 
                 //echo "row=".$row.": id=".$googleFormId."<br>";
 
                 $googleForm = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
-                if( $googleForm ) {
+                if ($googleForm) {
                     continue; //skip this fell application, because it already exists in DB
                 }
 
 
-                $email = $this->getValueByHeaderName('email',$rowData,$headers);
-                $lastName = $this->getValueByHeaderName('lastName',$rowData,$headers);
-                $firstName = $this->getValueByHeaderName('firstName',$rowData,$headers);
-                $middleName = $this->getValueByHeaderName('middleName',$rowData,$headers);
+                $email = $this->getValueByHeaderName('email', $rowData, $headers);
+                $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+                $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+                $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
 
                 $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
                 $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
@@ -478,22 +491,22 @@ class FellAppUtil {
                 $firstNameCap = preg_replace('/\s+/', '_', $firstNameCap);
 
                 //Last Name + First Name + Email
-                $username = $lastNameCap."_".$firstNameCap."_".$email;
+                $username = $lastNameCap . "_" . $firstNameCap . "_" . $email;
 
-                $displayName = $firstName." ".$lastName;
-                if( $middleName ) {
-                    $displayName = $firstName." ".$middleName." ".$lastName;
+                $displayName = $firstName . " " . $lastName;
+                if ($middleName) {
+                    $displayName = $firstName . " " . $middleName . " " . $lastName;
                 }
 
                 //create logger which must be deleted on successefull creation of application
-                $eventAttempt = "Attempt of creating Fellowship Applicant ".$displayName." with unique Google Applicant ID=".$googleFormId;
-                $eventLogAttempt =  $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$eventAttempt,$systemUser,null,null,'Fellowship Application Creation Failed');
+                $eventAttempt = "Attempt of creating Fellowship Applicant " . $displayName . " with unique Google Applicant ID=" . $googleFormId;
+                $eventLogAttempt = $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $eventAttempt, $systemUser, null, null, 'Fellowship Application Creation Failed');
 
 
                 //check if the user already exists in DB by $googleFormId
                 $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
 
-                if( !$user ) {
+                if (!$user) {
                     //create excel user
                     $addobjects = false;
                     $user = new User($addobjects);
@@ -531,11 +544,11 @@ class FellAppUtil {
                 $user->addFellowshipApplication($fellowshipApplication);
 
                 //timestamp
-                $fellowshipApplication->setTimestamp($this->transformDatestrToDate($this->getValueByHeaderName('timestamp',$rowData,$headers)));
+                $fellowshipApplication->setTimestamp($this->transformDatestrToDate($this->getValueByHeaderName('timestamp', $rowData, $headers)));
 
                 //fellowshipType
-                $fellowshipType = $this->getValueByHeaderName('fellowshipType',$rowData,$headers);
-                if( $fellowshipType ) {
+                $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
+                if ($fellowshipType) {
                     $fellowshipType = trim($fellowshipType);
                     $fellowshipType = $this->capitalizeIfNotAllCapital($fellowshipType);
                     $transformer = new GenericTreeTransformer($em, $systemUser, 'FellowshipSubspecialty');
@@ -544,12 +557,19 @@ class FellAppUtil {
                 }
 
                 //institution "Pathology Fellowship Programs"
-                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-                $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),"Pathology Fellowship Programs");
-                if( !$instPathologyFellowshipProgram ) {
-                    throw new EntityNotFoundException('Unable to find Institution by name='."Pathology Fellowship Programs");
+                //get string from SiteParameters - "Pathology Fellowship Programs (WCMC)"
+                $localInstitutionFellApp = $userUtil->getSiteSetting($this->em, 'localInstitutionFellApp');
+                $localInstitutionFellAppArr = explode(' ', $localInstitutionFellApp);
+                if (count($localInstitutionFellAppArr) == 2 && $localInstitutionFellAppArr[0] != "" && $localInstitutionFellAppArr[1] != "") {
+                    $rootInst = trim($localInstitutionFellAppArr[0]);  //"WCMC"
+                    $localInst = trim($localInstitutionFellAppArr[1]); //"Pathology Fellowship Programs"
+                    $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
+                    $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
+                    if (!$instPathologyFellowshipProgram) {
+                        throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
+                    }
+                    $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
                 }
-                $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
 
                 //trainingPeriodStart
                 $fellowshipApplication->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers)));
