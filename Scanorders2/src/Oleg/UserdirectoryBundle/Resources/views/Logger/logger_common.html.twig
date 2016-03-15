@@ -183,18 +183,21 @@
                     </td>
                 {% endif %}
 
-                <td>
-                    {#{% for role in entity.roles %}#}
-                        {#{% if role != "ROLE_USER" %}#}
-                            {#"{{ attribute(roles, role) }}"<br>#}
-                        {#{% endif %}#}
-                    {#{% endfor %}#}
-                    {% for role in user_security_utility.getObjectRolesBySite(entity, sitename, true) %}
-                        {% if role.name != "ROLE_USER" %}
-                            "{{ role.alias }}"<br>
-                        {% endif %}
-                    {% endfor %}
-                </td>
+                {% if hideRoles is not defined or hideRoles == false %}
+                    <td>
+                        {#{% for role in entity.roles %}#}
+                            {#{% if role != "ROLE_USER" %}#}
+                                {#"{{ attribute(roles, role) }}"<br>#}
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+                        {% for role in user_security_utility.getObjectRolesBySite(entity, sitename, true) %}
+                            {% if role.name != "ROLE_USER" %}
+                                "{{ role.alias }}"<br>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
                 <td>{{ entity.eventType }}</td>
                 <td>{{ entity.event|raw }}</td>
 
