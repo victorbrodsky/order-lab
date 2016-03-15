@@ -46,7 +46,6 @@ class FellAppController extends Controller {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
         if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
-            exit('1');
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -423,6 +422,7 @@ class FellAppController extends Controller {
         $fellappUtil = $this->container->get('fellapp_util');
         //if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
         if( false == $this->get('security.context')->isGranted("read",$entity) ) {
+            //exit('fellapp permission not ok ID:'.$entity->getId());
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
         //exit('fellapp permission ok ID:'.$entity->getId());

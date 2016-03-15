@@ -246,10 +246,6 @@ class LoggerController extends Controller
         );
         //echo "<br>pagination=".count($pagination)."<br>";
 
-        //echo "pagination[0]:<br>";
-        //print_r($pagination[0]['logger']);
-        //echo "<br>";
-
 //        foreach( $pagination as $logger ) {
 //            echo "logger entity = ". $logger->getEntityName() . " " .$logger->getEntityId() . "<br>";
 //            //echo "record logger = ". $logger['loggerEntity']['entityName'] . "<br>";

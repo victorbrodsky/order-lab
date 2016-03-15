@@ -246,15 +246,16 @@ abstract class BasePermissionVoter extends Voter {
             //if subject is string, then it must be used only to show a list of entities =>
             //there is no institution info => skip the institution check
             //echo "subject is string; subject=".$subject."<br>";
+        }
 
-            //check if the user has role with a permission $subject class name (i.e. "Patient") and "update"
-            if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $subject, "update" ) ) {
-                //exit('can View! exit');
-                //echo "isUserHasPermissionObjectAction!!! className=".$subject."<br>";
-                return true;
-            } else {
-                //echo "can not view ".$subject."<br>";
-            }
+        //If Edit => can Read: check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
+        $className = $this->getClassName($subject);
+        if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "update" ) ) {
+            //exit('can View! exit');
+            //echo "isUserHasPermissionObjectAction!!! className=".$className."<br>";
+            return true;
+        } else {
+            //echo "can not view ".$className."<br>";
         }
 
         //echo "can not Edit! <br>";

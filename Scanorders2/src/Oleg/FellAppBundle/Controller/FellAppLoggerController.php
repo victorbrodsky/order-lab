@@ -140,8 +140,63 @@ class FellAppLoggerController extends LoggerController
         return $loggerFormParams;
     }
 
+    //filter FellowshipApplication objects:
+    // select loggers where entityName is not FellowshipApplication or
+    // entityName is FellowshipApplication and FellowshipApplication object is the same as user's fellowship type
+    public function addCustomDql($dql) {
+
+        //show all for admin
+        if( $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            $dql->select('logger');
+            return $dql;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //1) get user's role's fellowship types
+        $user = $this->get('security.context')->getToken()->getUser();
+        $roleObjects = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, 'fellapp', "ROLE_FELLAPP_");
+        $fellowshipTypes = array();
+        foreach ($roleObjects as $roleObject) {
+            if ($roleObject->getFellowshipSubspecialty()) {
+                $fellowshipTypes[] = $roleObject->getFellowshipSubspecialty()->getId() . "";  //$roleObject->getFellowshipSubspecialty()."";
+                //echo "role add=" . $roleObject->getFellowshipSubspecialty()->getId() . ":" . $roleObject->getFellowshipSubspecialty()->getName() . "<br>";
+            }
+        }
+        //echo "count=" . count($fellowshipTypes) . "<br>";
+
+        //2) subquery to get a fellowship application object with logger.entityId and fellowshipSubspecialty in the $fellowshipTypes array
+        $subquery = $em->createQueryBuilder()
+            ->select('fellapp.id')
+            ->from('OlegFellAppBundle:FellowshipApplication', 'fellapp')
+            ->leftJoin('fellapp.fellowshipSubspecialty','fellowshipSubspecialty')
+            ->where('fellapp.id = logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).')') //AND fellowshipSubspecialty.id IN(37)
+            ->getDQL();
+        $subquery = '('.$subquery.')';
+
+        //3) main query to get logger objects, where use $subquery (fellowship application object)
+        //$query = $em->createQueryBuilder();
+        //$dql->from('OlegUserdirectoryBundle:Logger', 'logger');
+
+        $dql->select('logger');
+        $entityName = 'FellowshipApplication';
+
+        //filter FellowshipApplication objects:
+        // select loggers where entityName is not FellowshipApplication or
+        // entityName is FellowshipApplication and FellowshipApplication object is the same as user's fellowship type
+        $dql->andWhere("logger.entityName != '".$entityName."' OR ( logger.entityName = '".$entityName."' AND logger.entityId=".$subquery.")");
+
+        //$query->andWhere("logger.entityName = '".$entityName."' AND logger.entityId=".$subquery);
+        //$query->andWhere("logger.entityName IS NULL OR (logger.entityName='FellowshipApplication' AND loggerEntity.id IS NOT NULL)");
+
+        return $dql;
+    }
 
 
+
+
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////// BELOW NOT USED - TO DELETE //////////////////////
     public function addCustomDql_1($dql) {
         $em = $this->getDoctrine()->getManager();
 
@@ -249,43 +304,6 @@ class FellAppLoggerController extends LoggerController
 //        );
 
         return $dql;
-    }
-
-    public function addCustomDql($dql) {
-        $em = $this->getDoctrine()->getManager();
-
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roleObjects = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, 'fellapp', "ROLE_FELLAPP_");
-        $fellowshipTypes = array();
-        foreach ($roleObjects as $roleObject) {
-            if ($roleObject->getFellowshipSubspecialty()) {
-                $fellowshipTypes[] = $roleObject->getFellowshipSubspecialty()->getId() . "";  //$roleObject->getFellowshipSubspecialty()."";
-                //echo "role add=" . $roleObject->getFellowshipSubspecialty()->getId() . ":" . $roleObject->getFellowshipSubspecialty()->getName() . "<br>";
-            }
-        }
-        //echo "count=" . count($fellowshipTypes) . "<br>";
-
-        //subquery to get a fellowship application object
-        $subquery = $em->createQueryBuilder()
-            ->select('fellapp.id')
-            ->from('OlegFellAppBundle:FellowshipApplication', 'fellapp')
-            ->leftJoin('fellapp.fellowshipSubspecialty','fellowshipSubspecialty')
-            ->where('fellapp.id = logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).')') //AND fellowshipSubspecialty.id IN(37)
-            ->getDQL();
-        $subquery = '('.$subquery.')';
-
-        //main query to get logger objects
-        $entityName = 'FellowshipApplication';
-        $query = $em->createQueryBuilder();
-        $query->select('logger');
-        $query->from('OlegUserdirectoryBundle:Logger', 'logger');
-
-        $query->andWhere("logger.entityName != '".$entityName."' OR ( logger.entityName = '".$entityName."' AND logger.entityId=".$subquery.")");
-        //$query->andWhere("logger.entityName = '".$entityName."' AND logger.entityId=".$subquery);
-
-        //$query->andWhere("logger.entityName IS NULL OR (logger.entityName='FellowshipApplication' AND loggerEntity.id IS NOT NULL)");
-
-        return $query;
     }
 
 
