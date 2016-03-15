@@ -285,7 +285,7 @@ class SiteParameters {
     private $excelIdFellApp;
 
     /**
-     * Local Institution to which every imported application is set: Department of Pathology and Laboratory Medicine (under WCMC)
+     * Local Institution to which every imported application is set: Pathology Fellowship Programs (WCMC)
      *
      * @ORM\Column(type="string", nullable=true)
      */

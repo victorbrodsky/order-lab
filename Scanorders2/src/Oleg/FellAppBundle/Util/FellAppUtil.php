@@ -569,6 +569,8 @@ class FellAppUtil {
                         throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
                     }
                     $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
+                } else {
+                    $logger->warning('Local Institution for Import Application is not set or invalid; localInstitutionFellApp='.$localInstitutionFellApp);
                 }
 
                 //trainingPeriodStart
