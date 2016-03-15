@@ -124,8 +124,12 @@ class DeidentifierLoggerController extends LoggerController
         $loggerFormParams['hideWidth'] = true;
         $loggerFormParams['hideHeight'] = true;
         $loggerFormParams['hideADServerResponse'] = true;
-        //$loggerFormParams['hideObjectType'] = true;
-        //$loggerFormParams['hideObjectId'] = true;
+
+        $loggerFormParams['hideIp'] = true;
+        $loggerFormParams['hideRoles'] = true;
+        $loggerFormParams['hideId'] = true;         //Event ID
+        $loggerFormParams['hideObjectType'] = true;
+        $loggerFormParams['hideObjectId'] = true;
 
         return $loggerFormParams;
     }
@@ -188,6 +192,13 @@ class DeidentifierLoggerController extends LoggerController
         $loggerFormParams['hideWidth'] = true;
         $loggerFormParams['hideHeight'] = true;
         $loggerFormParams['hideADServerResponse'] = true;
+
+        $loggerFormParams['hideIp'] = true;
+        $loggerFormParams['hideRoles'] = true;
+        $loggerFormParams['hideId'] = true;         //Event ID
+        $loggerFormParams['hideObjectType'] = true;
+        $loggerFormParams['hideObjectId'] = true;
+
         $loggerFormParams['hideUser'] = true;
         $loggerFormParams['hideEventType'] = true;
 

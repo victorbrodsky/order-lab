@@ -112,8 +112,9 @@
                     <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
                 {% endif %}
 
-
-                <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
+                {% if hideUser is not defined or hideUser == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
+                {% endif %}
 
                 {% if hideRoles is not defined or hideRoles == false %}
                     <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
@@ -171,16 +172,18 @@
                     <td>{{ entity.height }}</td>
                 {% endif %}
 
-                {% if entity.username == 'anon.' %}
-                    <td>
-                        unknown
-                    </td>
-                {% else %}
-                    <td>
-                        {% if entity.user %}
-                            <a href="{{ path(scan_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.getUserNameStr() }}</a>
-                        {% endif %}
-                    </td>
+                {% if hideUser is not defined or hideUser == false %}
+                    {% if entity.username == 'anon.' %}
+                        <td>
+                            unknown
+                        </td>
+                    {% else %}
+                        <td>
+                            {% if entity.user %}
+                                <a href="{{ path(scan_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.getUserNameStr() }}</a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                 {% endif %}
 
                 {% if hideRoles is not defined or hideRoles == false %}
