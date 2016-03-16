@@ -559,7 +559,7 @@ class FellAppUtil {
                 //institution "Pathology Fellowship Programs"
                 //get string from SiteParameters - "Pathology Fellowship Programs (WCMC)"
                 $localInstitutionFellApp = $userUtil->getSiteSetting($this->em, 'localInstitutionFellApp');
-                $localInstitutionFellAppArr = explode(' ', $localInstitutionFellApp);
+                $localInstitutionFellAppArr = explode(' (', $localInstitutionFellApp);
                 if (count($localInstitutionFellAppArr) == 2 && $localInstitutionFellAppArr[0] != "" && $localInstitutionFellAppArr[1] != "") {
                     $rootInst = trim($localInstitutionFellAppArr[0]);  //"(WCMC)"
                     $rootInst = str_replace("(", "", $rootInst);
