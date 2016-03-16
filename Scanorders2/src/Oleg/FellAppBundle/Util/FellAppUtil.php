@@ -565,6 +565,7 @@ class FellAppUtil {
                     $rootInst = str_replace("(", "", $rootInst);
                     $rootInst = str_replace(")", "", $rootInst);
                     $localInst = trim($localInstitutionFellAppArr[1]); //"Pathology Fellowship Programs"
+                    $logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
                     $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
                     $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
                     if (!$instPathologyFellowshipProgram) {
