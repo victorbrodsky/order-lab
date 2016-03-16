@@ -86,6 +86,10 @@
             {{ formmacros.field(edit_form.confirmationBodyFellApp) }}
         {% endif %}
 
+        {% if edit_form.applicationPageLinkFellApp is defined %}
+            {{ formmacros.field(edit_form.applicationPageLinkFellApp) }}
+        {% endif %}
+
         {% if edit_form.clientEmailFellApp is defined %}
             {{ formmacros.field(edit_form.clientEmailFellApp) }}
         {% endif %}

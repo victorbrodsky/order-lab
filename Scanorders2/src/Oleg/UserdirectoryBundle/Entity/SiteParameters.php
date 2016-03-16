@@ -317,15 +317,24 @@ class SiteParameters {
 
     /**
      * Path to spreadsheets: i.e. Spreadsheets
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $spreadsheetsPathFellApp;
 
     /**
      * Path to upload applicants documents: i.e. FellowshipApplicantUploads
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $applicantsUploadPathFellApp;
+
+    /**
+     * Link to the Application Page (so the users can click and see how it looks)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $applicationPageLinkFellApp;
     ///////////////////// EOF FELLAPP /////////////////////
 
     // Co-Path //
@@ -1685,6 +1694,22 @@ class SiteParameters {
     public function setYearsOldAplicationsFellApp($yearsOldAplicationsFellApp)
     {
         $this->yearsOldAplicationsFellApp = $yearsOldAplicationsFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicationPageLinkFellApp()
+    {
+        return $this->applicationPageLinkFellApp;
+    }
+
+    /**
+     * @param mixed $applicationPageLinkFellApp
+     */
+    public function setApplicationPageLinkFellApp($applicationPageLinkFellApp)
+    {
+        $this->applicationPageLinkFellApp = $applicationPageLinkFellApp;
     }
 
 
