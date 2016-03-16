@@ -119,14 +119,14 @@
 
                             {#<li><a href="{{ path('accountrequest') }}">Account Requests</a></li>#}
 
-                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
-                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
-                                {#<li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>#}
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
+                                <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
                                 {#<li><a href="{{ path(fellapp_sitename~'_siteparameters') }}">Site Settings</a></li>#}
-                                {#<li class="divider"></li>#}
+                                <li class="divider"></li>
                                 {#<li><a href="{{ path('fellapp_import') }}">Import from Google</a></li>#}
                                 {#<li><a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a></li>#}
-                            {#{% endif %}#}
+                            {% endif %}
 
 
 
@@ -140,15 +140,16 @@
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <li class="divider"></li>
                                 <li><a href="{{ path(fellapp_sitename~'_siteparameters') }}">Site Settings</a></li>
-                                <li><a
-                                        general-data-confirm="Are you sure you want to regenerate all Complete Fellowship Application PDFs? All reports will be replaced by new reports."
-                                        href="{{ path('fellapp_regenerate_reports') }}">Regenerate all Complete Application PDFs
-                                    </a>
-                                </li>
 
                                 <li><a
                                         general-data-confirm="Are you sure you want to Reset Queue and Re-run?"
                                         href="{{ path('fellapp_reset_queue_run') }}">Reset Queue and Run
+                                    </a>
+                                </li>
+
+                                <li><a
+                                            general-data-confirm="Are you sure you want to regenerate all Complete Fellowship Application PDFs? All reports will be replaced by new reports."
+                                            href="{{ path('fellapp_regenerate_reports') }}">Regenerate all Complete Application PDFs
                                     </a>
                                 </li>
                             {% endif %}
