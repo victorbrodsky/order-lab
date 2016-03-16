@@ -439,6 +439,10 @@ class ReportGenerator {
         //check and create Report and temp folders
         $userUtil = new UserUtil();
         $reportsUploadPathFellApp = $userUtil->getSiteSetting($this->em,'reportsUploadPathFellApp');
+        if( !$reportsUploadPathFellApp ) {
+            $reportsUploadPathFellApp = "Reports";
+            $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
+        }
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;   //'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/Reports';
         $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath.'/';
         if( !file_exists($uploadReportPath) ) {

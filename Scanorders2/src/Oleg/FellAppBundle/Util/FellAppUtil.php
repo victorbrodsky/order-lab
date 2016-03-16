@@ -98,6 +98,9 @@ class FellAppUtil {
 
             //$path = $this->uploadDir.'/Spreadsheets';
             $path = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'spreadsheetsPathFellApp');
+            if( !$path ) {
+                $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
+            }
 
             $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'excel', $path);
 
@@ -183,6 +186,10 @@ class FellAppUtil {
 
         //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
         $pkey = $userUtil->getSiteSetting($this->em,'p12KeyPathFellApp');
+        if( !$pkey ) {
+            $logger = $this->container->get('logger');
+            $logger->warning('p12KeyPathFellApp is not defined in Site Parameters. p12KeyPathFellApp='.$pkey);
+        }
 
         //$user_to_impersonate = 'olegivanov@pathologysystems.org';
         $user_to_impersonate = $userUtil->getSiteSetting($this->em,'userImpersonateEmailFellApp');
@@ -364,6 +371,10 @@ class FellAppUtil {
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
         $userUtil = new UserUtil();
         $uploadPath = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'applicantsUploadPathFellApp');
+        if( !$uploadPath ) {
+            $uploadPath = "FellowshipApplicantUploads";
+            $logger->warning('applicantsUploadPathFellApp is not defined in Site Parameters. Use default "'.$uploadPath.'" folder.');
+        }
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
