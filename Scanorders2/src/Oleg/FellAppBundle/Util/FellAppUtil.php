@@ -561,7 +561,9 @@ class FellAppUtil {
                 $localInstitutionFellApp = $userUtil->getSiteSetting($this->em, 'localInstitutionFellApp');
                 $localInstitutionFellAppArr = explode(' ', $localInstitutionFellApp);
                 if (count($localInstitutionFellAppArr) == 2 && $localInstitutionFellAppArr[0] != "" && $localInstitutionFellAppArr[1] != "") {
-                    $rootInst = trim($localInstitutionFellAppArr[0]);  //"WCMC"
+                    $rootInst = trim($localInstitutionFellAppArr[0]);  //"(WCMC)"
+                    $rootInst = str_replace("(", "", $rootInst);
+                    $rootInst = str_replace(")", "", $rootInst);
                     $localInst = trim($localInstitutionFellAppArr[1]); //"Pathology Fellowship Programs"
                     $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
                     $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
