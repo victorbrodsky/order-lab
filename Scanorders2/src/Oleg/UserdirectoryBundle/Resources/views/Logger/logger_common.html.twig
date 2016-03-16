@@ -25,19 +25,21 @@
                 </div>
             </div>
 
-            {% if hideUser is not defined or hideUser == false %}
-                <div class="col-xs-3">
-                    {{ form_row(loggerfilter.user,{'attr': {'placeholder': 'User'}}) }}
-                </div>
+            {% set hideUserStyle = "" %}
+            {% if hideUser is defined and hideUser == true %}
+                {% set hideUserStyle = 'style=display:none;' %}
             {% endif %}
-            {% do loggerfilter.user.setRendered %}
+            <div class="col-xs-3" {{ hideUserStyle }}>
+                {{ form_row(loggerfilter.user,{'attr': {'placeholder': 'User'}}) }}
+            </div>
 
-            {% if hideEventType is not defined or hideEventType == false %}
-                <div class="col-xs-3">
-                    {{ form_row(loggerfilter.eventType, {'attr': {'placeholder': 'Event Type'}}) }}
-                </div>
+            {% set hideEventTypeStyle = "" %}
+            {% if hideEventType is defined and hideEventType == true %}
+                {% set hideEventTypeStyle = 'style=display:none;' %}
             {% endif %}
-            {% do loggerfilter.eventType.setRendered %}
+            <div class="col-xs-3" {{ hideEventTypeStyle }}>
+                {{ form_row(loggerfilter.eventType, {'attr': {'placeholder': 'Event Type'}}) }}
+            </div>
 
             <div class="col-xs-2">
                 {{ form_row(loggerfilter.search, {'attr': {'placeholder': 'Event Title'}}) }}
@@ -49,33 +51,37 @@
 
         <div class="row">
 
-            {% if hideIp is not defined or hideIp == false %}
-                <div class="col-xs-2">
-                    {{ form_row(loggerfilter.ip, {'attr': {'placeholder': 'IP'}}) }}
-                </div>
+            {% set hideIpStyle = "" %}
+            {% if hideIp is defined and hideIp == true %}
+                {% set hideIpStyle = 'style=display:none;' %}
             {% endif %}
-            {% do loggerfilter.ip.setRendered %}
+            <div class="col-xs-2" {{ hideIpStyle }}>
+                {{ form_row(loggerfilter.ip, {'attr': {'placeholder': 'IP'}}) }}
+            </div>
 
-            {% if hideRoles is not defined or hideRoles == false %}
-                <div class="col-xs-3">
-                    {{ form_row(loggerfilter.roles, {'attr': {'placeholder': 'Roles'}}) }}
-                </div>
+            {% set hideRolesStyle = "" %}
+            {% if hideRoles is defined and hideRoles == true %}
+                {% set hideRolesStyle = 'style=display:none;' %}
             {% endif %}
-            {% do loggerfilter.roles.setRendered %}
+            <div class="col-xs-3" {{ hideRolesStyle }}>
+                {{ form_row(loggerfilter.roles, {'attr': {'placeholder': 'Roles'}}) }}
+            </div>
 
-            {% if hideObjectType is not defined or hideObjectType == false %}
-                <div class="col-xs-3">
-                    {{ form_row(loggerfilter.objectType, {'attr': {'placeholder': 'Object Type'}}) }}
-                </div>
+            {% set hideObjectTypeStyle = "" %}
+            {% if hideObjectType is defined and hideObjectType == true %}
+                {% set hideObjectTypeStyle = 'style=display:none;' %}
             {% endif %}
-            {% do loggerfilter.objectType.setRendered %}
+            <div class="col-xs-3" {{ hideObjectTypeStyle }}>
+                {{ form_row(loggerfilter.objectType, {'attr': {'placeholder': 'Object Type'}}) }}
+            </div>
 
-            {% if hideObjectId is not defined or hideObjectId == false %}
-                <div class="col-xs-3">
-                    {{ form_row(loggerfilter.objectId, {'attr': {'placeholder': 'Object ID'}}) }}
-                </div>
+            {% set hideObjectIdStyle = "" %}
+            {% if hideObjectId is defined and hideObjectId == true %}
+                {% set hideObjectIdStyle = 'style=display:none;' %}
             {% endif %}
-            {% do loggerfilter.objectId.setRendered %}
+            <div class="col-xs-3" {{ hideObjectIdStyle }}>
+                {{ form_row(loggerfilter.objectId, {'attr': {'placeholder': 'Object ID'}}) }}
+            </div>
 
             <div class="col-xs-1">
                 <button type="submit" class="btn btn-sm btn-default">Filter</button>

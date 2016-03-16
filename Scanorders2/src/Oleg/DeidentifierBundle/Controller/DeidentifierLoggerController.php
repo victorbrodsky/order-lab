@@ -167,8 +167,12 @@ class DeidentifierLoggerController extends LoggerController
             $eventTypes = $filter['eventType'];
             $users = $filter['user'];
         }
+        //echo 'eventType count='.count($eventTypes).'<br>';
+        //echo 'users count='.count($users).'<br>';
+        //exit('1');
 
         if( count($eventTypes) == 0 || count($users) == 0 ) {
+            //echo 'assign and redirect back <br>';
             //add eventTypes and users
             return $this->redirect($this->generateUrl('deidentifier_my_generation_log',
                 array(
@@ -196,8 +200,8 @@ class DeidentifierLoggerController extends LoggerController
         $loggerFormParams['hideIp'] = true;
         $loggerFormParams['hideRoles'] = true;
         $loggerFormParams['hideId'] = true;         //Event ID
-        $loggerFormParams['hideObjectType'] = true;
-        $loggerFormParams['hideObjectId'] = true;
+        //$loggerFormParams['hideObjectType'] = true;
+        //$loggerFormParams['hideObjectId'] = true;
 
         $loggerFormParams['hideUser'] = true;
         $loggerFormParams['hideEventType'] = true;
@@ -213,6 +217,7 @@ class DeidentifierLoggerController extends LoggerController
 
         $loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event for user: ".$user;
 
+        //exit('before return');
         return $loggerFormParams;
     }
 

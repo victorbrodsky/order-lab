@@ -114,6 +114,8 @@ class LoggerController extends Controller
         $postData = ( array_key_exists('postData', $params) ? $params['postData'] : null);
         $onlyheader = ( array_key_exists('onlyheader', $params) ? $params['onlyheader'] : null);
 
+        //echo "entityId=".$entityId."<br>";
+
         $em = $this->getDoctrine()->getManager();
 
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
