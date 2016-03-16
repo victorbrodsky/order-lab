@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Controller\FellAppController;
 use Oleg\FellAppBundle\Form\FellowshipApplicationType;
 use Oleg\UserdirectoryBundle\Entity\Document;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
