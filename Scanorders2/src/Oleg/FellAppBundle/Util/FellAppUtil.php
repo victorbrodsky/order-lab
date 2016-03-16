@@ -556,28 +556,46 @@ class FellAppUtil {
                     $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
                 }
 
-                //institution "Pathology Fellowship Programs"
-                //get string from SiteParameters - "Pathology Fellowship Programs (WCMC)"
+                //////////////////////// assign local institution from SiteParameters ////////////////////////
+                $instPathologyFellowshipProgram = null;
                 $localInstitutionFellApp = $userUtil->getSiteSetting($this->em, 'localInstitutionFellApp');
-                $localInstitutionFellAppArr = explode(' (', $localInstitutionFellApp);
-                if (count($localInstitutionFellAppArr) == 2 && $localInstitutionFellAppArr[0] != "" && $localInstitutionFellAppArr[1] != "") {
-                    $rootInst = trim($localInstitutionFellAppArr[0]);  //"(WCMC)"
-                    $rootInst = str_replace('(', '', $rootInst);
-                    $rootInst = str_replace(')', '', $rootInst);
-                    $localInst = trim($localInstitutionFellAppArr[1]); //"Pathology Fellowship Programs"
-                    $logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
-                    $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
-                    if( !$wcmc ) {
-                        throw new EntityNotFoundException('Unable to find Institution by name=' . $rootInst);
+
+                if( strpos($localInstitutionFellApp, " (") !== false ) {
+                    //Case 1: get string from SiteParameters - "Pathology Fellowship Programs (WCMC)"
+                    $localInstitutionFellAppArr = explode(" (", $localInstitutionFellApp);
+                    if (count($localInstitutionFellAppArr) == 2 && $localInstitutionFellAppArr[0] != "" && $localInstitutionFellAppArr[1] != "") {
+                        $localInst = trim($localInstitutionFellAppArr[0]); //"Pathology Fellowship Programs"
+                        $rootInst = trim($localInstitutionFellAppArr[1]);  //"(WCMC)"
+                        $rootInst = str_replace("(", "", $rootInst);
+                        $rootInst = str_replace(")", "", $rootInst);
+                        //$logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
+                        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
+                        if( !$wcmc ) {
+                            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($rootInst);
+                            if( !$wcmc ) {
+                                throw new EntityNotFoundException('Unable to find Institution by name=' . $rootInst);
+                            }
+                        }
+                        $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
+                        if( !$instPathologyFellowshipProgram ) {
+                            throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
+                        }
                     }
-                    $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
+                } else {
+                    //Case 2: get string from SiteParameters - "WCMC" or "Weill Cornell Medical College"
+                    $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($localInstitutionFellApp);
                     if( !$instPathologyFellowshipProgram ) {
-                        throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
+                        $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($localInstitutionFellApp);
                     }
+                }
+
+                if( $instPathologyFellowshipProgram ) {
                     $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
                 } else {
                     $logger->warning('Local Institution for Import Application is not set or invalid; localInstitutionFellApp='.$localInstitutionFellApp);
                 }
+                //////////////////////// EOF assign local institution from SiteParameters ////////////////////////
+
 
                 //trainingPeriodStart
                 $fellowshipApplication->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers)));
