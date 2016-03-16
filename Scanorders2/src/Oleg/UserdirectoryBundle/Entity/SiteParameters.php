@@ -329,6 +329,14 @@ class SiteParameters {
      */
     private $applicantsUploadPathFellApp;
 
+
+    /**
+     * Path to upload applicants documents used in ReportGenerator: i.e. Reports
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $reportsUploadPathFellApp;
+
     /**
      * Link to the Application Page (so the users can click and see how it looks)
      *
@@ -1710,6 +1718,22 @@ class SiteParameters {
     public function setApplicationPageLinkFellApp($applicationPageLinkFellApp)
     {
         $this->applicationPageLinkFellApp = $applicationPageLinkFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReportsUploadPathFellApp()
+    {
+        return $this->reportsUploadPathFellApp;
+    }
+
+    /**
+     * @param mixed $reportsUploadPathFellApp
+     */
+    public function setReportsUploadPathFellApp($reportsUploadPathFellApp)
+    {
+        $this->reportsUploadPathFellApp = $reportsUploadPathFellApp;
     }
 
 

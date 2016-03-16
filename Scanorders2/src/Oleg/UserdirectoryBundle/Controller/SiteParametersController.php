@@ -77,12 +77,17 @@ class SiteParametersController extends Controller
         $link = realpath($_SERVER['DOCUMENT_ROOT']).'\order\scanorder\Scanorders2\app\config\parameters.yml';
         //echo "link=".$link."<br>";
 
+        //get absolute path prefix for Upload folder
+        $rootDir = $this->container->get('kernel')->getRootDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app
+        $rootDir = str_replace('app','',$rootDir);
+        $uploadPath = $rootDir . 'web\\';
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'cycle' => 'show',
             'link' => $link,
+            'uploadPath' => $uploadPath,
             'sitename' => $sitename,
             'phphostname' => gethostname()
         );

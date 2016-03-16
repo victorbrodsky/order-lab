@@ -437,7 +437,9 @@ class ReportGenerator {
         $logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
 
         //check and create Report and temp folders
-        $uploadReportPath = 'Uploaded/' . $this->container->getParameter('fellapp.uploadpath').'/Reports';
+        $userUtil = new UserUtil();
+        $reportsUploadPathFellApp = $userUtil->getSiteSetting($this->em,'reportsUploadPathFellApp');
+        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;   //'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/Reports';
         $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath.'/';
         if( !file_exists($uploadReportPath) ) {
             mkdir($uploadReportPath, 0700, true);

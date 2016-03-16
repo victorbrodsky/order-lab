@@ -55,7 +55,7 @@
 
                     <tr>
                         <td>Link to the Application Page</td>
-                        <td>{{ entity.applicationPageLinkFellApp }}</td>
+                        <td class="rowlink-skip">{{ entity.applicationPageLinkFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicationPageLinkFellApp'}) }}">Edit</a></td>
                     </tr>
 
@@ -67,7 +67,7 @@
 
                     <tr>
                         <td>Full Path to p12 key file</td>
-                        <td>{{ entity.p12KeyPathFellApp }}</td>
+                        <td class="rowlink-skip">{{ entity.p12KeyPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'p12KeyPathFellApp'}) }}">Edit</a></td>
                     </tr>
 
@@ -122,15 +122,33 @@
                     </tr>
 
                     <tr>
-                        <td>Relative to "Fellowship Application Upload Folder" path to spreadsheets file (example "Spreadsheets")</td>
+                        <td class="rowlink-skip element-table-with-tooltip-always"
+                            data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
+                            Relative to "Fellowship Application Upload Folder" path to spreadsheets file (example "Spreadsheets").
+                            <br>Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.spreadsheetsPathFellApp }}
+                        </td>
                         <td>{{ entity.spreadsheetsPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'spreadsheetsPathFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Relative to "Fellowship Application Upload Folder" path to upload applicants documents (example "FellowshipApplicantUploads")</td>
+                        <td class="rowlink-skip element-table-with-tooltip-always"
+                            data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
+                            Relative to "Fellowship Application Upload Folder" path to upload applicants documents (example "FellowshipApplicantUploads").
+                            <br>Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.applicantsUploadPathFellApp }}
+                        </td>
                         <td>{{ entity.applicantsUploadPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicantsUploadPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td class="rowlink-skip element-table-with-tooltip-always"
+                            data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
+                            Relative to "Fellowship Application Upload Folder" path to generate applicants reports (example "Reports").
+                            <br>Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.reportsUploadPathFellApp }}
+                        </td>
+                        <td>{{ entity.reportsUploadPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'reportsUploadPathFellApp'}) }}">Edit</a></td>
                     </tr>
 
                 </tbody>

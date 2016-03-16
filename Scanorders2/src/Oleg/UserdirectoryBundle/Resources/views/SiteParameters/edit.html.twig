@@ -130,6 +130,10 @@
             {{ formmacros.field(edit_form.applicantsUploadPathFellApp) }}
         {% endif %}
 
+        {% if edit_form.reportsUploadPathFellApp is defined %}
+            {{ formmacros.field(edit_form.reportsUploadPathFellApp) }}
+        {% endif %}
+
 
     {% if cycle == 'show' %}
         <hr>

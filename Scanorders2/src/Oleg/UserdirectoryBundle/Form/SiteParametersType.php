@@ -362,13 +362,28 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'spreadsheetsPathFellApp' )
             $builder->add('spreadsheetsPathFellApp',null,array(
                 'label'=>'Relative to "Fellowship Application Upload Folder" path to spreadsheets file (example "Spreadsheets"):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+                'attr' => array(
+                    'class'=>'form-control form-control-modif',
+                    'style'=>'margin:0',
+                )
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'applicantsUploadPathFellApp' )
             $builder->add('applicantsUploadPathFellApp',null,array(
                 'label'=>'Relative to "Fellowship Application Upload Folder" path to upload applicants documents (example "FellowshipApplicantUploads"):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+                'attr' => array(
+                    'class'=>'form-control form-control-modif',
+                    'style'=>'margin:0',
+                )
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'reportsUploadPathFellApp' )
+            $builder->add('reportsUploadPathFellApp',null,array(
+                'label'=>'Relative to "Fellowship Application Upload Folder" path to generate applicants reports (example "Reports"):',
+                'attr' => array(
+                    'class'=>'form-control form-control-modif',
+                    'style'=>'margin:0',
+                )
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'applicationPageLinkFellApp' )

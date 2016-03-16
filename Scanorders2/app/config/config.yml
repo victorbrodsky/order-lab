@@ -59,6 +59,11 @@ twig:
 #        underlogin_msg_user: %underlogin_msg_user%
 #        underlogin_msg_scan: %underlogin_msg_scan%
 
+        #relative upload folder
+        employees_uploadpath: Uploaded/%employees.uploadpath%
+        scan_uploadpath: Uploaded/%scan.uploadpath%
+        fellapp_uploadpath: Uploaded/%fellapp.uploadpath%
+
         #service
         user_security_utility: "@user_security_utility"
 

@@ -45,7 +45,10 @@ class GenerateReportCommand extends ContainerAwareCommand {
         $res = $fellappRepGen->generateFellAppReport( $id );
      } else {
         //testing
-        $uploadReportPath = 'Uploaded/' . $this->getContainer()->getParameter('fellapp.uploadpath').'/Reports';
+        $reportsUploadPathFellApp = "Reports";
+        //$userUtil = new UserUtil();
+        //$reportsUploadPathFellApp = $userUtil->getSiteSetting($this->em,'reportsUploadPathFellApp');
+        $uploadReportPath = 'Uploaded/' . $this->getContainer()->getParameter('fellapp.uploadpath').'/'.$reportsUploadPathFellApp;
         $reportPath = $this->getContainer()->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath.'/';
         $outdir = $reportPath.'temp_'.$id.'/';
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";

@@ -906,6 +906,7 @@ class AdminController extends Controller
             "yearsOldAplicationsFellApp" => 2,
             "spreadsheetsPathFellApp" => "Spreadsheets",
             "applicantsUploadPathFellApp" => "FellowshipApplicantUploads",
+            "reportsUploadPathFellApp" => "Reports",
             "applicationPageLinkFellApp" => "http://wcmc.pathologysystems.org/fellowship-application",
             ///////////////////// EOF FELLAPP /////////////////////
 

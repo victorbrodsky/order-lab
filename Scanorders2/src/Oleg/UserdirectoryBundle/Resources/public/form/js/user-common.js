@@ -51,6 +51,11 @@ function initTooltips() {
     $(".element-with-tooltip-always").tooltip();
     attachTooltipToSelectCombobox('.element-with-select2-tooltip-always',null);
 
+    //Tooltips in button groups, input groups, and tables require special setting
+    //you'll have to specify the option container: 'body' (documented below) to avoid
+    //unwanted side effects (such as the element growing wider and/or losing its rounded corners when the tooltip is triggered).
+    $(".element-table-with-tooltip-always").tooltip({container: 'body'});
+
     //element-with-select2-tooltip-always-when-readonly
     //console.log('cycle='+cycle);
 //    if( cycle && cycle.indexOf("show") == -1 ) {
