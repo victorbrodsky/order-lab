@@ -255,6 +255,11 @@ class LoggerController extends Controller
 //            //print_r($row);
 //        }
 
+        $eventlogTitle = $this->container->getParameter('eventlog_title');
+        if( $filtered ) {
+            $eventlogTitle = $eventlogTitle . " showing " . count($pagination) . " matching event(s)";
+        }
+
         return array(
             'filterform' => $filterform,
             'loggerfilter' => $filterform->createView(),
@@ -265,7 +270,8 @@ class LoggerController extends Controller
             'updateLogger' => $updateLogger,
             'filtered' => $filtered,
             'routename' => $request->get('_route'),
-            'titlePostfix' => ""
+            //'titlePostfix' => " event(s)",
+            'eventLogTitle' => $eventlogTitle
         );
     }
 
