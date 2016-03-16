@@ -562,13 +562,16 @@ class FellAppUtil {
                 $localInstitutionFellAppArr = explode(' (', $localInstitutionFellApp);
                 if (count($localInstitutionFellAppArr) == 2 && $localInstitutionFellAppArr[0] != "" && $localInstitutionFellAppArr[1] != "") {
                     $rootInst = trim($localInstitutionFellAppArr[0]);  //"(WCMC)"
-                    $rootInst = str_replace("(", "", $rootInst);
-                    $rootInst = str_replace(")", "", $rootInst);
+                    $rootInst = str_replace('(', '', $rootInst);
+                    $rootInst = str_replace(')', '', $rootInst);
                     $localInst = trim($localInstitutionFellAppArr[1]); //"Pathology Fellowship Programs"
                     $logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
                     $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
+                    if( !$wcmc ) {
+                        throw new EntityNotFoundException('Unable to find Institution by name=' . $rootInst);
+                    }
                     $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
-                    if (!$instPathologyFellowshipProgram) {
+                    if( !$instPathologyFellowshipProgram ) {
                         throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
                     }
                     $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
