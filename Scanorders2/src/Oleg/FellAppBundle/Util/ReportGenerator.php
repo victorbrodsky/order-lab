@@ -18,6 +18,7 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -784,14 +785,23 @@ class ReportGenerator {
 //    }
 
 
+    //convert all uploads to pdf using LibreOffice
     protected function convertToPdf( $filePathsArr, $outdir ) {
 
         $logger = $this->container->get('logger');
         $fileNamesArr = array();
 
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
-        $cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
-        //$cmd = '"'.$this->container->get('kernel')->getRootDir() . '\..\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice" --headless -convert-to pdf -outdir "' . $outdir . '"';
+        //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
+
+        //'"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir'
+        $userUtil = new UserUtil();
+        $libreOfficeConvertToPDFCommandFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFCommandFellApp');
+        if( !$libreOfficeConvertToPDFCommandFellApp ) {
+            throw new \InvalidArgumentException('libreOfficeConvertToPDFCommandFellApp is not defined in Site Parameters.');
+        }
+
+        $cmd = $libreOfficeConvertToPDFCommandFellApp . ' "' . $outdir . '"';
 
         //echo "cmd=" . $cmd . "<br>";
 
@@ -895,10 +905,17 @@ class ReportGenerator {
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
         $pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
 
-        //quick fix for c.med running on E:
-        if( strpos(getcwd(),'E:') !== false ) {
-            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
+        $userUtil = new UserUtil();
+        $pdftkLocation = $userUtil->getSiteSetting($this->em,'pdftkLocationFellApp');
+        if( !$pdftkLocation ) {
+            throw new \InvalidArgumentException('pdftkLocationFellApp is not defined in Site Parameters.');
         }
+        $pdftkLocation = '"' . $pdftkLocation . '" ';
+
+        //quick fix for c.med running on E:
+        //if( strpos(getcwd(),'E:') !== false ) {
+        //    $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
+        //}
 
         $cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
         //echo "cmd=".$cmd."<br>";
@@ -989,12 +1006,18 @@ class ReportGenerator {
 
         $filesOutArr = array();
 
-        $gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+        //$gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+        $userUtil = new UserUtil();
+        $gsLocation = $userUtil->getSiteSetting($this->em,'gsPathFellApp');
+        if( !$gsLocation ) {
+            throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
+        }
+        $gsLocation = '"' . $gsLocation . '" ';
 
         //quick fix for c.med running on E:
-        if( strpos(getcwd(),'E:') !== false ) {
-            $gsLocation = str_replace('C:','E:',$gsLocation);
-        }
+//        if( strpos(getcwd(),'E:') !== false ) {
+//            $gsLocation = str_replace('C:','E:',$gsLocation);
+//        }
 
         foreach( $filesArr as $file ) {
 

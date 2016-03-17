@@ -151,6 +151,24 @@
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'reportsUploadPathFellApp'}) }}">Edit</a></td>
                     </tr>
 
+                    <tr>
+                        <td>Command line to convert a file to pdf (i.e. "C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir)</td>
+                        <td>{{ entity.libreOfficeConvertToPDFCommandFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFCommandFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to pdfk location (i.e. E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk)</td>
+                        <td>{{ entity.pdftkPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to Ghostscript location (i.e. E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe)</td>
+                        <td>{{ entity.gsPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
                 </tbody>
             </table>
 

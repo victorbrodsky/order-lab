@@ -908,6 +908,8 @@ class AdminController extends Controller
             "applicantsUploadPathFellApp" => "FellowshipApplicantUploads",
             "reportsUploadPathFellApp" => "Reports",
             "applicationPageLinkFellApp" => "http://wcmc.pathologysystems.org/fellowship-application",
+            "libreOfficeConvertToPDFCommandFellApp" => '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir',
+            "pdftkLocationFellApp" => 'C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk',
             ///////////////////// EOF FELLAPP /////////////////////
 
             "maintenance" => false,

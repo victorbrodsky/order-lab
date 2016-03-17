@@ -134,6 +134,17 @@
             {{ formmacros.field(edit_form.reportsUploadPathFellApp) }}
         {% endif %}
 
+        {% if edit_form.libreOfficeConvertToPDFCommandFellApp is defined %}
+            {{ formmacros.field(edit_form.libreOfficeConvertToPDFCommandFellApp) }}
+        {% endif %}
+
+        {% if edit_form.pdftkPathFellApp is defined %}
+            {{ formmacros.field(edit_form.pdftkPathFellApp) }}
+        {% endif %}
+
+        {% if edit_form.gsPathFellApp is defined %}
+            {{ formmacros.field(edit_form.gsPathFellApp) }}
+        {% endif %}
 
     {% if cycle == 'show' %}
         <hr>

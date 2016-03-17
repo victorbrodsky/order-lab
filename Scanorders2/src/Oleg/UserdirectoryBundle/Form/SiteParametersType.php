@@ -392,6 +392,24 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFCommandFellApp' )
+            $builder->add('libreOfficeConvertToPDFCommandFellApp',null,array(
+                'label'=>'Command line to convert a file to pdf (i.e. "C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellApp' )
+            $builder->add('pdftkPathFellApp',null,array(
+                'label'=>'Path to pdfk location (i.e. C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellApp' )
+            $builder->add('gsPathFellApp',null,array(
+                'label'=>'Path to Ghostscript location (i.e. E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
         $this->addCoPath($builder);
 
     }

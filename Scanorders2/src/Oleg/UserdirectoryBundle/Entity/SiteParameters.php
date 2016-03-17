@@ -343,6 +343,28 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $applicationPageLinkFellApp;
+
+    /**
+     * "C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $libreOfficeConvertToPDFCommandFellApp;
+
+    /**
+     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $pdftkPathFellApp;
+
+    /**
+     * Ghostscript
+     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $gsPathFellApp;
     ///////////////////// EOF FELLAPP /////////////////////
 
     // Co-Path //
@@ -1735,6 +1757,56 @@ class SiteParameters {
     {
         $this->reportsUploadPathFellApp = $reportsUploadPathFellApp;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFCommandFellApp()
+    {
+        return $this->libreOfficeConvertToPDFCommandFellApp;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFCommandFellApp
+     */
+    public function setLibreOfficeConvertToPDFCommandFellApp($libreOfficeConvertToPDFCommandFellApp)
+    {
+        $this->libreOfficeConvertToPDFCommandFellApp = $libreOfficeConvertToPDFCommandFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkPathFellApp()
+    {
+        return $this->pdftkPathFellApp;
+    }
+
+    /**
+     * @param mixed $pdftkPathFellApp
+     */
+    public function setPdftkPathFellApp($pdftkPathFellApp)
+    {
+        $this->pdftkPathFellApp = $pdftkPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGsPathFellApp()
+    {
+        return $this->gsPathFellApp;
+    }
+
+    /**
+     * @param mixed $gsPathFellApp
+     */
+    public function setGsPathFellApp($gsPathFellApp)
+    {
+        $this->gsPathFellApp = $gsPathFellApp;
+    }
+
+
 
 
 
