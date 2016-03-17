@@ -905,6 +905,7 @@ class ReportGenerator {
         $userUtil = new UserUtil();
         $pdftkLocation = $userUtil->getSiteSetting($this->em,'pdftkLocationFellApp');
         if( !$pdftkLocation ) {
+            $logger->warning('pdftkLocationFellApp is not defined in Site Parameters.');
             throw new \InvalidArgumentException('pdftkLocationFellApp is not defined in Site Parameters.');
         }
         //$pdftkLocation = '"' . $pdftkLocation . '" ';
