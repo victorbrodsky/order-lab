@@ -868,25 +868,25 @@ class ReportGenerator {
         return $fileNamesArr;
     }
 
-    //TODO: try https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
-    //if file already exists then it is replaced with a new one
-    protected function mergeByPDFMerger_ORIG( $filesArr, $filenameMerged ) {
-        $logger = $this->container->get('logger');
-        $pdf = new PDFMerger();
-
-        foreach( $filesArr as $file ) {
-//            echo "add merge: filepath=(".$file.") => ";
-            if( file_exists($file) ) {
-                $pdf->addPDF($file, 'all');
-                //$logger->notice("PDFMerger: merged file path=" . $file );
-            } else {
-                //$logger->warning("PDFMerger: pdf file does not exists path=" . $file );
-                //new \Exception("PDFMerger: pdf file does not exists path=" . $file);
-            }
-        }
-
-        $pdf->merge('file', $filenameMerged);
-    }
+//    //TODO: try https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
+//    //if file already exists then it is replaced with a new one
+//    protected function mergeByPDFMerger_ORIG( $filesArr, $filenameMerged ) {
+//        $logger = $this->container->get('logger');
+//        $pdf = new PDFMerger();
+//
+//        foreach( $filesArr as $file ) {
+////            echo "add merge: filepath=(".$file.") => ";
+//            if( file_exists($file) ) {
+//                $pdf->addPDF($file, 'all');
+//                //$logger->notice("PDFMerger: merged file path=" . $file );
+//            } else {
+//                //$logger->warning("PDFMerger: pdf file does not exists path=" . $file );
+//                //new \Exception("PDFMerger: pdf file does not exists path=" . $file);
+//            }
+//        }
+//
+//        $pdf->merge('file', $filenameMerged);
+//    }
 
     protected function mergeByPDFMerger( $filesArr, $filenameMerged ) {
 
@@ -907,7 +907,8 @@ class ReportGenerator {
         if( !$pdftkLocation ) {
             throw new \InvalidArgumentException('pdftkLocationFellApp is not defined in Site Parameters.');
         }
-        $pdftkLocation = '"' . $pdftkLocation . '" ';
+        //$pdftkLocation = '"' . $pdftkLocation . '" ';
+        $pdftkLocation = $pdftkLocation . ' ';
 
         //quick fix for c.med running on E:
         if( strpos(getcwd(),'E:') !== false ) {
