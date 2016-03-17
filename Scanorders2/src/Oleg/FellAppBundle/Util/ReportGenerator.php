@@ -906,11 +906,11 @@ class ReportGenerator {
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
         //$pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
         $userUtil = new UserUtil();
-        $pdftkLocation = $userUtil->getSiteSetting($this->em,'pdftkLocationFellApp');
+        $pdftkLocation = $userUtil->getSiteSetting($this->em,'pdftkPathFellApp');
         $logger->warning('0 pdftkLocation='.$pdftkLocation);
         if( !$pdftkLocation ) {
-            $logger->warning('pdftkLocationFellApp is not defined in Site Parameters.');
-            throw new \InvalidArgumentException('pdftkLocationFellApp is not defined in Site Parameters.');
+            $logger->warning('pdftkPathFellApp is not defined in Site Parameters.');
+            throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
         }
         //$pdftkLocation = '"' . $pdftkLocation . '" ';
         //$pdftkLocation = $pdftkLocation . ' ';
