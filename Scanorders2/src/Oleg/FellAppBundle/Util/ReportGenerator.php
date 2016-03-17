@@ -901,13 +901,13 @@ class ReportGenerator {
         //echo "filenameMerged=".$filenameMerged."<br>";
 
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
-        $pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
-//        $userUtil = new UserUtil();
-//        $pdftkLocation = $userUtil->getSiteSetting($this->em,'pdftkLocationFellApp');
-//        if( !$pdftkLocation ) {
-//            throw new \InvalidArgumentException('pdftkLocationFellApp is not defined in Site Parameters.');
-//        }
-//        $pdftkLocation = '"' . $pdftkLocation . '" ';
+        //$pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
+        $userUtil = new UserUtil();
+        $pdftkLocation = $userUtil->getSiteSetting($this->em,'pdftkLocationFellApp');
+        if( !$pdftkLocation ) {
+            throw new \InvalidArgumentException('pdftkLocationFellApp is not defined in Site Parameters.');
+        }
+        $pdftkLocation = '"' . $pdftkLocation . '" ';
 
         //quick fix for c.med running on E:
         if( strpos(getcwd(),'E:') !== false ) {
