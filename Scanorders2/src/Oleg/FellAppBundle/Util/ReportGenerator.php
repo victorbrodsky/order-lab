@@ -1006,13 +1006,13 @@ class ReportGenerator {
 
         $filesOutArr = array();
 
-        //$gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
-        $userUtil = new UserUtil();
-        $gsLocation = $userUtil->getSiteSetting($this->em,'gsPathFellApp');
-        if( !$gsLocation ) {
-            throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
-        }
-        $gsLocation = '"' . $gsLocation . '" ';
+        $gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+//        $userUtil = new UserUtil();
+//        $gsLocation = $userUtil->getSiteSetting($this->em,'gsPathFellApp');
+//        if( !$gsLocation ) {
+//            throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
+//        }
+//        $gsLocation = '"' . $gsLocation . '" ';
 
         //quick fix for c.med running on E:
 //        if( strpos(getcwd(),'E:') !== false ) {

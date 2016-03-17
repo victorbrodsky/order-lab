@@ -400,7 +400,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellApp' )
             $builder->add('pdftkPathFellApp',null,array(
-                'label'=>'Path to pdfk location (i.e. C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk):',
+                'label'=>'Path to pdfk location (i.e. E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
