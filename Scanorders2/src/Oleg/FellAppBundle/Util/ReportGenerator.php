@@ -892,14 +892,11 @@ class ReportGenerator {
 
         $logger = $this->container->get('logger');
 
-        $logger->warning('before convertFilesArrToString.');
         $filesStr = $this->convertFilesArrToString($filesArr);
-        $logger->warning('after convertFilesArrToString');
 
         $filenameMerged = str_replace("/","\\", $filenameMerged);
         $filenameMerged = str_replace("app\..","", $filenameMerged);
         $filenameMerged = '"'.$filenameMerged.'"';
-        $logger->warning('filenameMerged='.$filenameMerged);
 
         //echo "filenameMerged=".$filenameMerged."<br>";
 
@@ -907,22 +904,18 @@ class ReportGenerator {
         //$pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
         $userUtil = new UserUtil();
         $pdftkLocation = $userUtil->getSiteSetting($this->em,'pdftkPathFellApp');
-        $logger->warning('0 pdftkLocation='.$pdftkLocation);
         if( !$pdftkLocation ) {
-            $logger->warning('pdftkPathFellApp is not defined in Site Parameters.');
             throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
         }
         $pdftkLocation = '"' . $pdftkLocation . '" ';
         //$pdftkLocation = $pdftkLocation . ' ';
-        $logger->warning('1 pdftkLocation='.$pdftkLocation);
 
         //quick fix for c.med running on E:
-        if( strpos(getcwd(),'E:') !== false ) {
-            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
-        }
+//        if( strpos(getcwd(),'E:') !== false ) {
+//            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
+//        }
 
         $cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
-        $logger->warning("cmd=" . $cmd);
         //echo "cmd=".$cmd."<br>";
 
         $output = null;
@@ -1000,7 +993,6 @@ class ReportGenerator {
         }
 
         $filesStr = str_replace("/","\\", $filesStr);
-        $filesStr = str_replace('\"\"','\"', $filesStr);
         $filesStr = str_replace("app\..","", $filesStr);
 
         return $filesStr;
@@ -1012,13 +1004,13 @@ class ReportGenerator {
 
         $filesOutArr = array();
 
-        $gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
-//        $userUtil = new UserUtil();
-//        $gsLocation = $userUtil->getSiteSetting($this->em,'gsPathFellApp');
-//        if( !$gsLocation ) {
-//            throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
-//        }
-//        $gsLocation = '"' . $gsLocation . '" ';
+        //$gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+        $userUtil = new UserUtil();
+        $gsLocation = $userUtil->getSiteSetting($this->em,'gsPathFellApp');
+        if( !$gsLocation ) {
+            throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
+        }
+        $gsLocation = '"' . $gsLocation . '" ';
 
         //quick fix for c.med running on E:
         if( strpos(getcwd(),'E:') !== false ) {
