@@ -912,7 +912,7 @@ class ReportGenerator {
             $logger->warning('pdftkPathFellApp is not defined in Site Parameters.');
             throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
         }
-        //$pdftkLocation = '"' . $pdftkLocation . '" ';
+        $pdftkLocation = '"' . $pdftkLocation . '" ';
         //$pdftkLocation = $pdftkLocation . ' ';
         $logger->warning('1 pdftkLocation='.$pdftkLocation);
 
