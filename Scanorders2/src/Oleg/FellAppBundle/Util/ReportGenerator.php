@@ -908,7 +908,6 @@ class ReportGenerator {
             throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
         }
         $pdftkLocation = '"' . $pdftkLocation . '" ';
-        //$pdftkLocation = $pdftkLocation . ' ';
 
         //quick fix for c.med running on E:
         //collage is running on C:
