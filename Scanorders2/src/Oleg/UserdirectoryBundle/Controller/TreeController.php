@@ -170,7 +170,7 @@ class TreeController extends Controller {
         $output = array();
         foreach( $entities as $entity ) {
 
-            if( $entity && $entity->hasInstitutionType("Collaboration") ) {
+            if( $entity && method_exists($entity, 'hasInstitutionType') && $entity->hasInstitutionType("Collaboration") ) {
                 $levelTitle = "Collaboration";  // . " (Level " . $entity->getLevel() . ")";
             } else {
 
