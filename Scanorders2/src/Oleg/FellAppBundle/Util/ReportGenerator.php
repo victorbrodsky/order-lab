@@ -910,9 +910,9 @@ class ReportGenerator {
 //        $pdftkLocation = '"' . $pdftkLocation . '" ';
 
         //quick fix for c.med running on E:
-        //if( strpos(getcwd(),'E:') !== false ) {
-        //    $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
-        //}
+        if( strpos(getcwd(),'E:') !== false ) {
+            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
+        }
 
         $cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
         //echo "cmd=".$cmd."<br>";
@@ -1012,9 +1012,9 @@ class ReportGenerator {
 //        $gsLocation = '"' . $gsLocation . '" ';
 
         //quick fix for c.med running on E:
-//        if( strpos(getcwd(),'E:') !== false ) {
-//            $gsLocation = str_replace('C:','E:',$gsLocation);
-//        }
+        if( strpos(getcwd(),'E:') !== false ) {
+            $gsLocation = str_replace('C:','E:',$gsLocation);
+        }
 
         foreach( $filesArr as $file ) {
 
