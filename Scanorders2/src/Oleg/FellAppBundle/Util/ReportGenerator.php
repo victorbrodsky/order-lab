@@ -908,7 +908,7 @@ class ReportGenerator {
             throw new \InvalidArgumentException('pdftkLocationFellApp is not defined in Site Parameters.');
         }
         //$pdftkLocation = '"' . $pdftkLocation . '" ';
-        $pdftkLocation = $pdftkLocation . ' ';
+        //$pdftkLocation = $pdftkLocation . ' ';
 
         //quick fix for c.med running on E:
         if( strpos(getcwd(),'E:') !== false ) {
@@ -916,6 +916,7 @@ class ReportGenerator {
         }
 
         $cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
+        $logger->warning("cmd=" . $cmd);
         //echo "cmd=".$cmd."<br>";
 
         $output = null;
