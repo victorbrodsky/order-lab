@@ -899,6 +899,7 @@ class ReportGenerator {
         $filenameMerged = str_replace("/","\\", $filenameMerged);
         $filenameMerged = str_replace("app\..","", $filenameMerged);
         $filenameMerged = '"'.$filenameMerged.'"';
+        $logger->warning('filenameMerged='.$filenameMerged);
 
         //echo "filenameMerged=".$filenameMerged."<br>";
 
@@ -906,12 +907,14 @@ class ReportGenerator {
         //$pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
         $userUtil = new UserUtil();
         $pdftkLocation = $userUtil->getSiteSetting($this->em,'pdftkLocationFellApp');
+        $logger->warning('0 pdftkLocation='.$pdftkLocation);
         if( !$pdftkLocation ) {
             $logger->warning('pdftkLocationFellApp is not defined in Site Parameters.');
             throw new \InvalidArgumentException('pdftkLocationFellApp is not defined in Site Parameters.');
         }
         //$pdftkLocation = '"' . $pdftkLocation . '" ';
         //$pdftkLocation = $pdftkLocation . ' ';
+        $logger->warning('1 pdftkLocation='.$pdftkLocation);
 
         //quick fix for c.med running on E:
         if( strpos(getcwd(),'E:') !== false ) {
