@@ -911,6 +911,7 @@ class ReportGenerator {
         //$pdftkLocation = $pdftkLocation . ' ';
 
         //quick fix for c.med running on E:
+        //collage is running on C:
 //        if( strpos(getcwd(),'E:') !== false ) {
 //            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
 //        }
@@ -1013,9 +1014,9 @@ class ReportGenerator {
         $gsLocation = '"' . $gsLocation . '" ';
 
         //quick fix for c.med running on E:
-        if( strpos(getcwd(),'E:') !== false ) {
-            $gsLocation = str_replace('C:','E:',$gsLocation);
-        }
+//        if( strpos(getcwd(),'E:') !== false ) {
+//            $gsLocation = str_replace('C:','E:',$gsLocation);
+//        }
 
         foreach( $filesArr as $file ) {
 
