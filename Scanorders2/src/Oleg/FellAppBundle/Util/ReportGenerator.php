@@ -892,7 +892,9 @@ class ReportGenerator {
 
         $logger = $this->container->get('logger');
 
+        $logger->warning('before convertFilesArrToString.');
         $filesStr = $this->convertFilesArrToString($filesArr);
+        $logger->warning('after convertFilesArrToString');
 
         $filenameMerged = str_replace("/","\\", $filenameMerged);
         $filenameMerged = str_replace("app\..","", $filenameMerged);
@@ -995,6 +997,7 @@ class ReportGenerator {
         }
 
         $filesStr = str_replace("/","\\", $filesStr);
+        $filesStr = str_replace('\"\"','\"', $filesStr);
         $filesStr = str_replace("app\..","", $filesStr);
 
         return $filesStr;
