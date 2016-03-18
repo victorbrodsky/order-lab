@@ -436,7 +436,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellApp' )
             $builder->add('gsPathFellApp',null,array(
-                'label'=>'Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe):',
+                'label'=>'Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
