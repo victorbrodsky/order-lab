@@ -950,15 +950,14 @@ class ReportGenerator {
 
         $output = null;
         $return = null;
-//        $shellout = exec( $cmd, $output, $return );
+        $shellout = exec( $cmd, $output, $return );
         //$shellout = exec( $cmd );
 
         //$logger->error("pdftk output: " . print_r($output));
         //$logger->error("pdftk return: " . $return);
 
         //return 0 => ok, return 1 => failed
-        if( 1 ) {
-        //if( $return == 1 ) {
+        if( $return == 1 ) {
 
             //event log
             $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
