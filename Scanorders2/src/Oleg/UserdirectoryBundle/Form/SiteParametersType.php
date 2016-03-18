@@ -355,9 +355,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteOldAplicationsFellApp' )
             $builder->add('deleteOldAplicationsFellApp',null,array(
-                'label'=>'Delete downloaded spreadsheets with fellowship applications after successful import into the database
-
-:',
+                'label'=>'Delete downloaded spreadsheets with fellowship applications after successful import into the database:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
@@ -400,9 +398,15 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFCommandFellApp' )
-            $builder->add('libreOfficeConvertToPDFCommandFellApp',null,array(
-                'label'=>'Command to convert a file to pdf using LibreOffice (C:\Program Files (x86)\LibreOffice 5\program\soffice):',
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFPathFellApp' )
+            $builder->add('libreOfficeConvertToPDFPathFellApp',null,array(
+                'label'=>'Path to LibreOffice for converting a file to pdf (C:\Program Files (x86)\LibreOffice 5\program):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFFilenameFellApp' )
+            $builder->add('libreOfficeConvertToPDFFilenameFellApp',null,array(
+                'label'=>'LibreOffice executable file (soffice):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 

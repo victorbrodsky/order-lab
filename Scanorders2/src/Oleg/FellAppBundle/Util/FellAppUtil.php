@@ -210,7 +210,14 @@ class FellAppUtil {
     public function authenticationP12Key($pkey,$client_email,$user_to_impersonate) {
         //echo "pkey=".$pkey."<br>";
         $private_key = file_get_contents($pkey); //notasecret
-        $scopes = array('https://www.googleapis.com/auth/drive');
+
+        $userUtil = new UserUtil();
+        $googleDriveApiUrlFellApp = $userUtil->getSiteSetting($this->em,'googleDriveApiUrlFellApp');
+        if( !$googleDriveApiUrlFellApp ) {
+            throw new \InvalidArgumentException('googleDriveApiUrlFellApp is not defined in Site Parameters.');
+        }
+        $scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
+
         $credentials = new \Google_Auth_AssertionCredentials(
             $client_email,
             $scopes,

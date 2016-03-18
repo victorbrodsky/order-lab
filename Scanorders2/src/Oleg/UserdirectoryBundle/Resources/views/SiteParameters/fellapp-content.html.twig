@@ -137,7 +137,7 @@
                             data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
                             Path to the downloaded spreadsheets with fellowship applications relative to the "Fellowship Application Upload Folder" (Spreadsheets).
                             <br>
-                            Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.spreadsheetsPathFellApp }}
+                            Resulting Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.spreadsheetsPathFellApp }}
                         </td>
                         <td>{{ entity.spreadsheetsPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'spreadsheetsPathFellApp'}) }}">Edit</a></td>
@@ -147,7 +147,7 @@
                         <td class="rowlink-skip element-table-with-tooltip-always"
                             data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
                             Path to the downloaded attached documents relative to the "Fellowship Application Upload Folder" (FellowshipApplicantUploads).
-                            <br>Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.applicantsUploadPathFellApp }}
+                            <br>Resulting Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.applicantsUploadPathFellApp }}
                         </td>
                         <td>{{ entity.applicantsUploadPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicantsUploadPathFellApp'}) }}">Edit</a></td>
@@ -157,16 +157,22 @@
                         <td class="rowlink-skip element-table-with-tooltip-always"
                             data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
                             Path to the generated fellowship applications in PDF format relative to the "Fellowship Application Upload Folder" (Reports).
-                            <br>Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.reportsUploadPathFellApp }}
+                            <br>Resulting Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.reportsUploadPathFellApp }}
                         </td>
                         <td>{{ entity.reportsUploadPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'reportsUploadPathFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Command to convert a file to pdf using LibreOffice (C:\Program Files (x86)\LibreOffice 5\program\soffice)</td>
-                        <td>{{ entity.libreOfficeConvertToPDFCommandFellApp }}</td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFCommandFellApp'}) }}">Edit</a></td>
+                        <td>Command to convert a file to pdf using LibreOffice (C:\Program Files (x86)\LibreOffice 5\program)</td>
+                        <td>{{ entity.libreOfficeConvertToPDFPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>LibreOffice executable file (soffice) (soffice)</td>
+                        <td>{{ entity.libreOfficeConvertToPDFFilenameFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFFilenameFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>

@@ -352,11 +352,18 @@ class SiteParameters {
     private $applicationPageLinkFellApp;
 
     /**
-     * C:\Program Files (x86)\LibreOffice 5\program\soffice
+     * C:\Program Files (x86)\LibreOffice 5\program
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $libreOfficeConvertToPDFCommandFellApp;
+    private $libreOfficeConvertToPDFPathFellApp;
+
+    /**
+     * soffice
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $libreOfficeConvertToPDFFilenameFellApp;
 
     /**
      * --headless -convert-to pdf -outdir
@@ -1805,22 +1812,6 @@ class SiteParameters {
     /**
      * @return mixed
      */
-    public function getLibreOfficeConvertToPDFCommandFellApp()
-    {
-        return $this->libreOfficeConvertToPDFCommandFellApp;
-    }
-
-    /**
-     * @param mixed $libreOfficeConvertToPDFCommandFellApp
-     */
-    public function setLibreOfficeConvertToPDFCommandFellApp($libreOfficeConvertToPDFCommandFellApp)
-    {
-        $this->libreOfficeConvertToPDFCommandFellApp = $libreOfficeConvertToPDFCommandFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getPdftkPathFellApp()
     {
         return $this->pdftkPathFellApp;
@@ -1947,6 +1938,38 @@ class SiteParameters {
     public function setLibreOfficeConvertToPDFArgumentsdFellApp($libreOfficeConvertToPDFArgumentsdFellApp)
     {
         $this->libreOfficeConvertToPDFArgumentsdFellApp = $libreOfficeConvertToPDFArgumentsdFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFFilenameFellApp()
+    {
+        return $this->libreOfficeConvertToPDFFilenameFellApp;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFFilenameFellApp
+     */
+    public function setLibreOfficeConvertToPDFFilenameFellApp($libreOfficeConvertToPDFFilenameFellApp)
+    {
+        $this->libreOfficeConvertToPDFFilenameFellApp = $libreOfficeConvertToPDFFilenameFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFPathFellApp()
+    {
+        return $this->libreOfficeConvertToPDFPathFellApp;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFPathFellApp
+     */
+    public function setLibreOfficeConvertToPDFPathFellApp($libreOfficeConvertToPDFPathFellApp)
+    {
+        $this->libreOfficeConvertToPDFPathFellApp = $libreOfficeConvertToPDFPathFellApp;
     }
 
 

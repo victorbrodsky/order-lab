@@ -795,16 +795,22 @@ class ReportGenerator {
         //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
         //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
         $userUtil = new UserUtil();
-        $libreOfficeConvertToPDFCommandFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFCommandFellApp');
-        if( !$libreOfficeConvertToPDFCommandFellApp ) {
-            throw new \InvalidArgumentException('libreOfficeConvertToPDFCommandFellApp is not defined in Site Parameters.');
+        $libreOfficeConvertToPDFPathFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFPathFellApp');
+        if( !$libreOfficeConvertToPDFPathFellApp ) {
+            throw new \InvalidArgumentException('libreOfficeConvertToPDFPathFellApp is not defined in Site Parameters.');
+        }
+
+        $libreOfficeConvertToPDFFilenameFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFFilenameFellApp');
+        if( !$libreOfficeConvertToPDFFilenameFellApp ) {
+            throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameFellApp is not defined in Site Parameters.');
         }
 
         $libreOfficeConvertToPDFArgumentsdFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFArgumentsdFellApp');
         if( !$libreOfficeConvertToPDFArgumentsdFellApp ) {
             throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellApp is not defined in Site Parameters.');
         }
-        $cmd = '"' . $libreOfficeConvertToPDFCommandFellApp . '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
+
+        $cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp . '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
         //echo "cmd=" . $cmd . "<br>";
 
