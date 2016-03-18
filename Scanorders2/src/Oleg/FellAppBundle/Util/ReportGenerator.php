@@ -1036,11 +1036,22 @@ class ReportGenerator {
 
         //$gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
         $userUtil = new UserUtil();
-        $gsLocation = $userUtil->getSiteSetting($this->em,'gsPathFellApp');
-        if( !$gsLocation ) {
+        $gsPathFellApp = $userUtil->getSiteSetting($this->em,'gsPathFellApp');
+        if( !$gsPathFellApp ) {
             throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
         }
-        $gsLocation = '"' . $gsLocation . '" ';
+
+        $gsFilenameFellApp = $userUtil->getSiteSetting($this->em,'gsFilenameFellApp');
+        if( !$gsFilenameFellApp ) {
+            throw new \InvalidArgumentException('gsFilenameFellApp is not defined in Site Parameters.');
+        }
+
+        $gsArgumentsFellApp = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
+        if( !$gsArgumentsFellApp ) {
+            throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
+        }
+
+        $gsLocation = '"' . $gsPathFellApp . '\\' . $gsFilenameFellApp . '"';
 
         //quick fix for c.med running on E:
 //        if( strpos(getcwd(),'E:') !== false ) {
@@ -1051,7 +1062,7 @@ class ReportGenerator {
 
             //$ "C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe" -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="C:\Temp New\out\out.pdf" -c .setpdfwrite -f "C:\Temp New\test.pdf"
             //"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64.exe"
-            $cmd = $gsLocation . ' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite ';
+            //$cmd = $gsLocation . ' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite ';
 
             //echo "add merge: filepath=(".$file.") <br>";
             $filesStr = '"' . $file . '"';
@@ -1069,8 +1080,16 @@ class ReportGenerator {
             //$logger->notice('GS: outFilename='.$outFilename);
 
             //gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=unencrypted.pdf -c .setpdfwrite -f encrypted.pdf
-            $cmd = $cmd . '-sOutputFile=' . $outFilename . ' -c .setpdfwrite -f ' . $filesStr ;
-            //$logger->notice('GS: cmd='.$cmd);
+            //$cmd = $cmd . '-sOutputFile=' . $outFilename . ' -c .setpdfwrite -f ' . $filesStr ;
+
+            //replace ###parameter### by appropriate variable
+            //-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
+            $gsArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$gsArgumentsFellApp);
+            $gsArgumentsFellApp = str_replace('###outputFile###',$outFilename,$gsArgumentsFellApp);
+
+            $cmd = $gsLocation . ' ' . $gsArgumentsFellApp;
+
+            $logger->warning('GS: cmd='.$cmd);
 
             $output = null;
             $return = null;
