@@ -898,6 +898,7 @@ class AdminController extends Controller
                                          "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
             "clientEmailFellApp" => '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com',
             "p12KeyPathFellApp" => 'E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
+            "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive",
             "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
             "excelIdFellApp" => "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc",
             "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",
@@ -909,7 +910,13 @@ class AdminController extends Controller
             "reportsUploadPathFellApp" => "Reports",
             "applicationPageLinkFellApp" => "http://wcmc.pathologysystems.org/fellowship-application",
             "libreOfficeConvertToPDFCommandFellApp" => '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir',
-            "pdftkLocationFellApp" => 'C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk',
+            "pdftkLocationFellApp" => 'C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
+            "pdftkFilenameFellApp" => "pdftk",
+            "pdftkArg1FellApp" => "cat output",
+            "pdftkArg1FellApp" => "dont_ask",
+            "gsPathFellApp" => "C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin",
+            "gsFilenameFellApp"=>"gswin64c.exe",
+            "gsArgumentsFellApp"=>"-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###",
             ///////////////////// EOF FELLAPP /////////////////////
 
             "maintenance" => false,

@@ -38,6 +38,11 @@ oleg_testpage:
         _controller: FrameworkBundle:Template:template
         template:    'OlegUserdirectoryBundle:Default:testpage.html.twig'
 
+fellapp_instructions:
+    path: /fellowship-applications/instructions
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'OlegFellAppBundle:Instructions:taskSchedulerWindows.html.twig'
 
 #login and logout routes
 

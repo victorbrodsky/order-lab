@@ -45,222 +45,223 @@
 
     {{ form_start(edit_form) }}
 
-    {% if cycle == 'show' %}
-        <hr>
-    {% endif %}
+    {#{% if cycle == 'show' %}#}
+        {#<hr>#}
+    {#{% endif %}#}
 
-        {% if edit_form.maxIdleTime is defined %}
-            {{ formmacros.field(edit_form.maxIdleTime) }}
-        {% endif %}
+        {#{% if edit_form.maxIdleTime is defined %}#}
+            {#{{ formmacros.field(edit_form.maxIdleTime) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.environment is defined %}
-            {{ formmacros.field(edit_form.environment) }}
-        {% endif %}
+        {#{% if edit_form.environment is defined %}#}
+            {#{{ formmacros.field(edit_form.environment) }}#}
+        {#{% endif %}#}
 
-        {% if cycle == 'show' %}
-            <hr>
-            <h3 class="text-info">Email</h3>
-        {% endif %}
+        {#{% if cycle == 'show' %}#}
+            {#<hr>#}
+            {#<h3 class="text-info">Email</h3>#}
+        {#{% endif %}#}
 
-        {% if edit_form.siteEmail is defined %}
-            {{ formmacros.field(edit_form.siteEmail) }}
-        {% endif %}
+        {#{% if edit_form.siteEmail is defined %}#}
+            {#{{ formmacros.field(edit_form.siteEmail) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.smtpServerAddress is defined %}
-            {{ formmacros.field(edit_form.smtpServerAddress) }}
-        {% endif %}
+        {#{% if edit_form.smtpServerAddress is defined %}#}
+            {#{{ formmacros.field(edit_form.smtpServerAddress) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.allowPopulateFellApp is defined %}
-            {{ formmacros.checkbox(edit_form.allowPopulateFellApp) }}
-        {% endif %}
+        {#{% if edit_form.allowPopulateFellApp is defined %}#}
+            {#{{ formmacros.checkbox(edit_form.allowPopulateFellApp) }}#}
+        {#{% endif %}#}
             
-        {% if edit_form.confirmationEmailFellApp is defined %}
-            {{ formmacros.field(edit_form.confirmationEmailFellApp) }}
-        {% endif %}
-            
-        {% if edit_form.confirmationSubjectFellApp is defined %}
-            {{ formmacros.field(edit_form.confirmationSubjectFellApp) }}
-        {% endif %}
-            
-        {% if edit_form.confirmationBodyFellApp is defined %}
-            {{ formmacros.field(edit_form.confirmationBodyFellApp) }}
-        {% endif %}
+        {#{% if edit_form.confirmationEmailFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.confirmationEmailFellApp) }}#}
+        {#{% endif %}#}
+            {##}
+        {#{% if edit_form.confirmationSubjectFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.confirmationSubjectFellApp) }}#}
+        {#{% endif %}#}
+            {##}
+        {#{% if edit_form.confirmationBodyFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.confirmationBodyFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.applicationPageLinkFellApp is defined %}
-            {{ formmacros.field(edit_form.applicationPageLinkFellApp) }}
-        {% endif %}
+        {#{% if edit_form.applicationPageLinkFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.applicationPageLinkFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.clientEmailFellApp is defined %}
-            {{ formmacros.field(edit_form.clientEmailFellApp) }}
-        {% endif %}
+        {#{% if edit_form.clientEmailFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.clientEmailFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.p12KeyPathFellApp is defined %}
-            {{ formmacros.field(edit_form.p12KeyPathFellApp) }}
-        {% endif %}
+        {#{% if edit_form.p12KeyPathFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.p12KeyPathFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.userImpersonateEmailFellApp is defined %}
-            {{ formmacros.field(edit_form.userImpersonateEmailFellApp) }}
-        {% endif %}
+        {#{% if edit_form.userImpersonateEmailFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.userImpersonateEmailFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.excelIdFellApp is defined %}
-            {{ formmacros.field(edit_form.excelIdFellApp) }}
-        {% endif %}
+        {#{% if edit_form.excelIdFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.excelIdFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.localInstitutionFellApp is defined %}
-            {{ formmacros.field(edit_form.localInstitutionFellApp) }}
-        {% endif %}
+        {#{% if edit_form.localInstitutionFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.localInstitutionFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.deleteImportedAplicationsFellApp is defined %}
-            {{ formmacros.field(edit_form.deleteImportedAplicationsFellApp) }}
-        {% endif %}
+        {#{% if edit_form.deleteImportedAplicationsFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.deleteImportedAplicationsFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.deleteOldAplicationsFellApp is defined %}
-            {{ formmacros.field(edit_form.deleteOldAplicationsFellApp) }}
-        {% endif %}
+        {#{% if edit_form.deleteOldAplicationsFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.deleteOldAplicationsFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.yearsOldAplicationsFellApp is defined %}
-            {{ formmacros.field(edit_form.yearsOldAplicationsFellApp) }}
-        {% endif %}
+        {#{% if edit_form.yearsOldAplicationsFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.yearsOldAplicationsFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.spreadsheetsPathFellApp is defined %}
-            {{ formmacros.field(edit_form.spreadsheetsPathFellApp) }}
-        {% endif %}
+        {#{% if edit_form.spreadsheetsPathFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.spreadsheetsPathFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.applicantsUploadPathFellApp is defined %}
-            {{ formmacros.field(edit_form.applicantsUploadPathFellApp) }}
-        {% endif %}
+        {#{% if edit_form.applicantsUploadPathFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.applicantsUploadPathFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.reportsUploadPathFellApp is defined %}
-            {{ formmacros.field(edit_form.reportsUploadPathFellApp) }}
-        {% endif %}
+        {#{% if edit_form.reportsUploadPathFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.reportsUploadPathFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.libreOfficeConvertToPDFCommandFellApp is defined %}
-            {{ formmacros.field(edit_form.libreOfficeConvertToPDFCommandFellApp) }}
-        {% endif %}
+        {#{% if edit_form.libreOfficeConvertToPDFCommandFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.libreOfficeConvertToPDFCommandFellApp) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.pdftkPathFellApp is defined %}
-            {{ formmacros.field(edit_form.pdftkPathFellApp) }}
-        {% endif %}
+        {#{% if edit_form.pdftkPathFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.pdftkPathFellApp) }}#}
+        {#{% endif %}#}
+        {#{{ form_rest(edit_form) }}#}
 
-        {% if edit_form.gsPathFellApp is defined %}
-            {{ formmacros.field(edit_form.gsPathFellApp) }}
-        {% endif %}
+        {#{% if edit_form.gsPathFellApp is defined %}#}
+            {#{{ formmacros.field(edit_form.gsPathFellApp) }}#}
+        {#{% endif %}#}
 
-    {% if cycle == 'show' %}
-        <hr>
-        <h3 class="text-info">ScanOrder DB</h3>
-        Note: Parameters are stored in app/config/parameters.yml
-        <br><br>
-    {% endif %}
+    {#{% if cycle == 'show' %}#}
+        {#<hr>#}
+        {#<h3 class="text-info">ScanOrder DB</h3>#}
+        {#Note: Parameters are stored in app/config/parameters.yml#}
+        {#<br><br>#}
+    {#{% endif %}#}
 
-        {% if edit_form.dbServerAddress is defined %}
-            {{ formmacros.field(edit_form.dbServerAddress) }}
-        {% endif %}
+        {#{% if edit_form.dbServerAddress is defined %}#}
+            {#{{ formmacros.field(edit_form.dbServerAddress) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.dbServerPort is defined %}
-            {{ formmacros.field(edit_form.dbServerPort) }}
-        {% endif %}
+        {#{% if edit_form.dbServerPort is defined %}#}
+            {#{{ formmacros.field(edit_form.dbServerPort) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.dbServerAccountUserName is defined %}
-            {{ formmacros.field(edit_form.dbServerAccountUserName) }}
-        {% endif %}
+        {#{% if edit_form.dbServerAccountUserName is defined %}#}
+            {#{{ formmacros.field(edit_form.dbServerAccountUserName) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.dbServerAccountPassword is defined %}
-            {{ formmacros.field(edit_form.dbServerAccountPassword) }}
-        {% endif %}
+        {#{% if edit_form.dbServerAccountPassword is defined %}#}
+            {#{{ formmacros.field(edit_form.dbServerAccountPassword) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.dbDatabaseName is defined %}
-            {{ formmacros.field(edit_form.dbDatabaseName) }}
-        {% endif %}
-
-
-    {% if cycle == 'show' %}
-        <hr>
-
-        <h3 class="text-info">AD/LDAP</h3>
-        Note: Parameters are stored in Resources/config/services.yml
-        <br><br>
-    {% endif %}
-
-        {% if edit_form.autoAssignInstitution is defined %}
-            {{ formmacros.field(edit_form.autoAssignInstitution) }}
-        {% endif %}
-
-        {% if edit_form.aDLDAPServerAddress is defined %}
-            {{ formmacros.field(edit_form.aDLDAPServerAddress) }}
-        {% endif %}
-
-        {% if edit_form.aDLDAPServerPort is defined %}
-            {{ formmacros.field(edit_form.aDLDAPServerPort) }}
-        {% endif %}
-
-        {% if edit_form.aDLDAPServerOu is defined %}
-            {{ formmacros.field(edit_form.aDLDAPServerOu) }}
-        {% endif %}
-
-        {% if edit_form.aDLDAPServerAccountUserName is defined %}
-            {{ formmacros.field(edit_form.aDLDAPServerAccountUserName) }}
-        {% endif %}
-
-        {% if edit_form.aDLDAPServerAccountPassword is defined %}
-            {{ formmacros.field(edit_form.aDLDAPServerAccountPassword) }}
-        {% endif %}
-
-        {% if edit_form.ldapExePath is defined %}
-            {{ formmacros.field(edit_form.ldapExePath) }}
-        {% endif %}
-
-        {% if edit_form.ldapExeFilename is defined %}
-            {{ formmacros.field(edit_form.ldapExeFilename) }}
-        {% endif %}
+        {#{% if edit_form.dbDatabaseName is defined %}#}
+            {#{{ formmacros.field(edit_form.dbDatabaseName) }}#}
+        {#{% endif %}#}
 
 
-    {% if cycle == 'show' %}
-        <hr>
-        <h3 class="text-info">Footer</h3>
-    {% endif %}
+    {#{% if cycle == 'show' %}#}
+        {#<hr>#}
 
-    {% if edit_form.institutionname is defined %}
-        {{ formmacros.field(edit_form.institutionname) }}
-    {% endif %}
+        {#<h3 class="text-info">AD/LDAP</h3>#}
+        {#Note: Parameters are stored in Resources/config/services.yml#}
+        {#<br><br>#}
+    {#{% endif %}#}
 
-    {% if edit_form.institutionurl is defined %}
-        {{ formmacros.field(edit_form.institutionurl) }}
-    {% endif %}
+        {#{% if edit_form.autoAssignInstitution is defined %}#}
+            {#{{ formmacros.field(edit_form.autoAssignInstitution) }}#}
+        {#{% endif %}#}
 
-    {% if edit_form.departmentname is defined %}
-        {{ formmacros.field(edit_form.departmentname) }}
-    {% endif %}
+        {#{% if edit_form.aDLDAPServerAddress is defined %}#}
+            {#{{ formmacros.field(edit_form.aDLDAPServerAddress) }}#}
+        {#{% endif %}#}
 
-    {% if edit_form.departmenturl is defined %}
-        {{ formmacros.field(edit_form.departmenturl) }}
-    {% endif %}
+        {#{% if edit_form.aDLDAPServerPort is defined %}#}
+            {#{{ formmacros.field(edit_form.aDLDAPServerPort) }}#}
+        {#{% endif %}#}
 
-    {% if edit_form.scanuploadpath is defined %}
-        {{ formmacros.field(edit_form.scanuploadpath) }}
-    {% endif %}
+        {#{% if edit_form.aDLDAPServerOu is defined %}#}
+            {#{{ formmacros.field(edit_form.aDLDAPServerOu) }}#}
+        {#{% endif %}#}
 
-    {% if edit_form.fellappuploadpath is defined %}
-        {{ formmacros.field(edit_form.fellappuploadpath) }}
-    {% endif %}
+        {#{% if edit_form.aDLDAPServerAccountUserName is defined %}#}
+            {#{{ formmacros.field(edit_form.aDLDAPServerAccountUserName) }}#}
+        {#{% endif %}#}
 
-    {% if edit_form.employeesuploadpath is defined %}
-        {{ formmacros.field(edit_form.employeesuploadpath) }}
-    {% endif %}
+        {#{% if edit_form.aDLDAPServerAccountPassword is defined %}#}
+            {#{{ formmacros.field(edit_form.aDLDAPServerAccountPassword) }}#}
+        {#{% endif %}#}
 
-    {% if edit_form.avataruploadpath is defined %}
-        {{ formmacros.field(edit_form.avataruploadpath) }}
-    {% endif %}
+        {#{% if edit_form.ldapExePath is defined %}#}
+            {#{{ formmacros.field(edit_form.ldapExePath) }}#}
+        {#{% endif %}#}
+
+        {#{% if edit_form.ldapExeFilename is defined %}#}
+            {#{{ formmacros.field(edit_form.ldapExeFilename) }}#}
+        {#{% endif %}#}
 
 
-    {% if cycle == 'show' %}
-        <hr>
-        <h3 class="text-info">Maintanence Mode</h3>
-    {% endif %}
+    {#{% if cycle == 'show' %}#}
+        {#<hr>#}
+        {#<h3 class="text-info">Footer</h3>#}
+    {#{% endif %}#}
 
-    {% if edit_form.maintenance is defined %}
-        {{ formmacros.checkbox(edit_form.maintenance) }}
-    {% endif %}
+    {#{% if edit_form.institutionname is defined %}#}
+        {#{{ formmacros.field(edit_form.institutionname) }}#}
+    {#{% endif %}#}
+
+    {#{% if edit_form.institutionurl is defined %}#}
+        {#{{ formmacros.field(edit_form.institutionurl) }}#}
+    {#{% endif %}#}
+
+    {#{% if edit_form.departmentname is defined %}#}
+        {#{{ formmacros.field(edit_form.departmentname) }}#}
+    {#{% endif %}#}
+
+    {#{% if edit_form.departmenturl is defined %}#}
+        {#{{ formmacros.field(edit_form.departmenturl) }}#}
+    {#{% endif %}#}
+
+    {#{% if edit_form.scanuploadpath is defined %}#}
+        {#{{ formmacros.field(edit_form.scanuploadpath) }}#}
+    {#{% endif %}#}
+
+    {#{% if edit_form.fellappuploadpath is defined %}#}
+        {#{{ formmacros.field(edit_form.fellappuploadpath) }}#}
+    {#{% endif %}#}
+
+    {#{% if edit_form.employeesuploadpath is defined %}#}
+        {#{{ formmacros.field(edit_form.employeesuploadpath) }}#}
+    {#{% endif %}#}
+
+    {#{% if edit_form.avataruploadpath is defined %}#}
+        {#{{ formmacros.field(edit_form.avataruploadpath) }}#}
+    {#{% endif %}#}
+
+
+    {#{% if cycle == 'show' %}#}
+        {#<hr>#}
+        {#<h3 class="text-info">Maintanence Mode</h3>#}
+    {#{% endif %}#}
+
+    {#{% if edit_form.maintenance is defined %}#}
+        {#{{ formmacros.checkbox(edit_form.maintenance) }}#}
+    {#{% endif %}#}
 
     {% if edit_form.maintenanceenddate is defined %}
         {#{{ formmacros.fielddate(edit_form.maintenanceenddate, "maintenanceenddate") }}#}
@@ -274,58 +275,58 @@
         </p>
     {% endif %}
 
-    {% if edit_form.maintenanceloginmsg is defined %}
-        {{ formmacros.field(edit_form.maintenanceloginmsg) }}
-    {% endif %}
+    {#{% if edit_form.maintenanceloginmsg is defined %}#}
+        {#{{ formmacros.field(edit_form.maintenanceloginmsg) }}#}
+    {#{% endif %}#}
 
-    {% if edit_form.maintenancelogoutmsg is defined %}
-        {{ formmacros.field(edit_form.maintenancelogoutmsg) }}
-    {% endif %}
-
-
-    {% if cycle == 'show' %}
-        <hr>
-        <h3 class="text-info">Titles and Messages</h3>
-    {% endif %}
-
-    {% if edit_form.mainHomeTitle is defined %}
-        {{ formmacros.field(edit_form.mainHomeTitle) }}
-    {% endif %}
-
-    {% if edit_form.listManagerTitle is defined %}
-        {{ formmacros.field(edit_form.listManagerTitle) }}
-    {% endif %}
-
-    {% if edit_form.eventLogTitle is defined %}
-        {{ formmacros.field(edit_form.eventLogTitle) }}
-    {% endif %}
-
-    {% if edit_form.siteSettingsTitle is defined %}
-        {{ formmacros.field(edit_form.siteSettingsTitle) }}
-    {% endif %}
-
-    {% if edit_form.contentAboutPage is defined %}
-        {{ formmacros.field(edit_form.contentAboutPage) }}
-    {% endif %}
+    {#{% if edit_form.maintenancelogoutmsg is defined %}#}
+        {#{{ formmacros.field(edit_form.maintenancelogoutmsg) }}#}
+    {#{% endif %}#}
 
 
-    {% if cycle == 'show' %}
-        <hr>
-    {% endif %}
+    {#{% if cycle == 'show' %}#}
+        {#<hr>#}
+        {#<h3 class="text-info">Titles and Messages</h3>#}
+    {#{% endif %}#}
 
-        <br>
+    {#{% if edit_form.mainHomeTitle is defined %}#}
+        {#{{ formmacros.field(edit_form.mainHomeTitle) }}#}
+    {#{% endif %}#}
 
-        {% if cycle == "show" %}
+    {#{% if edit_form.listManagerTitle is defined %}#}
+        {#{{ formmacros.field(edit_form.listManagerTitle) }}#}
+    {#{% endif %}#}
 
-            <p>
-                <a class="btn btn-success" href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': param }) }}">Edit</a>
-            </p>
+    {#{% if edit_form.eventLogTitle is defined %}#}
+        {#{{ formmacros.field(edit_form.eventLogTitle) }}#}
+    {#{% endif %}#}
 
-        {% endif %}
+    {#{% if edit_form.siteSettingsTitle is defined %}#}
+        {#{{ formmacros.field(edit_form.siteSettingsTitle) }}#}
+    {#{% endif %}#}
 
-    <p>
-        {{ form_rest(edit_form) }}
-    </p>
+    {#{% if edit_form.contentAboutPage is defined %}#}
+        {#{{ formmacros.field(edit_form.contentAboutPage) }}#}
+    {#{% endif %}#}
+
+
+    {#{% if cycle == 'show' %}#}
+        {#<hr>#}
+    {#{% endif %}#}
+
+        {#<br>#}
+
+        {#{% if cycle == "show" %}#}
+
+            {#<p>#}
+                {#<a class="btn btn-success" href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': param }) }}">Edit</a>#}
+            {#</p>#}
+
+    {#{% endif %}#}
+
+        <p>
+            {{ form_rest(edit_form) }}
+        </p>
 
         {#{{ form(edit_form) }}#}
 

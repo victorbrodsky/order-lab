@@ -799,7 +799,12 @@ class ReportGenerator {
         if( !$libreOfficeConvertToPDFCommandFellApp ) {
             throw new \InvalidArgumentException('libreOfficeConvertToPDFCommandFellApp is not defined in Site Parameters.');
         }
-        $cmd = $libreOfficeConvertToPDFCommandFellApp . ' "' . $outdir . '"';
+
+        $libreOfficeConvertToPDFArgumentsdFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFArgumentsdFellApp');
+        if( !$libreOfficeConvertToPDFArgumentsdFellApp ) {
+            throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellApp is not defined in Site Parameters.');
+        }
+        $cmd = '"' . $libreOfficeConvertToPDFCommandFellApp . '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
         //echo "cmd=" . $cmd . "<br>";
 

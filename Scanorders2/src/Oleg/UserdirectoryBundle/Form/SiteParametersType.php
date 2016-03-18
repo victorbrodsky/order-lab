@@ -286,25 +286,25 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'allowPopulateFellApp' )
             $builder->add('allowPopulateFellApp',null,array(
-                'label'=>'Allow to populate Fellowship Applications from Google Form by cron job:',
+                'label'=>'Periodically import fellowship applications submitted via the Google form:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationSubjectFellApp' )
             $builder->add('confirmationSubjectFellApp',null,array(
-                'label'=>'Confirmation Email Subject:',
+                'label'=>'Email subject for confirmation of application submission:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationBodyFellApp' )
             $builder->add('confirmationBodyFellApp',null,array(
-                'label'=>'Confirmation Email Body:',
+                'label'=>'Email body for confirmation of application submission:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationEmailFellApp' )
             $builder->add('confirmationEmailFellApp',null,array(
-                'label'=>'Confirmation Email:',
+                'label'=>'Email address for confirmation of application submission:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
@@ -313,55 +313,63 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'clientEmailFellApp' )
             $builder->add('clientEmailFellApp',null,array(
-                'label'=>'Client Email:',
+                'label'=>'Client Email for accessing the Google Drive API (1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'p12KeyPathFellApp' )
             $builder->add('p12KeyPathFellApp',null,array(
-                'label'=>'Full Path to p12 key file:',
+                'label'=>'Full Path to p12 key file for accessing the Google Drive API (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'googleDriveApiUrlFellApp' )
+            $builder->add('googleDriveApiUrlFellApp',null,array(
+                'label'=>'Google Drive API URL (https://www.googleapis.com/auth/drive):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'userImpersonateEmailFellApp' )
             $builder->add('userImpersonateEmailFellApp',null,array(
-                'label'=>'Impersonate user Email:',
+                'label'=>'Impersonate the following user email address for accessing the Google Drive API (olegivanov@pathologysystems.org):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'excelIdFellApp' )
             $builder->add('excelIdFellApp',null,array(
-                'label'=>'Id of excel file:',
+                'label'=>'ID of the spreadsheet file with fellowship applications on Google Drive (1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'localInstitutionFellApp' )
             $builder->add('localInstitutionFellApp',null,array(
-                'label'=>'Local Institution for Import Application (example "Pathology Fellowship Programs (WCMC)"):',
+                'label'=>'Local Organizational Group for imported fellowship applications (Pathology Fellowship Programs (WCMC)):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteImportedAplicationsFellApp' )
             $builder->add('deleteImportedAplicationsFellApp',null,array(
-                'label'=>'Delete successfully imported applications from Google Drive:',
+                'label'=>"Delete successfully imported applications from Google Drive:",
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteOldAplicationsFellApp' )
             $builder->add('deleteOldAplicationsFellApp',null,array(
-                'label'=>'Automatically delete downloaded applications that are older than [X] year(s):',
+                'label'=>'Delete downloaded spreadsheets with fellowship applications after successful import into the database
+
+:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'yearsOldAplicationsFellApp' )
             $builder->add('yearsOldAplicationsFellApp',null,array(
-                'label'=>'Number of years after applications are deleted:',
+                'label'=>'Number of years to keep downloaded spreadsheets with fellowship applications as backup:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'spreadsheetsPathFellApp' )
             $builder->add('spreadsheetsPathFellApp',null,array(
-                'label'=>'Relative to "Fellowship Application Upload Folder" path to spreadsheets file (example "Spreadsheets"):',
+                'label'=>'Path to the downloaded spreadsheets with fellowship applications relative to the "Fellowship Application Upload Folder" (Spreadsheets):',
                 'attr' => array(
                     'class'=>'form-control form-control-modif',
                     'style'=>'margin:0',
@@ -370,7 +378,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'applicantsUploadPathFellApp' )
             $builder->add('applicantsUploadPathFellApp',null,array(
-                'label'=>'Relative to "Fellowship Application Upload Folder" path to upload applicants documents (example "FellowshipApplicantUploads"):',
+                'label'=>'Path to the downloaded attached documents relative to the "Fellowship Application Upload Folder" (FellowshipApplicantUploads):',
                 'attr' => array(
                     'class'=>'form-control form-control-modif',
                     'style'=>'margin:0',
@@ -379,7 +387,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'reportsUploadPathFellApp' )
             $builder->add('reportsUploadPathFellApp',null,array(
-                'label'=>'Relative to "Fellowship Application Upload Folder" path to generate applicants reports (example "Reports"):',
+                'label'=>'Path to the generated fellowship applications in PDF format relative to the "Fellowship Application Upload Folder" (Reports):',
                 'attr' => array(
                     'class'=>'form-control form-control-modif',
                     'style'=>'margin:0',
@@ -394,21 +402,53 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFCommandFellApp' )
             $builder->add('libreOfficeConvertToPDFCommandFellApp',null,array(
-                'label'=>'Command line to convert a file to pdf (i.e. "C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir):',
+                'label'=>'Command to convert a file to pdf using LibreOffice (C:\Program Files (x86)\LibreOffice 5\program\soffice):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFArgumentsdFellApp' )
+            $builder->add('libreOfficeConvertToPDFArgumentsdFellApp',null,array(
+                'label'=>'LibreOffice arguments (--headless -convert-to pdf -outdir):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellApp' )
             $builder->add('pdftkPathFellApp',null,array(
-                'label'=>'Path to pdfk location (i.e. E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk):',
+                'label'=>'Path to pdftk for PDF concatenation (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkFilenameFellApp' )
+            $builder->add('pdftkFilenameFellApp',null,array(
+                'label'=>'pdftk executable file (pdftk):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkArgumentsFellApp' )
+            $builder->add('pdftkArgumentsFellApp',null,array(
+                'label'=>'pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellApp' )
             $builder->add('gsPathFellApp',null,array(
-                'label'=>'Path to Ghostscript location (i.e. E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe):',
+                'label'=>'Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsFilenameFellApp' )
+            $builder->add('gsFilenameFellApp',null,array(
+                'label'=>'Ghostscript executable file (gswin64c.exe):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsArgumentsFellApp' )
+            $builder->add('gsArgumentsFellApp',null,array(
+                'label'=>'Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+
 
         $this->addCoPath($builder);
 

@@ -31,6 +31,10 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
+//TODO: implement
+// "Delete successfully imported applications from Google Drive",
+// "deletion of rows from the spreadsheet on Google Drive upon successful import"
+// "Automatically delete downloaded applications that are older than [X] year(s)".
 
 /*
  * 1) importFellApp

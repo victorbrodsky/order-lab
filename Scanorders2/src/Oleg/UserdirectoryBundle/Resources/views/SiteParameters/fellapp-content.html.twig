@@ -22,7 +22,10 @@
 
                     {#AllowPopulateFellApp#}
                     <tr>
-                        <td>Allow to populate Fellowship Applications from Google Form by cron job</td>
+                        <td class="rowlink-skip">
+                            Periodically import fellowship applications submitted via the Google form
+                            <a style="color:#428bca" href="{{ path('fellapp_instructions') }}" target="_blank">View instructions to change the interval</a>
+                        </td>
                         <td>
                             {% set allowPopulateFellAppStr = 'No' %}
                             {% if entity.allowPopulateFellApp == true %}
@@ -35,19 +38,19 @@
                     </tr>
 
                     <tr>
-                        <td>Application Submit Confirmation Email</td>
+                        <td>Email address for confirmation of application submission</td>
                         <td>{{ entity.confirmationEmailFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationEmailFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Application Submit Confirmation Email Subject</td>
+                        <td>Email subject for confirmation of application submission</td>
                         <td>{{ entity.confirmationSubjectFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationSubjectFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Application Submit Confirmation Email Body</td>
+                        <td>Email body for confirmation of application submission</td>
                         <td>{{ entity.confirmationBodyFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationBodyFellApp'}) }}">Edit</a></td>
                     </tr>
@@ -55,36 +58,44 @@
 
                     <tr>
                         <td>Link to the Application Page</td>
-                        <td class="rowlink-skip">{{ entity.applicationPageLinkFellApp }}</td>
+                        <td class="rowlink-skip">
+                            <a href="{{ entity.applicationPageLinkFellApp }}" target="_blank">{{ entity.applicationPageLinkFellApp }}</a>
+                        </td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicationPageLinkFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Client Email</td>
+                        <td>Client Email for accessing the Google Drive API (1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com)</td>
                         <td>{{ entity.clientEmailFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'clientEmailFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Full Path to p12 key file</td>
+                        <td>Full Path to p12 key file for accessing the Google Drive API (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12)</td>
                         <td class="rowlink-skip">{{ entity.p12KeyPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'p12KeyPathFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Impersonate user Email</td>
+                        <td>Google Drive API URL (https://www.googleapis.com/auth/drive)</td>
+                        <td class="rowlink-skip">{{ entity.googleDriveApiUrlFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'googleDriveApiUrlFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Impersonate the following user email address for accessing the Google Drive API (olegivanov@pathologysystems.org)</td>
                         <td>{{ entity.userImpersonateEmailFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'userImpersonateEmailFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Id of excel file</td>
+                        <td>ID of the spreadsheet file with fellowship applications on Google Drive (1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc)</td>
                         <td>{{ entity.excelIdFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'excelIdFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Local Institution for Import Application (example "Pathology Fellowship Programs (WCMC)")</td>
+                        <td>Local Organizational Group for imported fellowship applications (Pathology Fellowship Programs (WCMC))</td>
                         <td>{{ entity.localInstitutionFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'localInstitutionFellApp'}) }}">Edit</a></td>
                     </tr>
@@ -103,7 +114,7 @@
                     </tr>
 
                     <tr>
-                        <td>Automatically delete downloaded applications that are older than [X] year(s)</td>
+                        <td>Delete downloaded spreadsheets with fellowship applications after successful import into the database</td>
                         <td>
                             {{ entity.deleteOldAplicationsFellApp }}
                             {% set deleteOldAplicationsFellAppStr = 'No' %}
@@ -116,7 +127,7 @@
                     </tr>
 
                     <tr>
-                        <td>Number of years after applications are deleted</td>
+                        <td>Number of years to keep downloaded spreadsheets with fellowship applications as backup</td>
                         <td>{{ entity.yearsOldAplicationsFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'yearsOldAplicationsFellApp'}) }}">Edit</a></td>
                     </tr>
@@ -124,8 +135,9 @@
                     <tr>
                         <td class="rowlink-skip element-table-with-tooltip-always"
                             data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
-                            Relative to "Fellowship Application Upload Folder" path to spreadsheets file (example "Spreadsheets").
-                            <br>Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.spreadsheetsPathFellApp }}
+                            Path to the downloaded spreadsheets with fellowship applications relative to the "Fellowship Application Upload Folder" (Spreadsheets).
+                            <br>
+                            Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.spreadsheetsPathFellApp }}
                         </td>
                         <td>{{ entity.spreadsheetsPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'spreadsheetsPathFellApp'}) }}">Edit</a></td>
@@ -134,7 +146,7 @@
                     <tr>
                         <td class="rowlink-skip element-table-with-tooltip-always"
                             data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
-                            Relative to "Fellowship Application Upload Folder" path to upload applicants documents (example "FellowshipApplicantUploads").
+                            Path to the downloaded attached documents relative to the "Fellowship Application Upload Folder" (FellowshipApplicantUploads).
                             <br>Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.applicantsUploadPathFellApp }}
                         </td>
                         <td>{{ entity.applicantsUploadPathFellApp }}</td>
@@ -144,7 +156,7 @@
                     <tr>
                         <td class="rowlink-skip element-table-with-tooltip-always"
                             data-toggle="tooltip" title='the root folder is set by "Fellowship Application Upload Folder" under "Uploads" section'>
-                            Relative to "Fellowship Application Upload Folder" path to generate applicants reports (example "Reports").
+                            Path to the generated fellowship applications in PDF format relative to the "Fellowship Application Upload Folder" (Reports).
                             <br>Path: {{ uploadPath ~ fellapp_uploadpath|replace({'/':'\\'}) ~'\\'~ entity.reportsUploadPathFellApp }}
                         </td>
                         <td>{{ entity.reportsUploadPathFellApp }}</td>
@@ -152,22 +164,53 @@
                     </tr>
 
                     <tr>
-                        <td>Command line to convert a file to pdf (i.e. "C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir)</td>
+                        <td>Command to convert a file to pdf using LibreOffice (C:\Program Files (x86)\LibreOffice 5\program\soffice)</td>
                         <td>{{ entity.libreOfficeConvertToPDFCommandFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFCommandFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Path to pdfk location (i.e. E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk)</td>
+                        <td>LibreOffice arguments (--headless -convert-to pdf -outdir)</td>
+                        <td>{{ entity.libreOfficeConvertToPDFArgumentsdFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFArgumentsdFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to pdftk for PDF concatenation (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder)</td>
                         <td>{{ entity.pdftkPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkPathFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Path to Ghostscript location (i.e. E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe)</td>
+                        <td>pdftk executable file (pdftk)</td>
+                        <td>{{ entity.pdftkFilenameFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkFilenameFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask) (pdftk)</td>
+                        <td>{{ entity.pdftkArgumentsFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkArgumentsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe)</td>
                         <td>{{ entity.gsPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsPathFellApp'}) }}">Edit</a></td>
                     </tr>
+
+                    <tr>
+                        <td>Ghostscript executable file (gswin64c.exe)</td>
+                        <td>{{ entity.gsFilenameFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsFilenameFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###)</td>
+                        <td>{{ entity.gsArgumentsFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
 
                 </tbody>
             </table>

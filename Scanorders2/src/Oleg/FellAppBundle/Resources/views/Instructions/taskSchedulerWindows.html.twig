@@ -1,0 +1,28 @@
+{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Task Scheduler for importing Fellowship Application from Google on the Windows Server
+{% endblock %}
+
+
+{% block content %}
+
+    <h3>
+        Task Scheduler for importing Fellowship Application from Google on the Windows Server
+    </h3>
+
+
+    <p>
+        1) Control Panel -> Schedule Tasks
+        <br>
+        2) Import default task xml file importFellowshipApplications.xml located on
+        order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util
+        <br>
+        3) Check if "Configure for" is correct and drive letter is correct (on the dev server it is "C:" on test and prod server it is "E:")
+        <br>
+        4) Click run and check if the "Last Run Result" shows "The operation completed successfully"
+        <br>
+        5) Change the setting if necessarily.
+    </p>
+
+{% endblock %}

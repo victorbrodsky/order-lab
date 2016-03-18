@@ -264,11 +264,18 @@ class SiteParameters {
 
     /**
      * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
-     * E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util
+     * E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $p12KeyPathFellApp;
+
+    /**
+     * https://www.googleapis.com/auth/drive
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $googleDriveApiUrlFellApp;
 
     /**
      * Impersonate user Email: i.e. olegivanov@pathologysystems.org
@@ -345,26 +352,63 @@ class SiteParameters {
     private $applicationPageLinkFellApp;
 
     /**
-     * "C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
+     * C:\Program Files (x86)\LibreOffice 5\program\soffice
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $libreOfficeConvertToPDFCommandFellApp;
 
     /**
-     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk
+     * --headless -convert-to pdf -outdir
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $libreOfficeConvertToPDFArgumentsdFellApp;
+
+    /**
+     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $pdftkPathFellApp;
 
     /**
+     * pdftk
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $pdftkFilenameFellApp;
+
+    /**
+     * ###inputFiles### cat output ###outputFile### dont_ask
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $pdftkArgumentsFellApp;
+
+    /**
      * Ghostscript
-     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe
+     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $gsPathFellApp;
+
+    /**
+     * Ghostscript
+     * gswin64c.exe
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $gsFilenameFellApp;
+
+    /**
+     * Ghostscript
+     * -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $gsArgumentsFellApp;
     ///////////////////// EOF FELLAPP /////////////////////
 
     // Co-Path //
@@ -1804,6 +1848,105 @@ class SiteParameters {
     public function setGsPathFellApp($gsPathFellApp)
     {
         $this->gsPathFellApp = $gsPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkFilenameFellApp()
+    {
+        return $this->pdftkFilenameFellApp;
+    }
+
+    /**
+     * @param mixed $pdftkFilenameFellApp
+     */
+    public function setPdftkFilenameFellApp($pdftkFilenameFellApp)
+    {
+        $this->pdftkFilenameFellApp = $pdftkFilenameFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkArgumentsFellApp()
+    {
+        return $this->pdftkArgumentsFellApp;
+    }
+
+    /**
+     * @param mixed $pdftkArgumentsFellApp
+     */
+    public function setPdftkArgumentsFellApp($pdftkArgumentsFellApp)
+    {
+        $this->pdftkArgumentsFellApp = $pdftkArgumentsFellApp;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getGsFilenameFellApp()
+    {
+        return $this->gsFilenameFellApp;
+    }
+
+    /**
+     * @param mixed $gsFilenameFellApp
+     */
+    public function setGsFilenameFellApp($gsFilenameFellApp)
+    {
+        $this->gsFilenameFellApp = $gsFilenameFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGsArgumentsFellApp()
+    {
+        return $this->gsArgumentsFellApp;
+    }
+
+    /**
+     * @param mixed $gsArgumentsFellApp
+     */
+    public function setGsArgumentsFellApp($gsArgumentsFellApp)
+    {
+        $this->gsArgumentsFellApp = $gsArgumentsFellApp;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleDriveApiUrlFellApp()
+    {
+        return $this->googleDriveApiUrlFellApp;
+    }
+
+    /**
+     * @param mixed $googleDriveApiUrlFellApp
+     */
+    public function setGoogleDriveApiUrlFellApp($googleDriveApiUrlFellApp)
+    {
+        $this->googleDriveApiUrlFellApp = $googleDriveApiUrlFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFArgumentsdFellApp()
+    {
+        return $this->libreOfficeConvertToPDFArgumentsdFellApp;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFArgumentsdFellApp
+     */
+    public function setLibreOfficeConvertToPDFArgumentsdFellApp($libreOfficeConvertToPDFArgumentsdFellApp)
+    {
+        $this->libreOfficeConvertToPDFArgumentsdFellApp = $libreOfficeConvertToPDFArgumentsdFellApp;
     }
 
 
