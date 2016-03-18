@@ -924,7 +924,12 @@ class ReportGenerator {
             throw new \InvalidArgumentException('pdftkFilenameFellApp is not defined in Site Parameters.');
         }
 
-        $pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '" ';
+        $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em,'pdftkArgumentsFellApp');
+        if( !$pdftkArgumentsFellApp ) {
+            throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
+        }
+
+        $pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '"';
 
         //quick fix for c.med running on E:
         //collage is running on C:
@@ -932,7 +937,15 @@ class ReportGenerator {
 //            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
 //        }
 
-        $cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
+        //$cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
+
+        //replace ###parameter### by appropriate variable
+        //###inputFiles### cat output ###outputFile### dont_ask
+        $pdftkArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$pdftkArgumentsFellApp);
+        $pdftkArgumentsFellApp = str_replace('###outputFile###',$filenameMerged,$pdftkArgumentsFellApp);
+
+        $cmd = $pdftkLocation . ' ' . $pdftkArgumentsFellApp;
+
         //echo "cmd=".$cmd."<br>";
 
         $output = null;
