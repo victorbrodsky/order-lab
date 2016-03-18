@@ -957,8 +957,7 @@ class ReportGenerator {
         //$logger->error("pdftk return: " . $return);
 
         //return 0 => ok, return 1 => failed
-        if( 1 ) {
-        //if( $return == 1 ) {
+        if( $return == 1 ) {
 
             //event log
             $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
@@ -972,7 +971,7 @@ class ReportGenerator {
             $filesInArr = $this->processFilesGostscript($filesArr);
 
             $filesInStr = $this->convertFilesArrToString($filesInArr, false);
-            $logger->warning('pdftk encrypted filesInStr='.$filesInStr);
+            //$logger->warning('pdftk encrypted filesInStr='.$filesInStr);
 
             //$cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
 
@@ -1098,7 +1097,7 @@ class ReportGenerator {
 
             $cmd = $gsLocation . ' ' . $gsArgumentsFellApp;
 
-            $logger->warning('GS: cmd='.$cmd);
+            //$logger->warning('GS: cmd='.$cmd);
 
             $output = null;
             $return = null;
