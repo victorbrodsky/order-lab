@@ -37,7 +37,7 @@
 <div id="platform-settings" class="panel-collapse collapse">
     <div class="panel-body">
 
-    <table class="records_list table table-bordered table-hover table-condensed text-left">
+    <table class="table table-bordered table-hover table-condensed text-left">
         <thead>
             <tr>
                 <th>Parameter</th>
@@ -456,6 +456,8 @@
     </div>
 </div>
 </div>
+
+    {% include 'OlegUserdirectoryBundle:SiteParameters:third-party-software-content.html.twig' %}
 
     {% if (sitename == "employees" or sitename == "fellapp") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'OlegUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
