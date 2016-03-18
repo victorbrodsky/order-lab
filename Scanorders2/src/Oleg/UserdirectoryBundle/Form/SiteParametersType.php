@@ -452,7 +452,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsArgumentsFellApp' )
             $builder->add('gsArgumentsFellApp',null,array(
-                'label'=>'Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###):',
+                'label'=>'Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 

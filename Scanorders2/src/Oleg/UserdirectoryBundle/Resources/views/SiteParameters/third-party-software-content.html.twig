@@ -51,7 +51,7 @@
                     </tr>
 
                     <tr>
-                        <td>pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask) (pdftk)</td>
+                        <td>pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask)</td>
                         <td>{{ entity.pdftkArgumentsFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkArgumentsFellApp'}) }}">Edit</a></td>
                     </tr>
@@ -69,7 +69,7 @@
                     </tr>
 
                     <tr>
-                        <td>Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###)</td>
+                        <td>Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###)</td>
                         <td>{{ entity.gsArgumentsFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellApp'}) }}">Edit</a></td>
                     </tr>
