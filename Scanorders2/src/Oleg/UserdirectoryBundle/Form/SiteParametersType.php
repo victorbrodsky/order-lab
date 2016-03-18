@@ -284,6 +284,13 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        //Fellowship Application parameters
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'codeGoogleFormFellApp' )
+            $builder->add('codeGoogleFormFellApp',null,array(
+                'label'=>'Path to the local copy of the fellowship application form Code.gs file (https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'allowPopulateFellApp' )
             $builder->add('allowPopulateFellApp',null,array(
                 'label'=>'Periodically import fellowship applications submitted via the Google form:',
@@ -307,9 +314,6 @@ class SiteParametersType extends AbstractType
                 'label'=>'Email address for confirmation of application submission:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
-
-
-
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'clientEmailFellApp' )
             $builder->add('clientEmailFellApp',null,array(

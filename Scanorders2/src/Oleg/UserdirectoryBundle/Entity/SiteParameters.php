@@ -236,6 +236,14 @@ class SiteParameters {
 
     ///////////////////// FELLAPP /////////////////////
     /**
+     * Path to the local copy of the fellowship application form
+     * https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $codeGoogleFormFellApp;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $allowPopulateFellApp;
@@ -1970,6 +1978,22 @@ class SiteParameters {
     public function setLibreOfficeConvertToPDFPathFellApp($libreOfficeConvertToPDFPathFellApp)
     {
         $this->libreOfficeConvertToPDFPathFellApp = $libreOfficeConvertToPDFPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodeGoogleFormFellApp()
+    {
+        return $this->codeGoogleFormFellApp;
+    }
+
+    /**
+     * @param mixed $codeGoogleFormFellApp
+     */
+    public function setCodeGoogleFormFellApp($codeGoogleFormFellApp)
+    {
+        $this->codeGoogleFormFellApp = $codeGoogleFormFellApp;
     }
 
 
