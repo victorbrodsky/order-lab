@@ -70,22 +70,26 @@ class GoogleSheetManagement {
         $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
         $rowId = 3;
 
-        $file = null;
-        try {
-            $file = $service->files->get($excelId);
-        } catch (Exception $e) {
-            throw new IOException('Google API: Unable to get file by file id='.$excelId.". An error occurred: " . $e->getMessage());
-        }
-
         //excel download test
-        $response = $this->downloadFile($service, $file, 'excel');
-        echo "response=".$response."<br>";
-        if( !$response ) {
-            throw new IOException('Error file response is empty: file id='.$excelId);
+        if(0) {
+            $file = null;
+            try {
+                $file = $service->files->get($excelId);
+            } catch (Exception $e) {
+                throw new IOException('Google API: Unable to get file by file id=' . $excelId . ". An error occurred: " . $e->getMessage());
+            }
+            //download file test
+            $response = $this->downloadFile($service, $file, 'excel');
+            echo "response=" . $response . "<br>";
+            if (!$response) {
+                throw new IOException('Error file response is empty: file id=' . $excelId);
+            }
+            echo 'response ok <br>';
         }
-        echo 'response ok <br>';
 
         $deleteUrl = "https://spreadsheets.google.com/feeds/list/key/".$excelId."/private/full/".$rowId;
+        echo 'deleteUrl='.$deleteUrl.'<br>';
+
         $request = new \Google_Http_Request($deleteUrl, 'DELETE', null, null);
         $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
         echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
