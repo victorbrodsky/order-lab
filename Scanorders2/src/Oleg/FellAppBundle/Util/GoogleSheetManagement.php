@@ -54,7 +54,7 @@ class GoogleSheetManagement {
             $fellappUtil->sendEmailToSystemEmail($event, $event);
             return null;
         }
-        exit('service ok');
+        //exit('service ok');
 
         //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
         //$excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
@@ -76,7 +76,7 @@ class GoogleSheetManagement {
         if( !$response ) {
             throw new IOException('Error file response is empty: file id='.$excelId);
         }
-        exit('1');
+        echo 'response ok <br>';
 
         $deleteUrl = "https://spreadsheets.google.com/feeds/list/key/".$excelId."/private/full/".$rowId;
         $request = new \Google_Http_Request($deleteUrl, 'DELETE', null, null);
