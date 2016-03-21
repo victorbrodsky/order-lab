@@ -70,8 +70,15 @@ class GoogleSheetManagement {
         $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
         $rowId = 3;
 
+        $file = null;
+        try {
+            $file = $service->files->get($excelId);
+        } catch (Exception $e) {
+            throw new IOException('Google API: Unable to get file by file id='.$excelId.". An error occurred: " . $e->getMessage());
+        }
+
         //excel download test
-        $response = $this->downloadFile($service, $excelId, 'excel');
+        $response = $this->downloadFile($service, $file, 'excel');
         echo "response=".$response."<br>";
         if( !$response ) {
             throw new IOException('Error file response is empty: file id='.$excelId);
