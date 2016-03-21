@@ -31,10 +31,6 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-//TODO: implement
-// "Delete successfully imported applications from Google Drive",
-// "deletion of rows from the spreadsheet on Google Drive upon successful import"
-// "Automatically delete downloaded applications that are older than [X] year(s)".
 
 /*
  * 1) importFellApp
@@ -81,9 +77,10 @@ class FellAppUtil {
 
         $res = null;
         $logger = $this->container->get('logger');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
-        $service = $this->getGoogleService();
+        $service = $googlesheetmanagement->getGoogleService();
 
         if( !$service ) {
             $event = "Google API service failed!";
@@ -183,66 +180,7 @@ class FellAppUtil {
 
 
 
-    public function getGoogleService() {
-        //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
-        $userUtil = new UserUtil();
-        $client_email = $userUtil->getSiteSetting($this->em,'clientEmailFellApp');
 
-        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
-        $pkey = $userUtil->getSiteSetting($this->em,'p12KeyPathFellApp');
-        if( !$pkey ) {
-            $logger = $this->container->get('logger');
-            $logger->warning('p12KeyPathFellApp is not defined in Site Parameters. p12KeyPathFellApp='.$pkey);
-        }
-
-        //$user_to_impersonate = 'olegivanov@pathologysystems.org';
-        $user_to_impersonate = $userUtil->getSiteSetting($this->em,'userImpersonateEmailFellApp');
-
-        $res = $this->authenticationP12Key($pkey,$client_email,$user_to_impersonate);
-        return $res['service'];
-    }
-
-    //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
-    //https://developers.google.com/api-client-library/php/auth/service-accounts
-    //1) Create a service account by Google Developers Console.
-    //2) Delegate domain-wide authority to the service account.
-    //3) Impersonate a user account.
-    public function authenticationP12Key($pkey,$client_email,$user_to_impersonate) {
-        //echo "pkey=".$pkey."<br>";
-        $private_key = file_get_contents($pkey); //notasecret
-
-        $userUtil = new UserUtil();
-        $googleDriveApiUrlFellApp = $userUtil->getSiteSetting($this->em,'googleDriveApiUrlFellApp');
-        if( !$googleDriveApiUrlFellApp ) {
-            throw new \InvalidArgumentException('googleDriveApiUrlFellApp is not defined in Site Parameters.');
-        }
-        $scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
-
-        $credentials = new \Google_Auth_AssertionCredentials(
-            $client_email,
-            $scopes,
-            $private_key,
-            'notasecret',                                 // Default P12 password
-            'http://oauth.net/grant_type/jwt/1.0/bearer', // Default grant type
-            $user_to_impersonate
-        );
-
-        $client = new \Google_Client();
-        $client->setAssertionCredentials($credentials);
-        if( $client->getAuth()->isAccessTokenExpired() ) {
-            $client->getAuth()->refreshTokenWithAssertion($credentials); //causes timeout on localhost: OAuth ERR_CONNECTION_RESET
-        }
-
-        $service = new \Google_Service_Drive($client);
-
-        $res = array(
-            'client' => $client,
-            'credentials' => $credentials,
-            'service' => $service
-        );
-
-        return $res;
-    }
 
     public function downloadFileToServer($author, $service, $fileId, $type, $path) {
         $file = null;
@@ -261,7 +199,8 @@ class FellAppUtil {
                 return $documentDb;
             }
 
-            $response = $this->downloadFile($service, $file, $type);
+            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+            $response = $googlesheetmanagement->downloadFile($service, $file, $type);
             //echo "response=".$response."<br>";
             if( !$response ) {
                 throw new IOException('Error file response is empty: file id='.$fileId);
@@ -330,35 +269,7 @@ class FellAppUtil {
     }
 
 
-    /**
-     * Download a file's content.
-     *
-     * @param Google_Servie_Drive $service Drive API service instance.
-     * @param Google_Servie_Drive_DriveFile $file Drive File instance.
-     * @return String The file's content if successful, null otherwise.
-     */
-    function downloadFile($service, $file, $type=null) {
-        if( $type && $type == 'excel' ) {
-            $downloadUrl = $file->getExportLinks()['text/csv'];
-        } else {
-            $downloadUrl = $file->getDownloadUrl();
-        }
-        //echo "downloadUrl=".$downloadUrl."<br>";
-        if ($downloadUrl) {
-            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
-            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-            //echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
-            if ($httpRequest->getResponseHttpCode() == 200) {
-                return $httpRequest->getResponseBody();
-            } else {
-                // An error occurred.
-                return null;
-            }
-        } else {
-            // The file doesn't have any content stored on Drive.
-            return null;
-        }
-    }
+
 
 
 
@@ -371,7 +282,8 @@ class FellAppUtil {
         $logger = $this->container->get('logger');
         ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
 
-        $service = $this->getGoogleService();
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $service = $googlesheetmanagement->getGoogleService();
         if( !$service ) {
             $event = "Google API service failed!";
             $logger->warning($event);
@@ -452,11 +364,8 @@ class FellAppUtil {
         $count = 0;
 
         //for each user in excel
-        for ($row = 3; $row <= $highestRow; $row++){
+        for( $row = 3; $row <= $highestRow; $row++ ){
 
-            
-    
-            
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
                 NULL,
@@ -464,8 +373,6 @@ class FellAppUtil {
                 FALSE);
 
             //print_r($rowData);
-
-
 
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
@@ -913,6 +820,13 @@ class FellAppUtil {
                         $logger->notice("Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
                         $emailUtil->sendEmail( $email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp );
                     }
+                }
+
+                //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
+                $deleteImportedAplicationsFellApp = $userUtil->getSiteSetting($this->em,'deleteImportedAplicationsFellApp');
+                if( $deleteImportedAplicationsFellApp ) {
+                    $googleSheetManagement = $this->container->get('fellapp_googlesheetmanagement');
+                    $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive($fellowshipApplication);
                 }
 
                 $count++;
@@ -2175,5 +2089,7 @@ class FellAppUtil {
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $this->systemEmail, $subject, $message );
     }
+
+
 
 } 

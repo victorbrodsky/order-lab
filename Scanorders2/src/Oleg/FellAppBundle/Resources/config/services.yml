@@ -24,6 +24,10 @@ services:
         class: Oleg\FellAppBundle\Util\ReportGenerator
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container", "@templating"]
 
+    fellapp_googlesheetmanagement:
+        class: Oleg\FellAppBundle\Util\GoogleSheetManagement
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
 
     fellap_role_voter:
         class: Oleg\FellAppBundle\Security\Voter\FellAppRoleVoter

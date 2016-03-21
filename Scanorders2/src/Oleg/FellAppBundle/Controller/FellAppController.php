@@ -2002,6 +2002,10 @@ class FellAppController extends Controller {
      */
     public function testAction() {
 
+        $googleSheetManagement = $this->container->get('fellapp_googleSheetManagement');
+        $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive('cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53');
+        exit('googleSheetManagement res='.$res);
+
         //include_once "vendor/google/apiclient/examples/simple-query.php";
         include_once "vendor/google/apiclient/examples/user-example.php";
         //include_once "vendor/google/apiclient/examples/idtoken.php";
