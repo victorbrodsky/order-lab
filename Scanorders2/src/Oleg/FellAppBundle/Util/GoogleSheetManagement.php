@@ -135,9 +135,29 @@ class GoogleSheetManagement {
         $listFeed = $worksheet->getListFeed();
 
         $rowTitle = "cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53";
+        $rowTitle = "cinava7@";
+        $rowTitle = "testid1";
+        $rowTitle = "test1emailcinava@yahoo.com";
+        $rowTitle = "test1emailcinava_yahoo.com_Doe_Linda_2016-03-15_17_59_5";
+        $rowTitle = "cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53";
+
+        //$rowTitle = urlencode($rowTitle);
+        //echo "rowTitle=".$rowTitle."<br>";
+
         $listFeed = $worksheet->getListFeed(array("sq" => "id = $rowTitle", "reverse" => "true"));
 
-        print_r($listFeed);
+        $entries = $listFeed->getEntries();
+        foreach( $entries as $entry ) {
+            echo "list:<br>";
+            $values = $entry->getValues();
+            print_r($values );
+            echo "<br>";
+            echo "lastname=".$values['lastname']."<br>";
+        }
+        echo "eof list<br><br>";
+
+        //echo "<br><br>full list:<br>";
+        //print_r($listFeed);
     }
 
 
