@@ -24,6 +24,7 @@ use Google\Spreadsheet\ServiceRequestFactory;
 use Google\Spreadsheet\Spreadsheet;
 use Google\Spreadsheet\SpreadsheetService;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 class GoogleSheetManagement {
 
@@ -129,11 +130,18 @@ class GoogleSheetManagement {
         ServiceRequestFactory::setInstance($serviceRequest);
 
         $spreadsheetService = new SpreadsheetService();
-        $spreadsheetFeed = $spreadsheetService->getSpreadsheets();
+        //$spreadsheetFeed = $spreadsheetService->getSpreadsheets();
         //$spreadsheet = $spreadsheetFeed->getByTitle('Fellapp-test');
-        $spreadsheet = $this->getByKey($spreadsheetFeed,'1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno');
+        $key = '1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno';
+        //$spreadsheet = $this->getByKey($spreadsheetFeed,$key);
+
+        $spreadsheet = $spreadsheetService->getSpreadsheetById($key);
+        if( !$spreadsheet ) {
+            throw new IOException('Spreadsheet not found by key='.$key);
+        }
+
         $worksheetFeed = $spreadsheet->getWorksheets();
-        $worksheet = $worksheetFeed->getByTitle($spreadsheetFeed,'Form Responses 1');
+        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
         $listFeed = $worksheet->getListFeed();
 
         $rowTitle = "cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53";
@@ -176,12 +184,15 @@ class GoogleSheetManagement {
      */
     public function getByKey($spreadsheetFeed,$key)
     {
-        foreach( $spreadsheetFeed->xml->entry as $entry ) {
-            //full id: https://spreadsheets.google.com/feeds/worksheets/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
+        foreach( $spreadsheetFeed->getXml()->entry as $entry ) {
+            //full id: https://spreadsheets.google.com/feeds/spreadsheets/private/full/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
             $id = $entry->id->__toString();
+            //echo "id=".$id."<br>";
             $parts = explode("/",$id);
-            if( count($parts) == 6 ) {
-                $keyId = $parts[5];
+            //echo "count=".count($parts)."<br>";
+            if( count($parts) == 8 ) {
+                $keyId = $parts[7];
+                //echo "keyId=".$keyId."<br>";
                 if( $keyId == $key) {
                     return new Spreadsheet($entry);
                 }
