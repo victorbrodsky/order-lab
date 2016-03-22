@@ -34,6 +34,87 @@ class GoogleSheetManagement {
 
 
     //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
+    public function deleteImportedApplicationAndUploadsFromGoogleDrive_orig($fellowshipApplication) {
+
+        $logger = $this->container->get('logger');
+        $fellappUtil = $this->container->get('fellapp_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        $userUtil = new UserUtil();
+
+        //cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53
+        //$rowId = $fellowshipApplication->getGoogleFormId();
+
+        $service = $this->getGoogleService();
+
+        if( !$service ) {
+            $event = "Google API service failed!";
+            $logger->warning($event);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+            $fellappUtil->sendEmailToSystemEmail($event, $event);
+            return null;
+        }
+        //exit('service ok');
+
+        //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
+        //$excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
+        $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
+
+        //http://stackoverflow.com/questions/23400842/delete-row-in-google-spredsheet-with-php-curl?
+
+        //https://api.kdyby.org/class-Google_Http_Request.html
+        //https://developers.google.com/google-apps/spreadsheets/#deleting_a_list_row:
+        // DELETE https://spreadsheets.google.com/feeds/list/key/worksheetId/private/full/rowId/rowVersion
+
+        //https://docs.google.com/a/pathologysystems.org/spreadsheets/d/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno/edit?usp=sharing
+        $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
+        $rowId = 3;
+
+        ///////////////////excel download test
+        if(0) {
+            $file = null;
+            try {
+                $file = $service->files->get($excelId);
+            } catch (Exception $e) {
+                throw new IOException('Google API: Unable to get file by file id=' . $excelId . ". An error occurred: " . $e->getMessage());
+            }
+            //download file test
+            $response = $this->downloadFile($service, $file, 'excel');
+            echo "response=" . $response . "<br>";
+            if (!$response) {
+                throw new IOException('Error file response is empty: file id=' . $excelId);
+            }
+            echo 'response ok <br>';
+        }
+        //////////////////////////////
+
+        $deleteUrl = "https://spreadsheets.google.com/feeds/list/key/".$excelId."/private/full/".$rowId;
+        echo 'deleteUrl='.$deleteUrl.'<br>';
+
+        $request = new \Google_Http_Request($deleteUrl, 'DELETE', null, null);
+        $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+        echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
+
+        print_r($httpRequest);
+
+        if ($httpRequest->getResponseHttpCode() == 200) {
+            return $httpRequest->getResponseBody();
+        } else {
+            // An error occurred.
+            return null;
+        }
+
+
+        exit(1);
+        return true;
+    }
+
+
+
+
+
+
+    //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
     public function deleteImportedApplicationAndUploadsFromGoogleDrive($fellowshipApplication) {
 
         $logger = $this->container->get('logger');
@@ -66,7 +147,7 @@ class GoogleSheetManagement {
         //https://developers.google.com/google-apps/spreadsheets/#deleting_a_list_row:
         // DELETE https://spreadsheets.google.com/feeds/list/key/worksheetId/private/full/rowId/rowVersion
 
-        https://docs.google.com/a/pathologysystems.org/spreadsheets/d/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno/edit?usp=sharing
+        //https://docs.google.com/a/pathologysystems.org/spreadsheets/d/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno/edit?usp=sharing
         $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
         $rowId = 3;
 
@@ -84,15 +165,50 @@ class GoogleSheetManagement {
             if (!$response) {
                 throw new IOException('Error file response is empty: file id=' . $excelId);
             }
-            echo 'response ok <br>';
+            echo 'response ok <br><br><br>';
+            //exit('1');
         }
 
-        $deleteUrl = "https://spreadsheets.google.com/feeds/list/key/".$excelId."/private/full/".$rowId;
+        $worksheetId = "odjpdbo";
+        $rowId = 'cpzh4'; //'cokwr';
+
+        $method = 'DELETE';
+        $deleteUrl = "https://spreadsheets.google.com/feeds/list/key/".$worksheetId."/private/full/".$rowId."/v=3.0";
+
+        //GET https://spreadsheets.google.com/feeds/cells/key/worksheetId/private/full?min-row=2&min-col=4&max-col=4
+        $method = 'GET';
+        $deleteUrl = "https://spreadsheets.google.com/feeds/cells/key/".$worksheetId."/private/full?min-row=2&min-col=4&max-col=4";
+        $deleteUrl = "https://spreadsheets.google.com/feeds/cells/key/$excelId/private/full";
+        $deleteUrl = "https://spreadsheets.google.com/feeds/worksheets/$excelId/private/full";
+        $deleteUrl = "https://spreadsheets.google.com/feeds/spreadsheets/private/full"; //get info about spreadsheet
+        $deleteUrl = "https://spreadsheets.google.com/feeds/worksheets/$excelId/private/full"; //get info about this spreadsheet => get worksheetId='odjpdbo'
+        //$deleteUrl = "https://spreadsheets.google.com/feeds/list/key/$worksheetId/private/full";
+
+        //1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
+        $deleteUrl = "https://spreadsheets.google.com/feeds/worksheets/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno/private/full/odjpdbo"; //get info about this worksheet
+
+        $deleteUrl = "https://spreadsheets.google.com/feeds/list/$excelId/$worksheetId/private/full"; //get worksheet => get rowId='cokwr'
+
+        //$deleteUrl = "https://spreadsheets.google.com/feeds/list/$excelId/$worksheetId/private/full/$rowId";
+
+        //GET https://spreadsheets.google.com/feeds/cells/key/worksheetId/private/full?min-row=2&min-col=4&max-col=4
+        //R3C1 => cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53
+        //R3C2 => 3/15/2016 17:59:533/15/2016 17:59:53
+        //R3C3 => DoeDoe
+        //R3C4 => LindaLinda
+        $deleteUrl = "https://spreadsheets.google.com/feeds/cells/$excelId/$worksheetId/private/full?min-row=3&min-col=1&max-col=4";
+
+        //try to use: http://stackoverflow.com/questions/19362703/how-to-update-google-spreadsheet-cell-using-php-api
+        //https://github.com/asimlqt/php-google-spreadsheet-client
+
         echo 'deleteUrl='.$deleteUrl.'<br>';
 
-        $request = new \Google_Http_Request($deleteUrl, 'DELETE', null, null);
+        $request = new \Google_Http_Request($deleteUrl, $method, null, null);
         $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
         echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
+
+        print_r($httpRequest);
+        echo "<br><br><br>";
 
         if ($httpRequest->getResponseHttpCode() == 200) {
             return $httpRequest->getResponseBody();
@@ -105,7 +221,6 @@ class GoogleSheetManagement {
         exit(1);
         return true;
     }
-
 
 
 
@@ -129,6 +244,8 @@ class GoogleSheetManagement {
     }
 
     //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
+    //Security page: https://admin.google.com/pathologysystems.org/AdminHome?fral=1#SecuritySettings:
+    //Credentials page: https://console.developers.google.com/apis/credentials?project=turnkey-delight-103315&authuser=1
     //https://developers.google.com/api-client-library/php/auth/service-accounts
     //1) Create a service account by Google Developers Console.
     //2) Delegate domain-wide authority to the service account.
@@ -142,7 +259,13 @@ class GoogleSheetManagement {
         if( !$googleDriveApiUrlFellApp ) {
             throw new \InvalidArgumentException('googleDriveApiUrlFellApp is not defined in Site Parameters.');
         }
-        $scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
+
+        //PHP API scopes: https://developers.google.com/api-client-library/php/auth/service-accounts#creatinganaccount
+        //set scopes on developer console:
+        // https://admin.google.com/pathologysystems.org/AdminHome?chromeless=1#OGX:ManageOauthClients
+        //scopes: example: "https://spreadsheets.google.com/feeds https://docs.google.com/feeds"
+        //$scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
+        $scopes = $googleDriveApiUrlFellApp;
 
         $credentials = new \Google_Auth_AssertionCredentials(
             $client_email,
