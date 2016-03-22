@@ -117,6 +117,10 @@ class GoogleSheetManagement {
                     //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
                     $fileID = $this->getFileId($cellValue);
                     echo 'fileID = '.$fileID."<br>";
+                    $res = $this->removeFile($fileID);
+                    if( $res ) {
+                        echo 'File was deleted with fileID = '.$fileID."<br>";
+                    }
                 }
             }
 
@@ -139,7 +143,15 @@ class GoogleSheetManagement {
         return null;
     }
 
-
+    public function removeFile($fileId) {
+        try {
+            $service = $this->getGoogleService();
+            $service->files->delete($fileId);
+        } catch (Exception $e) {
+            return "Error: " . $e->getMessage();
+        }
+        return true;
+    }
 
 
 
