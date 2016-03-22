@@ -2428,6 +2428,8 @@ class AdminController extends Controller
             'Fellowship Application Status changed to Rejected',
             'Fellowship Application Status changed to On Hold',
             'Fellowship Interview Evaluation Updated',
+            "Deleted Fellowship Application From Google Drive",
+            "Failed Deleted Fellowship Application From Google Drive",
 
             'Role Permission Updated',
 

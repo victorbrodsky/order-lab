@@ -826,7 +826,16 @@ class FellAppUtil {
                 $deleteImportedAplicationsFellApp = $userUtil->getSiteSetting($this->em,'deleteImportedAplicationsFellApp');
                 if( $deleteImportedAplicationsFellApp ) {
                     $googleSheetManagement = $this->container->get('fellapp_googlesheetmanagement');
-                    $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive($fellowshipApplication);
+                    $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive($fellowshipApplication->getGoogleFormId());
+                    if( $res ) {
+                        $event = "Fellowship Application (and all uploaded files) with Google Applicant ID=".$googleFormId." Application ID " . $fellowshipApplication->getId() . " has been successful deleted from Google Drive";
+                        $eventTypeStr = "Deleted Fellowship Application From Google Drive";
+                    } else {
+                        $event = "Error: Fellowship Application with Google Applicant ID=".$googleFormId." Application ID " . $fellowshipApplication->getId() . "failed to delete from Google Drive";
+                        $eventTypeStr = "Failed Deleted Fellowship Application From Google Drive";
+                    }
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,$eventTypeStr);
+                    $logger->error($event);
                 }
 
                 $count++;

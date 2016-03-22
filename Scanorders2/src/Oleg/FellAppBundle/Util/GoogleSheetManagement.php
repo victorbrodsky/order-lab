@@ -126,6 +126,12 @@ class GoogleSheetManagement {
 
         }
 
+        //5) delete this row
+        $rowDelRes = $this->deleteRow($rowId);
+        if( $rowDelRes ) {
+            echo 'Row was deleted with rowId = '.$rowId."<br>";
+        }
+
         exit(1);
         return true;
     }
@@ -148,8 +154,15 @@ class GoogleSheetManagement {
             $service = $this->getGoogleService();
             $service->files->delete($fileId);
         } catch (Exception $e) {
-            return "Error: " . $e->getMessage();
+            $logger = $this->container->get('logger');
+            $logger->error("Error deleting file from Google Drive with fileId=".$fileId."; Error: " . $e->getMessage());
+            return false;
         }
+        return true;
+    }
+
+    public function deleteRow($rowId) {
+
         return true;
     }
 
