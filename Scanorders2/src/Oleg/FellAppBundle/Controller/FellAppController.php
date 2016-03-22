@@ -2004,16 +2004,16 @@ class FellAppController extends Controller {
 
         $googleSheetManagement = $this->container->get('fellapp_googleSheetManagement');
 
-        $res = $googleSheetManagement->searchSheet();
-        exit('searchSheet res='.$res);
+        //$res = $googleSheetManagement->searchSheet();
+        //exit('searchSheet res='.$res);
 
-        $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive('cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53');
+        $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive('cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53');
         exit('googleSheetManagement res='.$res);
 
+        
         //include_once "vendor/google/apiclient/examples/simple-query.php";
         include_once "vendor/google/apiclient/examples/user-example.php";
         //include_once "vendor/google/apiclient/examples/idtoken.php";
-
 
 
         return new Response("OK Test");
