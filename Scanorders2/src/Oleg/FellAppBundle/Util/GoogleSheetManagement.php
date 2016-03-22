@@ -155,13 +155,15 @@ class GoogleSheetManagement {
         $service = $this->getGoogleService();
 
         try {
-            $file = $service->files->get($fileId);
-            if( $file ) {
-                $service->files->delete($fileId);
-            } else {
-                $logger->error("File not found on Google Drive with fileId=".$fileId);
-                return false;
-            }
+//            //check if file exists on Google Drive
+//            $file = $service->files->get($fileId);
+//            if( $file ) {
+//                $service->files->delete($fileId);
+//            } else {
+//                $logger->error("File not found on Google Drive with fileId=".$fileId);
+//                return false;
+//            }
+            $service->files->delete($fileId);
         } catch (Exception $e) {
             $logger->error("Error deleting file from Google Drive with fileId=".$fileId."; Error: " . $e->getMessage());
             return false;
