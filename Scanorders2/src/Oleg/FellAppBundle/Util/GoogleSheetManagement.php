@@ -131,7 +131,7 @@ class GoogleSheetManagement {
         $spreadsheetService = new SpreadsheetService();
         $spreadsheetFeed = $spreadsheetService->getSpreadsheets();
         //$spreadsheet = $spreadsheetFeed->getByTitle('Fellapp-test');
-        $spreadsheet = $this->getByKey('1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno');
+        $spreadsheet = $this->getByKey($spreadsheetFeed,'1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno');
         $worksheetFeed = $spreadsheet->getWorksheets();
         $worksheet = $worksheetFeed->getByTitle($spreadsheetFeed,'Form Responses 1');
         $listFeed = $worksheet->getListFeed();
