@@ -129,7 +129,8 @@ class GoogleSheetManagement {
 
         $spreadsheetService = new SpreadsheetService();
         $spreadsheetFeed = $spreadsheetService->getSpreadsheets();
-        $spreadsheet = $spreadsheetFeed->getByTitle('Fellapp-test');
+        //$spreadsheet = $spreadsheetFeed->getByTitle('Fellapp-test');
+        $spreadsheet = $spreadsheetFeed->getByKey('1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno');
         $worksheetFeed = $spreadsheet->getWorksheets();
         $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
         $listFeed = $worksheet->getListFeed();
@@ -158,6 +159,34 @@ class GoogleSheetManagement {
 
         //echo "<br><br>full list:<br>";
         //print_r($listFeed);
+    }
+
+    /**
+     * Gets a spreadhseet from the feed by its key . i.e. the id of
+     * the spreadsheet in google drive. This method will return only the
+     * first spreadsheet found with the specified title.
+     *
+     * https://drive.google.com/open?id=1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
+     * key=1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
+     *
+     * @param string $title
+     *
+     * @return \Google\Spreadsheet\Spreadsheet|null
+     */
+    public function getByKey($key)
+    {
+        foreach( $this->xml->entry as $entry ) {
+            //full id: https://spreadsheets.google.com/feeds/worksheets/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
+            $id = $entry->id->__toString();
+            $parts = explode("/",$id);
+            if( count($parts) == 6 ) {
+                $keyId = $parts[5];
+                if( $keyId == $key) {
+                    return new Spreadsheet($entry);
+                }
+            }
+        }
+        return null;
     }
 
 
