@@ -198,6 +198,9 @@ class GoogleSheetManagement {
         //R3C4 => LindaLinda
         $deleteUrl = "https://spreadsheets.google.com/feeds/cells/$excelId/$worksheetId/private/full?min-row=3&min-col=1&max-col=4";
 
+        //$id = "cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53";
+        //$deleteUrl = "https://spreadsheets.google.com/feeds/list/$excelId/$worksheetId/private/full?sq=id=cinava7";
+
         //try to use: http://stackoverflow.com/questions/19362703/how-to-update-google-spreadsheet-cell-using-php-api
         //https://github.com/asimlqt/php-google-spreadsheet-client
 
