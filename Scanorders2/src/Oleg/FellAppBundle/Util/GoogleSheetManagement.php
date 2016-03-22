@@ -21,6 +21,7 @@ namespace Oleg\FellAppBundle\Util;
 
 use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\ServiceRequestFactory;
+use Google\Spreadsheet\Spreadsheet;
 use Google\Spreadsheet\SpreadsheetService;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
@@ -132,7 +133,7 @@ class GoogleSheetManagement {
         //$spreadsheet = $spreadsheetFeed->getByTitle('Fellapp-test');
         $spreadsheet = $this->getByKey('1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno');
         $worksheetFeed = $spreadsheet->getWorksheets();
-        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
+        $worksheet = $worksheetFeed->getByTitle($spreadsheetFeed,'Form Responses 1');
         $listFeed = $worksheet->getListFeed();
 
         $rowTitle = "cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53";
@@ -173,9 +174,9 @@ class GoogleSheetManagement {
      *
      * @return \Google\Spreadsheet\Spreadsheet|null
      */
-    public function getByKey($key)
+    public function getByKey($spreadsheetFeed,$key)
     {
-        foreach( $this->xml->entry as $entry ) {
+        foreach( $spreadsheetFeed->xml->entry as $entry ) {
             //full id: https://spreadsheets.google.com/feeds/worksheets/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
             $id = $entry->id->__toString();
             $parts = explode("/",$id);
