@@ -45,21 +45,22 @@ class GoogleSheetManagement {
     //3) find row in worksheet by rowid (don't use '@'. In google GS '@' is replaced by '_') cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04
     //4) foreach file in the row => delete this file from Google Drive
     //5) delete this row
-    public function deleteImportedApplicationAndUploadsFromGoogleDrive($fellowshipApplication) {
+    public function deleteImportedApplicationAndUploadsFromGoogleDrive($rowId) {
 
         $logger = $this->container->get('logger');
-        $fellappUtil = $this->container->get('fellapp_util');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $userUtil = new UserUtil();
 
         //cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53
-        $rowId = $fellowshipApplication->getGoogleFormId();
         $rowId = "cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04";
         if( !$rowId ) {
             $logger->warning('Fellowship Application Google Form ID does not exists. rowId='.$rowId);
         }
 
+        $fellappUtil = $this->container->get('fellapp_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        $userUtil = new UserUtil();
+
+        //get Google access token
         $accessToken = $this->getGoogleToken();
 
         if( !$accessToken ) {
