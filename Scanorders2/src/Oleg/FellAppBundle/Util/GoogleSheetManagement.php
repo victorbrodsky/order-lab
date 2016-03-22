@@ -15,6 +15,9 @@ namespace Oleg\FellAppBundle\Util;
 // "Automatically delete downloaded applications that are older than [X] year(s)".
 
 
+use Google\Spreadsheet\DefaultServiceRequest;
+use Google\Spreadsheet\ServiceRequestFactory;
+use Google\Spreadsheet\SpreadsheetService;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 class GoogleSheetManagement {
@@ -111,6 +114,22 @@ class GoogleSheetManagement {
 
 
 
+
+
+    function searchSheet() {
+        $accessToken = $this->getGoogleToken();
+
+        $serviceRequest = new DefaultServiceRequest($accessToken);
+        ServiceRequestFactory::setInstance($serviceRequest);
+        $spreadsheetService = new SpreadsheetService();
+        $spreadsheetFeed = $spreadsheetService->getSpreadsheets();
+        $spreadsheet = $spreadsheetFeed->getByTitle('title_of_the_spreadsheet_doc');
+        $worksheetFeed = $spreadsheet->getWorksheets();
+        $worksheet = $worksheetFeed->getByTitle('title_of_the_tab');
+        $listFeed = $worksheet->getListFeed();
+
+        print_r($listFeed);
+    }
 
 
 
@@ -225,9 +244,41 @@ class GoogleSheetManagement {
         return true;
     }
 
-
+    public function getGoogleToken() {
+        $res = $this->authenticationP12Key();
+        $obj_client_auth = $res['client'];
+        $obj_token  = json_decode($obj_client_auth->getAccessToken() );
+        return $obj_token->access_token;
+    }
 
     public function getGoogleService() {
+//        //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
+//        $userUtil = new UserUtil();
+//        $client_email = $userUtil->getSiteSetting($this->em,'clientEmailFellApp');
+//
+//        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+//        $pkey = $userUtil->getSiteSetting($this->em,'p12KeyPathFellApp');
+//        if( !$pkey ) {
+//            $logger = $this->container->get('logger');
+//            $logger->warning('p12KeyPathFellApp is not defined in Site Parameters. p12KeyPathFellApp='.$pkey);
+//        }
+//
+//        //$user_to_impersonate = 'olegivanov@pathologysystems.org';
+//        $user_to_impersonate = $userUtil->getSiteSetting($this->em,'userImpersonateEmailFellApp');
+
+        $res = $this->authenticationP12Key();
+        return $res['service'];
+    }
+
+    //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
+    //Security page: https://admin.google.com/pathologysystems.org/AdminHome?fral=1#SecuritySettings:
+    //Credentials page: https://console.developers.google.com/apis/credentials?project=turnkey-delight-103315&authuser=1
+    //https://developers.google.com/api-client-library/php/auth/service-accounts
+    //1) Create a service account by Google Developers Console.
+    //2) Delegate domain-wide authority to the service account.
+    //3) Impersonate a user account.
+    public function authenticationP12Key() {
+
         //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
         $userUtil = new UserUtil();
         $client_email = $userUtil->getSiteSetting($this->em,'clientEmailFellApp');
@@ -242,18 +293,6 @@ class GoogleSheetManagement {
         //$user_to_impersonate = 'olegivanov@pathologysystems.org';
         $user_to_impersonate = $userUtil->getSiteSetting($this->em,'userImpersonateEmailFellApp');
 
-        $res = $this->authenticationP12Key($pkey,$client_email,$user_to_impersonate);
-        return $res['service'];
-    }
-
-    //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
-    //Security page: https://admin.google.com/pathologysystems.org/AdminHome?fral=1#SecuritySettings:
-    //Credentials page: https://console.developers.google.com/apis/credentials?project=turnkey-delight-103315&authuser=1
-    //https://developers.google.com/api-client-library/php/auth/service-accounts
-    //1) Create a service account by Google Developers Console.
-    //2) Delegate domain-wide authority to the service account.
-    //3) Impersonate a user account.
-    public function authenticationP12Key($pkey,$client_email,$user_to_impersonate) {
         echo "pkey=".$pkey."<br>";
         $private_key = file_get_contents($pkey); //notasecret
 

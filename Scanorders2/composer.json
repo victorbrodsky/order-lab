@@ -34,6 +34,7 @@
         "oneup/uploader-bundle": "~1.3",
 
         "google/apiclient": "1.0.*@beta",
+        "asimlqt/php-google-spreadsheet-client": "2.3.*",
         "ensepar/html2pdf-bundle": "~2.0",
         "spraed/pdf-generator-bundle": "v1.0",
         "knplabs/knp-snappy-bundle": "v1.4",

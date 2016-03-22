@@ -2003,6 +2003,10 @@ class FellAppController extends Controller {
     public function testAction() {
 
         $googleSheetManagement = $this->container->get('fellapp_googleSheetManagement');
+
+        $res = $googleSheetManagement->searchSheet();
+        exit('searchSheet res='.$res);
+
         $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive('cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53');
         exit('googleSheetManagement res='.$res);
 
