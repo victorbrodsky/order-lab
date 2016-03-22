@@ -329,7 +329,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'googleDriveApiUrlFellApp' )
             $builder->add('googleDriveApiUrlFellApp',null,array(
-                'label'=>'Google Drive API URL (https://www.googleapis.com/auth/drive):',
+                'label'=>'Google Drive API URL (https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 

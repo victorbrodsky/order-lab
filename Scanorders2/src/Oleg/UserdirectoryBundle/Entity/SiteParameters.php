@@ -279,7 +279,7 @@ class SiteParameters {
     private $p12KeyPathFellApp;
 
     /**
-     * https://www.googleapis.com/auth/drive
+     * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
      *
      * @ORM\Column(type="string", nullable=true)
      */

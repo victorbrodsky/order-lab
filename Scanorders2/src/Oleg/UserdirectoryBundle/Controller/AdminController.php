@@ -899,7 +899,7 @@ class AdminController extends Controller
                                          "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
             "clientEmailFellApp" => '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com',
             "p12KeyPathFellApp" => 'E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
-            "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive",
+            "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
             "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
             "excelIdFellApp" => "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc",
             "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",

@@ -8,6 +8,10 @@
 
 namespace Oleg\FellAppBundle\Util;
 
+//use https://github.com/asimlqt/php-google-spreadsheet-client/blob/master/README.md
+//install:
+//1) composer.phar install
+//2) composer.phar update
 
 //TODO: implement
 // "Delete successfully imported applications from Google Drive",
@@ -119,14 +123,19 @@ class GoogleSheetManagement {
     function searchSheet() {
         $accessToken = $this->getGoogleToken();
 
-        $serviceRequest = new DefaultServiceRequest($accessToken);
+        //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
+        $serviceRequest = new CustomDefaultServiceRequest($accessToken);
         ServiceRequestFactory::setInstance($serviceRequest);
+
         $spreadsheetService = new SpreadsheetService();
         $spreadsheetFeed = $spreadsheetService->getSpreadsheets();
-        $spreadsheet = $spreadsheetFeed->getByTitle('title_of_the_spreadsheet_doc');
+        $spreadsheet = $spreadsheetFeed->getByTitle('Fellapp-test');
         $worksheetFeed = $spreadsheet->getWorksheets();
-        $worksheet = $worksheetFeed->getByTitle('title_of_the_tab');
+        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
         $listFeed = $worksheet->getListFeed();
+
+        $rowTitle = "cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53";
+        $listFeed = $worksheet->getListFeed(array("sq" => "id = $rowTitle", "reverse" => "true"));
 
         print_r($listFeed);
     }
