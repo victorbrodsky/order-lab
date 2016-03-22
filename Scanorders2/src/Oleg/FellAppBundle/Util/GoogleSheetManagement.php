@@ -150,11 +150,19 @@ class GoogleSheetManagement {
     }
 
     public function removeFile($fileId) {
+
+        $logger = $this->container->get('logger');
+        $service = $this->getGoogleService();
+
         try {
-            $service = $this->getGoogleService();
-            $service->files->delete($fileId);
+            $file = $service->files->get($fileId);
+            if( $file ) {
+                $service->files->delete($fileId);
+            } else {
+                $logger->error("File not found on Google Drive with fileId=".$fileId);
+                return false;
+            }
         } catch (Exception $e) {
-            $logger = $this->container->get('logger');
             $logger->error("Error deleting file from Google Drive with fileId=".$fileId."; Error: " . $e->getMessage());
             return false;
         }
