@@ -124,13 +124,17 @@ class GoogleSheetManagement {
                 }
             }
 
+
+            //5) delete this row (entry)
+            //$rowDelRes = $this->deleteRow($rowId);
+            //if( $rowDelRes ) {
+            //    echo 'Row was deleted with rowId = '.$rowId."<br>";
+            //}
+            $entry->delete();
+
         }
 
-        //5) delete this row
-        $rowDelRes = $this->deleteRow($rowId);
-        if( $rowDelRes ) {
-            echo 'Row was deleted with rowId = '.$rowId."<br>";
-        }
+
 
         exit(1);
         return true;
