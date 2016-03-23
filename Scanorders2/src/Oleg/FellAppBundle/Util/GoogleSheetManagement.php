@@ -82,8 +82,16 @@ class GoogleSheetManagement {
         }
 
         //testing revision
+        $revcount = 0;
         $revisions = $this->retrieveRevisions($excelId);
-        print_r($revisions);
+        foreach( $revisions as $revision ) {
+            echo "<br>";
+            print_r($revision);
+            echo "<br>";
+            $revcount++;
+        }
+        echo "revcount=".$revcount."<br>";
+        //print_r($revisions);
         exit('1');
 
         //0 initialize ServiceRequestFactory
