@@ -51,6 +51,7 @@ class GoogleSheetManagement {
 
         //cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53
         $rowId = "cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04";
+        $rowId = "cinava_yahoo.com_Doe_Linda_2016-03-23_09_34_24";
         if( !$rowId ) {
             $logger->warning('Fellowship Application Google Form ID does not exists. rowId='.$rowId);
         }
@@ -130,7 +131,7 @@ class GoogleSheetManagement {
             //if( $rowDelRes ) {
             //    echo 'Row was deleted with rowId = '.$rowId."<br>";
             //}
-            $entry->delete();
+            //$entry->delete();
 
         }
 
@@ -159,14 +160,6 @@ class GoogleSheetManagement {
         $service = $this->getGoogleService();
 
         try {
-//            //check if file exists on Google Drive
-//            $file = $service->files->get($fileId);
-//            if( $file ) {
-//                $service->files->delete($fileId);
-//            } else {
-//                $logger->error("File not found on Google Drive with fileId=".$fileId);
-//                return false;
-//            }
             $service->files->delete($fileId);
         } catch (Exception $e) {
             $logger->error("Error deleting file from Google Drive with fileId=".$fileId."; Error: " . $e->getMessage());
