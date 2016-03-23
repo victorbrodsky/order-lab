@@ -75,11 +75,16 @@ class GoogleSheetManagement {
 
         //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
         $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-        $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
+        //$excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
         if( !$excelId ) {
             $logger = $this->container->get('logger');
             $logger->warning('Sheet ID is not defined in Site Parameters. excelIdFellApp='.$excelId);
         }
+
+        //testing revision
+        $revisions = $this->retrieveRevisions($excelId);
+        print_r($revisions);
+        exit('1');
 
         //0 initialize ServiceRequestFactory
         $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
@@ -172,6 +177,25 @@ class GoogleSheetManagement {
 
         return true;
     }
+
+    /**
+     * Retrieve a list of revisions.
+     *
+     * @param String $fileId ID of the file to retrieve revisions for.
+     * @return Array List of Google_Servie_Drive_Revision resources.
+     */
+    function retrieveRevisions($fileId) {
+        $service = $this->getGoogleService();
+        try {
+            $revisions = $service->revisions->listRevisions($fileId);
+            return $revisions->getItems();
+        } catch (Exception $e) {
+            print "An error occurred: " . $e->getMessage();
+        }
+        return NULL;
+    }
+
+
 
 
 
