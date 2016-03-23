@@ -24,6 +24,7 @@ use Google\Spreadsheet\ServiceRequestFactory;
 use Google\Spreadsheet\Spreadsheet;
 use Google\Spreadsheet\SpreadsheetService;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 class GoogleSheetManagement {
@@ -82,7 +83,8 @@ class GoogleSheetManagement {
         }
 
         //testing revision
-        //$revisions = $this->retrieveRevisions($excelId);
+        $revisions = $this->retrieveRevisions($excelId);
+        exit('1');
 
         //0 initialize ServiceRequestFactory
         $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
@@ -117,13 +119,16 @@ class GoogleSheetManagement {
             foreach( $values as $cellValue ) {
 
                 if( strpos($cellValue, $fileStrFlag) !== false ) {
-                    echo 'this is file = '.$cellValue." => ";
+                    //echo 'this is file = '.$cellValue." => ";
                     //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
                     $fileID = $this->getFileId($cellValue);
                     echo 'fileID = '.$fileID."<br>";
                     $res = $this->removeFile($fileID);
                     if( $res ) {
                         echo 'File was deleted with fileID = '.$fileID."<br>";
+                    } else {
+                        echo 'Failed to delete file with fileID = '.$fileID."<br>";
+                        $logger->warning('Failed to delete file with fileID = '.$fileID);
                     }
                 }
             }
@@ -164,7 +169,7 @@ class GoogleSheetManagement {
 
         try {
             $service->files->delete($fileId);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $logger->error("Error deleting file from Google Drive with fileId=".$fileId."; Error: " . $e->getMessage());
             return false;
         }
@@ -194,20 +199,56 @@ class GoogleSheetManagement {
         }
 
         if( $revisionItems ) {
+            //$lastRevision = null;
             $revcount = 0;
-            foreach ($revisions as $revision) {
+            foreach ($revisions as $revision) { //revision is Google_Service_Drive_Revision object
                 echo "<br>";
                 print_r($revision);
                 echo "<br>";
+                $revisionId = $revision->getId();
+                echo "revisionId=".$revisionId."<br>";
+                //$lastRevision = $revision;
                 $revcount++;
             }
             echo "revcount=" . $revcount . "<br>";
+
+            echo "delete revision id=".$revisionId."; time=".$revision->getModifiedDate()."<br>";
+            //https://developers.google.com/drive/v3/reference/revisions/delete?authuser=1#try-it
+            $revision = $service->revisions->get($fileId, $revisionId);
+            //$revision->delete();
+            //$revision->setPublished(true);
+            $revision->setPinned(false);
+            $revision->setDownloadUrl('www.yahoo.com');
+            $revision->setMimeType('testTTT');
+            $revision->setExportLinks(null);
+            $service->revisions->update($fileId, $revisionId, $revision);
+
+            $revision = $service->revisions->get($fileId, $revisionId);
+            echo "<br>";
+            print_r($revision);
+            echo "<br>";
+
+            //$this->removeRevision($service, $fileId, $revisionId);
         }
 
         return NULL;
     }
 
-
+    /**
+     * https://developers.google.com/drive/v2/reference/revisions/delete#try-it
+     * Remove a revision.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param String $fileId ID of the file to remove the revision for.
+     * @param String $revisionId ID of the revision to remove.
+     */
+    function removeRevision($service, $fileId, $revisionId) {
+        try {
+            $service->revisions->delete($fileId, $revisionId);
+        } catch (Exception $e) {
+            print "An error occurred: " . $e->getMessage();
+        }
+    }
 
 
 
