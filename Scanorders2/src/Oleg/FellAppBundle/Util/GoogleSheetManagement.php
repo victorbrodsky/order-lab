@@ -75,24 +75,14 @@ class GoogleSheetManagement {
 
         //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
         $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-        //$excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
+        $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
         if( !$excelId ) {
             $logger = $this->container->get('logger');
             $logger->warning('Sheet ID is not defined in Site Parameters. excelIdFellApp='.$excelId);
         }
 
         //testing revision
-        $revcount = 0;
-        $revisions = $this->retrieveRevisions($excelId);
-        foreach( $revisions as $revision ) {
-            echo "<br>";
-            print_r($revision);
-            echo "<br>";
-            $revcount++;
-        }
-        echo "revcount=".$revcount."<br>";
-        //print_r($revisions);
-        exit('1');
+        //$revisions = $this->retrieveRevisions($excelId);
 
         //0 initialize ServiceRequestFactory
         $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
@@ -194,12 +184,26 @@ class GoogleSheetManagement {
      */
     function retrieveRevisions($fileId) {
         $service = $this->getGoogleService();
+        $revisionItems = null;
+
         try {
             $revisions = $service->revisions->listRevisions($fileId);
-            return $revisions->getItems();
+            $revisionItems = $revisions->getItems();
         } catch (Exception $e) {
             print "An error occurred: " . $e->getMessage();
         }
+
+        if( $revisionItems ) {
+            $revcount = 0;
+            foreach ($revisions as $revision) {
+                echo "<br>";
+                print_r($revision);
+                echo "<br>";
+                $revcount++;
+            }
+            echo "revcount=" . $revcount . "<br>";
+        }
+
         return NULL;
     }
 
