@@ -125,6 +125,7 @@ class FellAppManagement extends Controller {
 
             $this->assignFellAppAccessRoles($felltype,$felltype->getDirectors(),"DIRECTOR");
             $this->assignFellAppAccessRoles($felltype,$felltype->getCoordinators(),"COORDINATOR");
+            $this->assignFellAppAccessRoles($felltype,$felltype->getInterviewers(),"INTERVIEWER");
 
             $em->persist($felltype);
             $em->flush();

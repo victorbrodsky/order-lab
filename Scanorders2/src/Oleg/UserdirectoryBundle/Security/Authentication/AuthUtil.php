@@ -342,10 +342,12 @@ class AuthUtil {
 
         $res = ldap_bind($cnx,$LDAPUserAdmin,$LDAPUserPasswordAdmin);
         if( !$res ) {
-        	echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
+        	//echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             ldap_error($cnx);
             ldap_unbind($cnx);
-            return NULL;
+            //exit("error");
+            //return NULL;
+            return -1;  //"Could not bind to LDAP server";
         } else {
         	//echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
         }

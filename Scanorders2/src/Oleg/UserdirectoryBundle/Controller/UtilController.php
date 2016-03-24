@@ -926,6 +926,7 @@ class UtilController extends Controller {
         $authUtil = new AuthUtil($this->container,$em);
         
         //search this user if exists in ldap directory
+        //$searchRes might be -1 => can not bind to LDAP server, meaning running on testing localhost outside cornell.edu network => user is ok
         $searchRes = $authUtil->searchLdap($userId);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
             $output = "notok";

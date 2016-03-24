@@ -217,7 +217,7 @@ function checkUsertypeUserid(userType,userId) {
 }
 
 function isValidCWID(userId) {
-    var valid = false;
+    var valid = true;
     var url = getCommonBaseUrl("util/"+"cwid-usertype-userid","employees");
     $.ajax({
         url: url,
@@ -226,8 +226,8 @@ function isValidCWID(userId) {
         timeout: _ajaxTimeout,
         async: false
     }).success(function(data) {
-        if( data == "ok" ) {
-            valid = true;
+        if( data == "notok" ) {
+            valid = false;
         } 
     });
     return valid;
