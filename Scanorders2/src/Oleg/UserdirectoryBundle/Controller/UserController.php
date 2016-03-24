@@ -3351,4 +3351,28 @@ class UserController extends Controller
         //return $this->redirect($this->generateUrl('employees_showuser', array('id' => $id)));
     }
 
+    /**
+     * @Route("/user/impersonate/{id}", name="employees_user_impersonate")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     */
+    public function impersonateUserAction(Request $request, $id)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //get username
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $username = $user->getUsername();
+
+        //http://example.com/somewhere?_switch_user=thomas
+        $url = $this->generateUrl('employees_showuser', array('id' => $id));
+        $url = $url . "?_switch_user=" . $username;
+        return $this->redirect($url);
+    }
+
+
 }

@@ -39,7 +39,7 @@ oleg_testpage:
         template:    'OlegUserdirectoryBundle:Default:testpage.html.twig'
 
 fellapp_instructions:
-    path: /fellowship-applications/instructions
+    path: /fellowship-applications/instructions-to-change-import-interval
     defaults:
         _controller: FrameworkBundle:Template:template
         template:    'OlegFellAppBundle:Instructions:taskSchedulerWindows.html.twig'

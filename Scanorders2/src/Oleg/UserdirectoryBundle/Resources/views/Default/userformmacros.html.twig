@@ -921,6 +921,11 @@
                         <a style="color:black;" href="{{ path(sitename~'_user_edit',{'id':user.id}) }}">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                         </a>
+                        {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                            <a style="margin-left: 10px; color:black;" href="{{ path(employees_sitename~'_user_impersonate',{'id':user.id}) }}">
+                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            </a>
+                        {% endif %}
                         </p>
                     {% endif %}
 
