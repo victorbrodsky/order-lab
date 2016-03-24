@@ -109,7 +109,7 @@
                     <tr>
                         <td>Delete successfully imported applications from Google Drive</td>
                         <td>
-                            {{ entity.deleteImportedAplicationsFellApp }}
+                            {#{{ entity.deleteImportedAplicationsFellApp }}#}
                             {% set deleteImportedAplicationsFellAppStr = 'No' %}
                             {% if entity.deleteImportedAplicationsFellApp == true %}
                                 {% set deleteImportedAplicationsFellAppStr = 'Yes' %}
@@ -122,7 +122,7 @@
                     <tr>
                         <td>Delete downloaded spreadsheets with fellowship applications after successful import into the database</td>
                         <td>
-                            {{ entity.deleteOldAplicationsFellApp }}
+                            {#{{ entity.deleteOldAplicationsFellApp }}#}
                             {% set deleteOldAplicationsFellAppStr = 'No' %}
                             {% if entity.deleteOldAplicationsFellApp == true %}
                                 {% set deleteOldAplicationsFellAppStr = 'Yes' %}
