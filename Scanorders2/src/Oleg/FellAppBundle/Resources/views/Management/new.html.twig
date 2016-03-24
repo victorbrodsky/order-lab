@@ -44,7 +44,10 @@
     </p>
     
     <br><br>
-    
+
+    {#list all other users with related fellowship roles for this fellowship type#}
+
+
     {% if cycle == "edit" %}
         <p>
             {#<a class="btn_margin_top btn btn-primary btn-success" href="{{ path('fellapp_fellowshiptype_setting_update',{'id':entity.id}) }}">Edit</a>#}

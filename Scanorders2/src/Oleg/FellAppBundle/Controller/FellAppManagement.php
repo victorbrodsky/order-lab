@@ -83,6 +83,8 @@ class FellAppManagement extends Controller {
 
         $args = $this->getShowParameters($routeName,$felltype);
 
+        //TODO: list all other users with related fellowship roles for this fellowship type
+
         return $this->render('OlegFellAppBundle:Management:new.html.twig', $args);
 
     }
@@ -108,6 +110,7 @@ class FellAppManagement extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
         }
 
+        //TODO: delete role if a user is removed from default list?
 
         $form = $this->createForm( new FellowshipSubspecialtyType(),$felltype);
 
