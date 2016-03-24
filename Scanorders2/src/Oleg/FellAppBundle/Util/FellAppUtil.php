@@ -1344,7 +1344,8 @@ class FellAppUtil {
         return $accessreqs;
     }
 
-    public function getFellAppByStatusAndYear($status,$fellSubspecId,$year=null,$interviewer=null) {
+    //$fellSubspecArg: single fellowshipSubspecialty id or array of fellowshipSubspecialty ids
+    public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
 
         $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
         $dql =  $repository->createQueryBuilder("fellapp");
@@ -1363,9 +1364,17 @@ class FellAppUtil {
             $dql->where("appStatus.name = '" . $status . "'");
         }
 
-        if( $fellSubspecId ) {
+        if( $fellSubspecArg ) {
             $dql->leftJoin("fellapp.fellowshipSubspecialty","fellowshipSubspecialty");
-            $dql->andWhere("fellowshipSubspecialty.id=".$fellSubspecId);
+            if( is_array($fellSubspecArg) ) {
+                $felltypeArr = array();
+                foreach( $fellSubspecArg as $fellowshipTypeID => $fellowshipTypeName ) {
+                    $felltypeArr[] = "fellowshipSubspecialty.id = ".$fellowshipTypeID;
+                }
+                $dql->andWhere( implode(" OR ", $felltypeArr) );
+            } else {
+                $dql->andWhere("fellowshipSubspecialty.id=".$fellSubspecArg);
+            }
         }
 
         if( $year ) {

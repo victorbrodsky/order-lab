@@ -300,8 +300,15 @@ class FellAppController extends Controller {
         $awaitedInterviews = null;
         $receivedInterviews = null;
         if( $route == "fellapp_myinterviewees" ) {
-            $awaitedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee-not',$fellSubspecId,$startYearStr,$user));
-            $receivedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecId,$startYearStr,$user));
+
+            if( $fellSubspecId ) {
+                $fellSubspecArg = $fellSubspecId;
+            } else {
+                $fellSubspecArg = $fellowshipTypes;
+            }
+
+            $awaitedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee-not',$fellSubspecArg,$startYearStr,$user));
+            $receivedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecArg,$startYearStr,$user));
             //echo "awaitedInterviews=".$awaitedInterviews."<br>";
             //echo "receivedInterviews=".$receivedInterviews."<br>";
         }
