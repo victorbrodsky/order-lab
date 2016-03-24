@@ -65,15 +65,27 @@
     {% endif %}
 
     {% if awaitedInterviews is not null and receivedInterviews is not null %}
+
+        {% if receivedInterviews == 1 %}
+            {% set evaluationStr = "evaluation" %}
+            {% set allStr = "" %}
+        {% elseif receivedInterviews == 2 %}
+            {% set evaluationStr = "evaluations" %}
+            {% set allStr = "" %}
+        {% else %}
+            {% set evaluationStr = "evaluations" %}
+            {% set allStr = "all " %}
+        {% endif %}
+
         <p><b>
             {#"Showing applications of your interviewees: 25 evaluations received, 10 awaited"#}
             {% if awaitedInterviews > 0 and receivedInterviews > 0 %}
-                Showing applications of your interviewees: {{ receivedInterviews }} evaluations received, {{ awaitedInterviews }} awaited
+                Showing applications of your interviewees: {{ receivedInterviews }} {{ evaluationStr }} received, {{ awaitedInterviews }} awaited
             {% endif %}
 
             {#"Showing applications of your interviewees: all 35 evaluations received, thank you!"#}
             {% if awaitedInterviews == 0 and receivedInterviews > 0 %}
-                Showing applications of your interviewees: all {{ receivedInterviews }} evaluations received, thank you!
+                Showing applications of your interviewees: {{ allStr }}{{ receivedInterviews }} {{ evaluationStr }} received, thank you!
             {% endif %}
 
             {#You have not been assigned as an interviewer to any applicants for the selected year: no applications to show#}
