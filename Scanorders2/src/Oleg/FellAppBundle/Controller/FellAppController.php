@@ -2014,7 +2014,9 @@ class FellAppController extends Controller {
         //$res = $googleSheetManagement->searchSheet();
         //exit('searchSheet res='.$res);
 
-        $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive('cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53');
+        $rowId = "cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53";
+
+        $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive($rowId);
         exit('googleSheetManagement res='.$res);
 
 

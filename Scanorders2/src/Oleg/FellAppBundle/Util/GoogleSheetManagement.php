@@ -52,7 +52,6 @@ class GoogleSheetManagement {
 
         //cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53
         //$rowId = "cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04";
-        $rowId = "test1emailcinava_yahoo.com_Doe_Linda_2016-03-15_17_59_5";
         if( !$rowId ) {
             $logger->warning('Fellowship Application Google Form ID does not exists. rowId='.$rowId);
         }
@@ -76,7 +75,7 @@ class GoogleSheetManagement {
 
         //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
         $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-        $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
+        //$excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
         if( !$excelId ) {
             $logger = $this->container->get('logger');
             $logger->warning('Sheet ID is not defined in Site Parameters. excelIdFellApp='.$excelId);
@@ -105,6 +104,8 @@ class GoogleSheetManagement {
         $listFeed = $worksheet->getListFeed( array("sq" => "id = " . $rowId) ); //it's a row
 
         //4) foreach file in the row => delete this file from Google Drive
+
+        $deletedRows = 0;
 
         //identify file by presence of string 'drive.google.com/a/pathologysystems.org/file/d/'
         $fileStrFlag = 'drive.google.com/a/pathologysystems.org/file/d/';
@@ -138,11 +139,12 @@ class GoogleSheetManagement {
             //5) delete this row (entry)
             $entry->delete();
 
+            $deletedRows++;
         }
 
 
         //exit(1);
-        return true;
+        return $deletedRows;
     }
 
 
