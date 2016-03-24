@@ -863,7 +863,7 @@ class FellAppUtil {
                 //$emails = "oli2002@med.cornell.edu";
                 //$userutil = new UserUtil();
                 //$emails = $userutil->getSiteSetting($this->em,'siteEmail');
-                //$event = "Error creating fellowship applicant with unique Google Applicant ID=".$googleFormId."; Exception=".$e->getMessage();
+                $event = "Error creating fellowship applicant with unique Google Applicant ID=".$googleFormId."; Exception=".$e->getMessage();
                 //$emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event );
                 $this->sendEmailToSystemEmail("Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event);
 
