@@ -51,8 +51,8 @@ class GoogleSheetManagement {
         $logger = $this->container->get('logger');
 
         //cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53
-        $rowId = "cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04";
-        $rowId = "cinava_yahoo.com_Doe_Linda_2016-03-23_09_34_24";
+        //$rowId = "cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04";
+        $rowId = "test1emailcinava_yahoo.com_Doe_Linda_2016-03-15_17_59_5";
         if( !$rowId ) {
             $logger->warning('Fellowship Application Google Form ID does not exists. rowId='.$rowId);
         }
@@ -83,8 +83,8 @@ class GoogleSheetManagement {
         }
 
         //testing revision
-        $revisions = $this->retrieveRevisions($excelId);
-        exit('1');
+        //$revisions = $this->retrieveRevisions($excelId);
+        //exit('1');
 
         //0 initialize ServiceRequestFactory
         $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
@@ -116,18 +116,19 @@ class GoogleSheetManagement {
             //echo "<br>";
             //echo "lastname=".$values['lastname']."<br>";
 
+            //4.a) foreach file in the row => delete this file from Google Drive
             foreach( $values as $cellValue ) {
 
                 if( strpos($cellValue, $fileStrFlag) !== false ) {
                     //echo 'this is file = '.$cellValue." => ";
                     //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
                     $fileID = $this->getFileId($cellValue);
-                    echo 'fileID = '.$fileID."<br>";
+                    //echo 'fileID = '.$fileID."<br>";
                     $res = $this->removeFile($fileID);
                     if( $res ) {
-                        echo 'File was deleted with fileID = '.$fileID."<br>";
+                        //echo 'File was deleted with fileID = '.$fileID."<br>";
                     } else {
-                        echo 'Failed to delete file with fileID = '.$fileID."<br>";
+                        //echo 'Failed to delete file with fileID = '.$fileID."<br>";
                         $logger->warning('Failed to delete file with fileID = '.$fileID);
                     }
                 }
@@ -135,17 +136,12 @@ class GoogleSheetManagement {
 
 
             //5) delete this row (entry)
-            //$rowDelRes = $this->deleteRow($rowId);
-            //if( $rowDelRes ) {
-            //    echo 'Row was deleted with rowId = '.$rowId."<br>";
-            //}
-            //$entry->delete();
+            $entry->delete();
 
         }
 
 
-
-        exit(1);
+        //exit(1);
         return true;
     }
 
@@ -176,10 +172,6 @@ class GoogleSheetManagement {
         return true;
     }
 
-    public function deleteRow($rowId) {
-
-        return true;
-    }
 
     /**
      * Retrieve a list of revisions.
@@ -377,7 +369,7 @@ class GoogleSheetManagement {
         //$user_to_impersonate = 'olegivanov@pathologysystems.org';
         $user_to_impersonate = $userUtil->getSiteSetting($this->em,'userImpersonateEmailFellApp');
 
-        echo "pkey=".$pkey."<br>";
+        //echo "pkey=".$pkey."<br>";
         $private_key = file_get_contents($pkey); //notasecret
 
         $userUtil = new UserUtil();
@@ -406,7 +398,7 @@ class GoogleSheetManagement {
         $client->setAssertionCredentials($credentials);
 
         if( $client->getAuth()->isAccessTokenExpired() ) {
-            echo 'before refreshTokenWithAssertion<br>';
+            //echo 'before refreshTokenWithAssertion<br>';
             //print_r($credentials);
             //exit('1');
             $client->getAuth()->refreshTokenWithAssertion($credentials); //causes timeout on localhost: OAuth ERR_CONNECTION_RESET
