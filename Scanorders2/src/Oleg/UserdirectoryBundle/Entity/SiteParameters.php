@@ -293,11 +293,18 @@ class SiteParameters {
     private $userImpersonateEmailFellApp;
 
     /**
-     * Id of excel file: i.e. 1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
+     * Last known Google Spreadsheet ID of the spreadsheet with applications: i.e. 1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $excelIdFellApp;
+
+    /**
+     * Id of the single source of truth spreadsheet file: i.e. 1JniTgB-KOzlpHQb9JvyBDKmxTyGMoidddcHk8W7Jv-8
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $singleTruthSourceId;
 
     /**
      * Local Institution to which every imported application is set: Pathology Fellowship Programs (WCMC)
@@ -1994,6 +2001,22 @@ class SiteParameters {
     public function setCodeGoogleFormFellApp($codeGoogleFormFellApp)
     {
         $this->codeGoogleFormFellApp = $codeGoogleFormFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSingleTruthSourceId()
+    {
+        return $this->singleTruthSourceId;
+    }
+
+    /**
+     * @param mixed $singleTruthSourceId
+     */
+    public function setSingleTruthSourceId($singleTruthSourceId)
+    {
+        $this->singleTruthSourceId = $singleTruthSourceId;
     }
 
 

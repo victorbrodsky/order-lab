@@ -95,7 +95,13 @@
                     </tr>
 
                     <tr>
-                        <td>ID of the spreadsheet file with fellowship applications on Google Drive (1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc)</td>
+                        <td>Google Spreadsheet ID containing the ID of the spreadsheet with applications (1JniTgB-KOzlpHQb9JvyBDKmxTyGMoidddcHk8W7Jv-8)</td>
+                        <td>{{ entity.singleTruthSourceId }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'singleTruthSourceId'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Last known Google Spreadsheet ID of the spreadsheet with applications (1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc)</td>
                         <td>{{ entity.excelIdFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'excelIdFellApp'}) }}">Edit</a></td>
                     </tr>

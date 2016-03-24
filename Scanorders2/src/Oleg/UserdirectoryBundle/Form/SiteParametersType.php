@@ -341,7 +341,13 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'excelIdFellApp' )
             $builder->add('excelIdFellApp',null,array(
-                'label'=>'ID of the spreadsheet file with fellowship applications on Google Drive (1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc):',
+                'label'=>'Last known Google Spreadsheet ID of the spreadsheet with applications:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'singleTruthSourceId' )
+            $builder->add('singleTruthSourceId',null,array(
+                'label'=>'Google Spreadsheet ID containing the ID of the spreadsheet with applications (1JniTgB-KOzlpHQb9JvyBDKmxTyGMoidddcHk8W7Jv-8):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
