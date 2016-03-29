@@ -449,8 +449,8 @@ class FellAppController extends Controller {
 
 
         //event log
-        //$logger = $this->container->get('logger');
-        //$logger->notice("view: timezone=".date_default_timezone_get());
+        $logger = $this->container->get('logger');
+        $logger->notice("view: timezone=".date_default_timezone_get());
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
         $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
 
@@ -755,8 +755,8 @@ class FellAppController extends Controller {
             //exit('report regen');
 
             //set logger for update
-            //$logger = $this->container->get('logger');
-            //$logger->notice("update: timezone=".date_default_timezone_get());
+            $logger = $this->container->get('logger');
+            $logger->notice("update: timezone=".date_default_timezone_get());
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;

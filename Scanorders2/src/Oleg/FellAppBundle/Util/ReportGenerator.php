@@ -54,8 +54,8 @@ class ReportGenerator {
 
         $this->runningGenerationReport = false;
 
-        //TODO: check if user's time zones are still correct
-        date_default_timezone_set('America/New_York');
+        //TODO: check if user's time zones are still correct: this will overwrite the default time zone on the server!
+        //date_default_timezone_set('America/New_York');
     }
 
 
