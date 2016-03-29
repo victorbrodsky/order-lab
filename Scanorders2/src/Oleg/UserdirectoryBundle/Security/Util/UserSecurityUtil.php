@@ -403,7 +403,7 @@ class UserSecurityUtil {
         $eventLog->setEvent($event);
 
         //make sure timezone set to UTC
-        date_default_timezone_set('UTC');
+        //date_default_timezone_set('UTC');
 
         //set Event Type
 //        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
@@ -463,8 +463,8 @@ class UserSecurityUtil {
 
         }
 
-        $logger = $this->container->get('logger');
-        $logger->notice("usersec: timezone=".date_default_timezone_get());
+        //$logger = $this->container->get('logger');
+        //$logger->notice("usersec: timezone=".date_default_timezone_get());
 
         $em->persist($eventLog);
         $em->flush($eventLog);

@@ -127,6 +127,9 @@ class Logger
     public function __construct($siteName) {
         $this->siteName = $siteName;
         $this->institutionTrees = new ArrayCollection();
+
+        //make sure timezone set to UTC
+        date_default_timezone_set('UTC');
     }
 
 
