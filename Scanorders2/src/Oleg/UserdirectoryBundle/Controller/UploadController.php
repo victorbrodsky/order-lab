@@ -140,14 +140,14 @@ class UploadController extends Controller {
 
 
     /**
-     * @Route("/file-download/{id}", name="employees_file_download", requirements={"id" = "\d+"})
+     * @Route("/file-download/{id}/{eventtype}", name="employees_file_download", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function downloadFileAction(Request $request, $id) {
-        return $this->downloadFileMethod($request,$id);
+    public function downloadFileAction(Request $request, $id, $eventtype=null) {
+        return $this->downloadFileMethod($request,$id,$this->container->getParameter('employees.sitename'),$eventtype);
     }
 
-    public function downloadFileMethod($request,$id) {
+    public function downloadFileMethod($request,$id,$sitename=null,$eventtype=null) {
 
         if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -159,6 +159,14 @@ class UploadController extends Controller {
         $response = new Response();
 
         if( $document ) {
+
+            //event log
+            if( $eventtype && $sitename ) {
+                $userSecUtil = $this->container->get('user_security_utility');
+                $user = $this->get('security.context')->getToken()->getUser();
+                $eventDescription = "Document has been downloaded by " . $user;
+                $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
+            }
 
             $originalname = $document->getOriginalname();
             $abspath = $document->getAbsoluteUploadFullPath();
@@ -195,14 +203,14 @@ class UploadController extends Controller {
 
 
     /**
-     * @Route("/file-view/{id}", name="employees_file_view", requirements={"id" = "\d+"})
+     * @Route("/file-view/{id}/{eventtype}", name="employees_file_view", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function viewFileAction(Request $request, $id) {
-        return $this->viewFileMethod($request,$id);
+    public function viewFileAction(Request $request, $id, $eventtype=null) {
+        return $this->viewFileMethod($request,$id,$this->container->getParameter('employees.sitename'),$eventtype);
     }
 
-    public function viewFileMethod($request,$id) {
+    public function viewFileMethod($request,$id,$sitename=null,$eventtype=null) {
 
         if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -214,6 +222,14 @@ class UploadController extends Controller {
         $response = new Response();
 
         if( $document ) {
+
+            //event log
+            if( $eventtype && $sitename ) {
+                $userSecUtil = $this->container->get('user_security_utility');
+                $user = $this->get('security.context')->getToken()->getUser();
+                $eventDescription = "Document has been viewed by " . $user;
+                $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
+            }
 
             $originalname = $document->getOriginalname();
             $abspath = $document->getAbsoluteUploadFullPath();

@@ -292,7 +292,7 @@ class FellAppApplicantController extends Controller {
         //fellapp_interview_edit
         $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), true );
 
-        $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
+        $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId(),"eventtype"=>"Complete Fellowship Application Downloaded"), true );
 
         $break = "\r\n";
 
@@ -405,13 +405,13 @@ class FellAppApplicantController extends Controller {
         $senderEmail = $user->getEmail();
 
         foreach( $entity->getObservers() as $observer ) {
-            $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$entity->getRecentReport()->getId()), true );
+            $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$entity->getRecentReport()->getId(),"eventtype"=>"Complete Fellowship Application Downloaded"), true );
 
             //fellapp_file_download
             $scheduleLink = null;
             if( $entity->getRecentItinerary() ) {
                 $scheduleDocumentId = $entity->getRecentItinerary()->getId();
-                $scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
+                $scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId,"eventtype"=>"Fellowship Interview Itinerary Downloaded"), true );
             }
 
             //get email

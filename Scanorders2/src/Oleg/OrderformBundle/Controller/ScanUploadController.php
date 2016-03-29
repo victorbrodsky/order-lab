@@ -31,11 +31,11 @@ class ScanUploadController extends UploadController {
     }
 
     /**
-     * @Route("/file-download/{id}", name="scan_file_download", requirements={"id" = "\d+"})
+     * @Route("/file-download/{id}/{eventtype}", name="scan_file_download", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function downloadFileAction(Request $request,$id) {
-        return $this->downloadFileMethod($request,$id);
+    public function downloadFileAction(Request $request, $id, $eventtype=null) {
+        return $this->downloadFileMethod($request,$id,$this->container->getParameter('scan.sitename'),$eventtype);
     }
 
 

@@ -280,7 +280,7 @@
                 {% else %}
                     {% set hrefTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
                 {% endif %}
-                {% set refStr = refStr~' <a href="'~url('fellapp_file_download', { 'id': ref.documents|first.id})~'">'~hrefTitleStr~'</a>' %}
+                {% set refStr = refStr~' <a href="'~url('fellapp_file_download', { 'id': ref.documents|first.id,"eventtype":"Fellowship Recommendation Downloaded"})~'">'~hrefTitleStr~'</a>' %}
                 {#                            {% set refStr = '<a href="'~path('fellapp_file_download', { 'id': ref.documents|first.id})~'">'~refereeNameStr~'</a>' %}#}
             {% endif %}
 
@@ -291,7 +291,7 @@
                 {% set manyDocArr = [] %}
                 {% for document in ref.documents %}
                     {#letters of recommendation#}
-                    {% set docHref = '<a href="'~url('fellapp_file_download', { 'id': document.id})~'">Letter '~docCount~'</a>' %}
+                    {% set docHref = '<a href="'~url('fellapp_file_download', { 'id': document.id,"eventtype":"Fellowship Recommendation Downloaded"})~'">Letter '~docCount~'</a>' %}
                     {% set manyDocArr = manyDocArr|merge([docHref]) %}
                     {% set docCount = docCount + 1 %}
                 {% endfor %}

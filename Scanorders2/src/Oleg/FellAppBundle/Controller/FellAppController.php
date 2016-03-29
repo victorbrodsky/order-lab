@@ -1763,9 +1763,9 @@ class FellAppController extends Controller {
             $routeName = $request->get('_route');
 
             if( $routeName == "fellapp_view_pdf" ) {
-                return $this->redirect( $this->generateUrl('fellapp_file_view',array('id' => $reportDocument->getId())) );
+                return $this->redirect( $this->generateUrl('fellapp_file_view',array('id' => $reportDocument->getId(),"eventtype"=>"Complete Fellowship Application Downloaded")) );
             } else {
-                return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $reportDocument->getId())) );
+                return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $reportDocument->getId(),"eventtype"=>"Complete Fellowship Application Downloaded")) );
             }
 
         } else {

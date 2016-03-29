@@ -35,32 +35,32 @@ class FellAppUploadController extends UploadController {
     /**
      * $id - document id
      *
-     * @Route("/file-download/{id}", name="fellapp_file_download", requirements={"id" = "\d+"})
+     * @Route("/file-download/{id}/{eventtype}", name="fellapp_file_download", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function downloadFileAction(Request $request,$id) {
+    public function downloadFileAction(Request $request,$id,$eventtype=null) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        return $this->downloadFileMethod($request,$id);
+        return $this->downloadFileMethod($request,$id,$this->container->getParameter('fellapp.sitename'),$eventtype);
     }
 
 
     /**
      * $id - document id
      *
-     * @Route("/file-view/{id}", name="fellapp_file_view", requirements={"id" = "\d+"})
+     * @Route("/file-view/{id}/{eventtype}", name="fellapp_file_view", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function viewFileAction(Request $request,$id) {
+    public function viewFileAction(Request $request,$id,$eventtype=null) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        return $this->viewFileMethod($request,$id);
+        return $this->viewFileMethod($request,$id,$this->container->getParameter('fellapp.sitename'),$eventtype);
     }
 
 
