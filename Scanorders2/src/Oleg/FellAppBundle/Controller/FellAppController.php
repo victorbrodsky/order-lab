@@ -39,7 +39,6 @@ class FellAppController extends Controller {
      * @Template("OlegFellAppBundle:Default:home.html.twig")
      */
     public function indexAction(Request $request) {
-
         //echo "fellapp home <br>";
 
 //        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
@@ -288,8 +287,6 @@ class FellAppController extends Controller {
 
         $onhold = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId,$startYearStr);
         $onholdTotal = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId);
-
-        //echo "timezone=".date_default_timezone_get()."<br>";
 
         $idsArr = array();
         foreach( $fellApps as $fellApp ) {
@@ -756,18 +753,19 @@ class FellAppController extends Controller {
             //exit('report regen');
 
             //set logger for update
+            $logger = $this->container->get('logger');
+            $logger->notice("update: timezone=".date_default_timezone_get());
             $userSecUtil = $this->container->get('user_security_utility');
-            $systemUser = $userSecUtil->findSystemUser();
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Updated');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
         }
 
         //echo 'form invalid <br>';
-        exit('form invalid');
+        //exit('form invalid');
 
         return array(
             'form' => $form->createView(),
@@ -1052,9 +1050,8 @@ class FellAppController extends Controller {
 
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
-            $systemUser = $userSecUtil->findSystemUser();
             $event = "Fellowship Application with ID " . $fellowshipApplication->getId() . " has been created by " . $user;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,$request,'Fellowship Application Updated');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
 
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));

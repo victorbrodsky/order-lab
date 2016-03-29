@@ -330,7 +330,6 @@ class FellAppApplicantController extends Controller {
         }
 
         $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = $event . $emailStr;

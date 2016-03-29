@@ -246,7 +246,6 @@ class UserController extends Controller
         ){
             return $this->redirect( $this->generateUrl('login') );
         }
-
         //$form = $this->createForm(new SearchType(),null);
 
         //$form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
