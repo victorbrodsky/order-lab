@@ -490,7 +490,7 @@
                         {% if entity.interviewDate is not empty %}
                             {% if entity.itinerarys|length > 0 %}
                                 <a  
-                                   href="{{ path('fellapp_file_download', { 'id': entity.itinerarys|last.id, "eventtype":"Fellowship Interview Itinerary Downloaded"}) }}"
+                                   href="{{ path('fellapp_file_download', {'id': entity.itinerarys|last.id}) }}"
                                    target="_blank" 
                                    style="color:black;"
                                    data-toggle="tooltip" title="Download Itinerary"

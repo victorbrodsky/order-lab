@@ -118,15 +118,22 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             previewTemplate: previewHtml,
             dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
             sending: function(file, xhr, formData){
-                console.log('userid='+userid);
+                //console.log('userid='+userid);
                 formData.append('userid', userid);
+
                 var filename = file.name;
                 //console.log('filename='+filename);
                 formData.append('filename', filename);
 
                 var documentType = $(this.element).find('#documentcontainer-document-type').val();
-                console.log('documentType='+documentType);
+                //console.log('documentType='+documentType);
                 formData.append('documenttype', documentType);
+
+                //console.log('_sitename='+_sitename);
+                formData.append('sitename', _sitename);
+
+                //console.log('_authuser_id='+_authuser_id);
+                formData.append('authuserid', _authuser_id);
             },
             success: function(file, responseText){
                 //console.log('responseText='+responseText);
@@ -336,7 +343,7 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
             url: url,
             timeout: _ajaxTimeout,
             async: true,
-            data: { documentid: documentid, commentid: commentid, commenttype: commenttype }
+            data: { documentid: documentid, commentid: commentid, commenttype: commenttype, sitename: _sitename }
         }).success(function(data) {
             //if( parseInt(data) > 0 ) {
             //console.log('remove ok, data='+data);

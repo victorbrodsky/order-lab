@@ -144,6 +144,7 @@
             {% endif %}
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
 			<input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
+            <input type="hidden" id="authuser_id" value="{{app.security.getToken().getUser().getId()}}" />
 
         </div>
 

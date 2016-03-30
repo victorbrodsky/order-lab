@@ -27,7 +27,7 @@ class UploadListener {
     private $em;
     private $sc;
 
-    public function __construct(ContainerInterface $container, EntityManager $em, SecurityContext $sc)
+    public function __construct(ContainerInterface $container, EntityManager $em, $sc)
     {
         $this->container = $container;
         $this->em = $em;
@@ -41,6 +41,8 @@ class UploadListener {
         $userid = $request->get('userid');
         $originalfilename = $request->get('filename');
         $documentType = $request->get('documenttype');
+        $sitename = $request->get('sitename');
+        $authUserId = $request->get('authuserid');
 
         //$holdername = $request->get('holdername');
         //$holderid = $request->get('holderid');
@@ -80,6 +82,9 @@ class UploadListener {
         $this->em->persist($object);
         $this->em->flush();
 
+        //set event log for server upload
+        $authUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($authUserId);
+        $this->setUploadEventLog($request,$object,$authUser,$sitename,null);
 
         $response = $event->getResponse();
         $response['documentid'] = $object->getId();
@@ -109,8 +114,7 @@ class UploadListener {
 //    }
 
 
-    //TODO: implement this for upload
-    public function setUploadEventLog($request,$document,$sitename=null,$eventtype=null) {
+    public function setUploadEventLog($request,$document,$user, $sitename=null,$eventtype=null) {
 
         //try to get document type
         if( !$eventtype ) {
@@ -122,8 +126,7 @@ class UploadListener {
 
         if( $eventtype && $sitename ) {
             $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->get('security.context')->getToken()->getUser();
-            $eventDescription = "Document has been viewed by " . $user;
+            $eventDescription = "Document has been uploaded to the server by " . $user;
             $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
         }
     }

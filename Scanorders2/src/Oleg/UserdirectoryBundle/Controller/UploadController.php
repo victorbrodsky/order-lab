@@ -40,6 +40,7 @@ class UploadController extends Controller {
         $documentid = $request->get('documentid');
         $commentid = $request->get('commentid');
         $commentclass = $request->get('commenttype');    //comment class
+        $sitename = $request->get('sitename');
         //echo "documentid=".$documentid."<br>";
         //echo "commentid=".$commentid."<br>";
         //echo "commentclass=".$commentclass."<br>";
@@ -97,6 +98,16 @@ class UploadController extends Controller {
                 }
 
             } //if commentid && $commentclass
+
+            //event log
+            $user = $this->get('security.context')->getToken()->getUser();
+            $eventDescription = "Document has been deleted from the server by " . $user;
+            //get eventtype
+            $documentType = $document->getType();
+            if( $documentType ) {
+                $eventtype = $documentType->getName() . " Deleted";
+            }
+            $this->setDownloadEventLog($request,$document,$user,$sitename,$eventtype,$eventDescription);
 
             $count++;
             $em->remove($document);
@@ -161,7 +172,9 @@ class UploadController extends Controller {
         if( $document ) {
 
             //event log
-            $this->setUploadEventLog($request,$document,$sitename,$eventtype);
+            $user = $this->get('security.context')->getToken()->getUser();
+            $eventDescription = "Document has been downloaded by " . $user;
+            $this->setDownloadEventLog($request,$document,$user,$sitename,$eventtype,$eventDescription);
 
             $originalname = $document->getOriginalname();
             $abspath = $document->getAbsoluteUploadFullPath();
@@ -219,13 +232,9 @@ class UploadController extends Controller {
         if( $document ) {
 
             //event log
-//            if( $eventtype && $sitename ) {
-//                $userSecUtil = $this->container->get('user_security_utility');
-//                $user = $this->get('security.context')->getToken()->getUser();
-//                $eventDescription = "Document has been viewed by " . $user;
-//                $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
-//            }
-            $this->setUploadEventLog($request,$document,$sitename,$eventtype);
+            $user = $this->get('security.context')->getToken()->getUser();
+            $eventDescription = "Document has been viewed by " . $user;
+            $this->setDownloadEventLog($request,$document,$user,$sitename,$eventtype,$eventDescription);
 
             $originalname = $document->getOriginalname();
             $abspath = $document->getAbsoluteUploadFullPath();
@@ -247,7 +256,8 @@ class UploadController extends Controller {
     //"Complete Fellowship Application in PDF"=>"Complete Fellowship Application PDF"
     //"Old Complete Fellowship Application in PDF"=>"Old Complete Fellowship Application PDF"
     //"Fellowship Application Upload"=>"Fellowship Application Document"
-    public function setUploadEventLog($request,$document,$sitename=null,$eventtype=null) {
+    //EventTypeList: "Fellowship Application Upload Downloaded"=>"Fellowship Application Document Downloaded"
+    public function setDownloadEventLog($request,$document,$user,$sitename,$eventtype,$eventDescription) {
 
         //try to get document type
         if( !$eventtype ) {
@@ -259,8 +269,8 @@ class UploadController extends Controller {
 
         if( $eventtype && $sitename ) {
             $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->get('security.context')->getToken()->getUser();
-            $eventDescription = "Document has been viewed by " . $user;
+            //$user = $this->get('security.context')->getToken()->getUser();
+            //$eventDescription = "Document has been downloaded by " . $user;
             $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
         }
     }

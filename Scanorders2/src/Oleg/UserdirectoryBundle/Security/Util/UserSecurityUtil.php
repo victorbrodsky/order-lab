@@ -215,7 +215,10 @@ class UserSecurityUtil {
 
     function constructEventLog( $sitename, $user, $request ) {
 
-        $logger = new Logger($sitename);
+        //get abbreviation from sitename:
+        $sitenameAbbreviation = $this->getSitenameAbbreviation($sitename);
+
+        $logger = new Logger($sitenameAbbreviation);
         $logger->setUser($user);
         $logger->setRoles($user->getRoles());
         $logger->setUsername($user."");
@@ -229,6 +232,27 @@ class UserSecurityUtil {
         }
 
         return $logger;
+    }
+
+    //get abbreviation from sitename:
+    // fellowship-applications => fellapp
+    // fellapp => fellapp
+    public function getSitenameAbbreviation($sitename) {
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:SiteList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where("list.name = :sitename OR list.abbreviation = :sitename");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(array('sitename'=>$sitename));
+
+        $sitenameObject = $query->getSingleResult();
+
+        if( !$sitenameObject ) {
+            return $sitename;
+        }
+
+        return $sitenameObject->getAbbreviation();
     }
 
 //    public function getDefaultUserKeytypeSafe() {

@@ -12,6 +12,7 @@ var urlBase = $("#baseurl").val();
 var cycle = $("#formcycle").val();
 var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
+var _authuser_id = $("#authuser_id").val();
 
 if( !user_id ) {
     user_id = 'undefined';
