@@ -468,7 +468,7 @@ class GoogleSheetManagement {
         $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' years';
 
         //testing
-        //$yearsOldAplicationsFellApp = 99;
+        //$yearsOldAplicationsFellApp = 90;
         $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
         //echo "dateCorrectionStr=".$dateCorrectionStr."<br>";
 
@@ -503,18 +503,25 @@ class GoogleSheetManagement {
         foreach( $documents as $document ) {
             $deletedDocumentIdsArr[] = $document->getId();
 
-            //continue; //testing
-
             //document absolute path
             $documentPath = $document->getServerPath();
+            //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
+            echo "documentPath=".$documentPath."<br>";
 
-            $this->em->remove($document);
-            $this->em->flush();
+            //continue; //testing
+
+            //$this->em->remove($document);
+            //$this->em->flush();
 
             //remove file from folder
             if( is_file($documentPath) ) {
-                unlink($documentPath);
+                echo "file exists!!! ";
+                //unlink($documentPath);
+            } else {
+                echo "file does exists??? ";
             }
+
+            break; //testing
         }
 
         return implode(",",$deletedDocumentIdsArr);
