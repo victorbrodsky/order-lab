@@ -449,8 +449,8 @@ class FellAppController extends Controller {
 
 
         //event log
-        $logger = $this->container->get('logger');
-        $logger->notice("view: timezone=".date_default_timezone_get());
+        //$logger = $this->container->get('logger');
+        //$logger->notice("view: timezone=".date_default_timezone_get());
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
         $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
 
@@ -755,8 +755,8 @@ class FellAppController extends Controller {
             //exit('report regen');
 
             //set logger for update
-            $logger = $this->container->get('logger');
-            $logger->notice("update: timezone=".date_default_timezone_get());
+            //$logger = $this->container->get('logger');
+            //$logger->notice("update: timezone=".date_default_timezone_get());
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
@@ -1751,7 +1751,7 @@ class FellAppController extends Controller {
         //event log
         $userSecUtil = $this->container->get('user_security_utility');
         $event = "Report for Fellowship Application with ID".$id." has been downloaded by ".$user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application Downloaded');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application PDF Downloaded');
 
         $reportDocument = $entity->getRecentReport();
         //echo "report=".$reportDocument."<br>";
@@ -1762,9 +1762,9 @@ class FellAppController extends Controller {
             $routeName = $request->get('_route');
 
             if( $routeName == "fellapp_view_pdf" ) {
-                return $this->redirect( $this->generateUrl('fellapp_file_view',array('id' => $reportDocument->getId(),"eventtype"=>"Complete Fellowship Application Downloaded")) );
+                return $this->redirect( $this->generateUrl('fellapp_file_view',array('id' => $reportDocument->getId())) );
             } else {
-                return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $reportDocument->getId(),"eventtype"=>"Complete Fellowship Application Downloaded")) );
+                return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $reportDocument->getId())) );
             }
 
         } else {

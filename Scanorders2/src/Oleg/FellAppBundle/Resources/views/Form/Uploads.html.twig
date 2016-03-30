@@ -34,7 +34,7 @@
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
-                    {{ usermacros.documentsContainer(null,form.avatars,cycle,'noprototype',8,'default') }}
+                    {{ usermacros.documentsContainer(null,form.avatars,cycle,'noprototype',8,'default','Fellowship Photo') }}
 
                 </div>
             </div>
@@ -46,7 +46,7 @@
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
-                    {{ usermacros.documentsContainer(null,form.cvs,cycle,'noprototype',8,'default') }}
+                    {{ usermacros.documentsContainer(null,form.cvs,cycle,'noprototype',8,'default','Fellowship CV') }}
 
                 </div>
             </div>
@@ -59,7 +59,7 @@
                 <div class="col-xs-12">
 
                     {#{{ usermacros.fileuploadLabelField( null, form.coverLetters, cycle, 'user-coverLetters', 'noprototype' ) }}#}
-                    {{ usermacros.documentsContainer(null,form.coverLetters,cycle,'noprototype',8,'default') }}
+                    {{ usermacros.documentsContainer(null,form.coverLetters,cycle,'noprototype',8,'default','Fellowship Cover Letter') }}
 
                 </div>
             </div>
@@ -73,7 +73,7 @@
                     {% if form.examinations is defined %}
                         {% for examination in form.examinations %}
                             {#{{ usermacros.fileuploadLabelField( null, examination.scores, cycle, 'user-scores', 'noprototype' ) }}#}
-                            {{ usermacros.documentsContainer(null,examination.scores,cycle,'noprototype',8,'default') }}
+                            {{ usermacros.documentsContainer(null,examination.scores,cycle,'noprototype',8,'default','Fellowship USMLE Scores') }}
                         {% endfor %}
                     {% endif %}
 
@@ -103,7 +103,7 @@
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
-                    {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default') }}
+                    {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Fellowship Application Upload') }}
 
                 </div>
             </div>

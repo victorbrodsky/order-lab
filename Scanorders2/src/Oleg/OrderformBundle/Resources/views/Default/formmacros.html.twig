@@ -1288,7 +1288,7 @@
                 {% elseif fieldtype == "lockdate" %}
                     {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
                 {% elseif fieldtype == "paper" %}
-                    {{ usermacros.documentsContainer(fieldThis,fieldThis.documents,cycle,prototype,3,'default') }}
+                    {{ usermacros.documentsContainer(fieldThis,fieldThis.documents,cycle,prototype,3,'default','Part Document') }}
                 {% elseif classname == "patientmrn" %}
                     {{ form_widget(fieldThis.keytype) }}
                     {{ form_widget(fieldThis.field) }}

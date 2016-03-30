@@ -10,6 +10,7 @@ namespace Oleg\UserdirectoryBundle\Services;
 
 
 use Doctrine\ORM\EntityManager;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -39,6 +40,7 @@ class UploadListener {
         $request = $event->getRequest();
         $userid = $request->get('userid');
         $originalfilename = $request->get('filename');
+        $documentType = $request->get('documenttype');
 
         //$holdername = $request->get('holdername');
         //$holderid = $request->get('holderid');
@@ -62,6 +64,16 @@ class UploadListener {
         $object->setUniquename($uniquefilename);
         $object->setUploadDirectory($path);
         $object->setSize($size);
+
+        if( $documentType ) {
+            //$documentTypeObject = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName($documentType);
+            $transformer = new GenericTreeTransformer($this->em, $user, "DocumentTypeList", "UserdirectoryBundle");
+            $documentType = trim($documentType);
+            $documentTypeObject = $transformer->reverseTransform($documentType);
+            if( $documentTypeObject ) {
+                $object->setType($documentTypeObject);
+            }
+        }
 
         //$this->processHolder($object,$holdername,$holderid,$docfieldname);
 

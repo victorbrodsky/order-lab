@@ -1158,7 +1158,7 @@ class ReportGenerator {
         $object->setUploadDirectory($path);
         $object->setSize($filesize);
 
-        $fellappReportType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Complete Fellowship Application in PDF');
+        $fellappReportType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Complete Fellowship Application PDF');
 
         if( $fellappReportType ) {
             $object->setType($fellappReportType);

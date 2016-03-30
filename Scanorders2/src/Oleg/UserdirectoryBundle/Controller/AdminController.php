@@ -2255,10 +2255,22 @@ class AdminController extends Controller
             'Whole Slide Image',
             'Requisition Form Image',
             'Outside Report Reference Representation',
+            'Grant Document',
+
             'Fellowship Application Spreadsheet',
             'Fellowship Application Upload',
-            'Complete Fellowship Application in PDF',
-            'Old Complete Fellowship Application in PDF'
+            'Complete Fellowship Application PDF',
+            'Old Complete Fellowship Application PDF',
+
+            'Fellowship Photo',
+            'Fellowship CV',
+            'Fellowship Cover Letter',
+            'Fellowship USMLE Scores',
+            'Fellowship Interview Itinerary',
+            'Fellowship Recommendation',
+            'Fellowship Reprimand',
+            'Fellowship Legal Suit'
+
         );
 
 
@@ -2410,13 +2422,14 @@ class AdminController extends Controller
             'Fellowship Application Rating Invitation Emails Resent',
             'Fellowship Application Page Viewed',
 
-            'Complete Fellowship Application Downloaded',
+            'Complete Fellowship Application PDF Downloaded',
             'Fellowship Interview Itinerary Downloaded',
             'Fellowship CV Downloaded',
             'Fellowship Cover Letter Downloaded',
             'Fellowship USMLE Scores Downloaded',
             'Fellowship Recommendation Downloaded',
 
+            'Complete Fellowship Application PDF Uploaded',
             'Fellowship Interview Itinerary Uploaded',
             'Fellowship CV Uploaded',
             'Fellowship Cover Letter Uploaded',

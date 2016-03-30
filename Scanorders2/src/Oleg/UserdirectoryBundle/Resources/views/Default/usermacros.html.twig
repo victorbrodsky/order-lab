@@ -33,7 +33,7 @@
     </li>
 {% endmacro %}
 
-{#constract full input element with label and dropzone; used only by comments macros#}
+{#constract full input element with label and dropzone; Currently, used only by comments macros#}
 {% macro fileuploadLabelField( container, documents, cycle, classname, prototype ) %}
 
     {% import _self as usermacros %}
@@ -47,7 +47,7 @@
         </div>
         <div class="col-xs-6" align="left">
 
-            {{ usermacros.documentsContainer(container,documents,cycle,prototype,3,'default') }}
+            {{ usermacros.documentsContainer(container,documents,cycle,prototype,3,'default','Comment Document') }}
 
         </div>
     </div>
@@ -58,7 +58,7 @@
 {#dropzoneInit = 'inactive':    inactive by default#}
 {#dropzoneInit = 'active':      active by default#}
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
-{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit) %}
+{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -76,6 +76,12 @@
             {% set dz_maxFiles = documentspercontainer %}
         {% endif %}
         {#documentspercontainer:{{ documentspercontainer }}#}
+
+        {% if documentType is not defined %}
+            {% set dz_documentType = "" %}
+        {% else %}
+            {% set dz_documentType = documentType %}
+        {% endif %}
 
         {#dropzoneInit:{{ dropzoneInit }}<br>#}
         {% if dropzoneInit is not defined %}
@@ -118,6 +124,7 @@
             {% if not showFlag %}
 
                 <input type="hidden" id="documentcontainer-documentspercontainer" value="{{ dz_maxFiles }}">
+                <input type="hidden" id="documentcontainer-document-type" value="{{ dz_documentType }}">
                 <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span></div>
 
             {% else %}
@@ -157,8 +164,12 @@
         {% set sitename = employees_sitename %}
     {% endif %}
     {% if '/fellowship-applications/' in currentPath %}
-        {% set sitename = employees_sitename %}
+        {% set sitename = fellapp_sitename %}
     {% endif %}
+    {% if '/deidentifier/' in currentPath %}
+        {% set sitename = deidentifier_sitename %}
+    {% endif %}
+
 
     {% if "show" in cycle %}
         {% set showFlag = true %}
@@ -180,6 +191,7 @@
             <div class="dz-success-mark"><span>✔</span></div>
             <div class="dz-error-mark"><span>✘</span></div>
             <div class="dz-error-message"><span data-dz-errormessage></span></div>
+
 
             {#link to open/download file#}
             <div class="file-upload-showlink">
@@ -1880,6 +1892,21 @@
         {% set objectClass = "objectMaxFull" %}
     {% endif %}
 
+    {#get sitename#}
+    {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
+    {% if '/scan/' in currentPath %}
+        {% set sitename = scan_sitename %}
+    {% endif %}
+    {% if '/directory/' in currentPath %}
+        {% set sitename = employees_sitename %}
+    {% endif %}
+    {% if '/fellowship-applications/' in currentPath %}
+        {% set sitename = fellapp_sitename %}
+    {% endif %}
+    {% if '/deidentifier/' in currentPath %}
+        {% set sitename = deidentifier_sitename %}
+    {% endif %}
+
     {% if '.pdf' in documentEntity.getAbsoluteUploadFullPath %}
         {#pdf!!!#}
         {#<a href="{{ documentEntity.getAbsoluteUploadFullPath }}" target="_blank">#}
@@ -1890,9 +1917,9 @@
         {#>#}
         {#</object>#}
         {#</a>#}
-        <a href="{{ path('fellapp_file_view', { 'id': documentEntity.id}) }}" target="_blank">
+        <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
             <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalname }}"
-                  data="{{ path('fellapp_file_view', { 'id': documentEntity.id}) }}"
+                  data="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}"
                   type="application/pdf"
                   class="{{ objectClass }}"
             >
@@ -1909,9 +1936,9 @@
         {#>#}
         {#</object>#}
         {#</a>#}
-        <a href="{{ path('fellapp_file_view', { 'id': documentEntity.id}) }}" target="_blank">
+        <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
             <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalname }}"
-                  data="{{ path('fellapp_file_view', { 'id': documentEntity.id}) }}"
+                  data="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}"
                   type="application/msword"
                   class="{{ objectClass }}"
             >
@@ -1919,7 +1946,7 @@
         </a>
     {% else %}
         {#img!!!#}
-        <a href="{{ path('fellapp_file_view', { 'id': documentEntity.id}) }}" target="_blank">
+        <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
             {#<img {{ atr }}#}
                  {#src="{{ documentEntity.getAbsoluteUploadFullPath }}"#}
                  {#alt="{{ alt }}"#}
@@ -1928,7 +1955,7 @@
                  {#class="{{ objectClass }}"#}
             {#/>#}
             <img {{ atr }}
-                src="{{ path('fellapp_file_view', { 'id': documentEntity.id}) }}"
+                src="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}"
                 alt="{{ alt~" "~documentEntity.getOriginalname }}"
                 class="{{ objectClass }}"
             />

@@ -161,12 +161,7 @@ class UploadController extends Controller {
         if( $document ) {
 
             //event log
-            if( $eventtype && $sitename ) {
-                $userSecUtil = $this->container->get('user_security_utility');
-                $user = $this->get('security.context')->getToken()->getUser();
-                $eventDescription = "Document has been downloaded by " . $user;
-                $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
-            }
+            $this->setUploadEventLog($request,$document,$sitename,$eventtype);
 
             $originalname = $document->getOriginalname();
             $abspath = $document->getAbsoluteUploadFullPath();
@@ -224,12 +219,13 @@ class UploadController extends Controller {
         if( $document ) {
 
             //event log
-            if( $eventtype && $sitename ) {
-                $userSecUtil = $this->container->get('user_security_utility');
-                $user = $this->get('security.context')->getToken()->getUser();
-                $eventDescription = "Document has been viewed by " . $user;
-                $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
-            }
+//            if( $eventtype && $sitename ) {
+//                $userSecUtil = $this->container->get('user_security_utility');
+//                $user = $this->get('security.context')->getToken()->getUser();
+//                $eventDescription = "Document has been viewed by " . $user;
+//                $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
+//            }
+            $this->setUploadEventLog($request,$document,$sitename,$eventtype);
 
             $originalname = $document->getOriginalname();
             $abspath = $document->getAbsoluteUploadFullPath();
@@ -247,5 +243,22 @@ class UploadController extends Controller {
         return $response;
     }
 
+    public function setUploadEventLog($request,$document,$sitename=null,$eventtype=null) {
+
+        //try to get document type
+        if( !$eventtype ) {
+            $documentType = $document->getType();
+            if( $documentType ) {
+                $eventtype = $documentType->getName() . " Downloaded";
+            }
+        }
+
+        if( $eventtype && $sitename ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $user = $this->get('security.context')->getToken()->getUser();
+            $eventDescription = "Document has been viewed by " . $user;
+            $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
+        }
+    }
 
 } 

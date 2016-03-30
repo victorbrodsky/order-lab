@@ -85,6 +85,12 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     }
     //console.log('_dz_maxFiles='+_dz_maxFiles);
 
+    //var documentType = $(targetid).find('#documentcontainer-document-type').val();
+    //console.log('documentType='+documentType);
+    //if( documentType && documentType != "undefined" ) {
+    //    _dz_documentType = documentType;
+    //}
+    //console.log('_dz_documentType='+_dz_documentType);
 
     var previewHtml =
         '<div class="dz-preview dz-file-preview" style="width:100%; height:220px; margin-left:1px; margin-right:0px;">'+
@@ -112,10 +118,15 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             previewTemplate: previewHtml,
             dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
             sending: function(file, xhr, formData){
+                console.log('userid='+userid);
                 formData.append('userid', userid);
                 var filename = file.name;
                 //console.log('filename='+filename);
                 formData.append('filename', filename);
+
+                var documentType = $(this.element).find('#documentcontainer-document-type').val();
+                console.log('documentType='+documentType);
+                formData.append('documenttype', documentType);
             },
             success: function(file, responseText){
                 //console.log('responseText='+responseText);
@@ -774,7 +785,7 @@ function setGrantDocuments( parent, data ) {
         parent,
         documentContainerData,      //
         null,                       //tooltipName
-        '.documentcontainer'              //documentHolderClass
+        '.documentcontainer'        //documentHolderClass
     );
 }
 
