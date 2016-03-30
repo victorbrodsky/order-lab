@@ -57,6 +57,17 @@ class CronCommand extends ContainerAwareCommand {
         }
         $result = $result . "; Populate: " . $eventPopulate;
 
+        //delete
+        $googlesheetmanagement = $this->getContainer()->get('fellapp_googlesheetmanagement');
+        $deletedDocumentIds = $googlesheetmanagement->deleteOldSheetFellApp();
+        if( $deletedDocumentIds ) {
+            $eventDelete = 'FellApp Spreadsheet Deleted: '.$deletedDocumentIds;
+            $logger->notice($eventDelete);
+        } else {
+            $eventDelete = 'None FellApp Spreadsheet Deleted';
+            $logger->notice($eventDelete);
+        }
+        $result = $result . "; Delete Old Sheet: ".$eventDelete;
 
         $output->writeln($result);
     }

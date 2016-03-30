@@ -455,6 +455,15 @@ class GoogleSheetManagement {
     public function deleteOldSheetFellApp() {
 
         $userUtil = new UserUtil();
+
+        //deleteOldAplicationsFellApp
+        $deleteOldAplicationsFellApp = $userUtil->getSiteSetting($this->em,'deleteOldAplicationsFellApp');
+        if( !$deleteOldAplicationsFellApp ) {
+            $logger = $this->container->get('logger');
+            $logger->notice('deleteOldAplicationsFellApp is FALSE or not defined in Site Parameters. deleteOldAplicationsFellApp='.$deleteOldAplicationsFellApp);
+            return false;
+        }
+
         $yearsOldAplicationsFellApp = $userUtil->getSiteSetting($this->em,'yearsOldAplicationsFellApp');
         if( !$yearsOldAplicationsFellApp ) {
             $logger = $this->container->get('logger');
