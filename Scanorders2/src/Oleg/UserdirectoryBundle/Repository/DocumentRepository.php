@@ -105,7 +105,7 @@ class DocumentRepository extends EntityRepository {
                 break;           
             case 'FellowshipApplication':
             case 'Examination':
-                $doctypeStr = 'Fellowship Application Upload';
+                $doctypeStr = 'Fellowship Application Document';
                 break;
             default:
                 //

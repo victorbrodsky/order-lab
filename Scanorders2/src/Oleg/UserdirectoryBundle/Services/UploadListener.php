@@ -108,4 +108,24 @@ class UploadListener {
 //        }
 //    }
 
+
+    //TODO: implement this for upload
+    public function setUploadEventLog($request,$document,$sitename=null,$eventtype=null) {
+
+        //try to get document type
+        if( !$eventtype ) {
+            $documentType = $document->getType();
+            if( $documentType ) {
+                $eventtype = $documentType->getName() . " Uploaded";
+            }
+        }
+
+        if( $eventtype && $sitename ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $user = $this->get('security.context')->getToken()->getUser();
+            $eventDescription = "Document has been viewed by " . $user;
+            $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
+        }
+    }
+
 } 

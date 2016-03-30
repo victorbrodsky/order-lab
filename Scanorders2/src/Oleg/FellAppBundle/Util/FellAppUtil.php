@@ -238,7 +238,7 @@ class FellAppUtil {
             if( $type && $type == 'excel' ) {
                 $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
             } else {
-                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Upload');
+                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
             }
             if( $fellappSpreadsheetType ) {
                 $object->setType($fellappSpreadsheetType);

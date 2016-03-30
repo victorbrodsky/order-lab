@@ -243,6 +243,10 @@ class UploadController extends Controller {
         return $response;
     }
 
+    //make sure to update server DocumentTypeList and EventTypeList
+    //"Complete Fellowship Application in PDF"=>"Complete Fellowship Application PDF"
+    //"Old Complete Fellowship Application in PDF"=>"Old Complete Fellowship Application PDF"
+    //"Fellowship Application Upload"=>"Fellowship Application Document"
     public function setUploadEventLog($request,$document,$sitename=null,$eventtype=null) {
 
         //try to get document type

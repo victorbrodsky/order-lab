@@ -2258,7 +2258,7 @@ class AdminController extends Controller
             'Grant Document',
 
             'Fellowship Application Spreadsheet',
-            'Fellowship Application Upload',
+            'Fellowship Application Document',
             'Complete Fellowship Application PDF',
             'Old Complete Fellowship Application PDF',
 
