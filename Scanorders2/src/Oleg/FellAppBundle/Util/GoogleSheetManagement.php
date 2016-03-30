@@ -517,7 +517,7 @@ class GoogleSheetManagement {
             //remove file from folder
             if( is_file($documentPath) ) {
                 echo "file exists!!! ";
-                unlink($documentPath);
+                //unlink($documentPath);
             } else {
                 echo "file does exists??? ";
             }
