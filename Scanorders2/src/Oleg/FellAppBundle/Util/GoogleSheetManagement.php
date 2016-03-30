@@ -469,7 +469,7 @@ class GoogleSheetManagement {
 
         //testing
         //$yearsOldAplicationsFellApp = 90;
-        $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
+        //$dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
         //echo "dateCorrectionStr=".$dateCorrectionStr."<br>";
 
         $beforeDate = $nowDate->modify($dateCorrectionStr)->format('Y-m-d');
@@ -507,7 +507,7 @@ class GoogleSheetManagement {
             //$documentPath = $document->getAbsoluteUploadFullPath();
             $documentPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $document->getUploadDirectory().'/'.$document->getUniquename();
             //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
-            echo "documentPath=".$documentPath."<br>";
+            //echo "documentPath=".$documentPath."<br>";
 
             //continue; //testing
 
@@ -516,13 +516,13 @@ class GoogleSheetManagement {
 
             //remove file from folder
             if( is_file($documentPath) ) {
-                echo "file exists!!! ";
+                //echo "file exists!!! ";
                 unlink($documentPath);
             } else {
-                echo "file does exists??? ";
+                //echo "file does exists??? ";
             }
 
-            break; //testing
+            //break; //testing
         }
 
         return implode(",",$deletedDocumentIdsArr);
