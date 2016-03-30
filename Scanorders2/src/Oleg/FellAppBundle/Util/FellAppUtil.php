@@ -103,7 +103,7 @@ class FellAppUtil {
                 $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
             }
 
-            $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'excel', $path);
+            $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'Fellowship Application Spreadsheet', $path);
 
             if( $fileDb ) {
                 $this->em->flush($fileDb);
@@ -182,7 +182,7 @@ class FellAppUtil {
 
 
 
-    public function downloadFileToServer($author, $service, $fileId, $type, $path) {
+    public function downloadFileToServer($author, $service, $fileId, $documentType, $path) {
         $file = null;
         try {
             $file = $service->files->get($fileId);
@@ -194,13 +194,13 @@ class FellAppUtil {
 
             //check if file already exists by file id
             $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
-            if( $documentDb && $type != 'excel' ) {
+            if( $documentDb && $documentType != 'Fellowship Application Spreadsheet' ) {
                 //echo "already exists file ID=".$file->getId()."<br>";
                 return $documentDb;
             }
 
             $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-            $response = $googlesheetmanagement->downloadFile($service, $file, $type);
+            $response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
             //echo "response=".$response."<br>";
             if( !$response ) {
                 throw new IOException('Error file response is empty: file id='.$fileId);
@@ -235,13 +235,16 @@ class FellAppUtil {
             $object->setUploadDirectory($path);
             $object->setSize($filesize);
 
-            if( $type && $type == 'excel' ) {
-                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
-            } else {
-                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
-            }
-            if( $fellappSpreadsheetType ) {
-                $object->setType($fellappSpreadsheetType);
+//            if( $type && $type == 'excel' ) {
+//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
+//            } else {
+//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
+//            }
+            $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
+            $documentType = trim($documentType);
+            $documentTypeObject = $transformer->reverseTransform($documentType);
+            if( $documentTypeObject ) {
+                $object->setType($documentTypeObject);
             }
 
             $this->em->persist($object);
@@ -536,7 +539,7 @@ class FellAppUtil {
                 $uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl',$rowData,$headers);
                 $uploadedPhotoId = $this->getFileIdByUrl( $uploadedPhotoUrl );
                 if( $uploadedPhotoId ) {
-                    $uploadedPhotoDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedPhotoId, null, $uploadPath);
+                    $uploadedPhotoDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedPhotoId, 'Fellowship Photo', $uploadPath);
                     if( !$uploadedPhotoDb ) {
                         throw new IOException('Unable to download file to server: uploadedPhotoUrl='.$uploadedPhotoUrl.', fileDB='.$uploadedPhotoDb);
                     }
@@ -548,7 +551,7 @@ class FellAppUtil {
                 $uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl',$rowData,$headers);
                 $uploadedCVUrlId = $this->getFileIdByUrl( $uploadedCVUrl );
                 if( $uploadedCVUrlId ) {
-                    $uploadedCVUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedCVUrlId, null, $uploadPath);
+                    $uploadedCVUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedCVUrlId, 'Fellowship CV', $uploadPath);
                     if( !$uploadedCVUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedCVUrl='.$uploadedCVUrl.', fileDB='.$uploadedCVUrlDb);
                     }
@@ -559,7 +562,7 @@ class FellAppUtil {
                 $uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl',$rowData,$headers);
                 $uploadedCoverLetterUrlId = $this->getFileIdByUrl( $uploadedCoverLetterUrl );
                 if( $uploadedCoverLetterUrlId ) {
-                    $uploadedCoverLetterUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedCoverLetterUrlId, null, $uploadPath);
+                    $uploadedCoverLetterUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedCoverLetterUrlId, 'Fellowship Cover Letter', $uploadPath);
                     if( !$uploadedCoverLetterUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedCoverLetterUrl='.$uploadedCoverLetterUrl.', fileDB='.$uploadedCoverLetterUrlDb);
                     }
@@ -573,7 +576,7 @@ class FellAppUtil {
                 $uploadedUSMLEScoresUrl = $this->getValueByHeaderName('uploadedUSMLEScoresUrl',$rowData,$headers);
                 $uploadedUSMLEScoresUrlId = $this->getFileIdByUrl( $uploadedUSMLEScoresUrl );
                 if( $uploadedUSMLEScoresUrlId ) {
-                    $uploadedUSMLEScoresUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedUSMLEScoresUrlId, null, $uploadPath);
+                    $uploadedUSMLEScoresUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedUSMLEScoresUrlId, 'Fellowship USMLE Scores', $uploadPath);
                     if( !$uploadedUSMLEScoresUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedUSMLEScoresUrl='.$uploadedUSMLEScoresUrl.', fileDB='.$uploadedUSMLEScoresUrlDb);
                     }
@@ -715,7 +718,7 @@ class FellAppUtil {
                 $uploadedReprimandExplanationUrl = $this->getValueByHeaderName('uploadedReprimandExplanationUrl',$rowData,$headers);
                 $uploadedReprimandExplanationUrlId = $this->getFileIdByUrl( $uploadedReprimandExplanationUrl );
                 if( $uploadedReprimandExplanationUrlId ) {
-                    $uploadedReprimandExplanationUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedReprimandExplanationUrlId, null, $uploadPath);
+                    $uploadedReprimandExplanationUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedReprimandExplanationUrlId, 'Fellowship Reprimand', $uploadPath);
                     if( !$uploadedReprimandExplanationUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedReprimandExplanationUrl='.$uploadedReprimandExplanationUrl.', fileID='.$uploadedReprimandExplanationUrlDb->getId());
                     }
@@ -728,7 +731,7 @@ class FellAppUtil {
                 $uploadedLegalExplanationUrl = $this->getValueByHeaderName('uploadedLegalExplanationUrl',$rowData,$headers);
                 $uploadedLegalExplanationUrlId = $this->getFileIdByUrl( $uploadedLegalExplanationUrl );
                 if( $uploadedLegalExplanationUrlId ) {
-                    $uploadedLegalExplanationUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedLegalExplanationUrlId, null, $uploadPath);
+                    $uploadedLegalExplanationUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedLegalExplanationUrlId, 'Fellowship Legal Suit', $uploadPath);
                     if( !$uploadedLegalExplanationUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedLegalExplanationUrl='.$uploadedLegalExplanationUrl.', fileID='.$uploadedLegalExplanationUrlDb->getId());
                     }

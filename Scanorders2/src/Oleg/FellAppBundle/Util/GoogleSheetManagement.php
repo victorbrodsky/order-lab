@@ -427,7 +427,7 @@ class GoogleSheetManagement {
      * @return String The file's content if successful, null otherwise.
      */
     function downloadFile($service, $file, $type=null) {
-        if( $type && $type == 'excel' ) {
+        if( $type && $type == 'Fellowship Application Spreadsheet' ) {
             $downloadUrl = $file->getExportLinks()['text/csv'];
         } else {
             $downloadUrl = $file->getDownloadUrl();
@@ -448,6 +448,82 @@ class GoogleSheetManagement {
             return null;
         }
     }
+
+
+    //Automatically delete downloaded applications that are older than [X] year(s)
+    // X - yearsOldAplicationsFellApp
+    public function deleteOldSheetFellApp() {
+
+        $userUtil = new UserUtil();
+        $yearsOldAplicationsFellApp = $userUtil->getSiteSetting($this->em,'yearsOldAplicationsFellApp');
+        if( !$yearsOldAplicationsFellApp ) {
+            $logger = $this->container->get('logger');
+            $logger->warning('yearsOldAplicationsFellApp is not defined in Site Parameters. yearsOldAplicationsFellApp='.$yearsOldAplicationsFellApp);
+            return false;
+        }
+
+        //$beforeDate = $startDate->format('Y');
+        //DB date format: 2015-09-29 20:26:13.000000
+        $nowDate = new \DateTime('now');
+        $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' years';
+
+        //testing
+        //$yearsOldAplicationsFellApp = 14;
+        //$dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
+        //echo "dateCorrectionStr=".$dateCorrectionStr."<br>";
+
+        $beforeDate = $nowDate->modify($dateCorrectionStr)->format('Y-m-d');
+        //echo "beforeDate=".$beforeDate."<br>";
+
+        //get spreadsheets older than X year
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Document');
+        $dql =  $repository->createQueryBuilder("document");
+        $dql->select('document');
+        $dql->leftJoin('document.type','documentType');
+
+        $dql->where("documentType.name = :documentType OR documentType.abbreviation = :documentType");
+        $dql->andWhere("document.createdate < :beforeDate");
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $query->setParameters(array(
+            'documentType' => 'Fellowship Application Spreadsheet',
+            'beforeDate' => $beforeDate
+        ));
+
+        $documents = $query->getResult();
+
+        //echo "documents count=".count($documents)."<br>";
+
+        $deletedDocumentIdsArr = array();
+
+        //foreach documents unlink and delete from DB
+        foreach( $documents as $document ) {
+            $deletedDocumentIdsArr[] = $document->getId();
+            continue; //testing
+
+            //document absolute path
+            $documentPath = $document->getServerPath();
+
+            $this->em->remove($document);
+            $this->em->flush();
+
+            //remove file from folder
+            if( is_file($documentPath) ) {
+                unlink($documentPath);
+            }
+        }
+
+        return implode(",",$deletedDocumentIdsArr);
+    }
+
+
+
+
+
+
 
 
 
@@ -501,7 +577,7 @@ class GoogleSheetManagement {
                 throw new IOException('Google API: Unable to get file by file id=' . $excelId . ". An error occurred: " . $e->getMessage());
             }
             //download file test
-            $response = $this->downloadFile($service, $file, 'excel');
+            $response = $this->downloadFile($service, $file, 'Fellowship Application Spreadsheet');
             echo "response=" . $response . "<br>";
             if (!$response) {
                 throw new IOException('Error file response is empty: file id=' . $excelId);
@@ -577,7 +653,7 @@ class GoogleSheetManagement {
                 throw new IOException('Google API: Unable to get file by file id=' . $excelId . ". An error occurred: " . $e->getMessage());
             }
             //download file test
-            $response = $this->downloadFile($service, $file, 'excel');
+            $response = $this->downloadFile($service, $file, 'Fellowship Application Spreadsheet');
             echo "response=" . $response . "<br>";
             if (!$response) {
                 throw new IOException('Error file response is empty: file id=' . $excelId);
