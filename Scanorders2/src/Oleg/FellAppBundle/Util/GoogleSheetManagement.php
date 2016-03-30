@@ -469,7 +469,7 @@ class GoogleSheetManagement {
 
         //testing
         //$yearsOldAplicationsFellApp = 14;
-        $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
+        //$dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
         //echo "dateCorrectionStr=".$dateCorrectionStr."<br>";
 
         $beforeDate = $nowDate->modify($dateCorrectionStr)->format('Y-m-d');
