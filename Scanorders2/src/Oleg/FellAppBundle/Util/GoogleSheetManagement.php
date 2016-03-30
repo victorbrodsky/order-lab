@@ -468,8 +468,8 @@ class GoogleSheetManagement {
         $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' years';
 
         //testing
-        //$yearsOldAplicationsFellApp = 14;
-        //$dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
+        //$yearsOldAplicationsFellApp = 99;
+        $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
         //echo "dateCorrectionStr=".$dateCorrectionStr."<br>";
 
         $beforeDate = $nowDate->modify($dateCorrectionStr)->format('Y-m-d');
@@ -502,6 +502,7 @@ class GoogleSheetManagement {
         //foreach documents unlink and delete from DB
         foreach( $documents as $document ) {
             $deletedDocumentIdsArr[] = $document->getId();
+
             continue; //testing
 
             //document absolute path
