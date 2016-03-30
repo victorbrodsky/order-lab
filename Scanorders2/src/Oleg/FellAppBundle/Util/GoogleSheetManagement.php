@@ -503,7 +503,7 @@ class GoogleSheetManagement {
         foreach( $documents as $document ) {
             $deletedDocumentIdsArr[] = $document->getId();
 
-            continue; //testing
+            //continue; //testing
 
             //document absolute path
             $documentPath = $document->getServerPath();
