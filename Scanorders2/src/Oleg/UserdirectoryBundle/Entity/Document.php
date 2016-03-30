@@ -298,6 +298,11 @@ class Document {
         //return "http://collage.med.cornell.edu/".$this->getRelativeUploadFullPath();
     }
 
+//    public function getCommandAbsoluteUploadFullPath()
+//    {
+//        return $this->container->get('kernel')->getRootDir() . '/../web/' . $this->getUploadDirectory().'/'.$this->getUniquename();
+//    }
+
     public function getRelativeUploadFullPath()
     {
         return $this->getPrefixPath().$this->getUploadDirectory().'/'.$this->getUniquename();

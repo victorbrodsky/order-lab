@@ -504,7 +504,8 @@ class GoogleSheetManagement {
             $deletedDocumentIdsArr[] = $document->getId();
 
             //document absolute path
-            $documentPath = $document->getServerPath();
+            //$documentPath = $document->getAbsoluteUploadFullPath();
+            $documentPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $document->getUploadDirectory().'/'.$document->getUniquename();
             //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
             echo "documentPath=".$documentPath."<br>";
 
@@ -516,7 +517,7 @@ class GoogleSheetManagement {
             //remove file from folder
             if( is_file($documentPath) ) {
                 echo "file exists!!! ";
-                //unlink($documentPath);
+                unlink($documentPath);
             } else {
                 echo "file does exists??? ";
             }

@@ -59,6 +59,8 @@ class UploadController extends Controller {
             //document absolute path
             $documentPath = $document->getServerPath();
             //echo "documentPath=".$documentPath."<br>";
+            $logger = $this->container->get('logger');
+            $logger->notice("documentPath=".$documentPath);
 
             //find object where document is belongs
             //$comment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
