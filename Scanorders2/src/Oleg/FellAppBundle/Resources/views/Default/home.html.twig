@@ -14,6 +14,9 @@
 
 {% block content %}
 
+
+<div id="fellapp-rank-modal"></div>
+
 <p>
 
     {% if is_granted('ROLE_FELLAPP_COORDINATOR') %}
@@ -568,9 +571,13 @@
 
                             {#<a data-toggle="modal" href="{{ path('fellapp_rank_edit',{'fellappid':entity.id}) }}" data-target="#fellapp-rank-modal-{{ entity.id }}">{{ rankValue }}</a>#}
                             {#<div id="fellapp-rank-modal-{{ entity.id }}"></div>#}
-                            <a class="btn btn-fellapp-rank-modal" data-toggle="modal" data-target="#fellapp-rank-modal-{{ entity.id }}">{{ rankValue }}</a>
-                            <div id="fellapp-rank-modal-{{ entity.id }}">
-                                {{ render(controller('OlegFellAppBundle:FellAppRank:rankEdit', { 'fellappid': entity.id })) }}
+                            {#<a class="btn btn-fellapp-rank-modal" data-toggle="modal" data-target="#fellapp-rank-modal">{{ rankValue }}</a>#}
+                            {#<div id="fellapp-rank-modal-{{ entity.id }}">#}
+                                {#{{ render(controller('OlegFellAppBundle:FellAppRank:rankEdit', { 'fellappid': entity.id })) }}#}
+                            {#</div>#}
+
+                            <div class="btn btn-fellapp-rank-modal" type="button" style="padding:0px;" data-id="{{ entity.id }}">
+                                {{ rankValue }}
                             </div>
 
                         </td>
@@ -861,6 +868,7 @@
 
     {% javascripts
         '@OlegFellAppBundle/Resources/public/form/js/interview-modal.js'
+        '@OlegFellAppBundle/Resources/public/form/js/rank-modal.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -883,6 +891,8 @@
             attachTitleToScores();
 
             initInterviewModal();
+
+            initRankModal();
 
             changeFilterColorButton();
 

@@ -36,7 +36,7 @@ class RankType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\FellAppBundle\Entity\Rank',
-            //'csrf_protection' => false,
+            'csrf_protection' => false,
         ));
     }
 

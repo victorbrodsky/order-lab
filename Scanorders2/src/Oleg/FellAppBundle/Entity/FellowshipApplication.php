@@ -225,7 +225,8 @@ class FellowshipApplication extends BaseUserAttributes {
     private $observers;
 
     /**
-     * @ORM\OneToOne(targetEntity="Rank", mappedBy="fellapp", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="Rank", inversedBy="fellapp", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="rank_id", referencedColumnName="id", nullable=true)
      **/
     private $rank;
 

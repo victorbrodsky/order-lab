@@ -32,8 +32,7 @@ class Rank {
 
 
     /**
-     * @ORM\OneToOne(targetEntity="FellowshipApplication", inversedBy="rank")
-     * @ORM\JoinColumn(name="fellapp_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="FellowshipApplication", mappedBy="rank")
      */
     private $fellapp;
 
@@ -86,7 +85,7 @@ class Rank {
 
 
 
-    public function __construct($siteName) {
+    public function __construct() {
         $this->creationdate = new \DateTime();
 
     }
@@ -148,14 +147,45 @@ class Rank {
     {
         return $this->userroles;
     }
-
     /**
      * @param array $userroles
      */
     public function setUserroles($userroles)
     {
-        $this->userroles = $userroles;
+        if( $userroles ) {
+            foreach( $userroles as $role ) {
+                $this->addUserrole($role."");
+            }
+        }
     }
+    public function addUserrole($role) {
+        $this->roles[] = $role;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUpdateuserroles()
+    {
+        return $this->updateuserroles;
+    }
+    /**
+     * @param array $updateuserroles
+     */
+    public function setUpdateuserroles($updateuserroles)
+    {
+        if( $updateuserroles ) {
+            foreach( $updateuserroles as $role ) {
+                $this->addUpdateuserrole($role."");
+            }
+        }
+    }
+    public function addUpdateuserrole($role) {
+        $this->updateuserroles[] = $role;
+        return $this;
+    }
+
 
     /**
      * @return \DateTime
@@ -187,22 +217,6 @@ class Rank {
     public function setUpdateuser($updateuser)
     {
         $this->updateuser = $updateuser;
-    }
-
-    /**
-     * @return array
-     */
-    public function getUpdateuserroles()
-    {
-        return $this->updateuserroles;
-    }
-
-    /**
-     * @param array $updateuserroles
-     */
-    public function setUpdateuserroles($updateuserroles)
-    {
-        $this->updateuserroles = $updateuserroles;
     }
 
     /**

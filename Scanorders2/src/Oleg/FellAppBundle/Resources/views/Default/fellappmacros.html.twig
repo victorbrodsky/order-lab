@@ -73,6 +73,8 @@
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
+    <div style="text-align:center;">
+
     <h1>
         {% if is_granted('ROLE_PLATFORM_DEMO') %}
             Demo Applicant
@@ -96,6 +98,7 @@
         </div>
     </div>
 
+    </div>
 
 {% endmacro %}
 
