@@ -137,6 +137,7 @@ class FellAppController extends Controller {
         $dql->leftJoin("applicant.infos", "applicantinfos");
         //$dql->leftJoin("applicant.credentials", "credentials");
         $dql->leftJoin("fellapp.examinations", "examinations");
+        $dql->leftJoin("fellapp.rank", "rank");
 
         if( $search ) {
             $dql->leftJoin("applicant.infos", "userinfos");

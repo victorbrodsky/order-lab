@@ -224,6 +224,11 @@ class FellowshipApplication extends BaseUserAttributes {
      **/
     private $observers;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Rank", mappedBy="fellapp", cascade={"persist","remove"})
+     **/
+    private $rank;
+
 
     /////////// user objects /////////////
 //    /**
@@ -944,6 +949,22 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getAppStatus()
     {
         return $this->appStatus;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRank()
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param mixed $rank
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
     }
 
 

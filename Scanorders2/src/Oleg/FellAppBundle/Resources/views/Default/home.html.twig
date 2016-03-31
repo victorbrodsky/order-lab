@@ -290,6 +290,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
 
+                {% if fellappTypeId > 0 %}
+                    <th>{{ knp_pagination_sortable(entities, 'Rank', 'rank.rank') }}</th>
+                {% endif %}
+
                 <th>
                     <div data-toggle="tooltip" title="View Complete Application PDF">
                         <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
@@ -549,6 +553,28 @@
                             </div>
                         </div>
                     </td>
+
+                    {% if fellappTypeId > 0 %}
+                        <td class="rowlink-skip">
+                            {% if entity.rank %}
+                                {% set rankValue = entity.rank.rank %}
+                            {% else %}
+                                {% set rankValue = "?" %}
+                            {% endif %}
+
+                            {#<div class="btn btn-sm btn-fellapp-rank-modal" type="button" style="padding:0px;" data-id="{{ entity.id }}">#}
+                                {#<span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>#}
+                            {#</div>#}
+
+                            {#<a data-toggle="modal" href="{{ path('fellapp_rank_edit',{'fellappid':entity.id}) }}" data-target="#fellapp-rank-modal-{{ entity.id }}">{{ rankValue }}</a>#}
+                            {#<div id="fellapp-rank-modal-{{ entity.id }}"></div>#}
+                            <a class="btn btn-fellapp-rank-modal" data-toggle="modal" data-target="#fellapp-rank-modal-{{ entity.id }}">{{ rankValue }}</a>
+                            <div id="fellapp-rank-modal-{{ entity.id }}">
+                                {{ render(controller('OlegFellAppBundle:FellAppRank:rankEdit', { 'fellappid': entity.id })) }}
+                            </div>
+
+                        </td>
+                    {% endif %}
 
                     <td class="rowlink-skip">
 
