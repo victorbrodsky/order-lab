@@ -2,7 +2,6 @@
  * Created by oli2002 on 11/11/15.
  */
 
-//console.log('include interview-modal.js');
 
 function initRankModal() {
     $('.btn-fellapp-rank-modal').click(function(ev) {
@@ -15,12 +14,9 @@ function initRankModal() {
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
 function rankModalCreation( btnEl, fellappId ) {
 
-    //console.log('interviewModalAction fellappId='+fellappId);
-
     var url = getCommonBaseUrl("rank/edit/"+fellappId);
     //console.log('url='+url);
 
-//    return;
     var waitModal = true;
     if( waitModal ) {
         var waitHtml =
@@ -40,17 +36,6 @@ function rankModalCreation( btnEl, fellappId ) {
         lbtn.start();
     }
 
-
-    //    $.ajax({
-//        type: 'GET',
-//        url: url,
-//        success: function(response){
-//            console.log('response ok');
-//            $('body').append(response);
-//            $('#fellapp_rank_'+fellappId).modal({show:true});
-//        }
-//    });
-//    return;
 
     var success = false; //open modal only if success=true
     $.ajax({
@@ -123,11 +108,3 @@ function submitRank(btn,fellappId) {
     });
 }
 
-
-function cleanRankModal() {
-    $(".modal_error_div").html('');
-    $(".modal-body").find('textarea').val('');
-    $('#modal-processor-comment').select2('data',null);
-    //console.log("close: clean modal");
-    //$(this).closest('.modal').find('.modal_error_div').html('');
-}
