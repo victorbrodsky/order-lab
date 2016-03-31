@@ -75,18 +75,8 @@
        
     
     {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}
-    {{ render_hinclude( url('employees_showuser_only',{'id':user_id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
+    {#testing{{ render_hinclude( url('employees_showuser_only',{'id':user_id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}#}
 
-{#        {{ render( url('employees_showuser_only',{'id':entity.id}) ) }}#}
-        
-{#    render(controller("OlegUserdirectoryBundle:User:pendingAdminReview"))#}
-{#    {{ render_hinclude( controller("OlegUserdirectoryBundle:User:showOnlyUser",{"id":user_id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}#}
-{#    {{ render( controller('OlegUserdirectoryBundle:User:showOnlyUser',{'id':user_id}) ) }}#}
-          
-{#     <hx:include src="{{ path('employees_showuser_only',{'id':entity.id}) }}"></hx:include>   #}
-        
-{#        <link rel="import" href="{{ path('employees_showuser_only',{'id':entity.id}) }}" async data-target="this" data-source="#selector" />#}
-    
     {% endif %}
     
 {% endblock %}    

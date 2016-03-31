@@ -1532,8 +1532,172 @@ class User extends BaseUser {
         return $emailArr;
     }
 
-    //Return: Chief, Eyebrow Pathology
+
+
+
+    /////////////////////// Return: Chief, Eyebrow Pathology ///////////////////////
+    //Group by institutions
     public function getHeadInfo() {
+
+        //$headInfo = array();
+        //$instArr['inst']['instId']
+        //$instArr['inst']['instInfo']
+        //$instArr['inst']['titleInfo']
+        $instArr = array();
+
+        //getAdministrativeTitles
+        $instArr = $this->addTitleInfo($instArr,'administrativeTitle',$this->getAdministrativeTitles());
+
+        $instArr = $this->addTitleInfo($instArr,'appointmentTitle',$this->getAppointmentTitles());
+
+        $instArr = $this->addTitleInfo($instArr,'medicalTitle',$this->getMedicalTitles());
+
+        //print_r($instArr);
+        //echo "<br><br>";
+        //print_r($instArr[234][0]);
+
+//        foreach( $instArr as $instInfo ) {
+//            //echo "key=".$key.":<br>";
+//            var_dump($instInfo['titleInfo']);
+//            //echo "<br>####### Title0=".$instInfo['titleInfo'][0]['name']." #######<br>";
+//
+////            foreach( $instInfo['titleInfo'] as $titleinfo ) {
+////                //echo "<br>####### Title=".$titleinfo['name']." #######<br>";
+////                var_dump($titleinfo);
+////            }
+//
+//            echo "<br><br>";
+//
+//            var_dump($instInfo['instInfo']);
+//
+//        }
+//        echo "###########<br>";
+
+        return $instArr;
+    }
+    public function addTitleInfo($instArr,$tablename,$titles) {
+        foreach( $titles as $title ) {
+            $elementInfo = null;
+            if( $title->getName() ) {
+                $name = $title->getName()->getName()."";
+                $titleId = null;
+                if( $title->getName()->getId() ) {
+                    $titleId = $title->getName()->getId();
+                }
+                $elementInfo = array('tablename'=>$tablename,'id'=>$titleId,'name'=>$name);
+            }
+
+            //$headInfo[] = 'break-br';
+
+            $instId = 0;
+            $institution = null;
+            if( $title->getInstitution() ) {
+                $institution = $title->getInstitution();
+                $instId = $title->getInstitution()->getId();
+            }
+
+            //if not exists
+            $infoArr = array(
+                'instInfo' => $this->getHeadInstitutionInfoArr($institution),
+                'titleInfo'    => $elementInfo
+            );
+
+            //$instArr[$title->getInstitution()->getId()] = array();
+            //array_push( $instArr[$title->getInstitution()->getId()], $infoArr );
+
+            if( array_key_exists($instId,$instArr) ) {
+                //echo $instId." => instId already exists<br>";
+                //$instArr[$instId]['titleInfo'][] = $elementInfo;
+            } else {
+                //echo $instId." => instId does not exists<br>";
+                $instArr[$instId]['instInfo'] = $this->getHeadInstitutionInfoArr($institution);
+                //$instArr[$instId]['titleInfo'][] = $elementInfo;
+            }
+            $instArr[$instId]['titleInfo'][] = $elementInfo;
+        }
+
+        return $instArr;
+    }
+    public function getHeadInstitutionInfoArr($institution) {
+
+        //echo "inst=".$institution."<br>";
+        //echo "count=".count($headInfo)."<br>";
+
+        $headInfo = array();
+
+        //service
+        if( $institution ) {
+
+            $institutionThis = $institution;
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+            $headInfo[] = $elementInfo;
+
+        }
+
+        //division
+        if( $institution && $institution->getParent() ) {
+
+            $institutionThis = $institution->getParent();
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+            $headInfo[] = $elementInfo;
+
+        }
+
+        //department
+        if( $institution && $institution->getParent() && $institution->getParent()->getParent() ) {
+
+            $institutionThis = $institution->getParent()->getParent();
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+            $headInfo[] = $elementInfo;
+
+        }
+
+        //institution
+        if( $institution && $institution->getParent() && $institution->getParent()->getParent() && $institution->getParent()->getParent()->getParent() ) {
+
+            $institutionThis = $institution->getParent()->getParent()->getParent();
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+            $headInfo[] = $elementInfo;
+
+            //$headInfo[] = 'break-hr';
+        }
+
+        //$headInfo[] = 'break-hr';
+
+        return $headInfo;
+    }
+
+
+    //Return: Chief, Eyebrow Pathology
+    public function getHeadInfo_orig() {
 
         $headInfo = array();
 
@@ -1588,8 +1752,6 @@ class User extends BaseUser {
         return $headInfo;
 
     }
-
-
     public function getHeadInstitutionInfo($headInfo, $institution) {
 
         //echo "inst=".$institution."<br>";
@@ -1689,6 +1851,8 @@ class User extends BaseUser {
 //        }
 //
 //    }
+
+    /////////////////////// EOF Return: Chief, Eyebrow Pathology ///////////////////////
 
     //TODO: create dynamic roles as in http://php-and-symfony.matthiasnoback.nl/2012/07/symfony2-security-creating-dynamic-roles-using-roleinterface/
     //ROLE_DEIDENTIFICATOR_USE: if one of the user role has DEIDENTIFICATOR site then create this role. It will solve security.yml problem
