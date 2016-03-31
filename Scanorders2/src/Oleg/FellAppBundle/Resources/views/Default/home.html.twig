@@ -557,29 +557,33 @@
                         </div>
                     </td>
 
+                    {#rank#}
                     {% if fellappTypeId > 0 %}
                         <td class="rowlink-skip">
-                            {% if entity.rank %}
+                            {% if entity.rank and entity.rank != 0 and entity.rank != "" %}
+                                {% if entity.rank.updateuser %}
+                                    {% set rankUser = entity.rank.updateuser %}
+                                    {% set rankDate = entity.rank.updatedate %}
+                                {% else %}
+                                    {% set rankUser = entity.rank.user %}
+                                    {% set rankDate = entity.rank.creationdate %}
+                                {% endif %}
+                                {% set tooltipStr = "Set by "~rankUser.getUserNameStr()~" on "~rankDate|date('m/d/Y','UTC') %}
                                 {% set rankValue = entity.rank.rank %}
                             {% else %}
+                                {% set tooltipStr = "" %}
                                 {% set rankValue = "?" %}
                             {% endif %}
 
-                            {#<div class="btn btn-sm btn-fellapp-rank-modal" type="button" style="padding:0px;" data-id="{{ entity.id }}">#}
-                                {#<span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>#}
-                            {#</div>#}
-
-                            {#<a data-toggle="modal" href="{{ path('fellapp_rank_edit',{'fellappid':entity.id}) }}" data-target="#fellapp-rank-modal-{{ entity.id }}">{{ rankValue }}</a>#}
-                            {#<div id="fellapp-rank-modal-{{ entity.id }}"></div>#}
-                            {#<a class="btn btn-fellapp-rank-modal" data-toggle="modal" data-target="#fellapp-rank-modal">{{ rankValue }}</a>#}
-                            {#<div id="fellapp-rank-modal-{{ entity.id }}">#}
-                                {#{{ render(controller('OlegFellAppBundle:FellAppRank:rankEdit', { 'fellappid': entity.id })) }}#}
-                            {#</div>#}
-
-                            <div class="btn btn-fellapp-rank-modal" type="button" style="padding:0px;" data-id="{{ entity.id }}">
+                            <div
+                                class="btn btn-fellapp-rank-modal"
+                                type="button"
+                                style="padding:0px;"
+                                data-id="{{ entity.id }}"
+                                data-toggle="tooltip" title="{{ tooltipStr }}"
+                            >
                                 {{ rankValue }}
                             </div>
-
                         </td>
                     {% endif %}
 

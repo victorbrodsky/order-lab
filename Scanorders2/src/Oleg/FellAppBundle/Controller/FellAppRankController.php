@@ -32,8 +32,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class FellAppRankController extends Controller {
 
     /**
-     * Show home page
-     *
      * @Route("/rank/edit/{fellappid}", name="fellapp_rank_edit")
      * @Method("GET")
      * @Template("OlegFellAppBundle:Rank:rank_modal.html.twig")
@@ -75,11 +73,8 @@ class FellAppRankController extends Controller {
 
 
     /**
-     * Show home page
-     *
      * @Route("/rank/update/{fellappid}", name="fellapp_rank_update")
      * @Method("PUT")
-     * @Template("OlegFellAppBundle:Rank:rank_modal.html.twig")
      */
     public function rankUpdateAction(Request $request, $fellappid) {
 
@@ -88,7 +83,7 @@ class FellAppRankController extends Controller {
         }
 
         $logger = $this->container->get('logger');
-        $logger->warning('create rank');
+        $logger->warning('create rank: fellappid='.$fellappid);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -120,22 +115,11 @@ class FellAppRankController extends Controller {
 
         $form->handleRequest($request);
 
-//        echo "errors:<br>";
-//        $string = (string) $form->getErrors(true);
-//        echo "string errors=".$string."<br>";
-//        echo "getErrors count=".count($form->getErrors())."<br>";
-//        echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
-//        print_r($form->getErrors());
-//        echo "<br>string errors:<br>";
-//        print_r($form->getErrorsAsString());
-//        echo "<br>";
-//        exit();
-
 
         if( $form->isValid() ) {
 
             echo "rank=".$rank->getRank()."<br>";
-            //exit('submit rank');
+            exit('submit rank');
 
             $em->persist($rank);
             $em->flush();
@@ -143,13 +127,71 @@ class FellAppRankController extends Controller {
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellappid)));
             return $this->redirect($this->generateUrl('fellapp_home'));
         }
-        exit('form is invalid');
+        //exit('form is invalid');
 
         //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellappid)));
         return $this->redirect($this->generateUrl('fellapp_home'));
     }
 
 
+    /**
+     * @Route("/rank/update-ajax/{fellappid}", name="fellapp_rank_update")
+     * @Method("PUT")
+     */
+    public function rankUpdateAjaxAction(Request $request, $fellappid) {
+
+        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $rankValue = $request->request->get('rankValue');
+        //echo "rankValue=".$rankValue."<br>";
+        //echo "fellappid=".$fellappid."<br>";
+
+        $logger = $this->container->get('logger');
+        $logger->warning('create rank: fellappid='.$fellappid);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fellApp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappid);
+        if( !$fellApp ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $rank = $fellApp->getRank();
+
+        if( !$rank ) {
+            //exit('no rank');
+            $rank = new Rank();
+            $rank->setUser($user);
+            $rank->setUserroles($user->getRoles());
+            $fellApp->setRank($rank);
+        } else {
+            $rank->setUpdateuser($user);
+            $rank->setUpdateuserroles($user->getRoles());
+        }
+
+        //$res = 'notok';
+        //$res = 'ok';
+        //if( $rankValue != "" ) {
+            $rank->setRank($rankValue);
+
+            //echo "rank=".$rank->getRank()."<br>";
+            //exit('submit rank');
+
+            $em->persist($rank);
+            $em->flush();
+
+            $res = 'ok';
+        //}
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
 
 
 }

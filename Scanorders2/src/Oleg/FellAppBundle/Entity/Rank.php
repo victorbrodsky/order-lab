@@ -159,7 +159,7 @@ class Rank {
         }
     }
     public function addUserrole($role) {
-        $this->roles[] = $role;
+        $this->userroles[] = $role;
         return $this;
     }
 

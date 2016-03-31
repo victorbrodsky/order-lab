@@ -91,21 +91,43 @@ function rankModalCreation( btnEl, fellappId ) {
 
 }
 
-function sendInviteInterviewersToRate(url,confirmMsg) {
-    //console.log("inviteinterviewerstorate: url="+url);
-    var r = confirm(confirmMsg);
-    if( r == false ) {
-        return;
-    }
+function submitRank(btn,fellappId) {
+
+    var rankValue = $('#oleg_fellappbundle_rank_rank').val();
+
+    var url = getCommonBaseUrl("rank/update-ajax/"+fellappId);
+
+    var rank_modal = $('#fellapp_rank_'+fellappId);
+
     $.ajax({
-        type: 'GET',
+        type: 'PUT',
         url: url,
-        success: function(response){
-            //console.log('response ok');
-            if( response == "ok" ) {
-                alert("Invitation email(s) have been successfully sent.");
+        data: {rankValue: rankValue},
+        timeout: _ajaxTimeout,
+        success: function(data){
+            //console.log("OK submit a new rank");
+            if( data == 'ok' ) {
+                rank_modal.modal('hide');
+                rank_modal.remove();
+                //cleanRankModal();
+                //if( _reload_page_after_modal == '1' ) {
+                    window.parent.location.reload();
+                //}
+            } else {
+                console.log("error: data="+data);
             }
+        },
+        error: function(){
+            console.log("error: data="+data);
         }
     });
 }
 
+
+function cleanRankModal() {
+    $(".modal_error_div").html('');
+    $(".modal-body").find('textarea').val('');
+    $('#modal-processor-comment').select2('data',null);
+    //console.log("close: clean modal");
+    //$(this).closest('.modal').find('.modal_error_div').html('');
+}

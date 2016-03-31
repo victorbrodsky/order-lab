@@ -1,5 +1,6 @@
 
 {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 <!-- Modal -->
 <div class="modal fade" id="fellapp_rank_{{ entity.id }}" tabindex="-1" role="dialog" aria-labelledby="myRankModalLabel" aria-hidden="true">
@@ -13,6 +14,8 @@
                 {{ fellappmacros.snapshot(entity,'fellapp','edit') }}
             </div>
 
+            <br>
+
             <div class="modal-body">
 
                 <div id="modal_error_{{ entity.id }}" class="modal_error_div"></div>
@@ -22,14 +25,19 @@
 
                     {{ form_errors(form) }}
 
-                    {{ form_row(form.rank) }}
+                    {#{{ form_row(form.rank) }}#}
+                    {{ formmacros.field(form.rank)}}
 
+                    <br>
+                    <div style="text-align:center;">
                     <p>
                         <div class="center-block">
-                            <button id="fellapp_rank_save" type="submit" class="btn btn-primary">Save</button>
+                            {#<button id="fellapp_rank_save" type="submit" class="btn btn-primary">Save</button>#}
+                            <button id="fellapp_rank_save" type="button" class="btn btn-primary" onclick="submitRank(this,{{ entity.id }})">Save</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         </div>
                     </p>
+                    </div>
 
                 {{ form_end(form, {'render_rest': false}) }}
 
