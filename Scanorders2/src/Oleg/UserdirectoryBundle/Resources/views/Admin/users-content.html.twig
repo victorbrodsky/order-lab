@@ -106,28 +106,34 @@
                 <td>
                     <a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}"><strong>{{ entity.displayName }}</strong></a>
                 </td>
+
+                {#administrativeTitles#}
                 <td class="rowlink-skip">
-                    {% for administrativeTitle in entity.administrativeTitles %}
+                    {% for administrativeTitle in entity.getUniqueTitles(entity.administrativeTitles) %}
                         {% if administrativeTitle.name %}
                             <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name.id, 'name': administrativeTitle.name.name }) }}">{{ administrativeTitle.name }}</a></p>
                         {% endif %}
                     {% endfor %}
                 </td>
+
+                {#appointmentTitles#}
                 <td class="rowlink-skip">
-                    {% for appointmentTitles in entity.appointmentTitles %}
-                        {% if appointmentTitles.name %}
-                            <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitle','id': appointmentTitles.name.id, 'name': appointmentTitles.name.name }) }}">{{ appointmentTitles.name }}</a></p>
+                    {% for appointmentTitle in entity.getUniqueTitles(entity.appointmentTitles) %}
+                        {% if appointmentTitle.name %}
+                            <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitle','id': appointmentTitle.name.id, 'name': appointmentTitle.name.name }) }}">{{ appointmentTitle.name }}</a></p>
                         {% endif %}
                     {% endfor %}
                 </td>
+
                 <td>
-                    {% for appointmentTitles in entity.appointmentTitles %}
-                        {% set expectedPgy = appointmentTitles.calculateExpectedPgy() %}
+                    {% for appointmentTitle in entity.appointmentTitles %}
+                        {% set expectedPgy = appointmentTitle.calculateExpectedPgy() %}
                         {% if expectedPgy %}
                             {{ expectedPgy }}<br>
                         {% endif %}
                     {% endfor %}
                 </td>
+
                 {#<td>{{ entity.primaryPublicUserId }}</td>#}
                 <td class="rowlink-skip">
                     {#<a href="mailto:{{ entity.email }}" target="_top">{{ entity.email }}</a>#}

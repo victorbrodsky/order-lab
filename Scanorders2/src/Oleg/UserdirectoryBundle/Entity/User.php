@@ -1668,163 +1668,20 @@ class User extends BaseUser {
         return $headInfo;
     }
 
-
-//    //Return: Chief, Eyebrow Pathology
-//    public function getHeadInfo_orig() {
-//
-//        $headInfo = array();
-//
-//        //get all titles
-//        foreach( $this->getAdministrativeTitles() as $title ) {
-//            if( $title->getName() ) {
-//                $name = $title->getName()->getName()."";
-//                $titleId = null;
-//                if( $title->getName()->getId() ) {
-//                    $titleId = $title->getName()->getId();
-//                }
-//                $elementInfo = array('tablename'=>'administrativeTitle','id'=>$titleId,'name'=>$name);
-//                $headInfo[] = $elementInfo;
-//            }
-//            $headInfo[] = 'break-br';
-//            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
-//            //$headInfo[] = 'break';
-//        }
-//        foreach( $this->getAppointmentTitles() as $title ) {
-//            if( $title->getName() ) {
-//                $name = $title->getName()->getName()."";
-//                $titleId = null;
-//                if( $title->getName()->getId() ) {
-//                    $titleId = $title->getName()->getId();
-//                }
-//                $elementInfo = array('tablename'=>'appointmentTitle','id'=>$titleId,'name'=>$name);
-//                $headInfo[] = $elementInfo;
-//            }
-//            $headInfo[] = 'break-br';
-//            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
-//            //$headInfo[] = 'break';
-//        }
-//        foreach( $this->getMedicalTitles() as $title ) {
-//            if( $title->getName() ) {
-//                $name = $title->getName()->getName()."";
-//                $titleId = null;
-//                if( $title->getName()->getId() ) {
-//                    $titleId = $title->getName()->getId();
-//                }
-//                $elementInfo = array('tablename'=>'medicalTitle','id'=>$titleId,'name'=>$name);
-//                $headInfo[] = $elementInfo;
-//                //$headInfo[] = $title->getName()->getName()."";
-//            }
-//            $headInfo[] = 'break-br';
-//            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
-//            //$headInfo[] = 'break';
-//        }
-//
-//        //echo "headInfo=".implode(", ",$headInfo)."<br>";
-//
-//        //return implode("<br>",$headInfo);
-//        return $headInfo;
-//
-//    }
-//    public function getHeadInstitutionInfo($headInfo, $institution) {
-//
-//        //echo "inst=".$institution."<br>";
-//        //echo "count=".count($headInfo)."<br>";
-//
-//        //service
-//        if( $institution ) {
-//
-//            $institutionThis = $institution;
-//            //echo "inst=".$institutionThis."<br>";
-//
-//            $name = $institutionThis->getName()."";
-//            $titleId = null;
-//            if( $institutionThis->getId() ) {
-//                $titleId = $institutionThis->getId();
-//            }
-//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-//            $headInfo[] = $elementInfo;
-//
-//        }
-//
-//        //division
-//        if( $institution && $institution->getParent() ) {
-//
-//            $institutionThis = $institution->getParent();
-//            //echo "inst=".$institutionThis."<br>";
-//
-//            $name = $institutionThis->getName()."";
-//            $titleId = null;
-//            if( $institutionThis->getId() ) {
-//                $titleId = $institutionThis->getId();
-//            }
-//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-//            $headInfo[] = $elementInfo;
-//
-//        }
-//
-//        //department
-//        if( $institution && $institution->getParent() && $institution->getParent()->getParent() ) {
-//
-//            $institutionThis = $institution->getParent()->getParent();
-//            //echo "inst=".$institutionThis."<br>";
-//
-//            $name = $institutionThis->getName()."";
-//            $titleId = null;
-//            if( $institutionThis->getId() ) {
-//                $titleId = $institutionThis->getId();
-//            }
-//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-//            $headInfo[] = $elementInfo;
-//
-//        }
-//
-//        //institution
-//        if( $institution && $institution->getParent() && $institution->getParent()->getParent() && $institution->getParent()->getParent()->getParent() ) {
-//
-//            $institutionThis = $institution->getParent()->getParent()->getParent();
-//            //echo "inst=".$institutionThis."<br>";
-//
-//            $name = $institutionThis->getName()."";
-//            $titleId = null;
-//            if( $institutionThis->getId() ) {
-//                $titleId = $institutionThis->getId();
-//            }
-//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-//            $headInfo[] = $elementInfo;
-//
-//            //$headInfo[] = 'break-hr';
-//        }
-//
-//        $headInfo[] = 'break-hr';
-//
-//        return $headInfo;
-//    }
-
-//    public function getHeadInstitutionInfo_Rec($headInfo, $institution) {
-//
-//        echo "inst=".$institution."<br>";
-//        echo "count=".count($headInfo)."<br>";
-//
-//        if( $institution->getParent() ) {
-//            $this->getHeadInstitutionInfo($headInfo, $institution->getParent());
-//            //array_merge($headInfo, $headInfoNew);
-//            //return $headInfo;
-//        } else {
-//
-//            $name = $institution->getName()."";
-//            $titleId = null;
-//            if( $institution->getId() ) {
-//                $titleId = $institution->getId();
-//            }
-//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-//            $headInfo[] = $elementInfo;
-//
-//            //return $headInfo;
-//            //return $headInfo;
-//        }
-//
-//    }
-
+    public function getUniqueTitles( $titles ) {
+        $titlesArr = new ArrayCollection();
+        $titleNameIdsArr = array();
+        foreach( $titles as $title ) {
+            if( $title->getName() ) {
+                $nameId = $title->getName()->getId();
+                if (!in_array($nameId, $titleNameIdsArr)) {
+                    $titleNameIdsArr[] = $nameId;
+                    $titlesArr->add($title);
+                }
+            }
+        }
+        return $titlesArr;
+    }
     /////////////////////// EOF Return: Chief, Eyebrow Pathology ///////////////////////
 
     //TODO: create dynamic roles as in http://php-and-symfony.matthiasnoback.nl/2012/07/symfony2-security-creating-dynamic-roles-using-roleinterface/

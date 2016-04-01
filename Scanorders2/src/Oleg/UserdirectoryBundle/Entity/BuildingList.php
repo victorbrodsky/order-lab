@@ -238,7 +238,7 @@ class BuildingList extends ListAbstract
             }
             $instNameArr[] = $thisInstName;
         }
-        $instName = join(",",$instNameArr);
+        $instName = join(", ",$instNameArr);
 
         $geoName = "";
         if( $this->getGeoLocation() != "" ) {
