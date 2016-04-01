@@ -38,6 +38,16 @@ class ScanUploadController extends UploadController {
         return $this->downloadFileMethod($request,$id,$this->container->getParameter('scan.sitename'),$eventtype);
     }
 
+    /**
+     * $id - document id
+     *
+     * @Route("/file-view/{id}/{eventtype}", name="scan_file_view", requirements={"id" = "\d+"})
+     * @Method("GET")
+     */
+    public function viewFileAction(Request $request,$id,$eventtype=null) {
+        return $this->viewFileMethod($request,$id,$this->container->getParameter('scan.sitename'),$eventtype);
+    }
+
 
     //Aperio API for authenticated user: http://c.med.cornell.edu/imageserver/@73956?GETPATH => \\collage\images\2015-05-14\73956.svs
 

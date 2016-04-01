@@ -1538,40 +1538,13 @@ class User extends BaseUser {
     /////////////////////// Return: Chief, Eyebrow Pathology ///////////////////////
     //Group by institutions
     public function getHeadInfo() {
-
-        //$headInfo = array();
-        //$instArr['inst']['instId']
-        //$instArr['inst']['instInfo']
-        //$instArr['inst']['titleInfo']
         $instArr = array();
 
-        //getAdministrativeTitles
         $instArr = $this->addTitleInfo($instArr,'administrativeTitle',$this->getAdministrativeTitles());
 
         $instArr = $this->addTitleInfo($instArr,'appointmentTitle',$this->getAppointmentTitles());
 
         $instArr = $this->addTitleInfo($instArr,'medicalTitle',$this->getMedicalTitles());
-
-        //print_r($instArr);
-        //echo "<br><br>";
-        //print_r($instArr[234][0]);
-
-//        foreach( $instArr as $instInfo ) {
-//            //echo "key=".$key.":<br>";
-//            var_dump($instInfo['titleInfo']);
-//            //echo "<br>####### Title0=".$instInfo['titleInfo'][0]['name']." #######<br>";
-//
-////            foreach( $instInfo['titleInfo'] as $titleinfo ) {
-////                //echo "<br>####### Title=".$titleinfo['name']." #######<br>";
-////                var_dump($titleinfo);
-////            }
-//
-//            echo "<br><br>";
-//
-//            var_dump($instInfo['instInfo']);
-//
-//        }
-//        echo "###########<br>";
 
         return $instArr;
     }
@@ -1696,136 +1669,136 @@ class User extends BaseUser {
     }
 
 
-    //Return: Chief, Eyebrow Pathology
-    public function getHeadInfo_orig() {
-
-        $headInfo = array();
-
-        //get all titles
-        foreach( $this->getAdministrativeTitles() as $title ) {
-            if( $title->getName() ) {
-                $name = $title->getName()->getName()."";
-                $titleId = null;
-                if( $title->getName()->getId() ) {
-                    $titleId = $title->getName()->getId();
-                }
-                $elementInfo = array('tablename'=>'administrativeTitle','id'=>$titleId,'name'=>$name);
-                $headInfo[] = $elementInfo;
-            }
-            $headInfo[] = 'break-br';
-            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
-            //$headInfo[] = 'break';
-        }
-        foreach( $this->getAppointmentTitles() as $title ) {
-            if( $title->getName() ) {
-                $name = $title->getName()->getName()."";
-                $titleId = null;
-                if( $title->getName()->getId() ) {
-                    $titleId = $title->getName()->getId();
-                }
-                $elementInfo = array('tablename'=>'appointmentTitle','id'=>$titleId,'name'=>$name);
-                $headInfo[] = $elementInfo;
-            }
-            $headInfo[] = 'break-br';
-            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
-            //$headInfo[] = 'break';
-        }
-        foreach( $this->getMedicalTitles() as $title ) {
-            if( $title->getName() ) {
-                $name = $title->getName()->getName()."";
-                $titleId = null;
-                if( $title->getName()->getId() ) {
-                    $titleId = $title->getName()->getId();
-                }
-                $elementInfo = array('tablename'=>'medicalTitle','id'=>$titleId,'name'=>$name);
-                $headInfo[] = $elementInfo;
-                //$headInfo[] = $title->getName()->getName()."";
-            }
-            $headInfo[] = 'break-br';
-            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
-            //$headInfo[] = 'break';
-        }
-
-        //echo "headInfo=".implode(", ",$headInfo)."<br>";
-
-        //return implode("<br>",$headInfo);
-        return $headInfo;
-
-    }
-    public function getHeadInstitutionInfo($headInfo, $institution) {
-
-        //echo "inst=".$institution."<br>";
-        //echo "count=".count($headInfo)."<br>";
-
-        //service
-        if( $institution ) {
-
-            $institutionThis = $institution;
-            //echo "inst=".$institutionThis."<br>";
-
-            $name = $institutionThis->getName()."";
-            $titleId = null;
-            if( $institutionThis->getId() ) {
-                $titleId = $institutionThis->getId();
-            }
-            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-            $headInfo[] = $elementInfo;
-
-        }
-
-        //division
-        if( $institution && $institution->getParent() ) {
-
-            $institutionThis = $institution->getParent();
-            //echo "inst=".$institutionThis."<br>";
-
-            $name = $institutionThis->getName()."";
-            $titleId = null;
-            if( $institutionThis->getId() ) {
-                $titleId = $institutionThis->getId();
-            }
-            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-            $headInfo[] = $elementInfo;
-
-        }
-
-        //department
-        if( $institution && $institution->getParent() && $institution->getParent()->getParent() ) {
-
-            $institutionThis = $institution->getParent()->getParent();
-            //echo "inst=".$institutionThis."<br>";
-
-            $name = $institutionThis->getName()."";
-            $titleId = null;
-            if( $institutionThis->getId() ) {
-                $titleId = $institutionThis->getId();
-            }
-            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-            $headInfo[] = $elementInfo;
-
-        }
-
-        //institution
-        if( $institution && $institution->getParent() && $institution->getParent()->getParent() && $institution->getParent()->getParent()->getParent() ) {
-
-            $institutionThis = $institution->getParent()->getParent()->getParent();
-            //echo "inst=".$institutionThis."<br>";
-
-            $name = $institutionThis->getName()."";
-            $titleId = null;
-            if( $institutionThis->getId() ) {
-                $titleId = $institutionThis->getId();
-            }
-            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-            $headInfo[] = $elementInfo;
-
-            //$headInfo[] = 'break-hr';
-        }
-
-        $headInfo[] = 'break-hr';
-
-        return $headInfo;
-    }
+//    //Return: Chief, Eyebrow Pathology
+//    public function getHeadInfo_orig() {
+//
+//        $headInfo = array();
+//
+//        //get all titles
+//        foreach( $this->getAdministrativeTitles() as $title ) {
+//            if( $title->getName() ) {
+//                $name = $title->getName()->getName()."";
+//                $titleId = null;
+//                if( $title->getName()->getId() ) {
+//                    $titleId = $title->getName()->getId();
+//                }
+//                $elementInfo = array('tablename'=>'administrativeTitle','id'=>$titleId,'name'=>$name);
+//                $headInfo[] = $elementInfo;
+//            }
+//            $headInfo[] = 'break-br';
+//            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
+//            //$headInfo[] = 'break';
+//        }
+//        foreach( $this->getAppointmentTitles() as $title ) {
+//            if( $title->getName() ) {
+//                $name = $title->getName()->getName()."";
+//                $titleId = null;
+//                if( $title->getName()->getId() ) {
+//                    $titleId = $title->getName()->getId();
+//                }
+//                $elementInfo = array('tablename'=>'appointmentTitle','id'=>$titleId,'name'=>$name);
+//                $headInfo[] = $elementInfo;
+//            }
+//            $headInfo[] = 'break-br';
+//            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
+//            //$headInfo[] = 'break';
+//        }
+//        foreach( $this->getMedicalTitles() as $title ) {
+//            if( $title->getName() ) {
+//                $name = $title->getName()->getName()."";
+//                $titleId = null;
+//                if( $title->getName()->getId() ) {
+//                    $titleId = $title->getName()->getId();
+//                }
+//                $elementInfo = array('tablename'=>'medicalTitle','id'=>$titleId,'name'=>$name);
+//                $headInfo[] = $elementInfo;
+//                //$headInfo[] = $title->getName()->getName()."";
+//            }
+//            $headInfo[] = 'break-br';
+//            $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
+//            //$headInfo[] = 'break';
+//        }
+//
+//        //echo "headInfo=".implode(", ",$headInfo)."<br>";
+//
+//        //return implode("<br>",$headInfo);
+//        return $headInfo;
+//
+//    }
+//    public function getHeadInstitutionInfo($headInfo, $institution) {
+//
+//        //echo "inst=".$institution."<br>";
+//        //echo "count=".count($headInfo)."<br>";
+//
+//        //service
+//        if( $institution ) {
+//
+//            $institutionThis = $institution;
+//            //echo "inst=".$institutionThis."<br>";
+//
+//            $name = $institutionThis->getName()."";
+//            $titleId = null;
+//            if( $institutionThis->getId() ) {
+//                $titleId = $institutionThis->getId();
+//            }
+//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+//            $headInfo[] = $elementInfo;
+//
+//        }
+//
+//        //division
+//        if( $institution && $institution->getParent() ) {
+//
+//            $institutionThis = $institution->getParent();
+//            //echo "inst=".$institutionThis."<br>";
+//
+//            $name = $institutionThis->getName()."";
+//            $titleId = null;
+//            if( $institutionThis->getId() ) {
+//                $titleId = $institutionThis->getId();
+//            }
+//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+//            $headInfo[] = $elementInfo;
+//
+//        }
+//
+//        //department
+//        if( $institution && $institution->getParent() && $institution->getParent()->getParent() ) {
+//
+//            $institutionThis = $institution->getParent()->getParent();
+//            //echo "inst=".$institutionThis."<br>";
+//
+//            $name = $institutionThis->getName()."";
+//            $titleId = null;
+//            if( $institutionThis->getId() ) {
+//                $titleId = $institutionThis->getId();
+//            }
+//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+//            $headInfo[] = $elementInfo;
+//
+//        }
+//
+//        //institution
+//        if( $institution && $institution->getParent() && $institution->getParent()->getParent() && $institution->getParent()->getParent()->getParent() ) {
+//
+//            $institutionThis = $institution->getParent()->getParent()->getParent();
+//            //echo "inst=".$institutionThis."<br>";
+//
+//            $name = $institutionThis->getName()."";
+//            $titleId = null;
+//            if( $institutionThis->getId() ) {
+//                $titleId = $institutionThis->getId();
+//            }
+//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+//            $headInfo[] = $elementInfo;
+//
+//            //$headInfo[] = 'break-hr';
+//        }
+//
+//        $headInfo[] = 'break-hr';
+//
+//        return $headInfo;
+//    }
 
 //    public function getHeadInstitutionInfo_Rec($headInfo, $institution) {
 //
