@@ -41,11 +41,11 @@ class DeidentifierUploadController extends UploadController {
     /**
      * $id - document id
      *
-     * @Route("/file-view/{id}/{eventtype}", name="deidentifier_file_view", requirements={"id" = "\d+"})
+     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="deidentifier_file_view", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function viewFileAction(Request $request,$id,$eventtype=null) {
-        return $this->viewFileMethod($request,$id,$this->container->getParameter('deidentifier.sitename'),$eventtype);
+    public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
+        return $this->viewFileMethod($request,$id,$this->container->getParameter('deidentifier.sitename'),$eventtype,$viewType);
     }
 
 

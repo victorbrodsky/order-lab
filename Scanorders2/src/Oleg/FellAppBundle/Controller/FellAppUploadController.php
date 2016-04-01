@@ -51,16 +51,16 @@ class FellAppUploadController extends UploadController {
     /**
      * $id - document id
      *
-     * @Route("/file-view/{id}/{eventtype}", name="fellapp_file_view", requirements={"id" = "\d+"})
+     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="fellapp_file_view", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function viewFileAction(Request $request,$id,$eventtype=null) {
+    public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        return $this->viewFileMethod($request,$id,$this->container->getParameter('fellapp.sitename'),$eventtype);
+        return $this->viewFileMethod($request,$id,$this->container->getParameter('fellapp.sitename'),$eventtype,$viewType);
     }
 
 
