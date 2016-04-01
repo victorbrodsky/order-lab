@@ -407,39 +407,7 @@ class ReportGenerator {
         }
 
         //generate file name: LastName_FirstName_FellowshipType_StartYear.pdf
-//        $currentDate = new \DateTime();
-//        $subjectUser = $entity->getUser();
-////        $filename =
-////            "ID".$id.
-////            "_".$subjectUser->getLastNameUppercase().
-////            "_".$subjectUser->getFirstNameUppercase().
-////            "_".$entity->getFellowshipSubspecialty()->getName().
-////            "_".$entity->getStartDate()->format('Y').
-////            ".pdf";
-//        //Cytopathology-Fellowship-Application-2017-ID47-Smith-John-generated-on-12-25-2015-at-02-13-pm.pdf
-//        if( $entity->getFellowshipSubspecialty() ) {
-//            $fellappType = $entity->getFellowshipSubspecialty()->getName();
-//        } else {
-//            $fellappType = "Unknown";
-//            $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());
-//        }
-//        $serverTimezone = date_default_timezone_get(); //server timezone
-//        $fellappType = str_replace(" ","-",$fellappType);
-//        $filename =
-//            $fellappType."-Fellowship-Application".
-//            "-".$entity->getStartDate()->format('Y').
-//            "-ID".$id.
-//            "-".$subjectUser->getLastNameUppercase().
-//            "-".$subjectUser->getFirstNameUppercase().
-//            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-s-a').'_'.$serverTimezone.
-//            ".pdf";
-//
-//        //replace all white spaces to _
-//        $filename = str_replace(" ","_",$filename);
-//        $filename = str_replace("/","_",$filename);
-
         $fileFullReportUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application");
-
         $logger->notice("Start to generate full report for ID=".$id."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
@@ -549,19 +517,19 @@ class ReportGenerator {
         //4) add the report to application report DB
         $filesize = filesize($filenameMerged);
         //$this->createFellAppFullReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
-        $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize);
+        $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF');
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
         $formReportPath = $reportPath . $fileUniqueName;
         if( file_exists($applicationFilePath) ) {
             if( !copy($applicationFilePath, $formReportPath ) ) {
-                echo "failed to copy $applicationFilePath...\n<br>";
+                //echo "failed to copy $applicationFilePath...\n<br>";
                 $logger->warning("failed to copy Application PDF without attached documents ".$applicationFilePath);
             } else {
                 $formReportSize = filesize($formReportPath);
                 //$holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType
-                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize);
+                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize,'Fellowship Application PDF Without Attached Documents');
             }
         } else {
             $logger->warning("Original Application PDF without attached documents does not exists on path: ".$applicationFilePath);
