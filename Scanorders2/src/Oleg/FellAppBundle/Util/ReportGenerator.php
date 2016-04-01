@@ -517,7 +517,8 @@ class ReportGenerator {
         //4) add the report to application report DB
         $filesize = filesize($filenameMerged);
         //$this->createFellAppFullReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
-        $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF');
+        $deleteOldFileFromServer = false;
+        $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
@@ -529,7 +530,8 @@ class ReportGenerator {
             } else {
                 $formReportSize = filesize($formReportPath);
                 //$holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType
-                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize,'Fellowship Application PDF Without Attached Documents');
+                $deleteOldFileFromServer = true;
+                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize,'Fellowship Application PDF Without Attached Documents',$deleteOldFileFromServer);
             }
         } else {
             $logger->warning("Original Application PDF without attached documents does not exists on path: ".$applicationFilePath);
@@ -1168,7 +1170,9 @@ class ReportGenerator {
 
     }
 
-    protected function createFellAppReportDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType) {
+    protected function createFellAppReportDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType,$deleteOldFileFromServer) {
+
+        $logger = $this->container->get('logger');
 
         $object = new Document($author);
 
@@ -1194,6 +1198,19 @@ class ReportGenerator {
 
         //remove all reports
         foreach( $holderEntity->$getMethod() as $report ) {
+
+            //delete file from server
+            if( $deleteOldFileFromServer ) {
+                $filePath = $report->getServerPath();
+                if( file_exists($filePath) ) {
+                    $logger->notice("create FellApp ReportDB: unlink file path=" . $filePath);
+                    unlink($filePath);
+                } else {
+                    $logger->warning("create FellApp ReportDB: cannot unlink file path=" . $filePath);
+                }
+            }
+
+            //delete file from DB
             $holderEntity->$removeMethod($report);
             $this->em->remove($report);
         }
