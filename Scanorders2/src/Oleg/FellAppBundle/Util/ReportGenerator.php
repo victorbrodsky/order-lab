@@ -516,7 +516,6 @@ class ReportGenerator {
 
         //4) add the report to application report DB
         $filesize = filesize($filenameMerged);
-        //$this->createFellAppFullReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
         $deleteOldFileFromServer = false;
         $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
 
@@ -1138,38 +1137,6 @@ class ReportGenerator {
 
 
     //create fellapp report in DB
-    //path = Uploaded/fellapp/Reports
-    protected function createFellAppFullReportDB($holderEntity,$author,$uniqueid,$title,$fileUniqueName,$path,$filesize) {
-
-        $object = new Document($author);
-        $object->setUniqueid($uniqueid);
-        $object->setOriginalname($title);
-        $object->setTitle($title);
-        $object->setUniquename($fileUniqueName);
-        $object->setUploadDirectory($path);
-        $object->setSize($filesize);
-
-        $fellappReportType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Complete Fellowship Application PDF');
-
-        if( $fellappReportType ) {
-            $object->setType($fellappReportType);
-        }
-
-        //remove all reports
-        foreach( $holderEntity->getReports() as $report ) {
-            $holderEntity->removeReport($report);
-            $this->em->remove($report);
-        }
-
-        //add report
-        $holderEntity->addReport($object);
-
-        $this->em->persist($holderEntity);
-        $this->em->persist($object);
-        $this->em->flush();
-
-    }
-
     protected function createFellAppReportDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType,$deleteOldFileFromServer) {
 
         $logger = $this->container->get('logger');
@@ -1203,7 +1170,7 @@ class ReportGenerator {
             if( $deleteOldFileFromServer ) {
                 $filePath = $report->getServerPath();
                 if( file_exists($filePath) ) {
-                    $logger->notice("create FellApp ReportDB: unlink file path=" . $filePath);
+                    //$logger->notice("create FellApp ReportDB: unlink file path=" . $filePath);
                     unlink($filePath);
                 } else {
                     $logger->warning("create FellApp ReportDB: cannot unlink file path=" . $filePath);
