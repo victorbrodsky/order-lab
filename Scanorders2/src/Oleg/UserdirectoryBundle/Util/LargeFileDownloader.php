@@ -27,7 +27,7 @@ class LargeFileDownloader {
 
     //download large files
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/Aperio%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
-    public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download" ) {
+    public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
 
         $filenameClean = str_replace("\\","/",$filepath);
 
@@ -58,10 +58,19 @@ class LargeFileDownloader {
             header('Content-Disposition: inline; filename='.$filename);
         }
 
-        if( $size < 10000000 ) {
-            readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
+        if( $viewType == 'snapshot' ) {
+
+            //$resizedImg = $this->Img_Resize($filenameClean,2);
+            $resizedImg = $this->resizeImage($filenameClean, 10, 10);
+
+            readfile($resizedImg);
+
         } else {
-            $this->readfile_chunked($filenameClean);
+            if( $size < 10000000 ) {
+                readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
+            } else {
+                $this->readfile_chunked($filenameClean);
+            }
         }
 
         return;
@@ -127,6 +136,84 @@ class LargeFileDownloader {
     }
 
 
+
+
+    //resize the image by proportion
+    function Img_Resize($path,$proportion) {
+
+        $x = getimagesize($path);
+        $width  = $x['0'];
+        $height = $x['1'];
+
+        $rs_width  = $width / $proportion;//resize to half of the original width.
+        $rs_height = $height / $proportion;//resize to half of the original height.
+
+        switch ($x['mime']) {
+            case "image/gif":
+                $img = imagecreatefromgif($path);
+                break;
+            case "image/jpeg":
+                $img = imagecreatefromjpeg($path);
+                break;
+            case "image/png":
+                $img = imagecreatefrompng($path);
+                break;
+        }
+
+        $img_base = imagecreatetruecolor($rs_width, $rs_height);
+        imagecopyresized($img_base, $img, 0, 0, 0, 0, $rs_width, $rs_height, $width, $height);
+
+        $path_info = pathinfo($path);
+        switch ($path_info['extension']) {
+            case "gif":
+                imagegif($img_base, $path);
+                break;
+            case "jpeg":
+            case "jpg":
+                imagejpeg($img_base, $path);
+                break;
+            case "png":
+                imagepng($img_base, $path);
+                break;
+        }
+
+    }
+    /**
+     * Resize an image and keep the proportions
+     * @author Allison Beckwith <allison@planetargon.com>
+     * @param string $filename
+     * @param integer $max_width
+     * @param integer $max_height
+     * @return image
+     */
+    function resizeImage($filename, $max_width, $max_height)
+    {
+        list($orig_width, $orig_height) = getimagesize($filename);
+
+        $width = $orig_width;
+        $height = $orig_height;
+
+        # taller
+        if ($height > $max_height) {
+            $width = ($max_height / $height) * $width;
+            $height = $max_height;
+        }
+
+        # wider
+        if ($width > $max_width) {
+            $height = ($max_width / $width) * $height;
+            $width = $max_width;
+        }
+
+        $image_p = imagecreatetruecolor($width, $height);
+
+        $image = imagecreatefromjpeg($filename);
+
+        imagecopyresampled($image_p, $image, 0, 0, 0, 0,
+            $width, $height, $orig_width, $orig_height);
+
+        return $image_p;
+    }
 
 
 

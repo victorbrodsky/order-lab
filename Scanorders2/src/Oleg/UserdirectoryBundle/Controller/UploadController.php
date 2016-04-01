@@ -245,8 +245,9 @@ class UploadController extends Controller {
             $size = $document->getSize();
 
             $downloader = new LargeFileDownloader();
-            ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download"
-            $downloader->downloadLargeFile($abspath,$originalname,$size,true,"view");
+            ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null
+            $viewType = null;
+            $downloader->downloadLargeFile($abspath, $originalname, $size, true, "view", $viewType);
 
             exit;
         } else {
@@ -278,5 +279,6 @@ class UploadController extends Controller {
             $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
         }
     }
+
 
 } 
