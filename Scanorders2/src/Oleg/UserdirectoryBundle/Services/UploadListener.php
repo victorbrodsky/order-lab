@@ -60,6 +60,7 @@ class UploadListener {
 
         //creator: subjectUser
         $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $authUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($authUserId);
 
         $object = new Document($user);
         $object->setOriginalname($originalfilename);
@@ -69,7 +70,7 @@ class UploadListener {
 
         if( $documentType ) {
             //$documentTypeObject = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName($documentType);
-            $transformer = new GenericTreeTransformer($this->em, $user, "DocumentTypeList", "UserdirectoryBundle");
+            $transformer = new GenericTreeTransformer($this->em, $authUser, "DocumentTypeList", "UserdirectoryBundle");
             $documentType = trim($documentType);
             $documentTypeObject = $transformer->reverseTransform($documentType);
             if( $documentTypeObject ) {
@@ -83,7 +84,6 @@ class UploadListener {
         $this->em->flush();
 
         //set event log for server upload
-        $authUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($authUserId);
         $this->setUploadEventLog($request,$object,$authUser,$sitename,null);
 
         $response = $event->getResponse();

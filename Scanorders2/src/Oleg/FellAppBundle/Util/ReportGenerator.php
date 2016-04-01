@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Controller\FellAppController;
 use Oleg\FellAppBundle\Form\FellowshipApplicationType;
 use Oleg\UserdirectoryBundle\Entity\Document;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
@@ -401,42 +402,45 @@ class ReportGenerator {
         $systemUser = $userSecUtil->findSystemUser();
 
         $entity = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
-
         if( !$entity ) {
             throw new EntityNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
         //generate file name: LastName_FirstName_FellowshipType_StartYear.pdf
-        $currentDate = new \DateTime();
-        $subjectUser = $entity->getUser();
+//        $currentDate = new \DateTime();
+//        $subjectUser = $entity->getUser();
+////        $filename =
+////            "ID".$id.
+////            "_".$subjectUser->getLastNameUppercase().
+////            "_".$subjectUser->getFirstNameUppercase().
+////            "_".$entity->getFellowshipSubspecialty()->getName().
+////            "_".$entity->getStartDate()->format('Y').
+////            ".pdf";
+//        //Cytopathology-Fellowship-Application-2017-ID47-Smith-John-generated-on-12-25-2015-at-02-13-pm.pdf
+//        if( $entity->getFellowshipSubspecialty() ) {
+//            $fellappType = $entity->getFellowshipSubspecialty()->getName();
+//        } else {
+//            $fellappType = "Unknown";
+//            $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());
+//        }
+//        $serverTimezone = date_default_timezone_get(); //server timezone
+//        $fellappType = str_replace(" ","-",$fellappType);
 //        $filename =
-//            "ID".$id.
-//            "_".$subjectUser->getLastNameUppercase().
-//            "_".$subjectUser->getFirstNameUppercase().
-//            "_".$entity->getFellowshipSubspecialty()->getName().
-//            "_".$entity->getStartDate()->format('Y').
+//            $fellappType."-Fellowship-Application".
+//            "-".$entity->getStartDate()->format('Y').
+//            "-ID".$id.
+//            "-".$subjectUser->getLastNameUppercase().
+//            "-".$subjectUser->getFirstNameUppercase().
+//            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-s-a').'_'.$serverTimezone.
 //            ".pdf";
-        //Cytopathology-Fellowship-Application-2017-ID47-Smith-John-generated-on-12-25-2015-at-02-13-pm.pdf
-        if( $entity->getFellowshipSubspecialty() ) {
-            $fellappType = $entity->getFellowshipSubspecialty()->getName();
-        } else {
-            $fellappType = "Unknown";
-            $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());
-        }
-        $fellappType = str_replace(" ","-",$fellappType);
-        $filename =
-            $fellappType."-Fellowship-Application".
-            "-".$entity->getStartDate()->format('Y').
-            "-ID".$id.
-            "-".$subjectUser->getLastNameUppercase().
-            "-".$subjectUser->getFirstNameUppercase().
-            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-s-a').'_EDT'.
-            ".pdf";
+//
+//        //replace all white spaces to _
+//        $filename = str_replace(" ","_",$filename);
+//        $filename = str_replace("/","_",$filename);
 
-        //replace all white spaces to _
-        $filename = str_replace(" ","_",$filename);
+        $fileFullReportUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application");
 
-        $logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
+        $logger->notice("Start to generate full report for ID=".$id."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
         $userUtil = new UserUtil();
@@ -460,6 +464,22 @@ class ReportGenerator {
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
         $this->generateApplicationPdf($id,$applicationFilePath);
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+
+        //keep application form pdf for "Application PDF without attached documents"
+        $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
+
+        $formReportPath = $reportPath . $fileUniqueName;
+
+        if( file_exists($applicationFilePath) ) {
+            if( !copy($applicationFilePath, $formReportPath ) ) {
+                echo "failed to copy $applicationFilePath...\n<br>";
+                $logger->warning("failed to copy Application PDF without attached documents ".$applicationFilePath);
+            } else {
+                $formReportSize = filesize($formReportPath);
+                //$holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType
+                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize);
+            }
+        }
 
         //1) get all upload documents
         $filePathsArr = array();
@@ -532,9 +552,9 @@ class ReportGenerator {
         //$logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
 
         //3) merge all pdfs
-        $uniqueid = $filename;  //"report_ID" . $id;
-        $fileUniqueName = $filename;    //$uniqueid . ".pdf";
-        $filenameMerged = $reportPath . $fileUniqueName;
+        //$uniqueid = $filename;  //"report_ID" . $id;
+        //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
+        $filenameMerged = $reportPath . $fileFullReportUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
         //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
@@ -544,7 +564,8 @@ class ReportGenerator {
 
         //4) add the report to application report DB
         $filesize = filesize($filenameMerged);
-        $this->createFellAppReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
+        //$this->createFellAppFullReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
+        $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize);
 
         //log event       
         if( $createFlag ) {
@@ -552,7 +573,7 @@ class ReportGenerator {
         } else {
             $actionStr = "updated";
         }
-        $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $filename;
+        $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $fileFullReportUniqueName;
         //echo $event."<br>";
         //$logger->notice($event);
 
@@ -564,7 +585,7 @@ class ReportGenerator {
         $this->deleteDir($outdir);
 
         $res = array(
-            'filename' => $filename,
+            'filename' => $fileFullReportUniqueName,
             'report' => $filenameMerged,
             'size' => $filesize
         );
@@ -1148,7 +1169,7 @@ class ReportGenerator {
 
     //create fellapp report in DB
     //path = Uploaded/fellapp/Reports
-    protected function createFellAppReportDB($holderEntity,$author,$uniqueid,$title,$fileUniqueName,$path,$filesize) {
+    protected function createFellAppFullReportDB($holderEntity,$author,$uniqueid,$title,$fileUniqueName,$path,$filesize) {
 
         $object = new Document($author);
         $object->setUniqueid($uniqueid);
@@ -1179,9 +1200,79 @@ class ReportGenerator {
 
     }
 
+    protected function createFellAppReportDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType) {
 
+        $object = new Document($author);
 
+        $object->setUniqueid($uniqueTitle);
+        $object->setOriginalname($uniqueTitle);
+        $object->setTitle($uniqueTitle);
+        $object->setUniquename($uniqueTitle);
 
+        $object->setUploadDirectory($path);
+        $object->setSize($filesize);
+
+        $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
+        $documentType = trim($documentType);
+        $documentTypeObject = $transformer->reverseTransform($documentType);
+        if( $documentTypeObject ) {
+            $object->setType($documentTypeObject);
+        }
+
+        //constructs methods: "getReports", "removeReport", "addReport"
+        $getMethod = "get".$holderMethodSingularStr."s";
+        $removeMethod = "remove".$holderMethodSingularStr;
+        $addMethod = "add".$holderMethodSingularStr;
+
+        //remove all reports
+        foreach( $holderEntity->$getMethod() as $report ) {
+            $holderEntity->$removeMethod($report);
+            $this->em->remove($report);
+        }
+
+        //add report
+        $holderEntity->$addMethod($object);
+
+        $this->em->persist($holderEntity);
+        $this->em->persist($object);
+        $this->em->flush();
+
+    }
+
+    //Cytopathology-Fellowship-Application-2017-ID47-Smith-John-generated-on-12-25-2015-at-02-13-pm.pdf
+    //$filenameStr: i.e. "Fellowship-Application"
+    protected function constructUniqueFileName($entity,$filenameStr) {
+
+        $logger = $this->container->get('logger');
+
+        $currentDate = new \DateTime();
+        $subjectUser = $entity->getUser();
+
+        if( $entity->getFellowshipSubspecialty() ) {
+            $fellappType = $entity->getFellowshipSubspecialty()->getName();
+        } else {
+            $fellappType = "Unknown";
+            $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());
+        }
+
+        $serverTimezone = date_default_timezone_get(); //server timezone
+        $fellappType = str_replace(" ","-",$fellappType);
+
+        $filename =
+            $fellappType."-".$filenameStr.           //"-Fellowship-Application".
+            "-".$entity->getStartDate()->format('Y').
+            "-ID".$entity->getId().
+            "-".$subjectUser->getLastNameUppercase().
+            "-".$subjectUser->getFirstNameUppercase().
+            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-s-a').'_'.$serverTimezone.
+            ".pdf";
+
+        //replace all white spaces to _
+        $filename = str_replace(" ","_",$filename);
+        $filename = str_replace("/","_",$filename);
+
+        return $filename;
+    }
 
 
 //    protected function spraed($html) {

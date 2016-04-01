@@ -173,6 +173,16 @@ class FellowshipApplication extends BaseUserAttributes {
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellApp_formReport",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="formReport_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $formReports;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_oldReport",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="oldReport_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -320,6 +330,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->lawsuitDocuments = new ArrayCollection();
         $this->references = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->formReports = new ArrayCollection();
         $this->oldReports = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->itinerarys = new ArrayCollection();
@@ -706,6 +717,21 @@ class FellowshipApplication extends BaseUserAttributes {
         return $this->reports;
     }
 
+    public function addFormReport($item)
+    {
+        if( $item && !$this->formReports->contains($item) ) {
+            $this->formReports->add($item);
+        }
+        return $this;
+    }
+    public function removeFormReport($item)
+    {
+        $this->formReports->removeElement($item);
+    }
+    public function getFormReports()
+    {
+        return $this->formReports;
+    }
 
     public function addOldReport($item)
     {
