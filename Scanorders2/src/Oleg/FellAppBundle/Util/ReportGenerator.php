@@ -465,22 +465,6 @@ class ReportGenerator {
         $this->generateApplicationPdf($id,$applicationFilePath);
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
-        //keep application form pdf for "Application PDF without attached documents"
-        $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
-
-        $formReportPath = $reportPath . $fileUniqueName;
-
-        if( file_exists($applicationFilePath) ) {
-            if( !copy($applicationFilePath, $formReportPath ) ) {
-                echo "failed to copy $applicationFilePath...\n<br>";
-                $logger->warning("failed to copy Application PDF without attached documents ".$applicationFilePath);
-            } else {
-                $formReportSize = filesize($formReportPath);
-                //$holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType
-                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize);
-            }
-        }
-
         //1) get all upload documents
         $filePathsArr = array();
 
@@ -566,6 +550,22 @@ class ReportGenerator {
         $filesize = filesize($filenameMerged);
         //$this->createFellAppFullReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
         $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize);
+
+        //keep application form pdf for "Application PDF without attached documents"
+        $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
+        $formReportPath = $reportPath . $fileUniqueName;
+        if( file_exists($applicationFilePath) ) {
+            if( !copy($applicationFilePath, $formReportPath ) ) {
+                echo "failed to copy $applicationFilePath...\n<br>";
+                $logger->warning("failed to copy Application PDF without attached documents ".$applicationFilePath);
+            } else {
+                $formReportSize = filesize($formReportPath);
+                //$holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType
+                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize);
+            }
+        } else {
+            $logger->warning("Original Application PDF without attached documents does not exists on path: ".$applicationFilePath);
+        }
 
         //log event       
         if( $createFlag ) {
