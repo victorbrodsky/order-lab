@@ -9,6 +9,7 @@
 
 namespace Oleg\UserdirectoryBundle\Security\Authentication;
 
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -159,6 +160,18 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //exit();
 
         $response = new RedirectResponse($referer_url);
+
+        ///////////// set cookies /////////////
+        //$cookie = $request->cookies->get('userOrderSuccessCookies');
+        //if( !$cookie ) {
+            $cookie = new Cookie(
+                'userOrderSuccessCookies',
+                "keytype=>".$user->getKeytype().";username=>".$user->getPrimaryPublicUserId()
+            );
+        //}
+        $response->headers->setCookie($cookie);
+        ///////////// EOF set cookies /////////////
+
         return $response;
 
     }

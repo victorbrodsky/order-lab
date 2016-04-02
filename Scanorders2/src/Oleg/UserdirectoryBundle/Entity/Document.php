@@ -89,10 +89,33 @@ class Document {
      */
     private $uniqueid;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="GeneralEntity", cascade={"persist","remove"})
+//     * @ORM\JoinColumn(name="useObject_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+//     */
+//    private $useObject;
+
+    //Fields specifying a subject entity
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $entityNamespace;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $entityName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $entityId;
+
+
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
-        $this->setCreatedate();
+        $this->setCreatedate(new \DateTime());
     }
 
 
@@ -211,16 +234,9 @@ class Document {
         return $this->uploadDirectory;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
-    public function setCreatedate()
+    public function setCreatedate($date)
     {
-        $this->createdate = new \DateTime();
-//        if( !$date ) {
-//            $date = new \DateTime();
-//        }
-//        $this->createdate = $date;
+        $this->createdate = $date;  //new \DateTime();
     }
     public function getCreatedate()
     {
@@ -276,6 +292,119 @@ class Document {
     }
 
 
+
+
+    /**
+     * @return mixed
+     */
+    public function getEntityNamespace()
+    {
+        return $this->entityNamespace;
+    }
+
+    /**
+     * @param mixed $entityNamespace
+     */
+    public function setEntityNamespace($entityNamespace)
+    {
+        $this->entityNamespace = $entityNamespace;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityName()
+    {
+        return $this->entityName;
+    }
+
+    /**
+     * @param mixed $entityName
+     */
+    public function setEntityName($entityName)
+    {
+        $this->entityName = $entityName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * @param mixed $entityId
+     */
+    public function setEntityId($entityId)
+    {
+        $this->entityId = $entityId;
+    }
+
+    //Util method
+    public function isOrphan()
+    {
+        if( !$this->getEntityName() && !$this->getEntityNamespace() && !$this->getEntityId() ) {
+            return true;
+        }
+        return false;
+    }
+    public function createUseObject($object)
+    {
+        $this->setObject($object);
+    }
+    public function setObject($object) {
+        $class = new \ReflectionClass($object);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        if( $className && !$this->getEntityName() ) {
+            $this->setEntityName($className);
+        }
+
+        if( $classNamespace && !$this->getEntityNamespace() ) {
+            $this->setEntityNamespace($classNamespace);
+        }
+
+        if( !$this->getEntityId() && $object->getId() ) {
+            $this->setEntityId($object->getId());
+        }
+    }
+    public function clearUseObject()
+    {
+        $this->setEntityName(NULL);
+        $this->setEntityNamespace(NULL);
+        $this->setEntityId(NULL);
+    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getUseObject()
+//    {
+//        return $this->useObject;
+//    }
+//
+//    /**
+//     * @param mixed $useObject
+//     */
+//    public function setUseObject($useObject)
+//    {
+//        $this->useObject = $useObject;
+//    }
+//
+//    public function createUseObject($object)
+//    {
+//        $useObject = $this->getUseObject();
+//        if( !$useObject ) {
+//            $useObject = new GeneralEntity();
+//        }
+//        $useObject->setObject($object);
+//
+//        $this->setUseObject($useObject);
+//
+//        return $useObject;
+//    }
 
 
 

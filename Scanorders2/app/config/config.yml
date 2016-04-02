@@ -186,18 +186,23 @@ knp_paginator:
 oneup_uploader:
     mappings:
         employees_gallery:
+#            use_orphanage: true
             frontend: dropzone
             storage:
                 directory: Uploaded/%employees.uploadpath%
         scan_gallery:
+#            use_orphanage: true
             frontend: dropzone
             storage:
                 directory: Uploaded/%scan.uploadpath%
         fellapp_gallery:
+#            use_orphanage: true
             frontend: dropzone
             storage:
                 directory: Uploaded/%fellapp.uploadpath%
-
+#    orphanage:
+#        maxage: 86400
+#        directory: Uploaded/orphanage
 
 stof_doctrine_extensions:
     default_locale: en_US

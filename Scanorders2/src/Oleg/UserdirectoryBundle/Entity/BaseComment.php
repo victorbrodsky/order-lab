@@ -9,6 +9,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -145,6 +146,7 @@ abstract class BaseComment extends BaseUserAttributes {
 
         if( $document && !$this->documents->contains($document) ) {
             $this->documents->add($document);
+            $document->createUseObject($this);
         }
 
         return $this;
@@ -157,6 +159,7 @@ abstract class BaseComment extends BaseUserAttributes {
     public function removeDocument($document)
     {
         $this->documents->removeElement($document);
+        $document->clearUseObject();
     }
 
     /**
@@ -171,8 +174,10 @@ abstract class BaseComment extends BaseUserAttributes {
 
     public function setDocuments($documents)
     {
-        //$this->documents = new ArrayCollection();
-        return $this->documents = $documents;
+        $this->documents = new ArrayCollection();
+        foreach( $documents as $document ) {
+            $this->addDocument($document);
+        }
     }
 
 }

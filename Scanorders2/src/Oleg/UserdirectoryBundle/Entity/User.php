@@ -299,6 +299,12 @@ class User extends BaseUser {
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
+
+        if( $avatar ) {
+            $avatar->createUseObject($this);
+        } else {
+            $avatar->clearUseObject();
+        }
     }
 
     /**

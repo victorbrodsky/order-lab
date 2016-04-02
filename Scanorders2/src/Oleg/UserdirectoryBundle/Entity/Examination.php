@@ -249,12 +249,14 @@ class Examination
     {
         if( $item && !$this->scores->contains($item) ) {
             $this->scores->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeScore($item)
     {
         $this->scores->removeElement($item);
+        $item->clearUseObject();
     }
     public function getScores()
     {

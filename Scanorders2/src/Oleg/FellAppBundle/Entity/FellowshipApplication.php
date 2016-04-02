@@ -389,12 +389,14 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->avatars->contains($item) ) {
             $this->avatars->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeAvatar($item)
     {
         $this->avatars->removeElement($item);
+        $item->clearUseObject();
     }
     public function getAvatars()
     {
@@ -595,24 +597,28 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->cvs->contains($item) ) {
             $this->cvs->add($item);
+            $item->createUseObject($this);
         }
 
     }
     public function removeCv($item)
     {
         $this->cvs->removeElement($item);
+        $item->clearUseObject();
     }
 
     public function addCoverLetter($item)
     {
         if( $item && !$this->coverLetters->contains($item) ) {
             $this->coverLetters->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeCoverLetter($item)
     {
         $this->coverLetters->removeElement($item);
+        $item->clearUseObject();
     }
     public function getCoverLetters()
     {
@@ -623,12 +629,14 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->reprimandDocuments->contains($item) ) {
             $this->reprimandDocuments->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeReprimandDocument($item)
     {
         $this->reprimandDocuments->removeElement($item);
+        $item->clearUseObject();
     }
     public function getReprimandDocuments()
     {
@@ -639,12 +647,14 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->lawsuitDocuments->contains($item) ) {
             $this->lawsuitDocuments->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeLawsuitDocument($item)
     {
         $this->lawsuitDocuments->removeElement($item);
+        $item->clearUseObject();
     }
     public function getLawsuitDocuments()
     {
@@ -705,12 +715,14 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->reports->contains($item) ) {
             $this->reports->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeReport($item)
     {
         $this->reports->removeElement($item);
+        $item->clearUseObject();
     }
     public function getReports()
     {
@@ -721,12 +733,14 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->formReports->contains($item) ) {
             $this->formReports->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeFormReport($item)
     {
         $this->formReports->removeElement($item);
+        $item->clearUseObject();
     }
     public function getFormReports()
     {
@@ -737,12 +751,14 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->oldReports->contains($item) ) {
             $this->oldReports->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeOldReport($item)
     {
         $this->oldReports->removeElement($item);
+        $item->clearUseObject();
     }
     public function getOldReports()
     {
@@ -754,12 +770,14 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->itinerarys->contains($item) ) {
             $this->itinerarys->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeItinerary($item)
     {
         $this->itinerarys->removeElement($item);
+        $item->clearUseObject();
     }
     public function getItinerarys()
     {
@@ -934,12 +952,14 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         if( $item && !$this->documents->contains($item) ) {
             $this->documents->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeDocument($item)
     {
         $this->documents->removeElement($item);
+        $item->clearUseObject();
     }
     public function getDocuments()
     {

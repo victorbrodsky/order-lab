@@ -84,6 +84,26 @@ class SecurityController extends Controller
 
         $formArr['usernametypes'] = $usernametypes;
 
+        ///////////// read cookies /////////////
+        $cookie = $request->cookies->get('userOrderSuccessCookies');
+        if( $cookie ) {
+            //print_r($cookie);
+            //keytype=>Local User;username=>oli2002
+            $cookieArr = explode(";",$cookie);
+
+            $keytypeStr = $cookieArr[0];
+            $keytypeArr = explode("=>",$keytypeStr);
+            $user_type = $keytypeArr[1];
+            $formArr['user_type'] = $user_type;
+
+            $usernameStr = $cookieArr[1];
+            $usernameArr = explode("=>",$usernameStr);
+            $last_username = $usernameArr[1];
+            $formArr['last_username'] = $last_username;
+        }
+        ///////////// EOF read cookies /////////////
+
+
         return $this->render(
             'OlegUserdirectoryBundle:Security:login.html.twig',
             $formArr

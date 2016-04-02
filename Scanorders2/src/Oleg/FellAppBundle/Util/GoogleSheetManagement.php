@@ -471,70 +471,76 @@ class GoogleSheetManagement {
             return false;
         }
 
-        //$beforeDate = $startDate->format('Y');
-        //DB date format: 2015-09-29 20:26:13.000000
-        $nowDate = new \DateTime('now');
-        $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' years';
+        //TODO: test it!
+        $userSecUtil = $this->get('user_security_utility');
+        $days = $yearsOldAplicationsFellApp * 365;
+        $result = $userSecUtil->deleteOrphanFiles( $days, $documentType='Fellowship Application Spreadsheet', $documentTypeFlag='only' );
+        return $result;
 
-        //testing
-        //$yearsOldAplicationsFellApp = 90;
-        //$dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
-        //echo "dateCorrectionStr=".$dateCorrectionStr."<br>";
-
-        $beforeDate = $nowDate->modify($dateCorrectionStr)->format('Y-m-d');
-        //echo "beforeDate=".$beforeDate."<br>";
-
-        //get spreadsheets older than X year
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Document');
-        $dql =  $repository->createQueryBuilder("document");
-        $dql->select('document');
-        $dql->leftJoin('document.type','documentType');
-
-        $dql->where("documentType.name = :documentType OR documentType.abbreviation = :documentType");
-        $dql->andWhere("document.createdate < :beforeDate");
-
-        $query = $this->em->createQuery($dql);
-
-        //echo "query=".$query->getSql()."<br>";
-
-        $query->setParameters(array(
-            'documentType' => 'Fellowship Application Spreadsheet',
-            'beforeDate' => $beforeDate
-        ));
-
-        $documents = $query->getResult();
-
-        //echo "documents count=".count($documents)."<br>";
-
-        $deletedDocumentIdsArr = array();
-
-        //foreach documents unlink and delete from DB
-        foreach( $documents as $document ) {
-            $deletedDocumentIdsArr[] = $document->getId();
-
-            //document absolute path
-            //$documentPath = $document->getAbsoluteUploadFullPath();
-            $documentPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $document->getUploadDirectory().'/'.$document->getUniquename();
-            //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
-            //echo "documentPath=".$documentPath."<br>";
-
-            //continue; //testing
-
-            $this->em->remove($document);
-            $this->em->flush();
-
-            //remove file from folder
-            if( is_file($documentPath) ) {
-                //echo "file exists!!! ";
-                unlink($documentPath);
-            } else {
-                //echo "file does exists??? ";
-            }
-
-            //break; //testing
-        }
-
-        return implode(",",$deletedDocumentIdsArr);
+//        //$beforeDate = $startDate->format('Y');
+//        //DB date format: 2015-09-29 20:26:13.000000
+//        $nowDate = new \DateTime('now');
+//        $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' years';
+//
+//        //testing
+//        //$yearsOldAplicationsFellApp = 90;
+//        //$dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
+//        //echo "dateCorrectionStr=".$dateCorrectionStr."<br>";
+//
+//        $beforeDate = $nowDate->modify($dateCorrectionStr)->format('Y-m-d');
+//        //echo "beforeDate=".$beforeDate."<br>";
+//
+//        //get spreadsheets older than X year
+//        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Document');
+//        $dql =  $repository->createQueryBuilder("document");
+//        $dql->select('document');
+//        $dql->leftJoin('document.type','documentType');
+//
+//        $dql->where("documentType.name = :documentType OR documentType.abbreviation = :documentType");
+//        $dql->andWhere("document.createdate < :beforeDate");
+//
+//        $query = $this->em->createQuery($dql);
+//
+//        //echo "query=".$query->getSql()."<br>";
+//
+//        $query->setParameters(array(
+//            'documentType' => 'Fellowship Application Spreadsheet',
+//            'beforeDate' => $beforeDate
+//        ));
+//
+//        $documents = $query->getResult();
+//
+//        //echo "documents count=".count($documents)."<br>";
+//
+//        $deletedDocumentIdsArr = array();
+//
+//        //foreach documents unlink and delete from DB
+//        foreach( $documents as $document ) {
+//            $deletedDocumentIdsArr[] = $document->getId();
+//
+//            //document absolute path
+//            //$documentPath = $document->getAbsoluteUploadFullPath();
+//            $documentPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $document->getUploadDirectory().'/'.$document->getUniquename();
+//            //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
+//            //echo "documentPath=".$documentPath."<br>";
+//
+//            //continue; //testing
+//
+//            $this->em->remove($document);
+//            $this->em->flush();
+//
+//            //remove file from folder
+//            if( is_file($documentPath) ) {
+//                //echo "file exists!!! ";
+//                unlink($documentPath);
+//            } else {
+//                //echo "file does exists??? ";
+//            }
+//
+//            //break; //testing
+//        }
+//
+//        return implode(",",$deletedDocumentIdsArr);
     }
 
 

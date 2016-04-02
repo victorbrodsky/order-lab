@@ -37,7 +37,12 @@
             {#usernametype#}
             <select id="usernametypeid_show" class="combobox limit-font-size">
                 {% for  usernametype in usernametypes %}
-                    <option value="{{ usernametype.abbreviation }}">{{ usernametype.name }}</option>
+                    {% if user_type is defined and usernametype.name == user_type %}
+                        {% set selected = 'selected="selected"' %}
+                    {% else %}
+                        {% set selected = '' %}
+                    {% endif %}
+                    <option value="{{ usernametype.abbreviation }}" {{ selected }}>{{ usernametype.name }}</option>
                 {% endfor %}
             </select>
 

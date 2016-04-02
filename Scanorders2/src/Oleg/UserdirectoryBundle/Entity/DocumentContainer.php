@@ -175,12 +175,14 @@ class DocumentContainer {
         //exit('add');
         if( $document && !$this->documents->contains($document) ) {
             $this->documents->add($document);
+            $document->createUseObject($this);
         }
         return $this;
     }
     public function removeDocument($document)
     {
         $this->documents->removeElement($document);
+        $document->clearUseObject();
     }
 
 

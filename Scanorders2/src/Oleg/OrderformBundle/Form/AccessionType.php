@@ -3,7 +3,6 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

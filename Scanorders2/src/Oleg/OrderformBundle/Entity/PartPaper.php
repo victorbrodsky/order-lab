@@ -61,6 +61,7 @@ class PartPaper extends PartArrayFieldAbstract
 
         if( !$this->documents->contains($document) ) {
             $this->documents->add($document);
+            $document->createUseObject($this);
         }
 
         return $this;
@@ -73,6 +74,7 @@ class PartPaper extends PartArrayFieldAbstract
     public function removeDocument($document)
     {
         $this->documents->removeElement($document);
+        $document->clearUseObject();
     }
 
     /**
@@ -87,8 +89,10 @@ class PartPaper extends PartArrayFieldAbstract
 
     public function setDocuments($documents)
     {
-        //$this->documents = new ArrayCollection();
-        return $this->documents = $documents;
+        $this->documents = new ArrayCollection();
+        foreach( $documents as $document ) {
+            $this->addDocument($document);
+        }
     }
 
     public function __toString() {

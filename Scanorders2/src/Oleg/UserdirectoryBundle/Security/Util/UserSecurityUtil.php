@@ -810,4 +810,85 @@ class UserSecurityUtil {
     }
     ///////////////////////// EOF User Role methods /////////////////////////
 
+
+    //$documentTypeFlag: only or except
+    public function deleteOrphanFiles( $days, $documentType='Fellowship Application Spreadsheet', $documentTypeFlag='only' ) {
+
+        if( !$days ) {
+            return "Invalid days parameter";
+        }
+
+        //$beforeDate = $startDate->format('Y');
+        //DB date format: 2015-09-29 20:26:13.000000
+        $nowDate = new \DateTime('now');
+        $dateCorrectionStr = '-'.$days.' days';
+
+        $beforeDate = $nowDate->modify($dateCorrectionStr)->format('Y-m-d');
+        //echo "beforeDate=".$beforeDate."<br>";
+
+        //get spreadsheets older than X year
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Document');
+        $dql =  $repository->createQueryBuilder("document");
+        $dql->select('document');
+        $dql->leftJoin('document.type','documentType');
+
+        $dql->where("document.entityNamespace IS NULL AND document.entityName IS NULL AND document.entityId IS NULL");
+        $dql->andWhere("document.createdate < :beforeDate");
+
+        $queryParameters = array(
+            'beforeDate' => $beforeDate
+        );
+
+        if( $documentType ) {
+            if( $documentTypeFlag == 'only' ) {
+                $dql->andWhere("documentType.name = :documentType OR documentType.abbreviation = :documentType");
+            }
+            if( $documentTypeFlag == 'except' ) {
+                $dql->andWhere("documentType.name IS NOT :documentType AND documentType.abbreviation IS NOT :documentType");
+            }
+            $queryParameters['documentType'] = $documentType;
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $query->setParameters($queryParameters);
+
+        $documents = $query->getResult();
+
+        //echo "documents count=".count($documents)."<br>";
+
+        $deletedDocumentIdsArr = array();
+
+        //foreach documents unlink and delete from DB
+        foreach( $documents as $document ) {
+            $deletedDocumentIdsArr[] = $document->getId();
+
+            //document absolute path
+            //$documentPath = $document->getAbsoluteUploadFullPath();
+            $documentPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $document->getUploadDirectory().'/'.$document->getUniquename();
+            //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
+            //echo "documentPath=".$documentPath."<br>";
+
+            //continue; //testing
+
+            $this->em->remove($document);
+            $this->em->flush();
+
+            //remove file from folder
+            if( is_file($documentPath) ) {
+                //echo "file exists!!! ";
+                unlink($documentPath);
+            } else {
+                //echo "file does exists??? ";
+            }
+
+            //break; //testing
+        }
+
+        return implode(",",$deletedDocumentIdsArr);
+    }
+
+
 }

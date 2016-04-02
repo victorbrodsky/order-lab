@@ -268,12 +268,14 @@ class Reference
     {
         if( $item && !$this->documents->contains($item) ) {
             $this->documents->add($item);
+            $item->createUseObject($this);
         }
         return $this;
     }
     public function removeDocument($item)
     {
         $this->documents->removeElement($item);
+        $item->clearUseObject();
     }
     public function getDocuments()
     {
