@@ -814,7 +814,7 @@ class UserSecurityUtil {
     //$documentTypeFlag: only or except
     public function deleteOrphanFiles( $days, $documentType='Fellowship Application Spreadsheet', $documentTypeFlag='only' ) {
 
-        if( !$days || !is_int($days) ) {
+        if( $days == null || $days == "" || !is_int($days) ) {
             return "Invalid days parameter days=" . $days;
         }
 
@@ -833,7 +833,7 @@ class UserSecurityUtil {
         $dql->leftJoin('document.type','documentType');
 
         $dql->where("document.entityNamespace IS NULL AND document.entityName IS NULL AND document.entityId IS NULL");
-        $dql->andWhere("document.createdate < :beforeDate");
+        $dql->andWhere("document.createdate <= :beforeDate");
 
         $queryParameters = array(
             'beforeDate' => $beforeDate
