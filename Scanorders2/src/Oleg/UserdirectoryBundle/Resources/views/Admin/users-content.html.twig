@@ -106,13 +106,14 @@
                                 </a>
                             {% elseif instArr|length > 1 %}
                                 {{ instName }} (
-                                {% for inst in instArr %}
-                                    <a href="{{ path( employees_sitename~'_search_same_object',
-                                    { 'tablename':'Institution','id': inst.instId, 'name': instName }
-                                    ) }}">
-                                        {{ inst.rootName }}
-                                    </a>
-                                {% endfor %}
+                                    {% for inst in instArr %}
+                                        <a href="{{ path( employees_sitename~'_search_same_object',
+                                        { 'tablename':'Institution','id': inst.instId, 'name': instName }
+                                        ) }}">
+                                            {{ inst.rootName }}
+                                        </a>
+                                    {% endfor %}
+                                    {% if not loop.last %},{% endif %}
                                 )
                             {% endif %}
                         </p>
