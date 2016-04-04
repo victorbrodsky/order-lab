@@ -873,13 +873,13 @@ class UserSecurityUtil {
 
             //continue; //testing
 
-//            $this->em->remove($document);
-//            $this->em->flush();
+            $this->em->remove($document);
+            $this->em->flush();
 
             //remove file from folder
             if( is_file($documentPath) ) {
                 //echo "file exists!!! ";
-//                unlink($documentPath);
+                unlink($documentPath);
             } else {
                 //echo "file does exists??? ";
             }

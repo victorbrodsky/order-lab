@@ -42,7 +42,7 @@ class CronCommand extends ContainerAwareCommand {
 
         // 2 years => 365*2 = 730 days
         $days = 730;
-        $days = 0;
+        $days = 1;
 
         $documentTypeFlag = 'except';
         //$documentTypeFlag = 'only';
