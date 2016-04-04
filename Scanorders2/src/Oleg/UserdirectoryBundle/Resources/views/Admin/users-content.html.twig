@@ -91,18 +91,64 @@
 
             <tr>
                 <td style="display:none"><a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+
                 <td class="rowlink-skip">
-                    {% for institution in entity.getInstitutions %}
-                        <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution.getNodeNameWithRoot() }}</a></p>
+
+                    {% set institutionsArr = entity.getDeduplicatedInstitutions() %}
+                    {#{{ dump(institutionsArr) }}#}
+
+                    {% for instName,instArr in institutionsArr %}
+                        <p>
+                            {% if instArr|length == 1 %}
+                                {#name={{ instName }} => rootId={{ instArr[0].rootName }}, instId={{ instArr[0].instId }}#}
+                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': instArr[0].instId, 'name': instName }) }}">
+                                    {{ instArr[0].instNameWithRoot }}
+                                </a>
+                            {% elseif instArr|length > 1 %}
+                                {{ instName }} (
+                                {% for inst in instArr %}
+                                    <a href="{{ path( employees_sitename~'_search_same_object',
+                                    { 'tablename':'Institution','id': inst.instId, 'name': instName }
+                                    ) }}">
+                                        {{ inst.rootName }}
+                                    </a>
+                                {% endfor %}
+                                )
+                            {% endif %}
+                        </p>
                     {% endfor %}
+
+                    {#{% if institutionsArr|length == 1 %}#}
+                        {#{% for instName,instArr in institutionsArr %}#}
+                            {#name={{ instName }} => rootId={{ instArr[0].rootName }}, instId={{ instArr[0].instId }}#}
+                            {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': instArr[0].instId, 'name': instName }) }}">#}
+                                {#{{ instArr[0].instNameWithRoot }}#}
+                            {#</a>#}
+                        {#{% endfor %}#}
+                    {#{% elseif institutionsArr|length > 1 %}#}
+                        {#<p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution.getNodeNameWithRoot() }}</a></p>#}
+                        {#name={{ key }} => value.rootId={{ value.rootId }}, value.instId={{ value.instId }}#}
+
+                            {#{% for instName,instArr in institutionsArr %}#}
+                                {#<p>#}
+                                {#{{ instName }} (#}
+                                    {#{% for inst in instArr %}#}
+                                        {#<a href="{{ path( employees_sitename~'_search_same_object',#}
+                                            {#{ 'tablename':'Institution','id': inst.instId, 'name': inst.rootName }#}
+                                        {#) }}">#}
+                                            {#{{ inst.rootName }}#}
+                                        {#</a>#}
+                                    {#{% endfor %}#}
+                                {#)#}
+                                {#</p>#}
+                            {#{% endfor %}#}
+
+                    {#{% else %}#}
+
+                    {#{% endif %}#}
+
                 </td>
-                {#<td class="rowlink-skip">#}
-                    {#{% for service in entity.getServices %}#}
-                        {#{% if service is defined and service != "" %}#}
-                            {#<p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.name }) }}">{{ service.name }}</a></p>#}
-                        {#{% endif %}#}
-                    {#{% endfor %}#}
-                {#</td>#}
+
                 <td>
                     <a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}"><strong>{{ entity.displayName }}</strong></a>
                 </td>

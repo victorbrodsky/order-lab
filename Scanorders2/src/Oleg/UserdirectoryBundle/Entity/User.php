@@ -1393,6 +1393,26 @@ class User extends BaseUser {
         return $institutions;
     }
 
+    //return array grouped by institution name:
+    //instArr[instName][] = array('rootId'=>$rootId,'instId'=>$instId)
+    public function getDeduplicatedInstitutions() {
+        $instArr = array();
+        foreach( $this->getInstitutions() as $institution ) {
+            $instName = $institution->getName()."";
+            //echo "instName=".$instName."<br>";
+            $instArr[$instName][] = array(
+                'rootId'=>$institution->getRootName($institution)->getId(),
+                'rootName'=>$institution->getRootName($institution)->__toString()."",
+                'instId'=>$institution->getId(),
+                'instNameWithRoot'=>$institution->getNodeNameWithRoot()
+            );
+        }
+
+        //var_dump($instArr);
+
+        return $instArr;
+    }
+
     //TODO: check performance of foreach. It might be replaced by direct DB query
     public function getBosses() {
         $res = array();
