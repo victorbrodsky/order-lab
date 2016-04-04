@@ -919,13 +919,18 @@ class AccessRequestController extends Controller
         //user's roles associated with this site
         $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
 
+        //TODO: check if this user is already athorized to access this site
+        $userSecUtil = $this->get('user_security_utility');
+        $accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
+
         $userViewArr = array(
             'form' => $form->createView(),
             'entity' => $entity,
             'sitename' => $this->siteName,
             'sitenameshowuser' => $this->siteNameShowuser,
             'sitenamefull'=>$this->siteNameStr,
-            'siteRoles'=>$siteRoles
+            'siteRoles'=>$siteRoles,
+            'accreq' => $accReq
         );
 
         return $userViewArr;

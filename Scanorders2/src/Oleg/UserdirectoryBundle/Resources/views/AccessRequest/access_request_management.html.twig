@@ -14,12 +14,25 @@
 
 {#This form is used for access request and authorization management#}
 
-{% block title %}
-    {% if accreq is defined %}
-        Access Request for {{ sitenamefull }}
+{% if accreq is defined %}
+    {% if accreq.status == 0 %}
+        {#STATUS_ACTIVE#}
+        {% set titleStr = "This user has active request to access "~sitenamefull~". You can update the role and other details below." %}
+    {% elseif accreq.status == 1 %}
+        {#STATUS_DECLINED#}
+        {% set titleStr = "This user is declined to access "~sitenamefull~". You can update the role and other details below." %}
+    {% elseif accreq.status == 2 %}
+        {#STATUS_APPROVED#}
+        {% set titleStr = "This user is already authorized to access "~sitenamefull~". You can update the role and other details below." %}
     {% else %}
-        Specify role and accessible data for the user being authorized to access {{ sitenamefull }}
+        {% set titleStr = "Specify role and accessible data for the user being authorized to access "~sitenamefull %}
     {% endif %}
+{% else %}
+    {% set titleStr = "Specify role and accessible data for the user being authorized to access "~sitenamefull %}
+{% endif %}
+
+{% block title %}
+    {{ titleStr }}
 {% endblock %}
 
 
@@ -30,11 +43,7 @@
     {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
 
     <h3 class="text-info">
-        {% if accreq is defined %}
-            Access Request for {{ sitenamefull }}
-        {% else %}
-            Specify role and accessible data for the user being authorized to access {{ sitenamefull }}
-        {% endif %}
+        {{ titleStr }}
     </h3>
 
     <br>
@@ -56,7 +65,7 @@
         {{ formmacros.simplefield( "Last Login:", entity.lastLogin|date('Y-m-d H:i'), "", "disabled" ) }}
         {{ formmacros.simplefield( "Status Updated On:", accreq.updatedate|date('Y-m-d H:i'), "", "disabled" ) }}
 
-        {% set updatedby = '<a href="'~path(sitenameshowuser~'_showuser', { 'id': entity.updatedby.id })~'">'~entity.updatedby~'</a>' %}
+        {% set updatedby = '<a href="'~path(sitenameshowuser~'_showuser', { 'id': accreq.updatedby.id })~'">'~accreq.updatedby~'</a>' %}
         {{ formmacros.simplefield( "Status Updated By:", updatedby, "", "disabled" ) }}
 
         <hr>

@@ -31,6 +31,7 @@ class CronCommand extends ContainerAwareCommand {
     //UPDATE [ScanOrder].[dbo].[user_document]
     //SET entityNamespace='notempty',entityName='notempty',entityId='notempty'
     //WHERE entityNamespace IS NULL
+    //
     //Cron job to delete orphan files (uploaded manually but not attached to the application by clicking "Update" that are older than 2 years of age).
     // 2 years => 365*2 = 730 days
     //php app/console cron:delete-orphan --env=prod

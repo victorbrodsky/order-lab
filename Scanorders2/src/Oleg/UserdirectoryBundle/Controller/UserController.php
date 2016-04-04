@@ -51,7 +51,6 @@ use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Util\CropAvatar;
 use Oleg\UserdirectoryBundle\Entity\Grant;
-use Symfony\Component\Security\Core\Util\StringUtils;
 
 
 class UserController extends Controller
@@ -1550,6 +1549,11 @@ class UserController extends Controller
             //set unique username
             $user->setUniqueUsername();
 
+            //password can not be NULL
+            if( $user->getPassword() == NULL ) {
+                $user->setPassword("");
+            }
+
             //encrypt password
             $this->encryptPassword($user,null);
 
@@ -1794,7 +1798,7 @@ class UserController extends Controller
     /**
      * route "employees_showuser_object" is the old user profile view (slow)
      * 
-     * @Route("/user/show/ee", name="employees_showuser_notstrict")
+     * @Route("/user/show/{id}", name="employees_showuser_notstrict")
      * @Route("/user/object/{id}", name="employees_showuser_object", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
@@ -2718,15 +2722,19 @@ class UserController extends Controller
         //echo "getPassword=".$user->getPassword()."<br>";
         //echo "getPlainPassword=".$user->getPlainPassword()."<br>";
 
+        if( !$originalPassword ) {
+            return;
+        }
+
         //password is the same as original one
-        if( StringUtils::equals($originalPassword, $user->getPassword()) ) {
+        if( hash_equals($originalPassword, $user->getPassword()) ) {
             //exit('password is the same');
             return;
         }
 
         $encoder = $this->container->get('security.password_encoder');
         $encoded = $encoder->encodePassword($user, $user->getPassword());
-        $bool = StringUtils::equals($originalPassword, $encoded);
+        $bool = hash_equals($originalPassword, $encoded);
 
         //echo "encoded=".$encoded."<br>";
 

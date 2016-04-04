@@ -298,12 +298,15 @@ class User extends BaseUser {
      */
     public function setAvatar($avatar)
     {
-        $this->avatar = $avatar;
+        //1) clear old avatar image if exists
+        if( $this->getAvatar() ) {
+            $this->getAvatar()->clearUseObject();
+        }
 
+        //2) set avatar
+        $this->avatar = $avatar;
         if( $avatar ) {
             $avatar->createUseObject($this);
-        } else {
-            $avatar->clearUseObject();
         }
     }
 
@@ -346,6 +349,15 @@ class User extends BaseUser {
     {
         return $this->primaryPublicUserId;
     }
+
+//    //password can not be NULL
+//    public function setPassword($password) {
+//        if( $password == NULL ) {
+//            $this->password = "";
+//        } else {
+//            $this->password = $password;
+//        }
+//    }
 
     /**
      * @param mixed $title
