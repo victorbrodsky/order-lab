@@ -833,7 +833,7 @@ class UserSecurityUtil {
         $dql->leftJoin('document.type','documentType');
 
         $dql->where("document.entityNamespace IS NULL AND document.entityName IS NULL AND document.entityId IS NULL");
-        $dql->andWhere("document.createdate <= :beforeDate");
+        $dql->andWhere("document.createdate < :beforeDate");
 
         $queryParameters = array(
             'beforeDate' => $beforeDate

@@ -472,8 +472,9 @@ class GoogleSheetManagement {
         }
 
         //TODO: test it!
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $days = $yearsOldAplicationsFellApp * 365;
+        $days = 1;
         $result = $userSecUtil->deleteOrphanFiles( $days, $documentType='Fellowship Application Spreadsheet', $documentTypeFlag='only' );
         return $result;
 
