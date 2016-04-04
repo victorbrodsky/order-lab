@@ -1386,6 +1386,10 @@ class User extends BaseUser {
             }
         }
         //echo "inst count=".count($institutions)."<br>";
+//        foreach( $institutions as $institution ) {
+//            echo "inst=".$institution->getId()."-".$institution->getName()."<br>";
+//        }
+
         return $institutions;
     }
 
