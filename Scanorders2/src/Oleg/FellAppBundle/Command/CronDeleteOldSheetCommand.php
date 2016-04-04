@@ -36,12 +36,14 @@ class CronDeleteOldSheetCommand extends ContainerAwareCommand {
         $deletedDocumentIds = $googlesheetmanagement->deleteOldSheetFellApp();
         if( $deletedDocumentIds ) {
             $eventImport = 'FellApp Spreadsheet Deleted: '.$deletedDocumentIds;
-            $logger->notice($eventImport);
+            //$logger->notice($eventImport);
         } else {
             $eventImport = 'None FellApp Spreadsheet Deleted';
-            $logger->notice($eventImport);
+            //$logger->notice($eventImport);
         }
         $result = "Delete Old Sheet: ".$eventImport;
+
+        $logger->notice($result);
 
         $output->writeln($result);
     }

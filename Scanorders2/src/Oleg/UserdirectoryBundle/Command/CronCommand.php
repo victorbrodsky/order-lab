@@ -26,7 +26,8 @@ class CronCommand extends ContainerAwareCommand {
             ->setDescription('Cron job to delete orphan files older than 2 years of age');
     }
 
-    //TODO: make sure to set all current documents useObject (before implemented document useObject are NULL): entityNamespace=notempty,entityName=notempty,entityId=notempty
+    //TODO: make sure to set all current documents useObject (before implemented document useObject are NULL):
+    //TODO: entityNamespace=notempty,entityName=notempty,entityId=notempty
     //Cron job to delete orphan files (uploaded manually but not attached to the application by clicking "Update" that are older than 2 years of age).
     // 2 years => 365*2 = 730 days
     //php app/console cron:delete-orphan --env=prod
@@ -34,8 +35,25 @@ class CronCommand extends ContainerAwareCommand {
 
         $logger = $this->getContainer()->get('logger');
 
-        $userSecUtil = $this->get('user_security_utility');
-        $result = $userSecUtil->deleteOrphanFiles( 730, 'Fellowship Application Spreadsheet', 'except' );
+        $userSecUtil = $this->getContainer()->get('user_security_utility');
+
+        // 2 years => 365*2 = 730 days
+        $days = 730;
+        //$days = 50;
+
+        $documentTypeFlag = 'except';
+        //$documentTypeFlag = 'only';
+
+        $deletedDocumentIds = $userSecUtil->deleteOrphanFiles( $days, 'Fellowship Application Spreadsheet', $documentTypeFlag );
+
+        if( $deletedDocumentIds ) {
+            $eventImport = 'Old Documents Deleted: '.$deletedDocumentIds;
+            //$logger->notice($eventImport);
+        } else {
+            $eventImport = 'None Old Documents Deleted';
+            //$logger->notice($eventImport);
+        }
+        $result = "Delete Old Documents: ".$eventImport;
 
         $logger->notice($result);
 

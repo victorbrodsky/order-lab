@@ -162,14 +162,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $response = new RedirectResponse($referer_url);
 
         ///////////// set cookies /////////////
-        //$cookie = $request->cookies->get('userOrderSuccessCookies');
-        //if( !$cookie ) {
-            $cookie = new Cookie(
-                'userOrderSuccessCookies',
-                "keytype=>".$user->getKeytype().";username=>".$user->getPrimaryPublicUserId()
-            );
+        //$cookieKeytype = $request->cookies->get('userOrderSuccessCookiesKeytype');
+        //if( !$cookieKeytype ) {
+        //    $response->headers->setCookie(new Cookie('userOrderSuccessCookiesKeytype', $user->getKeytype().""));
         //}
-        $response->headers->setCookie($cookie);
+        //$response->headers->setCookie($cookie);
+        $response->headers->setCookie(new Cookie('userOrderSuccessCookiesKeytype', $user->getKeytype().""));
+        $response->headers->setCookie(new Cookie('userOrderSuccessCookiesUsername', $user->getPrimaryPublicUserId()));
         ///////////// EOF set cookies /////////////
 
         return $response;

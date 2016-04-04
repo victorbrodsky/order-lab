@@ -814,8 +814,8 @@ class UserSecurityUtil {
     //$documentTypeFlag: only or except
     public function deleteOrphanFiles( $days, $documentType='Fellowship Application Spreadsheet', $documentTypeFlag='only' ) {
 
-        if( !$days ) {
-            return "Invalid days parameter";
+        if( !$days || !is_int($days) ) {
+            return "Invalid days parameter days=" . $days;
         }
 
         //$beforeDate = $startDate->format('Y');
@@ -844,7 +844,7 @@ class UserSecurityUtil {
                 $dql->andWhere("documentType.name = :documentType OR documentType.abbreviation = :documentType");
             }
             if( $documentTypeFlag == 'except' ) {
-                $dql->andWhere("documentType.name IS NOT :documentType AND documentType.abbreviation IS NOT :documentType");
+                $dql->andWhere("documentType.id IS NULL OR documentType.name != :documentType");
             }
             $queryParameters['documentType'] = $documentType;
         }
@@ -873,13 +873,13 @@ class UserSecurityUtil {
 
             //continue; //testing
 
-            $this->em->remove($document);
-            $this->em->flush();
+//            $this->em->remove($document);
+//            $this->em->flush();
 
             //remove file from folder
             if( is_file($documentPath) ) {
                 //echo "file exists!!! ";
-                unlink($documentPath);
+//                unlink($documentPath);
             } else {
                 //echo "file does exists??? ";
             }

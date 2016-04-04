@@ -27,30 +27,33 @@ class ScanSecurityController extends SecurityController
      * @Template()
      */
     public function loginAction( Request $request ) {
-        $sitename = $this->container->getParameter('scan.sitename');
 
-        $formArr = $this->loginPage($sitename);
+        return parent::loginAction($request);
 
-        if( $formArr == null ) {
-            return $this->redirect( $this->generateUrl('main_common_home') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        //$usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
-        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
-            array(
-                'type' => array('default', 'user-added'),
-                'abbreviation' => array('wcmc-cwid', 'aperio', 'local-user')
-            ),
-            array('orderinlist' => 'ASC')
-        );
-
-        $formArr['usernametypes'] = $usernametypes;
-
-        return $this->render(
-            'OlegUserdirectoryBundle:Security:login.html.twig',
-            $formArr
-        );
+//        $sitename = $this->container->getParameter('scan.sitename');
+//
+//        $formArr = $this->loginPage($sitename);
+//
+//        if( $formArr == null ) {
+//            return $this->redirect( $this->generateUrl('main_common_home') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        //$usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
+//        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
+//            array(
+//                'type' => array('default', 'user-added'),
+//                'abbreviation' => array('wcmc-cwid', 'aperio', 'local-user')
+//            ),
+//            array('orderinlist' => 'ASC')
+//        );
+//
+//        $formArr['usernametypes'] = $usernametypes;
+//
+//        return $this->render(
+//            'OlegUserdirectoryBundle:Security:login.html.twig',
+//            $formArr
+//        );
     }
 
 

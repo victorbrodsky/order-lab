@@ -85,21 +85,16 @@ class SecurityController extends Controller
         $formArr['usernametypes'] = $usernametypes;
 
         ///////////// read cookies /////////////
-        $cookie = $request->cookies->get('userOrderSuccessCookies');
-        if( $cookie ) {
-            //print_r($cookie);
-            //keytype=>Local User;username=>oli2002
-            $cookieArr = explode(";",$cookie);
+        $cookieKeytype = $request->cookies->get('userOrderSuccessCookiesKeytype');
+        if( $cookieKeytype ) {
+            $formArr['user_type'] = $cookieKeytype;
+            //echo "cookieKeytype=".$cookieKeytype."<br>";
+        }
 
-            $keytypeStr = $cookieArr[0];
-            $keytypeArr = explode("=>",$keytypeStr);
-            $user_type = $keytypeArr[1];
-            $formArr['user_type'] = $user_type;
-
-            $usernameStr = $cookieArr[1];
-            $usernameArr = explode("=>",$usernameStr);
-            $last_username = $usernameArr[1];
-            $formArr['last_username'] = $last_username;
+        $cookieUsername = $request->cookies->get('userOrderSuccessCookiesUsername');
+        if( $cookieUsername ) {
+            $formArr['last_username'] = $cookieUsername;
+            //echo "cookieUsername=".$cookieUsername."<br>";
         }
         ///////////// EOF read cookies /////////////
 
