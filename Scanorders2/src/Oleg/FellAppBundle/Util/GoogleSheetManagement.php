@@ -471,11 +471,10 @@ class GoogleSheetManagement {
             return false;
         }
 
-        //TODO: test it!
+        //delete old sheets
         $userSecUtil = $this->container->get('user_security_utility');
         $days = $yearsOldAplicationsFellApp * 365;
-        $days = 1;
-        $result = $userSecUtil->deleteOrphanFiles( $days, $documentType='Fellowship Application Spreadsheet', $documentTypeFlag='only' );
+        $result = $userSecUtil->deleteOrphanFiles( $days, 'Fellowship Application Spreadsheet', 'only' );
         return $result;
 
 //        //$beforeDate = $startDate->format('Y');

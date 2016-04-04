@@ -44,9 +44,7 @@ class CronCommand extends ContainerAwareCommand {
         $days = 730;
         //$days = 1;
 
-        $documentTypeFlag = 'except';
-
-        $deletedDocumentIds = $userSecUtil->deleteOrphanFiles( $days, 'Fellowship Application Spreadsheet', $documentTypeFlag );
+        $deletedDocumentIds = $userSecUtil->deleteOrphanFiles( $days, 'Fellowship Application Spreadsheet', 'except' );
 
         if( $deletedDocumentIds ) {
             $eventImport = 'Old Documents Deleted: '.$deletedDocumentIds;
