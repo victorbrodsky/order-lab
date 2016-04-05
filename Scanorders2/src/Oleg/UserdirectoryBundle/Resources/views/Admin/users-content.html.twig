@@ -29,8 +29,9 @@
         {% for entity in entities %}
             {% set oneEmail = entity.getSingleEmail() %}
             {% if oneEmail %}
-                {% set emailsArr = emailsArr|merge({ (loop.index0): entity.getUsernameOptimal|replace({",": ""})~" <"~oneEmail~">"}) %}
-                {% set emailsAppleArr = emailsAppleArr|merge({ (loop.index0): entity.getUsernameOptimal~" <"~oneEmail~">"}) %}
+                {% set optimalUserName = entity.getUsernameOptimal() %}
+                {% set emailsArr = emailsArr|merge({ (loop.index0): optimalUserName~" <"~oneEmail~">"}) %}
+                {% set emailsAppleArr = emailsAppleArr|merge({ (loop.index0): optimalUserName|replace({",": ""})~" <"~oneEmail~">"}) %}
             {% endif %}
         {% endfor %}
         {#<div class="well well-sm">#}
@@ -62,7 +63,7 @@
             </div>
             <div class="panel-collapse collapse" role="tabpanel">
                 <div class="panel-body">
-                    {{ emailsArr|join(', ') }}
+                    {{ emailsAppleArr|join(', ') }}
                 </div>
             </div>
         </div>
