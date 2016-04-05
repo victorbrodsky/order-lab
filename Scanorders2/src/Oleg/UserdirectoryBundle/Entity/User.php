@@ -1395,22 +1395,80 @@ class User extends BaseUser {
 
     //return array grouped by institution name:
     //instArr[instName][] = array('rootId'=>$rootId,'instId'=>$instId)
+    //Cases:
+    // Software Development (WCMC)
+    // Pathology Informatics (NYP, WCMC)
+    //Molecular Hematopathology (Hematopathology-WCMC, Molecular and Genomic Pathology-WCMC, Hematopathology-NYP, Molecular and Genomic Pathology-NYP)"
     public function getDeduplicatedInstitutions() {
+
         $instArr = array();
+
         foreach( $this->getInstitutions() as $institution ) {
             $instName = $institution->getName()."";
             //echo "instName=".$instName."<br>";
+
+            //default prefixName = "WCMC"
+            $prefixName = $institution->getRootName($institution)."";
+
+//            //check if name is already exists in instArr, but id different
+//            if( array_key_exists($instName, $instArr) ) {
+//                //echo "inst with same name=".$instName.", ID=".$institution->getId()."; ";
+//                //echo "id in array=".$instArr[$instName][0]['instId']."<br>";
+//                //echo '<pre>';
+//                //print_r($instArr);
+//                //echo  '</pre>';
+//
+//                if( !$this->checkArrayForKeyMatchElement($instArr[$instName],'instId',$institution->getId()) ) {
+//                    //echo "different inst with same name=".$instName."<br>";
+//                    //prefixName = "Hematopathology-WCMC"
+//                    $prefixName = $institution->getParent()."-".$institution->getRootName($institution);
+//
+//                }
+//
+//            }
+
+            //$prefixName = $institution->getRootName($institution)."";
+
             $instArr[$instName][] = array(
                 'rootId'=>$institution->getRootName($institution)->getId(),
-                'rootName'=>$institution->getRootName($institution)->__toString()."",
+                'prefixName'=>$prefixName,
                 'instId'=>$institution->getId(),
                 'instNameWithRoot'=>$institution->getNodeNameWithRoot()
             );
         }
 
-        //var_dump($instArr);
+//        echo '<pre>';
+//        print_r($instArr);
+//        echo  '</pre>';
 
-        return $instArr;
+        //constract a new correct array
+        $instResArr = array();
+        foreach( $instArr as $instKeyName=>$instInfoArr ) {
+            foreach( $instInfoArr as $institution ) {
+                //check if name is already exists in instArr, but id different
+                if( $this->checkArrayForKeyMatchElement($instInfoArr,'prefixName',$institution['prefixName']) ) {
+                    //echo "different inst with same name=".$institution['instId']."<br>";
+                    //prefixName = "Hematopathology-WCMC"
+                    $institution['prefixName'] = $instKeyName."-".$institution['prefixName'];
+                }
+                $instResArr[$instKeyName][] = $institution;
+            }
+        }
+
+//        echo '<pre>';
+//        print_r($instResArr);
+//        echo  '</pre>';
+
+        return $instResArr;
+    }
+    public function checkArrayForKeyMatchElement($array,$key,$match) {
+        foreach( $array as $element ) {
+            //echo "compare: ".$element[$key]."==".$match."<br>";
+            if( $element[$key] == $match ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //TODO: check performance of foreach. It might be replaced by direct DB query

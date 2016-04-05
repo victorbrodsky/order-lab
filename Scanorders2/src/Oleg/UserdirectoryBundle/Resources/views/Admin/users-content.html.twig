@@ -100,53 +100,21 @@
                     {% for instName,instArr in institutionsArr %}
                         <p>
                             {% if instArr|length == 1 %}
-                                {#name={{ instName }} => rootId={{ instArr[0].rootName }}, instId={{ instArr[0].instId }}#}
+                                {#name={{ instName }} => rootId={{ instArr[0].prefixName }}, instId={{ instArr[0].instId }}#}
                                 <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': instArr[0].instId, 'name': instName }) }}">
                                     {{ instArr[0].instNameWithRoot }}
                                 </a>
                             {% elseif instArr|length > 1 %}
-                                {{ instName }} (
+                                {{ instName }} (<!--
                                     {% for inst in instArr %}
-                                        <a href="{{ path( employees_sitename~'_search_same_object',
+                                        --><a href="{{ path( employees_sitename~'_search_same_object',
                                         { 'tablename':'Institution','id': inst.instId, 'name': instName }
-                                        ) }}">
-                                            {{ inst.rootName }}
-                                        </a>
-                                        {% if not loop.last %},{% endif %}
+                                        ) }}">{{ inst.prefixName }}</a>{% if not loop.last %}, {% endif %}<!--
                                     {% endfor %}
-                                )
+                                -->)
                             {% endif %}
                         </p>
                     {% endfor %}
-
-                    {#{% if institutionsArr|length == 1 %}#}
-                        {#{% for instName,instArr in institutionsArr %}#}
-                            {#name={{ instName }} => rootId={{ instArr[0].rootName }}, instId={{ instArr[0].instId }}#}
-                            {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': instArr[0].instId, 'name': instName }) }}">#}
-                                {#{{ instArr[0].instNameWithRoot }}#}
-                            {#</a>#}
-                        {#{% endfor %}#}
-                    {#{% elseif institutionsArr|length > 1 %}#}
-                        {#<p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution.getNodeNameWithRoot() }}</a></p>#}
-                        {#name={{ key }} => value.rootId={{ value.rootId }}, value.instId={{ value.instId }}#}
-
-                            {#{% for instName,instArr in institutionsArr %}#}
-                                {#<p>#}
-                                {#{{ instName }} (#}
-                                    {#{% for inst in instArr %}#}
-                                        {#<a href="{{ path( employees_sitename~'_search_same_object',#}
-                                            {#{ 'tablename':'Institution','id': inst.instId, 'name': inst.rootName }#}
-                                        {#) }}">#}
-                                            {#{{ inst.rootName }}#}
-                                        {#</a>#}
-                                    {#{% endfor %}#}
-                                {#)#}
-                                {#</p>#}
-                            {#{% endfor %}#}
-
-                    {#{% else %}#}
-
-                    {#{% endif %}#}
 
                 </td>
 

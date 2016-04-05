@@ -167,8 +167,9 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //    $response->headers->setCookie(new Cookie('userOrderSuccessCookiesKeytype', $user->getKeytype().""));
         //}
         //$response->headers->setCookie($cookie);
-        $response->headers->setCookie(new Cookie('userOrderSuccessCookiesKeytype', $user->getKeytype().""));
-        $response->headers->setCookie(new Cookie('userOrderSuccessCookiesUsername', $user->getPrimaryPublicUserId()));
+        $lifetime = time() + (86400 * 30); //in seconds. 86400 => 1 day. 86400 * 30 => 1 month
+        $response->headers->setCookie(new Cookie('userOrderSuccessCookiesKeytype', $user->getKeytype()."", $lifetime));
+        $response->headers->setCookie(new Cookie('userOrderSuccessCookiesUsername', $user->getPrimaryPublicUserId(), $lifetime));
         ///////////// EOF set cookies /////////////
 
         return $response;
