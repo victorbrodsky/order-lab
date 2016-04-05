@@ -1415,12 +1415,15 @@ class User extends BaseUser {
                 $rootId = $institution->getRootName($institution)->getId();
             }
 
-            $instArr[$instName][] = array(
+            $institution = array(
                 'rootId'=>$rootId,
                 'uniqueName'=>$uniqueName,
+                'parentName'=>$institution->getParent()."",
                 'instId'=>$institution->getId(),
                 'instNameWithRoot'=>$institution->getNodeNameWithRoot()
             );
+
+            $instArr[$instName][] = $institution;
         }
 
 //        echo '<pre>';
@@ -1429,13 +1432,14 @@ class User extends BaseUser {
 
         //constract a new correct array
         $instResArr = array();
-        foreach( $instArr as $instKeyName=>$instInfoArr ) {
-            foreach( $instInfoArr as $institution ) {
+
+        foreach ($instArr as $instKeyName => $instInfoArr) {
+            foreach ($instInfoArr as $institution) {
                 //check if name is already exists in instArr, but id different
-                if( $this->checkArrayForKeyMatchElement($instInfoArr,'uniqueName',$institution['uniqueName']) ) {
+                if( !$this->isSingleUniqueKeyMatchCombination($instInfoArr, 'uniqueName', $institution['uniqueName']) ) {
                     //echo "different inst with same name=".$institution['instId']."<br>";
                     //uniqueName = "Hematopathology-WCMC"
-                    $institution['uniqueName'] = $instKeyName."-".$institution['uniqueName'];
+                    $institution['uniqueName'] = $institution['parentName']."-".$institution['uniqueName'];
                 }
                 $instResArr[$instKeyName][] = $institution;
             }
@@ -1447,15 +1451,37 @@ class User extends BaseUser {
 
         return $instResArr;
     }
-    public function checkArrayForKeyMatchElement($array,$key,$match) {
+    public function isSingleUniqueKeyMatchCombination($array,$key1,$match1) {
+        $count = 0;
         foreach( $array as $element ) {
-            //echo "compare: ".$element[$key]."==".$match."<br>";
-            if( $element[$key] == $match ) {
-                return true;
+            //echo $count.": compare: ".$element[$key1]."==".$match1."=>";
+            if( $element[$key1] == $match1 ) {
+                $count++;
+                //echo "not unique! <br>";
+                if( $count > 1 ) {
+                    //echo "not unique! <br>";
+                    return false;
+                }
+            } else {
+                //echo "<br>";
             }
         }
-        return false;
+        return true;
     }
+//    public function isUniqueKeyMatchCombination($array,$key1,$match1,$key2,$match2) {
+//        $count = 0;
+//        foreach( $array as $element ) {
+//            echo $count.": compare: ".$element[$key1]."==".$match1." && ".$element[$key2]."==".$match2."<br>";
+//            if( $element[$key1] == $match1 && $element[$key2] == $match2 ) {
+//                $count++;
+//                if( $count > 1 ) {
+//                    echo "not unique! <br>";
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
+//    }
 
     //TODO: check performance of foreach. It might be replaced by direct DB query
     public function getBosses() {
