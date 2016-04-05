@@ -1644,7 +1644,7 @@ class User extends BaseUser {
         return $emailArr;
     }
 
-    public function getOneEmail() {
+    public function getSingleEmail() {
         if( $this->getEmail() ) {
             return $this->getEmail();
         }

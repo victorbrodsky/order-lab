@@ -27,7 +27,7 @@
         {% set emailsArr = {} %}
         {% set emailsAppleArr = {} %}
         {% for entity in entities %}
-            {% set oneEmail = entity.getOneEmail() %}
+            {% set oneEmail = entity.getSingleEmail() %}
             {% if oneEmail %}
                 {% set emailsArr = emailsArr|merge({ (loop.index0): entity.getUsernameOptimal|replace({",": ""})~" <"~oneEmail~">"}) %}
                 {% set emailsAppleArr = emailsAppleArr|merge({ (loop.index0): entity.getUsernameOptimal~" <"~oneEmail~">"}) %}
