@@ -100,7 +100,7 @@
                     {% for instName,instArr in institutionsArr %}
                         <p>
                             {% if instArr|length == 1 %}
-                                {#name={{ instName }} => rootId={{ instArr[0].prefixName }}, instId={{ instArr[0].instId }}#}
+                                {#name={{ instName }} => rootId={{ instArr[0].uniqueName }}, instId={{ instArr[0].instId }}#}
                                 <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': instArr[0].instId, 'name': instName }) }}">
                                     {{ instArr[0].instNameWithRoot }}
                                 </a>
@@ -109,7 +109,7 @@
                                     {% for inst in instArr %}
                                         --><a href="{{ path( employees_sitename~'_search_same_object',
                                         { 'tablename':'Institution','id': inst.instId, 'name': instName }
-                                        ) }}">{{ inst.prefixName }}</a>{% if not loop.last %}, {% endif %}<!--
+                                        ) }}">{{ inst.uniqueName }}</a>{% if not loop.last %}, {% endif %}<!--
                                     {% endfor %}
                                 -->)
                             {% endif %}

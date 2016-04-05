@@ -1407,31 +1407,12 @@ class User extends BaseUser {
             $instName = $institution->getName()."";
             //echo "instName=".$instName."<br>";
 
-            //default prefixName = "WCMC"
-            $prefixName = $institution->getRootName($institution)."";
-
-//            //check if name is already exists in instArr, but id different
-//            if( array_key_exists($instName, $instArr) ) {
-//                //echo "inst with same name=".$instName.", ID=".$institution->getId()."; ";
-//                //echo "id in array=".$instArr[$instName][0]['instId']."<br>";
-//                //echo '<pre>';
-//                //print_r($instArr);
-//                //echo  '</pre>';
-//
-//                if( !$this->checkArrayForKeyMatchElement($instArr[$instName],'instId',$institution->getId()) ) {
-//                    //echo "different inst with same name=".$instName."<br>";
-//                    //prefixName = "Hematopathology-WCMC"
-//                    $prefixName = $institution->getParent()."-".$institution->getRootName($institution);
-//
-//                }
-//
-//            }
-
-            //$prefixName = $institution->getRootName($institution)."";
+            //default uniqueName = "WCMC"
+            $uniqueName = $institution->getRootName($institution)."";
 
             $instArr[$instName][] = array(
                 'rootId'=>$institution->getRootName($institution)->getId(),
-                'prefixName'=>$prefixName,
+                'uniqueName'=>$uniqueName,
                 'instId'=>$institution->getId(),
                 'instNameWithRoot'=>$institution->getNodeNameWithRoot()
             );
@@ -1446,10 +1427,10 @@ class User extends BaseUser {
         foreach( $instArr as $instKeyName=>$instInfoArr ) {
             foreach( $instInfoArr as $institution ) {
                 //check if name is already exists in instArr, but id different
-                if( $this->checkArrayForKeyMatchElement($instInfoArr,'prefixName',$institution['prefixName']) ) {
+                if( $this->checkArrayForKeyMatchElement($instInfoArr,'uniqueName',$institution['uniqueName']) ) {
                     //echo "different inst with same name=".$institution['instId']."<br>";
-                    //prefixName = "Hematopathology-WCMC"
-                    $institution['prefixName'] = $instKeyName."-".$institution['prefixName'];
+                    //uniqueName = "Hematopathology-WCMC"
+                    $institution['uniqueName'] = $instKeyName."-".$institution['uniqueName'];
                 }
                 $instResArr[$instKeyName][] = $institution;
             }
