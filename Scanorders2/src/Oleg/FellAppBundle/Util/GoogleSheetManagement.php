@@ -357,6 +357,8 @@ class GoogleSheetManagement {
     //3) Impersonate a user account.
     public function authenticationP12Key() {
 
+        $logger = $this->container->get('logger');
+
         //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
         $userUtil = new UserUtil();
         $client_email = $userUtil->getSiteSetting($this->em,'clientEmailFellApp');
@@ -364,7 +366,6 @@ class GoogleSheetManagement {
         //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
         $pkey = $userUtil->getSiteSetting($this->em,'p12KeyPathFellApp');
         if( !$pkey ) {
-            $logger = $this->container->get('logger');
             $logger->warning('p12KeyPathFellApp is not defined in Site Parameters. p12KeyPathFellApp='.$pkey);
         }
 
@@ -387,27 +388,38 @@ class GoogleSheetManagement {
         //$scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
         $scopes = $googleDriveApiUrlFellApp;
 
-        $credentials = new \Google_Auth_AssertionCredentials(
-            $client_email,
-            $scopes,
-            $private_key,
-            'notasecret',                                 // Default P12 password
-            'http://oauth.net/grant_type/jwt/1.0/bearer', // Default grant type
-            $user_to_impersonate
-        );
+        try {
 
-        $client = new \Google_Client();
-        $client->setAssertionCredentials($credentials);
+            $credentials = new \Google_Auth_AssertionCredentials(
+                $client_email,
+                $scopes,
+                $private_key,
+                'notasecret',                                 // Default P12 password
+                'http://oauth.net/grant_type/jwt/1.0/bearer', // Default grant type
+                $user_to_impersonate
+            );
 
-        if( $client->getAuth()->isAccessTokenExpired() ) {
-            //echo 'before refreshTokenWithAssertion<br>';
-            //print_r($credentials);
-            //exit('1');
-            $client->getAuth()->refreshTokenWithAssertion($credentials); //causes timeout on localhost: OAuth ERR_CONNECTION_RESET
-            //exit('after');
+            $client = new \Google_Client();
+            $client->setAssertionCredentials($credentials);
+
+            if( $client->getAuth()->isAccessTokenExpired() ) {
+                //echo 'before refreshTokenWithAssertion<br>';
+                //print_r($credentials);
+                //exit('before');
+                $client->getAuth()->refreshTokenWithAssertion($credentials); //causes timeout on localhost: OAuth ERR_CONNECTION_RESET
+                exit('after');
+            }
+
+            $service = new \Google_Service_Drive($client);
+
+        } catch(Exception $e) {
+            $subject = "Failed to authenticate to Google using P12";
+            $event = "Failed to authenticate to Google using P12: " . $e->getMessage();
+            $logger->error($event);
+            //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+            $fellappUtil = $this->container->get('fellapp_util');
+            $fellappUtil->sendEmailToSystemEmail($subject, $event);
         }
-
-        $service = new \Google_Service_Drive($client);
 
         $res = array(
             'client' => $client,
