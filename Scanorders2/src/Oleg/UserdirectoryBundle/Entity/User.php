@@ -1644,6 +1644,25 @@ class User extends BaseUser {
         return $emailArr;
     }
 
+    public function getOneEmail() {
+        if( $this->getEmail() ) {
+            return $this->getEmail();
+        }
+
+        foreach( $this->getLocations() as $location ) {
+            if( $location->getEmail() && $location->hasLocationTypeName("Employee Office") ) {
+                return $location->getEmail();
+            }
+        }
+
+        foreach( $this->getLocations() as $location ) {
+            if( $location->getEmail() ) {
+                return $location->getEmail();
+            }
+        }
+
+        return null;
+    }
 
 
 
