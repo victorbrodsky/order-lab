@@ -1410,8 +1410,13 @@ class User extends BaseUser {
             //default uniqueName = "WCMC"
             $uniqueName = $institution->getRootName($institution)."";
 
+            $rootId = null;
+            if( $institution->getRootName($institution) ) {
+                $rootId = $institution->getRootName($institution)->getId();
+            }
+
             $instArr[$instName][] = array(
-                'rootId'=>$institution->getRootName($institution)->getId(),
+                'rootId'=>$rootId,
                 'uniqueName'=>$uniqueName,
                 'instId'=>$institution->getId(),
                 'instNameWithRoot'=>$institution->getNodeNameWithRoot()
