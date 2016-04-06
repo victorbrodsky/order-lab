@@ -407,7 +407,7 @@ class GoogleSheetManagement {
                 //print_r($credentials);
                 //exit('before');
                 $client->getAuth()->refreshTokenWithAssertion($credentials); //causes timeout on localhost: OAuth ERR_CONNECTION_RESET
-                exit('after');
+                //exit('after');
             }
 
             $service = new \Google_Service_Drive($client);
