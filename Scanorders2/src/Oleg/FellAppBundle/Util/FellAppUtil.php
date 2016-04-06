@@ -235,9 +235,9 @@ class FellAppUtil {
     }
     public function addFileToDataFileDB( $document ) {
 
-        $dataFile = $this->em->getRepository('OlegFellAppBundle:DataFile')->findOneByUniqueid($document->getId());
+        $dataFile = $this->em->getRepository('OlegFellAppBundle:DataFile')->findOneByDocument($document->getId());
         if( $dataFile ) {
-            echo "DataFile already exists with document ID=".$dataFile->getId()."<br>";
+            echo "DataFile already exists with document ID=".$document->getId()."<br>";
             return $dataFile;
         }
 
