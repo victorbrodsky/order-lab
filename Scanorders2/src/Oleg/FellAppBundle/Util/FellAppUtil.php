@@ -80,7 +80,7 @@ class FellAppUtil {
         $this->populateApplicationsFromDataFile();
 
         //3) Delete old sheet and uploads from Google Drive if deleteOldAplicationsFellApp is true
-        //$this->deleteSuccessfullyImportedApplications();
+        $this->deleteSuccessfullyImportedApplications();
 
         //4)  Process backup sheet on Google Drive
         //$this->processBackupFellAppFromGoogleDrive();
@@ -153,6 +153,142 @@ class FellAppUtil {
         return $fileDb;
 
     }
+
+    //2)  Populate applications from DataFile DB object
+    //2a)   for each sheet with not "completed" status in DataFile:
+    //      populate application by populateSingleFellApp($sheet) (this function add report generation to queue)
+    //2b)   if populateSingleFellApp($sheet) return true => set sheet DataFile status to "completed"
+    public function populateApplicationsFromDataFile() {
+
+        if( !$this->checkIfFellappAllowed() ) {
+            return null;
+        }
+
+        $logger = $this->container->get('logger');
+
+        //get not completed DataFile
+        $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
+        $dql =  $repository->createQueryBuilder("datafile");
+        $dql->select('datafile');
+        $dql->where("datafile.status != :completeStatus");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter("completeStatus","completed");
+
+        $datafiles = $query->getResult();
+
+        $populatedCount = 0;
+
+        foreach( $datafiles as $datafile ) {
+
+            $count = $this->populateSingleFellApp( $datafile->getDocument() );
+
+            if( $count > 0 ) {
+                $datafile->setStatus("completed");
+                $this->em->flush($datafile);
+
+                $populatedCount = $populatedCount + $count;
+            }
+
+        }
+
+        $event = "Populated Applications from DataFile: populatedCount=" . $populatedCount;
+        $logger->notice($event);
+
+    }
+
+    //3)  Delete successfully imported sheets and uploads from Google Drive if deleteImportedAplicationsFellApp is true
+    //3a)   foreach "completed" sheet in DataFile:
+    //3b)   delete sheet and uploads from Google drive
+    //3c)   delete sheet object from DataFile
+    //3d)   unlink sheet file from folder
+    public function deleteSuccessfullyImportedApplications() {
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp');
+        if( !$deleteImportedAplicationsFellApp ) {
+            $logger->error("deleteImportedAplicationsFellApp parameter is nor defined or is set to false");
+            return false;
+        }
+
+        //get completed DataFile
+        $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
+        $dql =  $repository->createQueryBuilder("datafile");
+        $dql->select('datafile');
+        $dql->where("datafile.status = :completeStatus");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter("completeStatus","completed");
+
+        $datafiles = $query->getResult();
+
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $service = $googlesheetmanagement->getGoogleService();
+        if( !$service ) {
+            $event = "Google API service failed!";
+            $logger->error($event);
+            $this->sendEmailToSystemEmail($event, $event);
+            return null;
+        }
+
+        $deletedCount = 0;
+
+        foreach( $datafiles as $datafile ) {
+
+            //get Google Drive file id
+            $document = $datafile->getDocument();
+
+            if( !$document ) {
+                $logger->error("Document does not exists in DataFile object with ID=".$datafile->getId());
+                continue;
+            }
+
+            $fileId = $document->getUniquename();
+
+            //delete all rows and associated files from Google Drive
+            $deletedRows = $googlesheetmanagement->deleteAllRowsWithUploads($fileId);
+
+            //delete file from Google Drive
+            if( $deletedRows > 0 ) {
+                $fileDeleted = $googlesheetmanagement->deleteFile($service, $fileId);
+
+                if( !$fileDeleted ) {
+                    $logger->error("Delete file from Google Drive failed! fileId=".$fileId);
+                    continue;
+                }
+            }
+
+            //remove (unlink) file from server
+            $documentPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $document->getUploadDirectory().'/'.$document->getUniquename();
+            if( is_file($documentPath) ) {
+
+                unlink($documentPath);
+                $logger->notice("File deleted from server: path=".$documentPath);
+
+                //delete datafile
+                $datafileId = $datafile->getId();
+                $this->em->remove($datafile);
+                $this->em->flush($datafile);
+                $logger->notice("DataFile object deleted from DB: datafileId=".$datafileId);
+
+                //delete document from Document DB
+                $documentId = $document->getId();
+                $this->em->remove($document);
+                $this->em->flush($document);
+                $logger->notice("File deleted from DB and server: documentId=".$documentId);
+
+            } else {
+                $logger->error("File does not exist on server! path=".$documentPath);
+            }
+
+        } //foreach datafile
+
+    }
+
 
     /**
      * Download files belonging to a folder. $folderId='0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E'
@@ -254,50 +390,6 @@ class FellAppUtil {
 
 
 
-    //2)  Populate applications from DataFile DB object
-    //2a)   for each sheet with not "completed" status in DataFile:
-    //      populate application by populateSingleFellApp($sheet) (this function add report generation to queue)
-    //2b)   if populateSingleFellApp($sheet) return true => set sheet DataFile status to "completed"
-    public function populateApplicationsFromDataFile() {
-
-        $logger = $this->container->get('logger');
-
-        //$documentDb = $this->em->getRepository('OlegFellAppBundle:DataFile')->findBy(array("status"=>"active"));
-        $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
-        $dql =  $repository->createQueryBuilder("datafile");
-        $dql->select('datafile');
-        $dql->where("datafile.status != :completeStatus");
-
-        $query = $this->em->createQuery($dql);
-
-        $query->setParameter("completeStatus","completed");
-
-        $datafiles = $query->getResult();
-
-        $populatedCount = 0;
-
-        foreach( $datafiles as $datafile ) {
-
-            $count = $this->populateSingleFellApp( $datafile->getDocument() );
-
-            if( $count > 0 ) {
-                $datafile->setStatus("completed");
-                $this->em->flush($datafile);
-
-                $populatedCount = $populatedCount + $count;
-            }
-
-        }
-
-        $event = "Populated Applications from DataFile: populatedCount=" . $populatedCount;
-        $logger->notice($event);
-
-    }
-
-
-
-
-
     public function checkIfFellappAllowed() {
 
         $logger = $this->container->get('logger');
@@ -318,140 +410,6 @@ class FellAppUtil {
         return true;
     }
 
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//    //1) Import google form spreadsheet and download it on the server; create Document object
-//    public function importFellApp() {
-//
-//        $logger = $this->container->get('logger');
-//        $userUtil = new UserUtil();
-//
-//        $allowPopulateFellApp = $userUtil->getSiteSetting($this->em,'AllowPopulateFellApp');
-//        if( !$allowPopulateFellApp ) {
-//            $logger->warning("Import is not proceed because the AllowPopulateFellApp parameter is set to false.");
-//            return null;
-//        }
-//
-//        $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
-//        if( $maintenance ) {
-//            $logger->warning("Import is not proceed because the server is on the  maintenance.");
-//            return null;
-//        }
-//
-//        //echo "fellapp import <br>";
-//
-//        $res = null;
-//        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $systemUser = $userSecUtil->findSystemUser();
-//        $service = $googlesheetmanagement->getGoogleService();
-//
-//        if( !$service ) {
-//            $event = "Google API service failed!";
-//            $logger->warning($event);
-//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-//            $this->sendEmailToSystemEmail($event, $event);
-//            return null;
-//        }
-//
-//        if( $service ) {
-//
-//            //echo "service ok <br>";
-//
-//            //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
-//            //$excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
-//            $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-//
-//            //$path = $this->uploadDir.'/Spreadsheets';
-//            $path = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'spreadsheetsPathFellApp');
-//            if( !$path ) {
-//                $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
-//            }
-//
-//            $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'Fellowship Application Spreadsheet', $path);
-//
-//            if( $fileDb ) {
-//                $this->em->flush($fileDb);
-//                $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
-//                $logger->notice($event);
-//            } else {
-//                $event = "Fellowship Application Spreadsheet download failed!";
-//                $logger->warning($event);
-//                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-//                $this->sendEmailToSystemEmail($event, $event);
-//            }
-//
-//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Applications Spreadsheet');
-//
-//        }
-//
-//        //echo "import ok <br>";
-//
-//        return $fileDb;
-//    }
-
-//    //2) populate fellowship applications from spreadsheet to DB (using uploaded files from Google Drive)
-//    public function populateFellApp( $path=null ) {
-//
-//        $logger = $this->container->get('logger');
-//        $userUtil = new UserUtil();
-//
-//        $allowPopulateFellApp = $userUtil->getSiteSetting($this->em,'AllowPopulateFellApp');
-//        if( !$allowPopulateFellApp ) {
-//            $logger->warning("Populate is not proceed because the AllowPopulateFellApp parameter is set to false.");
-//            return;
-//        }
-//
-//        $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
-//        if( $maintenance ) {
-//            $logger->warning("Populate is not proceed because the server is on the  maintenance.");
-//            return null;
-//        }
-//
-//        //echo "fellapp populate Spreadsheet <br>";
-//
-//        //1) get latest spreadsheet file from Uploaded/fellapp/Spreadsheets
-//        $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
-//        $documents = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findBy(
-//            array('type' => $fellappSpreadsheetType),
-//            array('createdate'=>'desc'),
-//            1   //limit to one
-//        );
-//
-//        if( count($documents) == 1 ) {
-//            $document = $documents[0];
-//        }
-//
-//        //2a) get spreadsheet path
-//        $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
-//
-//        if( $path ) {
-//            $inputFileName = $path . "/" . $inputFileName;
-//        }
-//
-//        //2b) populate applicants
-//        $populatedCount = $this->populateSpreadsheet($inputFileName);
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $systemUser = $userSecUtil->findSystemUser();
-//        $event = "Populated ".$populatedCount." Fellowship Applications from Spreadsheets to DB.";
-//        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Application data to DB');
-//
-//        //call tryRun() asynchronous
-//        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-//        $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
-//        $fellappRepGen->windowsCmdRunAsync($cmd);
-//
-//        return $populatedCount;
-//    }
-///////////////////////////////////////////////////////////////////////////////////////
 
 
     //2) populate a single fellowship application from spreadsheet to DB (using uploaded files from Google Drive)
@@ -626,14 +584,6 @@ class FellAppUtil {
             return -1;
         }
 
-        //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
-        $userUtil = new UserUtil();
-        $uploadPath = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'applicantsUploadPathFellApp');
-        if( !$uploadPath ) {
-            $uploadPath = "FellowshipApplicantUploads";
-            $logger->warning('applicantsUploadPathFellApp is not defined in Site Parameters. Use default "'.$uploadPath.'" folder.');
-        }
-
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
@@ -642,6 +592,14 @@ class FellAppUtil {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
             $this->sendEmailToSystemEmail($event, $event);
             throw new IOException($event);
+        }
+
+        //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
+        $userUtil = new UserUtil();
+        $uploadPath = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'applicantsUploadPathFellApp');
+        if( !$uploadPath ) {
+            $uploadPath = "FellowshipApplicantUploads";
+            $logger->warning('applicantsUploadPathFellApp is not defined in Site Parameters. Use default "'.$uploadPath.'" folder.');
         }
 
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);

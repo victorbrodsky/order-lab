@@ -40,13 +40,58 @@ class GoogleSheetManagement {
         $this->container = $container;
     }
 
+    public function getSheetByFileId( $fileId ) {
+
+        $logger = $this->container->get('logger');
+        $fellappUtil = $this->container->get('fellapp_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //get Google access token
+        $accessToken = $this->getGoogleToken();
+
+        if( !$accessToken ) {
+            $systemUser = $userSecUtil->findSystemUser();
+            $event = "Google API access Token empty";
+            $logger->warning($event);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+            $fellappUtil->sendEmailToSystemEmail($event, $event);
+            return null;
+        }
+
+        //0 initialize ServiceRequestFactory
+        $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
+        ServiceRequestFactory::setInstance($serviceRequest);
+        $spreadsheetService = new SpreadsheetService();
+
+        //1) find spreadsheet
+        $spreadsheet = $spreadsheetService->getSpreadsheetById($fileId);
+        if( !$spreadsheet ) {
+            throw new IOException('Spreadsheet not found by key='.$fileId);
+        }
+
+        //2) find worksheet by name
+        $worksheetFeed = $spreadsheet->getWorksheets();
+        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
+
+        return $worksheet;
+    }
+
+    public function deleteAllRowsWithUploads( $fileId ) {
+
+        $worksheet = $this->getSheetByFileId($fileId);
+
+        //get all rows in worksheet
+        $listFeed = $worksheet->getListFeed();
+
+        $deletedRows = $this->deleteRowInListFeed( $listFeed );
+
+        return $deletedRows;
+    }
+
     //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
-    //1) find spreadsheet
-    //2) find worksheet
-    //3) find row in worksheet by rowid (don't use '@'. In google GS '@' is replaced by '_') cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04
-    //4) foreach file in the row => delete this file from Google Drive
-    //5) delete this row
-    public function deleteImportedApplicationAndUploadsFromGoogleDrive($rowId) {
+    //1) find row in worksheet by rowid (don't use '@'. In google GS '@' is replaced by '_') cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04
+    //2) foreach file in the row => delete this file from Google Drive and delete this row
+    public function deleteImportedApplicationAndUploadsFromGoogleDrive( $worksheet, $rowId ) {
 
         $logger = $this->container->get('logger');
 
@@ -56,55 +101,104 @@ class GoogleSheetManagement {
             $logger->warning('Fellowship Application Google Form ID does not exists. rowId='.$rowId);
         }
 
-        $fellappUtil = $this->container->get('fellapp_util');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $userUtil = new UserUtil();
+        //$fellappUtil = $this->container->get('fellapp_util');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$systemUser = $userSecUtil->findSystemUser();
+        //$userUtil = new UserUtil();
 
-        //get Google access token
-        $accessToken = $this->getGoogleToken();
+//        //get Google access token
+//        $accessToken = $this->getGoogleToken();
+//
+//        if( !$accessToken ) {
+//            $event = "Google API access Token empty";
+//            $logger->warning($event);
+//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+//            $fellappUtil->sendEmailToSystemEmail($event, $event);
+//            return null;
+//        }
+//        //exit('service ok');
+//
+//        //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
+////        $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
+////        //$excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
+////        if( !$excelId ) {
+////            $logger = $this->container->get('logger');
+////            $logger->warning('Sheet ID is not defined in Site Parameters. excelIdFellApp='.$excelId);
+////        }
+//
+//        //testing revision
+//        //$revisions = $this->retrieveRevisions($excelId);
+//        //exit('1');
+//
+//        //0 initialize ServiceRequestFactory
+//        $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
+//        ServiceRequestFactory::setInstance($serviceRequest);
+//        $spreadsheetService = new SpreadsheetService();
+//
+//        //1) find spreadsheet
+//        $spreadsheet = $spreadsheetService->getSpreadsheetById($excelId);
+//        if( !$spreadsheet ) {
+//            throw new IOException('Spreadsheet not found by key='.$excelId);
+//        }
+//
+//        //2) find worksheet by name
+//        $worksheetFeed = $spreadsheet->getWorksheets();
+//        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
 
-        if( !$accessToken ) {
-            $event = "Google API access Token empty";
-            $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $fellappUtil->sendEmailToSystemEmail($event, $event);
-            return null;
-        }
-        //exit('service ok');
+        //$worksheet = $this->getSheetByFileId($excelId);
 
-        //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
-        $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-        //$excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
-        if( !$excelId ) {
-            $logger = $this->container->get('logger');
-            $logger->warning('Sheet ID is not defined in Site Parameters. excelIdFellApp='.$excelId);
-        }
-
-        //testing revision
-        //$revisions = $this->retrieveRevisions($excelId);
-        //exit('1');
-
-        //0 initialize ServiceRequestFactory
-        $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
-        ServiceRequestFactory::setInstance($serviceRequest);
-        $spreadsheetService = new SpreadsheetService();
-
-        //1) find spreadsheet
-        $spreadsheet = $spreadsheetService->getSpreadsheetById($excelId);
-        if( !$spreadsheet ) {
-            throw new IOException('Spreadsheet not found by key='.$excelId);
-        }
-
-        //2) find worksheet by name
-        $worksheetFeed = $spreadsheet->getWorksheets();
-        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
-
-        //3) find row in worksheet by rowid (don't use '@'. In google GS '@' is replaced by '_') cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04
+        //1) find row in worksheet by rowid (don't use '@'. In google GS '@' is replaced by '_') cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04
         $listFeed = $worksheet->getListFeed( array("sq" => "id = " . $rowId) ); //it's a row
 
-        //4) foreach file in the row => delete this file from Google Drive
+        //2) foreach file in the row => delete this file from Google Drive
+        $deletedRows = $this->deleteRowInListFeed( $listFeed );
 
+//        $deletedRows = 0;
+//
+//        //identify file by presence of string 'drive.google.com/a/pathologysystems.org/file/d/'
+//        $fileStrFlag = 'drive.google.com/a/pathologysystems.org/file/d/';
+//
+//        foreach( $listFeed->getEntries() as $entry ) {
+//            $values = $entry->getValues();
+//            //echo "list:<br>";
+//            //print_r($values );
+//            //echo "<br>";
+//            //echo "lastname=".$values['lastname']."<br>";
+//
+//            //4.a) foreach file in the row => delete this file from Google Drive
+//            foreach( $values as $cellValue ) {
+//
+//                if( strpos($cellValue, $fileStrFlag) !== false ) {
+//                    //echo 'this is file = '.$cellValue." => ";
+//                    //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
+//                    $fileID = $this->getFileId($cellValue);
+//                    //echo 'fileID = '.$fileID."<br>";
+//                    $res = $this->removeFile($fileID);
+//                    if( $res ) {
+//                        //echo 'File was deleted with fileID = '.$fileID."<br>";
+//                    } else {
+//                        //echo 'Failed to delete file with fileID = '.$fileID."<br>";
+//                        $logger->warning('Failed to delete file with fileID = '.$fileID);
+//                    }
+//                }
+//            }
+//
+//
+//            //5) delete this row (entry)
+//            $entry->delete();
+//
+//            $deletedRows++;
+//        }
+
+
+        //exit(1);
+        return $deletedRows;
+    }
+
+    //foreach file in the row => delete this file from Google Drive
+    public function deleteRowInListFeed( $listFeed ) {
+
+        $logger = $this->container->get('logger');
         $deletedRows = 0;
 
         //identify file by presence of string 'drive.google.com/a/pathologysystems.org/file/d/'
@@ -133,20 +227,43 @@ class GoogleSheetManagement {
                         $logger->warning('Failed to delete file with fileID = '.$fileID);
                     }
                 }
-            }
+            } //foreach cell
 
 
-            //5) delete this row (entry)
+            //delete this row (entry)
             $entry->delete();
 
             $deletedRows++;
-        }
+
+        }//foreach row
 
 
         //exit(1);
         return $deletedRows;
     }
 
+    /**
+     * Permanently delete a file, skipping the trash.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param String $fileId ID of the file to delete.
+     */
+    function deleteFile($service, $fileId) {
+        $logger = $this->container->get('logger');
+
+        $result = false;
+
+        try {
+            $service->files->delete($fileId);
+            $result = true;
+            $logger->notice("File from Google Drive deleted successfully; fileId=".$fileId);
+        } catch (Exception $e) {
+            $event = "File from Google Drive deletion failed. An error occurred: " . $e->getMessage();
+            $logger->error($event);
+        }
+
+        return $result;
+    }
 
     function getFileId($str) {
         // https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
