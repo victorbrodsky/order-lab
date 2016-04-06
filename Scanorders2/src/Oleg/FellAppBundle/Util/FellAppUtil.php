@@ -210,7 +210,7 @@ class FellAppUtil {
 
         do {
             try {
-                $parameters = array('q' => $folderId.'+in+parents');
+                $parameters = array('q' => "'".$folderId."' in parents and trashed=false");
                 if ($pageToken) {
                     $parameters['pageToken'] = $pageToken;
                 }
