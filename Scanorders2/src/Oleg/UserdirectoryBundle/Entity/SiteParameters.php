@@ -293,18 +293,32 @@ class SiteParameters {
     private $userImpersonateEmailFellApp;
 
     /**
-     * Last known Google Spreadsheet ID of the spreadsheet with applications: i.e. 1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
+     * Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $excelIdFellApp;
+    private $templateIdFellApp;
 
     /**
-     * Id of the single source of truth spreadsheet file: i.e. 1JniTgB-KOzlpHQb9JvyBDKmxTyGMoidddcHk8W7Jv-8
+     * Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $singleTruthSourceId;
+    private $backupFileIdFellApp;
+
+    /**
+     * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $folderIdFellApp;
+
+    /**
+     * Backup Sheet Last Modified Date
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $backupUpdateDatetimeFellApp;
 
     /**
      * Local Institution to which every imported application is set: Pathology Fellowship Programs (WCMC)
@@ -1680,21 +1694,6 @@ class SiteParameters {
         $this->userImpersonateEmailFellApp = $userImpersonateEmailFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getExcelIdFellApp()
-    {
-        return $this->excelIdFellApp;
-    }
-
-    /**
-     * @param mixed $excelIdFellApp
-     */
-    public function setExcelIdFellApp($excelIdFellApp)
-    {
-        $this->excelIdFellApp = $excelIdFellApp;
-    }
 
     /**
      * @return mixed
@@ -2006,18 +2005,68 @@ class SiteParameters {
     /**
      * @return mixed
      */
-    public function getSingleTruthSourceId()
+    public function getTemplateIdFellApp()
     {
-        return $this->singleTruthSourceId;
+        return $this->templateIdFellApp;
     }
 
     /**
-     * @param mixed $singleTruthSourceId
+     * @param mixed $templateIdFellApp
      */
-    public function setSingleTruthSourceId($singleTruthSourceId)
+    public function setTemplateIdFellApp($templateIdFellApp)
     {
-        $this->singleTruthSourceId = $singleTruthSourceId;
+        $this->templateIdFellApp = $templateIdFellApp;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBackupFileIdFellApp()
+    {
+        return $this->backupFileIdFellApp;
+    }
+
+    /**
+     * @param mixed $backupFileIdFellApp
+     */
+    public function setBackupFileIdFellApp($backupFileIdFellApp)
+    {
+        $this->backupFileIdFellApp = $backupFileIdFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFolderIdFellApp()
+    {
+        return $this->folderIdFellApp;
+    }
+
+    /**
+     * @param mixed $folderIdFellApp
+     */
+    public function setFolderIdFellApp($folderIdFellApp)
+    {
+        $this->folderIdFellApp = $folderIdFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBackupUpdateDatetimeFellApp()
+    {
+        return $this->backupUpdateDatetimeFellApp;
+    }
+
+    /**
+     * @param mixed $backupUpdateDatetimeFellApp
+     */
+    public function setBackupUpdateDatetimeFellApp($backupUpdateDatetimeFellApp)
+    {
+        $this->backupUpdateDatetimeFellApp = $backupUpdateDatetimeFellApp;
+    }
+
+
 
 
 

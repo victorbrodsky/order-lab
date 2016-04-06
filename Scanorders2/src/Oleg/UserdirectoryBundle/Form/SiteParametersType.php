@@ -339,17 +339,29 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'excelIdFellApp' )
-            $builder->add('excelIdFellApp',null,array(
-                'label'=>'Last known Google Spreadsheet ID of the spreadsheet with applications:',
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'templateIdFellApp' )
+            $builder->add('templateIdFellApp',null,array(
+                'label'=>'Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'singleTruthSourceId' )
-            $builder->add('singleTruthSourceId',null,array(
-                'label'=>'Google Spreadsheet ID containing the ID of the spreadsheet with applications (1JniTgB-KOzlpHQb9JvyBDKmxTyGMoidddcHk8W7Jv-8):',
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'backupFileIdFellApp' )
+            $builder->add('backupFileIdFellApp',null,array(
+                'label'=>'Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'folderIdFellApp' )
+            $builder->add('folderIdFellApp',null,array(
+                'label'=>'Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'backupUpdateDatetimeFellApp' )
+//            $builder->add('backupUpdateDatetimeFellApp',null,array(
+//                'label'=>'Backup Sheet Last Modified Date:',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'localInstitutionFellApp' )
             $builder->add('localInstitutionFellApp',null,array(

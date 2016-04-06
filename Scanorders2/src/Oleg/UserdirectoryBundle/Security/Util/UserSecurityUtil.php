@@ -891,4 +891,35 @@ class UserSecurityUtil {
     }
 
 
+    //return parameter specified by $parameter. If the first time login when site parameter does not exist yet, return -1.
+    public function getSiteSettingParameter( $parameter ) {
+
+        $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+
+//        if( !$params ) {
+//            //throw new \Exception( 'Parameter object is not found' );
+//        }
+
+        //echo "params count=".count($params)."<br>";
+
+        if( count($params) == 0 ) {
+            return -1;
+        }
+
+        if( count($params) > 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+        }
+
+        $param = $params[0];
+
+        if( $parameter == null ) {
+            return $param;
+        }
+
+        $getSettingMethod = "get".$parameter;
+        $res = $param->$getSettingMethod();
+
+        return $res;
+    }
+
 }

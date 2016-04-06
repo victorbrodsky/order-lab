@@ -17,7 +17,10 @@ services:
 
     #fellowship application utilities
     fellapp_util:
-        class: Oleg\FellAppBundle\Util\FellAppUtil
+            class: Oleg\FellAppBundle\Util\FellAppUtil
+            arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+    fellapp_populate_util:
+        class: Oleg\FellAppBundle\Util\FellAppPopulateUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
 
     fellapp_reportgenerator:

@@ -1511,7 +1511,7 @@ class FellAppController extends Controller {
 
 
     /**
-     * Import and populate applicants from Google
+     * Manually import and populate applicants from Google
      *
      * @Route("/populate-import", name="fellapp_import_populate")
      */
@@ -1522,46 +1522,54 @@ class FellAppController extends Controller {
         }
 
         $fellappUtil = $this->container->get('fellapp_util');
-        $error = false;
 
-        //1) import
-        $fileDb = $fellappUtil->importFellApp();
-
-        if( $fileDb ) {
-            $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
-            $flashType = 'notice';
-        } else {
-            $event = "Fellowship Application Spreadsheet download failed!";
-            $flashType = 'warning';
-            $error = true;
-        }
+        $result = $fellappUtil->processFellAppFromGoogleDrive();
 
         $this->get('session')->getFlashBag()->add(
-            $flashType,
-            $event
-        );
-
-        if( $error ) {
-            return $this->redirect( $this->generateUrl('fellapp_home') );
-        }
-
-        //2) populate
-        $populatedCount = $fellappUtil->populateFellApp();
-
-        if( $populatedCount >= 0 ) {
-            $event = "Populated ".$populatedCount." Fellowship Applicantions.";
-            $flashType = 'notice';
-        } else {
-            $event = "Google API service failed!";
-            $flashType = 'warning';
-        }
-
-        $this->get('session')->getFlashBag()->add(
-            $flashType,
-            $event
+            'notice',
+            $result
         );
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
+
+//        //1) import
+//        $fileDb = $fellappUtil->importFellApp();
+//
+//        if( $fileDb ) {
+//            $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
+//            $flashType = 'notice';
+//        } else {
+//            $event = "Fellowship Application Spreadsheet download failed!";
+//            $flashType = 'warning';
+//            $error = true;
+//        }
+//
+//        $this->get('session')->getFlashBag()->add(
+//            $flashType,
+//            $event
+//        );
+//
+//        if( $error ) {
+//            return $this->redirect( $this->generateUrl('fellapp_home') );
+//        }
+//
+//        //2) populate
+//        $populatedCount = $fellappUtil->populateFellApp();
+//
+//        if( $populatedCount >= 0 ) {
+//            $event = "Populated ".$populatedCount." Fellowship Applicantions.";
+//            $flashType = 'notice';
+//        } else {
+//            $event = "Google API service failed!";
+//            $flashType = 'warning';
+//        }
+//
+//        $this->get('session')->getFlashBag()->add(
+//            $flashType,
+//            $event
+//        );
+//
+//        return $this->redirect( $this->generateUrl('fellapp_home') );
     }
 
     /**

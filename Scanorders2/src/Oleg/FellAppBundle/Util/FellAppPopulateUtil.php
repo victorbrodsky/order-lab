@@ -32,8 +32,11 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
-
-class FellAppUtil {
+/*
+ * 1) importFellApp
+ * 2) populateFellApp
+ */
+class FellAppPopulateUtil {
 
     protected $em;
     protected $sc;
@@ -51,206 +54,10 @@ class FellAppUtil {
 
         //fellapp.uploadpath = fellapp
         $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
+
+        $userutil = new UserUtil();
+        $this->systemEmail = $userutil->getSiteSetting($this->em,'siteEmail');
     }
-
-
-    //1)  Import sheets from Google Drive Folder
-    //1a)   import all sheets from Google Drive folder
-    //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
-    //
-    //2)  Populate applications from DataFile DB object
-    //2a)   for each sheet with not "completed" status in DataFile:
-    //      populate application by populateSingleFellApp($sheet) (this function add report generation to queue)
-    //2b)   if populateSingleFellApp($sheet) return true => set sheet DataFile status to "completed"
-    //
-    //3)  Delete successfully imported sheets and uploads from Google Drive if deleteImportedAplicationsFellApp is true
-    //3a)   foreach "completed" sheet in DataFile:
-    //3b)   delete sheet and uploads from Google drive
-    //3c)   delete sheet object from DataFile
-    //3d)   unlink sheet file from folder
-    //
-    //4)  Process backup sheet on Google Drive
-    public function processFellAppFromGoogleDrive() {
-
-        //1) Import sheets from Google Drive Folder
-        $this->importSheetsFromGoogleDriveFolder();
-
-        //2) Populate applications from DataFile DB object
-        $this->populateApplicationsFromDataFile();
-
-        //3) Delete old sheet and uploads from Google Drive if deleteOldAplicationsFellApp is true
-        $this->deleteSuccessfullyImportedApplications();
-
-        //4)  Process backup sheet on Google Drive
-        $this->processBackupFellAppFromGoogleDrive();
-
-        return;
-    }
-
-    //1)  Import sheets from Google Drive
-    //1a)   import all sheets from Google Drive folder
-    //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
-    public function importSheetsFromGoogleDriveFolder() {
-
-        if( !$this->checkIfFellappAllowed() ) {
-            return null;
-        }
-
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-
-        //get Google service
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $service = $googlesheetmanagement->getGoogleService();
-
-        if( !$service ) {
-            $event = "Google API service failed!";
-            $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $this->sendEmailToSystemEmail($event, $event);
-            return null;
-        }
-
-        //echo "service ok <br>";
-
-        $sourceFolderId = $userSecUtil->getSiteSettingParameter($this->em,'sourceFolderIdFellApp');
-        if( !$sourceFolderId ) {
-            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. sourceFolderIdFellApp='.$sourceFolderId);
-        }
-
-        //get all files in google folder
-        $result = $this->processFilesInFolder($service, $sourceFolderId);
-
-        return $result;
-
-        //$path = $this->uploadDir.'/Spreadsheets';
-        $path = $this->uploadDir.'/'.$userSecUtil->getSiteSettingParameter('spreadsheetsPathFellApp');
-        if( !$path ) {
-            $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
-        }
-
-        $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'Fellowship Application Spreadsheet', $path);
-
-        if( $fileDb ) {
-            $this->em->flush($fileDb);
-            $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
-            $logger->notice($event);
-        } else {
-            $event = "Fellowship Application Spreadsheet download failed!";
-            $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $this->sendEmailToSystemEmail($event, $event);
-        }
-
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Applications Spreadsheet');
-
-
-        //echo "import ok <br>";
-
-        return $fileDb;
-
-    }
-
-    /**
-     * Download files belonging to a folder.
-     *
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param String $folderId ID of the folder to print files from.
-     */
-    public function processFilesInFolder( $folderId, $service ) {
-        $logger = $this->container->get('logger');
-
-        $pageToken = NULL;
-
-        do {
-            try {
-                $parameters = array();
-                if ($pageToken) {
-                    $parameters['pageToken'] = $pageToken;
-                }
-                $children = $service->children->listChildren($folderId, $parameters);
-
-                foreach ($children->getItems() as $child) {
-                    //print 'File Id: ' . $child->getId();
-                    $this->processSingleFile( $child->getId(), $service );
-                }
-
-                $pageToken = $children->getNextPageToken();
-            } catch (Exception $e) {
-                $subject = "An error occurred while getting files from Google Drive folder with ID=" . $folderId;
-                $event = $subject . "; Error=" . $e->getMessage();
-                $logger->error($event);
-                $this->sendEmailToSystemEmail($subject, $event);
-                $pageToken = NULL;
-            }
-        } while ($pageToken);
-    }
-
-    public function processSingleFile( $fileId, $service, $status="active" ) {
-
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-
-        //$path = $this->uploadDir.'/Spreadsheets';
-        $path = $this->uploadDir.'/'.$userSecUtil->getSiteSetting($this->em,'spreadsheetsPathFellApp');
-        if( !$path ) {
-            $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
-        }
-
-        //download file
-        $fileDb = $this->downloadFileToServer($systemUser, $service, $fileId, 'Fellowship Application Spreadsheet', $path);
-
-        if( $fileDb ) {
-            $this->em->flush($fileDb);
-            $this->addFileToDataFileDB($fileDb);
-
-            $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
-            $logger->notice($event);
-        } else {
-            $event = "Fellowship Application Spreadsheet download failed!";
-            $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $this->sendEmailToSystemEmail($event, $event);
-        }
-
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Application Spreadsheet');
-
-        return $fileDb;
-    }
-    public function addFileToDataFileDB( $fileDb ) {
-        $dataFile = new DataFile($fileDb);
-        $this->em->persist($dataFile);
-        $this->em->flush($dataFile);
-    }
-
-
-    public function checkIfFellappAllowed() {
-
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('AllowPopulateFellApp');
-        if( !$allowPopulateFellApp ) {
-            $logger->warning("Import is not proceed because the AllowPopulateFellApp parameter is set to false.");
-            return false;
-        }
-
-        $maintenance = $userSecUtil->getSiteSettingParameter('maintenance');
-        if( $maintenance ) {
-            $logger->warning("Import is not proceed because the server is on the  maintenance.");
-            return false;
-        }
-
-        return true;
-    }
-
-
-
-
-
-
 
 
     //1) Import google form spreadsheet and download it on the server; create Document object
@@ -284,7 +91,6 @@ class FellAppUtil {
             $logger->warning($event);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
             $this->sendEmailToSystemEmail($event, $event);
-            return null;
         }
 
         if( $service ) {
@@ -2361,11 +2167,8 @@ class FellAppUtil {
     }
 
     public function sendEmailToSystemEmail($subject, $message) {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-
         $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->sendEmail( $systemEmail, $subject, $message );
+        $emailUtil->sendEmail( $this->systemEmail, $subject, $message );
     }
 
 
