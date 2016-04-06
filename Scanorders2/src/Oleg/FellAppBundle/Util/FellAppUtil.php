@@ -235,9 +235,12 @@ class FellAppUtil {
     }
     public function addFileToDataFileDB( $document ) {
 
+        $logger = $this->container->get('logger');
+
         $dataFile = $this->em->getRepository('OlegFellAppBundle:DataFile')->findOneByDocument($document->getId());
         if( $dataFile ) {
-            echo "DataFile already exists with document ID=".$document->getId()."<br>";
+            $event = "DataFile already exists with document ID=".$document->getId();
+            $logger->notice($event);
             return $dataFile;
         }
 
@@ -256,6 +259,38 @@ class FellAppUtil {
     //      populate application by populateSingleFellApp($sheet) (this function add report generation to queue)
     //2b)   if populateSingleFellApp($sheet) return true => set sheet DataFile status to "completed"
     public function populateApplicationsFromDataFile() {
+
+        $logger = $this->container->get('logger');
+
+        //$documentDb = $this->em->getRepository('OlegFellAppBundle:DataFile')->findBy(array("status"=>"active"));
+        $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
+        $dql =  $repository->createQueryBuilder("datafile");
+        $dql->select('datafile');
+        $dql->where("datafile.status != :completeStatus");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter("completeStatus","completed");
+
+        $datafiles = $query->getResult();
+
+        $populatedCount = 0;
+
+        foreach( $datafiles as $datafile ) {
+
+            $count = $this->populateSingleFellApp( $datafile->getDocument() );
+
+            if( $count > 0 ) {
+                $datafile->setStatus("completed");
+                $this->em->flush($datafile);
+
+                $populatedCount = $populatedCount + $count;
+            }
+
+        }
+
+        $event = "Populated Applications from DataFile: populatedCount=" . $populatedCount;
+        $logger->notice($event);
 
     }
 
@@ -489,8 +524,10 @@ class FellAppUtil {
 
             //check if file already exists by file id
             $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
-            if( $documentDb ) { //&& $documentType != 'Fellowship Application Spreadsheet'
-                echo "already exists file ID=".$file->getId()."<br>";
+            if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
+                $logger = $this->container->get('logger');
+                $event = "Document already exists with uniqueid=".$file->getId();
+                $logger->warning($event);
                 return $documentDb;
             }
 

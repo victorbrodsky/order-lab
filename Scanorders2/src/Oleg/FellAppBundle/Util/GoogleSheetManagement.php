@@ -440,7 +440,7 @@ class GoogleSheetManagement {
      * @return String The file's content if successful, null otherwise.
      */
     function downloadFile($service, $file, $type=null) {
-        if( $type && $type == 'Fellowship Application Spreadsheet' ) {
+        if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet') ) {
             $downloadUrl = $file->getExportLinks()['text/csv'];
         } else {
             $downloadUrl = $file->getDownloadUrl();
