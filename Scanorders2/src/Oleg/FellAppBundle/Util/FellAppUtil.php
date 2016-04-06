@@ -163,46 +163,54 @@ class FellAppUtil {
     public function processFilesInFolder( $folderId, $service ) {
         $logger = $this->container->get('logger');
 
-        $pageToken = NULL;
+        $files = $this->retrieveFilesByFolderId($folderId,$service);
+        echo "files count=".count($files)."<br>";
 
-        do {
-            try {
-                $parameters = array();
-                if ($pageToken) {
-                    $parameters['pageToken'] = $pageToken;
-                }
-                $files = $service->files->listFiles($parameters);
-                echo "children count=".count($children->getItems())."<br>";
+        foreach( $files as $file ) {
+            echo 'File Id: ' . $file->getId() . "<br>";
+        }
 
-                foreach ($children->getItems() as $child) {
-                    echo 'File Id: ' . $child->getId() . "<br>";
-//                    $this->processSingleFile( $child->getId(), $service );
-                }
-
-                $pageToken = $children->getNextPageToken();
-            } catch (Exception $e) {
-                $subject = "An error occurred while getting files from Google Drive folder with ID=" . $folderId;
-                $event = $subject . "; Error=" . $e->getMessage();
-                echo $event."<br>";
-                $logger->error($event);
-                $this->sendEmailToSystemEmail($subject, $event);
-                $pageToken = NULL;
-            }
-        } while ($pageToken);
+//        $pageToken = NULL;
+//
+//        do {
+//            try {
+//                $parameters = array();
+//                if ($pageToken) {
+//                    $parameters['pageToken'] = $pageToken;
+//                }
+//                $files = $service->files->listFiles($parameters);
+//                echo "children count=".count($children->getItems())."<br>";
+//
+//                foreach ($children->getItems() as $child) {
+//                    echo 'File Id: ' . $child->getId() . "<br>";
+////                    $this->processSingleFile( $child->getId(), $service );
+//                }
+//
+//                $pageToken = $children->getNextPageToken();
+//            } catch (Exception $e) {
+//                $subject = "An error occurred while getting files from Google Drive folder with ID=" . $folderId;
+//                $event = $subject . "; Error=" . $e->getMessage();
+//                echo $event."<br>";
+//                $logger->error($event);
+//                $this->sendEmailToSystemEmail($subject, $event);
+//                $pageToken = NULL;
+//            }
+//        } while ($pageToken);
     }
     /**
      * Retrieve a list of File resources.
      *
+     * @param Google_Service_Drive $folderId folder ID.
      * @param Google_Service_Drive $service Drive API service instance.
      * @return Array List of Google_Service_Drive_DriveFile resources.
      */
-    function retrieveAllFiles($service) {
+    function retrieveFilesByFolderId($folderId,$service) {
         $result = array();
         $pageToken = NULL;
 
         do {
             try {
-                $parameters = array();
+                $parameters = array('q' => $folderId.'+in+parents');
                 if ($pageToken) {
                     $parameters['pageToken'] = $pageToken;
                 }
