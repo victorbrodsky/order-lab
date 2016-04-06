@@ -436,6 +436,7 @@ class GoogleSheetManagement {
      *
      * @param Google_Servie_Drive $service Drive API service instance.
      * @param Google_Servie_Drive_DriveFile $file Drive File instance.
+     * @param String $type Document type string.
      * @return String The file's content if successful, null otherwise.
      */
     function downloadFile($service, $file, $type=null) {

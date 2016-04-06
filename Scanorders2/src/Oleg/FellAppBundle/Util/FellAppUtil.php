@@ -292,75 +292,75 @@ class FellAppUtil {
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
-    //1) Import google form spreadsheet and download it on the server; create Document object
-    public function importFellApp() {
-
-        $logger = $this->container->get('logger');
-        $userUtil = new UserUtil();
-
-        $allowPopulateFellApp = $userUtil->getSiteSetting($this->em,'AllowPopulateFellApp');
-        if( !$allowPopulateFellApp ) {
-            $logger->warning("Import is not proceed because the AllowPopulateFellApp parameter is set to false.");
-            return null;
-        }
-        
-        $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
-        if( $maintenance ) {
-            $logger->warning("Import is not proceed because the server is on the  maintenance.");
-            return null;
-        }
-
-        //echo "fellapp import <br>";
-
-        $res = null;
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $service = $googlesheetmanagement->getGoogleService();
-
-        if( !$service ) {
-            $event = "Google API service failed!";
-            $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $this->sendEmailToSystemEmail($event, $event);
-            return null;
-        }
-
-        if( $service ) {
-
-            //echo "service ok <br>";
-
-            //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
-            //$excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
-            $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-
-            //$path = $this->uploadDir.'/Spreadsheets';
-            $path = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'spreadsheetsPathFellApp');
-            if( !$path ) {
-                $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
-            }
-
-            $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'Fellowship Application Spreadsheet', $path);
-
-            if( $fileDb ) {
-                $this->em->flush($fileDb);
-                $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
-                $logger->notice($event);
-            } else {
-                $event = "Fellowship Application Spreadsheet download failed!";
-                $logger->warning($event);
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-                $this->sendEmailToSystemEmail($event, $event);
-            }
-
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Applications Spreadsheet');
-
-        }
-
-        //echo "import ok <br>";
-
-        return $fileDb;
-    }
+//    //1) Import google form spreadsheet and download it on the server; create Document object
+//    public function importFellApp() {
+//
+//        $logger = $this->container->get('logger');
+//        $userUtil = new UserUtil();
+//
+//        $allowPopulateFellApp = $userUtil->getSiteSetting($this->em,'AllowPopulateFellApp');
+//        if( !$allowPopulateFellApp ) {
+//            $logger->warning("Import is not proceed because the AllowPopulateFellApp parameter is set to false.");
+//            return null;
+//        }
+//
+//        $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
+//        if( $maintenance ) {
+//            $logger->warning("Import is not proceed because the server is on the  maintenance.");
+//            return null;
+//        }
+//
+//        //echo "fellapp import <br>";
+//
+//        $res = null;
+//        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $systemUser = $userSecUtil->findSystemUser();
+//        $service = $googlesheetmanagement->getGoogleService();
+//
+//        if( !$service ) {
+//            $event = "Google API service failed!";
+//            $logger->warning($event);
+//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+//            $this->sendEmailToSystemEmail($event, $event);
+//            return null;
+//        }
+//
+//        if( $service ) {
+//
+//            //echo "service ok <br>";
+//
+//            //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
+//            //$excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
+//            $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
+//
+//            //$path = $this->uploadDir.'/Spreadsheets';
+//            $path = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'spreadsheetsPathFellApp');
+//            if( !$path ) {
+//                $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
+//            }
+//
+//            $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'Fellowship Application Spreadsheet', $path);
+//
+//            if( $fileDb ) {
+//                $this->em->flush($fileDb);
+//                $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
+//                $logger->notice($event);
+//            } else {
+//                $event = "Fellowship Application Spreadsheet download failed!";
+//                $logger->warning($event);
+//                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+//                $this->sendEmailToSystemEmail($event, $event);
+//            }
+//
+//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Applications Spreadsheet');
+//
+//        }
+//
+//        //echo "import ok <br>";
+//
+//        return $fileDb;
+//    }
 
 //    //2) populate fellowship applications from spreadsheet to DB (using uploaded files from Google Drive)
 //    public function populateFellApp( $path=null ) {
@@ -489,7 +489,7 @@ class FellAppUtil {
 
             //check if file already exists by file id
             $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
-            if( $documentDb && $documentType != 'Fellowship Application Spreadsheet' ) {
+            if( $documentDb ) { //&& $documentType != 'Fellowship Application Spreadsheet'
                 //echo "already exists file ID=".$file->getId()."<br>";
                 return $documentDb;
             }
