@@ -77,7 +77,7 @@ class FellAppUtil {
         $this->importSheetsFromGoogleDriveFolder();
 
         //2) Populate applications from DataFile DB object
-        //$this->populateApplicationsFromDataFile();
+        $this->populateApplicationsFromDataFile();
 
         //3) Delete old sheet and uploads from Google Drive if deleteOldAplicationsFellApp is true
         //$this->deleteSuccessfullyImportedApplications();
@@ -233,11 +233,34 @@ class FellAppUtil {
 
         return $fileDb;
     }
-    public function addFileToDataFileDB( $fileDb ) {
-        $dataFile = new DataFile($fileDb);
+    public function addFileToDataFileDB( $document ) {
+
+        $dataFile = $this->em->getRepository('OlegFellAppBundle:DataFile')->findOneByUniqueid($document->getId());
+        if( $dataFile ) {
+            echo "DataFile already exists with document ID=".$dataFile->getId()."<br>";
+            return $dataFile;
+        }
+
+        //create new
+        $dataFile = new DataFile($document);
         $this->em->persist($dataFile);
         $this->em->flush($dataFile);
+
+        return $dataFile;
     }
+
+
+
+    //2)  Populate applications from DataFile DB object
+    //2a)   for each sheet with not "completed" status in DataFile:
+    //      populate application by populateSingleFellApp($sheet) (this function add report generation to queue)
+    //2b)   if populateSingleFellApp($sheet) return true => set sheet DataFile status to "completed"
+    public function populateApplicationsFromDataFile() {
+
+    }
+
+
+
 
 
     public function checkIfFellappAllowed() {
@@ -266,7 +289,9 @@ class FellAppUtil {
 
 
 
-
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
     //1) Import google form spreadsheet and download it on the server; create Document object
     public function importFellApp() {
 
@@ -391,6 +416,8 @@ class FellAppUtil {
 //
 //        return $populatedCount;
 //    }
+///////////////////////////////////////////////////////////////////////////////////////
+
 
     //2) populate a single fellowship application from spreadsheet to DB (using uploaded files from Google Drive)
     public function populateSingleFellApp( $document ) {
