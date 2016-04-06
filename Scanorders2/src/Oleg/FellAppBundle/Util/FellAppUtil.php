@@ -154,7 +154,7 @@ class FellAppUtil {
     }
 
     /**
-     * Download files belonging to a folder.
+     * Download files belonging to a folder. $folderId='0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E'
      *
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
@@ -171,16 +171,18 @@ class FellAppUtil {
                     $parameters['pageToken'] = $pageToken;
                 }
                 $children = $service->children->listChildren($folderId, $parameters);
+                echo "children count=".count($children->getItems())."<br>";
 
                 foreach ($children->getItems() as $child) {
-                    //print 'File Id: ' . $child->getId();
-                    $this->processSingleFile( $child->getId(), $service );
+                    print 'File Id: ' . $child->getId();
+//                    $this->processSingleFile( $child->getId(), $service );
                 }
 
                 $pageToken = $children->getNextPageToken();
             } catch (Exception $e) {
                 $subject = "An error occurred while getting files from Google Drive folder with ID=" . $folderId;
                 $event = $subject . "; Error=" . $e->getMessage();
+                echo $event."<br>";
                 $logger->error($event);
                 $this->sendEmailToSystemEmail($subject, $event);
                 $pageToken = NULL;
