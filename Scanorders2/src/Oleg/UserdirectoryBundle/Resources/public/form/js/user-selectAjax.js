@@ -236,7 +236,7 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
         var treeUrl = Routing.generate('employees_get_composition_tree');
         //console.log('treeUrl='+treeUrl);
         treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&bundlename=' + bundleName + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid + '&type=default';
-        //console.log('final treeUrl='+treeUrl);
+        //console.log('user-selectAjax.js: final treeUrl='+treeUrl);
 
         if( typeof cycle === 'undefined' ) {
             cycle = 'new';

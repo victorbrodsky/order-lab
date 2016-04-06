@@ -141,7 +141,12 @@ class TreeController extends Controller {
 
         //echo "type=".$type."<br>";
         if( $type ) {
-            $where = $this->addToWhere($where,"(list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+            if( $thisid ) {
+                $where = $this->addToWhere($where,"(list.id=:thisid OR list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+                $params['thisid'] = $thisid;
+            } else {
+                $where = $this->addToWhere($where,"(list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+            }
             $params['user'] = $userid;
             $params['type'] = $type;
         }
@@ -262,7 +267,7 @@ class TreeController extends Controller {
 
                 $defaultOrganizationalGroupType = $treeRepository->getDefaultLevelLabel($mapper,$childLevel);
 
-                if( $parent && $parent->hasInstitutionType("Collaboration") ) {
+                if( $parent && method_exists($parent,'hasInstitutionType')  && $parent->hasInstitutionType("Collaboration") ) {
                     //$collaborationLevel = $parent->getLevel() + 1;
                     $defaultOrganizationalGroupType = "Collaboration";// . " (Level " . $collaborationLevel . ")";
                 }
