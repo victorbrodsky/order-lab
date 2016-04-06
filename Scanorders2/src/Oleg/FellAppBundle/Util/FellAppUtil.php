@@ -76,13 +76,13 @@ class FellAppUtil {
         $this->importSheetsFromGoogleDriveFolder();
 
         //2) Populate applications from DataFile DB object
-        $this->populateApplicationsFromDataFile();
+        //$this->populateApplicationsFromDataFile();
 
         //3) Delete old sheet and uploads from Google Drive if deleteOldAplicationsFellApp is true
-        $this->deleteSuccessfullyImportedApplications();
+        //$this->deleteSuccessfullyImportedApplications();
 
         //4)  Process backup sheet on Google Drive
-        $this->processBackupFellAppFromGoogleDrive();
+        //$this->processBackupFellAppFromGoogleDrive();
 
         return;
     }
