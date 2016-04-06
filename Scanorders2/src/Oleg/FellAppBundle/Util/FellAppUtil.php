@@ -247,7 +247,7 @@ class FellAppUtil {
                 continue;
             }
 
-            $fileId = $document->getUniquename();
+            $fileId = $document->getUniqueid();
 
             //delete all rows and associated files from Google Drive
             $deletedRows = $googlesheetmanagement->deleteAllRowsWithUploads($fileId);
