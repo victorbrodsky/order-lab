@@ -168,35 +168,10 @@ class FellAppUtil {
 
         foreach( $files as $file ) {
             echo 'File Id: ' . $file->getId() . "<br>";
+            $this->processSingleFile( $file->getId(), $service );
         }
-
-//        $pageToken = NULL;
-//
-//        do {
-//            try {
-//                $parameters = array();
-//                if ($pageToken) {
-//                    $parameters['pageToken'] = $pageToken;
-//                }
-//                $files = $service->files->listFiles($parameters);
-//                echo "children count=".count($children->getItems())."<br>";
-//
-//                foreach ($children->getItems() as $child) {
-//                    echo 'File Id: ' . $child->getId() . "<br>";
-////                    $this->processSingleFile( $child->getId(), $service );
-//                }
-//
-//                $pageToken = $children->getNextPageToken();
-//            } catch (Exception $e) {
-//                $subject = "An error occurred while getting files from Google Drive folder with ID=" . $folderId;
-//                $event = $subject . "; Error=" . $e->getMessage();
-//                echo $event."<br>";
-//                $logger->error($event);
-//                $this->sendEmailToSystemEmail($subject, $event);
-//                $pageToken = NULL;
-//            }
-//        } while ($pageToken);
     }
+
     /**
      * Retrieve a list of File resources.
      *
@@ -219,7 +194,7 @@ class FellAppUtil {
                 $result = array_merge($result, $files->getItems());
                 $pageToken = $files->getNextPageToken();
             } catch (Exception $e) {
-                print "An error occurred: " . $e->getMessage();
+                //print "An error occurred: " . $e->getMessage();
                 $pageToken = NULL;
             }
         } while ($pageToken);
