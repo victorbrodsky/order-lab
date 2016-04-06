@@ -10,6 +10,7 @@ namespace Oleg\FellAppBundle\Util;
 
 
 use Doctrine\ORM\EntityNotFoundException;
+use Oleg\FellAppBundle\Entity\DataFile;
 use Oleg\FellAppBundle\Entity\Interview;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
@@ -114,13 +115,13 @@ class FellAppUtil {
 
         //echo "service ok <br>";
 
-        $sourceFolderId = $userSecUtil->getSiteSettingParameter($this->em,'sourceFolderIdFellApp');
-        if( !$sourceFolderId ) {
-            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. sourceFolderIdFellApp='.$sourceFolderId);
+        $folderIdFellApp = $userSecUtil->getSiteSettingParameter('folderIdFellApp');
+        if( !$folderIdFellApp ) {
+            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. sourceFolderIdFellApp='.$folderIdFellApp);
         }
 
         //get all files in google folder
-        $result = $this->processFilesInFolder($service, $sourceFolderId);
+        $result = $this->processFilesInFolder($folderIdFellApp,$service);
 
         return $result;
 
@@ -187,14 +188,14 @@ class FellAppUtil {
         } while ($pageToken);
     }
 
-    public function processSingleFile( $fileId, $service, $status="active" ) {
+    public function processSingleFile( $fileId, $service ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
         //$path = $this->uploadDir.'/Spreadsheets';
-        $path = $this->uploadDir.'/'.$userSecUtil->getSiteSetting($this->em,'spreadsheetsPathFellApp');
+        $path = $this->uploadDir.'/'.$userSecUtil->getSiteSettingParameter('spreadsheetsPathFellApp');
         if( !$path ) {
             $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
         }
