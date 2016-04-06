@@ -490,7 +490,7 @@ class FellAppUtil {
             //check if file already exists by file id
             $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
             if( $documentDb ) { //&& $documentType != 'Fellowship Application Spreadsheet'
-                //echo "already exists file ID=".$file->getId()."<br>";
+                echo "already exists file ID=".$file->getId()."<br>";
                 return $documentDb;
             }
 
