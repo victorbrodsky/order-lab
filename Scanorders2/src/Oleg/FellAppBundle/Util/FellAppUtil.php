@@ -321,13 +321,13 @@ class FellAppUtil {
             return null;
         }
 
-        //TODO: get modified date and process backup if modified date is recent
         //1) get backup file on GoogleDrive
         $backupFile = $service->files->get($backupFileIdFellApp);
         $modifiedDate = $backupFile->getModifiedDate(); //datetime
 
         $intervalDays = 0;
 
+        //get interval
         if( $modifiedDate ) {
             //echo "modifiedDate=".$modifiedDate."<br>";
             $logger->notice("modifiedDate=".$modifiedDate);
@@ -339,6 +339,7 @@ class FellAppUtil {
         }
 
         //echo "intervalDays=".$intervalDays."<br>";
+        //don't process backup file if interval is more than 1 day (process if interval is less then 1 day - recently modified backup)
         if( $intervalDays > 1 ) {
             //exit('dont process backup');
             return 0;
@@ -660,7 +661,7 @@ class FellAppUtil {
             $logger->error("Source sheet does not exists with filename=".$inputFileName);
         }
 
-        $logger->notice("Getting source sheet with filename=".$inputFileName);
+        //$logger->notice("Getting source sheet with filename=".$inputFileName);
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -673,7 +674,7 @@ class FellAppUtil {
             throw new IOException($event);
         }
 
-        $logger->notice("Successfully obtained sheet with filename=".$inputFileName);
+        //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
 
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
         $uploadPath = $this->uploadDir.'/'.$userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp');
@@ -682,7 +683,7 @@ class FellAppUtil {
             $logger->warning('applicantsUploadPathFellApp is not defined in Site Parameters. Use default "'.$uploadPath.'" folder.');
         }
 
-        $logger->notice("Destination upload path=".$uploadPath);
+        //$logger->notice("Destination upload path=".$uploadPath);
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
         //var_dump($sheetData);
 

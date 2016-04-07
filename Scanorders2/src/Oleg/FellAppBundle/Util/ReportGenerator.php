@@ -756,9 +756,9 @@ class ReportGenerator {
             }
 
 
-            $logger->notice("convertToPdf: " . $shellout);
+            //$logger->notice("convertToPdf: " . $shellout);
 
-        }
+        }//foreach
 
         return $fileNamesArr;
     }
