@@ -159,8 +159,8 @@ class ReportGenerator {
         $oExec = pclose(popen("start /B ". $cmd, "r"));
         //$oExec = exec($cmd);
 
-        $logger = $this->container->get('logger');
-        $logger->notice("Windows Cmd Run Sync: oExec=".$oExec);
+        //$logger = $this->container->get('logger');
+        //$logger->notice("Windows Cmd Run Sync: oExec=".$oExec);
 
         return $oExec;
     }
@@ -645,144 +645,11 @@ class ReportGenerator {
         //echo "generated ok! <br>";
     }
 
-//    public function generateFromTwig($applicationId,$applicationOutputFilePath) {
-//        $args = $this->getShowParameters($applicationId,'fellapp_home'); //fellapp_download
-//        $this->container->get('knp_snappy.pdf')->generateFromHtml(
-//            $this->renderView(
-//                'OlegFellAppBundle:Form:download.html.twig',
-//                $args
-//            ),
-//            $applicationOutputFilePath
-//        );
-//    }
-
-
-  
-//    private function logIn()
-//    {
-//        $firewall = 'ldap_fellapp_firewall';
-//        
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $systemUser = $userSecUtil->findSystemUser();
-//        $token = new UsernamePasswordToken($systemUser, null, $firewall, array('ROLE_PLATFORM_ADMIN'));
-//        $this->container->get('security.context')->setToken($token);
-//        $session = $this->container->get('session');
-//        $session->set('_security_'.$firewall, serialize($token));
-//        
-//        //$this->container->get('security.token_storage')->setToken($token);
-//        //We no longer need to manually save the token to the session either. 
-//        //The token storage handles that                     
-//        //$this->container->get('security.context')->setToken($token);
-//        //$session = $this->container->get('session'); 
-//        //$session->set('_security_'.$firewall, serialize($token));
-//        $session->save(); 
-//        session_write_close();
-//        return $session;
-//        
-//        $session = $this->container->get('session');       
-//        $token = new UsernamePasswordToken('systemuser_@_wcmc-cwid', 'systempassword', $firewall, array('ROLE_PLATFORM_ADMIN')); 
-//        //$token->setAuthenticated(true);
-//        $session->set('_security_'.$firewall, serialize($token));              
-//        $this->sc->setToken($token);
-//        //$session->save();
-//        $tokenExisted = $this->sc->getToken();
-//        if($tokenExisted->isAuthenticated() ) {
-//            echo "token auth! <br>";
-//        } else {
-//            echo "token is not auth!!!!!!<br>";
-//        }
-//        //$session->save();
-//        return $session;
-//    }   
-//    private function logIn1()
-//    {
-//        $session = $this->container->get('session');
-//
-//        $firewall = 'ldap_fellapp_firewall';
-//        $token = new UsernamePasswordToken('system', null, $firewall, array('ROLE_FELLAPP_ADMIN'));
-//        $session->set('_security_'.$firewall, serialize($token));
-//        $session->save();
-//
-//        //$cookie = new Cookie($session->getName(), $session->getId());
-//        //$this->container->getCookieJar()->set($cookie);
-//    }
-//    private function logIn2() {
-//        $firewall = 'ldap_fellapp_firewall';
-//        // create the authentication token
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $systemUser = $userSecUtil->findSystemUser();
-//        $token = new UsernamePasswordToken(
-//            $systemUser,
-//            null,
-//            $firewall,
-//            $systemUser->getRoles());
-//
-//        // give it to the security context
-//        $this->container->get('security.context')->setToken($token);
-//
-//        $session = $this->container->get('session');
-//        $session->set('_security_'.$firewall, serialize($token));
-//        //$session->save();
-//
-//        //save session
-//        $session = $this->container->get('session');
-////        $session->save();
-////        session_write_close();
-////        echo "session=".$session->getName() . ", id=". $session->getId() . "<br>";
-//    }
-    //    public function getShowParameters($id,$routeName) {
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $user = $userSecUtil->findSystemUser();
-//        $em = $this->em;
-//
-//        //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
-//        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
-//
-//        if( !$entity ) {
-//            throw new EntityNotFoundException('Unable to find Fellowship Application by id='.$id);
-//        }
-//
-//        if( $routeName == "fellapp_download" ) {
-//            $cycle = 'download';
-//            $disabled = true;
-//            $method = "GET";
-//            $action = null;
-//        }
-//
-//        $params = array(
-//            'cycle' => $cycle,
-//            'sc' => $this->sc,
-//            'em' => $em,
-//            'user' => $entity->getUser(),
-//            'cloneuser' => null,
-//            'roles' => $user->getRoles()
-//        );
-//
-//        $formFactory = $this->container->get('form.factory');
-//        $form = $formFactory->create(
-//            new FellowshipApplicationType($params),
-//            $entity,
-//            array(
-//                'disabled' => $disabled,
-//                //'method' => $method,
-//                //'action' => $action
-//            )
-//        );
-//
-//        return array(
-//            'form' => $form->createView(),
-//            'entity' => $entity,
-//            'pathbase' => 'fellapp',
-//            'cycle' => $cycle,
-//            'sitename' => $this->container->getParameter('fellapp.sitename')
-//        );
-//    }
-
-
     //convert all uploads to pdf using LibreOffice
     protected function convertToPdf( $filePathsArr, $outdir ) {
 
         $logger = $this->container->get('logger');
+        $fellappUtil = $this->container->get('fellapp_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $fileNamesArr = array();
 
@@ -809,14 +676,16 @@ class ReportGenerator {
 
         //echo "cmd=" . $cmd . "<br>";
 
-        $logger->notice("Convert to PDF: input file count=".count($filePathsArr));
+        //$logger->notice("Convert to PDF: input file count=".count($filePathsArr));
 
         foreach( $filePathsArr as $filePath ) {
 
             $filePath = realpath($filePath);
 
             if( !file_exists($filePath) ) {
-                $logger->error("Input file does not exist!!!: filePath=".$filePath);
+                $event = "Convert to PDF: Input file does not exist!!!: filePath=".$filePath;
+                $logger->error($event);
+                $fellappUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist!!!", $event);
             }
 
             //$outFilename = $outdir . basename($filePath);
@@ -841,20 +710,22 @@ class ReportGenerator {
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             if( $ext != 'pdf' ) { //TESTING!!!
 
-                $logger->notice("###PDF converting: cmd=".$cmd);
+                //$logger->notice("###PDF converting: cmd=".$cmd);
 
                 //$shellout = shell_exec( $cmd );
                 $shellout = exec( $cmd );
 
                 if( $shellout ) {
                     //echo "shellout=".$shellout."<br>";
-                    $logger->notice("LibreOffice converted input file=" . $filePath);
+                    //$logger->notice("LibreOffice converted input file=" . $filePath);
                 } else {
                     $logger->error("LibreOffice failed to convert input file=" . $filePath);
                 }
 
                 if( !file_exists($outFilename) ) {
-                    $logger->error("Output file does not exist after PDF generation!!!: outFilename=".$outFilename);
+                    $event = "Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
+                    $logger->error($event);
+                    $fellappUtil->sendEmailToSystemEmail("Output file does not exist after PDF generation!!!", $event);
                 }
 
             } else {

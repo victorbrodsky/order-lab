@@ -87,15 +87,14 @@ class FellAppUtil {
         $populatedBackupApplications = $this->processBackupFellAppFromGoogleDrive();
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-        //$generatedReport = $fellappRepGen->tryRun(); //run hard run report generation
-        $numUpdated = $fellappRepGen->resetQueueRun();
+        $generatedReport = $fellappRepGen->tryRun(); //run hard run report generation
 
         //exit('eof processFellAppFromGoogleDrive');
 
         $result = "Finish processing Fellowship Application on Google Drive and on server.<br>".
             "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
             ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".count($populatedBackupApplications).
-            ", Number of reset processes in queue=".$numUpdated;
+            ", Forst generated report in queue=".$generatedReport;
 
         $logger = $this->container->get('logger');
         $logger->notice($result);
