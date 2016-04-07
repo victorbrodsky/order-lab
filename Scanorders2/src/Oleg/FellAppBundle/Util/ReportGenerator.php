@@ -421,15 +421,17 @@ class ReportGenerator {
             $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;   //'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/Reports';
+        $uploadReportPath = realpath($uploadReportPath);
 
         $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath.'/';
+        $reportPath = realpath($reportPath);
+
         if( !file_exists($uploadReportPath) ) {
             mkdir($uploadReportPath, 0700, true);
             chmod($uploadReportPath, 0700);
         }
 
         $outdir = $reportPath.'temp_'.$id.'/';
-        $outdir = realpath($outdir);
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
@@ -443,7 +445,7 @@ class ReportGenerator {
         //itinerarys
         $itineraryDocument = $entity->getRecentItinerary();
         if( $itineraryDocument ) {
-            $filePathsArr[] = $itineraryDocument->getFileSystemPath();
+            $filePathsArr[] = $itineraryDocument->getAbsoluteServerFilePath();
         }
 
         //check if photo is not image
@@ -452,7 +454,7 @@ class ReportGenerator {
             $ext = pathinfo($photo->getOriginalName(), PATHINFO_EXTENSION);
             $photoUrl = null;
             if( $ext == 'pdf' ) {
-                $filePathsArr[] = $photo->getFileSystemPath();
+                $filePathsArr[] = $photo->getAbsoluteServerFilePath();
             }
         }
 
@@ -462,43 +464,43 @@ class ReportGenerator {
         //cv
         $recentDocumentCv = $entity->getRecentCv();
         if( $recentDocumentCv ) {
-            $filePathsArr[] = $recentDocumentCv->getFileSystemPath();
+            $filePathsArr[] = $recentDocumentCv->getAbsoluteServerFilePath();
         }
 
         //cover letter
         $recentCoverLetter = $entity->getRecentCoverLetter();
         if( $recentCoverLetter ) {
-            $filePathsArr[] = $recentCoverLetter->getFileSystemPath();
+            $filePathsArr[] = $recentCoverLetter->getAbsoluteServerFilePath();
         }
 
         //scores
         $scores = $entity->getExaminationScores();
         foreach( $scores as $score ) {
-            $filePathsArr[] = $score->getFileSystemPath();
+            $filePathsArr[] = $score->getAbsoluteServerFilePath();
         }
 
         //Reprimand
         $reprimand = $entity->getRecentReprimand();
         if( $reprimand ) {
-            $filePathsArr[] = $reprimand->getFileSystemPath();
+            $filePathsArr[] = $reprimand->getAbsoluteServerFilePath();
         }
 
         //Legal Explanation
         $legalExplanation = $entity->getRecentLegalExplanation();
         if( $legalExplanation ) {
-            $filePathsArr[] = $legalExplanation->getFileSystemPath();
+            $filePathsArr[] = $legalExplanation->getAbsoluteServerFilePath();
         }
 
         //references
         $references = $entity->getReferenceLetters();
         foreach( $references as $reference ) {
-            $filePathsArr[] = $reference->getFileSystemPath();
+            $filePathsArr[] = $reference->getAbsoluteServerFilePath();
         }
 
         //other documents
         $otherDocuments = $entity->getDocuments();
         foreach( $otherDocuments as $otherDocument ) {
-            $filePathsArr[] = $otherDocument->getFileSystemPath();
+            $filePathsArr[] = $otherDocument->getAbsoluteServerFilePath();
         }
 
         $createFlag = true;
