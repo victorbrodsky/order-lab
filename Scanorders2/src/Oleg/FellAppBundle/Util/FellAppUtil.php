@@ -344,6 +344,7 @@ class FellAppUtil {
             return 0;
         }
         //exit('process backup');
+        $logger->notice("Process backup file modified on ".$modifiedDate);
 
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
