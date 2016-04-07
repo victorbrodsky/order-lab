@@ -332,8 +332,8 @@ class FellAppUtil {
             echo "modifiedDate=".$modifiedDate."<br>";
             $logger->notice("modifiedDate=".$modifiedDate);
 
-            $datetimeNow = new DateTime();
-            $datetimeModified = new DateTime($modifiedDate);
+            $datetimeNow = new \DateTime();
+            $datetimeModified = new \DateTime($modifiedDate);
             $intervalDays = $datetimeNow->diff($datetimeModified)->days;
         }
 
