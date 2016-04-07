@@ -420,7 +420,6 @@ class ReportGenerator {
             $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;   //'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/Reports';
-        $uploadReportPath = realpath($uploadReportPath);
 
         $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath.'/';
         $reportPath = realpath($reportPath);
@@ -431,6 +430,10 @@ class ReportGenerator {
         }
 
         $outdir = $reportPath.'temp_'.$id.'/';
+        if( !file_exists($outdir) ) {
+            mkdir($outdir, 0700, true);
+            chmod($outdir, 0700);
+        }
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
@@ -814,9 +817,9 @@ class ReportGenerator {
 
         foreach( $filePathsArr as $filePath ) {
 
-            $logger->notice("Input file before realpath: filePath=".$filePath);
+            //$logger->notice("Input file before realpath: filePath=".$filePath);
             $filePath = realpath($filePath);
-            $logger->notice("Input file after realpath: filePath=".$filePath);
+            //$logger->notice("Input file after realpath: filePath=".$filePath);
 
             if( !file_exists($filePath) ) {
                 $logger->error("Input file does not exist!!!: filePath=".$filePath);
@@ -824,7 +827,7 @@ class ReportGenerator {
 
             //$outFilename = $outdir . basename($filePath);
             $outFilename = $outdir . pathinfo($filePath, PATHINFO_FILENAME) . ".pdf";
-            $outFilename = realpath($outFilename);
+            //$outFilename = realpath($outFilename);
             //echo "outFilename=".$outFilename."<br>";
             //exit('1');
 
@@ -845,7 +848,7 @@ class ReportGenerator {
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             if( $ext != 'pdf' ) { //TESTING!!!
 
-                $logger->notice("Not PDF converting: cmd=".$cmd);
+                $logger->notice("###PDF converting: cmd=".$cmd);
 
                 //$shellout = shell_exec( $cmd );
                 $shellout = exec( $cmd );
