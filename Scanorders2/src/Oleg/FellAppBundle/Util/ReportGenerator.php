@@ -308,7 +308,7 @@ class ReportGenerator {
         $now = new \DateTime();
         $nowtime = $now->getTimestamp();
         $started = $process->getStartTimestamp()->getTimestamp();
-        if( round(abs($nowtime - $started)) > 600 ) { //10min*60sec=600sec minutes limit
+        if( round(abs($nowtime - $started)) > 600 ) { //10min*60sec=600sec (10 minutes) limit
             return true;
         }
         return false;
@@ -430,10 +430,10 @@ class ReportGenerator {
         }
 
         $outdir = $reportPath.'temp_'.$id.'/';
-        if( !file_exists($outdir) ) {
-            mkdir($outdir, 0700, true);
-            chmod($outdir, 0700);
-        }
+//        if( !file_exists($outdir) ) {
+//            mkdir($outdir, 0700, true);
+//            chmod($outdir, 0700);
+//        }
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
