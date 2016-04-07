@@ -11,6 +11,7 @@ namespace Oleg\FellAppBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
+use Oleg\FellAppBundle\Entity\DataFile;
 use Oleg\FellAppBundle\Entity\Interview;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
