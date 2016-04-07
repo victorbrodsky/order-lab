@@ -807,6 +807,8 @@ class ReportGenerator {
 
         //echo "cmd=" . $cmd . "<br>";
 
+        $logger->notice("Convert to PDF: input file count=".count($filePathsArr));
+
         foreach( $filePathsArr as $filePath ) {
 
             //$outFilename = $outdir . basename($filePath);
@@ -831,12 +833,14 @@ class ReportGenerator {
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             if( $ext != 'pdf' ) { //TESTING!!!
 
+                $logger->notice("Not PDF converting: cmd=".$cmd);
+
                 //$shellout = shell_exec( $cmd );
                 $shellout = exec( $cmd );
 
                 if( $shellout ) {
                     //echo "shellout=".$shellout."<br>";
-                    //$logger->notice("LibreOffice converted input file=" . $filePath);
+                    $logger->notice("LibreOffice converted input file=" . $filePath);
                 } else {
                     $logger->error("LibreOffice failed to convert input file=" . $filePath);
                 }
