@@ -922,4 +922,9 @@ class UserSecurityUtil {
         return $res;
     }
 
+    //return absolute file name on the server which will work for web and command
+    public function getAbsoluteServerFilePath( $document ) {
+        return realpath($this->container->get('kernel')->getRootDir() . "/../web/" . $document->getServerPath());
+    }
+
 }

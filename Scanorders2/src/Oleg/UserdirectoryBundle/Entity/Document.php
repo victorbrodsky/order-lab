@@ -427,11 +427,11 @@ class Document {
         //return "http://collage.med.cornell.edu/".$this->getRelativeUploadFullPath();
     }
 
-    public function getCommandAbsoluteUploadFullPath()
-    {
-        //return $this->container->get('kernel')->getRootDir() . '/../web/' . $this->getUploadDirectory().'/'.$this->getUniquename();
-        return realpath($this->container->get('kernel')->getRootDir() . "/../web/" . $this->getServerPath());
-    }
+//    public function getCommandAbsoluteUploadFullPath()
+//    {
+//        //return $this->container->get('kernel')->getRootDir() . '/../web/' . $this->getUploadDirectory().'/'.$this->getUniquename();
+//        return realpath($this->container->get('kernel')->getRootDir() . "/../web/" . $this->getServerPath());
+//    }
 
     public function getRelativeUploadFullPath()
     {
@@ -445,11 +445,6 @@ class Document {
     public function getFileSystemPath() {
         //echo "getcwd=".getcwd()."<br>";
         return getcwd() . "\\" . $this->getServerPath();
-    }
-
-    //return absolute file name on the server which will work for web and command
-    public function getAbsoluteServerFilePath() {
-        return $this->getCommandAbsoluteUploadFullPath();
     }
 
     public function getSizeStr()
