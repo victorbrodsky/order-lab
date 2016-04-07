@@ -142,9 +142,8 @@ class ReportGenerator {
         $logger->notice("call tryRun() asynchronous");
 
         //call tryRun() asynchronous
-        //$this->windowsCmdRunAsync($this->generatereportrunCmd);
-        $this->resetQueue($queue);
-        
+        $this->windowsCmdRunAsync($this->generatereportrunCmd);
+
     }
 
     //http://www.somacon.com/p395.php

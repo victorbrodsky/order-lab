@@ -75,19 +75,31 @@ class FellAppUtil {
     public function processFellAppFromGoogleDrive() {
 
         //1) Import sheets from Google Drive Folder
-        $this->importSheetsFromGoogleDriveFolder();
+        $filesGoogleDrive = $this->importSheetsFromGoogleDriveFolder();
 
         //2) Populate applications from DataFile DB object
-        $this->populateApplicationsFromDataFile();
+        $populatedCount = $this->populateApplicationsFromDataFile();
 
         //3) Delete old sheet and uploads from Google Drive if deleteOldAplicationsFellApp is true
-        $this->deleteSuccessfullyImportedApplications();
+        $deletedSheetCount = $this->deleteSuccessfullyImportedApplications();
 
         //4)  Process backup sheet on Google Drive
-        $this->processBackupFellAppFromGoogleDrive();
+        $populatedBackupApplications = $this->processBackupFellAppFromGoogleDrive();
+
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        $numUpdated = $fellappRepGen->resetQueueRun();
 
         //exit('eof processFellAppFromGoogleDrive');
-        return;
+
+        $result = "Finish processing Fellowship Application on Google Drive and on server.<br>".
+            "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
+            ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".count($populatedBackupApplications).
+            ", Number of reset processes in queue=".$numUpdated;
+
+        $logger = $this->container->get('logger');
+        $logger->notice($result);
+
+        return $result;
     }
 
     //1)  Import sheets from Google Drive
@@ -182,6 +194,7 @@ class FellAppUtil {
         $event = "Populated Applications from DataFile: populatedCount=" . $populatedCount;
         $logger->notice($event);
 
+        return $populatedCount;
     }
 
     //3)  Delete successfully imported sheets and uploads from Google Drive if deleteImportedAplicationsFellApp is true
@@ -314,9 +327,9 @@ class FellAppUtil {
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
 
-        $count = $this->populateSingleFellApp($backupDb, true);
+        $populatedBackupApplications = $this->populateSingleFellApp($backupDb, true);
 
-        return $backupDb;
+        return $populatedBackupApplications;
     }
 
 
