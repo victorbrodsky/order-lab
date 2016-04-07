@@ -23,7 +23,8 @@ use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\ServiceRequestFactory;
 use Google\Spreadsheet\Spreadsheet;
 use Google\Spreadsheet\SpreadsheetService;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\UserdirectoryBundle\Entity\Document;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 
@@ -518,25 +519,24 @@ class GoogleSheetManagement {
     public function authenticationP12Key() {
 
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
-        $userUtil = new UserUtil();
-        $client_email = $userUtil->getSiteSetting($this->em,'clientEmailFellApp');
+        $client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
 
         //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
-        $pkey = $userUtil->getSiteSetting($this->em,'p12KeyPathFellApp');
+        $pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
         if( !$pkey ) {
             $logger->warning('p12KeyPathFellApp is not defined in Site Parameters. p12KeyPathFellApp='.$pkey);
         }
 
         //$user_to_impersonate = 'olegivanov@pathologysystems.org';
-        $user_to_impersonate = $userUtil->getSiteSetting($this->em,'userImpersonateEmailFellApp');
+        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
 
         //echo "pkey=".$pkey."<br>";
         $private_key = file_get_contents($pkey); //notasecret
 
-        $userUtil = new UserUtil();
-        $googleDriveApiUrlFellApp = $userUtil->getSiteSetting($this->em,'googleDriveApiUrlFellApp');
+        $googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
         if( !$googleDriveApiUrlFellApp ) {
             throw new \InvalidArgumentException('googleDriveApiUrlFellApp is not defined in Site Parameters.');
         }
@@ -627,17 +627,17 @@ class GoogleSheetManagement {
     // X - yearsOldAplicationsFellApp
     public function deleteOldSheetFellApp() {
 
-        $userUtil = new UserUtil();
+        $userSecUtil = $this->container->get('user_security_utility');
 
         //deleteOldAplicationsFellApp
-        $deleteOldAplicationsFellApp = $userUtil->getSiteSetting($this->em,'deleteOldAplicationsFellApp');
+        $deleteOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteOldAplicationsFellApp');
         if( !$deleteOldAplicationsFellApp ) {
             $logger = $this->container->get('logger');
             $logger->notice('deleteOldAplicationsFellApp is FALSE or not defined in Site Parameters. deleteOldAplicationsFellApp='.$deleteOldAplicationsFellApp);
             return false;
         }
 
-        $yearsOldAplicationsFellApp = $userUtil->getSiteSetting($this->em,'yearsOldAplicationsFellApp');
+        $yearsOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('yearsOldAplicationsFellApp');
         if( !$yearsOldAplicationsFellApp ) {
             $logger = $this->container->get('logger');
             $logger->warning('yearsOldAplicationsFellApp is not defined in Site Parameters. yearsOldAplicationsFellApp='.$yearsOldAplicationsFellApp);
@@ -645,274 +645,10 @@ class GoogleSheetManagement {
         }
 
         //delete old sheets
-        $userSecUtil = $this->container->get('user_security_utility');
         $days = $yearsOldAplicationsFellApp * 365;
         $result = $userSecUtil->deleteOrphanFiles( $days, 'Fellowship Application Spreadsheet', 'only' );
+
         return $result;
-
-//        //$beforeDate = $startDate->format('Y');
-//        //DB date format: 2015-09-29 20:26:13.000000
-//        $nowDate = new \DateTime('now');
-//        $dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' years';
-//
-//        //testing
-//        //$yearsOldAplicationsFellApp = 90;
-//        //$dateCorrectionStr = '-'.$yearsOldAplicationsFellApp.' days';
-//        //echo "dateCorrectionStr=".$dateCorrectionStr."<br>";
-//
-//        $beforeDate = $nowDate->modify($dateCorrectionStr)->format('Y-m-d');
-//        //echo "beforeDate=".$beforeDate."<br>";
-//
-//        //get spreadsheets older than X year
-//        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Document');
-//        $dql =  $repository->createQueryBuilder("document");
-//        $dql->select('document');
-//        $dql->leftJoin('document.type','documentType');
-//
-//        $dql->where("documentType.name = :documentType OR documentType.abbreviation = :documentType");
-//        $dql->andWhere("document.createdate < :beforeDate");
-//
-//        $query = $this->em->createQuery($dql);
-//
-//        //echo "query=".$query->getSql()."<br>";
-//
-//        $query->setParameters(array(
-//            'documentType' => 'Fellowship Application Spreadsheet',
-//            'beforeDate' => $beforeDate
-//        ));
-//
-//        $documents = $query->getResult();
-//
-//        //echo "documents count=".count($documents)."<br>";
-//
-//        $deletedDocumentIdsArr = array();
-//
-//        //foreach documents unlink and delete from DB
-//        foreach( $documents as $document ) {
-//            $deletedDocumentIdsArr[] = $document->getId();
-//
-//            //document absolute path
-//            //$documentPath = $document->getAbsoluteUploadFullPath();
-//            $documentPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $document->getUploadDirectory().'/'.$document->getUniquename();
-//            //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
-//            //echo "documentPath=".$documentPath."<br>";
-//
-//            //continue; //testing
-//
-//            $this->em->remove($document);
-//            $this->em->flush();
-//
-//            //remove file from folder
-//            if( is_file($documentPath) ) {
-//                //echo "file exists!!! ";
-//                unlink($documentPath);
-//            } else {
-//                //echo "file does exists??? ";
-//            }
-//
-//            //break; //testing
-//        }
-//
-//        return implode(",",$deletedDocumentIdsArr);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    ///////////////////////////////// OLD not used methods ////////////////////////////////////////////
-    //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
-    public function deleteImportedApplicationAndUploadsFromGoogleDrive_orig($fellowshipApplication) {
-
-        $logger = $this->container->get('logger');
-        $fellappUtil = $this->container->get('fellapp_util');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $userUtil = new UserUtil();
-
-        //cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53
-        //$rowId = $fellowshipApplication->getGoogleFormId();
-
-        $service = $this->getGoogleService();
-
-        if( !$service ) {
-            $event = "Google API service failed!";
-            $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $fellappUtil->sendEmailToSystemEmail($event, $event);
-            return null;
-        }
-        //exit('service ok');
-
-        //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
-        //$excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
-        $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-
-        //http://stackoverflow.com/questions/23400842/delete-row-in-google-spredsheet-with-php-curl?
-
-        //https://api.kdyby.org/class-Google_Http_Request.html
-        //https://developers.google.com/google-apps/spreadsheets/#deleting_a_list_row:
-        // DELETE https://spreadsheets.google.com/feeds/list/key/worksheetId/private/full/rowId/rowVersion
-
-        //https://docs.google.com/a/pathologysystems.org/spreadsheets/d/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno/edit?usp=sharing
-        $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
-        $rowId = 3;
-
-        ///////////////////excel download test
-        if(0) {
-            $file = null;
-            try {
-                $file = $service->files->get($excelId);
-            } catch (Exception $e) {
-                throw new IOException('Google API: Unable to get file by file id=' . $excelId . ". An error occurred: " . $e->getMessage());
-            }
-            //download file test
-            $response = $this->downloadFile($service, $file, 'Fellowship Application Spreadsheet');
-            echo "response=" . $response . "<br>";
-            if (!$response) {
-                throw new IOException('Error file response is empty: file id=' . $excelId);
-            }
-            echo 'response ok <br>';
-        }
-        //////////////////////////////
-
-        $deleteUrl = "https://spreadsheets.google.com/feeds/list/key/".$excelId."/private/full/".$rowId;
-        echo 'deleteUrl='.$deleteUrl.'<br>';
-
-        $request = new \Google_Http_Request($deleteUrl, 'DELETE', null, null);
-        $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-        echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
-
-        print_r($httpRequest);
-
-        if ($httpRequest->getResponseHttpCode() == 200) {
-            return $httpRequest->getResponseBody();
-        } else {
-            // An error occurred.
-            return null;
-        }
-
-
-        exit(1);
-        return true;
-    }
-
-    //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
-    public function deleteImportedApplicationAndUploadsFromGoogleDrive_2($fellowshipApplication) {
-
-        $logger = $this->container->get('logger');
-        $fellappUtil = $this->container->get('fellapp_util');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $userUtil = new UserUtil();
-
-        //cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53
-        //$rowId = $fellowshipApplication->getGoogleFormId();
-
-        $service = $this->getGoogleService();
-
-        if( !$service ) {
-            $event = "Google API service failed!";
-            $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $fellappUtil->sendEmailToSystemEmail($event, $event);
-            return null;
-        }
-        //exit('service ok');
-
-        //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
-        //$excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
-        $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-
-        //http://stackoverflow.com/questions/23400842/delete-row-in-google-spredsheet-with-php-curl?
-
-        //https://api.kdyby.org/class-Google_Http_Request.html
-        //https://developers.google.com/google-apps/spreadsheets/#deleting_a_list_row:
-        // DELETE https://spreadsheets.google.com/feeds/list/key/worksheetId/private/full/rowId/rowVersion
-
-        //https://docs.google.com/a/pathologysystems.org/spreadsheets/d/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno/edit?usp=sharing
-        $excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
-        $rowId = 3;
-
-        //excel download test
-        if(0) {
-            $file = null;
-            try {
-                $file = $service->files->get($excelId);
-            } catch (Exception $e) {
-                throw new IOException('Google API: Unable to get file by file id=' . $excelId . ". An error occurred: " . $e->getMessage());
-            }
-            //download file test
-            $response = $this->downloadFile($service, $file, 'Fellowship Application Spreadsheet');
-            echo "response=" . $response . "<br>";
-            if (!$response) {
-                throw new IOException('Error file response is empty: file id=' . $excelId);
-            }
-            echo 'response ok <br><br><br>';
-            //exit('1');
-        }
-
-        $worksheetId = "odjpdbo";
-        $rowId = 'cpzh4'; //'cokwr';
-
-        $method = 'DELETE';
-        $deleteUrl = "https://spreadsheets.google.com/feeds/list/key/".$worksheetId."/private/full/".$rowId."/v=3.0";
-
-        //GET https://spreadsheets.google.com/feeds/cells/key/worksheetId/private/full?min-row=2&min-col=4&max-col=4
-        $method = 'GET';
-        $deleteUrl = "https://spreadsheets.google.com/feeds/cells/key/".$worksheetId."/private/full?min-row=2&min-col=4&max-col=4";
-        $deleteUrl = "https://spreadsheets.google.com/feeds/cells/key/$excelId/private/full";
-        $deleteUrl = "https://spreadsheets.google.com/feeds/worksheets/$excelId/private/full";
-        $deleteUrl = "https://spreadsheets.google.com/feeds/spreadsheets/private/full"; //get info about spreadsheet
-        $deleteUrl = "https://spreadsheets.google.com/feeds/worksheets/$excelId/private/full"; //get info about this spreadsheet => get worksheetId='odjpdbo'
-        //$deleteUrl = "https://spreadsheets.google.com/feeds/list/key/$worksheetId/private/full";
-
-        //1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
-        $deleteUrl = "https://spreadsheets.google.com/feeds/worksheets/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno/private/full/odjpdbo"; //get info about this worksheet
-
-        $deleteUrl = "https://spreadsheets.google.com/feeds/list/$excelId/$worksheetId/private/full"; //get worksheet => get rowId='cokwr'
-
-        //$deleteUrl = "https://spreadsheets.google.com/feeds/list/$excelId/$worksheetId/private/full/$rowId";
-
-        //GET https://spreadsheets.google.com/feeds/cells/key/worksheetId/private/full?min-row=2&min-col=4&max-col=4
-        //R3C1 => cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53
-        //R3C2 => 3/15/2016 17:59:533/15/2016 17:59:53
-        //R3C3 => DoeDoe
-        //R3C4 => LindaLinda
-        $deleteUrl = "https://spreadsheets.google.com/feeds/cells/$excelId/$worksheetId/private/full?min-row=3&min-col=1&max-col=4";
-
-        //$id = "cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53";
-        //$deleteUrl = "https://spreadsheets.google.com/feeds/list/$excelId/$worksheetId/private/full?sq=id=cinava7";
-
-        //try to use: http://stackoverflow.com/questions/19362703/how-to-update-google-spreadsheet-cell-using-php-api
-        //https://github.com/asimlqt/php-google-spreadsheet-client
-
-        echo 'deleteUrl='.$deleteUrl.'<br>';
-
-        $request = new \Google_Http_Request($deleteUrl, $method, null, null);
-        $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-        echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
-
-        print_r($httpRequest);
-        echo "<br><br><br>";
-
-        if ($httpRequest->getResponseHttpCode() == 200) {
-            return $httpRequest->getResponseBody();
-        } else {
-            // An error occurred.
-            return null;
-        }
-
-
-        exit(1);
-        return true;
     }
 
 
