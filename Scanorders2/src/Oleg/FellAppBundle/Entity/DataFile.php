@@ -46,6 +46,12 @@ class DataFile {
      */
     private $document;
 
+    /**
+     * @ORM\OneToOne(targetEntity="FellowshipApplication")
+     * @ORM\JoinColumn(name="fellapp_id", referencedColumnName="id")
+     */
+    private $fellapp;
+
     
     public function __construct($document) {
         $this->setCreationdate(new \DateTime());
@@ -141,6 +147,22 @@ class DataFile {
         if( $document ) {
             $document->createUseObject($this);
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellapp()
+    {
+        return $this->fellapp;
+    }
+
+    /**
+     * @param mixed $fellapp
+     */
+    public function setFellapp($fellapp)
+    {
+        $this->fellapp = $fellapp;
     }
     
     

@@ -9,6 +9,7 @@
 namespace Oleg\FellAppBundle\Util;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\DataFile;
 use Oleg\FellAppBundle\Entity\Interview;
@@ -125,33 +126,6 @@ class FellAppUtil {
         $result = $this->processFilesInFolder($folderIdFellApp,$service);
 
         return $result;
-
-//        //$path = $this->uploadDir.'/Spreadsheets';
-//        $path = $this->uploadDir.'/'.$userSecUtil->getSiteSettingParameter('spreadsheetsPathFellApp');
-//        if( !$path ) {
-//            $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
-//        }
-//
-//        $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'Fellowship Application Spreadsheet', $path);
-//
-//        if( $fileDb ) {
-//            $this->em->flush($fileDb);
-//            $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
-//            $logger->notice($event);
-//        } else {
-//            $event = "Fellowship Application Spreadsheet download failed!";
-//            $logger->warning($event);
-//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-//            $this->sendEmailToSystemEmail($event, $event);
-//        }
-//
-//        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Applications Spreadsheet');
-
-
-        //echo "import ok <br>";
-
-        return $fileDb;
-
     }
 
     //2)  Populate applications from DataFile DB object
@@ -182,9 +156,12 @@ class FellAppUtil {
 
         foreach( $datafiles as $datafile ) {
 
-            $count = $this->populateSingleFellApp( $datafile->getDocument() );
+            $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument() );
+            $count = count($populatedFellowshipApplications);
 
             if( $count > 0 ) {
+                //this method process a sheet with a single application => $populatedFellowshipApplications has only one element
+                $datafile->setFellapp($populatedFellowshipApplications[0]);
                 $datafile->setStatus("completed");
                 $this->em->flush($datafile);
 
@@ -235,12 +212,14 @@ class FellAppUtil {
             return null;
         }
 
-        $deletedCount = 0;
+        $deletedSheetCount = 0;
 
         foreach( $datafiles as $datafile ) {
 
             //get Google Drive file id
             $document = $datafile->getDocument();
+
+            $fellowshipApplication = $datafile->getFellapp();
 
             if( !$document ) {
                 $logger->error("Document does not exists in DataFile object with ID=".$datafile->getId());
@@ -281,14 +260,22 @@ class FellAppUtil {
                 $this->em->flush($document);
                 $logger->notice("File deleted from DB and server: documentId=".$documentId);
 
-                $deletedCount++;
+                $deletedSheetCount++;
             } else {
                 $logger->error("File does not exist on server! path=".$documentPath);
             }
 
         } //foreach datafile
 
-        return $deletedCount;
+        if( $deletedSheetCount > 0 ) {
+            //eventlog
+            $systemUser = $userSecUtil->findSystemUser();
+            $event = "Successfully deleted imported sheets and uploads from Google Drive and from server: deletedSheetCount=".$deletedSheetCount;
+            $eventTypeStr = "Deleted Fellowship Application From Google Drive";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,$eventTypeStr);
+        }
+
+        return $deletedSheetCount;
     }
 
     //4)  Process backup sheet on Google Drive
@@ -385,22 +372,22 @@ class FellAppUtil {
         }
 
         //download file
-        $fileDb = $this->downloadFileToServer($systemUser, $service, $fileId, 'Fellowship Application Spreadsheet', $path);
+        $fileDb = $this->downloadFileToServer($systemUser, $service, $fileId, $documentType, $path);
 
         if( $fileDb ) {
             $this->em->flush($fileDb);
             $this->addFileToDataFileDB($fileDb);
 
-            $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
+            $event = $documentType . " file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
             $logger->notice($event);
         } else {
-            $event = "Fellowship Application Spreadsheet download failed!";
+            $event = $documentType . " download failed!";
             $logger->warning($event);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
             $this->sendEmailToSystemEmail($event, $event);
         }
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Application Spreadsheet');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of '.$documentType);
 
         return $fileDb;
     }
@@ -480,13 +467,14 @@ class FellAppUtil {
 //        }
 
         //2b) populate applicants
-        $populatedCount = $this->populateSpreadsheet($inputFileName,$deleteSourceRow);
+        $populatedFellowshipApplications = $this->populateSpreadsheet($inputFileName,$deleteSourceRow);
 
-        if( $populatedCount && $populatedCount > 0 ) {
-            //set applicantData from 'active' to 'populated'
-        } else {
-            //set applicantData from active to 'failed'
-        }
+//        if( $populatedCount && $populatedCount > 0 ) {
+//            //set applicantData from 'active' to 'populated'
+//        } else {
+//            //set applicantData from active to 'failed'
+//        }
+        $populatedCount = count($populatedFellowshipApplications);
 
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
@@ -498,7 +486,7 @@ class FellAppUtil {
         $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
         $fellappRepGen->windowsCmdRunAsync($cmd);
 
-        return $populatedCount;
+        return $populatedFellowshipApplications;
     }
 
 
@@ -689,7 +677,8 @@ class FellAppUtil {
             FALSE);
         //print_r($headers);
 
-        $count = 0;
+        //$count = 0;
+        $populatedFellowshipApplications = new ArrayCollection();
 
         //for each user in excel
         for( $row = 3; $row <= $highestRow; $row++ ){
@@ -1196,7 +1185,10 @@ class FellAppUtil {
 //                    $logger->error($event);
 //                }
 
-                $count++;
+                //$count++;
+                if( $fellowshipApplication && !$populatedFellowshipApplications->contains($fellowshipApplication) ) {
+                    $populatedFellowshipApplications->add($fellowshipApplication);
+                }
 
                 //exit( 'Test: end of fellowship applicant id='.$fellowshipApplication->getId() );
 
@@ -1242,7 +1234,7 @@ class FellAppUtil {
         //echo "count=".$count."<br>";
         //exit('end populate');
 
-        return $count;
+        return $populatedFellowshipApplications;
     }
 
     public function createFellAppReference($em,$author,$typeStr,$rowData,$headers) {
