@@ -166,7 +166,7 @@ class FellAppUtil {
 
         $datafiles = $query->getResult();
 
-        $logger->notice("Start populating " . count($datafiles) . " data files on the server.");
+        //$logger->notice("Start populating " . count($datafiles) . " data files on the server.");
 
         $populatedCount = 0;
 
@@ -178,13 +178,13 @@ class FellAppUtil {
             if( $count > 0 ) {
                 //this method process a sheet with a single application => $populatedFellowshipApplications has only one element
                 $populatedFellowshipApplication = $populatedFellowshipApplications[0];
-                $logger->notice("Completing population of the FellApp ID " . $populatedFellowshipApplication->getID() . " data file ID ".$datafile->getId()." on the server.");
+                //$logger->notice("Completing population of the FellApp ID " . $populatedFellowshipApplication->getID() . " data file ID ".$datafile->getId()." on the server.");
 
                 $datafile->setFellapp($populatedFellowshipApplication);
                 $datafile->setStatus("completed");
                 $this->em->flush($datafile);
 
-                $logger->notice("Status changed to 'completed' for data file ID ".$datafile->getId());
+                //$logger->notice("Status changed to 'completed' for data file ID ".$datafile->getId());
 
                 $populatedCount = $populatedCount + $count;
             }

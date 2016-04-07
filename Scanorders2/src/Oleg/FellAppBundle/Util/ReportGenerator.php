@@ -125,8 +125,6 @@ class ReportGenerator {
             $process = new Process($id);
             $process->setArgument($argument);
             $queue->addProcess($process);
-            $this->em->persist($process);
-            $this->em->persist($queue);
             $this->em->flush();
             $logger->notice("Added new process to queue: Fellowship Application ID=".$id."; queue ID=".$queue->getId());
         }
@@ -839,6 +837,8 @@ class ReportGenerator {
                 if( $shellout ) {
                     //echo "shellout=".$shellout."<br>";
                     //$logger->notice("LibreOffice converted input file=" . $filePath);
+                } else {
+                    $logger->error("LibreOffice failed to convert input file=" . $filePath);
                 }
 
             } else {
@@ -854,12 +854,14 @@ class ReportGenerator {
                     echo "source exists \n<br>";
                 } else {
                     echo "source does not exist\n<br>";
+                    $logger->error("convert To Pdf: source does not exist; filePath=".$filePath);
                 }
 
                 if( !file_exists($outFilename) ) {
                 //if( strpos($filePath,'application_ID') === false ) {
                     if( !copy($filePath, $outFilename ) ) {
                         echo "failed to copy $filePath...\n<br>";
+                        $logger->error("failed to copy; filePath=".$filePath);
                     }
                 }
 
@@ -867,7 +869,7 @@ class ReportGenerator {
             }
 
 
-            //$logger->debug("convertToPdf: " . $shellout);
+            $logger->notice("convertToPdf: " . $shellout);
 
         }
 
@@ -953,6 +955,20 @@ class ReportGenerator {
 
         //return 0 => ok, return 1 => failed
         if( $return == 1 ) {
+
+            //from command cause Error:
+            //ERROR: 'Complete Application PDF' will not be generated! pdftk failed:
+            // "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"
+            // "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\application_ID192.pdf"
+            // "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk.pdf"
+            // "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1eendWbUdzV0ZNelU.pdf"
+            // "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046559ID0B2FwyaXvFk1eMWdxSjhGdDBWQW8.pdf"
+            // cat output
+            // "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\Breast-Pathology-Fellowship-Application-2018-ID192-Doe7-Linda-generated-on-04-07-2016-at-05-12-14-pm_UTC.pdf"
+            // dont_ask [] []
+            // reason: 1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk files don't exists
+            //correct: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
+            //actual : E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
 
             //event log
             $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
