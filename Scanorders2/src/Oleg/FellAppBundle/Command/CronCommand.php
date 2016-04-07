@@ -34,7 +34,7 @@ class CronCommand extends ContainerAwareCommand {
 
         $result = $fellappUtil->processFellAppFromGoogleDrive();
 
-        $logger->notice($result);
+        $logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result);
 
         $output->writeln($result);
 

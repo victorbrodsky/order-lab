@@ -123,9 +123,11 @@ class FellAppUtil {
         }
 
         //get all files in google folder
-        $result = $this->processFilesInFolder($folderIdFellApp,$service);
+        $filesGoogleDrive = $this->processFilesInFolder($folderIdFellApp,$service);
 
-        return $result;
+        $logger->notice("Processed " . count($filesGoogleDrive) . " files with applicant data from Google Drive");
+
+        return $filesGoogleDrive;
     }
 
     //2)  Populate applications from DataFile DB object
@@ -152,6 +154,8 @@ class FellAppUtil {
 
         $datafiles = $query->getResult();
 
+        $logger->notice("Start populating " . count($datafiles) . " data files on the server.");
+
         $populatedCount = 0;
 
         foreach( $datafiles as $datafile ) {
@@ -161,9 +165,14 @@ class FellAppUtil {
 
             if( $count > 0 ) {
                 //this method process a sheet with a single application => $populatedFellowshipApplications has only one element
-                $datafile->setFellapp($populatedFellowshipApplications[0]);
+                $populatedFellowshipApplication = $populatedFellowshipApplications[0];
+                $logger->notice("Completing population of the FellApp ID " . $populatedFellowshipApplication->getID() . " data file ID ".$datafile->getId()." on the server.");
+
+                $datafile->setFellapp($populatedFellowshipApplication);
                 $datafile->setStatus("completed");
                 $this->em->flush($datafile);
+
+                $logger->notice("Status changed to 'completed' for data file ID ".$datafile->getId());
 
                 $populatedCount = $populatedCount + $count;
             }
@@ -327,6 +336,8 @@ class FellAppUtil {
             //echo 'File Id: ' . $file->getId() . "<br>";
             $this->processSingleFile( $file->getId(), $service, 'Fellowship Application Spreadsheet' );
         }
+
+        return $files; //google drive files
     }
 
     /**
@@ -374,12 +385,15 @@ class FellAppUtil {
         //download file
         $fileDb = $this->downloadFileToServer($systemUser, $service, $fileId, $documentType, $path);
 
+        $dataFile = null;
+
         if( $fileDb ) {
             $this->em->flush($fileDb);
-            $this->addFileToDataFileDB($fileDb);
-
-            $event = $documentType . " file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
-            $logger->notice($event);
+            $dataFile = $this->addFileToDataFileDB($fileDb);
+            if( $dataFile ) {
+                $event = $documentType . " file has been successful downloaded to the server with id=" . $fileDb->getId() . ", title=" . $fileDb->getUniquename();
+                $logger->notice($event);
+            }
         } else {
             $event = $documentType . " download failed!";
             $logger->warning($event);
@@ -387,10 +401,14 @@ class FellAppUtil {
             $this->sendEmailToSystemEmail($event, $event);
         }
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of '.$documentType);
+        if( $dataFile ) {
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Import of ' . $documentType);
+        }
 
         return $fileDb;
     }
+
+    //return newly created DataFile object
     public function addFileToDataFileDB( $document ) {
 
         $logger = $this->container->get('logger');
@@ -399,7 +417,7 @@ class FellAppUtil {
         if( $dataFile ) {
             $event = "DataFile already exists with document ID=".$document->getId();
             $logger->notice($event);
-            return $dataFile;
+            return null;
         }
 
         //create new
@@ -474,12 +492,12 @@ class FellAppUtil {
 //        } else {
 //            //set applicantData from active to 'failed'
 //        }
-        $populatedCount = count($populatedFellowshipApplications);
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $event = "Populated ".$populatedCount." Fellowship Applications from Spreadsheets to DB.";
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Import of Fellowship Application data to DB');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $systemUser = $userSecUtil->findSystemUser();
+//        foreach( $populatedFellowshipApplications as $fellowshipApplication ) {
+//            $event = "Populated Fellowship Application for ".$fellowshipApplication->getUser()." (Application ID ".$fellowshipApplication->getId().") from Spreadsheets to DB.";
+//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Import of Fellowship Application data to DB');
+//        }
 
         //call tryRun() asynchronous
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
@@ -604,7 +622,7 @@ class FellAppUtil {
             $event = "Google API service failed!";
             $logger->warning($event);
             $this->sendEmailToSystemEmail($event, $event);
-            return -1;
+            return false;
         }
 
         try {
