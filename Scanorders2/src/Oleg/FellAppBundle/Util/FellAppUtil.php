@@ -333,6 +333,7 @@ class FellAppUtil {
             $logger->notice("modifiedDate=".$modifiedDate);
 
             $datetimeNow = new \DateTime();
+            //$datetimeNow->modify('+9 day');
             $datetimeModified = new \DateTime($modifiedDate);
             $intervalDays = $datetimeNow->diff($datetimeModified)->days;
         }
@@ -342,7 +343,7 @@ class FellAppUtil {
             exit('dont process backup');
             return 0;
         }
-        exit();
+        exit('process backup');
 
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
