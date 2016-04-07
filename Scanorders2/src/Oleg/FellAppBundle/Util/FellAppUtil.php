@@ -620,6 +620,10 @@ class FellAppUtil {
             return false;
         }
 
+        if( !file_exists($inputFileName) ) {
+            $logger->error("Source sheet does not exists with filename=".$inputFileName);
+        }
+
         $logger->notice("Getting source sheet with filename=".$inputFileName);
 
         try {
