@@ -322,7 +322,19 @@ class FellAppUtil {
         }
 
         //TODO: get modified date and process backup if modified date is recent
-        return;
+        //1) get backup file on GoogleDrive
+        $backupFile = $service->files->get($backupFileIdFellApp);
+        $modifiedDate = $backupFile->getModifiedDate(); //datetime
+
+        if( $modifiedDate ) {
+            echo "modifiedDate=".$modifiedDate."<br>";
+            $logger->notice("modifiedDate=".$modifiedDate);
+        }
+        exit();
+
+        if( 1 ) {
+            return 0;
+        }
 
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
