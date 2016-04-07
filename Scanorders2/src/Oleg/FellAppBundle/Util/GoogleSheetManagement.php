@@ -95,13 +95,6 @@ class GoogleSheetManagement {
 
         $logger = $this->container->get('logger');
 
-//        //Never delete sources for non production environment
-//        $env = $this->container->get('kernel')->getEnvironment();
-//        if( !$env || $env != 'prod' ) {
-//            $logger->error("Delete Row: Never delete sources for non production environment: env=".$env);
-//            return false;
-//        }
-
         //cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53
         //$rowId = "cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04";
         if( !$rowId ) {
@@ -127,7 +120,7 @@ class GoogleSheetManagement {
         $env = $this->container->get('kernel')->getEnvironment();
         if( !$env || $env != 'prod' ) {
             $logger->error("Delete Row in ListFeed: Never delete sources for non production environment: env=".$env);
-            return false;
+            //return false;
         }
 
         $service = $this->getGoogleService();
@@ -188,7 +181,7 @@ class GoogleSheetManagement {
         $env = $this->container->get('kernel')->getEnvironment();
         if( !$env || $env != 'prod' ) {
             $logger->error("Delete File: Never delete sources for non production environment: env=".$env);
-            return false;
+            //return false;
         }
 
         $result = false;
