@@ -41,6 +41,110 @@ class GoogleSheetManagement {
         $this->container = $container;
     }
 
+    public function allowModifySOurceGoogleDrive() {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+
+        if( $environment == "live" ) {
+            return true;
+        }
+
+        //Never delete sources for non live server
+        return false;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //////////////////////// Methods Modifying Google Drive //////////////////////////
+
+    //foreach file in the row => delete this file from Google Drive
+    public function deleteRowInListFeed( $listFeed ) {
+
+        $logger = $this->container->get('logger');
+
+        //Never delete sources for non live server
+        if( !$this->allowModifySOurceGoogleDrive() ) {
+            $logger->error("Delete Row in ListFeed: Never delete sources for non production environment");
+            //return false;
+        }
+
+        $service = $this->getGoogleService();
+
+        $deletedRows = 0;
+
+        //identify file by presence of string 'drive.google.com/a/pathologysystems.org/file/d/'
+        $fileStrFlag = 'drive.google.com/a/pathologysystems.org/file/d/';
+
+        foreach( $listFeed->getEntries() as $entry ) {
+            $values = $entry->getValues();
+            //echo "list:<br>";
+            //print_r($values );
+            //echo "<br>";
+            //echo "lastname=".$values['lastname']."<br>";
+
+            //4.a) foreach file in the row => delete this file from Google Drive
+            foreach( $values as $cellValue ) {
+
+                if( strpos($cellValue, $fileStrFlag) !== false ) {
+                    //echo 'this is file = '.$cellValue." => ";
+                    //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
+                    $fileID = $this->getFileId($cellValue);
+                    //echo 'fileID = '.$fileID."<br>";
+                    $res = $this->deleteFile($service,$fileID);
+                    if( $res ) {
+                        //echo 'File was deleted with fileID = '.$fileID."<br>";
+                    } else {
+                        //echo 'Failed to delete file with fileID = '.$fileID."<br>";
+                        $logger->warning('Failed to delete file with fileID = '.$fileID);
+                    }
+                }
+            } //foreach cell
+
+
+            //delete this row (entry)
+            $entry->delete();
+
+            $deletedRows++;
+
+        }//foreach row
+
+
+        //exit(1);
+        return $deletedRows;
+    }
+
+    /**
+     * Permanently delete a file, skipping the trash.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param String $fileId ID of the file to delete.
+     */
+    function deleteFile($service, $fileId) {
+        $logger = $this->container->get('logger');
+
+        //Never delete sources for non live server
+        if( !$this->allowModifySOurceGoogleDrive() ) {
+            $logger->error("Delete File: Never delete sources for non production environment");
+            //return false;
+        }
+
+        $result = false;
+
+        try {
+            $service->files->delete($fileId);
+            $result = true;
+            $logger->notice("File from Google Drive deleted successfully; fileId=".$fileId);
+        } catch (Exception $e) {
+            $event = "File from Google Drive deletion failed. An error occurred: " . $e->getMessage();
+            $logger->error($event);
+        }
+
+        return $result;
+    }
+    //////////////////////// Methods Modifying Google Drive //////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
+
+
     public function getSheetByFileId( $fileId ) {
 
         $logger = $this->container->get('logger');
@@ -110,93 +214,6 @@ class GoogleSheetManagement {
 
         //exit(1);
         return $deletedRows;
-    }
-
-    //foreach file in the row => delete this file from Google Drive
-    public function deleteRowInListFeed( $listFeed ) {
-
-        $logger = $this->container->get('logger');
-
-        //Never delete sources for non production environment
-        $env = $this->container->get('kernel')->getEnvironment();
-        if( !$env || $env != 'prod' ) {
-            $logger->error("Delete Row in ListFeed: Never delete sources for non production environment: env=".$env);
-            //return false;
-        }
-
-        $service = $this->getGoogleService();
-
-        $deletedRows = 0;
-
-        //identify file by presence of string 'drive.google.com/a/pathologysystems.org/file/d/'
-        $fileStrFlag = 'drive.google.com/a/pathologysystems.org/file/d/';
-
-        foreach( $listFeed->getEntries() as $entry ) {
-            $values = $entry->getValues();
-            //echo "list:<br>";
-            //print_r($values );
-            //echo "<br>";
-            //echo "lastname=".$values['lastname']."<br>";
-
-            //4.a) foreach file in the row => delete this file from Google Drive
-            foreach( $values as $cellValue ) {
-
-                if( strpos($cellValue, $fileStrFlag) !== false ) {
-                    //echo 'this is file = '.$cellValue." => ";
-                    //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
-                    $fileID = $this->getFileId($cellValue);
-                    //echo 'fileID = '.$fileID."<br>";
-                    $res = $this->deleteFile($service,$fileID);
-                    if( $res ) {
-                        //echo 'File was deleted with fileID = '.$fileID."<br>";
-                    } else {
-                        //echo 'Failed to delete file with fileID = '.$fileID."<br>";
-                        $logger->warning('Failed to delete file with fileID = '.$fileID);
-                    }
-                }
-            } //foreach cell
-
-
-            //delete this row (entry)
-            $entry->delete();
-
-            $deletedRows++;
-
-        }//foreach row
-
-
-        //exit(1);
-        return $deletedRows;
-    }
-
-    /**
-     * Permanently delete a file, skipping the trash.
-     *
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param String $fileId ID of the file to delete.
-     */
-    function deleteFile($service, $fileId) {
-        $logger = $this->container->get('logger');
-
-        //Never delete sources for non production environment
-        $env = $this->container->get('kernel')->getEnvironment();
-        if( !$env || $env != 'prod' ) {
-            $logger->error("Delete File: Never delete sources for non production environment: env=".$env);
-            //return false;
-        }
-
-        $result = false;
-
-        try {
-            $service->files->delete($fileId);
-            $result = true;
-            $logger->notice("File from Google Drive deleted successfully; fileId=".$fileId);
-        } catch (Exception $e) {
-            $event = "File from Google Drive deletion failed. An error occurred: " . $e->getMessage();
-            $logger->error($event);
-        }
-
-        return $result;
     }
 
     function getFileId($str) {
@@ -621,36 +638,6 @@ class GoogleSheetManagement {
             return null;
         }
     }
-
-
-    //Automatically delete downloaded applications that are older than [X] year(s)
-    // X - yearsOldAplicationsFellApp
-    public function deleteOldSheetFellApp() {
-
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        //deleteOldAplicationsFellApp
-        $deleteOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteOldAplicationsFellApp');
-        if( !$deleteOldAplicationsFellApp ) {
-            $logger = $this->container->get('logger');
-            $logger->notice('deleteOldAplicationsFellApp is FALSE or not defined in Site Parameters. deleteOldAplicationsFellApp='.$deleteOldAplicationsFellApp);
-            return false;
-        }
-
-        $yearsOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('yearsOldAplicationsFellApp');
-        if( !$yearsOldAplicationsFellApp ) {
-            $logger = $this->container->get('logger');
-            $logger->warning('yearsOldAplicationsFellApp is not defined in Site Parameters. yearsOldAplicationsFellApp='.$yearsOldAplicationsFellApp);
-            return false;
-        }
-
-        //delete old sheets
-        $days = $yearsOldAplicationsFellApp * 365;
-        $result = $userSecUtil->deleteOrphanFiles( $days, 'Fellowship Application Spreadsheet', 'only' );
-
-        return $result;
-    }
-
 
 
 

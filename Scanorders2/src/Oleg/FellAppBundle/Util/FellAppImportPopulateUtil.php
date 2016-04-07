@@ -63,6 +63,42 @@ class FellAppImportPopulateUtil {
 
 
 
+
+
+
+
+
+    //Automatically delete downloaded application spreadsheets that are older than [X] year(s)
+    // X - yearsOldAplicationsFellApp
+    public function deleteOldSheetFellApp() {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //deleteOldAplicationsFellApp
+        $deleteOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteOldAplicationsFellApp');
+        if( !$deleteOldAplicationsFellApp ) {
+            $logger = $this->container->get('logger');
+            $logger->notice('deleteOldAplicationsFellApp is FALSE or not defined in Site Parameters. deleteOldAplicationsFellApp='.$deleteOldAplicationsFellApp);
+            return false;
+        }
+
+        $yearsOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('yearsOldAplicationsFellApp');
+        if( !$yearsOldAplicationsFellApp ) {
+            $logger = $this->container->get('logger');
+            $logger->warning('yearsOldAplicationsFellApp is not defined in Site Parameters. yearsOldAplicationsFellApp='.$yearsOldAplicationsFellApp);
+            return false;
+        }
+
+        //delete old sheets
+        $days = $yearsOldAplicationsFellApp * 365;
+        $result = $userSecUtil->deleteOrphanFiles( $days, 'Fellowship Application Spreadsheet', 'only' );
+
+        return $result;
+    }
+
+
+
+
 //    //1) Import google form spreadsheet and download it on the server; create Document object
 //    public function importFellApp() {
 //

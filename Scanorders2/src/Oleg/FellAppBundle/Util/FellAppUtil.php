@@ -207,13 +207,6 @@ class FellAppUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-//        //Never delete sources for non production environment
-//        $env = $this->container->get('kernel')->getEnvironment();
-//        if( !$env || $env != 'prod' ) {
-//            $logger->error("Delete Applications from Google Drive: Never delete sources for non production environment: env=".$env);
-//            return false;
-//        }
-
         $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp');
         if( !$deleteImportedAplicationsFellApp ) {
             $logger->error("deleteImportedAplicationsFellApp parameter is nor defined or is set to false");
@@ -312,13 +305,6 @@ class FellAppUtil {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
-
-//        //Never delete sources for non production environment
-//        $env = $this->container->get('kernel')->getEnvironment();
-//        if( $env != 'prod' ) {
-//            $logger->error("Never delete sources for non production environment: env=".$env);
-//            return false;
-//        }
 
         $backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
         if( !$backupFileIdFellApp ) {
@@ -1621,6 +1607,7 @@ class FellAppUtil {
         $fileId = $urlSecondArr[0];
         return $fileId;
     }
+
 ////////////////////////////////////// EOF Populate FellApp ///////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

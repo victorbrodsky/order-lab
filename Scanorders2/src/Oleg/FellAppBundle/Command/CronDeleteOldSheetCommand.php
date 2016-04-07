@@ -32,8 +32,8 @@ class CronDeleteOldSheetCommand extends ContainerAwareCommand {
         $logger = $this->getContainer()->get('logger');
 
         //delete
-        $googlesheetmanagement = $this->getContainer()->get('fellapp_googlesheetmanagement');
-        $deletedDocumentIds = $googlesheetmanagement->deleteOldSheetFellApp();
+        $fellappImportPopulateUtil = $this->getContainer()->get('fellapp_importpopulate_util');
+        $deletedDocumentIds = $fellappImportPopulateUtil->deleteOldSheetFellApp();
         if( $deletedDocumentIds ) {
             $eventImport = 'FellApp Spreadsheet Deleted: '.$deletedDocumentIds;
             //$logger->notice($eventImport);

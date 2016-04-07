@@ -82,50 +82,50 @@ class CronCommand extends ContainerAwareCommand {
 
 
 
-    //php app/console cron:importfellapp --env=prod
-    protected function execute_old(InputInterface $input, OutputInterface $output) {
-
-        $logger = $this->getContainer()->get('logger');
-        $fellappUtil = $this->getContainer()->get('fellapp_util');
-        $result = "";
-
-        //import
-        $fileDb = $fellappUtil->importFellApp();
-        if( $fileDb ) {
-            $eventImport = 'FellApp Imported: '.$fileDb;
-            $logger->notice($eventImport);
-        } else {
-            $eventImport = 'FellApp Imported Failed';
-            $logger->error($eventImport);
-        }
-        $result = "Import: ".$eventImport;
-
-
-        //populate
-        $path = getcwd() . "/web";
-        $populatedCount = $fellappUtil->populateFellApp($path);
-        if( $populatedCount >= 0 ) {
-            $eventPopulate = "Populated ".$populatedCount." Fellowship Applicantions.";
-            $logger->notice($eventPopulate);
-        } else {
-            $eventPopulate = "Google API service failed!";
-            $logger->error($eventPopulate);
-        }
-        $result = $result . "; Populate: " . $eventPopulate;
-
-        //delete
-        $googlesheetmanagement = $this->getContainer()->get('fellapp_googlesheetmanagement');
-        $deletedDocumentIds = $googlesheetmanagement->deleteOldSheetFellApp();
-        if( $deletedDocumentIds ) {
-            $eventDelete = 'FellApp Spreadsheet Deleted: '.$deletedDocumentIds;
-            $logger->notice($eventDelete);
-        } else {
-            $eventDelete = 'None FellApp Spreadsheet Deleted';
-            $logger->notice($eventDelete);
-        }
-        $result = $result . "; Delete Old Sheet: ".$eventDelete;
-
-        $output->writeln($result);
-    }
+//    //php app/console cron:importfellapp --env=prod
+//    protected function execute_old(InputInterface $input, OutputInterface $output) {
+//
+//        $logger = $this->getContainer()->get('logger');
+//        $fellappUtil = $this->getContainer()->get('fellapp_util');
+//        $result = "";
+//
+//        //import
+//        $fileDb = $fellappUtil->importFellApp();
+//        if( $fileDb ) {
+//            $eventImport = 'FellApp Imported: '.$fileDb;
+//            $logger->notice($eventImport);
+//        } else {
+//            $eventImport = 'FellApp Imported Failed';
+//            $logger->error($eventImport);
+//        }
+//        $result = "Import: ".$eventImport;
+//
+//
+//        //populate
+//        $path = getcwd() . "/web";
+//        $populatedCount = $fellappUtil->populateFellApp($path);
+//        if( $populatedCount >= 0 ) {
+//            $eventPopulate = "Populated ".$populatedCount." Fellowship Applicantions.";
+//            $logger->notice($eventPopulate);
+//        } else {
+//            $eventPopulate = "Google API service failed!";
+//            $logger->error($eventPopulate);
+//        }
+//        $result = $result . "; Populate: " . $eventPopulate;
+//
+//        //delete
+//        $googlesheetmanagement = $this->getContainer()->get('fellapp_googlesheetmanagement');
+//        $deletedDocumentIds = $googlesheetmanagement->deleteOldSheetFellApp();
+//        if( $deletedDocumentIds ) {
+//            $evenstDelete = 'FellApp Spreadsheet Deleted: '.$deletedDocumentIds;
+//            $logger->notice($eventDelete);
+//        } else {
+//            $eventDelete = 'None FellApp Spreadsheet Deleted';
+//            $logger->notice($eventDelete);
+//        }
+//        $result = $result . "; Delete Old Sheet: ".$eventDelete;
+//
+//        $output->writeln($result);
+//    }
 
 } 
