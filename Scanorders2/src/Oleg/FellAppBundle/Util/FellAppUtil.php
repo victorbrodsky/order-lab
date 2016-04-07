@@ -423,7 +423,9 @@ class FellAppUtil {
 
         if( $fileDb ) {
             $this->em->flush($fileDb);
-            $dataFile = $this->addFileToDataFileDB($fileDb);
+            if( $documentType != "Fellowship Application Backup Spreadsheet" ) {
+                $dataFile = $this->addFileToDataFileDB($fileDb);
+            }
             if( $dataFile ) {
                 $event = $documentType . " file has been successful downloaded to the server with id=" . $fileDb->getId() . ", title=" . $fileDb->getUniquename();
                 $logger->notice($event);
