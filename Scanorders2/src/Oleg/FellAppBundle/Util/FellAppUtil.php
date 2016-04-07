@@ -87,7 +87,8 @@ class FellAppUtil {
         $populatedBackupApplications = $this->processBackupFellAppFromGoogleDrive();
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-        $numUpdated = $fellappRepGen->tryRun(); //run hard run report generation
+        //$generatedReport = $fellappRepGen->tryRun(); //run hard run report generation
+        $numUpdated = $fellappRepGen->resetQueueRun();
 
         //exit('eof processFellAppFromGoogleDrive');
 
