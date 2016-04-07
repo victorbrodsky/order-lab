@@ -329,21 +329,21 @@ class FellAppUtil {
         $intervalDays = 0;
 
         if( $modifiedDate ) {
-            echo "modifiedDate=".$modifiedDate."<br>";
+            //echo "modifiedDate=".$modifiedDate."<br>";
             $logger->notice("modifiedDate=".$modifiedDate);
 
             $datetimeNow = new \DateTime();
-            //$datetimeNow->modify('+9 day');
+            //$datetimeNow->modify('+9 day'); //testing
             $datetimeModified = new \DateTime($modifiedDate);
             $intervalDays = $datetimeNow->diff($datetimeModified)->days;
         }
 
-        echo "intervalDays=".$intervalDays."<br>";
+        //echo "intervalDays=".$intervalDays."<br>";
         if( $intervalDays > 1 ) {
-            exit('dont process backup');
+            //exit('dont process backup');
             return 0;
         }
-        exit('process backup');
+        //exit('process backup');
 
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
