@@ -813,7 +813,9 @@ class ReportGenerator {
 
         foreach( $filePathsArr as $filePath ) {
 
+            $logger->notice("Input file before realpath: filePath=".$filePath);
             $filePath = realpath($filePath);
+            $logger->notice("Input file after realpath: filePath=".$filePath);
 
             if( !file_exists($filePath) ) {
                 $logger->error("Input file does not exist!!!: filePath=".$filePath);
