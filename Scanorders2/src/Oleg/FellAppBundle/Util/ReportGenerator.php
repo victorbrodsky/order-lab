@@ -40,6 +40,7 @@ class ReportGenerator {
     protected $processes;
     
     //protected $WshShell;
+    protected $generatereportrunCmd;
     protected $runningGenerationReport;
     //protected $env;
 
@@ -52,6 +53,8 @@ class ReportGenerator {
 
         //fellapp.uploadpath = fellapp
         $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
+
+        $this->generatereportrunCmd = 'php ../app/console fellapp:generatereportrun --env=prod';
 
         $this->runningGenerationReport = false;
 
@@ -97,8 +100,7 @@ class ReportGenerator {
 //        $query = $this->em->createQuery('UPDATE OlegFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
 //        $numUpdated = $query->execute();
 
-        $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
-        $this->windowsCmdRunAsync($cmd);
+        $this->windowsCmdRunAsync($this->generatereportrunCmd);
 
         return $numUpdated;
     }
@@ -118,13 +120,15 @@ class ReportGenerator {
             $processesDb = $this->em->getRepository('OlegFellAppBundle:Process')->findOneByFellappId($id);
         }
 
-        //add as a new process only if argument is 'overwrite'
+        //add as a new process only if argument is 'overwrite' or process is not created yet
         if( $processesDb == null ) {
             $process = new Process($id);
             $process->setArgument($argument);
             $queue->addProcess($process);
+            $this->em->persist($process);
+            $this->em->persist($queue);
             $this->em->flush();
-            $logger->notice("Added new process to queue: Fellowship Application ID=".$id);
+            $logger->notice("Added new process to queue: Fellowship Application ID=".$id."; queue ID=".$queue->getId());
         }
 
         //move all reports to OldReports
@@ -138,9 +142,8 @@ class ReportGenerator {
         $logger->notice("call tryRun() asynchronous");
 
         //call tryRun() asynchronous
-        //$cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
-        $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
-        $this->windowsCmdRunAsync($cmd);
+        $this->windowsCmdRunAsync($this->generatereportrunCmd);
+        //$this->resetQueue($queue,$process);
         
     }
 
@@ -289,9 +292,7 @@ class ReportGenerator {
 
             //4) run next in queue
             //$this->tryRun();
-            //$cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
-            $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
-            $this->windowsCmdRunAsync($cmd);
+            $this->windowsCmdRunAsync($this->generatereportrunCmd);
 
             $reportFileName = $res['filename'];
         }
@@ -350,9 +351,11 @@ class ReportGenerator {
 
     public function getQueue() {
 
+        $logger = $this->container->get('logger');
         $queue = null;
 
         $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
+        $logger->notice("Current queue count=".count($queues));
 
         //must be only one
         if( count($queues) > 0 ) {
