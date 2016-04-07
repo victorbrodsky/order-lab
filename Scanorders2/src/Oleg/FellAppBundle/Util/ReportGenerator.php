@@ -421,7 +421,7 @@ class ReportGenerator {
         }
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;   //'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/Reports';
 
-        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath.'/';
+        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         $reportPath = realpath($reportPath);
 
         if( !file_exists($uploadReportPath) ) {
@@ -429,11 +429,7 @@ class ReportGenerator {
             chmod($uploadReportPath, 0700);
         }
 
-        $outdir = $reportPath.'temp_'.$id.'/';
-//        if( !file_exists($outdir) ) {
-//            mkdir($outdir, 0700, true);
-//            chmod($outdir, 0700);
-//        }
+        $outdir = $reportPath.'/temp_'.$id.'/';
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
@@ -514,7 +510,7 @@ class ReportGenerator {
         //3) merge all pdfs
         //$uniqueid = $filename;  //"report_ID" . $id;
         //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
-        $filenameMerged = $reportPath . $fileFullReportUniqueName;
+        $filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
         //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
@@ -529,7 +525,7 @@ class ReportGenerator {
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
-        $formReportPath = $reportPath . $fileUniqueName;
+        $formReportPath = $reportPath . '/' . $fileUniqueName;
         if( file_exists($applicationFilePath) ) {
             if( !copy($applicationFilePath, $formReportPath ) ) {
                 //echo "failed to copy $applicationFilePath...\n<br>";
@@ -817,9 +813,7 @@ class ReportGenerator {
 
         foreach( $filePathsArr as $filePath ) {
 
-            //$logger->notice("Input file before realpath: filePath=".$filePath);
             $filePath = realpath($filePath);
-            //$logger->notice("Input file after realpath: filePath=".$filePath);
 
             if( !file_exists($filePath) ) {
                 $logger->error("Input file does not exist!!!: filePath=".$filePath);
@@ -827,7 +821,6 @@ class ReportGenerator {
 
             //$outFilename = $outdir . basename($filePath);
             $outFilename = $outdir . pathinfo($filePath, PATHINFO_FILENAME) . ".pdf";
-            //$outFilename = realpath($outFilename);
             //echo "outFilename=".$outFilename."<br>";
             //exit('1');
 
