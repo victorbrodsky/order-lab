@@ -170,7 +170,7 @@ class ReportGenerator {
         $logger = $this->container->get('logger');
         $logger->notice("tryRun() started");
 
-        $reportFileName = 'noFileName';
+        $reportFileName = 'TryRun: Dummy Report File Name';
         
         $queue = $this->getQueue();
 
@@ -429,6 +429,7 @@ class ReportGenerator {
         }
 
         $outdir = $reportPath.'temp_'.$id.'/';
+        $outdir = realpath($outdir);
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
@@ -811,8 +812,11 @@ class ReportGenerator {
 
         foreach( $filePathsArr as $filePath ) {
 
+            $filePath = realpath($filePath);
+
             //$outFilename = $outdir . basename($filePath);
             $outFilename = $outdir . pathinfo($filePath, PATHINFO_FILENAME) . ".pdf";
+            $outFilename = realpath($outFilename);
             //echo "outFilename=".$outFilename."<br>";
             //exit('1');
 
