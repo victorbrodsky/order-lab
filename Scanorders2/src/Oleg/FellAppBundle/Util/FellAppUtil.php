@@ -95,7 +95,7 @@ class FellAppUtil {
     //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
     public function importSheetsFromGoogleDriveFolder() {
 
-        if( !$this->checkIfFellappAllowed() ) {
+        if( !$this->checkIfFellappAllowed("Import from Google Drive") ) {
             return null;
         }
 
@@ -136,7 +136,7 @@ class FellAppUtil {
     //2b)   if populateSingleFellApp($sheet) return true => set sheet DataFile status to "completed"
     public function populateApplicationsFromDataFile() {
 
-        if( !$this->checkIfFellappAllowed() ) {
+        if( !$this->checkIfFellappAllowed("Populate not completed applications") ) {
             return null;
         }
 
@@ -430,20 +430,20 @@ class FellAppUtil {
 
 
 
-    public function checkIfFellappAllowed() {
+    public function checkIfFellappAllowed( $action="Action" ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
         $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('AllowPopulateFellApp');
         if( !$allowPopulateFellApp ) {
-            $logger->warning("Import is not proceed because the AllowPopulateFellApp parameter is set to false.");
+            $logger->warning($action." is not proceed because the AllowPopulateFellApp parameter is set to false.");
             return false;
         }
 
         $maintenance = $userSecUtil->getSiteSettingParameter('maintenance');
         if( $maintenance ) {
-            $logger->warning("Import is not proceed because the server is on the  maintenance.");
+            $logger->warning($action." is not proceed because the server is on the  maintenance.");
             return false;
         }
 
@@ -456,17 +456,9 @@ class FellAppUtil {
     public function populateSingleFellApp( $document, $deleteSourceRow=false ) {
 
         $logger = $this->container->get('logger');
-        $userUtil = new UserUtil();
+        //$userSecUtil = $this->container->get('user_security_utility');
 
-        $allowPopulateFellApp = $userUtil->getSiteSetting($this->em,'AllowPopulateFellApp');
-        if( !$allowPopulateFellApp ) {
-            $logger->warning("Populate is not proceed because the AllowPopulateFellApp parameter is set to false.");
-            return;
-        }
-
-        $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
-        if( $maintenance ) {
-            $logger->warning("Populate is not proceed because the server is on the  maintenance.");
+        if( !$this->checkIfFellappAllowed("Populate Single Application") ) {
             return null;
         }
 
@@ -479,6 +471,7 @@ class FellAppUtil {
 
         //2a) get spreadsheet path
         $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
+        $logger->notice("Population a single application sheet with filename=".$inputFileName);
 
 //        if( $path ) {
 //            $inputFileName = $path . "/" . $inputFileName;
@@ -614,16 +607,20 @@ class FellAppUtil {
 
         //echo "inputFileName=".$inputFileName."<br>";
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
         ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
 
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $service = $googlesheetmanagement->getGoogleService();
         if( !$service ) {
             $event = "Google API service failed!";
-            $logger->warning($event);
+            $logger->error($event);
             $this->sendEmailToSystemEmail($event, $event);
             return false;
         }
+
+        $logger->notice("Getting source sheet with filename=".$inputFileName);
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -631,18 +628,21 @@ class FellAppUtil {
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($event);
             $this->sendEmailToSystemEmail($event, $event);
             throw new IOException($event);
         }
 
+        $logger->notice("Successfully obtained sheet with filename=".$inputFileName);
+
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
-        $userUtil = new UserUtil();
-        $uploadPath = $this->uploadDir.'/'.$userUtil->getSiteSetting($this->em,'applicantsUploadPathFellApp');
+        $uploadPath = $this->uploadDir.'/'.$userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp');
         if( !$uploadPath ) {
             $uploadPath = "FellowshipApplicantUploads";
             $logger->warning('applicantsUploadPathFellApp is not defined in Site Parameters. Use default "'.$uploadPath.'" folder.');
         }
 
+        $logger->notice("Destination upload path=".$uploadPath);
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
         //var_dump($sheetData);
 
@@ -650,9 +650,7 @@ class FellAppUtil {
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $userUtil = new UserUtil();
 
-        $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getUsernameType('local-user');
         if( !$userkeytype ) {
             throw new EntityNotFoundException('Unable to find local user keytype');
@@ -695,7 +693,6 @@ class FellAppUtil {
             FALSE);
         //print_r($headers);
 
-        //$count = 0;
         $populatedFellowshipApplications = new ArrayCollection();
 
         //for each user in excel
@@ -822,7 +819,7 @@ class FellAppUtil {
 
                 //////////////////////// assign local institution from SiteParameters ////////////////////////
                 $instPathologyFellowshipProgram = null;
-                $localInstitutionFellApp = $userUtil->getSiteSetting($this->em, 'localInstitutionFellApp');
+                $localInstitutionFellApp = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp');
 
                 if( strpos($localInstitutionFellApp, " (") !== false ) {
                     //Case 1: get string from SiteParameters - "Pathology Fellowship Programs (WCMC)"
@@ -1145,11 +1142,11 @@ class FellAppUtil {
                 $logger->notice($event);
                 
                 //send confirmation email to this applicant for prod server
-                $environment = $userUtil->getSiteSetting($this->em,'environment');
+                $environment = $userSecUtil->getSiteSettingParameter('environment');
                 if( $environment == "live" ) {
-                    $confirmationEmailFellApp = $userUtil->getSiteSetting($this->em,'confirmationEmailFellApp');
-                    $confirmationSubjectFellApp = $userUtil->getSiteSetting($this->em,'confirmationSubjectFellApp');
-                    $confirmationBodyFellApp = $userUtil->getSiteSetting($this->em,'confirmationBodyFellApp');
+                    $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+                    $confirmationSubjectFellApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectFellApp');
+                    $confirmationBodyFellApp = $userSecUtil->getSiteSettingParameter('confirmationBodyFellApp');
                     //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
                     if( $email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp ) {
                         $logger->notice("Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
