@@ -2025,8 +2025,9 @@ class FellAppController extends Controller {
         $excelId = "156lKGi2cxSbHI3sMN8hiRZLZbLuSQVmisZYARxYWZsM";
         $rowId = "cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53";
 
-        $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive($excelId,$rowId);
-        exit('googleSheetManagement res='.$res);
+        //$res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive($excelId,$rowId);
+        //exit('googleSheetManagement res='.$res);
+        exit('no test');
 
 
         //include_once "vendor/google/apiclient/examples/simple-query.php";

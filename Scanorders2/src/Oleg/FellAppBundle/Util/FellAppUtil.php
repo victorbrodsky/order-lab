@@ -207,6 +207,13 @@ class FellAppUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
+//        //Never delete sources for non production environment
+//        $env = $this->container->get('kernel')->getEnvironment();
+//        if( !$env || $env != 'prod' ) {
+//            $logger->error("Delete Applications from Google Drive: Never delete sources for non production environment: env=".$env);
+//            return false;
+//        }
+
         $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp');
         if( !$deleteImportedAplicationsFellApp ) {
             $logger->error("deleteImportedAplicationsFellApp parameter is nor defined or is set to false");
@@ -306,9 +313,16 @@ class FellAppUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
+//        //Never delete sources for non production environment
+//        $env = $this->container->get('kernel')->getEnvironment();
+//        if( $env != 'prod' ) {
+//            $logger->error("Never delete sources for non production environment: env=".$env);
+//            return false;
+//        }
+
         $backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
         if( !$backupFileIdFellApp ) {
-            $logger->error("Import is not proceed because the backupFileIdFellApp parameter is set to false.");
+            $logger->error("Import is not proceed because the backupFileIdFellApp parameter is not set.");
             return false;
         }
 
@@ -365,7 +379,8 @@ class FellAppUtil {
      */
     public function processFilesInFolder( $folderId, $service ) {
 
-        $files = $this->retrieveFilesByFolderId($folderId,$service);
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $files = $googlesheetmanagement->retrieveFilesByFolderId($folderId,$service);
         //echo "files count=".count($files)."<br>";
 
         foreach( $files as $file ) {
@@ -376,40 +391,13 @@ class FellAppUtil {
         return $files; //google drive files
     }
 
-    /**
-     * Retrieve a list of File resources.
-     *
-     * @param Google_Service_Drive $folderId folder ID.
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @return Array List of Google_Service_Drive_DriveFile resources.
-     */
-    function retrieveFilesByFolderId($folderId,$service) {
-        $result = array();
-        $pageToken = NULL;
-
-        do {
-            try {
-                $parameters = array('q' => "'".$folderId."' in parents and trashed=false");
-                if ($pageToken) {
-                    $parameters['pageToken'] = $pageToken;
-                }
-                $files = $service->files->listFiles($parameters);
-
-                $result = array_merge($result, $files->getItems());
-                $pageToken = $files->getNextPageToken();
-            } catch (Exception $e) {
-                //print "An error occurred: " . $e->getMessage();
-                $pageToken = NULL;
-            }
-        } while ($pageToken);
-        return $result;
-    }
 
     //Download file from Google Drive to server and link it to a new Document DB
     public function processSingleFile( $fileId, $service, $documentType ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $systemUser = $userSecUtil->findSystemUser();
 
         //$path = $this->uploadDir.'/Spreadsheets';
@@ -419,7 +407,7 @@ class FellAppUtil {
         }
 
         //download file
-        $fileDb = $this->downloadFileToServer($systemUser, $service, $fileId, $documentType, $path);
+        $fileDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $fileId, $documentType, $path);
 
         $dataFile = null;
 
@@ -539,113 +527,16 @@ class FellAppUtil {
     }
 
 
-
-
-
-    public function downloadFileToServer($author, $service, $fileId, $documentType, $path) {
-        $file = null;
-        try {
-            $file = $service->files->get($fileId);
-        } catch (Exception $e) {
-            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
-        }
-
-        if( $file ) {
-
-            //check if file already exists by file id
-            $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
-            if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
-                $logger = $this->container->get('logger');
-                $event = "Document already exists with uniqueid=".$file->getId();
-                $logger->warning($event);
-                return $documentDb;
-            }
-
-            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-            $response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
-            //echo "response=".$response."<br>";
-            if( !$response ) {
-                throw new IOException('Error file response is empty: file id='.$fileId);
-            }
-
-            //create unique file name
-            $currentDatetime = new \DateTime();
-            $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
-
-            //$fileTitle = trim($file->getTitle());
-            //$fileTitle = str_replace(" ","",$fileTitle);
-            //$fileTitle = str_replace("-","_",$fileTitle);
-            //$fileTitle = 'testfile.jpg';
-            $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
-            $fileExtStr = "";
-            if( $fileExt ) {
-                $fileExtStr = ".".$fileExt;
-            }
-
-            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$file->getId().$fileExtStr;  //.'_title='.$fileTitle;
-            //echo "fileUniqueName=".$fileUniqueName."<br>";
-
-            $filesize = $file->getFileSize();
-            if( !$filesize ) {
-                $filesize = mb_strlen($response) / 1024; //KBs,
-            }
-
-            $object = new Document($author);
-            $object->setUniqueid($file->getId());
-            $object->setOriginalname($file->getTitle());
-            $object->setUniquename($fileUniqueName);
-            $object->setUploadDirectory($path);
-            $object->setSize($filesize);
-
-//            if( $type && $type == 'excel' ) {
-//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
-//            } else {
-//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
-//            }
-            $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
-            $documentType = trim($documentType);
-            $documentTypeObject = $transformer->reverseTransform($documentType);
-            if( $documentTypeObject ) {
-                $object->setType($documentTypeObject);
-            }
-
-            $this->em->persist($object);
-
-            $root = $this->container->get('kernel')->getRootDir();
-            //echo "root=".$root."<br>";
-            //$fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
-            $fullpath = $root . '/../web/'.$path;
-            $target_file = $fullpath . "/" . $fileUniqueName;
-
-            //$target_file = $fullpath . 'uploadtestfile.jpg';
-            //echo "target_file=".$target_file."<br>";
-            if( !file_exists($fullpath) ) {
-                // 0600 - Read/write/execute for owner, nothing for everybody else
-                mkdir($fullpath, 0700, true);
-                chmod($fullpath, 0700);
-            }
-
-            file_put_contents($target_file, $response);
-
-            return $object;
-        }
-
-        return null;
-    }
-
-
-
-
     /////////////// populate methods /////////////////
     public function populateSpreadsheet( $inputFileName, $deleteSourceRow=false ) {
 
         //echo "inputFileName=".$inputFileName."<br>";
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
 
         ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
 
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $service = $googlesheetmanagement->getGoogleService();
         if( !$service ) {
             $event = "Google API service failed!";
@@ -687,7 +578,6 @@ class FellAppUtil {
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
         //var_dump($sheetData);
 
-        $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -909,7 +799,7 @@ class FellAppUtil {
                 $uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl',$rowData,$headers);
                 $uploadedPhotoId = $this->getFileIdByUrl( $uploadedPhotoUrl );
                 if( $uploadedPhotoId ) {
-                    $uploadedPhotoDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedPhotoId, 'Fellowship Photo', $uploadPath);
+                    $uploadedPhotoDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedPhotoId, 'Fellowship Photo', $uploadPath);
                     if( !$uploadedPhotoDb ) {
                         throw new IOException('Unable to download file to server: uploadedPhotoUrl='.$uploadedPhotoUrl.', fileDB='.$uploadedPhotoDb);
                     }
@@ -921,7 +811,7 @@ class FellAppUtil {
                 $uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl',$rowData,$headers);
                 $uploadedCVUrlId = $this->getFileIdByUrl( $uploadedCVUrl );
                 if( $uploadedCVUrlId ) {
-                    $uploadedCVUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedCVUrlId, 'Fellowship CV', $uploadPath);
+                    $uploadedCVUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedCVUrlId, 'Fellowship CV', $uploadPath);
                     if( !$uploadedCVUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedCVUrl='.$uploadedCVUrl.', fileDB='.$uploadedCVUrlDb);
                     }
@@ -932,7 +822,7 @@ class FellAppUtil {
                 $uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl',$rowData,$headers);
                 $uploadedCoverLetterUrlId = $this->getFileIdByUrl( $uploadedCoverLetterUrl );
                 if( $uploadedCoverLetterUrlId ) {
-                    $uploadedCoverLetterUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedCoverLetterUrlId, 'Fellowship Cover Letter', $uploadPath);
+                    $uploadedCoverLetterUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedCoverLetterUrlId, 'Fellowship Cover Letter', $uploadPath);
                     if( !$uploadedCoverLetterUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedCoverLetterUrl='.$uploadedCoverLetterUrl.', fileDB='.$uploadedCoverLetterUrlDb);
                     }
@@ -946,7 +836,7 @@ class FellAppUtil {
                 $uploadedUSMLEScoresUrl = $this->getValueByHeaderName('uploadedUSMLEScoresUrl',$rowData,$headers);
                 $uploadedUSMLEScoresUrlId = $this->getFileIdByUrl( $uploadedUSMLEScoresUrl );
                 if( $uploadedUSMLEScoresUrlId ) {
-                    $uploadedUSMLEScoresUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedUSMLEScoresUrlId, 'Fellowship USMLE Scores', $uploadPath);
+                    $uploadedUSMLEScoresUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedUSMLEScoresUrlId, 'Fellowship USMLE Scores', $uploadPath);
                     if( !$uploadedUSMLEScoresUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedUSMLEScoresUrl='.$uploadedUSMLEScoresUrl.', fileDB='.$uploadedUSMLEScoresUrlDb);
                     }
@@ -1088,7 +978,7 @@ class FellAppUtil {
                 $uploadedReprimandExplanationUrl = $this->getValueByHeaderName('uploadedReprimandExplanationUrl',$rowData,$headers);
                 $uploadedReprimandExplanationUrlId = $this->getFileIdByUrl( $uploadedReprimandExplanationUrl );
                 if( $uploadedReprimandExplanationUrlId ) {
-                    $uploadedReprimandExplanationUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedReprimandExplanationUrlId, 'Fellowship Reprimand', $uploadPath);
+                    $uploadedReprimandExplanationUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedReprimandExplanationUrlId, 'Fellowship Reprimand', $uploadPath);
                     if( !$uploadedReprimandExplanationUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedReprimandExplanationUrl='.$uploadedReprimandExplanationUrl.', fileID='.$uploadedReprimandExplanationUrlDb->getId());
                     }
@@ -1101,7 +991,7 @@ class FellAppUtil {
                 $uploadedLegalExplanationUrl = $this->getValueByHeaderName('uploadedLegalExplanationUrl',$rowData,$headers);
                 $uploadedLegalExplanationUrlId = $this->getFileIdByUrl( $uploadedLegalExplanationUrl );
                 if( $uploadedLegalExplanationUrlId ) {
-                    $uploadedLegalExplanationUrlDb = $fellappUtil->downloadFileToServer($systemUser, $service, $uploadedLegalExplanationUrlId, 'Fellowship Legal Suit', $uploadPath);
+                    $uploadedLegalExplanationUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedLegalExplanationUrlId, 'Fellowship Legal Suit', $uploadPath);
                     if( !$uploadedLegalExplanationUrlDb ) {
                         throw new IOException('Unable to download file to server: uploadedLegalExplanationUrl='.$uploadedLegalExplanationUrl.', fileID='.$uploadedLegalExplanationUrlDb->getId());
                     }
@@ -1731,8 +1621,8 @@ class FellAppUtil {
         $fileId = $urlSecondArr[0];
         return $fileId;
     }
-
-
+////////////////////////////////////// EOF Populate FellApp ///////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -2363,8 +2253,7 @@ class FellAppUtil {
             
             //check if author can have access to view this applicant
             //user who has the same fell type can view or edit
-            $fellappUtil = $this->container->get('fellapp_util');
-            if( $fellappUtil->hasFellappPermission($author,$fellapp) == false ) {
+            if( $this->hasFellappPermission($author,$fellapp) == false ) {
                 continue; //skip this applicant because the current user does not permission to view this applicant
             }
             
@@ -2492,8 +2381,7 @@ class FellAppUtil {
 
             //check if author can have access to view this applicant
             //user who has the same fell type can view or edit
-            $fellappUtil = $this->container->get('fellapp_util');
-            if( $fellappUtil->hasFellappPermission($author,$fellapp) == false ) {
+            if( $this->hasFellappPermission($author,$fellapp) == false ) {
                 continue; //skip this applicant because the current user does not permission to view this applicant
             }
 

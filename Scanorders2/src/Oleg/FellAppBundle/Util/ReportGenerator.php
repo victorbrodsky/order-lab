@@ -592,7 +592,7 @@ class ReportGenerator {
         //echo "rootDir=".$rootDir."<br>";
         //echo "getcwd=".getcwd()."<br>";
         
-        $env = $this->container->get('kernel')->getEnvironment();
+        //$env = $this->container->get('kernel')->getEnvironment();
         //echo "env=".$env."<br>";
         //$logger->notice("env=".$env."<br>");
 

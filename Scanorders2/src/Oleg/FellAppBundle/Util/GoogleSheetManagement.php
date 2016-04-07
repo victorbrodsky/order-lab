@@ -95,101 +95,24 @@ class GoogleSheetManagement {
 
         $logger = $this->container->get('logger');
 
+//        //Never delete sources for non production environment
+//        $env = $this->container->get('kernel')->getEnvironment();
+//        if( !$env || $env != 'prod' ) {
+//            $logger->error("Delete Row: Never delete sources for non production environment: env=".$env);
+//            return false;
+//        }
+
         //cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53
         //$rowId = "cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04";
         if( !$rowId ) {
             $logger->warning('Fellowship Application Google Form ID does not exists. rowId='.$rowId);
         }
 
-        //$fellappUtil = $this->container->get('fellapp_util');
-        //$userSecUtil = $this->container->get('user_security_utility');
-        //$systemUser = $userSecUtil->findSystemUser();
-        //$userUtil = new UserUtil();
-
-//        //get Google access token
-//        $accessToken = $this->getGoogleToken();
-//
-//        if( !$accessToken ) {
-//            $event = "Google API access Token empty";
-//            $logger->warning($event);
-//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-//            $fellappUtil->sendEmailToSystemEmail($event, $event);
-//            return null;
-//        }
-//        //exit('service ok');
-//
-//        //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
-////        $excelId = $userUtil->getSiteSetting($this->em,'excelIdFellApp');
-////        //$excelId = "1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno";
-////        if( !$excelId ) {
-////            $logger = $this->container->get('logger');
-////            $logger->warning('Sheet ID is not defined in Site Parameters. excelIdFellApp='.$excelId);
-////        }
-//
-//        //testing revision
-//        //$revisions = $this->retrieveRevisions($excelId);
-//        //exit('1');
-//
-//        //0 initialize ServiceRequestFactory
-//        $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
-//        ServiceRequestFactory::setInstance($serviceRequest);
-//        $spreadsheetService = new SpreadsheetService();
-//
-//        //1) find spreadsheet
-//        $spreadsheet = $spreadsheetService->getSpreadsheetById($excelId);
-//        if( !$spreadsheet ) {
-//            throw new IOException('Spreadsheet not found by key='.$excelId);
-//        }
-//
-//        //2) find worksheet by name
-//        $worksheetFeed = $spreadsheet->getWorksheets();
-//        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
-
-        //$worksheet = $this->getSheetByFileId($excelId);
-
         //1) find row in worksheet by rowid (don't use '@'. In google GS '@' is replaced by '_') cinava_yahoo.com_Doe1_Linda1_2016-03-22_17_30_04
         $listFeed = $worksheet->getListFeed( array("sq" => "id = " . $rowId) ); //it's a row
 
         //2) foreach file in the row => delete this file from Google Drive
         $deletedRows = $this->deleteRowInListFeed( $listFeed );
-
-//        $deletedRows = 0;
-//
-//        //identify file by presence of string 'drive.google.com/a/pathologysystems.org/file/d/'
-//        $fileStrFlag = 'drive.google.com/a/pathologysystems.org/file/d/';
-//
-//        foreach( $listFeed->getEntries() as $entry ) {
-//            $values = $entry->getValues();
-//            //echo "list:<br>";
-//            //print_r($values );
-//            //echo "<br>";
-//            //echo "lastname=".$values['lastname']."<br>";
-//
-//            //4.a) foreach file in the row => delete this file from Google Drive
-//            foreach( $values as $cellValue ) {
-//
-//                if( strpos($cellValue, $fileStrFlag) !== false ) {
-//                    //echo 'this is file = '.$cellValue." => ";
-//                    //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
-//                    $fileID = $this->getFileId($cellValue);
-//                    //echo 'fileID = '.$fileID."<br>";
-//                    $res = $this->removeFile($fileID);
-//                    if( $res ) {
-//                        //echo 'File was deleted with fileID = '.$fileID."<br>";
-//                    } else {
-//                        //echo 'Failed to delete file with fileID = '.$fileID."<br>";
-//                        $logger->warning('Failed to delete file with fileID = '.$fileID);
-//                    }
-//                }
-//            }
-//
-//
-//            //5) delete this row (entry)
-//            $entry->delete();
-//
-//            $deletedRows++;
-//        }
-
 
         //exit(1);
         return $deletedRows;
@@ -199,6 +122,16 @@ class GoogleSheetManagement {
     public function deleteRowInListFeed( $listFeed ) {
 
         $logger = $this->container->get('logger');
+
+        //Never delete sources for non production environment
+        $env = $this->container->get('kernel')->getEnvironment();
+        if( !$env || $env != 'prod' ) {
+            $logger->error("Delete Row in ListFeed: Never delete sources for non production environment: env=".$env);
+            return false;
+        }
+
+        $service = $this->getGoogleService();
+
         $deletedRows = 0;
 
         //identify file by presence of string 'drive.google.com/a/pathologysystems.org/file/d/'
@@ -219,7 +152,7 @@ class GoogleSheetManagement {
                     //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
                     $fileID = $this->getFileId($cellValue);
                     //echo 'fileID = '.$fileID."<br>";
-                    $res = $this->removeFile($fileID);
+                    $res = $this->deleteFile($service,$fileID);
                     if( $res ) {
                         //echo 'File was deleted with fileID = '.$fileID."<br>";
                     } else {
@@ -251,6 +184,13 @@ class GoogleSheetManagement {
     function deleteFile($service, $fileId) {
         $logger = $this->container->get('logger');
 
+        //Never delete sources for non production environment
+        $env = $this->container->get('kernel')->getEnvironment();
+        if( !$env || $env != 'prod' ) {
+            $logger->error("Delete File: Never delete sources for non production environment: env=".$env);
+            return false;
+        }
+
         $result = false;
 
         try {
@@ -277,170 +217,280 @@ class GoogleSheetManagement {
         return null;
     }
 
-    public function removeFile($fileId) {
-
-        $logger = $this->container->get('logger');
-        $service = $this->getGoogleService();
-
-        try {
-            $service->files->delete($fileId);
-        } catch (\Exception $e) {
-            $logger->error("Error deleting file from Google Drive with fileId=".$fileId."; Error: " . $e->getMessage());
-            return false;
-        }
-        return true;
-    }
-
 
     /**
-     * Retrieve a list of revisions.
+     * Retrieve a list of File resources.
      *
-     * @param String $fileId ID of the file to retrieve revisions for.
-     * @return Array List of Google_Servie_Drive_Revision resources.
-     */
-    function retrieveRevisions($fileId) {
-        $service = $this->getGoogleService();
-        $revisionItems = null;
-
-        try {
-            $revisions = $service->revisions->listRevisions($fileId);
-            $revisionItems = $revisions->getItems();
-        } catch (Exception $e) {
-            print "An error occurred: " . $e->getMessage();
-        }
-
-        if( $revisionItems ) {
-            //$lastRevision = null;
-            $revcount = 0;
-            foreach ($revisions as $revision) { //revision is Google_Service_Drive_Revision object
-                echo "<br>";
-                print_r($revision);
-                echo "<br>";
-                $revisionId = $revision->getId();
-                echo "revisionId=".$revisionId."<br>";
-                //$lastRevision = $revision;
-                $revcount++;
-            }
-            echo "revcount=" . $revcount . "<br>";
-
-            echo "delete revision id=".$revisionId."; time=".$revision->getModifiedDate()."<br>";
-            //https://developers.google.com/drive/v3/reference/revisions/delete?authuser=1#try-it
-            $revision = $service->revisions->get($fileId, $revisionId);
-            //$revision->delete();
-            //$revision->setPublished(true);
-            $revision->setPinned(false);
-            $revision->setDownloadUrl('www.yahoo.com');
-            $revision->setMimeType('testTTT');
-            $revision->setExportLinks(null);
-            $service->revisions->update($fileId, $revisionId, $revision);
-
-            $revision = $service->revisions->get($fileId, $revisionId);
-            echo "<br>";
-            print_r($revision);
-            echo "<br>";
-
-            //$this->removeRevision($service, $fileId, $revisionId);
-        }
-
-        return NULL;
-    }
-
-    /**
-     * https://developers.google.com/drive/v2/reference/revisions/delete#try-it
-     * Remove a revision.
-     *
+     * @param Google_Service_Drive $folderId folder ID.
      * @param Google_Service_Drive $service Drive API service instance.
-     * @param String $fileId ID of the file to remove the revision for.
-     * @param String $revisionId ID of the revision to remove.
+     * @return Array List of Google_Service_Drive_DriveFile resources.
      */
-    function removeRevision($service, $fileId, $revisionId) {
-        try {
-            $service->revisions->delete($fileId, $revisionId);
-        } catch (Exception $e) {
-            print "An error occurred: " . $e->getMessage();
-        }
-    }
+    function retrieveFilesByFolderId($folderId,$service) {
+        $result = array();
+        $pageToken = NULL;
 
-
-
-    function searchSheet() {
-        $accessToken = $this->getGoogleToken();
-
-        //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
-        $serviceRequest = new CustomDefaultServiceRequest($accessToken);
-        ServiceRequestFactory::setInstance($serviceRequest);
-
-        $spreadsheetService = new SpreadsheetService();
-        //$spreadsheetFeed = $spreadsheetService->getSpreadsheets();
-        //$spreadsheet = $spreadsheetFeed->getByTitle('Fellapp-test');
-        $key = '1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno';
-        //$spreadsheet = $this->getByKey($spreadsheetFeed,$key);
-
-        $spreadsheet = $spreadsheetService->getSpreadsheetById($key);
-        if( !$spreadsheet ) {
-            throw new IOException('Spreadsheet not found by key='.$key);
-        }
-
-        $worksheetFeed = $spreadsheet->getWorksheets();
-        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
-        $listFeed = $worksheet->getListFeed();
-
-        $rowTitle = "cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53";
-        $rowTitle = "cinava7@";
-        $rowTitle = "testid1";
-        $rowTitle = "test1emailcinava@yahoo.com";
-        $rowTitle = "test1emailcinava_yahoo.com_Doe_Linda_2016-03-15_17_59_5";
-        $rowTitle = "cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53";
-
-        //$rowTitle = urlencode($rowTitle);
-        //echo "rowTitle=".$rowTitle."<br>";
-
-        $listFeed = $worksheet->getListFeed(array("sq" => "id = $rowTitle", "reverse" => "true"));
-
-        $entries = $listFeed->getEntries();
-        foreach( $entries as $entry ) {
-            echo "list:<br>";
-            $values = $entry->getValues();
-            print_r($values );
-            echo "<br>";
-            echo "lastname=".$values['lastname']."<br>";
-        }
-        echo "eof list<br><br>";
-
-        //echo "<br><br>full list:<br>";
-        //print_r($listFeed);
-    }
-
-    /**
-     * Gets a spreadhseet from the feed by its key . i.e. the id of
-     * the spreadsheet in google drive. This method will return only the
-     * first spreadsheet found with the specified title.
-     *
-     * https://drive.google.com/open?id=1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
-     * key=1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
-     *
-     * @param string $title
-     *
-     * @return \Google\Spreadsheet\Spreadsheet|null
-     */
-    public function getByKey($spreadsheetFeed,$key)
-    {
-        foreach( $spreadsheetFeed->getXml()->entry as $entry ) {
-            //full id: https://spreadsheets.google.com/feeds/spreadsheets/private/full/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
-            $id = $entry->id->__toString();
-            //echo "id=".$id."<br>";
-            $parts = explode("/",$id);
-            //echo "count=".count($parts)."<br>";
-            if( count($parts) == 8 ) {
-                $keyId = $parts[7];
-                //echo "keyId=".$keyId."<br>";
-                if( $keyId == $key) {
-                    return new Spreadsheet($entry);
+        do {
+            try {
+                $parameters = array('q' => "'".$folderId."' in parents and trashed=false");
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
                 }
+                $files = $service->files->listFiles($parameters);
+
+                $result = array_merge($result, $files->getItems());
+                $pageToken = $files->getNextPageToken();
+            } catch (Exception $e) {
+                //print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
             }
+        } while ($pageToken);
+        return $result;
+    }
+
+
+    public function downloadFileToServer($author, $service, $fileId, $documentType, $path) {
+        $file = null;
+        try {
+            $file = $service->files->get($fileId);
+        } catch (Exception $e) {
+            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
         }
+
+        if( $file ) {
+
+            //check if file already exists by file id
+            $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
+            if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
+                $logger = $this->container->get('logger');
+                $event = "Document already exists with uniqueid=".$file->getId();
+                $logger->warning($event);
+                return $documentDb;
+            }
+
+            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+            $response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
+            //echo "response=".$response."<br>";
+            if( !$response ) {
+                throw new IOException('Error file response is empty: file id='.$fileId);
+            }
+
+            //create unique file name
+            $currentDatetime = new \DateTime();
+            $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+
+            //$fileTitle = trim($file->getTitle());
+            //$fileTitle = str_replace(" ","",$fileTitle);
+            //$fileTitle = str_replace("-","_",$fileTitle);
+            //$fileTitle = 'testfile.jpg';
+            $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
+            $fileExtStr = "";
+            if( $fileExt ) {
+                $fileExtStr = ".".$fileExt;
+            }
+
+            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$file->getId().$fileExtStr;  //.'_title='.$fileTitle;
+            //echo "fileUniqueName=".$fileUniqueName."<br>";
+
+            $filesize = $file->getFileSize();
+            if( !$filesize ) {
+                $filesize = mb_strlen($response) / 1024; //KBs,
+            }
+
+            $object = new Document($author);
+            $object->setUniqueid($file->getId());
+            $object->setOriginalname($file->getTitle());
+            $object->setUniquename($fileUniqueName);
+            $object->setUploadDirectory($path);
+            $object->setSize($filesize);
+
+//            if( $type && $type == 'excel' ) {
+//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
+//            } else {
+//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
+//            }
+            $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
+            $documentType = trim($documentType);
+            $documentTypeObject = $transformer->reverseTransform($documentType);
+            if( $documentTypeObject ) {
+                $object->setType($documentTypeObject);
+            }
+
+            $this->em->persist($object);
+
+            $root = $this->container->get('kernel')->getRootDir();
+            //echo "root=".$root."<br>";
+            //$fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
+            $fullpath = $root . '/../web/'.$path;
+            $target_file = $fullpath . "/" . $fileUniqueName;
+
+            //$target_file = $fullpath . 'uploadtestfile.jpg';
+            //echo "target_file=".$target_file."<br>";
+            if( !file_exists($fullpath) ) {
+                // 0600 - Read/write/execute for owner, nothing for everybody else
+                mkdir($fullpath, 0700, true);
+                chmod($fullpath, 0700);
+            }
+
+            file_put_contents($target_file, $response);
+
+            return $object;
+        }
+
         return null;
     }
+
+
+
+
+//    /**
+//     * Retrieve a list of revisions.
+//     *
+//     * @param String $fileId ID of the file to retrieve revisions for.
+//     * @return Array List of Google_Servie_Drive_Revision resources.
+//     */
+//    function retrieveRevisions($fileId) {
+//        $service = $this->getGoogleService();
+//        $revisionItems = null;
+//
+//        try {
+//            $revisions = $service->revisions->listRevisions($fileId);
+//            $revisionItems = $revisions->getItems();
+//        } catch (Exception $e) {
+//            print "An error occurred: " . $e->getMessage();
+//        }
+//
+//        if( $revisionItems ) {
+//            //$lastRevision = null;
+//            $revcount = 0;
+//            foreach ($revisions as $revision) { //revision is Google_Service_Drive_Revision object
+//                echo "<br>";
+//                print_r($revision);
+//                echo "<br>";
+//                $revisionId = $revision->getId();
+//                echo "revisionId=".$revisionId."<br>";
+//                //$lastRevision = $revision;
+//                $revcount++;
+//            }
+//            echo "revcount=" . $revcount . "<br>";
+//
+//            echo "delete revision id=".$revisionId."; time=".$revision->getModifiedDate()."<br>";
+//            //https://developers.google.com/drive/v3/reference/revisions/delete?authuser=1#try-it
+//            $revision = $service->revisions->get($fileId, $revisionId);
+//            //$revision->delete();
+//            //$revision->setPublished(true);
+//            $revision->setPinned(false);
+//            $revision->setDownloadUrl('www.yahoo.com');
+//            $revision->setMimeType('testTTT');
+//            $revision->setExportLinks(null);
+//            $service->revisions->update($fileId, $revisionId, $revision);
+//
+//            $revision = $service->revisions->get($fileId, $revisionId);
+//            echo "<br>";
+//            print_r($revision);
+//            echo "<br>";
+//
+//            //$this->removeRevision($service, $fileId, $revisionId);
+//        }
+//
+//        return NULL;
+//    }
+
+//    /**
+//     * https://developers.google.com/drive/v2/reference/revisions/delete#try-it
+//     * Remove a revision.
+//     *
+//     * @param Google_Service_Drive $service Drive API service instance.
+//     * @param String $fileId ID of the file to remove the revision for.
+//     * @param String $revisionId ID of the revision to remove.
+//     */
+//    function removeRevision($service, $fileId, $revisionId) {
+//        try {
+//            $service->revisions->delete($fileId, $revisionId);
+//        } catch (Exception $e) {
+//            print "An error occurred: " . $e->getMessage();
+//        }
+//    }
+
+
+
+//    function searchSheet() {
+//        $accessToken = $this->getGoogleToken();
+//
+//        //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
+//        $serviceRequest = new CustomDefaultServiceRequest($accessToken);
+//        ServiceRequestFactory::setInstance($serviceRequest);
+//
+//        $spreadsheetService = new SpreadsheetService();
+//        //$spreadsheetFeed = $spreadsheetService->getSpreadsheets();
+//        //$spreadsheet = $spreadsheetFeed->getByTitle('Fellapp-test');
+//        $key = '1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno';
+//        //$spreadsheet = $this->getByKey($spreadsheetFeed,$key);
+//
+//        $spreadsheet = $spreadsheetService->getSpreadsheetById($key);
+//        if( !$spreadsheet ) {
+//            throw new IOException('Spreadsheet not found by key='.$key);
+//        }
+//
+//        $worksheetFeed = $spreadsheet->getWorksheets();
+//        $worksheet = $worksheetFeed->getByTitle('Form Responses 1');
+//        $listFeed = $worksheet->getListFeed();
+//
+//        $rowTitle = "cinava7@yahoo.com_Doe_Linda_2016-03-15_17_59_53";
+//        $rowTitle = "cinava7@";
+//        $rowTitle = "testid1";
+//        $rowTitle = "test1emailcinava@yahoo.com";
+//        $rowTitle = "test1emailcinava_yahoo.com_Doe_Linda_2016-03-15_17_59_5";
+//        $rowTitle = "cinava7_yahoo.com_Doe_Linda_2016-03-15_17_59_53";
+//
+//        //$rowTitle = urlencode($rowTitle);
+//        //echo "rowTitle=".$rowTitle."<br>";
+//
+//        $listFeed = $worksheet->getListFeed(array("sq" => "id = $rowTitle", "reverse" => "true"));
+//
+//        $entries = $listFeed->getEntries();
+//        foreach( $entries as $entry ) {
+//            echo "list:<br>";
+//            $values = $entry->getValues();
+//            print_r($values );
+//            echo "<br>";
+//            echo "lastname=".$values['lastname']."<br>";
+//        }
+//        echo "eof list<br><br>";
+//
+//        //echo "<br><br>full list:<br>";
+//        //print_r($listFeed);
+//    }
+
+//    /**
+//     * Gets a spreadhseet from the feed by its key . i.e. the id of
+//     * the spreadsheet in google drive. This method will return only the
+//     * first spreadsheet found with the specified title.
+//     *
+//     * https://drive.google.com/open?id=1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
+//     * key=1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
+//     *
+//     * @param string $title
+//     *
+//     * @return \Google\Spreadsheet\Spreadsheet|null
+//     */
+//    public function getByKey($spreadsheetFeed,$key)
+//    {
+//        foreach( $spreadsheetFeed->getXml()->entry as $entry ) {
+//            //full id: https://spreadsheets.google.com/feeds/spreadsheets/private/full/1hNJUm-EWC33tEyvgkcBJQ7lO1PcFwxfi3vMuB96etno
+//            $id = $entry->id->__toString();
+//            //echo "id=".$id."<br>";
+//            $parts = explode("/",$id);
+//            //echo "count=".count($parts)."<br>";
+//            if( count($parts) == 8 ) {
+//                $keyId = $parts[7];
+//                //echo "keyId=".$keyId."<br>";
+//                if( $keyId == $key) {
+//                    return new Spreadsheet($entry);
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
 
 
