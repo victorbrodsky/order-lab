@@ -783,28 +783,29 @@ class ReportGenerator {
     protected function convertToPdf( $filePathsArr, $outdir ) {
 
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
         $fileNamesArr = array();
 
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
         //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
         //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
-        $userUtil = new UserUtil();
-        $libreOfficeConvertToPDFPathFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFPathFellApp');
+        $libreOfficeConvertToPDFPathFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathFellApp');
         if( !$libreOfficeConvertToPDFPathFellApp ) {
             throw new \InvalidArgumentException('libreOfficeConvertToPDFPathFellApp is not defined in Site Parameters.');
         }
 
-        $libreOfficeConvertToPDFFilenameFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFFilenameFellApp');
+        $libreOfficeConvertToPDFFilenameFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFFilenameFellApp');
         if( !$libreOfficeConvertToPDFFilenameFellApp ) {
             throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameFellApp is not defined in Site Parameters.');
         }
 
-        $libreOfficeConvertToPDFArgumentsdFellApp = $userUtil->getSiteSetting($this->em,'libreOfficeConvertToPDFArgumentsdFellApp');
+        $libreOfficeConvertToPDFArgumentsdFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFArgumentsdFellApp');
         if( !$libreOfficeConvertToPDFArgumentsdFellApp ) {
             throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellApp is not defined in Site Parameters.');
         }
 
-        $cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp . '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
+        $cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp .
+               '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
         //echo "cmd=" . $cmd . "<br>";
 
@@ -813,6 +814,10 @@ class ReportGenerator {
         foreach( $filePathsArr as $filePath ) {
 
             $filePath = realpath($filePath);
+
+            if( !file_exists($filePath) ) {
+                $logger->error("Input file does not exist!!!: filePath=".$filePath);
+            }
 
             //$outFilename = $outdir . basename($filePath);
             $outFilename = $outdir . pathinfo($filePath, PATHINFO_FILENAME) . ".pdf";
@@ -847,6 +852,10 @@ class ReportGenerator {
                     $logger->notice("LibreOffice converted input file=" . $filePath);
                 } else {
                     $logger->error("LibreOffice failed to convert input file=" . $filePath);
+                }
+
+                if( !file_exists($outFilename) ) {
+                    $logger->error("Output file does not exist after PDF generation!!!: outFilename=".$outFilename);
                 }
 
             } else {
