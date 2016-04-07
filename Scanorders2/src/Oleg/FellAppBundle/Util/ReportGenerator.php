@@ -161,6 +161,9 @@ class ReportGenerator {
         $oExec = pclose(popen("start /B ". $cmd, "r"));
         //$oExec = exec($cmd);
 
+        $logger = $this->container->get('logger');
+        $logger->notice("Windows Cmd Run Sync: oExec=".$oExec);
+
         return $oExec;
     }
     
@@ -354,7 +357,7 @@ class ReportGenerator {
         $queue = null;
 
         $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
-        $logger->notice("Current queue count=".count($queues));
+        //$logger->notice("Current queue count=".count($queues));
 
         //must be only one
         if( count($queues) > 0 ) {
