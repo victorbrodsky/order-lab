@@ -1521,9 +1521,9 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $fellappUtil = $this->container->get('fellapp_util');
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
-        $result = $fellappUtil->processFellAppFromGoogleDrive();
+        $result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();
 
         $this->get('session')->getFlashBag()->add(
             'notice',

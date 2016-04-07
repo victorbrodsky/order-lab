@@ -65,7 +65,7 @@ class GoogleSheetManagement {
         //Never delete sources for non live server
         if( !$this->allowModifySOurceGoogleDrive() ) {
             $logger->error("Delete Row in ListFeed: Never delete sources for non production environment");
-            //return false;
+            return false;
         }
 
         $service = $this->getGoogleService();
@@ -125,7 +125,7 @@ class GoogleSheetManagement {
         //Never delete sources for non live server
         if( !$this->allowModifySOurceGoogleDrive() ) {
             $logger->error("Delete File: Never delete sources for non production environment");
-            //return false;
+            return false;
         }
 
         $result = false;
