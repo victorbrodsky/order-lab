@@ -326,15 +326,23 @@ class FellAppUtil {
         $backupFile = $service->files->get($backupFileIdFellApp);
         $modifiedDate = $backupFile->getModifiedDate(); //datetime
 
+        $intervalDays = 0;
+
         if( $modifiedDate ) {
             echo "modifiedDate=".$modifiedDate."<br>";
             $logger->notice("modifiedDate=".$modifiedDate);
-        }
-        exit();
 
-        if( 1 ) {
+            $datetimeNow = new DateTime();
+            $datetimeModified = new DateTime($modifiedDate);
+            $intervalDays = $datetimeNow->diff($datetimeModified)->days;
+        }
+
+        echo "intervalDays=".$intervalDays."<br>";
+        if( $intervalDays > 1 ) {
+            exit('dont process backup');
             return 0;
         }
+        exit();
 
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
