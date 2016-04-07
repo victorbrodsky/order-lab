@@ -620,6 +620,9 @@ class FellAppUtil {
             return false;
         }
 
+        //if ruuning from cron path must be: $path = getcwd() . "/web";
+        //$inputFileName = $path . "/" . $inputFileName;
+        $inputFileName = realpath($this->get('kernel')->getRootDir() . "/web/" . $inputFileName);
         if( !file_exists($inputFileName) ) {
             $logger->error("Source sheet does not exists with filename=".$inputFileName);
         }
