@@ -45,7 +45,7 @@ class LargeFileDownloader {
 
         $mimeType = $this->getMimeType($filename);
 
-        header('Content-Description: File Transfer');
+        //header('Content-Description: File Transfer');
         header('Content-Type: '.$mimeType);
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
@@ -56,13 +56,16 @@ class LargeFileDownloader {
             header('Content-Disposition: attachment; filename='.$filename);
         } elseif( $action == "view" ) {
             header('Content-Disposition: inline; filename='.$filename);
+            header('Accept-Ranges: bytes');
+        } else {
+            //default as "download" action
+            header('Content-Disposition: attachment; filename='.$filename);
         }
 
         if( $viewType == 'snapshot' ) {
 
             //$resizedImg = $this->Img_Resize($filenameClean,2);
             $resizedImg = $this->resizeImage($filenameClean, 10, 10);
-            //$resizedImg = $filenameClean;
 
             readfile($resizedImg);
 
