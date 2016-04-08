@@ -1135,6 +1135,7 @@ class ReportGenerator {
     }
 
 
+    //test method for console command
     public function testCmd() {
         $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(7);
         $avatar = $fellapp->getAvatars()->last();

@@ -420,6 +420,7 @@ class Document {
     }
 
     //use for command console to get a full absolute server path
+    //example: C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2/web/Uploaded/fellapp/documents/56fbf9e8867c3.jpg
     public function getFullServerPath()
     {
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
