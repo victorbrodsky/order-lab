@@ -146,6 +146,10 @@
         
         var itineraryPanel = $('#Itinerary');
         var dropzone = itineraryPanel.find('.file-upload-dropzone');
+
+        if( !dropzone || dropzone.length == 0 ) {
+            return;
+        }
         
         //make inactive if interview date is not set
         var dateField = itineraryPanel.find('.datepicker');
