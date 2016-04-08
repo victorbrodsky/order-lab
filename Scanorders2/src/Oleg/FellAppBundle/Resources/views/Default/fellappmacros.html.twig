@@ -88,7 +88,14 @@
         <div class="text-center col-md-2 col-md-offset-5">
             {#avatar form modal#}
             {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
-                {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
+                {% if cycle == "download" %}
+                    <img src="{{ fellapp.avatars|last.getAbsoluteUploadFullPath }}"
+                         alt="{{ "Avatar "~fellapp.avatars|last.getOriginalname }}"
+                         class="objectMaxFull"
+                    >
+                {% else %}
+                    {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
+                {% endif %}
             {% else %}
                 {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                 <a href="#panel-uploads">
