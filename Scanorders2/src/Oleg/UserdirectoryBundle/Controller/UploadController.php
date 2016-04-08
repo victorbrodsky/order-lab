@@ -246,7 +246,7 @@ class UploadController extends Controller {
 
             $downloader = new LargeFileDownloader();
             ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null
-            $viewType = null;
+            //$viewType = null;
             $downloader->downloadLargeFile($abspath, $originalname, $size, true, "view", $viewType);
 
             exit;

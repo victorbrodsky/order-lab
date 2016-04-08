@@ -62,6 +62,7 @@ class LargeFileDownloader {
 
             //$resizedImg = $this->Img_Resize($filenameClean,2);
             $resizedImg = $this->resizeImage($filenameClean, 10, 10);
+            //$resizedImg = $filenameClean;
 
             readfile($resizedImg);
 
