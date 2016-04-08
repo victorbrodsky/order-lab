@@ -419,6 +419,15 @@ class Document {
         return $this->getUploadDirectory().'/'.$this->getUniquename();
     }
 
+    //use for command console to get a full absolute server path
+    public function getFullServerPath()
+    {
+        //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
+        $fullPath = getcwd() . "/web/" . $this->getUploadDirectory().'/'.$this->getUniquename();
+        //$fullPath = realpath($fullPath);
+        return $fullPath;
+    }
+
     public function getAbsoluteUploadFullPath()
     {
         return "http://" . $_SERVER['SERVER_NAME'] . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();

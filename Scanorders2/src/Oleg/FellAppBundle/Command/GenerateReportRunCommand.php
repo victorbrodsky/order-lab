@@ -45,6 +45,8 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
         //echo "argument=".$argument."<br>";
 
         $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
+        $result = $fellappRepGen->testCmd();
+        exit('1');
         $result = $fellappRepGen->tryRun();
         
         $logger->notice("Run Command: result report filename=".$result);

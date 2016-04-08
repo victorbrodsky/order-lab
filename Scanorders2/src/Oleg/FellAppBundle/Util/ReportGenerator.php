@@ -1135,6 +1135,13 @@ class ReportGenerator {
     }
 
 
+    public function testCmd() {
+        $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(7);
+        $avatar = $fellapp->getAvatars()->last();
+        $serverPath = $avatar->getFullServerPath();
+        echo "serverPath=".$serverPath." ";
+    }
+
 //    protected function spraed($html) {
 //        $pdfGenerator = $this->get('spraed.pdf.generator');
 //

@@ -89,7 +89,8 @@
             {#avatar form modal#}
             {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
                 {% if cycle == "download" %}
-                    <img src="{{ fellapp.avatars|last.getAbsoluteUploadFullPath }}"
+                    {#{% set avatarPath = fellapp.avatars|last.getFullServerPath() %}#}
+                    <img src="{{ fellapp.avatars|last.getFullServerPath() }}"
                          alt="{{ "Avatar "~fellapp.avatars|last.getOriginalname }}"
                          class="objectMaxFull"
                     >
