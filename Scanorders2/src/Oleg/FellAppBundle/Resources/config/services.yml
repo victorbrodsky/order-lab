@@ -32,14 +32,14 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
 
 
-    fellap_role_voter:
+    fellapp_role_voter:
         class: Oleg\FellAppBundle\Security\Voter\FellAppRoleVoter
         public: false
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
-    fellap_permission_voter:
+    fellapp_permission_voter:
         class: Oleg\FellAppBundle\Security\Voter\FellAppPermissionVoter
         public: false
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]

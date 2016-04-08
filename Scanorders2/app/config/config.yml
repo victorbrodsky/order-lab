@@ -4,8 +4,11 @@ imports:
     - { resource: "@OlegUserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
     - { resource: "@OlegFellAppBundle/Resources/config/services.yml" }
-    - { resource: "@OlegUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
+    - { resource: "@OlegVacReqBundle/Resources/config/services.yml" }
     - { resource: "@OlegDeidentifierBundle/Resources/config/services.yml" }
+    - { resource: "@OlegUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
+
+
 
 
 services:
@@ -63,6 +66,7 @@ twig:
         employees_uploadpath: Uploaded/%employees.uploadpath%
         scan_uploadpath: Uploaded/%scan.uploadpath%
         fellapp_uploadpath: Uploaded/%fellapp.uploadpath%
+        vacreq_uploadpath: Uploaded/%vacreq.uploadpath%
 
         #service
         user_security_utility: "@user_security_utility"
@@ -74,7 +78,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        ['OlegUserdirectoryBundle','OlegOrderformBundle','OlegFellAppBundle','OlegDeidentifierBundle']
+    bundles:        ['OlegUserdirectoryBundle','OlegOrderformBundle','OlegFellAppBundle','OlegDeidentifierBundle','OlegVacReqBundle']
     #java: /usr/bin/java
     filters:
 #         less:
@@ -127,6 +131,7 @@ doctrine:
                     OlegUserdirectoryBundle: ~
                     OlegFellAppBundle: ~
                     OlegDeidentifierBundle: ~
+                    OlegVacReqBundle: ~
                     gedmo_tree:
                         type: annotation
                         prefix: Gedmo\Tree\Entity
@@ -186,20 +191,21 @@ knp_paginator:
 oneup_uploader:
     mappings:
         employees_gallery:
-#            use_orphanage: true
             frontend: dropzone
             storage:
                 directory: Uploaded/%employees.uploadpath%
         scan_gallery:
-#            use_orphanage: true
             frontend: dropzone
             storage:
                 directory: Uploaded/%scan.uploadpath%
         fellapp_gallery:
-#            use_orphanage: true
             frontend: dropzone
             storage:
                 directory: Uploaded/%fellapp.uploadpath%
+        vacreq_gallery:
+            frontend: dropzone
+            storage:
+                directory: Uploaded/%vacreq.uploadpath%
 #    orphanage:
 #        maxage: 86400
 #        directory: Uploaded/orphanage

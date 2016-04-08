@@ -169,9 +169,26 @@ function setNavBar(sitename) {
     else if( sitename == "deidentifier" ){
         setDeidentificatorNavBar();
     }
+    else if( sitename == "vacation-request" ){
+        setVacReqNavBar();
+    }
     else {
         setDirectoryNavBar();
     }
+}
+
+function setVacReqNavBar() {
+    var id = 'vacreqhome';
+
+    var full = window.location.pathname;
+
+    id = commonNavBar(full,id)
+
+    if( full.indexOf("/vacation-request/re-identify") !== -1 ) {
+        id = null;
+    }
+
+    $('#nav-bar-'+id).addClass('active');
 }
 
 function setDeidentificatorNavBar() {

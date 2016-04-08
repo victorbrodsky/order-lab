@@ -1,0 +1,34 @@
+{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ eventLogTitle }}
+{% endblock %}
+
+
+{% block content %}
+    {% include 'OlegUserdirectoryBundle::Logger/logger_common.html.twig' %}
+{% endblock %}
+
+
+{% block additionalcss %}
+
+    {% stylesheets
+    'bundles/oleguserdirectory/datetimepicker/css/bootstrap-datetimepicker.min.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {#<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">#}
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}

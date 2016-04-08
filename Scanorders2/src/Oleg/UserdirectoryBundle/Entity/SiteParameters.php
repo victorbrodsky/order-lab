@@ -197,6 +197,11 @@ class SiteParameters {
      */
     private $fellappuploadpath;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $vacrequploadpath;
+
 
     //site titles and messages
     /**
@@ -2064,6 +2069,22 @@ class SiteParameters {
     public function setBackupUpdateDatetimeFellApp($backupUpdateDatetimeFellApp)
     {
         $this->backupUpdateDatetimeFellApp = $backupUpdateDatetimeFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacrequploadpath()
+    {
+        return $this->vacrequploadpath;
+    }
+
+    /**
+     * @param mixed $vacrequploadpath
+     */
+    public function setVacrequploadpath($vacrequploadpath)
+    {
+        $this->vacrequploadpath = $vacrequploadpath;
     }
 
 

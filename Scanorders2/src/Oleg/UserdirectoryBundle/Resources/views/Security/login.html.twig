@@ -28,6 +28,10 @@
             {% set title = "Deidentifier" %}
         {% endif %}
 
+        {% if sitename == vacreq_sitename %}
+            {% set title = "Vacation Request" %}
+        {% endif %}
+
         <title>{{ title }}</title>
 
         {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}

@@ -29,6 +29,11 @@
                     <span class="glyphicon glyphicon-retweet"></span> Deidentifier
                 </a>
             </li>
+            <li>
+                <a href="{{ path(vacreq_sitename~'_home') }}">
+                    <span class="glyphicon glyphicon-plane"></span> Vacation Request
+                </a>
+            </li>
         </ul>
     </li>
 {% endmacro %}
@@ -168,6 +173,9 @@
     {% endif %}
     {% if '/deidentifier/' in currentPath %}
         {% set sitename = deidentifier_sitename %}
+    {% endif %}
+    {% if '/vacation-request/' in currentPath %}
+        {% set sitename = vacreq_sitename %}
     {% endif %}
 
 
@@ -1889,6 +1897,7 @@
 {% macro showDocumentAsImage( documentEntity, alt, atr, objectClass ) %}
 
     {% if not objectClass or objectClass is not defined %}
+        {#Note: objectMaxFull causes avatar not visible on pdf converted file#}
         {% set objectClass = "objectMaxFull" %}
     {% endif %}
 
@@ -1905,6 +1914,9 @@
     {% endif %}
     {% if '/deidentifier/' in currentPath %}
         {% set sitename = deidentifier_sitename %}
+    {% endif %}
+    {% if '/vacation-request/' in currentPath %}
+        {% set sitename = vacreq_sitename %}
     {% endif %}
 
     {% if '.pdf' in documentEntity.getAbsoluteUploadFullPath %}

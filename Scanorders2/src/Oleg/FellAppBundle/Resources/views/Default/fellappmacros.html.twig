@@ -89,9 +89,7 @@
             {#avatar form modal#}
             {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
                 {% if cycle == "download" %}
-                    {#<img src="http://www.tizag.com/pics/htmlT/sunset.gif" />#}
                     {% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath() %}
-                    {#avatarPath={{ avatarPath }}#}
                     <img src="{{ avatarPath }}"
                          alt="{{ "Avatar "~fellapp.avatars|last.getOriginalname }}"
                     >

@@ -1,0 +1,30 @@
+parameters:
+
+    vacreq.sitename: vacreq
+    vacreq.uploadpath:
+
+
+twig:
+    globals:
+        vacreq_sitename: %vacreq.sitename%
+
+
+services:
+
+    vacreq_authentication_handler:
+        class: Oleg\VacReqBundle\Security\Authentication\VacReqLoginSuccessHandler
+        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+
+    vacreq_role_voter:
+        class: Oleg\VacReqBundle\Security\Voter\VacReqRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    vacreq_permission_voter:
+        class: Oleg\VacReqBundle\Security\Voter\VacReqPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }

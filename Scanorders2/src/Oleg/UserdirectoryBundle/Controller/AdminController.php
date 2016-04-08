@@ -729,6 +729,38 @@ class AdminController extends Controller
                 "Does not allow to visit Deidentifier site",
                 0
             ),
+
+
+            //////////// VACREQ roles ////////////
+            "ROLE_VACREQ_ADMIN" => array(
+                "Vacation Request Administrator",
+                "Full access for Vacation Request site",
+                90
+            ),
+
+//            "ROLE_VACREQ_APPROVER" => array(
+//                "Vacation Request Approver",
+//                "Can search and approve vacation requests",
+//                50
+//            ),
+//
+//            "ROLE_VACREQ_SUBMITTER" => array(
+//                "Vacation Request Submitter",
+//                "Can submit a vacation request",
+//                10
+//            ),
+
+            "ROLE_VACREQ_BANNED" => array(
+                "Vacation Request Banned User",
+                "Does not allow to visit Vacation Request site",
+                -1
+            ),
+            "ROLE_VACREQ_UNAPPROVED" => array(
+                "Vacation Request Unapproved User",
+                "Does not allow to visit Vacation Request site",
+                0
+            ),
+
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -1206,7 +1238,8 @@ class AdminController extends Controller
             'directory' => 'employees',
             'scan' => 'scan',
             'fellowship-applications' => 'fellapp',
-            'deidentifier' => 'deidentifier'
+            'deidentifier' => 'deidentifier',
+            'vacation-request' => 'vacreq'
         );
 
 
@@ -4399,6 +4432,8 @@ class AdminController extends Controller
             $resCount = 0;
 
             $resCount = $resCount + $this->addSites( $role, '_DEIDENTIFICATOR_', 'deidentifier' );
+
+            $resCount = $resCount + $this->addSites( $role, '_VACREQ_', 'vacation-request' );
 
             $resCount = $resCount + $this->addSites( $role, '_FELLAPP_', 'fellowship-applications' );
 

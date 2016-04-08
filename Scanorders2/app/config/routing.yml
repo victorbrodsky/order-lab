@@ -14,10 +14,16 @@ oleg_deidentifier:
     type:     annotation
     prefix:   /deidentifier
 
-oleg_fell_app:
+oleg_fellapp:
     resource: "@OlegFellAppBundle/Controller/"
     type:     annotation
     prefix:   /fellowship-applications
+
+oleg_vacreq:
+    resource: "@OlegVacReqBundle/Controller/"
+    type:     annotation
+    prefix:   /vacation-request
+
 
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
@@ -72,6 +78,10 @@ deidentifier_login_check:
 deidentifier_logout:
     path:   /deidentifier/logout
 
+vacreq_login_check:
+    path:   /vacation-request/login_check
+vacreq_logout:
+    path:   /vacation-request/logout
 
 #fos user bundle
 #fos_user_security:
