@@ -1137,10 +1137,19 @@ class ReportGenerator {
 
     //test method for console command
     public function testCmd() {
+
         $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(7);
         $avatar = $fellapp->getAvatars()->last();
-        $serverPath = $avatar->getFullServerPath();
-        echo "serverPath=".$serverPath." ";
+
+        //$serverPath = $avatar->getFullServerPath();
+        //echo "serverPath=".$serverPath." ";
+
+        $applicationOutputFilePath = getcwd() . "/web/" . $avatar->getUploadDirectory() . "/test/test.pdf";
+        echo "path=".$applicationOutputFilePath." ";
+
+        $this->generateApplicationPdf($fellapp->getId(),$applicationOutputFilePath);
+
+        exit();
     }
 
 //    protected function spraed($html) {

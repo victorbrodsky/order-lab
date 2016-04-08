@@ -412,6 +412,10 @@ class Document {
         return $this->getRelativeUploadFullPath();
     }
 
+//    public function getTestPath() {
+//        return $this->getAbsoluteUploadFullPath();
+//    }
+
     //get server path to delete file: /var/www/test/folder/images/image_name.jpeg
     public function getServerPath()
     {
