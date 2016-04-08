@@ -176,16 +176,17 @@ class UploadController extends Controller {
             //event log
             $user = $this->get('security.context')->getToken()->getUser();
             $eventDescription = "Document has been downloaded by " . $user;
-            $this->setDownloadEventLog($request,$document,$user,$sitename,$eventtype,$eventDescription);
+            $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
 
             $originalname = $document->getOriginalname();
             $abspath = $document->getAbsoluteUploadFullPath();
             $size = $document->getSize();
 
             $downloader = new LargeFileDownloader();
-            $downloader->downloadLargeFile($abspath,$originalname,$size);
+            $downloader->downloadLargeFile($abspath, $originalname, $size);
+        }
 
-            exit;
+        exit;
 //            $referer = $request->headers->get('referer');
 //            echo "referer=".$referer."<br>";
 //            if( strpos($referer, '/login') ) {
@@ -193,21 +194,21 @@ class UploadController extends Controller {
 //            } else {
 //                exit;
 //            }
-
-            if(0) {
-                $response->headers->set('Content-Type', 'application/unknown');
-                $response->headers->set('Content-Description', 'File Transfer');
-                $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
-                $response->headers->set('Content-Length', $size);
-                $response->headers->set('Content-Transfer-Encoding', 'binary');
-                $response->setContent(file_get_contents($abspath));
-            }
-
-        } else {
-            $response->setContent('error');
-        }
-
-        return $response;
+//
+//            if(0) {
+//                $response->headers->set('Content-Type', 'application/unknown');
+//                $response->headers->set('Content-Description', 'File Transfer');
+//                $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
+//                $response->headers->set('Content-Length', $size);
+//                $response->headers->set('Content-Transfer-Encoding', 'binary');
+//                $response->setContent(file_get_contents($abspath));
+//            }
+//
+//        } else {
+//            $response->setContent('error');
+//        }
+//
+//        return $response;
     }
 
 

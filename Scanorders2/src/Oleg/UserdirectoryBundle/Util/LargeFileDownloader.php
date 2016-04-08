@@ -77,6 +77,7 @@ class LargeFileDownloader {
             }
         }
 
+        exit;
         return;
     }
 
