@@ -30,7 +30,7 @@ class SecurityController extends Controller
 //
 //        echo "username=".$username.", password=".$password."<br>";
 //
-//        exit("my login check!");
+//        //exit("my login check!");
 //    }
 
     /**
@@ -59,6 +59,7 @@ class SecurityController extends Controller
         if( $routename == "vacreq_login" ) {
             $sitename = $this->container->getParameter('vacreq.sitename');
         }
+        //exit('sitename='.$sitename);
 
         //$sitename = $this->container->getParameter('employees.sitename');
         $formArr = $this->loginPage($sitename);
@@ -176,7 +177,7 @@ class SecurityController extends Controller
         if( $routename == "scan_idlelogout" ) {
             $sitename = $this->container->getParameter('scan.sitename');
         }
-        if( $routename == "vacreq_login" ) {
+        if( $routename == "vacreq_idlelogout" ) {
             $sitename = $this->container->getParameter('vacreq.sitename');
         }
 
@@ -444,7 +445,7 @@ class SecurityController extends Controller
 //    public function logoutAction( Request $request )
 //    {
 //        echo "logout Action! <br>";
-//        exit();
+//        //exit();
 //
 //        $this->get('security.context')->setToken(null);
 //        //$this->get('request')->getSession()->invalidate();

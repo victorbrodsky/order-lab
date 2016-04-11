@@ -208,9 +208,7 @@ class UserSecurityUtil {
 
 
         //return $this->redirect($this->generateUrl('login'));
-
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
-
     }
 
     function constructEventLog( $sitename, $user, $request ) {
@@ -337,6 +335,10 @@ class UserSecurityUtil {
 
             if( $sitename == $this->container->getParameter('deidentifier.sitename') ) {
                 $roles = array("ROLE_DEIDENTIFICATOR_ADMIN");
+            }
+
+            if( $sitename == $this->container->getParameter('vacreq.sitename') ) {
+                $roles = array("ROLE_VACREQ_ADMIN");
             }
 
         } else {

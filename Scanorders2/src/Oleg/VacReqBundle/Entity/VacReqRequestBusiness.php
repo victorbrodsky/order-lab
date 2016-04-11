@@ -36,7 +36,7 @@ class VacReqRequestBusiness extends VacReqRequestBase
     /**
      * @ORM\OneToOne(targetEntity="VacReqRequest", mappedBy="requestBusiness")
      */
-    private $requestForm;
+    private $request;
 
 
 
@@ -91,18 +91,20 @@ class VacReqRequestBusiness extends VacReqRequestBase
     /**
      * @return mixed
      */
-    public function getRequestForm()
+    public function getRequest()
     {
-        return $this->requestForm;
+        return $this->request;
     }
 
     /**
-     * @param mixed $requestForm
+     * @param mixed $request
      */
-    public function setRequestForm($requestForm)
+    public function setRequest($request)
     {
-        $this->requestForm = $requestForm;
+        $this->request = $request;
     }
+
+
 
 
 

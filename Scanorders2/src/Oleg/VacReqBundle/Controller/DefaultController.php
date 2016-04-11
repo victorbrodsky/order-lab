@@ -30,14 +30,16 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-
         if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
 
+        $vacReqRequests = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
 
         return array(
+            'vacReqRequests' => $vacReqRequests
         );
     }
 

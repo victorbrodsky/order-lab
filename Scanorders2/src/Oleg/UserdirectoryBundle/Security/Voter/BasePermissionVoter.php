@@ -45,6 +45,7 @@ abstract class BasePermissionVoter extends Voter {
     //$subject: string (i.e. "FellowshipApplication") or entity
     protected function supports($attribute, $subject) {
         //return false; //testing
+        //exit('base: support');
 
         $siteRoleBase = $this->getSiteRoleBase();
         $sitename = $this->getSitename();

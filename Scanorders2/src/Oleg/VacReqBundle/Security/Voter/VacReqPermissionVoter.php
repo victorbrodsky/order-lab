@@ -21,6 +21,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 {
 
     protected function getSiteRoleBase() {
+        //exit('111');
         return 'VACREQ';
     }
 

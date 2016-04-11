@@ -9,6 +9,7 @@
 
 namespace Oleg\VacReqBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -55,6 +56,17 @@ class VacReqRequest
     private $updateDate;
 
     /**
+     * @ORM\ManyToMany(targetEntity="VacReqAvailabilityList", inversedBy="requests")
+     * @ORM\JoinTable(name="vacreq_request_availability")
+     **/
+    private $availabilities;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $availabilityComment;
+
+    /**
      * status: pending, approved, declined
      * @ORM\Column(type="string", nullable=true)
      */
@@ -67,14 +79,14 @@ class VacReqRequest
 
 
     /**
-     * @ORM\OneToOne(targetEntity="VacReqRequestBusiness", inversedBy="requestForm", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="VacReqRequestBusiness", inversedBy="request", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="requestBusiness_id", referencedColumnName="id", nullable=true)
      **/
     private $requestBusiness;
 
 
     /**
-     * @ORM\OneToOne(targetEntity="VacReqRequestVacation", inversedBy="requestForm", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="VacReqRequestVacation", inversedBy="request", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="requestVacation_id", referencedColumnName="id", nullable=true)
      **/
     private $requestVacation;
@@ -85,7 +97,9 @@ class VacReqRequest
     public function __construct($user=null) {
         $this->setUser($user);
         $this->setStatus('pending');
-        $this->setCreateDate(new DateTime());
+        $this->setCreateDate(new \DateTime());
+
+        $this->availabilities = new ArrayCollection();
     }
 
 
@@ -235,7 +249,38 @@ class VacReqRequest
         $this->requestVacation = $requestVacation;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAvailabilityComment()
+    {
+        return $this->availabilityComment;
+    }
 
+    /**
+     * @param mixed $availabilityComment
+     */
+    public function setAvailabilityComment($availabilityComment)
+    {
+        $this->availabilityComment = $availabilityComment;
+    }
+
+
+    public function getAvailabilities()
+    {
+        return $this->availabilities;
+    }
+    public function addAvailability($item)
+    {
+        if( !$this->availabilities->contains($item) ) {
+            $this->availabilities->add($item);
+        }
+        return $this;
+    }
+    public function removeAvailability($item)
+    {
+        $this->availabilities->removeElement($item);
+    }
 
 
 }

@@ -89,6 +89,7 @@ abstract class BaseRoleVoter extends Voter {
 
     //evaluate if this user has this role (attribute)
     public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) {
+        //exit('voteOnSiteSpecificAttribute');
         //return false; //testing
         //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute."<br>";
         //echo 'attribute='.$attribute."<br>";

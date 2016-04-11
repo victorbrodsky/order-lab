@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>VacReqRequest</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ vacReqRequest.id }}</td>
+            </tr>
+            <tr>
+                <th>Createdate</th>
+                <td>{% if vacReqRequest.createDate %}{{ vacReqRequest.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updatedate</th>
+                <td>{% if vacReqRequest.updateDate %}{{ vacReqRequest.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ vacReqRequest.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('vacreqrequest_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('vacreqrequest_edit', { 'id': vacReqRequest.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

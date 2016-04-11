@@ -26,27 +26,27 @@ class VacReqRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('user', new FellAppUserType($this->params), array(
+        $builder->add('user', new VacReqUserType($this->params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
             'label' => false,
             'required' => false,
         ));
 
-        $builder->add('startDate','date',array(
-            'widget' => 'single_text',
-            'label' => "Start Date:",
-            'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
-            'attr' => array('class' => 'datepicker form-control fellapp-startDate'),
-            'required' => false,
-        ));
-
-        $builder->add('endDate','date',array(
-            'widget' => 'single_text',
-            'label' => "End Date:",
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control fellapp-endDate'),
-            'required' => false,
-        ));
+//        $builder->add('startDate','datetime',array(
+//            'widget' => 'single_text',
+//            'label' => "Start Date:",
+//            'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
+//            'attr' => array('class' => 'datepicker form-control fellapp-startDate'),
+//            'required' => false,
+//        ));
+//
+//        $builder->add('endDate','datetime',array(
+//            'widget' => 'single_text',
+//            'label' => "End Date:",
+//            'format' => 'MM/dd/yyyy',
+//            'attr' => array('class' => 'datepicker form-control fellapp-endDate'),
+//            'required' => false,
+//        ));
 
         ///////////////////////// tree node /////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -81,7 +81,7 @@ class VacReqRequestType extends AbstractType
         ///////////////////////// EOF tree node /////////////////////////
 
         $builder->add('status', 'choice', array(
-            'disabled' => ($this->params['admin'] ? true : false),
+            'disabled' => ($this->params['roleAdmin'] ? true : false),
             'choices'   => array(
                 'pending' => 'pending',
                 'approved' => 'approved',
@@ -90,6 +90,16 @@ class VacReqRequestType extends AbstractType
             'label' => "Status:",
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width'),
+        ));
+
+        $builder->add('availabilities', null, array(
+            'label' => "Availability(s):",
+            'attr' => array('class' => 'combobox combobox-width'),
+        ));
+
+        $builder->add('availabilityComment', null, array(
+            'label' => false,
+            'attr' => array('class' => 'form-control'),
         ));
 
 

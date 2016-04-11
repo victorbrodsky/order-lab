@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>VacReqRequest list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Createdate</th>
+                <th>Updatedate</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vacReqRequest in vacReqRequests %}
+            <tr>
+                <td><a href="{{ path('vacreqrequest_show', { 'id': vacReqRequest.id }) }}">{{ vacReqRequest.id }}</a></td>
+                <td>{% if vacReqRequest.createDate %}{{ vacReqRequest.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if vacReqRequest.updateDate %}{{ vacReqRequest.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ vacReqRequest.status }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('vacreqrequest_show', { 'id': vacReqRequest.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('vacreqrequest_edit', { 'id': vacReqRequest.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('vacreqrequest_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

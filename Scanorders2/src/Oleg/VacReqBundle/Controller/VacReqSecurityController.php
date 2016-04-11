@@ -25,6 +25,7 @@ class VacReqSecurityController extends SecurityController
      * @Template()
      */
     public function loginAction( Request $request ) {
+        //exit('vacreq: loginAction');
         return parent::loginAction($request);
     }
 
@@ -36,6 +37,7 @@ class VacReqSecurityController extends SecurityController
      */
     public function setAjaxLoginVisit( Request $request )
     {
+        //exit('vacreq: setAjaxLoginVisit');
         return parent::setAjaxLoginVisit($request);
     }
 
@@ -47,6 +49,7 @@ class VacReqSecurityController extends SecurityController
      */
     public function actionNoPermission( Request $request )
     {
+        //exit('vacreq: actionNoPermission');
         //return parent::actionNoPermission($request);
         return array(
             //'returnpage' => '',
@@ -61,6 +64,7 @@ class VacReqSecurityController extends SecurityController
      */
     public function idlelogoutAction( Request $request, $flag = null )
     {
+        //exit('vacreq: idlelogoutAction');
         return parent::idlelogoutAction($request,$flag);
     }
 
