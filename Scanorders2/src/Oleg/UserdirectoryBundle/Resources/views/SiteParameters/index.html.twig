@@ -15,6 +15,10 @@
     {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
 {% endif %}
 
+{% if sitename == 'vacreq' %}
+    {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+{% endif %}
+
 {% extends extendStr%}
 
 
@@ -416,7 +420,11 @@
                 <td>{{ entity.avataruploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'avataruploadpath'}) }}">Edit</a></td>
             </tr>
-
+            <tr>
+                <td>Vacation Request Upload Folder (example: directory/vacreq)</td>
+                <td>{{ entity.vacrequploadpath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'vacrequploadpath'}) }}">Edit</a></td>
+            </tr>
 
             {#Titles and Messages#}
             <tr>

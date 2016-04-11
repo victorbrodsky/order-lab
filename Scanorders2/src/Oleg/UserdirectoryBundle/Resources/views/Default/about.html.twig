@@ -8,6 +8,8 @@
     {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
 {% elseif sitename == 'scan' %}
     {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% elseif sitename == 'vacreq' %}
+    {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% extends extendStr%}

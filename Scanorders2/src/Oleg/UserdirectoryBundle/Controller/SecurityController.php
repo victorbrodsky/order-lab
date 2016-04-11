@@ -56,6 +56,9 @@ class SecurityController extends Controller
         if( $routename == "scan_login" ) {
             $sitename = $this->container->getParameter('scan.sitename');
         }
+        if( $routename == "vacreq_login" ) {
+            $sitename = $this->container->getParameter('vacreq.sitename');
+        }
 
         //$sitename = $this->container->getParameter('employees.sitename');
         $formArr = $this->loginPage($sitename);
@@ -173,6 +176,9 @@ class SecurityController extends Controller
         if( $routename == "scan_idlelogout" ) {
             $sitename = $this->container->getParameter('scan.sitename');
         }
+        if( $routename == "vacreq_login" ) {
+            $sitename = $this->container->getParameter('vacreq.sitename');
+        }
 
         $userSecUtil = $this->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
@@ -207,6 +213,10 @@ class SecurityController extends Controller
             //scan uses its own setLoginAttempt
             $options['sitename'] = $this->container->getParameter('scan.sitename');
             $options['event'] = "Scan Order login page visit";
+        }
+        if( $routename == "vacreq_setloginvisit" ) {
+            $options['sitename'] = $this->container->getParameter('vacreq.sitename');
+            $options['event'] = "Vacation Request login page visit";
         }
 
 

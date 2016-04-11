@@ -252,6 +252,13 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        //vacrequploadpath
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'vacrequploadpath' )
+            $builder->add('vacrequploadpath',null,array(
+                'label'=>'Vacation Request Upload Folder:',
+                'attr' => array('class'=>'form-control')
+            ));
+
 
         //titles and messages
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mainHomeTitle' )
@@ -414,6 +421,7 @@ class SiteParametersType extends AbstractType
                 )
             ));
 
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'applicationPageLinkFellApp' )
             $builder->add('applicationPageLinkFellApp',null,array(
                 'label'=>'Link to the Application Page:',
@@ -473,6 +481,7 @@ class SiteParametersType extends AbstractType
                 'label'=>'Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
+
 
 
 

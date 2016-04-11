@@ -12,6 +12,7 @@ namespace Oleg\OrderformBundle\Security\Util;
 //All user roles are checked by security context, not $user->hasRole() function. hasRole function will not work for global roles set by security.uml
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -303,7 +304,11 @@ class SecurityUtil extends UserSecurityUtil {
     }
 
     public function getUserPerSiteSettings($user) {
-        return $user->getPerSiteSettings();
+        if( $user instanceof User ) {
+            return $user->getPerSiteSettings();
+        } else {
+            return null;
+        }
         //$entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneByUser($user);
         //return $entity;
     }

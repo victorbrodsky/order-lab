@@ -968,6 +968,7 @@ class AdminController extends Controller
             "employeesuploadpath" => "directory/documents",
             "scanuploadpath" => "scan-order/documents",
             "fellappuploadpath" => "fellapp",
+            "vacrequploadpath" => "directory/vacreq",
 
             "mainHomeTitle" => "Welcome to the O R D E R platform!",
             "listManagerTitle" => "List Manager",

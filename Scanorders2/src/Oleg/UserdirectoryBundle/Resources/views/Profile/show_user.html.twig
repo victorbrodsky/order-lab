@@ -28,6 +28,10 @@
         {#{{ render(controller('OlegDeidentifierBundle:Default:deidentifierNavbar', {'accessionTypeStr': accessionTypeStr, 'accessionTypeId': accessionTypeId, 'accessionNumber': accessionNumber})) }}#}
     {% endif %}
 
+    {% if sitename == 'vacreq' %}
+        {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+    {% endif %}
+
 {% endblock %}
 
 {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}

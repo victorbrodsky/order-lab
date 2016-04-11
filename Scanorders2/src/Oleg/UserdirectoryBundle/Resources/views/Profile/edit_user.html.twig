@@ -19,6 +19,10 @@
         {% include 'OlegDeidentifierBundle:Default:navbar.html.twig' %}
     {% endif %}
 
+    {% if sitename == 'vacreq' %}
+        {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+    {% endif %}
+
 {% endblock %}
 
 

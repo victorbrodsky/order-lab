@@ -30,6 +30,15 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('OlegVacReqBundle:Default:index.html.twig');
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_USER') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+
+
+        return array(
+        );
     }
+
 }

@@ -26,8 +26,8 @@ class CronCommand extends ContainerAwareCommand {
             ->setDescription('Cron job to delete orphan files older than 2 years of age');
     }
 
-    //TODO: make sure to set all current documents useObject (before implemented document useObject are NULL):
-    //TODO: entityNamespace=notempty,entityName=notempty,entityId=notempty
+    //Make sure to set all current documents useObject (before implemented document useObject are NULL):
+    //entityNamespace=notempty,entityName=notempty,entityId=notempty
     //UPDATE [ScanOrder].[dbo].[user_document]
     //SET entityNamespace='notempty',entityName='notempty',entityId='notempty'
     //WHERE entityNamespace IS NULL

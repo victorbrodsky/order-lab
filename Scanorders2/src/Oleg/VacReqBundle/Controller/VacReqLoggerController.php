@@ -69,29 +69,29 @@ class VacReqLoggerController extends LoggerController
     }
 
 
-    /**
-     * Generation Log with eventTypes = "Generate Vacation Request"
-     *
-     * @Route("/generation-log/", name="vacreq_generation_log")
-     * @Method("GET")
-     * @Template("OlegVacReqBundle:Logger:index.html.twig")
-     */
-    public function generationLogAction(Request $request)
-    {
+//    /**
+//     * Generation Log with eventTypes = "Generate Vacation Request"
+//     *
+//     * @Route("/generation-log/", name="vacreq_generation_log")
+//     * @Method("GET")
+//     * @Template("OlegVacReqBundle:Logger:index.html.twig")
+//     */
+//    public function generationLogAction(Request $request)
+//    {
+//
+//    }
 
-    }
 
-
-    /**
-     * Generation Log with eventTypes = "Generate Vacation Request" and users = current user id
-     *
-     * @Route("/event-log-per-user-per-event-type/", name="vacreq_my_generation_log")
-     * @Method("GET")
-     * @Template("OlegVacReqBundle:Logger:index.html.twig")
-     */
-    public function myGenerationLogAction(Request $request)
-    {
-
-    }
+//    /**
+//     * Generation Log with eventTypes = "Generate Vacation Request" and users = current user id
+//     *
+//     * @Route("/event-log-per-user-per-event-type/", name="vacreq_my_generation_log")
+//     * @Method("GET")
+//     * @Template("OlegVacReqBundle:Logger:index.html.twig")
+//     */
+//    public function myGenerationLogAction(Request $request)
+//    {
+//
+//    }
 
 }

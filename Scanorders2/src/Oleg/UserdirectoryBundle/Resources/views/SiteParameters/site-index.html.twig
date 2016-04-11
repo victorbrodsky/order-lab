@@ -15,6 +15,10 @@
     {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
 {% endif %}
 
+{% if sitename == 'vacreq' %}
+    {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+{% endif %}
+
 {% extends extendStr%}
 
 

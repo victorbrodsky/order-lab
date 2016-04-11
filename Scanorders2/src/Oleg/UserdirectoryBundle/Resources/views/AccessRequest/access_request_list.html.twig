@@ -6,6 +6,8 @@
     {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
 {% elseif sitename == 'deidentifier' %}
     {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% elseif sitename == 'vacreq' %}
+    {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% extends extendStr%}
