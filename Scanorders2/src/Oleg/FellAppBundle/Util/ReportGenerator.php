@@ -51,8 +51,7 @@ class ReportGenerator {
         $this->container = $container;
         $this->templating = $templating;
 
-        //fellapp.uploadpath = fellapp
-        $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
+        $this->uploadDir = 'Uploaded';
 
         $this->generatereportrunCmd = 'php ../app/console fellapp:generatereportrun --env=prod';
 
@@ -419,7 +418,7 @@ class ReportGenerator {
             $reportsUploadPathFellApp = "Reports";
             $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
-        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;   //'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/Reports';
+        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
 
         $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         $reportPath = realpath($reportPath);
@@ -1138,7 +1137,7 @@ class ReportGenerator {
     //test method for console command
     public function testCmd() {
 
-        $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(7);
+        $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(6);
         $avatar = $fellapp->getAvatars()->last();
 
         //$serverPath = $avatar->getFullServerPath();

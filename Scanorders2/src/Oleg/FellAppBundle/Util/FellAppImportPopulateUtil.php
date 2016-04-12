@@ -51,8 +51,7 @@ class FellAppImportPopulateUtil {
         $this->sc = $sc;
         $this->container = $container;
 
-        //fellapp.uploadpath = fellapp
-        $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
+        $this->uploadDir = 'Uploaded';
 
         $userutil = new UserUtil();
         $this->systemEmail = $userutil->getSiteSetting($this->em,'siteEmail');
@@ -391,10 +390,12 @@ class FellAppImportPopulateUtil {
         $systemUser = $userSecUtil->findSystemUser();
 
         //$path = $this->uploadDir.'/Spreadsheets';
-        $path = $this->uploadDir.'/'.$userSecUtil->getSiteSettingParameter('spreadsheetsPathFellApp');
-        if( !$path ) {
-            $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$path);
+        $spreadsheetsPathFellApp = $userSecUtil->getSiteSettingParameter('spreadsheetsPathFellApp');
+        if( !$spreadsheetsPathFellApp ) {
+            $spreadsheetsPathFellApp = 'Spreadsheets';
+            $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$spreadsheetsPathFellApp);
         }
+        $path = $this->uploadDir.'/'.$spreadsheetsPathFellApp;
 
         //download file
         $fileDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $fileId, $documentType, $path);
@@ -558,11 +559,12 @@ class FellAppImportPopulateUtil {
         //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
 
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
-        $uploadPath = $this->uploadDir.'/'.$userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp');
-        if( !$uploadPath ) {
-            $uploadPath = "FellowshipApplicantUploads";
-            $logger->warning('applicantsUploadPathFellApp is not defined in Site Parameters. Use default "'.$uploadPath.'" folder.');
+        $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp');
+        if( !$applicantsUploadPathFellApp ) {
+            $applicantsUploadPathFellApp = "FellowshipApplicantUploads";
+            $logger->warning('applicantsUploadPathFellApp is not defined in Site Parameters. Use default "'.$applicantsUploadPathFellApp.'" folder.');
         }
+        $uploadPath = $this->uploadDir.'/'.$applicantsUploadPathFellApp;
 
         //$logger->notice("Destination upload path=".$uploadPath);
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
@@ -1642,19 +1644,18 @@ class FellAppImportPopulateUtil {
     // X - yearsOldAplicationsFellApp
     public function deleteOldSheetFellApp() {
 
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
         //deleteOldAplicationsFellApp
         $deleteOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteOldAplicationsFellApp');
         if( !$deleteOldAplicationsFellApp ) {
-            $logger = $this->container->get('logger');
             $logger->notice('deleteOldAplicationsFellApp is FALSE or not defined in Site Parameters. deleteOldAplicationsFellApp='.$deleteOldAplicationsFellApp);
             return false;
         }
 
         $yearsOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('yearsOldAplicationsFellApp');
         if( !$yearsOldAplicationsFellApp ) {
-            $logger = $this->container->get('logger');
             $logger->warning('yearsOldAplicationsFellApp is not defined in Site Parameters. yearsOldAplicationsFellApp='.$yearsOldAplicationsFellApp);
             return false;
         }

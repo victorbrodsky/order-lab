@@ -92,6 +92,7 @@
                     {% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath() %}
                     <img src="{{ avatarPath }}"
                          alt="{{ "Avatar "~fellapp.avatars|last.getOriginalname }}"
+                         style="max-width: 250px;"
                     >
                 {% else %}
                     {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
