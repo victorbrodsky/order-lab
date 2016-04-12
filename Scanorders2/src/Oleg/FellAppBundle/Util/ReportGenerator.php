@@ -423,9 +423,9 @@ class ReportGenerator {
         $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         $reportPath = realpath($reportPath);
 
-        if( !file_exists($uploadReportPath) ) {
-            mkdir($uploadReportPath, 0700, true);
-            chmod($uploadReportPath, 0700);
+        if( !file_exists($reportPath) ) {
+            mkdir($reportPath, 0700, true);
+            chmod($reportPath, 0700);
         }
 
         $outdir = $reportPath.'/temp_'.$id.'/';
