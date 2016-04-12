@@ -3,6 +3,7 @@
 namespace Oleg\VacReqBundle\Form;
 
 
+use Oleg\VacReqBundle\Form\VacReqRequestBusinessType;
 use Oleg\UserdirectoryBundle\Entity\PrivateComment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,10 +27,23 @@ class VacReqRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('user', new VacReqUserType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-            'label' => false,
+//        $builder->add('user', new VacReqUserType($this->params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+//            'label' => "Requester:",
+//            'required' => false,
+//        ));
+        $builder->add('user', null, array(
+            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'label' => "Requester:",
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width vacreq-user')
+        ));
+
+        $builder->add('approver', null, array(
+            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'label' => "Approver:",
             'required' => false,
+            'attr' => array('class' => 'combobox combobox-width vacreq-approver')
         ));
 
 //        $builder->add('startDate','datetime',array(
@@ -48,60 +62,80 @@ class VacReqRequestType extends AbstractType
 //            'required' => false,
 //        ));
 
-        ///////////////////////// tree node /////////////////////////
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $title = $event->getData();
-            $form = $event->getForm();
+//        ///////////////////////// tree node /////////////////////////
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $title = $event->getData();
+//            $form = $event->getForm();
+//
+//            $label = null;
+//            if( $title ) {
+//                $institution = $title->getInstitution();
+//                if( $institution ) {
+//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+//                }
+//            }
+//            if( !$label ) {
+//                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+//            }
+//            //echo "label=".$label."<br>";
+//
+//            $form->add('institution', 'employees_custom_selector', array(
+//                'label' => $label,
+//                'required' => false,
+//                //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+//                'attr' => array(
+//                    'class' => 'ajax-combobox-compositetree',
+//                    'type' => 'hidden',
+//                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+//                    'data-compositetree-classname' => 'Institution'
+//                ),
+//                'classtype' => 'institution'
+//            ));
+//        });
+//        ///////////////////////// EOF tree node /////////////////////////
 
-            $label = null;
-            if( $title ) {
-                $institution = $title->getInstitution();
-                if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
-                }
-            }
-            if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
-            }
-            //echo "label=".$label."<br>";
-
-            $form->add('institution', 'employees_custom_selector', array(
-                'label' => $label,
-                'required' => false,
-                //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree',
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
-                    'data-compositetree-classname' => 'Institution'
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('status', 'choice', array(
+                'disabled' => ($this->params['roleAdmin'] ? true : false),
+                'choices' => array(
+                    'pending' => 'pending',
+                    'approved' => 'approved',
+                    'declined' => 'declined'
                 ),
-                'classtype' => 'institution'
+                'label' => "Status:",
+                'required' => true,
+                'attr' => array('class' => 'combobox combobox-width'),
             ));
-        });
-        ///////////////////////// EOF tree node /////////////////////////
-
-        $builder->add('status', 'choice', array(
-            'disabled' => ($this->params['roleAdmin'] ? true : false),
-            'choices'   => array(
-                'pending' => 'pending',
-                'approved' => 'approved',
-                'declined' => 'declined'
-            ),
-            'label' => "Status:",
-            'required' => true,
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
+        }
 
         $builder->add('availabilities', null, array(
             'label' => "Availability(s):",
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
-        $builder->add('availabilityComment', null, array(
-            'label' => false,
+        $builder->add('emergencyCellPhone', null, array(
+            'label' => "Cell Phone:",
             'attr' => array('class' => 'form-control'),
         ));
 
+        $builder->add('emergencyOther', null, array(
+            'label' => "Other:",
+            'attr' => array('class' => 'form-control'),
+        ));
+
+        //Business Travel
+        $builder->add('requestBusiness', new VacReqRequestBusinessType($this->params), array(
+            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestBusiness',
+            'label' => false,
+            'required' => false,
+        ));
+
+        //Business Travel
+        $builder->add('requestVacation', new VacReqRequestVacationType($this->params), array(
+            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestVacation',
+            'label' => false,
+            'required' => false,
+        ));
 
     }
 

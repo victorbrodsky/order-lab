@@ -34,7 +34,7 @@
 
                     <li id="nav-bar-vacreqhome" class="hidden-xs divider-vertical">
                         <a href="{{ path(vacreq_sitename~'_home') }}">
-                            <span class="glyphicon glyphicon-file"></span> Home
+                            <span class="glyphicon glyphicon-plane"></span> Home
                         </a>
                     </li>
 
@@ -47,9 +47,25 @@
 
                     {% if is_granted('ROLE_VACREQ_SUBMITTER') %}
                         <li id="nav-bar-myrequests" class="divider-vertical">
-                            {#<a href="{{ path('vacreq_myrequests') }}">#}
-                                {#My Requests#}
-                            {#</a>#}
+                            <a href="{{ path('vacreq_myrequests') }}">
+                                My Vacation Requests
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_VACREQ_APPROVER') %}
+                        <li id="nav-bar-myrequests" class="divider-vertical">
+                            <a href="{{ path('vacreq_incomingrequests') }}">
+                                Incoming Vacation Requests
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_VACREQ_ADMIN') %}
+                        <li id="nav-bar-myrequests" class="divider-vertical">
+                            <a href="{{ path('vacreq_approvers') }}">
+                                Vacation Request Groups
+                            </a>
                         </li>
                     {% endif %}
 

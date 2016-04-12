@@ -64,7 +64,12 @@ class VacReqRequest
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $availabilityComment;
+    private $emergencyCellPhone;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $emergencyOther;
 
     /**
      * status: pending, approved, declined
@@ -72,26 +77,31 @@ class VacReqRequest
      */
     private $status;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
-     */
-    private $institution;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+//     */
+//    private $institution;
 
 
     /**
-     * @ORM\OneToOne(targetEntity="VacReqRequestBusiness", inversedBy="request", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="requestBusiness_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="VacReqRequestBusiness", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="requestBusiness_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $requestBusiness;
 
 
     /**
-     * @ORM\OneToOne(targetEntity="VacReqRequestVacation", inversedBy="request", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="requestVacation_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="VacReqRequestVacation", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="requestVacation_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $requestVacation;
 
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $approver;
 
 
     public function __construct($user=null) {
@@ -201,21 +211,21 @@ class VacReqRequest
         $this->status = $status;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
-    }
-
-    /**
-     * @param mixed $institution
-     */
-    public function setInstitution($institution)
-    {
-        $this->institution = $institution;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getInstitution()
+//    {
+//        return $this->institution;
+//    }
+//
+//    /**
+//     * @param mixed $institution
+//     */
+//    public function setInstitution($institution)
+//    {
+//        $this->institution = $institution;
+//    }
 
     /**
      * @return mixed
@@ -249,22 +259,6 @@ class VacReqRequest
         $this->requestVacation = $requestVacation;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAvailabilityComment()
-    {
-        return $this->availabilityComment;
-    }
-
-    /**
-     * @param mixed $availabilityComment
-     */
-    public function setAvailabilityComment($availabilityComment)
-    {
-        $this->availabilityComment = $availabilityComment;
-    }
-
 
     public function getAvailabilities()
     {
@@ -281,6 +275,56 @@ class VacReqRequest
     {
         $this->availabilities->removeElement($item);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmergencyCellPhone()
+    {
+        return $this->emergencyCellPhone;
+    }
+
+    /**
+     * @param mixed $emergencyCellPhone
+     */
+    public function setEmergencyCellPhone($emergencyCellPhone)
+    {
+        $this->emergencyCellPhone = $emergencyCellPhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmergencyOther()
+    {
+        return $this->emergencyOther;
+    }
+
+    /**
+     * @param mixed $emergencyOther
+     */
+    public function setEmergencyOther($emergencyOther)
+    {
+        $this->emergencyOther = $emergencyOther;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApprover()
+    {
+        return $this->approver;
+    }
+
+    /**
+     * @param mixed $approver
+     */
+    public function setApprover($approver)
+    {
+        $this->approver = $approver;
+    }
+
+
 
 
 }

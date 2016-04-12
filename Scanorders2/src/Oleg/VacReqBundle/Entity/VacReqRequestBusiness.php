@@ -33,10 +33,10 @@ class VacReqRequestBusiness extends VacReqRequestBase
      */
     private $paidByOutsideOrganization;
 
-    /**
-     * @ORM\OneToOne(targetEntity="VacReqRequest", mappedBy="requestBusiness")
-     */
-    private $request;
+//    /**
+//     * @ORM\OneToOne(targetEntity="VacReqRequest", mappedBy="requestBusiness")
+//     */
+//    private $request;
 
 
 
@@ -88,21 +88,21 @@ class VacReqRequestBusiness extends VacReqRequestBase
         $this->paidByOutsideOrganization = $paidByOutsideOrganization;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @param mixed $request
-     */
-    public function setRequest($request)
-    {
-        $this->request = $request;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getRequest()
+//    {
+//        return $this->request;
+//    }
+//
+//    /**
+//     * @param mixed $request
+//     */
+//    public function setRequest($request)
+//    {
+//        $this->request = $request;
+//    }
 
 
 

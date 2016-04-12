@@ -23,24 +23,26 @@ class DefaultController extends Controller
         return array('sitename'=>$this->container->getParameter('vacreq.sitename'));
     }
 
-    /**
-     * @Route("/", name="vacreq_home")
-     * @Template("OlegVacReqBundle:Default:index.html.twig")
-     * @Method("GET")
-     */
-    public function indexAction()
-    {
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_USER') ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-        }
+//    /**
+//     * @Route("/", name="vacreq_home")
+//     * @Template("OlegVacReqBundle:Default:index.html.twig")
+//     * @Method("GET")
+//     */
+//    public function indexAction()
+//    {
+//        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_USER') ) {
+//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $vacReqRequests = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
+//
+//        return array(
+//            'vacReqRequests' => $vacReqRequests
+//        );
+//    }
 
-        $em = $this->getDoctrine()->getManager();
 
-        $vacReqRequests = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
-
-        return array(
-            'vacReqRequests' => $vacReqRequests
-        );
-    }
 
 }

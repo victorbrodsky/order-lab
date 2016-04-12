@@ -13,32 +13,211 @@
 
 
 {% block title %}
-    Vacation Request
+    Pathology Faculty Vacation/Business Travel Request
 {% endblock %}
 
 
 
 {% block content %}
 
-    Vacation Request
+    <h4 class="text-info" align="center">
+        Pathology Faculty Vacation/Business Travel Request
+    </h4>
 
 
-    {{ form_start(form) }}
+    {{ form_start(form,{'attr': {'id': 'vacreq-request-form'}}) }}
 
         {{ form_errors(form) }}
 
 
-        {{ treemacros.compositeTreeNode(form.institutions,cycle,'') }}
+        {#{{ treemacros.compositeTreeNode(form.institution,cycle,'') }}#}
 
         {{ formmacros.field(form.user) }}
 
-        {{ formmacros.field(form.availabilities) }}
-        {{ formmacros.field(form.availabilityComment) }}
+        {{ formmacros.field(form.approver) }}
 
 
-        {#{{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}#}
+        {#Business#}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#vacreq-Business">
+                        Business Travel
+                    </a>
+                </h4>
+            </div>
+            <div id="vacreq-Business" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    {{ formmacros.fieldDateLabel(form.requestBusiness.startDate,'allow-future-date') }}
+                    {{ formmacros.fieldDateLabel(form.requestBusiness.endDate,'allow-future-date') }}
+                    {{ formmacros.field(form.requestBusiness.numberOfDays) }}
+                    {{ formmacros.fieldDateLabel(form.requestBusiness.firstDayBackInOffice,'allow-future-date') }}
+                    {{ formmacros.field(form.requestBusiness.expenses) }}
+                    {{ formmacros.field(form.requestBusiness.description) }}
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+
+        {#Vacation#}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#vacreq-Vacation">
+                        Vacation Travel
+                    </a>
+                </h4>
+            </div>
+            <div id="vacreq-Vacation" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    {{ formmacros.fieldDateLabel(form.requestVacation.startDate,'allow-future-date') }}
+                    {{ formmacros.fieldDateLabel(form.requestVacation.endDate,'allow-future-date') }}
+                    {{ formmacros.field(form.requestVacation.numberOfDays) }}
+                    {{ formmacros.fieldDateLabel(form.requestVacation.firstDayBackInOffice,'allow-future-date') }}
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+
+        {#{{ formmacros.fieldDateLabel(form.credentials.dob,'allow-future-date') }}#}
+
+        {#Emergency#}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#Emergency">
+                        Emergency Contact Info (optional)
+                    </a>
+                </h4>
+            </div>
+            <div id="Emergency" class="panel-collapse collapse">
+                <div class="panel-body">
+                    {{ formmacros.field(form.availabilities) }}
+                    {{ formmacros.field(form.emergencyCellPhone) }}
+                    {{ formmacros.field(form.emergencyOther) }}
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+        {% if form.status is defined %}
+            {{ formmacros.field(form.status) }}
+        {% endif %}
 
     {{ form_end(form) }}
 
+    <br>
+
+    <div id="error-box" class="alert alert-danger" style="display: none"></div>
+
+    <br>
+
+    {% if cycle == "new" %}
+        <p>
+            <button class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqForm()">Create</button>
+        </p>
+    {% endif %}
+
+    {% if cycle == "edit" %}
+        <p>
+            <button class="btn btn-warning" name="btnUpdate" type="button" onclick="validateVacReqForm()">Update</button>
+            <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
+        </p>
+    {% endif %}
+
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn_margin_top btn btn-primary" href="{{ path(vacreq_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
+        </p>
+    {% endif %}
+
 {% endblock %}
 
+
+{% block additionaljs %}
+
+    <script language="Javascript">
+
+        function validateVacReqForm() {
+
+            $('#error-box').hide();
+
+            var error = null;
+
+            var userData = $('.vacreq-user').first().select2('data');
+            if( !error && !userData ) {
+                error = "Please choose a requester";
+            }
+
+            var approverData = $('.vacreq-approver').first().select2('data');
+            if( !error && !approverData ) {
+                error = "Please choose an approver";
+            }
+
+            var businessRequest = $('#vacreq-Business');
+            var vacationRequest = $('#vacreq-Vacation');
+
+            var startDateBusiness = businessRequest.find('.vacreq-startDate').first().val();
+            var endDateBusiness = businessRequest.find('.vacreq-endDate').first().val();
+            //console.log('startDateBusiness=('+startDateBusiness+')' + 'endDateBusiness=('+endDateBusiness+')');
+
+            var startDateVacation = vacationRequest.find('.vacreq-startDate').first().val();
+            var endDateVacation = vacationRequest.find('.vacreq-endDate').first().val();
+            //console.log('startDateVacation=('+startDateVacation+')' + 'endDateVacation=('+endDateVacation+')');
+
+            if( !error && !startDateBusiness && !startDateVacation ) {
+                error = "Please fill in the Start Date";
+            }
+
+            //console.log('endDate=('+endDate+')');
+            if( !error && !endDateBusiness && !endDateVacation ) {
+                error = "Please fill in the End Date";
+            }
+
+            //Business
+            if( !error && startDateBusiness && endDateBusiness ) {
+
+                var numberOfDays = businessRequest.find('.vacreq-numberOfDays').first().val();
+                if( !error && !numberOfDays ) {
+                    error = "Please fill in the number of days";
+                }
+
+                var expenses = businessRequest.find('.vacreq-expenses').first().val();
+                if( !error && !expenses ) {
+                    error = "Please fill in the estimated expenses";
+                }
+
+                var description = businessRequest.find('.vacreq-description').first().val();
+                if( !error && !description ) {
+                    error = "Please fill in the description";
+                }
+
+            }
+
+            //Vacation
+            if( !error && startDateVacation && endDateVacation ) {
+
+                var numberOfDays = vacationRequest.find('.vacreq-numberOfDays').first().val();
+                if( !error && !numberOfDays ) {
+                    error = "Please fill in the number of days";
+                }
+
+                var firstDayBackInOffice = vacationRequest.find('.vacreq-firstDayBackInOffice').first().val();
+                if( !error && !firstDayBackInOffice ) {
+                    error = "Please fill in the first day back in office";
+                }
+
+            }
+
+            //console.log('error='+error);
+
+            if( error ) {
+                $('#error-box').html(error);
+                $('#error-box').show();
+                return false;
+            }
+
+            $('#vacreq-request-form').submit();
+        }
+
+    </script>
+{% endblock %}
