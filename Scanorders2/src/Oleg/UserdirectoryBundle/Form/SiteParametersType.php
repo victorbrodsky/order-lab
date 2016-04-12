@@ -396,7 +396,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'spreadsheetsPathFellApp' )
             $builder->add('spreadsheetsPathFellApp',null,array(
-                'label'=>'Path to the downloaded spreadsheets with fellowship applications relative to the "Fellowship Application Upload Folder" (Spreadsheets):',
+                'label'=>'Path to the downloaded spreadsheets with fellowship applications (fellapp/Spreadsheets):',
                 'attr' => array(
                     'class'=>'form-control form-control-modif',
                     'style'=>'margin:0',
@@ -405,7 +405,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'applicantsUploadPathFellApp' )
             $builder->add('applicantsUploadPathFellApp',null,array(
-                'label'=>'Path to the downloaded attached documents relative to the "Fellowship Application Upload Folder" (FellowshipApplicantUploads):',
+                'label'=>'Path to the downloaded attached documents (fellapp/FellowshipApplicantUploads):',
                 'attr' => array(
                     'class'=>'form-control form-control-modif',
                     'style'=>'margin:0',
@@ -414,7 +414,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'reportsUploadPathFellApp' )
             $builder->add('reportsUploadPathFellApp',null,array(
-                'label'=>'Path to the generated fellowship applications in PDF format relative to the "Fellowship Application Upload Folder" (Reports):',
+                'label'=>'Path to the generated fellowship applications in PDF format (fellapp/Reports):',
                 'attr' => array(
                     'class'=>'form-control form-control-modif',
                     'style'=>'margin:0',
