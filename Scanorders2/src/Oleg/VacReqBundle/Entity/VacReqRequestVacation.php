@@ -20,36 +20,5 @@ use Doctrine\ORM\Mapping as ORM;
 class VacReqRequestVacation extends VacReqRequestBase
 {
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="VacReqRequest", mappedBy="requestVacation")
-//     */
-//    private $request;
-
-
-
-
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getRequest()
-//    {
-//        return $this->request;
-//    }
-//
-//    /**
-//     * @param mixed $request
-//     */
-//    public function setRequest($request)
-//    {
-//        $this->request = $request;
-//    }
-
-
-
-
-
-
-
 
 }

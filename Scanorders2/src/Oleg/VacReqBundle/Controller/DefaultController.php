@@ -25,7 +25,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/", name="vacreq_home")
-//     * @Template("OlegVacReqBundle:Default:index.html.twig")
+//     * @Template("OlegVacReqBundle:Request:index.html.twig")
 //     * @Method("GET")
 //     */
 //    public function indexAction()

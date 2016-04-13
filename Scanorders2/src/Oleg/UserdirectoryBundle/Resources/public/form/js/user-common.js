@@ -510,9 +510,9 @@ function initDatepicker( holder ) {
         //console.log(holder);
 
         if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
-            var targets = holder.find('.input-group.date');
+            var targets = holder.find('.input-group.date').not('.form_datetime');
         } else {
-            var targets = $('.input-group.date');
+            var targets = $('.input-group.date').not('.form_datetime');
         }
 
         processAllDatepickers( targets );

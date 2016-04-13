@@ -137,6 +137,77 @@
 
     <script language="Javascript">
 
+        $(document).ready(function() {
+
+            vacreqDateListener();
+
+        });
+
+        function vacreqDateListener() {
+
+            $('.vacreq-startDate,.vacreq-endDate').on("change", function(e) {
+                //vacreqUpdateDaysAndFirstday(this);
+
+                var holder = $(this).closest('.panel-body');
+
+                var startDate = holder.find('.vacreq-startDate').first().datepicker('getDate');
+                var endDate = holder.find('.vacreq-endDate').first().datepicker('getDate');
+                //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
+
+                //get working days difference
+                if( startDate && endDate ) {
+
+                    //var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                    //var diffDays = 1 + Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
+                    var diffWorkingDays = calculateWorkingDays(startDate,endDate);
+                    //console.log('diffWorkingDays='+diffWorkingDays);
+
+                    if( diffWorkingDays > 0 ) {
+                        //numberOfDays
+                        holder.find('.vacreq-numberOfDays').first().val(diffWorkingDays);
+
+                        //firstDayBackInOffice
+                        var nextWorkingDay = getNextWorkingDay(endDate);
+                        //console.log('nextWorkingDay='+nextWorkingDay);
+                        holder.find('.vacreq-firstDayBackInOffice').first().datepicker('setDate', nextWorkingDay);
+                    }
+
+                }//if
+
+            });
+
+        }
+
+        // Count days from d0 to d1 inclusive, excluding Fridays and Saturdays
+        function calculateWorkingDays( startDate, endDate )  {
+            var days = 0;
+            for( var i = startDate; i <= endDate; i.setDate(i.getDate() + 1) ) {
+                if( i.getDay() != 6 && i.getDay() != 0 ) {
+                    days = days + 1;
+                }
+            }
+            return days;
+        }
+
+
+
+        function getNextWorkingDay( endDate )  {
+            var finishDate = new Date();
+            finishDate.setDate(endDate.getDate()+7);
+            //console.log('finishDate='+finishDate+", day="+finishDate.getDay());
+
+            var nextWorkingDay = new Date();
+            nextWorkingDay.setDate(endDate.getDate()+1);
+
+            for( nextWorkingDay; nextWorkingDay <= finishDate; nextWorkingDay.setDate(nextWorkingDay.getDate() + 1) ) {
+                //console.log('nextWorkingDay='+nextWorkingDay+", day="+nextWorkingDay.getDay());
+                if( nextWorkingDay.getDay() != 6 && nextWorkingDay.getDay() != 0 ) {
+                    return nextWorkingDay;
+                }
+            }
+            return null;
+        }
+
         function validateVacReqForm() {
 
             $('#error-box').hide();

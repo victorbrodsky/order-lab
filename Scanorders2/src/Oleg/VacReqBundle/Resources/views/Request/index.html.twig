@@ -1,0 +1,196 @@
+{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+{% block title %}
+    Vacation Request
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        Pathology Faculty Vacation/Business Travel Requests
+    </h4>
+
+    <p>
+    <form action="{{ path(routename) }}" method="get" {{ form_enctype(vacreqfilter) }} class="well form-search">
+
+        <div class="row">
+            <div class="col-xs-12">
+
+            <div class="col-xs-2">
+                <div class="input-group input-group-reg date allow-future-date">
+                    {{ form_widget(vacreqfilter.startdate) }}
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </div>
+
+            <div class="col-xs-2">
+                <div class="input-group input-group-reg date allow-future-date">
+                    {{ form_widget(vacreqfilter.enddate) }}
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </div>
+
+            <div class="col-xs-6">
+                {{ form_row(vacreqfilter.user) }}
+            </div>
+
+            {#<div class="col-xs-2">#}
+                {#{{ form_row(vacreqfilter.year) }}#}
+            {#</div>#}
+
+            <div class="col-xs-1">
+                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+            </div>
+
+            </div>
+        </div>
+
+
+        {{ form_rest(vacreqfilter) }}
+    </form>
+    </p>
+
+
+
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'Request ID', 'request.id') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Submitted Date', 'request.createDate') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Faculty', 'infos.displayName') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Email', 'user.email') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Phone', 'infos.preferredPhone') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Start Date', 'requestBusiness.startDate') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'End Date', 'requestBusiness.endDate') }}</th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in pagination %}
+
+            <tr>
+
+                <td>
+                    <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                </td>
+
+                <td>{% if entity.createDate %}{{ entity.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+
+                <td class="rowlink-skip">
+                    {% if entity.user %}
+                        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.getUserNameStr() }}</a>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% set singleEmail = entity.user.getSingleEmail %}
+                    {% if singleEmail %}
+                        <a href="mailto:{{ singleEmail }}" target="_top">{{ singleEmail }}</a>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% set preferredPhone = entity.user.getPreferredPhone %}
+                    {% if preferredPhone %}
+                        {{ usermacros.phoneHref(preferredPhone) }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if entity.requestBusiness and entity.requestBusiness.startDate %}
+                        {{ entity.requestBusiness.startDate|date('Y-m-d') }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if entity.requestBusiness and entity.requestBusiness.endDate %}
+                        {{ entity.requestBusiness.endDate|date('Y-m-d') }}
+                    {% endif %}
+                </td>
+
+                {#Action#}
+                <td class="rowlink-skip">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li><a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>
+
+                            <li>
+                                <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">Review request</a>
+                            </li>
+
+                            <li class="divider"></li>
+
+                            {% if entity.status != 'pending' %}
+                                <li>
+                                    <a
+                                        general-data-confirm="Are you sure you would like to set the request status for {{ entity.user }} to Pending?"
+                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'pending' }) }}">Set to Pending
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if entity.status != 'approved' %}
+                                <li>
+                                    <a
+                                        general-data-confirm="Are you sure you would like to Approve the request for {{ entity.user }}?"
+                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'approved' }) }}">Approve
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if entity.status != 'declined' %}
+                                <li>
+                                    <a
+                                        general-data-confirm="Are you sure you would like to Decline the request for {{ entity.user }}?"
+                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'declined' }) }}">Decline
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+
+                    </div>
+
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+
+
+{% endblock %}
+
+{#{% block additionaljs %}#}
+
+    {#{% javascripts#}
+    {#'@OlegUserdirectoryBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+{#{% endblock %}#}

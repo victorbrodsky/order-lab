@@ -132,6 +132,56 @@ class RequestController extends Controller
 
 
 
+    /**
+     * @Route("/status/{id}/{status}", name="vacreq_status_change")
+     * @Method({"GET"})
+     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     */
+    public function statusAction(Request $request, $id, $status) {
+
+        //if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
+        //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        //}
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
+        }
+
+
+        if( $status ) {
+
+            $entity->setStatus($status);
+
+            $em->persist($entity);
+            $em->flush();
+
+            //return $this->redirectToRoute('vacreq_home');
+
+            //flash
+            if( $status == 'pending' ) {
+                $status = 'set to Pending';
+            }
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Request ID ".$entity->getId()." for ". $entity->getUser() ." has been " . $status
+            );
+        }
+
+        $url = $request->headers->get('referer');
+        //exit('url='.$url);
+
+        //return $this->redirectToRoute('vacreq_home');
+        //return $this->redirect($this->generateUrl('vacreq_home', $request->query->all()));
+
+        return $this->redirect($url);
+    }
+
+
+
 //    /**
 //     * @Route("/request/{id}", name="vacreq_request_show")
 //     * @Route("/request/edit/{id}", name="vacreq_request_edit")
