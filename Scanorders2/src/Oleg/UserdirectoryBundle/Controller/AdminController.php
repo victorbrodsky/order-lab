@@ -905,7 +905,7 @@ class AdminController extends Controller
             $this->setInstitutionFellowship($entity,$role);
 
             //set institution and Fellowship Subspecialty types to role
-            $this->setInstitutionVacReqRole($entity,$role);
+            //$this->setInstitutionVacReqRole($entity,$role);
 
             $em->persist($entity);
             $em->flush();
@@ -987,95 +987,116 @@ class AdminController extends Controller
         //should be 8:
 
         //EXECUTIVE: ?
-        if( strpos($role,'EXECUTIVE') !== false ) {
-            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-            $instName = "";
-            $EXECUTIVE = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-            if( !$EXECUTIVE ) {
-                exit($wcmc.": no child found with name=".$instName);
-            }
-            $entity->setInstitution($EXECUTIVE);
-        }
+//        if( strpos($role,'EXECUTIVE') !== false ) {
+//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+//            $instName = "";
+//            $EXECUTIVE = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+//            if( !$EXECUTIVE ) {
+//                exit($wcmc.": no child found with name=".$instName);
+//            }
+//            $entity->setInstitution($EXECUTIVE);
+//        }
+        $this->vacreqRoleSetSingleInstitution($entity,$role,"EXECUTIVE",$wcmc,"???");
 
-        //CLINICALPATHOLOGY: Clinical Chemistry, Clinical Microbiology?
-        if( strpos($role,'CLINICALPATHOLOGY') !== false ) {
-            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-            $instName = "";
-            $CLINICALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-            if( !$CLINICALPATHOLOGY ) {
-                exit($wcmc.": no child found with name=".$instName);
-            }
-            $entity->setInstitution($CLINICALPATHOLOGY);
-        }
+//        //CLINICALPATHOLOGY: Clinical Chemistry, Clinical Microbiology?
+//        if( strpos($role,'CLINICALPATHOLOGY') !== false ) {
+//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+//            $instName = "";
+//            $CLINICALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+//            if( !$CLINICALPATHOLOGY ) {
+//                exit($wcmc.": no child found with name=".$instName);
+//            }
+//            $entity->setInstitution($CLINICALPATHOLOGY);
+//        }
+        $this->vacreqRoleSetSingleInstitution($entity,$role,"CLINICALPATHOLOGY",$wcmc,"???");
 
-        //EXPERIMENTALPATHOLOGY: ?
-        if( strpos($role,'EXPERIMENTALPATHOLOGY') !== false ) {
-            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-            $instName = "";
-            $EXPERIMENTALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-            if( !$EXPERIMENTALPATHOLOGY ) {
-                exit($wcmc.": no child found with name=".$instName);
-            }
-            $entity->setInstitution($EXPERIMENTALPATHOLOGY);
-        }
+//        //EXPERIMENTALPATHOLOGY: ?
+//        if( strpos($role,'EXPERIMENTALPATHOLOGY') !== false ) {
+//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+//            $instName = "";
+//            $EXPERIMENTALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+//            if( !$EXPERIMENTALPATHOLOGY ) {
+//                exit($wcmc.": no child found with name=".$instName);
+//            }
+//            $entity->setInstitution($EXPERIMENTALPATHOLOGY);
+//        }
+        $this->vacreqRoleSetSingleInstitution($entity,$role,"EXPERIMENTALPATHOLOGY",$wcmc,"???");
 
-        //VASCULARBIOLOGY: "Vascular Biology" in NYP
-        if( strpos($role,'VASCULARBIOLOGY') !== false ) {
-            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-            $instName = "Vascular Biology";
-            $VASCULARBIOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-            if( !$VASCULARBIOLOGY ) {
-                exit($wcmc.": no child found with name=".$instName);
-            }
-            $entity->setInstitution($VASCULARBIOLOGY);
-        }
+//        //VASCULARBIOLOGY: "Vascular Biology" in NYP
+//        if( strpos($role,'VASCULARBIOLOGY') !== false ) {
+//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+//            $instName = "Vascular Biology";
+//            $VASCULARBIOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+//            if( !$VASCULARBIOLOGY ) {
+//                exit($wcmc.": no child found with name=".$instName);
+//            }
+//            $entity->setInstitution($VASCULARBIOLOGY);
+//        }
+        $this->vacreqRoleSetSingleInstitution($entity,$role,"VASCULARBIOLOGY",$wcmc,"???");
 
-        //HEMATOPATHOLOGY: Hematopathology?
-        if( strpos($role,'HEMATOPATHOLOGY') !== false ) {
-            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-            $instName = "";
-            $HEMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-            if( !$HEMATOPATHOLOGY ) {
-                exit($wcmc.": no child found with name=".$instName);
-            }
-            $entity->setInstitution($HEMATOPATHOLOGY);
-        }
+//        //HEMATOPATHOLOGY: Hematopathology?
+//        if( strpos($role,'HEMATOPATHOLOGY') !== false ) {
+//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+//            $instName = "";
+//            $HEMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+//            if( !$HEMATOPATHOLOGY ) {
+//                exit($wcmc.": no child found with name=".$instName);
+//            }
+//            $entity->setInstitution($HEMATOPATHOLOGY);
+//        }
+        $this->vacreqRoleSetSingleInstitution($entity,$role,"HEMATOPATHOLOGY",$wcmc,"???");
 
-        //SURGICALPATHOLOGY: ?
-        if( strpos($role,'SURGICALPATHOLOGY') !== false ) {
-            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-            $instName = "";
-            $SURGICALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-            if( !$SURGICALPATHOLOGY ) {
-                exit($wcmc.": no child found with name=".$instName);
-            }
-            $entity->setInstitution($SURGICALPATHOLOGY);
-        }
+//        //SURGICALPATHOLOGY: ?
+//        if( strpos($role,'SURGICALPATHOLOGY') !== false ) {
+//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+//            $instName = "";
+//            $SURGICALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+//            if( !$SURGICALPATHOLOGY ) {
+//                exit($wcmc.": no child found with name=".$instName);
+//            }
+//            $entity->setInstitution($SURGICALPATHOLOGY);
+//        }
+        $this->vacreqRoleSetSingleInstitution($entity,$role,"SURGICALPATHOLOGY",$wcmc,"???");
 
-        //CYTOPATHOLOGY: ?
-        if( strpos($role,'CYTOPATHOLOGY') !== false ) {
-            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-            $instName = "";
-            $CYTOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-            if( !$CYTOPATHOLOGY ) {
-                exit($wcmc.": no child found with name=".$instName);
-            }
-            $entity->setInstitution($CYTOPATHOLOGY);
-        }
+//        //CYTOPATHOLOGY: ?
+//        if( strpos($role,'CYTOPATHOLOGY') !== false ) {
+//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+//            $instName = "";
+//            $CYTOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+//            if( !$CYTOPATHOLOGY ) {
+//                exit($wcmc.": no child found with name=".$instName);
+//            }
+//            $entity->setInstitution($CYTOPATHOLOGY);
+//        }
+        $this->vacreqRoleSetSingleInstitution($entity,$role,"CYTOPATHOLOGY",$wcmc,"???");
 
-        //DERMATOPATHOLOGY: ?
-        if( strpos($role,'DERMATOPATHOLOGY') !== false ) {
-            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-            $instName = "";
-            $DERMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-            if( !$DERMATOPATHOLOGY ) {
-                exit($wcmc.": no child found with name=".$instName);
-            }
-            $entity->setInstitution($DERMATOPATHOLOGY);
-        }
+//        //DERMATOPATHOLOGY: ?
+//        if( strpos($role,'DERMATOPATHOLOGY') !== false ) {
+//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+//            $instName = "";
+//            $DERMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+//            if( !$DERMATOPATHOLOGY ) {
+//                exit($wcmc.": no child found with name=".$instName);
+//            }
+//            $entity->setInstitution($DERMATOPATHOLOGY);
+//        }
+        $this->vacreqRoleSetSingleInstitution($entity,$role,"DERMATOPATHOLOGY",$wcmc,"???");
 
     }
-    //public function
+    //$VacReqGroupStr: "DERMATOPATHOLOGY" string
+    //$root: $wcmc object
+    //$instName: "Dermatology" institution name string
+    public function vacreqRoleSetSingleInstitution($entity,$role,$VacReqGroupStr,$root,$instName) {
+        $em = $this->getDoctrine()->getManager();
+        //DERMATOPATHOLOGY: ?
+        if( strpos($role,$VacReqGroupStr) !== false ) {
+            $groupObject = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
+            if( !$groupObject ) {
+                exit($root.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($groupObject);
+        }
+    }
 
     public function generateSiteParameters() {
 
