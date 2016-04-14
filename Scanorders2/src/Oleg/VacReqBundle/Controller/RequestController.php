@@ -119,7 +119,7 @@ class RequestController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirectToRoute('vacreq_edit', array('id' => $entity->getId()));
+            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
         }
 
         return array(

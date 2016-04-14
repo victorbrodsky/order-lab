@@ -29,6 +29,7 @@ use Oleg\UserdirectoryBundle\Entity\SiteList;
 use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Oleg\UserdirectoryBundle\Entity\TrainingTypeList;
+use Oleg\VacReqBundle\Entity\VacReqAvailabilityList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -251,6 +252,8 @@ class AdminController extends Controller
 
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
 
+        $count_VacReqAvailabilityList = $this->generateVacReqAvailabilityList();
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
@@ -313,6 +316,7 @@ class AdminController extends Controller
             'PermissionActions ='.$count_PermissionActions.', '.
             'Collaboration Types='.$collaborationtypes.', '.
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
+            'VacReqAvailabilityList='.$count_VacReqAvailabilityList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -743,6 +747,46 @@ class AdminController extends Controller
 //                "Can search and approve vacation requests",
 //                50
 //            ),
+            "ROLE_VACREQ_APPROVER_EXECUTIVE" => array(
+                "Vacation Request Approver for the Executive Committee",
+                "Can search and approve vacation requests",
+                50
+            ),
+            "ROLE_VACREQ_APPROVER_CLINICALPATHOLOGY" => array(
+                "Vacation Request Approver for the Clinical Pathology",
+                "Can search and approve vacation requests for specified service",
+                50
+            ),
+            "ROLE_VACREQ_APPROVER_EXPERIMENTALPATHOLOGY" => array(
+                "Vacation Request Approver for the Experimental Pathology",
+                "Can search and approve vacation requests for specified service",
+                50
+            ),
+            "ROLE_VACREQ_APPROVER_VASCULARBIOLOGY" => array(
+                "Vacation Request Approver for the Vascular Biology",
+                "Can search and approve vacation requests for specified service",
+                50
+            ),
+            "ROLE_VACREQ_APPROVER_HEMATOPATHOLOGY" => array(
+                "Vacation Request Approver for the Hematopathology",
+                "Can search and approve vacation requests for specified service",
+                50
+            ),
+            "ROLE_VACREQ_APPROVER_SURGICALPATHOLOGY" => array(
+                "Vacation Request Approver for the Surgical Pathology",
+                "Can search and approve vacation requests for specified service",
+                50
+            ),
+            "ROLE_VACREQ_APPROVER_CYTOPATHOLOGY" => array(
+                "Vacation Request Approver for the Cytopathology",
+                "Can search and approve vacation requests for specified service",
+                50
+            ),
+            "ROLE_VACREQ_APPROVER_DERMATOPATHOLOGY" => array(
+                "Vacation Request Approver for the Dermatopathology",
+                "Can search and approve vacation requests for specified service",
+                50
+            ),
 //
 //            "ROLE_VACREQ_SUBMITTER" => array(
 //                "Vacation Request Submitter",
@@ -826,6 +870,13 @@ class AdminController extends Controller
             $count = $count + 10;
 
         } //foreach
+
+        //add sitename to roles
+        $count = $this->syncRolesDb();
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'syncRolesDb count='.$count
+        );
 
         return round($count/10);
     }
@@ -4349,6 +4400,55 @@ class AdminController extends Controller
 
         return round($count/10);
     }
+
+
+    public function generateVacReqAvailabilityList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Available via email"       =>  "email",
+            "Available via cell phone"  =>  "phone",
+            "Other"                     =>  "other",
+            "Not Accessible"            =>  "none",
+        );
+
+        $count = 10;
+        foreach( $types as $type=>$abbreviation ) {
+
+            if( !$type ) {
+                continue;
+            }
+            //echo "type=".$type."<br>";
+
+            $listEntity = $em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation($abbreviation);
+            if( $listEntity ) {
+                continue;
+            } else {
+                $listEntity = $em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByName($type);
+                if( $listEntity ) {
+                    continue;
+                }
+            }
+            //echo "populate type=".$type."<br>";
+
+            $listEntity = new VacReqAvailabilityList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $listEntity->setAbbreviation($abbreviation);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        //exit("generateVacReqAvailabilityList count=".$count."<br>");
+        return round($count/10);
+    }
+
 
     /**
      * @Route("/sync-db/", name="user_sync_db")

@@ -28,7 +28,7 @@
 
     <br>
 
-    {% if entity.user.id is defined %}
+    {% if cycle == 'show' and entity.user.id is defined %}
         {{ userform.snapshot_steve(entity.user,vacreq_sitename,cycle) }}
     {% endif %}
 
@@ -38,11 +38,33 @@
 
         {{ form_errors(form) }}
 
-
         {#{{ treemacros.compositeTreeNode(form.institution,cycle,'') }}#}
 
-        {{ formmacros.field(form.user) }}
+        {% if form.user is defined %}
+            {{ formmacros.field(form.user) }}
+        {% endif %}
 
+        {#Emergency#}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#Emergency">
+                        Emergency Contact Info (optional)
+                    </a>
+                </h4>
+            </div>
+            <div id="Emergency" class="panel-collapse collapse">
+                <div class="panel-body">
+                    {{ formmacros.field(form.availabilities) }}
+                    {{ formmacros.field(form.emergencyComment) }}
+                    {#{{ formmacros.field(form.emergencyCellPhone) }}#}
+                    {#{{ formmacros.field(form.emergencyOther) }}#}
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+
+        {#approver#}
         {{ formmacros.field(form.approver) }}
 
 
@@ -75,8 +97,9 @@
                     {{ formmacros.field(form.requestBusiness.expenses) }}
                     {{ formmacros.checkbox(form.requestBusiness.paidByOutsideOrganization) }}
                     {{ formmacros.field(form.requestBusiness.description) }}
-
-                    {#{{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}#}
+                    {% if form.requestBusiness.approverComment is defined %}
+                        {{ formmacros.field(form.requestBusiness.approverComment) }}
+                    {% endif %}
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
         </div> <!-- panel panel-info -->
@@ -108,30 +131,14 @@
                     {{ formmacros.fieldDateLabel(form.requestVacation.endDate,'allow-future-date') }}
                     {{ formmacros.field(form.requestVacation.numberOfDays) }}
                     {{ formmacros.fieldDateLabel(form.requestVacation.firstDayBackInOffice,'allow-future-date') }}
+                    {% if form.requestVacation.approverComment is defined %}
+                        {{ formmacros.field(form.requestVacation.approverComment) }}
+                    {% endif %}
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
         </div> <!-- panel panel-info -->
-
 
         {#{{ formmacros.fieldDateLabel(form.credentials.dob,'allow-future-date') }}#}
-
-        {#Emergency#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#Emergency">
-                        Emergency Contact Info (optional)
-                    </a>
-                </h4>
-            </div>
-            <div id="Emergency" class="panel-collapse collapse">
-                <div class="panel-body">
-                    {{ formmacros.field(form.availabilities) }}
-                    {{ formmacros.field(form.emergencyCellPhone) }}
-                    {{ formmacros.field(form.emergencyOther) }}
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
 
         {% if form.status is defined %}
             {{ formmacros.field(form.status) }}
@@ -325,4 +332,14 @@
         }
 
     </script>
+{% endblock %}
+
+
+{#Snapshot css#}
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/oleguserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}

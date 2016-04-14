@@ -61,15 +61,15 @@ class VacReqRequest
      **/
     private $availabilities;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $emergencyCellPhone;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $emergencyCellPhone;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $emergencyOther;
+    private $emergencyComment;
 
 //    /**
 //     * status: pending, approved, declined
@@ -247,34 +247,52 @@ class VacReqRequest
     /**
      * @return mixed
      */
-    public function getEmergencyCellPhone()
+    public function getEmergencyComment()
     {
-        return $this->emergencyCellPhone;
+        return $this->emergencyComment;
     }
 
     /**
-     * @param mixed $emergencyCellPhone
+     * @param mixed $emergencyComment
      */
-    public function setEmergencyCellPhone($emergencyCellPhone)
+    public function setEmergencyComment($emergencyComment)
     {
-        $this->emergencyCellPhone = $emergencyCellPhone;
+        $this->emergencyComment = $emergencyComment;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEmergencyOther()
-    {
-        return $this->emergencyOther;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getEmergencyCellPhone()
+//    {
+//        return $this->emergencyCellPhone;
+//    }
+//
+//    /**
+//     * @param mixed $emergencyCellPhone
+//     */
+//    public function setEmergencyCellPhone($emergencyCellPhone)
+//    {
+//        $this->emergencyCellPhone = $emergencyCellPhone;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getEmergencyOther()
+//    {
+//        return $this->emergencyOther;
+//    }
+//
+//    /**
+//     * @param mixed $emergencyOther
+//     */
+//    public function setEmergencyOther($emergencyOther)
+//    {
+//        $this->emergencyOther = $emergencyOther;
+//    }
 
-    /**
-     * @param mixed $emergencyOther
-     */
-    public function setEmergencyOther($emergencyOther)
-    {
-        $this->emergencyOther = $emergencyOther;
-    }
+
 
     /**
      * @return mixed

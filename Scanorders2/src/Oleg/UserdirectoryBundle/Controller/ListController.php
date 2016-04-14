@@ -93,6 +93,8 @@ class ListController extends Controller
      * @Route("/permission-actions/", name="permissionaction-list")
      * @Route("/sites/", name="sites-list")
      * @Route("/event-object-types/", name="eventobjecttypes-list")
+     * @Route("/vacreq-availabilities/", name="vacreqavailabilities-list")
+     *
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -310,6 +312,7 @@ class ListController extends Controller
      * @Route("/permission-actions/", name="permissionaction_create")
      * @Route("/sites/", name="sites_create")
      * @Route("/event-object-types/", name="eventobjecttypes_create")
+     * @Route("/vacreq-availabilities/", name="vacreqavailabilities_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -463,6 +466,7 @@ class ListController extends Controller
      * @Route("/permission-actions/new", name="permissionaction_new")
      * @Route("/sites/new", name="sites_new")
      * @Route("/event-object-types/new", name="eventobjecttypes_new")
+     * @Route("/vacreq-availabilities/new", name="vacreqavailabilities_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -587,6 +591,7 @@ class ListController extends Controller
      * @Route("/permission-actions/{id}", name="permissionaction_show")
      * @Route("/sites/{id}", name="sites_show")
      * @Route("/event-object-types/{id}", name="eventobjecttypes_show")
+     * @Route("/vacreq-availabilities/{id}", name="vacreqavailabilities_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -701,6 +706,7 @@ class ListController extends Controller
      * @Route("/permission-actions/{id}/edit", name="permissionaction_edit")
      * @Route("/sites/{id}/edit", name="sites_edit")
      * @Route("/event-object-types/{id}/edit", name="eventobjecttypes_edit")
+     * @Route("/vacreq-availabilities/{id}/edit", name="vacreqavailabilities_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -858,6 +864,7 @@ class ListController extends Controller
      * @Route("/permission-actions/{id}", name="permissionaction_update")
      * @Route("/sites/{id}", name="sites_update")
      * @Route("/event-object-types/{id}", name="eventobjecttypes_update")
+     * @Route("/vacreq-availabilities/{id}", name="vacreqavailabilities_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1440,6 +1447,11 @@ class ListController extends Controller
                 $className = "EventObjectTypeList";
                 $displayName = "Event Log Object Types";
                 break;
+            case "vacreqavailabilities":
+                $className = "VacReqAvailabilityList";
+                $displayName = "Availability List";
+                $bundleName = "VacReqBundle";
+                break;
 
             default:
                 $className = null;
@@ -1539,6 +1551,7 @@ class ListController extends Controller
      * @Route("/permission-actions/{id}", name="permissionaction_delete")
      * @Route("/sites/{id}", name="sites_delete")
      * @Route("/event-object-types/{id}", name="eventobjecttypes_delete")
+     * @Route("/vacreq-availabilities/{id}", name="vacreqavailabilities_delete")
      *
      *
      * @Method("DELETE")

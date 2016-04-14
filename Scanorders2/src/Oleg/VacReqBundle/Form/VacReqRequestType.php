@@ -27,17 +27,14 @@ class VacReqRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add('user', new VacReqUserType($this->params), array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-//            'label' => "Requester:",
-//            'required' => false,
-//        ));
-        $builder->add('user', null, array(
-            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-            'label' => "Requester:",
-            'required' => true,
-            'attr' => array('class' => 'combobox combobox-width vacreq-user')
-        ));
+        if( $this->params['cycle'] != 'show' ) {
+            $builder->add('user', null, array(
+                //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+                'label' => "Requester:",
+                'required' => true,
+                'attr' => array('class' => 'combobox combobox-width vacreq-user')
+            ));
+        }
 
         $builder->add('approver', null, array(
             //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
@@ -113,13 +110,18 @@ class VacReqRequestType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
-        $builder->add('emergencyCellPhone', null, array(
-            'label' => "Cell Phone:",
-            'attr' => array('class' => 'form-control'),
-        ));
+//        $builder->add('emergencyCellPhone', null, array(
+//            'label' => "Cell Phone:",
+//            'attr' => array('class' => 'form-control'),
+//        ));
+//
+//        $builder->add('emergencyOther', null, array(
+//            'label' => "Other:",
+//            'attr' => array('class' => 'form-control'),
+//        ));
 
-        $builder->add('emergencyOther', null, array(
-            'label' => "Other:",
+        $builder->add('emergencyComment', null, array(
+            'label' => "Emergency Comment:",
             'attr' => array('class' => 'form-control'),
         ));
 

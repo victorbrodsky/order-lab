@@ -53,6 +53,11 @@ class VacReqRequestBase
      */
     protected $status;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $approverComment;
+
 
 
     public function __construct($status='pending') {
@@ -154,6 +159,22 @@ class VacReqRequestBase
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApproverComment()
+    {
+        return $this->approverComment;
+    }
+
+    /**
+     * @param mixed $approverComment
+     */
+    public function setApproverComment($approverComment)
+    {
+        $this->approverComment = $approverComment;
     }
 
 

@@ -58,6 +58,14 @@ class VacReqRequestBaseType extends AbstractType
             'attr' => array('class' => 'datepicker form-control vacreq-firstDayBackInOffice'),
         ));
 
+        if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
+            $builder->add('approverComment', 'textarea', array(
+                'label' => 'Approver Comment:',
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control'),
+            ));
+        }
+
         if( $this->params['cycle'] != 'new' ) {
             $builder->add('status', 'choice', array(
                 'disabled' => ($this->params['roleAdmin'] ? false : true),

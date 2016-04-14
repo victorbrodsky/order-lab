@@ -123,7 +123,7 @@
                     {% endif %}
                 </td>
 
-                <td>
+                <td class="rowlink-skip">
                     {% set preferredPhone = entity.user.getPreferredPhone %}
                     {% if preferredPhone %}
                         {{ usermacros.phoneHref(preferredPhone) }}
@@ -138,7 +138,10 @@
                 </td>
                 <td>
                     {% if entity.requestBusiness and entity.requestBusiness.description %}
-                        {{ entity.requestBusiness.description }}
+                        {#{{ entity.requestBusiness.description }}#}
+                        <div class="textarea_widget">
+                            <textarea class="textarea form-control">{{ entity.requestBusiness.description }}</textarea>
+                        </div>
                     {% endif %}
                 </td>
                 <td>
@@ -156,18 +159,26 @@
                 {#Action#}
                 <td class="rowlink-skip">
 
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            Action <span class="caret"></span>
-                        </button>
+                    <p>
+                        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">User Details</a>
+                    </p>
 
-                        <ul class="dropdown-menu dropdown-menu-right">
+                    <p>
+                        <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">Review</a>
+                    </p>
 
-                            <li><a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>
+                    {#<div class="btn-group">#}
+                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                            {#Action <span class="caret"></span>#}
+                        {#</button>#}
 
-                            <li>
-                                <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">Review</a>
-                            </li>
+                        {#<ul class="dropdown-menu dropdown-menu-right">#}
+
+                            {#<li><a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>#}
+
+                            {#<li>#}
+                                {#<a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">Review</a>#}
+                            {#</li>#}
 
                             {#<li class="divider"></li>#}
 
@@ -198,10 +209,9 @@
                                 {#</li>#}
                             {#{% endif %}#}
 
-                        </ul>
+                        {#</ul>#}
 
-                    </div>
-
+                    {#</div>#}
 
                 </td>
 
