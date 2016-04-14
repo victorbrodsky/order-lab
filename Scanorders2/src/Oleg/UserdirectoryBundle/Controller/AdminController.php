@@ -791,8 +791,48 @@ class AdminController extends Controller
 //            "ROLE_VACREQ_SUBMITTER" => array(
 //                "Vacation Request Submitter",
 //                "Can submit a vacation request",
-//                10
+//                30
 //            ),
+            "ROLE_VACREQ_SUBMITTER_EXECUTIVE" => array(
+                "Vacation Request Submitter for the Executive Committee",
+                "Can search and create vacation requests",
+                30
+            ),
+            "ROLE_VACREQ_SUBMITTER_CLINICALPATHOLOGY" => array(
+                "Vacation Request Submitter for the Clinical Pathology",
+                "Can search and create vacation requests for specified service",
+                30
+            ),
+            "ROLE_VACREQ_SUBMITTER_EXPERIMENTALPATHOLOGY" => array(
+                "Vacation Request Submitter for the Experimental Pathology",
+                "Can search and create vacation requests for specified service",
+                30
+            ),
+            "ROLE_VACREQ_SUBMITTER_VASCULARBIOLOGY" => array(
+                "Vacation Request Submitter for the Vascular Biology",
+                "Can search and create vacation requests for specified service",
+                30
+            ),
+            "ROLE_VACREQ_SUBMITTER_HEMATOPATHOLOGY" => array(
+                "Vacation Request Submitter for the Hematopathology",
+                "Can search and create vacation requests for specified service",
+                30
+            ),
+            "ROLE_VACREQ_SUBMITTER_SURGICALPATHOLOGY" => array(
+                "Vacation Request Submitter for the Surgical Pathology",
+                "Can search and create vacation requests for specified service",
+                30
+            ),
+            "ROLE_VACREQ_SUBMITTER_CYTOPATHOLOGY" => array(
+                "Vacation Request Submitter for the Cytopathology",
+                "Can search and create vacation requests for specified service",
+                30
+            ),
+            "ROLE_VACREQ_SUBMITTER_DERMATOPATHOLOGY" => array(
+                "Vacation Request Submitter for the Dermatopathology",
+                "Can search and create vacation requests for specified service",
+                30
+            ),
 
             "ROLE_VACREQ_BANNED" => array(
                 "Vacation Request Banned User",
@@ -864,6 +904,9 @@ class AdminController extends Controller
             //set institution and Fellowship Subspecialty types to role
             $this->setInstitutionFellowship($entity,$role);
 
+            //set institution and Fellowship Subspecialty types to role
+            $this->setInstitutionVacReqRole($entity,$role);
+
             $em->persist($entity);
             $em->flush();
 
@@ -930,6 +973,109 @@ class AdminController extends Controller
         }
 
     }
+
+    //entity - role object
+    //role - role string
+    public function setInstitutionVacReqRole($entity,$role) {
+        if( strpos($role,'_VACREQ_') === false ) {
+            return;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+
+        //should be 8:
+
+        //EXECUTIVE: ?
+        if( strpos($role,'EXECUTIVE') !== false ) {
+            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+            $instName = "";
+            $EXECUTIVE = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+            if( !$EXECUTIVE ) {
+                exit($wcmc.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($EXECUTIVE);
+        }
+
+        //CLINICALPATHOLOGY: Clinical Chemistry, Clinical Microbiology?
+        if( strpos($role,'CLINICALPATHOLOGY') !== false ) {
+            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+            $instName = "";
+            $CLINICALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+            if( !$CLINICALPATHOLOGY ) {
+                exit($wcmc.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($CLINICALPATHOLOGY);
+        }
+
+        //EXPERIMENTALPATHOLOGY: ?
+        if( strpos($role,'EXPERIMENTALPATHOLOGY') !== false ) {
+            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+            $instName = "";
+            $EXPERIMENTALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+            if( !$EXPERIMENTALPATHOLOGY ) {
+                exit($wcmc.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($EXPERIMENTALPATHOLOGY);
+        }
+
+        //VASCULARBIOLOGY: "Vascular Biology" in NYP
+        if( strpos($role,'VASCULARBIOLOGY') !== false ) {
+            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+            $instName = "Vascular Biology";
+            $VASCULARBIOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+            if( !$VASCULARBIOLOGY ) {
+                exit($wcmc.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($VASCULARBIOLOGY);
+        }
+
+        //HEMATOPATHOLOGY: Hematopathology?
+        if( strpos($role,'HEMATOPATHOLOGY') !== false ) {
+            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+            $instName = "";
+            $HEMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+            if( !$HEMATOPATHOLOGY ) {
+                exit($wcmc.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($HEMATOPATHOLOGY);
+        }
+
+        //SURGICALPATHOLOGY: ?
+        if( strpos($role,'SURGICALPATHOLOGY') !== false ) {
+            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+            $instName = "";
+            $SURGICALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+            if( !$SURGICALPATHOLOGY ) {
+                exit($wcmc.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($SURGICALPATHOLOGY);
+        }
+
+        //CYTOPATHOLOGY: ?
+        if( strpos($role,'CYTOPATHOLOGY') !== false ) {
+            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+            $instName = "";
+            $CYTOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+            if( !$CYTOPATHOLOGY ) {
+                exit($wcmc.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($CYTOPATHOLOGY);
+        }
+
+        //DERMATOPATHOLOGY: ?
+        if( strpos($role,'DERMATOPATHOLOGY') !== false ) {
+            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
+            $instName = "";
+            $DERMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
+            if( !$DERMATOPATHOLOGY ) {
+                exit($wcmc.": no child found with name=".$instName);
+            }
+            $entity->setInstitution($DERMATOPATHOLOGY);
+        }
+
+    }
+    //public function
 
     public function generateSiteParameters() {
 
@@ -4214,7 +4360,10 @@ class AdminController extends Controller
             "Submit an interview evaluation",
             "Create a New Fellowship Application",
             "Modify a Fellowship Application",
-            "View a Fellowship Application"
+            "View a Fellowship Application",
+
+            "Submit a Vacation Request",
+            "Approve a Vacation Request"
         );
 
         $count = 10;
@@ -4266,6 +4415,8 @@ class AdminController extends Controller
 
             "Interview" => array("",array("fellapp")),
             "FellowshipApplication" => array("",array("fellapp")),
+
+            "Business/Vacation Request" => array("",array("vacreq")),
         );
 
         $count = 10;
@@ -4547,6 +4698,8 @@ class AdminController extends Controller
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
 
+            $resCount = $resCount + $this->addVacReqPermission( $role );
+
 
             //disable/remove already existing general roles
             if(
@@ -4614,6 +4767,24 @@ class AdminController extends Controller
 
         return $count;
     }
+
+    public function addVacReqPermission( $role ) {
+        $count = 0;
+
+        //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create","changestatus"
+        if( strpos($role, "ROLE_VACREQ_APPROVER") !== false ) {
+            $count = $count + $this->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
+            $count = $count + $this->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
+        }
+
+        //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create"
+        if( strpos($role, "ROLE_VACREQ_SUBMITTER") !== false ) {
+            $count = $count + $this->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
+        }
+
+        return $count;
+    }
+
     public function checkAndAddPermissionToRole($role,$permissionListStr,$permissionObjectListStr,$permissionActionListStr) {
 
         $count = 0;
