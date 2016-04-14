@@ -29,7 +29,7 @@
     <br>
 
     {% if entity.user.id is defined %}
-        {{ userform.snapshot_steve(entity.user,'vacreq',cycle) }}
+        {{ userform.snapshot_steve(entity.user,vacreq_sitename,cycle) }}
     {% endif %}
 
     <hr>
