@@ -29,6 +29,14 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
             'attr' => array('class'=>'textarea form-control vacreq-description')
         ));
 
+        $builder->add('paidByOutsideOrganization', 'checkbox', array(
+            'label' => 'Paid by Outside Organization:',
+            'mapped' => false,
+            'required' => false,
+            //'data' => true,
+            'attr' => array('class' => 'form-control'),
+        ));
+
     }
 
 

@@ -46,7 +46,7 @@ class VacReqRequestBaseType extends AbstractType
 
 
         $builder->add('numberOfDays', null, array(
-            'label' => 'Number of Work Days Offsite:',
+            'label' => 'Number of Work Days Offsite (Please do not include holidays):',
             'attr' => array('class'=>'form-control vacreq-numberOfDays')
         ));
 
@@ -57,6 +57,23 @@ class VacReqRequestBaseType extends AbstractType
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control vacreq-firstDayBackInOffice'),
         ));
+
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('status', 'choice', array(
+                'disabled' => ($this->params['roleAdmin'] ? false : true),
+                'choices' => array(
+                    //'pending' => 'Pending',
+                    'approved' => 'Approved',
+                    'rejected' => 'Rejected'
+                ),
+                'label' => false,   //"Status:",
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true,
+                //'data' => 'pending',
+                'attr' => array('class' => 'horizontal_type_wide'), //horizontal_type
+            ));
+        }
 
     }
 

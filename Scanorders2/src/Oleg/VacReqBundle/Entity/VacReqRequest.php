@@ -71,11 +71,11 @@ class VacReqRequest
      */
     private $emergencyOther;
 
-    /**
-     * status: pending, approved, declined
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $status;
+//    /**
+//     * status: pending, approved, declined
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $status;
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
@@ -106,7 +106,7 @@ class VacReqRequest
 
     public function __construct($user=null) {
         $this->setUser($user);
-        $this->setStatus('pending');
+        //$this->setStatus('pending');
         $this->setCreateDate(new \DateTime());
 
         $this->availabilities = new ArrayCollection();
@@ -194,38 +194,6 @@ class VacReqRequest
     {
         $this->updateDate = new \DateTime();
     }
-
-    /**
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param mixed $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getInstitution()
-//    {
-//        return $this->institution;
-//    }
-//
-//    /**
-//     * @param mixed $institution
-//     */
-//    public function setInstitution($institution)
-//    {
-//        $this->institution = $institution;
-//    }
 
     /**
      * @return mixed

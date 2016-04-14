@@ -47,7 +47,17 @@ class VacReqRequestBase
      */
     protected $firstDayBackInOffice;
 
+    /**
+     * status: pending, approved, rejected
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $status;
 
+
+
+    public function __construct($status='pending') {
+        $this->setStatus($status);
+    }
 
 
     /**
@@ -128,6 +138,22 @@ class VacReqRequestBase
     public function setFirstDayBackInOffice($firstDayBackInOffice)
     {
         $this->firstDayBackInOffice = $firstDayBackInOffice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 
 

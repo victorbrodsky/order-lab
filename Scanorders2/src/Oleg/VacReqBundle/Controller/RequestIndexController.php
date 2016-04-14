@@ -53,17 +53,14 @@ class RequestIndexController extends Controller
     public function incomingRequestsAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
-
-        return array(
-            'entities' => $entities,
+        $params = array(
+            'sitename'=>$this->container->getParameter('vacreq.sitename')
         );
+        return $this->listRequests($params, $request);
     }
 
     public function processFilter( $dql, $request, $params ) {
@@ -95,16 +92,19 @@ class RequestIndexController extends Controller
         $filterform = $this->createForm(new VacReqFilterType($params), null);
 
         $filterform->bind($request);
+        //echo "<pre>";
+        //print_r($filterform['startdate']);
+        //echo "</pre>";
 
         $startdate = $filterform['startdate']->getData();
         $enddate = $filterform['enddate']->getData();
         $user = $filterform['user']->getData();
         //$year = $filterform['year']->getData();
-        echo "userID=".$user->getId()."<br>";
+        //echo "userID=".$user."<br>";
 
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
-        if( $user ) {
+        if( $user && $user->getId() ) {
             $where = "";
             if( $where != "" ) {
                 $where .= " OR ";
@@ -119,11 +119,12 @@ class RequestIndexController extends Controller
             $filtered = true;
         }
 
-        echo "startdate=".$startdate."<br>";
+        //echo "startdate=".$startdate."<br>";
         if( $startdate ) {
             $dql->andWhere("request.createDate >= :startdate");
 
             $startdate = $this->convertFromUserTimezonetoUTC($startdate,$currentUser);
+            $startdate->setTime(00, 00, 00);
             $dqlParameters['startdate'] = $startdate;
 
             $filtered = true;
@@ -133,6 +134,7 @@ class RequestIndexController extends Controller
             $dql->andWhere("request.createDate <= :enddate");
 
             $enddate = $this->convertFromUserTimezonetoUTC($enddate,$currentUser);
+            $enddate->setTime(23, 59, 59);
             $dqlParameters['enddate'] = $enddate;
 
             $filtered = true;
@@ -174,7 +176,7 @@ class RequestIndexController extends Controller
             $query->setParameters( $dqlParameters );
         }
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -191,6 +193,21 @@ class RequestIndexController extends Controller
             'filtered' => $filtered,
             'routename' => $request->get('_route')
         );
+    }
+
+
+    //convert given datetime from user's timezone to UTC. Use UTC in DB query. 12:00 => 17:00 +5
+    public function convertFromUserTimezonetoUTC($datetime,$user) {
+
+        //$user_tz = 'America/New_York';
+        $user_tz = $user->getPreferences()->getTimezone();
+
+        //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
+        $datetimeTz = new \DateTime($datetime->format('Y-m-d'), new \DateTimeZone($user_tz) );
+        $datetimeUTC = $datetimeTz->setTimeZone(new \DateTimeZone('UTC'));
+        //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";
+
+        return $datetimeUTC;
     }
 
 }

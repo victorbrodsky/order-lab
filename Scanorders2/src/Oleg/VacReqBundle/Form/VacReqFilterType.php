@@ -51,7 +51,7 @@ class VacReqFilterType extends AbstractType
             'label' => false, //'Start Date/Time:',
             'required' => false,
             'widget' => 'single_text',
-            'format' => 'MM/dd/yyyy H:m',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'Start Date')
         ));
 
@@ -59,7 +59,7 @@ class VacReqFilterType extends AbstractType
             'label' => false, //'End Date/Time:',
             'required' => false,
             'widget' => 'single_text',
-            'format' => 'MM/dd/yyyy H:m',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'End Date')
         ));
 

@@ -1,6 +1,7 @@
 {% extends "OlegVacReqBundle::Default/base.html.twig" %}
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
 {% block title %}
     Vacation Request
@@ -55,9 +56,26 @@
 
 
 
-
-    <table class="records_list table table-hover table-condensed text-left">
+    {#table-bordered#}
+    <table class="records_list table table-hover table-condensed text-left table-bordered">
         <thead>
+        <tr>
+            <th colspan="5" class="text-center table-header-grey-gradient">
+                Requester Info
+            </th>
+
+            <th colspan="8" class="text-center table-header-grey-gradient">
+                Business Travel
+            </th>
+
+            <th colspan="5" class="text-center table-header-grey-gradient">
+                Vacation
+            </th>
+
+            <th rowspan="1" class="text-center table-header-grey-gradient">
+                Action
+            </th>
+        </tr>
         <tr>
             <th>{{ knp_pagination_sortable(pagination, 'Request ID', 'request.id') }}</th>
 
@@ -69,11 +87,16 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Phone', 'infos.preferredPhone') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Start Date', 'requestBusiness.startDate') }}</th>
+            {{ vacreqmacros.request_base_header( pagination, 'requestBusiness' ) }}
+            <th>{{ knp_pagination_sortable(pagination, 'Estimated Expenses', 'requestBusiness.expenses') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Description', 'requestBusiness.description') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Paid by Outside Organization', 'requestBusiness.paidByOutsideOrganization') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'End Date', 'requestBusiness.endDate') }}</th>
+            {{ vacreqmacros.request_base_header( pagination, 'requestVacation' ) }}
 
-            <th>Actions</th>
+            <th>
+                {#Actions#}
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -107,17 +130,28 @@
                     {% endif %}
                 </td>
 
+                {{ vacreqmacros.request_base_body( entity.requestBusiness )  }}
                 <td>
-                    {% if entity.requestBusiness and entity.requestBusiness.startDate %}
-                        {{ entity.requestBusiness.startDate|date('Y-m-d') }}
+                    {% if entity.requestBusiness and entity.requestBusiness.expenses %}
+                        {{ entity.requestBusiness.expenses }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entity.requestBusiness and entity.requestBusiness.description %}
+                        {{ entity.requestBusiness.description }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entity.requestBusiness and entity.requestBusiness.paidByOutsideOrganization %}
+                        {% if entity.requestBusiness.paidByOutsideOrganization %}
+                            yes
+                        {% else %}
+                            no
+                        {% endif %}
                     {% endif %}
                 </td>
 
-                <td>
-                    {% if entity.requestBusiness and entity.requestBusiness.endDate %}
-                        {{ entity.requestBusiness.endDate|date('Y-m-d') }}
-                    {% endif %}
-                </td>
+                {{ vacreqmacros.request_base_body( entity.requestVacation )  }}
 
                 {#Action#}
                 <td class="rowlink-skip">
@@ -132,37 +166,37 @@
                             <li><a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>
 
                             <li>
-                                <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">Review request</a>
+                                <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">Review</a>
                             </li>
 
-                            <li class="divider"></li>
+                            {#<li class="divider"></li>#}
 
-                            {% if entity.status != 'pending' %}
-                                <li>
-                                    <a
-                                        general-data-confirm="Are you sure you would like to set the request status for {{ entity.user }} to Pending?"
-                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'pending' }) }}">Set to Pending
-                                    </a>
-                                </li>
-                            {% endif %}
+                            {#{% if entity.status != 'pending' %}#}
+                                {#<li>#}
+                                    {#<a#}
+                                        {#general-data-confirm="Are you sure you would like to set the request status for {{ entity.user }} to Pending?"#}
+                                        {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'pending' }) }}">Set to Pending#}
+                                    {#</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
 
-                            {% if entity.status != 'approved' %}
-                                <li>
-                                    <a
-                                        general-data-confirm="Are you sure you would like to Approve the request for {{ entity.user }}?"
-                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'approved' }) }}">Approve
-                                    </a>
-                                </li>
-                            {% endif %}
+                            {#{% if entity.status != 'approved' %}#}
+                                {#<li>#}
+                                    {#<a#}
+                                        {#general-data-confirm="Are you sure you would like to Approve the request for {{ entity.user }}?"#}
+                                        {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'approved' }) }}">Approve#}
+                                    {#</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
 
-                            {% if entity.status != 'declined' %}
-                                <li>
-                                    <a
-                                        general-data-confirm="Are you sure you would like to Decline the request for {{ entity.user }}?"
-                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'declined' }) }}">Decline
-                                    </a>
-                                </li>
-                            {% endif %}
+                            {#{% if entity.status != 'declined' %}#}
+                                {#<li>#}
+                                    {#<a#}
+                                        {#general-data-confirm="Are you sure you would like to Decline the request for {{ entity.user }}?"#}
+                                        {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'declined' }) }}">Decline#}
+                                    {#</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
 
                         </ul>
 

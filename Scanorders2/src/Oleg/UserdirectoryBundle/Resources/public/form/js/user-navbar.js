@@ -182,6 +182,18 @@ function setVacReqNavBar() {
 
     var full = window.location.pathname;
 
+    if( full.indexOf("/vacation-request/my-requests/") !== -1 ) {
+        id = 'myrequests';
+    }
+
+    if( full.indexOf("/vacation-request/incoming-requests/") !== -1 ) {
+        id = 'incomingrequests';
+    }
+
+    if( full.indexOf("/vacation-request/approvers/") !== -1 ) {
+        id = 'approvers';
+    }
+
     id = commonNavBar(full,id)
 
     if( full.indexOf("/vacation-request/re-identify") !== -1 ) {

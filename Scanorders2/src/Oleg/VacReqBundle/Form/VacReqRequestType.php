@@ -94,19 +94,19 @@ class VacReqRequestType extends AbstractType
 //        });
 //        ///////////////////////// EOF tree node /////////////////////////
 
-        if( $this->params['cycle'] != 'new' ) {
-            $builder->add('status', 'choice', array(
-                'disabled' => ($this->params['roleAdmin'] ? true : false),
-                'choices' => array(
-                    'pending' => 'pending',
-                    'approved' => 'approved',
-                    'declined' => 'declined'
-                ),
-                'label' => "Status:",
-                'required' => true,
-                'attr' => array('class' => 'combobox combobox-width'),
-            ));
-        }
+//        if( $this->params['cycle'] != 'new' ) {
+//            $builder->add('status', 'choice', array(
+//                'disabled' => ($this->params['roleAdmin'] ? true : false),
+//                'choices' => array(
+//                    'pending' => 'pending',
+//                    'approved' => 'approved',
+//                    'declined' => 'declined'
+//                ),
+//                'label' => "Status:",
+//                'required' => true,
+//                'attr' => array('class' => 'combobox combobox-width'),
+//            ));
+//        }
 
         $builder->add('availabilities', null, array(
             'label' => "Availability(s):",

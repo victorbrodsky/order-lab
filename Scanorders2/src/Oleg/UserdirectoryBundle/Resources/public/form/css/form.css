@@ -26,6 +26,11 @@
     /*width: 70px;*/
     margin-right:3%;
 }
+.horizontal_type_wide LABEL, .horizontal_type_wide INPUT {
+    display: inline;
+    padding-right: 20px;
+    padding-left: 3px;
+}
 
 
 .flash-notice {
@@ -537,5 +542,9 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     /*margin: -1px; padding: 0; border: 0;*/
 /*}*/
 
-
-
+.table-header-grey-gradient {
+    background-color: -webkit-linear-gradient(left, #b9b9b9, #e8e8e8, #b9b9b9); /* For Safari 5.1 to 6.0 */
+    background-color: -o-linear-gradient(left, #b9b9b9, #e8e8e8, #b9b9b9); /* For Opera 11.1 to 12.0 */
+    background-color: -moz-linear-gradient(left, #b9b9b9, #e8e8e8, #b9b9b9); /* For Fx 3.6 to 15 */
+    background-color: linear-gradient(to right, #b9b9b9, #e8e8e8, #b9b9b9); /* Standard syntax (must be last) */
+}

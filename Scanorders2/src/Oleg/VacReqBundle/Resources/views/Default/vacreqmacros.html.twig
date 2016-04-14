@@ -1,0 +1,55 @@
+{% macro request_base_header( pagination, requestStr ) %}
+
+    <th>{{ knp_pagination_sortable(pagination, 'Status', requestStr~'.status') }}</th>
+
+    <th>{{ knp_pagination_sortable(pagination, 'Start Date', requestStr~'.startDate') }}</th>
+
+    <th>{{ knp_pagination_sortable(pagination, 'End Date', requestStr~'.endDate') }}</th>
+
+    <th>{{ knp_pagination_sortable(pagination, 'Number of Work Days Offsite', requestStr~'.numberOfDays') }}</th>
+
+    <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', requestStr~'.firstDayBackInOffice') }}</th>
+
+{% endmacro %}
+
+
+{% macro request_base_body( request ) %}
+
+    <td>
+        {% if request and request.status %}
+            {{ request.status|capitalize }}
+        {% endif %}
+    </td>
+
+    <td>
+        {% if request and request.startDate %}
+            {{ request.startDate|date('Y-m-d') }}
+        {% endif %}
+    </td>
+
+    <td>
+        {% if request and request.endDate %}
+            {{ request.endDate|date('Y-m-d') }}
+        {% endif %}
+    </td>
+
+    <td>
+        {% if request and request.numberOfDays %}
+            {{ request.numberOfDays }}
+        {% endif %}
+    </td>
+
+    <td>
+        {% if request and request.firstDayBackInOffice %}
+            {{ request.firstDayBackInOffice|date('Y-m-d') }}
+        {% endif %}
+    </td>
+
+{% endmacro %}
+
+{% macro request_radio_choice( request ) %}
+    {% if request.status is defined %}
+        {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+        {{ form_widget(request.status) }}
+    {% endif %}
+{% endmacro %}
