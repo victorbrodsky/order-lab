@@ -987,102 +987,31 @@ class AdminController extends Controller
         //should be 8:
 
         //EXECUTIVE: ?
-//        if( strpos($role,'EXECUTIVE') !== false ) {
-//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-//            $instName = "";
-//            $EXECUTIVE = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-//            if( !$EXECUTIVE ) {
-//                exit($wcmc.": no child found with name=".$instName);
-//            }
-//            $entity->setInstitution($EXECUTIVE);
-//        }
         $this->vacreqRoleSetSingleInstitution($entity,$role,"EXECUTIVE",$wcmc,"???");
 
-//        //CLINICALPATHOLOGY: Clinical Chemistry, Clinical Microbiology?
-//        if( strpos($role,'CLINICALPATHOLOGY') !== false ) {
-//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-//            $instName = "";
-//            $CLINICALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-//            if( !$CLINICALPATHOLOGY ) {
-//                exit($wcmc.": no child found with name=".$instName);
-//            }
-//            $entity->setInstitution($CLINICALPATHOLOGY);
-//        }
+        //CLINICALPATHOLOGY: Clinical Chemistry, Clinical Microbiology?
         $this->vacreqRoleSetSingleInstitution($entity,$role,"CLINICALPATHOLOGY",$wcmc,"???");
 
-//        //EXPERIMENTALPATHOLOGY: ?
-//        if( strpos($role,'EXPERIMENTALPATHOLOGY') !== false ) {
-//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-//            $instName = "";
-//            $EXPERIMENTALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-//            if( !$EXPERIMENTALPATHOLOGY ) {
-//                exit($wcmc.": no child found with name=".$instName);
-//            }
-//            $entity->setInstitution($EXPERIMENTALPATHOLOGY);
-//        }
+        //EXPERIMENTALPATHOLOGY: ?
         $this->vacreqRoleSetSingleInstitution($entity,$role,"EXPERIMENTALPATHOLOGY",$wcmc,"???");
 
-//        //VASCULARBIOLOGY: "Vascular Biology" in NYP
-//        if( strpos($role,'VASCULARBIOLOGY') !== false ) {
-//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-//            $instName = "Vascular Biology";
-//            $VASCULARBIOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-//            if( !$VASCULARBIOLOGY ) {
-//                exit($wcmc.": no child found with name=".$instName);
-//            }
-//            $entity->setInstitution($VASCULARBIOLOGY);
-//        }
+        //VASCULARBIOLOGY: "Vascular Biology" in NYP
         $this->vacreqRoleSetSingleInstitution($entity,$role,"VASCULARBIOLOGY",$wcmc,"???");
 
-//        //HEMATOPATHOLOGY: Hematopathology?
-//        if( strpos($role,'HEMATOPATHOLOGY') !== false ) {
-//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-//            $instName = "";
-//            $HEMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-//            if( !$HEMATOPATHOLOGY ) {
-//                exit($wcmc.": no child found with name=".$instName);
-//            }
-//            $entity->setInstitution($HEMATOPATHOLOGY);
-//        }
+        //HEMATOPATHOLOGY: Hematopathology?
         $this->vacreqRoleSetSingleInstitution($entity,$role,"HEMATOPATHOLOGY",$wcmc,"???");
 
-//        //SURGICALPATHOLOGY: ?
-//        if( strpos($role,'SURGICALPATHOLOGY') !== false ) {
-//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-//            $instName = "";
-//            $SURGICALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-//            if( !$SURGICALPATHOLOGY ) {
-//                exit($wcmc.": no child found with name=".$instName);
-//            }
-//            $entity->setInstitution($SURGICALPATHOLOGY);
-//        }
+        //SURGICALPATHOLOGY: ?
         $this->vacreqRoleSetSingleInstitution($entity,$role,"SURGICALPATHOLOGY",$wcmc,"???");
 
-//        //CYTOPATHOLOGY: ?
-//        if( strpos($role,'CYTOPATHOLOGY') !== false ) {
-//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-//            $instName = "";
-//            $CYTOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-//            if( !$CYTOPATHOLOGY ) {
-//                exit($wcmc.": no child found with name=".$instName);
-//            }
-//            $entity->setInstitution($CYTOPATHOLOGY);
-//        }
+        //CYTOPATHOLOGY: ?
         $this->vacreqRoleSetSingleInstitution($entity,$role,"CYTOPATHOLOGY",$wcmc,"???");
 
-//        //DERMATOPATHOLOGY: ?
-//        if( strpos($role,'DERMATOPATHOLOGY') !== false ) {
-//            //findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null)
-//            $instName = "";
-//            $DERMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(),$instName);
-//            if( !$DERMATOPATHOLOGY ) {
-//                exit($wcmc.": no child found with name=".$instName);
-//            }
-//            $entity->setInstitution($DERMATOPATHOLOGY);
-//        }
+        //DERMATOPATHOLOGY: ?
         $this->vacreqRoleSetSingleInstitution($entity,$role,"DERMATOPATHOLOGY",$wcmc,"???");
 
     }
+    //Assign Institution to a Role Object
     //$VacReqGroupStr: "DERMATOPATHOLOGY" string
     //$root: $wcmc object
     //$instName: "Dermatology" institution name string
@@ -1095,6 +1024,10 @@ class AdminController extends Controller
                 exit($root.": no child found with name=".$instName);
             }
             $entity->setInstitution($groupObject);
+
+            //Don't use this method. Use Role's Institution to link a role and VacReqRequest's Institution
+            //Create and add appropriate permission to this role:
+            //Permission Holder: "" - Permission: "Submit a Vacation Request", Institution(s): ""
         }
     }
 
@@ -4437,7 +4370,7 @@ class AdminController extends Controller
             "Interview" => array("",array("fellapp")),
             "FellowshipApplication" => array("",array("fellapp")),
 
-            "Business/Vacation Request" => array("",array("vacreq")),
+            "VacReqRequest" => array("",array("vacreq")), //"Business/Vacation Request"
         );
 
         $count = 10;

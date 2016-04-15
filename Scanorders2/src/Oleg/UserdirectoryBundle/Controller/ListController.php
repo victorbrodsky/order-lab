@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Oleg\UserdirectoryBundle\Entity\Permission;
+use Oleg\UserdirectoryBundle\Form\ListFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -205,11 +206,28 @@ class ListController extends Controller
 //            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
 //        }
 
+        $dqlParameters = array();
+        $filterform = $this->createForm(new ListFilterType(), null);
+        $filterform->bind($request);
+        $search = $filterform['search']->getData();
+        echo "search=".$search."<br>";
+
+        if( $search ) {
+            $dql->andWhere("ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search");
+            $dqlParameters['search'] = '%'.$search.'%';
+        }
+
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $limit = 50;
+
         $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
         $paginator = $this->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
@@ -237,7 +255,9 @@ class ListController extends Controller
             'entities' => $entities,
             'displayName' => $mapper['displayName'],
             'pathbase' => $pathbase,
-            'withCreateNewEntityLink' => $createNew
+            'withCreateNewEntityLink' => $createNew,
+            'filterform' => $filterform->createView(),
+            'routename' => $request->get('_route')
         );
     }
 

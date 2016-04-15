@@ -77,10 +77,10 @@ class VacReqRequest
 //     */
 //    private $status;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
-//     */
-//    private $institution;
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $institution;
 
 
     /**
@@ -260,40 +260,6 @@ class VacReqRequest
         $this->emergencyComment = $emergencyComment;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getEmergencyCellPhone()
-//    {
-//        return $this->emergencyCellPhone;
-//    }
-//
-//    /**
-//     * @param mixed $emergencyCellPhone
-//     */
-//    public function setEmergencyCellPhone($emergencyCellPhone)
-//    {
-//        $this->emergencyCellPhone = $emergencyCellPhone;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getEmergencyOther()
-//    {
-//        return $this->emergencyOther;
-//    }
-//
-//    /**
-//     * @param mixed $emergencyOther
-//     */
-//    public function setEmergencyOther($emergencyOther)
-//    {
-//        $this->emergencyOther = $emergencyOther;
-//    }
-
-
-
     /**
      * @return mixed
      */
@@ -308,6 +274,22 @@ class VacReqRequest
     public function setApprover($approver)
     {
         $this->approver = $approver;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
     }
 
 

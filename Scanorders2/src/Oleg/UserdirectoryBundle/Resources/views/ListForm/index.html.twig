@@ -13,7 +13,27 @@
     {% if withCreateNewEntityLink is not defined %}
         {% set withCreateNewEntityLink = true %}
     {% endif %}
-    
+
+
+    <p>
+    <form action="{{ path(routename) }}" method="get" {{ form_enctype(filterform) }} class="well form-search">
+        <div class="row">
+            <div class="col-xs-12">
+
+                <div class="col-xs-11">
+                    {{ form_widget(filterform.search) }}
+                </div>
+
+                <div class="col-xs-1">
+                    <button type="submit" class="btn btn-sm btn-default">Filter</button>
+                </div>
+
+            </div>
+        </div>
+        {{ form_rest(filterform) }}
+    </form>
+    </p>
+
     {{ listmacros.listIndex( entities, pathbase, withCreateNewEntityLink ) }}
 
 
