@@ -905,7 +905,7 @@ class AdminController extends Controller
             $this->setInstitutionFellowship($entity,$role);
 
             //set institution and Fellowship Subspecialty types to role
-            //$this->setInstitutionVacReqRole($entity,$role);
+            //$this->setInstitutionVacReqRole($entity);
 
             $em->persist($entity);
             $em->flush();
@@ -913,13 +913,6 @@ class AdminController extends Controller
             $count = $count + 10;
 
         } //foreach
-
-        //add sitename to roles
-        $count = $this->syncRolesDb();
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'syncRolesDb count='.$count
-        );
 
         return round($count/10);
     }
@@ -975,8 +968,11 @@ class AdminController extends Controller
     }
 
     //entity - role object
-    //role - role string
-    public function setInstitutionVacReqRole($entity,$role) {
+    public function setInstitutionVacReqRole($entity) {
+
+        //role - role string
+        $role = $entity->getName()."";
+
         if( strpos($role,'_VACREQ_') === false ) {
             return;
         }
@@ -986,37 +982,42 @@ class AdminController extends Controller
 
         //should be 8:
 
-        //EXECUTIVE: ?
-        $this->vacreqRoleSetSingleInstitution($entity,$role,"EXECUTIVE",$wcmc,"???");
+        //create "Executive Committee" in the Pathology Department and name the type of that group "Committee":
+        //Create organizational group "Committee" with default level -2, because all other levels are taken by regular tree elements
+        //-2 is mirroring of the same level 2 - "Division". This solution should work and don not cause any errors.
+        //Other solution is to remove restriction for level uniqueness in the organizational group object. But, how it will affect the logic?
+        //EXECUTIVE (Dr. Daniel Knowles): Executive Committee
+        $this->vacreqRoleSetSingleInstitution($entity,"EXECUTIVE",$wcmc,"Executive Committee");
 
-        //CLINICALPATHOLOGY: Clinical Chemistry, Clinical Microbiology?
-        $this->vacreqRoleSetSingleInstitution($entity,$role,"CLINICALPATHOLOGY",$wcmc,"???");
+        //CLINICALPATHOLOGY (Dr. Jacob Rand): Laboratory Medicine
+        $this->vacreqRoleSetSingleInstitution($entity,"CLINICALPATHOLOGY",$wcmc,"Laboratory Medicine");
 
-        //EXPERIMENTALPATHOLOGY: ?
-        $this->vacreqRoleSetSingleInstitution($entity,$role,"EXPERIMENTALPATHOLOGY",$wcmc,"???");
+        //EXPERIMENTALPATHOLOGY (Barry Sleckman): Experimental Pathology (create new under WCMC => Pathology and Laboratory Medicine)
+        $this->vacreqRoleSetSingleInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology");
 
-        //VASCULARBIOLOGY: "Vascular Biology" in NYP
-        $this->vacreqRoleSetSingleInstitution($entity,$role,"VASCULARBIOLOGY",$wcmc,"???");
+        //VASCULARBIOLOGY (Dr. Timothy Hla): "Vascular Biology" (in NYP onlys. Create a new under WCMC => Pathology and Laboratory Medicine => Research)
+        $this->vacreqRoleSetSingleInstitution($entity,"VASCULARBIOLOGY",$wcmc,"Vascular Biology");
 
-        //HEMATOPATHOLOGY: Hematopathology?
-        $this->vacreqRoleSetSingleInstitution($entity,$role,"HEMATOPATHOLOGY",$wcmc,"???");
+        //HEMATOPATHOLOGY (Dr. Attilio Orazi): "Hematopathology" - use division, not service
+        $this->vacreqRoleSetSingleInstitution($entity,"HEMATOPATHOLOGY",$wcmc,"Hematopathology");
 
-        //SURGICALPATHOLOGY: ?
-        $this->vacreqRoleSetSingleInstitution($entity,$role,"SURGICALPATHOLOGY",$wcmc,"???");
+        //SURGICALPATHOLOGY (Dr. Alain Borczuk): Anatomic Pathology
+        $this->vacreqRoleSetSingleInstitution($entity,"SURGICALPATHOLOGY",$wcmc,"Anatomic Pathology");
 
-        //CYTOPATHOLOGY: ?
-        $this->vacreqRoleSetSingleInstitution($entity,$role,"CYTOPATHOLOGY",$wcmc,"???");
+        //CYTOPATHOLOGY (Rana Shafiq-Hoda, MBBS): Cytopathology
+        $this->vacreqRoleSetSingleInstitution($entity,"CYTOPATHOLOGY",$wcmc,"Cytopathology");
 
-        //DERMATOPATHOLOGY: ?
-        $this->vacreqRoleSetSingleInstitution($entity,$role,"DERMATOPATHOLOGY",$wcmc,"???");
+        //DERMATOPATHOLOGY (Dr. Cynthia Magro): Dermatopathology
+        $this->vacreqRoleSetSingleInstitution($entity,"DERMATOPATHOLOGY",$wcmc,"Dermatopathology");
 
     }
     //Assign Institution to a Role Object
     //$VacReqGroupStr: "DERMATOPATHOLOGY" string
     //$root: $wcmc object
     //$instName: "Dermatology" institution name string
-    public function vacreqRoleSetSingleInstitution($entity,$role,$VacReqGroupStr,$root,$instName) {
+    public function vacreqRoleSetSingleInstitution($entity,$VacReqGroupStr,$root,$instName) {
         $em = $this->getDoctrine()->getManager();
+        $role = $entity->getName()."";
         //DERMATOPATHOLOGY: ?
         if( strpos($role,$VacReqGroupStr) !== false ) {
             $groupObject = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
@@ -4653,6 +4654,7 @@ class AdminController extends Controller
             $resCount = $resCount + $this->addFellAppPermission( $role );
 
             $resCount = $resCount + $this->addVacReqPermission( $role );
+            $this->setInstitutionVacReqRole($role); //set institution and Fellowship Subspecialty types to role
 
 
             //disable/remove already existing general roles
@@ -4744,6 +4746,9 @@ class AdminController extends Controller
         $count = 0;
         $em = $this->getDoctrine()->getManager();
         $permission = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findOneByName($permissionListStr);
+        if( !$permission ) {
+            exit("Permission is not found by name=".$permissionListStr);
+        }
 
         //make sure permission is added to role: role->permissions(Permission)->permission(PermissionList)->(PermissionObjectList,PermissionActionList)
         //check if role has permission (Permission): PermissionList with $permissionListStr

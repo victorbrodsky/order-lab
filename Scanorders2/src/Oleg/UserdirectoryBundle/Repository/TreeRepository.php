@@ -269,6 +269,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.name = :nameStr AND list.root=:rootNodeId");
+        $dql->orderBy("list.level","ASC"); //higher level first, so in case of similar division and service name, the division will be returned.
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters( array("nameStr"=>$nameStr,"rootNodeId"=>$rootNodeId) );
