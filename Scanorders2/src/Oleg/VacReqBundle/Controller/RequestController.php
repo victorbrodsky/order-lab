@@ -2,6 +2,7 @@
 
 namespace Oleg\VacReqBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\VacReqBundle\Entity\VacReqRequest;
 use Oleg\VacReqBundle\Form\VacReqRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,6 +34,10 @@ class RequestController extends Controller
 
         $entity = new VacReqRequest($user);
 
+        if( false == $this->get('security.context')->isGranted("create", $entity) ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
         $cycle = 'new';
 
         $form = $this->createRequestForm($entity,$cycle);
@@ -40,6 +45,10 @@ class RequestController extends Controller
         $form->handleRequest($request);
 
         if( $form->isSubmitted() && $form->isValid() ) {
+
+            //convert institution id to object
+            $entity = $this->convertInstitutionIdToObject($entity);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -47,16 +56,20 @@ class RequestController extends Controller
             return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
         }
 
+        //check for active access requests
+        $accessreqs = $this->getActiveAccessReq();
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cycle' => $cycle
+            'cycle' => $cycle,
+            'accessreqs' => count($accessreqs),
         );
     }
 
 
     /**
-     * Finds and displays a VacReqRequest entity.
+     * Show: Finds and displays a VacReqRequest entity.
      *
      * @Route("/show/{id}", name="vacreq_show")
      * @Method("GET")
@@ -64,7 +77,8 @@ class RequestController extends Controller
      */
     public function showAction(Request $request, $id)
     {
-        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_USER') ) {
+            //exit('show: no permission');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -75,6 +89,12 @@ class RequestController extends Controller
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
         }
+
+        if( false == $this->get('security.context')->isGranted("read", $entity) ) {
+            exit('show: no permission');
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+        //exit('show: ok permission');
 
         $cycle = 'show';
 
@@ -89,7 +109,7 @@ class RequestController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing VacReqRequest entity.
+     * Edit: Displays a form to edit an existing VacReqRequest entity.
      *
      * @Route("/edit/{id}", name="vacreq_edit")
      * @Method({"GET", "POST"})
@@ -108,6 +128,10 @@ class RequestController extends Controller
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
         }
 
+        if( false == $this->get('security.context')->isGranted("update", $entity) ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
         $cycle = 'edit';
 
         $form = $this->createRequestForm($entity,$cycle);
@@ -115,6 +139,10 @@ class RequestController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //convert institution id to object
+            $entity = $this->convertInstitutionIdToObject($entity);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -151,6 +179,9 @@ class RequestController extends Controller
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
         }
 
+        if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
 
         if( $status ) {
 
@@ -232,7 +263,7 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
 //        if( !$entity ) {
 //            $entity = new VacReqRequest($user);
 //        }
@@ -242,12 +273,16 @@ class RequestController extends Controller
             $admin = true;
         }
 
+        //organizationalInstitution
+        $organizationalInstitutions = $this->getOrganizationalInstitution($entity,$user);
+
         $params = array(
             'sc' => $this->get('security.context'),
             'em' => $em,
             'user' => $entity->getUser(),
             'cycle' => $cycle,
-            'roleAdmin' => $admin
+            'roleAdmin' => $admin,
+            'organizationalInstitution' => $organizationalInstitutions
         );
 
         $disabled = false;
@@ -278,4 +313,83 @@ class RequestController extends Controller
         return $form;
     }
 
+    //get institution from user submitter role
+    public function getOrganizationalInstitution( $entity, $user ) {
+
+        $institutions = array();
+
+        $em = $this->getDoctrine()->getManager();
+
+        //get vacreq submitter role
+        $submitterRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "VacReqRequest", "create" );
+
+        if( count($submitterRoles) == 0 ) {
+            //find all submitter role's institution
+            $submitterRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "create");
+        }
+        //echo "roles count=".count($submitterRoles)."<br>";
+
+        foreach( $submitterRoles as $submitterRole ) {
+            $institution = $submitterRole->getInstitution();
+            if( $institution ) {
+
+                //Clinical Pathology (for review by Firstname Lastname)
+                //find approvers with the same institution
+                $approverStr = $this->getApproversBySubmitterRole($submitterRole);
+                if( $approverStr ) {
+                    $orgName = $institution . " (for review by " . $approverStr . ")";
+                } else {
+                    $orgName = $institution;
+                }
+
+                //$institutions[] = array( $institution->getId() => $institution."-".$organizationalName . "-" . $approver);
+                $institutions[$institution->getId()] = $orgName;
+                //$institutions[] = $orgName;
+                //$institutions[] = $institution;
+            }
+        }
+
+        //add request institution
+//        if( $entity->getInstitution() ) {
+//            $orgName = $institution . " (for review by " . $approverStr . ")";
+//            $institutions[$entity->getInstitution()->getId()] = $orgName;
+//        }
+
+        return $institutions;
+    }
+
+    //$role - string; for example "ROLE_VACREQ_APPROVER_CYTOPATHOLOGY"
+    public function getApproversBySubmitterRole( $role ) {
+        $em = $this->getDoctrine()->getManager();
+        $roleApprover = str_replace("SUBMITTER","APPROVER",$role);
+        $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover);
+
+        $approversArr = array();
+        foreach( $approvers as $approver ) {
+            $approversArr[] = $approver->getUsernameShortest();
+        }
+
+        return implode(", ",$approversArr);
+    }
+
+    //check for active access requests
+    public function getActiveAccessReq() {
+        if( !$this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return null;
+        }
+        $userSecUtil = $this->get('user_security_utility');
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('vacreq.sitename'),AccessRequest::STATUS_ACTIVE);
+        return $accessreqs;
+    }
+
+    public function convertInstitutionIdToObject($entity) {
+        $em = $this->getDoctrine()->getManager();
+        //convert institution id to object
+        $organizationalInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($entity->getInstitution());
+        $entity->setInstitution($organizationalInstitution);
+        //echo "inst=".$entity->getInstitution()."<br>";
+        //exit('1');
+
+        return $entity;
+    }
 }

@@ -30,34 +30,13 @@ class VacReqRequestType extends AbstractType
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('user', null, array(
                 //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+                'read_only' => ($this->params['roleAdmin'] ? false : true),
                 'label' => "Requester:",
                 'required' => true,
                 'attr' => array('class' => 'combobox combobox-width vacreq-user')
             ));
         }
 
-        $builder->add('approver', null, array(
-            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-            'label' => "Approver:",
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width vacreq-approver')
-        ));
-
-//        $builder->add('startDate','datetime',array(
-//            'widget' => 'single_text',
-//            'label' => "Start Date:",
-//            'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
-//            'attr' => array('class' => 'datepicker form-control fellapp-startDate'),
-//            'required' => false,
-//        ));
-//
-//        $builder->add('endDate','datetime',array(
-//            'widget' => 'single_text',
-//            'label' => "End Date:",
-//            'format' => 'MM/dd/yyyy',
-//            'attr' => array('class' => 'datepicker form-control fellapp-endDate'),
-//            'required' => false,
-//        ));
 
 //        ///////////////////////// tree node /////////////////////////
 //        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -138,6 +117,37 @@ class VacReqRequestType extends AbstractType
             'label' => false,
             'required' => false,
         ));
+
+
+        //add organizational group <-> institution
+//        $builder->add('institution', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            //'property' => 'getUserNameStr',
+//            'label' => "Organizational Group",
+//            'required' => false,
+//            'multiple' => false,
+//            'attr' => array('class' => 'combobox', 'placeholder' => 'Organizational Group'),
+//            'choices' => $this->params['organizationalInstitution'],
+//        ));
+        //employees_custom_selector
+        $builder->add('organizationalInstitution', 'choice', array(
+            //'class' => 'OlegUserdirectoryBundle:Institution',
+            //'property' => 'getUserNameStr',
+            'mapped' => false,
+            'label' => "Organizational Group",
+            'required' => true,
+            //'read_only' => ($this->params['roleAdmin'] ? false : true),
+            //'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
+            'choices' => $this->params['organizationalInstitution'],
+        ));
+
+//        $builder->add('approver', null, array(
+//            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+//            'label' => "Approver:",
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width vacreq-approver')
+//        ));
 
     }
 

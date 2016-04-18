@@ -22,6 +22,14 @@
 
 {% block content %}
 
+    {% if is_granted('ROLE_VACREQ_ADMIN') %}
+        {% if accessreqs is defined and accessreqs and accessreqs > 0 %}
+            <div class="alert alert-warning">
+                There are <a href="{{ path(vacreq_sitename~'_accessrequest_list') }}" target="_blank">{{ accessreqs }} unprocessed access request(s)</a>
+            </div>
+        {% endif %}
+    {% endif %}
+
     <h4 class="text-info" align="center">
         Pathology Faculty Vacation/Business Travel Request
     </h4>
@@ -44,6 +52,11 @@
             {{ formmacros.field(form.user) }}
         {% endif %}
 
+        {#organizationalInstitution => institution#}
+        {#{{ formmacros.field(form.institution) }}#}
+        {{ formmacros.field(form.organizationalInstitution) }}
+
+
         {#Emergency#}
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -62,10 +75,6 @@
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
         </div> <!-- panel panel-info -->
-
-
-        {#approver#}
-        {{ formmacros.field(form.approver) }}
 
 
         {#Business#}
@@ -258,6 +267,11 @@
             var userData = $('.vacreq-user').first().select2('data');
             if( !error && !userData ) {
                 error = "Please choose a requester";
+            }
+
+            var userInstitution = $('.vacreq-institution').first().select2('data');
+            if( !error && !userInstitution ) {
+                error = "Please choose an organizational group";
             }
 
             var approverData = $('.vacreq-approver').first().select2('data');

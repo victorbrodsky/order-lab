@@ -19,6 +19,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 //Permission object has one permission (PermissionList);
 //Permission has one PermissionObjectList and one PermissionActionList
 
+//Role Voter check for the general roles such as ROLE_FELLAPP_USER, ROLE_FELLAPP_BANNED etc.: isGranted("ROLE_FELLAPP_USER")
 
 abstract class BaseRoleVoter extends Voter {
 
@@ -41,6 +42,8 @@ abstract class BaseRoleVoter extends Voter {
 
         $siteRoleBase = $this->getSiteRoleBase();
         $sitename = $this->getSitename();
+
+        //echo "Supported voter?: attribute=".$attribute."; subject=".$subject."<br>";
 
         //support USERDIRECTORY roles only
         if( strpos($attribute, 'ROLE_'.$siteRoleBase.'_') === false ) {

@@ -904,9 +904,6 @@ class AdminController extends Controller
             //set institution and Fellowship Subspecialty types to role
             $this->setInstitutionFellowship($entity,$role);
 
-            //set institution and Fellowship Subspecialty types to role
-            //$this->setInstitutionVacReqRole($entity);
-
             $em->persist($entity);
             $em->flush();
 
@@ -987,37 +984,39 @@ class AdminController extends Controller
         //-2 is mirroring of the same level 2 - "Division". This solution should work and don not cause any errors.
         //Other solution is to remove restriction for level uniqueness in the organizational group object. But, how it will affect the logic?
         //EXECUTIVE (Dr. Daniel Knowles): Executive Committee
-        $this->vacreqRoleSetSingleInstitution($entity,"EXECUTIVE",$wcmc,"Executive Committee");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"EXECUTIVE",$wcmc,"Executive Committee","dknowles");
 
         //CLINICALPATHOLOGY (Dr. Jacob Rand): Laboratory Medicine
-        $this->vacreqRoleSetSingleInstitution($entity,"CLINICALPATHOLOGY",$wcmc,"Laboratory Medicine");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"CLINICALPATHOLOGY",$wcmc,"Laboratory Medicine","jar9135");
 
         //EXPERIMENTALPATHOLOGY (Barry Sleckman): Experimental Pathology (create new under WCMC => Pathology and Laboratory Medicine)
-        $this->vacreqRoleSetSingleInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology","bas2022");
 
         //VASCULARBIOLOGY (Dr. Timothy Hla): "Vascular Biology" (in NYP onlys. Create a new under WCMC => Pathology and Laboratory Medicine => Research)
-        $this->vacreqRoleSetSingleInstitution($entity,"VASCULARBIOLOGY",$wcmc,"Vascular Biology");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"VASCULARBIOLOGY",$wcmc,"Vascular Biology","tih2002");
 
         //HEMATOPATHOLOGY (Dr. Attilio Orazi): "Hematopathology" - use division, not service
-        $this->vacreqRoleSetSingleInstitution($entity,"HEMATOPATHOLOGY",$wcmc,"Hematopathology");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"HEMATOPATHOLOGY",$wcmc,"Hematopathology","ato9002");
 
         //SURGICALPATHOLOGY (Dr. Alain Borczuk): Anatomic Pathology
-        $this->vacreqRoleSetSingleInstitution($entity,"SURGICALPATHOLOGY",$wcmc,"Anatomic Pathology");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"SURGICALPATHOLOGY",$wcmc,"Anatomic Pathology","alb9003");
 
         //CYTOPATHOLOGY (Rana Shafiq-Hoda, MBBS): Cytopathology
-        $this->vacreqRoleSetSingleInstitution($entity,"CYTOPATHOLOGY",$wcmc,"Cytopathology");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"CYTOPATHOLOGY",$wcmc,"Cytopathology","rhoda");
 
         //DERMATOPATHOLOGY (Dr. Cynthia Magro): Dermatopathology
-        $this->vacreqRoleSetSingleInstitution($entity,"DERMATOPATHOLOGY",$wcmc,"Dermatopathology");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"DERMATOPATHOLOGY",$wcmc,"Dermatopathology","cym2003");
 
+        return 0;
     }
     //Assign Institution to a Role Object
     //$VacReqGroupStr: "DERMATOPATHOLOGY" string
     //$root: $wcmc object
     //$instName: "Dermatology" institution name string
-    public function vacreqRoleSetSingleInstitution($entity,$VacReqGroupStr,$root,$instName) {
+    public function vacreqRoleSetSingleUserInstitution($entity,$VacReqGroupStr,$root,$instName,$cwid) {
         $em = $this->getDoctrine()->getManager();
         $role = $entity->getName()."";
+        //echo "role=".$role."<br>";
         //DERMATOPATHOLOGY: ?
         if( strpos($role,$VacReqGroupStr) !== false ) {
             $groupObject = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
@@ -1026,7 +1025,18 @@ class AdminController extends Controller
             }
             $entity->setInstitution($groupObject);
 
-            //Don't use this method. Use Role's Institution to link a role and VacReqRequest's Institution
+            //assign approver APPROVER
+            //echo "cwid=".$cwid."<br>";
+            if( $cwid && strpos($role,"ROLE_VACREQ_APPROVER") !== false ) {
+                $approver = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+                //echo "approver=".$approver."<br>";
+                if( $approver ) {
+                    $approver->addRole($entity);
+                    $em->flush($approver);
+                }
+            }
+
+            //Don't use this method: Use Role's Institution to link a role and VacReqRequest's Institution
             //Create and add appropriate permission to this role:
             //Permission Holder: "" - Permission: "Submit a Vacation Request", Institution(s): ""
         }
@@ -4406,8 +4416,19 @@ class AdminController extends Controller
                 continue;
             }
 
+            //Create new
             $listEntity = new PermissionObjectList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $sites = $abbreviationSiteArr[1];
+            foreach( $sites as $site ) {
+                $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($site);
+                if( !$listEntity->getSites()->contains($siteObject) ) {
+                    $listEntity->addSite($siteObject);
+                    //$em->persist($listEntity);
+                    //$em->flush();
+                }
+            }
 
             $em->persist($listEntity);
             $em->flush();
@@ -4654,7 +4675,7 @@ class AdminController extends Controller
             $resCount = $resCount + $this->addFellAppPermission( $role );
 
             $resCount = $resCount + $this->addVacReqPermission( $role );
-            $this->setInstitutionVacReqRole($role); //set institution and Fellowship Subspecialty types to role
+            $resCount = $resCount + $this->setInstitutionVacReqRole($role); //set institution and Fellowship Subspecialty types to role
 
 
             //disable/remove already existing general roles
@@ -4684,6 +4705,7 @@ class AdminController extends Controller
             }
         }
 
+        //exit('resCount='.$resCount);
         return $count;
     }
     public function addSites( $role, $roleStr, $sitename ) {
@@ -4729,7 +4751,7 @@ class AdminController extends Controller
 
         //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create","changestatus"
         if( strpos($role, "ROLE_VACREQ_APPROVER") !== false ) {
-            $count = $count + $this->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
+            //$count = $count + $this->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $this->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
         }
 

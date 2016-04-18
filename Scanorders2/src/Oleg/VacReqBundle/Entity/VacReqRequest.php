@@ -294,5 +294,8 @@ class VacReqRequest
 
 
 
-
+    public function __toString()
+    {
+        return "VacReqRequest: id=".$this->getId()."<br>";
+    }
 }

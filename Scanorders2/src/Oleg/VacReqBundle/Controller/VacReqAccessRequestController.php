@@ -36,7 +36,7 @@ class VacReqAccessRequestController extends AccessRequestController
      */
     public function accessRequestCreatePlainAction()
     {
-        exit('accessRequestCreatePlainAction');
+        //exit('accessRequestCreatePlainAction');
         return parent::accessRequestCreatePlain();
     }
 

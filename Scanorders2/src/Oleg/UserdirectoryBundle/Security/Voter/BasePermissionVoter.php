@@ -19,6 +19,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 //Permission object has one permission (PermissionList);
 //Permission has one PermissionObjectList and one PermissionActionList
 
+//Role Voter check for the role's permission based on the object-action: isGranted("read", "Accession") or isGranted("read", $accession)
 
 abstract class BasePermissionVoter extends Voter {
 
@@ -61,6 +62,9 @@ abstract class BasePermissionVoter extends Voter {
         //$permissionObjects = $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" );
         $className = $this->getClassName($subject);
 
+        //echo "className=".$className."<br>";
+        //echo "sitename=".$sitename."<br>";
+
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:PermissionObjectList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
@@ -76,13 +80,14 @@ abstract class BasePermissionVoter extends Voter {
         );
 
         $permissionObjects = $query->getResult();
+        //echo "permissionObjects count=".count($permissionObjects)."<br>";
 
         if( count($permissionObjects) > 0 ) {
             return true;
         }
         //////////// EOF check if the $subject (className string or object) is in PermissionObjectList ////////////
 
-        //echo "Supported subject=".$subject."<br>";
+        //echo "Not Supported voter: attribute=".$attribute."; subject=".$subject."<br>";
         return false;
     }
     // if the attribute isn't one we support, return false
@@ -154,21 +159,25 @@ abstract class BasePermissionVoter extends Voter {
         }
 
         //$subject: string (i.e. "FellowshipApplication") or entity
-        if( is_object($subject) ) {
-
-            $securityUtil = $this->container->get('order_security_utility');
-            //minimum requirement: subject must be under user's permitted/collaborated institutions
-            //don't perform this check for dummy, empty objects
-            if( $subject->getId() && $subject->getInstitution() ) {
-                if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false) {
-                    //exit('isObjectUnderUserPermittedCollaboratedInstitutions false');
-                    return false;
-                }
-            }
-
-        } else {
-            //if subject is string, then it must be used only to show a list of entities =>
-            //there is no institution info => skip the institution check
+//        if( is_object($subject) ) {
+//
+//            $securityUtil = $this->container->get('order_security_utility');
+//            //minimum requirement: subject must be under user's permitted/collaborated institutions
+//            //don't perform this check for dummy, empty objects
+//            if( $subject->getId() && $subject->getInstitution() ) {
+//                if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false) {
+//                    return false;
+//                }
+//            }
+//
+//        } else {
+//            //if subject is string, then it must be used only to show a list of entities =>
+//            //there is no institution info => skip the institution check
+//        }
+        //minimum requirement: subject must be under user's permitted/collaborated institutions
+        if( $this->checkPermittedInstitutions( $subject, $user ) == false ) {
+            //exit('check Permitted Institutions: can not View exit');
+            return false;
         }
 
         $className = $this->getClassName($subject);
@@ -186,7 +195,7 @@ abstract class BasePermissionVoter extends Voter {
         return false;
     }
 
-    //status change can be done only by submitter(owner), ordering provider, or service chief
+    //status change: user can view and update the subject
     protected function canChangeStatus($subject, TokenInterface $token) {
 
         // if they can edit, they can view
@@ -231,22 +240,25 @@ abstract class BasePermissionVoter extends Voter {
 //        }
 
         //minimum requirement: subject must be under user's permitted/collaborated institutions
-        //$subject: string (i.e. "FellowshipApplication") or entity
-        if( is_object($subject) ) {
-            //echo "subject is object <br>";
-            $securityUtil = $this->container->get('order_security_utility');
-
-            //don't perform this check for dummy, empty objects
-            if( $subject->getId() && $subject->getInstitution() ) {
-                if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false ) {
-                    //exit('isObjectUnderUserPermittedCollaboratedInstitutions false');
-                    return false;
-                }
-            }
-        } else {
-            //if subject is string, then it must be used only to show a list of entities =>
-            //there is no institution info => skip the institution check
-            //echo "subject is string; subject=".$subject."<br>";
+//        //$subject: string (i.e. "FellowshipApplication") or entity
+//        if( is_object($subject) ) {
+//            //echo "subject is object <br>";
+//            $securityUtil = $this->container->get('order_security_utility');
+//
+//            //don't perform this check for dummy, empty objects
+//            if( $subject->getId() && $subject->getInstitution() ) {
+//                if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false ) {
+//                    return false;
+//                }
+//            }
+//        } else {
+//            //if subject is string, then it must be used only to show a list of entities =>
+//            //there is no institution info => skip the institution check
+//            //echo "subject is string; subject=".$subject."<br>";
+//        }
+        //minimum requirement: subject must be under user's permitted/collaborated institutions
+        if( $this->checkPermittedInstitutions( $subject, $user ) == false ) {
+            return false;
         }
 
         //If Edit => can Read: check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
@@ -269,7 +281,7 @@ abstract class BasePermissionVoter extends Voter {
         $sitename = $this->getSitename();
 
         //echo 'attribute='.$attribute."<br>";
-        //echo 'subject='.$subject."<br>";
+        //echo 'can Create: subject='.$subject."<br>";
         $user = $token->getUser();
         //return true;
 
@@ -293,12 +305,12 @@ abstract class BasePermissionVoter extends Voter {
 
         //echo "className=".$className."<br>";
 
-        //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
+        //check if the user has role with a permission $subject class name (i.e. "Patient") and "create"
         if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "create" ) ) {
             //exit('can View! exit');
             return true;
         } else {
-            //echo "can not view ".$className."<br>";
+            //echo "can not update ".$className."<br>";
         }
 
         //exit('no permission');
@@ -306,8 +318,27 @@ abstract class BasePermissionVoter extends Voter {
     }
 
 
+    //check if subject is under user's permitted/collaborated institutions
+    protected function checkPermittedInstitutions( $subject, $user ) {
+        //$subject: string (i.e. "FellowshipApplication") or entity
+        if( is_object($subject) ) {
+            //echo "subject is object <br>";
+            $securityUtil = $this->container->get('order_security_utility');
 
+            //don't perform this check for dummy, empty objects
+            if( $subject->getId() && $subject->getInstitution() ) {
+                if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false ) {
+                    return false;
+                }
+            }
+        } else {
+            //if subject is string, then it must be used only to show a list of entities =>
+            //there is no institution info => skip the institution check
+            //echo "subject is string; subject=".$subject."<br>";
+        }
 
+        return true;
+    }
 
     protected function getClassName($subject) {
 

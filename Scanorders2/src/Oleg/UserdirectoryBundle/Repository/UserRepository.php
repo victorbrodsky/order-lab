@@ -184,6 +184,29 @@ class UserRepository extends EntityRepository {
 
         $userRoles = new ArrayCollection();
 
+        //get all roles with corresponding permissions: object-action
+        $roles = $this->findRolesByObjectAction($object, $action);
+        //echo "roles count=".count($roles)."<br>";
+        //exit('exit');
+
+        //check if user has one of roles
+        foreach( $roles as $role ) {
+            //echo "role=".$role."<br>";
+            if( $user->hasRole($role) ) {
+                $userRoles->add($role);
+
+                if( $atLeastOne ) {
+                    return $userRoles;
+                }
+            }
+        }
+
+        return $userRoles;
+    }
+
+    //get all roles with corresponding permissions: object-action
+    public function findRolesByObjectAction($object, $action) {
+
         //check if user's roles have permission
         $query = $this->_em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Roles', 'list')
@@ -206,19 +229,7 @@ class UserRepository extends EntityRepository {
         //echo "roles count=".count($roles)."<br>";
         //exit('exit');
 
-        //check if user has one of roles
-        foreach( $roles as $role ) {
-            //echo "role=".$role."<br>";
-            if( $user->hasRole($role) ) {
-                $userRoles->add($role);
-
-                if( $atLeastOne ) {
-                    return $userRoles;
-                }
-            }
-        }
-
-        return $userRoles;
+        return $roles;
     }
 
 

@@ -45,7 +45,7 @@ class VacReqSecurityController extends SecurityController
     /**
      * @Route("/no-permission", name="vacreq-nopermission")
      * @Method("GET")
-     * @Template("VacReqBundle:Security:nopermission.html.twig")
+     * @Template("OlegVacReqBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {
