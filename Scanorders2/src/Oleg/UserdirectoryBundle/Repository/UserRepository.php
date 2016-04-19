@@ -233,13 +233,13 @@ class UserRepository extends EntityRepository {
     }
 
 
-    public function findUserRolesBySiteAndPartialRoleName( $user, $sitename, $attribute, $institutionId=null, $atLeastOne=true ) {
+    public function findUserRolesBySiteAndPartialRoleName( $user, $sitename, $rolePartialName, $institutionId=null, $atLeastOne=true ) {
 
         $userRoles = new ArrayCollection();
 
         $parameters = array(
             'sitename' => $sitename,
-            'roleName' => '%' . $attribute . '%'
+            'roleName' => '%' . $rolePartialName . '%'
         );
 
         //check if user's roles have permission

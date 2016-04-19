@@ -4,14 +4,15 @@
 {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
 {% block title %}
-    Vacation Request
+    {{ title }}
 {% endblock %}
 
 
 {% block content %}
 
     <h4 class="text-info" align="center">
-        Pathology Faculty Vacation/Business Travel Requests
+        {#Pathology Faculty Vacation/Business Travel Requests#}
+        {{ title }}
     </h4>
 
     <p>
@@ -58,9 +59,10 @@
 
     {#table-bordered#}
     <table class="records_list table table-hover table-condensed text-left table-bordered">
+    {#<table class="records_list table">#}
         <thead>
         <tr>
-            <th colspan="5" class="text-center table-header-grey-gradient">
+            <th colspan="6" class="text-center table-header-grey-gradient">
                 Requester Info
             </th>
 
@@ -83,6 +85,8 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Faculty', 'infos.displayName') }}</th>
 
+            <th>Photo</th>
+
             <th>{{ knp_pagination_sortable(pagination, 'Email', 'user.email') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Phone', 'infos.preferredPhone') }}</th>
@@ -99,10 +103,23 @@
             </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody data-link="row" class="rowlink">
         {% for entity in pagination %}
 
-            <tr>
+            {#Set row color#}
+            {% set trclassname = "" %}
+            {% if entity.getOverallStatus() == 'pending' %}
+                {% set trclassname = "order-interviewee-status" %}
+            {% endif %}
+            {#{% if entity.getOverallStatus() == 'approved' %}#}
+                {#{% set trclassname = "info" %}#}
+            {#{% endif %}#}
+            {% if entity.getOverallStatus() == 'rejected' %}
+                {% set trclassname = "order-reject-status" %}
+            {% endif %}
+            {#EOF Set row color#}
+
+            <tr class="{{ trclassname }}">
 
                 <td>
                     <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
@@ -112,8 +129,24 @@
 
                 <td class="rowlink-skip">
                     {% if entity.user %}
-                        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.getUserNameStr() }}</a>
+                        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.displayName() }}</a>
                     {% endif %}
+                </td>
+
+                <td class="rowlink-skip">
+                    <div style="height: 60px; width: 60px;">
+                        {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                            {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                        {% else %}
+                            {% if entity.user.avatar %}
+                                {{ usermacros.showDocumentAsImage(entity.user.avatar,'Avatar','') }}
+                            {% else %}
+                                {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                                <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 </td>
 
                 <td>

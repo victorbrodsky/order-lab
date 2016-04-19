@@ -294,6 +294,33 @@ class VacReqRequest
 
 
 
+    public function getOverallStatus()
+    {
+        if(
+            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'approved' ||
+            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'approved'
+        ) {
+            return 'approved';
+        }
+
+        if(
+            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'rejected' ||
+            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'rejected'
+        ) {
+            return 'rejected';
+        }
+
+        if(
+            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'pending' ||
+            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'pending'
+        ) {
+            return 'pending';
+        }
+
+        return null;
+    }
+
+
     public function __toString()
     {
         return "VacReqRequest: id=".$this->getId()."<br>";

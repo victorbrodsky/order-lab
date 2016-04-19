@@ -80,15 +80,39 @@ class UserSecurityUtil {
         $showToInstitutions = $preferences->getShowToInstitutions();
         if( count($showToInstitutions) > 0 ) {
             $hideInstitution = true;
+
             //check if $currentUser has one of the verified Institutions
             $type = null; //all types: AdministrativeTitle, AppointmentTitle, MedicalTitle
             $status = 1;  //1-verified
-            foreach( $showToInstitutions as $showToInstitution ) {
-                if( $currentUser->getInstitutions($type,$status)->contains($showToInstitution) ) {
+            $currentUserInstitutions = $currentUser->getInstitutions($type,$status);
+            foreach( $currentUserInstitutions as $currentUserInstitution ) {
+                //echo "currentUserInstitution=".$currentUserInstitution."<br>";
+                if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($showToInstitutions, $currentUserInstitution) ) {
                     $hideInstitution = false;
                     break;
                 }
             }
+
+            //check if $currentUser has one of the Institutional PHI Scope
+            $securityUtil = $this->container->get('order_security_utility');
+            $userSiteSettings = $securityUtil->getUserPerSiteSettings($subjectUser);
+            $currentUserPermittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+            foreach( $currentUserPermittedInstitutions as $currentUserPermittedInstitution ) {
+                //echo "currentUserInstitution=".$currentUserInstitution."<br>";
+                if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($showToInstitutions, $currentUserPermittedInstitution) ) {
+                    $hideInstitution = false;
+                    break;
+                }
+            }
+
+//            foreach( $showToInstitutions as $showToInstitution ) {
+//                //echo "verified inst count=".count($currentUserInst)."<br>";
+//                //echo "showToInstitution=".$showToInstitution."<br>";
+//                if( $currentUserInstitutions->contains($showToInstitution) ) {
+//                    $hideInstitution = false;
+//                    break;
+//                }
+//            }
         }
 
 
@@ -111,11 +135,26 @@ class UserSecurityUtil {
         //echo "hideRole=".$hideRole."<br>";
         //exit();
 
+        if( $hide ) {
+            //exit('hide');
+            //return false;
+        }
+        if( $hideInstitution ) {
+            exit('hideInstitution');
+            //return false;
+        }
+        if( $hideRole ) {
+            //exit('hideRole');
+            //return false;
+        }
+
         if( $hide || $hideInstitution || $hideRole ) {
+            //exit('???');
             return false; //not visible
         } else {
             return true; //visible
         }
+
     }
 
 

@@ -36,8 +36,12 @@ class RequestIndexController extends Controller
         //$em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $params = array(
-            'sitename'=>$this->container->getParameter('vacreq.sitename')
+            'sitename' => $this->container->getParameter('vacreq.sitename'),
+            'subjectUser' => $user,
+            'title' => "My Business/Vacation Requests"
         );
         return $this->listRequests($params, $request);
     }
@@ -57,10 +61,89 @@ class RequestIndexController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $params = array(
-            'sitename'=>$this->container->getParameter('vacreq.sitename')
+            'sitename' => $this->container->getParameter('vacreq.sitename'),
+            'approver' => $user,
+            'title' => "Incoming Business/Vacation Requests"
         );
         return $this->listRequests($params, $request);
+    }
+
+
+
+
+    public function listRequests( $params, $request ) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
+        $subjectUser = ( array_key_exists('subjectUser', $params) ? $params['subjectUser'] : null);
+        $approver = ( array_key_exists('approver', $params) ? $params['approver'] : null);
+
+        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("user.infos", "infos");
+        $dql->leftJoin("request.institution", "institution");
+
+        $dql->leftJoin("request.requestBusiness", "requestBusiness");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+
+        //$dql->where("requestBusiness.startDate IS NOT NULL OR requestVacation.startDate IS NOT NULL");
+
+        //my requests
+        if( $subjectUser ) {
+            $dql->andWhere("user.id=".$subjectUser->getId());
+        }
+
+        //incoming requests: show all requests with institutions in approver institutions
+        if( $approver ) {
+            $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver, "vacreq", "ROLE_VACREQ_APPROVER_");
+            $instArr = array();
+            foreach( $approverRoles as $approverRole ) {
+                $instArr[] = $approverRole->getInstitution()->getId();
+            }
+            if( count($instArr) > 0 ) {
+                $dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
+            }
+        }
+
+        //process filter
+        $filterRes = $this->processFilter( $dql, $request, $params );
+        $filterform = $filterRes['form'];
+        $dqlParameters = $filterRes['dqlParameters'];
+        $filtered = $filterRes['filtered'];
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1),   /*page number*/
+            $limit,                                         /*limit per page*/
+            array('defaultSortFieldName' => 'request.createDate', 'defaultSortDirection' => 'DESC')
+        );
+
+        return array(
+            'filterform' => $filterform,
+            'vacreqfilter' => $filterform->createView(),
+            'pagination' => $pagination,
+            'sitename' => $sitename,
+            'filtered' => $filtered,
+            'routename' => $request->get('_route'),
+            'title' => $params['title']
+        );
     }
 
     public function processFilter( $dql, $request, $params ) {
@@ -152,59 +235,6 @@ class RequestIndexController extends Controller
 
         return $filterRes;
     }
-
-
-    public function listRequests( $params, $request ) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
-
-        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
-        $dql =  $repository->createQueryBuilder("request");
-        $dql->select('request');
-
-        $dql->leftJoin("request.user", "user");
-        $dql->leftJoin("user.infos", "infos");
-
-        $dql->leftJoin("request.requestBusiness", "requestBusiness");
-        $dql->leftJoin("request.requestVacation", "requestVacation");
-
-        //$dql->where("requestBusiness.startDate IS NOT NULL OR requestVacation.startDate IS NOT NULL");
-
-        //process filter
-        $filterRes = $this->processFilter( $dql, $request, $params );
-        $filterform = $filterRes['form'];
-        $dqlParameters = $filterRes['dqlParameters'];
-        $filtered = $filterRes['filtered'];
-
-        $limit = 30;
-        $query = $em->createQuery($dql);
-
-        if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
-        }
-
-        //echo "query=".$query->getSql()."<br>";
-
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query,
-            $this->get('request')->query->get('page', 1),   /*page number*/
-            $limit,                                         /*limit per page*/
-            array('defaultSortFieldName' => 'request.createDate', 'defaultSortDirection' => 'DESC')
-        );
-
-        return array(
-            'filterform' => $filterform,
-            'vacreqfilter' => $filterform->createView(),
-            'pagination' => $pagination,
-            'sitename' => $sitename,
-            'filtered' => $filtered,
-            'routename' => $request->get('_route')
-        );
-    }
-
 
     //convert given datetime from user's timezone to UTC. Use UTC in DB query. 12:00 => 17:00 +5
     public function convertFromUserTimezonetoUTC($datetime,$user) {

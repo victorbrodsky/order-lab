@@ -203,6 +203,7 @@ class VacReqRequestType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequest',
+            'csrf_protection' => false,
         ));
     }
 

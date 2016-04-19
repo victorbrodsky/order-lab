@@ -73,13 +73,13 @@ class VacReqRequestBaseType extends AbstractType
         if( $this->params['cycle'] != 'new' ) {
 
             $readOnly = true;
-            if( $this->params['review'] && $this->params['roleAdmin'] ) {
+            if( $this->params['review'] || $this->params['roleAdmin'] ) {
                 $readOnly = false;
             }
 
             $builder->add('status', 'choice', array(
-                'disabled' => ($this->params['roleAdmin'] ? false : true),
-                'read_only' => $readOnly,
+                'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+                //'read_only' => $readOnly,
                 'choices' => array(
                     //'pending' => 'Pending',
                     'approved' => 'Approved',

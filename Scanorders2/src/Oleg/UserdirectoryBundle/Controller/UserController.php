@@ -1654,6 +1654,7 @@ class UserController extends Controller
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+            //exit('0 show User Optimized no permission');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1670,6 +1671,7 @@ class UserController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
+            //exit('1 show User Optimized no permission');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
