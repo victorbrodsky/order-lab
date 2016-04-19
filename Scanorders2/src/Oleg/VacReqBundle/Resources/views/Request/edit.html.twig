@@ -53,8 +53,12 @@
         {% endif %}
 
         {#organizationalInstitution => institution#}
-        {#{{ formmacros.field(form.institution) }}#}
-        {{ formmacros.field(form.organizationalInstitution) }}
+        {% if form.institution is defined %}
+            {{ formmacros.field(form.institution) }}
+        {% endif %}
+        {% if form.organizationalInstitution is defined %}
+            {{ formmacros.field(form.organizationalInstitution) }}
+        {% endif %}
 
 
         {#Emergency#}

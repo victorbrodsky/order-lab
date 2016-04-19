@@ -47,7 +47,7 @@ class RequestController extends Controller
         if( $form->isSubmitted() && $form->isValid() ) {
 
             //convert institution id to object
-            $entity = $this->convertInstitutionIdToObject($entity);
+            //$entity = $this->convertInstitutionIdToObject($form,$entity);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -141,7 +141,7 @@ class RequestController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             //convert institution id to object
-            $entity = $this->convertInstitutionIdToObject($entity);
+            //$entity = $this->convertInstitutionIdToObject($form,$entity);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -274,7 +274,8 @@ class RequestController extends Controller
         }
 
         //organizationalInstitution
-        $organizationalInstitutions = $this->getOrganizationalInstitution($entity,$user);
+        //$organizationalInstitutions = $em->getRepository('OlegUserdirectoryBundle:User')->findVacReqOrganizationalInstitution($user);
+        $organizationalInstitutions = $this->getVacReqOrganizationalInstitution($user);
 
         $params = array(
             'sc' => $this->get('security.context'),
@@ -314,7 +315,7 @@ class RequestController extends Controller
     }
 
     //get institution from user submitter role
-    public function getOrganizationalInstitution( $entity, $user ) {
+    public function getVacReqOrganizationalInstitution( $user ) {
 
         $institutions = array();
 
@@ -382,14 +383,20 @@ class RequestController extends Controller
         return $accessreqs;
     }
 
-    public function convertInstitutionIdToObject($entity) {
-        $em = $this->getDoctrine()->getManager();
-        //convert institution id to object
-        $organizationalInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($entity->getInstitution());
-        $entity->setInstitution($organizationalInstitution);
-        //echo "inst=".$entity->getInstitution()."<br>";
-        //exit('1');
+//    public function convertInstitutionIdToObject($form,$entity) {
+//        $em = $this->getDoctrine()->getManager();
+//        $organizationalInstitution = $entity->getInstitution();
+//        //$organizationalInstitution = $form['organizationalInstitution']->getData();
+//        //echo "instId=".$organizationalInstitution."<br>";
+//        //convert institution id to object
+//        $organizationalInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($organizationalInstitution);
+//        if( $organizationalInstitution ) {
+//            $entity->setInstitution($organizationalInstitution);
+//        }
+//        //echo "inst=".$entity->getInstitution()."<br>";
+//        //exit('1');
+//
+//        return $entity;
+//    }
 
-        return $entity;
-    }
 }

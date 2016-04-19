@@ -42,8 +42,6 @@ var _grants = [];
 var _cities = [];
 var _organizations = [];
 
-
-
 function initAllComboboxGeneric(newForm) {
 
     getComboboxGeneric(newForm,'identifierkeytype',_identifiers,false);

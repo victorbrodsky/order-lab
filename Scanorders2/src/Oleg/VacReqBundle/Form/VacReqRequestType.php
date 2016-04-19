@@ -3,15 +3,15 @@
 namespace Oleg\VacReqBundle\Form;
 
 
-use Oleg\VacReqBundle\Form\VacReqRequestBusinessType;
-use Oleg\UserdirectoryBundle\Entity\PrivateComment;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
-
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+
+use Oleg\VacReqBundle\Form\VacReqRequestBusinessType;
 
 
 class VacReqRequestType extends AbstractType
@@ -137,27 +137,64 @@ class VacReqRequestType extends AbstractType
         }
 
         //add organizational group <-> institution
-//        $builder->add('institution', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:Institution',
+//        $builder->add('institution', 'choice', array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Institution',
+//            //'class' => 'OlegUserdirectoryBundle:Institution',
 //            //'property' => 'getUserNameStr',
 //            'label' => "Organizational Group",
 //            'required' => false,
-//            'multiple' => false,
-//            'attr' => array('class' => 'combobox', 'placeholder' => 'Organizational Group'),
+//            //'multiple' => false,
+//            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
 //            'choices' => $this->params['organizationalInstitution'],
 //        ));
-        //employees_custom_selector
-        $builder->add('organizationalInstitution', 'choice', array(
-            //'class' => 'OlegUserdirectoryBundle:Institution',
-            //'property' => 'getUserNameStr',
-            'mapped' => false,
-            'label' => "Organizational Group",
+//        $builder->add('organizationalInstitution', 'choice', array(
+//            //'class' => 'OlegUserdirectoryBundle:Institution',
+//            //'property' => 'getUserNameStr',
+//            'mapped' => false,
+//            'label' => "Organizational Group",
+//            'required' => true,
+//            //'read_only' => ($this->params['roleAdmin'] ? false : true),
+//            //'multiple' => false,
+//            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
+//            'choices' => $this->params['organizationalInstitution'],
+//        ));
+        $builder->add('institution', 'choice', array(
+            'label' => "Organizational Group:",
             'required' => true,
-            //'read_only' => ($this->params['roleAdmin'] ? false : true),
-            //'multiple' => false,
             'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
             'choices' => $this->params['organizationalInstitution'],
         ));
+        $builder->get('institution')
+            ->addModelTransformer(new CallbackTransformer(
+                //original from DB to form: institutionObject to institutionId
+                function($originalInstitution) {
+                    //echo "originalInstitution=".$originalInstitution."<br>";
+                    if( is_object($originalInstitution) && $originalInstitution->getId() ) { //object
+                        return $originalInstitution->getId();
+                    }
+                    return $originalInstitution; //id
+//                    if( $originalInstitution ) { //id
+//                        $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($originalInstitution);
+//                        return $institutionObject;
+//                    }
+//                    return null;
+                },
+                //reverse from form to DB: institutionId to institutionObject
+                function($submittedInstitutionObject) {
+                    echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
+                    if( $submittedInstitutionObject ) { //id
+                        $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+                        return $institutionObject;
+                    }
+                    return null;
+//                    if( is_object($submittedInstitutionObject) && $submittedInstitutionObject->getId() ) { //object
+//                        return $submittedInstitutionObject->getId();
+//                    }
+//                    return $submittedInstitutionObject; //id
+                    //return $submittedInstitutionObject->getId();
+                }
+            ))
+        ;
 
 //        $builder->add('approver', null, array(
 //            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
