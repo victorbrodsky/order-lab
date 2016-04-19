@@ -77,6 +77,7 @@ class VacReqRequestType extends AbstractType
         $builder->add('availabilities', null, array(
             'label' => "Availability(s):",
             'attr' => array('class' => 'combobox combobox-width'),
+            'read_only' => ($this->params['review'] ? true : false)
         ));
 
 //        $builder->add('emergencyCellPhone', null, array(
@@ -92,6 +93,7 @@ class VacReqRequestType extends AbstractType
         $builder->add('emergencyComment', null, array(
             'label' => "Emergency Comment:",
             'attr' => array('class' => 'form-control'),
+            'read_only' => ($this->params['review'] ? true : false)
         ));
 
         //Business Travel
@@ -108,7 +110,7 @@ class VacReqRequestType extends AbstractType
             'required' => false,
         ));
 
-        if( $this->params['cycle'] != 'show' ) {
+        if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
 //            $builder->add('user', null, array(
 //                //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
 //                'read_only' => ($this->params['roleAdmin'] ? false : true),
@@ -124,6 +126,7 @@ class VacReqRequestType extends AbstractType
                 'multiple' => false,
                 //'property' => 'name',
                 'attr' => array('class' => 'combobox combobox-width'),
+                'read_only' => ($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos","infos")
@@ -163,6 +166,7 @@ class VacReqRequestType extends AbstractType
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
             'choices' => $this->params['organizationalInstitution'],
+            'read_only' => ($this->params['review'] ? true : false)
         ));
         $builder->get('institution')
             ->addModelTransformer(new CallbackTransformer(
@@ -173,28 +177,18 @@ class VacReqRequestType extends AbstractType
                         return $originalInstitution->getId();
                     }
                     return $originalInstitution; //id
-//                    if( $originalInstitution ) { //id
-//                        $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($originalInstitution);
-//                        return $institutionObject;
-//                    }
-//                    return null;
                 },
                 //reverse from form to DB: institutionId to institutionObject
                 function($submittedInstitutionObject) {
-                    echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
+                    //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
                     if( $submittedInstitutionObject ) { //id
                         $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
                         return $institutionObject;
                     }
                     return null;
-//                    if( is_object($submittedInstitutionObject) && $submittedInstitutionObject->getId() ) { //object
-//                        return $submittedInstitutionObject->getId();
-//                    }
-//                    return $submittedInstitutionObject; //id
-                    //return $submittedInstitutionObject->getId();
                 }
-            ))
-        ;
+            )
+        );
 
 //        $builder->add('approver', null, array(
 //            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',

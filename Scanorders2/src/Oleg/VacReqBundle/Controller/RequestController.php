@@ -46,9 +46,6 @@ class RequestController extends Controller
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
-            //convert institution id to object
-            //$entity = $this->convertInstitutionIdToObject($form,$entity);
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -91,7 +88,7 @@ class RequestController extends Controller
         }
 
         if( false == $this->get('security.context')->isGranted("read", $entity) ) {
-            exit('show: no permission');
+            //exit('show: no permission');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
         //exit('show: ok permission');
@@ -112,6 +109,7 @@ class RequestController extends Controller
      * Edit: Displays a form to edit an existing VacReqRequest entity.
      *
      * @Route("/edit/{id}", name="vacreq_edit")
+     * @Route("/review/{id}", name="vacreq_review")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
@@ -128,20 +126,25 @@ class RequestController extends Controller
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
         }
 
-        if( false == $this->get('security.context')->isGranted("update", $entity) ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        //check permission
+        $routName = $request->get('_route');
+        if( $routName == 'vacreq_review' ) {
+            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+            }
+        } else {
+            if( false == $this->get('security.context')->isGranted("update", $entity) ) {
+                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+            }
         }
 
         $cycle = 'edit';
 
-        $form = $this->createRequestForm($entity,$cycle);
+        $form = $this->createRequestForm($entity,$cycle,$request);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            //convert institution id to object
-            //$entity = $this->convertInstitutionIdToObject($form,$entity);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -150,10 +153,18 @@ class RequestController extends Controller
             return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
         }
 
+        $review = false;
+        if( $request ) {
+            if( $request->get('_route') == 'vacreq_review' ) {
+                $review = true;
+            }
+        }
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cycle' => $cycle
+            'cycle' => $cycle,
+            'review' => $review
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -259,7 +270,7 @@ class RequestController extends Controller
 //    }
 
 
-    public function createRequestForm( $entity, $cycle ) {
+    public function createRequestForm( $entity, $cycle, $request=null ) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -299,6 +310,13 @@ class RequestController extends Controller
 
         if( $cycle == 'edit' ) {
             $method = 'POST';
+        }
+
+        $params['review']=false;
+        if( $request ) {
+            if( $request->get('_route') == 'vacreq_review' ) {
+                $params['review']=true;
+            }
         }
 
         $form = $this->createForm(
@@ -383,20 +401,5 @@ class RequestController extends Controller
         return $accessreqs;
     }
 
-//    public function convertInstitutionIdToObject($form,$entity) {
-//        $em = $this->getDoctrine()->getManager();
-//        $organizationalInstitution = $entity->getInstitution();
-//        //$organizationalInstitution = $form['organizationalInstitution']->getData();
-//        //echo "instId=".$organizationalInstitution."<br>";
-//        //convert institution id to object
-//        $organizationalInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($organizationalInstitution);
-//        if( $organizationalInstitution ) {
-//            $entity->setInstitution($organizationalInstitution);
-//        }
-//        //echo "inst=".$entity->getInstitution()."<br>";
-//        //exit('1');
-//
-//        return $entity;
-//    }
 
 }

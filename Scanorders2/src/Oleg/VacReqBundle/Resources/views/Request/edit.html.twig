@@ -14,6 +14,10 @@
 {% endif %}
 
 
+{% if review is not defined %}
+    {% set review = false %}
+{% endif %}
+
 {% block title %}
     Pathology Faculty Vacation/Business Travel Request
 {% endblock %}
@@ -36,7 +40,7 @@
 
     <br>
 
-    {% if cycle == 'show' and entity.user.id is defined %}
+    {% if (cycle == 'show' or review) and entity.user.id is defined %}
         {{ userform.snapshot_steve(entity.user,vacreq_sitename,cycle) }}
     {% endif %}
 
@@ -82,6 +86,10 @@
 
 
         {#Business#}
+        {% set businessCollapse = '' %}
+        {% if (not showFlag and not review) or (entity.requestBusiness and entity.requestBusiness.numberOfDays>0) %}
+            {% set businessCollapse = 'in' %}
+        {% endif %}
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4 class="panel-title" align='center'>
@@ -95,13 +103,15 @@
                                 Business Travel
                             </a>
                         </div>
-                        <div class="col-xs-6" align="left">
-                            {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
-                        </div>
+                        {% if businessCollapse == 'in' %}
+                            <div class="col-xs-6" align="left">
+                                {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </h4>
             </div>
-            <div id="vacreq-Business" class="panel-collapse collapse in">
+            <div id="vacreq-Business" class="panel-collapse collapse {{ businessCollapse }}">
                 <div class="panel-body">
                     {{ formmacros.fieldDateLabel(form.requestBusiness.startDate,'allow-future-date') }}
                     {{ formmacros.fieldDateLabel(form.requestBusiness.endDate,'allow-future-date') }}
@@ -110,7 +120,7 @@
                     {{ formmacros.field(form.requestBusiness.expenses) }}
                     {{ formmacros.checkbox(form.requestBusiness.paidByOutsideOrganization) }}
                     {{ formmacros.field(form.requestBusiness.description) }}
-                    {% if form.requestBusiness.approverComment is defined %}
+                    {% if form.requestBusiness.approverComment is defined and businessCollapse == 'in'  %}
                         {{ formmacros.field(form.requestBusiness.approverComment) }}
                     {% endif %}
                 </div> <!-- panel-body -->
@@ -119,6 +129,10 @@
 
 
         {#Vacation#}
+        {% set vacationCollapse = '' %}
+        {% if (not showFlag and not review) or (entity.requestBusiness and entity.requestVacation.numberOfDays>0) %}
+            {% set vacationCollapse = 'in' %}
+        {% endif %}
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -132,19 +146,21 @@
                                 Vacation Travel
                             </a>
                         </div>
-                        <div class="col-xs-6" align="left">
-                            {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
-                        </div>
+                        {% if vacationCollapse == 'in' %}
+                            <div class="col-xs-6" align="left">
+                                {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </h4>
             </div>
-            <div id="vacreq-Vacation" class="panel-collapse collapse in">
+            <div id="vacreq-Vacation" class="panel-collapse collapse {{ vacationCollapse }}">
                 <div class="panel-body">
                     {{ formmacros.fieldDateLabel(form.requestVacation.startDate,'allow-future-date') }}
                     {{ formmacros.fieldDateLabel(form.requestVacation.endDate,'allow-future-date') }}
                     {{ formmacros.field(form.requestVacation.numberOfDays) }}
                     {{ formmacros.fieldDateLabel(form.requestVacation.firstDayBackInOffice,'allow-future-date') }}
-                    {% if form.requestVacation.approverComment is defined %}
+                    {% if form.requestVacation.approverComment is defined and vacationCollapse == 'in' %}
                         {{ formmacros.field(form.requestVacation.approverComment) }}
                     {% endif %}
                 </div> <!-- panel-body -->
@@ -157,7 +173,7 @@
             {{ formmacros.field(form.status) }}
         {% endif %}
 
-    {{ form_end(form) }}
+    {{ form_end(form,{'render_rest': false}) }}
 
     <br>
 

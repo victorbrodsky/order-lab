@@ -159,12 +159,12 @@
                 {#Action#}
                 <td class="rowlink-skip">
 
-                    <p>
-                        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">User Details</a>
-                    </p>
+                    {#<p>#}
+                        {#<a class="btn-sm btn-default" href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">User Details</a>#}
+                    {#</p>#}
 
                     <p>
-                        <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">Review</a>
+                        <a class="btn-sm btn-info" href="{{ path(vacreq_sitename~'_review', { 'id': entity.id }) }}">Review</a>
                     </p>
 
                     {#<div class="btn-group">#}
@@ -229,12 +229,3 @@
 
 {% endblock %}
 
-{#{% block additionaljs %}#}
-
-    {#{% javascripts#}
-    {#'@OlegUserdirectoryBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'#}
-    {#%}#}
-    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
-
-{#{% endblock %}#}

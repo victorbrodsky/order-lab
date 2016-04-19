@@ -37,6 +37,20 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             return true;
         }
 
+        return $this->checkLocalPermission($subject, $token);
+    }
+
+    protected function canEdit($subject, TokenInterface $token) {
+
+        if( parent::canEdit($subject, $token) ) {
+            return true;
+        }
+
+        return $this->checkLocalPermission($subject, $token);
+    }
+
+
+    private function checkLocalPermission($subject, TokenInterface $token) {
         //check if owner
         $user = $token->getUser();
         if( !$user instanceof User ) {
@@ -50,15 +64,27 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             }
         }
 
-        exit('vacreq can not view');
+        //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
+        if( $this->hasApproverRoleInstitution($subject,$user) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function hasApproverRoleInstitution($subject,$user) {
+        //get approver role for subject institution
+        if( $subject->getInstitution() ) {
+            $approverRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                findUserRolesBySiteAndPartialRoleName($user, "vacreq", "ROLE_VACREQ_APPROVER_", $subject->getInstitution()->getId() );
+            if( count($approverRoles) > 0 ) {
+                return true;
+            }
+        }
         return false;
     }
 
 
-//    protected function canEdit($subject, TokenInterface $token) {
-//        return false;
-//    }
-//
 //    protected function canChangeStatus($subject, TokenInterface $token) {
 //        return false;
 //    }

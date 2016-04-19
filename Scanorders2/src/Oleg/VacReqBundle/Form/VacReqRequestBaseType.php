@@ -34,6 +34,7 @@ class VacReqRequestBaseType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control vacreq-startDate'),
+            'read_only' => ($this->params['review'] ? true : false)
         ));
 
         $builder->add('endDate', 'date', array(
@@ -42,12 +43,14 @@ class VacReqRequestBaseType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control vacreq-endDate'),
+            'read_only' => ($this->params['review'] ? true : false)
         ));
 
 
         $builder->add('numberOfDays', null, array(
             'label' => 'Number of Work Days Offsite (Please do not include holidays):',
-            'attr' => array('class'=>'form-control vacreq-numberOfDays')
+            'attr' => array('class'=>'form-control vacreq-numberOfDays'),
+            'read_only' => ($this->params['review'] ? true : false)
         ));
 
         $builder->add('firstDayBackInOffice', 'date', array(
@@ -56,6 +59,7 @@ class VacReqRequestBaseType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control vacreq-firstDayBackInOffice'),
+            'read_only' => ($this->params['review'] ? true : false)
         ));
 
         if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
@@ -67,8 +71,15 @@ class VacReqRequestBaseType extends AbstractType
         }
 
         if( $this->params['cycle'] != 'new' ) {
+
+            $readOnly = true;
+            if( $this->params['review'] && $this->params['roleAdmin'] ) {
+                $readOnly = false;
+            }
+
             $builder->add('status', 'choice', array(
                 'disabled' => ($this->params['roleAdmin'] ? false : true),
+                'read_only' => $readOnly,
                 'choices' => array(
                     //'pending' => 'Pending',
                     'approved' => 'Approved',

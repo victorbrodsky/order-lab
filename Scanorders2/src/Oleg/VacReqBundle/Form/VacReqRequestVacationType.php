@@ -20,7 +20,8 @@ class VacReqRequestVacationType extends VacReqRequestBaseType {
 
         $builder->add('numberOfDays', null, array(
             'label' => 'Vacation Days Requested (Please do not include holidays):',
-            'attr' => array('class'=>'form-control vacreq-numberOfDays')
+            'attr' => array('class'=>'form-control vacreq-numberOfDays'),
+            'read_only' => ($this->params['review'] ? true : false)
         ));
 
     }
