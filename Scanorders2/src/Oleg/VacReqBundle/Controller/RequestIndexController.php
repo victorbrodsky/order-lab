@@ -53,7 +53,7 @@ class RequestIndexController extends Controller
     public function incomingRequestsAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -75,17 +75,23 @@ class RequestIndexController extends Controller
         $dqlFilterUser = $repository->createQueryBuilder('user');
         $dqlFilterUser->select('user');
         $dqlFilterUser->leftJoin("user.infos","infos");
+        $dqlFilterUser->leftJoin("user.employmentStatus", "employmentStatus");
+        $dqlFilterUser->leftJoin("employmentStatus.employmentType", "employmentType");
+        //filter out system user
+        $dqlFilterUser->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'");
+        //filter out Pathology Fellowship Applicants
+        $dqlFilterUser->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         //$dqlFilterUser->where("user.keytype IS NOT NULL");
         $dqlFilterUser->orderBy("infos.lastName","ASC");
         $queryFilterUser = $em->createQuery($dqlFilterUser);
         $filterUsers = $queryFilterUser->getResult();
         //echo "count=".count($filterUsers)."<br>";
         //add unknown dummy user
-        $unknown = new User();
-        $unknown->setDisplayName("unknown");
-        $em->persist($unknown);
+//        $unknown = new User();
+//        $unknown->setDisplayName("unknown");
+//        $em->persist($unknown);
         //$filterUsers[] = $unknown;
-        array_unshift($filterUsers, $unknown);
+//        array_unshift($filterUsers, $unknown);
         $params['filterUsers'] = $filterUsers;
         //////////////////// EOF get list of users with "unknown" user ////////////////////
 
@@ -157,13 +163,16 @@ class RequestIndexController extends Controller
         $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
+
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("user.infos", "infos");
+
         $dql->leftJoin("request.requestBusiness", "requestBusiness");
         $dql->leftJoin("request.requestVacation", "requestVacation");
 
         //$dql->where("requestBusiness.startDate IS NOT NULL OR requestVacation.startDate IS NOT NULL");
 
+        //process filter
         $filterRes = $this->processFilter( $dql, $request, $params );
         $filterform = $filterRes['form'];
         $dqlParameters = $filterRes['dqlParameters'];

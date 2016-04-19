@@ -27,16 +27,6 @@ class VacReqRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( $this->params['cycle'] != 'show' ) {
-            $builder->add('user', null, array(
-                //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-                'read_only' => ($this->params['roleAdmin'] ? false : true),
-                'label' => "Requester:",
-                'required' => true,
-                'attr' => array('class' => 'combobox combobox-width vacreq-user')
-            ));
-        }
-
 
 //        ///////////////////////// tree node /////////////////////////
 //        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -118,6 +108,33 @@ class VacReqRequestType extends AbstractType
             'required' => false,
         ));
 
+        if( $this->params['cycle'] != 'show' ) {
+//            $builder->add('user', null, array(
+//                //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+//                'read_only' => ($this->params['roleAdmin'] ? false : true),
+//                'label' => "Requester:",
+//                'required' => true,
+//                'attr' => array('class' => 'combobox combobox-width vacreq-user')
+//            ));
+
+            $builder->add('user', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Requester:",
+                'required' => true,
+                'multiple' => false,
+                //'property' => 'name',
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('user')
+                        ->leftJoin("user.infos","infos")
+                        ->leftJoin("user.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
+                        ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        ->orderBy("infos.lastName","ASC");
+                },
+            ));
+        }
 
         //add organizational group <-> institution
 //        $builder->add('institution', 'entity', array(
