@@ -237,6 +237,54 @@ class UserRepository extends EntityRepository {
 
         $userRoles = new ArrayCollection();
 
+//        $parameters = array(
+//            'sitename' => $sitename,
+//            'roleName' => '%' . $rolePartialName . '%'
+//        );
+//
+//        //check if user's roles have permission
+//        $query = $this->_em->createQueryBuilder()
+//            ->from('OlegUserdirectoryBundle:Roles', 'list')
+//            ->select("list")
+//            ->leftJoin("list.sites","sites");
+//
+//        $query->where("list.name LIKE :roleName AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
+//
+//        if( $institutionId ) {
+//            $query->andWhere("list.institution = :institutionId");
+//            $parameters['institutionId'] = $institutionId;
+//        }
+//
+//        $query->orderBy("list.id","ASC");
+//
+//        $query->setParameters($parameters);
+//
+//        //echo "sql=".$query->getQuery()->getSql()."<br>";
+//
+//        $roles = $query->getQuery()->getResult();
+
+        $roles = $this->findRolesBySiteAndPartialRoleName( $sitename, $rolePartialName, $institutionId );
+
+        //echo "roles count=".count($roles)."<br>";
+        //exit('exit');
+
+        //check if user has one of roles
+        foreach( $roles as $role ) {
+            //echo "role=".$role."<br>";
+            if( $user->hasRole($role) ) {
+                $userRoles->add($role);
+
+                if( $atLeastOne ) {
+                    return $userRoles;
+                }
+            }
+        }
+
+        return $userRoles;
+    }
+
+    public function findRolesBySiteAndPartialRoleName( $sitename, $rolePartialName, $institutionId=null ) {
+
         $parameters = array(
             'sitename' => $sitename,
             'roleName' => '%' . $rolePartialName . '%'
@@ -259,27 +307,11 @@ class UserRepository extends EntityRepository {
 
         $query->setParameters($parameters);
 
-        $query =
-
         //echo "sql=".$query->getQuery()->getSql()."<br>";
 
         $roles = $query->getQuery()->getResult();
-        //echo "roles count=".count($roles)."<br>";
-        //exit('exit');
 
-        //check if user has one of roles
-        foreach( $roles as $role ) {
-            //echo "role=".$role."<br>";
-            if( $user->hasRole($role) ) {
-                $userRoles->add($role);
-
-                if( $atLeastOne ) {
-                    return $userRoles;
-                }
-            }
-        }
-
-        return $userRoles;
+        return $roles;
     }
 
 

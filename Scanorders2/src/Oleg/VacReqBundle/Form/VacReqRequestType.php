@@ -148,9 +148,9 @@ class VacReqRequestType extends AbstractType
 //            'required' => false,
 //            //'multiple' => false,
 //            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
-//            'choices' => $this->params['organizationalInstitution'],
+//            'choices' => $this->params['organizationalInstitutions'],
 //        ));
-//        $builder->add('organizationalInstitution', 'choice', array(
+//        $builder->add('organizationalInstitutions', 'choice', array(
 //            //'class' => 'OlegUserdirectoryBundle:Institution',
 //            //'property' => 'getUserNameStr',
 //            'mapped' => false,
@@ -159,13 +159,13 @@ class VacReqRequestType extends AbstractType
 //            //'read_only' => ($this->params['roleAdmin'] ? false : true),
 //            //'multiple' => false,
 //            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
-//            'choices' => $this->params['organizationalInstitution'],
+//            'choices' => $this->params['organizationalInstitutions'],
 //        ));
         $builder->add('institution', 'choice', array(
             'label' => "Organizational Group:",
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
-            'choices' => $this->params['organizationalInstitution'],
+            'choices' => $this->params['organizationalInstitutions'],
             'read_only' => ($this->params['review'] ? true : false)
         ));
         $builder->get('institution')

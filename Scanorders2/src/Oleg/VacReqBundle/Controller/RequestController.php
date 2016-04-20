@@ -286,7 +286,7 @@ class RequestController extends Controller
 
         //organizationalInstitution
         //$organizationalInstitutions = $em->getRepository('OlegUserdirectoryBundle:User')->findVacReqOrganizationalInstitution($user);
-        $organizationalInstitutions = $this->getVacReqOrganizationalInstitution($user);
+        $organizationalInstitutions = $this->getVacReqOrganizationalInstitutions($user);
 
         $params = array(
             'sc' => $this->get('security.context'),
@@ -294,7 +294,7 @@ class RequestController extends Controller
             'user' => $entity->getUser(),
             'cycle' => $cycle,
             'roleAdmin' => $admin,
-            'organizationalInstitution' => $organizationalInstitutions
+            'organizationalInstitutions' => $organizationalInstitutions
         );
 
         $disabled = false;
@@ -333,7 +333,7 @@ class RequestController extends Controller
     }
 
     //get institution from user submitter role
-    public function getVacReqOrganizationalInstitution( $user ) {
+    public function getVacReqOrganizationalInstitutions( $user ) {
 
         $institutions = array();
 

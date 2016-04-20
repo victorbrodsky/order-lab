@@ -1,13 +1,34 @@
 {% extends "OlegVacReqBundle::Default/base.html.twig" %}
 
 {% block title %}
-    Vacation Request Approvers
+    Vacation/Business Request Groups
 {% endblock %}
 
 
 {% block content %}
 
-    Vacation Request Approvers
+
+    <h4 class="text-info" align="center">
+        Vacation/Business Request Groups
+    </h4>
+
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+
+    <br>
+
+    {% for organizationalInstitution in organizationalInstitutions %}
+
+        <p>
+            {{ render(controller('OlegVacReqBundle:Approver:OrganizationalInstitution', { 'institutionId': organizationalInstitution.id })) }}
+        </p>
+
+    {% endfor %}
+
+
 
 {% endblock %}
 
