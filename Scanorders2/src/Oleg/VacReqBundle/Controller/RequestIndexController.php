@@ -66,7 +66,7 @@ class RequestIndexController extends Controller
         $params = array(
             'sitename' => $this->container->getParameter('vacreq.sitename'),
             'approver' => $user,
-            'title' => "Incoming Business/Vacation Requests"
+            'title' => "Incoming Business/Vacation Requests",
         );
         return $this->listRequests($params, $request);
     }

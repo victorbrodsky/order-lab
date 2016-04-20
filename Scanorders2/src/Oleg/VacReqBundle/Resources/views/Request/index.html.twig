@@ -196,7 +196,7 @@
                         {#<a class="btn-sm btn-default" href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">User Details</a>#}
                     {#</p>#}
 
-                    {% if review %}
+                    {% if routename == 'vacreq_incomingrequests' %}
                         <p>
                             <a class="btn-sm btn-info" href="{{ path(vacreq_sitename~'_review', { 'id': entity.id }) }}">Review</a>
                         </p>
