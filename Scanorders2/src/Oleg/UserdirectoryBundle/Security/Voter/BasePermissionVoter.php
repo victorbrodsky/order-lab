@@ -195,19 +195,6 @@ abstract class BasePermissionVoter extends Voter {
         return false;
     }
 
-    //status change: user can view and update the subject
-    protected function canChangeStatus($subject, TokenInterface $token) {
-
-        // if they can edit, they can view
-        if( $this->canEdit($subject, $token) ) {
-            return true;
-        }
-
-        //exit("canChangeStatus: not implemented yet");
-
-        return false;
-    }
-
     //$subject: string (i.e. "FellowshipApplication") or entity
     protected function canEdit($subject, TokenInterface $token)
     {
@@ -314,6 +301,24 @@ abstract class BasePermissionVoter extends Voter {
         }
 
         //exit('no permission');
+        return false;
+    }
+
+    //status change: user can view and update the subject
+    protected function canChangeStatus($subject, TokenInterface $token) {
+
+        exit("canChangeStatus: not implemented yet: overwrite in the particular permission voter");
+
+        // if they can edit, they can view
+        if( $this->canEdit($subject, $token) ) {
+
+            //add if user has appropriate admin role: overwrite in the particular permission voter
+
+            return true;
+        }
+
+        //exit("canChangeStatus: not implemented yet");
+
         return false;
     }
 

@@ -49,6 +49,26 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         return $this->checkLocalPermission($subject, $token);
     }
 
+    //status change: user can view and update the subject
+    protected function canChangeStatus($subject, TokenInterface $token) {
+
+        //exit("canChangeStatus: not implemented yet");
+
+        // if they can edit, they can view
+        if( $this->canEdit($subject, $token) ) {
+
+            //add if user has appropriate admin role: overwrite in the particular permission voter
+            //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
+            $user = $token->getUser();
+            if( $this->hasApproverRoleInstitution($subject,$user) ) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
 
     private function checkLocalPermission($subject, TokenInterface $token) {
         //check if owner
