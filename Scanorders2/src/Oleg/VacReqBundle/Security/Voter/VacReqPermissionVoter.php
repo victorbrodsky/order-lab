@@ -54,6 +54,12 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
         //exit("canChangeStatus: not implemented yet");
 
+        //ROLE_PLATFORM_DEPUTY_ADMIN can do anything
+        if( $this->decisionManager->decide($token, array('ROLE_PLATFORM_DEPUTY_ADMIN')) ) {
+            //exit('admin!');
+            return true;
+        }
+
         // if they can edit, they can view
         if( $this->canEdit($subject, $token) ) {
 
