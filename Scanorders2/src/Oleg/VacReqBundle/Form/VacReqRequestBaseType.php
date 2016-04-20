@@ -72,8 +72,9 @@ class VacReqRequestBaseType extends AbstractType
 
         if( $this->params['cycle'] != 'new' ) {
 
+            //enable status radio only for admin or for reviewer
             $readOnly = true;
-            if( $this->params['review'] || $this->params['roleAdmin'] ) {
+            if( $this->params['review'] === true ) { //|| $this->params['roleAdmin']
                 $readOnly = false;
             }
 

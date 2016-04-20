@@ -90,7 +90,16 @@
         {% if (not showFlag and not review) or (entity.requestBusiness and entity.requestBusiness.numberOfDays>0) %}
             {% set businessCollapse = 'in' %}
         {% endif %}
-        <div class="panel panel-info">
+        {#set accordion color#}
+        {% set businessPanelColor = 'panel-info' %}
+        {% if entity.requestBusiness and entity.requestBusiness.status == 'approved' %}
+            {% set businessPanelColor = 'panel-success' %}
+        {% endif %}
+        {% if entity.requestBusiness and entity.requestBusiness.status == 'rejected' %}
+            {% set businessPanelColor = 'panel-danger' %}
+        {% endif %}
+        {#Business panel#}
+        <div class="panel {{ businessPanelColor }}">
             <div class="panel-heading">
                 <h4 class="panel-title" align='center'>
                     {#<a data-toggle="collapse" href="#vacreq-Business">#}
@@ -104,7 +113,7 @@
                             </a>
                         </div>
                         {% if businessCollapse == 'in' %}
-                            <div class="col-xs-6" align="left">
+                            <div class="col-xs-6" align="left" style="color:#333;">
                                 {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
                             </div>
                         {% endif %}
@@ -129,11 +138,22 @@
 
 
         {#Vacation#}
+
+        {#set vacationCollapse#}
         {% set vacationCollapse = '' %}
-        {% if (not showFlag and not review) or (entity.requestBusiness and entity.requestVacation.numberOfDays>0) %}
+        {% if (not showFlag and not review) or (entity.requestVacation and entity.requestVacation.numberOfDays>0) %}
             {% set vacationCollapse = 'in' %}
         {% endif %}
-        <div class="panel panel-info">
+        {#set accordion color#}
+        {% set vacationPanelColor = 'panel-info' %}
+        {% if entity.requestVacation and entity.requestVacation.status == 'approved' %}
+            {% set vacationPanelColor = 'panel-success' %}
+        {% endif %}
+        {% if entity.requestVacation and entity.requestVacation.status == 'rejected' %}
+            {% set vacationPanelColor = 'panel-danger' %}
+        {% endif %}
+        {#vacation panel#}
+        <div class="panel {{ vacationPanelColor }}">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     {#<a data-toggle="collapse" href="#vacreq-Vacation">#}
@@ -147,7 +167,7 @@
                             </a>
                         </div>
                         {% if vacationCollapse == 'in' %}
-                            <div class="col-xs-6" align="left">
+                            <div class="col-xs-6" align="left" style="color:#333;">
                                 {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
                             </div>
                         {% endif %}
