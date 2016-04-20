@@ -1,0 +1,50 @@
+{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+
+
+
+{% block title %}
+    Organizational Group Management for {{ organizationalGroupName }}
+{% endblock %}
+
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        Organizational Group Management for {{ organizationalGroupName }}
+    </h4>
+
+    <br>
+
+    <div class="well">
+        <h5>Approver(s)</h5>
+        {% for approver in approvers %}
+
+            <p>
+                {{ approver }} ({{ approver.getSiteRoles('APPROVER')|join(', ') }})
+            </p>
+
+        {% endfor %}
+    </div>
+
+    <div class="well">
+        <h5>Submitter(s)</h5>
+        {% for submitter in submitters %}
+
+            <p>
+                {{ submitter }} ({{ submitter.getSiteRoles('SUBMITTER')|join(', ') }})
+            </p>
+
+        {% endfor %}
+    </div>
+
+    <br>
+    <p>
+        <a class="btn-sm btn-danger" href="#">Update</a>
+    </p>
+    <p>
+        <a class="btn-sm btn-danger" href="#">Delete Group</a>
+    </p>
+
+{% endblock %}
+

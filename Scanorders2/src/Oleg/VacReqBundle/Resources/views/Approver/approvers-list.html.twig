@@ -23,11 +23,13 @@
     {% for organizationalInstitution in organizationalInstitutions %}
 
         <p>
-            {{ render(controller('OlegVacReqBundle:Approver:OrganizationalInstitution', { 'institutionId': organizationalInstitution.id })) }}
+            {{ render(controller('OlegVacReqBundle:Approver:organizationalInstitution', { 'institutionId': organizationalInstitution.id })) }}
         </p>
 
     {% endfor %}
 
+
+    <a class="btn-sm btn-warning" href="#">Add a group</a>
 
 
 {% endblock %}
