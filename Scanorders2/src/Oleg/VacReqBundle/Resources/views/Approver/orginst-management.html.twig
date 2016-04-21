@@ -16,35 +16,80 @@
 
     <br>
 
-    <div class="well">
-        <h5>Approver(s)</h5>
-        {% for approver in approvers %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#vacreq-organizational-group-approver">
+                    Approver(s)
+                </a>
+            </h4>
+        </div>
+        <div id="vacreq-organizational-group-approver" class="panel-collapse collapse in">
+            <div class="panel-body">
 
-            <p>
-                {{ approver }} ({{ approver.getSiteRoles('APPROVER')|join(', ') }})
-            </p>
+                {% for approver in approvers %}
+                    <div class="well">
+                        {#{{ approver }}#}
+                        {#({{ approver.getSiteRoles('APPROVER')|join(', ') }})#}
+                        {{ render(controller('OlegVacReqBundle:Approver:userManagement', { 'userid': approver.id, 'instid':organizationalGroupId, 'roleId':approverRoleId})) }}
+                    </div>
+                {% endfor %}
 
-        {% endfor %}
-    </div>
+                {#<form id="add_authorized_user_form" action="{{ path('vacreq_orginst_add_user',{'roleId':approverRoleId}) }}" method="GET">#}
 
-    <div class="well">
-        <h5>Submitter(s)</h5>
-        {% for submitter in submitters %}
+                    {#{{ formmacros.field(form.keytype) }}#}
+                    {#{{ formmacros.field(form.primaryPublicUserId) }}#}
 
-            <p>
-                {{ submitter }} ({{ submitter.getSiteRoles('SUBMITTER')|join(', ') }})
-            </p>
+                    {#<p>#}
+                        {#<button type='submit' class="btn btn-info btn-sm">Add Approver</button>#}
+                    {#</p>#}
+                {#</form>#}
+                <div class="well">
+                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':submitterRoleId,'btnName':'Add Approver'})) }}
+                </div>
 
-        {% endfor %}
-    </div>
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#vacreq-organizational-group-submitter">
+                    Submitter(s)
+                </a>
+            </h4>
+        </div>
+        <div id="vacreq-organizational-group-submitter" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {% for submitter in submitters %}
+                    <div class="well">
+                        {#{{ submitter }}#}
+                        {#({{ approver.getSiteRoles('SUBMITTER')|join(', ') }})#}
+                        {{ render( url('vacreq_orginst_user_management',{'userid':submitter.id,'instid':organizationalGroupId, 'roleId':submitterRoleId}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
+                    </div>
+                {% endfor %}
+
+                <div class="well">
+                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':submitterRoleId,'btnName':'Add Submitter'})) }}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+
 
     <br>
-    <p>
-        <a class="btn-sm btn-danger" href="#">Update</a>
-    </p>
+    {#<p>#}
+        {#<a class="btn-sm btn-danger" href="#">Update</a>#}
+    {#</p>#}
     <p>
         <a class="btn-sm btn-danger" href="#">Delete Group</a>
     </p>
 
-{% endblock %}
+    <br>
 
+{% endblock %}

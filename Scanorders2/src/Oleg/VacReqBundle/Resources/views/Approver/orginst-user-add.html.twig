@@ -1,0 +1,17 @@
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+<h3 class="text-info">Authorized Users for {{ sitenamefull }}</h3>
+
+
+<hr>
+
+{#<form id="add_authorized_user_form" action="{{ path(sitename~'_add_authorized_user') }}" method="GET">#}
+<form method="GET">
+
+    {{ formmacros.field(form.keytype) }}
+    {{ formmacros.field(form.primaryPublicUserId) }}
+
+    <p>
+        <button type='submit' class="btn btn-info btn-sm">{{ btnName }}</button>
+    </p>
+</form>

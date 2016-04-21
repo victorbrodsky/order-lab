@@ -21,26 +21,24 @@
     <div id="vacreq-organizational-group-{{ organizationalGroupId }}" class="panel-collapse collapse in">
         <div class="panel-body">
 
-            <div class="well">
-            <h5>Approver(s)</h5>
-            {% for approver in approvers %}
-
-                <p>
-                    {{ approver }} ({{ approver.getSiteRoles('APPROVER')|join(', ') }})
-                </p>
-
-            {% endfor %}
+            <div class="well" align="justify">
+                <strong>Approver(s)</strong>
+                <br>
+                {% for approver in approvers %}
+                    {{ approver }}
+                    {#({{ approver.getSiteRoles('APPROVER')|join(', ') }})#}
+                    <br>
+                {% endfor %}
             </div>
 
-            <div class="well">
-            <h5>Submitter(s)</h5>
-            {% for submitter in submitters %}
-
-                <p>
-                    {{ submitter }} ({{ submitter.getSiteRoles('SUBMITTER')|join(', ') }})
-                </p>
-
-            {% endfor %}
+            <div class="well" align="justify">
+                <strong>Submitter(s)</strong>
+                <br>
+                {% for submitter in submitters %}
+                    {{ submitter }}
+                    {#({{ submitter.getSiteRoles('SUBMITTER')|join(', ') }})#}
+                    <br>
+                {% endfor %}
             </div>
 
         </div> <!-- panel-body -->

@@ -49,7 +49,6 @@
 
 {% macro request_radio_choice( request ) %}
     {% if request.status is defined %}
-        {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
         {{ form_widget(request.status) }}
     {% endif %}
 {% endmacro %}
