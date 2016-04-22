@@ -12,7 +12,10 @@
     {#<button type='submit' class="btn btn-info btn-sm">Update</button>#}
     <button type='button' class="btn btn-info btn-sm" onclick="updateVacReqGroupUser(this,{{ entity.id }},{{ institution.id }},{{ roleId }})">Update</button>
 
-    <a class="btn btn-danger btn-sm" href="{{ path('vacreq_orginst_user_remove',{'userid': entity.id, 'instid':institution.id, 'roleId':roleId}) }}">Remove</a>
+    <a
+        general-data-confirm="Are you sure you want to change user's role?"
+        class="btn btn-danger btn-sm" href="{{ path('vacreq_orginst_user_remove',{'userid': entity.id, 'instid':institution.id, 'roleId':roleId}) }}">
+        Remove</a>
 
 </form>
 
