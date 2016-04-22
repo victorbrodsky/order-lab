@@ -270,12 +270,7 @@ class ApproverController extends Controller
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
 
-        //Original Roles not associated with this site
-        //$securityUtil = $this->get('order_security_utility');
-        //$originalOtherRoles = $securityUtil->getUserRolesBySite( $subjectUser, 'vacreq', false );
-        //$this->processUserAuthorization( $subjectUser, $originalOtherRoles );
-
-        echo "roleIds=".$roleIds."<br>";
+        //echo "roleIds=".$roleIds."<br>";
 
         if( $roleIds || $roleIds == '0' ) {
             $roleArr = explode(',',$roleIds);
@@ -283,37 +278,29 @@ class ApproverController extends Controller
             $roleArr = array();
         }
 
-        print_r($roleArr);
-
-//        //add roles
-//        foreach( $roleArr as $roleName ) {
-//            echo "0 userRole=".$roleName."<br>";
-//            $subjectUser->addRole($roleName);
-//        }
-//        echo "<br>";
-
         $securityUtil = $this->get('order_security_utility');
-        $roleArrDiff = $securityUtil->addOnlySiteRoles($subjectUser,$roleArr,'vacreq');
+        $res = $securityUtil->addOnlySiteRoles($subjectUser,$roleArr,'vacreq');
 
-        //foreach( $subjectUser->getRoles() as $userRole ) {
-        //    echo "1 userRole=".$userRole."<br>";
-        //}
-        //exit('submitted');
+        if( $res ) {
 
-        $em->persist($subjectUser);
-        $em->flush();
+            $originalUserSiteRoles = $res['originalUserSiteRoles'];
+            $newUserSiteRoles = $res['newUserSiteRoles'];
 
+            $em->persist($subjectUser);
+            $em->flush();
 
-        //Event Log
-        $event = "Roles of ".$subjectUser . " has been changed " . $roleArrDiff;
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,'User record updated');
+            //Event Log
+            $event = "Roles of ".$subjectUser . " has been changed. Original roles:".implode(",",$originalUserSiteRoles)."; New roles:".implode(",",$newUserSiteRoles);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,'User record updated');
 
-        //Flash
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            $event
-        );
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+
+        }
 
         //return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
         exit('ok');

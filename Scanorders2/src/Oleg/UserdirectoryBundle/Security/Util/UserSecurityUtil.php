@@ -876,9 +876,13 @@ class UserSecurityUtil {
             $subjectUser->addRole($newUserSiteRole);
         }
 
-        $arrayDiff = array_diff($originalUserSiteRoles, $newUserSiteRoles);
+        //$arrayDiff = array_diff($originalUserSiteRoles, $newUserSiteRoles);
+        $res = array(
+            'originalUserSiteRoles' => $originalUserSiteRoles,
+            'newUserSiteRoles' => $newUserSiteRoles
+        );
 
-        return $arrayDiff;
+        return $res;
     }
     ///////////////////////// EOF User Role methods /////////////////////////
 

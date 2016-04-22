@@ -119,6 +119,7 @@ class RequestController extends Controller
         //$editForm = $this->createForm('Oleg\VacReqBundle\Form\VacReqRequestType', $vacReqRequest);
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
@@ -149,6 +150,26 @@ class RequestController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+
+            if( $routName == 'vacreq_review' ) {
+                $status = $entity->getOverallStatus();
+                $eventType = 'Business/Vacation Request has been '.$status;
+                $action = $status;
+            } else {
+                $action = "updated";
+                $eventType = 'Business/Vacation Request has been updated';
+            }
+
+            //Event Log
+            $event = "Request for ".$entity->getUser()." has been ".$action;
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
 
             return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
         }
@@ -183,6 +204,7 @@ class RequestController extends Controller
         //}
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
@@ -203,14 +225,20 @@ class RequestController extends Controller
 
             //return $this->redirectToRoute('vacreq_home');
 
-            //flash
+            //Flash
             if( $status == 'pending' ) {
                 $status = 'set to Pending';
             }
+            $event = "Request ID ".$entity->getId()." for ". $entity->getUser() ." has been " . $status;
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "Request ID ".$entity->getId()." for ". $entity->getUser() ." has been " . $status
+                $event
             );
+
+            //Event Log
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,'Business/Vacation Request has been updated');
+
         }
 
         $url = $request->headers->get('referer');
