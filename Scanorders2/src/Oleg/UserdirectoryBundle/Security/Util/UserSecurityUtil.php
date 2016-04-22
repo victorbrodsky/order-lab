@@ -845,9 +845,40 @@ class UserSecurityUtil {
         return $rolesArr;
     }
 
+    public function getSiteRolesIdKeyValue( $sitename ) {
+        $rolesArr = array();
+
+        $roles = $this->getRolesBySite($sitename);
+
+        foreach( $roles as $role ) {
+            $rolesArr[$role->getId()] = $role->getAlias();
+        }
+        return $rolesArr;
+    }
+
     //lowest level role == roles with level = 1
     public function getLowestRolesBySite( $sitename ) {
         return $this->getRolesBySite($sitename, true, 1);
+    }
+
+    public function addOnlySiteRoles( $subjectUser, $newUserSiteRoles, $sitename ) {
+        $originalUserSiteRoles = $this->getUserRolesBySite( $subjectUser, $sitename, true );
+
+        if( $originalUserSiteRoles == $newUserSiteRoles ) {
+            return null;
+        }
+
+        foreach( $originalUserSiteRoles as $originalUserSiteRole ) {
+            $subjectUser->removeRole($originalUserSiteRole);
+        }
+
+        foreach( $newUserSiteRoles as $newUserSiteRole ) {
+            $subjectUser->addRole($newUserSiteRole);
+        }
+
+        $arrayDiff = array_diff($originalUserSiteRoles, $newUserSiteRoles);
+
+        return $arrayDiff;
     }
     ///////////////////////// EOF User Role methods /////////////////////////
 

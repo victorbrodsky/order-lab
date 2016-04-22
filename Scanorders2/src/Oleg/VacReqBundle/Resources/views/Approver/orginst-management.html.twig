@@ -45,7 +45,7 @@
                     {#</p>#}
                 {#</form>#}
                 <div class="well">
-                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':submitterRoleId,'btnName':'Add Approver'})) }}
+                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':approverRoleId,'btnName':'Add Approver'})) }}
                 </div>
 
             </div> <!-- panel-body -->
@@ -93,3 +93,47 @@
     <br>
 
 {% endblock %}
+
+
+
+{% block additionaljs %}
+
+    <script>
+
+        $(document).ready(function() {
+
+
+        });
+
+        function updateVacReqGroupUser(btn,userid,instid,roleId) {
+            var formid = "vacreq_orginst_user_management_"+userid+"_"+roleId;
+            console.log('formid='+formid);
+
+            var form = $('#'+formid);
+
+            //get roles by class vacreq-roles
+            var roles = form.find('.vacreq-roles').select2('val');
+            console.log('roles='+roles);
+
+            if( !roles || roles == '' ) {
+                roles = 0;
+            }
+
+            var updateUserUrl = Routing.generate('vacreq_orginst_user_update', {userid: userid, instid:instid, roleIds:roles});
+            console.log('updateUserUrl='+updateUserUrl);
+
+            //$('#'+formid).submit();
+            $.get(updateUserUrl, function(data, status){
+                console.log("Data: " + data + "\nStatus: " + status);
+                if( status == "success" ) {
+                    //reload page
+                    location.reload();
+                }
+            });
+        }
+
+    </script>
+
+{% endblock %}
+
+

@@ -1,14 +1,16 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-{{ entity }}
+{#{{ entity }}#}
+<a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.id }) }}">{{ entity }}</a>
 
-<form method="POST">
+<form id="vacreq_orginst_user_management_{{ entity.id }}_{{ roleId }}" method="POST">
 
     {{ formmacros.field(form.roles) }}
 
 
-    <button type='submit' class="btn btn-info btn-sm">Update</button>
+    {#<button type='submit' class="btn btn-info btn-sm">Update</button>#}
+    <button type='button' class="btn btn-info btn-sm" onclick="updateVacReqGroupUser(this,{{ entity.id }},{{ institution.id }},{{ roleId }})">Update</button>
 
     <a class="btn btn-danger btn-sm" href="{{ path('vacreq_orginst_user_remove',{'userid': entity.id, 'instid':institution.id, 'roleId':roleId}) }}">Remove</a>
 

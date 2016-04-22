@@ -180,8 +180,8 @@ class ApproverController extends Controller
         }
 
         //Original Roles not associated with this site
-        $securityUtil = $this->get('order_security_utility');
-        $originalOtherRoles = $securityUtil->getUserRolesBySite( $subjectUser, 'vacreq', false );
+        //$securityUtil = $this->get('order_security_utility');
+        //$originalOtherRoles = $securityUtil->getUserRolesBySite( $subjectUser, 'vacreq', false );
 
         //Roles
         $securityUtil = $this->get('order_security_utility');
@@ -198,18 +198,39 @@ class ApproverController extends Controller
             )
         );
 
-        $form->handleRequest($request);
+//        $form->handleRequest($request);
 
-        if( $form->isSubmitted() && $form->isValid() ) {
+        //$formRoles = $request->request->get('roles');
+        //$formRoles = $form->getData();
+        //$formRoles = $form["roles"]->getData();
+        //print_r($formRoles);
 
-            $this->processUserAuthorization( $subjectUser, $originalOtherRoles );
+//        foreach( $subjectUser->getRoles() as $userRole ) {
+//            echo "0 userRole=".$userRole."<br>";
+//        }
+//        echo "<br>";
+        //exit('formRoles='.$formRoles);
 
-            $em->persist($subjectUser);
-            $em->flush();
-
-            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
-        }
-
+//        if( $form->isSubmitted() && $form->isValid() ) {
+//
+//            foreach( $subjectUser->getRoles() as $userRole ) {
+//                echo "0 userRole=".$userRole."<br>";
+//            }
+//            echo "<br>";
+//
+//            $this->processUserAuthorization( $subjectUser, $originalOtherRoles );
+//
+//            foreach( $subjectUser->getRoles() as $userRole ) {
+//                echo "1 userRole=".$userRole."<br>";
+//            }
+//            exit('submitted');
+//
+//            $em->persist($subjectUser);
+//            $em->flush();
+//
+//            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+//        }
+        //exit('not submitted');
 
         return array(
             'form' => $form->createView(),
@@ -217,6 +238,85 @@ class ApproverController extends Controller
             'institution' => $organizationalGroupInstitution,
             'roleId' => $roleId
         );
+    }
+
+
+    /**
+     * @Route("/organizational-institution-user-update/{userid}/{instid}/{roleIds}", name="vacreq_orginst_user_update", options={"expose"=true})
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Approver:orginst-user-management.html.twig")
+     */
+    public function userManagementUpdateAction(Request $request, $userid, $instid, $roleIds )
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //echo " => userId=".$id."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+
+        if( !$subjectUser ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
+        }
+
+        $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+
+        if( !$organizationalGroupInstitution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        //Original Roles not associated with this site
+        //$securityUtil = $this->get('order_security_utility');
+        //$originalOtherRoles = $securityUtil->getUserRolesBySite( $subjectUser, 'vacreq', false );
+        //$this->processUserAuthorization( $subjectUser, $originalOtherRoles );
+
+        echo "roleIds=".$roleIds."<br>";
+
+        if( $roleIds || $roleIds == '0' ) {
+            $roleArr = explode(',',$roleIds);
+        } else {
+            $roleArr = array();
+        }
+
+        print_r($roleArr);
+
+//        //add roles
+//        foreach( $roleArr as $roleName ) {
+//            echo "0 userRole=".$roleName."<br>";
+//            $subjectUser->addRole($roleName);
+//        }
+//        echo "<br>";
+
+        $securityUtil = $this->get('order_security_utility');
+        $roleArrDiff = $securityUtil->addOnlySiteRoles($subjectUser,$roleArr,'vacreq');
+
+        //foreach( $subjectUser->getRoles() as $userRole ) {
+        //    echo "1 userRole=".$userRole."<br>";
+        //}
+        //exit('submitted');
+
+        $em->persist($subjectUser);
+        $em->flush();
+
+
+        //Event Log
+        $event = "Roles of ".$subjectUser . " has been changed " . $roleArrDiff;
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,'User record updated');
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $event
+        );
+
+        //return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+        exit('ok');
     }
 
 
@@ -235,8 +335,8 @@ class ApproverController extends Controller
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
-        //$user = $this->get('security.context')->getToken()->getUser();
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
 
         if( !$subjectUser ) {
@@ -270,9 +370,15 @@ class ApproverController extends Controller
             $em->persist($subjectUser);
             $em->flush();
 
+            //Event Log
+            $event = "User ".$subjectUser." has been removed as ".$role->getAlias();
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,'User record updated');
+
+            //Flash
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "User ".$subjectUser." has been removed as ".$role->getName()." from ".$organizationalGroupInstitution." group."
+                $event
             );
 
         }
@@ -310,7 +416,36 @@ class ApproverController extends Controller
         );
         $form = $this->createForm(new SimpleUserType($params));
 
-        $form->handleRequest($request);
+        return array(
+            'form' => $form->createView(),
+            'btnName' => $btnName,
+            'roleId' => $roleId,
+            'instid' => $instid
+        );
+    }
+
+    /**
+     * @Route("/organizational-institution-user-add-action/{instid}/{roleId}", name="vacreq_orginst_add_action_user")
+     * @Method({"GET"})
+     */
+    public function addRoleToUserAction(Request $request, $instid, $roleId )
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //echo " => userId=".$id."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
+
+        if( !$role ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
+        }
+
 
         $keytype = $request->query->get('keytype');
         $keytype = trim($keytype);
@@ -318,135 +453,49 @@ class ApproverController extends Controller
         $primaryPublicUserId = $request->query->get('primaryPublicUserId');
         $primaryPublicUserId = trim($primaryPublicUserId);
 
-        exit('primaryPublicUserId='.$primaryPublicUserId);
+        //exit('primaryPublicUserId='.$primaryPublicUserId);
 
-        if( $form->isSubmitted() && $form->isValid() ) {
+        //find user in DB
+        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
 
-            $keytype = $request->query->get('keytype');
-            $keytype = trim($keytype);
-
-            $primaryPublicUserId = $request->query->get('primaryPublicUserId');
-            $primaryPublicUserId = trim($primaryPublicUserId);
-
-            exit('form submitted!');
-
-            //find user in DB
-            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
-
-            if( count($users) > 1 ) {
-                throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
-            }
-
-            if( count($users) == 1 ) {
-                $subjectUser = $users[0];
-            }
-
-            if( count($users) == 0 ) {
-                $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
-                $this->get('session')->getFlashBag()->set(
-                    'notice',
-                    'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
-                    "Please use the 'Create New User' form to add a new user."
-                );
-                return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
-            }
-
-            $subjectUser->addRole($role);
-
-            $em->persist($subjectUser);
-            $em->flush();
-
-            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+        if( count($users) > 1 ) {
+            throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
         }
-        //exit('form not submitted');
 
+        if( count($users) == 1 ) {
+            $subjectUser = $users[0];
+        }
 
-        return array(
-            'form' => $form->createView(),
-            'btnName' => $btnName,
-            'roleId' => $roleId
+        if( count($users) == 0 ) {
+            $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
+            $this->get('session')->getFlashBag()->set(
+                'notice',
+                'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
+                "Please use the 'Create New User' form to add a new user."
+            );
+            return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
+        }
+
+        $subjectUser->addRole($role);
+
+        //exit('added '.$role.' to '.$subjectUser);
+
+        $em->persist($subjectUser);
+        $em->flush();
+
+        //Event Log
+        $event = "User ".$subjectUser." has been added as ".$role->getAlias();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,'User record updated');
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $event
         );
-    }
 
-//    /**
-//     * @Route("/organizational-institution-user-add-action/{instid}/{roleId}/{btnName}", name="vacreq_orginst_add_action_user")
-//     * @Method({"GET"})
-//     * @Template("OlegVacReqBundle:Approver:orginst-user-add.html.twig")
-//     */
-//    public function addRoleToUserAction(Request $request, $instid, $roleId, $btnName )
-//    {
-//
-//        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-//        }
-//
-//        //echo " => userId=".$id."<br>";
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
-//
-//        if( !$role ) {
-//            throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
-//        }
-//
-//        //new simple user form: user type, user id
-//        $params = array(
-//            'cycle' => 'create',
-//            'readonly' => false,
-//            //'sc' => $this->get('security.context')
-//        );
-//        $form = $this->createForm(new SimpleUserType($params));
-//
-//        $form->handleRequest($request);
-//
-//        if( $form->isSubmitted() && $form->isValid() ) {
-//
-//            $keytype = $request->query->get('keytype');
-//            $keytype = trim($keytype);
-//
-//            $primaryPublicUserId = $request->query->get('primaryPublicUserId');
-//            $primaryPublicUserId = trim($primaryPublicUserId);
-//
-//            exit('form submitted!');
-//
-//            //find user in DB
-//            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
-//
-//            if( count($users) > 1 ) {
-//                throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
-//            }
-//
-//            if( count($users) == 1 ) {
-//                $subjectUser = $users[0];
-//            }
-//
-//            if( count($users) == 0 ) {
-//                $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
-//                $this->get('session')->getFlashBag()->set(
-//                    'notice',
-//                    'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
-//                    "Please use the 'Create New User' form to add a new user."
-//                );
-//                return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
-//            }
-//
-//            $subjectUser->addRole($role);
-//
-//            $em->persist($subjectUser);
-//            $em->flush();
-//
-//            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
-//        }
-//        exit('form not submitted');
-//
-//
-//        return array(
-//            'form' => $form->createView(),
-//            'btnName' => $btnName,
-//            'roleId' => $roleId
-//        );
-//    }
+        return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+    }
 
 
     public function processUserAuthorization( $entity, $originalOtherRoles ) {
