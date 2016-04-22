@@ -1,0 +1,30 @@
+{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+
+{% block title %}
+    Vacation/Business Request Add Groups
+{% endblock %}
+
+
+{% block content %}
+
+
+    <h4 class="text-info" align="center">
+        Vacation/Business Request Add Groups
+    </h4>
+
+
+    <form method="POST">
+
+        {{ treemacros.compositeTreeNode(form.institution,'','') }}
+
+        <p>
+        <button type='submit' class="btn btn-info btn-sm">Add Group</button>
+        </p>
+
+    </form>
+
+{% endblock %}
+
+

@@ -2,8 +2,11 @@
 
 namespace Oleg\VacReqBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Entity\Roles;
 use Oleg\UserdirectoryBundle\Form\SimpleUserType;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\VacReqBundle\Entity\VacReqRequest;
+use Oleg\VacReqBundle\Form\VacReqGroupType;
 use Oleg\VacReqBundle\Form\VacReqRequestType;
 use Oleg\VacReqBundle\Form\VacReqUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -485,19 +488,207 @@ class ApproverController extends Controller
     }
 
 
-    public function processUserAuthorization( $entity, $originalOtherRoles ) {
 
-        //$em = $this->getDoctrine()->getManager();
+    /**
+     * @Route("/organizational-institution-add", name="vacreq_group_add")
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Approver:orginst-add.html.twig")
+     */
+    public function addGroupAction(Request $request )
+    {
 
-        ///////////////// update roles /////////////////
-        //add original roles not associated with this site
-        foreach( $originalOtherRoles as $role ) {
-            $entity->addRole($role);
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //$em->persist($entity);
-        //$em->flush($entity);
-        ///////////////// EOF update roles /////////////////
+        //echo " => userId=".$id."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+//        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
+//
+//        if( !$role ) {
+//            throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
+//        }
+
+        //new simple user form: user type, user id
+        $params = array(
+            'em' => $em,
+            'cycle' => 'create',
+            'readonly' => false,
+            //'path' => 'vacreq_orginst_add_action_user'
+        );
+        $form = $this->createForm(new VacReqGroupType($params));
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userutil = new UserUtil();
+            $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+
+            //add group
+            //$instid = null;
+            $institution = $form["institution"]->getData();
+
+            $instid = $institution->getId();
+            //exit('instid='.$instid);
+
+            $count = 0;
+
+            //get ROLE NAME: Pathology Informatics => PATHOLOGYINFORMATCS
+            $roleNameBase = str_replace(" ","",$institution->getName());
+            $roleNameBase = strtoupper($roleNameBase);
+
+            //create approver role
+            $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
+            $approverRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+            if( !$approverRole ) {
+                $approverRole = new Roles();
+                $approverRole = $userutil->setDefaultList($approverRole, 1000, $user, $roleName);
+                $approverRole->setLevel(50);
+                $approverRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
+                $approverRole->setDescription('Can search and approve vacation requests for specified service');
+                $approverRole->addSite($site);
+                $approverRole->setInstitution($institution);
+                $userSecUtil->checkAndAddPermissionToRole($approverRole, "Approve a Vacation Request", "VacReqRequest", "changestatus");
+
+                $em->persist($approverRole);
+                $em->flush($approverRole);
+
+                $count++;
+            }
+
+            //create submitter role
+            $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
+            $submitterRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+            if( !$submitterRole ) {
+                $submitterRole = new Roles();
+                $submitterRole = $userutil->setDefaultList($submitterRole, 1000, $user, $roleName);
+                $submitterRole->setLevel(30);
+                $submitterRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
+                $submitterRole->setDescription('Can search and approve vacation requests for specified service');
+                $submitterRole->addSite($site);
+                $submitterRole->setInstitution($institution);
+                $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
+
+                $em->persist($submitterRole);
+                $em->flush($submitterRole);
+
+                $count++;
+            }
+
+            if( $count > 0 ) {
+                //Event Log
+                $event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+            }
+
+            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+        }
+
+            return array(
+            'form' => $form->createView(),
+            //'roleId' => $roleId,
+            //'instid' => $instid
+        );
     }
+
+
+    /**
+     * @Route("/organizational-institution-remove/{instid}", name="vacreq_group_remove")
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Approver:orginst-user-add.html.twig")
+     */
+    public function removeGroupAction(Request $request, $instid )
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //echo " => userId=".$id."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        //exit('not implemented');
+
+        $removedRoles = array();
+
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_APPROVER_",$request);
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_SUBMITTER_",$request);
+
+        if( count($removedRoles) > 0 ) {
+            //Event Log
+            $event = "Business/Vacation Group " . $institution . " has been removed by removing roles:".implode(", ",$removedRoles);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Role Removed');
+
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+        }
+
+        return $this->redirectToRoute('vacreq_approvers');
+    }
+
+    public function removeVacReqGroupByInstitution($instid,$rolePartialName) {
+        $em = $this->getDoctrine()->getManager();
+
+        $roleName = null;
+
+        //1) find approver roles with iinstitution
+        $role = null;
+        $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$rolePartialName,$instid);
+        if( count($roles)>0 ) {
+            $role = $roles[0];
+            $roleName = $role->getName();
+        }
+
+        //2) remove approver role from all users
+        if( $role ) {
+            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleName);
+            foreach( $users as $user ) {
+                $user->removeRole($roleName);
+            }
+
+            $em->remove($role);
+            $em->flush();
+        }
+
+        return $roleName;
+    }
+
+//    public function processUserAuthorization( $entity, $originalOtherRoles ) {
+//
+//        //$em = $this->getDoctrine()->getManager();
+//
+//        ///////////////// update roles /////////////////
+//        //add original roles not associated with this site
+//        foreach( $originalOtherRoles as $role ) {
+//            $entity->addRole($role);
+//        }
+//
+//        //$em->persist($entity);
+//        //$em->flush($entity);
+//        ///////////////// EOF update roles /////////////////
+//    }
 
 }

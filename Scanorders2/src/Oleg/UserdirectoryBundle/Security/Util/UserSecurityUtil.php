@@ -11,6 +11,7 @@ namespace Oleg\UserdirectoryBundle\Security\Util;
 
 
 
+use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1001,6 +1002,48 @@ class UserSecurityUtil {
     //return absolute file name on the server which will work for web and command
     public function getAbsoluteServerFilePath( $document ) {
         return realpath($this->container->get('kernel')->getRootDir() . "/../web/" . $document->getServerPath());
+    }
+
+    //checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create")
+    public function checkAndAddPermissionToRole($role,$permissionListStr,$permissionObjectListStr,$permissionActionListStr) {
+
+        $count = 0;
+        $em = $this->em;
+        $permission = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findOneByName($permissionListStr);
+        if( !$permission ) {
+            exit("Permission is not found by name=".$permissionListStr);
+        }
+
+        //make sure permission is added to role: role->permissions(Permission)->permission(PermissionList)->(PermissionObjectList,PermissionActionList)
+        //check if role has permission (Permission): PermissionList with $permissionListStr
+        $permissionExists = false;
+        foreach( $role->getPermissions() as $rolePermission ) {
+            if( $rolePermission->getPermission() && $rolePermission->getPermission()->getId() == $permission->getId() ) {
+                $permissionExists = true;
+            }
+        }
+        if( !$permissionExists ) {
+            $rolePermission = new Permission();
+            $rolePermission->setPermission($permission);
+            $role->addPermission($rolePermission);
+            $count++;
+        }
+
+        //make sure object is set
+        if( !$permission->getPermissionObjectList() ) {
+            $permissionObject = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findOneByName($permissionObjectListStr);
+            $permission->setPermissionObjectList($permissionObject);
+            $count++;
+        }
+
+        //make sure action is set
+        if( !$permission->getPermissionActionList() ) {
+            $permissionAction = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findOneByName($permissionActionListStr);
+            $permission->setPermissionActionList($permissionAction);
+            $count++;
+        }
+
+        return $count;
     }
 
 }

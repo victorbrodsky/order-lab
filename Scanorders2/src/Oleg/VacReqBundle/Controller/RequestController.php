@@ -153,11 +153,11 @@ class RequestController extends Controller
 
             if( $routName == 'vacreq_review' ) {
                 $status = $entity->getOverallStatus();
-                $eventType = 'Business/Vacation Request has been '.$status;
+                $eventType = 'Business/Vacation Request '.ucwords($status);
                 $action = $status;
             } else {
                 $action = "updated";
-                $eventType = 'Business/Vacation Request has been updated';
+                $eventType = 'Business/Vacation Request Updated';
             }
 
             //Event Log
@@ -237,7 +237,7 @@ class RequestController extends Controller
 
             //Event Log
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,'Business/Vacation Request has been updated');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,'Business/Vacation Request Updated');
 
         }
 

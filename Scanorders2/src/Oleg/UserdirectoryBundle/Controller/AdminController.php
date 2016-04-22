@@ -4724,9 +4724,11 @@ class AdminController extends Controller
     public function addFellAppPermission( $role ) {
         $count = 0;
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
         //ROLE_FELLAPP_INTERVIEWER: permission="Submit an interview evaluation", object="Interview", action="create"
         if( strpos($role, "ROLE_FELLAPP_INTERVIEWER") !== false ) {
-            $count = $count + $this->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create");
         }
 
         //ROLE_FELLAPP_DIRECTOR:
@@ -4734,13 +4736,13 @@ class AdminController extends Controller
         // permission="Create a New Fellowship Application", object="FellowshipApplication", action="create"
         // permission="Modify a Fellowship Application", object="FellowshipApplication", action="update"
         if( strpos($role, "ROLE_FELLAPP_COORDINATOR") !== false || strpos($role, "ROLE_FELLAPP_DIRECTOR") !== false ) {
-            $count = $count + $this->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create");
-            $count = $count + $this->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update");
         }
 
         //ROLE_FELLAPP_OBSERVER: permission="View a Fellowship Application", object="FellowshipApplication", action="read"
         if( strpos($role, "ROLE_FELLAPP_OBSERVER") !== false ) {
-            $count = $count + $this->checkAndAddPermissionToRole($role,"View a Fellowship Application","FellowshipApplication","read");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"View a Fellowship Application","FellowshipApplication","read");
         }
 
         return $count;
@@ -4749,56 +4751,17 @@ class AdminController extends Controller
     public function addVacReqPermission( $role ) {
         $count = 0;
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
         //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create","changestatus"
         if( strpos($role, "ROLE_VACREQ_APPROVER") !== false ) {
-            //$count = $count + $this->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
-            $count = $count + $this->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
+            //$count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
         }
 
         //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create"
         if( strpos($role, "ROLE_VACREQ_SUBMITTER") !== false ) {
-            $count = $count + $this->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
-        }
-
-        return $count;
-    }
-
-    public function checkAndAddPermissionToRole($role,$permissionListStr,$permissionObjectListStr,$permissionActionListStr) {
-
-        $count = 0;
-        $em = $this->getDoctrine()->getManager();
-        $permission = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findOneByName($permissionListStr);
-        if( !$permission ) {
-            exit("Permission is not found by name=".$permissionListStr);
-        }
-
-        //make sure permission is added to role: role->permissions(Permission)->permission(PermissionList)->(PermissionObjectList,PermissionActionList)
-        //check if role has permission (Permission): PermissionList with $permissionListStr
-        $permissionExists = false;
-        foreach( $role->getPermissions() as $rolePermission ) {
-            if( $rolePermission->getPermission() && $rolePermission->getPermission()->getId() == $permission->getId() ) {
-                $permissionExists = true;
-            }
-        }
-        if( !$permissionExists ) {
-            $rolePermission = new Permission();
-            $rolePermission->setPermission($permission);
-            $role->addPermission($rolePermission);
-            $count++;
-        }
-
-        //make sure object is set
-        if( !$permission->getPermissionObjectList() ) {
-            $permissionObject = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findOneByName($permissionObjectListStr);
-            $permission->setPermissionObjectList($permissionObject);
-            $count++;
-        }
-
-        //make sure action is set
-        if( !$permission->getPermissionActionList() ) {
-            $permissionAction = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findOneByName($permissionActionListStr);
-            $permission->setPermissionActionList($permissionAction);
-            $count++;
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
         }
 
         return $count;
