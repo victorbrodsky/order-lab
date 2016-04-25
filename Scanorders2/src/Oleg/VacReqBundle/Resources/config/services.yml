@@ -28,3 +28,7 @@ services:
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
+
+    vacreq_util:
+        class: Oleg\VacReqBundle\Util\VacReqUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]

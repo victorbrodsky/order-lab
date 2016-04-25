@@ -118,6 +118,7 @@ function regularCombobox(holder) {
     });
 }
 function specificRegularCombobox( comboboxEl ) {
+
     comboboxEl.select2({
         width: combobox_width,
         dropdownAutoWidth: true,
@@ -128,7 +129,7 @@ function specificRegularCombobox( comboboxEl ) {
         //containerCssClass: 'combobox-width'
     });
 
-    if( comboboxEl.attr("readonly") ) {
+    if (comboboxEl.attr("readonly")) {
         comboboxEl.select2("readonly", true);
     }
 
@@ -140,6 +141,7 @@ function specificRegularCombobox( comboboxEl ) {
 //            });
 //            //comboboxEl.tooltip();
 //        }
+
 }
 
 function getElementTargetByHolder(holder,target) {

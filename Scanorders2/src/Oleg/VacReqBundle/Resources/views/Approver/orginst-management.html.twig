@@ -81,6 +81,26 @@
     </div> <!-- panel panel-info -->
 
 
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#vacreq-organizational-group-emails">
+                    Confirmation Email List
+                </a>
+            </h4>
+        </div>
+        <div id="vacreq-organizational-group-emails" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div class="well">
+                    {{ render( url('vacreq_orginst_emailusers',{'instid':organizationalGroupId})) }}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+
 
     <br>
     {#<p>#}
@@ -112,24 +132,51 @@
 
         function updateVacReqGroupUser(btn,userid,instid,roleId) {
             var formid = "vacreq_orginst_user_management_"+userid+"_"+roleId;
-            console.log('formid='+formid);
+            //console.log('formid='+formid);
 
             var form = $('#'+formid);
 
             //get roles by class vacreq-roles
             var roles = form.find('.vacreq-roles').select2('val');
-            console.log('roles='+roles);
+            //console.log('roles='+roles);
 
             if( !roles || roles == '' ) {
                 roles = 0;
             }
 
             var updateUserUrl = Routing.generate('vacreq_orginst_user_update', {userid: userid, instid:instid, roleIds:roles});
-            console.log('updateUserUrl='+updateUserUrl);
+            //console.log('updateUserUrl='+updateUserUrl);
 
             //$('#'+formid).submit();
             $.get(updateUserUrl, function(data, status){
-                console.log("Data: " + data + "\nStatus: " + status);
+                //console.log("Data: " + data + "\nStatus: " + status);
+                if( status == "success" ) {
+                    //reload page
+                    location.reload();
+                }
+            });
+        }
+
+        function updateVacReqGroupEmailUsers(btn,instid) {
+            var formid = "vacreq_orginst_emailusers";
+            //console.log('formid='+formid);
+
+            var form = $('#'+formid);
+
+            //get roles by class vacreq-roles
+            var users = form.find('.vacreq-emailusers').select2('val');
+            //console.log('users='+users);
+
+            if( !users || users == '' ) {
+                users = 0;
+            }
+
+            var updateUserUrl = Routing.generate('vacreq_orginst_emailusers_update', {instid:instid,users:users});
+            //console.log('updateUserUrl='+updateUserUrl);
+
+            //$('#'+formid).submit();
+            $.get(updateUserUrl, function(data, status){
+                //console.log("Data: " + data + "\nStatus: " + status);
                 if( status == "success" ) {
                     //reload page
                     location.reload();

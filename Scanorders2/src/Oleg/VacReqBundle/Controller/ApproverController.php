@@ -6,6 +6,8 @@ use Oleg\UserdirectoryBundle\Entity\Roles;
 use Oleg\UserdirectoryBundle\Form\SimpleUserType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\VacReqBundle\Entity\VacReqRequest;
+use Oleg\VacReqBundle\Entity\VacReqSettings;
+use Oleg\VacReqBundle\Form\VacReqEmailusersType;
 use Oleg\VacReqBundle\Form\VacReqGroupType;
 use Oleg\VacReqBundle\Form\VacReqRequestType;
 use Oleg\VacReqBundle\Form\VacReqUserType;
@@ -46,8 +48,13 @@ class ApproverController extends Controller
             $organizationalInstitutions[] = $role->getInstitution();
         }
 
+//        //vacreq_util
+//        $vacreqUtil = $this->get('vacreq_util');
+//        $arraySettings = $vacreqUtil->getInstitutionSettingArray();
+
         return array(
             'organizationalInstitutions' => $organizationalInstitutions,
+//            'arraySettings' => $arraySettings
         );
     }
 
@@ -90,11 +97,16 @@ class ApproverController extends Controller
 
         $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
 
+        //vacreq_util
+        $vacreqUtil = $this->get('vacreq_util');
+        $settings = $vacreqUtil->getSettingsByInstitution($institutionId);
+
         return array(
             'approvers' => $approvers,
             'submitters' => $submitters,
             'organizationalGroupId' => $institutionId,
-            'organizationalGroupName' => $organizationalGroupInstitution.""
+            'organizationalGroupName' => $organizationalGroupInstitution."",
+            'settings' => $settings
         );
     }
 
@@ -690,5 +702,120 @@ class ApproverController extends Controller
 //        //$em->flush($entity);
 //        ///////////////// EOF update roles /////////////////
 //    }
+
+
+    /**
+ * @Route("/organizational-institution-emailusers/{instid}", name="vacreq_orginst_emailusers")
+ * @Method({"GET", "POST"})
+ * @Template("OlegVacReqBundle:Approver:orginst-emailusers.html.twig")
+ */
+    public function emailUsersAction(Request $request, $instid)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        //$user = $this->get('security.context')->getToken()->getUser();
+
+        //vacreq_util
+        $vacreqUtil = $this->get('vacreq_util');
+        $entity = $vacreqUtil->getSettingsByInstitution($instid);
+
+        if( !$entity ) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+            if( !$institution ) {
+                throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+            }
+            $entity = new VacReqSettings($institution);
+        }
+
+        $params = array();
+
+        $form = $this->createForm(
+            new VacReqEmailusersType($params),
+            $entity,
+            array(
+                'method' => "POST",
+                //'action' => $action
+            )
+        );
+
+//        $form->handleRequest($request);
+//
+//        if( $form->isSubmitted() && $form->isValid() ) {
+//
+//            foreach( $entity->getEmailUsers() as $emailUser ) {
+//                echo "emailUser=".$emailUser."<br>";
+//            }
+//            exit();
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+//        }
+//        exit('form not valid');
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'organizationalGroupName' => $institution."",
+            'organizationalGroupId' => $instid,
+        );
+    }
+    /**
+     * @Route("/organizational-institution-emailusers-update/{instid}/{users}", name="vacreq_orginst_emailusers_update", options={"expose"=true})
+     * @Method({"GET", "POST"})
+     */
+    public function emailUsersUpdateAction(Request $request, $instid, $users)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+//        $keytype = $request->query->get('keytype');
+//        $keytype = trim($keytype);
+
+        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        //vacreq_util
+        $vacreqUtil = $this->get('vacreq_util');
+        $entity = $vacreqUtil->getSettingsByInstitution($instid);
+
+        if( !$entity ) {
+            $entity = new VacReqSettings($institution);
+        }
+
+
+        foreach( explode(",",$users) as $emailUserStr ) {
+
+            echo "emailUserStr=".$emailUserStr."<br>";
+            $emailUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($emailUserStr);
+            if( $emailUser ) {
+                $entity->addEmailUser($emailUser);
+                $em->persist($entity);
+                $em->flush();
+
+                //Event Log
+                $event = "Email users has been updated for Business/Vacation Group " . $institution;
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+
+            }
+
+        }//foreach
+
+
+        return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+
+    }
 
 }

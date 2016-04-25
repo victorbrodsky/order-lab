@@ -1,0 +1,22 @@
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
+<h4 class="text-info" align="center">
+    Confirmation Emails for {{ organizationalGroupName }}
+</h4>
+
+<br>
+
+<form id="vacreq_orginst_emailusers" method="POST">
+
+    {{ formmacros.field(form.emailUsers) }}
+
+    <p>
+        <button type='button' class="btn btn-info btn-sm" onclick="updateVacReqGroupEmailUsers(this,{{ organizationalGroupId }})">Update</button>
+        {#<button type='button' class="btn btn-info btn-sm" onclick="document.getElementById('vacreq_orginst_emailusers').submit()">Update</button>#}
+    </p>
+
+</form>
+
+
