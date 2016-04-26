@@ -788,30 +788,38 @@ class ApproverController extends Controller
             $entity = new VacReqSettings($institution);
         }
 
+        $res = $vacreqUtil->settingsAddRemoveUsers( $entity, $users );
 
-        foreach( explode(",",$users) as $emailUserStr ) {
+//        foreach( explode(",",$users) as $emailUserStr ) {
+//
+//            echo "emailUserStr=".$emailUserStr."<br>";
+//            $emailUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($emailUserStr);
+//            $entity->addEmailUser($emailUser);
 
-            echo "emailUserStr=".$emailUserStr."<br>";
-            $emailUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($emailUserStr);
-            if( $emailUser ) {
-                $entity->addEmailUser($emailUser);
-                $em->persist($entity);
-                $em->flush();
+        if( $res ) {
 
-                //Event Log
-                $event = "Email users has been updated for Business/Vacation Group " . $institution;
-                $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
+            $originalUsers = $res['originalUsers'];
+            $newUsers = $res['newUsers'];
 
-                //Flash
-                $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    $event
-                );
+            $em->persist($entity);
+            $em->flush();
 
-            }
+            //Event Log
+            $event = "Email users has been updated for Business/Vacation Group " . $institution .
+                "; Original email users=".implode(",",$originalUsers).
+                "; New email users=".implode(",",$newUsers);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
 
-        }//foreach
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+
+        }
+
+//        }//foreach
 
 
         return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));

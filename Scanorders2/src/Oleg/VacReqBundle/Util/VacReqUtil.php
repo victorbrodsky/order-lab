@@ -1,6 +1,7 @@
 <?php
 
 namespace Oleg\VacReqBundle\Util;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Created by PhpStorm.
@@ -44,6 +45,45 @@ class VacReqUtil
         }
 
         return $arraySettings;
+    }
+
+
+
+    public function settingsAddRemoveUsers( $settings, $userIds ) {
+        $originalUsers = $settings->getEmailUsers();
+
+        $newUsers = new ArrayCollection();
+        foreach( explode(",",$userIds) as $userId ) {
+            //echo "userId=" . $userId . "<br>";
+            $emailUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+            if( $emailUser ) {
+                $newUsers->add($emailUser);
+            }
+        }
+
+        if( $originalUsers == $newUsers ) {
+            return null;
+        }
+
+        $originalUsersNames = array();
+        foreach( $originalUsers as $originalUser ) {
+            $originalUsersNames[] = $originalUser;
+            $settings->removeEmailUser($originalUser);
+        }
+
+        $newUsersNames = array();
+        foreach( $newUsers as $newUser ) {
+            $newUsersNames[] = $newUser;
+            $settings->addEmailUser($newUser);
+        }
+
+        //$arrayDiff = array_diff($originalUserSiteRoles, $newUserSiteRoles);
+        $res = array(
+            'originalUsers' => $originalUsersNames,
+            'newUsers' => $newUsersNames
+        );
+
+        return $res;
     }
 
 }
