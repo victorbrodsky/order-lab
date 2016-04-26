@@ -309,7 +309,12 @@ class RequestController extends Controller
         //return $this->redirectToRoute('vacreq_home');
         //return $this->redirect($this->generateUrl('vacreq_home', $request->query->all()));
 
-        return $this->redirect($url);
+        if( $url ) {
+            return $this->redirect($url);
+        } else {
+            //return $this->redirectToRoute('vacreq_approvers');
+            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+        }
     }
 
 
@@ -374,6 +379,12 @@ class RequestController extends Controller
             $admin = true;
         }
 
+        $roleApprover = false;
+        if( $this->get('security.context')->isGranted("changestatus", $entity) ) {
+            $roleApprover = true;
+        }
+
+
         //organizationalInstitution
         //$organizationalInstitutions = $em->getRepository('OlegUserdirectoryBundle:User')->findVacReqOrganizationalInstitution($user);
         $organizationalInstitutions = $this->getVacReqOrganizationalInstitutions($user);
@@ -384,6 +395,7 @@ class RequestController extends Controller
             'user' => $entity->getUser(),
             'cycle' => $cycle,
             'roleAdmin' => $admin,
+            'roleApprover' => $roleApprover,
             'organizationalInstitutions' => $organizationalInstitutions
         );
 

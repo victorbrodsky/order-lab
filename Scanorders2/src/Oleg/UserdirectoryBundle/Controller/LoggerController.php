@@ -152,9 +152,7 @@ class LoggerController extends Controller
             //echo "0=".$namepartsArr[0]."<br>";
             //$subjectUser = $em->getRepository($repName.':'.$entityName)->find($entityId);
 
-            //TODO: test it !!! Invalid parameter: token entityName is not defined in the query
             $queryParameters = array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId );
-            //$queryParameters = array( 'entityNamespace'=>$entityNamespace, 'entityId'=>$entityId );
 
             $dql->andWhere('logger.entityNamespace = :entityNamespace');
             $dql->andWhere('logger.entityName = :entityName');
