@@ -2217,16 +2217,18 @@ class UserController extends Controller
         //exit();
 
         $originalInsts = new ArrayCollection();
-        foreach( $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
-            $originalInsts->add($item);
-        }
         $originalScanOrdersServicesScope = new ArrayCollection();
-        foreach( $entity->getPerSiteSettings()->getScanOrdersServicesScope() as $item) {
-            $originalScanOrdersServicesScope->add($item);
-        }
         $originalChiefServices = new ArrayCollection();
-        foreach( $entity->getPerSiteSettings()->getChiefServices() as $item) {
-            $originalChiefServices->add($item);
+        if( $entity->getPerSiteSettings() ) {
+            foreach ($entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
+                $originalInsts->add($item);
+            }
+            foreach ($entity->getPerSiteSettings()->getScanOrdersServicesScope() as $item) {
+                $originalScanOrdersServicesScope->add($item);
+            }
+            foreach ($entity->getPerSiteSettings()->getChiefServices() as $item) {
+                $originalChiefServices->add($item);
+            }
         }
 
         //Roles
