@@ -174,7 +174,8 @@ class VacReqUtil
         $message .= $break . $break . "Please click on the below URL to review the vacation/business travel request:" . $break;
         $message .= $reviewRequestUrl . $break . $break;
 
-        $message .= "Please click on the URLs below for quick actions to approve or reject the vacation/business travel request." . $break;
+        $message .= $break . "Please click on the URLs below for quick actions to approve or reject the vacation/business travel request.";
+
         if( $entity->getRequestBusiness() ) {
             //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
             //approved

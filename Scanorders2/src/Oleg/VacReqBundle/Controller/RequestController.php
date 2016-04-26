@@ -303,18 +303,20 @@ class RequestController extends Controller
 
         }
 
-        $url = $request->headers->get('referer');
-        //exit('url='.$url);
+//        $url = $request->headers->get('referer');
+//        //exit('url='.$url);
+//
+//        //return $this->redirectToRoute('vacreq_home');
+//        //return $this->redirect($this->generateUrl('vacreq_home', $request->query->all()));
+//
+//        if( $url ) {
+//            return $this->redirect($url);
+//        } else {
+//            //return $this->redirectToRoute('vacreq_approvers');
+//            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+//        }
 
-        //return $this->redirectToRoute('vacreq_home');
-        //return $this->redirect($this->generateUrl('vacreq_home', $request->query->all()));
-
-        if( $url ) {
-            return $this->redirect($url);
-        } else {
-            //return $this->redirectToRoute('vacreq_approvers');
-            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
-        }
+        return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
     }
 
 
