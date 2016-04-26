@@ -281,7 +281,77 @@ class VacReqUtil
         }
 
         $emailUtil->sendEmail( $submitter->getSingleEmail(), $subject, $message, $cssArr, null );
+    }
 
+
+    //"During the current academic year, you have received X approved vacation days in total."
+    // (if X = 1, show "During the current academic year, you have received X approved vacation day."
+    // if X = 0, show "During the current academic year, you have received no approved vacation days."
+    public function getApprovedDaysString( $user ) {
+
+        $result = "During the current academic year, you have received ";
+
+        $requestTypeStr = 'business';
+        $numberOfDays = $this->getApprovedTotalDays($user,$requestTypeStr);
+        if( $numberOfDays == 0 ) {
+            $result .= "no approved ".$requestTypeStr." days";
+        }
+        if( $numberOfDays == 1 ) {
+            $result .= $numberOfDays." approved ".$requestTypeStr." day";
+        }
+        if( $numberOfDays > 1 ) {
+            $result .= $numberOfDays." approved ".$requestTypeStr." days in total";
+        }
+
+        $result .= " and ";
+
+        $requestTypeStr = 'vacation';
+        $numberOfDays = $this->getApprovedTotalDays($user,$requestTypeStr);
+        if( $numberOfDays == 0 ) {
+            $result .= "no approved ".$requestTypeStr." days.";
+        }
+        if( $numberOfDays == 1 ) {
+            $result .= $numberOfDays." approved ".$requestTypeStr." day.";
+        }
+        if( $numberOfDays > 1 ) {
+            $result .= $numberOfDays." approved ".$requestTypeStr." days in total.";
+        }
+
+        return $result;
+    }
+    public function getApprovedTotalDays( $user, $requestTypeStr ) {
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+
+        $dql->select('SUM(requestType.numberOfDays) as numberOfDays');
+
+        $dql->leftJoin("request.user", "user");
+
+        if( $requestTypeStr == 'business' ) {
+            $dql->leftJoin("request.requestBusiness", "requestType");
+        }
+
+        if( $requestTypeStr == 'vacation' ) {
+            $dql->leftJoin("request.requestVacation", "requestType");
+        }
+
+        $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :statusApproved");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'userId' => $user->getId(),
+            'statusApproved' => 'approved'
+        ));
+
+        $numberOfDaysRes = $query->getSingleResult();
+
+        $numberOfDays = $numberOfDaysRes['numberOfDays'];
+
+        //echo "numberOfDays=".$numberOfDays."<br>";
+
+        return $numberOfDays;
     }
 
 }

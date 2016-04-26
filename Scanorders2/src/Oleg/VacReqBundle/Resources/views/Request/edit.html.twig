@@ -34,6 +34,12 @@
         {% endif %}
     {% endif %}
 
+    {% if totalApprovedDaysString %}
+        <div class="alert alert-info">
+            <p>{{ totalApprovedDaysString }}</p>
+        </div>
+    {% endif %}
+
     <h4 class="text-info" align="center">
         Pathology Faculty Vacation/Business Travel Request
     </h4>

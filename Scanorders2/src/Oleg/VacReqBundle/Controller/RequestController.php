@@ -30,6 +30,8 @@ class RequestController extends Controller
     public function newAction(Request $request)
     {
 
+        $vacreqUtil = $this->get('vacreq_util');
+
         $user = $this->get('security.context')->getToken()->getUser();
 
         $entity = new VacReqRequest($user);
@@ -62,7 +64,6 @@ class RequestController extends Controller
                 $event
             );
 
-            $vacreqUtil = $this->get('vacreq_util');
             $emailUtil = $this->get('user_mailer_utility');
             $break = "\r\n";
 
@@ -90,11 +91,16 @@ class RequestController extends Controller
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
+        //calculate approved vacation days in total.
+        $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
+        //echo "totalApprovedDaysString=".$totalApprovedDaysString."<br>";
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
             'accessreqs' => count($accessreqs),
+            'totalApprovedDaysString' => $totalApprovedDaysString,
         );
     }
 
