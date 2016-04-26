@@ -164,6 +164,17 @@ class VacReqUtil
 
         $message .= $submitter->getUsernameOptimal()." has submitted the pathology faculty vacation/business travel request and it is ready for review.";
 
+        $reviewRequestUrl = $url = $this->container->get('router')->generate(
+            'vacreq_review',
+            array(
+                'id' => $entity->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $message .= $break . $break . "Please click on the below URL to review the vacation/business travel request:" . $break;
+        $message .= $reviewRequestUrl . $break . $break;
+
+        $message .= "Please click on the URLs below for quick actions to approve or reject the vacation/business travel request." . $break;
         if( $entity->getRequestBusiness() ) {
             //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
             //approved
@@ -176,7 +187,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to approve the business request:" . $break;
+            $message .= $break . $break . "Please click on the below URL to Approve the business request:" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
@@ -189,7 +200,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to reject the business request:" . $break;
+            $message .= $break . $break . "Please click on the below URL to Reject the business request:" . $break;
             $message .= $actionRequestUrl;
         }
 
@@ -205,7 +216,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to approve the vacation request:" . $break;
+            $message .= $break . $break . "Please click on the below URL to Approve the vacation request:" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
@@ -218,7 +229,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to reject the vacation request:" . $break;
+            $message .= $break . $break . "Please click on the below URL to Reject the vacation request:" . $break;
             $message .= $actionRequestUrl;
         }
 
