@@ -416,10 +416,10 @@ class RequestController extends Controller
             $method = 'POST';
         }
 
-        $params['review']=false;
+        $params['review'] = false;
         if( $request ) {
             if( $request->get('_route') == 'vacreq_review' ) {
-                $params['review']=true;
+                $params['review'] = true;
             }
         }
 

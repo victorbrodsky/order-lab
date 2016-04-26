@@ -119,6 +119,12 @@ class VacReqRequestType extends AbstractType
 //                'attr' => array('class' => 'combobox combobox-width vacreq-user')
 //            ));
 
+            //enabled ($readOnly = false) for admin only
+            $readOnly = true;
+            if( $this->params['roleAdmin'] ) {
+                $readOnly = false;
+            }
+
             $builder->add('user', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Requester:",
@@ -126,7 +132,7 @@ class VacReqRequestType extends AbstractType
                 'multiple' => false,
                 //'property' => 'name',
                 'attr' => array('class' => 'combobox combobox-width'),
-                'read_only' => ($this->params['review'] ? true : false),
+                'read_only' => $readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos","infos")
