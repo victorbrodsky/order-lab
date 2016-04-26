@@ -10,6 +10,7 @@ use Oleg\VacReqBundle\Entity\VacReqSettings;
 use Oleg\VacReqBundle\Form\VacReqEmailusersType;
 use Oleg\VacReqBundle\Form\VacReqGroupType;
 use Oleg\VacReqBundle\Form\VacReqRequestType;
+use Oleg\VacReqBundle\Form\VacReqUserComboboxType;
 use Oleg\VacReqBundle\Form\VacReqUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -274,13 +275,11 @@ class ApproverController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
-
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
         $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
-
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -305,9 +304,10 @@ class ApproverController extends Controller
             $em->flush();
 
             //Event Log
-            $event = "Roles of ".$subjectUser . " has been changed. Original roles:".implode(",",$originalUserSiteRoles)."; New roles:".implode(",",$newUserSiteRoles);
+            $eventType = "Business/Vacation Group Updated"; //"User record updated";
+            $event = $organizationalGroupInstitution.": Roles of ".$subjectUser . " has been changed. Original roles:".implode(",",$originalUserSiteRoles)."; New roles:".implode(",",$newUserSiteRoles);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,'User record updated');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
 
             //Flash
             $this->get('session')->getFlashBag()->add(
@@ -340,13 +340,11 @@ class ApproverController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
-
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
         $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
-
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -373,9 +371,10 @@ class ApproverController extends Controller
             $em->flush();
 
             //Event Log
-            $event = "User ".$subjectUser." has been removed as ".$role->getAlias();
+            $eventType = "Business/Vacation Group Updated";
+            $event = $organizationalGroupInstitution.": User ".$subjectUser." has been removed as ".$role->getAlias();
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,'User record updated');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
 
             //Flash
             $this->get('session')->getFlashBag()->add(
@@ -410,13 +409,20 @@ class ApproverController extends Controller
             throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
         }
 
-        //new simple user form: user type, user id
-        $params = array(
-            'cycle' => 'create',
-            'readonly' => false,
-            //'path' => 'vacreq_orginst_add_action_user'
-        );
-        $form = $this->createForm(new SimpleUserType($params));
+        if(0) {
+            //new simple user form: user type, user id
+            $params = array(
+                'cycle' => 'create',
+                'readonly' => false,
+                //'path' => 'vacreq_orginst_add_action_user'
+            );
+            $form = $this->createForm(new SimpleUserType($params));
+        }else {
+            $params = array(
+                'btnName' => $btnName
+            );
+            $form = $this->createForm(new VacReqUserComboboxType($params));
+        }
 
         return array(
             'form' => $form->createView(),
@@ -428,7 +434,7 @@ class ApproverController extends Controller
 
     /**
      * @Route("/organizational-institution-user-add-action/{instid}/{roleId}", name="vacreq_orginst_add_action_user")
-     * @Method({"GET"})
+     * @Method({"GET","POST"})
      */
     public function addRoleToUserAction(Request $request, $instid, $roleId )
     {
@@ -443,52 +449,92 @@ class ApproverController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
-
         if( !$role ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
         }
 
-
-        $keytype = $request->query->get('keytype');
-        $keytype = trim($keytype);
-
-        $primaryPublicUserId = $request->query->get('primaryPublicUserId');
-        $primaryPublicUserId = trim($primaryPublicUserId);
-
-        //exit('primaryPublicUserId='.$primaryPublicUserId);
-
-        //find user in DB
-        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
-
-        if( count($users) > 1 ) {
-            throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
+        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
 
-        if( count($users) == 1 ) {
-            $subjectUser = $users[0];
-        }
+        if(0) {
 
-        if( count($users) == 0 ) {
-            $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
-            $this->get('session')->getFlashBag()->set(
-                'notice',
-                'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
-                "Please use the 'Create New User' form to add a new user."
+//            $keytype = $request->query->get('keytype');
+//            $keytype = trim($keytype);
+//
+//            $primaryPublicUserId = $request->query->get('primaryPublicUserId');
+//            $primaryPublicUserId = trim($primaryPublicUserId);
+//
+//            //exit('primaryPublicUserId='.$primaryPublicUserId);
+//
+//            //find user in DB
+//            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('keytype' => $keytype, 'primaryPublicUserId' => $primaryPublicUserId));
+//
+//            if( count($users) > 1 ) {
+//                throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
+//            }
+//
+//            if( count($users) == 1 ) {
+//                $subjectUser = $users[0];
+//            }
+//
+//            if( count($users) == 0 ) {
+//                $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
+//                $this->get('session')->getFlashBag()->set(
+//                    'notice',
+//                    'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
+//                    "Please use the 'Create New User' form to add a new user."
+//                );
+//                return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
+//            }
+//
+//            $subjectUser->addRole($role);
+//            $em->persist($subjectUser);
+//            $em->flush();
+//
+//            $event = "User ".$subjectUser." has been added as ".$role->getAlias();
+//            $eventType = "User record updated";
+//            //Event Log
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,$eventType);
+
+        } else {
+
+            $params = array(
+                'cycle' => 'create',
+                'readonly' => false,
             );
-            return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
+            $form = $this->createForm(new VacReqUserComboboxType($params));
+
+            $form->handleRequest($request);
+
+            //$users = $form['users']->getData();
+            $users = $form->get('users')->getData();
+
+            $usersStr = array();
+
+            foreach( $users as $user ) {
+                //echo "user=".$user."<br>";
+                $user->addRole($role);
+                $em->persist($user);
+                $usersStr[] = $user;
+            }
+
+            //$users = $request->query->get('users');
+            //$users = trim($users);
+
+            $em->flush();
+
+            $event = $institution.": the following users have been added as ".$role->getAlias().": ".implode(",",$usersStr);
+            $eventType = "Business/Vacation Group Updated";
+
+            //Event Log
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$institution,$request,$eventType);
+
+            //exit();
         }
-
-        $subjectUser->addRole($role);
-
-        //exit('added '.$role.' to '.$subjectUser);
-
-        $em->persist($subjectUser);
-        $em->flush();
-
-        //Event Log
-        $event = "User ".$subjectUser." has been added as ".$role->getAlias();
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,'User record updated');
 
         //Flash
         $this->get('session')->getFlashBag()->add(

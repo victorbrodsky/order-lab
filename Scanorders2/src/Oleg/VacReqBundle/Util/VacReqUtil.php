@@ -2,6 +2,7 @@
 
 namespace Oleg\VacReqBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Created by PhpStorm.
@@ -84,6 +85,221 @@ class VacReqUtil
         );
 
         return $res;
+    }
+
+
+    //find role approvers by institution
+    public function getRequestApprovers( $entity ) {
+
+        $institution = $entity->getInstitution();
+        if( !$institution ) {
+            return null;
+        }
+
+        $approvers = array();
+        $roleApprovers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institution->getId());
+        $roleApprover = $roleApprovers[0];
+        //echo "roleApprover=".$roleApprover."<br>";
+        if( $roleApprover ) {
+            $approvers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName());
+        }
+
+        return $approvers;
+    }
+
+
+    public function sendConfirmationEmailToApprovers( $entity ) {
+
+        $institution = $entity->getInstitution();
+        if( !$institution ) {
+            return null;
+        }
+
+        $emailUtil = $this->get('user_mailer_utility');
+        //$break = "\r\n";
+
+        $approvers = $this->getRequestApprovers($entity);
+
+        $approversNameArr = array();
+
+        foreach( $approvers as $approver ) {
+
+            if( !$approver->getSingleEmail() ) {
+                continue;
+            }
+
+            $approversNameArr[] = $approver;
+
+//            $submitter = $entity->getUser();
+//
+//            $subject = "Review Faculty Vacation/Business Request #" . $entity->getId() . " Confirmation";
+//
+//            $message = "Dear " . $approver->getUsernameOptimal() . "," . $break.$break;
+//            $message .= $submitter->getUsernameOptimal()." has submitted the pathology faculty vacation/business travel request and it is ready for review.";
+//
+//            if( $entity->getRequestBusiness() ) {
+//                //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
+//                //approved
+//                $actionRequestUrl = $url = $this->container->get('router')->generate(
+//                    'vacreq_status_change',
+//                    array(
+//                        'id' => $entity->getId(),
+//                        'requestName' => 'business',
+//                        'status' => 'approved'
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $message .= $break . $break . "Please click on the below URL to approve the business request:" . $break;
+//                $message .= $actionRequestUrl;
+//
+//                //rejected
+//                $actionRequestUrl = $url = $this->container->get('router')->generate(
+//                    'vacreq_status_change',
+//                    array(
+//                        'id' => $entity->getId(),
+//                        'requestName' => 'business',
+//                        'status' => 'rejected'
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $message .= $break . $break . "Please click on the below URL to reject the business request:" . $break;
+//                $message .= $actionRequestUrl;
+//            }
+//
+//            if( $entity->getRequestVacation() ) {
+//                //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
+//                //approved
+//                $actionRequestUrl = $url = $this->container->get('router')->generate(
+//                    'vacreq_status_change',
+//                    array(
+//                        'id' => $entity->getId(),
+//                        'requestName' => 'vacation',
+//                        'status' => 'approved'
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $message .= $break . $break . "Please click on the below URL to approve the vacation request:" . $break;
+//                $message .= $actionRequestUrl;
+//
+//                //rejected
+//                $actionRequestUrl = $url = $this->container->get('router')->generate(
+//                    'vacreq_status_change',
+//                    array(
+//                        'id' => $entity->getId(),
+//                        'requestName' => 'vacation',
+//                        'status' => 'rejected'
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $message .= $break . $break . "Please click on the below URL to reject the vacation request:" . $break;
+//                $message .= $actionRequestUrl;
+//            }
+//
+//            $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site";
+//            $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+
+            $subject = "Review Faculty Vacation/Business Request #" . $entity->getId() . " Confirmation";
+            $message = $this->createEmailBody($entity,$approver);
+            $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
+
+        } //foreach approver
+
+        //send email to email users
+        $subject = "Copy of the Review Faculty Vacation/Business Request #" . $entity->getId() . " Confirmation";
+        $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
+        $settings = $this->getSettingsByInstitution($institution->getId());
+        foreach( $settings->getEmailUsers() as $emailUser ) {
+            $emailUserEmail = $emailUser->getSingleEmail();
+            if( $emailUserEmail ) {
+                $message = $this->createEmailBody($entity,$emailUser,$addText);
+                $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+            }
+        }
+
+    }
+    public function createEmailBody($entity,$emailToUser,$addText=null) {
+
+        $break = "\r\n";
+
+        $submitter = $entity->getUser();
+
+        $message = "Dear " . $emailToUser->getUsernameOptimal() . "," . $break.$break;
+
+        if( $addText ) {
+            $message .= $addText.$break.$break;
+        }
+
+        $message .= $submitter->getUsernameOptimal()." has submitted the pathology faculty vacation/business travel request and it is ready for review.";
+
+        if( $entity->getRequestBusiness() ) {
+            //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
+            //approved
+            $actionRequestUrl = $url = $this->container->get('router')->generate(
+                'vacreq_status_change',
+                array(
+                    'id' => $entity->getId(),
+                    'requestName' => 'business',
+                    'status' => 'approved'
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $message .= $break . $break . "Please click on the below URL to approve the business request:" . $break;
+            $message .= $actionRequestUrl;
+
+            //rejected
+            $actionRequestUrl = $url = $this->container->get('router')->generate(
+                'vacreq_status_change',
+                array(
+                    'id' => $entity->getId(),
+                    'requestName' => 'business',
+                    'status' => 'rejected'
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $message .= $break . $break . "Please click on the below URL to reject the business request:" . $break;
+            $message .= $actionRequestUrl;
+        }
+
+        if( $entity->getRequestVacation() ) {
+            //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
+            //approved
+            $actionRequestUrl = $url = $this->container->get('router')->generate(
+                'vacreq_status_change',
+                array(
+                    'id' => $entity->getId(),
+                    'requestName' => 'vacation',
+                    'status' => 'approved'
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $message .= $break . $break . "Please click on the below URL to approve the vacation request:" . $break;
+            $message .= $actionRequestUrl;
+
+            //rejected
+            $actionRequestUrl = $url = $this->container->get('router')->generate(
+                'vacreq_status_change',
+                array(
+                    'id' => $entity->getId(),
+                    'requestName' => 'vacation',
+                    'status' => 'rejected'
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $message .= $break . $break . "Please click on the below URL to reject the vacation request:" . $break;
+            $message .= $actionRequestUrl;
+        }
+
+        $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site";
+        $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+
+        return $message;
+    }
+
+
+    public function sendSingleRespondEmailToSubmitter( $entity, $requestName=null, $status ) {
+
+
+
     }
 
 }

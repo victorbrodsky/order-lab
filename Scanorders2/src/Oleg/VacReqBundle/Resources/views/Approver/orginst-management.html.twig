@@ -45,7 +45,7 @@
                     {#</p>#}
                 {#</form>#}
                 <div class="well">
-                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':approverRoleId,'btnName':'Add Approver'})) }}
+                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':approverRoleId,'btnName':'Add Approver(s)'})) }}
                 </div>
 
             </div> <!-- panel-body -->
@@ -73,7 +73,7 @@
                 {% endfor %}
 
                 <div class="well">
-                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':submitterRoleId,'btnName':'Add Submitter'})) }}
+                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':submitterRoleId,'btnName':'Add Submitter(s)'})) }}
                 </div>
 
             </div> <!-- panel-body -->

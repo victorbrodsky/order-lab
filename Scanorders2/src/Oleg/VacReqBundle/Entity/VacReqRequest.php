@@ -72,7 +72,7 @@ class VacReqRequest
     private $emergencyComment;
 
 //    /**
-//     * status: pending, approved, declined
+//     * status: pending, approved, rejected
 //     * @ORM\Column(type="string", nullable=true)
 //     */
 //    private $status;

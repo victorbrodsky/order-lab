@@ -50,6 +50,40 @@ class RequestController extends Controller
             $em->persist($entity);
             $em->flush();
 
+            //Event Log
+            $eventType = "Business/Vacation Request Created";
+            $event = "Request for ".$entity->getUser()." has been created";
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+
+            $vacreqUtil = $this->get('vacreq_util');
+            $emailUtil = $this->get('user_mailer_utility');
+            $break = "\r\n";
+
+            //set confirmation email to submitter and approver and email users
+            $subject = "Faculty Vacation/Business Request #".$entity->getId()." Confirmation";
+            $message = "Dear ".$entity->getUsernameOptimal().",".$break.$break;
+            $message .= "You have successfully submitted the pathology faculty vacation/business travel request.";
+            $message .= "The division approver will review your request soon.";
+            $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+            $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
+
+            //set confirmation email to approver and email users
+//            $approvers = $vacreqUtil->getApprovers();
+//            $subject = "Review Faculty Vacation/Business Request #".$entity->getId()." Confirmation";
+//            $message = "Dear ".$entity->getUsernameOptimal().",".$break.$break;
+//            $message .= "You have successfully submitted the pathology faculty vacation/business travel request.";
+//            $message .= "The division approver will review your request soon.";
+//            $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+//            $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
+            $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
+
             return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
         }
 
@@ -155,6 +189,12 @@ class RequestController extends Controller
                 $status = $entity->getOverallStatus();
                 $eventType = 'Business/Vacation Request '.ucwords($status);
                 $action = $status;
+
+                //send respond email
+                $vacreqUtil = $this->get('vacreq_util');
+                $requestName = null;
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $requestName, $status );
+
             } else {
                 $action = "updated";
                 $eventType = 'Business/Vacation Request Updated';
@@ -193,11 +233,11 @@ class RequestController extends Controller
 
 
     /**
-     * @Route("/status/{id}/{status}", name="vacreq_status_change")
+     * @Route("/status/{id}/{requestName}/{status}", name="vacreq_status_change")
      * @Method({"GET"})
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
-    public function statusAction(Request $request, $id, $status) {
+    public function statusAction(Request $request, $id, $requestName, $status) {
 
         //if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
         //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -218,26 +258,48 @@ class RequestController extends Controller
 
         if( $status ) {
 
-            $entity->setStatus($status);
+            $statusSet = false;
 
-            $em->persist($entity);
-            $em->flush();
-
-            //return $this->redirectToRoute('vacreq_home');
-
-            //Flash
-            if( $status == 'pending' ) {
-                $status = 'set to Pending';
+            if( $requestName == 'business' ) {
+                $businessRequest = $entity->getRequestBusiness();
+                if( $businessRequest ) {
+                    $businessRequest->setStatus($status);
+                    $statusSet = true;
+                }
             }
-            $event = "Request ID ".$entity->getId()." for ". $entity->getUser() ." has been " . $status;
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                $event
-            );
 
-            //Event Log
-            $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,'Business/Vacation Request Updated');
+            if( $requestName == 'vacation' ) {
+                $businessRequest = $entity->getRequestBusiness();
+                if( $businessRequest ) {
+                    $businessRequest->setStatus($status);
+                    $statusSet = true;
+                }
+            }
+
+            if( $statusSet ) {
+                $em->persist($entity);
+                $em->flush();
+
+                //return $this->redirectToRoute('vacreq_home');
+
+                //Flash
+                if ($status == 'pending') {
+                    $status = 'set to Pending';
+                }
+                $event = ucwords($requestName)." Request ID " . $entity->getId() . " for " . $entity->getUser() . " has been " . $status;
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+
+                //Event Log
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $entity, $request, 'Business/Vacation Request Updated');
+
+                //send respond confirmation email to a submitter
+                $vacreqUtil = $this->get('vacreq_util');
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $requestName, $status );
+            }
 
         }
 

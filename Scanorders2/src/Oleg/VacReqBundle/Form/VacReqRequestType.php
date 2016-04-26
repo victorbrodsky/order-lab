@@ -66,7 +66,7 @@ class VacReqRequestType extends AbstractType
 //                'choices' => array(
 //                    'pending' => 'pending',
 //                    'approved' => 'approved',
-//                    'declined' => 'declined'
+//                    'rejected' => 'rejected'
 //                ),
 //                'label' => "Status:",
 //                'required' => true,

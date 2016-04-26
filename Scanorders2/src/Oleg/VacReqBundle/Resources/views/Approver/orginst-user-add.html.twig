@@ -4,10 +4,12 @@
 {#<hr>#}
 
 {#<form id="add_authorized_user_form" action="{{ path(sitename~'_add_authorized_user') }}" method="GET">#}
-<form action="{{ path('vacreq_orginst_add_action_user',{'instid':instid,'roleId':roleId}) }}" method="GET">
+<form action="{{ path('vacreq_orginst_add_action_user',{'instid':instid,'roleId':roleId}) }}" method="POST">
 
-    {{ formmacros.field(form.keytype) }}
-    {{ formmacros.field(form.primaryPublicUserId) }}
+    {#{{ formmacros.field(form.keytype) }}#}
+    {#{{ formmacros.field(form.primaryPublicUserId) }}#}
+
+    {{ formmacros.field(form.users) }}
 
     <p>
         <button type='submit' class="btn btn-warning btn-sm">{{ btnName }}</button>
