@@ -68,7 +68,7 @@ class RequestController extends Controller
 
             //set confirmation email to submitter and approver and email users
             $subject = "Faculty Vacation/Business Request #".$entity->getId()." Confirmation";
-            $message = "Dear ".$entity->getUsernameOptimal().",".$break.$break;
+            $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
             $message .= "You have successfully submitted the pathology faculty vacation/business travel request.";
             $message .= "The division approver will review your request soon.";
             $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
@@ -193,7 +193,7 @@ class RequestController extends Controller
                 //send respond email
                 $vacreqUtil = $this->get('vacreq_util');
                 $requestName = null;
-                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $requestName, $status );
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $status );
 
             } else {
                 $action = "updated";
@@ -298,7 +298,7 @@ class RequestController extends Controller
 
                 //send respond confirmation email to a submitter
                 $vacreqUtil = $this->get('vacreq_util');
-                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $requestName, $status );
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $status );
             }
 
         }
