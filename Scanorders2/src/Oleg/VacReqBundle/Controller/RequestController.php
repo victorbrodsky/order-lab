@@ -397,10 +397,6 @@ class RequestController extends Controller
         //$organizationalInstitutions = $em->getRepository('OlegUserdirectoryBundle:User')->findVacReqOrganizationalInstitution($user);
         $organizationalInstitutions = $this->getVacReqOrganizationalInstitutions($user);
 
-        if( count($organizationalInstitutions) == 1 ) {
-            $entity->setInstitution($organizationalInstitutions[0]);
-        }
-
         $params = array(
             'sc' => $this->get('security.context'),
             'em' => $em,
