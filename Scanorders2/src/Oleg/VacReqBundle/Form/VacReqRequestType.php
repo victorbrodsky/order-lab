@@ -169,7 +169,7 @@ class VacReqRequestType extends AbstractType
 //        ));
         $builder->add('institution', 'choice', array(
             'label' => "Organizational Group:",
-            'required' => true,
+            'required' => false,
             'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
             'choices' => $this->params['organizationalInstitutions'],
             'read_only' => ($this->params['review'] ? true : false)
