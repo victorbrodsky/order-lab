@@ -26,6 +26,7 @@ class VacReqImportData
     }
 
 
+    // url: /import-old-data/
     public function importOldData() {
 
         $email = "oli2002@med.cornell.edu";
@@ -33,28 +34,34 @@ class VacReqImportData
         $requests = array();
 
         $vacreqEm = $this->container->get('doctrine')->getManager('vacreq');
+        echo "get vacreq em<br>";
 
         $vacreqConnection = $vacreqEm->getConnection();
+        echo "after connection vacreq <br>";
 
         //select USERID,FIRST_NAME,LAST_NAME from profiler2015.USER_INFO where EMAIL LIKE '%gul%';
         $statement = $vacreqConnection->prepare(
             "select USERID,FIRST_NAME,LAST_NAME from profiler2015.USER_INFO where EMAIL LIKE :email"
         );
         $statement->bindValue('email', "'%".$email."%'");
+
+        echo "before execute<br>";
         $statement->execute();
+        echo "after execute<br>";
 
         $results = $statement->fetchAll();
-
-        // for INSERT, UPDATE, DELETE queries
-        $affected_rows = $statement->rowCount();
-        echo "Affected Rows=".$affected_rows."<br>";
 
         echo "<br>Result:<br>";
         print_r($results);
         echo "<br><br>";
 
+        // for INSERT, UPDATE, DELETE queries
+        $affected_rows = $statement->rowCount();
+        echo "Affected Rows=".$affected_rows."<br>";
+
+
         if( $affected_rows != 1 && count($results) != 1 ) {
-            throw $this->createNotFoundException('Unable to find unique image with id='.$imageid);
+            throw $this->createNotFoundException('Unable to find request');
         }
 
         $request = $results[0]['FIRST_NAME'];
