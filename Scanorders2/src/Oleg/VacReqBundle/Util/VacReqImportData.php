@@ -25,6 +25,26 @@ class VacReqImportData
 
     }
 
+    //REQUEST_STATUS_ID
+    //BUS_REQUEST_STATUS_ID
+    //VAC_REQUEST_STATUS_ID
+
+    //PFVBTR_REQUEST_STATUS_SEL
+    //1	pending
+    //2	approved
+    //3	rejected
+    //4	completed
+    //5	closed
+
+    //PFVBTR_APPROVER_INFO
+    //1	Barry Sleckman	bas2022@med.cornell.edu	Sara Lynch	sal2026@med.cornell.edu	Experimental Pathology	approver	yes
+    //2	Dr. Jacob Rand	jar9135@med.cornell.edu	Sara 	sal2026@med.cornell.edu	Clinical Pathology	approver	yes
+    //3	Attilio Orazi	ato9002@med.cornell.edu	Melissa Honore 	meh9043@nyp.org	Hematopathology	approver	yes
+    //4	Alain Borczuk 	alb9003@med.cornell.edu	Rashida Eteng	rse9005@nyp.org	Surgical Pathology	approver	yes
+    //5	Rana Hoda	rhoda@med.cornell.edu	Maxine Stevenson	mes9008@nyp.org	Cytopathology	approver	yes
+    //20	Daniel M. Knowles	dknowles@med.cornell.edu	Sara Lynch	sal2026@med.cornell.edu	Executive Committee	executive	yes
+    //6	Timothy Hla	tih2002@med.cornell.edu	Mario A. Castro Martinez	mcm2010@med.cornell.edu	Vascular Biology	approver	yes
+    //19	Cynthia Magro				Dermatopathology	approver	no
 
     // url: /import-old-data/
     public function importOldData() {
