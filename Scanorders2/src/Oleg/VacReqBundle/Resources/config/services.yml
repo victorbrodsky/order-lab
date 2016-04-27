@@ -32,3 +32,7 @@ services:
     vacreq_util:
         class: Oleg\VacReqBundle\Util\VacReqUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
+    vacreq_import_data:
+        class: Oleg\VacReqBundle\Util\VacReqImportData
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]

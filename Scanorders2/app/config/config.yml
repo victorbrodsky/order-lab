@@ -118,6 +118,14 @@ doctrine:
                 user:     %database_user_aperio%
                 password: %database_password_aperio%
                 charset:  UTF8
+            vacreq:
+                driver:   %database_driver_vacreq%
+                host:     %database_host_vacreq%
+                port:     %database_port_vacreq%
+                dbname:   %database_name_vacreq%
+                user:     %database_user_vacreq%
+                password: %database_password_vacreq%
+                charset:  UTF8
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
@@ -149,6 +157,8 @@ doctrine:
 #                mappings:
 #                    OlegOrderformBundle: ~
 #                    OlegUserdirectoryBundle: ~
+            vacreq:
+                connection: vacreq
 
 
 monolog:
