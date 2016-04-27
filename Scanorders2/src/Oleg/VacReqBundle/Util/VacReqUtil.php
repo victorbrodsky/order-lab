@@ -321,6 +321,19 @@ class VacReqUtil
     }
     public function getApprovedTotalDays( $user, $requestTypeStr ) {
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //academicYearStart
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearEnd
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
@@ -337,6 +350,20 @@ class VacReqUtil
         }
 
         $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :statusApproved");
+
+        if( $academicYearStart && $academicYearEnd ) {
+            //academicYearStart
+            $academicYearStartStr = $academicYearStart->format('m-d');
+            $previousYear = date("Y") - 1;
+            $academicYearStartStr = $previousYear."-".$academicYearStartStr;
+            //echo "academicYearStartStr=".$academicYearStartStr."<br>";
+            //academicYearEnd
+            $academicYearEndStr = $academicYearEnd->format('m-d');
+            $currentYear = date("Y");
+            $academicYearEndStr = $currentYear."-".$academicYearEndStr;
+            //echo "academicYearEndStr=".$academicYearEndStr."<br>";
+            $dql->andWhere("requestType.startDate > '" . $academicYearStartStr . "'" . " AND requestType.endDate < " . "'" . $academicYearEndStr . "'");
+        }
 
         $query = $this->em->createQuery($dql);
 

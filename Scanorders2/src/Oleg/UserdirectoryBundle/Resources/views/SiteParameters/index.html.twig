@@ -458,6 +458,31 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'contentAboutPage'}) }}">Edit</a></td>
             </tr>
 
+
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Business/Vacation Request:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Academic Year Start</td>
+                <td>
+                    {% if entity.academicYearStart %}
+                        {{ entity.academicYearStart|date('M d','UTC') }}
+                    {% endif %}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'academicYearStart'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Academic Year End</td>
+                <td>
+                    {% if entity.academicYearEnd %}
+                        {{ entity.academicYearEnd|date('M d','UTC') }}
+                    {% endif %}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'academicYearEnd'}) }}">Edit</a></td>
+            </tr>
+
         </tbody>
     </table>
 

@@ -209,20 +209,20 @@
 
     {% if cycle == "new" %}
         <p>
-            <button class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqForm()">Create</button>
+            <button class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqForm(this)">Create</button>
         </p>
     {% endif %}
 
     {% if cycle == "edit" %}
         <p>
-            <button class="btn btn-warning" name="btnUpdate" type="button" onclick="validateVacReqForm()">Update</button>
+            <button class="btn btn-warning" name="btnUpdate" type="button" onclick="validateVacReqForm(this)">Update</button>
             <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
         </p>
     {% endif %}
 
     {% if cycle == "show" %}
         <p>
-            <a class="btn_margin_top btn btn-primary" href="{{ path(vacreq_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
+            <a class="btn btn_margin_top btn-primary" href="{{ path(vacreq_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
         </p>
     {% endif %}
 
@@ -304,7 +304,10 @@
             return null;
         }
 
-        function validateVacReqForm() {
+        function validateVacReqForm(btn) {
+
+            var lbtn = Ladda.create(btn);
+            lbtn.start();
 
             $('#error-box').hide();
 
@@ -385,6 +388,7 @@
             if( error ) {
                 $('#error-box').html(error);
                 $('#error-box').show();
+                lbtn.stop();
                 return false;
             }
 

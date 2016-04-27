@@ -563,6 +563,15 @@ class SiteParameters {
      */
     private $LISVersionDevelopment;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $academicYearStart;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $academicYearEnd;
 
 
     /**
@@ -2085,6 +2094,38 @@ class SiteParameters {
     public function setVacrequploadpath($vacrequploadpath)
     {
         $this->vacrequploadpath = $vacrequploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcademicYearStart()
+    {
+        return $this->academicYearStart;
+    }
+
+    /**
+     * @param mixed $academicYearStart
+     */
+    public function setAcademicYearStart($academicYearStart)
+    {
+        $this->academicYearStart = $academicYearStart;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcademicYearEnd()
+    {
+        return $this->academicYearEnd;
+    }
+
+    /**
+     * @param mixed $academicYearEnd
+     */
+    public function setAcademicYearEnd($academicYearEnd)
+    {
+        $this->academicYearEnd = $academicYearEnd;
     }
 
 

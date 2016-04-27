@@ -482,8 +482,18 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'academicYearStart' )
+            $builder->add('academicYearStart',null,array(
+                'label'=>'Academic Year Start (July 1st):',
+                //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
+                'attr' => array('class'=>'form-control')
+            ));
 
-
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'academicYearEnd' )
+            $builder->add('academicYearEnd',null,array(
+                'label'=>'Academic Year End (June 30th):',
+                'attr' => array('class'=>'form-control')
+            ));
 
         $this->addCoPath($builder);
 
