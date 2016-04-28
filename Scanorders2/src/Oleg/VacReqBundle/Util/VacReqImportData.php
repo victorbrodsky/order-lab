@@ -114,13 +114,13 @@ class VacReqImportData
                 FALSE);
 
             //Insert row data array into the database
-//            echo $row.": ";
-//            var_dump($rowData);
-//            echo "<br>";
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
 
             $exportId = $this->getValueByHeaderName('FACULTY_REQUEST_ID', $rowData, $headers);
             $exportId = trim($exportId);
-            echo "exportId=".$exportId."<br>";
+            //echo "exportId=".$exportId."<br>";
 
             $request = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->findOneByExportId($exportId);
             if( $request ) {
@@ -130,7 +130,7 @@ class VacReqImportData
             //$FACULTY_NAME = $this->getValueByHeaderName('FACULTY_NAME', $rowData, $headers);
 
             $email = $this->getValueByHeaderName('FACULTY_EMAIL', $rowData, $headers);
-            echo "email=".$email."<br>";
+            //echo "email=".$email."<br>";
             if( !$email ) {
                 //continue; //ignore existing request to prevent overwrite
                 $error = 'Email not found for exportId='.$exportId;
@@ -140,7 +140,7 @@ class VacReqImportData
 
             $emailParts = explode("@", $email);
             $cwid = $emailParts[0];
-            echo "cwid=".$cwid."<br>";
+            //echo "cwid=".$cwid."<br>";
 
             $BUS_FIRST_DAY_AWAY = $this->getValueByHeaderName('BUS_FIRST_DAY_AWAY', $rowData, $headers); //24-OCT-12
             $BUS_FIRST_DAY_AWAY_Date = $this->transformDatestrToDate($BUS_FIRST_DAY_AWAY);
@@ -153,7 +153,7 @@ class VacReqImportData
 
                 //get newest date
                 $newestDate = $this->getNewestDate($BUS_FIRST_DAY_AWAY_Date,$VAC_FIRST_DAY_AWAY_Date);
-                echo "submitter not found; newest date=".$this->convertDateTimeToStr($newestDate)."<br>";
+                //echo "submitter not found; newest date=".$this->convertDateTimeToStr($newestDate)."<br>";
 
                 if( array_key_exists($email, $notExistingUsers) ) {
                     $existingNewestDate = $notExistingUsers[$email];
@@ -358,13 +358,13 @@ class VacReqImportData
             $em->persist($request);
             $em->flush();
 
-            if( $VACATION_REQUEST && $BUSINESS_REQUEST ) {
-                exit('finished exportId=' . $exportId);
-            }
+//            if( $VACATION_REQUEST && $BUSINESS_REQUEST ) {
+//                exit('finished exportId=' . $exportId);
+//            }
 
             $count++;
 
-            echo "<br>";
+            //echo "<br>";
 
         }//for each request
 
@@ -372,14 +372,14 @@ class VacReqImportData
 
         //process not existing users
         //print_r($notExistingUsers);
-        echo "not existing users = ".count($notExistingUsers)."<br>";
+        //echo "not existing users = ".count($notExistingUsers)."<br>";
         foreach( $notExistingUsers as $email=>$newestDate ) {
             $warning = "not existing user email=".$email."; newestDate=".$this->convertDateTimeToStr($newestDate);
-            echo $warning."<br>";
+            //echo $warning."<br>";
             $logger->warning($warning);
         }
 
-        exit('1');
+        //exit('1');
 
         $result = "Imported requests = " . $count;
         return $result;
@@ -532,51 +532,7 @@ class VacReqImportData
     }
 
 
-    public function importOldData_FROMDB_TODELETE() {
 
-        $email = "oli2002@med.cornell.edu";
-
-        $requests = array();
-
-        $vacreqEm = $this->container->get('doctrine')->getManager('vacreq');
-        echo "get vacreq em<br>";
-
-        $vacreqConnection = $vacreqEm->getConnection();
-        echo "after connection vacreq <br>";
-
-        //select USERID,FIRST_NAME,LAST_NAME from profiler2015.USER_INFO where EMAIL LIKE '%gul%';
-        $statement = $vacreqConnection->prepare(
-            "select USERID,FIRST_NAME,LAST_NAME from profiler2015.USER_INFO where EMAIL LIKE :email"
-        );
-        $statement->bindValue('email', "'%".$email."%'");
-
-        echo "before execute<br>";
-        $statement->execute();
-        echo "after execute<br>";
-
-        $results = $statement->fetchAll();
-
-        echo "<br>Result:<br>";
-        print_r($results);
-        echo "<br><br>";
-
-        // for INSERT, UPDATE, DELETE queries
-        $affected_rows = $statement->rowCount();
-        echo "Affected Rows=".$affected_rows."<br>";
-
-
-        if( $affected_rows != 1 && count($results) != 1 ) {
-            throw $this->createNotFoundException('Unable to find request');
-        }
-
-        $request = $results[0]['FIRST_NAME'];
-        echo "request=".$request."<br>";
-
-        exit('1');
-
-        $result = "Imported requests = " . count($requests);
-        return $result;
-    }
 
 
 }
