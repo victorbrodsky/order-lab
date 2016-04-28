@@ -3,8 +3,8 @@
 namespace Oleg\VacReqBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
@@ -33,12 +33,11 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
 
         $builder->add('paidByOutsideOrganization', 'checkbox', array(
             'label' => 'Paid by Outside Organization:',
-            'mapped' => false,
             'required' => false,
-            //'data' => true,
-            'attr' => array('class' => 'form-control'),
+            //'attr' => array('class' => 'form-control'),
             'read_only' => ($this->params['review'] ? true : false)
         ));
+
 
     }
 

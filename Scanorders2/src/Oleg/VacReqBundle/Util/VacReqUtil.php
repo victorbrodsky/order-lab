@@ -141,11 +141,13 @@ class VacReqUtil
         $subject = "Copy of the Review Faculty Vacation/Business Request #" . $entity->getId() . " Confirmation";
         $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
         $settings = $this->getSettingsByInstitution($institution->getId());
-        foreach( $settings->getEmailUsers() as $emailUser ) {
-            $emailUserEmail = $emailUser->getSingleEmail();
-            if( $emailUserEmail ) {
-                $message = $this->createEmailBody($entity,$emailUser,$addText);
-                $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+        if( $settings ) {
+            foreach ($settings->getEmailUsers() as $emailUser) {
+                $emailUserEmail = $emailUser->getSingleEmail();
+                if ($emailUserEmail) {
+                    $message = $this->createEmailBody($entity, $emailUser, $addText);
+                    $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+                }
             }
         }
 
@@ -273,10 +275,12 @@ class VacReqUtil
         //css
         $cssArr = array();
         $settings = $this->getSettingsByInstitution($institution->getId());
-        foreach( $settings->getEmailUsers() as $emailUser ) {
-            $emailUserEmail = $emailUser->getSingleEmail();
-            if( $emailUserEmail ) {
-                $cssArr[] = $emailUserEmail;
+        if( $settings ) {
+            foreach ($settings->getEmailUsers() as $emailUser) {
+                $emailUserEmail = $emailUser->getSingleEmail();
+                if ($emailUserEmail) {
+                    $cssArr[] = $emailUserEmail;
+                }
             }
         }
 

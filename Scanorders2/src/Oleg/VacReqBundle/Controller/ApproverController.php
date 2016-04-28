@@ -712,7 +712,7 @@ class ApproverController extends Controller
 
         $roleName = null;
 
-        //1) find approver roles with iinstitution
+        //1) find approver roles with institution
         $role = null;
         $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$rolePartialName,$instid);
         if( count($roles)>0 ) {

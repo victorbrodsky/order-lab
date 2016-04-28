@@ -990,6 +990,9 @@ class AdminController extends Controller
         $this->vacreqRoleSetSingleUserInstitution($entity,"CLINICALPATHOLOGY",$wcmc,"Laboratory Medicine","jar9135");
 
         //EXPERIMENTALPATHOLOGY (Barry Sleckman): Experimental Pathology (create new under WCMC => Pathology and Laboratory Medicine)
+        //bas2022@med.cornell.edu
+        // +1 212 746 4842
+        //Pathology and Laboratory Medicine (WCMC)
         $this->vacreqRoleSetSingleUserInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology","bas2022");
 
         //VASCULARBIOLOGY (Dr. Timothy Hla): "Vascular Biology" (in NYP onlys. Create a new under WCMC => Pathology and Laboratory Medicine => Research)

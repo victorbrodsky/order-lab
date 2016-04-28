@@ -34,7 +34,7 @@
         {% endif %}
     {% endif %}
 
-    {% if totalApprovedDaysString %}
+    {% if totalApprovedDaysString is defined and totalApprovedDaysString %}
         <div class="alert alert-info">
             <p>{{ totalApprovedDaysString }}</p>
         </div>

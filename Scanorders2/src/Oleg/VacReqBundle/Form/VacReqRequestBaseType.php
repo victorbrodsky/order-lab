@@ -62,13 +62,13 @@ class VacReqRequestBaseType extends AbstractType
             'read_only' => ($this->params['review'] ? true : false)
         ));
 
-        if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
-            $builder->add('approverComment', 'textarea', array(
-                'label' => 'Approver Comment:',
-                'required' => false,
-                'attr' => array('class' => 'textarea form-control'),
-            ));
-        }
+//        if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
+//            $builder->add('approverComment', 'textarea', array(
+//                'label' => 'Approver Comment:',
+//                'required' => false,
+//                'attr' => array('class' => 'textarea form-control'),
+//            ));
+//        }
 
         if( $this->params['cycle'] != 'new' ) {
 
@@ -92,6 +92,13 @@ class VacReqRequestBaseType extends AbstractType
                 'required' => true,
                 //'data' => 'pending',
                 'attr' => array('class' => 'horizontal_type_wide'), //horizontal_type
+            ));
+
+            $builder->add('approverComment', 'textarea', array(
+                'label' => 'Approver Comment:',
+                'read_only' => $readOnly,
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control'),
             ));
         }
 

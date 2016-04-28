@@ -33,7 +33,7 @@ class VacReqRequest
     /**
      * @var integer
      *
-     * @ORM\Column(name="exportId", type="integer")
+     * @ORM\Column(name="exportId", type="integer", nullable=true)
      */
     private $exportId;
 
@@ -114,6 +114,42 @@ class VacReqRequest
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $approvedRejectDate;
+
+
+    //extra not needed fields, but they are exists in the old site
+    /**
+     * REQUEST_STATUS_ID
+     * status: pending, approved, rejected
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $status;
+
+    /**
+     * FINAL_FIRST_DAY_AWAY
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $firstDayAway;
+
+    /**
+     * FINAL_FIRST_DAY_BACK
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $firstDayBackInOffice;
+
+    /**
+     * COMMENTS
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
+     * UPDATE_COMMENTS
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $updateComment;
+
+
+
 
 
     public function __construct($user=null) {
@@ -344,6 +380,87 @@ class VacReqRequest
     {
         $this->approvedRejectDate = $approvedRejectDate;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstDayAway()
+    {
+        return $this->firstDayAway;
+    }
+
+    /**
+     * @param mixed $firstDayAway
+     */
+    public function setFirstDayAway($firstDayAway)
+    {
+        $this->firstDayAway = $firstDayAway;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstDayBackInOffice()
+    {
+        return $this->firstDayBackInOffice;
+    }
+
+    /**
+     * @param mixed $firstDayBackInOffice
+     */
+    public function setFirstDayBackInOffice($firstDayBackInOffice)
+    {
+        $this->firstDayBackInOffice = $firstDayBackInOffice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param mixed $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateComment()
+    {
+        return $this->updateComment;
+    }
+
+    /**
+     * @param mixed $updateComment
+     */
+    public function setUpdateComment($updateComment)
+    {
+        $this->updateComment = $updateComment;
+    }
+
 
 
 

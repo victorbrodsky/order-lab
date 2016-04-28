@@ -59,7 +59,9 @@ class VacReqImportData
         ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
         $logger = $this->container->get('logger');
-        $email = "oli2002@med.cornell.edu";
+        $em = $this->em;
+
+        //$email = "oli2002@med.cornell.edu";
         $requests = array();
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
@@ -78,6 +80,7 @@ class VacReqImportData
         $noneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('none');
 
         $notExistingUsers = array();
+        $count = 0;
 
         $inputFileName = __DIR__ . '/vacreqExportData.xls';
 
@@ -116,12 +119,15 @@ class VacReqImportData
 //            echo "<br>";
 
             $exportId = $this->getValueByHeaderName('FACULTY_REQUEST_ID', $rowData, $headers);
+            $exportId = trim($exportId);
             echo "exportId=".$exportId."<br>";
 
-            $requestDb = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->findOneByExportId( trim($exportId) );
-            if( $requestDb ) {
+            $request = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->findOneByExportId($exportId);
+            if( $request ) {
                 continue; //ignore existing request to prevent overwrite
             }
+
+            //$FACULTY_NAME = $this->getValueByHeaderName('FACULTY_NAME', $rowData, $headers);
 
             $email = $this->getValueByHeaderName('FACULTY_EMAIL', $rowData, $headers);
             echo "email=".$email."<br>";
@@ -161,6 +167,8 @@ class VacReqImportData
             }
 
             $request = new VacReqRequest($submitter);
+
+            $request->setExportId($exportId);
 
             //set emergency
             //EMERGENCY_EMAIL
@@ -215,7 +223,7 @@ class VacReqImportData
                     //TRIP_PAID_BY_OUTSIDE
                     $TRIP_PAID_BY_OUTSIDE = $this->getValueByHeaderName('TRIP_PAID_BY_OUTSIDE', $rowData, $headers);
                     if( $TRIP_PAID_BY_OUTSIDE ) {
-                        $requestBusiness->setPaidByOutsideOrganization($TRIP_PAID_BY_OUTSIDE);
+                        $requestBusiness->setPaidByOutsideOrganization(true);
                     }
 
                     //DESCRIPTION
@@ -224,6 +232,12 @@ class VacReqImportData
                         $requestBusiness->setDescription($DESCRIPTION);
                     }
 
+                    //BUS_REQUEST_STATUS_ID
+                    $BUS_REQUEST_STATUS_ID = $this->getValueByHeaderName('BUS_REQUEST_STATUS_ID', $rowData, $headers);
+                    $BUS_REQUEST_STATUS = $this->statusMapper($BUS_REQUEST_STATUS_ID);
+                    if( $BUS_REQUEST_STATUS ) {
+                        $requestBusiness->setStatus($BUS_REQUEST_STATUS);
+                    }
                 }
             }
 
@@ -244,46 +258,117 @@ class VacReqImportData
 
                     //VAC_DAYS_REQUESTED
                     $VAC_DAYS_REQUESTED = $this->getValueByHeaderName('VAC_DAYS_REQUESTED', $rowData, $headers);
-                    $request->setNumberOfDays($VAC_DAYS_REQUESTED);
+                    $requestVacation->setNumberOfDays($VAC_DAYS_REQUESTED);
 
                     //FIRST_BACK_OFFICE
                     $FIRST_BACK_OFFICE = $this->getValueByHeaderName('FIRST_BACK_OFFICE', $rowData, $headers); //24-OCT-12
                     $FIRST_BACK_OFFICE_Date = $this->transformDatestrToDate($FIRST_BACK_OFFICE);
                     $requestVacation->setFirstDayBackInOffice($FIRST_BACK_OFFICE_Date);
 
+                    //VAC_REQUEST_STATUS_ID
+                    $VAC_REQUEST_STATUS_ID = $this->getValueByHeaderName('VAC_REQUEST_STATUS_ID', $rowData, $headers);
+                    $VAC_REQUEST_STATUS = $this->statusMapper($VAC_REQUEST_STATUS_ID);
+                    if( $VAC_REQUEST_STATUS ) {
+                        $requestVacation->setStatus($VAC_REQUEST_STATUS);
+                    }
+
                 }
 
             }
-
-            //FINAL_FIRST_DAY_AWAY
-            //FINAL_FIRST_DAY_BACK
 
             //APPROVER_ID
             $APPROVER_ID = $this->getValueByHeaderName('APPROVER_ID', $rowData, $headers);
             $approver = $this->getApproverByUserId($APPROVER_ID);
             if( $approver ) {
+
                 $request->setApprover($approver);
+
                 //DATE_APPROVED_REJECTED
                 $DATE_APPROVED_REJECTED = $this->getValueByHeaderName('DATE_APPROVED_REJECTED', $rowData, $headers);
                 $DATE_APPROVED_REJECTED_Date = $this->transformDatestrToDate($DATE_APPROVED_REJECTED);
                 $request->setApprovedRejectDate($DATE_APPROVED_REJECTED_Date);
+
+                //set organizational group
+                $institution = null;
+                $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver,"vacreq","ROLE_VACREQ_APPROVER");
+                if( count($roles) > 0 ) {
+                    $role = $roles[0];
+                    $institution = $role->getInstitution();
+                }
+                if( $institution ) {
+                    $request->setInstitution($institution);
+
+                    //assign submitter organizational group the same as approver
+                    $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER",$institution);
+                    if( count($roles) > 0 ) {
+                        $role = $roles[0];
+                        $roleName = $role->getName();
+                        $submitter->addRole($roleName);
+                        //exit($submitter.': added role '.$roleName);
+                    } else {
+                        $error = 'Submitter roles not found for exportId='.$exportId . "; APPROVER_ID=".$APPROVER_ID;
+                        $logger->error($error);
+                        throw new \Exception( $error );
+                    }
+
+                } else {
+                    $error = 'Organizational group not found for exportId='.$exportId . "; APPROVER_ID=".$APPROVER_ID;
+                    $logger->error($error);
+                    throw new \Exception( $error );
+                }
+
             } else {
                 $error = 'Approver not found for exportId='.$exportId . "; APPROVER_ID=".$APPROVER_ID;
                 $logger->error($error);
                 throw new \Exception( $error );
             }
 
-            //REQUEST_STATUS_ID
-            //BUS_REQUEST_STATUS_ID
-            //VAC_REQUEST_STATUS_ID
+            //DATE_REQUESTED
+            $DATE_REQUESTED = $this->getValueByHeaderName('DATE_REQUESTED', $rowData, $headers);
+            $DATE_REQUESTED_Date = $this->transformDatestrToDate($DATE_REQUESTED);
+            $request->setCreateDate($DATE_REQUESTED_Date);
 
+            // Not used, but existing fields in the old site
+            //REQUEST_STATUS_ID
+            $REQUEST_STATUS_ID = $this->getValueByHeaderName('REQUEST_STATUS_ID', $rowData, $headers);
+            $REQUEST_STATUS = $this->statusMapper($REQUEST_STATUS_ID);
+            if( $REQUEST_STATUS ) {
+                $request->setStatus($REQUEST_STATUS);
+            }
+
+            //FINAL_FIRST_DAY_AWAY
+            $FINAL_FIRST_DAY_AWAY = $this->getValueByHeaderName('FINAL_FIRST_DAY_AWAY', $rowData, $headers); //24-OCT-12
+            $FINAL_FIRST_DAY_AWAY_Date = $this->transformDatestrToDate($FINAL_FIRST_DAY_AWAY);
+            $request->setFirstDayAway($FINAL_FIRST_DAY_AWAY_Date);
+
+            //FINAL_FIRST_DAY_BACK
+            $FINAL_FIRST_DAY_BACK = $this->getValueByHeaderName('FINAL_FIRST_DAY_BACK', $rowData, $headers); //24-OCT-12
+            $FINAL_FIRST_DAY_BACK_Date = $this->transformDatestrToDate($FINAL_FIRST_DAY_BACK);
+            $request->setFirstDayBackInOffice($FINAL_FIRST_DAY_BACK_Date);
 
             //COMMENTS
+            $COMMENTS = $this->getValueByHeaderName('COMMENTS', $rowData, $headers);
+            $request->setComment($COMMENTS);
+
+            //UPDATE_COMMENTS
+            $UPDATE_COMMENTS = $this->getValueByHeaderName('UPDATE_COMMENTS', $rowData, $headers);
+            $request->setUpdateComment($UPDATE_COMMENTS);
 
 
-            echo "finished looping<br><br>";
+            $em->persist($request);
+            $em->flush();
+
+            if( $VACATION_REQUEST && $BUSINESS_REQUEST ) {
+                exit('finished exportId=' . $exportId);
+            }
+
+            $count++;
+
             echo "<br>";
+
         }//for each request
+
+        //echo "finished looping<br><br>";
 
         //process not existing users
         //print_r($notExistingUsers);
@@ -296,7 +381,7 @@ class VacReqImportData
 
         exit('1');
 
-        $result = "Imported requests = " . count($requests);
+        $result = "Imported requests = " . $count;
         return $result;
     }
 
@@ -365,12 +450,11 @@ class VacReqImportData
     }
 
     public function getApproverByUserId($userId) {
-        $cwid = userMapper($userId);
+        $cwid = $this->userMapper($userId);
         $username = $cwid."_@_". $this->usernamePrefix;
         $approver = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
         return $approver;
     }
-
     public function userMapper( $userId ) {
 
         //PFVBTR_APPROVER_INFO
@@ -401,21 +485,51 @@ class VacReqImportData
             case "5":
                 $cwid = "rhoda";
                 break;
-            case "20":
-                $cwid = "dknowles";
-                break;
             case "6":
                 $cwid = "tih2002";
                 break;
             case "19":
                 $cwid = "cym2003";
                 break;
+            case "20":
+                $cwid = "dknowles";
+                break;
         }
 
         return $cwid;
     }
 
+    public function statusMapper( $id ) {
 
+        //PFVBTR_REQUEST_STATUS_SEL
+        //1	pending
+        //2	approved
+        //3	rejected
+        //4	completed
+        //5	closed
+
+        $status = null;
+
+        switch( $id ){
+            case "1":
+                $status = "pending";
+                break;
+            case "2":
+                $status = "approved";
+                break;
+            case "3":
+                $status = "rejected";
+                break;
+            case "4":
+                $status = "completed";
+                break;
+            case "5":
+                $status = "closed";
+                break;
+        }
+
+        return $status;
+    }
 
 
     public function importOldData_FROMDB_TODELETE() {
