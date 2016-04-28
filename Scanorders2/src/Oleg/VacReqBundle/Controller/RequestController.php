@@ -532,7 +532,7 @@ class RequestController extends Controller
         $vacReqImportData = $this->get('vacreq_import_data');
         $res = $vacReqImportData->importOldData();
 
-        exit('Imported result: '.$res);
+        //exit('Imported result: '.$res);
 
         //Flash
         $this->get('session')->getFlashBag()->add(
