@@ -1262,48 +1262,52 @@ class UserGenerator {
 
 
     public function transformDatestrToDate($datestr) {
-        $date = null;
 
-        if( !$datestr ) {
-            return $date;
-        }
-        $datestr = trim($datestr);
-        //echo "###datestr=".$datestr."<br>";
+        $userSecUtil = $this->container->get('user_security_utility');
+        return $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr,$this->container->getParameter('employees.sitename'));
 
-        if( strtotime($datestr) === false ) {
-            // bad format
-            $msg = 'transformDatestrToDate: Bad format of datetime string='.$datestr;
-            //throw new \UnexpectedValueException($msg);
-            $logger = $this->container->get('logger');
-            $logger->error($msg);
-
-            //send email
-            $userSecUtil = $this->container->get('user_security_utility');
-            $systemUser = $userSecUtil->findSystemUser();
-            $event = "Fellowship Applicantions warning: " . $msg;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Warning');
-
-            //exit('bad');
-            return $date;
-        }
-
-//        if( !$this->valid_date($datestr) ) {
-//            $msg = 'Date string is not valid'.$datestr;
-//            throw new \UnexpectedValueException($msg);
+//        $date = null;
+//
+//        if( !$datestr ) {
+//            return $date;
+//        }
+//        $datestr = trim($datestr);
+//        //echo "###datestr=".$datestr."<br>";
+//
+//        if( strtotime($datestr) === false ) {
+//            // bad format
+//            $msg = 'transformDatestrToDate: Bad format of datetime string='.$datestr;
+//            //throw new \UnexpectedValueException($msg);
+//            $logger = $this->container->get('logger');
+//            $logger->error($msg);
+//
+//            //send email
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $systemUser = $userSecUtil->findSystemUser();
+//            $event = "Fellowship Applicantions warning: " . $msg;
+//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Warning');
+//
+//            //exit('bad');
+//            return $date;
+//        }
+//
+////        if( !$this->valid_date($datestr) ) {
+////            $msg = 'Date string is not valid'.$datestr;
+////            throw new \UnexpectedValueException($msg);
+////            $logger = $this->container->get('logger');
+////            $logger->error($msg);
+////        }
+//
+//        try {
+//            $date = new \DateTime($datestr);
+//        } catch (Exception $e) {
+//            $msg = 'Failed to convert string'.$datestr.'to DateTime:'.$e->getMessage();
+//            //throw new \UnexpectedValueException($msg);
 //            $logger = $this->container->get('logger');
 //            $logger->error($msg);
 //        }
-
-        try {
-            $date = new \DateTime($datestr);
-        } catch (Exception $e) {
-            $msg = 'Failed to convert string'.$datestr.'to DateTime:'.$e->getMessage();
-            //throw new \UnexpectedValueException($msg);
-            $logger = $this->container->get('logger');
-            $logger->error($msg);
-        }
-
-        return $date;
+//
+//        return $date;
     }
 
 } 

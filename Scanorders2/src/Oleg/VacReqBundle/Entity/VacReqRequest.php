@@ -30,6 +30,12 @@ class VacReqRequest
      */
     private $id;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="exportId", type="integer")
+     */
+    private $exportId;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
@@ -103,6 +109,12 @@ class VacReqRequest
      */
     private $approver;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $approvedRejectDate;
+
 
     public function __construct($user=null) {
         $this->setUser($user);
@@ -130,6 +142,24 @@ class VacReqRequest
     {
         $this->id = $id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getExportId()
+    {
+        return $this->exportId;
+    }
+
+    /**
+     * @param mixed $exportId
+     */
+    public function setExportId($exportId)
+    {
+        $this->exportId = $exportId;
+    }
+
+
 
     /**
      * @return mixed
@@ -259,6 +289,12 @@ class VacReqRequest
     {
         $this->emergencyComment = $emergencyComment;
     }
+    public function addEmergencyComment($emergencyComment) {
+        if( $emergencyComment ) {
+            $comment = $this->getEmergencyComment() . "\r\n"."\r\n" . $emergencyComment;
+            $this->setEmergencyComment($comment);
+        }
+    }
 
     /**
      * @return mixed
@@ -274,6 +310,7 @@ class VacReqRequest
     public function setApprover($approver)
     {
         $this->approver = $approver;
+        $this->setApprovedRejectDate(new \DateTime());
     }
 
     /**
@@ -290,6 +327,22 @@ class VacReqRequest
     public function setInstitution($institution)
     {
         $this->institution = $institution;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getApprovedRejectDate()
+    {
+        return $this->approvedRejectDate;
+    }
+
+    /**
+     * @param \DateTime $approvedRejectDate
+     */
+    public function setApprovedRejectDate($approvedRejectDate)
+    {
+        $this->approvedRejectDate = $approvedRejectDate;
     }
 
 
@@ -318,6 +371,20 @@ class VacReqRequest
         }
 
         return null;
+    }
+
+    public function hasBusinessRequest() {
+        if( $this->getRequestBusiness() && $this->getRequestBusiness()->getStartDate() ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function hasVacationRequest() {
+        if( $this->getRequestVacation() && $this->getRequestVacation()->getStartDate() ) {
+            return true;
+        }
+        return false;
     }
 
 

@@ -176,7 +176,7 @@ class VacReqUtil
 
         $message .= $break . "Please click on the URLs below for quick actions to approve or reject the vacation/business travel request.";
 
-        if( $entity->getRequestBusiness() ) {
+        if( $entity->hasBusinessRequest() ) {
             //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
             //approved
             $actionRequestUrl = $url = $this->container->get('router')->generate(
@@ -205,7 +205,7 @@ class VacReqUtil
             $message .= $actionRequestUrl;
         }
 
-        if( $entity->getRequestVacation() ) {
+        if( $entity->hasVacationRequest() ) {
             //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
             //approved
             $actionRequestUrl = $url = $this->container->get('router')->generate(

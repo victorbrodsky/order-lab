@@ -1046,4 +1046,57 @@ class UserSecurityUtil {
         return $count;
     }
 
+
+    public function transformDatestrToDateWithSiteEventLog($datestr,$sitename) {
+        $date = null;
+
+        if( !$datestr ) {
+            return $date;
+        }
+        $datestr = trim($datestr);
+        //echo "###datestr=".$datestr."<br>";
+
+        if( strtotime($datestr) === false ) {
+            // bad format
+            $msg = 'transformDatestrToDate: Bad format of datetime string='.$datestr;
+            //throw new \UnexpectedValueException($msg);
+            $logger = $this->container->get('logger');
+            $logger->error($msg);
+
+            //send email
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+            $event = $sitename." warning: " . $msg;
+            $userSecUtil->createUserEditEvent($sitename,$event,$systemUser,null,null,'Warning');
+
+            //exit('bad');
+            return $date;
+        }
+
+//        if( !$this->valid_date($datestr) ) {
+//            $msg = 'Date string is not valid'.$datestr;
+//            throw new \UnexpectedValueException($msg);
+//            $logger = $this->container->get('logger');
+//            $logger->error($msg);
+//        }
+
+        try {
+            $date = new \DateTime($datestr);
+        } catch (Exception $e) {
+            $msg = 'Failed to convert string'.$datestr.'to DateTime:'.$e->getMessage();
+            //throw new \UnexpectedValueException($msg);
+            $logger = $this->container->get('logger');
+            $logger->error($msg);
+            $this->sendEmailToSystemEmail("Bad format of datetime string", $msg);
+        }
+
+        return $date;
+    }
+    public function sendEmailToSystemEmail($subject, $message) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail( $systemEmail, $subject, $message );
+    }
 }

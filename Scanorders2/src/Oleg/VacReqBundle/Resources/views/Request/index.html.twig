@@ -60,11 +60,11 @@
     <table class="records_list table table-hover table-condensed text-left table-bordered">
         <thead>
         <tr>
-            <th colspan="6" class="text-center table-header-grey-gradient">
+            <th colspan="8" class="text-center table-header-grey-gradient">
                 Requester Info
             </th>
 
-            <th colspan="8" class="text-center table-header-grey-gradient">
+            <th colspan="6" class="text-center table-header-grey-gradient">
                 Business Travel
             </th>
 
@@ -89,10 +89,15 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Phone', 'infos.preferredPhone') }}</th>
 
+            <th>{{ knp_pagination_sortable(pagination, 'Division', 'institution.name') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Status Changed Date', 'request.approvedRejectDate') }}</th>
+
+
             {{ vacreqmacros.request_base_header( pagination, 'requestBusiness' ) }}
-            <th>{{ knp_pagination_sortable(pagination, 'Estimated Expenses', 'requestBusiness.expenses') }}</th>
+            {#<th>{{ knp_pagination_sortable(pagination, 'Estimated Expenses', 'requestBusiness.expenses') }}</th>#}
             <th>{{ knp_pagination_sortable(pagination, 'Description', 'requestBusiness.description') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Paid by Outside Organization', 'requestBusiness.paidByOutsideOrganization') }}</th>
+            {#<th>{{ knp_pagination_sortable(pagination, 'Paid by Outside Organization', 'requestBusiness.paidByOutsideOrganization') }}</th>#}
 
             {{ vacreqmacros.request_base_header( pagination, 'requestVacation' ) }}
 
@@ -161,12 +166,24 @@
                     {% endif %}
                 </td>
 
-                {{ vacreqmacros.request_base_body( entity.requestBusiness )  }}
                 <td>
-                    {% if entity.requestBusiness and entity.requestBusiness.expenses %}
-                        {{ entity.requestBusiness.expenses }}
+                    {% if entity.institution %}
+                        {{ entity.institution }}
                     {% endif %}
                 </td>
+
+                <td>
+                    {% if entity.approvedRejectDate %}
+                        {{ entity.approvedRejectDate|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+
+                {{ vacreqmacros.request_base_body( entity.requestBusiness )  }}
+                {#<td>#}
+                    {#{% if entity.requestBusiness and entity.requestBusiness.expenses %}#}
+                        {#{{ entity.requestBusiness.expenses }}#}
+                    {#{% endif %}#}
+                {#</td>#}
                 <td>
                     {% if entity.requestBusiness and entity.requestBusiness.description %}
                         {#{{ entity.requestBusiness.description }}#}
@@ -175,15 +192,15 @@
                         </div>
                     {% endif %}
                 </td>
-                <td>
-                    {% if entity.requestBusiness and entity.requestBusiness.paidByOutsideOrganization %}
-                        {% if entity.requestBusiness.paidByOutsideOrganization %}
-                            yes
-                        {% else %}
-                            no
-                        {% endif %}
-                    {% endif %}
-                </td>
+                {#<td>#}
+                    {#{% if entity.requestBusiness and entity.requestBusiness.paidByOutsideOrganization %}#}
+                        {#{% if entity.requestBusiness.paidByOutsideOrganization %}#}
+                            {#yes#}
+                        {#{% else %}#}
+                            {#no#}
+                        {#{% endif %}#}
+                    {#{% endif %}#}
+                {#</td>#}
 
                 {{ vacreqmacros.request_base_body( entity.requestVacation )  }}
 

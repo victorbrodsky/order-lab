@@ -77,33 +77,6 @@
 
             {{ vacreqmacros.vacreq_ParticularRequestAction( entity, entity.requestVacation, "vacation", vacreq_sitename ) }}
 
-            {#{% if entity.status != 'pending' %}#}
-                {#<li>#}
-                    {#<a#}
-                            {#general-data-confirm="Are you sure you would like to set the request status for {{ entity.user }} to Pending?"#}
-                            {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'pending' }) }}">Set to Pending#}
-                    {#</a>#}
-                {#</li>#}
-            {#{% endif %}#}
-
-            {#{% if entity.status != 'approved' %}#}
-                {#<li>#}
-                    {#<a#}
-                            {#general-data-confirm="Are you sure you would like to Approve the request for {{ entity.user }}?"#}
-                            {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'approved' }) }}">Approve#}
-                    {#</a>#}
-                {#</li>#}
-            {#{% endif %}#}
-
-            {#{% if entity.status != 'rejected' %}#}
-                {#<li>#}
-                    {#<a#}
-                            {#general-data-confirm="Are you sure you would like to Reject the request for {{ entity.user }}?"#}
-                            {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'status': 'rejected' }) }}">Reject#}
-                    {#</a>#}
-                {#</li>#}
-            {#{% endif %}#}
-
         </ul>
 
     </div>
@@ -111,18 +84,29 @@
 {% endmacro %}
 {% macro vacreq_ParticularRequestAction( entity, request, requestName, vacreq_sitename ) %}
 
-    {% if request %}
-        <li class="divider">
-        <li><strong>{{requestName|capitalize}} Request</strong></li>
+    {% if requestName == "business" %}
+        {% set hasParticulraRequest = entity.hasBusinessRequest() %}
+    {% endif %}
+    {% if requestName == "vacation" %}
+        {% set hasParticulraRequest = entity.hasVacationRequest() %}
+    {% endif %}
 
-        {% if request.status != 'pending' %}
-            <li>
-                <a
-                    general-data-confirm="Are you sure you would like to set the {{ requestName }} request status for {{ entity.user }} to Pending?"
-                    href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'requestName':requestName, 'status': 'pending' }) }}">Set {{requestName|capitalize}} Request to Pending
-                </a>
-            </li>
-        {% endif %}
+    {% if request and hasParticulraRequest %}
+        <li class="divider">
+        <li>
+            <div align="center">
+                <strong>{{requestName|capitalize}} Request</strong>
+            </div>
+        </li>
+
+        {#{% if request.status != 'pending' %}#}
+            {#<li>#}
+                {#<a#}
+                    {#general-data-confirm="Are you sure you would like to set the {{ requestName }} request status for {{ entity.user }} to Pending?"#}
+                    {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'requestName':requestName, 'status': 'pending' }) }}">Set {{requestName|capitalize}} Request to Pending#}
+                {#</a>#}
+            {#</li>#}
+        {#{% endif %}#}
 
         {% if request.status != 'approved' %}
             <li>

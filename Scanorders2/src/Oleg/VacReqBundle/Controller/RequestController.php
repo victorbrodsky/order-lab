@@ -188,11 +188,12 @@ class RequestController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            if( $routName == 'vacreq_review' ) { //review
 
-            if( $routName == 'vacreq_review' ) {
+                $entity->setApprover($user);
+                $em->persist($entity);
+                $em->flush();
+
                 $status = $entity->getOverallStatus();
                 $eventType = 'Business/Vacation Request '.ucwords($status);
                 $action = $status;
@@ -202,13 +203,18 @@ class RequestController extends Controller
                 $requestName = null;
                 $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $status );
 
-            } else {
+            } else { //update
+
+                $entity->setUpdateUser($user);
+                $em->persist($entity);
+                $em->flush();
+
                 $action = "updated";
                 $eventType = 'Business/Vacation Request Updated';
             }
 
             //Event Log
-            $event = "Request for ".$entity->getUser()." has been ".$action;
+            $event = "Request for ".$entity->getUser()." has been ".$action." by ".$user;
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
@@ -284,6 +290,7 @@ class RequestController extends Controller
             }
 
             if( $statusSet ) {
+                $entity->setApprover($user);
                 $em->persist($entity);
                 $em->flush();
 
@@ -293,7 +300,7 @@ class RequestController extends Controller
                 if ($status == 'pending') {
                     $status = 'set to Pending';
                 }
-                $event = ucwords($requestName)." Request ID " . $entity->getId() . " for " . $entity->getUser() . " has been " . $status;
+                $event = ucwords($requestName)." Request ID " . $entity->getId() . " for " . $entity->getUser() . " has been " . $status . " by " . $user;
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     $event
