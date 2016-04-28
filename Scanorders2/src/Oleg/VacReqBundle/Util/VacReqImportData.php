@@ -56,7 +56,7 @@ class VacReqImportData
     // url: /import-old-data/
     public function importOldData() {
 
-        ini_set('max_execution_time', 900); //900 seconds = 15 minutes
+        ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes
 
         $logger = $this->container->get('logger');
         $em = $this->em;
