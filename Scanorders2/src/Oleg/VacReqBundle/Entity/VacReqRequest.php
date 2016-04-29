@@ -45,6 +45,12 @@ class VacReqRequest
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $submitter;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
      */
     private $updateUser;
@@ -62,6 +68,11 @@ class VacReqRequest
     private $updateDate;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $phone;
+
+    /**
      * @ORM\ManyToMany(targetEntity="VacReqAvailabilityList", inversedBy="requests")
      * @ORM\JoinTable(name="vacreq_request_availability")
      **/
@@ -73,15 +84,22 @@ class VacReqRequest
 //    private $emergencyCellPhone;
 
     /**
+     * Other
      * @ORM\Column(type="string", nullable=true)
      */
     private $emergencyComment;
 
-//    /**
-//     * status: pending, approved, rejected
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $status;
+    /**
+     * Cell Phone
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $emergencyPhone;
+
+    /**
+     * E-Mail
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $emergencyEmail;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
@@ -114,6 +132,8 @@ class VacReqRequest
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $approvedRejectDate;
+
+
 
 
     //extra not needed fields, but they are exists in the old site
@@ -154,6 +174,7 @@ class VacReqRequest
 
     public function __construct($user=null) {
         $this->setUser($user);
+        $this->setSubmitter($user);
         //$this->setStatus('pending');
         $this->setCreateDate(new \DateTime());
 
@@ -212,6 +233,26 @@ class VacReqRequest
     {
         $this->user = $user;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSubmitter()
+    {
+        return $this->submitter;
+    }
+
+    /**
+     * @param mixed $submitter
+     */
+    public function setSubmitter($submitter)
+    {
+        $this->submitter = $submitter;
+    }
+
+
+
+
 
     /**
      * @return mixed
@@ -459,6 +500,22 @@ class VacReqRequest
     public function setUpdateComment($updateComment)
     {
         $this->updateComment = $updateComment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
     }
 
 

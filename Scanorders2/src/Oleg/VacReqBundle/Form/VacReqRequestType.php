@@ -74,9 +74,15 @@ class VacReqRequestType extends AbstractType
 //            ));
 //        }
 
+        $builder->add('phone', null, array(
+            'label' => "Phone Number for the person away:",
+            'attr' => array('class' => 'form-control vacreq-phone'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+
         $builder->add('availabilities', null, array(
-            'label' => "Availability(s):",
-            'attr' => array('class' => 'combobox combobox-width'),
+            'label' => "Availability:",
+            'attr' => array('class' => 'combobox combobox-width vacreq-availabilities'),
             'read_only' => ($this->params['review'] ? true : false)
         ));
 
@@ -92,7 +98,7 @@ class VacReqRequestType extends AbstractType
 
         $builder->add('emergencyComment', null, array(
             'label' => "Emergency Comment:",
-            'attr' => array('class' => 'form-control'),
+            'attr' => array('class' => 'form-control vacreq-emergencyComment'),
             'read_only' => ($this->params['review'] ? true : false)
         ));
 
@@ -125,14 +131,33 @@ class VacReqRequestType extends AbstractType
                 $readOnly = false;
             }
 
-            $builder->add('user', 'entity', array(
+            $builder->add('submitter', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'label' => "Requester:",
+                'label' => "Request Submitter:",
                 'required' => true,
                 'multiple' => false,
                 //'property' => 'name',
                 'attr' => array('class' => 'combobox combobox-width'),
-                'read_only' => $readOnly,   //($this->params['review'] ? true : false),
+                'read_only' => true,    //$readOnly,   //($this->params['review'] ? true : false),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('user')
+                        ->leftJoin("user.infos","infos")
+                        ->leftJoin("user.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
+                        ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        ->orderBy("infos.lastName","ASC");
+                },
+            ));
+
+            $builder->add('user', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Person Away:",
+                'required' => true,
+                'multiple' => false,
+                //'property' => 'name',
+                'attr' => array('class' => 'combobox combobox-width'),
+                //'read_only' => $readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos","infos")

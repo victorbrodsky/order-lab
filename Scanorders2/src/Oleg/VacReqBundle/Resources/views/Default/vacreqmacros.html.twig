@@ -53,6 +53,49 @@
     {% endif %}
 {% endmacro %}
 
+{% macro request_inputWithCalculateBtn( field ) %}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {{ form_label(field) }}
+        </div>
+        <div class="col-xs-6" align="left">
+            <div class = "input-group">
+                {#<input type = "text" class = "form-control">#}
+                {{ form_widget(field) }}
+                <span class = "input-group-addon btn" onclick="setVacReqNumberOfDays(this,event)">
+                    Calculate
+                </span>
+            </div>
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+
+{% macro request_dateWithCalculateBtn( field ) %}
+    <p>
+    <div class="row">
+        {{ form_errors(field) }}
+        <div class="col-xs-6" align="right">
+            {{ form_label(field) }}
+        </div>
+        <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+            {#<div class="input-group input-group-reg date allow-future-date">#}
+            <div class="input-group allow-future-date">
+                {{ form_widget(field) }}
+                {#<span class="input-group-addon">#}
+                    {#<i class="glyphicon glyphicon-calendar"></i>#}
+                {#</span>#}
+                <span class = "input-group-addon btn" onclick="setVacReqFirstDayBack(this,event)">
+                    Calculate
+                </span>
+            </div>
+        </div>
+        {{ form_rest(field) }}
+    </div>
+    </p>
+{% endmacro %}
+
 {#entity - request#}
 {% macro vacreq_action( entity, vacreq_sitename ) %}
 

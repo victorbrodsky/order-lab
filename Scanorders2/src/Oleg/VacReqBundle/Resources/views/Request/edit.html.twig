@@ -19,7 +19,7 @@
 {% endif %}
 
 {% block title %}
-    Pathology Faculty Vacation/Business Travel Request
+    Vacation/Business Travel Request
 {% endblock %}
 
 
@@ -41,7 +41,7 @@
     {% endif %}
 
     <h4 class="text-info" align="center">
-        Pathology Faculty Vacation/Business Travel Request
+        Vacation/Business Travel Request
     </h4>
 
     <br>
@@ -58,9 +58,14 @@
 
         {#{{ treemacros.compositeTreeNode(form.institution,cycle,'') }}#}
 
+        {{ formmacros.field(form.submitter) }}
+
         {% if form.user is defined %}
             {{ formmacros.field(form.user) }}
         {% endif %}
+
+        {#{{ formmacros.field(form.phone) }}#}
+        {{ usermacros.emailPhoneField(form.phone,cycle,'phone',"") }}
 
         {#organizationalInstitution => institution#}
         {% if form.institution is defined %}
@@ -71,27 +76,11 @@
         {% endif %}
 
 
-        {#Emergency#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#Emergency">
-                        Emergency Contact Info (optional)
-                    </a>
-                </h4>
-            </div>
-            <div id="Emergency" class="panel-collapse collapse">
-                <div class="panel-body">
-                    {{ formmacros.field(form.availabilities) }}
-                    {{ formmacros.field(form.emergencyComment) }}
-                    {#{{ formmacros.field(form.emergencyCellPhone) }}#}
-                    {#{{ formmacros.field(form.emergencyOther) }}#}
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
-
-
         {#Business#}
+        {% set showBusinessStatus = false %}
+        {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
+            {% set showBusinessStatus = true %}
+        {% endif %}
         {% set businessCollapse = '' %}
         {% if (not showFlag and not review) or (entity.requestBusiness and entity.requestBusiness.numberOfDays>0) %}
             {% set businessCollapse = 'in' %}
@@ -112,26 +101,36 @@
                         {#Business Travel#}
                     {#</a>#}
                     {#{{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}#}
-                    <div class="row">
-                        <div class="col-xs-6" align="right">
-                            <a data-toggle="collapse" href="#vacreq-Business">
-                                Business Travel
-                            </a>
-                        </div>
-                        {% if businessCollapse == 'in' %}
-                            <div class="col-xs-6" align="left" style="color:#333;">
-                                {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
+                    {% if showBusinessStatus %}
+                        <div class="row">
+                            <div class="col-xs-6" align="right">
+                                <a data-toggle="collapse" href="#vacreq-Business">
+                                    Business Travel
+                                </a>
                             </div>
-                        {% endif %}
-                    </div>
+                            {#{% if showBusinessStatus %}#}
+                                <div class="col-xs-6" align="left" style="color:#333;">
+                                    {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
+                                </div>
+                            {#{% endif %}#}
+                        </div>
+                    {% else %}
+                        <a data-toggle="collapse" href="#vacreq-Business">
+                            Business Travel
+                        </a>
+                    {% endif %}
                 </h4>
             </div>
             <div id="vacreq-Business" class="panel-collapse collapse {{ businessCollapse }}">
                 <div class="panel-body">
                     {{ formmacros.fieldDateLabel(form.requestBusiness.startDate,'allow-future-date') }}
                     {{ formmacros.fieldDateLabel(form.requestBusiness.endDate,'allow-future-date') }}
-                    {{ formmacros.field(form.requestBusiness.numberOfDays) }}
-                    {{ formmacros.fieldDateLabel(form.requestBusiness.firstDayBackInOffice,'allow-future-date') }}
+
+                    {#{{ formmacros.field(form.requestBusiness.numberOfDays) }}#}
+                    {#{{ formmacros.fieldDateLabel(form.requestBusiness.firstDayBackInOffice,'allow-future-date') }}#}
+                    {{ vacreqmacros.request_inputWithCalculateBtn(form.requestBusiness.numberOfDays) }}
+                    {{ vacreqmacros.request_dateWithCalculateBtn(form.requestBusiness.firstDayBackInOffice) }}
+
                     {{ formmacros.field(form.requestBusiness.expenses) }}
                     {{ formmacros.checkbox(form.requestBusiness.paidByOutsideOrganization) }}
                     {{ formmacros.field(form.requestBusiness.description) }}
@@ -146,6 +145,10 @@
         {#Vacation#}
 
         {#set vacationCollapse#}
+        {% set showVacationStatus = false %}
+        {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
+            {% set showVacationStatus = true %}
+        {% endif %}
         {% set vacationCollapse = '' %}
         {% if (not showFlag and not review) or (entity.requestVacation and entity.requestVacation.numberOfDays>0) %}
             {% set vacationCollapse = 'in' %}
@@ -166,26 +169,37 @@
                         {#Vacation Travel#}
                     {#</a>#}
                     {#{{ vacreqmacros.request_radio_choice( form.requestVacation ) }}#}
-                    <div class="row">
-                        <div class="col-xs-6" align="right">
-                            <a data-toggle="collapse" href="#vacreq-Vacation">
-                                Vacation Travel
-                            </a>
-                        </div>
-                        {% if vacationCollapse == 'in' %}
-                            <div class="col-xs-6" align="left" style="color:#333;">
-                                {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
+                    {% if showVacationStatus %}
+                        <div class="row">
+                            <div class="col-xs-6" align="right">
+                                <a data-toggle="collapse" href="#vacreq-Vacation">
+                                    Vacation Travel
+                                </a>
                             </div>
-                        {% endif %}
-                    </div>
+                            {#{% if showVacationStatus %}#}
+                                <div class="col-xs-6" align="left" style="color:#333;">
+                                    {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
+                                </div>
+                            {#{% endif %}#}
+                        </div>
+                    {% else %}
+                        <a data-toggle="collapse" href="#vacreq-Vacation">
+                            Vacation Travel
+                        </a>
+                    {% endif %}
                 </h4>
             </div>
             <div id="vacreq-Vacation" class="panel-collapse collapse {{ vacationCollapse }}">
                 <div class="panel-body">
                     {{ formmacros.fieldDateLabel(form.requestVacation.startDate,'allow-future-date') }}
                     {{ formmacros.fieldDateLabel(form.requestVacation.endDate,'allow-future-date') }}
-                    {{ formmacros.field(form.requestVacation.numberOfDays) }}
-                    {{ formmacros.fieldDateLabel(form.requestVacation.firstDayBackInOffice,'allow-future-date') }}
+
+                    {#{{ formmacros.field(form.requestVacation.numberOfDays) }}#}
+                    {{ vacreqmacros.request_inputWithCalculateBtn(form.requestVacation.numberOfDays) }}
+
+                    {#{{ formmacros.fieldDateLabel(form.requestVacation.firstDayBackInOffice,'allow-future-date') }}#}
+                    {{ vacreqmacros.request_dateWithCalculateBtn(form.requestVacation.firstDayBackInOffice) }}
+
                     {% if form.requestVacation.approverComment is defined and vacationCollapse == 'in' %}
                         {{ formmacros.field(form.requestVacation.approverComment) }}
                     {% endif %}
@@ -194,6 +208,27 @@
         </div> <!-- panel panel-info -->
 
         {#{{ formmacros.fieldDateLabel(form.credentials.dob,'allow-future-date') }}#}
+
+
+        {#Emergency#}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#Emergency">
+                        Emergency Contact Info (optional)
+                    </a>
+                </h4>
+            </div>
+            <div id="Emergency" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    {{ formmacros.field(form.availabilities) }}
+                    {{ formmacros.field(form.emergencyComment) }}
+                    {#{{ formmacros.field(form.emergencyCellPhone) }}#}
+                    {#{{ formmacros.field(form.emergencyOther) }}#}
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
 
         {% if form.status is defined %}
             {{ formmacros.field(form.status) }}
@@ -209,7 +244,7 @@
 
     {% if cycle == "new" %}
         <p>
-            <button class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqForm(this)">Create</button>
+            <button class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqForm(this)">Submit</button>
         </p>
     {% endif %}
 
@@ -237,11 +272,38 @@
 
             vacreqDateListener();
 
+            vacreqAvailabilityListener();
+
         });
+
+        function vacreqAvailabilityListener() {
+            $('.vacreq-availabilities').on("change", function(e) {
+                var holder = $(this).closest('.panel-body');
+                var availabilities = holder.find('.vacreq-availabilities').first().select2('data');
+                //console.log(availabilities);
+
+                //this returns all the selected item
+                var items= $(this).val();
+                //console.log('items='+items);
+
+                $.each( availabilities, function( key, value ) {
+                    //console.log( key + ": " + value );
+                    //console.log( value );
+                    var item = value.text;
+                    //console.log('item='+item);
+                    if( item == "Not Accessible" ) {
+                        //clear others
+                        holder.find('.vacreq-availabilities').first().select2('val',value.id);
+                    }
+
+                });
+
+            });
+        }
 
         function vacreqDateListener() {
 
-            $('.vacreq-startDate,.vacreq-endDate').on("change", function(e) {
+            $('.vacreq-startDate,.vacreq-endDate').datepicker().on("changeDate", function(e) {
                 //vacreqUpdateDaysAndFirstday(this);
 
                 var holder = $(this).closest('.panel-body');
@@ -250,8 +312,18 @@
                 var endDate = holder.find('.vacreq-endDate').first().datepicker('getDate');
                 //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
 
+
                 //get working days difference
                 if( startDate && endDate ) {
+
+                    if( startDate > endDate ) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        alert("The requested End Date cannot precede the Start Date.");
+                        //setVacReqDates(holder,null,null);
+                        $(this).datepicker('setDate', null);
+                        return;
+                    }
 
                     //var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
                     //var diffDays = 1 + Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
@@ -260,18 +332,111 @@
 
                     if( diffWorkingDays > 0 ) {
                         //numberOfDays
-                        holder.find('.vacreq-numberOfDays').first().val(diffWorkingDays);
+                        //holder.find('.vacreq-numberOfDays').first().val(diffWorkingDays);
 
                         //firstDayBackInOffice
                         var nextWorkingDay = getNextWorkingDay(endDate);
                         //console.log('nextWorkingDay='+nextWorkingDay);
-                        holder.find('.vacreq-firstDayBackInOffice').first().datepicker('setDate', nextWorkingDay);
+                        //holder.find('.vacreq-firstDayBackInOffice').first().datepicker('setDate', nextWorkingDay);
+
+                        setVacReqDates(holder,diffWorkingDays,nextWorkingDay)
+                    } else {
+                        //setVacReqDates(holder,null,null);
                     }
 
                 }//if
 
             });
 
+        }
+
+        function setVacReqDates(holder,diffWorkingDays,nextWorkingDay) {
+
+            var numberOfDaysField = holder.find('.vacreq-numberOfDays').first();
+            if( !numberOfDaysField.val() ) {
+                numberOfDaysField.val(diffWorkingDays);
+            }
+
+            var firstDayBackInOffice = holder.find('.vacreq-firstDayBackInOffice').first();
+            if( !firstDayBackInOffice.datepicker('getDate') ) {
+                firstDayBackInOffice.datepicker('setDate', nextWorkingDay);
+            }
+        }
+
+        //onclick action button
+        function setVacReqNumberOfDays(btn,event) {
+            var holder = $(btn).closest('.panel-body');
+            var startDate = holder.find('.vacreq-startDate').first().datepicker('getDate');
+            var endDate = holder.find('.vacreq-endDate').first().datepicker('getDate');
+            //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
+
+            event.stopPropagation();
+            event.preventDefault();
+
+            var diffWorkingDays = null;
+
+            if( startDate && endDate ) {
+                if( startDate > endDate ) {
+                    alert("The requested End Date cannot precede the Start Date.");
+                    holder.find('.vacreq-numberOfDays').first().val(null);
+                    return null;
+                }
+
+                diffWorkingDays = calculateWorkingDays(startDate,endDate);
+
+                if( diffWorkingDays > 0 ) {
+                    //numberOfDays
+                    holder.find('.vacreq-numberOfDays').first().val(diffWorkingDays);
+                } else {
+                    holder.find('.vacreq-numberOfDays').first().val(null);
+                }
+            }
+
+            return diffWorkingDays;
+        }
+
+        //onlcick
+        function setVacReqFirstDayBack(btn,event) {
+            var holder = $(btn).closest('.panel-body');
+            var startDate = holder.find('.vacreq-startDate').first().datepicker('getDate');
+            var endDate = holder.find('.vacreq-endDate').first().datepicker('getDate');
+            //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
+
+            //holder.find('.vacreq-firstDayBackInOffice').first().datepicker('hide');
+
+            event.stopPropagation();
+            event.preventDefault();
+
+            var nextWorkingDay = null;
+
+            //get working days difference
+            if( startDate && endDate ) {
+
+                if( startDate > endDate ) {
+                    alert("The requested End Date cannot precede the Start Date.");
+                    holder.find('.vacreq-firstDayBackInOffice').first().datepicker('setDate', null);
+                    return;
+                }
+
+                //var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                //var diffDays = 1 + Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
+                var diffWorkingDays = calculateWorkingDays(startDate,endDate);
+                //console.log('diffWorkingDays='+diffWorkingDays);
+
+                if( diffWorkingDays > 0 ) {
+                    //firstDayBackInOffice
+                    nextWorkingDay = getNextWorkingDay(endDate);
+                    //console.log('nextWorkingDay='+nextWorkingDay);
+                    holder.find('.vacreq-firstDayBackInOffice').first().datepicker('setDate', nextWorkingDay);
+                } else {
+                    holder.find('.vacreq-firstDayBackInOffice').first().datepicker('setDate', null);
+                }
+
+            }//if
+
+            //holder.find('.vacreq-firstDayBackInOffice').first().datepicker('hide');
+
+            return nextWorkingDay;
         }
 
         // Count days from d0 to d1 inclusive, excluding Fridays and Saturdays
@@ -394,6 +559,7 @@
 
             $('#vacreq-request-form').submit();
         }
+
 
     </script>
 {% endblock %}
