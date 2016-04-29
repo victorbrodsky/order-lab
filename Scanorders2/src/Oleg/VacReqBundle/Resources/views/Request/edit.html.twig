@@ -58,7 +58,9 @@
 
         {#{{ treemacros.compositeTreeNode(form.institution,cycle,'') }}#}
 
-        {{ formmacros.field(form.submitter) }}
+        {% if form.submitter is defined %}
+            {{ formmacros.field(form.submitter) }}
+        {% endif %}
 
         {% if form.user is defined %}
             {{ formmacros.field(form.user) }}
