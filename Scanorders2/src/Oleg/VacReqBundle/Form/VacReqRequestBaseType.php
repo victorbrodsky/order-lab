@@ -18,6 +18,8 @@ class VacReqRequestBaseType extends AbstractType
     protected $params;
     protected $entity;
 
+    protected $requestTypeName;
+
     public function __construct( $params=null, $entity = null )
     {
         $this->params = $params;
@@ -29,7 +31,7 @@ class VacReqRequestBaseType extends AbstractType
     {
 
         $builder->add('startDate', 'date', array(
-            'label' => 'Start Date:',
+            'label' => $this->requestTypeName.' - First Day Away:',
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
@@ -38,7 +40,7 @@ class VacReqRequestBaseType extends AbstractType
         ));
 
         $builder->add('endDate', 'date', array(
-            'label' => 'End Date:',
+            'label' => $this->requestTypeName.' - Last Day Away:',
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',

@@ -74,10 +74,10 @@ class VacReqImportData
         ////////////// end of add system user /////////////////
 
         //VacReqAvailabilityList
-        $emailAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('email');
-        $phoneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('phone');
-        $otherAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('other');
-        $noneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('none');
+//        $emailAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('email');
+//        $phoneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('phone');
+//        $otherAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('other');
+//        $noneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('none');
 
         $notExistingUsers = array();
         $count = 0;
@@ -174,28 +174,32 @@ class VacReqImportData
             //EMERGENCY_EMAIL
             $EMERGENCY_EMAIL = $this->getValueByHeaderName('EMERGENCY_EMAIL', $rowData, $headers);
             if( $EMERGENCY_EMAIL ) {
-                $request->addAvailability($emailAvailable);
+                $request->setAvailableViaEmail(true);
+                //FACULTY_EMAIL
+                $FACULTY_EMAIL = $this->getValueByHeaderName('FACULTY_EMAIL', $rowData, $headers);
+                $request->setAvailableEmail($FACULTY_EMAIL);
+                //$request->addAvailability($emailAvailable);
             }
             //EMERGENCY_PHONE
             $EMERGENCY_PHONE = $this->getValueByHeaderName('EMERGENCY_PHONE', $rowData, $headers);
             if( $EMERGENCY_PHONE ) {
-                $request->addAvailability($phoneAvailable);
+                $request->setAvailableCellPhone(true);
                 //CELL_PHONE
                 $CELL_PHONE = $this->getValueByHeaderName('CELL_PHONE', $rowData, $headers);
-                $request->addEmergencyComment("Cell Phone: ".$CELL_PHONE);
+                $request->setAvailableCellPhone($CELL_PHONE);
             }
             //EMERGENCY_OTHER
             $EMERGENCY_OTHER = $this->getValueByHeaderName('EMERGENCY_OTHER', $rowData, $headers);
             if( $EMERGENCY_OTHER ) {
-                $request->addAvailability($otherAvailable);
+                $request->setAvailableViaOther(true);
                 //OTHER
                 $OTHER = $this->getValueByHeaderName('OTHER', $rowData, $headers);
-                $request->addEmergencyComment("Other: ".$OTHER);
+                $request->setAvailableOther($OTHER);
             }
             //NOT_ACCESSIBLE
             $NOT_ACCESSIBLE = $this->getValueByHeaderName('NOT_ACCESSIBLE', $rowData, $headers);
             if( $NOT_ACCESSIBLE ) {
-                $request->addAvailability($noneAvailable);
+                $request->setAvailableNone(true);
             }
 
             //BUSINESS_REQUEST

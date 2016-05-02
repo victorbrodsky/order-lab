@@ -80,12 +80,11 @@ class VacReqRequestType extends AbstractType
             'read_only' => ($this->params['review'] ? true : false)
         ));
 
-        $builder->add('availabilities', null, array(
-            'label' => "Availability:",
-            'attr' => array('class' => 'combobox combobox-width vacreq-availabilities'),
-            'read_only' => ($this->params['review'] ? true : false)
-        ));
-
+//        $builder->add('availabilities', null, array(
+//            'label' => "Availability:",
+//            'attr' => array('class' => 'combobox combobox-width vacreq-availabilities'),
+//            'read_only' => ($this->params['review'] ? true : false)
+//        ));
 //        $builder->add('emergencyCellPhone', null, array(
 //            'label' => "Cell Phone:",
 //            'attr' => array('class' => 'form-control'),
@@ -95,12 +94,11 @@ class VacReqRequestType extends AbstractType
 //            'label' => "Other:",
 //            'attr' => array('class' => 'form-control'),
 //        ));
-
-        $builder->add('emergencyComment', null, array(
-            'label' => "Emergency Comment:",
-            'attr' => array('class' => 'form-control vacreq-emergencyComment'),
-            'read_only' => ($this->params['review'] ? true : false)
-        ));
+//        $builder->add('emergencyComment', null, array(
+//            'label' => "Emergency Comment:",
+//            'attr' => array('class' => 'form-control vacreq-emergencyComment'),
+//            'read_only' => ($this->params['review'] ? true : false)
+//        ));
 
         //Business Travel
         $builder->add('requestBusiness', new VacReqRequestBusinessType($this->params), array(
@@ -234,6 +232,45 @@ class VacReqRequestType extends AbstractType
 //            'required' => false,
 //            'attr' => array('class' => 'combobox combobox-width vacreq-approver')
 //        ));
+
+        $builder->add('availableViaEmail', null, array(
+            'label' => "Available via E-Mail:",
+            'attr' => array('class' => 'vacreq-availableViaEmail'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+        $builder->add('availableEmail', null, array(
+            'label' => "E-Mail address while away on this trip:",
+            'attr' => array('class' => 'form-control vacreq-availableEmail'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+
+        $builder->add('availableViaCellPhone', null, array(
+            'label' => "Available via Cell Phone:",
+            'attr' => array('class' => 'vacreq-availableViaCellPhone'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+        $builder->add('availableCellPhone', null, array(
+            'label' => "Cell Phone number while away on this trip:",
+            'attr' => array('class' => 'form-control vacreq-availableCellPhone'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+
+        $builder->add('availableViaOther', null, array(
+            'label' => "Available via another method:",
+            'attr' => array('class' => 'vacreq-availableViaOther'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+        $builder->add('availableOther', null, array(
+            'label' => "Other:",
+            'attr' => array('class' => 'form-control vacreq-availableOther'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+
+        $builder->add('availableNone', null, array(
+            'label' => "Not Available:",
+            'attr' => array('class' => 'vacreq-availableNone'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
 
     }
 

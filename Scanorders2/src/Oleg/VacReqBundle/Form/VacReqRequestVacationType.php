@@ -13,6 +13,13 @@ use Symfony\Component\Form\FormEvent;
 
 class VacReqRequestVacationType extends VacReqRequestBaseType {
 
+    public function __construct( $params=null, $entity = null )
+    {
+        parent::__construct($params,$entity);
+
+        $this->requestTypeName = "Vacation";
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 

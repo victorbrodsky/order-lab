@@ -385,4 +385,50 @@ class VacReqUtil
         return $numberOfDays;
     }
 
+
+    public function getSubmitterPhone($user) {
+
+        //(a) prepopulate the phone number with the phone number from the user's profile
+        $phones = $user->getAllPhones();
+        if( count($phones) > 0 ) {
+            return $phones[0];
+        }
+
+        //(b) prepopulate from previous approved request (if there is one) for this user (person away)
+        //$requests = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->findByUser($user,array('ORDER'=>'approvedRejectDate'));
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestBusiness", "requestBusiness");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+
+        $dql->where("user.id = :userId");
+        $dql->andWhere("requestBusiness.status = :statusApproved OR requestVacation.status = :statusApproved");
+        $dql->andWhere("request.phone IS NOT NULL");
+
+        $dql->orderBy('request.createDate', 'DESC');
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'userId' => $user->getId(),
+            'statusApproved' => 'approved'
+        ));
+
+        $requests = $query->getResult();
+
+        if( count($requests) > 0 ) {
+            $request = $requests[0];
+            if ($request->getPhone()) {
+                return $request->getPhone();
+            }
+        }
+
+        //(c) prepopulate from the approved request before the last one
+
+        return null;
+    }
+
 }

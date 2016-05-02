@@ -41,6 +41,10 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        //set phone
+        $phone = $vacreqUtil->getSubmitterPhone($user);
+        $entity->setPhone($phone);
+
         $cycle = 'new';
 
         $form = $this->createRequestForm($entity,$cycle);

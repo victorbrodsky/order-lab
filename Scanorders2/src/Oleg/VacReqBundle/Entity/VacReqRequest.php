@@ -72,34 +72,6 @@ class VacReqRequest
      */
     private $phone;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="VacReqAvailabilityList", inversedBy="requests")
-     * @ORM\JoinTable(name="vacreq_request_availability")
-     **/
-    private $availabilities;
-
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $emergencyCellPhone;
-
-    /**
-     * Other
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $emergencyComment;
-
-    /**
-     * Cell Phone
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $emergencyPhone;
-
-    /**
-     * E-Mail
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $emergencyEmail;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
@@ -133,6 +105,67 @@ class VacReqRequest
      */
     private $approvedRejectDate;
 
+
+    //availability
+//    /**
+//     * @ORM\ManyToMany(targetEntity="VacReqAvailabilityList", inversedBy="requests")
+//     * @ORM\JoinTable(name="vacreq_request_availability")
+//     **/
+//    private $availabilities;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $availableViaEmail;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $availableEmail;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $availableViaCellPhone;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $availableCellPhone;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $availableViaOther;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $availableOther;
+
+    /**
+     * Not Available
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $availableNone;
+
+//    /**
+//     * Other
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $emergencyComment;
+//
+//    /**
+//     * Cell Phone
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $emergencyPhone;
+//
+//    /**
+//     * E-Mail
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $emergencyEmail;
 
 
 
@@ -178,7 +211,7 @@ class VacReqRequest
         //$this->setStatus('pending');
         $this->setCreateDate(new \DateTime());
 
-        $this->availabilities = new ArrayCollection();
+        //$this->availabilities = new ArrayCollection();
     }
 
 
@@ -334,44 +367,157 @@ class VacReqRequest
         $this->requestVacation = $requestVacation;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAvailableViaEmail()
+    {
+        return $this->availableViaEmail;
+    }
 
-    public function getAvailabilities()
+    /**
+     * @param mixed $availableViaEmail
+     */
+    public function setAvailableViaEmail($availableViaEmail)
     {
-        return $this->availabilities;
-    }
-    public function addAvailability($item)
-    {
-        if( !$this->availabilities->contains($item) ) {
-            $this->availabilities->add($item);
-        }
-        return $this;
-    }
-    public function removeAvailability($item)
-    {
-        $this->availabilities->removeElement($item);
+        $this->availableViaEmail = $availableViaEmail;
     }
 
     /**
      * @return mixed
      */
-    public function getEmergencyComment()
+    public function getAvailableEmail()
     {
-        return $this->emergencyComment;
+        return $this->availableEmail;
     }
 
     /**
-     * @param mixed $emergencyComment
+     * @param mixed $availableEmail
      */
-    public function setEmergencyComment($emergencyComment)
+    public function setAvailableEmail($availableEmail)
     {
-        $this->emergencyComment = $emergencyComment;
+        $this->availableEmail = $availableEmail;
     }
-    public function addEmergencyComment($emergencyComment) {
-        if( $emergencyComment ) {
-            $comment = $this->getEmergencyComment() . "\r\n"."\r\n" . $emergencyComment;
-            $this->setEmergencyComment($comment);
-        }
+
+    /**
+     * @return mixed
+     */
+    public function getAvailableViaCellPhone()
+    {
+        return $this->availableViaCellPhone;
     }
+
+    /**
+     * @param mixed $availableViaCellPhone
+     */
+    public function setAvailableViaCellPhone($availableViaCellPhone)
+    {
+        $this->availableViaCellPhone = $availableViaCellPhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvailableCellPhone()
+    {
+        return $this->availableCellPhone;
+    }
+
+    /**
+     * @param mixed $availableCellPhone
+     */
+    public function setAvailableCellPhone($availableCellPhone)
+    {
+        $this->availableCellPhone = $availableCellPhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvailableViaOther()
+    {
+        return $this->availableViaOther;
+    }
+
+    /**
+     * @param mixed $availableViaOther
+     */
+    public function setAvailableViaOther($availableViaOther)
+    {
+        $this->availableViaOther = $availableViaOther;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvailableOther()
+    {
+        return $this->availableOther;
+    }
+
+    /**
+     * @param mixed $availableOther
+     */
+    public function setAvailableOther($availableOther)
+    {
+        $this->availableOther = $availableOther;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvailableNone()
+    {
+        return $this->availableNone;
+    }
+
+    /**
+     * @param mixed $availableNone
+     */
+    public function setAvailableNone($availableNone)
+    {
+        $this->availableNone = $availableNone;
+    }
+
+
+//    public function getAvailabilities()
+//    {
+//        return $this->availabilities;
+//    }
+//    public function addAvailability($item)
+//    {
+//        if( !$this->availabilities->contains($item) ) {
+//            $this->availabilities->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeAvailability($item)
+//    {
+//        $this->availabilities->removeElement($item);
+//    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getEmergencyComment()
+//    {
+//        return $this->emergencyComment;
+//    }
+//
+//    /**
+//     * @param mixed $emergencyComment
+//     */
+//    public function setEmergencyComment($emergencyComment)
+//    {
+//        $this->emergencyComment = $emergencyComment;
+//    }
+//    public function addEmergencyComment($emergencyComment) {
+//        if( $emergencyComment ) {
+//            $comment = $this->getEmergencyComment() . "\r\n"."\r\n" . $emergencyComment;
+//            $this->setEmergencyComment($comment);
+//        }
+//    }
+
+
 
     /**
      * @return mixed
