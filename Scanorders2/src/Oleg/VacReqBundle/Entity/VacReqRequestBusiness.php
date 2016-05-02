@@ -91,7 +91,7 @@ class VacReqRequestBusiness extends VacReqRequestBase
         $break = "\r\n";
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
-        $res = "Business Travel Request:".$break;
+        $res = "### Business Travel Request ###".$break;
         $res .= "Business Travel - First Day Away: ".$transformer->transform($this->getStartDate()).$break;
         $res .= "Business Travel - First Day Away: ".$transformer->transform($this->getEndDate()).$break;
         $res .= "Number of Work Days Off-site: ".$this->getNumberOfDays().$break;
