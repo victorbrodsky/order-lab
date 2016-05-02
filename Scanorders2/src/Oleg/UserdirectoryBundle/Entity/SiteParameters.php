@@ -573,6 +573,13 @@ class SiteParameters {
      */
     private $academicYearEnd;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $holidaysUrl;
+
+
+
 
     /**
      * @param mixed $maxIdleTime
@@ -2126,6 +2133,22 @@ class SiteParameters {
     public function setAcademicYearEnd($academicYearEnd)
     {
         $this->academicYearEnd = $academicYearEnd;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHolidaysUrl()
+    {
+        return $this->holidaysUrl;
+    }
+
+    /**
+     * @param mixed $holidaysUrl
+     */
+    public function setHolidaysUrl($holidaysUrl)
+    {
+        $this->holidaysUrl = $holidaysUrl;
     }
 
 

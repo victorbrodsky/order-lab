@@ -35,7 +35,7 @@
     {% endif %}
 
     {% if totalApprovedDaysString is defined and totalApprovedDaysString %}
-        <div class="alert alert-info">
+        <div class="alert alert-success">
             <p>{{ totalApprovedDaysString }}</p>
         </div>
     {% endif %}
@@ -133,8 +133,9 @@
                     {{ vacreqmacros.request_inputWithCalculateBtn(form.requestBusiness.numberOfDays) }}
                     {{ vacreqmacros.request_dateWithCalculateBtn(form.requestBusiness.firstDayBackInOffice) }}
 
-                    {{ formmacros.field(form.requestBusiness.expenses) }}
                     {{ formmacros.checkbox(form.requestBusiness.paidByOutsideOrganization) }}
+                    {{ formmacros.field(form.requestBusiness.expenses) }}
+
                     {{ formmacros.field(form.requestBusiness.description) }}
                     {% if form.requestBusiness.approverComment is defined and businessCollapse == 'in'  %}
                         {{ formmacros.field(form.requestBusiness.approverComment) }}

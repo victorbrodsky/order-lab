@@ -57,7 +57,8 @@
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
-            {{ form_label(field) }}
+            {#{{ form_label(field) }}#}
+            <strong>{{ field.vars.label|raw }}</strong>
         </div>
         <div class="col-xs-6" align="left">
             <div class = "input-group">
@@ -173,3 +174,15 @@
 
 {% endmacro %}
 
+{% macro checkbox( value ) %}
+    {#<div class="row">#}
+        {#{{ form_errors(value) }}#}
+        {#<div class="col-xs-6" align="right">#}
+            {#{{ form_label(value) }}#}
+        {#</div>#}
+        {#<div class="col-xs-6 text-center" align="left" style="width: 50px;">#}
+            {#{{ form_widget(value) }}#}
+        {#</div>#}
+    {#</div>#}
+    {{ form_widget(value) }} {{ form_label(value) }}
+{% endmacro %}

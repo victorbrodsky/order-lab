@@ -11,6 +11,7 @@ namespace Oleg\VacReqBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
 /**
@@ -107,12 +108,6 @@ class VacReqRequest
 
 
     //availability
-//    /**
-//     * @ORM\ManyToMany(targetEntity="VacReqAvailabilityList", inversedBy="requests")
-//     * @ORM\JoinTable(name="vacreq_request_availability")
-//     **/
-//    private $availabilities;
-
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
@@ -210,8 +205,6 @@ class VacReqRequest
         $this->setSubmitter($user);
         //$this->setStatus('pending');
         $this->setCreateDate(new \DateTime());
-
-        //$this->availabilities = new ArrayCollection();
     }
 
 
@@ -480,45 +473,6 @@ class VacReqRequest
     }
 
 
-//    public function getAvailabilities()
-//    {
-//        return $this->availabilities;
-//    }
-//    public function addAvailability($item)
-//    {
-//        if( !$this->availabilities->contains($item) ) {
-//            $this->availabilities->add($item);
-//        }
-//        return $this;
-//    }
-//    public function removeAvailability($item)
-//    {
-//        $this->availabilities->removeElement($item);
-//    }
-//    /**
-//     * @return mixed
-//     */
-//    public function getEmergencyComment()
-//    {
-//        return $this->emergencyComment;
-//    }
-//
-//    /**
-//     * @param mixed $emergencyComment
-//     */
-//    public function setEmergencyComment($emergencyComment)
-//    {
-//        $this->emergencyComment = $emergencyComment;
-//    }
-//    public function addEmergencyComment($emergencyComment) {
-//        if( $emergencyComment ) {
-//            $comment = $this->getEmergencyComment() . "\r\n"."\r\n" . $emergencyComment;
-//            $this->setEmergencyComment($comment);
-//        }
-//    }
-
-
-
     /**
      * @return mixed
      */
@@ -710,6 +664,24 @@ class VacReqRequest
 
     public function __toString()
     {
-        return "VacReqRequest: id=".$this->getId()."<br>";
+        $break = "\r\n";
+        //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+
+        $res = "ID: ".$this->getId().$break;
+        $res .= "Person Away: ".$this->getUser().$break;
+        $res .= "Organizational Group: ".$this->getInstitution().$break;
+        $res .= "Phone Number for the person away: ".$this->getInstitution().$break.$break;
+
+        if( $this->hasBusinessRequest() ) {
+            $subRequest = $this->getRequestBusiness();
+            $res .= $subRequest."".$break;
+        }
+
+        if( $this->hasVacationRequest() ) {
+            $subRequest = $this->getRequestVacation();
+            $res .= $subRequest."".$break;
+        }
+
+        return $res;
     }
 }

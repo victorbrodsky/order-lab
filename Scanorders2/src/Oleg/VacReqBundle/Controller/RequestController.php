@@ -293,6 +293,11 @@ class RequestController extends Controller
                 }
             }
 
+            if( $requestName == 'entire' ) {
+                $entity->setStatus($status);
+                $statusSet = true;
+            }
+
             if( $statusSet ) {
                 $entity->setApprover($user);
                 $em->persist($entity);
@@ -316,7 +321,16 @@ class RequestController extends Controller
 
                 //send respond confirmation email to a submitter
                 $vacreqUtil = $this->get('vacreq_util');
-                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $status );
+
+                if( $requestName == 'entire' ) {
+                    //an email should be sent to approver saying
+                    // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
+                    // and list all variable names and values in the email.
+                    $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
+                } else {
+                    $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $status );
+                }
+
             }
 
         }
@@ -409,6 +423,14 @@ class RequestController extends Controller
         //$organizationalInstitutions = $em->getRepository('OlegUserdirectoryBundle:User')->findVacReqOrganizationalInstitution($user);
         $organizationalInstitutions = $this->getVacReqOrganizationalInstitutions($user);
 
+        //get holidays url
+        $userSecUtil = $this->container->get('user_security_utility');
+        $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl');
+        if( !$holidaysUrl ) {
+            throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
+        }
+        $holidaysUrl = '<a target="_blank" href="'.$holidaysUrl.'">holidays</a>';
+
         $params = array(
             'sc' => $this->get('security.context'),
             'em' => $em,
@@ -416,7 +438,8 @@ class RequestController extends Controller
             'cycle' => $cycle,
             'roleAdmin' => $admin,
             'roleApprover' => $roleApprover,
-            'organizationalInstitutions' => $organizationalInstitutions
+            'organizationalInstitutions' => $organizationalInstitutions,
+            'holidaysUrl' => $holidaysUrl
         );
 
         $disabled = false;

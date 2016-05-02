@@ -495,6 +495,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'holidaysUrl' )
+            $builder->add('holidaysUrl',null,array(
+                'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',
+                'attr' => array('class'=>'form-control')
+            ));
+
         $this->addCoPath($builder);
 
     }

@@ -29,7 +29,6 @@ use Oleg\UserdirectoryBundle\Entity\SiteList;
 use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Oleg\UserdirectoryBundle\Entity\TrainingTypeList;
-use Oleg\VacReqBundle\Entity\VacReqAvailabilityList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -252,7 +251,6 @@ class AdminController extends Controller
 
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
 
-        $count_VacReqAvailabilityList = $this->generateVacReqAvailabilityList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -316,7 +314,6 @@ class AdminController extends Controller
             'PermissionActions ='.$count_PermissionActions.', '.
             'Collaboration Types='.$collaborationtypes.', '.
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
-            'VacReqAvailabilityList='.$count_VacReqAvailabilityList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -4531,53 +4528,6 @@ class AdminController extends Controller
         return round($count/10);
     }
 
-
-    public function generateVacReqAvailabilityList() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $types = array(
-            "Available via email"       =>  "email",
-            "Available via cell phone"  =>  "phone",
-            "Other"                     =>  "other",
-            "Not Accessible"            =>  "none",
-        );
-
-        $count = 10;
-        foreach( $types as $type=>$abbreviation ) {
-
-            if( !$type ) {
-                continue;
-            }
-            //echo "type=".$type."<br>";
-
-            $listEntity = $em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation($abbreviation);
-            if( $listEntity ) {
-                continue;
-            } else {
-                $listEntity = $em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByName($type);
-                if( $listEntity ) {
-                    continue;
-                }
-            }
-            //echo "populate type=".$type."<br>";
-
-            $listEntity = new VacReqAvailabilityList();
-            $this->setDefaultList($listEntity,$count,$username,$type);
-
-            $listEntity->setAbbreviation($abbreviation);
-
-            $em->persist($listEntity);
-            $em->flush();
-
-            $count = $count + 10;
-        }
-
-        //exit("generateVacReqAvailabilityList count=".$count."<br>");
-        return round($count/10);
-    }
 
 
     /**

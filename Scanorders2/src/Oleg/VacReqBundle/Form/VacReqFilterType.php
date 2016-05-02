@@ -5,6 +5,7 @@ namespace Oleg\VacReqBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -23,15 +24,17 @@ class VacReqFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('user', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'property' => 'getUserNameStr',
-            'label' => false,
-            'required' => false,
-            'multiple' => false,
-            'attr' => array('class' => 'combobox', 'placeholder' => 'Faculty Name or CWID'),
-            'choices' => $this->params['filterUsers'],
-        ));
+        if( $this->params['filterShowUser'] ) {
+            $builder->add('user', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'property' => 'getUserNameStr',
+                'label' => false,
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox', 'placeholder' => 'Faculty Name or CWID'),
+                'choices' => $this->params['filterUsers'],
+            ));
+        }
 
 //        $builder->add('cwid', 'text', array(
 //            'required' => false,
@@ -68,6 +71,28 @@ class VacReqFilterType extends AbstractType
 //            'label' => false,
 //            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder' => 'Year'),
 //        ));
+
+        $builder->add('vacationRequest', 'checkbox', array(
+            'label' => 'Vacation Requests',
+            'required' => false,
+        ));
+        $builder->add('businessRequest', 'checkbox', array(
+            'label' => 'Business Travel Requests',
+            'required' => false,
+        ));
+
+        $builder->add('pending', 'checkbox', array(
+            'label' => 'Pending Requests',
+            'required' => false,
+        ));
+        $builder->add('approved', 'checkbox', array(
+            'label' => 'Approved Requests',
+            'required' => false,
+        ));
+        $builder->add('rejected', 'checkbox', array(
+            'label' => 'Rejected Requests',
+            'required' => false,
+        ));
 
     }
 

@@ -50,7 +50,7 @@ class VacReqRequestBaseType extends AbstractType
 
 
         $builder->add('numberOfDays', null, array(
-            'label' => 'Number of Work Days Off-site (Please do not include holidays):',
+            'label' => 'Number of Work Days Off-site (Please do not include '.$this->params['holidaysUrl'].'):',
             'attr' => array('class'=>'form-control vacreq-numberOfDays'),
             'read_only' => ($this->params['review'] ? true : false)
         ));

@@ -431,4 +431,61 @@ class VacReqUtil
         return null;
     }
 
+
+    //set cancel email to approver and email users
+    public function sendCancelEmailToApprovers( $entity, $user, $status ) {
+
+        $institution = $entity->getInstitution();
+        if( !$institution ) {
+            return null;
+        }
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        //$break = "\r\n";
+
+        $approvers = $this->getRequestApprovers($entity);
+
+        $approversNameArr = array();
+
+        $subject = "Faculty Vacation/Business Request #" . $entity->getId() . " " . ucwords($status);
+
+        foreach( $approvers as $approver ) {
+
+            if( !$approver->getSingleEmail() ) {
+                continue;
+            }
+
+            $approversNameArr[] = $approver;
+
+            $message = $this->createCancelEmailBody($entity,$approver);
+            $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
+
+        } //foreach approver
+
+        //send email to email users
+        $subject = "Copy of the Faculty Vacation/Business Request #" . $entity->getId() . " " . ucwords($status);
+        $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
+        $settings = $this->getSettingsByInstitution($institution->getId());
+        if( $settings ) {
+            foreach ($settings->getEmailUsers() as $emailUser) {
+                $emailUserEmail = $emailUser->getSingleEmail();
+                if ($emailUserEmail) {
+                    $message = $this->createCancelEmailBody($entity, $emailUser);
+                    $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+                }
+            }
+        }
+
+    }
+    public function createCancelEmailBody( $entity, $subjectUser ) {
+        $break = "\r\n";
+
+        $message = $entity->getUser()." canceled/withdrew their business travel / vacation request described below:".$break.$break;
+
+        $message .= $entity."";
+
+        $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+
+        return $message;
+    }
 }

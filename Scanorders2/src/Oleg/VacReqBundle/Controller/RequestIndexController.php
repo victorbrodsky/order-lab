@@ -33,15 +33,22 @@ class RequestIndexController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $vacreqUtil = $this->get('vacreq_util');
+
         //$em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
 
         $user = $this->get('security.context')->getToken()->getUser();
 
+        //calculate approved vacation days in total.
+        $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
+
         $params = array(
             'sitename' => $this->container->getParameter('vacreq.sitename'),
             'subjectUser' => $user,
-            'title' => "My Business/Vacation Requests"
+            'title' => "My Business Travel & Vacation Requests",
+            'totalApprovedDaysString' => $totalApprovedDaysString,
+            'filterShowUser' => false
         );
         return $this->listRequests($params, $request);
     }
@@ -67,6 +74,7 @@ class RequestIndexController extends Controller
             'sitename' => $this->container->getParameter('vacreq.sitename'),
             'approver' => $user,
             'title' => "Incoming Business/Vacation Requests",
+            'filterShowUser' => true
         );
         return $this->listRequests($params, $request);
     }
@@ -187,7 +195,16 @@ class RequestIndexController extends Controller
 
         $startdate = $filterform['startdate']->getData();
         $enddate = $filterform['enddate']->getData();
-        $user = $filterform['user']->getData();
+
+        $user = ( array_key_exists('user', $filterform) ? $filterform['user']->getData() : null);
+
+        $vacationRequest = $filterform['vacationRequest']->getData();
+        $businessRequest = $filterform['businessRequest']->getData();
+
+        $pending = $filterform['pending']->getData();
+        $approved = $filterform['approved']->getData();
+        $rejected = $filterform['rejected']->getData();
+
         //$year = $filterform['year']->getData();
         //echo "userID=".$user."<br>";
 
@@ -226,6 +243,28 @@ class RequestIndexController extends Controller
             $enddate->setTime(23, 59, 59);
             $dqlParameters['enddate'] = $enddate;
 
+            $filtered = true;
+        }
+
+        if( $businessRequest ) {
+            $dql->andWhere("requestBusiness.startDate IS NOT NULL");
+            $filtered = true;
+        }
+        if( $vacationRequest ) {
+            $dql->andWhere("requestVacation.startDate IS NOT NULL");
+            $filtered = true;
+        }
+
+        if( $pending ) {
+            $dql->andWhere("requestBusiness.status='pending' OR requestVacation.status='pending'");
+            $filtered = true;
+        }
+        if( $rejected ) {
+            $dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected'");
+            $filtered = true;
+        }
+        if( $approved ) {
+            $dql->andWhere("requestBusiness.status='approved' OR requestVacation.status='approved'");
             $filtered = true;
         }
 
