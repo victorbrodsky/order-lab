@@ -667,7 +667,7 @@ class VacReqRequest
         $break = "\r\n";
         //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
-        $res = "ID: ".$this->getId().$break;
+        $res = "Request ID: ".$this->getId().$break;
         $res .= "Person Away: ".$this->getUser().$break;
         $res .= "Organizational Group: ".$this->getInstitution().$break;
         $res .= "Phone Number for the person away: ".$this->getInstitution().$break.$break;
