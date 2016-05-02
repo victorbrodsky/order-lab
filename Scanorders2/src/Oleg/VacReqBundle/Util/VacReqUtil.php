@@ -470,17 +470,23 @@ class VacReqUtil
             foreach ($settings->getEmailUsers() as $emailUser) {
                 $emailUserEmail = $emailUser->getSingleEmail();
                 if ($emailUserEmail) {
-                    $message = $this->createCancelEmailBody($entity, $emailUser);
+                    $message = $this->createCancelEmailBody($entity, $emailUser, $addText);
                     $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
                 }
             }
         }
 
     }
-    public function createCancelEmailBody( $entity, $subjectUser ) {
+    public function createCancelEmailBody( $entity, $emailUser, $addText=null ) {
         $break = "\r\n";
 
-        $message = $entity->getUser()." canceled/withdrew their business travel / vacation request described below:".$break.$break;
+        $message = "Dear " . $emailUser->getUsernameOptimal() . "," . $break.$break;
+
+        if( $addText ) {
+            $message .= $addText.$break.$break;
+        }
+
+        $message .= $entity->getUser()." canceled/withdrew their business travel / vacation request described below:".$break.$break;
 
         $message .= $entity."";
 
