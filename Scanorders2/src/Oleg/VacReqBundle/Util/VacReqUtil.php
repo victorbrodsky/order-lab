@@ -392,7 +392,7 @@ class VacReqUtil
         //(a) prepopulate the phone number with the phone number from the user's profile
         $phones = $user->getAllPhones();
         if( count($phones) > 0 ) {
-            return $phones[0];
+            return $phones[0]['phone'];
         }
 
         //(b) prepopulate from previous approved request (if there is one) for this user (person away)
