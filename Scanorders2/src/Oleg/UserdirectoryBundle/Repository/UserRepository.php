@@ -119,15 +119,16 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
-    public function findUserByRole($role) {
+    public function findUserByRole( $role, $orderBy="user.id" ) {
 
-        $user = null;
+        //$user = null;
 
         $query = $this->_em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:User', 'list')
-            ->select("list")
-            ->where("list.roles LIKE :role")
-            ->orderBy("list.id","ASC")
+            ->from('OlegUserdirectoryBundle:User', 'user')
+            ->select("user")
+            ->leftJoin("user.infos","infos")
+            ->where("user.roles LIKE :role")
+            ->orderBy($orderBy,"ASC")
             ->setParameter('role', '%"' . $role . '"%');
 
         return $query->getQuery()->getResult();

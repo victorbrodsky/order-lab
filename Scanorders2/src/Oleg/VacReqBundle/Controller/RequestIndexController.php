@@ -48,7 +48,7 @@ class RequestIndexController extends Controller
             'subjectUser' => $user,
             'title' => "My Business Travel & Vacation Requests",
             'totalApprovedDaysString' => $totalApprovedDaysString,
-            'filterShowUser' => false
+            'filterShowUser' => false,
         );
         return $this->listRequests($params, $request);
     }

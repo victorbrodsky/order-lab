@@ -85,13 +85,19 @@
     </form>
     {#</p>#}
 
-
+    {% if routename == 'vacreq_incomingrequests' %}
+        {% set colspanRequestInfo = 9 %}
+        {% set showUserInfo = true %}
+    {% else %}
+        {% set colspanRequestInfo = 5 %}
+        {% set showUserInfo = false %}
+    {% endif %}
 
     <table class="records_list table table-hover table-condensed text-left table-bordered">
         <thead>
         <tr>
-            <th colspan="9" class="text-center table-header-grey-gradient">
-                Person Away
+            <th colspan="{{ colspanRequestInfo }}" class="text-center table-header-grey-gradient">
+                Request Info
             </th>
 
             {#<th colspan="2" class="text-center table-header-grey-gradient">#}
@@ -113,8 +119,9 @@
         <tr>
             <th>{{ knp_pagination_sortable(pagination, 'Request ID', 'request.id') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Submitted Date', 'request.createDate') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Date Submitted', 'request.createDate') }}</th>
 
+            {% if showUserInfo %}
             <th>{{ knp_pagination_sortable(pagination, 'Faculty', 'infos.displayName') }}</th>
 
             <th>Photo</th>
@@ -122,10 +129,11 @@
             <th>{{ knp_pagination_sortable(pagination, 'Email', 'user.email') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Phone', 'infos.preferredPhone') }}</th>
+            {% endif %}
 
             <th>{{ knp_pagination_sortable(pagination, 'Division', 'institution.name') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Status Changed Date', 'request.approvedRejectDate') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Date Status Changed', 'request.approvedRejectDate') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', 'request.firstDayBackInOffice') }}</th>
 
@@ -168,6 +176,7 @@
 
                 <td>{% if entity.createDate %}{{ entity.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
+                {% if showUserInfo %}
                 <td class="rowlink-skip">
                     {% if entity.user %}
                         <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.displayName() }}</a>
@@ -203,6 +212,7 @@
                         {{ usermacros.phoneHref(preferredPhone) }}
                     {% endif %}
                 </td>
+                {% endif %}
 
                 <td>
                     {% if entity.institution %}

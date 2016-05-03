@@ -575,7 +575,7 @@ class AccessRequestController extends Controller
 
     public function createAccessRequestUserNotification( $subjectUser, $status, $sitename ) {
 
-        $sitenameFull = $this->siteNameStr;
+        $sitenameFull = $this->siteNameStr." site";
 
         $user = $this->get('security.context')->getToken()->getUser();
         $siteLink = $this->generateUrl( $sitename.'_home', array(), true );
@@ -643,6 +643,7 @@ class AccessRequestController extends Controller
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
+        $request = $this->get('request');
         $em = $this->getDoctrine()->getManager();
 
         //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
@@ -693,7 +694,8 @@ class AccessRequestController extends Controller
             'entity' => $entity,
             'sitename' => $this->siteName,
             'sitenameshowuser' => $this->siteNameShowuser,
-            'sitenamefull'=>$this->siteNameStr
+            'sitenamefull'=>$this->siteNameStr,
+            'routename' => $request->get('_route'),
         );
 
 
@@ -893,6 +895,7 @@ class AccessRequestController extends Controller
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
+        $request = $this->get('request');
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
@@ -930,7 +933,8 @@ class AccessRequestController extends Controller
             'sitenameshowuser' => $this->siteNameShowuser,
             'sitenamefull'=>$this->siteNameStr,
             'siteRoles'=>$siteRoles,
-            'accreq' => $accReq
+            'accreq' => $accReq,
+            'routename' => $request->get('_route'),
         );
 
         return $userViewArr;

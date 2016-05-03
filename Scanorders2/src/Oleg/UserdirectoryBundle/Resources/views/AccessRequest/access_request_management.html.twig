@@ -82,7 +82,13 @@
 
     <form id="accessrequest_management" action="{{ actionPath }}" method="POST">
 
-        {{ formmacros.field(form.perSiteSettings.permittedInstitutionalPHIScope) }}
+        {#{% if routename == sitename~'_accessrequest_management' %}#}
+            {#<div style="display: none">#}
+                {#{{ formmacros.field(form.perSiteSettings.permittedInstitutionalPHIScope) }}#}
+            {#</div>#}
+        {#{% else %}#}
+            {{ formmacros.field(form.perSiteSettings.permittedInstitutionalPHIScope) }}
+        {#{% endif %}#}
 
         {{ formmacros.field(form.roles) }}
 

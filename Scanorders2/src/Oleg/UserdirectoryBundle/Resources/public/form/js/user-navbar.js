@@ -190,7 +190,7 @@ function setVacReqNavBar() {
         id = 'incomingrequests';
     }
 
-    if( full.indexOf("/vacation-request/approvers/") !== -1 || full.indexOf("/vacation-request/organizational-institution-management/") !== -1 ) {
+    if( full.indexOf("/vacation-request/groups/") !== -1 || full.indexOf("/vacation-request/organizational-institution-management/") !== -1 ) {
         id = 'approvers';
     }
 
