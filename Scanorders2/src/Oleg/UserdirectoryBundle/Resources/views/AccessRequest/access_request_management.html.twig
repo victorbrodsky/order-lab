@@ -19,13 +19,13 @@
 {% if accreq is defined %}
     {% if accreq.status == 0 %}
         {#STATUS_ACTIVE#}
-        {% set titleStr = "This user has an active request to access "~sitenamefull~". You can update the role and other details below." %}
+        {% set titleStr = "This user has an active request to access "~sitenamefull~" site. You can update the role and other details below." %}
     {% elseif accreq.status == 1 %}
         {#STATUS_DECLINED#}
-        {% set titleStr = "This user has declined to request access to "~sitenamefull~". You can update the role and other details below." %}
+        {% set titleStr = "This user has declined to request access to "~sitenamefull~" site. You can update the role and other details below." %}
     {% elseif accreq.status == 2 %}
         {#STATUS_APPROVED#}
-        {% set titleStr = "This user is already authorized to access "~sitenamefull~". You can update the role and other details below." %}
+        {% set titleStr = "This user is already authorized to access "~sitenamefull~" site. You can update the role and other details below." %}
     {% else %}
         {% set titleStr = "Specify role and accessible data for the user being authorized to access "~sitenamefull %}
     {% endif %}
@@ -96,11 +96,16 @@
 
             {% if accreq is defined %}
                 <div class="col-xs-6" align="right">
-                    <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Approve</button>
+                    {#Approve#}
+                    <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Update</button>
                 </div>
 
                 <div class="col-xs-6" align="left">
-                    <button name="accessrequest-decline" type='submit' class="btn btn-danger btn-sm">Deny</button>
+                    {#Deny#}
+                    <button
+                        name="accessrequest-decline" type='submit' class="btn btn-danger btn-sm"
+                        onclick="return confirm('You are about to stop {{ entity }} from being able to log in and use the {{ sitenamefull }} site')"
+                    >Revoke</button>
                 </div>
             {% else %}
 

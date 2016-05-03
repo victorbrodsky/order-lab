@@ -43,10 +43,10 @@ class VacReqRequestBase
      */
     protected $numberOfDays;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    protected $firstDayBackInOffice;
+//    /**
+//     * @ORM\Column(type="date", nullable=true)
+//     */
+//    protected $firstDayBackInOffice;
 
     /**
      * status: pending, approved, rejected
@@ -130,21 +130,21 @@ class VacReqRequestBase
         $this->numberOfDays = $numberOfDays;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFirstDayBackInOffice()
-    {
-        return $this->firstDayBackInOffice;
-    }
-
-    /**
-     * @param mixed $firstDayBackInOffice
-     */
-    public function setFirstDayBackInOffice($firstDayBackInOffice)
-    {
-        $this->firstDayBackInOffice = $firstDayBackInOffice;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getFirstDayBackInOffice()
+//    {
+//        return $this->firstDayBackInOffice;
+//    }
+//
+//    /**
+//     * @param mixed $firstDayBackInOffice
+//     */
+//    public function setFirstDayBackInOffice($firstDayBackInOffice)
+//    {
+//        $this->firstDayBackInOffice = $firstDayBackInOffice;
+//    }
 
     /**
      * @return mixed

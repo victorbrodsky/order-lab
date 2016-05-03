@@ -28,7 +28,7 @@ class ApproverController extends Controller
     /**
      * Creates a new VacReqRequest entity.
      *
-     * @Route("/approvers/", name="vacreq_approvers")
+     * @Route("/groups/", name="vacreq_approvers")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Approver:approvers-list.html.twig")
      */

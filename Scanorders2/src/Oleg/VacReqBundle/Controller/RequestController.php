@@ -164,6 +164,7 @@ class RequestController extends Controller
         //$editForm = $this->createForm('Oleg\VacReqBundle\Form\VacReqRequestType', $vacReqRequest);
 
         $em = $this->getDoctrine()->getManager();
+        $vacreqUtil = $this->get('vacreq_util');
         $user = $this->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
@@ -171,6 +172,11 @@ class RequestController extends Controller
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
         }
+
+//        //can not edit if request is already processed by an approver: status == completed
+//        if( $entity->getStatus() == 'completed' ) {
+//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//        }
 
         //check permission
         $routName = $request->get('_route');
@@ -194,22 +200,30 @@ class RequestController extends Controller
 
             if( $routName == 'vacreq_review' ) { //review
 
+                $overallStatus = $entity->getOverallStatus();
+
+                //set overall status
+                $entity->setStatus($overallStatus);
+
                 $entity->setApprover($user);
                 $em->persist($entity);
                 $em->flush();
 
-                $status = $entity->getOverallStatus();
-                $eventType = 'Business/Vacation Request '.ucwords($status);
-                $action = $status;
+                $eventType = 'Business/Vacation Request '.ucwords($overallStatus);
+                $action = $overallStatus;
 
                 //send respond email
-                $vacreqUtil = $this->get('vacreq_util');
                 $requestName = null;
-                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $status );
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $overallStatus );
 
             } else { //update
 
                 $entity->setUpdateUser($user);
+
+                /////////////// Add event log on edit (edit or add collection) ///////////////
+                /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+                $changedInfoArr = $vacreqUtil->setEventLogChanges($entity);
+
                 $em->persist($entity);
                 $em->flush();
 
@@ -217,10 +231,14 @@ class RequestController extends Controller
                 $eventType = 'Business/Vacation Request Updated';
             }
 
+            if( $action == 'pending' ) {
+                $action = 'set to Pending';
+            }
+
             //Event Log
-            $event = "Request for ".$entity->getUser()." has been ".$action." by ".$user;
+            $break = "\r\n";
+            $event = "Request for ".$entity->getUser()." has been ".$action." by ".$user.$break.$break;
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
             //Flash
             $this->get('session')->getFlashBag()->add(
@@ -228,7 +246,21 @@ class RequestController extends Controller
                 $event
             );
 
-            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+            //set event log for objects
+            if( count($changedInfoArr) > 0 ) {
+                //$user = $this->get('security.context')->getToken()->getUser();
+                $event .= "Updated Data:".$break;
+                $event .= implode("<br>", $changedInfoArr);
+            }
+
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+
+            if( $routName == 'vacreq_review' ) {
+                return $this->redirectToRoute('vacreq_incomingrequests');
+            } else {
+                return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+            }
+
         }
 
         $review = false;
@@ -242,7 +274,7 @@ class RequestController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'review' => $review
+            'review' => $review,
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -250,6 +282,7 @@ class RequestController extends Controller
 
 
     /**
+     * approved, rejected, pending, canceled
      * @Route("/status/{id}/{requestName}/{status}", name="vacreq_status_change")
      * @Method({"GET"})
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
@@ -281,6 +314,12 @@ class RequestController extends Controller
                 $businessRequest = $entity->getRequestBusiness();
                 if( $businessRequest ) {
                     $businessRequest->setStatus($status);
+                    //set overall status
+                    if( $status == 'pending' ) {
+                        $entity->setStatus('pending');
+                    } else {
+                        $entity->setStatus('completed');
+                    }
                     $statusSet = true;
                 }
             }
@@ -289,11 +328,26 @@ class RequestController extends Controller
                 $businessRequest = $entity->getRequestBusiness();
                 if( $businessRequest ) {
                     $businessRequest->setStatus($status);
+                    //set overall status
+                    if( $status == 'pending' ) {
+                        $entity->setStatus('pending');
+                    } else {
+                        $entity->setStatus('completed');
+                    }
                     $statusSet = true;
                 }
             }
 
             if( $requestName == 'entire' ) {
+
+                $requestName = $entity->getRequestName(); //'business travel and vacation';
+
+                $entity->setEntireStatus($status);
+
+                if( $status != 'canceled' && $status != 'pending' ) {
+                    $status = 'completed';
+                }
+
                 $entity->setStatus($status);
                 $statusSet = true;
             }
@@ -306,10 +360,11 @@ class RequestController extends Controller
                 //return $this->redirectToRoute('vacreq_home');
 
                 //Flash
-                if ($status == 'pending') {
-                    $status = 'set to Pending';
+                $statusStr = $status;
+                if( $status == 'pending' ) {
+                    $statusStr = 'set to Pending';
                 }
-                $event = ucwords($requestName)." Request ID " . $entity->getId() . " for " . $entity->getUser() . " has been " . $status . " by " . $user;
+                $event = ucwords($requestName)." Request ID " . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     $event
@@ -322,7 +377,7 @@ class RequestController extends Controller
                 //send respond confirmation email to a submitter
                 $vacreqUtil = $this->get('vacreq_util');
 
-                if( $requestName == 'entire' ) {
+                if( $status == 'canceled' ) {
                     //an email should be sent to approver saying
                     // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
                     // and list all variable names and values in the email.

@@ -1,7 +1,7 @@
 {% extends "OlegVacReqBundle::Default/base.html.twig" %}
 
 {% block title %}
-    Vacation/Business Request Groups
+    Vacation & Business Travel Request Groups
 {% endblock %}
 
 
@@ -9,7 +9,7 @@
 
 
     <h4 class="text-info" align="center">
-        Vacation/Business Request Groups
+        Vacation & Business Travel Request Groups
     </h4>
 
 
@@ -29,8 +29,7 @@
     {% endfor %}
 
 
-    <a general-data-confirm="Are you sure you want to create a new organizational group by creating approver and submiiter roles?"
-       class="btn-sm btn-warning" href="{{ path('vacreq_group_add') }}">Add Group</a>
+    <a class="btn-sm btn-warning" href="{{ path('vacreq_group_add') }}">Add Group</a>
 
 
 {% endblock %}

@@ -1,25 +1,23 @@
 {% macro request_base_header( pagination, requestStr ) %}
 
-    <th>{{ knp_pagination_sortable(pagination, 'Status', requestStr~'.status') }}</th>
-
     <th>{{ knp_pagination_sortable(pagination, 'Start Date', requestStr~'.startDate') }}</th>
 
     <th>{{ knp_pagination_sortable(pagination, 'End Date', requestStr~'.endDate') }}</th>
 
     <th>{{ knp_pagination_sortable(pagination, 'Number of Work Days Offsite', requestStr~'.numberOfDays') }}</th>
 
-    <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', requestStr~'.firstDayBackInOffice') }}</th>
+    {#<th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', requestStr~'.firstDayBackInOffice') }}</th>#}
+
+    {% if requestStr == 'requestBusiness' %}
+        <th>{{ knp_pagination_sortable(pagination, 'Description', requestStr~'.description') }}</th>
+    {% endif %}
+
+    <th>{{ knp_pagination_sortable(pagination, 'Status', requestStr~'.status') }}</th>
 
 {% endmacro %}
 
 
-{% macro request_base_body( request ) %}
-
-    <td>
-        {% if request and request.status %}
-            {{ request.status|capitalize }}
-        {% endif %}
-    </td>
+{% macro request_base_body( request, requestStr ) %}
 
     <td>
         {% if request and request.startDate %}
@@ -39,9 +37,27 @@
         {% endif %}
     </td>
 
+    {#<td>#}
+        {#{% if request and request.firstDayBackInOffice %}#}
+            {#{{ request.firstDayBackInOffice|date('Y-m-d') }}#}
+        {#{% endif %}#}
+    {#</td>#}
+
+    {% if requestStr == 'requestBusiness' %}
+        <td>
+            {% if request and request.description %}
+                {{ request.description }}
+                {#textarea class="form-control"#}
+                {#<div class="textarea_widget">#}
+                    {#<textarea class="form-control textarea">{{ request.description }}</textarea>#}
+                {#</div>#}
+            {% endif %}
+        </td>
+    {% endif %}
+
     <td>
-        {% if request and request.firstDayBackInOffice %}
-            {{ request.firstDayBackInOffice|date('Y-m-d') }}
+        {% if request and request.status  %}
+            {{ request.status|capitalize }}
         {% endif %}
     </td>
 
@@ -116,10 +132,34 @@
             </li>
 
             {#<li class="divider"></li>#}
+            {#{% if entity.status != 'completed' and entity.getOverallStatus() != 'completed' %}#}
+
+            <li class="divider">
+            <li>
+                <a
+                general-data-confirm="Are you sure you would like to approve entire request for {{ entity.user }}?"
+                href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'approved' }) }}">Approve entire request
+                </a>
+            </li>
+            <li>
+                <a
+                general-data-confirm="Are you sure you would like to reject entire request for {{ entity.user }}?"
+                href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'rejected' }) }}">Reject entire request
+                </a>
+            </li>
+            <li>
+                <a
+                general-data-confirm="Are you sure you would like to set entire request to 'pending approval' for {{ entity.user }}?"
+                href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">Set entire request to "Pending approval"
+                </a>
+            </li>
+
 
             {{ vacreqmacros.vacreq_ParticularRequestAction( entity, entity.requestBusiness, "business", vacreq_sitename ) }}
 
             {{ vacreqmacros.vacreq_ParticularRequestAction( entity, entity.requestVacation, "vacation", vacreq_sitename ) }}
+
+            {#{% endif %}#}
 
         </ul>
 
@@ -128,18 +168,21 @@
 {% endmacro %}
 {% macro vacreq_ParticularRequestAction( entity, request, requestName, vacreq_sitename ) %}
 
+    {% set requestNameStr = "Request" %}
     {% if requestName == "business" %}
         {% set hasParticulraRequest = entity.hasBusinessRequest() %}
+        {% set requestNameStr = "Business Travel Request" %}
     {% endif %}
     {% if requestName == "vacation" %}
         {% set hasParticulraRequest = entity.hasVacationRequest() %}
+        {% set requestNameStr = "Vacation Request" %}
     {% endif %}
 
     {% if request and hasParticulraRequest %}
         <li class="divider">
         <li>
             <div align="center">
-                <strong>{{requestName|capitalize}} Request</strong>
+                <strong>{{ requestNameStr }}</strong>
             </div>
         </li>
 

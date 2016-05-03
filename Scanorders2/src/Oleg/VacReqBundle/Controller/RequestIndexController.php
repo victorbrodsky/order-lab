@@ -73,7 +73,7 @@ class RequestIndexController extends Controller
         $params = array(
             'sitename' => $this->container->getParameter('vacreq.sitename'),
             'approver' => $user,
-            'title' => "Incoming Business/Vacation Requests",
+            'title' => "Incoming Business Travel & Vacation Requests",
             'filterShowUser' => true
         );
         return $this->listRequests($params, $request);
@@ -92,7 +92,10 @@ class RequestIndexController extends Controller
 
         $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
+
         $dql->select('request');
+        //$dql->addSelect('IF(SUM(requestBusiness.numberOfDays) IS NULL, 0, SUM(requestBusiness.numberOfDays)) AS requestBusinessTotalDays');
+        //$dql->addSelect('IF(SUM(requestVacation.numberOfDays) IS NULL, 0, SUM(requestVacation.numberOfDays)) AS requestVacationTotalDays');
 
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("user.infos", "infos");
@@ -142,6 +145,9 @@ class RequestIndexController extends Controller
             $limit,                                         /*limit per page*/
             array('defaultSortFieldName' => 'request.createDate', 'defaultSortDirection' => 'DESC')
         );
+
+        //print_r($pagination[1]);
+        //echo "count req=".count($pagination[0])."<br>";
 
         return array(
             'filterform' => $filterform,
@@ -201,6 +207,7 @@ class RequestIndexController extends Controller
         $vacationRequest = $filterform['vacationRequest']->getData();
         $businessRequest = $filterform['businessRequest']->getData();
 
+        $completed = $filterform['completed']->getData();
         $pending = $filterform['pending']->getData();
         $approved = $filterform['approved']->getData();
         $rejected = $filterform['rejected']->getData();
@@ -255,6 +262,10 @@ class RequestIndexController extends Controller
             $filtered = true;
         }
 
+        if( $completed ) {
+            $dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'");
+            $filtered = true;
+        }
         if( $pending ) {
             $dql->andWhere("requestBusiness.status='pending' OR requestVacation.status='pending'");
             $filtered = true;

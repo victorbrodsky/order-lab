@@ -203,7 +203,7 @@ class VacReqRequest
     public function __construct($user=null) {
         $this->setUser($user);
         $this->setSubmitter($user);
-        //$this->setStatus('pending');
+        $this->setStatus('pending');
         $this->setCreateDate(new \DateTime());
     }
 
@@ -621,44 +621,104 @@ class VacReqRequest
 
 
 
+//    public function getOverallStatus_OLD()
+//    {
+//        $status = null;
+//
+//        if(
+//            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'approved' ||
+//            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'approved'
+//        ) {
+//            $status = 'approved';
+//        }
+//
+//        if(
+//            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'rejected' ||
+//            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'rejected'
+//        ) {
+//            $status = 'rejected';
+//        }
+//
+//        if(
+//            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'pending' ||
+//            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'pending'
+//        ) {
+//            $status = 'pending';
+//        }
+//
+//        return $status;
+//    }
+
     public function getOverallStatus()
     {
-        if(
-            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'approved' ||
-            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'approved'
-        ) {
-            return 'approved';
+        $statusB = null;
+        $statusV = null;
+
+        if( $this->hasBusinessRequest() ) {
+            $statusB = $this->getRequestBusiness()->getStatus();
         }
 
-        if(
-            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'rejected' ||
-            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'rejected'
-        ) {
-            return 'rejected';
+        if( $this->hasVacationRequest() ) {
+            $statusV = $this->getRequestVacation()->getStatus();
         }
 
-        if(
-            $this->getRequestBusiness() && $this->getRequestBusiness()->getStatus() == 'pending' ||
-            $this->getRequestVacation() && $this->getRequestVacation()->getStatus() == 'pending'
-        ) {
+        if( $statusB == null && $statusV == null ) {
+            return 'pending';
+        }
+        if( $statusB == 'pending' && $statusV == 'pending' ) {
+            return 'pending';
+        }
+        if( $statusB == null && $statusV == 'pending' ) {
+            return 'pending';
+        }
+        if( $statusB == 'pending' && $statusV == null ) {
             return 'pending';
         }
 
-        return null;
+        return 'completed';
     }
 
     public function hasBusinessRequest() {
         if( $this->getRequestBusiness() && $this->getRequestBusiness()->getStartDate() ) {
-            return true;
+            return $this->getRequestBusiness();
         }
         return false;
     }
 
     public function hasVacationRequest() {
         if( $this->getRequestVacation() && $this->getRequestVacation()->getStartDate() ) {
-            return true;
+            return $this->getRequestVacation();
         }
         return false;
+    }
+
+    public function setEntireStatus( $status ) {
+        if( $subRequest = $this->hasBusinessRequest() ) {
+            $subRequest->setStatus($status);
+        }
+
+        if( $subRequest = $this->hasVacationRequest() ) {
+            $subRequest->setStatus($status);
+        }
+    }
+
+    public function getRequestName() {
+        $name = "";
+        if( $subRequest = $this->hasBusinessRequest() ) {
+            $name = "Business Travel";
+        }
+
+        if( $subRequest = $this->hasVacationRequest() ) {
+            if( $name ) {
+                $name = $name . " and ";
+            }
+            $name = $name . "Vacation";
+        }
+//        if( $name ) {
+//            $name = $name . " ";
+//        }
+//        $name = $name . "Request";
+        return $name;
     }
 
 
@@ -672,13 +732,13 @@ class VacReqRequest
         $res .= "Organizational Group: ".$this->getInstitution().$break;
         $res .= "Phone Number for the person away: ".$this->getInstitution().$break.$break;
 
-        if( $this->hasBusinessRequest() ) {
-            $subRequest = $this->getRequestBusiness();
+        if( $subRequest = $this->hasBusinessRequest() ) {
+            //$subRequest = $this->getRequestBusiness();
             $res .= $subRequest."".$break;
         }
 
-        if( $this->hasVacationRequest() ) {
-            $subRequest = $this->getRequestVacation();
+        if( $subRequest = $this->hasVacationRequest() ) {
+            //$subRequest = $this->getRequestVacation();
             $res .= $subRequest."".$break;
         }
 

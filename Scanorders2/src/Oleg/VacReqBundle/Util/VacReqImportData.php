@@ -264,10 +264,10 @@ class VacReqImportData
                     $VAC_DAYS_REQUESTED = $this->getValueByHeaderName('VAC_DAYS_REQUESTED', $rowData, $headers);
                     $requestVacation->setNumberOfDays($VAC_DAYS_REQUESTED);
 
-                    //FIRST_BACK_OFFICE
-                    $FIRST_BACK_OFFICE = $this->getValueByHeaderName('FIRST_BACK_OFFICE', $rowData, $headers); //24-OCT-12
-                    $FIRST_BACK_OFFICE_Date = $this->transformDatestrToDate($FIRST_BACK_OFFICE);
-                    $requestVacation->setFirstDayBackInOffice($FIRST_BACK_OFFICE_Date);
+//                    //FIRST_BACK_OFFICE
+//                    $FIRST_BACK_OFFICE = $this->getValueByHeaderName('FIRST_BACK_OFFICE', $rowData, $headers); //24-OCT-12
+//                    $FIRST_BACK_OFFICE_Date = $this->transformDatestrToDate($FIRST_BACK_OFFICE);
+//                    $requestVacation->setFirstDayBackInOffice($FIRST_BACK_OFFICE_Date);
 
                     //VAC_REQUEST_STATUS_ID
                     $VAC_REQUEST_STATUS_ID = $this->getValueByHeaderName('VAC_REQUEST_STATUS_ID', $rowData, $headers);

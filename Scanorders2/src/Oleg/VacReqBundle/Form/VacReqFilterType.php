@@ -81,6 +81,10 @@ class VacReqFilterType extends AbstractType
             'required' => false,
         ));
 
+        $builder->add('completed', 'checkbox', array(
+            'label' => 'Completed Requests',
+            'required' => false,
+        ));
         $builder->add('pending', 'checkbox', array(
             'label' => 'Pending Requests',
             'required' => false,

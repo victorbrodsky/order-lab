@@ -2,6 +2,7 @@
 
 namespace Oleg\VacReqBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -260,9 +261,9 @@ class VacReqUtil
         $message = "Dear " . $submitter->getUsernameOptimal() . "," . $break.$break;
 
         if( $requestName ) {
-            $message .= "Your ".$requestName." request";
+            $message .= "Your ".$requestName." Request";
         } else {
-            $message .= "Your request";
+            $message .= "Your ".$entity->getRequestName()." Request";   //"Your request";
         }
 
         if ($status == 'pending') {
@@ -494,4 +495,100 @@ class VacReqUtil
 
         return $message;
     }
+
+
+
+
+
+    //User log should record all changes in user: subjectUser, Author, field, old value, new value.
+    public function setEventLogChanges($request) {
+
+        $em = $this->em;
+
+        $uow = $em->getUnitOfWork();
+        $uow->computeChangeSets(); // do not compute changes if inside a listener
+
+        $eventArr = array();
+
+        //log simple fields
+        $changeset = $uow->getEntityChangeSet($request);
+        $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
+
+        //log Business Request
+        if( $requestParticular = $request->hasBusinessRequest() ) {
+            //$requestParticular = $request->getRequestBusiness();
+            $changeset = $uow->getEntityChangeSet($requestParticular);
+            $text = "("."Business Travel Request ID ".$request->getId().")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Vacation Request
+        if( $requestParticular = $request->hasVacationRequest() ) {
+            //$requestParticular = $request->getRequestVacation();
+            $changeset = $uow->getEntityChangeSet($requestParticular);
+            $text = "("."Vacation Request ID ".$request->getId().")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //exit('1');
+        return $eventArr;
+
+    }
+    public function addChangesToEventLog( $eventArr, $changeset, $text="" ) {
+
+        $changeArr = array();
+
+        //echo "count changeset=".count($changeset)."<br>";
+
+        //process $changeset: author, subjectuser, oldvalue, newvalue
+        foreach( $changeset as $key => $value ) {
+            if( $value[0] != $value[1] ) {
+
+                if( is_object($key) ) {
+                    //if $key is object then skip it, because we don't want to have non-informative record such as: credentials(stateLicense New): old value=, new value=Credentials
+                    continue;
+                }
+
+                $field = $key;
+
+                $oldValue = $value[0];
+                $newValue = $value[1];
+
+                if( $oldValue instanceof \DateTime ) {
+                    $oldValue = $this->convertDateTimeToStr($value[0]);
+                }
+                if( $newValue instanceof \DateTime ) {
+                    $newValue = $this->convertDateTimeToStr($value[1]);
+                }
+
+                if( is_array($oldValue) ) {
+                    $oldValue = implode(", ",$oldValue);
+                }
+                if( is_array($newValue) ) {
+                    $newValue = implode(", ",$newValue);
+                }
+
+                $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;
+
+                //echo "event=".$event."<br>";
+                //exit();
+
+                $changeArr[] = $event;
+            }
+        }
+
+        if( count($changeArr) > 0 ) {
+            $eventArr[] = implode("<br>", $changeArr);
+        }
+
+        return $eventArr;
+
+    }
+
+    public function convertDateTimeToStr($datetime) {
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        $dateStr = $transformer->transform($datetime);
+        return $dateStr;
+    }
+
 }

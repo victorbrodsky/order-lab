@@ -69,6 +69,8 @@
                 &nbsp;&nbsp;
 
                 &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.completed) }}
+                &nbsp;&nbsp;
                 {{ vacreqmacros.checkbox(vacreqfilter.pending) }}
                 &nbsp;&nbsp;
                 {{ vacreqmacros.checkbox(vacreqfilter.approved) }}
@@ -88,15 +90,19 @@
     <table class="records_list table table-hover table-condensed text-left table-bordered">
         <thead>
         <tr>
-            <th colspan="8" class="text-center table-header-grey-gradient">
-                Requester Info
+            <th colspan="9" class="text-center table-header-grey-gradient">
+                Person Away
             </th>
 
-            <th colspan="6" class="text-center table-header-grey-gradient">
+            {#<th colspan="2" class="text-center table-header-grey-gradient">#}
+                {#Total prior approved away days this academic year#}
+            {#</th>#}
+
+            <th colspan="5" class="text-center table-header-grey-gradient">
                 Business Travel
             </th>
 
-            <th colspan="5" class="text-center table-header-grey-gradient">
+            <th colspan="4" class="text-center table-header-grey-gradient">
                 Vacation
             </th>
 
@@ -121,10 +127,14 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Status Changed Date', 'request.approvedRejectDate') }}</th>
 
+            <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', 'request.firstDayBackInOffice') }}</th>
+
+            {#<th>{{ knp_pagination_sortable(pagination, 'Business Travel', 'requestBusinessTotalDays') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(pagination, 'Vacation', 'requestVacationTotalDays') }}</th>#}
 
             {{ vacreqmacros.request_base_header( pagination, 'requestBusiness' ) }}
             {#<th>{{ knp_pagination_sortable(pagination, 'Estimated Expenses', 'requestBusiness.expenses') }}</th>#}
-            <th>{{ knp_pagination_sortable(pagination, 'Description', 'requestBusiness.description') }}</th>
+            {#<th>{{ knp_pagination_sortable(pagination, 'Description', 'requestBusiness.description') }}</th>#}
             {#<th>{{ knp_pagination_sortable(pagination, 'Paid by Outside Organization', 'requestBusiness.paidByOutsideOrganization') }}</th>#}
 
             {{ vacreqmacros.request_base_header( pagination, 'requestVacation' ) }}
@@ -145,8 +155,8 @@
             {#{% if entity.getOverallStatus() == 'approved' %}#}
                 {#{% set trclassname = "info" %}#}
             {#{% endif %}#}
-            {% if entity.getOverallStatus() == 'rejected' %}
-                {% set trclassname = "order-reject-status" %}
+            {% if entity.getOverallStatus() == 'completed' %}
+                {% set trclassname = "order-neutral-status" %}
             {% endif %}
             {#EOF Set row color#}
 
@@ -206,20 +216,40 @@
                     {% endif %}
                 </td>
 
-                {{ vacreqmacros.request_base_body( entity.requestBusiness )  }}
+                <td>
+                    {% if entity.firstDayBackInOffice %}
+                        {{ entity.firstDayBackInOffice|date('Y-m-d') }}
+                    {% endif %}
+                </td>
+
+
+                {#Total prior approved away days this academic year#}
+                {#<td>#}
+                    {#{% if entity.requestBusiness %}#}
+                        {#{{ entity.requestBusiness.numberOfDays }}#}
+                    {#{% endif %}#}
+                {#</td>#}
+                {#<td>#}
+                    {#{% if entity.requestVacation %}#}
+                        {#{{ entity.requestVacation.numberOfDays }}#}
+                    {#{% endif %}#}
+                {#</td>#}
+
+
+                {{ vacreqmacros.request_base_body( entity.requestBusiness, 'requestBusiness' )  }}
                 {#<td>#}
                     {#{% if entity.requestBusiness and entity.requestBusiness.expenses %}#}
                         {#{{ entity.requestBusiness.expenses }}#}
                     {#{% endif %}#}
                 {#</td>#}
-                <td>
-                    {% if entity.requestBusiness and entity.requestBusiness.description %}
+                {#<td>#}
+                    {#{% if entity.requestBusiness and entity.requestBusiness.description %}#}
                         {#{{ entity.requestBusiness.description }}#}
-                        <div class="textarea_widget">
-                            <textarea class="textarea form-control">{{ entity.requestBusiness.description }}</textarea>
-                        </div>
-                    {% endif %}
-                </td>
+                        {#<div class="textarea_widget">#}
+                            {#<textarea class="textarea form-control">{{ entity.requestBusiness.description }}</textarea>#}
+                        {#</div>#}
+                    {#{% endif %}#}
+                {#</td>#}
                 {#<td>#}
                     {#{% if entity.requestBusiness and entity.requestBusiness.paidByOutsideOrganization %}#}
                         {#{% if entity.requestBusiness.paidByOutsideOrganization %}#}
@@ -230,7 +260,7 @@
                     {#{% endif %}#}
                 {#</td>#}
 
-                {{ vacreqmacros.request_base_body( entity.requestVacation )  }}
+                {{ vacreqmacros.request_base_body( entity.requestVacation, 'requestVacation' )  }}
 
                 {#Action#}
                 <td class="rowlink-skip">
@@ -258,22 +288,25 @@
                                 <li>
                                     <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">View</a>
                                 </li>
-                                <li class="divider">
 
-                                {% if request.status != 'canceled' %}
+                                {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
+                                    <li class="divider">
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to Cancel this entire request for {{ entity.user }}?"
-                                            href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">Cancel (withdraw entire request)
+                                        general-data-confirm="Are you sure you would like to Cancel this entire request for {{ entity.user }}?"
+                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">
+                                            Cancel (withdraw entire request)
                                         </a>
                                     </li>
                                 {% endif %}
 
-                                {% if request.status != 'resubmitted' %}
+                                {% if entity.status == 'canceled' %}
+                                    <li class="divider">
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to Re-Submit this entire request for {{ entity.user }}?"
-                                            href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'resubmitted' }) }}">Re-Submit
+                                        general-data-confirm="Are you sure you would like to Re-Submit this entire request for {{ entity.user }}?"
+                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
+                                            Re-Submit
                                         </a>
                                     </li>
                                 {% endif %}

@@ -272,6 +272,16 @@ class VacReqRequestType extends AbstractType
             'read_only' => ($this->params['review'] ? true : false)
         ));
 
+
+        $builder->add('firstDayBackInOffice', 'date', array(
+            'label' => 'First Day Back in Office:',
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control vacreq-firstDayBackInOffice'),
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
