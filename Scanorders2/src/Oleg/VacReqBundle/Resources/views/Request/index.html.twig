@@ -178,7 +178,11 @@
 
                 <td>
                     {#2014-2015, 2015-2016#}
-                    {{ vacreq_util.getRequestAcademicYears(entity) }}
+                    {#{{ vacreq_util.getRequestAcademicYears(entity) }}#}
+                    {% for academicYear in vacreq_util.getRequestAcademicYears(entity) %}
+                        {{ academicYear }}
+                        {% if not loop.last %}<br>{% endif %}
+                    {% endfor %}
                 </td>
 
                 <td>{% if entity.createDate %}{{ entity.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>

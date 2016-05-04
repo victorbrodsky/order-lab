@@ -461,9 +461,9 @@ class VacReqUtil
             $academicYearArr[] = $year."-".$endtyear;
         }
 
-        $academicYearStr = implode(", ",$academicYearArr);
+        //$academicYearStr = implode(", ",$academicYearArr);
 
-        return $academicYearStr;
+        return $academicYearArr;
     }
 
 
