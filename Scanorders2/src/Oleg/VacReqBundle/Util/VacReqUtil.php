@@ -386,6 +386,86 @@ class VacReqUtil
         return $numberOfDays;
     }
 
+    public function getRequestAcademicYears( $request ) {
+        //return "2014-2015, 2015-2016";
+        $academicYearStr = null;
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //academicYearStart: July 01
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearEnd: June 30
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+
+        //$res['academicYearStart'] = $academicYearStart;
+        //$res['academicYearEnd'] = $academicYearEnd;
+
+        $dates = $request->getFinalStartEndDates();
+        $startDate = $dates['startDate'];
+        $endDate = $dates['endDate'];
+
+        //echo "startDate= ".$startDate->format('Y-m-d')."<br>";
+        //echo "endDate= ".$endDate->format('Y-m-d')."<br>";
+
+        $startDateMD = $startDate->format('m-d');
+        $endDateMD = $endDate->format('m-d');
+
+        $startYear = $startDate->format('Y');
+        $endYear = $endDate->format('Y');
+
+        //calculate year difference (span)
+        $yearDiff = $endYear - $startYear;
+        $yearDiff = $yearDiff + 1;
+
+        $academicYearStartMD = $academicYearStart->format('m-d');
+        $academicStartDateStr = $startYear."-".$academicYearStartMD;
+        //echo "academicStartDateStr= ".$academicStartDateStr."<br>";
+        //$academicStartDate = new \DateTime($academicStartDateStr);
+
+        //$endYear = $endYear + $yearDiff;
+        $academicYearEndMD = $academicYearEnd->format('m-d');
+        $academicEndDateStr = $endYear."-".$academicYearEndMD;
+        //echo "academicEndDateStr= ".$academicEndDateStr."<br>";
+        //$academicEndDate = new \DateTime($academicEndDateStr);
+
+        $academicYearArr = array();
+
+        //case 1: start and end dates are inside of academic year
+        if( $startDateMD >= $academicYearStartMD && $endDateMD <= $academicYearEndMD ) {
+            //echo "case 1: start and end dates are inside of academic year <br>";
+        }
+
+        //case 2: start date is before start of academic year
+        if( $startDateMD < $academicYearStartMD ) {
+            //echo "case 2: start date is before start of academic year <br>";
+            $startYear = $startYear - 1;
+        }
+
+        //case 3: end date is after end of academic year
+        if( $endDateMD > $academicYearEndMD ) {
+            //echo "case 3: end date is after end of academic year <br>";
+            $endYear = $endYear + 1;
+        }
+
+        //$academicYearStr = "2014-2015, 2015-2016";
+        //$academicYearStr = $startYear . "-" . $endYear;
+
+        for( $year=$startYear; $year < $endYear; $year++ ) {
+            //$academicYearStr = $startYear . "-" . $endYear;
+            $endtyear = $year + 1;
+            $academicYearArr[] = $year."-".$endtyear;
+        }
+
+        $academicYearStr = implode(", ",$academicYearArr);
+
+        return $academicYearStr;
+    }
+
 
     public function getSubmitterPhone($user) {
 

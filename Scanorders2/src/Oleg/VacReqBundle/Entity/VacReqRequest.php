@@ -680,35 +680,84 @@ class VacReqRequest
 
     public function hasBusinessRequest() {
         if( $this->getRequestBusiness() && $this->getRequestBusiness()->getStartDate() ) {
-            return $this->getRequestBusiness();
+            return true;
         }
         return false;
     }
 
     public function hasVacationRequest() {
         if( $this->getRequestVacation() && $this->getRequestVacation()->getStartDate() ) {
-            return $this->getRequestVacation();
+            return true;
         }
         return false;
     }
 
     public function setEntireStatus( $status ) {
-        if( $subRequest = $this->hasBusinessRequest() ) {
-            $subRequest->setStatus($status);
+        if( $this->hasBusinessRequest() ) {
+            $this->getRequestBusiness()->setStatus($status);
         }
 
-        if( $subRequest = $this->hasVacationRequest() ) {
-            $subRequest->setStatus($status);
+        if( $this->hasVacationRequest() ) {
+            $this->getRequestVacation()->setStatus($status);
         }
+    }
+
+    public function getFinalStartEndDates() {
+
+        $startDate = null;
+        $endDate = null;
+        $res = array();
+
+        if( $this->hasBusinessRequest() && $this->hasVacationRequest() ) {
+            $subRequestB = $this->getRequestBusiness();
+            $subRequestV = $this->getRequestVacation();
+
+            //get earliest startDate
+            if( $subRequestB->getStartDate() < $subRequestV->getStartDate() ) {
+                $startDate = $subRequestB->getStartDate();
+            } else {
+                $startDate = $subRequestV->getStartDate();
+            }
+            //get latest endDate
+            if( $subRequestB->getEndDate() > $subRequestV->getEndDate() ) {
+                $endDate = $subRequestB->getEndDate();
+            } else {
+                $endDate = $subRequestV->getEndDate();
+            }
+
+            $res['startDate'] = $startDate;
+            $res['endDate'] = $endDate;
+            return $res;
+        }
+
+        if( $this->hasBusinessRequest() ) {
+            $subRequest = $this->getRequestBusiness();
+            $startDate = $subRequest->getStartDate();
+            $endDate = $subRequest->getStartDate();
+            $res['startDate'] = $startDate;
+            $res['endDate'] = $endDate;
+            return $res;
+        }
+
+        if( $this->hasVacationRequest() ) {
+            $subRequest = $this->getRequestVacation();
+            $startDate = $subRequest->getStartDate();
+            $endDate = $subRequest->getStartDate();
+            $res['startDate'] = $startDate;
+            $res['endDate'] = $endDate;
+            return $res;
+        }
+
+        return null;
     }
 
     public function getRequestName() {
         $name = "";
-        if( $subRequest = $this->hasBusinessRequest() ) {
+        if( $this->hasBusinessRequest() ) {
             $name = "Business Travel";
         }
 
-        if( $subRequest = $this->hasVacationRequest() ) {
+        if( $this->hasVacationRequest() ) {
             if( $name ) {
                 $name = $name . " and ";
             }
@@ -732,13 +781,13 @@ class VacReqRequest
         $res .= "Organizational Group: ".$this->getInstitution().$break;
         $res .= "Phone Number for the person away: ".$this->getInstitution().$break.$break;
 
-        if( $subRequest = $this->hasBusinessRequest() ) {
-            //$subRequest = $this->getRequestBusiness();
+        if( $this->hasBusinessRequest() ) {
+            $subRequest = $this->getRequestBusiness();
             $res .= $subRequest."".$break;
         }
 
-        if( $subRequest = $this->hasVacationRequest() ) {
-            //$subRequest = $this->getRequestVacation();
+        if( $this->hasVacationRequest() ) {
+            $subRequest = $this->getRequestVacation();
             $res .= $subRequest."".$break;
         }
 
