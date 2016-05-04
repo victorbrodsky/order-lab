@@ -371,7 +371,7 @@ class VacReqUtil
         $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",true);
         foreach( $requests as $request ) {
             $subRequest = $request->$subRequestGetMethod();
-            echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
+            //echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
             $days = $days + $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($endStr) );
         }
         return $days;
@@ -383,7 +383,7 @@ class VacReqUtil
         $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",true);
         foreach( $requests as $request ) {
             $subRequest = $request->$subRequestGetMethod();
-            echo $request->getId().": after: request days=".$subRequest->getNumberOfDays()."<br>";
+            //echo $request->getId().": after: request days=".$subRequest->getNumberOfDays()."<br>";
             $days = $days + $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($startStr), $subRequest->getEndDate() );
         }
         return $days;
