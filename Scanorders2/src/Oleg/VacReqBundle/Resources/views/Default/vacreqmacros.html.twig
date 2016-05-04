@@ -80,7 +80,7 @@
             <div class = "input-group">
                 {#<input type = "text" class = "form-control">#}
                 {{ form_widget(field) }}
-                <span class = "input-group-addon btn" onclick="setVacReqNumberOfDays(this,event)">
+                <span class = "input-group-addon btn" onclick="setVacReqNumberOfDays(this)">
                     Calculate
                 </span>
             </div>
@@ -103,7 +103,7 @@
                 {#<span class="input-group-addon">#}
                     {#<i class="glyphicon glyphicon-calendar"></i>#}
                 {#</span>#}
-                <span class = "input-group-addon btn" onclick="setVacReqFirstDayBack(this,event)">
+                <span class = "input-group-addon btn" onclick="setVacReqFirstDayBack(this)">
                     Calculate
                 </span>
             </div>

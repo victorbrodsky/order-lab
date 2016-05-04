@@ -345,7 +345,7 @@
         function vacreqAvailabilityListener_OLD() {
             $('.vacreq-availabilities').on("change", function(e) {
                 var holder = $(this).closest('.panel-body');
-                var availabilities = holder.find('.vacreq-availabilities').first().select2('data');
+                var availabilities = holder.find('.vacreq-availabilities').select2('data');
                 //console.log(availabilities);
 
                 //this returns all the selected item
@@ -359,7 +359,7 @@
                     //console.log('item='+item);
                     if( item == "Not Accessible" ) {
                         //clear others
-                        holder.find('.vacreq-availabilities').first().select2('val',value.id);
+                        holder.find('.vacreq-availabilities').select2('val',value.id);
                     }
 
                 });
@@ -372,29 +372,33 @@
                 $(this).removeClass('alert-danger');
             });
 
-            $('.vacreq-firstDayBackInOffice').datepicker().on("changeDate", function(e) {
+            //$('.vacreq-firstDayBackInOffice').datepicker().on("changeDate", function(e) {
+            $('.vacreq-firstDayBackInOffice').on("change", function(e) {
                 $(this).removeClass('alert-danger');
             });
         }
 
         function vacreqDateListener() {
 
-            $('.vacreq-startDate,.vacreq-endDate').datepicker().on("changeDate", function(e) {
+            //$('.vacreq-startDate,.vacreq-endDate').datepicker().on("changeDate", function(e) {
+            $('.vacreq-startDate,.vacreq-endDate').on("change", function(e) {
                 //vacreqUpdateDaysAndFirstday(this);
 
                 var holder = $(this).closest('.panel-body');
 
-                var startDate = holder.find('.vacreq-startDate').first().datepicker('getDate');
-                var endDate = holder.find('.vacreq-endDate').first().datepicker('getDate');
+                var startDate = holder.find('.vacreq-startDate').val();
+                var endDate = holder.find('.vacreq-endDate').val();
                 //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
 
+                startDate = new Date(startDate);
+                endDate = new Date(endDate);
 
                 //get working days difference
                 if( startDate && endDate ) {
 
                     if( startDate > endDate ) {
-                        e.stopPropagation();
-                        e.preventDefault();
+                        //e.stopPropagation();
+                        //e.preventDefault();
                         alert("The requested End Date cannot precede the Start Date.");
                         $(this).datepicker('setDate', null);
                         return;
@@ -407,7 +411,7 @@
 
                     if( diffWorkingDays > 0 ) {
                         //numberOfDays
-                        //holder.find('.vacreq-numberOfDays').first().val(diffWorkingDays);
+                        //holder.find('.vacreq-numberOfDays').val(diffWorkingDays);
 
                         //firstDayBackInOffice
                         var nextWorkingDay = getNextWorkingDay();
@@ -424,36 +428,36 @@
 
         function setVacReqDates(holder,diffWorkingDays,nextWorkingDay) {
 
-            var numberOfDaysField = holder.find('.vacreq-numberOfDays').first();
+            var numberOfDaysField = holder.find('.vacreq-numberOfDays');
             if( !numberOfDaysField.val() ) {
                 numberOfDaysField.val(diffWorkingDays);
                 numberOfDaysField.removeClass('alert-danger');
             }
 
-            var firstDayBackInOffice = $('.vacreq-firstDayBackInOffice').first();
-            if( !firstDayBackInOffice.datepicker('getDate') ) {
+            var firstDayBackInOffice = $('.vacreq-firstDayBackInOffice');
+            if( !firstDayBackInOffice.val() ) {
                 firstDayBackInOffice.datepicker('setDate', nextWorkingDay);
             }
         }
 
         //onclick action button
-        function setVacReqNumberOfDays(btn,event) {
+        function setVacReqNumberOfDays(btn) {
             var holder = $(btn).closest('.panel-body');
-            var startDate = holder.find('.vacreq-startDate').first().datepicker('getDate');
-            var endDate = holder.find('.vacreq-endDate').first().datepicker('getDate');
+            var startDate = holder.find('.vacreq-startDate').val();
+            var endDate = holder.find('.vacreq-endDate').val();
             //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
 
-            event.stopPropagation();
-            event.preventDefault();
+            startDate = new Date(startDate);
+            endDate = new Date(endDate);
 
-            holder.find('.vacreq-numberOfDays').first().removeClass('alert-danger');
+            holder.find('.vacreq-numberOfDays').removeClass('alert-danger');
 
             var diffWorkingDays = null;
 
             if( startDate && endDate ) {
                 if( startDate > endDate ) {
                     alert("The requested Last Day Away cannot precede the First Day Away.");
-                    holder.find('.vacreq-numberOfDays').first().val(null);
+                    holder.find('.vacreq-numberOfDays').val(null);
                     return null;
                 }
 
@@ -461,9 +465,9 @@
 
                 if( diffWorkingDays > 0 ) {
                     //numberOfDays
-                    holder.find('.vacreq-numberOfDays').first().val(diffWorkingDays);
+                    holder.find('.vacreq-numberOfDays').val(diffWorkingDays);
                 } else {
-                    holder.find('.vacreq-numberOfDays').first().val(null);
+                    holder.find('.vacreq-numberOfDays').val(null);
                 }
             }
 
@@ -471,22 +475,16 @@
         }
 
         //onlcick
-        function setVacReqFirstDayBack(btn,event) {
-            //var holder = $(btn).closest('.panel-body');
-            //var startDate = holder.find('.vacreq-startDate').first().datepicker('getDate');
-            //var endDate = holder.find('.vacreq-endDate').first().datepicker('getDate');
-            //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
-
-            event.stopPropagation();
-            event.preventDefault();
+        function setVacReqFirstDayBack(btn) {
 
             var nextWorkingDay = getNextWorkingDay();
+            //console.log('nextWorkingDay='+nextWorkingDay);
+            //return; //testing
 
             $('.vacreq-firstDayBackInOffice').removeClass('alert-danger');
 
             if( nextWorkingDay ) {
                 //firstDayBackInOffice
-                nextWorkingDay = getNextWorkingDay();
                 //console.log('nextWorkingDay='+nextWorkingDay);
                 $('.vacreq-firstDayBackInOffice').datepicker('setDate', nextWorkingDay);
             } else {
@@ -498,6 +496,7 @@
 
         // Count days from d0 to d1 inclusive, excluding Fridays and Saturdays
         function calculateWorkingDays( startDate, endDate )  {
+            //return 0;//testing
             var days = 0;
             for( var i = startDate; i <= endDate; i.setDate(i.getDate() + 1) ) {
                 if( i.getDay() != 6 && i.getDay() != 0 ) {
@@ -510,26 +509,46 @@
 
 
         function getNextWorkingDay( endDate )  {
-
+            //return endDate;//testing
             //get endDate - the latest date from business and vacation request
             var endDate = null;
             $('.vacreq-endDate').each( function(){
-                var thisDate = $(this).datepicker('getDate');
-                if( endDate == null || thisDate > endDate ) {
-                    endDate = thisDate;
+                //var thisDate = $(this).datepicker('getDate'); //this cause problem async between datepicker field and calendar icon
+                var thisDate = $(this).val();
+                //console.log('1thisDate='+thisDate);
+                if( thisDate ) {
+                    thisDate = new Date(thisDate);
+                    //console.log('2thisDate=' + thisDate);
+                    if( endDate == null || thisDate > endDate ) {
+                        endDate = thisDate;
+                    }
+//                    if( endDate == null ) {
+//                        endDate = thisDate;
+//                    } else {
+//                        if( thisDate > endDate ) {
+//                            endDate = thisDate;
+//                        }
+//                    }
                 }
             });
 
             if( endDate == null ) {
+                //console.log('NULL endDate='+endDate);
                 return null;
             }
 
-            var finishDate = new Date();
+            //var endDate = new Date(endDate);
+
+            //console.log('endDate='+endDate);
+            //return endDate;//testing
+
+            var finishDate = new Date(endDate);
             finishDate.setDate(endDate.getDate()+7);
             //console.log('finishDate='+finishDate+", day="+finishDate.getDay());
 
-            var nextWorkingDay = new Date();
+            var nextWorkingDay = new Date(endDate);    //new Date();
             nextWorkingDay.setDate(endDate.getDate()+1);
+            //console.log('nextWorkingDay='+nextWorkingDay+", day="+nextWorkingDay.getDay());
 
             for( nextWorkingDay; nextWorkingDay <= finishDate; nextWorkingDay.setDate(nextWorkingDay.getDate() + 1) ) {
                 //console.log('nextWorkingDay='+nextWorkingDay+", day="+nextWorkingDay.getDay());
@@ -537,6 +556,8 @@
                     return nextWorkingDay;
                 }
             }
+
+            //console.log('EOF NULL');
             return null;
         }
 
@@ -552,18 +573,18 @@
 
             var error = null;
 
-            var userData = $('.vacreq-user').first().select2('data');
+            var userData = $('.vacreq-user').select2('data');
             if( !error && !userData ) {
                 error = "Please choose a requester";
             }
 
-            var userInstitution = $('.vacreq-institution').first().select2('data');
+            var userInstitution = $('.vacreq-institution').select2('data');
             if( !error && !userInstitution ) {
                 error = "Please choose an organizational group";
-                //$('.vacreq-institution').first().addClass('alert-danger');
+                //$('.vacreq-institution').addClass('alert-danger');
             }
 
-            var approverData = $('.vacreq-approver').first().select2('data');
+            var approverData = $('.vacreq-approver').select2('data');
             if( !error && !approverData ) {
                 error = "Please choose an approver";
             }
@@ -571,12 +592,12 @@
             var businessRequest = $('#vacreq-Business');
             var vacationRequest = $('#vacreq-Vacation');
 
-            var startDateBusiness = businessRequest.find('.vacreq-startDate').first().val();
-            var endDateBusiness = businessRequest.find('.vacreq-endDate').first().val();
+            var startDateBusiness = businessRequest.find('.vacreq-startDate').val();
+            var endDateBusiness = businessRequest.find('.vacreq-endDate').val();
             //console.log('startDateBusiness=('+startDateBusiness+')' + 'endDateBusiness=('+endDateBusiness+')');
 
-            var startDateVacation = vacationRequest.find('.vacreq-startDate').first().val();
-            var endDateVacation = vacationRequest.find('.vacreq-endDate').first().val();
+            var startDateVacation = vacationRequest.find('.vacreq-startDate').val();
+            var endDateVacation = vacationRequest.find('.vacreq-endDate').val();
             //console.log('startDateVacation=('+startDateVacation+')' + 'endDateVacation=('+endDateVacation+')');
 
             if( !error && !startDateBusiness && !startDateVacation ) {
@@ -591,19 +612,19 @@
             //Business
             if( !error && startDateBusiness && endDateBusiness ) {
 
-                var numberOfDays = businessRequest.find('.vacreq-numberOfDays').first().val();
+                var numberOfDays = businessRequest.find('.vacreq-numberOfDays').val();
                 if( !error && !numberOfDays ) {
                     error = "Please enter the number of work days off-site";
                     businessRequest.find('.vacreq-numberOfDays').addClass('alert-danger');
                 }
 
-                var expenses = businessRequest.find('.vacreq-expenses').first().val();
+                var expenses = businessRequest.find('.vacreq-expenses').val();
                 if( !error && !expenses ) {
                     error = "Please fill in the estimated expenses";
                     businessRequest.find('.vacreq-expenses').addClass('alert-danger');
                 }
 
-                var description = businessRequest.find('.vacreq-description').first().val();
+                var description = businessRequest.find('.vacreq-description').val();
                 if( !error && !description ) {
                     error = "Please fill in the description";
                     businessRequest.find('.vacreq-description').addClass('alert-danger');
@@ -614,7 +635,7 @@
             //Vacation
             if( !error && startDateVacation && endDateVacation ) {
 
-                var numberOfDays = vacationRequest.find('.vacreq-numberOfDays').first().val();
+                var numberOfDays = vacationRequest.find('.vacreq-numberOfDays').val();
                 if( !error && !numberOfDays ) {
                     error = "Please enter the number of work days off-site";
                     vacationRequest.find('.vacreq-numberOfDays').addClass('alert-danger');
@@ -622,7 +643,7 @@
 
             }
 
-            var firstDayBackInOffice = $('.vacreq-firstDayBackInOffice').first().val();
+            var firstDayBackInOffice = $('.vacreq-firstDayBackInOffice').val();
             if( !error && !firstDayBackInOffice ) {
                 error = "Please fill in the first day back in office";
                 vacationRequest.find('.vacreq-firstDayBackInOffice').addClass('alert-danger');
