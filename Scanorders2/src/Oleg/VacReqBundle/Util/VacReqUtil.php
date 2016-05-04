@@ -324,6 +324,8 @@ class VacReqUtil
 
         return $result;
     }
+
+
     public function getApprovedTotalDays( $user, $requestTypeStr ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -339,10 +341,64 @@ class VacReqUtil
             throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
         }
 
+        //constract start and end date for DB select "Y-m-d"
+        //academicYearStart
+        $academicYearStartStr = $academicYearStart->format('m-d');
+        $previousYear = date("Y") - 1;
+        $academicYearStartStr = $previousYear."-".$academicYearStartStr;
+        //echo "academicYearStartStr=".$academicYearStartStr."<br>";
+        //academicYearEnd
+        $academicYearEndStr = $academicYearEnd->format('m-d');
+        $currentYear = date("Y");
+        $academicYearEndStr = $currentYear."-".$academicYearEndStr;
+        //echo "academicYearEndStr=".$academicYearEndStr."<br>";
+
+        //step1: get requests within academic Year
+        $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false);
+
+        //step2: get requests with start date earlier than academic Year Start
+        $numberOfDaysBefore = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr);
+
+        //step2: get requests with start date later than academic Year End
+        $numberOfDaysAfter = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr);
+
+        return $numberOfDaysBefore+$numberOfDaysInside+$numberOfDaysAfter;
+    }
+
+    public function getApprovedBeforeAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null ) {
+        $days = 0;
+        $subRequestGetMethod = "getRequest".$requestTypeStr;
+        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",true);
+        foreach( $requests as $request ) {
+            $subRequest = $request->$subRequestGetMethod();
+            echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
+            $days = $days + $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($endStr) );
+        }
+        return $days;
+    }
+
+    public function getApprovedAfterAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null ) {
+        $days = 0;
+        $subRequestGetMethod = "getRequest".$requestTypeStr;
+        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",true);
+        foreach( $requests as $request ) {
+            $subRequest = $request->$subRequestGetMethod();
+            echo $request->getId().": after: request days=".$subRequest->getNumberOfDays()."<br>";
+            $days = $days + $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($startStr), $subRequest->getEndDate() );
+        }
+        return $days;
+    }
+
+    public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false ) {
+
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
-        $dql->select('SUM(requestType.numberOfDays) as numberOfDays');
+        if( $asObject ) {
+            $dql->select('request');
+        } else {
+            $dql->select('SUM(requestType.numberOfDays) as numberOfDays');
+        }
 
         $dql->leftJoin("request.user", "user");
 
@@ -356,18 +412,19 @@ class VacReqUtil
 
         $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :statusApproved");
 
-        if( $academicYearStart && $academicYearEnd ) {
-            //academicYearStart
-            $academicYearStartStr = $academicYearStart->format('m-d');
-            $previousYear = date("Y") - 1;
-            $academicYearStartStr = $previousYear."-".$academicYearStartStr;
-            //echo "academicYearStartStr=".$academicYearStartStr."<br>";
-            //academicYearEnd
-            $academicYearEndStr = $academicYearEnd->format('m-d');
-            $currentYear = date("Y");
-            $academicYearEndStr = $currentYear."-".$academicYearEndStr;
-            //echo "academicYearEndStr=".$academicYearEndStr."<br>";
-            $dql->andWhere("requestType.startDate > '" . $academicYearStartStr . "'" . " AND requestType.endDate < " . "'" . $academicYearEndStr . "'");
+        // |----|--s--e--|----|
+        if( $type == "inside" && $startStr && $endStr ) {
+            $dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'");
+        }
+
+        // |--s--|--e--|----|
+        if( $type == "before" && $startStr ) {
+            $dql->andWhere("requestType.startDate < '" . $startStr . "'"); // . " AND requestType.endDate > " . "'" . $startStr . "'");
+        }
+
+        // |----|--s--|--e--|
+        if( $type == "after" && $endStr ) {
+            $dql->andWhere("requestType.endDate > '" . $endStr . "'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
         }
 
         $query = $this->em->createQuery($dql);
@@ -377,13 +434,109 @@ class VacReqUtil
             'statusApproved' => 'approved'
         ));
 
-        $numberOfDaysRes = $query->getSingleResult();
+        if( $asObject ) {
+            $requests = $query->getResult();
+            return $requests;
+        } else {
+            $numberOfDaysRes = $query->getSingleResult();
+            $numberOfDays = $numberOfDaysRes['numberOfDays'];
+            //echo "numberOfDays=".$numberOfDays."<br>";
+            return $numberOfDays;
+        }
 
-        $numberOfDays = $numberOfDaysRes['numberOfDays'];
+        return null;
+    }
 
-        //echo "numberOfDays=".$numberOfDays."<br>";
+    public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
+        $starDateStr = $starDate->format('Y-m-d');
+        $endDateStr = $endDate->format('Y-m-d');
+        //$holidays = array();
+        $holidays = ['*-12-25', '*-01-01', '2013-12-23']; # variable and fixed holidays
+        //return $this->getWorkingDays($starDateStr,$endDateStr,$holidays);
+        return $this->number_of_working_days($starDateStr,$endDateStr,$holidays);
+    }
+    //http://stackoverflow.com/questions/336127/calculate-business-days
+    //The function returns the no. of business days between two dates and it skips the holidays
+    function getWorkingDays($startDate,$endDate,$holidays){
+        // do strtotime calculations just once
+        $endDate = strtotime($endDate);
+        $startDate = strtotime($startDate);
 
-        return $numberOfDays;
+
+        //The total number of days between the two dates. We compute the no. of seconds and divide it to 60*60*24
+        //We add one to inlude both dates in the interval.
+        $days = ($endDate - $startDate) / 86400 + 1;
+
+        $no_full_weeks = floor($days / 7);
+        $no_remaining_days = fmod($days, 7);
+
+        //It will return 1 if it's Monday,.. ,7 for Sunday
+        $the_first_day_of_week = date("N", $startDate);
+        $the_last_day_of_week = date("N", $endDate);
+
+        //---->The two can be equal in leap years when february has 29 days, the equal sign is added here
+        //In the first case the whole interval is within a week, in the second case the interval falls in two weeks.
+        if ($the_first_day_of_week <= $the_last_day_of_week) {
+            if ($the_first_day_of_week <= 6 && 6 <= $the_last_day_of_week) $no_remaining_days--;
+            if ($the_first_day_of_week <= 7 && 7 <= $the_last_day_of_week) $no_remaining_days--;
+        }
+        else {
+            // (edit by Tokes to fix an edge case where the start day was a Sunday
+            // and the end day was NOT a Saturday)
+
+            // the day of the week for start is later than the day of the week for end
+            if ($the_first_day_of_week == 7) {
+                // if the start date is a Sunday, then we definitely subtract 1 day
+                $no_remaining_days--;
+
+                if ($the_last_day_of_week == 6) {
+                    // if the end date is a Saturday, then we subtract another day
+                    $no_remaining_days--;
+                }
+            }
+            else {
+                // the start date was a Saturday (or earlier), and the end date was (Mon..Fri)
+                // so we skip an entire weekend and subtract 2 days
+                $no_remaining_days -= 2;
+            }
+        }
+
+        //The no. of business days is: (number of weeks between the two dates) * (5 working days) + the remainder
+        //---->february in none leap years gave a remainder of 0 but still calculated weekends between first and last day, this is one way to fix it
+        $workingDays = $no_full_weeks * 5;
+        if ($no_remaining_days > 0 )
+        {
+            $workingDays += $no_remaining_days;
+        }
+
+        //We subtract the holidays
+        foreach($holidays as $holiday){
+            $time_stamp=strtotime($holiday);
+            //If the holiday doesn't fall in weekend
+            if ($startDate <= $time_stamp && $time_stamp <= $endDate && date("N",$time_stamp) != 6 && date("N",$time_stamp) != 7)
+                $workingDays--;
+        }
+
+        return $workingDays;
+    }
+    function number_of_working_days($from, $to, $holidayDays) {
+        $workingDays = [1, 2, 3, 4, 5]; # date format = N (1 = Monday, ...)
+        //$holidayDays = ['*-12-25', '*-01-01', '2013-12-23']; # variable and fixed holidays
+
+        $from = new \DateTime($from);
+        $to = new \DateTime($to);
+        $to->modify('+1 day');
+        $interval = new \DateInterval('P1D');
+        $periods = new \DatePeriod($from, $interval, $to);
+
+        $days = 0;
+        foreach ($periods as $period) {
+            if (!in_array($period->format('N'), $workingDays)) continue;
+            if (in_array($period->format('Y-m-d'), $holidayDays)) continue;
+            if (in_array($period->format('*-m-d'), $holidayDays)) continue;
+            $days++;
+        }
+        return $days;
     }
 
     public function getRequestAcademicYears( $request ) {
@@ -436,9 +589,9 @@ class VacReqUtil
         $academicYearArr = array();
 
         //case 1: start and end dates are inside of academic year
-        if( $startDateMD >= $academicYearStartMD && $endDateMD <= $academicYearEndMD ) {
+        //if( $startDateMD >= $academicYearStartMD && $endDateMD <= $academicYearEndMD ) {
             //echo "case 1: start and end dates are inside of academic year <br>";
-        }
+        //}
 
         //case 2: start date is before start of academic year
         if( $startDateMD < $academicYearStartMD ) {
