@@ -554,3 +554,4 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     background: -moz-linear-gradient(left, #b9b9b9, #e8e8e8, #b9b9b9); /* For Fx 3.6 to 15 */
     background: linear-gradient(to right, #b9b9b9, #e8e8e8, #b9b9b9); /* Standard syntax (must be last) */
 }
+

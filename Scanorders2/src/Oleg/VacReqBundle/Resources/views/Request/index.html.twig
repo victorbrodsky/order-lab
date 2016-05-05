@@ -86,10 +86,10 @@
     {#</p>#}
 
     {% if routename == 'vacreq_incomingrequests' %}
-        {% set colspanRequestInfo = 10 %}
+        {% set colspanRequestInfo = 11 %}
         {% set showUserInfo = true %}
     {% else %}
-        {% set colspanRequestInfo = 6 %} {#4 fields less#}
+        {% set colspanRequestInfo = 7 %} {#4 fields less#}
         {% set showUserInfo = false %}
     {% endif %}
 
@@ -100,19 +100,19 @@
                 Request Info
             </th>
 
-            {#<th colspan="2" class="text-center table-header-grey-gradient">#}
-                {#Total prior approved away days this academic year#}
-            {#</th>#}
+            <th colspan="2" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                Total prior approved away days this academic year
+            </th>
 
-            <th colspan="5" class="text-center table-header-grey-gradient">
+            <th colspan="5" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
                 Business Travel
             </th>
 
-            <th colspan="4" class="text-center table-header-grey-gradient">
+            <th colspan="4" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
                 Vacation
             </th>
 
-            <th rowspan="1" class="text-center table-header-grey-gradient">
+            <th rowspan="1" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
                 Action
             </th>
         </tr>
@@ -120,6 +120,8 @@
             <th>{{ knp_pagination_sortable(pagination, 'Request ID', 'request.id') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Total Days', 'totalDays') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Date Submitted', 'request.firstDayBackInOffice') }}</th>
 
@@ -139,8 +141,15 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', 'request.firstDayBackInOffice') }}</th>
 
-            {#<th>{{ knp_pagination_sortable(pagination, 'Business Travel', 'requestBusinessTotalDays') }}</th>#}
-            {#<th>{{ knp_pagination_sortable(pagination, 'Vacation', 'requestVacationTotalDays') }}</th>#}
+            {#Total prior approved away days this academic year#}
+            <th style="border-left: 2px solid gray;">
+                {#{{ knp_pagination_sortable(pagination, 'Business Travel', 'requestBusiness.numberOfDays') }}#}
+                Business Travel
+            </th>
+            <th>
+                {#{{ knp_pagination_sortable(pagination, 'Vacation', 'requestVacation.numberOfDays') }}#}
+                Vacation
+            </th>
 
             {{ vacreqmacros.request_base_header( pagination, 'requestBusiness' ) }}
             {#<th>{{ knp_pagination_sortable(pagination, 'Estimated Expenses', 'requestBusiness.expenses') }}</th>#}
@@ -149,25 +158,29 @@
 
             {{ vacreqmacros.request_base_header( pagination, 'requestVacation' ) }}
 
-            <th>
+            <th style="border-left: 2px solid gray;">
                 {#Actions#}
             </th>
         </tr>
         </thead>
         <tbody data-link="row" class="rowlink">
-        {% for entity in pagination %}
+
+        {% for object in pagination %}
+
+            {% set entity = object['object'] %}
+            {% set totalDays = object['totalDays'] %}
 
             {#Set row color#}
             {% set trclassname = "" %}
-            {% if entity.getOverallStatus() == 'pending' %}
-                {% set trclassname = "order-interviewee-status" %}
-            {% endif %}
+            {#{% if entity.getOverallStatus() == 'pending' %}#}
+                {#{% set trclassname = "order-interviewee-status" %}#}
+            {#{% endif %}#}
             {#{% if entity.getOverallStatus() == 'approved' %}#}
                 {#{% set trclassname = "info" %}#}
             {#{% endif %}#}
-            {% if entity.getOverallStatus() == 'completed' %}
-                {% set trclassname = "order-neutral-status" %}
-            {% endif %}
+            {#{% if entity.getOverallStatus() == 'completed' %}#}
+                {#{% set trclassname = "order-neutral-status" %}#}
+            {#{% endif %}#}
             {#EOF Set row color#}
 
             <tr class="{{ trclassname }}">
@@ -183,6 +196,13 @@
                         {{ academicYear }}
                         {% if not loop.last %}<br>{% endif %}
                     {% endfor %}
+                </td>
+
+                <td>
+                    {% if entity %}
+                        {#{{ entity.getTotalDays() }}#}
+                        {{ totalDays }}
+                    {% endif %}
                 </td>
 
                 <td>{% if entity.createDate %}{{ entity.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
@@ -245,46 +265,26 @@
 
 
                 {#Total prior approved away days this academic year#}
-                {#<td>#}
-                    {#{% if entity.requestBusiness %}#}
+                <td style="border-left: 2px solid gray;">
+                    {% if entity.requestBusiness %}
                         {#{{ entity.requestBusiness.numberOfDays }}#}
-                    {#{% endif %}#}
-                {#</td>#}
-                {#<td>#}
-                    {#{% if entity.requestVacation %}#}
+                        {{ vacreq_util.getPriorApprovedDays(entity,'requestBusiness') }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entity.requestVacation %}
                         {#{{ entity.requestVacation.numberOfDays }}#}
-                    {#{% endif %}#}
-                {#</td>#}
+                        {{ vacreq_util.getPriorApprovedDays(entity,'requestVacation') }}
+                    {% endif %}
+                </td>
 
 
                 {{ vacreqmacros.request_base_body( entity.requestBusiness, 'requestBusiness' )  }}
-                {#<td>#}
-                    {#{% if entity.requestBusiness and entity.requestBusiness.expenses %}#}
-                        {#{{ entity.requestBusiness.expenses }}#}
-                    {#{% endif %}#}
-                {#</td>#}
-                {#<td>#}
-                    {#{% if entity.requestBusiness and entity.requestBusiness.description %}#}
-                        {#{{ entity.requestBusiness.description }}#}
-                        {#<div class="textarea_widget">#}
-                            {#<textarea class="textarea form-control">{{ entity.requestBusiness.description }}</textarea>#}
-                        {#</div>#}
-                    {#{% endif %}#}
-                {#</td>#}
-                {#<td>#}
-                    {#{% if entity.requestBusiness and entity.requestBusiness.paidByOutsideOrganization %}#}
-                        {#{% if entity.requestBusiness.paidByOutsideOrganization %}#}
-                            {#yes#}
-                        {#{% else %}#}
-                            {#no#}
-                        {#{% endif %}#}
-                    {#{% endif %}#}
-                {#</td>#}
 
                 {{ vacreqmacros.request_base_body( entity.requestVacation, 'requestVacation' )  }}
 
                 {#Action#}
-                <td class="rowlink-skip">
+                <td class="rowlink-skip" style="border-left: 2px solid gray;">
 
                     {#<p>#}
                         {#<a class="btn-sm btn-default" href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">User Details</a>#}

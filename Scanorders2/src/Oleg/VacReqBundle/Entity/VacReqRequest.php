@@ -702,6 +702,19 @@ class VacReqRequest
         }
     }
 
+    public function getTotalDays($status='approved') {
+        $days = 0;
+        if( $this->hasBusinessRequest() && $this->getRequestBusiness()->getStatus() == $status ) {
+            $days = $days + $this->getRequestBusiness()->getNumberOfDays();
+        }
+        if( $this->hasVacationRequest() && $this->getRequestVacation()->getStatus() == $status ) {
+            $days = $days + $this->getRequestVacation()->getNumberOfDays();
+        }
+
+        return $days;
+    }
+
+
     public function getFinalStartEndDates() {
 
         $startDate = null;

@@ -389,6 +389,43 @@ class VacReqUtil
         return $days;
     }
 
+    public function getPriorApprovedDays( $request, $requestTypeStr ) {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //academicYearStart
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearEnd
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+
+        //constract start and end date for DB select "Y-m-d"
+        //academicYearStart
+        $academicYearStartStr = $academicYearStart->format('m-d');
+        $previousYear = date("Y") - 1;
+        $academicYearStartStr = $previousYear."-".$academicYearStartStr;
+        //echo "academicYearStartStr=".$academicYearStartStr."<br>";
+        //academicYearEnd
+        $academicYearEndStr = $academicYearEnd->format('m-d');
+        $currentYear = date("Y");
+        $academicYearEndStr = $currentYear."-".$academicYearEndStr;
+        //echo "academicYearEndStr=".$academicYearEndStr."<br>";
+
+        $user = $request->getUser();
+
+        $requestCreateDate = $request->getCreateDate();
+        $requestCreateDateStr = $requestCreateDate->format('Y-m-d');
+
+        $days = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$requestCreateDateStr,"inside",false);
+
+        return $days;
+    }
+
     public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false ) {
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
@@ -402,11 +439,11 @@ class VacReqUtil
 
         $dql->leftJoin("request.user", "user");
 
-        if( $requestTypeStr == 'business' ) {
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
             $dql->leftJoin("request.requestBusiness", "requestType");
         }
 
-        if( $requestTypeStr == 'vacation' ) {
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
             $dql->leftJoin("request.requestVacation", "requestType");
         }
 
@@ -428,6 +465,8 @@ class VacReqUtil
         }
 
         $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
 
         $query->setParameters( array(
             'userId' => $user->getId(),

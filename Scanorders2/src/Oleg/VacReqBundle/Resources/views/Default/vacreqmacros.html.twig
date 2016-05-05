@@ -1,6 +1,6 @@
 {% macro request_base_header( pagination, requestStr ) %}
 
-    <th>{{ knp_pagination_sortable(pagination, 'Start Date', requestStr~'.startDate') }}</th>
+    <th style="border-left: 2px solid gray;">{{ knp_pagination_sortable(pagination, 'Start Date', requestStr~'.startDate') }}</th>
 
     <th>{{ knp_pagination_sortable(pagination, 'End Date', requestStr~'.endDate') }}</th>
 
@@ -19,19 +19,37 @@
 
 {% macro request_base_body( request, requestStr ) %}
 
-    <td>
+    {#Set row color#}
+    {% set tdclassname = "" %}
+    {% if request %}
+        {% if request.getStatus() == 'pending' %}
+            {% set tdclassname = "alert alert-warning" %}
+        {% endif %}
+        {% if request.getStatus() == 'approved' %}
+            {% set tdclassname = "alert alert-success" %}
+        {% endif %}
+        {% if request.getStatus() == 'rejected' %}
+            {% set tdclassname = "alert alert-danger" %}
+        {% endif %}
+        {% if request.getStatus() == 'completed' %}
+            {% set tdclassname = "" %}
+        {% endif %}
+    {% endif %}
+    {#EOF Set row color#}
+
+    <td class="{{ tdclassname }}" style="border-left: 2px solid gray;">
         {% if request and request.startDate %}
             {{ request.startDate|date('Y-m-d') }}
         {% endif %}
     </td>
 
-    <td>
+    <td class="{{ tdclassname }}">
         {% if request and request.endDate %}
             {{ request.endDate|date('Y-m-d') }}
         {% endif %}
     </td>
 
-    <td>
+    <td class="{{ tdclassname }}">
         {% if request and request.numberOfDays %}
             {{ request.numberOfDays }}
         {% endif %}
@@ -44,7 +62,7 @@
     {#</td>#}
 
     {% if requestStr == 'requestBusiness' %}
-        <td>
+        <td class="{{ tdclassname }}">
             {% if request and request.description %}
                 {{ request.description }}
                 {#textarea class="form-control"#}
@@ -55,7 +73,7 @@
         </td>
     {% endif %}
 
-    <td>
+    <td class="{{ tdclassname }}">
         {% if request and request.status  %}
             {{ request.status|capitalize }}
         {% endif %}

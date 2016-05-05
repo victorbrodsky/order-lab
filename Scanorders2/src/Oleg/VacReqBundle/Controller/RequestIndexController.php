@@ -93,7 +93,9 @@ class RequestIndexController extends Controller
         $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
-        $dql->select('request');
+        $dql->select('request as object');
+        $dql->addSelect('(requestBusiness.numberOfDays+requestVacation.numberOfDays) as totalDays');
+        //$dql->addSelect('(SUM(requestBusiness.numberOfDays)+SUM(requestVacation.numberOfDays)) as totalDays');
         //$dql->addSelect('IF(SUM(requestBusiness.numberOfDays) IS NULL, 0, SUM(requestBusiness.numberOfDays)) AS requestBusinessTotalDays');
         //$dql->addSelect('IF(SUM(requestVacation.numberOfDays) IS NULL, 0, SUM(requestVacation.numberOfDays)) AS requestVacationTotalDays');
 
@@ -146,8 +148,9 @@ class RequestIndexController extends Controller
             array('defaultSortFieldName' => 'request.createDate', 'defaultSortDirection' => 'DESC')
         );
 
-        //print_r($pagination[1]);
-        //echo "count req=".count($pagination[0])."<br>";
+        //print_r($pagination[0]);
+        //echo "count req=".count($pagination)."<br>";
+        //exit('1');
 
         return array(
             'filterform' => $filterform,
