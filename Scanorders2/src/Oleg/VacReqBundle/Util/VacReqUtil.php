@@ -403,8 +403,8 @@ class VacReqUtil
         $days = 0;
         $subRequestGetMethod = "getRequest".$requestTypeStr;
 
-        //echo "startStr=".$startStr."<br>";
-        //echo "endStr=".$endStr."<br>";
+        echo "startStr=".$startStr."<br>";
+        echo "endStr=".$endStr."<br>";
         $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",true);
 
         foreach( $requests as $request ) {
@@ -505,6 +505,7 @@ class VacReqUtil
 
         // |----||--s--||--e--|
         if( $type == "after" && $startStr && $endStr ) {
+            echo "sql endStr=".$endStr."<br>";
             $dql->andWhere("requestType.endDate > '" . $endStr . "'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
             //$dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate > " . "'" . $endStr . "'");
         }
@@ -512,6 +513,7 @@ class VacReqUtil
         $query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
+        echo "dql=".$dql."<br>";
 
         $query->setParameters( array(
             'userId' => $user->getId(),
@@ -623,7 +625,7 @@ class VacReqUtil
         return $days;
     }
 
-    public function getRequestEdgeAcademicYearDate( $request, $edge = 'Start' ) {
+    public function getRequestEdgeAcademicYearDate( $request, $edge ) {
         $userSecUtil = $this->container->get('user_security_utility');
 
         //academicYearEdge
@@ -644,7 +646,7 @@ class VacReqUtil
         } else {
             throw new \InvalidArgumentException("Request's academic ".$edge." year is not defined.");
         }
-        //echo "academicYearEdgeStr=".$academicYearEdgeStr."<br>";
+        echo "academicYearEdgeStr=".$academicYearEdgeStr."<br>";
 
         return $academicYearEdgeStr;
     }
