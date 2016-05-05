@@ -726,7 +726,7 @@ class VacReqRequest
         }
 
         if( $dateB && $dateV ) {
-            //echo "date=".$dateB."<br>";
+            //echo "date=".$dateB->format('Y-m-d')."<br>";
             if ($dateB < $dateV) {
                 return $dateB;
             } else {
@@ -735,12 +735,12 @@ class VacReqRequest
         }
 
         if( $dateB ) {
-            //echo "dateB=".$dateB."<br>";
+            //echo "dateB=".$dateB->format('Y-m-d')."<br>";
             return $dateB;
         }
 
         if( $dateV ) {
-            //echo "dateV=".$dateV."<br>";
+            //echo "dateV=".$dateV->format('Y-m-d')."<br>";
             return $dateV;
         }
 

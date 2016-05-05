@@ -433,8 +433,10 @@ class VacReqUtil
         $requestFirstDateAway = $request->getFirstDateAway('approved');
         if( $requestFirstDateAway == null ) {
             //exit("Request's first day away is not defined.");
-            throw new \InvalidArgumentException("Request's first day away is not defined.");
+            //throw new \InvalidArgumentException("Request's first day away is not defined.");
+            return null;
         }
+
         $requestFirstDateAwayStr = $requestFirstDateAway->format('Y-m-d');
         //echo "requestFirstDateAwayStr=".$requestFirstDateAwayStr."<br>";
 
