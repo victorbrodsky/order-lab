@@ -97,7 +97,12 @@ class RequestIndexController extends Controller
 
         //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
         //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
-        $dql->addSelect('(IFNULL(requestBusiness.numberOfDays,0) + IFNULL(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+        //$dql->addSelect('(ISNULL(requestBusiness.numberOfDays,0) + ISNULL(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+
+        //$dql->addSelect('ISNULL(requestBusiness.numberOfDays,0) as thisRequestTotalDays');
+        $addSelect = '((CASE WHEN (requestBusiness.numberOfDays IS NULL) THEN 0 ELSE requestBusiness.numberOfDays END) + '.
+            '(CASE WHEN (requestVacation.numberOfDays IS NULL) THEN 0 ELSE requestVacation.numberOfDays END)) AS thisRequestTotalDays';
+        $dql->addSelect($addSelect);
 
         //$dql->addSelect('IF(SUM(requestBusiness.numberOfDays) IS NULL, 0, SUM(requestBusiness.numberOfDays)) AS requestBusinessTotalDays');
         //$dql->addSelect('IF(SUM(requestVacation.numberOfDays) IS NULL, 0, SUM(requestVacation.numberOfDays)) AS requestVacationTotalDays');
