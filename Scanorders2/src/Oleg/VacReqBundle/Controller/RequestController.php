@@ -325,9 +325,9 @@ class RequestController extends Controller
             }
 
             if( $requestName == 'vacation' ) {
-                $businessRequest = $entity->getRequestBusiness();
-                if( $businessRequest ) {
-                    $businessRequest->setStatus($status);
+                $vacationRequest = $entity->getRequestVacation();
+                if( $vacationRequest ) {
+                    $vacationRequest->setStatus($status);
                     //set overall status
                     if( $status == 'pending' ) {
                         $entity->setStatus('pending');
@@ -403,7 +403,8 @@ class RequestController extends Controller
 //            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
 //        }
 
-        return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+        //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+        return $this->redirectToRoute('vacreq_incomingrequests');
     }
 
 

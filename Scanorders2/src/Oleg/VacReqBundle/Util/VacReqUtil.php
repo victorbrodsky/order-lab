@@ -794,16 +794,16 @@ class VacReqUtil
         $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
 
         //log Business Request
-        if( $requestParticular = $request->hasBusinessRequest() ) {
-            //$requestParticular = $request->getRequestBusiness();
+        if( $request->hasBusinessRequest() ) {
+            $requestParticular = $request->getRequestBusiness();
             $changeset = $uow->getEntityChangeSet($requestParticular);
             $text = "("."Business Travel Request ID ".$request->getId().")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 
         //log Vacation Request
-        if( $requestParticular = $request->hasVacationRequest() ) {
-            //$requestParticular = $request->getRequestVacation();
+        if( $request->hasVacationRequest() ) {
+            $requestParticular = $request->getRequestVacation();
             $changeset = $uow->getEntityChangeSet($requestParticular);
             $text = "("."Vacation Request ID ".$request->getId().")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
