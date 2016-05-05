@@ -168,7 +168,7 @@
         {% for object in pagination %}
 
             {% set entity = object['object'] %}
-            {% set thisRequestTotalDays = object['thisRequestTotalDays'] %}
+            {#{% set thisRequestTotalDays = object['thisRequestTotalDays'] %}#}
 
             {#Set row color#}
             {% set trclassname = "" %}
@@ -199,10 +199,10 @@
                 </td>
 
                 <td>
-                    {% if entity %}
+                    {#{% if entity %}#}
                         {#{{ entity.getTotalDays() }}#}
-                        {{ thisRequestTotalDays }}
-                    {% endif %}
+                        {{ object['thisRequestTotalDays'] }}
+                    {#{% endif %}#}
                 </td>
 
                 <td>{% if entity.createDate %}{{ entity.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
