@@ -137,6 +137,7 @@ class RequestIndexController extends Controller
             $query->setParameters( $dqlParameters );
         }
 
+        //echo "dql=".$dql."<br>";
         //echo "query=".$query->getSql()."<br>";
 
         $paginator  = $this->get('knp_paginator');
@@ -205,7 +206,12 @@ class RequestIndexController extends Controller
         $startdate = $filterform['startdate']->getData();
         $enddate = $filterform['enddate']->getData();
 
-        $user = ( array_key_exists('user', $filterform) ? $filterform['user']->getData() : null);
+        //$user = ( array_key_exists('user', $filterform) ? $filterform['user']->getData() : null);
+        if( $filterform->has('user') ) {
+            $user = $filterform['user']->getData();
+        } else {
+            $user = null;
+        }
 
         $vacationRequest = $filterform['vacationRequest']->getData();
         $businessRequest = $filterform['businessRequest']->getData();
@@ -225,7 +231,7 @@ class RequestIndexController extends Controller
             if( $where != "" ) {
                 $where .= " OR ";
             }
-            if( $user->getId() ) {
+            if( $user ) {
                 $where .= "request.user=".$user->getId();
             } else {
                 $where .= "request.user IS NULL";
