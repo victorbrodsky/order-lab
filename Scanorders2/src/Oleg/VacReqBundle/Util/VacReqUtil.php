@@ -364,9 +364,9 @@ class VacReqUtil
 
         //step3: get requests with start date later than academic Year End
         $currentYear = date("Y");
-        $academicYearStartStr = $currentYear."-".$academicYearStartStr;
+        $academicYearStartStr = $currentYear."-".$academicYearStart->format('m-d');
         $nextYear = date("Y") + 1;
-        $academicYearEndStr = $nextYear."-".$academicYearEndStr;
+        $academicYearEndStr = $nextYear."-".$academicYearStart->format('m-d');
         $numberOfDaysAfter = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr);
         //echo "numberOfDaysAfter=".$numberOfDaysAfter."<br>";
 
@@ -403,8 +403,8 @@ class VacReqUtil
         $days = 0;
         $subRequestGetMethod = "getRequest".$requestTypeStr;
 
-        echo "startStr=".$startStr."<br>";
-        echo "endStr=".$endStr."<br>";
+        //echo "startStr=".$startStr."<br>";
+        //echo "endStr=".$endStr."<br>";
         $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",true);
 
         foreach( $requests as $request ) {
@@ -505,7 +505,7 @@ class VacReqUtil
 
         // |----||--s--||--e--|
         if( $type == "after" && $startStr && $endStr ) {
-            echo "sql endStr=".$endStr."<br>";
+            //echo "sql endStr=".$endStr."<br>";
             $dql->andWhere("requestType.endDate > '" . $endStr . "'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
             //$dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate > " . "'" . $endStr . "'");
         }
@@ -513,7 +513,7 @@ class VacReqUtil
         $query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         $query->setParameters( array(
             'userId' => $user->getId(),
@@ -646,7 +646,7 @@ class VacReqUtil
         } else {
             throw new \InvalidArgumentException("Request's academic ".$edge." year is not defined.");
         }
-        echo "academicYearEdgeStr=".$academicYearEdgeStr."<br>";
+        //echo "academicYearEdgeStr=".$academicYearEdgeStr."<br>";
 
         return $academicYearEdgeStr;
     }
