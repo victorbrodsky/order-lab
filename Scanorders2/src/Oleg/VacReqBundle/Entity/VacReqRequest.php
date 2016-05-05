@@ -714,6 +714,39 @@ class VacReqRequest
         return $days;
     }
 
+    public function getFirstDateAway($status='approved') {
+        //echo "status=".$status."<br>";
+        $dateB = null;
+        $dateV = null;
+        if( $this->hasBusinessRequest() && $this->getRequestBusiness()->getStatus() == $status ) {
+            $dateB = $this->getRequestBusiness()->getStartDate();
+        }
+        if( $this->hasVacationRequest() && $this->getRequestVacation()->getStatus() == $status ) {
+            $dateV = $this->getRequestVacation()->getStartDate();
+        }
+
+        if( $dateB && $dateV ) {
+            //echo "date=".$dateB."<br>";
+            if ($dateB < $dateV) {
+                return $dateB;
+            } else {
+                return $dateV;
+            }
+        }
+
+        if( $dateB ) {
+            //echo "dateB=".$dateB."<br>";
+            return $dateB;
+        }
+
+        if( $dateV ) {
+            //echo "dateV=".$dateV."<br>";
+            return $dateV;
+        }
+
+        return null;
+    }
+
 
     public function getFinalStartEndDates() {
 

@@ -410,7 +410,7 @@ class VacReqUtil
         $academicYearStartStr = $academicYearStart->format('m-d');
 //        $previousYear = date("Y") - 1;
 //        $academicYearStartStr = $previousYear."-".$academicYearStartStr;
-        //echo "academicYearStartStr=".$academicYearStartStr."<br>";
+//        echo "academicYearStartStr=".$academicYearStartStr."<br>";
 //        //academicYearEnd
 //        $academicYearEndStr = $academicYearEnd->format('m-d');
 //        $currentYear = date("Y");
@@ -420,17 +420,25 @@ class VacReqUtil
         $academicYearArr = $this->getRequestAcademicYears($request);
         if( count($academicYearArr) > 0 ) {
             $yearsArr = explode("-",$academicYearArr[0]);
-            $academicYearStartStr = $yearsArr[0]."-".$academicYearStartStr;
+            $startYear = $yearsArr[0];
+            $academicYearStartStr = $startYear."-".$academicYearStartStr;
         } else {
             throw new \InvalidArgumentException("Request's academic start year is not defined.");
         }
+        //echo "academicYearStartStr=".$academicYearStartStr."<br>";
 
         $user = $request->getUser();
 
-        $requestCreateDate = $request->getCreateDate();
-        $requestCreateDateStr = $requestCreateDate->format('Y-m-d');
+        //get the first day away
+        $requestFirstDateAway = $request->getFirstDateAway('approved');
+        if( $requestFirstDateAway == null ) {
+            //exit("Request's first day away is not defined.");
+            throw new \InvalidArgumentException("Request's first day away is not defined.");
+        }
+        $requestFirstDateAwayStr = $requestFirstDateAway->format('Y-m-d');
+        //echo "requestFirstDateAwayStr=".$requestFirstDateAwayStr."<br>";
 
-        $days = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$requestCreateDateStr,"inside",false);
+        $days = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$requestFirstDateAwayStr,"inside",false);
 
         return $days;
     }
