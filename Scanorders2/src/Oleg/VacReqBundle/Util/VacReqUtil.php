@@ -389,7 +389,8 @@ class VacReqUtil
         return $days;
     }
 
-    //get prior approved days for the request's academic year
+    //get prior approved days for the request's academic year:
+    // SUM numberOfDays from this request's academic start date and this request's first day away
     public function getPriorApprovedDays( $request, $requestTypeStr ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -399,24 +400,11 @@ class VacReqUtil
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
-//        //academicYearEnd
-//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
-//        if( !$academicYearEnd ) {
-//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-//        }
 
-        //constract start and end date for DB select "Y-m-d"
         //academicYearStart
         $academicYearStartStr = $academicYearStart->format('m-d');
-//        $previousYear = date("Y") - 1;
-//        $academicYearStartStr = $previousYear."-".$academicYearStartStr;
-//        echo "academicYearStartStr=".$academicYearStartStr."<br>";
-//        //academicYearEnd
-//        $academicYearEndStr = $academicYearEnd->format('m-d');
-//        $currentYear = date("Y");
-//        $academicYearEndStr = $currentYear."-".$academicYearEndStr;
-//        //echo "academicYearEndStr=".$academicYearEndStr."<br>";
 
+        //get request's academic year
         $academicYearArr = $this->getRequestAcademicYears($request);
         if( count($academicYearArr) > 0 ) {
             $yearsArr = explode("-",$academicYearArr[0]);

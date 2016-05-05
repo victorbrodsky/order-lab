@@ -121,7 +121,7 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Total Days', 'totalDays') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Date Submitted', 'request.firstDayBackInOffice') }}</th>
 
@@ -168,7 +168,7 @@
         {% for object in pagination %}
 
             {% set entity = object['object'] %}
-            {% set totalDays = object['totalDays'] %}
+            {% set thisRequestTotalDays = object['thisRequestTotalDays'] %}
 
             {#Set row color#}
             {% set trclassname = "" %}
@@ -201,7 +201,7 @@
                 <td>
                     {% if entity %}
                         {#{{ entity.getTotalDays() }}#}
-                        {{ totalDays }}
+                        {{ thisRequestTotalDays }}
                     {% endif %}
                 </td>
 

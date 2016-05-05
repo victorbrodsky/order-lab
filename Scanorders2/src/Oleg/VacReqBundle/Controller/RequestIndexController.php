@@ -94,8 +94,10 @@ class RequestIndexController extends Controller
         $dql =  $repository->createQueryBuilder("request");
 
         $dql->select('request as object');
-        $dql->addSelect('(requestBusiness.numberOfDays+requestVacation.numberOfDays) as totalDays');
-        //$dql->addSelect('(SUM(requestBusiness.numberOfDays)+SUM(requestVacation.numberOfDays)) as totalDays');
+
+        //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0
+        $dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+
         //$dql->addSelect('IF(SUM(requestBusiness.numberOfDays) IS NULL, 0, SUM(requestBusiness.numberOfDays)) AS requestBusinessTotalDays');
         //$dql->addSelect('IF(SUM(requestVacation.numberOfDays) IS NULL, 0, SUM(requestVacation.numberOfDays)) AS requestVacationTotalDays');
 
