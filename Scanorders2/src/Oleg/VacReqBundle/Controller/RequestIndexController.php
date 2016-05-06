@@ -96,7 +96,8 @@ class RequestIndexController extends Controller
         $dql->select('request as object');
 
         //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
-        $dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+        //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+        $dql->addSelect('requestBusiness.numberOfDays as thisRequestTotalDays');
 
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("user.infos", "infos");
@@ -145,7 +146,7 @@ class RequestIndexController extends Controller
             $query,
             $this->get('request')->query->get('page', 1),   /*page number*/
             $limit,                                         /*limit per page*/
-            array('defaultSortFieldName' => 'request.createDate', 'defaultSortDirection' => 'DESC')
+            array('defaultSortFieldName' => 'request.createDate', 'defaultSortDirection' => 'DESC', 'wrap-queries'=>true)
         );
 
         //echo "num=".$pagination[0]['thisRequestTotalDays']."<br>";
