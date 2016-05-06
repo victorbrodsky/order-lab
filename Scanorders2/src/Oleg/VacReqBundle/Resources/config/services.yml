@@ -38,3 +38,9 @@ services:
     vacreq_import_data:
         class: Oleg\VacReqBundle\Util\VacReqImportData
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
+    vacreq_awaycalendar_listener:
+        class: Oleg\VacReqBundle\EventListener\CalendarEventListener
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+        tags:
+            - { name: kernel.event_listener, event: calendar.load_events, method: loadEvents }
