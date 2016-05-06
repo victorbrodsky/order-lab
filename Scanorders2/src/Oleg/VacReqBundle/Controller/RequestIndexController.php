@@ -106,6 +106,8 @@ class RequestIndexController extends Controller
         $dql->leftJoin("request.requestBusiness", "requestBusiness");
         $dql->leftJoin("request.requestVacation", "requestVacation");
 
+        //$dql->groupBy("user");
+
         //$dql->where("requestBusiness.startDate IS NOT NULL OR requestVacation.startDate IS NOT NULL");
 
         //my requests
@@ -141,12 +143,18 @@ class RequestIndexController extends Controller
         //echo "dql=".$dql."<br>";
         //echo "query=".$query->getSql()."<br>";
 
+        $paginationParams = array(
+            'defaultSortFieldName' => 'request.createDate',
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries'=>true
+        );
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
             $this->get('request')->query->get('page', 1),   /*page number*/
             $limit,                                         /*limit per page*/
-            array('defaultSortFieldName' => 'request.createDate', 'defaultSortDirection' => 'DESC', 'wrap-queries'=>true)
+            $paginationParams
         );
 
         //echo "num=".$pagination[0]['thisRequestTotalDays']."<br>";
