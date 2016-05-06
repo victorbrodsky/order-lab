@@ -642,24 +642,46 @@ class RequestController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        //$entities = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findByExportId($id);
 
         $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
-        $dql->where("request.exportId IS NOT NULL");
+        $dql->where("request.exportId != 0");
 
         $query = $em->createQuery($dql);
 
         $requests = $query->getResult();
 
+        $batchSize = 20;
+        $count = 0;
         foreach( $requests as $request ) {
-            //echo "reqId=".$request->getId()."<br>";
 
+//            echo "reqId=".$request->getId()."<br>";
+//            if( $request->hasBusinessRequest() ) {
+//                echo "businessId=" . $request->getRequestBusiness()->getID() . "<br>";
+//            }
+//            if( $request->hasVacationRequest() ) {
+//                echo "vacationId=" . $request->getRequestVacation()->getID() . "<br>";
+//            }
+
+            $em->remove($request);
+
+            $em->flush();
+            //exit('removed');
+
+            if( ($count % $batchSize) === 0 ) {
+                $em->flush();
+                //$em->clear(); // Detaches all objects from Doctrine!
+            }
+
+            $count++;
         }
 
-        //exit('Imported result: '.$res);
+        $em->flush(); //Persist objects that did not make up an entire batch
+        $em->clear();
+
+        //exit('Remove result: '.$count);
 
         //Flash
         $this->get('session')->getFlashBag()->add(
