@@ -113,14 +113,16 @@ class RequestIndexController extends Controller
         }
 
         //incoming requests: show all requests with institutions in approver institutions
-        if( $approver ) {
-            $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver, "vacreq", "ROLE_VACREQ_APPROVER_");
-            $instArr = array();
-            foreach( $approverRoles as $approverRole ) {
-                $instArr[] = $approverRole->getInstitution()->getId();
-            }
-            if( count($instArr) > 0 ) {
-                $dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if ($approver) {
+                $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver, "vacreq", "ROLE_VACREQ_APPROVER_");
+                $instArr = array();
+                foreach ($approverRoles as $approverRole) {
+                    $instArr[] = $approverRole->getInstitution()->getId();
+                }
+                if (count($instArr) > 0) {
+                    $dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
+                }
             }
         }
 

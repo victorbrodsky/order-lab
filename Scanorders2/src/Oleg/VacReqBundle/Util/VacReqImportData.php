@@ -202,6 +202,12 @@ class VacReqImportData
                 $request->setAvailableNone(true);
             }
 
+            //FACULTY_PHONE
+            $FACULTY_PHONE = $this->getValueByHeaderName('FACULTY_PHONE', $rowData, $headers);
+            if( $FACULTY_PHONE ) {
+                $request->setPhone($FACULTY_PHONE);
+            }
+
             //BUSINESS_REQUEST
             $BUSINESS_REQUEST = $this->getValueByHeaderName('BUSINESS_REQUEST', $rowData, $headers);
             if( $BUSINESS_REQUEST ) {

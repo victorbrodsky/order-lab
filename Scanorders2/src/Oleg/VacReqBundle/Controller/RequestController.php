@@ -611,6 +611,9 @@ class RequestController extends Controller
      */
     public function importOldDataAction(Request $request) {
 
+        if( !$this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
 
         $vacReqImportData = $this->get('vacreq_import_data');
         $res = $vacReqImportData->importOldData();
@@ -625,4 +628,46 @@ class RequestController extends Controller
 
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
+
+
+    /**
+     * @Route("/delete-imported-old-data/", name="vacreq_delete_imported_old_data")
+     * @Method({"GET"})
+     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     */
+    public function deleteImportedOldDataAction(Request $request) {
+
+        if( !$this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //$entities = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findByExportId($id);
+
+        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+        $dql->where("request.exportId IS NOT NULL");
+
+        $query = $em->createQuery($dql);
+
+        $requests = $query->getResult();
+
+        foreach( $requests as $request ) {
+            //echo "reqId=".$request->getId()."<br>";
+
+        }
+
+        //exit('Imported result: '.$res);
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Removed requests: '.count($requests)
+        );
+
+        return $this->redirectToRoute('vacreq_incomingrequests');
+    }
+
 }
