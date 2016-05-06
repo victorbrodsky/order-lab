@@ -126,13 +126,19 @@
             <th>{{ knp_pagination_sortable(pagination, 'Date Submitted', 'request.firstDayBackInOffice') }}</th>
 
             {% if showUserInfo %}
-            <th>{{ knp_pagination_sortable(pagination, 'Faculty', 'infos.displayName') }}</th>
+            <th>
+                {#displayName#}
+                {{ knp_pagination_sortable(pagination, 'Faculty', 'infos.displayName') }}
+            </th>
 
             <th>Photo</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Email', 'user.email') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Phone', 'infos.preferredPhone') }}</th>
+            <th>
+                {#{{ knp_pagination_sortable(pagination, 'Phone', 'infos.preferredPhone') }}#}
+                {{ knp_pagination_sortable(pagination, 'Phone', 'request.phone') }}
+            </th>
             {% endif %}
 
             <th>{{ knp_pagination_sortable(pagination, 'Division', 'institution.name') }}</th>
@@ -235,9 +241,12 @@
                 </td>
 
                 <td class="rowlink-skip">
-                    {% set preferredPhone = entity.user.getPreferredPhone %}
-                    {% if preferredPhone %}
-                        {{ usermacros.phoneHref(preferredPhone) }}
+                    {#{% set preferredPhone = entity.user.getPreferredPhone %}#}
+                    {#{% if preferredPhone %}#}
+                        {#{{ usermacros.phoneHref(preferredPhone) }}#}
+                    {#{% endif %}#}
+                    {% if entity.phone %}
+                        {{ usermacros.phoneHref(entity.phone) }}
                     {% endif %}
                 </td>
                 {% endif %}

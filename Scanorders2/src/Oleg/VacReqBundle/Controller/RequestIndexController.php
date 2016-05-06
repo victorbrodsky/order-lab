@@ -97,7 +97,6 @@ class RequestIndexController extends Controller
 
         //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
         $dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
-        //$dql->addSelect('requestBusiness.numberOfDays as thisRequestTotalDays');
 
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("user.infos", "infos");
@@ -105,8 +104,6 @@ class RequestIndexController extends Controller
 
         $dql->leftJoin("request.requestBusiness", "requestBusiness");
         $dql->leftJoin("request.requestVacation", "requestVacation");
-
-        //$dql->groupBy("user");
 
         //$dql->where("requestBusiness.startDate IS NOT NULL OR requestVacation.startDate IS NOT NULL");
 
@@ -146,7 +143,7 @@ class RequestIndexController extends Controller
         $paginationParams = array(
             'defaultSortFieldName' => 'request.createDate',
             'defaultSortDirection' => 'DESC',
-            'wrap-queries'=>true
+            //'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
         );
 
         $paginator  = $this->get('knp_paginator');

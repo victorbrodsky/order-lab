@@ -520,8 +520,8 @@ class UserController extends Controller
             $pagination = $paginator->paginate(
                 $query,
                 $this->get('request')->query->get('page', 1), /*page number*/
-                $limit, /*limit per page*/
-                array('wrap-queries'=>true)
+                $limit /*limit per page*/
+                //array('wrap-queries'=>true) //don't need it with "doctrine/orm": "v2.4.8"
             );
         } else {
             $pagination = $query->getResult();
