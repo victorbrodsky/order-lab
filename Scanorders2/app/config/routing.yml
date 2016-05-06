@@ -31,6 +31,8 @@ oleg_userdirectory:
     prefix:   /directory
 
 
+adesigns_calendar:
+  resource: "@ADesignsCalendarBundle/Resources/config/routing.xml"
 
 
 #acme_demo:

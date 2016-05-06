@@ -409,50 +409,9 @@ class RequestController extends Controller
 
 
 
-//    /**
-//     * @Route("/request/{id}", name="vacreq_request_show")
-//     * @Route("/request/edit/{id}", name="vacreq_request_edit")
-//     * @Method("GET")
-//     * @Template("OlegVacReqBundle:Request:new.html.twig")
-//     */
-//    public function newRequestAction(Request $request, $id)
-//    {
-//
-//        if( false == $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
-//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequestForm')->find($id);
-//
-//        if( !$entity ) {
-//            throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
-//        }
-//
-//        $routeName = $request->get('_route');
-//
-//        $cycle = "show";
-//        if( $routeName = 'vacreq_request_edit' ) {
-//            $cycle = "edit";
-//        }
-//
-//        //VacReqRequestType Form
-//
-//        $form = $this->createRequestForm($entity, $cycle);
-//
-//        if( 1 ) {
-//            $admin = true;
-//        } else {
-//            $admin = false;
-//        }
-//
-//        return array(
-//            'form' => $form->createView(),
-//            'admin' => $admin,
-//            'cycle' => $cycle
-//        );
-//    }
+
+
+
 
 
     public function createRequestForm( $entity, $cycle, $request=null ) {
@@ -601,6 +560,8 @@ class RequestController extends Controller
         $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('vacreq.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
+
+
 
 
 

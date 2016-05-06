@@ -161,6 +161,13 @@ class RequestIndexController extends Controller
         //echo "count req=".count($pagination)."<br>";
         //exit('1');
 
+        $indexTitle = $params['title'];
+
+        if( $pagination->getTotalItemCount() > 0 ) {
+            $paginationData = $pagination->getPaginationData();
+            $indexTitle = $indexTitle." (".$paginationData['firstItemNumber']."-".$paginationData['lastItemNumber']." of ".$pagination->getTotalItemCount().")";
+        }
+
         return array(
             'filterform' => $filterform,
             'vacreqfilter' => $filterform->createView(),
@@ -168,7 +175,7 @@ class RequestIndexController extends Controller
             'sitename' => $sitename,
             'filtered' => $filtered,
             'routename' => $request->get('_route'),
-            'title' => $params['title']
+            'title' => $indexTitle
         );
     }
 

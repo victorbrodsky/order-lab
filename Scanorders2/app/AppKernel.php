@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new Ensepar\Html2pdfBundle\EnseparHtml2pdfBundle(),
             new Spraed\PDFGeneratorBundle\SpraedPDFGeneratorBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
+            new ADesigns\CalendarBundle\ADesignsCalendarBundle(),
 
             //new Acme\DemoBundle\AcmeDemoBundle(),
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),

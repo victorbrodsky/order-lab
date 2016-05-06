@@ -1,0 +1,50 @@
+{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+
+
+{% block title %}
+    Away Calendar
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+    <h4 class="text-info" align="center">
+        Vacation/Business Travel Request
+    </h4>
+
+    <br>
+
+
+    {% include 'ADesignsCalendarBundle::calendar.html.twig' %}
+
+{% endblock %}
+
+
+
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/adesignscalendar/css/fullcalendar/fullcalendar.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block additionaljs %}
+    {#<script type="text/javascript" src="{{ asset('bundles/adesignscalendar/js/jquery/jquery-1.8.2.min.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('bundles/adesignscalendar/js/fullcalendar/jquery.fullcalendar.min.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('bundles/adesignscalendar/js/calendar-settings.js') }}"></script>#}
+
+    {% javascripts
+        'bundles/adesignscalendar/js/jquery/jquery-1.8.2.min.js'
+        'bundles/adesignscalendar/js/fullcalendar/jquery.fullcalendar.min.js'
+        'bundles/adesignscalendar/js/calendar-settings.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
+

@@ -297,7 +297,9 @@ class VacReqUtil
         $result = "During the current academic year, you have received ";
 
         $requestTypeStr = 'business';
-        $numberOfDays = $this->getApprovedTotalDays($user,$requestTypeStr);
+        $res = $this->getApprovedTotalDays($user,$requestTypeStr);
+        $numberOfDays = $res['numberOfDays'];
+        $accurate = $res['accurate'];
         if( $numberOfDays == 0 ) {
             $result .= "no approved ".$requestTypeStr." days";
         }
@@ -307,20 +309,30 @@ class VacReqUtil
         if( $numberOfDays > 1 ) {
             $result .= $numberOfDays." approved ".$requestTypeStr." days in total";
         }
+        if( !$accurate ) {
+            $result .= " (the result might be inaccurate due to academic year overlap)";
+        }
 
         $result .= " and ";
 
         $requestTypeStr = 'vacation';
-        $numberOfDays = $this->getApprovedTotalDays($user,$requestTypeStr);
+        $res = $this->getApprovedTotalDays($user,$requestTypeStr);
+        $numberOfDays = $res['numberOfDays'];
+        $accurate = $res['accurate'];
         if( $numberOfDays == 0 ) {
-            $result .= "no approved ".$requestTypeStr." days.";
+            $result .= "no approved ".$requestTypeStr." days";
         }
         if( $numberOfDays == 1 ) {
-            $result .= $numberOfDays." approved ".$requestTypeStr." day.";
+            $result .= $numberOfDays." approved ".$requestTypeStr." day";
         }
         if( $numberOfDays > 1 ) {
-            $result .= $numberOfDays." approved ".$requestTypeStr." days in total.";
+            $result .= $numberOfDays." approved ".$requestTypeStr." days in total";
         }
+        if( !$accurate ) {
+            $result .= " (the result might be inaccurate due to academic year overlap)";
+        }
+
+        $result .= ".";
 
         return $result;
     }
@@ -370,7 +382,17 @@ class VacReqUtil
         $numberOfDaysAfter = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr);
         //echo "numberOfDaysAfter=".$numberOfDaysAfter."<br>";
 
-        return $numberOfDaysBefore+$numberOfDaysInside+$numberOfDaysAfter;
+        $res = array();
+
+        $numberOfDays = $numberOfDaysBefore+$numberOfDaysInside+$numberOfDaysAfter;
+        $res['numberOfDays'] = $numberOfDays;
+        $res['accurate'] = true;
+
+        if( $numberOfDaysBefore > 0 || $numberOfDaysAfter > 0 ) {
+            $res['accurate'] = false;
+        }
+
+        return $res;
     }
 
     public function getApprovedBeforeAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null ) {
