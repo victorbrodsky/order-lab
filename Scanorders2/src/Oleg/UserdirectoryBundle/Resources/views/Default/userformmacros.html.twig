@@ -760,6 +760,7 @@
                     {% if user.getEmail or user.getPreferredPhone %}
 
                         <div class="prefferedinfo">
+                            {{ vacreq_util.getUserAwayInfo(user)|raw }}
                             <h4>Preferred Contact Info:</h4>
                             <table>
                                 {% if user.getEmail %}

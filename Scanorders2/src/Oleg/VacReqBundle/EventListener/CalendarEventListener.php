@@ -117,7 +117,7 @@ class CalendarEventListener
     }
 
     public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate ) {
-
+        //echo "ID";
         $dateformat = 'M d Y';
         $vacreqUtil = $this->container->get('vacreq_util');
 
@@ -147,20 +147,23 @@ class CalendarEventListener
             $request = $requestFull->$getMethod();
             //echo "ID=".$request->getId();
 
-//            $url = $this->container->get('router')->generate(
-//                'vacreq_showuser',
-//                array(
-//                    'id' => $requestFull->getUser()->getId()
-//                )
-//            //UrlGeneratorInterface::ABSOLUTE_URL
-//            );
-            $url = $this->container->get('router')->generate(
-                'vacreq_show',
-                array(
-                    'id' => $requestFull->getId()
-                )
-            //UrlGeneratorInterface::ABSOLUTE_URL
-            );
+            //if( $this->container->get('security.context')->isGranted("read", $requestFull) ) {
+                $url = $this->container->get('router')->generate(
+                    'vacreq_show',
+                    array(
+                        'id' => $requestFull->getId()
+                    )
+                    //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+//            } else {
+//                $url = $this->container->get('router')->generate(
+//                    'vacreq_showuser',
+//                    array(
+//                        'id' => $requestFull->getUser()->getId()
+//                    )
+//                    //UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//            }
 
             //$userNameLink = '<a href="'.$url.'">'.$requestFull->getUser().'</a>';
 

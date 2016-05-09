@@ -768,7 +768,7 @@ class VacReqUtil
         }
 
         $dql->where("requestType.id IS NOT NULL AND requestType.status = :statusApproved");
-        $dql->andWhere('request.firstDayAway BETWEEN :startDate and :endDate');
+        $dql->andWhere('(requestType.startDate BETWEEN :startDate and :endDate)');
 
         $query = $this->em->createQuery($dql);
 
@@ -784,6 +784,105 @@ class VacReqUtil
 
         return $requests;
     }
+
+    //IF the person is away on the date the page is being loaded (approved request), show the heading "Away" and under it show one of three lines:
+    //Vacation: StartDate - EndDate, Back on BackDate
+    //Business Travel: StartDate - EndDate, Back on BackDate
+    //Vacation + Business Travel: StartDate - EndDate, Back on BackDate
+    //Followed by (if the phone number, email, or "other" field was filled in):
+    //Emergency Contact Via: Phone - [field-from-phone]; Email - [field form email]; Other - [field form other]__
+    public function getUserAwayInfo( $user ) {
+
+        $dateformat = 'M d Y';
+        //$res = "";
+        $resB = "";
+        $resV = "";
+
+        $requestsB = $this->getApprovedRequestToday( $user, 'requestBusiness' );
+        $requestsV = $this->getApprovedRequestToday( $user, 'requestVacation' );
+
+//        if( $requestB && $requestV ) {
+//            //Vacation + Business Travel: StartDate - EndDate, Back on BackDate
+//            $res = "Vacation + Business Travel:" . ;
+//        }
+
+        if( count($requestsB) > 0 ) {
+            //Business Travel: StartDate - EndDate, Back on BackDate
+            foreach( $requestsB as $request ) {
+                $subRequest = $request->getRequestBusiness();
+                $resB = "Business Travel: " . $subRequest->getStartDate()->format($dateformat) . " - " . $subRequest->getEndDate()->format($dateformat);
+                $resB .= "<br>";
+
+                $emergencyConatcs = $request->getEmergencyConatcs();
+                if( $emergencyConatcs ) {
+                    $resB .= "Emergency Contact Via: <br>" . "<strong>" . $emergencyConatcs . "</strong>";
+                    $resB .= "<br>";
+                }
+            }
+        }
+
+        if( count($requestsV) > 0 ) {
+            foreach( $requestsV as $request ) {
+                $subRequest = $request->getRequestVacation();
+                //Vacation: StartDate - EndDate, Back on BackDate
+                $resV = "Vacation: " . $subRequest->getStartDate()->format($dateformat) . " - " . $subRequest->getEndDate()->format($dateformat);
+                $resV .= "<br>";
+
+                $emergencyConatcs = $request->getEmergencyConatcs();
+                if( $emergencyConatcs ) {
+                    $resV .= "Emergency Contact Via: <br>" . "<strong>" . $emergencyConatcs . "</strong>";
+                    $resV .= "<br>";
+                }
+            }
+        }
+
+        if( $resB || $resV ) {
+            $res = "<h4>Away:</h4>";
+            $res .= '<div style="padding-left: 1em;">';
+            $res .= $resB . $resV;
+            $res .= '</div>';
+        }
+
+        $res = $res . "<br>";
+
+        return $res;
+    }
+    public function getApprovedRequestToday( $user, $requestTypeStr ) {
+
+        $today = new \DateTime();
+        $todayStr = $today->format('Y-m-d');
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql = $repository->createQueryBuilder('request');
+        $dql->leftJoin("request.user", "user");
+
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+            $dql->leftJoin("request.requestBusiness", "requestType");
+        }
+
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+            $dql->leftJoin("request.requestVacation", "requestType");
+        }
+
+        $dql->where("user.id = :userId AND requestType.id IS NOT NULL AND requestType.status = :statusApproved");
+
+        $dql->andWhere('(:today BETWEEN requestType.startDate and requestType.endDate)');
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('statusApproved', 'approved');
+        $query->setParameter('today', $todayStr);
+
+        //echo "dql=".$dql."<br>";
+
+        $requests = $query->getResult();
+
+        //echo "count=".count($requests)."<br>";
+
+        return $requests;
+    }
+
 
 
 

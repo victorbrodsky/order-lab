@@ -838,6 +838,26 @@ class VacReqRequest
         return $name;
     }
 
+    public function getEmergencyConatcs() {
+        $resArr = array();
+
+        $cellPhone = $this->getAvailableCellPhone();
+        if( $cellPhone ) {
+            $resArr[] = "Phone - " . $cellPhone;
+        }
+
+        $email = $this->getAvailableEmail();
+        if( $email ) {
+            $resArr[] = "Email - " . $email;
+        }
+
+        $other = $this->getAvailableOther();
+        if( $other ) {
+            $resArr[] = "Other - " . $other;
+        }
+
+        return implode('<br>',$resArr);
+    }
 
     public function __toString()
     {
