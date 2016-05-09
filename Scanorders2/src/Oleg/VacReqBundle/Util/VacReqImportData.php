@@ -472,6 +472,11 @@ class VacReqImportData
         $cwid = $this->userMapper($userId);
         $username = $cwid."_@_". $this->usernamePrefix;
         $approver = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+        if( !$approver ) {
+            $logger = $this->container->get('logger');
+            $logger->error("Can not find user by username=".$username);
+            echo "Can not find user by username=".$username."<br>";
+        }
         return $approver;
     }
     public function userMapper( $userId ) {
