@@ -39,13 +39,13 @@
 
     <td class="{{ tdclassname }}" style="border-left: 2px solid gray;">
         {% if request and request.startDate %}
-            {{ request.startDate|date('Y-m-d') }}
+            {{ request.startDate|date('m/d/Y','UTC') }}
         {% endif %}
     </td>
 
     <td class="{{ tdclassname }}">
         {% if request and request.endDate %}
-            {{ request.endDate|date('Y-m-d') }}
+            {{ request.endDate|date('m/d/Y','UTC') }}
         {% endif %}
     </td>
 

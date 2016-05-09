@@ -619,6 +619,16 @@ class VacReqRequest
     }
 
 
+    public function setFinalFields() {
+        //set overall status
+        $overallStatus = $this->getOverallStatus();
+        $this->setStatus($overallStatus);
+
+        //set first day away
+        $firstDateAway = $this->getFirstDateAway(null);
+        $this->setFirstDayAway($firstDateAway);
+    }
+
 
 
 //    public function getOverallStatus_OLD()
@@ -714,15 +724,27 @@ class VacReqRequest
         return $days;
     }
 
-    public function getFirstDateAway($status='approved') {
+    public function getFirstDateAway($status) {
         //echo "status=".$status."<br>";
         $dateB = null;
         $dateV = null;
-        if( $this->hasBusinessRequest() && $this->getRequestBusiness()->getStatus() == $status ) {
-            $dateB = $this->getRequestBusiness()->getStartDate();
+        if( $this->hasBusinessRequest() ) {
+            if( $status ) {
+                if( $this->getRequestBusiness()->getStatus() == $status ) {
+                    $dateB = $this->getRequestBusiness()->getStartDate();
+                }
+            } else {
+                $dateB = $this->getRequestBusiness()->getStartDate();
+            }
         }
-        if( $this->hasVacationRequest() && $this->getRequestVacation()->getStatus() == $status ) {
-            $dateV = $this->getRequestVacation()->getStartDate();
+        if( $this->hasVacationRequest() ) {
+            if( $status ) {
+                if( $this->getRequestVacation()->getStatus() == $status ) {
+                    $dateV = $this->getRequestVacation()->getStartDate();
+                }
+            } else {
+                $dateV = $this->getRequestVacation()->getStartDate();
+            }
         }
 
         if( $dateB && $dateV ) {
@@ -779,7 +801,7 @@ class VacReqRequest
         if( $this->hasBusinessRequest() ) {
             $subRequest = $this->getRequestBusiness();
             $startDate = $subRequest->getStartDate();
-            $endDate = $subRequest->getStartDate();
+            $endDate = $subRequest->getEndDate();
             $res['startDate'] = $startDate;
             $res['endDate'] = $endDate;
             return $res;
@@ -788,7 +810,7 @@ class VacReqRequest
         if( $this->hasVacationRequest() ) {
             $subRequest = $this->getRequestVacation();
             $startDate = $subRequest->getStartDate();
-            $endDate = $subRequest->getStartDate();
+            $endDate = $subRequest->getEndDate();
             $res['startDate'] = $startDate;
             $res['endDate'] = $endDate;
             return $res;

@@ -53,6 +53,9 @@ class RequestController extends Controller
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
+            //set final (global) fields
+            $entity->setFinalFields();
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -200,14 +203,20 @@ class RequestController extends Controller
 
             if( $routName == 'vacreq_review' ) { //review
 
-                $overallStatus = $entity->getOverallStatus();
-
                 //set overall status
-                $entity->setStatus($overallStatus);
+//                $overallStatus = $entity->getOverallStatus();
+//                $entity->setStatus($overallStatus);
+//                //set first day away
+//                $firstDateAway = $entity->getFirstDateAway(null);
+//                $entity->setFirstDayAway($firstDateAway);
+                //set final (global) fields
+                $entity->setFinalFields();
 
                 $entity->setApprover($user);
                 $em->persist($entity);
                 $em->flush();
+
+                $overallStatus = $entity->getStatus();
 
                 $eventType = 'Business/Vacation Request '.ucwords($overallStatus);
                 $action = $overallStatus;
@@ -608,7 +617,7 @@ class RequestController extends Controller
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
-        $dql->where("request.exportId != 0");
+        //$dql->where("request.exportId != 0");
 
         $query = $em->createQuery($dql);
 

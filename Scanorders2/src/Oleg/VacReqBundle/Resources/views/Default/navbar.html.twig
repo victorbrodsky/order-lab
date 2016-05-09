@@ -44,13 +44,6 @@
                         {#</li>#}
                     {#{% endif %}#}
 
-                    {#Away Calendar#}
-                    <li id="nav-bar-awaycalendar" class="divider-vertical">
-                        <a href="{{ path('vacreq_awaycalendar') }}">
-                            Away Calendar
-                        </a>
-                    </li>
-
                     {% if is_granted('ROLE_VACREQ_SUBMITTER') %}
                         <li id="nav-bar-myrequests" class="divider-vertical">
                             <a href="{{ path('vacreq_myrequests') }}">
@@ -58,6 +51,13 @@
                             </a>
                         </li>
                     {% endif %}
+
+                    {#Away Calendar#}
+                    <li id="nav-bar-awaycalendar" class="divider-vertical">
+                        <a href="{{ path('vacreq_awaycalendar') }}">
+                            Away Calendar
+                        </a>
+                    </li>
 
                     {% if is_granted('ROLE_VACREQ_APPROVER') %}
                         <li id="nav-bar-incomingrequests" class="divider-vertical">

@@ -122,6 +122,8 @@ class VacReqImportData
             $exportId = trim($exportId);
             //echo "exportId=".$exportId."<br>";
 
+            //if( $exportId != 1840 ) {continue;} //testing
+
             $request = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->findOneByExportId($exportId);
             if( $request ) {
                 continue; //ignore existing request to prevent overwrite
@@ -456,7 +458,14 @@ class VacReqImportData
     public function transformDatestrToDate($datestr)
     {
         $userSecUtil = $this->container->get('user_security_utility');
-        return $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr, $this->container->getParameter('vacreq.sitename'));
+        $date = $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr, $this->container->getParameter('vacreq.sitename'));
+//        if( $date ) {
+//            $date->setTimezone(new \DateTimeZone("UTC"));
+//            //echo "ok<br>";
+//        } else {
+//            //exit("date object is null for datestr=".$datestr);
+//        }
+        return $date;
     }
 
     public function getApproverByUserId($userId) {

@@ -1358,6 +1358,12 @@ class AdminController extends Controller
                         <a href="https://github.com/andreausu/UsuScryptPasswordEncoderBundle">Password Encoder</a>
                     </li>
 
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/adesigns/calendar-bundle">jQuery FullCalendar bundle</a>
+                    </li>
+
                 </ul>
                 </p>
             '

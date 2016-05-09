@@ -754,6 +754,38 @@ class VacReqUtil
         return $academicYearArr;
     }
 
+    public function getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate ) {
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql = $repository->createQueryBuilder('request');
+
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+            $dql->leftJoin("request.requestBusiness", "requestType");
+        }
+
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+            $dql->leftJoin("request.requestVacation", "requestType");
+        }
+
+        $dql->where("requestType.id IS NOT NULL AND requestType.status = :statusApproved");
+        $dql->andWhere('request.firstDayAway BETWEEN :startDate and :endDate');
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter('statusApproved', 'approved');
+        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+
+        //echo "dql=".$dql."<br>";
+
+        $requests = $query->getResult();
+
+        //echo "count=".count($requests)."<br>";
+
+        return $requests;
+    }
+
+
 
     public function getSubmitterPhone($user) {
 

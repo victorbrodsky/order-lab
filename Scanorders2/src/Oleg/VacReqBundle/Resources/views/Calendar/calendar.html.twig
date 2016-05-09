@@ -9,10 +9,8 @@
 
 {% block content %}
 
-
-
     <h4 class="text-info" align="center">
-        Vacation/Business Travel Request
+        Away Calendar
     </h4>
 
     <br>
@@ -33,17 +31,12 @@
 {% endblock %}
 
 {% block additionaljs %}
-    {#<script type="text/javascript" src="{{ asset('bundles/adesignscalendar/js/jquery/jquery-1.8.2.min.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/adesignscalendar/js/fullcalendar/jquery.fullcalendar.min.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/adesignscalendar/js/calendar-settings.js') }}"></script>#}
-
     {% javascripts
         'bundles/adesignscalendar/js/fullcalendar/jquery.fullcalendar.min.js'
         'bundles/adesignscalendar/js/calendar-settings.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
 {% endblock %}
 
 

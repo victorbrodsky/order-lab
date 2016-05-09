@@ -1081,7 +1081,21 @@ class UserSecurityUtil {
 //        }
 
         try {
+            //this is used to convert data string as entered in new-york time to UTC
+            $utcTz = new \DateTimeZone("UTC");
+            $nyTz = new \DateTimeZone("America/New_York");
             $date = new \DateTime($datestr);
+            $date->setTime(12, 00);
+            //echo "Original: data=".$date->format('M d Y H:i:s')."<br>";
+            $date->setTimezone( $nyTz );
+            //echo "after set: data=".$date->format('M d Y H:i:s')."<br>";
+            if( $date ) {
+                $date->setTimezone($utcTz);
+            //    echo "set timezone UTC: data=".$date->format('M d Y H:i:s')."<br>";
+            //    //exit('1');
+            } else {
+            //    //exit("date object is null for datestr=".$datestr);
+            }
         } catch (Exception $e) {
             $msg = 'Failed to convert string'.$datestr.'to DateTime:'.$e->getMessage();
             //throw new \UnexpectedValueException($msg);

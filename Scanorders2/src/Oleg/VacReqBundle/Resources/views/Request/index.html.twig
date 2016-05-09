@@ -209,7 +209,7 @@
                     {{ object['thisRequestTotalDays'] }}
                 </td>
 
-                <td>{% if entity.createDate %}{{ entity.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.createDate %}{{ entity.createDate|date('m/d/Y H:i:s') }}{% endif %}</td>
 
                 {% if showUserInfo %}
                 <td class="rowlink-skip">
@@ -260,13 +260,13 @@
 
                 <td>
                     {% if entity.approvedRejectDate %}
-                        {{ entity.approvedRejectDate|date('Y-m-d H:i:s') }}
+                        {{ entity.approvedRejectDate|date('m/d/Y H:i:s') }}
                     {% endif %}
                 </td>
 
                 <td>
                     {% if entity.firstDayBackInOffice %}
-                        {{ entity.firstDayBackInOffice|date('Y-m-d') }}
+                        {{ entity.firstDayBackInOffice|date('m/d/Y','UTC') }}
                     {% endif %}
                 </td>
 
