@@ -305,7 +305,12 @@ class VacReqImportData
                 $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver,"vacreq","ROLE_VACREQ_APPROVER");
                 if( count($roles) > 0 ) {
                     $role = $roles[0];
+                    $note = 'ROLE_VACREQ_APPROVER role='.$role;
+                    $logger->note($note);
                     $institution = $role->getInstitution();
+                } else {
+                    $error = 'ROLE_VACREQ_APPROVER not found for approver='.$approver;
+                    $logger->error($error);
                 }
                 if( $institution ) {
                     $request->setInstitution($institution);
