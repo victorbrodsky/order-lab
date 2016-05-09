@@ -306,7 +306,7 @@ class VacReqImportData
                 if( count($roles) > 0 ) {
                     $role = $roles[0];
                     $note = 'ROLE_VACREQ_APPROVER role='.$role;
-                    $logger->note($note);
+                    $logger->notice($note);
                     $institution = $role->getInstitution();
                 } else {
                     $error = 'ROLE_VACREQ_APPROVER not found for approver='.$approver;
