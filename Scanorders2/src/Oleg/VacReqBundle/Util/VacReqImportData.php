@@ -305,8 +305,8 @@ class VacReqImportData
                 $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver,"vacreq","ROLE_VACREQ_APPROVER");
                 if( count($roles) > 0 ) {
                     $role = $roles[0];
-                    $note = 'ROLE_VACREQ_APPROVER role='.$role;
-                    $logger->notice($note);
+                    //$note = 'ROLE_VACREQ_APPROVER role='.$role;
+                    //$logger->notice($note);
                     $institution = $role->getInstitution();
                 } else {
                     $error = 'ROLE_VACREQ_APPROVER not found for approver='.$approver;
@@ -480,7 +480,7 @@ class VacReqImportData
         if( !$approver ) {
             $logger = $this->container->get('logger');
             $logger->error("Can not find user by username=".$username);
-            echo "Can not find user by username=".$username."<br>";
+            //echo "Can not find user by username=".$username."<br>";
         }
         return $approver;
     }
