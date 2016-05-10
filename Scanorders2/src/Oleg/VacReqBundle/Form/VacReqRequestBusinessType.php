@@ -18,6 +18,7 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
         parent::__construct($params,$entity);
 
         $this->requestTypeName = "Business Travel";
+        $this->numberOfDaysLabelPrefix = "Number of Work Days Off-site";
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -18,19 +18,12 @@ class VacReqRequestVacationType extends VacReqRequestBaseType {
         parent::__construct($params,$entity);
 
         $this->requestTypeName = "Vacation";
+        $this->numberOfDaysLabelPrefix = "Vacation Days Requested";
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         parent::buildForm($builder,$options);
-
-        $builder->add('numberOfDays', null, array(
-            'label' => 'Vacation Days Requested (Please do not include holidays):',
-            'attr' => array('class'=>'form-control vacreq-numberOfDays'),
-            'read_only' => ($this->params['review'] ? true : false)
-        ));
-
     }
 
 

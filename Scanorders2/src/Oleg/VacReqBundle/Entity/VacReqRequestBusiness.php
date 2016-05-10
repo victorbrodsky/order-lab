@@ -86,6 +86,15 @@ class VacReqRequestBusiness extends VacReqRequestBase
     }
 
 
+    public function getArrayFields() {
+        $fieldsArr = parent::getArrayFields();
+        $fieldsArr[] = 'expenses';
+        $fieldsArr[] = 'paidByOutsideOrganization';
+        $fieldsArr[] = 'description';
+        return $fieldsArr;
+    }
+
+
     public function __toString()
     {
         $break = "\r\n";

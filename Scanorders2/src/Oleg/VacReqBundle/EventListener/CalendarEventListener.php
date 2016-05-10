@@ -125,12 +125,12 @@ class CalendarEventListener
 
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
             $backgroundColor = "#bce8f1";
-            $requestName = "Business Travel Request";
+            $requestName = "Business Travel";
         }
 
         if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
             $backgroundColor = "#b2dba1";
-            $requestName = "Vacation Request";
+            $requestName = "Vacation";
         }
 
         $getMethod = "get".$requestTypeStr;

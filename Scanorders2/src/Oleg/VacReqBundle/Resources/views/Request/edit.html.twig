@@ -26,6 +26,8 @@
 
 {% block content %}
 
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         {% if accessreqs is defined and accessreqs and accessreqs > 0 %}
             <div class="alert alert-warning">
@@ -79,157 +81,160 @@
 
 
         {#Business#}
-        {% set showBusinessStatus = false %}
-        {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
-            {% set showBusinessStatus = true %}
-        {% endif %}
-        {% set businessCollapse = '' %}
-        {% if (not showFlag and not review) or (entity.requestBusiness and entity.requestBusiness.numberOfDays>0) %}
-            {% set businessCollapse = 'in' %}
-        {% endif %}
-        {#set accordion color#}
-        {% set businessPanelColor = 'panel-info' %}
-        {% if entity.requestBusiness and entity.requestBusiness.status == 'approved' %}
-            {% set businessPanelColor = 'panel-success' %}
-        {% endif %}
-        {% if entity.requestBusiness and entity.requestBusiness.status == 'rejected' %}
-            {% set businessPanelColor = 'panel-danger' %}
-        {% endif %}
-        {#Business panel#}
-        <div class="panel {{ businessPanelColor }}">
-            <div class="panel-heading">
-                <h4 class="panel-title" align='center'>
-                    {#<a data-toggle="collapse" href="#vacreq-Business">#}
-                        {#Business Travel#}
-                    {#</a>#}
-                    {#{{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}#}
-                    {% if showBusinessStatus %}
-                        <div class="row">
-                            <div class="col-xs-6" align="right">
-                                <a data-toggle="collapse" href="#vacreq-Business">
-                                    Business Travel
-                                </a>
-                            </div>
-                            {#{% if showBusinessStatus %}#}
-                                <div class="col-xs-6" align="left" style="color:#333;">
-                                    {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
+        {% if entity.hasBusinessRequest or cycle == 'new' or cycle == 'edit' %}
+            {% set showBusinessStatus = false %}
+            {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
+                {% set showBusinessStatus = true %}
+            {% endif %}
+            {#set collapse#}
+            {% set businessCollapse = '' %}
+            {% if (not showFlag and not review) or (entity.requestBusiness and entity.requestBusiness.numberOfDays>0) %}
+                {% set businessCollapse = 'in' %}
+            {% endif %}
+            {#set accordion color#}
+            {% set businessPanelColor = 'panel-info' %}
+            {% if entity.requestBusiness and entity.requestBusiness.status == 'approved' %}
+                {% set businessPanelColor = 'panel-success' %}
+            {% endif %}
+            {% if entity.requestBusiness and entity.requestBusiness.status == 'rejected' %}
+                {% set businessPanelColor = 'panel-danger' %}
+            {% endif %}
+            {#Business panel#}
+            <div class="panel {{ businessPanelColor }}">
+                <div class="panel-heading">
+                    <h4 class="panel-title" align='center'>
+                        {#<a data-toggle="collapse" href="#vacreq-Business">#}
+                            {#Business Travel#}
+                        {#</a>#}
+                        {#{{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}#}
+                        {% if showBusinessStatus %}
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <a data-toggle="collapse" href="#vacreq-Business">
+                                        Business Travel
+                                    </a>
                                 </div>
-                            {#{% endif %}#}
-                        </div>
-                    {% else %}
-                        <a data-toggle="collapse" href="#vacreq-Business">
-                            Business Travel
-                        </a>
-                    {% endif %}
-                </h4>
-            </div>
-            <div id="vacreq-Business" class="panel-collapse collapse {{ businessCollapse }}">
-                <div class="panel-body">
-                    {{ formmacros.fieldDateLabel(form.requestBusiness.startDate,'allow-future-date') }}
-                    {{ formmacros.fieldDateLabel(form.requestBusiness.endDate,'allow-future-date') }}
+                                {#{% if showBusinessStatus %}#}
+                                    <div class="col-xs-6" align="left" style="color:#333;">
+                                        {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
+                                    </div>
+                                {#{% endif %}#}
+                            </div>
+                        {% else %}
+                            <a data-toggle="collapse" href="#vacreq-Business">
+                                Business Travel
+                            </a>
+                        {% endif %}
+                    </h4>
+                </div>
+                <div id="vacreq-Business" class="panel-collapse collapse {{ businessCollapse }}">
+                    <div class="panel-body">
+                        {{ formmacros.fieldDateLabel(form.requestBusiness.startDate,'allow-future-date') }}
+                        {{ formmacros.fieldDateLabel(form.requestBusiness.endDate,'allow-future-date') }}
 
-                    {#{{ formmacros.field(form.requestBusiness.numberOfDays) }}#}
-                    {#{{ formmacros.fieldDateLabel(form.requestBusiness.firstDayBackInOffice,'allow-future-date') }}#}
-                    {{ vacreqmacros.request_inputWithCalculateBtn(form.requestBusiness.numberOfDays) }}
-                    {#{{ vacreqmacros.request_dateWithCalculateBtn(form.requestBusiness.firstDayBackInOffice) }}#}
+                        {#{{ formmacros.field(form.requestBusiness.numberOfDays) }}#}
+                        {#{{ formmacros.fieldDateLabel(form.requestBusiness.firstDayBackInOffice,'allow-future-date') }}#}
+                        {{ vacreqmacros.request_inputWithCalculateBtn(form.requestBusiness.numberOfDays) }}
+                        {#{{ vacreqmacros.request_dateWithCalculateBtn(form.requestBusiness.firstDayBackInOffice) }}#}
 
-                    {{ formmacros.checkbox(form.requestBusiness.paidByOutsideOrganization) }}
-                    {{ formmacros.field(form.requestBusiness.expenses) }}
+                        {{ formmacros.checkbox(form.requestBusiness.paidByOutsideOrganization) }}
+                        {{ formmacros.field(form.requestBusiness.expenses) }}
 
-                    {{ formmacros.field(form.requestBusiness.description) }}
-                    {% if form.requestBusiness.approverComment is defined and businessCollapse == 'in'  %}
-                        {{ formmacros.field(form.requestBusiness.approverComment) }}
-                    {% endif %}
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
-
+                        {{ formmacros.field(form.requestBusiness.description) }}
+                        {% if form.requestBusiness.approverComment is defined and businessCollapse == 'in'  %}
+                            {{ formmacros.field(form.requestBusiness.approverComment) }}
+                        {% endif %}
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+        {% endif %}
 
         {#Vacation#}
-
-        {#set vacationCollapse#}
-        {% set showVacationStatus = false %}
-        {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
-            {% set showVacationStatus = true %}
-        {% endif %}
-        {% set vacationCollapse = '' %}
-        {% if (not showFlag and not review) or (entity.requestVacation and entity.requestVacation.numberOfDays>0) %}
-            {% set vacationCollapse = 'in' %}
-        {% endif %}
-        {#set accordion color#}
-        {% set vacationPanelColor = 'panel-info' %}
-        {% if entity.requestVacation and entity.requestVacation.status == 'approved' %}
-            {% set vacationPanelColor = 'panel-success' %}
-        {% endif %}
-        {% if entity.requestVacation and entity.requestVacation.status == 'rejected' %}
-            {% set vacationPanelColor = 'panel-danger' %}
-        {% endif %}
-        {#vacation panel#}
-        <div class="panel {{ vacationPanelColor }}">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    {#<a data-toggle="collapse" href="#vacreq-Vacation">#}
-                        {#Vacation Travel#}
-                    {#</a>#}
-                    {#{{ vacreqmacros.request_radio_choice( form.requestVacation ) }}#}
-                    {% if showVacationStatus %}
-                        <div class="row">
-                            <div class="col-xs-6" align="right">
-                                <a data-toggle="collapse" href="#vacreq-Vacation">
-                                    Vacation Travel
-                                </a>
-                            </div>
-                            {#{% if showVacationStatus %}#}
-                                <div class="col-xs-6" align="left" style="color:#333;">
-                                    {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
+        {% if entity.hasVacationRequest or cycle == 'new' or cycle == 'edit' %}
+            {#set vacationCollapse#}
+            {% set showVacationStatus = false %}
+            {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
+                {% set showVacationStatus = true %}
+            {% endif %}
+            {#set collapse#}
+            {% set vacationCollapse = '' %}
+            {% if (not showFlag and not review) or (entity.requestVacation and entity.requestVacation.numberOfDays>0) %}
+                {% set vacationCollapse = 'in' %}
+            {% endif %}
+            {#set accordion color#}
+            {% set vacationPanelColor = 'panel-info' %}
+            {% if entity.requestVacation and entity.requestVacation.status == 'approved' %}
+                {% set vacationPanelColor = 'panel-success' %}
+            {% endif %}
+            {% if entity.requestVacation and entity.requestVacation.status == 'rejected' %}
+                {% set vacationPanelColor = 'panel-danger' %}
+            {% endif %}
+            {#vacation panel#}
+            <div class="panel {{ vacationPanelColor }}">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {#<a data-toggle="collapse" href="#vacreq-Vacation">#}
+                            {#Vacation Travel#}
+                        {#</a>#}
+                        {#{{ vacreqmacros.request_radio_choice( form.requestVacation ) }}#}
+                        {% if showVacationStatus %}
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <a data-toggle="collapse" href="#vacreq-Vacation">
+                                        Vacation Travel
+                                    </a>
                                 </div>
-                            {#{% endif %}#}
-                        </div>
-                    {% else %}
-                        <a data-toggle="collapse" href="#vacreq-Vacation">
-                            Vacation Travel
+                                {#{% if showVacationStatus %}#}
+                                    <div class="col-xs-6" align="left" style="color:#333;">
+                                        {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
+                                    </div>
+                                {#{% endif %}#}
+                            </div>
+                        {% else %}
+                            <a data-toggle="collapse" href="#vacreq-Vacation">
+                                Vacation Travel
+                            </a>
+                        {% endif %}
+                    </h4>
+                </div>
+                <div id="vacreq-Vacation" class="panel-collapse collapse {{ vacationCollapse }}">
+                    <div class="panel-body">
+                        {{ formmacros.fieldDateLabel(form.requestVacation.startDate,'allow-future-date') }}
+                        {{ formmacros.fieldDateLabel(form.requestVacation.endDate,'allow-future-date') }}
+
+                        {#{{ formmacros.field(form.requestVacation.numberOfDays) }}#}
+                        {{ vacreqmacros.request_inputWithCalculateBtn(form.requestVacation.numberOfDays) }}
+
+                        {#{{ formmacros.fieldDateLabel(form.requestVacation.firstDayBackInOffice,'allow-future-date') }}#}
+                        {#{{ vacreqmacros.request_dateWithCalculateBtn(form.requestVacation.firstDayBackInOffice) }}#}
+
+                        {% if form.requestVacation.approverComment is defined and vacationCollapse == 'in' %}
+                            {{ formmacros.field(form.requestVacation.approverComment) }}
+                        {% endif %}
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+
+            {#{{ formmacros.fieldDateLabel(form.credentials.dob,'allow-future-date') }}#}
+
+            {#firstDayBackInOffice#}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#firstDayBackInOffice">
+                            First Day Back In Office
                         </a>
-                    {% endif %}
-                </h4>
-            </div>
-            <div id="vacreq-Vacation" class="panel-collapse collapse {{ vacationCollapse }}">
-                <div class="panel-body">
-                    {{ formmacros.fieldDateLabel(form.requestVacation.startDate,'allow-future-date') }}
-                    {{ formmacros.fieldDateLabel(form.requestVacation.endDate,'allow-future-date') }}
-
-                    {#{{ formmacros.field(form.requestVacation.numberOfDays) }}#}
-                    {{ vacreqmacros.request_inputWithCalculateBtn(form.requestVacation.numberOfDays) }}
-
-                    {#{{ formmacros.fieldDateLabel(form.requestVacation.firstDayBackInOffice,'allow-future-date') }}#}
-                    {#{{ vacreqmacros.request_dateWithCalculateBtn(form.requestVacation.firstDayBackInOffice) }}#}
-
-                    {% if form.requestVacation.approverComment is defined and vacationCollapse == 'in' %}
-                        {{ formmacros.field(form.requestVacation.approverComment) }}
-                    {% endif %}
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
-
-        {#{{ formmacros.fieldDateLabel(form.credentials.dob,'allow-future-date') }}#}
-
-        {#firstDayBackInOffice#}
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#firstDayBackInOffice">
-                        First Day Back In Office
-                    </a>
-                </h4>
-            </div>
-            <div id="firstDayBackInOffice" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    {% if form.firstDayBackInOffice is defined %}
-                        {{ vacreqmacros.request_dateWithCalculateBtn(form.firstDayBackInOffice) }}
-                    {% endif %}
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
-
+                    </h4>
+                </div>
+                <div id="firstDayBackInOffice" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        {% if form.firstDayBackInOffice is defined %}
+                            {{ vacreqmacros.request_dateWithCalculateBtn(form.firstDayBackInOffice) }}
+                        {% endif %}
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+        {% endif %}
 
         {#Emergency#}
         <div class="panel panel-default">
@@ -281,7 +286,7 @@
         </p>
     {% endif %}
 
-    {% if cycle == "edit" %}
+    {% if cycle == "edit" or review %}
         <p>
             <button class="btn btn-warning" name="btnUpdate" type="button" onclick="validateVacReqForm(this)">Update</button>
             {% if review %}
@@ -298,6 +303,7 @@
         </p>
     {% endif %}
 
+
 {% endblock %}
 
 
@@ -307,11 +313,17 @@
 
         $(document).ready(function() {
 
-            vacreqDateListener();
+            //console.log('cycle='+cycle);
+            if( cycle == 'new' || cycle == 'edit' ) {
+                vacreqDateListener();
 
-            vacreqAvailabilityListener();
+                vacreqAvailabilityListener();
 
-            vacreqNumberOfDaysListener();
+                vacreqNumberOfDaysListener();
+
+                //init datepicker manually, because the holder 'input-group' does not have class 'date', but js is looking for .input-group.date
+                initSingleDatepicker( $('.vacreq-firstDayBackInOffice') );
+            }
 
         });
 
@@ -442,6 +454,11 @@
 
         //onclick action button
         function setVacReqNumberOfDays(btn) {
+
+            if( cycle != 'new' && cycle != 'edit' ) {
+                return;
+            }
+
             var holder = $(btn).closest('.panel-body');
             var startDate = holder.find('.vacreq-startDate').val();
             var endDate = holder.find('.vacreq-endDate').val();
@@ -474,8 +491,12 @@
             return diffWorkingDays;
         }
 
-        //onlcick
+        //onclick
         function setVacReqFirstDayBack(btn) {
+
+            if( cycle != 'new' && cycle != 'edit' ) {
+                return;
+            }
 
             var nextWorkingDay = getNextWorkingDay();
             //console.log('nextWorkingDay='+nextWorkingDay);
@@ -565,6 +586,8 @@
             $('input').removeClass('alert-danger');
 
             var error = null;
+            var requestB = false;
+            var requestV = false;
 
             var userData = $('.vacreq-user').select2('data');
             if( !error && !userData ) {
@@ -604,7 +627,7 @@
 
             //Business
             if( !error && startDateBusiness && endDateBusiness ) {
-
+                requestB = true;
                 var numberOfDays = businessRequest.find('.vacreq-numberOfDays').val();
                 if( !error && !numberOfDays ) {
                     error = "Please enter the number of work days off-site";
@@ -627,7 +650,7 @@
 
             //Vacation
             if( !error && startDateVacation && endDateVacation ) {
-
+                requestV = true;
                 var numberOfDays = vacationRequest.find('.vacreq-numberOfDays').val();
                 if( !error && !numberOfDays ) {
                     error = "Please enter the number of work days off-site";
@@ -640,6 +663,14 @@
             if( !error && !firstDayBackInOffice ) {
                 error = "Please fill in the first day back in office";
                 vacationRequest.find('.vacreq-firstDayBackInOffice').addClass('alert-danger');
+            }
+
+            //check for dates overlaps
+            if( requestB && requestV ) {
+                //(StartDate1 <= EndDate2) and (StartDate2 <= EndDate1)
+                if( startDateBusiness <= endDateVacation && startDateVacation <= endDateBusiness ) {
+                    error = "It appears your Business Travel dates and Vacation dates overlap. Please correct the dates prior to submission";
+                }
             }
 
             //console.log('error='+error);

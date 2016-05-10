@@ -27,78 +27,11 @@ class VacReqRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-
-//        ///////////////////////// tree node /////////////////////////
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//            $title = $event->getData();
-//            $form = $event->getForm();
-//
-//            $label = null;
-//            if( $title ) {
-//                $institution = $title->getInstitution();
-//                if( $institution ) {
-//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
-//                }
-//            }
-//            if( !$label ) {
-//                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
-//            }
-//            //echo "label=".$label."<br>";
-//
-//            $form->add('institution', 'employees_custom_selector', array(
-//                'label' => $label,
-//                'required' => false,
-//                //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-//                'attr' => array(
-//                    'class' => 'ajax-combobox-compositetree',
-//                    'type' => 'hidden',
-//                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
-//                    'data-compositetree-classname' => 'Institution'
-//                ),
-//                'classtype' => 'institution'
-//            ));
-//        });
-//        ///////////////////////// EOF tree node /////////////////////////
-
-//        if( $this->params['cycle'] != 'new' ) {
-//            $builder->add('status', 'choice', array(
-//                'disabled' => ($this->params['roleAdmin'] ? true : false),
-//                'choices' => array(
-//                    'pending' => 'pending',
-//                    'approved' => 'approved',
-//                    'rejected' => 'rejected'
-//                ),
-//                'label' => "Status:",
-//                'required' => true,
-//                'attr' => array('class' => 'combobox combobox-width'),
-//            ));
-//        }
-
         $builder->add('phone', null, array(
             'label' => "Phone Number for the person away:",
             'attr' => array('class' => 'form-control vacreq-phone'),
             'read_only' => ($this->params['review'] ? true : false)
         ));
-
-//        $builder->add('availabilities', null, array(
-//            'label' => "Availability:",
-//            'attr' => array('class' => 'combobox combobox-width vacreq-availabilities'),
-//            'read_only' => ($this->params['review'] ? true : false)
-//        ));
-//        $builder->add('emergencyCellPhone', null, array(
-//            'label' => "Cell Phone:",
-//            'attr' => array('class' => 'form-control'),
-//        ));
-//
-//        $builder->add('emergencyOther', null, array(
-//            'label' => "Other:",
-//            'attr' => array('class' => 'form-control'),
-//        ));
-//        $builder->add('emergencyComment', null, array(
-//            'label' => "Emergency Comment:",
-//            'attr' => array('class' => 'form-control vacreq-emergencyComment'),
-//            'read_only' => ($this->params['review'] ? true : false)
-//        ));
 
         //Business Travel
         $builder->add('requestBusiness', new VacReqRequestBusinessType($this->params), array(
@@ -115,13 +48,6 @@ class VacReqRequestType extends AbstractType
         ));
 
         if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
-//            $builder->add('user', null, array(
-//                //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-//                'read_only' => ($this->params['roleAdmin'] ? false : true),
-//                'label' => "Requester:",
-//                'required' => true,
-//                'attr' => array('class' => 'combobox combobox-width vacreq-user')
-//            ));
 
             //enabled ($readOnly = false) for admin only
             $readOnly = true;
@@ -168,29 +94,6 @@ class VacReqRequestType extends AbstractType
             ));
         }
 
-        //add organizational group <-> institution
-//        $builder->add('institution', 'choice', array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Institution',
-//            //'class' => 'OlegUserdirectoryBundle:Institution',
-//            //'property' => 'getUserNameStr',
-//            'label' => "Organizational Group",
-//            'required' => false,
-//            //'multiple' => false,
-//            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
-//            'choices' => $this->params['organizationalInstitutions'],
-//        ));
-//        $builder->add('organizationalInstitutions', 'choice', array(
-//            //'class' => 'OlegUserdirectoryBundle:Institution',
-//            //'property' => 'getUserNameStr',
-//            'mapped' => false,
-//            'label' => "Organizational Group",
-//            'required' => true,
-//            //'read_only' => ($this->params['roleAdmin'] ? false : true),
-//            //'multiple' => false,
-//            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
-//            'choices' => $this->params['organizationalInstitutions'],
-//        ));
-
         $requiredInst = false;
         if( count($this->params['organizationalInstitutions']) == 1 ) {
             //echo "set org inst <br>";
@@ -226,17 +129,18 @@ class VacReqRequestType extends AbstractType
             )
         );
 
-//        $builder->add('approver', null, array(
-//            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-//            'label' => "Approver:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width vacreq-approver')
-//        ));
 
+        //Emergency info
+        $attrArr = array();
+        if( $this->params['review'] ) {
+            $attrArr['disabled'] = 'disabled';
+        }
+
+        $attrArr['class'] = 'vacreq-availableViaEmail';
         $builder->add('availableViaEmail', null, array(
             'label' => "Available via E-Mail:",
-            'attr' => array('class' => 'vacreq-availableViaEmail'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'attr' => $attrArr, //array('class' => 'vacreq-availableViaEmail'),
+            //'read_only' => ($this->params['review'] ? true : false)
         ));
         $builder->add('availableEmail', null, array(
             'label' => "E-Mail address while away on this trip:",
@@ -244,10 +148,11 @@ class VacReqRequestType extends AbstractType
             'read_only' => ($this->params['review'] ? true : false)
         ));
 
+        $attrArr['class'] = 'vacreq-availableViaCellPhone';
         $builder->add('availableViaCellPhone', null, array(
             'label' => "Available via Cell Phone:",
-            'attr' => array('class' => 'vacreq-availableViaCellPhone'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'attr' => $attrArr, //array('class' => 'vacreq-availableViaCellPhone'),
+            //'read_only' => ($this->params['review'] ? true : false)
         ));
         $builder->add('availableCellPhone', null, array(
             'label' => "Cell Phone number while away on this trip:",
@@ -255,21 +160,23 @@ class VacReqRequestType extends AbstractType
             'read_only' => ($this->params['review'] ? true : false)
         ));
 
+        $attrArr['class'] = 'vacreq-availableViaOther';
         $builder->add('availableViaOther', null, array(
             'label' => "Available via another method:",
-            'attr' => array('class' => 'vacreq-availableViaOther'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'attr' => $attrArr, //array('class' => 'vacreq-availableViaOther', 'disabled'=>$disableCheckbox),
+            //'read_only' => ($this->params['review'] ? true : false)
         ));
         $builder->add('availableOther', null, array(
             'label' => "Other:",
             'attr' => array('class' => 'form-control vacreq-availableOther'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'read_only' => ($this->params['review'] ? true : false),
         ));
 
+        $attrArr['class'] = 'vacreq-availableNone';
         $builder->add('availableNone', null, array(
             'label' => "Not Available:",
-            'attr' => array('class' => 'vacreq-availableNone'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'attr' => $attrArr, //array('class' => 'vacreq-availableNone'),
+            //'read_only' => ($this->params['review'] ? true : false)
         ));
 
 
@@ -278,7 +185,7 @@ class VacReqRequestType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control vacreq-firstDayBackInOffice'),
+            'attr' => array('class' => 'datepicker form-control allow-future-date vacreq-firstDayBackInOffice'),
             'read_only' => ($this->params['review'] ? true : false)
         ));
 

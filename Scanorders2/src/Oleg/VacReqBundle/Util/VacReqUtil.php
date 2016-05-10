@@ -2,6 +2,10 @@
 
 namespace Oleg\VacReqBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -931,6 +935,111 @@ class VacReqUtil
         return null;
     }
 
+    public function setEmergencyInfo( $user, $request ) {
+        $emergencyInfoArr = $this->getSubmitterEmergencyInfo($user);
+        if( $emergencyInfoArr['mobile'] ) {
+            $request->setAvailableViaCellPhone(true);
+            $request->setAvailableCellPhone($emergencyInfoArr['mobile']);
+        }
+        if( $emergencyInfoArr['email'] ) {
+            $request->setAvailableViaEmail(true);
+            $request->setAvailableEmail($emergencyInfoArr['email']);
+        }
+    }
+    public function getSubmitterEmergencyInfo($user) {
+
+        $res = array(
+            'mobile' => null,
+            'email' => null
+        );
+
+        //(1a) prepopulate the cell phone number from the user's profile
+        if ($res['mobile'] == null) {
+            $homeLocation = $user->getHomeLocation();
+            if ($homeLocation && $homeLocation->getMobile()) {
+                $res['mobile'] = $homeLocation->getMobile();
+            }
+        }
+        if ($res['mobile'] == null) {
+            $mainLocation = $user->getMainLocation();
+            if ($mainLocation && $mainLocation->getMobile()) {
+                $res['mobile'] = $mainLocation->getMobile();
+            }
+        }
+        if ($res['mobile'] == null) {
+            $locations = $user->getLocations();
+            foreach ($locations as $location) {
+                if ($res['mobile'] == null) {
+                    if ($location && $location->getMobile()) {
+                        $res['mobile'] = $location->getMobile();
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+        //(1b) prepopulate the email from the user's profile
+        $email = $user->getEmail();
+        if ($email) {
+            $res['email'] = $email;
+        }
+
+        //(2a) prepopulate mobile from previous approved request (if there is one) for this user (person away)
+        if( $res['mobile'] == null ) {
+            $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+            $dql = $repository->createQueryBuilder("request");
+            $dql->select('request');
+            $dql->leftJoin("request.user", "user");
+            $dql->where("user.id = :userId");
+            $dql->andWhere("request.availableCellPhone IS NOT NULL");
+            $dql->orderBy('request.createDate', 'DESC');
+
+            $query = $this->em->createQuery($dql);
+
+            $query->setParameters(array(
+                'userId' => $user->getId(),
+            ));
+
+            $requests = $query->getResult();
+
+            foreach( $requests as $request ) {
+                if( $request->getAvailableCellPhone() ) {
+                    $res['mobile'] = $request->getAvailableCellPhone();
+                    break;
+                }
+            }
+        }
+        //(2b) prepopulate email from previous approved request (if there is one) for this user (person away)
+        if( $res['email'] == null ) {
+            $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+            $dql = $repository->createQueryBuilder("request");
+            $dql->select('request');
+            $dql->leftJoin("request.user", "user");
+            $dql->where("user.id = :userId");
+            $dql->andWhere("request.availableEmail IS NOT NULL");
+            $dql->orderBy('request.createDate', 'DESC');
+
+            $query = $this->em->createQuery($dql);
+
+            $query->setParameters(array(
+                'userId' => $user->getId(),
+            ));
+
+            $requests = $query->getResult();
+
+            foreach( $requests as $request ) {
+                if( $request->getAvailableEmail() ) {
+                    $res['email'] = $request->getAvailableEmail();
+                    break;
+                }
+            }
+        }
+
+        //(c) prepopulate from the approved request before the last one
+
+        return $res;
+    }
+
 
     //set cancel email to approver and email users
     public function sendCancelEmailToApprovers( $entity, $user, $status ) {
@@ -1002,21 +1111,28 @@ class VacReqUtil
     //User log should record all changes in user: subjectUser, Author, field, old value, new value.
     public function setEventLogChanges($request) {
 
-        $em = $this->em;
+        //$diffArr = $this->diffDoctrineObject($request);
+        //echo "diffArr=".$diffArr."<br>";
+        //print_r($diffArr);
+        //exit('1');
 
-        $uow = $em->getUnitOfWork();
-        $uow->computeChangeSets(); // do not compute changes if inside a listener
+        //$em = $this->em;
+
+        //$uow = $em->getUnitOfWork();
+        //$uow->computeChangeSets(); // do not compute changes if inside a listener
 
         $eventArr = array();
 
         //log simple fields
-        $changeset = $uow->getEntityChangeSet($request);
+        //$changeset = $uow->getEntityChangeSet($request);
+        $changeset = $this->diffDoctrineObject($request);
         $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
 
         //log Business Request
         if( $request->hasBusinessRequest() ) {
             $requestParticular = $request->getRequestBusiness();
-            $changeset = $uow->getEntityChangeSet($requestParticular);
+            //$changeset = $uow->getEntityChangeSet($requestParticular);
+            $changeset = $this->diffDoctrineObject($requestParticular);
             $text = "("."Business Travel Request ID ".$request->getId().")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
@@ -1024,7 +1140,8 @@ class VacReqUtil
         //log Vacation Request
         if( $request->hasVacationRequest() ) {
             $requestParticular = $request->getRequestVacation();
-            $changeset = $uow->getEntityChangeSet($requestParticular);
+            //$changeset = $uow->getEntityChangeSet($requestParticular);
+            $changeset = $this->diffDoctrineObject($requestParticular);
             $text = "("."Vacation Request ID ".$request->getId().")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
@@ -1082,6 +1199,231 @@ class VacReqUtil
 
         return $eventArr;
 
+    }
+    public function diffDoctrineObject($entity) {
+        $uow = $this->em->getUnitOfWork();
+        $originalEntityData = $uow->getOriginalEntityData($entity);
+        //echo "originalEntityData=".$originalEntityData."<br>";
+        //print_r($originalEntityData);
+
+//        if( $originalEntityData['phone'] != $entity->getPhone() ) {
+//            echo "phone changed:".$originalEntityData['phone'] ."=>". $entity->getPhone()."<br>";
+//        }
+
+        $changeSet = array();
+
+        foreach( $entity->getArrayFields() as $field ) {
+            $getMethod = "get".$field;
+            $oldValue = $originalEntityData[$field];
+            $newValue = $entity->$getMethod();
+            if( $oldValue != $newValue ) {
+                //echo "phone changed:".$originalEntityData['phone'] ."=>". $entity->getPhone()."<br>";
+                $changeSet[$field] = array($oldValue,$newValue);
+            }
+        }
+
+        print_r($changeSet);
+        return $changeSet;
+    }
+    /**
+     * Try to get an Entity changeSet without changing the UnitOfWork
+     *
+     * @param EntityManager $em
+     * @param $entity
+     * @return null|array
+     */
+    public static function diffDoctrineObject_ORIG(EntityManager $em, $entity) {
+        $uow = $em->getUnitOfWork();
+
+        /*****************************************/
+        /* Equivalent of $uow->computeChangeSet($this->em->getClassMetadata(get_class($entity)), $entity);
+        /*****************************************/
+        $class = $em->getClassMetadata(get_class($entity));
+        $oid = spl_object_hash($entity);
+        $entityChangeSets = array();
+
+        if ($uow->isReadOnly($entity)) {
+            return null;
+        }
+
+        if ( ! $class->isInheritanceTypeNone()) {
+            $class = $em->getClassMetadata(get_class($entity));
+        }
+
+        // These parts are not needed for the changeSet?
+        // $invoke = $uow->listenersInvoker->getSubscribedSystems($class, Events::preFlush) & ~ListenersInvoker::INVOKE_MANAGER;
+        //
+        // if ($invoke !== ListenersInvoker::INVOKE_NONE) {
+        //     $uow->listenersInvoker->invoke($class, Events::preFlush, $entity, new PreFlushEventArgs($em), $invoke);
+        // }
+
+        $actualData = array();
+
+        foreach ($class->reflFields as $name => $refProp) {
+            $value = $refProp->getValue($entity);
+
+            if ($class->isCollectionValuedAssociation($name) && $value !== null) {
+                if ($value instanceof PersistentCollection) {
+                    if ($value->getOwner() === $entity) {
+                        continue;
+                    }
+
+                    $value = new ArrayCollection($value->getValues());
+                }
+
+                // If $value is not a Collection then use an ArrayCollection.
+                if ( ! $value instanceof Collection) {
+                    $value = new ArrayCollection($value);
+                }
+
+                $assoc = $class->associationMappings[$name];
+
+                // Inject PersistentCollection
+                $value = new PersistentCollection(
+                    $em, $em->getClassMetadata($assoc['targetEntity']), $value
+                );
+                $value->setOwner($entity, $assoc);
+                $value->setDirty( ! $value->isEmpty());
+
+                $class->reflFields[$name]->setValue($entity, $value);
+
+                $actualData[$name] = $value;
+
+                continue;
+            }
+
+            if (( ! $class->isIdentifier($name) || ! $class->isIdGeneratorIdentity()) && ($name !== $class->versionField)) {
+                $actualData[$name] = $value;
+            }
+        }
+
+        $originalEntityData = $uow->getOriginalEntityData($entity);
+        if (empty($originalEntityData)) {
+            // Entity is either NEW or MANAGED but not yet fully persisted (only has an id).
+            // These result in an INSERT.
+            $originalEntityData = $actualData;
+            $changeSet = array();
+
+            foreach ($actualData as $propName => $actualValue) {
+                if ( ! isset($class->associationMappings[$propName])) {
+                    $changeSet[$propName] = array(null, $actualValue);
+
+                    continue;
+                }
+
+                $assoc = $class->associationMappings[$propName];
+
+                if ($assoc['isOwningSide'] && $assoc['type'] & ClassMetadata::TO_ONE) {
+                    $changeSet[$propName] = array(null, $actualValue);
+                }
+            }
+
+            $entityChangeSets[$oid] = $changeSet; // @todo - remove this?
+        } else {
+            // Entity is "fully" MANAGED: it was already fully persisted before
+            // and we have a copy of the original data
+            $originalData           = $originalEntityData;
+            $isChangeTrackingNotify = $class->isChangeTrackingNotify();
+            $changeSet              = $isChangeTrackingNotify ? $uow->getEntityChangeSet($entity) : array();
+
+            foreach ($actualData as $propName => $actualValue) {
+                // skip field, its a partially omitted one!
+                if ( ! (isset($originalData[$propName]) || array_key_exists($propName, $originalData))) {
+                    continue;
+                }
+
+                $orgValue = $originalData[$propName];
+
+                // skip if value haven't changed
+                if ($orgValue === $actualValue) {
+                    continue;
+                }
+
+                // if regular field
+                if ( ! isset($class->associationMappings[$propName])) {
+                    if ($isChangeTrackingNotify) {
+                        continue;
+                    }
+
+                    $changeSet[$propName] = array($orgValue, $actualValue);
+
+                    continue;
+                }
+
+                $assoc = $class->associationMappings[$propName];
+
+                // Persistent collection was exchanged with the "originally"
+                // created one. This can only mean it was cloned and replaced
+                // on another entity.
+                if ($actualValue instanceof PersistentCollection) {
+                    $owner = $actualValue->getOwner();
+                    if ($owner === null) { // cloned
+                        $actualValue->setOwner($entity, $assoc);
+                    } else if ($owner !== $entity) { // no clone, we have to fix
+                        // @todo - what does this do... can it be removed?
+                        if (!$actualValue->isInitialized()) {
+                            $actualValue->initialize(); // we have to do this otherwise the cols share state
+                        }
+                        $newValue = clone $actualValue;
+                        $newValue->setOwner($entity, $assoc);
+                        $class->reflFields[$propName]->setValue($entity, $newValue);
+                    }
+                }
+
+                if ($orgValue instanceof PersistentCollection) {
+                    // A PersistentCollection was de-referenced, so delete it.
+                    // These parts are not needed for the changeSet?
+                    //            $coid = spl_object_hash($orgValue);
+                    //
+                    //            if (isset($uow->collectionDeletions[$coid])) {
+                    //                continue;
+                    //            }
+                    //
+                    //            $uow->collectionDeletions[$coid] = $orgValue;
+                    $changeSet[$propName] = $orgValue; // Signal changeset, to-many assocs will be ignored.
+
+                    continue;
+                }
+
+                if ($assoc['type'] & ClassMetadata::TO_ONE) {
+                    if ($assoc['isOwningSide']) {
+                        $changeSet[$propName] = array($orgValue, $actualValue);
+                    }
+
+                    // These parts are not needed for the changeSet?
+                    //            if ($orgValue !== null && $assoc['orphanRemoval']) {
+                    //                $uow->scheduleOrphanRemoval($orgValue);
+                    //            }
+                }
+            }
+
+            if ($changeSet) {
+                $entityChangeSets[$oid]     = $changeSet;
+                // These parts are not needed for the changeSet?
+                //        $originalEntityData         = $actualData;
+                //        $uow->entityUpdates[$oid]   = $entity;
+            }
+        }
+
+        // These parts are not needed for the changeSet?
+        //// Look for changes in associations of the entity
+        //foreach ($class->associationMappings as $field => $assoc) {
+        //    if (($val = $class->reflFields[$field]->getValue($entity)) !== null) {
+        //        $uow->computeAssociationChanges($assoc, $val);
+        //        if (!isset($entityChangeSets[$oid]) &&
+        //            $assoc['isOwningSide'] &&
+        //            $assoc['type'] == ClassMetadata::MANY_TO_MANY &&
+        //            $val instanceof PersistentCollection &&
+        //            $val->isDirty()) {
+        //            $entityChangeSets[$oid]   = array();
+        //            $originalEntityData = $actualData;
+        //            $uow->entityUpdates[$oid]      = $entity;
+        //        }
+        //    }
+        //}
+        /*********************/
+
+        return $entityChangeSets[$oid];
     }
 
     public function convertDateTimeToStr($datetime) {

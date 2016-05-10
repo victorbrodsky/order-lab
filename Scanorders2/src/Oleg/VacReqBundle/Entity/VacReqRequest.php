@@ -623,6 +623,7 @@ class VacReqRequest
         //set overall status
         $overallStatus = $this->getOverallStatus();
         $this->setStatus($overallStatus);
+        $this->setEntireStatus($overallStatus);
 
         //set first day away
         $firstDateAway = $this->getFirstDateAway(null);
@@ -858,6 +859,19 @@ class VacReqRequest
 
         return implode('<br>',$resArr);
     }
+
+
+    public function getArrayFields() {
+        $fieldsArr = array(
+            'phone','institution',
+            'status','firstDayAway','firstDayBackInOffice','comment','updateComment',
+            'availableViaEmail','availableEmail',
+            'availableViaCellPhone','availableCellPhone',
+            'availableViaOther','availableOther'
+        );
+        return $fieldsArr;
+    }
+
 
     public function __toString()
     {

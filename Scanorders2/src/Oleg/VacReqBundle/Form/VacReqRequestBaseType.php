@@ -50,7 +50,7 @@ class VacReqRequestBaseType extends AbstractType
 
 
         $builder->add('numberOfDays', null, array(
-            'label' => 'Number of Work Days Off-site (Please do not include '.$this->params['holidaysUrl'].'):',
+            'label' => $this->numberOfDaysLabelPrefix . ' (Please do not include '.$this->params['holidaysUrl'].'):',
             'attr' => array('class'=>'form-control vacreq-numberOfDays'),
             'read_only' => ($this->params['review'] ? true : false)
         ));
@@ -72,7 +72,7 @@ class VacReqRequestBaseType extends AbstractType
 //            ));
 //        }
 
-        if( $this->params['cycle'] != 'new' ) {
+        if( $this->params['cycle'] == 'review' || $this->params['cycle'] == 'show' ) {
 
             //enable status radio only for admin or for reviewer
             $readOnly = true;
@@ -81,8 +81,8 @@ class VacReqRequestBaseType extends AbstractType
             }
 
             $builder->add('status', 'choice', array(
-                'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
-                //'read_only' => $readOnly,
+                //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+                'read_only' => $readOnly,
                 'choices' => array(
                     //'pending' => 'Pending',
                     'approved' => 'Approved',

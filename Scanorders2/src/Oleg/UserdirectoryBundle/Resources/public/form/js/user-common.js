@@ -609,7 +609,7 @@ function initSingleDatepicker( datepickerElement ) {
         datepickerElement.datepicker().on("clearDate", function(e){
             var inputField = $(this).find('input.datepicker, input.datepicker-exception');
             //console.log('on clear Date');
-            printF(inputField,"clearDate input:");
+            //printF(inputField,"clearDate input:");
             clearErrorField( inputField );
         });
     }

@@ -4,6 +4,8 @@ namespace Oleg\VacReqBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\VacReqBundle\Entity\VacReqRequest;
+use Oleg\VacReqBundle\Entity\VacReqRequestBusiness;
+use Oleg\VacReqBundle\Entity\VacReqRequestVacation;
 use Oleg\VacReqBundle\Form\VacReqRequestType;
 use Oleg\VacReqBundle\Util\VacReqImportData;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,6 +33,7 @@ class RequestController extends Controller
     public function newAction(Request $request)
     {
 
+        $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -45,6 +48,9 @@ class RequestController extends Controller
         $phone = $vacreqUtil->getSubmitterPhone($user);
         $entity->setPhone($phone);
 
+        //set emergency info
+        $vacreqUtil->setEmergencyInfo($user,$entity);
+
         $cycle = 'new';
 
         $form = $this->createRequestForm($entity,$cycle);
@@ -56,7 +62,18 @@ class RequestController extends Controller
             //set final (global) fields
             $entity->setFinalFields();
 
-            $em = $this->getDoctrine()->getManager();
+            //remove sub requests if empty
+            if( !$entity->hasBusinessRequest() ) {
+                $subRequestB = $entity->getRequestBusiness();
+                $entity->setRequestBusiness(null);
+                $em->remove($subRequestB);
+            }
+            if( !$entity->hasVacationRequest() ) {
+                $subRequestV = $entity->getRequestVacation();
+                $entity->setRequestVacation(null);
+                $em->remove($subRequestV);
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -194,6 +211,23 @@ class RequestController extends Controller
         }
 
         $cycle = 'edit';
+        if( $routName == 'vacreq_review' ) {
+            $cycle = 'review';
+        }
+
+        //add missing subRequests for edit
+//        if( $routName == 'vacreq_edit' ) {
+//            if( !$entity->hasBusinessRequest() ) {
+//                $requestB = new VacReqRequestBusiness();
+//                $em->persist($requestB);
+//                $entity->setRequestBusiness($requestB);
+//            }
+//            if( !$entity->hasVacationRequest() ) {
+//                $requestV = new VacReqRequestVacation();
+//                $em->persist($requestV);
+//                $entity->setRequestVacation($requestV);
+//            }
+//        }
 
         $form = $this->createRequestForm($entity,$cycle,$request);
 
@@ -203,12 +237,6 @@ class RequestController extends Controller
 
             if( $routName == 'vacreq_review' ) { //review
 
-                //set overall status
-//                $overallStatus = $entity->getOverallStatus();
-//                $entity->setStatus($overallStatus);
-//                //set first day away
-//                $firstDateAway = $entity->getFirstDateAway(null);
-//                $entity->setFirstDayAway($firstDateAway);
                 //set final (global) fields
                 $entity->setFinalFields();
 
@@ -229,12 +257,66 @@ class RequestController extends Controller
 
                 $entity->setUpdateUser($user);
 
+                //remove sub requests if empty
+                if( !$entity->hasBusinessRequest() ) {
+                    echo "no business req => remove <br>";
+                    $subRequestB = $entity->getRequestBusiness();
+                    $entity->setRequestBusiness(null);
+                    $em->remove($subRequestB);
+                } else {
+                    //$subRequestB = $entity->getRequestBusiness();
+                    echo "yes business req<br>";
+                    //$em->persist($subRequestB);
+                    //$em->persist($entity->getRequestBusiness());
+                }
+                if( !$entity->hasVacationRequest() ) {
+                    $subRequestV = $entity->getRequestVacation();
+                    $entity->setRequestVacation(null);
+                    $em->remove($subRequestV);
+                } else {
+                    //$subRequestV = $entity->getRequestVacation();
+                    //$em->persist($subRequestV);
+                    //$em->persist($entity->getRequestVacation());
+                }
+                //exit('1');
+
                 /////////////// Add event log on edit (edit or add collection) ///////////////
                 /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
                 $changedInfoArr = $vacreqUtil->setEventLogChanges($entity);
 
+                //set final (global) fields
+                $entity->setFinalFields();
+
+//                //remove sub requests if empty
+//                if( !$entity->hasBusinessRequest() ) {
+//                    echo "no business req => remove <br>";
+//                    $subRequestB = $entity->getRequestBusiness();
+//                    $entity->setRequestBusiness(null);
+//                    $em->remove($subRequestB);
+//                } else {
+//                    $subRequestB = $entity->getRequestBusiness();
+//                    echo "yes business req:".$subRequestB."<br>";
+//                    //$em->persist($subRequestB);
+//                    $em->persist($entity->getRequestBusiness());
+//                }
+//                if( !$entity->hasVacationRequest() ) {
+//                    $subRequestV = $entity->getRequestVacation();
+//                    $entity->setRequestVacation(null);
+//                    $em->remove($subRequestV);
+//                } else {
+//                    $subRequestV = $entity->getRequestVacation();
+//                    //$em->persist($subRequestV);
+//                    $em->persist($entity->getRequestVacation());
+//                }
+                //exit('1');
+
+                echo "0 business req=".$entity->getRequestBusiness()."<br>";
+                //exit('1');
+
                 $em->persist($entity);
                 $em->flush();
+                echo "1 business req=".$entity->getRequestBusiness()."<br>";
+                //exit('1');
 
                 $action = "updated";
                 $eventType = 'Business/Vacation Request Updated';
@@ -478,6 +560,10 @@ class RequestController extends Controller
         }
 
         if( $cycle == 'edit' ) {
+            $method = 'POST';
+        }
+
+        if( $cycle == 'review' ) {
             $method = 'POST';
         }
 

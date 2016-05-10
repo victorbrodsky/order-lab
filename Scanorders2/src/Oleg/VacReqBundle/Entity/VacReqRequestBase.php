@@ -61,7 +61,7 @@ class VacReqRequestBase
 
 
 
-    public function __construct($status='pending') {
+    public function __construct($status='pending') { //='pending'
         $this->setStatus($status);
     }
 
@@ -179,5 +179,12 @@ class VacReqRequestBase
     }
 
 
+    public function getArrayFields() {
+        $fieldsArr = array(
+            'startDate','endDate','numberOfDays',
+            'status','approverComment',
+        );
+        return $fieldsArr;
+    }
 
 }

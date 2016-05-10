@@ -90,6 +90,8 @@ class RequestIndexController extends Controller
         $subjectUser = ( array_key_exists('subjectUser', $params) ? $params['subjectUser'] : null);
         $approver = ( array_key_exists('approver', $params) ? $params['approver'] : null);
 
+        $routeName = $request->get('_route');
+
         $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
@@ -143,10 +145,15 @@ class RequestIndexController extends Controller
         //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
-            'defaultSortFieldName' => 'request.createDate',
+            'defaultSortFieldName' => 'request.firstDayAway', //createDate
             'defaultSortDirection' => 'DESC',
             //'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
         );
+
+        if( $routeName == 'vacreq_incomingrequests' ) {
+            $paginationParams['defaultSortFieldName'] = 'request.id';
+        }
+
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -174,7 +181,7 @@ class RequestIndexController extends Controller
             'pagination' => $pagination,
             'sitename' => $sitename,
             'filtered' => $filtered,
-            'routename' => $request->get('_route'),
+            'routename' => $routeName,
             'title' => $indexTitle
         );
     }
