@@ -508,6 +508,7 @@ class RequestController extends Controller
     public function createRequestForm( $entity, $cycle, $request=null ) {
 
         $em = $this->getDoctrine()->getManager();
+        $vacreqUtil = $this->get('vacreq_util');
 
         $user = $this->get('security.context')->getToken()->getUser();
 //        if( !$entity ) {
@@ -527,7 +528,7 @@ class RequestController extends Controller
 
         //organizationalInstitution
         //$organizationalInstitutions = $em->getRepository('OlegUserdirectoryBundle:User')->findVacReqOrganizationalInstitution($user);
-        $organizationalInstitutions = $this->getVacReqOrganizationalInstitutions($user);
+        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user);
 
         //get holidays url
         $userSecUtil = $this->container->get('user_security_utility');
@@ -587,64 +588,63 @@ class RequestController extends Controller
         return $form;
     }
 
-    //get institution from user submitter role
-    public function getVacReqOrganizationalInstitutions( $user ) {
-
-        $institutions = array();
-
-        $em = $this->getDoctrine()->getManager();
-
-        //get vacreq submitter role
-        $submitterRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "VacReqRequest", "create" );
-
-        if( count($submitterRoles) == 0 ) {
-            //find all submitter role's institution
-            $submitterRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "create");
-        }
-        //echo "roles count=".count($submitterRoles)."<br>";
-
-        foreach( $submitterRoles as $submitterRole ) {
-            $institution = $submitterRole->getInstitution();
-            if( $institution ) {
-
-                //Clinical Pathology (for review by Firstname Lastname)
-                //find approvers with the same institution
-                $approverStr = $this->getApproversBySubmitterRole($submitterRole);
-                if( $approverStr ) {
-                    $orgName = $institution . " (for review by " . $approverStr . ")";
-                } else {
-                    $orgName = $institution;
-                }
-
-                //$institutions[] = array( $institution->getId() => $institution."-".$organizationalName . "-" . $approver);
-                $institutions[$institution->getId()] = $orgName;
-                //$institutions[] = $orgName;
-                //$institutions[] = $institution;
-            }
-        }
-
-        //add request institution
-//        if( $entity->getInstitution() ) {
-//            $orgName = $institution . " (for review by " . $approverStr . ")";
-//            $institutions[$entity->getInstitution()->getId()] = $orgName;
+//    //get institution from user submitter role
+//    public function getVacReqOrganizationalInstitutions( $user ) {
+//
+//        $institutions = array();
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        //get vacreq submitter role
+//        $submitterRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "VacReqRequest", "create" );
+//
+//        if( count($submitterRoles) == 0 ) {
+//            //find all submitter role's institution
+//            $submitterRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "create");
 //        }
-
-        return $institutions;
-    }
-
-    //$role - string; for example "ROLE_VACREQ_APPROVER_CYTOPATHOLOGY"
-    public function getApproversBySubmitterRole( $role ) {
-        $em = $this->getDoctrine()->getManager();
-        $roleApprover = str_replace("SUBMITTER","APPROVER",$role);
-        $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover);
-
-        $approversArr = array();
-        foreach( $approvers as $approver ) {
-            $approversArr[] = $approver->getUsernameShortest();
-        }
-
-        return implode(", ",$approversArr);
-    }
+//        //echo "roles count=".count($submitterRoles)."<br>";
+//
+//        foreach( $submitterRoles as $submitterRole ) {
+//            $institution = $submitterRole->getInstitution();
+//            if( $institution ) {
+//
+//                //Clinical Pathology (for review by Firstname Lastname)
+//                //find approvers with the same institution
+//                $approverStr = $this->getApproversBySubmitterRole($submitterRole);
+//                if( $approverStr ) {
+//                    $orgName = $institution . " (for review by " . $approverStr . ")";
+//                } else {
+//                    $orgName = $institution;
+//                }
+//
+//                //$institutions[] = array( $institution->getId() => $institution."-".$organizationalName . "-" . $approver);
+//                $institutions[$institution->getId()] = $orgName;
+//                //$institutions[] = $orgName;
+//                //$institutions[] = $institution;
+//            }
+//        }
+//
+//        //add request institution
+////        if( $entity->getInstitution() ) {
+////            $orgName = $institution . " (for review by " . $approverStr . ")";
+////            $institutions[$entity->getInstitution()->getId()] = $orgName;
+////        }
+//
+//        return $institutions;
+//    }
+//    //$role - string; for example "ROLE_VACREQ_APPROVER_CYTOPATHOLOGY"
+//    public function getApproversBySubmitterRole( $role ) {
+//        $em = $this->getDoctrine()->getManager();
+//        $roleApprover = str_replace("SUBMITTER","APPROVER",$role);
+//        $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover);
+//
+//        $approversArr = array();
+//        foreach( $approvers as $approver ) {
+//            $approversArr[] = $approver->getUsernameShortest();
+//        }
+//
+//        return implode(", ",$approversArr);
+//    }
 
     //check for active access requests
     public function getActiveAccessReq() {

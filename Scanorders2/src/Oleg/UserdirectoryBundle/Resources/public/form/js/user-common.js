@@ -588,7 +588,7 @@ function initSingleDatepicker( datepickerElement ) {
             todayBtn: datepickertodayBtn,
             todayHighlight: true,
             endDate: endDate,
-            orientation: "auto top",
+            orientation: "auto", //"auto top"
             ////minDate: new Date(1902, 1, 1)   //null
             format: datepickerFormat,
             minViewMode: datepickerMinViewMode

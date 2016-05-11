@@ -188,6 +188,9 @@ class RequestIndexController extends Controller
 
     public function processFilter( $dql, $request, $params ) {
 
+        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $vacreqUtil = $this->get('vacreq_util');
+
         $dqlParameters = array();
         $filterRes = array();
         $filtered = false;
@@ -218,6 +221,13 @@ class RequestIndexController extends Controller
         $params['filterUsers'] = $filterUsers;
         //////////////////// EOF get list of users with "unknown" user ////////////////////
 
+        $params['em'] = $em;
+
+        //institutional group
+        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser);
+        $params['organizationalInstitutions'] = $organizationalInstitutions;
+
+        //create filter form
         $filterform = $this->createForm(new VacReqFilterType($params), null);
 
         $filterform->bind($request);
@@ -228,37 +238,111 @@ class RequestIndexController extends Controller
         $startdate = $filterform['startdate']->getData();
         $enddate = $filterform['enddate']->getData();
 
-        //$user = ( array_key_exists('user', $filterform) ? $filterform['user']->getData() : null);
+        ////////////// Optional filters //////////////
+        //$subjectUser = ( array_key_exists('user', $filterform) ? $filterform['user']->getData() : null);
         if( $filterform->has('user') ) {
-            $user = $filterform['user']->getData();
+            $subjectUser = $filterform['user']->getData();
         } else {
-            $user = null;
+            $subjectUser = null;
         }
+
+        if( $filterform->has('submitter') ) {
+            $submitter = $filterform['submitter']->getData();
+        } else {
+            $submitter = null;
+        }
+
+        if( $filterform->has('organizationalInstitutions') ) {
+            $groups = $filterform['organizationalInstitutions']->getData();
+        } else {
+            $groups = null;
+        }
+
+        if( $filterform->has('academicYear') ) {
+            $academicYear = $filterform['academicYear']->getData();
+        } else {
+            $academicYear = null;
+        }
+        ////////////// EOF Optional filters //////////////
 
         $vacationRequest = $filterform['vacationRequest']->getData();
         $businessRequest = $filterform['businessRequest']->getData();
 
-        $completed = $filterform['completed']->getData();
+        //$completed = $filterform['completed']->getData();
+        $completed = null;
         $pending = $filterform['pending']->getData();
         $approved = $filterform['approved']->getData();
         $rejected = $filterform['rejected']->getData();
 
         //$year = $filterform['year']->getData();
-        //echo "userID=".$user."<br>";
+        //echo "userID=".$subjectUser."<br>";
 
-        $currentUser = $this->get('security.context')->getToken()->getUser();
-
-        if( $user && $user->getId() ) {
+        if( $subjectUser && $subjectUser->getId() ) {
             $where = "";
             if( $where != "" ) {
                 $where .= " OR ";
             }
-            if( $user ) {
-                $where .= "request.user=".$user->getId();
+            if( $subjectUser ) {
+                $where .= "request.user=".$subjectUser->getId();
             } else {
                 $where .= "request.user IS NULL";
             }
             $dql->andWhere($where);
+
+            $filtered = true;
+        }
+
+        if( $submitter && $submitter->getId() ) {
+            $where = "";
+            if( $where != "" ) {
+                $where .= " OR ";
+            }
+            if( $submitter ) {
+                $where .= "request.submitter=".$submitter->getId();
+            } else {
+                $where .= "request.submitter IS NULL";
+            }
+            $dql->andWhere($where);
+
+            $filtered = true;
+        }
+
+        if( $groups && $groups->getId() ) {
+            $where = "";
+            if( $where != "" ) {
+                $where .= " OR ";
+            }
+            if( $groups ) {
+                $where .= "request.institution=".$groups->getId();
+            } else {
+                $where .= "request.institution IS NULL";
+            }
+            $dql->andWhere($where);
+
+            $filtered = true;
+        }
+
+        if( $academicYear ) {
+
+            $academicYear = $academicYear->format('Y');
+            echo "academicYear=".$academicYear."<br>";
+
+            $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "Start" );
+            $startAcademicYearDate = new \DateTime($startAcademicYearStr);
+            $startAcademicYearDate = $this->convertFromUserTimezonetoUTC($startAcademicYearDate,$currentUser);
+            $startAcademicYearDate->setTime(00, 00, 00);
+            echo "start year date:".$startAcademicYearDate->format('Y-m-d H:i:s')."<br>";
+
+            $endAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "End" );
+            $endAcademicYearDate = new \DateTime($endAcademicYearStr);
+            $endAcademicYearDate = $this->convertFromUserTimezonetoUTC($endAcademicYearDate,$currentUser);
+            $endAcademicYearDate->setTime(23, 59, 59);
+            echo "end year date:".$endAcademicYearDate->format('Y-m-d H:i:s')."<br>";
+
+            $dql->andWhere("request.createDate between :createDateStart and :createDateEnd");
+
+            $dqlParameters['createDateStart'] = $startAcademicYearDate;
+            $dqlParameters['createDateEnd'] = $endAcademicYearDate;
 
             $filtered = true;
         }
