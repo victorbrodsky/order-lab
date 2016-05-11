@@ -325,21 +325,22 @@ class RequestIndexController extends Controller
         if( $academicYear ) {
 
             $academicYear = $academicYear->format('Y');
-            echo "academicYear=".$academicYear."<br>";
+            //echo "academicYear=".$academicYear."<br>";
 
             $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "Start" );
             $startAcademicYearDate = new \DateTime($startAcademicYearStr);
             $startAcademicYearDate = $this->convertFromUserTimezonetoUTC($startAcademicYearDate,$currentUser);
             $startAcademicYearDate->setTime(00, 00, 00);
-            echo "start year date:".$startAcademicYearDate->format('Y-m-d H:i:s')."<br>";
+            //echo "start year date:".$startAcademicYearDate->format('Y-m-d H:i:s')."<br>";
 
             $endAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "End" );
             $endAcademicYearDate = new \DateTime($endAcademicYearStr);
             $endAcademicYearDate = $this->convertFromUserTimezonetoUTC($endAcademicYearDate,$currentUser);
             $endAcademicYearDate->setTime(23, 59, 59);
-            echo "end year date:".$endAcademicYearDate->format('Y-m-d H:i:s')."<br>";
+            //echo "end year date:".$endAcademicYearDate->format('Y-m-d H:i:s')."<br>";
 
-            $dql->andWhere("request.createDate between :createDateStart and :createDateEnd");
+            //requests with firstDayAway or firstDayBackInOffice inside the academic year
+            $dql->andWhere("(request.firstDayAway between :createDateStart and :createDateEnd OR request.firstDayBackInOffice between :createDateStart and :createDateEnd)");
 
             $dqlParameters['createDateStart'] = $startAcademicYearDate;
             $dqlParameters['createDateEnd'] = $endAcademicYearDate;
