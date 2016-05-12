@@ -663,6 +663,9 @@ class ApproverController extends Controller
 
 
     /**
+     * It should ONLY remove/strip all of THIS GROUP's roles from all users.
+     * Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
+     *
      * @Route("/organizational-institution-remove/{instid}", name="vacreq_group_remove")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Approver:orginst-user-add.html.twig")
@@ -670,7 +673,7 @@ class ApproverController extends Controller
     public function removeGroupAction(Request $request, $instid )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -707,6 +710,8 @@ class ApproverController extends Controller
         return $this->redirectToRoute('vacreq_approvers');
     }
 
+    //remove/strip all of THIS GROUP's roles from all users.
+    //Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
     public function removeVacReqGroupByInstitution($instid,$rolePartialName) {
         $em = $this->getDoctrine()->getManager();
 
@@ -727,7 +732,9 @@ class ApproverController extends Controller
                 $user->removeRole($roleName);
             }
 
-            $em->remove($role);
+            //Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
+            //$em->remove($role);
+
             $em->flush();
         }
 

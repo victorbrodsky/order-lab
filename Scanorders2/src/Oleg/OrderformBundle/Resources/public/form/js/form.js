@@ -728,7 +728,7 @@ function processDatepicker( element, remove ) {
             element = element.closest('.input-group.date');
         }
 
-        //printF(element,"process Datepicker: Datepicker Btn:");
+        printF(element,"process Datepicker: Datepicker Btn:");
 
         if( remove == "remove" ) {
             //printF(element,"Remove datepicker:");

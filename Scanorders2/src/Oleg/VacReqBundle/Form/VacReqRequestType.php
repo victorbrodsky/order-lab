@@ -47,6 +47,17 @@ class VacReqRequestType extends AbstractType
             'required' => false,
         ));
 
+        if( $this->params['cycle'] == 'show' ) {
+            //approver
+            $builder->add('approver', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Approver:",
+                'required' => false,
+                'read_only' => true,
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        }
+
         if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
 
             //enabled ($readOnly = false) for admin only

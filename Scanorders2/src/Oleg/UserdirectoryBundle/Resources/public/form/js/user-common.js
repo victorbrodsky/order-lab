@@ -512,9 +512,11 @@ function initDatepicker( holder ) {
         //console.log(holder);
 
         if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
-            var targets = holder.find('.input-group.date').not('.form_datetime');
+            //var targets = holder.find('.input-group.date').not('.form_datetime, .datepicker-ignore');
+            var targets = holder.find('.input-group.date:not(.form_datetime, .datepicker-ignore)');
         } else {
-            var targets = $('.input-group.date').not('.form_datetime');
+            //var targets = $('.input-group.date').not('.form_datetime, .datepicker-ignore');
+            var targets = $('.input-group.date:not(.form_datetime, .datepicker-ignore)');
         }
 
         processAllDatepickers( targets );
@@ -536,14 +538,24 @@ function processAllDatepickers( targets ) {
 //Note: for bootstrap's "hide.bs.collapse" event use datepicker fix https://github.com/eternicode/bootstrap-datepicker/issues/978
 function initSingleDatepicker( datepickerElement ) {
 
-    //console.log("initSingleDatepicker:");
-    //printF(datepickerElement,'datepicker element:');
-    //console.log(datepickerElement);
+    if( datepickerElement.hasClass('datepicker-ignore') ) {
+        //printF(datepickerElement,'Ignore:');
+        return;
+    }
 
     //disable datepickers with readonly attributes
     var inputField = datepickerElement.find('input.datepicker, input.datepicker-exception');
     //var inputField = datepickerElement.find('input.datepicker');
     //printF(inputField,'inputField:');
+
+    if( inputField.hasClass('datepicker-ignore') ) {
+        //printF(inputField,'Ignore:');
+        return;
+    }
+
+    //console.log("initSingleDatepicker:");
+    //printF(datepickerElement,'datepicker element:');
+    //console.log(datepickerElement);
 
     var calendarIconBtn = datepickerElement.find('.calendar-icon-button');
     //console.log("calendarIconBtn:");
@@ -597,20 +609,36 @@ function initSingleDatepicker( datepickerElement ) {
         calendarIconBtn.prop('disabled', false);
 
         //fix bug: https://github.com/eternicode/bootstrap-datepicker/issues/978
-        datepickerElement.datepicker().on('hide.bs.collapse', function(event) {
+        //datepickerElement.datepicker().on('hide.bs.collapse', function(event) {
+        datepickerElement.on('hide.bs.collapse', function(event) {
             // prevent datepicker from firing bootstrap modal "show.bs.modal"
             event.stopPropagation();
         });
-        datepickerElement.datepicker().on('shown.bs.collapse', function(event) {
+        //datepickerElement.datepicker().on('shown.bs.collapse', function(event) {
+        datepickerElement.on('shown.bs.collapse', function(event) {
             // prevent datepicker from firing bootstrap modal "show.bs.modal"
             event.stopPropagation();
         });
 
-        datepickerElement.datepicker().on("clearDate", function(e){
+        //datepickerElement.datepicker().on("clearDate", function(e){
+        datepickerElement.on("clearDate", function (e) {
             var inputField = $(this).find('input.datepicker, input.datepicker-exception');
             //console.log('on clear Date');
-            //printF(inputField,"clearDate input:");
-            clearErrorField( inputField );
+            //printF(inputField, "clearDate input:");
+            clearErrorField(inputField);
+
+            //if( inputField.hasClass('datepicker-onclear-cleartooltip') ) {
+            //    console.log("clear tooltip!!!!!!");
+            //    console.log($(this));
+            //    //$(this).closest('.datepicker').tooltip('destroy');
+            //    //$(this).tooltip('destroy');
+            //    $(this).tooltip({
+            //        title: function() {
+            //            return "";
+            //        }
+            //    });
+            //}
+
         });
     }
 

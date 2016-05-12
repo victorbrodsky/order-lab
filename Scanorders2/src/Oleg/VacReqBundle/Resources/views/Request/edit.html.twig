@@ -60,6 +60,10 @@
 
         {#{{ treemacros.compositeTreeNode(form.institution,cycle,'') }}#}
 
+        {% if form.approver is defined %}
+            {{ formmacros.field(form.approver) }}
+        {% endif %}
+
         {% if form.submitter is defined %}
             {{ formmacros.field(form.submitter) }}
         {% endif %}
@@ -315,15 +319,19 @@
 
             //console.log('cycle='+cycle);
             if( cycle == 'new' || cycle == 'edit' ) {
+
                 vacreqDateListener();
 
                 vacreqAvailabilityListener();
 
-                vacreqNumberOfDaysListener();
+                vacreqRemoveErrorListener();
 
                 //init datepicker manually, because the holder 'input-group' does not have class 'date', but js is looking for .input-group.date
                 initSingleDatepicker( $('.vacreq-firstDayBackInOffice') );
+
             }
+
+            //vacreqDayWeekListener();
 
         });
 
@@ -379,7 +387,7 @@
             });
         }
 
-        function vacreqNumberOfDaysListener() {
+        function vacreqRemoveErrorListener() {
             $('.vacreq-numberOfDays, .vacreq-expenses, .vacreq-description').on("input", function(e) {
                 $(this).removeClass('alert-danger');
             });
@@ -387,7 +395,77 @@
             //$('.vacreq-firstDayBackInOffice').datepicker().on("changeDate", function(e) {
             $('.vacreq-firstDayBackInOffice').on("change", function(e) {
                 $(this).removeClass('alert-danger');
+                vacreqSetDayWeekTooltip($(this));
             });
+        }
+
+        //Show black tool tips above the 5 date fields on the home page with
+        //the day of the week (Monday, Tuesday, etc) corresponding to the displayed date on the homepage form.
+        var _daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+//        function vacreqDayWeekListener() {
+//            var daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+//            var datepickerElements = $('.vacreq-startDate,.vacreq-endDate,.vacreq-firstDayBackInOffice');
+//
+//            //datepickerElements.on("change", function(e) {
+//            //datepickerElements.datepicker().on('change.dp', function (e) {
+//            datepickerElements.on("changeDate", function(e) {
+//            //datepickerElements.on("change.dp", function(e) {
+//                //$(this).tooltip('destroy');
+//                var thisDate = $(this).val();
+//                console.log("change date="+thisDate);
+//                //printF($(this), "changeDate:");
+//                //console.log($(this));
+//                if( thisDate ) {
+//                    thisDate = new Date(thisDate);
+//                    $(this).tooltip({
+//                        title: function() {
+//                            return daysOfWeek[thisDate.getDay()];
+//                        }
+//                    });
+//                }
+//            });
+//
+////            $('.vacreq-startDate').on('clearDate', function(e) {
+////                console.log("clear date!!!!!!");
+////                $(this).tooltip('destroy');
+////            });
+////            datepickerElements.each( function(e) {
+////                $(this).on('clearDate', function(e) {
+////                    console.log("clear date!!!!!!");
+////                    $(this).tooltip('destroy');
+////                });
+////            });
+//
+//        }
+//        function clearErrorField(inputField) {
+//            console.log("clear date!!!!!!");
+//            inputField.tooltip('destroy');
+//        }
+        function vacreqSetDayWeekTooltip(datepickerElem) {
+            var thisDate = datepickerElem.val();
+            //console.log("set tooltip="+thisDate);
+            //printF(datepickerElem, "changeDate:");
+            //console.log(datepickerElem);
+            if( thisDate ) {
+                //console.log("create tooltip="+thisDate);
+                thisDate = new Date(thisDate);
+                datepickerElem.tooltip({
+                    title: function() {
+                        //console.log("set tooltip="+_daysOfWeek[thisDate.getDay()]);
+                        var tooltipDate = $(this).val();
+                        if( tooltipDate ) {
+                            //console.log("tooltip title: date=" + tooltipDate);
+                            return _daysOfWeek[thisDate.getDay()];
+                        } else {
+                            //console.log("tooltip title: destroy");
+                            $(this).tooltip('destroy');
+                        }
+                    }
+                });
+            } else {
+                //console.log("destroy tooltip="+thisDate);
+                datepickerElem.tooltip('destroy');
+            }
         }
 
         function vacreqDateListener() {
@@ -400,7 +478,7 @@
 
                 var startDate = holder.find('.vacreq-startDate').val();
                 var endDate = holder.find('.vacreq-endDate').val();
-                //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
+                console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
 
                 startDate = new Date(startDate);
                 endDate = new Date(endDate);
@@ -413,6 +491,7 @@
                         //e.preventDefault();
                         alert("The requested End Date cannot precede the Start Date.");
                         $(this).datepicker('setDate', null);
+                        e.stopPropagation();
                         return;
                     }
 
@@ -433,6 +512,8 @@
                     }
 
                 }//if
+
+                vacreqSetDayWeekTooltip($(this));
 
             });
 
