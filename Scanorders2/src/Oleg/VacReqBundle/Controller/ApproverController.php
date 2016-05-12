@@ -62,6 +62,8 @@ class ApproverController extends Controller
 
 
     /**
+     * Display a collapse for a given organizational institution
+     *
      * @Route("/organizational-institutions/{institutionId}", name="vacreq_orginst_list")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Approver:orginst-list.html.twig")
@@ -114,7 +116,7 @@ class ApproverController extends Controller
 
 
     /**
-     * Creates a new VacReqRequest entity.
+     * General management page for a given organizational institution
      *
      * @Route("/organizational-institution-management/{institutionId}", name="vacreq_orginst_management")
      * @Method({"GET", "POST"})
@@ -167,6 +169,8 @@ class ApproverController extends Controller
 
 
     /**
+     * A particular management page for a given organizational institution and user to show a well to update the role or remove a user
+     *
      * @Route("/organizational-institution-user-management/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_management")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Approver:orginst-user-management.html.twig")
@@ -200,8 +204,14 @@ class ApproverController extends Controller
         //$originalOtherRoles = $securityUtil->getUserRolesBySite( $subjectUser, 'vacreq', false );
 
         //Roles
-        $securityUtil = $this->get('order_security_utility');
-        $rolesArr = $securityUtil->getSiteRolesKeyValue('vacreq');
+        //$securityUtil = $this->get('order_security_utility');
+        //$rolesArr = $securityUtil->getSiteRolesKeyValue('vacreq');
+
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findById($roleId);
+        $rolesArr = array();
+        foreach( $roles as $role ) {
+            $rolesArr[$role->getName()] = $role->getAlias();
+        }
 
         $params = array('roles'=>$rolesArr);
 
@@ -214,40 +224,6 @@ class ApproverController extends Controller
             )
         );
 
-//        $form->handleRequest($request);
-
-        //$formRoles = $request->request->get('roles');
-        //$formRoles = $form->getData();
-        //$formRoles = $form["roles"]->getData();
-        //print_r($formRoles);
-
-//        foreach( $subjectUser->getRoles() as $userRole ) {
-//            echo "0 userRole=".$userRole."<br>";
-//        }
-//        echo "<br>";
-        //exit('formRoles='.$formRoles);
-
-//        if( $form->isSubmitted() && $form->isValid() ) {
-//
-//            foreach( $subjectUser->getRoles() as $userRole ) {
-//                echo "0 userRole=".$userRole."<br>";
-//            }
-//            echo "<br>";
-//
-//            $this->processUserAuthorization( $subjectUser, $originalOtherRoles );
-//
-//            foreach( $subjectUser->getRoles() as $userRole ) {
-//                echo "1 userRole=".$userRole."<br>";
-//            }
-//            exit('submitted');
-//
-//            $em->persist($subjectUser);
-//            $em->flush();
-//
-//            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
-//        }
-        //exit('not submitted');
-
         return array(
             'form' => $form->createView(),
             'entity' => $subjectUser,
@@ -258,6 +234,8 @@ class ApproverController extends Controller
 
 
     /**
+     * Update for a userManagementAction page
+     *
      * @Route("/organizational-institution-user-update/{userid}/{instid}/{roleIds}", name="vacreq_orginst_user_update", options={"expose"=true})
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Approver:orginst-user-management.html.twig")

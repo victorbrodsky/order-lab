@@ -68,6 +68,7 @@
                     <div class="well">
                         {#{{ submitter }}#}
                         {#({{ approver.getSiteRoles('SUBMITTER')|join(', ') }})#}
+                        {#the same as render(controller('OlegVacReqBundle:Approver:userManagement'#}
                         {{ render( url('vacreq_orginst_user_management',{'userid':submitter.id,'instid':organizationalGroupId, 'roleId':submitterRoleId}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
                     </div>
                 {% endfor %}
