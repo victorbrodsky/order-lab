@@ -912,22 +912,28 @@ class VacReqUtil
     }
 
     //get institution from user submitter role
-    public function getVacReqOrganizationalInstitutions( $user ) {
+    public function getVacReqOrganizationalInstitutions( $user, $asObject=false ) {
 
         $institutions = array();
 
         //get vacreq submitter role
-        $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "VacReqRequest", "create" );
+        $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "VacReqRequest", "changestatus" );
+        //echo "0 roles count=".count($submitterRoles)."<br>";
 
         if( count($submitterRoles) == 0 ) {
             //find all submitter role's institution
-            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "create");
+            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "changestatus");
         }
-        //echo "roles count=".count($submitterRoles)."<br>";
+        //echo "1 roles count=".count($submitterRoles)."<br>";
 
         foreach( $submitterRoles as $submitterRole ) {
             $institution = $submitterRole->getInstitution();
             if( $institution ) {
+
+                if( $asObject ) {
+                    $institutions[] = $institution;
+                    continue;
+                }
 
                 //Clinical Pathology (for review by Firstname Lastname)
                 //find approvers with the same institution

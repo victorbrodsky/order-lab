@@ -736,10 +736,10 @@ class ApproverController extends Controller
 
 
     /**
- * @Route("/organizational-institution-emailusers/{instid}", name="vacreq_orginst_emailusers")
- * @Method({"GET", "POST"})
- * @Template("OlegVacReqBundle:Approver:orginst-emailusers.html.twig")
- */
+     * @Route("/organizational-institution-emailusers/{instid}", name="vacreq_orginst_emailusers")
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Approver:orginst-emailusers.html.twig")
+     */
     public function emailUsersAction(Request $request, $instid)
     {
 
@@ -855,6 +855,88 @@ class ApproverController extends Controller
 
         return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
 
+    }
+
+
+
+    //My Group vacreq_mygroup
+    /**
+     * @Route("/my-group/", name="vacreq_mygroup")
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Group:mygroup.html.twig")
+     */
+    public function myGroupAction(Request $request)
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ||
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //vacreq_util
+        $vacreqUtil = $this->get('vacreq_util');
+
+        //find groups
+        $groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,true);
+        //echo "groups=".count($groups)."<br>";
+
+//        if( count($groups) == 0 ) {
+//            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+//                $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER');
+//                echo "roles=".count($approverRoles)."<br>";
+//                $groups = array();
+//                foreach ($approverRoles as $approverRole) {
+//                    echo "group=".$approverRole->getInstitution()."<br>";
+//                    $groups[] = $approverRole->getInstitution();
+//                }
+//            }
+//        }
+
+        return array(
+            'groups' => $groups
+            //'entity' => $entity,
+            //'form' => $form->createView(),
+            //'organizationalGroupName' => $institution."",
+            //'organizationalGroupId' => $instid,
+        );
+    }
+
+    /**
+     * @Route("/my-single-group/{groupId}", name="vacreq_mysinglegroup")
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Group:my-single-group.html.twig")
+     */
+    public function mySingleGroupAction(Request $request, $groupId)
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ||
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //find role submitters by institution
+        $submitters = array();
+        $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $groupId);
+        $roleSubmitter = $roleSubmitters[0];
+        //echo "roleSubmitter=".$roleSubmitter."<br>";
+        if( $roleSubmitter ) {
+            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName");
+        }
+
+        $group = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
+
+        return array(
+            'groupId' => $groupId,
+            'submitters' => $submitters,
+            'groupName' => $group."",
+        );
     }
 
 }

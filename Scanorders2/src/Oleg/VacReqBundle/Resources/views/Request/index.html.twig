@@ -260,7 +260,7 @@
                             {#<a href="mailto:{{ singleEmail }}" target="_top"><span class="glyphicon glyphicon-envelope"></span></a>#}
                         {#{% endif %}#}
 
-                        {{ vacreqmacros.personAwayInfo(entity,vacreq_sitename) }}
+                        {{ vacreqmacros.personAwayInfo(entity.user,entity.phone,vacreq_sitename) }}
                     {% endif %}
                 </td>
 

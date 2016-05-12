@@ -198,6 +198,10 @@ function setVacReqNavBar() {
         id = 'awaycalendar';
     }
 
+    if( full.indexOf("/vacation-request/my-group/") !== -1 ) {
+        id = 'mygroup';
+    }
+
     id = commonNavBar(full,id)
 
     if( full.indexOf("/vacation-request/re-identify") !== -1 ) {

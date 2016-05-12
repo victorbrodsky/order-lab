@@ -1,0 +1,83 @@
+
+
+{% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+
+<h4 class="text-info" align="center">
+    {{ groupName }}
+</h4>
+
+<table class="records_list table table-hover table-condensed text-left table-bordered">
+
+    <thead>
+    <tr>
+
+        <th>
+            Employee
+        </th>
+
+        <th>
+            {#{{ knp_pagination_sortable(pagination, 'Current Academic Year', 'request.id') }}#}
+            2015-2016 Business Travel
+        </th>
+
+        <th>
+            {#{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}#}
+            2015-2016 Vacation
+        </th>
+
+        <th>
+            {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
+            2015-2016 Total
+        </th>
+    </tr>
+    </thead>
+
+    <tbody data-link="row" class="rowlink">
+
+    {% for submitter in submitters %}
+
+        {% set businessDaysRes = vacreq_util.getApprovedTotalDays(submitter,'business') %}
+        {% set businessDays = businessDaysRes['numberOfDays'] %}
+        {% set businessAccurate = businessDaysRes['accurate'] %}
+
+        {% set vacationDaysRes = vacreq_util.getApprovedTotalDays(submitter,'vacation') %}
+        {% set vacationDays = vacationDaysRes['numberOfDays'] %}
+        {% set vacationAccurate = vacationDaysRes['accurate'] %}
+
+        <tr>
+
+            <td>
+                {{ vacreqmacros.personAwayInfo(submitter,submitter.getPreferredPhone,vacreq_sitename) }}
+            </td>
+
+            <td>
+                {{ businessDays }}
+                {% if not businessAccurate %}
+                    *
+                {% endif %}
+            </td>
+
+            <td>
+                {{ vacationDays }}
+                {% if not vacationAccurate %}
+                    *
+                {% endif %}
+            </td>
+
+            <td>
+                {{ businessDays + vacationDays }}
+                {% if not businessAccurate and not vacationAccurate %}
+                    *
+                {% endif %}
+            </td>
+
+        </tr>
+
+    {% endfor %}
+    </tbody>
+
+</table>
+
+
+
+

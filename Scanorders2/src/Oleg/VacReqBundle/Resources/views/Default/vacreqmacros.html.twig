@@ -248,21 +248,21 @@
     {{ form_widget(value) }} {{ form_label(value) }}
 {% endmacro %}
 
-{% macro personAwayInfo( entity, vacreq_sitename ) %}
+{% macro personAwayInfo( user, phone, vacreq_sitename ) %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {#<div style="white-space: nowrap;">#}
-        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.displayName() }}</a>
+        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': user.id }) }}">{{ user.displayName() }}</a>
 
-        {% set singleEmail = entity.user.getSingleEmail %}
+        {% set singleEmail = user.getSingleEmail %}
         {% if singleEmail %}
             <a href="mailto:{{ singleEmail }}" target="_top"><span class="glyphicon glyphicon-envelope"></span></a>
         {% endif %}
     {#</div>#}
 
-    {% if entity.phone %}
+    {% if phone %}
         <div style="white-space: nowrap;">
-            {{ usermacros.phoneHref(entity.phone) }}
+            {{ usermacros.phoneHref(phone) }}
         </div>
     {% endif %}
 
@@ -271,8 +271,8 @@
             {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
             <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
         {% else %}
-            {% if entity.user.avatar %}
-                {{ usermacros.showDocumentAsImage(entity.user.avatar,'Avatar','') }}
+            {% if user.avatar %}
+                {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
             {% else %}
                 {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                 <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">

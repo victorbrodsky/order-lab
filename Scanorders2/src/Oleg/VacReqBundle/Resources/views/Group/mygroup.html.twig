@@ -1,0 +1,28 @@
+{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+
+{% block title %}
+    My Group
+{% endblock %}
+
+
+{% block content %}
+
+
+    <h4 class="text-info" align="center">
+        My Group
+    </h4>
+
+    <br>
+
+    {% for group in groups %}
+        {#group: {{ group.name }}#}
+        <p>
+            {{ render(controller('OlegVacReqBundle:Approver:mySingleGroup', { 'groupId': group.id })) }}
+        </p>
+
+    {% endfor %}
+
+
+    * - the result might be inaccurate due to academic year overlap
+
+{% endblock %}
