@@ -410,14 +410,14 @@
             //console.log(datepickerElem);
             if( thisDate ) {
                 //console.log("create tooltip="+thisDate);
-                thisDate = new Date(thisDate);
                 datepickerElem.tooltip({
                     title: function() {
                         //console.log("set tooltip="+_daysOfWeek[thisDate.getDay()]);
                         var tooltipDate = $(this).val();
                         if( tooltipDate ) {
                             //console.log("tooltip title: date=" + tooltipDate);
-                            return _daysOfWeek[thisDate.getDay()];
+                            tooltipDate = new Date(tooltipDate);
+                            return _daysOfWeek[tooltipDate.getDay()];
                         } else {
                             //console.log("tooltip title: destroy");
                             $(this).tooltip('destroy');

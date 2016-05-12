@@ -58,7 +58,7 @@ class VacReqFilterType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
                 'format' => 'yyyy',
-                'attr' => array('class'=>'datepicker-only-year form-control datepicker-ignore', 'placeholder' => 'Academic Year', 'title'=>'Academic Year', 'data-toggle'=>'tooltip'),
+                'attr' => array('class'=>'datepicker-only-year form-control', 'placeholder' => 'Academic Year', 'title'=>'Academic Year', 'data-toggle'=>'tooltip'),
             ));
 
             $this->addGroup($builder);

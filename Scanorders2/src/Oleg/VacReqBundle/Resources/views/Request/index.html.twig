@@ -63,10 +63,11 @@
             {% if vacreqfilter.academicYear is defined %}
                 <div class="col-xs-1">
                     {#<div class="input-group input-group-reg date allow-future-date">#}
-                    <div class="input-group date allow-future-date">
-                        {{ form_widget(vacreqfilter.academicYear) }}
+                    {#<div class="input-group date allow-future-date">#}
+                        {#{{ form_widget(vacreqfilter.academicYear) }}#}
                         {#<span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>#}
-                    </div>
+                    {#</div>#}
+                    {{ form_row(vacreqfilter.academicYear) }}
                 </div>
             {% endif %}
 
