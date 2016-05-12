@@ -478,7 +478,7 @@
 
                 var startDate = holder.find('.vacreq-startDate').val();
                 var endDate = holder.find('.vacreq-endDate').val();
-                console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
+                //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
 
                 startDate = new Date(startDate);
                 endDate = new Date(endDate);
@@ -496,7 +496,7 @@
                     }
 
                     //var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-                    //var diffDays = 1 + Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
+                    //var difstartDate=fDays = 1 + Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
                     var diffWorkingDays = calculateWorkingDays(startDate,endDate);
                     //console.log('diffWorkingDays='+diffWorkingDays);
 
