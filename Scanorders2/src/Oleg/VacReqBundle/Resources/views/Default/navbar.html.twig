@@ -47,7 +47,7 @@
                     {% if is_granted('ROLE_VACREQ_SUBMITTER') %}
                         <li id="nav-bar-myrequests" class="divider-vertical">
                             <a href="{{ path('vacreq_myrequests') }}">
-                                My Vacation Requests
+                                My Requests
                             </a>
                         </li>
                     {% endif %}
@@ -62,7 +62,7 @@
                     {% if is_granted('ROLE_VACREQ_APPROVER') %}
                         <li id="nav-bar-incomingrequests" class="divider-vertical">
                             <a href="{{ path('vacreq_incomingrequests') }}">
-                                Incoming Vacation Requests
+                                Incoming Requests
                             </a>
                         </li>
                     {% endif %}
@@ -70,7 +70,7 @@
                     {% if is_granted('ROLE_VACREQ_ADMIN') %}
                         <li id="nav-bar-approvers" class="divider-vertical">
                             <a href="{{ path('vacreq_approvers') }}">
-                                Vacation Request Groups
+                                Manage Groups
                             </a>
                         </li>
                     {% endif %}
