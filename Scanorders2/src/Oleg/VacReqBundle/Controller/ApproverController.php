@@ -949,8 +949,8 @@ class ApproverController extends Controller
         $yearRanges[] = $previousYear."-".$currentYear;
 
         //Current Academic Year - 2
-        $currentYear = $currentYear - 2;
-        $previousYear = $currentYear - 2;
+        $currentYear = $currentYear - 1;
+        $previousYear = $currentYear - 1;
         $yearRanges[] = $previousYear."-".$currentYear;
 
         $yearRangesColor = array('#c1e2b3','#d0e9c6','#dff0d8');
