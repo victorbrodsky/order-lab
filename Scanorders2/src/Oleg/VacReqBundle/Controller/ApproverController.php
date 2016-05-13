@@ -1013,12 +1013,21 @@ class ApproverController extends Controller
             $userCarryOver = new VacReqUserCarryOver($subjectUser);
         }
 
-        $carryOver = $userCarryOver->getCarryOverByYear('2015');
+        //next year 2016-2017
+        $curentStartYear = date("Y")-1;
+        $carryOver = $userCarryOver->getCarryOverByYear($curentStartYear);
         if( !$carryOver ) {
             $carryOver = new VacReqCarryOver();
-            $carryOver->setYear('2015');
+            $carryOver->setYear($curentStartYear);
             $userCarryOver->addCarryOver($carryOver);
         }
+
+//        $carryOver = $userCarryOver->getCarryOverByYear('2016');
+//        if( !$carryOver ) {
+//            $carryOver = new VacReqCarryOver();
+//            $carryOver->setYear('2015');
+//            $userCarryOver->addCarryOver($carryOver);
+//        }
 
         $cycle = 'edit';
 
