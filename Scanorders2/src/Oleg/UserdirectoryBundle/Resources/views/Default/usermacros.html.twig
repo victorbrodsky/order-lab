@@ -223,6 +223,7 @@
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {#get sitename#}
+    {% set sitename = employees_sitename %} {#default sitename#}
     {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
     {% if '/scan/' in currentPath %}
         {% set sitename = scan_sitename %}
@@ -1956,7 +1957,7 @@
 {% endmacro %}
 
 
-{% macro showDocumentAsImage( documentEntity, alt, atr, objectClass ) %}
+{% macro showDocumentAsImage( documentEntity, alt, atr, objectClass, sitename ) %}
 
     {% if not objectClass or objectClass is not defined %}
         {#Note: objectMaxFull causes avatar not visible on pdf converted file#}
@@ -1964,21 +1965,24 @@
     {% endif %}
 
     {#get sitename#}
-    {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
-    {% if '/scan/' in currentPath %}
-        {% set sitename = scan_sitename %}
-    {% endif %}
-    {% if '/directory/' in currentPath %}
-        {% set sitename = employees_sitename %}
-    {% endif %}
-    {% if '/fellowship-applications/' in currentPath %}
-        {% set sitename = fellapp_sitename %}
-    {% endif %}
-    {% if '/deidentifier/' in currentPath %}
-        {% set sitename = deidentifier_sitename %}
-    {% endif %}
-    {% if '/vacation-request/' in currentPath %}
-        {% set sitename = vacreq_sitename %}
+    {% if sitename is not defined or not sitename %}
+        {% set sitename = employees_sitename %} {#default sitename#}
+        {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
+        {% if '/scan/' in currentPath %}
+            {% set sitename = scan_sitename %}
+        {% endif %}
+        {% if '/directory/' in currentPath %}
+            {% set sitename = employees_sitename %}
+        {% endif %}
+        {% if '/fellowship-applications/' in currentPath %}
+            {% set sitename = fellapp_sitename %}
+        {% endif %}
+        {% if '/deidentifier/' in currentPath %}
+            {% set sitename = deidentifier_sitename %}
+        {% endif %}
+        {% if '/vacation-request/' in currentPath %}
+            {% set sitename = vacreq_sitename %}
+        {% endif %}
     {% endif %}
 
     {% if '.pdf' in documentEntity.getAbsoluteUploadFullPath %}

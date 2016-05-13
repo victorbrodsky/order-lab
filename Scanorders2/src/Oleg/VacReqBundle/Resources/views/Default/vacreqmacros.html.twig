@@ -251,14 +251,12 @@
 {% macro personAwayInfo( user, phone, vacreq_sitename ) %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    {#<div style="white-space: nowrap;">#}
-        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': user.id }) }}">{{ user.displayName() }}</a>
+    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': user.id }) }}">{{ user.displayName() }}</a>
 
-        {% set singleEmail = user.getSingleEmail %}
-        {% if singleEmail %}
-            <a href="mailto:{{ singleEmail }}" target="_top"><span class="glyphicon glyphicon-envelope"></span></a>
-        {% endif %}
-    {#</div>#}
+    {% set singleEmail = user.getSingleEmail %}
+    {% if singleEmail %}
+        <a href="mailto:{{ singleEmail }}" target="_top"><span class="glyphicon glyphicon-envelope"></span></a>
+    {% endif %}
 
     {% if phone %}
         <div style="white-space: nowrap;">
@@ -272,7 +270,7 @@
             <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
         {% else %}
             {% if user.avatar %}
-                {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
+                {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','','',vacreq_sitename) }}
             {% else %}
                 {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                 <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
