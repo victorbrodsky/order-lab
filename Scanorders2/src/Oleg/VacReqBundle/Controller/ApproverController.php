@@ -71,7 +71,7 @@ class ApproverController extends Controller
     public function organizationalInstitutionAction(Request $request, $institutionId)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -125,7 +125,7 @@ class ApproverController extends Controller
     public function orgInstManagementAction(Request $request, $institutionId)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -178,7 +178,7 @@ class ApproverController extends Controller
     public function userManagementAction(Request $request, $userid, $instid, $roleId )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -243,7 +243,7 @@ class ApproverController extends Controller
     public function userManagementUpdateAction(Request $request, $userid, $instid, $roleIds )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -308,7 +308,7 @@ class ApproverController extends Controller
     public function removeUserAction(Request $request, $userid, $instid, $roleId )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -373,7 +373,7 @@ class ApproverController extends Controller
     public function addUserAction(Request $request, $instid, $roleId, $btnName )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -417,7 +417,7 @@ class ApproverController extends Controller
     public function addRoleToUserAction(Request $request, $instid, $roleId )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -533,7 +533,7 @@ class ApproverController extends Controller
     public function addGroupAction(Request $request )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -868,7 +868,11 @@ class ApproverController extends Controller
     public function myGroupAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ||
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
+            exit('no approver role');
+        }
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
             false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -913,7 +917,7 @@ class ApproverController extends Controller
     public function mySingleGroupAction(Request $request, $groupId)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ||
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
             false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );

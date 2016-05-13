@@ -44,13 +44,13 @@
                         {#</li>#}
                     {#{% endif %}#}
 
-                    {% if is_granted('ROLE_VACREQ_SUBMITTER') %}
+                    {#{% if is_granted('ROLE_VACREQ_SUBMITTER') %}#}
                         <li id="nav-bar-myrequests" class="divider-vertical">
                             <a href="{{ path('vacreq_myrequests') }}">
                                 My Requests
                             </a>
                         </li>
-                    {% endif %}
+                    {#{% endif %}#}
 
                     {#Away Calendar#}
                     <li id="nav-bar-awaycalendar" class="divider-vertical">
@@ -67,7 +67,7 @@
                         </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_VACREQ_ADMIN') %}
+                    {% if is_granted('ROLE_VACREQ_APPROVER') %}
                         <li id="nav-bar-mygroup" class="divider-vertical">
                             <a href="{{ path('vacreq_mygroup') }}">
                                 My Group
