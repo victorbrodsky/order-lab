@@ -17,7 +17,7 @@
 
         {% for yearRange in yearRanges %}
 
-            {% set backgroundColor = yearRangesColor[loop.index] %}
+            {% set backgroundColor = yearRangesColor[loop.index0] %}
 
             <th style="background-color: {{ backgroundColor }}">
                 {#{{ knp_pagination_sortable(pagination, 'Current Academic Year', 'request.id') }}#}
@@ -46,12 +46,12 @@
         <tr>
 
             <td>
-                {{ vacreqmacros.personAwayInfo(submitter,submitter.getPreferredPhone,"vacreq") }}
+                {{ vacreqmacros.personAwayInfo(submitter,submitter.getPreferredPhone,vacreq_sitename) }}
             </td>
 
             {% for yearRange in yearRanges %}
 
-                {% set backgroundColor = yearRangesColor[loop.index] %}
+                {% set backgroundColor = yearRangesColor[loop.index0] %}
 
                 {% set businessDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'business',yearRange) %}
                 {% set businessDays = businessDaysRes['numberOfDays'] %}
