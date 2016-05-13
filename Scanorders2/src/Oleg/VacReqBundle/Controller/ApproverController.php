@@ -5,11 +5,14 @@ namespace Oleg\VacReqBundle\Controller;
 use Oleg\UserdirectoryBundle\Entity\Roles;
 use Oleg\UserdirectoryBundle\Form\SimpleUserType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\VacReqBundle\Entity\VacReqCarryOver;
 use Oleg\VacReqBundle\Entity\VacReqRequest;
 use Oleg\VacReqBundle\Entity\VacReqSettings;
+use Oleg\VacReqBundle\Entity\VacReqUserCarryOver;
 use Oleg\VacReqBundle\Form\VacReqEmailusersType;
 use Oleg\VacReqBundle\Form\VacReqGroupType;
 use Oleg\VacReqBundle\Form\VacReqRequestType;
+use Oleg\VacReqBundle\Form\VacReqUserCarryOverType;
 use Oleg\VacReqBundle\Form\VacReqUserComboboxType;
 use Oleg\VacReqBundle\Form\VacReqUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -900,8 +903,30 @@ class ApproverController extends Controller
 //            }
 //        }
 
+        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+        $userSecUtil = $this->container->get('user_security_utility');
+        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
+        if( !$vacationAccruedDaysPerMonth ) {
+            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+        }
+        $monthCount = date("m");
+        //echo "monthCount=".$monthCount."<br>";
+        $accruedDays = (int)$monthCount * $vacationAccruedDaysPerMonth;
+
+        //Current Academic Year
+        $currentYear = new \DateTime();
+        $currentYear = $currentYear->format('Y');
+        $previousYear = $currentYear - 1;
+        $yearRange = $previousYear."-".$currentYear;
+
+        //test function
+        //$days = $vacreqUtil->getUserCarryOverDays( $user, $yearRange );
+        //echo "days=".$days."<br>";
+
         return array(
-            'groups' => $groups
+            'groups' => $groups,
+            'accruedDays' => $accruedDays,
+            'yearRange' => $yearRange
             //'entity' => $entity,
             //'form' => $form->createView(),
             //'organizationalGroupName' => $institution."",
@@ -925,6 +950,7 @@ class ApproverController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        //TODO: find submitters from submitted requests for this group. Don't use a submitter role, because the role might be removed
         //find role submitters by institution
         $submitters = array();
         $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $groupId);
@@ -962,6 +988,100 @@ class ApproverController extends Controller
             'yearRanges' => $yearRanges,
             'yearRangesColor' => $yearRangesColor
         );
+    }
+
+    /**
+     * @Route("/carry-over-vacation-days/{userId}", name="vacreq_carryover")
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Group:carryover.html.twig")
+     */
+    public function carryOverAction(Request $request, $userId)
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //$vacreqUtil = $this->get('vacreq_util');
+
+        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+
+        $userCarryOver = $em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
+
+        if( !$userCarryOver ) {
+            $userCarryOver = new VacReqUserCarryOver($subjectUser);
+        }
+
+        $carryOver = $userCarryOver->getCarryOverByYear('2015');
+        if( !$carryOver ) {
+            $carryOver = new VacReqCarryOver();
+            $carryOver->setYear('2015');
+            $userCarryOver->addCarryOver($carryOver);
+        }
+
+        $cycle = 'edit';
+
+        $form = $this->createCarryOversForm($userCarryOver,$cycle,$request);
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            $em->persist($userCarryOver);
+            $em->flush();
+
+            //Event Log
+//            $eventType = "Business/Vacation Request Created";
+            $event = "Carry Over Days for ".$subjectUser." has been updated";
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+
+            return $this->redirectToRoute('vacreq_mygroup');
+        }
+
+        return array(
+            'subjectUser' => $subjectUser,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+        );
+
+    }
+    public function createCarryOversForm( $entity, $cycle, $request=null ) {
+
+        $em = $this->getDoctrine()->getManager();
+        //$vacreqUtil = $this->get('vacreq_util');
+        //$user = $this->get('security.context')->getToken()->getUser();
+
+        $params = array(
+            'sc' => $this->get('security.context'),
+            'em' => $em,
+            'cycle' => $cycle,
+        );
+
+//        $disabled = false;
+//        $method = 'GET';
+//        if( $cycle == 'edit' ) {
+//            $method = 'POST';
+//        }
+
+        $form = $this->createForm(
+            new VacReqUserCarryOverType($params),
+            $entity,
+            array(
+                //'disabled' => $disabled,
+                //'method' => $method,
+                //'action' => $action
+            )
+        );
+
+        return $form;
     }
 
 }

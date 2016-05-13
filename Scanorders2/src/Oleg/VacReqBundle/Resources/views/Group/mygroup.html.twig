@@ -12,6 +12,10 @@
         My Group
     </h4>
 
+    <div class="well well-sm">
+        {{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
+    </div>
+
     {% for group in groups %}
         {#group: {{ group.name }}#}
         <p>

@@ -578,7 +578,10 @@ class SiteParameters {
      */
     private $holidaysUrl;
 
-
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $vacationAccruedDaysPerMonth;
 
 
     /**
@@ -2149,6 +2152,22 @@ class SiteParameters {
     public function setHolidaysUrl($holidaysUrl)
     {
         $this->holidaysUrl = $holidaysUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacationAccruedDaysPerMonth()
+    {
+        return $this->vacationAccruedDaysPerMonth;
+    }
+
+    /**
+     * @param mixed $vacationAccruedDaysPerMonth
+     */
+    public function setVacationAccruedDaysPerMonth($vacationAccruedDaysPerMonth)
+    {
+        $this->vacationAccruedDaysPerMonth = $vacationAccruedDaysPerMonth;
     }
 
 

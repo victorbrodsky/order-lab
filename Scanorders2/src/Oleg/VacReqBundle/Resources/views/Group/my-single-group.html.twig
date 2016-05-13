@@ -34,7 +34,18 @@
                 {{ yearRange }} Total
             </th>
 
+            <th style="background-color: {{ backgroundColor }}">
+                {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
+                {{ yearRange }} Carried Over Vacation Days From Previous Year
+            </th>
+
         {% endfor %}
+
+        {% if is_granted('ROLE_VACREQ_ADMIN') %}
+        <th>
+            Action
+        </th>
+        {% endif %}
 
     </tr>
     </thead>
@@ -82,7 +93,29 @@
                     {% endif %}
                 </td>
 
+                <td style="background-color: {{ backgroundColor }}">
+                    {{ vacreq_util.getUserCarryOverDays(submitter,yearRange) }}
+                </td>
+
             {% endfor %}
+
+            {% if is_granted('ROLE_VACREQ_ADMIN') %}
+                <td>
+                    {#action#}
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="{{ path(vacreq_sitename~'_carryover', { 'userId': submitter.id }) }}">Carry Over Vacation Days</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </td>
+            {% endif %}
 
         </tr>
 

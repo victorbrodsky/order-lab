@@ -491,6 +491,15 @@
                 </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'holidaysUrl'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Vacation days accrued per month by faculty (2)</td>
+                <td>
+                    {% if entity.vacationAccruedDaysPerMonth %}
+                        {{ entity.vacationAccruedDaysPerMonth }}
+                    {% endif %}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'vacationAccruedDaysPerMonth'}) }}">Edit</a></td>
+            </tr>
 
         </tbody>
     </table>

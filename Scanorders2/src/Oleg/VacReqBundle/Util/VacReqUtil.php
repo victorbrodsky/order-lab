@@ -341,6 +341,50 @@ class VacReqUtil
         return $result;
     }
 
+    public function getUserCarryOverDays( $user, $yearRange ) {
+
+        //$userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findBy(array('user'=>$user,''));
+
+        $startYear = $this->getYearsFromYearRangeStr($yearRange);
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver');
+        $dql = $repository->createQueryBuilder('userCarryOver');
+
+        $dql->leftJoin("userCarryOver.carryOvers", "carryOvers");
+
+
+        $dql->where("userCarryOver.user = :user");
+        $dql->andWhere("carryOvers.year = :year");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter('user', $user->getId());
+        $query->setParameter('year', "'".$startYear."'");
+
+        //echo "dql=".$dql."<br>";
+
+        $userCarryOvers = $query->getResult();
+
+        if( count($userCarryOvers) > 0 ) {
+            $days = $userCarryOvers[0]->getDays();
+            //echo "days=".$days."<br>";
+            return $days;
+        }
+        //echo "days=null<br>";
+
+        return null;
+    }
+
+    public function getYearsFromYearRangeStr($yearRangeStr) {
+        if( !$yearRangeStr ) {
+            throw new \InvalidArgumentException('Year Range of the Academic year is not defined: yearRangeStr='.$yearRangeStr);
+        }
+        $yearRangeArr = explode("-",$yearRangeStr);
+        if( count($yearRangeArr) != 2 ) {
+            throw new \InvalidArgumentException('Start or End Academic years are not defined: yearRange='.$yearRange);
+        }
+        return $yearRangeArr;
+    }
 
     //calculate approved total days for current academical year
     public function getApprovedTotalDays( $user, $requestTypeStr ) {
@@ -372,10 +416,11 @@ class VacReqUtil
         $academicYearStartStr = $academicYearStart->format('m-d');
 
         //years
-        $yearRangeArr = explode("-",$yearRange);
-        if( count($yearRangeArr) != 2 ) {
-            throw new \InvalidArgumentException('Start or End Academic years are not defined: yearRange='.$yearRange);
-        }
+//        $yearRangeArr = explode("-",$yearRange);
+//        if( count($yearRangeArr) != 2 ) {
+//            throw new \InvalidArgumentException('Start or End Academic years are not defined: yearRange='.$yearRange);
+//        }
+        $yearRangeArr = $this->getYearsFromYearRangeStr($yearRange);
         $previousYear = $yearRangeArr[0];
         $currentYear = $yearRangeArr[1];
 
@@ -489,7 +534,8 @@ class VacReqUtil
         //get request's academic year
         $academicYearArr = $this->getRequestAcademicYears($request);
         if( count($academicYearArr) > 0 ) {
-            $yearsArr = explode("-",$academicYearArr[0]);
+            //$yearsArr = explode("-",$academicYearArr[0]);
+            $yearsArr = $this->getYearsFromYearRangeStr($academicYearArr[0]);
             $startYear = $yearsArr[0];
             $academicYearStartStr = $startYear."-".$academicYearStartStr;
         } else {
@@ -686,7 +732,8 @@ class VacReqUtil
         //get request's academic year
         $academicYearArr = $this->getRequestAcademicYears($request);
         if( count($academicYearArr) > 0 ) {
-            $yearsArr = explode("-",$academicYearArr[0]);
+            //$yearsArr = explode("-",$academicYearArr[0]);
+            $yearsArr = $this->getYearsFromYearRangeStr($academicYearArr[0]);
             $edgeYear = $yearsArr[0];
             $academicYearEdgeStr = $edgeYear."-".$academicYearEdgeStr;
         } else {
