@@ -6,7 +6,7 @@
     {{ groupName }}
 </h4>
 
-<table class="records_list table table-hover table-condensed text-left table-bordered">
+<table class="records_list table table-hover table-condensed text-left table-bordered sortable">
 
     <thead>
     <tr>
@@ -15,20 +15,27 @@
             Employee
         </th>
 
-        <th>
-            {#{{ knp_pagination_sortable(pagination, 'Current Academic Year', 'request.id') }}#}
-            2015-2016 Business Travel
-        </th>
+        {% for yearRange in yearRanges %}
 
-        <th>
-            {#{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}#}
-            2015-2016 Vacation
-        </th>
+            {% set backgroundColor = yearRangesColor[loop.index] %}
 
-        <th>
-            {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
-            2015-2016 Total
-        </th>
+            <th style="background-color: {{ backgroundColor }}">
+                {#{{ knp_pagination_sortable(pagination, 'Current Academic Year', 'request.id') }}#}
+                {{ yearRange }} Business Travel
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}">
+                {#{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}#}
+                {{ yearRange }} Vacation
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}">
+                {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
+                {{ yearRange }} Total
+            </th>
+
+        {% endfor %}
+
     </tr>
     </thead>
 
@@ -36,40 +43,46 @@
 
     {% for submitter in submitters %}
 
-        {% set businessDaysRes = vacreq_util.getApprovedTotalDays(submitter,'business') %}
-        {% set businessDays = businessDaysRes['numberOfDays'] %}
-        {% set businessAccurate = businessDaysRes['accurate'] %}
-
-        {% set vacationDaysRes = vacreq_util.getApprovedTotalDays(submitter,'vacation') %}
-        {% set vacationDays = vacationDaysRes['numberOfDays'] %}
-        {% set vacationAccurate = vacationDaysRes['accurate'] %}
-
         <tr>
 
             <td>
                 {{ vacreqmacros.personAwayInfo(submitter,submitter.getPreferredPhone,vacreq_sitename) }}
             </td>
 
-            <td>
-                {{ businessDays }}
-                {% if not businessAccurate %}
-                    *
-                {% endif %}
-            </td>
+            {% for yearRange in yearRanges %}
 
-            <td>
-                {{ vacationDays }}
-                {% if not vacationAccurate %}
-                    *
-                {% endif %}
-            </td>
+                {% set backgroundColor = yearRangesColor[loop.index] %}
 
-            <td>
-                {{ businessDays + vacationDays }}
-                {% if not businessAccurate and not vacationAccurate %}
-                    *
-                {% endif %}
-            </td>
+                {% set businessDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'business',yearRange) %}
+                {% set businessDays = businessDaysRes['numberOfDays'] %}
+                {% set businessAccurate = businessDaysRes['accurate'] %}
+
+                {% set vacationDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange) %}
+                {% set vacationDays = vacationDaysRes['numberOfDays'] %}
+                {% set vacationAccurate = vacationDaysRes['accurate'] %}
+
+                <td style="background-color: {{ backgroundColor }}">
+                    {{ businessDays }}
+                    {% if not businessAccurate %}
+                        *
+                    {% endif %}
+                </td>
+
+                <td style="background-color: {{ backgroundColor }}">
+                    {{ vacationDays }}
+                    {% if not vacationAccurate %}
+                        *
+                    {% endif %}
+                </td>
+
+                <td style="background-color: {{ backgroundColor }}">
+                    {{ businessDays + vacationDays }}
+                    {% if not businessAccurate and not vacationAccurate %}
+                        <span data-toggle="tooltip" title="The result might be inaccurate due to academic year overlap">*</span>
+                    {% endif %}
+                </td>
+
+            {% endfor %}
 
         </tr>
 

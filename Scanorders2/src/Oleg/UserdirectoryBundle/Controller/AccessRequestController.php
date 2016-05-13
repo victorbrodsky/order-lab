@@ -682,7 +682,7 @@ class AccessRequestController extends Controller
 
         $params = array(
             //'institutions' => $institutions,
-            'sitename' => $this->siteName,
+            'sitename' => $this->siteNameStr,
             'roles' => $rolesArr,
             'simple-form' => true //show only permittedInstitutionalPHIScope
         );
@@ -735,7 +735,7 @@ class AccessRequestController extends Controller
 
         $params = array(
             //'institutions' => $institutions,
-            'sitename' => $this->siteName,
+            'sitename' => $this->siteNameStr,
             'roles' => $rolesArr,
             'simple-form' => true //show only permittedInstitutionalPHIScope
         );
@@ -913,7 +913,7 @@ class AccessRequestController extends Controller
 
         $params = array(
             //'institutions' => $institutions,
-            'sitename' => $this->siteName,
+            'sitename' => $this->siteNameStr,
             'roles' => $rolesArr,
             'simple-form' => true //show only permittedInstitutionalPHIScope
         );
@@ -967,7 +967,7 @@ class AccessRequestController extends Controller
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
 
         $params = array(
-            'sitename' => $this->siteName,
+            'sitename' => $this->siteNameStr,
             'roles' => $rolesArr,
             'simple-form' => true //show only permittedInstitutionalPHIScope
         );

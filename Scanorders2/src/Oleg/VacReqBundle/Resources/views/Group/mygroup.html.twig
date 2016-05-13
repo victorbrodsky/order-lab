@@ -12,8 +12,6 @@
         My Group
     </h4>
 
-    <br>
-
     {% for group in groups %}
         {#group: {{ group.name }}#}
         <p>
@@ -23,6 +21,46 @@
     {% endfor %}
 
 
-    * - the result might be inaccurate due to academic year overlap
+    {#* - the result might be inaccurate due to academic year overlap#}
 
 {% endblock %}
+
+
+{% block additionaljs %}
+
+    {% javascripts
+        '@OlegUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'
+        '@OlegUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            $('[data-toggle="tooltip"]').tooltip({html: true});
+
+//            var target = ".datepicker-only-year";
+//            var datefilter = $(target).datepicker( {
+//                autoclose: true,
+//                format: " yyyy",
+//                viewMode: "years",
+//                minViewMode: "years",
+//                orientation: 'auto'
+//            });
+
+        });
+
+    </script>
+
+{% endblock %}
+
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/oleguserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+

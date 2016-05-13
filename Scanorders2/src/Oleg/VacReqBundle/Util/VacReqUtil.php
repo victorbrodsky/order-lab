@@ -344,6 +344,15 @@ class VacReqUtil
 
     //calculate approved total days for current academical year
     public function getApprovedTotalDays( $user, $requestTypeStr ) {
+        $previousYear = date("Y") - 1;
+        $currentYear = date("Y");
+        $yearRange = $previousYear."-".$currentYear;
+        $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange );
+        return $res;
+    }
+
+    //calculate approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
+    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -361,16 +370,26 @@ class VacReqUtil
         //constract start and end date for DB select "Y-m-d"
         //academicYearStart
         $academicYearStartStr = $academicYearStart->format('m-d');
-        $previousYear = date("Y") - 1;
+
+        //years
+        $yearRangeArr = explode("-",$yearRange);
+        if( count($yearRangeArr) != 2 ) {
+            throw new \InvalidArgumentException('Start or End Academic years are not defined: yearRange='.$yearRange);
+        }
+        $previousYear = $yearRangeArr[0];
+        $currentYear = $yearRangeArr[1];
+
+        //$previousYear = date("Y") - 1;
         $academicYearStartStr = $previousYear."-".$academicYearStartStr;
         //echo "academicYearStartStr=".$academicYearStartStr."<br>";
         //academicYearEnd
         $academicYearEndStr = $academicYearEnd->format('m-d');
-        $currentYear = date("Y");
+
+        //$currentYear = date("Y");
         $academicYearEndStr = $currentYear."-".$academicYearEndStr;
         //echo "academicYearEndStr=".$academicYearEndStr."<br>";
 
-        //step1: get requests within academic Year
+        //step1: get requests within current academic Year
         $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false);
         //echo "numberOfDaysInside=".$numberOfDaysInside."<br>";
 
