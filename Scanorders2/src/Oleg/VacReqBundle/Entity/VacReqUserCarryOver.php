@@ -93,6 +93,7 @@ class VacReqUserCarryOver
     {
         if( $item && !$this->carryOvers->contains($item) ) {
             $this->carryOvers->add($item);
+            $item->setUserCarryOver($this);
         }
         return $this;
     }
