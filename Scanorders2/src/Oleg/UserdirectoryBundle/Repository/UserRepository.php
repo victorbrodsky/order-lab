@@ -194,7 +194,9 @@ class UserRepository extends EntityRepository {
         foreach( $roles as $role ) {
             //echo "role=".$role."<br>";
             if( $user->hasRole($role) ) {
-                $userRoles->add($role);
+                if( $role && !$userRoles->contains($role) ) {
+                    $userRoles->add($role);
+                }
 
                 if( $atLeastOne ) {
                     return $userRoles;

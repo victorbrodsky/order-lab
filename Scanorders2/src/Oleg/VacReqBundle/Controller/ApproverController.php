@@ -871,10 +871,6 @@ class ApproverController extends Controller
     public function myGroupAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
-            exit('no approver role');
-        }
-
         if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
             false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
         ) {
