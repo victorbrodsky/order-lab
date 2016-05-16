@@ -1042,6 +1042,7 @@ class VacReqUtil
         $dql =  $repository->createQueryBuilder("request");
         //$dql->select('request');
         $dql->select('DISTINCT (user) as submitter');
+        $dql->addSelect('infos.lastName');
         //$dql->select('user');
         //$dql->addSelect('request');
         //$dql->groupBy("user");
@@ -1059,7 +1060,7 @@ class VacReqUtil
         ));
 
         $results = $query->getResult();
-        echo "count results=".count($results)."<br>";
+        //echo "count results=".count($results)."<br>";
 
         $submitters = array();
         foreach( $results as $result ) {
@@ -1076,7 +1077,7 @@ class VacReqUtil
             //echo "res=".$result['id']."<br>";
 
         }
-        exit('1');
+        //exit('1');
 
         return $submitters;
     }
