@@ -386,7 +386,7 @@ class VacReqUtil
         }
         $yearRangeArr = explode("-",$yearRangeStr);
         if( count($yearRangeArr) != 2 ) {
-            throw new \InvalidArgumentException('Start or End Academic years are not defined: yearRange='.$yearRange);
+            throw new \InvalidArgumentException('Start or End Academic years are not defined: yearRangeStr='.$yearRangeStr);
         }
         return $yearRangeArr;
     }
@@ -1040,10 +1040,13 @@ class VacReqUtil
     public function getSubmittersFromSubmittedRequestsByGroup( $groupId ) {
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
-        $dql->select('request');
-        $dql->groupBy("user");
-        $dql->addGroupBy("request");
-        $dql->addGroupBy("infos");
+        //$dql->select('request');
+        $dql->select('DISTINCT (user) as submitter');
+        //$dql->select('user');
+        //$dql->addSelect('request');
+        //$dql->groupBy("user");
+        //$dql->addGroupBy("request");
+        //$dql->addGroupBy("infos");
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("user.infos", "infos");
         $dql->where("request.institution = :groupId");
@@ -1056,12 +1059,24 @@ class VacReqUtil
         ));
 
         $results = $query->getResult();
-        //echo "count results=".count($results)."<br>";
+        echo "count results=".count($results)."<br>";
 
         $submitters = array();
         foreach( $results as $result ) {
-            $submitters[] = $result->getUser();
+            //$submitters[] = $result->getUser();
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($result['submitter']);
+            if( $user ) {
+                $submitters[] = $user;
+            } else {
+                //exit('no user found');
+            }
+            //echo "user=".$result['submitter']."<br>";
+            //echo "user=".$user."<br>";
+            //print_r($result);
+            //echo "res=".$result['id']."<br>";
+
         }
+        exit('1');
 
         return $submitters;
     }
