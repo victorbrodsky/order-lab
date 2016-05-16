@@ -942,14 +942,14 @@ class ApproverController extends Controller
 
         //TODO: find submitters from submitted requests for this group. Don't use a submitter role, because the role might be removed
         //find role submitters by institution
-//        $submitters = array();
-//        $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $groupId);
-//        $roleSubmitter = $roleSubmitters[0];
-//        //echo "roleSubmitter=".$roleSubmitter."<br>";
-//        if( $roleSubmitter ) {
-//            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName");
-//        }
-        $submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
+        $submitters = array();
+        $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $groupId);
+        $roleSubmitter = $roleSubmitters[0];
+        //echo "roleSubmitter=".$roleSubmitter."<br>";
+        if( $roleSubmitter ) {
+            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName");
+        }
+        //$submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
 
         $group = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
 
