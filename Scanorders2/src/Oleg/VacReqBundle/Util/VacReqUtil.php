@@ -1042,7 +1042,6 @@ class VacReqUtil
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
         $dql->groupBy("user");
-        //$dql->addGroupBy("request.user");
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("user.infos", "infos");
         $dql->where("request.institution = :groupId");
