@@ -347,7 +347,7 @@ class VacReqUtil
         if( !$holidaysUrl ) {
             throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
         }
-        $holidayLink = '<a href="'.$holidaysUrl.'">holidays</a>';
+        $holidayLink = '<a href="'.$holidaysUrl.'" target="_blank">holidays</a>';
 
         $result .= "<br>If your requests included ".$holidayLink.", they are not automatically removed from these counts.";
 

@@ -46,23 +46,16 @@ class VacReqFilterType extends AbstractType
                 'choices' => $this->params['filterUsers'],
             ));
 
-//            $builder->add('academicYear', 'date', array(
-//                'label' => false, //'Start Date/Time:',
-//                'required' => false,
-//                'widget' => 'single_text',
-//                'format' => 'y',
-//                'attr' => array('class' => 'datepicker-only-year form-control', 'placeholder' => 'Academic Year')
-//            ));
-            $builder->add('academicYear', 'datetime', array(
-                'label' => false,
-                'widget' => 'single_text',
-                'required' => false,
-                'format' => 'yyyy',
-                'attr' => array('class'=>'datepicker-only-year form-control', 'placeholder' => 'Academic Year', 'title'=>$this->params['academicYearTooltip'], 'data-toggle'=>'tooltip'),
-            ));
-
             $this->addGroup($builder);
         }
+
+        $builder->add('academicYear', 'datetime', array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'yyyy',
+            'attr' => array('class'=>'datepicker-only-year form-control', 'placeholder' => 'Academic Year', 'title'=>$this->params['academicYearTooltip'], 'data-toggle'=>'tooltip'),
+        ));
 
 //        $builder->add('cwid', 'text', array(
 //            'required' => false,
