@@ -30,12 +30,14 @@
 
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         {% if accessreqs is defined and accessreqs and accessreqs > 0 %}
-            {% set reqStr = "request" %}
+            {% set prefixStr = "There is" %}
+            {% set postfixStr = "unprocessed access request" %}
             {% if accessreqs > 1 %}
-                {% set reqStr = "requests" %}
+                {% set prefixStr = "There are" %}
+                {% set postfixStr = "unprocessed access requests" %}
             {% endif %}
             <div class="alert alert-warning">
-                There are <a href="{{ path(vacreq_sitename~'_accessrequest_list') }}" target="_blank">{{ accessreqs }} unprocessed access {{ reqStr }}</a>
+                {{ prefixStr }} <a href="{{ path(vacreq_sitename~'_accessrequest_list') }}" target="_blank">{{ accessreqs }} {{ postfixStr }}</a>
             </div>
         {% endif %}
     {% endif %}

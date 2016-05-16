@@ -227,6 +227,14 @@ class RequestIndexController extends Controller
         $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser);
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 
+        //tooltip for Academic Year:
+        //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
+        $previousYear = date("Y") - 1;
+        $currentYear = date("Y");
+        $yearRange = $previousYear."-".$currentYear;
+        $academicYearTooltip = "Academic Year Start (for ".$yearRange.", pick ".$previousYear.")";
+        $params['academicYearTooltip'] = $academicYearTooltip;
+
         //create filter form
         $filterform = $this->createForm(new VacReqFilterType($params), null);
 
@@ -325,6 +333,7 @@ class RequestIndexController extends Controller
         if( $academicYear ) {
 
             $academicYear = $academicYear->format('Y');
+            $academicYear = $academicYear + 1; //the user should pick the start of the academic year (2015) to see 2015-2016
             //echo "academicYear=".$academicYear."<br>";
 
             $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "Start" );
