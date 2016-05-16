@@ -87,7 +87,7 @@ class RequestIndexController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
-        $subjectUser = ( array_key_exists('subjectUser', $params) ? $params['subjectUser'] : null);
+        $subjectUser = ( array_key_exists('subjectUser', $params) ? $params['subjectUser'] : null); //logged in user
         $approver = ( array_key_exists('approver', $params) ? $params['approver'] : null);
 
         $routeName = $request->get('_route');
@@ -101,6 +101,7 @@ class RequestIndexController extends Controller
         $dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
 
         $dql->leftJoin("request.user", "user");
+        //$dql->leftJoin("request.submitter", "submitter");
         $dql->leftJoin("user.infos", "infos");
         $dql->leftJoin("request.institution", "institution");
 
@@ -111,7 +112,7 @@ class RequestIndexController extends Controller
 
         //my requests
         if( $subjectUser ) {
-            $dql->andWhere("user.id=".$subjectUser->getId());
+            $dql->andWhere("(request.user=".$subjectUser->getId()." OR request.submitter=".$subjectUser->getId().")");
         }
 
         //incoming requests: show all requests with institutions in approver institutions
