@@ -120,12 +120,38 @@ class RequestController extends Controller
         $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
         //echo "totalApprovedDaysString=".$totalApprovedDaysString."<br>";
 
+        //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
+        //"You have accrued X vacation days this academic year (and will accrue X*12 by [date of academic year start from site settings, show as July 1st, 20XX]."
+        //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
+        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+        $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonth();
+        $totalAccruedDays = $vacreqUtil->getTotalAccruedDays();
+        $currentStartYear = date("Y")+1; //2016
+        $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $currentStartYear, "Start" );
+        $startAcademicYearDate = new \DateTime($startAcademicYearStr);
+        $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
+        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
+                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
+
+        //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
+        // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
+        $carriedOverDays = $vacreqUtil->getUserCarryOverDays($user, date("Y")-1); //2015
+        //echo "carriedOverDays=".$carriedOverDays."<br>";
+        $carriedOverDaysString = null;
+        //$carriedOverDays = 2;
+        if( $carriedOverDays ) {
+            $lastYearRange = (date("Y")-2)."-".(date("Y")-1);
+            $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange.".";
+        }
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
             'accessreqs' => count($accessreqs),
             'totalApprovedDaysString' => $totalApprovedDaysString,
+            'accruedDaysString' => $accruedDaysString,
+            'carriedOverDaysString' => $carriedOverDaysString
         );
     }
 

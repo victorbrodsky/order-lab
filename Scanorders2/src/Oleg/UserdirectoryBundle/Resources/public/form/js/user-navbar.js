@@ -198,7 +198,7 @@ function setVacReqNavBar() {
         id = 'awaycalendar';
     }
 
-    if( full.indexOf("/vacation-request/my-group/") !== -1 ) {
+    if( full.indexOf("/vacation-request/my-group/") !== -1 || full.indexOf("/vacation-request/carry-over-vacation-days/") !== -1 ) {
         id = 'mygroup';
     }
 

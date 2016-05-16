@@ -61,7 +61,6 @@
             </td>
 
             {% for yearRange in yearRanges %}
-
                 {% set backgroundColor = yearRangesColor[loop.index0] %}
 
                 {% set businessDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'business',yearRange) %}
@@ -100,7 +99,7 @@
             {% endfor %}
 
             {% if is_granted('ROLE_VACREQ_ADMIN') %}
-                <td>
+                <td class="rowlink-skip">
                     {#action#}
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

@@ -114,7 +114,12 @@ class VacReqCarryOver
         $this->days = $days;
     }
 
-
+    public function getYearRange() {
+        $endYear = (int)$this->getYear() + 1;
+        //echo "endYear=".$endYear."<br>";
+        $yearRange = $this->getYear() . "-" . $endYear;
+        return $yearRange;
+    }
 
 
 

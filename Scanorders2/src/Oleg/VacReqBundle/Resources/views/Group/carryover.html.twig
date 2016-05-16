@@ -21,14 +21,21 @@
         {{ form_errors(form) }}
 
         {% for carryOver in form.carryOvers %}
-            {{ formmacros.field(carryOver.year) }}
-            {{ formmacros.field(carryOver.days) }}
+
+            <div class="well well-sm">
+                {% set yearRange = carryOver.vars.value.getYearRange() %}
+                {{ formmacros.simplefield( "Academic Year:", yearRange, "input", "disabled" ) }}
+
+                {{ formmacros.field(carryOver.days) }}
+            </div>
+
         {% endfor %}
 
         <p>
             <button class="btn btn-info" name="btnCreate" type="submit">Update</button>
         </p>
 
+    {#{{ form_end(form,{'render_rest': false}) }}#}
     {{ form_end(form) }}
 
 {% endblock %}

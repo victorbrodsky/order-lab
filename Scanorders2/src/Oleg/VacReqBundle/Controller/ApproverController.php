@@ -904,24 +904,13 @@ class ApproverController extends Controller
 //        }
 
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-        $userSecUtil = $this->container->get('user_security_utility');
-        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
-        if( !$vacationAccruedDaysPerMonth ) {
-            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
-        }
-        $monthCount = date("m");
-        //echo "monthCount=".$monthCount."<br>";
-        $accruedDays = (int)$monthCount * $vacationAccruedDaysPerMonth;
+        $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonth();
 
         //Current Academic Year
         $currentYear = new \DateTime();
         $currentYear = $currentYear->format('Y');
         $previousYear = $currentYear - 1;
         $yearRange = $previousYear."-".$currentYear;
-
-        //test function
-        //$days = $vacreqUtil->getUserCarryOverDays( $user, $yearRange );
-        //echo "days=".$days."<br>";
 
         return array(
             'groups' => $groups,
@@ -1013,21 +1002,8 @@ class ApproverController extends Controller
             $userCarryOver = new VacReqUserCarryOver($subjectUser);
         }
 
-        //next year 2016-2017
-        $curentStartYear = date("Y")-1;
-        $carryOver = $userCarryOver->getCarryOverByYear($curentStartYear);
-        if( !$carryOver ) {
-            $carryOver = new VacReqCarryOver();
-            $carryOver->setYear($curentStartYear);
-            $userCarryOver->addCarryOver($carryOver);
-        }
-
-//        $carryOver = $userCarryOver->getCarryOverByYear('2016');
-//        if( !$carryOver ) {
-//            $carryOver = new VacReqCarryOver();
-//            $carryOver->setYear('2015');
-//            $userCarryOver->addCarryOver($carryOver);
-//        }
+        //add next year, current year, [Current -1], [Current -2]
+        $this->addCarryOverByYears($userCarryOver);
 
         $cycle = 'edit';
 
@@ -1091,6 +1067,49 @@ class ApproverController extends Controller
         );
 
         return $form;
+    }
+    //add next year, current year, [Current -1], [Current -2]
+    public function addCarryOverByYears( $userCarryOver ) {
+        //next year: 2016-2017
+        //$nextStartYear = date("Y"); //2016
+        $this->addCarryOverByAcademicYear($userCarryOver,+1);
+
+        //current year: 2015-2016 (reference point: current academical year is 2015-2016)
+        //$currentStartYear = date("Y")-1; //2015
+        $this->addCarryOverByAcademicYear($userCarryOver,0);
+
+        //current-1 year: 2014-2015
+        //$currentMinus1StartYear = date("Y")-2; //2014
+        $this->addCarryOverByAcademicYear($userCarryOver,-1);
+
+        //current-2 year: 2013-2014
+        //$currentMinus2StartYear = date("Y")-3; //2013
+        $this->addCarryOverByAcademicYear($userCarryOver,-2);
+    }
+    public function addCarryOverByAcademicYear( $userCarryOver, $yearIndex ) {
+
+        $vacreqUtil = $this->get('vacreq_util');
+
+        //get current academical start year:
+        $currentStartYear = date("Y"); //2016
+        $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $currentStartYear, "Start" );
+        $startAcademicYearDate = new \DateTime($startAcademicYearStr); //2015-07-01
+        //echo "startAcademicYearDate=".$startAcademicYearDate->format("Y-m-d")."<br>";
+
+        if( new \DateTime() > $startAcademicYearDate ) {
+            $currentStartYear = date("Y")-1; //2015
+        } else {
+            $currentStartYear = date("Y"); //2016
+        }
+
+        $startYear = $currentStartYear + $yearIndex;
+
+        $carryOver = $userCarryOver->getCarryOverByYear($startYear);
+        if( !$carryOver ) {
+            $carryOver = new VacReqCarryOver();
+            $carryOver->setYear($startYear);
+            $userCarryOver->addCarryOver($carryOver);
+        }
     }
 
 }

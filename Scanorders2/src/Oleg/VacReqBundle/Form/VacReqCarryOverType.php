@@ -26,11 +26,11 @@ class VacReqCarryOverType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('year', null, array(
-            'label' => "Academic Year:",
-            'attr' => array('class' => 'form-control'),
-            'read_only' => true
-        ));
+//        $builder->add('year', null, array(
+//            'label' => "Academic Year:",
+//            'attr' => array('class' => 'form-control'),
+//            'read_only' => true
+//        ));
 
         $builder->add('days', null, array(
             'label' => "Carry Over Days:",

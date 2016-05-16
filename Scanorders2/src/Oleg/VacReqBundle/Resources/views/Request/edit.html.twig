@@ -39,6 +39,10 @@
     {% if totalApprovedDaysString is defined and totalApprovedDaysString %}
         <div class="alert alert-success">
             <p>{{ totalApprovedDaysString }}</p>
+            <p>{{ accruedDaysString }}</p>
+            {% if carriedOverDaysString %}
+                <p>{{ carriedOverDaysString }}</p>
+            {% endif %}
         </div>
     {% endif %}
 

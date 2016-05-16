@@ -341,32 +341,32 @@ class VacReqUtil
         return $result;
     }
 
+    //$yearRange: '2015-2016' or '2015'
     public function getUserCarryOverDays( $user, $yearRange ) {
 
-        //$userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findBy(array('user'=>$user,''));
+        $startYearArr = $this->getYearsFromYearRangeStr($yearRange);
+        $startYear = $startYearArr[0];
 
-        $startYear = $this->getYearsFromYearRangeStr($yearRange);
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqCarryOver');
+        $dql = $repository->createQueryBuilder('carryOver');
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver');
-        $dql = $repository->createQueryBuilder('userCarryOver');
-
-        $dql->leftJoin("userCarryOver.carryOvers", "carryOvers");
-
+        $dql->leftJoin("carryOver.userCarryOver", "userCarryOver");
 
         $dql->where("userCarryOver.user = :user");
-        $dql->andWhere("carryOvers.year = :year");
+        $dql->andWhere("carryOver.year = :year");
 
         $query = $this->em->createQuery($dql);
 
         $query->setParameter('user', $user->getId());
-        $query->setParameter('year', "'".$startYear."'");
+        $query->setParameter('year', $startYear);
 
         //echo "dql=".$dql."<br>";
 
-        $userCarryOvers = $query->getResult();
+        $carryOvers = $query->getResult();
+        //echo "carryOvers=".count($carryOvers)."<br>";
 
-        if( count($userCarryOvers) > 0 ) {
-            $days = $userCarryOvers[0]->getDays();
+        if( count($carryOvers) > 0 ) {
+            $days = $carryOvers[0]->getDays();
             //echo "days=".$days."<br>";
             return $days;
         }
@@ -378,6 +378,10 @@ class VacReqUtil
     public function getYearsFromYearRangeStr($yearRangeStr) {
         if( !$yearRangeStr ) {
             throw new \InvalidArgumentException('Year Range of the Academic year is not defined: yearRangeStr='.$yearRangeStr);
+        }
+        if( strpos($yearRangeStr, '-') === false ) {
+            //echo "no '-' in ".$yearRangeStr."<br>";
+            return $yearRangeStr;
         }
         $yearRangeArr = explode("-",$yearRangeStr);
         if( count($yearRangeArr) != 2 ) {
@@ -416,10 +420,6 @@ class VacReqUtil
         $academicYearStartStr = $academicYearStart->format('m-d');
 
         //years
-//        $yearRangeArr = explode("-",$yearRange);
-//        if( count($yearRangeArr) != 2 ) {
-//            throw new \InvalidArgumentException('Start or End Academic years are not defined: yearRange='.$yearRange);
-//        }
         $yearRangeArr = $this->getYearsFromYearRangeStr($yearRange);
         $previousYear = $yearRangeArr[0];
         $currentYear = $yearRangeArr[1];
@@ -534,7 +534,6 @@ class VacReqUtil
         //get request's academic year
         $academicYearArr = $this->getRequestAcademicYears($request);
         if( count($academicYearArr) > 0 ) {
-            //$yearsArr = explode("-",$academicYearArr[0]);
             $yearsArr = $this->getYearsFromYearRangeStr($academicYearArr[0]);
             $startYear = $yearsArr[0];
             $academicYearStartStr = $startYear."-".$academicYearStartStr;
@@ -732,7 +731,6 @@ class VacReqUtil
         //get request's academic year
         $academicYearArr = $this->getRequestAcademicYears($request);
         if( count($academicYearArr) > 0 ) {
-            //$yearsArr = explode("-",$academicYearArr[0]);
             $yearsArr = $this->getYearsFromYearRangeStr($academicYearArr[0]);
             $edgeYear = $yearsArr[0];
             $academicYearEdgeStr = $edgeYear."-".$academicYearEdgeStr;
@@ -1374,6 +1372,32 @@ class VacReqUtil
 
         //print_r($changeSet);
         return $changeSet;
+    }
+
+
+    public function getAccruedDaysUpToThisMonth() {
+        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+        $userSecUtil = $this->container->get('user_security_utility');
+        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
+        if( !$vacationAccruedDaysPerMonth ) {
+            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+        }
+        $monthCount = date("m");
+        //echo "monthCount=".$monthCount."<br>";
+        $accruedDays = (int)$monthCount * $vacationAccruedDaysPerMonth;
+        return $accruedDays;
+    }
+
+    public function getTotalAccruedDays() {
+        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+        $userSecUtil = $this->container->get('user_security_utility');
+        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
+        if( !$vacationAccruedDaysPerMonth ) {
+            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+        }
+        //echo "monthCount=".$monthCount."<br>";
+        $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
+        return $totalAccruedDays;
     }
 
 
