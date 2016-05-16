@@ -298,7 +298,10 @@ class VacReqUtil
     // if X = 0, show "During the current academic year, you have received no approved vacation days."
     public function getApprovedDaysString( $user ) {
 
-        $result = "During the current academic year, you have received ";
+        $previousYear = date("Y") - 1;
+        $currentYear = date("Y");
+        $yearRange = $previousYear."-".$currentYear;
+        $result = "During the current ".$yearRange." academic year, you have received ";
 
         $requestTypeStr = 'business';
         $res = $this->getApprovedTotalDays($user,$requestTypeStr);
@@ -337,6 +340,16 @@ class VacReqUtil
         }
 
         $result .= ".";
+
+        //if your requests included holidays, they are not automatically removed from these counts
+        $userSecUtil = $this->container->get('user_security_utility');
+        $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl');
+        if( !$holidaysUrl ) {
+            throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
+        }
+        $holidayLink = '<a href="'.$holidaysUrl.'">holidays</a>';
+
+        $result .= "<br>If your requests included ".$holidayLink.", they are not automatically removed from these counts.";
 
         return $result;
     }
@@ -1038,6 +1051,8 @@ class VacReqUtil
     }
 
     public function getSubmittersFromSubmittedRequestsByGroup( $groupId ) {
+
+        //TODO: this might optomized to get user objects in one query. groupBy does not work in MSSQL.
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
         //$dql->select('request');

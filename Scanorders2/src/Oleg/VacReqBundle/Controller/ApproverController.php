@@ -121,7 +121,7 @@ class ApproverController extends Controller
     /**
      * General management page for a given organizational institution
      *
-     * @Route("/organizational-institution-management/{institutionId}", name="vacreq_orginst_management")
+     * @Route("/manage-group/{institutionId}", name="vacreq_orginst_management")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Approver:orginst-management.html.twig")
      */
@@ -529,7 +529,7 @@ class ApproverController extends Controller
 
 
     /**
-     * @Route("/organizational-institution-add", name="vacreq_group_add")
+     * @Route("/add-group", name="vacreq_group_add")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Approver:orginst-add.html.twig")
      */

@@ -30,15 +30,19 @@
 
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         {% if accessreqs is defined and accessreqs and accessreqs > 0 %}
+            {% set reqStr = "request" %}
+            {% if accessreqs > 1 %}
+                {% set reqStr = "requests" %}
+            {% endif %}
             <div class="alert alert-warning">
-                There are <a href="{{ path(vacreq_sitename~'_accessrequest_list') }}" target="_blank">{{ accessreqs }} unprocessed access request(s)</a>
+                There are <a href="{{ path(vacreq_sitename~'_accessrequest_list') }}" target="_blank">{{ accessreqs }} unprocessed access {{ reqStr }}</a>
             </div>
         {% endif %}
     {% endif %}
 
     {% if totalApprovedDaysString is defined and totalApprovedDaysString %}
         <div class="alert alert-success">
-            <p>{{ totalApprovedDaysString }}</p>
+            <p>{{ totalApprovedDaysString|raw }}</p>
             <p>{{ accruedDaysString }}</p>
             {% if carriedOverDaysString %}
                 <p>{{ carriedOverDaysString }}</p>

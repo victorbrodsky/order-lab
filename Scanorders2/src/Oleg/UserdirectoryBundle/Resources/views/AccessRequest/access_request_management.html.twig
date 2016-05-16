@@ -19,18 +19,18 @@
 {% if accreq is defined %}
     {% if accreq.status == 0 %}
         {#STATUS_ACTIVE#}
-        {% set titleStr = "This user has an active request to access "~sitenamefull~" site. You can update the role and other details below." %}
+        {% set titleStr = "This user has an active request to access the "~sitenamefull~" site. You can update the role and other details below." %}
     {% elseif accreq.status == 1 %}
         {#STATUS_DECLINED#}
-        {% set titleStr = "This user has declined to request access to "~sitenamefull~" site. You can update the role and other details below." %}
+        {% set titleStr = "This user has declined to request access to the "~sitenamefull~" site. You can update the role and other details below." %}
     {% elseif accreq.status == 2 %}
         {#STATUS_APPROVED#}
-        {% set titleStr = "This user is already authorized to access "~sitenamefull~" site. You can update the role and other details below." %}
+        {% set titleStr = "This user is already authorized to access the "~sitenamefull~" site. You can update the role and other details below." %}
     {% else %}
-        {% set titleStr = "Specify role and accessible data for the user being authorized to access "~sitenamefull %}
+        {% set titleStr = "Specify role and accessible data for the user being authorized to access the "~sitenamefull %}
     {% endif %}
 {% else %}
-    {% set titleStr = "Specify role and accessible data for the user being authorized to access "~sitenamefull %}
+    {% set titleStr = "Specify role and accessible data for the user being authorized to access the "~sitenamefull %}
 {% endif %}
 
 {% block title %}
