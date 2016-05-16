@@ -138,7 +138,6 @@ class RequestController extends Controller
         $carriedOverDays = $vacreqUtil->getUserCarryOverDays($user, date("Y")-1); //2015
         //echo "carriedOverDays=".$carriedOverDays."<br>";
         $carriedOverDaysString = null;
-        //$carriedOverDays = 2;
         if( $carriedOverDays ) {
             $lastYearRange = (date("Y")-2)."-".(date("Y")-1);
             $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange.".";

@@ -381,7 +381,8 @@ class VacReqUtil
         }
         if( strpos($yearRangeStr, '-') === false ) {
             //echo "no '-' in ".$yearRangeStr."<br>";
-            return $yearRangeStr;
+            $yearRangeArr = array($yearRangeStr);
+            return $yearRangeArr;
         }
         $yearRangeArr = explode("-",$yearRangeStr);
         if( count($yearRangeArr) != 2 ) {
@@ -1036,6 +1037,32 @@ class VacReqUtil
         return implode(", ",$approversArr);
     }
 
+    public function getSubmittersFromSubmittedRequestsByGroup( $groupId ) {
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+        $dql->groupBy("request.user");
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("user.infos", "infos");
+        $dql->where("request.institution = :groupId");
+        $dql->orderBy('infos.lastName', 'DESC');
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'groupId' => $groupId
+        ));
+
+        $results = $query->getResult();
+        //echo "count results=".count($results)."<br>";
+
+        $submitters = array();
+        foreach( $results as $result ) {
+            $submitters[] = $result->getUser();
+        }
+
+        return $submitters;
+    }
 
 
     public function getSubmitterPhone($user) {
