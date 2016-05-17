@@ -308,13 +308,13 @@ class VacReqUtil
         $numberOfDays = $res['numberOfDays'];
         $accurate = $res['accurate'];
         if( $numberOfDays == 0 ) {
-            $result .= "no approved ".$requestTypeStr." days";
+            $result .= "no approved ".$requestTypeStr." travel days";
         }
         if( $numberOfDays == 1 ) {
-            $result .= $numberOfDays." approved ".$requestTypeStr." day";
+            $result .= $numberOfDays." approved ".$requestTypeStr." travel day";
         }
         if( $numberOfDays > 1 ) {
-            $result .= $numberOfDays." approved ".$requestTypeStr." days in total";
+            $result .= $numberOfDays." approved ".$requestTypeStr." travel days in total";
         }
         if( !$accurate ) {
             $result .= " (the result might be inaccurate due to academic year overlap)";
@@ -781,6 +781,19 @@ class VacReqUtil
 
 
     public function getRequestAcademicYears( $request ) {
+
+        $academicYearArr = array();
+
+        if( $request->getRequestType() && $request->getRequestType()->getAbbreviation() == "carryover" ) {
+            if( $request->getSourceYear() && $request->getDestinationYear() ) {
+                $sourceYear = $request->getSourceYear();
+                $academicYearArr[] = $sourceYear."-".((int)$sourceYear+1);
+                $destinationYear = $request->getDestinationYear();
+                $academicYearArr[] = $destinationYear."-".((int)$destinationYear+1);
+            }
+            return $academicYearArr;
+        }
+
         //return "2014-2015, 2015-2016";
         $academicYearStr = null;
         $userSecUtil = $this->container->get('user_security_utility');
@@ -826,8 +839,6 @@ class VacReqUtil
         $academicEndDateStr = $endYear."-".$academicYearEndMD;
         //echo "academicEndDateStr= ".$academicEndDateStr."<br>";
         //$academicEndDate = new \DateTime($academicEndDateStr);
-
-        $academicYearArr = array();
 
         //case 1: start and end dates are inside of academic year
         //if( $startDateMD >= $academicYearStartMD && $endDateMD <= $academicYearEndMD ) {
@@ -1452,10 +1463,37 @@ class VacReqUtil
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
-        $monthCount = date("m");
+
+        //get start academic date
+        $currentStartYear = date("Y");
+        $startAcademicYearStr = $this->getEdgeAcademicYearDate( $currentStartYear, "Start" );
+        $startAcademicYearDate = new \DateTime($startAcademicYearStr);
+        //echo "startAcademicYearDate=".$startAcademicYearDate->format("Y-m-d")."<br>";
+
+        //get month difference between now and $startAcademicYearDate
+        $nowDate = new \DateTime();
+        $monthCount = $this->diffInMonths($startAcademicYearDate, $nowDate);
+        $monthCount = $monthCount - 1;
+
         //echo "monthCount=".$monthCount."<br>";
-        $accruedDays = (int)$monthCount * $vacationAccruedDaysPerMonth;
+        $accruedDays = (int)$monthCount * (int)$vacationAccruedDaysPerMonth;
         return $accruedDays;
+    }
+
+    /**
+     * Calculate the difference in months between two dates (v1 / 18.11.2013)
+     *
+     * @param \DateTime $date1
+     * @param \DateTime $date2
+     * @return int
+     */
+    public static function diffInMonths(\DateTime $date1, \DateTime $date2)
+    {
+        $diff =  $date1->diff($date2);
+
+        $months = $diff->y * 12 + $diff->m + $diff->d / 30;
+
+        return (int) round($months);
     }
 
     public function getTotalAccruedDays() {

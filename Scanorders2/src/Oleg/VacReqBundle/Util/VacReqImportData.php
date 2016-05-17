@@ -78,6 +78,10 @@ class VacReqImportData
 //        $phoneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('phone');
 //        $otherAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('other');
 //        $noneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('none');
+        $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+        if( !$requestType ) {
+            exit('No request type found with abbreviation "business-vacation"');
+        }
 
         $notExistingUsers = array();
         $count = 0;
@@ -169,6 +173,9 @@ class VacReqImportData
             }
 
             $request = new VacReqRequest($submitter);
+
+            //set request type
+            $request->setRequestType($requestType);
 
             $request->setExportId($exportId);
 

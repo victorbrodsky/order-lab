@@ -27,6 +27,8 @@ class RequestController extends Controller
      *
      * @Route("/", name="vacreq_home")
      * @Route("/new", name="vacreq_new")
+     * @Route("/carry-over-request/", name="vacreq_carryoverrequest")
+     *
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
@@ -44,6 +46,26 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        //set request type
+        $routeName = $request->get('_route');
+        if( $routeName == "vacreq_carryoverrequest" ) {
+            //carryover request
+            $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
+            $title = "Request carry over of vacation days";
+
+            //set Source year (2015)
+            $entity->setSourceYear( date("Y")-1 );
+
+            //set Destination year (2016)
+            $entity->setDestinationYear( date("Y") );
+
+        } else {
+            //business/vacation request
+            $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+            $title = "Vacation/Business Travel Request";
+        }
+        $entity->setRequestType($requestType);
+
         //set phone
         $phone = $vacreqUtil->getSubmitterPhone($user);
         $entity->setPhone($phone);
@@ -53,7 +75,7 @@ class RequestController extends Controller
 
         $cycle = 'new';
 
-        $form = $this->createRequestForm($entity,$cycle);
+        $form = $this->createRequestForm($entity,$cycle,$request);
 
         $form->handleRequest($request);
 
@@ -65,13 +87,17 @@ class RequestController extends Controller
             //remove sub requests if empty
             if( !$entity->hasBusinessRequest() ) {
                 $subRequestB = $entity->getRequestBusiness();
-                $entity->setRequestBusiness(null);
-                $em->remove($subRequestB);
+                if( $subRequestB ) {
+                    $entity->setRequestBusiness(null);
+                    $em->remove($subRequestB);
+                }
             }
             if( !$entity->hasVacationRequest() ) {
                 $subRequestV = $entity->getRequestVacation();
-                $entity->setRequestVacation(null);
-                $em->remove($subRequestV);
+                if( $subRequestV ) {
+                    $entity->setRequestVacation(null);
+                    $em->remove($subRequestV);
+                }
             }
 
             $em->persist($entity);
@@ -101,13 +127,6 @@ class RequestController extends Controller
             $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
 
             //set confirmation email to approver and email users
-//            $approvers = $vacreqUtil->getApprovers();
-//            $subject = "Review Faculty Vacation/Business Request #".$entity->getId()." Confirmation";
-//            $message = "Dear ".$entity->getUsernameOptimal().",".$break.$break;
-//            $message .= "You have successfully submitted the pathology faculty vacation/business travel request.";
-//            $message .= "The division approver will review your request soon.";
-//            $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
-//            $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
             $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
 
             return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
@@ -150,7 +169,8 @@ class RequestController extends Controller
             'accessreqs' => count($accessreqs),
             'totalApprovedDaysString' => $totalApprovedDaysString,
             'accruedDaysString' => $accruedDaysString,
-            'carriedOverDaysString' => $carriedOverDaysString
+            'carriedOverDaysString' => $carriedOverDaysString,
+            'title' => $title
         );
     }
 
@@ -159,6 +179,7 @@ class RequestController extends Controller
      * Show: Finds and displays a VacReqRequest entity.
      *
      * @Route("/show/{id}", name="vacreq_show")
+     *
      * @Method("GET")
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
@@ -185,12 +206,20 @@ class RequestController extends Controller
 
         $cycle = 'show';
 
-        $form = $this->createRequestForm($entity,$cycle);
+        //get request type
+        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            $title = "Request carry over of vacation days";
+        } else {
+            $title = "Vacation/Business Travel Request";
+        }
+
+        $form = $this->createRequestForm($entity,$cycle,$request);
 
         return array(
             'entity' => $entity,
             'cycle' => $cycle,
             'form' => $form->createView(),
+            'title' => $title
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -200,6 +229,7 @@ class RequestController extends Controller
      *
      * @Route("/edit/{id}", name="vacreq_edit")
      * @Route("/review/{id}", name="vacreq_review")
+     *
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
@@ -284,20 +314,24 @@ class RequestController extends Controller
 
                 //remove sub requests if empty
                 if( !$entity->hasBusinessRequest() ) {
-                    echo "no business req => remove <br>";
+                    //echo "no business req => remove <br>";
                     $subRequestB = $entity->getRequestBusiness();
-                    $entity->setRequestBusiness(null);
-                    $em->remove($subRequestB);
+                    if( $subRequestB ) {
+                        $entity->setRequestBusiness(null);
+                        $em->remove($subRequestB);
+                    }
                 } else {
                     //$subRequestB = $entity->getRequestBusiness();
-                    echo "yes business req<br>";
+                    //echo "yes business req<br>";
                     //$em->persist($subRequestB);
                     //$em->persist($entity->getRequestBusiness());
                 }
                 if( !$entity->hasVacationRequest() ) {
                     $subRequestV = $entity->getRequestVacation();
-                    $entity->setRequestVacation(null);
-                    $em->remove($subRequestV);
+                    if( $subRequestV ) {
+                        $entity->setRequestVacation(null);
+                        $em->remove($subRequestV);
+                    }
                 } else {
                     //$subRequestV = $entity->getRequestVacation();
                     //$em->persist($subRequestV);
@@ -335,12 +369,12 @@ class RequestController extends Controller
 //                }
                 //exit('1');
 
-                echo "0 business req=".$entity->getRequestBusiness()."<br>";
+                //echo "0 business req=".$entity->getRequestBusiness()."<br>";
                 //exit('1');
 
                 $em->persist($entity);
                 $em->flush();
-                echo "1 business req=".$entity->getRequestBusiness()."<br>";
+                //echo "1 business req=".$entity->getRequestBusiness()."<br>";
                 //exit('1');
 
                 $action = "updated";
@@ -386,11 +420,19 @@ class RequestController extends Controller
             }
         }
 
+        //get request type
+        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            $title = "Request carry over of vacation days";
+        } else {
+            $title = "Vacation/Business Travel Request";
+        }
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
             'review' => $review,
+            'title' => $title
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -530,10 +572,11 @@ class RequestController extends Controller
 
 
 
-    public function createRequestForm( $entity, $cycle, $request=null ) {
+    public function createRequestForm( $entity, $cycle, $request ) {
 
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
+        $routeName = $request->get('_route');
 
         $user = $this->get('security.context')->getToken()->getUser();
 //        if( !$entity ) {
@@ -595,10 +638,12 @@ class RequestController extends Controller
 
         $params['review'] = false;
         if( $request ) {
-            if( $request->get('_route') == 'vacreq_review' ) {
+            if( $routeName == 'vacreq_review' ) {
                 $params['review'] = true;
             }
         }
+
+        $params['requestType'] = $entity->getRequestType();
 
         $form = $this->createForm(
             new VacReqRequestType($params),

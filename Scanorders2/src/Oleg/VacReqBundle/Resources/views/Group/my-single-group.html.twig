@@ -2,6 +2,7 @@
 
 {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
+
 <h4 class="text-info" align="center">
     {{ groupName }}
 </h4>
@@ -60,6 +61,7 @@
                 {{ vacreqmacros.personAwayInfo(submitter,submitter.getPreferredPhone,vacreq_sitename) }}
             </td>
 
+
             {% for yearRange in yearRanges %}
                 {% set backgroundColor = yearRangesColor[loop.index0] %}
 
@@ -72,14 +74,16 @@
                 {% set vacationAccurate = vacationDaysRes['accurate'] %}
 
                 <td style="background-color: {{ backgroundColor }}">
-                    {{ businessDays }}
+                    {#{{ businessDays }}#}
+                    {{ vacreqmacros.incomingRequestHref( businessDays, submitter, yearRange, groupId, 1, 'businessRequest', vacreq_sitename ) }}
                     {% if not businessAccurate %}
                         *
                     {% endif %}
                 </td>
 
                 <td style="background-color: {{ backgroundColor }}">
-                    {{ vacationDays }}
+                    {#{{ vacationDays }}#}
+                    {{ vacreqmacros.incomingRequestHref( vacationDays, submitter, yearRange, groupId, 1, 'vacationRequest', vacreq_sitename ) }}
                     {% if not vacationAccurate %}
                         *
                     {% endif %}

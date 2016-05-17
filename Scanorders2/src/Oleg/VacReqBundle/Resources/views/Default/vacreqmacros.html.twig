@@ -280,5 +280,27 @@
 
 {% endmacro %}
 
+{% macro incomingRequestHref( days, user, yearRange, groupId, approved, requestType, vacreq_sitename ) %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if days > 0 %}
+
+        <a href="{{ path(vacreq_sitename~'_incomingrequests',
+            {
+                'filter[user]':user.id,
+                'filter[academicYear]':yearRange,
+                'filter[organizationalInstitutions]':groupId,
+                'filter[approved]':approved,
+                'filter[vacationRequest]':1
+            }
+        ) }}">
+            {{ days }}
+        </a>
+
+    {% else %}
+        {{ days }}
+    {% endif %}
+
+{% endmacro %}
 
 

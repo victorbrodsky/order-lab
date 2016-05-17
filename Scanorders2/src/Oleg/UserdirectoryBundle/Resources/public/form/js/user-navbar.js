@@ -202,6 +202,10 @@ function setVacReqNavBar() {
         id = 'mygroup';
     }
 
+    if( full.indexOf("/vacation-request/carry-over-request/") !== -1 ) {
+        id = 'carryoverrequest';
+    }
+
     id = commonNavBar(full,id)
 
     if( full.indexOf("/vacation-request/re-identify") !== -1 ) {

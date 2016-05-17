@@ -42,6 +42,12 @@
                 </div>
             </div>
 
+            {% if vacreqfilter.requestType is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.requestType) }}
+                </div>
+            {% endif %}
+
             {% if vacreqfilter.user is defined %}
                 <div class="col-xs-2">
                     {{ form_row(vacreqfilter.user) }}
@@ -70,6 +76,7 @@
                     {{ form_row(vacreqfilter.academicYear) }}
                 </div>
             {% endif %}
+
 
             {#<div class="col-xs-2">#}
                 {#{{ form_row(vacreqfilter.year) }}#}

@@ -27,6 +27,35 @@ class VacReqRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        //common fields for all request types
+        $this->addCommonFields($builder);
+
+        if( $this->params['requestType']->getAbbreviation() == "business-vacation" ) {
+            $this->addBusinessVacationFields($builder);
+        }
+
+        if( $this->params['requestType']->getAbbreviation() == "carryover" ) {
+            $this->addCarryOverFields($builder);
+        }
+
+
+
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequest',
+            'csrf_protection' => false,
+        ));
+    }
+
+    public function getName()
+    {
+        return 'oleg_vacreqbundle_request';
+    }
+
+    public function addBusinessVacationFields( $builder ) {
         $builder->add('phone', null, array(
             'label' => "Phone Number for the person away:",
             'attr' => array('class' => 'form-control vacreq-phone'),
@@ -47,16 +76,6 @@ class VacReqRequestType extends AbstractType
             'required' => false,
         ));
 
-        if( $this->params['cycle'] == 'show' ) {
-            //approver
-            $builder->add('approver', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:User',
-                'label' => "Approver:",
-                'required' => false,
-                'read_only' => true,
-                'attr' => array('class' => 'combobox combobox-width'),
-            ));
-        }
 
         if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
 
@@ -85,60 +104,7 @@ class VacReqRequestType extends AbstractType
                 },
             ));
 
-            $builder->add('user', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:User',
-                'label' => "Person Away:",
-                'required' => true,
-                'multiple' => false,
-                //'property' => 'name',
-                'attr' => array('class' => 'combobox combobox-width'),
-                //'read_only' => $readOnly,   //($this->params['review'] ? true : false),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('user')
-                        ->leftJoin("user.infos","infos")
-                        ->leftJoin("user.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
-                        ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                        ->orderBy("infos.lastName","ASC");
-                },
-            ));
         }
-
-        $requiredInst = false;
-        if( count($this->params['organizationalInstitutions']) == 1 ) {
-            //echo "set org inst <br>";
-            $requiredInst = true;
-        }
-
-        $builder->add('institution', 'choice', array(
-            'label' => "Organizational Group:",
-            'required' => $requiredInst,
-            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
-            'choices' => $this->params['organizationalInstitutions'],
-            'read_only' => ($this->params['review'] ? true : false)
-        ));
-        $builder->get('institution')
-            ->addModelTransformer(new CallbackTransformer(
-                //original from DB to form: institutionObject to institutionId
-                function($originalInstitution) {
-                    //echo "originalInstitution=".$originalInstitution."<br>";
-                    if( is_object($originalInstitution) && $originalInstitution->getId() ) { //object
-                        return $originalInstitution->getId();
-                    }
-                    return $originalInstitution; //id
-                },
-                //reverse from form to DB: institutionId to institutionObject
-                function($submittedInstitutionObject) {
-                    //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
-                    if( $submittedInstitutionObject ) { //id
-                        $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
-                        return $institutionObject;
-                    }
-                    return null;
-                }
-            )
-        );
 
 
         //Emergency info
@@ -199,19 +165,98 @@ class VacReqRequestType extends AbstractType
             'attr' => array('class' => 'datepicker form-control allow-future-date vacreq-firstDayBackInOffice'),
             'read_only' => ($this->params['review'] ? true : false)
         ));
-
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequest',
-            'csrf_protection' => false,
+
+    public function addCarryOverFields( $builder ) {
+
+//        $builder->add('sourceYear', null, array(
+//            'label' => "Source Academic Year:",
+//            'attr' => array('class' => 'form-control'),
+//        ));
+//
+//        $builder->add('destinationYear', null, array(
+//            'label' => "Destination Academic Year:",
+//            'attr' => array('class' => 'form-control'),
+//        ));
+
+        $builder->add('carryOverDays', null, array(
+            'label' => "Number of days to carry over:",
+            'attr' => array('class' => 'form-control vacreq-carryOverDays'),
         ));
+
     }
 
-    public function getName()
-    {
-        return 'oleg_vacreqbundle_request';
+
+    public function addCommonFields( $builder ) {
+
+        if( $this->params['cycle'] == 'show' ) {
+            //approver
+            $builder->add('approver', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Approver:",
+                'required' => false,
+                'read_only' => true,
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        }
+
+        if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
+            $builder->add('user', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Person Away:",
+                'required' => true,
+                'multiple' => false,
+                //'property' => 'name',
+                'attr' => array('class' => 'combobox combobox-width'),
+                //'read_only' => $readOnly,   //($this->params['review'] ? true : false),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('user')
+                        ->leftJoin("user.infos","infos")
+                        ->leftJoin("user.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
+                        ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        ->orderBy("infos.lastName","ASC");
+                },
+            ));
+        }
+
+
+        $requiredInst = false;
+        if( count($this->params['organizationalInstitutions']) == 1 ) {
+            //echo "set org inst <br>";
+            $requiredInst = true;
+        }
+        $builder->add('institution', 'choice', array(
+            'label' => "Organizational Group:",
+            'required' => $requiredInst,
+            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
+            'choices' => $this->params['organizationalInstitutions'],
+            'read_only' => ($this->params['review'] ? true : false)
+        ));
+        $builder->get('institution')
+            ->addModelTransformer(new CallbackTransformer(
+                //original from DB to form: institutionObject to institutionId
+                    function($originalInstitution) {
+                        //echo "originalInstitution=".$originalInstitution."<br>";
+                        if( is_object($originalInstitution) && $originalInstitution->getId() ) { //object
+                            return $originalInstitution->getId();
+                        }
+                        return $originalInstitution; //id
+                    },
+                    //reverse from form to DB: institutionId to institutionObject
+                    function($submittedInstitutionObject) {
+                        //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
+                        if( $submittedInstitutionObject ) { //id
+                            $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+                            return $institutionObject;
+                        }
+                        return null;
+                    }
+                )
+            );
+
     }
+
 }

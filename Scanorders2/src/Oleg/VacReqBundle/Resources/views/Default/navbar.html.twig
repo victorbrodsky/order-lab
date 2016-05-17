@@ -83,13 +83,11 @@
                         </li>
                     {% endif %}
 
-                    {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}#}
-                        {#<li id="nav-bar-fellappsettings" class="divider-vertical">#}
-                            {#<a href="{{ path('vacreq_fellowshiptype_settings') }}">#}
-                                {#Fellowship Settings#}
-                            {#</a>#}
-                        {#</li>#}
-                    {#{% endif %}#}
+                    <li id="nav-bar-carryoverrequest" class="divider-vertical">
+                        <a href="{{ path('vacreq_carryoverrequest') }}">
+                            Request Carry Over
+                        </a>
+                    </li>
 
                 </ul>
 

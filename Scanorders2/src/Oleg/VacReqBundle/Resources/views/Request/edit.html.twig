@@ -19,7 +19,7 @@
 {% endif %}
 
 {% block title %}
-    Vacation/Business Travel Request
+    {{ title }}
 {% endblock %}
 
 
@@ -27,6 +27,7 @@
 {% block content %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="requestType" value="{{ entity.getRequestType().getAbbreviation() }}" />
 
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         {% if accessreqs is defined and accessreqs and accessreqs > 0 %}
@@ -53,7 +54,7 @@
     {% endif %}
 
     <h4 class="text-info" align="center">
-        Vacation/Business Travel Request
+        {{ title }}
     </h4>
 
     <br>
@@ -82,8 +83,10 @@
             {{ formmacros.field(form.user) }}
         {% endif %}
 
-        {#{{ formmacros.field(form.phone) }}#}
-        {{ usermacros.emailPhoneField(form.phone,cycle,'phone',"") }}
+        {% if form.phone is defined %}
+            {#{{ formmacros.field(form.phone) }}#}
+            {{ usermacros.emailPhoneField(form.phone,cycle,'phone',"") }}
+        {% endif %}
 
         {#organizationalInstitution => institution#}
         {% if form.institution is defined %}
@@ -94,8 +97,35 @@
         {% endif %}
 
 
+        {#Carry Over#}
+        {% if entity.getRequestType().getAbbreviation() == "carryover" %}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#carryover">
+                            Carry Over Request
+                        </a>
+                    </h4>
+                </div>
+                <div id="carryover" class="panel-collapse collapse in">
+                    <div class="panel-body">
+
+                        {#{{ formmacros.field(form.sourceYear) }}#}
+                        {{ formmacros.simplefield( "Source Academic Year:", entity.getSourceYearRange(), "input", "disabled" ) }}
+
+                        {#{{ formmacros.field(form.destinationYear) }}#}
+                        {{ formmacros.simplefield( "Destination Academic Year:", entity.getDestinationYearRange(), "input", "disabled" ) }}
+
+                        {{ formmacros.field(form.carryOverDays) }}
+
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+        {% endif %}
+
+
         {#Business#}
-        {% if entity.hasBusinessRequest or cycle == 'new' or cycle == 'edit' %}
+        {% if form.requestBusiness is defined and (entity.hasBusinessRequest or cycle == 'new' or cycle == 'edit') %}
             {% set showBusinessStatus = false %}
             {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
                 {% set showBusinessStatus = true %}
@@ -164,7 +194,7 @@
         {% endif %}
 
         {#Vacation#}
-        {% if entity.hasVacationRequest or cycle == 'new' or cycle == 'edit' %}
+        {% if form.requestVacation is defined and (entity.hasVacationRequest or cycle == 'new' or cycle == 'edit') %}
             {#set vacationCollapse#}
             {% set showVacationStatus = false %}
             {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
@@ -251,35 +281,39 @@
         {% endif %}
 
         {#Emergency#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#Emergency">
-                        Emergency Contact Info (optional)
-                    </a>
-                </h4>
-            </div>
-            <div id="Emergency" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    {#{{ formmacros.field(form.availabilities) }}#}
-                    {#{{ formmacros.field(form.emergencyComment) }}#}
-                    {#{{ formmacros.field(form.emergencyCellPhone) }}#}
-                    {#{{ formmacros.field(form.emergencyOther) }}#}
+        {% if form.availableViaEmail is defined %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#Emergency">
+                            Emergency Contact Info (optional)
+                        </a>
+                    </h4>
+                </div>
+                <div id="Emergency" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        {#{{ formmacros.field(form.availabilities) }}#}
+                        {#{{ formmacros.field(form.emergencyComment) }}#}
+                        {#{{ formmacros.field(form.emergencyCellPhone) }}#}
+                        {#{{ formmacros.field(form.emergencyOther) }}#}
 
-                    {{ formmacros.field(form.availableViaEmail) }}
-                    {{ formmacros.field(form.availableEmail) }}
+                        {{ formmacros.field(form.availableViaEmail) }}
+                        {{ formmacros.field(form.availableEmail) }}
 
-                    {{ formmacros.field(form.availableViaCellPhone) }}
-                    {{ formmacros.field(form.availableCellPhone) }}
+                        {{ formmacros.field(form.availableViaCellPhone) }}
+                        {{ formmacros.field(form.availableCellPhone) }}
 
-                    {{ formmacros.field(form.availableViaOther) }}
-                    {{ formmacros.field(form.availableOther) }}
+                        {{ formmacros.field(form.availableViaOther) }}
+                        {{ formmacros.field(form.availableOther) }}
 
-                    {{ formmacros.field(form.availableNone) }}
+                        {{ formmacros.field(form.availableNone) }}
 
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+        {% endif %}
+
+
 
 
         {% if form.status is defined %}
@@ -325,21 +359,25 @@
 
     <script language="Javascript">
 
+        var _requestType = null;
+
         $(document).ready(function() {
 
+            _requestType = $('#requestType').val();
+
             //console.log('cycle='+cycle);
-            if( cycle == 'new' || cycle == 'edit' ) {
+            if( _requestType == "business-vacation" && (cycle == 'new' || cycle == 'edit') ) {
 
                 vacreqDateListener();
 
                 vacreqAvailabilityListener();
 
-                vacreqRemoveErrorListener();
-
                 //init datepicker manually, because the holder 'input-group' does not have class 'date', but js is looking for .input-group.date
                 initSingleDatepicker( $('.vacreq-firstDayBackInOffice') );
 
             }
+
+            vacreqRemoveErrorListener();
 
             //vacreqDayWeekListener();
 
@@ -398,13 +436,17 @@
         }
 
         function vacreqRemoveErrorListener() {
-            $('.vacreq-numberOfDays, .vacreq-expenses, .vacreq-description').on("input", function(e) {
+            $('input, .vacreq-numberOfDays, .vacreq-expenses, .vacreq-description').on("input", function(e) {
                 $(this).removeClass('alert-danger');
+                $('#error-box').html('');
+                $('#error-box').hide();
             });
 
             //$('.vacreq-firstDayBackInOffice').datepicker().on("changeDate", function(e) {
             $('.vacreq-firstDayBackInOffice').on("change", function(e) {
                 $(this).removeClass('alert-danger');
+                $('#error-box').html('');
+                $('#error-box').hide();
                 vacreqSetDayWeekTooltip($(this));
             });
         }
@@ -629,6 +671,46 @@
         }
 
         function validateVacReqForm(btn) {
+            if( _requestType == "business-vacation" ) {
+                validateVacReqBusinessVacationForm(btn);
+            }
+            if( _requestType == "carryover" ) {
+                validateVacReqCarryOverForm(btn);
+            }
+        }
+        function validateVacReqCarryOverForm(btn) {
+
+            var lbtn = Ladda.create(btn);
+            lbtn.start();
+
+            $('#error-box').hide();
+
+            //remove alert-danger from input fields
+            $('input').removeClass('alert-danger');
+
+            var error = null;
+
+            var userInstitution = $('.vacreq-institution').select2('data');
+            if( !error && !userInstitution ) {
+                error = "Please choose an organizational group";
+            }
+
+            var carryOverDays = $('.vacreq-carryOverDays').val();
+            if( !error && !carryOverDays ) {
+                error = "Please enter the number of days to carry over";
+                $('.vacreq-carryOverDays').addClass('alert-danger');
+            }
+
+            if( error ) {
+                $('#error-box').html(error);
+                $('#error-box').show();
+                lbtn.stop();
+                return false;
+            }
+
+            $('#vacreq-request-form').submit();
+        }
+        function validateVacReqBusinessVacationForm(btn) {
 
             var lbtn = Ladda.create(btn);
             lbtn.start();

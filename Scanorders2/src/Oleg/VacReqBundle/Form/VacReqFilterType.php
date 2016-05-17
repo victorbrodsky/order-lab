@@ -47,6 +47,16 @@ class VacReqFilterType extends AbstractType
             ));
 
             $this->addGroup($builder);
+        } else {
+            $builder->add('requestType', 'entity', array(
+                'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
+                'property' => 'name',
+                'label' => false,
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Request Type'),
+                //'choices' => $this->params['filterUsers'],
+            ));
         }
 
         $builder->add('academicYear', 'datetime', array(

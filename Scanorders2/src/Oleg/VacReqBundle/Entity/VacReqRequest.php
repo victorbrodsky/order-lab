@@ -197,6 +197,26 @@ class VacReqRequest
     private $updateComment;
 
 
+    //Carry Over Request fields: source year, destination year, number of carry over days
+    /**
+     * @ORM\ManyToOne(targetEntity="VacReqRequestTypeList")
+     */
+    private $requestType;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $sourceYear;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $destinationYear;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $carryOverDays;
 
 
 
@@ -618,16 +638,89 @@ class VacReqRequest
         $this->phone = $phone;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRequestType()
+    {
+        return $this->requestType;
+    }
+
+    /**
+     * @param mixed $requestType
+     */
+    public function setRequestType($requestType)
+    {
+        $this->requestType = $requestType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSourceYear()
+    {
+        return $this->sourceYear;
+    }
+
+    /**
+     * @param mixed $sourceYear
+     */
+    public function setSourceYear($sourceYear)
+    {
+        $this->sourceYear = $sourceYear;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDestinationYear()
+    {
+        return $this->destinationYear;
+    }
+
+    /**
+     * @param mixed $destinationYear
+     */
+    public function setDestinationYear($destinationYear)
+    {
+        $this->destinationYear = $destinationYear;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarryOverDays()
+    {
+        return $this->carryOverDays;
+    }
+
+    /**
+     * @param mixed $carryOverDays
+     */
+    public function setCarryOverDays($carryOverDays)
+    {
+        $this->carryOverDays = $carryOverDays;
+    }
+
+
+
+
+
 
     public function setFinalFields() {
-        //set overall status
-        $overallStatus = $this->getOverallStatus();
-        $this->setStatus($overallStatus);
-        $this->setEntireStatus($overallStatus);
 
-        //set first day away
-        $firstDateAway = $this->getFirstDateAway(null);
-        $this->setFirstDayAway($firstDateAway);
+        $requestType = $this->getRequestType();
+
+        if( $requestType && $requestType->getAbbreviation() == "business-vacation" ) {
+            //set overall status
+            $overallStatus = $this->getOverallStatus();
+            $this->setStatus($overallStatus);
+            $this->setEntireStatus($overallStatus);
+
+            //set first day away
+            $firstDateAway = $this->getFirstDateAway(null);
+            $this->setFirstDayAway($firstDateAway);
+        }
     }
 
 
@@ -860,6 +953,19 @@ class VacReqRequest
         return implode('<br>',$resArr);
     }
 
+    public function getSourceYearRange() {
+        $endYear = (int)$this->getSourceYear() + 1;
+        //echo "endYear=".$endYear."<br>";
+        $yearRange = $this->getSourceYear() . "-" . $endYear;
+        return $yearRange;
+    }
+    public function getDestinationYearRange() {
+        $endYear = (int)$this->getDestinationYear() + 1;
+        //echo "endYear=".$endYear."<br>";
+        $yearRange = $this->getDestinationYear() . "-" . $endYear;
+        return $yearRange;
+    }
+
 
     public function getArrayFields() {
         $fieldsArr = array(
@@ -867,7 +973,8 @@ class VacReqRequest
             'status','firstDayAway','firstDayBackInOffice','comment','updateComment',
             'availableViaEmail','availableEmail',
             'availableViaCellPhone','availableCellPhone',
-            'availableViaOther','availableOther'
+            'availableViaOther','availableOther',
+            'requestType','sourceYear','destinationYear','carryOverDays'
         );
         return $fieldsArr;
     }

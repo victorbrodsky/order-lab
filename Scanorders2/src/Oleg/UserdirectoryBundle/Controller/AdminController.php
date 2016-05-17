@@ -29,6 +29,7 @@ use Oleg\UserdirectoryBundle\Entity\SiteList;
 use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Oleg\UserdirectoryBundle\Entity\TrainingTypeList;
+use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -250,6 +251,7 @@ class AdminController extends Controller
         $count_PermissionActions = $this->generatePermissionActions();
 
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
+        $count_VacReqRequestTypeList = $this->generateVacReqRequestTypeList();
 
 
         $this->get('session')->getFlashBag()->add(
@@ -314,6 +316,7 @@ class AdminController extends Controller
             'PermissionActions ='.$count_PermissionActions.', '.
             'Collaboration Types='.$collaborationtypes.', '.
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
+            'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -4243,6 +4246,39 @@ class AdminController extends Controller
 
         return round($count/10);
 
+    }
+
+    public function generateVacReqRequestTypeList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Business/Travel Request" => "business-vacation",
+            "Carry Over Request" => "carryover",
+        );
+
+        $count = 10;
+        foreach( $types as $name => $abbreviation ) {
+
+            $listEntity = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new VacReqRequestTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setAbbreviation($abbreviation);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
     }
 
     public function generateCollaborationtypes() {

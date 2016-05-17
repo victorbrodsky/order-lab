@@ -108,6 +108,8 @@ class RequestIndexController extends Controller
         $dql->leftJoin("request.requestBusiness", "requestBusiness");
         $dql->leftJoin("request.requestVacation", "requestVacation");
 
+        $dql->leftJoin("request.requestType", "requestType");
+
         //$dql->where("requestBusiness.startDate IS NOT NULL OR requestVacation.startDate IS NOT NULL");
 
         //my requests
@@ -142,7 +144,7 @@ class RequestIndexController extends Controller
             $query->setParameters( $dqlParameters );
         }
 
-        //echo "dql=".$dql."<br>";
+        echo "dql=".$dql."<br>";
         //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
@@ -248,6 +250,20 @@ class RequestIndexController extends Controller
         $enddate = $filterform['enddate']->getData();
 
         ////////////// Optional filters //////////////
+
+        //filter type. By default select only business-vacation type requests.
+        $requestTypeAbbreviation = "business-vacation";
+        if( $filterform->has('requestType') ) {
+            $requestType = $filterform['requestType']->getData();
+            //echo "requestType=".$requestType."<br>";
+            if( $requestType ) {
+                $requestTypeAbbreviation = $requestType->getAbbreviation();
+            }
+        }
+        //echo "requestTypeAbbreviation=".$requestTypeAbbreviation."<br>";
+        $dql->andWhere("requestType.abbreviation = :requestTypeAbbreviation");
+        $dqlParameters['requestTypeAbbreviation'] = $requestTypeAbbreviation;
+
         //$subjectUser = ( array_key_exists('user', $filterform) ? $filterform['user']->getData() : null);
         if( $filterform->has('user') ) {
             $subjectUser = $filterform['user']->getData();

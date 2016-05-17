@@ -94,6 +94,7 @@ class ListController extends Controller
      * @Route("/permission-actions/", name="permissionaction-list")
      * @Route("/sites/", name="sites-list")
      * @Route("/event-object-types/", name="eventobjecttypes-list")
+     * @Route("/vacation-request-types/", name="vacreqrequesttypes-list")
      *
      *
      * @Method("GET")
@@ -331,6 +332,7 @@ class ListController extends Controller
      * @Route("/permission-actions/", name="permissionaction_create")
      * @Route("/sites/", name="sites_create")
      * @Route("/event-object-types/", name="eventobjecttypes_create")
+     * @Route("/vacation-request-types/", name="vacreqrequesttypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -484,6 +486,7 @@ class ListController extends Controller
      * @Route("/permission-actions/new", name="permissionaction_new")
      * @Route("/sites/new", name="sites_new")
      * @Route("/event-object-types/new", name="eventobjecttypes_new")
+     * @Route("/vacation-request-types/new", name="vacreqrequesttypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -608,6 +611,7 @@ class ListController extends Controller
      * @Route("/permission-actions/{id}", name="permissionaction_show")
      * @Route("/sites/{id}", name="sites_show")
      * @Route("/event-object-types/{id}", name="eventobjecttypes_show")
+     * @Route("/vacation-request-types/{id}", name="vacreqrequesttypes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -722,6 +726,7 @@ class ListController extends Controller
      * @Route("/permission-actions/{id}/edit", name="permissionaction_edit")
      * @Route("/sites/{id}/edit", name="sites_edit")
      * @Route("/event-object-types/{id}/edit", name="eventobjecttypes_edit")
+     * @Route("/vacation-request-types/{id}/edit", name="vacreqrequesttypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -879,6 +884,7 @@ class ListController extends Controller
      * @Route("/permission-actions/{id}", name="permissionaction_update")
      * @Route("/sites/{id}", name="sites_update")
      * @Route("/event-object-types/{id}", name="eventobjecttypes_update")
+     * @Route("/vacation-request-types/{id}", name="vacreqrequesttypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1461,6 +1467,11 @@ class ListController extends Controller
                 $className = "EventObjectTypeList";
                 $displayName = "Event Log Object Types";
                 break;
+            case "vacreqrequesttypes":
+                $className = "VacReqRequestTypeList";
+                $displayName = "Business/Vacation Request Types";
+                $bundleName = "VacReqBundle";
+                break;
 
             default:
                 $className = null;
@@ -1560,6 +1571,7 @@ class ListController extends Controller
      * @Route("/permission-actions/{id}", name="permissionaction_delete")
      * @Route("/sites/{id}", name="sites_delete")
      * @Route("/event-object-types/{id}", name="eventobjecttypes_delete")
+     * @Route("/vacation-request-types/{id}", name="vacreqrequesttypes_delete")
      *
      *
      * @Method("DELETE")
