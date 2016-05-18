@@ -1090,7 +1090,7 @@ class VacReqUtil
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("user.infos", "infos");
         $dql->where("request.institution = :groupId");
-        $dql->orderBy('infos.lastName', 'DESC');
+        $dql->orderBy('infos.lastName', 'ASC');
 
         $query = $this->em->createQuery($dql);
 
