@@ -317,7 +317,7 @@ class RequestIndexController extends Controller
             $businessRequest = null;
         }
         ////////////// EOF Optional filters //////////////
-        
+
 
         //$completed = $filterform['completed']->getData();
         $completed = null;

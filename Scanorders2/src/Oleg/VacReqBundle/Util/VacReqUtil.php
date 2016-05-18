@@ -1002,18 +1002,21 @@ class VacReqUtil
 
     //get user's organizational group
     //get institution from user submitter role (?)
-    public function getVacReqOrganizationalInstitutions( $user, $asObject=false ) {
+    public function getVacReqOrganizationalInstitutions( $user, $asObject=false )
+    {
 
         $institutions = array();
 
         //get vacreq submitter role
-        //$submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "VacReqRequest", "create" ); //changestatus
-        $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user,"vacreq","ROLE_VACREQ_SUBMITTER");
-        //echo "0 roles count=".count($submitterRoles)."<br>";
+        if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+            //find all submitter role's institution
+            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER");
+        } else {
+            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", "ROLE_VACREQ_SUBMITTER");
+        }
 
         if( count($submitterRoles) == 0 ) {
             //find all submitter role's institution
-            //$submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "create");
             $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER");
         }
         //echo "1 roles count=".count($submitterRoles)."<br>";
