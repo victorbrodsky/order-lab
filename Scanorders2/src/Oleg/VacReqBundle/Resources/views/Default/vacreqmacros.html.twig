@@ -81,6 +81,58 @@
 
 {% endmacro %}
 
+{% macro request_carryover_base_header( pagination, requestStr ) %}
+    <th style="border-left: 2px solid gray;">{{ knp_pagination_sortable(pagination, 'Source Academic Year', requestStr~'.sourceYear') }}</th>
+    <th>{{ knp_pagination_sortable(pagination, 'Destination Academic Year', requestStr~'.destinationYear') }}</th>
+    <th>{{ knp_pagination_sortable(pagination, 'Number of days to carry over', requestStr~'.carryOverDays') }}</th>
+    <th>{{ knp_pagination_sortable(pagination, 'Status', requestStr~'.status') }}</th>
+{% endmacro %}
+{% macro request_carryover_base_body( request, requestStr ) %}
+
+    {#Set row color#}
+    {% set tdclassname = "" %}
+    {% if request %}
+        {% if request.getStatus() == 'pending' %}
+            {% set tdclassname = "alert alert-warning" %}
+        {% endif %}
+        {% if request.getStatus() == 'approved' %}
+            {% set tdclassname = "alert alert-success" %}
+        {% endif %}
+        {% if request.getStatus() == 'rejected' %}
+            {% set tdclassname = "alert alert-danger" %}
+        {% endif %}
+        {% if request.getStatus() == 'completed' %}
+            {% set tdclassname = "" %}
+        {% endif %}
+    {% endif %}
+    {#EOF Set row color#}
+
+    <td class="{{ tdclassname }}" style="border-left: 2px solid gray;">
+        {% if request and request.sourceYear %}
+            {{ request.sourceYear }}
+        {% endif %}
+    </td>
+
+    <td class="{{ tdclassname }}">
+        {% if request and request.destinationYear %}
+            {{ request.destinationYear }}
+        {% endif %}
+    </td>
+
+    <td class="{{ tdclassname }}">
+        {% if request and request.carryOverDays %}
+            {{ request.carryOverDays }}
+        {% endif %}
+    </td>
+
+    <td class="{{ tdclassname }}">
+        {% if request and request.status  %}
+            {{ request.status|capitalize }}
+        {% endif %}
+    </td>
+
+{% endmacro %}
+
 {% macro request_radio_choice( request ) %}
     {% if request.status is defined %}
         {{ form_widget(request.status) }}

@@ -66,21 +66,13 @@
                 </div>
             {% endif %}
 
-            {% if vacreqfilter.academicYear is defined %}
-                <div class="col-xs-1">
-                    {#<div class="input-group input-group-reg date allow-future-date">#}
-                    {#<div class="input-group date allow-future-date">#}
-                        {#{{ form_widget(vacreqfilter.academicYear) }}#}
-                        {#<span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>#}
-                    {#</div>#}
-                    {{ form_row(vacreqfilter.academicYear) }}
-                </div>
+            {% if requestType != 'carryover' %}
+                {% if vacreqfilter.academicYear is defined %}
+                    <div class="col-xs-1">
+                        {{ form_row(vacreqfilter.academicYear) }}
+                    </div>
+                {% endif %}
             {% endif %}
-
-
-            {#<div class="col-xs-2">#}
-                {#{{ form_row(vacreqfilter.year) }}#}
-            {#</div>#}
 
             <div class="col-xs-1">
                 <button type="submit" class="btn btn-sm btn-default">Filter</button>
@@ -95,25 +87,16 @@
         <div class="row">
             <div class="col-xs-12" align="left">
 
-                {#{{  form_row(vacreqfilter.submitter) }}#}
-                {#&nbsp;&nbsp;#}
-
-                {#{{  form_row(vacreqfilter.institutionGroup) }}#}
-                {#&nbsp;&nbsp;#}
-
-                {#<div class="input-group input-group-reg date allow-future-date">#}
-                    {#{{ form_widget(vacreqfilter.academicYear) }}#}
-                    {#<span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>#}
-                {#</div>#}
-                {#&nbsp;&nbsp;#}
-
-                {{ vacreqmacros.checkbox(vacreqfilter.businessRequest) }}
-                &nbsp;&nbsp;
-                {{ vacreqmacros.checkbox(vacreqfilter.vacationRequest) }}
-                &nbsp;&nbsp;
+                {% if requestType != 'carryover' %}
+                    {{ vacreqmacros.checkbox(vacreqfilter.businessRequest) }}
+                    &nbsp;&nbsp;
+                    {{ vacreqmacros.checkbox(vacreqfilter.vacationRequest) }}
+                    &nbsp;&nbsp;
+                {% endif %}
 
                 {#&nbsp;&nbsp;#}
                 {#{{ vacreqmacros.checkbox(vacreqfilter.completed) }}#}
+
                 &nbsp;&nbsp;
                 {{ vacreqmacros.checkbox(vacreqfilter.pending) }}
                 &nbsp;&nbsp;
@@ -133,9 +116,15 @@
         {% set colspanRequestInfo = 8 %}
         {% set showUserInfo = true %}
     {% else %}
-        {% set colspanRequestInfo = 6 %} {#1 fields less#}
+        {% if requestType == 'carryover' %}
+            {% set colspanRequestInfo = 3 %}
+        {% else %}
+            {% set colspanRequestInfo = 6 %} {#2 fields less#}
+        {% endif %}
         {% set showUserInfo = false %}
     {% endif %}
+
+    {#requestType={{ requestType }}#}
 
     <table class="records_list table table-hover table-condensed text-left table-bordered">
         <thead>
@@ -145,46 +134,43 @@
             </th>
 
             {% if showUserInfo %}
-            <th colspan="2" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
-                Total prior approved away days in corresponding academic year
-            </th>
+                <th colspan="2" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                    Total prior approved away days in corresponding academic year
+                </th>
             {% endif %}
 
-            <th colspan="5" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
-                Business Travel
-            </th>
-
-            <th colspan="4" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
-                Vacation
-            </th>
+            {% if requestType == 'carryover' %}
+                <th colspan="4" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                    Carry Over
+                </th>
+            {% else %}
+                <th colspan="5" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                    Business Travel
+                </th>
+                <th colspan="4" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                    Vacation
+                </th>
+            {% endif %}
 
             <th rowspan="1" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
                 Action
             </th>
         </tr>
+
         <tr>
             <th>{{ knp_pagination_sortable(pagination, 'Request ID', 'request.id') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}</th>
+            {% if requestType != 'carryover' %}
+                <th>{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}</th>
+            {% endif %}
 
-            <th>{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}</th>
-
-            <th>{{ knp_pagination_sortable(pagination, 'Date Submitted', 'request.firstDayBackInOffice') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Date Submitted', 'request.createDate') }}</th>
 
             {% if showUserInfo %}
-            <th>
-                {#displayName#}
-                {{ knp_pagination_sortable(pagination, 'Person Away', 'infos.displayName') }}
-            </th>
-
-            {#<th>Photo</th>#}
-
-            {#<th>{{ knp_pagination_sortable(pagination, 'Email', 'user.email') }}</th>#}
-
-            {#<th>#}
-                {#{{ knp_pagination_sortable(pagination, 'Phone', 'infos.preferredPhone') }}#}
-                {#{{ knp_pagination_sortable(pagination, 'Phone', 'request.phone') }}#}
-            {#</th>#}
+                <th>
+                    {{ knp_pagination_sortable(pagination, 'Person Away', 'infos.displayName') }}
+                </th>
             {% endif %}
 
             <th>{{ knp_pagination_sortable(pagination, 'Group', 'institution.name') }}</th>
@@ -193,26 +179,26 @@
                 <th>{{ knp_pagination_sortable(pagination, 'Date Status Changed', 'request.approvedRejectDate') }}</th>
             {% endif %}
 
-            <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', 'request.firstDayBackInOffice') }}</th>
-
-            {% if showUserInfo %}
-            {#Total prior approved away days this academic year#}
-            <th style="border-left: 2px solid gray;">
-                {#{{ knp_pagination_sortable(pagination, 'Business Travel', 'requestBusiness.numberOfDays') }}#}
-                Business Travel
-            </th>
-            <th>
-                {#{{ knp_pagination_sortable(pagination, 'Vacation', 'requestVacation.numberOfDays') }}#}
-                Vacation
-            </th>
+            {% if requestType != 'carryover' %}
+                <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', 'request.firstDayBackInOffice') }}</th>
             {% endif %}
 
-            {{ vacreqmacros.request_base_header( pagination, 'requestBusiness' ) }}
-            {#<th>{{ knp_pagination_sortable(pagination, 'Estimated Expenses', 'requestBusiness.expenses') }}</th>#}
-            {#<th>{{ knp_pagination_sortable(pagination, 'Description', 'requestBusiness.description') }}</th>#}
-            {#<th>{{ knp_pagination_sortable(pagination, 'Paid by Outside Organization', 'requestBusiness.paidByOutsideOrganization') }}</th>#}
+            {% if showUserInfo %}
+                {#Total prior approved away days this academic year#}
+                <th style="border-left: 2px solid gray;">
+                    Business Travel
+                </th>
+                <th>
+                    Vacation
+                </th>
+            {% endif %}
 
-            {{ vacreqmacros.request_base_header( pagination, 'requestVacation' ) }}
+            {% if requestType == 'carryover' %}
+                {{ vacreqmacros.request_carryover_base_header( pagination, 'request' ) }}
+            {% else %}
+                {{ vacreqmacros.request_base_header( pagination, 'requestBusiness' ) }}
+                {{ vacreqmacros.request_base_header( pagination, 'requestVacation' ) }}
+            {% endif %}
 
             <th style="border-left: 2px solid gray;">
                 {#Actions#}
@@ -225,20 +211,7 @@
 
             {% set entity = object['object'] %}
 
-            {#Set row color#}
-            {% set trclassname = "" %}
-            {#{% if entity.getOverallStatus() == 'pending' %}#}
-                {#{% set trclassname = "order-interviewee-status" %}#}
-            {#{% endif %}#}
-            {#{% if entity.getOverallStatus() == 'approved' %}#}
-                {#{% set trclassname = "info" %}#}
-            {#{% endif %}#}
-            {#{% if entity.getOverallStatus() == 'completed' %}#}
-                {#{% set trclassname = "order-neutral-status" %}#}
-            {#{% endif %}#}
-            {#EOF Set row color#}
-
-            <tr class="{{ trclassname }}">
+            <tr>
 
                 <td>
                     <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
@@ -247,67 +220,28 @@
                     {% endif %}
                 </td>
 
-                <td>
-                    {#2014-2015, 2015-2016#}
-                    {#{{ vacreq_util.getRequestAcademicYears(entity) }}#}
-                    {% for academicYear in vacreq_util.getRequestAcademicYears(entity) %}
-                        {{ academicYear }}
-                        {% if not loop.last %}<br>{% endif %}
-                    {% endfor %}
-                </td>
+                {% if requestType != 'carryover' %}
+                    <td>
+                        {#2014-2015, 2015-2016#}
+                        {% for academicYear in vacreq_util.getRequestAcademicYears(entity) %}
+                            {{ academicYear }}
+                            {% if not loop.last %}<br>{% endif %}
+                        {% endfor %}
+                    </td>
 
-                <td>
-                    {#{{ entity.getTotalDays() }}#}
-                    {{ object['thisRequestTotalDays'] }}
-                </td>
+                    <td>
+                        {{ object['thisRequestTotalDays'] }}
+                    </td>
+                {% endif %}
 
                 <td>{% if entity.createDate %}{{ entity.createDate|date('m/d/Y H:i:s') }}{% endif %}</td>
 
                 {% if showUserInfo %}
-                <td class="rowlink-skip">
-                    {% if entity.user %}
-                        {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.displayName() }}</a>#}
-                        {#{% set singleEmail = entity.user.getSingleEmail %}#}
-                        {#{% if singleEmail %}#}
-                            {#<a href="mailto:{{ singleEmail }}" target="_top"><span class="glyphicon glyphicon-envelope"></span></a>#}
-                        {#{% endif %}#}
-
-                        {{ vacreqmacros.personAwayInfo(entity.user,entity.phone,vacreq_sitename) }}
-                    {% endif %}
-                </td>
-
-                {#<td class="rowlink-skip">#}
-                    {#<div style="height: 60px; width: 60px;">#}
-                        {#{% if is_granted('ROLE_PLATFORM_DEMO') %}#}
-                            {#{% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
-                            {#<img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
-                        {#{% else %}#}
-                            {#{% if entity.user.avatar %}#}
-                                {#{{ usermacros.showDocumentAsImage(entity.user.avatar,'Avatar','') }}#}
-                            {#{% else %}#}
-                                {#{% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
-                                {#<img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
-                            {#{% endif %}#}
-                        {#{% endif %}#}
-                    {#</div>#}
-                {#</td>#}
-
-                {#<td>#}
-                    {#{% set singleEmail = entity.user.getSingleEmail %}#}
-                    {#{% if singleEmail %}#}
-                        {#<a href="mailto:{{ singleEmail }}" target="_top">{{ singleEmail }}</a>#}
-                    {#{% endif %}#}
-                {#</td>#}
-
-                {#<td class="rowlink-skip">#}
-                    {#{% set preferredPhone = entity.user.getPreferredPhone %}#}
-                    {#{% if preferredPhone %}#}
-                        {#{{ usermacros.phoneHref(preferredPhone) }}#}
-                    {#{% endif %}#}
-                    {#{% if entity.phone %}#}
-                        {#{{ usermacros.phoneHref(entity.phone) }}#}
-                    {#{% endif %}#}
-                {#</td>#}
+                    <td class="rowlink-skip">
+                        {% if entity.user %}
+                            {{ vacreqmacros.personAwayInfo(entity.user,entity.phone,vacreq_sitename) }}
+                        {% endif %}
+                    </td>
                 {% endif %}
 
                 <td>
@@ -324,11 +258,13 @@
                     </td>
                 {% endif %}
 
-                <td>
-                    {% if entity.firstDayBackInOffice %}
-                        {{ entity.firstDayBackInOffice|date('m/d/Y','UTC') }}
-                    {% endif %}
-                </td>
+                {% if requestType != 'carryover' %}
+                    <td>
+                        {% if entity.firstDayBackInOffice %}
+                            {{ entity.firstDayBackInOffice|date('m/d/Y','UTC') }}
+                        {% endif %}
+                    </td>
+                {% endif %}
 
                 {% if showUserInfo %}
                 {#Total prior approved away days this academic year#}
@@ -346,10 +282,12 @@
                 </td>
                 {% endif %}
 
-
-                {{ vacreqmacros.request_base_body( entity.requestBusiness, 'requestBusiness' )  }}
-
-                {{ vacreqmacros.request_base_body( entity.requestVacation, 'requestVacation' )  }}
+                {% if requestType == 'carryover' %}
+                    {{ vacreqmacros.request_carryover_base_body( entity, 'request' ) }}
+                {% else %}
+                    {{ vacreqmacros.request_base_body( entity.requestBusiness, 'requestBusiness' )  }}
+                    {{ vacreqmacros.request_base_body( entity.requestVacation, 'requestVacation' )  }}
+                {% endif %}
 
                 {#Action#}
                 <td class="rowlink-skip" style="border-left: 2px solid gray;">

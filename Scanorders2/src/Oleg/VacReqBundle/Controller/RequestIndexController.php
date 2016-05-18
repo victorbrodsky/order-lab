@@ -136,6 +136,7 @@ class RequestIndexController extends Controller
         $filterform = $filterRes['form'];
         $dqlParameters = $filterRes['dqlParameters'];
         $filtered = $filterRes['filtered'];
+        $requestType = $filterRes['requestType'];
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -144,7 +145,7 @@ class RequestIndexController extends Controller
             $query->setParameters( $dqlParameters );
         }
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
         //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
@@ -185,7 +186,8 @@ class RequestIndexController extends Controller
             'sitename' => $sitename,
             'filtered' => $filtered,
             'routename' => $routeName,
-            'title' => $indexTitle
+            'title' => $indexTitle,
+            'requestType' => $requestType
         );
     }
 
@@ -256,11 +258,12 @@ class RequestIndexController extends Controller
         if( $filterform->has('requestType') ) {
             $requestType = $filterform['requestType']->getData();
             //echo "requestType=".$requestType."<br>";
-            if( $requestType ) {
+            if( $requestType && $requestType->getAbbreviation() ) {
                 $requestTypeAbbreviation = $requestType->getAbbreviation();
             }
         }
-        //echo "requestTypeAbbreviation=".$requestTypeAbbreviation."<br>";
+        //echo "requestTypeAbbreviation=(".$requestTypeAbbreviation.")<br>";
+        //$dql->andWhere("requestType.abbreviation = '".$requestTypeAbbreviation."'");
         $dql->andWhere("requestType.abbreviation = :requestTypeAbbreviation");
         $dqlParameters['requestTypeAbbreviation'] = $requestTypeAbbreviation;
 
@@ -424,6 +427,8 @@ class RequestIndexController extends Controller
         $filterRes['form'] = $filterform;
         $filterRes['dqlParameters'] = $dqlParameters;
         $filterRes['filtered'] = $filtered;
+        $filterRes['requestType'] = $requestTypeAbbreviation;
+
 
         return $filterRes;
     }
