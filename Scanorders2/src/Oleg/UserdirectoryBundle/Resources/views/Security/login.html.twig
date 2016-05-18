@@ -101,6 +101,15 @@
                     return true;
                 });
 
+                //cursor would only be moved to the password field if the user name is non-empty
+                if( $('#display-username').val() ) {
+                    //console.log('focus password field');
+                    $('#password').focus();
+                } else {
+                    //console.log('focus username field');
+                    $('#display-username').focus();
+                }
+
             });
 
             //append usernametype to username

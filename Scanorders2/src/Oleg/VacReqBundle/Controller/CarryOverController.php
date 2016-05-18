@@ -29,66 +29,66 @@ class CarryOverController extends Controller
 {
 
 
-    /**
-     * @Route("/carry-over-request/review/{id}", name="vacreq_carryoverrequest_review")
-     * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:CarryOver:carryoverrequest.html.twig")
-     */
-    public function carryOverRequestReviewAction(Request $request, $id)
-    {
-
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        //$vacreqUtil = $this->get('vacreq_util');
-        exit('not implemented');
-
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
-
-        $userCarryOver = $em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
-
-        if( !$userCarryOver ) {
-            $userCarryOver = new VacReqUserCarryOver($subjectUser);
-        }
-
-        //add next year, current year, [Current -1], [Current -2]
-        $this->addCarryOverByYears($userCarryOver);
-
-        $cycle = 'edit';
-
-        $form = $this->createCarryOversForm($userCarryOver,$cycle,$request);
-
-        $form->handleRequest($request);
-
-        if( $form->isSubmitted() && $form->isValid() ) {
-
-            $em->persist($userCarryOver);
-            $em->flush();
-
-            //Event Log
-//            $eventType = "Business/Vacation Request Created";
-            $event = "Carry Over Days for ".$subjectUser." has been updated";
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
-
-            //Flash
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                $event
-            );
-
-            return $this->redirectToRoute('vacreq_mygroup');
-        }
-
-        return array(
-            'subjectUser' => $subjectUser,
-            'form' => $form->createView(),
-            'cycle' => $cycle,
-        );
-
-    }
+//    /**
+//     * @Route("/carry-over-request/review/{id}", name="vacreq_carryoverrequest_review")
+//     * @Method({"GET", "POST"})
+//     * @Template("OlegVacReqBundle:CarryOver:carryoverrequest.html.twig")
+//     */
+//    public function carryOverRequestReviewAction(Request $request, $id)
+//    {
+//
+//        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        //$vacreqUtil = $this->get('vacreq_util');
+//        exit('not implemented');
+//
+//        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+//
+//        $userCarryOver = $em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
+//
+//        if( !$userCarryOver ) {
+//            $userCarryOver = new VacReqUserCarryOver($subjectUser);
+//        }
+//
+//        //add next year, current year, [Current -1], [Current -2]
+//        $this->addCarryOverByYears($userCarryOver);
+//
+//        $cycle = 'edit';
+//
+//        $form = $this->createCarryOversForm($userCarryOver,$cycle,$request);
+//
+//        $form->handleRequest($request);
+//
+//        if( $form->isSubmitted() && $form->isValid() ) {
+//
+//            $em->persist($userCarryOver);
+//            $em->flush();
+//
+//            //Event Log
+////            $eventType = "Business/Vacation Request Created";
+//            $event = "Carry Over Days for ".$subjectUser." has been updated";
+////            $userSecUtil = $this->container->get('user_security_utility');
+////            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+//
+//            //Flash
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                $event
+//            );
+//
+//            return $this->redirectToRoute('vacreq_mygroup');
+//        }
+//
+//        return array(
+//            'subjectUser' => $subjectUser,
+//            'form' => $form->createView(),
+//            'cycle' => $cycle,
+//        );
+//
+//    }
 
 
 

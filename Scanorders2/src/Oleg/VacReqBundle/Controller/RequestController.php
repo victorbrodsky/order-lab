@@ -27,7 +27,7 @@ class RequestController extends Controller
      *
      * @Route("/", name="vacreq_home")
      * @Route("/new", name="vacreq_new")
-     * @Route("/carry-over-request/", name="vacreq_carryoverrequest")
+     * @Route("/carry-over-request/new", name="vacreq_carryoverrequest")
      *
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
@@ -52,6 +52,7 @@ class RequestController extends Controller
             //carryover request
             $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
             $title = "Request carry over of vacation days";
+            $eventType = "Carry Over Request Created";
 
             //set Source year (2015)
             $entity->setSourceYear( date("Y")-1 );
@@ -63,6 +64,7 @@ class RequestController extends Controller
             //business/vacation request
             $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
             $title = "Vacation/Business Travel Request";
+            $eventType = "Business/Vacation Request Created";
         }
         $entity->setRequestType($requestType);
 
@@ -104,8 +106,8 @@ class RequestController extends Controller
             $em->flush();
 
             //Event Log
-            $eventType = "Business/Vacation Request Created";
-            $event = "Request for ".$entity->getUser()." has been created";
+            $requestName = $entity->getRequestName();
+            $event = $requestName . " for ".$entity->getUser()." has been created";
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
@@ -119,9 +121,9 @@ class RequestController extends Controller
             $break = "\r\n";
 
             //set confirmation email to submitter and approver and email users
-            $subject = "Faculty Vacation/Business Request #".$entity->getId()." Confirmation";
+            $subject = $requestName." #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
-            $message .= "You have successfully submitted the pathology faculty vacation/business travel request.";
+            $message .= "You have successfully submitted the ".$requestName.".";
             $message .= "The division approver will review your request soon.";
             $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
             $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
@@ -346,29 +348,6 @@ class RequestController extends Controller
                 //set final (global) fields
                 $entity->setFinalFields();
 
-//                //remove sub requests if empty
-//                if( !$entity->hasBusinessRequest() ) {
-//                    echo "no business req => remove <br>";
-//                    $subRequestB = $entity->getRequestBusiness();
-//                    $entity->setRequestBusiness(null);
-//                    $em->remove($subRequestB);
-//                } else {
-//                    $subRequestB = $entity->getRequestBusiness();
-//                    echo "yes business req:".$subRequestB."<br>";
-//                    //$em->persist($subRequestB);
-//                    $em->persist($entity->getRequestBusiness());
-//                }
-//                if( !$entity->hasVacationRequest() ) {
-//                    $subRequestV = $entity->getRequestVacation();
-//                    $entity->setRequestVacation(null);
-//                    $em->remove($subRequestV);
-//                } else {
-//                    $subRequestV = $entity->getRequestVacation();
-//                    //$em->persist($subRequestV);
-//                    $em->persist($entity->getRequestVacation());
-//                }
-                //exit('1');
-
                 //echo "0 business req=".$entity->getRequestBusiness()."<br>";
                 //exit('1');
 
@@ -378,7 +357,12 @@ class RequestController extends Controller
                 //exit('1');
 
                 $action = "updated";
-                $eventType = 'Business/Vacation Request Updated';
+
+                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                    $eventType = 'Carry Over Request Updated';
+                } else {
+                    $eventType = 'Business/Vacation Request Updated';
+                }
             }
 
             if( $action == 'pending' ) {
@@ -457,7 +441,7 @@ class RequestController extends Controller
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
         if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
+            throw $this->createNotFoundException('Unable to find Request by id='.$id);
         }
 
         if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
@@ -502,8 +486,13 @@ class RequestController extends Controller
 
                 $entity->setEntireStatus($status);
 
-                if( $status != 'canceled' && $status != 'pending' ) {
-                    $status = 'completed';
+                if( $entity->getRequestType()->getAbbreviation() == "business-vacation" ) {
+                    if ($status != 'canceled' && $status != 'pending') {
+                        $status = 'completed';
+                    }
+                }
+                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                    //exit("status=".$status);
                 }
 
                 $entity->setStatus($status);
@@ -522,15 +511,21 @@ class RequestController extends Controller
                 if( $status == 'pending' ) {
                     $statusStr = 'set to Pending';
                 }
-                $event = ucwords($requestName)." Request ID " . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
+                $event = ucwords($requestName)." ID " . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     $event
                 );
 
+                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                    $eventType = 'Carry Over Request Updated';
+                } else {
+                    $eventType = 'Business/Vacation Request Updated';
+                }
+
                 //Event Log
                 $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $entity, $request, 'Business/Vacation Request Updated');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
 
                 //send respond confirmation email to a submitter
                 $vacreqUtil = $this->get('vacreq_util');
@@ -548,18 +543,13 @@ class RequestController extends Controller
 
         }
 
-//        $url = $request->headers->get('referer');
-//        //exit('url='.$url);
-//
-//        //return $this->redirectToRoute('vacreq_home');
-//        //return $this->redirect($this->generateUrl('vacreq_home', $request->query->all()));
-//
-//        if( $url ) {
-//            return $this->redirect($url);
-//        } else {
-//            //return $this->redirectToRoute('vacreq_approvers');
-//            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
-//        }
+        $url = $request->headers->get('referer');
+        //exit('url='.$url);
+
+        //when status is changed from email, then the url is a system home page
+        if( $url && strpos($url, 'incoming-requests') !== false ) {
+            return $this->redirect($url);
+        }
 
         //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
         return $this->redirectToRoute('vacreq_incomingrequests');

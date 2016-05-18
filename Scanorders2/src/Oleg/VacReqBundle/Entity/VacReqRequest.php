@@ -914,22 +914,36 @@ class VacReqRequest
     }
 
     public function getRequestName() {
-        $name = "";
-        if( $this->hasBusinessRequest() ) {
-            $name = "Business Travel";
+
+        $requestType = $this->getRequestType();
+
+        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+            $name = $this->getRequestType() . "";
+            return $name;
         }
 
-        if( $this->hasVacationRequest() ) {
-            if( $name ) {
-                $name = $name . " and ";
+        if( $requestType && $requestType->getAbbreviation() == "business-vacation" ) {
+            $name = "";
+            if ($this->hasBusinessRequest()) {
+                $name = "Business Travel";
             }
-            $name = $name . "Vacation";
+
+            if ($this->hasVacationRequest()) {
+                if ($name) {
+                    $name = $name . " and ";
+                }
+                $name = $name . "Vacation";
+            }
+
+            if ($name) {
+                $name = $name . " ";
+            }
+            $name = $name . "Request";
+
+            return $name;
         }
-//        if( $name ) {
-//            $name = $name . " ";
-//        }
-//        $name = $name . "Request";
-        return $name;
+
+        return "Request";
     }
 
     public function getEmergencyConatcs() {

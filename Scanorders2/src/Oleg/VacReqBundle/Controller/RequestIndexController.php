@@ -136,7 +136,7 @@ class RequestIndexController extends Controller
         $filterform = $filterRes['form'];
         $dqlParameters = $filterRes['dqlParameters'];
         $filtered = $filterRes['filtered'];
-        $requestType = $filterRes['requestType'];
+        $requestTypeAbbreviation = $filterRes['requestTypeAbbreviation'];
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -173,6 +173,13 @@ class RequestIndexController extends Controller
         //exit('1');
 
         $indexTitle = $params['title'];
+        if( $requestTypeAbbreviation == "carryover" ) {
+            if( $routeName == "vacreq_incomingrequests" ) {
+                $indexTitle = "Incoming Carry Over Requests";
+            } else {
+                $indexTitle = "My Carry Over Requests";
+            }
+        }
 
         if( $pagination->getTotalItemCount() > 0 ) {
             $paginationData = $pagination->getPaginationData();
@@ -187,7 +194,7 @@ class RequestIndexController extends Controller
             'filtered' => $filtered,
             'routename' => $routeName,
             'title' => $indexTitle,
-            'requestType' => $requestType
+            'requestTypeAbbreviation' => $requestTypeAbbreviation
         );
     }
 
@@ -250,6 +257,7 @@ class RequestIndexController extends Controller
             if (!$requestType) {
                 throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
             }
+            //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
             $params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
         }
 
@@ -450,7 +458,7 @@ class RequestIndexController extends Controller
         $filterRes['form'] = $filterform;
         $filterRes['dqlParameters'] = $dqlParameters;
         $filterRes['filtered'] = $filtered;
-        $filterRes['requestType'] = $requestTypeAbbreviation;
+        $filterRes['requestTypeAbbreviation'] = $requestTypeAbbreviation;
 
 
         return $filterRes;

@@ -25,6 +25,16 @@ class VacReqFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $builder->add('requestType', 'entity', array(
+            'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
+            'property' => 'name',
+            'label' => false,
+            'required' => true,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Request Type'),
+            //'choices' => $this->params['filterUsers'],
+        ));
+
         if ($this->params['filterShowUser']) {
             $builder->add('user', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
@@ -48,15 +58,15 @@ class VacReqFilterType extends AbstractType
 
             $this->addGroup($builder);
         } else {
-            $builder->add('requestType', 'entity', array(
-                'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
-                'property' => 'name',
-                'label' => false,
-                'required' => true,
-                'multiple' => false,
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Request Type'),
-                //'choices' => $this->params['filterUsers'],
-            ));
+//            $builder->add('requestType', 'entity', array(
+//                'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
+//                'property' => 'name',
+//                'label' => false,
+//                'required' => true,
+//                'multiple' => false,
+//                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Request Type'),
+//                //'choices' => $this->params['filterUsers'],
+//            ));
         }
 
         if( $this->params['requestTypeAbbreviation'] == "business-vacation" ) {

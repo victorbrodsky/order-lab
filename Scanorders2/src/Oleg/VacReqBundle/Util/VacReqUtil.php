@@ -267,7 +267,7 @@ class VacReqUtil
         if( $requestName ) {
             $message .= "Your ".$requestName." Request";
         } else {
-            $message .= "Your ".$entity->getRequestName()." Request";   //"Your request";
+            $message .= "Your ".$entity->getRequestName();   //"Your request";
         }
 
         if ($status == 'pending') {
