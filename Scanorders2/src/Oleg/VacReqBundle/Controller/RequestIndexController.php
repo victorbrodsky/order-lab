@@ -240,6 +240,19 @@ class RequestIndexController extends Controller
         $academicYearTooltip = "Academic Year Start (for ".$yearRange.", pick ".$previousYear.")";
         $params['academicYearTooltip'] = $academicYearTooltip;
 
+        //get request type
+        $params['requestTypeAbbreviation'] = "business-vacation";
+        $requestParams = $request->query->all();
+        $requestTypeId = $requestParams["filter"]["requestType"];
+        //echo "requestTypeId=".$requestTypeId."<br>";
+        if( $requestTypeId ) {
+            $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
+            if (!$requestType) {
+                throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
+            }
+            $params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
+        }
+
         //create filter form
         $filterform = $this->createForm(new VacReqFilterType($params), null);
 
@@ -291,10 +304,20 @@ class RequestIndexController extends Controller
         } else {
             $academicYear = null;
         }
-        ////////////// EOF Optional filters //////////////
 
-        $vacationRequest = $filterform['vacationRequest']->getData();
-        $businessRequest = $filterform['businessRequest']->getData();
+        if( $filterform->has('vacationRequest') ) {
+            $vacationRequest = $filterform['vacationRequest']->getData();
+        } else {
+            $vacationRequest = null;
+        }
+
+        if( $filterform->has('businessRequest') ) {
+            $businessRequest = $filterform['businessRequest']->getData();
+        } else {
+            $businessRequest = null;
+        }
+        ////////////// EOF Optional filters //////////////
+        
 
         //$completed = $filterform['completed']->getData();
         $completed = null;

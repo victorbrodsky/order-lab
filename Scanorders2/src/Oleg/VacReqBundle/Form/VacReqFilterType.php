@@ -25,7 +25,7 @@ class VacReqFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( $this->params['filterShowUser'] ) {
+        if ($this->params['filterShowUser']) {
             $builder->add('user', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'property' => 'getUserNameStr',
@@ -59,13 +59,15 @@ class VacReqFilterType extends AbstractType
             ));
         }
 
-        $builder->add('academicYear', 'datetime', array(
-            'label' => false,
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'yyyy',
-            'attr' => array('class'=>'datepicker-only-year form-control', 'placeholder' => 'Academic Year', 'title'=>$this->params['academicYearTooltip'], 'data-toggle'=>'tooltip'),
-        ));
+        if( $this->params['requestTypeAbbreviation'] == "business-vacation" ) {
+            $builder->add('academicYear', 'datetime', array(
+                'label' => false,
+                'widget' => 'single_text',
+                'required' => false,
+                'format' => 'yyyy',
+                'attr' => array('class' => 'datepicker-only-year form-control', 'placeholder' => 'Academic Year', 'title' => $this->params['academicYearTooltip'], 'data-toggle' => 'tooltip'),
+            ));
+        }
 
 //        $builder->add('cwid', 'text', array(
 //            'required' => false,
@@ -103,14 +105,16 @@ class VacReqFilterType extends AbstractType
 //            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder' => 'Year'),
 //        ));
 
-        $builder->add('vacationRequest', 'checkbox', array(
-            'label' => 'Vacation Requests',
-            'required' => false,
-        ));
-        $builder->add('businessRequest', 'checkbox', array(
-            'label' => 'Business Travel Requests',
-            'required' => false,
-        ));
+        if( $this->params['requestTypeAbbreviation'] == "business-vacation" ) {
+            $builder->add('vacationRequest', 'checkbox', array(
+                'label' => 'Vacation Requests',
+                'required' => false,
+            ));
+            $builder->add('businessRequest', 'checkbox', array(
+                'label' => 'Business Travel Requests',
+                'required' => false,
+            ));
+        }
 
 //        $builder->add('completed', 'checkbox', array(
 //            'label' => 'Completed Requests',
