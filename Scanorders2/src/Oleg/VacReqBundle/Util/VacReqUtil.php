@@ -1083,7 +1083,7 @@ class VacReqUtil
 
     public function getSubmittersFromSubmittedRequestsByGroup( $groupId ) {
 
-        //TODO: this might optomized to get user objects in one query. groupBy does not work in MSSQL.
+        //TODO: this might optimized to get user objects in one query. groupBy does not work in MSSQL.
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
         //$dql->select('request');
@@ -1128,6 +1128,14 @@ class VacReqUtil
         return $submitters;
     }
 
+    public function hasPartialRoleNameAndGroup( $rolePartialName, $institutionId=null ) {
+        if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return true;
+        }
+        $user = $this->sc->getToken()->getUser();
+        $sitename = "vacreq";
+        return $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$rolePartialName,$institutionId);
+    }
 
     public function getSubmitterPhone($user) {
 

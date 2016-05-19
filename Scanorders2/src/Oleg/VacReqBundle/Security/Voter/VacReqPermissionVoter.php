@@ -101,8 +101,19 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
     private function hasApproverRoleInstitution($subject,$user) {
         //get approver role for subject institution
         if( $subject->getInstitution() ) {
+
+            $requestTypeAbbreviation = $subject->getRequestType()->getAbbreviation();
+
+            if( $requestTypeAbbreviation == "business-vacation" ) {
+                $roleSubStr = "ROLE_VACREQ_APPROVER_";
+            }
+
+            if( $requestTypeAbbreviation == "carryover" ) {
+                $roleSubStr = "ROLE_VACREQ_SUPERVISOR_";
+            }
+
             $approverRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
-                findUserRolesBySiteAndPartialRoleName($user, "vacreq", "ROLE_VACREQ_APPROVER_", $subject->getInstitution()->getId() );
+                findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, $subject->getInstitution()->getId() );
             if( count($approverRoles) > 0 ) {
                 return true;
             }

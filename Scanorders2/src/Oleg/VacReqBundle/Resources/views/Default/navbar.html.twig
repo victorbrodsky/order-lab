@@ -75,7 +75,7 @@
                         </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_VACREQ_ADMIN') %}
+                    {% if is_granted('ROLE_VACREQ_APPROVER') %}
                         <li id="nav-bar-approvers" class="divider-vertical">
                             <a href="{{ path('vacreq_approvers') }}">
                                 Manage Groups

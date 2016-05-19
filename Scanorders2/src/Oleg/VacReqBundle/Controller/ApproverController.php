@@ -136,7 +136,7 @@ class ApproverController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         //find role approvers by institution
         $approvers = array();
@@ -147,6 +147,18 @@ class ApproverController extends Controller
             $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName");
         }
         //echo "approvers=".count($approvers)."<br>";
+
+        //if current logged in user not in approver => no permission
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( $user->isInUserArray( $approvers ) == false ) {
+                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+            }
+        }
+        //testing
+        $vacreqUtil = $this->get('vacreq_util');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $institutionId) == false) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
 
         //find role submitters by institution
         $submitters = array();
@@ -159,11 +171,21 @@ class ApproverController extends Controller
 
         $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
 
+        $roleApproverId = null;
+        if( $roleApprover ) {
+            $roleApproverId = $roleApprover->getId();
+        }
+
+        $roleSubmitterId = null;
+        if( $roleSubmitter ) {
+            $roleSubmitterId = $roleSubmitter->getId();
+        }
+
         return array(
             'approvers' => $approvers,
-            'approverRoleId' => $roleApprover->getId(),
+            'approverRoleId' => $roleApproverId,
             'submitters' => $submitters,
-            'submitterRoleId' => $roleSubmitter->getId(),
+            'submitterRoleId' => $roleSubmitterId,
             'organizationalGroupId' => $institutionId,
             'organizationalGroupName' => $organizationalGroupInstitution.""
         );
@@ -189,7 +211,12 @@ class ApproverController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //check if logged in user has approver role for $instid
+        $vacreqUtil = $this->get('vacreq_util');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $instid) == false) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
 
         if( !$subjectUser ) {
@@ -254,6 +281,12 @@ class ApproverController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
+
+        //check if logged in user has approver role for $instid
+        $vacreqUtil = $this->get('vacreq_util');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $instid) == false) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
 
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
         if( !$subjectUser ) {
@@ -320,6 +353,12 @@ class ApproverController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
+        //check if logged in user has approver role for $instid
+        $vacreqUtil = $this->get('vacreq_util');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $instid) == false) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
@@ -380,9 +419,13 @@ class ApproverController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //echo " => userId=".$id."<br>";
-
         $em = $this->getDoctrine()->getManager();
+
+        //check if logged in user has approver role for $instid
+        $vacreqUtil = $this->get('vacreq_util');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $instid) == false) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
 
         $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
 
@@ -536,7 +579,7 @@ class ApproverController extends Controller
     public function addGroupAction(Request $request )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 

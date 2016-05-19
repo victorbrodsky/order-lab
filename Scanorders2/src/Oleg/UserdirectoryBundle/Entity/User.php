@@ -1664,6 +1664,14 @@ class User extends BaseUser {
         return null;
     }
 
+    public function isInUserArray( $users ) {
+        foreach( $users as $user ) {
+            if( $user->getId() == $this->getId() ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     /////////////////////// Return: Chief, Eyebrow Pathology ///////////////////////

@@ -29,7 +29,9 @@
     {% endfor %}
 
 
-    <a class="btn-sm btn-warning" href="{{ path('vacreq_group_add') }}">Add Group</a>
+    {% if is_granted('ROLE_VACREQ_ADMIN') %}
+        <a class="btn-sm btn-warning" href="{{ path('vacreq_group_add') }}">Add Group</a>
+    {% endif %}
 
 
 {% endblock %}

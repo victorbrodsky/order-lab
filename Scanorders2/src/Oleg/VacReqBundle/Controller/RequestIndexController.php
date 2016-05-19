@@ -235,18 +235,6 @@ class RequestIndexController extends Controller
 
         $params['em'] = $em;
 
-        //institutional group
-        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser);
-        $params['organizationalInstitutions'] = $organizationalInstitutions;
-
-        //tooltip for Academic Year:
-        //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
-        $previousYear = date("Y") - 1;
-        $currentYear = date("Y");
-        $yearRange = $previousYear."-".$currentYear;
-        $academicYearTooltip = "Academic Year Start (for ".$yearRange.", pick ".$previousYear.")";
-        $params['academicYearTooltip'] = $academicYearTooltip;
-
         //get request type
         $params['requestTypeAbbreviation'] = "business-vacation";
         $requestParams = $request->query->all();
@@ -260,6 +248,18 @@ class RequestIndexController extends Controller
             //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
             $params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
         }
+
+        //institutional group
+        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser, $params['requestTypeAbbreviation']);
+        $params['organizationalInstitutions'] = $organizationalInstitutions;
+
+        //tooltip for Academic Year:
+        //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
+        $previousYear = date("Y") - 1;
+        $currentYear = date("Y");
+        $yearRange = $previousYear."-".$currentYear;
+        $academicYearTooltip = "Academic Year Start (for ".$yearRange.", pick ".$previousYear.")";
+        $params['academicYearTooltip'] = $academicYearTooltip;
 
         //create filter form
         $filterform = $this->createForm(new VacReqFilterType($params), null);
