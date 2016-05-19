@@ -334,8 +334,7 @@
 
 {% macro incomingRequestHref( days, user, yearRange, groupId, approved, requestType, vacreq_sitename ) %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-{#TODO: fix request type#}
-    {% if days > 0 %}
+    {#{% if days > 0 %}#}
 
         {% if requestType == "businessRequest" %}
             {% set pathParams =
@@ -386,13 +385,13 @@
             {#{{ days }}#}
         {#</a>#}
 
-        <a href="{{ path(vacreq_sitename~'_incomingrequests',pathParams) }}">
+        <a href="{{ path(vacreq_sitename~'_incomingrequests',pathParams) }}" target="_blank">
             {{ days }}
         </a>
 
-    {% else %}
-        {{ days }}
-    {% endif %}
+    {#{% else %}#}
+        {#{{ days }}#}
+    {#{% endif %}#}
 
 {% endmacro %}
 
