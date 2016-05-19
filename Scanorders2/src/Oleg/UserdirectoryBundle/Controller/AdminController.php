@@ -787,7 +787,13 @@ class AdminController extends Controller
                 "Can search and approve vacation requests for specified service",
                 50
             ),
-//
+
+            "ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY" => array(
+                "Supervisor - WCMC Pathology Department",
+                "Can search and approve carry over requests for Department of Pathology and Laboratory Medicine(WCMC)",
+                40
+            ),
+
 //            "ROLE_VACREQ_SUBMITTER" => array(
 //                "Vacation Request Submitter",
 //                "Can submit a vacation request",
@@ -1010,6 +1016,9 @@ class AdminController extends Controller
         //DERMATOPATHOLOGY (Dr. Cynthia Magro): Dermatopathology
         $this->vacreqRoleSetSingleUserInstitution($entity,"DERMATOPATHOLOGY",$wcmc,"Dermatopathology","cym2003");
 
+        //SUPERVISOR (Sara Lynch, sal2026@med.cornell.edu): Pathology and Laboratory Medicine
+        $this->vacreqRoleSetSingleUserInstitution($entity,"SUPERVISOR",$wcmc,"Pathology and Laboratory Medicine","sal2026");
+
         return 0;
     }
     //Assign Institution to a Role Object
@@ -1036,6 +1045,22 @@ class AdminController extends Controller
                 if( $approver ) {
                     $approver->addRole($entity);
                     $em->flush($approver);
+                    //echo "user found by cwid=".$cwid."<br>";
+                } else {
+                    //exit("user not found by cwid=".$cwid);
+                }
+            }
+
+            //assign SUPERVISOR
+            if( $cwid && strpos($role,"ROLE_VACREQ_SUPERVISOR") !== false ) {
+                $supervisor = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+                //echo "supervisor=".$supervisor."<br>";
+                if( $supervisor ) {
+                    $supervisor->addRole($entity);
+                    $em->flush($supervisor);
+                    //echo "user found by cwid=".$cwid."<br>";
+                } else {
+                    //exit("user not found by cwid=".$cwid);
                 }
             }
 
@@ -4370,7 +4395,7 @@ class AdminController extends Controller
             "View a Fellowship Application",
 
             "Submit a Vacation Request",
-            "Approve a Vacation Request"
+            "Approve a Vacation Request",
         );
 
         $count = 10;
@@ -4757,6 +4782,11 @@ class AdminController extends Controller
         //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create"
         if( strpos($role, "ROLE_VACREQ_SUBMITTER") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
+        }
+
+        //ROLE_VACREQ_SUPERVISOR: permission="Approve a Vacation Request", object="VacReqRequest", action="create","changestatus"
+        if( strpos($role, "ROLE_VACREQ_SUPERVISOR") !== false ) {
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
         }
 
         return $count;

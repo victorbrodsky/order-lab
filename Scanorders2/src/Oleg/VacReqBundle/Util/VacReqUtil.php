@@ -1002,22 +1002,29 @@ class VacReqUtil
 
     //get user's organizational group
     //get institution from user submitter role (?)
-    public function getVacReqOrganizationalInstitutions( $user, $asObject=false )
+    public function getVacReqOrganizationalInstitutions( $user, $requestTypeAbbreviation="business-vacation", $asObject=false )
     {
 
         $institutions = array();
 
+        if( $requestTypeAbbreviation == "business-vacation" ) {
+            $requestRoleSubStr = "ROLE_VACREQ_SUBMITTER";
+        }
+        if( $requestTypeAbbreviation == "carryover" ) {
+            $requestRoleSubStr = "ROLE_VACREQ_SUPERVISOR";
+        }
+
         //get vacreq submitter role
         if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
             //find all submitter role's institution
-            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER");
+            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
         } else {
-            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", "ROLE_VACREQ_SUBMITTER");
+            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $requestRoleSubStr);
         }
 
         if( count($submitterRoles) == 0 ) {
             //find all submitter role's institution
-            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER");
+            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
         }
         //echo "1 roles count=".count($submitterRoles)."<br>";
 

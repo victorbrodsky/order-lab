@@ -583,10 +583,14 @@ class RequestController extends Controller
             $roleApprover = true;
         }
 
+        $requestType = $entity->getRequestType();
 
         //organizationalInstitution
-        //$organizationalInstitutions = $em->getRepository('OlegUserdirectoryBundle:User')->findVacReqOrganizationalInstitution($user);
-        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user);
+        if( $requestType->getAbbreviation() == "carryover" ) {
+            $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,"carryover");
+        } else {
+            $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user);
+        }
 
         //get holidays url
         $userSecUtil = $this->container->get('user_security_utility');
@@ -633,7 +637,7 @@ class RequestController extends Controller
             }
         }
 
-        $params['requestType'] = $entity->getRequestType();
+        $params['requestType'] = $requestType;
 
         $form = $this->createForm(
             new VacReqRequestType($params),
