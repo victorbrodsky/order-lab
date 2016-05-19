@@ -4775,7 +4775,7 @@ class AdminController extends Controller
 
         //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create","changestatus"
         if( strpos($role, "ROLE_VACREQ_APPROVER") !== false ) {
-            //$count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
         }
 
@@ -4786,6 +4786,7 @@ class AdminController extends Controller
 
         //ROLE_VACREQ_SUPERVISOR: permission="Approve a Vacation Request", object="VacReqRequest", action="create","changestatus"
         if( strpos($role, "ROLE_VACREQ_SUPERVISOR") !== false ) {
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
         }
 
