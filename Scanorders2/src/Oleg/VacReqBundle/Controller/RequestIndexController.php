@@ -64,7 +64,7 @@ class RequestIndexController extends Controller
     public function incomingRequestsAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -250,7 +250,14 @@ class RequestIndexController extends Controller
         }
 
         //institutional group
+//        if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+//            $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser, $params['requestTypeAbbreviation']);
+//        } else {
+//
+//        }
         $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser, $params['requestTypeAbbreviation']);
+
+
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 
         //tooltip for Academic Year:
@@ -260,6 +267,11 @@ class RequestIndexController extends Controller
         $yearRange = $previousYear."-".$currentYear;
         $academicYearTooltip = "Academic Year Start (for ".$yearRange.", pick ".$previousYear.")";
         $params['academicYearTooltip'] = $academicYearTooltip;
+
+        $params['routeName'] = $request->get('_route');
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $params['supervisor'] = $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_SUPERVISOR');
 
         //create filter form
         $filterform = $this->createForm(new VacReqFilterType($params), null);

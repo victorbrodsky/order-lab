@@ -59,7 +59,7 @@
                         </a>
                     </li>
 
-                    {% if is_granted('ROLE_VACREQ_APPROVER') %}
+                    {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                         <li id="nav-bar-incomingrequests" class="divider-vertical">
                             <a href="{{ path('vacreq_incomingrequests') }}">
                                 Incoming Requests
@@ -67,7 +67,7 @@
                         </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_VACREQ_APPROVER') %}
+                    {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                         <li id="nav-bar-mygroup" class="divider-vertical">
                             <a href="{{ path('vacreq_mygroup') }}">
                                 My Group
@@ -75,7 +75,7 @@
                         </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_VACREQ_APPROVER') %}
+                    {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                         <li id="nav-bar-approvers" class="divider-vertical">
                             <a href="{{ path('vacreq_approvers') }}">
                                 Manage Groups
@@ -117,10 +117,8 @@
                             <li><a href="{{ path(vacreq_sitename~'_accessrequest_list') }}">Access Requests</a></li>
                             <li><a href="{{ path(vacreq_sitename~'_authorized_users') }}">Authorized Users</a></li>
 
-                            {% if is_granted('ROLE_DEIDENTIFICATOR_ADMIN') %}
-                                <li class="divider"></li>
-                                <li><a href="{{ path(vacreq_sitename~'_logger') }}">Event Log</a></li>
-                            {% endif %}
+                            <li class="divider"></li>
+                            <li><a href="{{ path(vacreq_sitename~'_logger') }}">Event Log</a></li>
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <li><a href="{{ path(vacreq_sitename~'_siteparameters') }}">Site Settings</a></li>

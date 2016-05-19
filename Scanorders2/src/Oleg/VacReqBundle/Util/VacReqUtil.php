@@ -1001,7 +1001,8 @@ class VacReqUtil
     }
 
     //get user's organizational group
-    //get institution from user submitter role (?)
+    //get only institutions from the same institutional tree:
+    //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
     public function getVacReqOrganizationalInstitutions( $user, $requestTypeAbbreviation="business-vacation", $asObject=false )
     {
 
@@ -1037,6 +1038,9 @@ class VacReqUtil
             //echo "submitterRole=".$submitterRole."<br>";
             $institution = $submitterRole->getInstitution();
             if( $institution ) {
+
+                //TODO: get only institutions from the same institutional tree:
+                //TODO: if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
 
                 if( $asObject ) {
                     $institutions[] = $institution;

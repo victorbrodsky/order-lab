@@ -74,7 +74,10 @@ class ApproverController extends Controller
     public function organizationalInstitutionAction(Request $request, $institutionId)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -154,11 +157,11 @@ class ApproverController extends Controller
                 return $this->redirect( $this->generateUrl('vacreq-nopermission') );
             }
         }
-        //testing
-        $vacreqUtil = $this->get('vacreq_util');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $institutionId) == false) {
-            return $this->redirect($this->generateUrl('vacreq-nopermission'));
-        }
+//        //testing
+//        $vacreqUtil = $this->get('vacreq_util');
+//        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $institutionId) == false) {
+//            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//        }
 
         //find role submitters by institution
         $submitters = array();
@@ -914,7 +917,8 @@ class ApproverController extends Controller
     public function myGroupAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
             false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -970,7 +974,8 @@ class ApproverController extends Controller
     public function mySingleGroupAction(Request $request, $groupId)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
             false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -979,15 +984,7 @@ class ApproverController extends Controller
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
 
-        //TODO: find submitters from submitted requests for this group. Don't use a submitter role, because the role might be removed
         //find role submitters by institution
-//        $submitters = array();
-//        $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $groupId);
-//        $roleSubmitter = $roleSubmitters[0];
-//        //echo "roleSubmitter=".$roleSubmitter."<br>";
-//        if( $roleSubmitter ) {
-//            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName");
-//        }
         $submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
 
         $group = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);

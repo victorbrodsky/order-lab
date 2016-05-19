@@ -25,15 +25,18 @@ class VacReqFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('requestType', 'entity', array(
-            'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
-            'property' => 'name',
-            'label' => false,
-            'required' => true,
-            'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Request Type'),
-            //'choices' => $this->params['filterUsers'],
-        ));
+        //visible only for my request and incoming requests for SUPERVISOR users
+        if( $this->params['routeName'] == 'vacreq_myrequests' || $this->params['supervisor'] ) {
+            $builder->add('requestType', 'entity', array(
+                'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
+                'property' => 'name',
+                'label' => false,
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Request Type'),
+                //'choices' => $this->params['filterUsers'],
+            ));
+        }
 
         if ($this->params['filterShowUser']) {
             $builder->add('user', 'entity', array(
