@@ -90,7 +90,9 @@
                 </td>
 
                 <td style="background-color: {{ backgroundColor }}">
-                    {{ businessDays + vacationDays }}
+                    {#{{ businessDays + vacationDays }}#}
+                    {% set totalDays = businessDays + vacationDays %}
+                    {{ vacreqmacros.incomingRequestHref( totalDays, submitter, yearRange, groupId, 1, 'businessRequest-vacationRequest', vacreq_sitename ) }}
                     {% if not businessAccurate and not vacationAccurate %}
                         <span data-toggle="tooltip" title="The result might be inaccurate due to academic year overlap">*</span>
                     {% endif %}

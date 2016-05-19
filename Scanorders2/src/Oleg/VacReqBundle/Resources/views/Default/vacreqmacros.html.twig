@@ -337,15 +337,56 @@
 {#TODO: fix request type#}
     {% if days > 0 %}
 
-        <a href="{{ path(vacreq_sitename~'_incomingrequests',
-            {
-                'filter[user]':user.id,
-                'filter[academicYear]':yearRange,
-                'filter[organizationalInstitutions]':groupId,
-                'filter[approved]':approved,
-                'filter[vacationRequest]':1
-            }
-        ) }}">
+        {% if requestType == "businessRequest" %}
+            {% set pathParams =
+                {
+                    'filter[user]':user.id,
+                    'filter[academicYear]':yearRange,
+                    'filter[organizationalInstitutions]':groupId,
+                    'filter[approved]':approved,
+                    'filter[businessRequest]':1
+                }
+            %}
+        {% endif %}
+
+        {% if requestType == "vacationRequest" %}
+            {% set pathParams =
+                {
+                    'filter[user]':user.id,
+                    'filter[academicYear]':yearRange,
+                    'filter[organizationalInstitutions]':groupId,
+                    'filter[approved]':approved,
+                    'filter[vacationRequest]':1
+                }
+            %}
+        {% endif %}
+
+        {% if requestType == "businessRequest-vacationRequest" %}
+            {% set pathParams =
+                {
+                    'filter[user]':user.id,
+                    'filter[academicYear]':yearRange,
+                    'filter[organizationalInstitutions]':groupId,
+                    'filter[approved]':approved,
+                    'filter[businessRequest]':1,
+                    'filter[vacationRequest]':1
+                }
+            %}
+        {% endif %}
+
+        {#<a href="{{ path(vacreq_sitename~'_incomingrequests',#}
+            {#{#}
+                {#'filter[user]':user.id,#}
+                {#'filter[academicYear]':yearRange,#}
+                {#'filter[organizationalInstitutions]':groupId,#}
+                {#'filter[approved]':approved,#}
+                {#requestTypeFilter:1#}
+            {#}#}
+        {#) }}">#}
+            {#{{ days }}#}
+        {#</a>#}
+
+        <a href="{{ path(vacreq_sitename~'_incomingrequests',pathParams) }}">
             {{ days }}
         </a>
 

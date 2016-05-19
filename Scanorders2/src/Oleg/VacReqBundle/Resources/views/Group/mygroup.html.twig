@@ -17,7 +17,7 @@
     </div>
 
     {% for group in groups %}
-        {#group: {{ group.name }}#}
+        group: {{ group.name }}
         <p>
             {{ render(controller('OlegVacReqBundle:Approver:mySingleGroup', { 'groupId': group.id })) }}
         </p>

@@ -884,7 +884,7 @@ class ApproverController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
 
         //find groups
-        $groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,true);
+        $groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,"business-vacation",true);
         //echo "groups=".count($groups)."<br>";
 
 //        if( count($groups) == 0 ) {
