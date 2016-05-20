@@ -104,48 +104,6 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         //get approver role for subject institution
         if( $subject->getInstitution() ) {
 
-//            $requestTypeAbbreviation = $subject->getRequestType()->getAbbreviation();
-//            if( $requestTypeAbbreviation == "business-vacation" ) {
-//                $roleSubStr = "ROLE_VACREQ_APPROVER_";
-//
-//                $approverRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
-//                findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, $subject->getInstitution()->getId() );
-//                if( count($approverRoles) > 0 ) {
-//                    return true;
-//                }
-//            }
-
-//            if( $requestTypeAbbreviation == "carryover" ) {
-
-//                //deny if role is not SUPERVISOR
-//                if( $this->decisionManager->decide($token, array("ROLE_VACREQ_SUPERVISOR")) == false ) {
-//                    exit('not supervisor');
-//                    return false;
-//                }
-//
-//                //get user allowed groups
-//                $vacreqUtil = $this->container->get('vacreq_util');
-//                $groupParams = array(
-//                    'roleSubStrArr' => array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'),
-//                    'asObject' => true
-//                );
-//                $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
-//
-//                //check if subject has at least one of the $groupInstitutions
-//                foreach( $groupInstitutions as $inst ) {
-//                    if( $inst->getId() == $subject->getInstitution()->getId() ) {
-//                        return true;
-//                    }
-//                }
-
-//            }
-
-            //deny if role is not SUPERVISOR
-//            if( $this->decisionManager->decide($token, array("ROLE_VACREQ_SUPERVISOR")) == false ) {
-//                exit('not supervisor');
-//                return false;
-//            }
-
             //get user allowed groups
             $vacreqUtil = $this->container->get('vacreq_util');
             $groupParams = array(
@@ -161,11 +119,6 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
                 }
             }
 
-//            $approverRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
-//                findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, $subject->getInstitution()->getId() );
-//            if( count($approverRoles) > 0 ) {
-//                return true;
-//            }
         }
         return false;
     }

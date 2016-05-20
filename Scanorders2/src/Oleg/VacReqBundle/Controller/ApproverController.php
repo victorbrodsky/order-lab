@@ -53,7 +53,8 @@ class ApproverController extends Controller
 //            $organizationalInstitutions[] = $role->getInstitution();
 //        }
 
-        $params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+        //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+        $params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER'));
         $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
 
 //        //vacreq_util
@@ -135,7 +136,11 @@ class ApproverController extends Controller
     public function orgInstManagementAction(Request $request, $institutionId)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -155,17 +160,11 @@ class ApproverController extends Controller
         }
         //echo "approvers=".count($approvers)."<br>";
 
-        //if current logged in user not in approver => no permission
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
-            if( $user->isInUserArray( $approvers ) == false ) {
-                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-            }
+        $vacreqUtil = $this->get('vacreq_util');
+        $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $institutionId) == false ) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
-//        //testing
-//        $vacreqUtil = $this->get('vacreq_util');
-//        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $institutionId) == false) {
-//            return $this->redirect($this->generateUrl('vacreq-nopermission'));
-//        }
 
         //find role submitters by institution
         $submitters = array();
@@ -180,6 +179,7 @@ class ApproverController extends Controller
 
         $roleApproverId = null;
         if( $roleApprover ) {
+            //echo "roleApprover=".$roleApprover."<br>";
             $roleApproverId = $roleApprover->getId();
         }
 
@@ -187,6 +187,8 @@ class ApproverController extends Controller
         if( $roleSubmitter ) {
             $roleSubmitterId = $roleSubmitter->getId();
         }
+
+        //echo "approverRoleId=".$roleApproverId."<br>";
 
         return array(
             'approvers' => $approvers,
@@ -210,17 +212,22 @@ class ApproverController extends Controller
     public function userManagementAction(Request $request, $userid, $instid, $roleId )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //echo " => userId=".$id."<br>";
+        //echo " => userId=".$userid."<br>";
 
         $em = $this->getDoctrine()->getManager();
 
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $instid) == false) {
+        $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -280,7 +287,11 @@ class ApproverController extends Controller
     public function userManagementUpdateAction(Request $request, $userid, $instid, $roleIds )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -291,7 +302,8 @@ class ApproverController extends Controller
 
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $instid) == false) {
+        $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -351,7 +363,11 @@ class ApproverController extends Controller
     public function removeUserAction(Request $request, $userid, $instid, $roleId )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -362,7 +378,8 @@ class ApproverController extends Controller
 
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $instid) == false) {
+        $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -422,7 +439,11 @@ class ApproverController extends Controller
     public function addUserAction(Request $request, $instid, $roleId, $btnName )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -430,7 +451,9 @@ class ApproverController extends Controller
 
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER', $instid) == false) {
+        $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
+        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $instid) == false ) {
+            exit('no permission');
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -470,7 +493,11 @@ class ApproverController extends Controller
     public function addRoleToUserAction(Request $request, $instid, $roleId )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -489,83 +516,41 @@ class ApproverController extends Controller
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
 
-        if(0) {
-//            //Choose user by keytype and userid
-//            $keytype = $request->query->get('keytype');
-//            $keytype = trim($keytype);
-//
-//            $primaryPublicUserId = $request->query->get('primaryPublicUserId');
-//            $primaryPublicUserId = trim($primaryPublicUserId);
-//
-//            //exit('primaryPublicUserId='.$primaryPublicUserId);
-//
-//            //find user in DB
-//            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('keytype' => $keytype, 'primaryPublicUserId' => $primaryPublicUserId));
-//
-//            if( count($users) > 1 ) {
-//                throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
-//            }
-//
-//            if( count($users) == 1 ) {
-//                $subjectUser = $users[0];
-//            }
-//
-//            if( count($users) == 0 ) {
-//                $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
-//                $this->get('session')->getFlashBag()->set(
-//                    'notice',
-//                    'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
-//                    "Please use the 'Create New User' form to add a new user."
-//                );
-//                return $this->redirect( $this->generateUrl("employees_new_user",array("user-type"=>$keytype,"user-name"=>$primaryPublicUserId)) );
-//            }
-//
-//            $subjectUser->addRole($role);
-//            $em->persist($subjectUser);
-//            $em->flush();
-//
-//            $event = "User ".$subjectUser." has been added as ".$role->getAlias();
-//            $eventType = "User record updated";
-//            //Event Log
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,$eventType);
 
-        } else {
+        $params = array(
+            'cycle' => 'create',
+            'readonly' => false,
+        );
+        $form = $this->createForm(new VacReqUserComboboxType($params));
 
-            $params = array(
-                'cycle' => 'create',
-                'readonly' => false,
-            );
-            $form = $this->createForm(new VacReqUserComboboxType($params));
+        $form->handleRequest($request);
 
-            $form->handleRequest($request);
+        //$users = $form['users']->getData();
+        $users = $form->get('users')->getData();
 
-            //$users = $form['users']->getData();
-            $users = $form->get('users')->getData();
+        $usersStr = array();
 
-            $usersStr = array();
-
-            foreach( $users as $user ) {
-                //echo "user=".$user."<br>";
-                $user->addRole($role);
-                $em->persist($user);
-                $usersStr[] = $user;
-            }
-
-            //$users = $request->query->get('users');
-            //$users = trim($users);
-
-            $em->flush();
-
-            $event = $institution.": the following users have been added as ".$role->getAlias().": ".implode(",",$usersStr);
-            $eventType = "Business/Vacation Group Updated";
-
-            //Event Log
-            $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$institution,$request,$eventType);
-
-            //exit();
+        foreach( $users as $user ) {
+            //echo "user=".$user."<br>";
+            $user->addRole($role);
+            $em->persist($user);
+            $usersStr[] = $user;
         }
+
+        //$users = $request->query->get('users');
+        //$users = trim($users);
+
+        $em->flush();
+
+        $event = $institution.": the following users have been added as ".$role->getAlias().": ".implode(",",$usersStr);
+        $eventType = "Business/Vacation Group Updated";
+
+        //Event Log
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$institution,$request,$eventType);
+
+        //exit();
+
 
         //Flash
         $this->get('session')->getFlashBag()->add(

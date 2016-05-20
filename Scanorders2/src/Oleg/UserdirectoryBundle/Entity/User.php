@@ -1665,7 +1665,11 @@ class User extends BaseUser {
     }
 
     public function isInUserArray( $users ) {
+        if( !$users ) {
+            return false;
+        }
         foreach( $users as $user ) {
+            //echo "user=".$user."<br>";
             if( $user->getId() == $this->getId() ) {
                 return true;
             }

@@ -1159,13 +1159,30 @@ class VacReqUtil
         return $submitters;
     }
 
-    public function hasPartialRoleNameAndGroup( $rolePartialName, $institutionId=null ) {
+    //$rolePartialNameArr - array of roles partial names. For example, array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR')
+    public function hasPartialRoleNameAndGroup( $rolePartialNameArr, $institutionId=null ) {
         if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
             return true;
         }
+
         $user = $this->sc->getToken()->getUser();
-        $sitename = "vacreq";
-        return $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$rolePartialName,$institutionId);
+        //$sitename = "vacreq";
+        //return $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$rolePartialName,$institutionId);
+
+        //get user allowed groups
+        $groupParams = array(
+            'roleSubStrArr' => $rolePartialNameArr, //array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'),
+            'asObject' => true
+        );
+        $groupInstitutions = $this->getVacReqOrganizationalInstitutions($user,$groupParams);
+
+        //check if subject has at least one of the $groupInstitutions
+        foreach( $groupInstitutions as $inst ) {
+            if( $inst->getId() == $institutionId ) {
+                return true;
+            }
+        }
+
     }
 
     public function getSubmitterPhone($user) {

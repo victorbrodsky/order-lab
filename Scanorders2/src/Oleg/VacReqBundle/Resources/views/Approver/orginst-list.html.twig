@@ -10,11 +10,16 @@
                         {{ organizationalGroupName }}
                     </a>
                 </div>
-                {% if vacreq_util.hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER',organizationalGroupId) %}
-                <div class="col-xs-6" align="left">
-                    <a class="btn-sm btn-info" href="{{ path(vacreq_sitename~'_orginst_management', { 'institutionId': organizationalGroupId }) }}">Manage</a>
-                    {#<a class="btn-sm btn-danger" href="#">Delete</a>#}
-                </div>
+                {#{% if   vacreq_util.hasPartialRoleNameAndGroup('ROLE_VACREQ_APPROVER',organizationalGroupId) or#}
+                        {#vacreq_util.hasPartialRoleNameAndGroup('ROLE_VACREQ_SUPERVISOR',organizationalGroupId)#}
+                {#%}#}
+                {% if vacreq_util.hasPartialRoleNameAndGroup(['ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'],organizationalGroupId) %}
+                    <div class="col-xs-6" align="left">
+                        <a class="btn-sm btn-info" href="{{ path(vacreq_sitename~'_orginst_management', { 'institutionId': organizationalGroupId }) }}">
+                            Manage
+                        </a>
+                        {#<a class="btn-sm btn-danger" href="#">Delete</a>#}
+                    </div>
                 {% endif %}
             </div>
 
