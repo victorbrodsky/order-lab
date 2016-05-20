@@ -42,15 +42,19 @@ class ApproverController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $vacreqUtil = $this->get('vacreq_util');
+        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //list all organizational group (institution)
-        $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "changestatus");
+//        $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "changestatus");
+//        $organizationalInstitutions = array();
+//        foreach( $roles as $role ) {
+//            $organizationalInstitutions[] = $role->getInstitution();
+//        }
 
-        $organizationalInstitutions = array();
-        foreach( $roles as $role ) {
-            $organizationalInstitutions[] = $role->getInstitution();
-        }
+        $params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
 
 //        //vacreq_util
 //        $vacreqUtil = $this->get('vacreq_util');
