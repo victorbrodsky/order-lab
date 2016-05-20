@@ -66,7 +66,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             //add if user has appropriate admin role: overwrite in the particular permission voter
             //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
             $user = $token->getUser();
-            if( $this->hasApproverRoleInstitution($subject,$user) ) {
+            if( $this->hasApproverRoleInstitution($subject,$token) ) {
                 return true;
             }
 
@@ -91,32 +91,81 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         }
 
         //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
-        if( $this->hasApproverRoleInstitution($subject,$user) ) {
+        if( $this->hasApproverRoleInstitution($subject,$token) ) {
             return true;
         }
 
         return false;
     }
 
-    private function hasApproverRoleInstitution($subject,$user) {
+    private function hasApproverRoleInstitution( $subject, TokenInterface $token ) {
+        $user = $token->getUser();
+
         //get approver role for subject institution
         if( $subject->getInstitution() ) {
 
-            $requestTypeAbbreviation = $subject->getRequestType()->getAbbreviation();
+//            $requestTypeAbbreviation = $subject->getRequestType()->getAbbreviation();
+//            if( $requestTypeAbbreviation == "business-vacation" ) {
+//                $roleSubStr = "ROLE_VACREQ_APPROVER_";
+//
+//                $approverRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+//                findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, $subject->getInstitution()->getId() );
+//                if( count($approverRoles) > 0 ) {
+//                    return true;
+//                }
+//            }
 
-            if( $requestTypeAbbreviation == "business-vacation" ) {
-                $roleSubStr = "ROLE_VACREQ_APPROVER_";
+//            if( $requestTypeAbbreviation == "carryover" ) {
+
+//                //deny if role is not SUPERVISOR
+//                if( $this->decisionManager->decide($token, array("ROLE_VACREQ_SUPERVISOR")) == false ) {
+//                    exit('not supervisor');
+//                    return false;
+//                }
+//
+//                //get user allowed groups
+//                $vacreqUtil = $this->container->get('vacreq_util');
+//                $groupParams = array(
+//                    'roleSubStrArr' => array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'),
+//                    'asObject' => true
+//                );
+//                $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
+//
+//                //check if subject has at least one of the $groupInstitutions
+//                foreach( $groupInstitutions as $inst ) {
+//                    if( $inst->getId() == $subject->getInstitution()->getId() ) {
+//                        return true;
+//                    }
+//                }
+
+//            }
+
+            //deny if role is not SUPERVISOR
+//            if( $this->decisionManager->decide($token, array("ROLE_VACREQ_SUPERVISOR")) == false ) {
+//                exit('not supervisor');
+//                return false;
+//            }
+
+            //get user allowed groups
+            $vacreqUtil = $this->container->get('vacreq_util');
+            $groupParams = array(
+                'roleSubStrArr' => array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'),
+                'asObject' => true
+            );
+            $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
+
+            //check if subject has at least one of the $groupInstitutions
+            foreach( $groupInstitutions as $inst ) {
+                if( $inst->getId() == $subject->getInstitution()->getId() ) {
+                    return true;
+                }
             }
 
-            if( $requestTypeAbbreviation == "carryover" ) {
-                $roleSubStr = "ROLE_VACREQ_SUPERVISOR_";
-            }
-
-            $approverRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
-                findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, $subject->getInstitution()->getId() );
-            if( count($approverRoles) > 0 ) {
-                return true;
-            }
+//            $approverRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+//                findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, $subject->getInstitution()->getId() );
+//            if( count($approverRoles) > 0 ) {
+//                return true;
+//            }
         }
         return false;
     }

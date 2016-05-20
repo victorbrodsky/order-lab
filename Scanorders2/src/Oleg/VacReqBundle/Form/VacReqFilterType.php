@@ -60,16 +60,6 @@ class VacReqFilterType extends AbstractType
             ));
 
             $this->addGroup($builder);
-        } else {
-//            $builder->add('requestType', 'entity', array(
-//                'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
-//                'property' => 'name',
-//                'label' => false,
-//                'required' => true,
-//                'multiple' => false,
-//                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Request Type'),
-//                //'choices' => $this->params['filterUsers'],
-//            ));
         }
 
         if( $this->params['requestTypeAbbreviation'] == "business-vacation" ) {
@@ -163,21 +153,18 @@ class VacReqFilterType extends AbstractType
 
     public function addGroup($builder) {
 
-        if( count($this->params['organizationalInstitutions']) > 1 ) {
+        if( count($this->params['organizationalInstitutions']) > 1 || $this->params['supervisor'] ) {
+
+            if( count($this->params['organizationalInstitutions']) == 1 ) {
+                $required = true;
+            } else {
+                $required = false;
+            }
 
             //Institutional Group name - ApproverName
-//            $builder->add('organizationalInstitutions', 'choice', array(
-//                //'class' => 'OlegUserdirectoryBundle:Institution',
-//                //'property' => 'getUserNameStr',
-//                'label' => false,
-//                'required' => false,
-//                //'multiple' => false,
-//                'attr' => array('class' => 'combobox', 'placeholder' => 'Group'),
-//                'choices' => $this->params['organizationalInstitutions'],
-//            ));
             $builder->add('organizationalInstitutions', 'choice', array(
                 'label' => false,   //"Organizational Group:",
-                'required' => false,
+                'required' => $required,
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['organizationalInstitutions'],

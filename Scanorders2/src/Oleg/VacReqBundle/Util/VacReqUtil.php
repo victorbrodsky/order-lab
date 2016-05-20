@@ -1004,8 +1004,7 @@ class VacReqUtil
     //get only institutions from the same institutional tree:
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
     //public function getVacReqOrganizationalInstitutions( $user, $requestTypeAbbreviation="business-vacation", $asObject=false )
-    public function getVacReqOrganizationalInstitutions( $user, $params=array() )
-    {
+    public function getVacReqOrganizationalInstitutions( $user, $params=array() ) {
 
         $asObject = ( array_key_exists('asObject', $params) ? $params['asObject'] : false);
         //$requestTypeAbbreviation = ( array_key_exists('requestTypeAbbreviation', $params) ? $params['requestTypeAbbreviation'] : null);
@@ -1014,26 +1013,21 @@ class VacReqUtil
 
         $institutions = array();
 
-//        $requestRoleSubStr = "ROLE_VACREQ_";
-//        if( $requestTypeAbbreviation == "business-vacation" ) {
-//            $requestRoleSubStr = "ROLE_VACREQ_SUBMITTER";
-//        }
-//        if( $requestTypeAbbreviation == "carryover" ) {
-//            $requestRoleSubStr = "ROLE_VACREQ_SUPERVISOR";
-//        }
-//        echo "requestRoleSubStr=".$requestRoleSubStr."<br>";
-
-        //get vacreq submitter role
-//        if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
-//            //find all submitter role's institution
-//            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
-//        } else {
-//            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $requestRoleSubStr, null, false);
-//        }
+        //get user's institutions associated with this site
+        $partialRoleName = "ROLE_VACREQ_";
+        $userRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $partialRoleName);
+        $userInsts = new ArrayCollection();
+        foreach( $userRoles as $userRole ) {
+            $roleInst = $userRole->getInstitution();
+            if( $roleInst && !$userInsts->contains($roleInst) ) {
+                $userInsts->add($roleInst);
+                //echo "user institution=".$roleInst."<br>";
+            }
+        }
 
         $submitterRoles = new ArrayCollection();
         foreach( $roleSubStrArr as $roleSubStr ) {
-            if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') || $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
                 //find all submitter role's institution
                 $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
             } else {
@@ -1060,12 +1054,22 @@ class VacReqUtil
 //        }
 
         foreach( $submitterRoles as $submitterRole ) {
+
             //echo "submitterRole=".$submitterRole."<br>";
             $institution = $submitterRole->getInstitution();
+
             if( $institution ) {
 
-                //TODO: get only institutions from the same institutional tree:
-                //TODO: if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
+                //get only institutions from the same institutional tree:
+                //  if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
+                //check if this institution is equal or under user's site institution
+                if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                    if ($this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userInsts, $institution) == false) {
+                        //echo "remove institution=".$institution."<br>";
+                        continue;
+                    }
+                }
+                //echo "add submitterRole=".$submitterRole."<br>";
 
                 if( $asObject ) {
                     $institutions[] = $institution;

@@ -137,12 +137,30 @@ class RequestIndexController extends Controller
             if( $approver ) {
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
                 $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName);
-                $instArr = array();
-                foreach( $approverRoles as $approverRole ) {
-                    $instArr[] = $approverRole->getInstitution()->getId();
-                }
-                if( count($instArr) > 0 ) {
-                    $dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
+
+//                $instArr = array();
+//                foreach( $approverRoles as $approverRole ) {
+//                    $instArr[] = $approverRole->getInstitution()->getId();
+//                }
+//                if( count($instArr) > 0 ) {
+//                    //$dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
+//                }
+
+                //select all requests with institution is equal or under approverRole institution.
+                if( count($approverRoles) > 0 ) {
+                    $instCriterionArr = array();
+                    $addedNodes = array();
+                    foreach( $approverRoles as $approverRole ) {
+                        $roleInst = $approverRole->getInstitution();
+                        if( !in_array($roleInst->getId(), $addedNodes) ) {
+                            $addedNodes[] = $roleInst->getId();
+                            $instCriterionArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($roleInst,"institution",false);
+                        }
+                    }
+                    if( count($instCriterionArr) > 0 ) {
+                        $instCriteriaStr = implode(" OR ",$instCriterionArr);
+                        $dql->andWhere($instCriteriaStr);
+                    }
                 }
             }
         }
@@ -270,7 +288,12 @@ class RequestIndexController extends Controller
             $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUBMITTER'));
         }
         if( $request->get('_route') == "vacreq_incomingrequests" ) {
-            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+            //$groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+            if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
+                $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_APPROVER'));
+            } else {
+                $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
+            }
         }
         $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser,$groupParams);//, $params['requestTypeAbbreviation']);
         $params['organizationalInstitutions'] = $organizationalInstitutions;
