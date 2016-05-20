@@ -1003,35 +1003,60 @@ class VacReqUtil
     //get user's organizational group
     //get only institutions from the same institutional tree:
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
-    public function getVacReqOrganizationalInstitutions( $user, $requestTypeAbbreviation="business-vacation", $asObject=false )
+    //public function getVacReqOrganizationalInstitutions( $user, $requestTypeAbbreviation="business-vacation", $asObject=false )
+    public function getVacReqOrganizationalInstitutions( $user, $params=array() )
     {
+
+        $asObject = ( array_key_exists('asObject', $params) ? $params['asObject'] : false);
+        //$requestTypeAbbreviation = ( array_key_exists('requestTypeAbbreviation', $params) ? $params['requestTypeAbbreviation'] : null);
+        //$routeName = ( array_key_exists('routeName', $params) ? $params['routeName'] : null);
+        $roleSubStrArr = ( array_key_exists('roleSubStrArr', $params) ? $params['roleSubStrArr'] : array("ROLE_VACREQ_"));
 
         $institutions = array();
 
-        if( $requestTypeAbbreviation == "business-vacation" ) {
-            $requestRoleSubStr = "ROLE_VACREQ_SUBMITTER";
-        }
-        if( $requestTypeAbbreviation == "carryover" ) {
-            $requestRoleSubStr = "ROLE_VACREQ_SUPERVISOR";
-        }
+//        $requestRoleSubStr = "ROLE_VACREQ_";
+//        if( $requestTypeAbbreviation == "business-vacation" ) {
+//            $requestRoleSubStr = "ROLE_VACREQ_SUBMITTER";
+//        }
+//        if( $requestTypeAbbreviation == "carryover" ) {
+//            $requestRoleSubStr = "ROLE_VACREQ_SUPERVISOR";
+//        }
+//        echo "requestRoleSubStr=".$requestRoleSubStr."<br>";
 
         //get vacreq submitter role
-        if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
-            //find all submitter role's institution
-            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
-        } else {
-            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $requestRoleSubStr);
+//        if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+//            //find all submitter role's institution
+//            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
+//        } else {
+//            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $requestRoleSubStr, null, false);
+//        }
+
+        $submitterRoles = new ArrayCollection();
+        foreach( $roleSubStrArr as $roleSubStr ) {
+            if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+                //find all submitter role's institution
+                $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
+            } else {
+                $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, null, false);
+            }
+
+            foreach( $submitterSubRoles as $submitterSubRole ) {
+                if( $submitterSubRole && !$submitterRoles->contains($submitterSubRole) ) {
+                    $submitterRoles->add($submitterSubRole);
+                }
+            }
+
         }
 
-        if( count($submitterRoles) == 0 ) {
-            //find all submitter role's institution
-            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
-        }
-        //echo "1 roles count=".count($submitterRoles)."<br>";
+//        if( count($submitterRoles) == 0 ) {
+//            //find all submitter role's institution
+//            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
+//        }
+//        echo "roles count=".count($submitterRoles)."<br>";
 
-//        //get only SUBMITTER roles: filter roles by SUBMITTER string
+        //get only SUBMITTER roles: filter roles by SUBMITTER string
 //        foreach( $submitterRoles as $role ) {
-//
+//            echo "role=".$role."<br>";
 //        }
 
         foreach( $submitterRoles as $submitterRole ) {
@@ -1055,11 +1080,9 @@ class VacReqUtil
                 } else {
                     $orgName = $institution;
                 }
+                //echo "orgName=".$orgName."<br>";
 
-                //$institutions[] = array( $institution->getId() => $institution."-".$organizationalName . "-" . $approver);
                 $institutions[$institution->getId()] = $orgName;
-                //$institutions[] = $orgName;
-                //$institutions[] = $institution;
             }
         }
 

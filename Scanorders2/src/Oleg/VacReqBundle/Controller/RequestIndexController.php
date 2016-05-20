@@ -70,6 +70,20 @@ class RequestIndexController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
 
+        //for incomingrequests if requestType is not set, set requestType to 'carryover' if a user has only SUPERVISOR role
+//        $requestParams = $request->query->all();
+//        $requestTypeId = $requestParams["filter"]["requestType"];
+//        if( !$requestTypeId ) {
+//            $em = $this->getDoctrine()->getManager();
+//            $vacreqUtil = $this->get('vacreq_util');
+//            $supervisorInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user, array('roleSubStrArr' => array('ROLE_VACREQ_SUPERVISOR')));
+//            echo "supervisorInstitutions=" . count($supervisorInstitutions) . "<br>";
+//            if (count($supervisorInstitutions) > 0) {
+//                $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
+//                return $this->redirectToRoute('vacreq_incomingrequests', array('filter[requestType]' => $requestType->getId()));
+//            }
+//        }
+
         $params = array(
             'sitename' => $this->container->getParameter('vacreq.sitename'),
             'approver' => $user,
@@ -117,15 +131,17 @@ class RequestIndexController extends Controller
             $dql->andWhere("(request.user=".$subjectUser->getId()." OR request.submitter=".$subjectUser->getId().")");
         }
 
-        //incoming requests: show all requests with institutions in approver institutions
+        //incoming requests: show all requests with institutions in vacreq roles institutions
+        //filter by institutions for any user by using a general sub role name "ROLE_VACREQ_"
         if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
-            if ($approver) {
-                $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver, "vacreq", "ROLE_VACREQ_APPROVER_");
+            if( $approver ) {
+                $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
+                $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName);
                 $instArr = array();
-                foreach ($approverRoles as $approverRole) {
+                foreach( $approverRoles as $approverRole ) {
                     $instArr[] = $approverRole->getInstitution()->getId();
                 }
-                if (count($instArr) > 0) {
+                if( count($instArr) > 0 ) {
                     $dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
                 }
             }
@@ -250,14 +266,13 @@ class RequestIndexController extends Controller
         }
 
         //institutional group
-//        if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-//            $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser, $params['requestTypeAbbreviation']);
-//        } else {
-//
-//        }
-        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser, $params['requestTypeAbbreviation']);
-
-
+        if( $request->get('_route') == "vacreq_myrequests" ) {
+            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUBMITTER'));
+        }
+        if( $request->get('_route') == "vacreq_incomingrequests" ) {
+            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+        }
+        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser,$groupParams);//, $params['requestTypeAbbreviation']);
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 
         //tooltip for Academic Year:

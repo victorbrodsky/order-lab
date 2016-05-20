@@ -153,9 +153,13 @@
         <div class="row">
             <div class="col-xs-12" align="left">
 
-                {% if requestTypeAbbreviation != 'carryover' %}
+                {#requestTypeAbbreviation={{ requestTypeAbbreviation }}#}
+                {#{% if requestTypeAbbreviation != 'carryover' %}#}
+                {% if vacreqfilter.businessRequest is defined %}
                     {{ vacreqmacros.checkbox(vacreqfilter.businessRequest) }}
                     &nbsp;&nbsp;
+                {% endif %}
+                {% if vacreqfilter.vacationRequest is defined %}
                     {{ vacreqmacros.checkbox(vacreqfilter.vacationRequest) }}
                     &nbsp;&nbsp;
                 {% endif %}

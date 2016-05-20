@@ -558,10 +558,6 @@ class RequestController extends Controller
 
 
 
-
-
-
-
     public function createRequestForm( $entity, $cycle, $request ) {
 
         $em = $this->getDoctrine()->getManager();
@@ -587,10 +583,11 @@ class RequestController extends Controller
 
         //organizationalInstitution
         if( $requestType->getAbbreviation() == "carryover" ) {
-            $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,"carryover");
+            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
         } else {
-            $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user);
+            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUBMITTER'));
         }
+        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
 
         //get holidays url
         $userSecUtil = $this->container->get('user_security_utility');
