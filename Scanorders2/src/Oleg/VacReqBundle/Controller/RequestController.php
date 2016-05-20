@@ -589,6 +589,27 @@ class RequestController extends Controller
         }
         $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
 
+        if( count($organizationalInstitutions) == 0 ) {
+            $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN");
+            $emails = array();
+            foreach( $adminUsers as $adminUser ) {
+                $singleEmail = $adminUser->getSingleEmail();
+                if( $singleEmail ) {
+                    $emails[] = $adminUser->getSingleEmail();
+                }
+            }
+            $emailStr = "";
+            if( count($emails) > 0 ) {
+                $emailStr = " Admin email(s): " . implode(", ", $emails);
+            }
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have any assigned Submitter role for a Business/Vacation Request.".
+                " Please contact the site administrator to have a Submitter role.".$emailStr
+            );
+        }
+
         //get holidays url
         $userSecUtil = $this->container->get('user_security_utility');
         $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl');
