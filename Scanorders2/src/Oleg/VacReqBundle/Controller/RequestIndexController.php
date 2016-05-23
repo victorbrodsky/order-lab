@@ -309,7 +309,7 @@ class RequestIndexController extends Controller
         $params['routeName'] = $request->get('_route');
 
         $vacreqUtil = $this->get('vacreq_util');
-        $params['supervisor'] = $vacreqUtil->hasPartialRoleNameAndGroup('ROLE_VACREQ_SUPERVISOR');
+        $params['supervisor'] = $vacreqUtil->hasRoleNameAndGroup(array('ROLE_VACREQ_SUPERVISOR'));
 
         //create filter form
         $filterform = $this->createForm(new VacReqFilterType($params), null);

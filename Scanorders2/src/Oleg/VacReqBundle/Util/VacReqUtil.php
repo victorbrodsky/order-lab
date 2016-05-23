@@ -1003,7 +1003,6 @@ class VacReqUtil
     //get user's organizational group
     //get only institutions from the same institutional tree:
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
-    //public function getVacReqOrganizationalInstitutions( $user, $requestTypeAbbreviation="business-vacation", $asObject=false )
     public function getVacReqOrganizationalInstitutions( $user, $params=array() ) {
 
         $asObject = ( array_key_exists('asObject', $params) ? $params['asObject'] : false);
@@ -1013,24 +1012,26 @@ class VacReqUtil
 
         $institutions = array();
 
-        //get user's institutions associated with this site
+        //get this user institutions associated with this site
         $partialRoleName = "ROLE_VACREQ_";
-        $userRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $partialRoleName);
+        $userRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $partialRoleName, null, false);
         $userInsts = new ArrayCollection();
         foreach( $userRoles as $userRole ) {
             $roleInst = $userRole->getInstitution();
             if( $roleInst && !$userInsts->contains($roleInst) ) {
                 $userInsts->add($roleInst);
-                //echo "user institution=".$roleInst."<br>";
+                //echo "add to userInsts=".$roleInst."<br>";
             }
         }
 
+        //get user's roles by site and role name array
         $submitterRoles = new ArrayCollection();
         foreach( $roleSubStrArr as $roleSubStr ) {
             if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') || $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
                 //find all submitter role's institution
                 $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
             } else {
+                echo "roleSubStr=".$roleSubStr."<br>";
                 $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, null, false);
             }
 
@@ -1064,7 +1065,7 @@ class VacReqUtil
                 //  if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
                 //check if this institution is equal or under user's site institution
                 if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-                    if ($this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userInsts, $institution) == false) {
+                    if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userInsts, $institution) == false ) {
                         //echo "remove institution=".$institution."<br>";
                         continue;
                     }
@@ -1160,7 +1161,7 @@ class VacReqUtil
     }
 
     //$rolePartialNameArr - array of roles partial names. For example, array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR')
-    public function hasPartialRoleNameAndGroup( $rolePartialNameArr, $institutionId=null ) {
+    public function hasRoleNameAndGroup( $rolePartialNameArr, $institutionId=null ) {
         if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
             return true;
         }

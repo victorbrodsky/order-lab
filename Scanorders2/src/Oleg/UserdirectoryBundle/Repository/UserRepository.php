@@ -235,6 +235,64 @@ class UserRepository extends EntityRepository {
         return $roles;
     }
 
+    //get all roles with corresponding permissions: object-action
+    public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename) {
+
+        //check if user's roles have permission
+        $query = $this->_em->createQueryBuilder()->from('OlegUserdirectoryBundle:Roles', 'list');
+        $query->select("list");
+
+        $query->leftJoin("list.permissions","permissions");
+        $query->leftJoin("permissions.permission","permission");
+        $query->leftJoin("permission.permissionObjectList","permissionObjectList");
+        $query->leftJoin("permission.permissionActionList","permissionActionList");
+
+        $query->where("permissionActionList.name = :permissionActionStr OR permissionActionList.abbreviation = :permissionActionStr");
+        $query->andWhere("permissionObjectList.name = :permissionObjectStr OR permissionObjectList.abbreviation = :permissionObjectStr");
+
+        $parameters = array(
+            'permissionObjectStr' => $objectStr,
+            'permissionActionStr' => $actionStr
+        );
+
+        if( $institutionId ) {
+            $query->leftJoin("list.institution","institution");
+            $institution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
+            //echo "institution=".$institution->getNodeNameWithRoot()."<br>";
+            //get inst criterion string tree with collaboration
+            //$instStr = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+            //        getCriterionStrForCollaborationsByNode($institution,"institution",array("Intersection"),false,false);
+            //get simple inst criterion string tree (without collaboration)
+            $instStr = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+            //echo "instStr=".$instStr."<br>";
+            $query->andWhere($instStr);
+
+        }
+
+        if( $sitename ) {
+            $query->leftJoin("list.sites","sites");
+            $query->andWhere("sites.name = :sitename OR sites.abbreviation = :sitename");
+            $parameters['sitename'] = $sitename;
+        }
+
+        //print_r($parameters);
+
+        $query->orderBy("list.id","ASC");
+        $query->setParameters( $parameters);
+
+        //echo "sql=".$query."<br>";
+
+        $roles = $query->getQuery()->getResult();
+        //echo "roles count=".count($roles)."<br>";
+
+        foreach( $roles as $role ) {
+            echo "role=".$role."<br>";
+        }
+        //exit('exit');
+
+        return $roles;
+    }
+
     public function isUserHasSiteAndPartialRoleName( $user, $sitename, $rolePartialName, $institutionId=null ) {
         $userRoles = $this->findUserRolesBySiteAndPartialRoleName($user, $sitename, $rolePartialName, $institutionId);
         if( count($userRoles) > 0 ) {
@@ -298,7 +356,133 @@ class UserRepository extends EntityRepository {
         return $roles;
     }
 
+    //find users by roles specified by sitename, objectStr, actionStr and with institution equal to institutuionId or with instition children roles
+    public function findUsersBySitePermissionObjectActionInstitution( $sitename, $objectStr, $actionStr, $institutionId ) {
 
+        $roles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename);
+
+        //construct with "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_CLINICALPATHOLOGY%'"
+        $withLikes = array();
+        foreach( $roles as $role ) {
+            $withLikes[] = "user.roles LIKE '%".$role->getName()."%'";
+        }
+        $withLikesStr = implode(" OR ", $withLikes);
+        //echo "withLikesStr=".$withLikesStr."<br>";
+
+        $query = $this->_em->createQueryBuilder()->from('OlegUserdirectoryBundle:User', 'user');
+        $query->select("user");
+
+        //$query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_CLINICALPATHOLOGY%'");
+        //$query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", $withLikesStr);
+
+        $query->where($withLikesStr);
+
+        $query->orderBy("user.primaryPublicUserId","ASC");
+
+        //echo "query=".$query."<br>";
+
+        $users = $query->getQuery()->getResult();
+        //echo "<br>users count=".count($users)."<br>";
+
+        return $users;
+    }
+    public function findUsersBySitePermissionObjectActionInstitution_orig( $sitename, $objectStr, $actionStr, $institutionId ) {
+
+        $permission = $this->findPermissionByObjectAction($objectStr,$actionStr);
+        if( !$permission ) {
+            return array();
+        }
+        echo "permission=".$permission."<br>";
+
+        $query = $this->_em->createQueryBuilder()->from('OlegUserdirectoryBundle:User', 'user');
+        $query->select("user");
+
+        //$whereStr = "administrativeTitles.institution = :nodeid OR appointmentTitles.institution = :nodeid OR medicalTitles.institution = :nodeid";
+        //$whereStr = "institution.id = :nodeid";
+        //$whereStr = "(SELECT role FROM OlegUserdirectoryBundle:Roles at WHERE role.sites = :sitename) AS userrole";
+        //$whereStr = "role.name LIKE '%ROLE_%'";
+
+        //$whereStr = "institution.id = :nodeid";
+
+        //$query->where($whereStr);
+        //$query->addSelect($whereStr);
+
+        $query->where("sites.name = :sitename OR sites.abbreviation = :sitename");
+        $query->andWhere("permissions = :permission");
+
+        //$query->andWhere("roles.institution = :institutionId");
+
+        //$query->leftJoin("user.roles", "roles");
+        //$query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE roles.name");
+        //$query->innerJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "roles.name IN (user.roles)");
+
+        //$query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_%'");
+        //$query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_CYTOPATHOLOGY%'");
+        $query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
+        //$query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles IS NOT NULL");
+        //$query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_%'");
+
+        $query->leftJoin("roles.sites", "sites");
+        $query->leftJoin("roles.permissions", "permissions");
+
+        $query->leftJoin("roles.institution","institution");
+        $institution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
+        $instStr = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+        //echo "instStr=".$instStr."<br>";
+        $query->andWhere($instStr);
+
+        $query->orderBy("user.primaryPublicUserId","ASC");
+        //$query->leftJoin("user.institution", "institution");
+        //$query->groupBy('user');
+
+        $query->setParameters(
+            array(
+                //"institutionId" => $institutionId,
+                "permission" => $permission->getId(),
+                "sitename" => $sitename,
+                //'rolename' => '%"roles.name"%'
+            )
+        );
+
+        echo "query=".$query."<br>";
+
+        $users = $query->getQuery()->getResult();
+        echo "<br>users count=".count($users)."<br>";
+
+        return $users;
+    }
+
+    //check if user has direct permission
+    public function findPermissionByObjectAction( $objectStr, $actionStr, $single=true ) {
+
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Permission', 'permissions')
+            ->select("permissions")
+            ->leftJoin("permissions.permission","permission")
+            ->leftJoin("permission.permissionObjectList","permissionObjectList")
+            ->leftJoin("permission.permissionActionList","permissionActionList")
+            ->where("permissionActionList.name = :permissionActionStr")
+            ->andWhere("permissionObjectList.name = :permissionObjectStr OR permissionObjectList.abbreviation = :permissionObjectStr")
+            ->orderBy("permissions.id","ASC")
+            ->setParameters( array(
+                'permissionObjectStr' => $objectStr,
+                'permissionActionStr' => $actionStr
+            ));
+        //->setParameter('permissionAction', $action);
+
+        //echo "sql=".$query->getQuery()->getSql()."<br>";
+
+        $permissions = $query->getQuery()->getResult();
+
+        if( $single ) {
+            if( count($permissions) > 0 ) {
+                $permission = $permissions[0];
+                return $permission;
+            }
+        }
+
+        return $permissions;
+    }
 
 }
 

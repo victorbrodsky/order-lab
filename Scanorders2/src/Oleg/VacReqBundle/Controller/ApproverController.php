@@ -57,13 +57,74 @@ class ApproverController extends Controller
         $params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER'));
         $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
 
+        //TODO: add carryover approver group as in #489 (39)
+        $params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
+        $carryOverRequestGroups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);
+
 //        //vacreq_util
 //        $vacreqUtil = $this->get('vacreq_util');
 //        $arraySettings = $vacreqUtil->getInstitutionSettingArray();
 
         return array(
             'organizationalInstitutions' => $organizationalInstitutions,
+            'carryOverRequestGroups' => $carryOverRequestGroups
 //            'arraySettings' => $arraySettings
+        );
+    }
+
+
+
+    /**
+     * Display a collapse for a given carry over request group submitters
+     *
+     * @Route("/carry-over-request-group/{groupId}", name="vacreq_carry_over_request_group_list")
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Approver:carry-over-request-group-list.html.twig")
+     */
+    public function carryOverRequestGroupAction(Request $request, $groupId)
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //find role approvers by institution
+        $approvers = array();
+        $roleApprovers = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUPERVISOR', $groupId);
+        $roleApprover = $roleApprovers[0];
+        //echo "roleApprover=".$roleApprover."<br>";
+        if( $roleApprover ) {
+            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName");
+        }
+        //echo "approvers=".count($approvers)."<br>";
+
+        //find role submitters by institution
+//        $submitters = array();
+//        $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $groupId);
+//        $roleSubmitter = $roleSubmitters[0];
+//        //echo "roleSubmitter=".$roleSubmitter."<br>";
+//        if( $roleSubmitter ) {
+//            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName");
+//        }
+        $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId);
+
+        $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
+
+        //vacreq_util
+        $vacreqUtil = $this->get('vacreq_util');
+        $settings = $vacreqUtil->getSettingsByInstitution($groupId);
+
+        return array(
+            'approvers' => $approvers,
+            'submitters' => $submitters,
+            'organizationalGroupId' => $groupId,
+            'organizationalGroupName' => $organizationalGroupInstitution."",
+            'settings' => $settings
         );
     }
 
@@ -162,7 +223,7 @@ class ApproverController extends Controller
 
         $vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $institutionId) == false ) {
+        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $institutionId) == false ) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -227,7 +288,7 @@ class ApproverController extends Controller
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $instid) == false) {
+        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -303,7 +364,7 @@ class ApproverController extends Controller
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $instid) == false) {
+        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -379,7 +440,7 @@ class ApproverController extends Controller
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $instid) == false) {
+        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -452,7 +513,7 @@ class ApproverController extends Controller
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasPartialRoleNameAndGroup($partialRoleNames, $instid) == false ) {
+        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false ) {
             exit('no permission');
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
