@@ -582,12 +582,17 @@ class RequestController extends Controller
         $requestType = $entity->getRequestType();
 
         //organizationalInstitution
-        if( $requestType->getAbbreviation() == "carryover" ) {
-            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
-        } else {
-            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUBMITTER'));
-        }
-        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
+//        if( $requestType->getAbbreviation() == "carryover" ) {
+//            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
+//        } else {
+//            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUBMITTER'));
+//        }
+//        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
+
+        //get submitter groups: VacReqRequest, create
+        $groupParams = array();
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         if( count($organizationalInstitutions) == 0 ) {
             $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN");
@@ -670,63 +675,6 @@ class RequestController extends Controller
         return $form;
     }
 
-//    //get institution from user submitter role
-//    public function getVacReqOrganizationalInstitutions( $user ) {
-//
-//        $institutions = array();
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        //get vacreq submitter role
-//        $submitterRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "VacReqRequest", "create" );
-//
-//        if( count($submitterRoles) == 0 ) {
-//            //find all submitter role's institution
-//            $submitterRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "create");
-//        }
-//        //echo "roles count=".count($submitterRoles)."<br>";
-//
-//        foreach( $submitterRoles as $submitterRole ) {
-//            $institution = $submitterRole->getInstitution();
-//            if( $institution ) {
-//
-//                //Clinical Pathology (for review by Firstname Lastname)
-//                //find approvers with the same institution
-//                $approverStr = $this->getApproversBySubmitterRole($submitterRole);
-//                if( $approverStr ) {
-//                    $orgName = $institution . " (for review by " . $approverStr . ")";
-//                } else {
-//                    $orgName = $institution;
-//                }
-//
-//                //$institutions[] = array( $institution->getId() => $institution."-".$organizationalName . "-" . $approver);
-//                $institutions[$institution->getId()] = $orgName;
-//                //$institutions[] = $orgName;
-//                //$institutions[] = $institution;
-//            }
-//        }
-//
-//        //add request institution
-////        if( $entity->getInstitution() ) {
-////            $orgName = $institution . " (for review by " . $approverStr . ")";
-////            $institutions[$entity->getInstitution()->getId()] = $orgName;
-////        }
-//
-//        return $institutions;
-//    }
-//    //$role - string; for example "ROLE_VACREQ_APPROVER_CYTOPATHOLOGY"
-//    public function getApproversBySubmitterRole( $role ) {
-//        $em = $this->getDoctrine()->getManager();
-//        $roleApprover = str_replace("SUBMITTER","APPROVER",$role);
-//        $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover);
-//
-//        $approversArr = array();
-//        foreach( $approvers as $approver ) {
-//            $approversArr[] = $approver->getUsernameShortest();
-//        }
-//
-//        return implode(", ",$approversArr);
-//    }
 
     //check for active access requests
     public function getActiveAccessReq() {

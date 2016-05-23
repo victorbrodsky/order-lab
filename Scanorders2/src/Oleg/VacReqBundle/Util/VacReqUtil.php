@@ -1000,6 +1000,62 @@ class VacReqUtil
         return $requests;
     }
 
+    //get all user's organizational groups and children specified to permission
+    //get only institutions from the same institutional tree:
+    //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
+    public function getGroupsByPermission( $user, $params=array() ) {
+
+        $asObject = ( array_key_exists('asObject', $params) ? $params['asObject'] : false);
+        $permissions = ( array_key_exists('permissions', $params) ? $params['permissions'] : null);
+        $institutions = array();
+
+        foreach( $permissions as $permission ) {
+
+            $objectStr = $permission['objectStr'];
+            $actionStr = $permission['actionStr'];
+
+            if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') || $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+                if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
+                }
+                if( $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+                    //TODO: test it for supervisor
+                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
+                }
+            } else {
+                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
+            }
+
+            foreach($roles as $role ) {
+
+                $institution = $role->getInstitution();
+
+                if( $institution ) {
+
+                    if ($asObject) {
+                        $institutions[] = $institution;
+                        continue;
+                    }
+
+                    //Clinical Pathology (for review by Firstname Lastname)
+                    //find approvers with the same institution
+                    $approverStr = $this->getApproversBySubmitterRole($role);
+                    if( $approverStr ) {
+                        $orgName = $institution . " (for review by " . $approverStr . ")";
+                    } else {
+                        $orgName = $institution;
+                    }
+                    //echo "orgName=".$orgName."<br>";
+
+                    $institutions[$institution->getId()] = $orgName;
+
+                }
+            }
+
+        }
+
+        return $institutions;
+    }
     //get user's organizational group
     //get only institutions from the same institutional tree:
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
@@ -1031,7 +1087,7 @@ class VacReqUtil
                 //find all submitter role's institution
                 $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
             } else {
-                echo "roleSubStr=".$roleSubStr."<br>";
+                //echo "roleSubStr=".$roleSubStr."<br>";
                 $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, null, false);
             }
 
@@ -1176,14 +1232,18 @@ class VacReqUtil
             'asObject' => true
         );
         $groupInstitutions = $this->getVacReqOrganizationalInstitutions($user,$groupParams);
+        //echo "inst count=".count($groupInstitutions)."<br>";
 
         //check if subject has at least one of the $groupInstitutions
         foreach( $groupInstitutions as $inst ) {
+            //echo "inst=".$inst."<br>";
             if( $inst->getId() == $institutionId ) {
                 return true;
             }
         }
+        //echo "return false<br>";
 
+        return false;
     }
 
     public function getSubmitterPhone($user) {

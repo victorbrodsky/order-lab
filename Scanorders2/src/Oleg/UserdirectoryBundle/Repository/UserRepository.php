@@ -236,7 +236,7 @@ class UserRepository extends EntityRepository {
     }
 
     //get all roles with corresponding permissions: object-action
-    public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename) {
+    public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName=null) {
 
         //check if user's roles have permission
         $query = $this->_em->createQueryBuilder()->from('OlegUserdirectoryBundle:Roles', 'list');
@@ -275,6 +275,11 @@ class UserRepository extends EntityRepository {
             $parameters['sitename'] = $sitename;
         }
 
+        if( $roleName ) {
+            $query->andWhere("list.name = :roleName OR sites.abbreviation = :roleName");
+            $parameters['roleName'] = $roleName;
+        }
+
         //print_r($parameters);
 
         $query->orderBy("list.id","ASC");
@@ -286,7 +291,7 @@ class UserRepository extends EntityRepository {
         //echo "roles count=".count($roles)."<br>";
 
         foreach( $roles as $role ) {
-            echo "role=".$role."<br>";
+            //echo "role=".$role."<br>";
         }
         //exit('exit');
 
@@ -301,6 +306,8 @@ class UserRepository extends EntityRepository {
         return false;
     }
 
+    //method findUserRolesBySitePermissionObjectAction gets the same roles but appropriate input permissions
+    //find user roles with exact $institutionId
     public function findUserRolesBySiteAndPartialRoleName( $user, $sitename, $rolePartialName, $institutionId=null, $atLeastOne=true ) {
 
         $userRoles = new ArrayCollection();
@@ -319,6 +326,29 @@ class UserRepository extends EntityRepository {
                 if( $atLeastOne ) {
                     return $userRoles;
                 }
+            }
+        }
+
+        return $userRoles;
+    }
+
+    //find users by roles specified by sitename, objectStr, actionStr and with institution equal to institutuionId or with instition children roles
+    public function findUserRolesBySitePermissionObjectAction( $user, $sitename, $objectStr, $actionStr, $institutionId=null ) {
+
+        $userRoles = new ArrayCollection();
+
+        $roleNames = $user->getRoles();
+
+        foreach( $roleNames as $roleName ) {
+
+            $roles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName);
+
+            foreach( $roles as $role ) {
+
+                if( $role && !$userRoles->contains($role) ) {
+                    $userRoles->add($role);
+                }
+
             }
         }
 
