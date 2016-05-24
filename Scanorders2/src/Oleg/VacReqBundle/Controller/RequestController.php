@@ -591,7 +591,12 @@ class RequestController extends Controller
 
         //get submitter groups: VacReqRequest, create
         $groupParams = array();
-        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        if( $requestType->getAbbreviation() == "carryover" ) {
+            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        } else {
+            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        }
+        //$groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         if( count($organizationalInstitutions) == 0 ) {

@@ -332,7 +332,7 @@ class UserRepository extends EntityRepository {
         return $userRoles;
     }
 
-    //find users by roles specified by sitename, objectStr, actionStr and with institution equal to institutuionId or with instition children roles
+    //find user roles specified by sitename, objectStr, actionStr and with institution equal to institutuionId or with instition children roles
     public function findUserRolesBySitePermissionObjectAction( $user, $sitename, $objectStr, $actionStr, $institutionId=null ) {
 
         $userRoles = new ArrayCollection();
@@ -353,6 +353,61 @@ class UserRepository extends EntityRepository {
         }
 
         return $userRoles;
+    }
+    //find user roles with child roles specified by sitename, objectStr, actionStr
+    public function findUserChildRolesBySitePermissionObjectAction( $user, $sitename, $objectStr, $actionStr ) {
+
+        $userRoles = new ArrayCollection();
+
+        $roleNames = $user->getRoles();
+
+        foreach( $roleNames as $roleName ) {
+
+            $roles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, $sitename, $roleName);
+
+            foreach( $roles as $role ) {
+
+                $childRoles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $role->getInstitution(), $sitename, null);
+
+                foreach( $childRoles as $childRole ) {
+
+                    if( $childRole && !$userRoles->contains($childRole) ) {
+                        $userRoles->add($childRole);
+                    }
+
+                }
+
+            }
+        }
+
+        return $userRoles;
+    }
+    //find user parent roles specified by sitename, objectStr, actionStr
+    public function findUserParentRolesBySitePermissionObjectAction( $user, $sitename, $parentObjectStr, $parentActionStr, $childObjectStr,$childActionStr ) {
+
+        $userParentRoles = new ArrayCollection();
+
+        //find this user roles
+        $userRoles = $this->findUserRolesBySitePermissionObjectAction($user,$sitename,$childObjectStr,$childActionStr);
+        //echo "userRole count=".count($userRoles)."<br>";
+
+        //find parent roles
+        $parentRoles = $this->findRolesByObjectActionInstitutionSite($parentObjectStr,$parentActionStr,null,$sitename);
+        //echo "parentRoles=".count($parentRoles)."<br>";
+
+        foreach( $parentRoles as $parentRole ) {
+            //check if the $userRoles is under $parentRole
+            foreach( $userRoles as $userRole ) {
+                //echo "parentRole=".$parentRole."; userRole=".$userRole."<br>";
+                if( $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentRole->getInstitution(), $userRole->getInstitution()) ) {
+                    if( $parentRole && !$userParentRoles->contains($parentRole) ) {
+                        $userParentRoles->add($parentRole);
+                    }
+                }
+            }
+        }
+
+        return $userParentRoles;
     }
 
     public function findRolesBySiteAndPartialRoleName( $sitename, $rolePartialName, $institutionId=null ) {

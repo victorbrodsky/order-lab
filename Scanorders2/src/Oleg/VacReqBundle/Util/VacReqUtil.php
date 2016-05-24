@@ -1013,28 +1013,41 @@ class VacReqUtil
 
             $objectStr = $permission['objectStr'];
             $actionStr = $permission['actionStr'];
-            echo "objectStr=".$objectStr.", actionStr=".$actionStr."<br>";
+            //echo "objectStr=".$objectStr.", actionStr=".$actionStr."<br>";
 
-            $roles = null;
+            $roles = new ArrayCollection();
 
-            if( !$roles && $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( count($roles)==0 && $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
             }
-            if( !$roles && $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-                //TODO: test it for supervisor
+            if( count($roles)==0 && ($this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) ) {
+                //$roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                //    findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,null,false);
+                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                    findUserChildRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
+            }
+            if( count($roles)==0) {
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
-            if( !$roles ) {
+
+            //second try to get group. This is the case for changestatus-carryover action
+            if( count($roles)==0 && $actionStr == "changestatus-carryover" ) {
+                //echo "second try<br>";
+                //get all changestatus-carryover roles
+                $childObjectStr = $objectStr;
+                $childActionStr = "create";
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
-                    findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
+                    findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
             }
-            echo "role count=".count($roles)."<br>";
+
+
+            //echo "role count=".count($roles)."<br>";
 
             foreach($roles as $role ) {
 
-                echo "role=".$role."<br>";
+                //echo "role=".$role."<br>";
 
                 $institution = $role->getInstitution();
 
@@ -1062,9 +1075,9 @@ class VacReqUtil
 
         }
 
-        foreach( $institutions as $key=>$value) {
-            echo $key."=>".$value."<br>";
-        }
+//        foreach( $institutions as $key=>$value) {
+//            echo $key."=>".$value."<br>";
+//        }
 
         return $institutions;
     }
@@ -1234,6 +1247,7 @@ class VacReqUtil
             return true;
         }
 
+        //TODO: fix this by permission
         $user = $this->sc->getToken()->getUser();
         //$sitename = "vacreq";
         //return $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$rolePartialName,$institutionId);

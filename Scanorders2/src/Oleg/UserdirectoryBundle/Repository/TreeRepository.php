@@ -44,6 +44,16 @@ class TreeRepository extends NestedTreeRepository {
         return false;
     }
 
+//    public function isParentNodeUnderNodes( $parentNode, $nodes ) {
+//        foreach( $nodes as $node ) {
+//            if( $this->isNodeUnderParentnode($parentNode, $node) ) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
+
 //    public function selectStrNodesUnderParentNode( Institution $parentNode, Institution $node ) {
 //
 //        $criteriastr = "";

@@ -270,18 +270,18 @@ class RequestIndexController extends Controller
         }
 
         //institutional group
-        if( $request->get('_route') == "vacreq_myrequests" ) {
-            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUBMITTER'));
-        }
-        if( $request->get('_route') == "vacreq_incomingrequests" ) {
-            //$groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
-            if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
-                $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_APPROVER'));
-            } else {
-                $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
-            }
-        }
-        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser,$groupParams);//, $params['requestTypeAbbreviation']);
+//        if( $request->get('_route') == "vacreq_myrequests" ) {
+//            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUBMITTER'));
+//        }
+//        if( $request->get('_route') == "vacreq_incomingrequests" ) {
+//            //$groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+//            if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
+//                $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_APPROVER'));
+//            } else {
+//                $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
+//            }
+//        }
+//        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser,$groupParams);//, $params['requestTypeAbbreviation']);
 
         //get submitter groups: VacReqRequest, create
         $groupParams = array();
@@ -310,8 +310,7 @@ class RequestIndexController extends Controller
 
         $params['routeName'] = $request->get('_route');
 
-        $vacreqUtil = $this->get('vacreq_util');
-        $params['supervisor'] = $vacreqUtil->hasRoleNameAndGroup(array('ROLE_VACREQ_SUPERVISOR'));
+        $params['supervisor'] = $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR');
 
         //create filter form
         $filterform = $this->createForm(new VacReqFilterType($params), null);
