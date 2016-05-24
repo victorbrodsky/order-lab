@@ -1724,6 +1724,45 @@ class VacReqUtil
         return $totalAccruedDays;
     }
 
+    public function getPendingCarryOverRequests($user) {
+
+        if( $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') == false ) {
+           return null;
+        }
+
+        //1) get user's supervisor group
+        //$userRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+            //findUserChildRolesBySitePermissionObjectAction($user,'vacreq',"vacReqRequest","changestatus-carryover");
+
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $groups = $this->getGroupsByPermission($user,$groupParams);
+
+        $idArr = array();
+        foreach( $groups as $group ) {
+            $idArr[] = $group->getId();
+        }
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->leftJoin("request.institution", "institution");
+        $dql->leftJoin("request.requestType", "requestType");
+
+        $dql->where("request.status = 'pending' AND requestType.abbreviation = 'carryover'");
+
+        $dql->andWhere("institution.id in (:groupIds) ");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(array(
+            'groupIds' => implode(",",$idArr),
+        ));
+
+        $requests = $query->getResult();
+
+        return $requests;
+    }
+
 
     public function convertDateTimeToStr($datetime) {
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');

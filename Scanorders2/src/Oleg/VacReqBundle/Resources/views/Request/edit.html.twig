@@ -41,6 +41,18 @@
                 {{ prefixStr }} <a href="{{ path(vacreq_sitename~'_accessrequest_list') }}" target="_blank">{{ accessreqs }} {{ postfixStr }}</a>
             </div>
         {% endif %}
+
+        {% if carryoverPendingRequests is defined and carryoverPendingRequests and carryoverPendingRequests > 0 %}
+            {% set prefixStr = "There is" %}
+            {% set postfixStr = "unprocessed Carry Over request." %}
+            {% if carryoverPendingRequests > 1 %}
+                {% set prefixStr = "There are" %}
+                {% set postfixStr = "unprocessed Carry Over requests." %}
+            {% endif %}
+            <div class="alert alert-warning">
+                {{ prefixStr }} <a href="{{ path(vacreq_sitename~'_incomingrequests',{'filter[requestType]':requestTypeCarryOverId}) }}" target="_blank">{{ carryoverPendingRequests }} {{ postfixStr }}</a>
+            </div>
+        {% endif %}
     {% endif %}
 
     {% if totalApprovedDaysString is defined and totalApprovedDaysString %}

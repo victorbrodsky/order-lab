@@ -123,7 +123,7 @@ class RequestController extends Controller
             //set confirmation email to submitter and approver and email users
             $subject = $requestName." #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
-            $message .= "You have successfully submitted the ".$requestName.".";
+            $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
             $message .= "The approver will review your request soon.";
             $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
             $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
@@ -164,11 +164,21 @@ class RequestController extends Controller
             $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange.".";
         }
 
+        $carryoverPendingRequests = $vacreqUtil->getPendingCarryOverRequests($user);
+        $requestTypeCarryOver = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
+        if( $requestTypeCarryOver ) {
+            $requestTypeCarryOverId = $requestTypeCarryOver->getId();
+        } else {
+            $requestTypeCarryOverId = null;
+        }
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
             'accessreqs' => count($accessreqs),
+            'carryoverPendingRequests' => count($carryoverPendingRequests),
+            'requestTypeCarryOverId' => $requestTypeCarryOverId,
             'totalApprovedDaysString' => $totalApprovedDaysString,
             'accruedDaysString' => $accruedDaysString,
             'carriedOverDaysString' => $carriedOverDaysString,
@@ -551,7 +561,7 @@ class RequestController extends Controller
         }
 
         //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
-        return $this->redirectToRoute('vacreq_incomingrequests');
+        return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()));
     }
 
 
