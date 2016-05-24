@@ -190,7 +190,7 @@ class VacReqUtil
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $message .= $break . $break . "Please click on the below URL to review ".$requestName." #".$entity->getId().":" . $break;
+        $message .= $break . $break . "Please follow the link below to review ".$requestName." #".$entity->getId().":" . $break;
         $message .= $reviewRequestUrl . $break . $break;
 
         $message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." #".$entity->getId().".";
@@ -207,7 +207,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Approve the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Approve the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
@@ -220,7 +220,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Reject the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
         }
 
@@ -236,7 +236,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Approve the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Approve the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
@@ -249,7 +249,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Reject the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
         }
 
@@ -264,7 +264,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Approve the ".$requestName.":" . $break;
+            $message .= $break . $break . "Please follow the link below to Approve the ".$requestName.":" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
@@ -277,7 +277,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Reject the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
         }
 
