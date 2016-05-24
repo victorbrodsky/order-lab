@@ -101,8 +101,14 @@ class VacReqUtil
             return null;
         }
 
+        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            $approverRole = "ROLE_VACREQ_SUPERVISOR";
+        } else {
+            $approverRole = "ROLE_VACREQ_APPROVER";
+        }
+
         $approvers = array();
-        $roleApprovers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institution->getId());
+        $roleApprovers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", $approverRole, $institution->getId());
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
@@ -123,13 +129,17 @@ class VacReqUtil
         $emailUtil = $this->container->get('user_mailer_utility');
         //$break = "\r\n";
 
+        $requestName = $entity->getRequestName();
+
         $approvers = $this->getRequestApprovers($entity);
 
         $approversNameArr = array();
 
-        $subject = "Review Faculty Vacation/Business Request #" . $entity->getId() . " Confirmation";
+        $subject = "Review ".$requestName." #" . $entity->getId() . " Confirmation";
 
         foreach( $approvers as $approver ) {
+
+            //echo "approver".$approver."<br>";
 
             if( !$approver->getSingleEmail() ) {
                 continue;
@@ -143,7 +153,7 @@ class VacReqUtil
         } //foreach approver
 
         //send email to email users
-        $subject = "Copy of the Review Faculty Vacation/Business Request #" . $entity->getId() . " Confirmation";
+        $subject = "Copy of the Review ".$requestName." #" . $entity->getId() . " Confirmation";
         $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
         $settings = $this->getSettingsByInstitution($institution->getId());
         if( $settings ) {
@@ -169,7 +179,9 @@ class VacReqUtil
             $message .= $addText.$break.$break;
         }
 
-        $message .= $submitter->getUsernameOptimal()." has submitted the pathology faculty vacation/business travel request and it is ready for review.";
+        $requestName = $entity->getRequestName();
+
+        $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." #".$entity->getId()." and it is ready for review.";
 
         $reviewRequestUrl = $url = $this->container->get('router')->generate(
             'vacreq_review',
@@ -178,10 +190,10 @@ class VacReqUtil
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $message .= $break . $break . "Please click on the below URL to review the vacation/business travel request:" . $break;
+        $message .= $break . $break . "Please click on the below URL to review ".$requestName." #".$entity->getId().":" . $break;
         $message .= $reviewRequestUrl . $break . $break;
 
-        $message .= $break . "Please click on the URLs below for quick actions to approve or reject the vacation/business travel request.";
+        $message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." #".$entity->getId().".";
 
         if( $entity->hasBusinessRequest() ) {
             //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
@@ -195,7 +207,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Approve the business request:" . $break;
+            $message .= $break . $break . "Please click on the below URL to Approve the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
@@ -208,7 +220,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Reject the business request:" . $break;
+            $message .= $break . $break . "Please click on the below URL to Reject the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
         }
 
@@ -224,7 +236,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Approve the vacation request:" . $break;
+            $message .= $break . $break . "Please click on the below URL to Approve the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
@@ -237,7 +249,35 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please click on the below URL to Reject the vacation request:" . $break;
+            $message .= $break . $break . "Please click on the below URL to Reject the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $actionRequestUrl;
+        }
+
+        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+
+            $actionRequestUrl = $url = $this->container->get('router')->generate(
+                'vacreq_status_change',
+                array(
+                    'id' => $entity->getId(),
+                    'requestName' => 'entire',
+                    'status' => 'approved'
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $message .= $break . $break . "Please click on the below URL to Approve the ".$requestName.":" . $break;
+            $message .= $actionRequestUrl;
+
+            //rejected
+            $actionRequestUrl = $url = $this->container->get('router')->generate(
+                'vacreq_status_change',
+                array(
+                    'id' => $entity->getId(),
+                    'requestName' => 'entire',
+                    'status' => 'rejected'
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $message .= $break . $break . "Please click on the below URL to Reject the ".$requestName." #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
         }
 
@@ -248,7 +288,7 @@ class VacReqUtil
     }
 
     //set respond confirmation email to a submitter and email users
-    public function sendSingleRespondEmailToSubmitter( $entity, $approver, $requestName=null, $status ) {
+    public function sendSingleRespondEmailToSubmitter( $entity, $approver, $status ) {
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $break = "\r\n";
@@ -258,17 +298,15 @@ class VacReqUtil
             return null;
         }
 
-        $subject = "Respond Confirmation for Faculty Vacation/Business Request #".$entity->getId();
+        $requestName = $entity->getRequestName();
+
+        $subject = "Respond Confirmation for ".$requestName." #".$entity->getId();
 
         $submitter = $entity->getUser();
 
         $message = "Dear " . $submitter->getUsernameOptimal() . "," . $break.$break;
 
-        if( $requestName ) {
-            $message .= "Your ".$requestName." Request";
-        } else {
-            $message .= "Your ".$entity->getRequestName();   //"Your request";
-        }
+        $message .= "Your ".$requestName." #" . $entity->getId();
 
         if ($status == 'pending') {
             $status = 'set to Pending';
@@ -1007,6 +1045,8 @@ class VacReqUtil
 
         $asObject = ( array_key_exists('asObject', $params) ? $params['asObject'] : false);
         $permissions = ( array_key_exists('permissions', $params) ? $params['permissions'] : null);
+        $exceptPermissions = ( array_key_exists('exceptPermissions', $params) ? $params['exceptPermissions'] : null);
+
         $institutions = array();
 
         foreach( $permissions as $permission ) {
@@ -1022,8 +1062,7 @@ class VacReqUtil
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
             }
             if( count($roles)==0 && ($this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) ) {
-                //$roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
-                //    findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,null,false);
+                //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserChildRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
@@ -1031,7 +1070,6 @@ class VacReqUtil
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
-
             //second try to get group. This is the case for changestatus-carryover action
             if( count($roles)==0 && $actionStr == "changestatus-carryover" ) {
                 //echo "second try<br>";
@@ -1047,11 +1085,31 @@ class VacReqUtil
 
             foreach($roles as $role ) {
 
-                //echo "role=".$role."<br>";
-
+                //echo "###role=".$role."<br>";
+                $include = true;
                 $institution = $role->getInstitution();
 
                 if( $institution ) {
+
+                    if( $exceptPermissions ) {
+                        foreach( $exceptPermissions as $exceptPermission ) {
+                            //echo "exceptPermission: ".$exceptPermission['objectStr']."=>".$exceptPermission['actionStr']."<br>";
+                            foreach( $role->getPermissions() as $permission ) {
+                                $roleObjectStr = $permission->getPermission()->getPermissionObjectList()->getName();
+                                $roleActionStr = $permission->getPermission()->getPermissionActionList()->getName();
+                                //echo "except: ".$roleObjectStr."=>".$roleActionStr."<br>";
+                                if( $roleObjectStr == $exceptPermission['objectStr'] && $roleActionStr == $exceptPermission['actionStr'] ) {
+                                    //echo "!!!!!!!!except role=".$role."<br>";
+                                    $include = false;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+                    if( $include == false ) {
+                        continue;
+                    }
 
                     if ($asObject) {
                         $institutions[] = $institution;
@@ -1075,12 +1133,13 @@ class VacReqUtil
 
         }
 
-        foreach( $institutions as $key=>$value) {
-            echo $key."=>".$value."<br>";
-        }
+//        foreach( $institutions as $key=>$value) {
+//            echo $key."=>".$value."<br>";
+//        }
 
         return $institutions;
     }
+    //TODO: replace by getGroupsByPermission
     //get user's organizational group
     //get only institutions from the same institutional tree:
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
@@ -1434,11 +1493,13 @@ class VacReqUtil
         $emailUtil = $this->container->get('user_mailer_utility');
         //$break = "\r\n";
 
+        $requestName = $entity->getRequestName();
+
         $approvers = $this->getRequestApprovers($entity);
 
         $approversNameArr = array();
 
-        $subject = "Faculty Vacation/Business Request #" . $entity->getId() . " " . ucwords($status);
+        $subject = $requestName." #" . $entity->getId() . " " . ucwords($status);
 
         foreach( $approvers as $approver ) {
 
@@ -1454,8 +1515,8 @@ class VacReqUtil
         } //foreach approver
 
         //send email to email users
-        $subject = "Copy of the Faculty Vacation/Business Request #" . $entity->getId() . " " . ucwords($status);
-        $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
+        $subject = "Copy of the confirmation email for ".$requestName." #" . $entity->getId() . " " . ucwords($status);
+        $addText = "### This is a copy of the confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
         $settings = $this->getSettingsByInstitution($institution->getId());
         if( $settings ) {
             foreach ($settings->getEmailUsers() as $emailUser) {
@@ -1477,7 +1538,9 @@ class VacReqUtil
             $message .= $addText.$break.$break;
         }
 
-        $message .= $entity->getUser()." canceled/withdrew their business travel / vacation request described below:".$break.$break;
+        $requestName = $entity->getRequestName();
+
+        $message .= $entity->getUser()." canceled/withdrew the ".$requestName." #".$entity->getId()." described below:".$break.$break;
 
         $message .= $entity."";
 

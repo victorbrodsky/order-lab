@@ -1,11 +1,21 @@
 
-
 {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
 
-<h4 class="text-info" align="center">
-    {{ groupName }}
-</h4>
+{#<h4 class="text-info" align="center">#}
+    {#{{ groupName }}#}
+{#</h4>#}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#vacreq-my-single-group-{{ groupId }}">
+                {{ groupName }}
+            </a>
+        </h4>
+    </div>
+    <div id="vacreq-my-single-group-{{ groupId }}" class="panel-collapse collapse in">
+        <div class="panel-body">
 
 <table class="records_list table table-hover table-condensed text-left table-bordered sortable">
 
@@ -129,6 +139,8 @@
 
 </table>
 
-
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+</div> <!-- panel panel-info -->
 
 

@@ -29,8 +29,6 @@ class ApproverController extends Controller
 {
 
     /**
-     * Creates a new VacReqRequest entity.
-     *
      * @Route("/groups/", name="vacreq_approvers")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Approver:approvers-list.html.twig")
@@ -44,7 +42,7 @@ class ApproverController extends Controller
 
         $vacreqUtil = $this->get('vacreq_util');
         $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
 
         //list all organizational group (institution)
 //        $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "changestatus");
@@ -53,22 +51,21 @@ class ApproverController extends Controller
 //            $organizationalInstitutions[] = $role->getInstitution();
 //        }
 
-        //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
-        $params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER'));
-        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
+        //get submitter groups
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
-        //TODO: add carryover approver group as in #489 (39)
-        $params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
-        $carryOverRequestGroups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);
+        //get carryover approver groups
+        $carryOverGroupParams = array('asObject'=>true);
+        $carryOverGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $carryOverRequestGroups = $vacreqUtil->getGroupsByPermission($user,$carryOverGroupParams);
 
-//        //vacreq_util
-//        $vacreqUtil = $this->get('vacreq_util');
-//        $arraySettings = $vacreqUtil->getInstitutionSettingArray();
 
         return array(
             'organizationalInstitutions' => $organizationalInstitutions,
             'carryOverRequestGroups' => $carryOverRequestGroups
-//            'arraySettings' => $arraySettings
         );
     }
 
@@ -980,12 +977,12 @@ class ApproverController extends Controller
         //vacreq_util
         $vacreqUtil = $this->get('vacreq_util');
 
-        //find groups
+        //find groups for logged in user
         //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
         //$groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
-        //TODO: fix it using getGroupsByPermission
         $groupParams = array('asObject'=>true);
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
         $groups = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "groups=".count($groups)."<br>";
 

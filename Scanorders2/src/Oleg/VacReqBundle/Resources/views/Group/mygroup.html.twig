@@ -16,6 +16,13 @@
         {{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
     </div>
 
+    {#<br>#}
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+    {#<br>#}
+
     {% for group in groups %}
         {#group: {{ group.name }}#}
         <p>

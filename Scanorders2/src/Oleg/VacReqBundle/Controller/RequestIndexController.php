@@ -291,6 +291,9 @@ class RequestIndexController extends Controller
         if( $request->get('_route') == "vacreq_incomingrequests" ) {
             if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+                if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                    $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+                }
             } else {
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
             }

@@ -124,7 +124,7 @@ class RequestController extends Controller
             $subject = $requestName." #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
             $message .= "You have successfully submitted the ".$requestName.".";
-            $message .= "The division approver will review your request soon.";
+            $message .= "The approver will review your request soon.";
             $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
             $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
 
@@ -307,8 +307,7 @@ class RequestController extends Controller
                 $action = $overallStatus;
 
                 //send respond email
-                $requestName = null;
-                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $overallStatus );
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $overallStatus );
 
             } else { //update
 
@@ -536,7 +535,7 @@ class RequestController extends Controller
                     // and list all variable names and values in the email.
                     $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
                 } else {
-                    $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $requestName, $status );
+                    $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
                 }
 
             }
@@ -581,22 +580,16 @@ class RequestController extends Controller
 
         $requestType = $entity->getRequestType();
 
-        //organizationalInstitution
-//        if( $requestType->getAbbreviation() == "carryover" ) {
-//            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUPERVISOR'));
-//        } else {
-//            $groupParams = array('roleSubStrArr'=>array('ROLE_VACREQ_SUBMITTER'));
-//        }
-//        $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
-
         //get submitter groups: VacReqRequest, create
         $groupParams = array();
         if( $requestType->getAbbreviation() == "carryover" ) {
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
         } else {
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+            }
         }
-        //$groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         if( count($organizationalInstitutions) == 0 ) {

@@ -290,9 +290,9 @@ class UserRepository extends EntityRepository {
         $roles = $query->getQuery()->getResult();
         //echo "roles count=".count($roles)."<br>";
 
-        foreach( $roles as $role ) {
+        //foreach( $roles as $role ) {
             //echo "role=".$role."<br>";
-        }
+        //}
         //exit('exit');
 
         return $roles;
@@ -363,9 +363,11 @@ class UserRepository extends EntityRepository {
 
         foreach( $roleNames as $roleName ) {
 
+            //find user role object (i.e. ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY)
             $roles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, $sitename, $roleName);
 
             foreach( $roles as $role ) {
+                //echo "###role=".$role."<br>";
 
                 $childRoles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $role->getInstitution(), $sitename, null);
 
@@ -375,10 +377,11 @@ class UserRepository extends EntityRepository {
                         $userRoles->add($childRole);
                     }
 
-                }
+                }//foreach userRole objects
 
-            }
-        }
+            }//foreach
+
+        }//foreach userRoles
 
         return $userRoles;
     }
