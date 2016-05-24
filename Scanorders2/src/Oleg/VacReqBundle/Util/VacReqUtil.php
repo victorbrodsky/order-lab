@@ -1013,20 +1013,28 @@ class VacReqUtil
 
             $objectStr = $permission['objectStr'];
             $actionStr = $permission['actionStr'];
+            echo "objectStr=".$objectStr.", actionStr=".$actionStr."<br>";
 
-            if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') || $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-                if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
-                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
-                }
-                if( $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-                    //TODO: test it for supervisor
-                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
-                }
-            } else {
-                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
+            $roles = null;
+
+            if( !$roles && $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                    findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
             }
+            if( !$roles && $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+                //TODO: test it for supervisor
+                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                    findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
+            }
+            if( !$roles ) {
+                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                    findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
+            }
+            echo "role count=".count($roles)."<br>";
 
             foreach($roles as $role ) {
+
+                echo "role=".$role."<br>";
 
                 $institution = $role->getInstitution();
 
@@ -1052,6 +1060,10 @@ class VacReqUtil
                 }
             }
 
+        }
+
+        foreach( $institutions as $key=>$value) {
+            echo $key."=>".$value."<br>";
         }
 
         return $institutions;

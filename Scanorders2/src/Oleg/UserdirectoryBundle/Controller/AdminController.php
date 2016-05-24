@@ -4396,6 +4396,7 @@ class AdminController extends Controller
 
             "Submit a Vacation Request",
             "Approve a Vacation Request",
+            "Approve a Carry Over Request"
         );
 
         $count = 10;
@@ -4511,22 +4512,28 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $types = array(
             "create",
             "read",
             "update",
             "delete",
-            "changestatus"
+            "changestatus",
+
+            "changestatus-carryover"
         );
 
         $count = 10;
         foreach( $types as $type ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findOneByName($type);
+            if( $listEntity ) {
+                continue;
+            }
 
             $listEntity = new PermissionActionList();
             $this->setDefaultList($listEntity,$count,$username,$type);
@@ -4773,9 +4780,9 @@ class AdminController extends Controller
 
         $userSecUtil = $this->container->get('user_security_utility');
 
-        //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create","changestatus"
+        //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="changestatus"
         if( strpos($role, "ROLE_VACREQ_APPROVER") !== false ) {
-            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
+            //$count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
         }
 
@@ -4784,10 +4791,11 @@ class AdminController extends Controller
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
         }
 
-        //ROLE_VACREQ_SUPERVISOR: permission="Approve a Vacation Request", object="VacReqRequest", action="create","changestatus"
+        //ROLE_VACREQ_SUPERVISOR: permission="Approve a Carry Over Request", object="VacReqRequest", action="changestatus-carryover"
         if( strpos($role, "ROLE_VACREQ_SUPERVISOR") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Carry Over Request","VacReqRequest","changestatus-carryover");
         }
 
         return $count;

@@ -70,20 +70,6 @@ class RequestIndexController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        //for incomingrequests if requestType is not set, set requestType to 'carryover' if a user has only SUPERVISOR role
-//        $requestParams = $request->query->all();
-//        $requestTypeId = $requestParams["filter"]["requestType"];
-//        if( !$requestTypeId ) {
-//            $em = $this->getDoctrine()->getManager();
-//            $vacreqUtil = $this->get('vacreq_util');
-//            $supervisorInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user, array('roleSubStrArr' => array('ROLE_VACREQ_SUPERVISOR')));
-//            echo "supervisorInstitutions=" . count($supervisorInstitutions) . "<br>";
-//            if (count($supervisorInstitutions) > 0) {
-//                $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
-//                return $this->redirectToRoute('vacreq_incomingrequests', array('filter[requestType]' => $requestType->getId()));
-//            }
-//        }
-
         $params = array(
             'sitename' => $this->container->getParameter('vacreq.sitename'),
             'approver' => $user,
@@ -296,6 +282,22 @@ class RequestIndexController extends Controller
             }
         }
         $organizationalInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($currentUser,$groupParams);//, $params['requestTypeAbbreviation']);
+
+        //get submitter groups: VacReqRequest, create
+        $groupParams = array();
+        if( $request->get('_route') == "vacreq_myrequests" ) {
+            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        }
+        if( $request->get('_route') == "vacreq_incomingrequests" ) {
+            if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
+                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+            } else {
+                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+            }
+        }
+        $user = $this->get('security.context')->getToken()->getUser();
+        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 
         //tooltip for Academic Year:
