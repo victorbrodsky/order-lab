@@ -1750,13 +1750,14 @@ class VacReqUtil
 
         $dql->where("request.status = 'pending' AND requestType.abbreviation = 'carryover'");
 
-        $dql->andWhere("institution.id in (:groupIds) ");
+        $idsStr = implode(",", $idArr);
+        $dql->andWhere("institution.id IN (".$idsStr.") ");
 
         $query = $this->em->createQuery($dql);
 
-        $query->setParameters(array(
-            'groupIds' => implode(",",$idArr),
-        ));
+//        $query->setParameters(array(
+//            'groupIds' => implode(",",$idArr),
+//        ));
 
         $requests = $query->getResult();
 
