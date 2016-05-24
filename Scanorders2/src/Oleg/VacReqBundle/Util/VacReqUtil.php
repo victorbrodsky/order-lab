@@ -1075,9 +1075,9 @@ class VacReqUtil
 
         }
 
-//        foreach( $institutions as $key=>$value) {
-//            echo $key."=>".$value."<br>";
-//        }
+        foreach( $institutions as $key=>$value) {
+            echo $key."=>".$value."<br>";
+        }
 
         return $institutions;
     }
@@ -1247,10 +1247,10 @@ class VacReqUtil
             return true;
         }
 
-        //TODO: fix this by permission
         $user = $this->sc->getToken()->getUser();
         //$sitename = "vacreq";
-        //return $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$rolePartialName,$institutionId);
+
+        //TODO: fix this by permission
 
         //get user allowed groups
         $groupParams = array(

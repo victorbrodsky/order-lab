@@ -981,21 +981,13 @@ class ApproverController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
 
         //find groups
-        $params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
-        $groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
+        //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+        //$groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
+        //TODO: fix it using getGroupsByPermission
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groups = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "groups=".count($groups)."<br>";
-
-//        if( count($groups) == 0 ) {
-//            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
-//                $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER');
-//                echo "roles=".count($approverRoles)."<br>";
-//                $groups = array();
-//                foreach ($approverRoles as $approverRole) {
-//                    echo "group=".$approverRole->getInstitution()."<br>";
-//                    $groups[] = $approverRole->getInstitution();
-//                }
-//            }
-//        }
 
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonth();
@@ -1032,6 +1024,7 @@ class ApproverController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        //echo "groupId=".$groupId."<br>";
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
 
