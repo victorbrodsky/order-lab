@@ -561,7 +561,7 @@ class RequestController extends Controller
         }
 
         //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
-        return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()));
+        return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
     }
 
 
