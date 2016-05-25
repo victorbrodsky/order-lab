@@ -435,7 +435,7 @@ class VacReqUtil
     }
 
     //$yearRange: '2015-2016' or '2015'
-    public function getUserCarryOverDays( $user, $yearRange ) {
+    public function getUserCarryOverDays( $user, $yearRange, $asObject=false ) {
 
         $startYearArr = $this->getYearsFromYearRangeStr($yearRange);
         $startYear = $startYearArr[0];
@@ -459,6 +459,9 @@ class VacReqUtil
         //echo "carryOvers=".count($carryOvers)."<br>";
 
         if( count($carryOvers) > 0 ) {
+            if( $asObject ) {
+                return $carryOvers[0];
+            }
             $days = $carryOvers[0]->getDays();
             //echo "days=".$days."<br>";
             return $days;
@@ -468,7 +471,7 @@ class VacReqUtil
         return null;
     }
 
-    public function processVacReqCarryOverRequest($entity) {
+    public function processVacReqCarryOverRequest( $entity, $onlyCheck=false ) {
 
         $requestType = $entity->getRequestType();
 
@@ -487,25 +490,44 @@ class VacReqUtil
 
         //get VacReqCarryOver for request's destination year
         $carryOverYear = $entity->getDestinationYear();
-        $carryOver = $this->getUserCarryOverDays( $subjectUser, $carryOverYear );
+        $carryOver = $this->getUserCarryOverDays( $subjectUser, $carryOverYear, true );
 
-        if( !$carryOver ) {
+        $carryOverDays = null;
+
+        if( !$carryOver && $onlyCheck == false ) {
             $carryOver = new VacReqCarryOver();
             $carryOver->setYear($carryOverYear);
             $userCarryOver->addCarryOver($carryOver);
+        } else {
+            $carryOverDays = $carryOver->getDays();
         }
 
         $res = array('userCarryOver'=>$userCarryOver);
 
-        $carryOverDays = $carryOver->getDays();
         if( $carryOverDays ) {
+
+            //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
+            $carryOverWarningMessageLog = $entity->getUser()->getUsernameOptimal()." already has ".$carryOverDays." days carried over from ".
+                $entity->getSourceYearRange()." academic year to the ".$entity->getDestinationYearRange()." academic year on file.<br>";
+            // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
+            $carryOverWarningMessageLog .= "This carry over request asks for ".$entity->getCarryOverDays()." days to be carried over from ".
+                $entity->getSourceYearRange()." academic year to the ".$entity->getDestinationYearRange()." academic year on file.<br>";
+            // Please enter the total amount of days that should be carried over 20YY-20ZZ academic year to the 20ZZ-20MM academic year: [ ]"
+            $carryOverWarningMessage = $carryOverWarningMessageLog . "Please enter the total amount of days that should be carried over ".
+                $entity->getSourceYearRange()." academic year to the ".$entity->getDestinationYearRange()." academic year on file.";
+
             $res['exists'] = true;
             $res['days'] = $carryOverDays;
+            $res['carryOverWarningMessage'] = $carryOverWarningMessage;
+            $res['carryOverWarningMessageLog'] = $carryOverWarningMessageLog;
+
         } else {
             $carryOverDays = $entity->getCarryOverDays();
             $carryOver->setDays($carryOverDays);
             $res['exists'] = false;
             $res['days'] = $carryOverDays;
+            $res['carryOverWarningMessage'] = null;
+            $res['carryOverWarningMessageLog'] = null;
         }
 
         return $res;

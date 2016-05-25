@@ -39,6 +39,31 @@ class VacReqRequestType extends AbstractType
         }
 
 
+        if( $this->params['requestType']->getAbbreviation() == "carryover" && ($this->params['cycle'] == 'review' || $this->params['cycle'] == 'show') ) {
+
+            //enable status radio only for admin or for reviewer
+            $readOnly = true;
+            if( $this->params['review'] === true || $this->params['roleAdmin'] || $this->params['roleApprover'] ) {
+                $readOnly = false;
+            }
+
+            $builder->add('status', 'choice', array(
+                //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+                'read_only' => $readOnly,
+                'choices' => array(
+                    //'pending' => 'Pending',
+                    'approved' => 'Approved',
+                    'rejected' => 'Rejected'
+                ),
+                'label' => false,   //"Status:",
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true,
+                //'data' => 'pending',
+                'attr' => array('class' => 'horizontal_type_wide'), //horizontal_type
+            ));
+
+        }
 
     }
 

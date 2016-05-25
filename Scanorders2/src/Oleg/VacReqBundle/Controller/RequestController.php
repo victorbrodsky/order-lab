@@ -111,18 +111,6 @@ class RequestController extends Controller
                 }
             }
 
-//            //process carry over request days
-//            $res = $vacreqUtil->processVacReqCarryOverRequest($entity);
-//            if( $res && $res['exists'] == true ) {
-//                //warning for overwrite
-//                exit('exists days='.$res['days']);
-//            }
-//            if( $res && $res['exists'] == false ) {
-//                //save
-//                $userCarryOver = $res['userCarryOver'];
-//                $em->persist($userCarryOver);
-//            }
-
             $em->persist($entity);
             $em->flush();
 
@@ -152,6 +140,15 @@ class RequestController extends Controller
 
             //set confirmation email to approver and email users
             $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
+
+            //check if requested carry over days are already approved or denied
+            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                //check if requested carry over days are already approved or denied
+                $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true);
+                $carryOverWarningMessageLog = $resCarryOverRequest['carryOverWarningMessageLog'];
+                $eventType = "Existing Days Carry Over Request Created";
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
+            }
 
             return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
         }
@@ -305,19 +302,16 @@ class RequestController extends Controller
             $cycle = 'review';
         }
 
-        //add missing subRequests for edit
-//        if( $routName == 'vacreq_edit' ) {
-//            if( !$entity->hasBusinessRequest() ) {
-//                $requestB = new VacReqRequestBusiness();
-//                $em->persist($requestB);
-//                $entity->setRequestBusiness($requestB);
-//            }
-//            if( !$entity->hasVacationRequest() ) {
-//                $requestV = new VacReqRequestVacation();
-//                $em->persist($requestV);
-//                $entity->setRequestVacation($requestV);
-//            }
-//        }
+        //check if requested carry over days are already approved or denied
+        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            //check if requested carry over days are already approved or denied
+            $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true);
+            $carryOverWarningMessage = $resCarryOverRequest['carryOverWarningMessage'];
+            $carryOverWarningMessageLog = $resCarryOverRequest['carryOverWarningMessageLog'];
+        } else {
+            $carryOverWarningMessage = null;
+            $carryOverWarningMessageLog = null;
+        }
 
         $form = $this->createRequestForm($entity,$cycle,$request);
 
@@ -421,6 +415,11 @@ class RequestController extends Controller
 
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
+            if( $carryOverWarningMessageLog ) {
+                $eventType = 'Existing Days Carry Over Request Updated';
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
+            }
+
             if( $routName == 'vacreq_review' ) {
                 return $this->redirectToRoute('vacreq_incomingrequests');
             } else {
@@ -448,7 +447,8 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'review' => $review,
-            'title' => $title
+            'title' => $title,
+            'carryOverWarningMessage' => $carryOverWarningMessage
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -525,13 +525,19 @@ class RequestController extends Controller
                 }
                 if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
                     //exit("status=".$status);
+
+                    //#489 (41)
                     if( $status == "approved" ) {
                         //process carry over request days if request is approved
                         $vacreqUtil = $this->get('vacreq_util');
                         $res = $vacreqUtil->processVacReqCarryOverRequest($entity);
                         if( $res && $res['exists'] == true ) {
-                            //warning for overwrite
-                            exit('exists days='.$res['days']);
+                            //warning for overwrite:
+                            //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
+                            // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
+                            // Please enter the total amount of days that should be carried over 20YY-20ZZ academic year to the 20ZZ-20MM academic year: [ ]"
+                            //exit('exists days='.$res['days']);
+                            return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
                         }
                         if( $res && $res['exists'] == false ) {
                             //save

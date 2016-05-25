@@ -117,15 +117,41 @@
 
         {#Carry Over#}
         {% if entity.getRequestType().getAbbreviation() == "carryover" %}
-            <div class="panel panel-info">
+            {% set showCarryoverStatus = false %}
+            {% if entity.status and entity.status is defined %}
+                {% set showCarryoverStatus = true %}
+            {% endif %}
+            {#set accordion color#}
+            {% set CarryoverPanelColor = 'panel-info' %}
+            {% if entity.status and entity.status == 'approved' %}
+                {% set CarryoverPanelColor = 'panel-success' %}
+            {% endif %}
+            {% if entity.status and entity.status == 'rejected' %}
+                {% set CarryoverPanelColor = 'panel-danger' %}
+            {% endif %}
+
+            <div class="panel {{ CarryoverPanelColor }}">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#carryover">
-                            Carry Over Request
-                        </a>
+                        {% if showCarryoverStatus %}
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <a data-toggle="collapse" href="#vacreq-Carryover">
+                                        Carry Over Request
+                                    </a>
+                                </div>
+                                <div class="col-xs-6" align="left" style="color:#333;">
+                                    {{ vacreqmacros.request_radio_choice( form ) }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <a data-toggle="collapse" href="#vacreq-Carryover">
+                                Carry Over Request
+                            </a>
+                        {% endif %}
                     </h4>
                 </div>
-                <div id="carryover" class="panel-collapse collapse in">
+                <div id="vacreq-Carryover" class="panel-collapse collapse in">
                     <div class="panel-body">
 
                         {#{{ formmacros.field(form.sourceYear) }}#}
@@ -165,10 +191,6 @@
             <div class="panel {{ businessPanelColor }}">
                 <div class="panel-heading">
                     <h4 class="panel-title" align='center'>
-                        {#<a data-toggle="collapse" href="#vacreq-Business">#}
-                            {#Business Travel#}
-                        {#</a>#}
-                        {#{{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}#}
                         {% if showBusinessStatus %}
                             <div class="row">
                                 <div class="col-xs-6" align="right">
@@ -176,11 +198,9 @@
                                         Business Travel
                                     </a>
                                 </div>
-                                {#{% if showBusinessStatus %}#}
-                                    <div class="col-xs-6" align="left" style="color:#333;">
-                                        {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
-                                    </div>
-                                {#{% endif %}#}
+                                <div class="col-xs-6" align="left" style="color:#333;">
+                                    {{ vacreqmacros.request_radio_choice( form.requestBusiness ) }}
+                                </div>
                             </div>
                         {% else %}
                             <a data-toggle="collapse" href="#vacreq-Business">
@@ -215,7 +235,7 @@
         {% if form.requestVacation is defined and (entity.hasVacationRequest or cycle == 'new' or cycle == 'edit') %}
             {#set vacationCollapse#}
             {% set showVacationStatus = false %}
-            {% if entity.requestBusiness and entity.requestBusiness.status is defined %}
+            {% if entity.requestVacation and entity.requestVacation.status is defined %}
                 {% set showVacationStatus = true %}
             {% endif %}
             {#set collapse#}
@@ -235,10 +255,6 @@
             <div class="panel {{ vacationPanelColor }}">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        {#<a data-toggle="collapse" href="#vacreq-Vacation">#}
-                            {#Vacation Travel#}
-                        {#</a>#}
-                        {#{{ vacreqmacros.request_radio_choice( form.requestVacation ) }}#}
                         {% if showVacationStatus %}
                             <div class="row">
                                 <div class="col-xs-6" align="right">
@@ -246,11 +262,9 @@
                                         Vacation Travel
                                     </a>
                                 </div>
-                                {#{% if showVacationStatus %}#}
-                                    <div class="col-xs-6" align="left" style="color:#333;">
-                                        {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
-                                    </div>
-                                {#{% endif %}#}
+                                <div class="col-xs-6" align="left" style="color:#333;">
+                                    {{ vacreqmacros.request_radio_choice( form.requestVacation ) }}
+                                </div>
                             </div>
                         {% else %}
                             <a data-toggle="collapse" href="#vacreq-Vacation">
@@ -278,8 +292,10 @@
             </div> <!-- panel panel-info -->
 
             {#{{ formmacros.fieldDateLabel(form.credentials.dob,'allow-future-date') }}#}
+        {% endif %}
 
-            {#firstDayBackInOffice#}
+        {#firstDayBackInOffice#}
+        {% if entity.getRequestType().getAbbreviation() == "business-vacation" %}
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -341,6 +357,13 @@
     {{ form_end(form,{'render_rest': false}) }}
 
     <br>
+
+    {% if carryOverWarningMessage %}
+        <div class="alert alert-warning">
+            {{ carryOverWarningMessage|raw }}
+        </div>
+        <br>
+    {% endif %}
 
     <div id="error-box" class="alert alert-danger" style="display: none"></div>
 
