@@ -980,6 +980,25 @@ class VacReqRequest
         return $yearRange;
     }
 
+    public function getEmailSubject() {
+
+        $requestType = $this->getRequestType();
+
+        $subject = $this->getUser()->getUsernameOptimal() . " has submitted the " . $this->getRequestName() . " #" . $this->getId();
+
+        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+            //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year]
+            $subject = $this->getUser()->getUsernameOptimal(). " requested carry over of " .
+                $this->getCarryOverDays() . " vacation days from " .
+                $this->getSourceYear() . " to " . $this->getDestinationYear();
+        }
+
+        if( $requestType && $requestType->getAbbreviation() == "business-vacation" ) {
+            $subject = $this->getUser()->getUsernameOptimal(). " has submitted the " . $this->getRequestName() . " #" . $this->getId();
+        }
+
+        return $subject;
+    }
 
     public function getArrayFields() {
         $fieldsArr = array(

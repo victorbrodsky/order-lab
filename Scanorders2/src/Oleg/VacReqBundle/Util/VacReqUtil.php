@@ -135,8 +135,6 @@ class VacReqUtil
 
         $approversNameArr = array();
 
-        $subject = "Review ".$requestName." #" . $entity->getId() . " Confirmation";
-
         foreach( $approvers as $approver ) {
 
             //echo "approver".$approver."<br>";
@@ -147,13 +145,16 @@ class VacReqUtil
 
             $approversNameArr[] = $approver;
 
+            //$subject = "Review ".$requestName." #" . $entity->getId() . " Confirmation";
+            $subject = $entity->getEmailSubject();
+
             $message = $this->createEmailBody($entity,$approver);
             $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
 
         } //foreach approver
 
         //send email to email users
-        $subject = "Copy of the Review ".$requestName." #" . $entity->getId() . " Confirmation";
+        $subject = "Copy of the Confirmation Email: ".$entity->getEmailSubject();
         $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
         $settings = $this->getSettingsByInstitution($institution->getId());
         if( $settings ) {
@@ -174,10 +175,6 @@ class VacReqUtil
         $submitter = $entity->getUser();
 
         $message = "Dear " . $emailToUser->getUsernameOptimal() . "," . $break.$break;
-
-        if( $addText ) {
-            $message .= $addText.$break.$break;
-        }
 
         $requestName = $entity->getRequestName();
 
@@ -255,6 +252,42 @@ class VacReqUtil
 
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
+            $previousYear = date("Y") - 1;
+            $currentYear = date("Y");
+            $yearRange = $previousYear."-".$currentYear;
+            $accruedDays = $this->getAccruedDaysUpToThisMonth();
+            $carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$yearRange);
+
+            //vacation
+            $resVacationDays = $this->getApprovedTotalDays($entity->getUser(),"vacation");
+            $approvedVacationDays = $resVacationDays['numberOfDays'];
+            if( !$resVacationDays['accurate'] ) {
+                $approvedVacationDays .= " (the result might be inaccurate due to academic year overlap)";
+            }
+
+            //business
+            $resBusinessDays = $this->getApprovedTotalDays($entity->getUser(),"business");
+            $approvedBusinessDays = $resBusinessDays['numberOfDays'];
+            $accurateBusiness = $resBusinessDays['accurate'];
+            if( !$accurateBusiness ) {
+                $approvedBusinessDays .= " (the result might be inaccurate due to academic year overlap)";
+            }
+
+            //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
+            //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
+            // had Z days carried over from [current academic year -1] to [current academic year],
+            // and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
+
+            //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
+            $message = $entity->getEmailSubject().$break;
+            //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
+            $message .= "As of ".$entity->getCreateDate()->format("F jS Y").", ".$entity->getUser()->getUsernameOptimal()." has accrued ".
+                $accruedDays." days in the current ".$yearRange." academic year,";
+            //had Z days carried over from [current academic year -1] to [current academic year],
+            $message .= " had ".$carriedOverDays." days carried over from ".$previousYear." to".$currentYear.",";
+            //and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
+            $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays." business travel days during ".$yearRange." so far.";
+
             $actionRequestUrl = $url = $this->container->get('router')->generate(
                 'vacreq_status_change',
                 array(
@@ -264,7 +297,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please follow the link below to Approve the ".$requestName.":" . $break;
+            $message .= $break . $break . "To approve this request, please follow this link:" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
@@ -277,12 +310,16 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "To deny this request, please follow this link:" . $break;
             $message .= $actionRequestUrl;
         }
 
         $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site";
         $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+
+        if( $addText ) {
+            $message = $addText.$break.$break.$message;
+        }
 
         return $message;
     }
