@@ -998,7 +998,7 @@ class ApproverController extends Controller
         return array(
             'groups' => $groups,
             'accruedDays' => $accruedDays,
-            'yearRange' => $yearRange
+            'yearRange' => $yearRange,
             //'entity' => $entity,
             //'form' => $form->createView(),
             //'organizationalGroupName' => $institution."",
@@ -1054,7 +1054,8 @@ class ApproverController extends Controller
             'submitters' => $submitters,
             'groupName' => $group."",
             'yearRanges' => $yearRanges,
-            'yearRangesColor' => $yearRangesColor
+            'yearRangesColor' => $yearRangesColor,
+            'totalAllocatedDays' => $vacreqUtil->getTotalAccruedDays()
         );
     }
 

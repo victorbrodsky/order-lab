@@ -1849,6 +1849,35 @@ class VacReqUtil
         return $requests;
     }
 
+    //(number of days accrued per month from site settings x 12) + days carried over from previous academic year
+    // - approved vacation days for this academic year based on the requests
+    // with the status of "Approved" or "Cancelation denied (Approved)"
+    public function getNewCarryOverRequestString( $user ) {
+        $totalAccruedDays = $this->getTotalAccruedDays();
+        $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,date("Y")-1); //2015
+
+        $requestTypeStr = 'vacation';
+        $res = $this->getApprovedTotalDays($user,$requestTypeStr);
+        $approvedVacationDays = $res['numberOfDays'];
+        //$accurate = $res['accurate'];
+
+        $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
+
+        if( $daysToRequest && $daysToRequest > 0 ) {
+            $actionRequestUrl = $url = $this->container->get('router')->generate(
+                'vacreq_carryoverrequest',
+                array(
+                    'days' => $daysToRequest,
+                )
+                //UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $link = '<a href="'.$actionRequestUrl.'">Request to carry over '.$daysToRequest.' vacation days</a>';
+            return $link;
+        }
+
+        return null;
+    }
 
     public function convertDateTimeToStr($datetime) {
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');

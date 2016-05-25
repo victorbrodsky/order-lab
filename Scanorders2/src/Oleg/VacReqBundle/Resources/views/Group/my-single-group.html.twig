@@ -47,6 +47,11 @@
 
             <th style="background-color: {{ backgroundColor }}">
                 {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
+                {{ yearRange }} Remaining Vacation Days
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}">
+                {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
                 {{ yearRange }} Carried Over Vacation Days From Previous Year
             </th>
 
@@ -83,6 +88,9 @@
                 {% set vacationDays = vacationDaysRes['numberOfDays'] %}
                 {% set vacationAccurate = vacationDaysRes['accurate'] %}
 
+                {#{% set totalRemainingDays = totalAllocatedDays|number_format - vacationDays|number_format %}#}
+                {#totalRemainingDays={{ totalRemainingDays }}#}
+
                 <td style="background-color: {{ backgroundColor }}">
                     {#{{ businessDays }}#}
                     {{ vacreqmacros.incomingRequestHref( businessDays, submitter, yearRange, groupId, 1, 'businessRequest', vacreq_sitename ) }}
@@ -105,6 +113,15 @@
                     {{ vacreqmacros.incomingRequestHref( totalDays, submitter, yearRange, groupId, 1, 'businessRequest-vacationRequest', vacreq_sitename ) }}
                     {% if not businessAccurate and not vacationAccurate %}
                         <span data-toggle="tooltip" title="The result might be inaccurate due to academic year overlap">*</span>
+                    {% endif %}
+                </td>
+
+                {#Remaining days#}
+                <td style="background-color: {{ backgroundColor }}">
+                    {#{{ totalRemainingDays }}#}
+                    {{ (totalAllocatedDays|number_format - vacationDays|number_format) }}
+                    {% if not vacationAccurate %}
+                        *
                     {% endif %}
                 </td>
 

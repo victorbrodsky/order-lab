@@ -65,6 +65,12 @@
         </div>
     {% endif %}
 
+    {% if newCarryOverRequest is defined and newCarryOverRequest %}
+        <div class="well well-sm">
+            <p>{{ newCarryOverRequest|raw }}</p>
+        </div>
+    {% endif %}
+
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>

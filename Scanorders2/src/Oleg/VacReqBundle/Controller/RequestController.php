@@ -60,11 +60,20 @@ class RequestController extends Controller
             //set Destination year (2016)
             $entity->setDestinationYear( date("Y") );
 
+            $newCarryOverRequest = null;
+
+            //check if 'days' parameter is set in http request
+            $carryOverRequestDays = $request->query->get('days');
+            if( $carryOverRequestDays ) {
+                $entity->setCarryOverDays($carryOverRequestDays);
+            }
         } else {
             //business/vacation request
             $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
             $title = "Vacation/Business Travel Request";
             $eventType = "Business/Vacation Request Created";
+
+            $newCarryOverRequest = $vacreqUtil->getNewCarryOverRequestString($user);
         }
         $entity->setRequestType($requestType);
 
@@ -195,7 +204,8 @@ class RequestController extends Controller
             'totalApprovedDaysString' => $totalApprovedDaysString,
             'accruedDaysString' => $accruedDaysString,
             'carriedOverDaysString' => $carriedOverDaysString,
-            'title' => $title
+            'title' => $title,
+            'newCarryOverRequest' => $newCarryOverRequest
         );
     }
 
@@ -228,11 +238,6 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
         //exit('show: ok permission');
-
-        //testing
-        $vacreqUtil = $this->get('vacreq_util');
-        $carriedOverDays = $vacreqUtil->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear());
-        echo "carriedOverDays=".$carriedOverDays."<br>";
 
         $cycle = 'show';
 
