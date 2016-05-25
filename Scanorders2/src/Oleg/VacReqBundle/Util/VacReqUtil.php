@@ -448,10 +448,10 @@ class VacReqUtil
         $query->setParameter('user', $user->getId());
         $query->setParameter('year', $startYear);
 
-        //echo "dql=".$dql."<br>";
+        echo "dql=".$dql."<br>";
 
         $carryOvers = $query->getResult();
-        //echo "carryOvers=".count($carryOvers)."<br>";
+        echo "carryOvers=".count($carryOvers)."<br>";
 
         if( count($carryOvers) > 0 ) {
             $days = $carryOvers[0]->getDays();
