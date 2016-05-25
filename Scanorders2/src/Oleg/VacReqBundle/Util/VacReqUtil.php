@@ -256,7 +256,7 @@ class VacReqUtil
             $currentYear = date("Y");
             $yearRange = $previousYear."-".$currentYear;
             $accruedDays = $this->getAccruedDaysUpToThisMonth();
-            $carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$yearRange);
+            $carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear()); //test it!
 
             //vacation
             $resVacationDays = $this->getApprovedTotalDays($entity->getUser(),"vacation");
@@ -279,12 +279,12 @@ class VacReqUtil
             // and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
 
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
-            $message = $entity->getEmailSubject().$break;
+            $message = $entity->getEmailSubject().".".$break.$break;
             //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
             $message .= "As of ".$entity->getCreateDate()->format("F jS Y").", ".$entity->getUser()->getUsernameOptimal()." has accrued ".
                 $accruedDays." days in the current ".$yearRange." academic year,";
             //had Z days carried over from [current academic year -1] to [current academic year],
-            $message .= " had ".$carriedOverDays." days carried over from ".$previousYear." to".$currentYear.",";
+            $message .= " had ".$carriedOverDays." days carried over from ".$previousYear." to ".$currentYear.",";
             //and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
             $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays." business travel days during ".$yearRange." so far.";
 

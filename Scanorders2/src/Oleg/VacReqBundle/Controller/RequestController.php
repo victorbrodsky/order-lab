@@ -216,6 +216,10 @@ class RequestController extends Controller
         }
         //exit('show: ok permission');
 
+        $vacreqUtil = $this->get('vacreq_util');
+        $carriedOverDays = $vacreqUtil->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear());
+        echo "carriedOverDays=".$carriedOverDays."<br>";
+
         $cycle = 'show';
 
         //get request type

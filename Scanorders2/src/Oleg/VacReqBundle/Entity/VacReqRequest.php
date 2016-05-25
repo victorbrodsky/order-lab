@@ -990,7 +990,7 @@ class VacReqRequest
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year]
             $subject = $this->getUser()->getUsernameOptimal(). " requested carry over of " .
                 $this->getCarryOverDays() . " vacation days from " .
-                $this->getSourceYear() . " to " . $this->getDestinationYear();
+                $this->getSourceYearRange() . " to " . $this->getDestinationYearRange();
         }
 
         if( $requestType && $requestType->getAbbreviation() == "business-vacation" ) {
