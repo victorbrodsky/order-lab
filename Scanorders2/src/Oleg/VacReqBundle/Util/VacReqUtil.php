@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
+use Oleg\VacReqBundle\Entity\VacReqCarryOver;
+use Oleg\VacReqBundle\Entity\VacReqUserCarryOver;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -256,7 +258,10 @@ class VacReqUtil
             $currentYear = date("Y");
             $yearRange = $previousYear."-".$currentYear;
             $accruedDays = $this->getAccruedDaysUpToThisMonth();
-            $carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear()); //test it!
+            $carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear());
+            if( !$carriedOverDays ) {
+                $carriedOverDays = 0;
+            }
 
             //vacation
             $resVacationDays = $this->getApprovedTotalDays($entity->getUser(),"vacation");
@@ -448,10 +453,10 @@ class VacReqUtil
         $query->setParameter('user', $user->getId());
         $query->setParameter('year', $startYear);
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         $carryOvers = $query->getResult();
-        echo "carryOvers=".count($carryOvers)."<br>";
+        //echo "carryOvers=".count($carryOvers)."<br>";
 
         if( count($carryOvers) > 0 ) {
             $days = $carryOvers[0]->getDays();
@@ -461,6 +466,49 @@ class VacReqUtil
         //echo "days=null<br>";
 
         return null;
+    }
+
+    public function processVacReqCarryOverRequest($entity) {
+
+        $requestType = $entity->getRequestType();
+
+        if( !$requestType || ($requestType && $requestType->getAbbreviation() != "carryover") ) {
+            return;
+        }
+
+        $subjectUser = $entity->getUser();
+
+        //get userCarryOver
+        $userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+
+        if( !$userCarryOver ) {
+            $userCarryOver = new VacReqUserCarryOver($subjectUser);
+        }
+
+        //get VacReqCarryOver for request's destination year
+        $carryOverYear = $entity->getDestinationYear();
+        $carryOver = $this->getUserCarryOverDays( $subjectUser, $carryOverYear );
+
+        if( !$carryOver ) {
+            $carryOver = new VacReqCarryOver();
+            $carryOver->setYear($carryOverYear);
+            $userCarryOver->addCarryOver($carryOver);
+        }
+
+        $res = array('userCarryOver'=>$userCarryOver);
+
+        $carryOverDays = $carryOver->getDays();
+        if( $carryOverDays ) {
+            $res['exists'] = true;
+            $res['days'] = $carryOverDays;
+        } else {
+            $carryOverDays = $entity->getCarryOverDays();
+            $carryOver->setDays($carryOverDays);
+            $res['exists'] = false;
+            $res['days'] = $carryOverDays;
+        }
+
+        return $res;
     }
 
     public function getYearsFromYearRangeStr($yearRangeStr) {

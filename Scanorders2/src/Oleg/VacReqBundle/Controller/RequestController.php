@@ -102,6 +102,18 @@ class RequestController extends Controller
                 }
             }
 
+//            //process carry over request days
+//            $res = $vacreqUtil->processVacReqCarryOverRequest($entity);
+//            if( $res && $res['exists'] == true ) {
+//                //warning for overwrite
+//                exit('exists days='.$res['days']);
+//            }
+//            if( $res && $res['exists'] == false ) {
+//                //save
+//                $userCarryOver = $res['userCarryOver'];
+//                $em->persist($userCarryOver);
+//            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -121,6 +133,7 @@ class RequestController extends Controller
             $break = "\r\n";
 
             //set confirmation email to submitter and approver and email users
+            $subject = $requestName." #".$entity->getId()." Confirmation";
             $subject = $requestName." #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
             $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
@@ -216,6 +229,7 @@ class RequestController extends Controller
         }
         //exit('show: ok permission');
 
+        //testing
         $vacreqUtil = $this->get('vacreq_util');
         $carriedOverDays = $vacreqUtil->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear());
         echo "carriedOverDays=".$carriedOverDays."<br>";
@@ -506,6 +520,20 @@ class RequestController extends Controller
                 }
                 if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
                     //exit("status=".$status);
+                    if( $status == "approved" ) {
+                        //process carry over request days if request is approved
+                        $vacreqUtil = $this->get('vacreq_util');
+                        $res = $vacreqUtil->processVacReqCarryOverRequest($entity);
+                        if( $res && $res['exists'] == true ) {
+                            //warning for overwrite
+                            exit('exists days='.$res['days']);
+                        }
+                        if( $res && $res['exists'] == false ) {
+                            //save
+                            $userCarryOver = $res['userCarryOver'];
+                            $em->persist($userCarryOver);
+                        }
+                    }
                 }
 
                 $entity->setStatus($status);
