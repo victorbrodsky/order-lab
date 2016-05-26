@@ -9,11 +9,36 @@
 
 {% block content %}
 
+    <input id="groupId" value="{{ groupId }}" style="display: none;">
+
     <h4 class="text-info" align="center">
         Away Calendar
     </h4>
 
-    <br>
+    <p>
+    <div class="row">
+
+        {#<div class="col-xs-4">#}
+        {#</div>#}
+        {#{% if vacreqfilter.organizationalInstitutions is defined %}#}
+            {#<div class="col-xs-2" align="right">#}
+                {#{{ form_row(vacreqfilter.organizationalInstitutions) }}#}
+            {#</div>#}
+        {#{% endif %}#}
+        {#<div class="col-xs-6" align="left">#}
+            {#<button type="button" id="calendar-filter" class="btn btn-sm btn-default" onclick="submitFilter()">Filter</button>#}
+        {#</div>#}
+
+        <div class="col-xs-4">
+        </div>
+        <div class="col-xs-4">
+            {{ form_row(vacreqfilter.organizationalInstitutions) }}
+        </div>
+        <div class="col-xs-4">
+        </div>
+
+    </div>
+    </p>
 
 
     {% include 'ADesignsCalendarBundle::calendar.html.twig' %}
@@ -31,12 +56,88 @@
 {% endblock %}
 
 {% block additionaljs %}
+    {#'bundles/adesignscalendar/js/calendar-settings.js'#}
+    {#'@OlegVacReqBundle/Resources/public/fullCalendarBundle/js/calendar-settings.js'#}
     {% javascripts
         'bundles/adesignscalendar/js/fullcalendar/jquery.fullcalendar.min.js'
-        'bundles/adesignscalendar/js/calendar-settings.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+
+    <script language="Javascript">
+
+        var vacreqcalendar;
+
+        $(document).ready(function() {
+
+            var groupId = $('#groupId').val();
+            constractCalendar(groupId);
+
+            //listener for calendar-filter
+            $('.organizationalInstitutions').change(function(){
+                submitFilter();
+            });
+
+        });
+
+        function constractCalendar( groupId ) {
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+            vacreqcalendar = $('#calendar-holder').fullCalendar({
+                header: {
+                    left: 'prev, next',
+                    center: 'title',
+                    right: 'month, basicWeek, basicDay,'
+                },
+                lazyFetching: true,
+                timeFormat: {
+                    // for agendaWeek and agendaDay
+                    agenda: 'h:mmt',    // 5:00 - 6:30
+
+                    // for all other views
+                    '': 'h:mmt'         // 7p
+                },
+                eventSources: [
+                    {
+                        url: Routing.generate('fullcalendar_loader'),
+                        type: 'POST',
+                        // A way to add custom filters to your event listeners
+                        data: {
+                            groupId: groupId
+                        },
+                        error: function() {
+                            //alert('There was an error while fetching Google Calendar!');
+                        }
+                    }
+                ]
+            });
+
+            return vacreqcalendar;
+        }
+
+        function submitFilter() {
+            var groupId = $('.organizationalInstitutions').select2('val');
+            console.log("groupId="+groupId);
+
+            var url = location.protocol + '//' + location.host + location.pathname; //window.location.href;
+
+            if( groupId ) {
+                if (url.indexOf('?') > -1) {
+                    url += '&group=' + groupId;
+                } else {
+                    url += '?group=' + groupId;
+                }
+            }
+
+            window.location.href = url;
+        }
+
+    </script>
+
 {% endblock %}
 
 

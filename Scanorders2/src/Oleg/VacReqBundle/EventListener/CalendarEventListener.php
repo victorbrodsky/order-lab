@@ -41,21 +41,62 @@ class CalendarEventListener
         // Use the filter in your query for example
 
         $request = $calendarEvent->getRequest();
-        $filter = $request->get('filter');
+        $groupId = $request->get('groupId');
+        //echo "filter:".$filter.";";
 
-        $this->setCalendar( $calendarEvent, "requestBusiness", $startDate, $endDate );
-        $this->setCalendar( $calendarEvent, "requestVacation", $startDate, $endDate );
+        $filter = array('groupId'=>$groupId);
+
+        $this->setCalendar( $calendarEvent, "requestBusiness", $startDate, $endDate, $filter );
+        $this->setCalendar( $calendarEvent, "requestVacation", $startDate, $endDate, $filter );
 
         return;
     }
 
-    public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate ) {
+    public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate, $filter ) {
         //echo "ID";
         $dateformat = 'M d Y';
         $vacreqUtil = $this->container->get('vacreq_util');
 
-        //TODO: filter if logged in user can see the request?
-        $requests = $vacreqUtil->getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate );
+        $user = $this->sc->getToken()->getUser();
+        //echo "user=".$user."<br>";
+
+        //$requests = $vacreqUtil->getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate );
+
+        $groupId = $filter['groupId'];
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql = $repository->createQueryBuilder('request');
+
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+            $dql->leftJoin("request.requestBusiness", "requestType");
+        }
+
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+            $dql->leftJoin("request.requestVacation", "requestType");
+        }
+
+        $dql->where("requestType.id IS NOT NULL");
+        //$dql->andWhere('requestType.status = :statusApproved');
+        $dql->andWhere('requestType.status = :statusApproved OR requestType.status = :statusPending');
+        $dql->andWhere('(requestType.startDate BETWEEN :startDate and :endDate)');
+
+        //$dql->andWhere('request.institution = :groupId');
+        if( $groupId ) {
+            $dql->leftJoin("request.institution","institution");
+            $institution = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
+            $instStr = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+            //echo "instStr=".$instStr."<br>";
+            $dql->andWhere($instStr);
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter('statusPending', 'pending');
+        $query->setParameter('statusApproved', 'approved');
+        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+
+        $requests = $query->getResult();
 
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
             $backgroundColor = "#bce8f1";
@@ -81,7 +122,7 @@ class CalendarEventListener
             $request = $requestFull->$getMethod();
             //echo "ID=".$request->getId();
 
-            //if( $this->container->get('security.context')->isGranted("read", $requestFull) ) {
+            if( $this->container->get('security.context')->isGranted("read", $requestFull) ) {
                 $url = $this->container->get('router')->generate(
                     'vacreq_show',
                     array(
@@ -89,15 +130,15 @@ class CalendarEventListener
                     )
                     //UrlGeneratorInterface::ABSOLUTE_URL
                 );
-//            } else {
-//                $url = $this->container->get('router')->generate(
-//                    'vacreq_showuser',
-//                    array(
-//                        'id' => $requestFull->getUser()->getId()
-//                    )
-//                    //UrlGeneratorInterface::ABSOLUTE_URL
-//                );
-//            }
+            } else {
+                $url = $this->container->get('router')->generate(
+                    'vacreq_showuser',
+                    array(
+                        'id' => $requestFull->getUser()->getId()
+                    )
+                    //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+            }
 
             //$userNameLink = '<a href="'.$url.'">'.$requestFull->getUser().'</a>';
 
@@ -115,11 +156,18 @@ class CalendarEventListener
             //$title .= ", back on ".$requestFull->getFirstDayBackInOffice()->format($dateformat).")";
             $title .= ")";
 
+            if( $request->getStatus() == 'pending' ) {
+                $backgroundColorCalendar = "#fcf8e3";
+                $title = $title." Pending Approval";
+            } else {
+                $backgroundColorCalendar = $backgroundColor;
+            }
+
             $eventEntity = new EventEntity($title, $startDate, $endDate, true);
 
             //optional calendar event settings
             $eventEntity->setAllDay(true); // default is false, set to true if this is an all day event
-            $eventEntity->setBgColor($backgroundColor); //set the background color of the event's label
+            $eventEntity->setBgColor($backgroundColorCalendar); //set the background color of the event's label
             $eventEntity->setFgColor('#2F4F4F'); //set the foreground color of the event's label
             $eventEntity->setUrl($url); // url to send user to when event label is clicked
             //$eventEntity->setCssClass('my-custom-class'); // a custom class you may want to apply to event labels
@@ -129,6 +177,7 @@ class CalendarEventListener
 
         }
     }
+
 
 
 }

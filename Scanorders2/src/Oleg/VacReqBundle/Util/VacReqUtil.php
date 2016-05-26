@@ -723,7 +723,7 @@ class VacReqUtil
         return $days;
     }
 
-    public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false ) {
+    public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
@@ -744,7 +744,7 @@ class VacReqUtil
             $dql->leftJoin("request.requestVacation", "requestType");
         }
 
-        $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :statusApproved");
+        $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :status");
 
         // |----||--s--e--||----|
         if( $type == "inside" && $startStr && $endStr ) {
@@ -770,7 +770,7 @@ class VacReqUtil
 
         $query->setParameters( array(
             'userId' => $user->getId(),
-            'statusApproved' => 'approved'
+            'status' => $status
         ));
 
         if( $asObject ) {
@@ -1019,6 +1019,7 @@ class VacReqUtil
 
         return $academicYearArr;
     }
+
 
     public function getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate ) {
 
@@ -1900,6 +1901,70 @@ class VacReqUtil
 
             $link = '<a href="'.$actionRequestUrl.'">Request to carry over the remaining '.$daysToRequest.' vacation days</a>';
             return $link;
+        }
+
+        return null;
+    }
+
+    //Get pending (non-approved, non-rejected) requests for the logged in approver
+    public function getTotalPendingRequests($approver) {
+        $requestsB = $this->getTotalStatusTypeRequests($approver,"business");
+        $requestsV = $this->getTotalStatusTypeRequests($approver,"vacation");
+
+        return count($requestsB) + count($requestsV);
+    }
+    public function getTotalStatusTypeRequests( $approver, $requestTypeStr, $startStr=null, $endStr=null, $asObject=true, $status = "pending" ) {
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+
+        if( $asObject ) {
+            $dql->select('request');
+        } else {
+            $dql->select('SUM(requestType.numberOfDays) as numberOfDays');
+        }
+
+        $dql->leftJoin("request.user", "user");
+
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+            $dql->leftJoin("request.requestBusiness", "requestType");
+        }
+
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+            $dql->leftJoin("request.requestVacation", "requestType");
+        }
+
+        $dql->where("requestType.status = :status");
+
+        //get approver groups
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        $groupRoles = $this->getGroupsByPermission($approver,$groupParams);
+        $groupIds = array();
+        foreach( $groupRoles as $role ) {
+            $groupIds[] = $role->getId();
+        }
+        if( $groupIds and count($groupIds) > 0 ) {
+            $dql->andWhere("request.institution IN (".implode(",",$groupIds).")");
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+        //echo "dql=".$dql."<br>";
+
+        $query->setParameters( array(
+            'status' => $status
+        ));
+
+        if( $asObject ) {
+            $requests = $query->getResult();
+            return $requests;
+        } else {
+            $numberOfDaysRes = $query->getSingleResult();
+            $numberOfDays = $numberOfDaysRes['numberOfDays'];
+            //echo "numberOfDays=".$numberOfDays."<br>";
+            return $numberOfDays;
         }
 
         return null;

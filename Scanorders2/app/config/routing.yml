@@ -32,7 +32,8 @@ oleg_userdirectory:
 
 
 adesigns_calendar:
-  resource: "@ADesignsCalendarBundle/Resources/config/routing.xml"
+    resource: "@ADesignsCalendarBundle/Resources/config/routing.xml"
+    prefix:   /vacation-request
 
 
 #acme_demo:

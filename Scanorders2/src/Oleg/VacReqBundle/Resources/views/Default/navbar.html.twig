@@ -61,9 +61,23 @@
 
                     {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                         <li id="nav-bar-incomingrequests" class="divider-vertical">
-                            <a href="{{ path('vacreq_incomingrequests') }}">
-                                Incoming Requests
-                            </a>
+                            {#<a href="{{ path('vacreq_incomingrequests') }}">#}
+                                {#Incoming Requests#}
+                            {#</a>#}
+                            {% set pendingRequestReview = vacreq_util.getTotalPendingRequests(app.security.getToken().getUser()) %}
+                            {% if pendingRequestReview is defined and pendingRequestReview > 0 %}
+                                <a id="incoming-orders-menu-title" href="#" class="dropdown-toggle" data-toggle="dropdown">Incoming Requests<b class="caret"></b></a><!--
+                                            --><a id="incoming-orders-menu-badge"
+                                                  class="element-with-tooltip-always"
+                                                  title="Pending Approval" data-toggle="tooltip"
+                                                  data-placement="bottom"
+                                                  href="{{ path('vacreq_incomingrequests',{'filter[pending]':1}) }}"
+                                                ><span class="badge">{{ pendingRequestReview }}</span></a>
+                            {% else %}
+                                <a href="{{ path('vacreq_incomingrequests') }}">
+                                    Incoming Requests
+                                </a>
+                            {% endif %}
                         </li>
                     {% endif %}
 

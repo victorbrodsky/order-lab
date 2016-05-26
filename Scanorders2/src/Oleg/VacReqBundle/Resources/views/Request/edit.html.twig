@@ -358,7 +358,7 @@
 
     <br>
 
-    {% if carryOverWarningMessage %}
+    {% if carryOverWarningMessage is defined and carryOverWarningMessage %}
         <div class="alert alert-danger">
             {{ carryOverWarningMessage|raw }}
         </div>

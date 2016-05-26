@@ -3,6 +3,7 @@
 namespace Oleg\VacReqBundle\Controller;
 
 
+use Oleg\VacReqBundle\Form\VacReqCalendarFilterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,7 +28,38 @@ class CalendarController extends Controller
      * @Template("OlegVacReqBundle:Calendar:calendar.html.twig")
      */
     public function awayCalendarAction(Request $request) {
-        return;
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $params = array();
+        $params['em'] = $em;
+        $params['supervisor'] = $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR');
+
+        //get submitter groups: VacReqRequest, create
+        $groupParams = array();
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+            $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+
+        $params['organizationalInstitutions'] = $organizationalInstitutions;
+
+        $groupId = $request->query->get('group');
+        //echo "groupId=".$groupId."<br>";
+
+        $params['groupId'] = $groupId;
+
+        $filterform = $this->createForm(new VacReqCalendarFilterType($params), null);
+
+
+        return array(
+            'vacreqfilter' => $filterform->createView(),
+            'groupId' => $groupId
+        );
     }
 
 }

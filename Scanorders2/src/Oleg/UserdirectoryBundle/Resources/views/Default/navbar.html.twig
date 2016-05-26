@@ -93,7 +93,13 @@
                         <li id="nav-bar-userlist" class="dropdown">
                             {% if pendingadminreview is defined and pendingadminreview > 0 %}
                                 <a id="incoming-orders-menu-title" href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a><!--
-                                            --><a id="incoming-orders-menu-badge" class="element-with-tooltip-always" title="Pending Administrative Review" data-toggle="tooltip" data-placement="bottom" href="{{ path(employees_sitename~'_listusers',{'filter': 'Pending Administrative Review'}) }}"><span class="badge">{{ pendingadminreview }}</span></a>
+                                            --><a id="incoming-orders-menu-badge"
+                                                  class="element-with-tooltip-always"
+                                                  title="Pending Administrative Review"
+                                                  data-toggle="tooltip"
+                                                  data-placement="bottom"
+                                                  href="{{ path(employees_sitename~'_listusers',{'filter': 'Pending Administrative Review'}) }}"
+                                                ><span class="badge">{{ pendingadminreview }}</span></a>
                             {% else %}
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a>
                             {% endif %}
