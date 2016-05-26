@@ -1907,13 +1907,13 @@ class VacReqUtil
     }
 
     //Get pending (non-approved, non-rejected) requests for the logged in approver
-    public function getTotalPendingRequests($approver) {
-        $requestsB = $this->getTotalStatusTypeRequests($approver,"business");
-        $requestsV = $this->getTotalStatusTypeRequests($approver,"vacation");
+    public function getTotalPendingRequests( $approver, $groupId=null ) {
+        $requestsB = $this->getTotalStatusTypeRequests($approver,"business",$groupId);
+        $requestsV = $this->getTotalStatusTypeRequests($approver,"vacation",$groupId);
 
         return count($requestsB) + count($requestsV);
     }
-    public function getTotalStatusTypeRequests( $approver, $requestTypeStr, $startStr=null, $endStr=null, $asObject=true, $status = "pending" ) {
+    public function getTotalStatusTypeRequests( $approver, $requestTypeStr, $groupId=null, $startStr=null, $endStr=null, $asObject=true, $status = "pending" ) {
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
@@ -1936,16 +1936,25 @@ class VacReqUtil
 
         $dql->where("requestType.status = :status");
 
-        //get approver groups
-        $groupParams = array('asObject'=>true);
-        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-        $groupRoles = $this->getGroupsByPermission($approver,$groupParams);
-        $groupIds = array();
-        foreach( $groupRoles as $role ) {
-            $groupIds[] = $role->getId();
-        }
-        if( $groupIds and count($groupIds) > 0 ) {
-            $dql->andWhere("request.institution IN (".implode(",",$groupIds).")");
+        $queryParameters = array(
+            'status' => $status
+        );
+
+        if( $groupId ) {
+            $dql->andWhere("request.institution = :groupId");
+            $queryParameters['groupId'] = $groupId;
+        } else {
+            //get approver groups
+            $groupParams = array('asObject' => true);
+            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus');
+            $groupRoles = $this->getGroupsByPermission($approver, $groupParams);
+            $groupIds = array();
+            foreach ($groupRoles as $role) {
+                $groupIds[] = $role->getId();
+            }
+            if ($groupIds and count($groupIds) > 0) {
+                $dql->andWhere("request.institution IN (" . implode(",", $groupIds) . ")");
+            }
         }
 
         $query = $this->em->createQuery($dql);
@@ -1953,9 +1962,7 @@ class VacReqUtil
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";
 
-        $query->setParameters( array(
-            'status' => $status
-        ));
+        $query->setParameters($queryParameters);
 
         if( $asObject ) {
             $requests = $query->getResult();
