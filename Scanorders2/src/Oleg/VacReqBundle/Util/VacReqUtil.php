@@ -494,10 +494,12 @@ class VacReqUtil
 
         $carryOverDays = null;
 
-        if( !$carryOver && $onlyCheck == false ) {
-            $carryOver = new VacReqCarryOver();
-            $carryOver->setYear($carryOverYear);
-            $userCarryOver->addCarryOver($carryOver);
+        if( !$carryOver ) {
+            if( $onlyCheck == false ) {
+                $carryOver = new VacReqCarryOver();
+                $carryOver->setYear($carryOverYear);
+                $userCarryOver->addCarryOver($carryOver);
+            }
         } else {
             $carryOverDays = $carryOver->getDays();
         }
@@ -523,7 +525,9 @@ class VacReqUtil
 
         } else {
             $carryOverDays = $entity->getCarryOverDays();
-            $carryOver->setDays($carryOverDays);
+            if( $carryOver ) {
+                $carryOver->setDays($carryOverDays);
+            }
             $res['exists'] = false;
             $res['days'] = $carryOverDays;
             $res['carryOverWarningMessage'] = null;

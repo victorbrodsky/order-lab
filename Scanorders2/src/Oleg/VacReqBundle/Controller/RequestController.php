@@ -721,21 +721,21 @@ class RequestController extends Controller
             //$entity->setSourceYear( date("Y")-1 );
             //set Destination year (2016)
             //$entity->setDestinationYear( date("Y") );
-            $nextYearRange = array( (date("Y")+1) => (date("Y")+1)."-".(date("Y")+2) );
-            $currentYearRange = array( date("Y") => date("Y")."-".(date("Y")+1) );
-            $previousYearRange = array( (date("Y")-1) => (date("Y")-1)."-".(date("Y")) );
+            $nextYearRange = (date("Y")+1)."-".(date("Y")+2);
+            $currentYearRange = date("Y")."-".(date("Y")+1);
+            $previousYearRange = (date("Y")-1)."-".(date("Y"));
 
             //sourceYearRanges: current academic year and previous academic year
             $sourceYearRanges = array(
-                $previousYearRange,
-                $currentYearRange
+                (date("Y")-1) => $previousYearRange,
+                date("Y") => $currentYearRange
             );
             $params['sourceYearRanges'] = $sourceYearRanges;
 
             //destinationYearRanges: Current Academic Year and Next Academic year
             $destinationYearRanges = array(
-                $currentYearRange,
-                $nextYearRange
+                date("Y") => $currentYearRange,
+                (date("Y")+1) => $nextYearRange
             );
             $params['destinationYearRanges'] = $destinationYearRanges;
         }
