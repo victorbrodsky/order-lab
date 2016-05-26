@@ -55,10 +55,9 @@ class RequestController extends Controller
             $eventType = "Carry Over Request Created";
 
             //set Source year (2015)
-            $entity->setSourceYear( date("Y")-1 );
-
+            //$entity->setSourceYear( date("Y")-1 );
             //set Destination year (2016)
-            $entity->setDestinationYear( date("Y") );
+            //$entity->setDestinationYear( date("Y") );
 
             $newCarryOverRequest = null;
 
@@ -110,6 +109,10 @@ class RequestController extends Controller
                     $em->remove($subRequestV);
                 }
             }
+
+            //testing
+            //echo "sourceYear=".$entity->getSourceYear()."<br>";
+            //exit('1');
 
             $em->persist($entity);
             $em->flush();
@@ -712,6 +715,30 @@ class RequestController extends Controller
         }
 
         $params['requestType'] = $requestType;
+
+        if( $requestType->getAbbreviation() == "carryover" ) {
+            //set Source year (2015)
+            //$entity->setSourceYear( date("Y")-1 );
+            //set Destination year (2016)
+            //$entity->setDestinationYear( date("Y") );
+            $nextYearRange = array( (date("Y")+1) => (date("Y")+1)."-".(date("Y")+2) );
+            $currentYearRange = array( date("Y") => date("Y")."-".(date("Y")+1) );
+            $previousYearRange = array( (date("Y")-1) => (date("Y")-1)."-".(date("Y")) );
+
+            //sourceYearRanges: current academic year and previous academic year
+            $sourceYearRanges = array(
+                $previousYearRange,
+                $currentYearRange
+            );
+            $params['sourceYearRanges'] = $sourceYearRanges;
+
+            //destinationYearRanges: Current Academic Year and Next Academic year
+            $destinationYearRanges = array(
+                $currentYearRange,
+                $nextYearRange
+            );
+            $params['destinationYearRanges'] = $destinationYearRanges;
+        }
 
         $form = $this->createForm(
             new VacReqRequestType($params),

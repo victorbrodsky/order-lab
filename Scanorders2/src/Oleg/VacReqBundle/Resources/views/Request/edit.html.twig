@@ -66,7 +66,7 @@
     {% endif %}
 
     {% if newCarryOverRequest is defined and newCarryOverRequest %}
-        <div class="well well-sm">
+        <div class="alert alert-success">
             <p>{{ newCarryOverRequest|raw }}</p>
         </div>
     {% endif %}
@@ -117,10 +117,10 @@
 
         {#Carry Over#}
         {% if entity.getRequestType().getAbbreviation() == "carryover" %}
-            {% set showCarryoverStatus = false %}
-            {% if entity.status and entity.status is defined %}
-                {% set showCarryoverStatus = true %}
-            {% endif %}
+            {#{% set showCarryoverStatus = false %}#}
+            {#{% if entity.status and entity.status is defined %}#}
+                {#{% set showCarryoverStatus = true %}#}
+            {#{% endif %}#}
             {#set accordion color#}
             {% set CarryoverPanelColor = 'panel-info' %}
             {% if entity.status and entity.status == 'approved' %}
@@ -133,7 +133,7 @@
             <div class="panel {{ CarryoverPanelColor }}">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        {% if showCarryoverStatus %}
+                        {% if form.status is defined %}
                             <div class="row">
                                 <div class="col-xs-6" align="right">
                                     <a data-toggle="collapse" href="#vacreq-Carryover">
@@ -154,11 +154,11 @@
                 <div id="vacreq-Carryover" class="panel-collapse collapse in">
                     <div class="panel-body">
 
-                        {#{{ formmacros.field(form.sourceYear) }}#}
-                        {{ formmacros.simplefield( "Source Academic Year:", entity.getSourceYearRange(), "input", "disabled" ) }}
+                        {{ formmacros.field(form.sourceYear) }}
+                        {#{{ formmacros.simplefield( "Source Academic Year:", entity.getSourceYearRange(), "input", "disabled" ) }}#}
 
-                        {#{{ formmacros.field(form.destinationYear) }}#}
-                        {{ formmacros.simplefield( "Destination Academic Year:", entity.getDestinationYearRange(), "input", "disabled" ) }}
+                        {{ formmacros.field(form.destinationYear) }}
+                        {#{{ formmacros.simplefield( "Destination Academic Year:", entity.getDestinationYearRange(), "input", "disabled" ) }}#}
 
                         {{ formmacros.field(form.carryOverDays) }}
 
@@ -359,7 +359,7 @@
     <br>
 
     {% if carryOverWarningMessage %}
-        <div class="alert alert-warning">
+        <div class="alert alert-danger">
             {{ carryOverWarningMessage|raw }}
         </div>
         <br>

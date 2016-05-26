@@ -1894,7 +1894,7 @@ class VacReqUtil
                 //UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-            $link = '<a href="'.$actionRequestUrl.'">Request to carry over '.$daysToRequest.' vacation days</a>';
+            $link = '<a href="'.$actionRequestUrl.'">Request to carry over the remaining '.$daysToRequest.' vacation days</a>';
             return $link;
         }
 

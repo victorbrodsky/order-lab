@@ -667,6 +667,7 @@ class VacReqRequest
      */
     public function setSourceYear($sourceYear)
     {
+        //$sourceYear = $this->convertYearRangeToYear($sourceYear);
         $this->sourceYear = $sourceYear;
     }
 
@@ -683,6 +684,7 @@ class VacReqRequest
      */
     public function setDestinationYear($destinationYear)
     {
+        //$destinationYear = $this->convertYearRangeToYear($destinationYear);
         $this->destinationYear = $destinationYear;
     }
 
@@ -703,6 +705,14 @@ class VacReqRequest
     }
 
 
+    public function convertYearRangeToYear($yearRangeStr) {
+        if( strpos($yearRangeStr, '-') === false ) {
+            return $yearRangeStr;
+        }
+        $yearRangeArr = explode("-",$yearRangeStr);
+        $year = $yearRangeArr[0];
+        return $year;
+    }
 
 
 

@@ -195,15 +195,17 @@ class VacReqRequestType extends AbstractType
 
     public function addCarryOverFields( $builder ) {
 
-//        $builder->add('sourceYear', null, array(
-//            'label' => "Source Academic Year:",
-//            'attr' => array('class' => 'form-control'),
-//        ));
-//
-//        $builder->add('destinationYear', null, array(
-//            'label' => "Destination Academic Year:",
-//            'attr' => array('class' => 'form-control'),
-//        ));
+        $builder->add('sourceYear', 'choice', array(
+            'label' => "Source Academic Year:",
+            'attr' => array('class' => 'form-control'),
+            'choices' => $this->params['sourceYearRanges']
+        ));
+
+        $builder->add('destinationYear', 'choice', array(
+            'label' => "Destination Academic Year:",
+            'attr' => array('class' => 'form-control'),
+            'choices' => $this->params['destinationYearRanges']
+        ));
 
         $builder->add('carryOverDays', null, array(
             'label' => "Number of days to carry over:",
