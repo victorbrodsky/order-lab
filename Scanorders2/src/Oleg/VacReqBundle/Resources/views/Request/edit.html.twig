@@ -742,6 +742,12 @@
                 $('.vacreq-carryOverDays').addClass('alert-danger');
             }
 
+            var sourceYear = $('.vacreq-sourceYear').select2('val');
+            var destinationYear = $('.vacreq-destinationYear').select2('val');
+            if( sourceYear == destinationYear ) {
+                error = "Please select two consecutive academic years as source and destination.";
+            }
+
             if( error ) {
                 $('#error-box').html(error);
                 $('#error-box').show();

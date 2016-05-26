@@ -197,13 +197,13 @@ class VacReqRequestType extends AbstractType
 
         $builder->add('sourceYear', 'choice', array(
             'label' => "Source Academic Year:",
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width vacreq-sourceYear'),
             'choices' => $this->params['sourceYearRanges']
         ));
 
         $builder->add('destinationYear', 'choice', array(
             'label' => "Destination Academic Year:",
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width vacreq-destinationYear'),
             'choices' => $this->params['destinationYearRanges']
         ));
 
@@ -250,12 +250,12 @@ class VacReqRequestType extends AbstractType
         }
 
 
-//        $requiredInst = false;
-//        if( count($this->params['organizationalInstitutions']) == 1 ) {
-//            //echo "set org inst <br>";
-//            $requiredInst = true;
-//        }
-        $requiredInst = true;
+        $requiredInst = false;
+        if( count($this->params['organizationalInstitutions']) == 1 ) {
+            //echo "set org inst <br>";
+            $requiredInst = true;
+        }
+        //$requiredInst = true;
         $builder->add('institution', 'choice', array(
             'label' => "Organizational Group:",
             'required' => $requiredInst,

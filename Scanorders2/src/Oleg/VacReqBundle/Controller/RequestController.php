@@ -721,21 +721,23 @@ class RequestController extends Controller
             //$entity->setSourceYear( date("Y")-1 );
             //set Destination year (2016)
             //$entity->setDestinationYear( date("Y") );
-            $nextYearRange = (date("Y")+1)."-".(date("Y")+2);
-            $currentYearRange = date("Y")."-".(date("Y")+1);
-            $previousYearRange = (date("Y")-1)."-".(date("Y"));
+            //TODO: get years according to current date (border conditions)
+            $nextYearRange = (date("Y"))."-".(date("Y")+1);
+            $currentYearRange = (date("Y")-1)."-".(date("Y"));
+            $previousYearRange = (date("Y")-2)."-".(date("Y")-1);
+            //$previousPreviousYearRange = (date("Y")-2)."-".(date("Y")-1);
 
             //sourceYearRanges: current academic year and previous academic year
             $sourceYearRanges = array(
-                (date("Y")-1) => $previousYearRange,
-                date("Y") => $currentYearRange
+                (date("Y")-1) => $currentYearRange,     //THIS YEAR (default)
+                (date("Y")-2) => $previousYearRange     //PREVIOUS YEAR
             );
             $params['sourceYearRanges'] = $sourceYearRanges;
 
             //destinationYearRanges: Current Academic Year and Next Academic year
             $destinationYearRanges = array(
-                date("Y") => $currentYearRange,
-                (date("Y")+1) => $nextYearRange
+                (date("Y")) => $nextYearRange,        //NEXT YEAR (default)
+                (date("Y")-1) => $currentYearRange    //THIS YEAR
             );
             $params['destinationYearRanges'] = $destinationYearRanges;
         }
