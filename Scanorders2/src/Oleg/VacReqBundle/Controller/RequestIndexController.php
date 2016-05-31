@@ -260,7 +260,9 @@ class RequestIndexController extends Controller
         $requestParams = $request->query->all();
         $requestTypeId = null;
         if( array_key_exists("filter", $requestParams) ) {
-            $requestTypeId = $requestParams["filter"]["requestType"];
+            if( array_key_exists("requestType", $requestParams["filter"]) ) {
+                $requestTypeId = $requestParams["filter"]["requestType"];
+            }
         }
         //echo "requestTypeId=".$requestTypeId."<br>";
         if( $requestTypeId ) {
