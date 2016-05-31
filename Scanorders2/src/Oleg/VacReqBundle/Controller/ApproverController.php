@@ -58,6 +58,7 @@ class ApproverController extends Controller
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //get carryover approver groups
+        $carryOverRequestGroups = array();
         if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
             $carryOverGroupParams = array('asObject'=>true);
             $carryOverGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
