@@ -175,7 +175,7 @@ class RequestIndexController extends Controller
         );
 
         if( $routeName == 'vacreq_incomingrequests' ) {
-            $paginationParams['defaultSortFieldName'] = 'request.id';
+            $paginationParams['defaultSortFieldName'] = 'request.createDate'; //'request.id';
         }
 
 
