@@ -849,11 +849,12 @@ class ApproverController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
         $entity = $vacreqUtil->getSettingsByInstitution($instid);
 
+        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
         if( !$entity ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
-            if( !$institution ) {
-                throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
-            }
             $entity = new VacReqSettings($institution);
         }
 
