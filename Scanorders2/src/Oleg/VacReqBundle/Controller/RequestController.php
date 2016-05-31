@@ -49,7 +49,7 @@ class RequestController extends Controller
                 //Flash
                 $this->get('session')->getFlashBag()->add(
                     'warning',
-                    "You don't have a submitter role in order to submit a request. You are redirected to the 'Incoming Requests' page."
+                    "You don't have a submitter role in order to submit a request. You have been redirected to the 'Incoming Requests' page."
                 );
                 return $this->redirectToRoute('vacreq_incomingrequests');
             }
