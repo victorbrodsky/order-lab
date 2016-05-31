@@ -16,7 +16,7 @@
             </a>
             {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                 {% if pendingRequests is defined and pendingRequests > 0 %}
-                    (<a href="{{ path('vacreq_incomingrequests',{'filter[pending]':1,'filter[organizationalInstitutions]':groupId}) }}">Pending Approval: {{ pendingRequests }}</a>)
+                    (<a href="{{ path('vacreq_incomingrequests',{'filter[pending]':1,'filter[organizationalInstitutions]':groupId}) }}">Pending Approval Requests: {{ pendingRequests }}</a>)
                 {% endif %}
             {% endif %}
         </h4>
@@ -50,6 +50,10 @@
             <th style="background-color: {{ backgroundColor }}">
                 {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
                 {{ yearRange }} Total
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}">
+                {{ yearRange }} Pending Approval Days
             </th>
 
             <th style="background-color: {{ backgroundColor }}">
@@ -121,6 +125,12 @@
                     {% if not businessAccurate and not vacationAccurate %}
                         <span data-toggle="tooltip" title="The result might be inaccurate due to academic year overlap">*</span>
                     {% endif %}
+                </td>
+
+                {#pending#}
+                <td style="background-color: {{ backgroundColor }}">
+                    {% set pendingDays = vacreq_util.getPendingTotalDaysAcademicYear(submitter,yearRange) %}
+                    {{ vacreqmacros.incomingRequestHref( pendingDays, submitter, yearRange, groupId, '', 'pending', vacreq_sitename ) }}
                 </td>
 
                 {#Remaining days#}

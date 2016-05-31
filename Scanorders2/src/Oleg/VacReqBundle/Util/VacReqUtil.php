@@ -553,6 +553,21 @@ class VacReqUtil
         return $yearRangeArr;
     }
 
+    public function getPendingTotalDaysAcademicYear( $user, $yearRange ) {
+
+        $requestTypeStr = "business";
+        $resB = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "pending" );
+        $numberOfDaysB = $resB['numberOfDays'];
+
+        $requestTypeStr = "vacation";
+        $resV = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "pending" );
+        $numberOfDaysV = $resV['numberOfDays'];
+
+        $totalPendingDays = $numberOfDaysB + $numberOfDaysV;
+
+        return $totalPendingDays;
+    }
+
     //calculate approved total days for current academical year
     public function getApprovedTotalDays( $user, $requestTypeStr ) {
         $previousYear = date("Y") - 1;
@@ -563,7 +578,7 @@ class VacReqUtil
     }
 
     //calculate approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
-    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange ) {
+    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved" ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -598,11 +613,11 @@ class VacReqUtil
         //echo "academicYearEndStr=".$academicYearEndStr."<br>";
 
         //step1: get requests within current academic Year
-        $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false);
+        $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false,$status);
         //echo "numberOfDaysInside=".$numberOfDaysInside."<br>";
 
         //step2: get requests with start date earlier than academic Year Start
-        $numberOfDaysBefore = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr);
+        $numberOfDaysBefore = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status);
         //echo "numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
@@ -610,7 +625,7 @@ class VacReqUtil
         $academicYearStartStr = $currentYear."-".$academicYearStart->format('m-d');
         $nextYear = date("Y") + 1;
         $academicYearEndStr = $nextYear."-".$academicYearStart->format('m-d');
-        $numberOfDaysAfter = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr);
+        $numberOfDaysAfter = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status);
         //echo "numberOfDaysAfter=".$numberOfDaysAfter."<br>";
 
         $res = array();
@@ -626,12 +641,12 @@ class VacReqUtil
         return $res;
     }
 
-    public function getApprovedBeforeAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null ) {
+    public function getApprovedBeforeAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $status="approved" ) {
         $logger = $this->container->get('logger');
         $days = 0;
         $subRequestGetMethod = "getRequest".$requestTypeStr;
 
-        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",true);
+        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",true,$status);
 
         foreach( $requests as $request ) {
             $subRequest = $request->$subRequestGetMethod();
@@ -651,14 +666,14 @@ class VacReqUtil
         return $days;
     }
 
-    public function getApprovedAfterAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null ) {
+    public function getApprovedAfterAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $status="approved" ) {
         $logger = $this->container->get('logger');
         $days = 0;
         $subRequestGetMethod = "getRequest".$requestTypeStr;
 
         //echo "startStr=".$startStr."<br>";
         //echo "endStr=".$endStr."<br>";
-        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",true);
+        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",true,$status);
 
         foreach( $requests as $request ) {
             $subRequest = $request->$subRequestGetMethod();

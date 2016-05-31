@@ -459,7 +459,7 @@ class RequestIndexController extends Controller
             //echo "end year date:".$endAcademicYearDate->format('Y-m-d H:i:s')."<br>";
 
             //requests with firstDayAway or firstDayBackInOffice inside the academic year
-            $dql->andWhere("(request.firstDayAway between :createDateStart and :createDateEnd OR request.firstDayBackInOffice between :createDateStart and :createDateEnd)");
+            $dql->andWhere("(request.firstDayAway between :createDateStart AND :createDateEnd OR request.firstDayBackInOffice between :createDateStart AND :createDateEnd)");
 
             $dqlParameters['createDateStart'] = $startAcademicYearDate;
             $dqlParameters['createDateEnd'] = $endAcademicYearDate;

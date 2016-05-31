@@ -43,6 +43,12 @@ class RequestController extends Controller
         $entity = new VacReqRequest($user);
 
         if( false == $this->get('security.context')->isGranted("create", $entity) ) {
+            //since this is a home page redirect users according to the roles
+            //approvers - redirect to incoming requests page
+            if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
+                return $this->redirectToRoute('vacreq_incomingrequests');
+            }
+
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -868,5 +874,76 @@ class RequestController extends Controller
 
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
+
+
+    /**
+     * @Route("/setdates-imported-old-data/", name="vacreq_setdates_imported_old_data")
+     * @Method({"GET"})
+     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     */
+    public function setdatesImportedOldDataAction(Request $request) {
+
+        if( !$this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.requestType", "requestType");
+
+        $dql->where("requestType.abbreviation = 'business-vacation'");
+        $dql->andWhere("request.firstDayAway IS NULL");
+        $dql->andWhere("request.firstDayBackInOffice IS NULL");
+
+        $query = $em->createQuery($dql);
+
+        $requests = $query->getResult();
+
+        $count = 0;
+        foreach( $requests as $request ) {
+            //echo "request=".$request->getId()."<br>";
+
+//            $res = $request->getFinalStartEndDates();
+//            $startDate = $res['startDate'];
+//            $endDate = $res['endDate'];
+//            echo "request=".$request->getId()."; startDate=".$startDate->format('Y-m-d')."; endDate=".$endDate->format('Y-m-d')."<br>";
+//            $request->setFirstDayAway($startDate);
+//            $request->setFirstDayBackInOffice($endDate);
+
+            //set first day away
+            $firstDateAway = $request->getFirstDateAway(null);
+            $request->setFirstDayAway($firstDateAway);
+
+//            $startDate = "";
+//            if( $request->getFirstDayAway() ) {
+//                $startDate = $request->getFirstDayAway()->format('Y-m-d');
+//            }
+//            $endDate = "";
+//            if( $request->getFirstDayBackInOffice() ) {
+//                $endDate = $request->getFirstDayBackInOffice()->format('Y-m-d');
+//            }
+//            echo "request=".$request->getId()."; startDate=".$startDate."; endDate=".$endDate."; requestType=".$request->getRequestType()."<br>";
+
+            $em->flush();
+
+            $count++;
+        }
+
+        //exit('Updated result: '.$count);
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Updated dates requests: '.count($requests)
+        );
+
+        return $this->redirectToRoute('vacreq_incomingrequests');
+    }
+
 
 }

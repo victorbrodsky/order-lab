@@ -373,6 +373,17 @@
             %}
         {% endif %}
 
+        {% if requestType == "pending" %}
+            {% set pathParams =
+                {
+                    'filter[user]':user.id,
+                    'filter[academicYear]':yearRange,
+                    'filter[organizationalInstitutions]':groupId,
+                    'filter[pending]':1,
+                }
+            %}
+        {% endif %}
+
         {#<a href="{{ path(vacreq_sitename~'_incomingrequests',#}
             {#{#}
                 {#'filter[user]':user.id,#}
