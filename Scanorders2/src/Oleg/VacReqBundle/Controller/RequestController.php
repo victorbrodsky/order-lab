@@ -48,7 +48,7 @@ class RequestController extends Controller
             if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
                 //Flash
                 $this->get('session')->getFlashBag()->add(
-                    'warning',
+                    'notice',
                     "You don't have a submitter role in order to submit a request. You have been redirected to the 'Incoming Requests' page."
                 );
                 return $this->redirectToRoute('vacreq_incomingrequests');
