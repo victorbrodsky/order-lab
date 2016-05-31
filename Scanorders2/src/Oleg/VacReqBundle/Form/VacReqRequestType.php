@@ -65,6 +65,15 @@ class VacReqRequestType extends AbstractType
 
         }
 
+        if( $this->params['requestType']->getAbbreviation() == "carryover" ) {
+            $builder->add('comment', 'textarea', array(
+                'label' => 'Comment:',
+                //'read_only' => $readOnly,
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control'),
+            ));
+        }
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -284,7 +284,15 @@ class VacReqUtil
             // and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
 
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
-            $message = $entity->getEmailSubject().".".$break.$break;
+            $message = $entity->getEmailSubject().".";
+
+            //comment
+            if( $entity->getComment() ) {
+                $message .= $break . "Comment: " . $entity->getComment();
+            }
+
+            $message .= $break.$break;
+
             //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
             $message .= "As of ".$entity->getCreateDate()->format("F jS Y").", ".$entity->getUser()->getUsernameOptimal()." has accrued ".
                 $accruedDays." days in the current ".$yearRange." academic year,";
