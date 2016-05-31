@@ -1061,7 +1061,7 @@ class VacReqUtil
     public function getUserAwayInfo( $user ) {
 
         $dateformat = 'M d Y';
-        //$res = "";
+        $res = "";
         $resB = "";
         $resV = "";
 
