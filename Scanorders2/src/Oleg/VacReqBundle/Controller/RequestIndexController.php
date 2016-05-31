@@ -258,7 +258,10 @@ class RequestIndexController extends Controller
         //get request type
         $params['requestTypeAbbreviation'] = "business-vacation";
         $requestParams = $request->query->all();
-        $requestTypeId = $requestParams["filter"]["requestType"];
+        $requestTypeId = null;
+        if( array_key_exists("filter", $requestParams) ) {
+            $requestTypeId = $requestParams["filter"]["requestType"];
+        }
         //echo "requestTypeId=".$requestTypeId."<br>";
         if( $requestTypeId ) {
             $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
