@@ -327,11 +327,16 @@ class RequestController extends Controller
                 //set final (global) fields
                 $entity->setFinalFields();
 
-                $entity->setApprover($user);
+                $overallStatus = $entity->getStatus();
+
+                if( $overallStatus == "pending" ) {
+                    $entity->setApprover(null);
+                } else {
+                    $entity->setApprover($user);
+                }
+
                 $em->persist($entity);
                 $em->flush();
-
-                $overallStatus = $entity->getStatus();
 
                 $eventType = 'Business/Vacation Request '.ucwords($overallStatus);
                 $action = $overallStatus;
@@ -555,7 +560,13 @@ class RequestController extends Controller
             }
 
             if( $statusSet ) {
-                $entity->setApprover($user);
+
+                if( $status == "pending" ) {
+                    $entity->setApprover(null);
+                } else {
+                    $entity->setApprover($user);
+                }
+
                 $em->persist($entity);
                 $em->flush();
 
