@@ -16,7 +16,7 @@
             </a>
             {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                 {% if pendingRequests is defined and pendingRequests > 0 %}
-                    (<a href="{{ path('vacreq_incomingrequests',{'filter[pending]':1,'filter[organizationalInstitutions]':groupId}) }}">Pending Approval Requests: {{ pendingRequests }}</a>)
+                    (<a href="{{ path('vacreq_incomingrequests',{'filter[pending]':1,'filter[organizationalInstitutions]':groupId}) }}">Requests Pending Approval: {{ pendingRequests }}</a>)
                 {% endif %}
             {% endif %}
         </h4>
@@ -38,31 +38,34 @@
             {% set backgroundColor = yearRangesColor[loop.index0] %}
 
             <th style="background-color: {{ backgroundColor }}">
-                {#{{ knp_pagination_sortable(pagination, 'Current Academic Year', 'request.id') }}#}
                 {{ yearRange }} Business Travel
             </th>
 
             <th style="background-color: {{ backgroundColor }}">
-                {#{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}#}
+                {{ yearRange }} Business Travel Days Pending Approval
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}">
                 {{ yearRange }} Vacation
             </th>
 
             <th style="background-color: {{ backgroundColor }}">
-                {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
+                {{ yearRange }} Vacation Days Pending Approval
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}">
                 {{ yearRange }} Total
             </th>
 
-            <th style="background-color: {{ backgroundColor }}">
-                {{ yearRange }} Pending Approval Days
-            </th>
+            {#<th style="background-color: {{ backgroundColor }}">#}
+                {#{{ yearRange }} Pending Approval Days#}
+            {#</th>#}
 
             <th style="background-color: {{ backgroundColor }}">
-                {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
                 {{ yearRange }} Remaining Vacation Days
             </th>
 
             <th style="background-color: {{ backgroundColor }}">
-                {#{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}#}
                 {{ yearRange }} Carried Over Vacation Days From Previous Year
             </th>
 
@@ -94,10 +97,16 @@
                 {% set businessDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'business',yearRange) %}
                 {% set businessDays = businessDaysRes['numberOfDays'] %}
                 {% set businessAccurate = businessDaysRes['accurate'] %}
+                {% set pendingDaysResB = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'business',yearRange,"pending") %}
+                {% set pendingDaysB = pendingDaysResB['numberOfDays'] %}
 
                 {% set vacationDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange) %}
                 {% set vacationDays = vacationDaysRes['numberOfDays'] %}
                 {% set vacationAccurate = vacationDaysRes['accurate'] %}
+                {% set pendingDaysResV = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange,"pending") %}
+                {% set pendingDaysV = pendingDaysResV['numberOfDays'] %}
+
+                {% set carryOverDays = vacreq_util.getUserCarryOverDays(submitter,yearRange) %}
 
                 {#{% set totalRemainingDays = totalAllocatedDays|number_format - vacationDays|number_format %}#}
                 {#totalRemainingDays={{ totalRemainingDays }}#}
@@ -111,11 +120,19 @@
                 </td>
 
                 <td style="background-color: {{ backgroundColor }}">
+                    {{ vacreqmacros.incomingRequestHref( pendingDaysB, submitter, yearRange, groupId, '', 'businessRequest-pending', vacreq_sitename ) }}
+                </td>
+
+                <td style="background-color: {{ backgroundColor }}">
                     {#{{ vacationDays }}#}
                     {{ vacreqmacros.incomingRequestHref( vacationDays, submitter, yearRange, groupId, 1, 'vacationRequest', vacreq_sitename ) }}
                     {% if not vacationAccurate %}
                         *
                     {% endif %}
+                </td>
+
+                <td style="background-color: {{ backgroundColor }}">
+                    {{ vacreqmacros.incomingRequestHref( pendingDaysV, submitter, yearRange, groupId, '', 'vacationRequest-pending', vacreq_sitename ) }}
                 </td>
 
                 <td style="background-color: {{ backgroundColor }}">
@@ -128,22 +145,24 @@
                 </td>
 
                 {#pending#}
-                <td style="background-color: {{ backgroundColor }}">
-                    {% set pendingDays = vacreq_util.getPendingTotalDaysAcademicYear(submitter,yearRange) %}
-                    {{ vacreqmacros.incomingRequestHref( pendingDays, submitter, yearRange, groupId, '', 'pending', vacreq_sitename ) }}
-                </td>
+                {#<td style="background-color: {{ backgroundColor }}">#}
+                    {#{% set pendingDays = vacreq_util.getPendingTotalDaysAcademicYear(submitter,yearRange) %}#}
+                    {#{{ vacreqmacros.incomingRequestHref( pendingDays, submitter, yearRange, groupId, '', 'pending', vacreq_sitename ) }}#}
+                {#</td>#}
 
                 {#Remaining days#}
                 <td style="background-color: {{ backgroundColor }}">
                     {#{{ totalRemainingDays }}#}
-                    {{ (totalAllocatedDays|number_format - vacationDays|number_format) }}
-                    {% if not vacationAccurate %}
+                    {#{{ (totalAllocatedDays|number_format - vacationDays|number_format + carryOverDays|number_format) }}=>#}
+                    {% set totalRemainingDaysRes = vacreq_util.totalVacationRemainingDays(submitter,totalAllocatedDays,vacationDays,carryOverDays,yearRange) %}
+                    {{ totalRemainingDaysRes['numberOfDays'] }}
+                    {% if not totalRemainingDaysRes['accurate'] %}
                         *
                     {% endif %}
                 </td>
 
                 <td style="background-color: {{ backgroundColor }}">
-                    {{ vacreq_util.getUserCarryOverDays(submitter,yearRange) }}
+                    {{ carryOverDays }}
                 </td>
 
             {% endfor %}

@@ -380,6 +380,38 @@ class VacReqUtil
         $emailUtil->sendEmail( $submitter->getSingleEmail(), $subject, $message, $cssArr, null );
     }
 
+    //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
+    public function totalVacationRemainingDays( $user, $totalAllocatedDays=null, $vacationDays=null, $carryOverDays=null, $yearRange=null ) {
+
+        if( !$totalAllocatedDays ) {
+            $totalAllocatedDays = $this->getTotalAccruedDays();
+        }
+
+        if( !$yearRange ) {
+            $currentYear = new \DateTime();
+            $currentYear = $currentYear->format('Y');
+            $previousYear = $currentYear - 1;
+            $yearRange = $previousYear."-".$currentYear;
+        }
+
+        $vacationAccurate = true;
+        if( !$vacationDays ) {
+            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($user,'vacation',$yearRange);
+            $vacationDays = $vacationDaysRes['numberOfDays'];
+            $vacationAccurate = $vacationDaysRes['accurate'];
+        }
+
+        if( !$carryOverDays ) {
+            $carryOverDays = $this->getUserCarryOverDays($user,$yearRange);
+        }
+
+        $res = array(
+            'numberOfDays' => ( (int)$totalAllocatedDays - (int)$vacationDays + (int)$carryOverDays ),
+            'accurate' => $vacationAccurate
+        );
+
+        return $res;
+    }
 
     //"During the current academic year, you have received X approved vacation days in total."
     // (if X = 1, show "During the current academic year, you have received X approved vacation day."

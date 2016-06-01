@@ -373,12 +373,25 @@
             %}
         {% endif %}
 
-        {% if requestType == "pending" %}
+        {% if requestType == "businessRequest-pending" %}
             {% set pathParams =
                 {
                     'filter[user]':user.id,
                     'filter[academicYear]':yearRange,
                     'filter[organizationalInstitutions]':groupId,
+                    'filter[businessRequest]':1,
+                    'filter[pending]':1,
+                }
+            %}
+        {% endif %}
+
+        {% if requestType == "vacationRequest-pending" %}
+            {% set pathParams =
+                {
+                    'filter[user]':user.id,
+                    'filter[academicYear]':yearRange,
+                    'filter[organizationalInstitutions]':groupId,
+                    'filter[vacationRequest]':1,
                     'filter[pending]':1,
                 }
             %}
@@ -406,4 +419,199 @@
 
 {% endmacro %}
 
+{% macro incomingRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
 
+    {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+
+    <form action="{{ path(routename) }}" method="get" {{ form_enctype(vacreqfilter) }} class="well form-search">
+
+        <p>
+        <div class="row">
+
+            <div class="col-xs-1">
+                <div class="input-group input-group-reg date allow-future-date">
+                    {{ form_widget(vacreqfilter.startdate) }}
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </div>
+
+            <div class="col-xs-1">
+                <div class="input-group input-group-reg date allow-future-date">
+                    {{ form_widget(vacreqfilter.enddate) }}
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </div>
+
+            {% if vacreqfilter.requestType is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.requestType) }}
+                </div>
+            {% endif %}
+
+            {% if vacreqfilter.user is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.user) }}
+                </div>
+            {% endif %}
+
+            {% if vacreqfilter.submitter is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.submitter) }}
+                </div>
+            {% endif %}
+
+            {% if vacreqfilter.organizationalInstitutions is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.organizationalInstitutions) }}
+                </div>
+            {% endif %}
+
+
+            {% if requestTypeAbbreviation != 'carryover' %}
+                {% if vacreqfilter.academicYear is defined %}
+                    <div class="col-xs-1">
+                        {{ form_row(vacreqfilter.academicYear) }}
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <div class="col-xs-1">
+                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+            </div>
+
+        </div>
+        </p>
+
+        <br>
+
+        <p>
+        <div class="row">
+            <div class="col-xs-12" align="left">
+
+                {#requestTypeAbbreviation={{ requestTypeAbbreviation }}#}
+                {#{% if requestTypeAbbreviation != 'carryover' %}#}
+                {% if vacreqfilter.businessRequest is defined %}
+                    {{ vacreqmacros.checkbox(vacreqfilter.businessRequest) }}
+                    &nbsp;&nbsp;
+                {% endif %}
+                {% if vacreqfilter.vacationRequest is defined %}
+                    {{ vacreqmacros.checkbox(vacreqfilter.vacationRequest) }}
+                    &nbsp;&nbsp;
+                {% endif %}
+
+                {#&nbsp;&nbsp;#}
+                {#{{ vacreqmacros.checkbox(vacreqfilter.completed) }}#}
+
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.pending) }}
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.approved) }}
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.rejected) }}
+            </div>
+        </div>
+        </p>
+
+        {{ form_rest(vacreqfilter) }}
+
+    </form>
+
+{% endmacro %}
+
+{% macro myRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
+
+    {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+
+    <form action="{{ path(routename) }}" method="get" {{ form_enctype(vacreqfilter) }} class="well form-search">
+
+        <p>
+        <div class="row">
+
+            <div class="col-xs-1">
+                <div class="input-group input-group-reg date allow-future-date">
+                    {{ form_widget(vacreqfilter.startdate) }}
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </div>
+
+            <div class="col-xs-1">
+                <div class="input-group input-group-reg date allow-future-date">
+                    {{ form_widget(vacreqfilter.enddate) }}
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </div>
+
+            {% if vacreqfilter.requestType is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.requestType) }}
+                </div>
+            {% endif %}
+
+            {% if vacreqfilter.user is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.user) }}
+                </div>
+            {% endif %}
+
+            {% if vacreqfilter.submitter is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.submitter) }}
+                </div>
+            {% endif %}
+
+            {% if vacreqfilter.organizationalInstitutions is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(vacreqfilter.organizationalInstitutions) }}
+                </div>
+            {% endif %}
+
+            {% if requestTypeAbbreviation != 'carryover' %}
+                {% if vacreqfilter.academicYear is defined %}
+                    <div class="col-xs-1">
+                        {{ form_row(vacreqfilter.academicYear) }}
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <div class="col-xs-1">
+                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+            </div>
+
+        </div>
+        </p>
+
+        <br>
+
+        <p>
+        <div class="row">
+            <div class="col-xs-12" align="left">
+
+                {#requestTypeAbbreviation={{ requestTypeAbbreviation }}#}
+                {#{% if requestTypeAbbreviation != 'carryover' %}#}
+                {% if vacreqfilter.businessRequest is defined %}
+                    {{ vacreqmacros.checkbox(vacreqfilter.businessRequest) }}
+                    &nbsp;&nbsp;
+                {% endif %}
+                {% if vacreqfilter.vacationRequest is defined %}
+                    {{ vacreqmacros.checkbox(vacreqfilter.vacationRequest) }}
+                    &nbsp;&nbsp;
+                {% endif %}
+
+                {#&nbsp;&nbsp;#}
+                {#{{ vacreqmacros.checkbox(vacreqfilter.completed) }}#}
+
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.pending) }}
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.approved) }}
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.rejected) }}
+            </div>
+        </div>
+        </p>
+
+        {{ form_rest(vacreqfilter) }}
+
+    </form>
+
+{% endmacro %}

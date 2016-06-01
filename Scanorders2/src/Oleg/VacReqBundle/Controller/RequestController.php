@@ -205,6 +205,14 @@ class RequestController extends Controller
             $requestTypeCarryOverId = null;
         }
 
+        //totalAllocatedDays - vacationDays + carryOverDays
+        $remainingDaysRes = $vacreqUtil->totalVacationRemainingDays($user);
+        $remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+        if( !$remainingDaysRes['accurate'] ) {
+            $remainingDaysString .= " (the result might be inaccurate due to academic year overlap)";
+        }
+        $remainingDaysString .= ".";
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -215,6 +223,7 @@ class RequestController extends Controller
             'totalApprovedDaysString' => $totalApprovedDaysString,
             'accruedDaysString' => $accruedDaysString,
             'carriedOverDaysString' => $carriedOverDaysString,
+            'remainingDaysString' => $remainingDaysString,
             'title' => $title,
             'newCarryOverRequest' => $newCarryOverRequest
         );
