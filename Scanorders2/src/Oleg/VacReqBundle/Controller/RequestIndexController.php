@@ -488,29 +488,41 @@ class RequestIndexController extends Controller
             $filtered = true;
         }
 
-        if( $businessRequest ) {
-            $dql->andWhere("requestBusiness.startDate IS NOT NULL");
-            $filtered = true;
-        }
-        if( $vacationRequest ) {
-            $dql->andWhere("requestVacation.startDate IS NOT NULL");
+        if( $vacationRequest || $businessRequest ) {
+            $requestBVTypeCriterionArr = array();
+            if( $businessRequest ) {
+                $requestBVTypeCriterionArr[] = "requestBusiness.startDate IS NOT NULL";
+            }
+            if( $vacationRequest ) {
+                $requestBVTypeCriterionArr[] = "requestVacation.startDate IS NOT NULL";
+            }
+            $dql->andWhere(implode(" OR ",$requestBVTypeCriterionArr));
             $filtered = true;
         }
 
-        if( $completed ) {
-            $dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'");
-            $filtered = true;
-        }
-        if( $pending ) {
-            $dql->andWhere("requestBusiness.status='pending' OR requestVacation.status='pending'");
-            $filtered = true;
-        }
-        if( $rejected ) {
-            $dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected'");
-            $filtered = true;
-        }
-        if( $approved ) {
-            $dql->andWhere("requestBusiness.status='approved' OR requestVacation.status='approved'");
+        if( $completed || $pending || $rejected || $approved ) {
+            $requestStatusCriterionArr = array();
+            if ($completed) {
+                //$dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'");
+                //$filtered = true;
+                $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'";
+            }
+            if ($pending) {
+                //$dql->andWhere("requestBusiness.status='pending' OR requestVacation.status='pending'");
+                //$filtered = true;
+                $requestStatusCriterionArr[] = "requestBusiness.status='pending' OR requestVacation.status='pending'";
+            }
+            if ($rejected) {
+                //$dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected'");
+                //$filtered = true;
+                $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected'";
+            }
+            if ($approved) {
+                //$dql->andWhere("requestBusiness.status='approved' OR requestVacation.status='approved'");
+                //$filtered = true;
+                $requestStatusCriterionArr[] = "requestBusiness.status='approved' OR requestVacation.status='approved'";
+            }
+            $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
             $filtered = true;
         }
 
