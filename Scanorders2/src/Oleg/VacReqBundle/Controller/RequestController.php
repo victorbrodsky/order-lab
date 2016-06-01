@@ -40,6 +40,22 @@ class RequestController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
 
+        //testing
+//        $currentYear = new \DateTime();
+//        $currentYear = $currentYear->format('Y');
+//        $previousYear = $currentYear - 1;
+//        $yearRange = $previousYear."-".$currentYear;
+//        $approvedDays = $vacreqUtil->getApprovedTotalDaysAcademicYear($user,"vacation",$yearRange);
+//        //print_r($approvedDays);
+//        echo "<br>##### approvedDays=".$approvedDays['numberOfDays']."<br>";
+//        if( $approvedDays['accurate'] ) {
+//            echo "accurate<br>";
+//        } else {
+//            echo "inaccurate!<br>";
+//        }
+//        exit('end');
+        //testing
+
         $entity = new VacReqRequest($user);
 
         if( false == $this->get('security.context')->isGranted("create", $entity) ) {
@@ -209,7 +225,7 @@ class RequestController extends Controller
         $remainingDaysRes = $vacreqUtil->totalVacationRemainingDays($user);
         $remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
         if( !$remainingDaysRes['accurate'] ) {
-            $remainingDaysString .= " (the result might be inaccurate due to academic year overlap)";
+            $remainingDaysString .= " (".$vacreqUtil->getInaccuracyMessage().")";
         }
         $remainingDaysString .= ".";
 

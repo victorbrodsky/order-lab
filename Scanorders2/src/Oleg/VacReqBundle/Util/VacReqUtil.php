@@ -267,7 +267,7 @@ class VacReqUtil
             $resVacationDays = $this->getApprovedTotalDays($entity->getUser(),"vacation");
             $approvedVacationDays = $resVacationDays['numberOfDays'];
             if( !$resVacationDays['accurate'] ) {
-                $approvedVacationDays .= " (the result might be inaccurate due to academic year overlap)";
+                $approvedVacationDays .= " (".$this->getInaccuracyMessage().")";
             }
 
             //business
@@ -275,7 +275,7 @@ class VacReqUtil
             $approvedBusinessDays = $resBusinessDays['numberOfDays'];
             $accurateBusiness = $resBusinessDays['accurate'];
             if( !$accurateBusiness ) {
-                $approvedBusinessDays .= " (the result might be inaccurate due to academic year overlap)";
+                $approvedBusinessDays .= " (".$this->getInaccuracyMessage().")";
             }
 
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
@@ -437,7 +437,7 @@ class VacReqUtil
             $result .= $numberOfDays." approved ".$requestTypeStr." travel days in total";
         }
         if( !$accurate ) {
-            $result .= " (the result might be inaccurate due to academic year overlap)";
+            $result .= " (".$this->getInaccuracyMessage().")";
         }
 
         $result .= " and ";
@@ -456,7 +456,7 @@ class VacReqUtil
             $result .= $numberOfDays." approved ".$requestTypeStr." days in total";
         }
         if( !$accurate ) {
-            $result .= " (the result might be inaccurate due to academic year overlap)";
+            $result .= " (".$this->getInaccuracyMessage().")";
         }
 
         $result .= ".";
@@ -617,6 +617,10 @@ class VacReqUtil
         return $res;
     }
 
+    public function getInaccuracyMessage() {
+        return "the count may be imprecise due to included holidays";
+    }
+
     //calculate approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
     public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved" ) {
 
@@ -644,28 +648,28 @@ class VacReqUtil
 
         //$previousYear = date("Y") - 1;
         $academicYearStartStr = $previousYear."-".$academicYearStartStr;
-        //echo "academicYearStartStr=".$academicYearStartStr."<br>";
+        //echo "current academicYearStartStr=".$academicYearStartStr."<br>";
         //academicYearEnd
         $academicYearEndStr = $academicYearEnd->format('m-d');
 
         //$currentYear = date("Y");
         $academicYearEndStr = $currentYear."-".$academicYearEndStr;
-        //echo "academicYearEndStr=".$academicYearEndStr."<br>";
+        //echo "current academicYearEndStr=".$academicYearEndStr."<br>";
 
-        //step1: get requests within current academic Year
+        //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
         $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false,$status);
         //echo "numberOfDaysInside=".$numberOfDaysInside."<br>";
 
         //step2: get requests with start date earlier than academic Year Start
-        $numberOfDaysBefore = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status);
+        $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status);
+        $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
+        $accurateBefore = $numberOfDaysBeforeRes['accurate'];
         //echo "numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
-        $currentYear = date("Y");
-        $academicYearStartStr = $currentYear."-".$academicYearStart->format('m-d');
-        $nextYear = date("Y") + 1;
-        $academicYearEndStr = $nextYear."-".$academicYearStart->format('m-d');
-        $numberOfDaysAfter = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status);
+        $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status);
+        $numberOfDaysAfter = $numberOfDaysAfterRes['numberOfDays'];
+        $accurateAfter = $numberOfDaysAfterRes['accurate'];
         //echo "numberOfDaysAfter=".$numberOfDaysAfter."<br>";
 
         $res = array();
@@ -674,64 +678,110 @@ class VacReqUtil
         $res['numberOfDays'] = $numberOfDays;
         $res['accurate'] = true;
 
-        if( $numberOfDaysBefore > 0 || $numberOfDaysAfter > 0 ) {
+        if( !$accurateBefore || !$accurateAfter ) {
             $res['accurate'] = false;
         }
 
         return $res;
     }
 
+    // |-----start-----|year|-----end-----|year+1|----|
+    // |-----start-----|2015-07-01|-----end-----|2016-06-30|----|
     public function getApprovedBeforeAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $status="approved" ) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $days = 0;
+        $accurate = true;
         $subRequestGetMethod = "getRequest".$requestTypeStr;
 
+        //echo "before startStr=".$startStr."<br>";
+        //echo "before endStr=".$endStr."<br>";
         $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",true,$status);
+        //echo "before requests count=".count($requests)."<br>";
 
         foreach( $requests as $request ) {
             $subRequest = $request->$subRequestGetMethod();
-            $requestEndAcademicYearStr = $this->getRequestEdgeAcademicYearDate( $request, "End" );
+            $requestEndAcademicYearStr = $this->getAcademicYearEdgeDateBetweenRequestStartEnd($request,"first");
+            if( !$requestEndAcademicYearStr ) {
+                echo $request->getId()." continue <br>";
+                continue;
+            }
             //echo "requestStartDate=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
             //echo "requestEndAcademicYearStr=".$requestEndAcademicYearStr."<br>";
             //echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
-            $workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
+            //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
+            $workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestEndAcademicYearStr), $subRequest->getEndDate() );
             //echo "workingDays=".$workingDays."<br>";
             if( $workingDays > $subRequest->getNumberOfDays() ) {
-                $logger->warning("Logical error getApprovedBeforeAcademicYearDays: number of calculated working days (".$workingDays.") are more than number of days in request (".$subRequest->getNumberOfDays().")");
+                //$logger->warning("Logical error getApprovedBeforeAcademicYearDays: number of calculated working days (".$workingDays.") are more than number of days in request (".$subRequest->getNumberOfDays().")");
                 $workingDays = $subRequest->getNumberOfDays();
             }
+
+            if( $workingDays != $subRequest->getNumberOfDays() ) {
+                //inaccuracy
+                //echo "user=".$request->getUser()."<br>";
+                //echo "Before: ID# ".$request->getId()." inaccurate: workingDays=".$workingDays." enteredDays=".$subRequest->getNumberOfDays()."<br>";
+                $accurate = false;
+            }
+
+            //echo $request->getId().": before: request days=".$workingDays."<br>";
             $days = $days + $workingDays;
         }
 
-        return $days;
+        $res = array(
+            'numberOfDays' => $days,
+            'accurate' => $accurate
+        );
+
+        return $res;
     }
 
+    // |----|year|-----start-----|year+1|-----end-----|
+    // |----|2015-07-01|-----start-----|2016-06-30|-----end-----|
     public function getApprovedAfterAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $status="approved" ) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $days = 0;
+        $accurate = true;
         $subRequestGetMethod = "getRequest".$requestTypeStr;
 
-        //echo "startStr=".$startStr."<br>";
-        //echo "endStr=".$endStr."<br>";
+        //echo "after startStr=".$startStr."<br>";
+        //echo "after endStr=".$endStr."<br>";
         $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",true,$status);
+        //echo "after requests count=".count($requests)."<br>";
 
         foreach( $requests as $request ) {
             $subRequest = $request->$subRequestGetMethod();
-            $requestStartAcademicYearStr = $this->getRequestEdgeAcademicYearDate( $request, "Start" );
+            $requestEndAcademicYearStr = $this->getAcademicYearEdgeDateBetweenRequestStartEnd($request,"last"); //get the academic year edge date after the request's start
             //echo $request->getId().": after: request days=".$subRequest->getNumberOfDays()."<br>";
+            if( !$requestEndAcademicYearStr ) {
+                continue;
+            }
+            //echo "requestEndAcademicYearStr=".$requestEndAcademicYearStr."<br>";
+            //echo "requestStartAcademicYearStr=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
 
-            //echo "requestStartAcademicYearStr=".$requestStartAcademicYearStr."<br>";
-            //echo "requestEndAcademicYearStr=".$subRequest->getEndDate()->format('Y-m-d')."<br>";
-
-            $workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestStartAcademicYearStr), $subRequest->getEndDate() );
+            //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestStartAcademicYearStr), $subRequest->getEndDate() );
+            $workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
+            //echo "calculated workingDays=".$workingDays."<br>";
             if( $workingDays > $subRequest->getNumberOfDays() ) {
-                $logger->warning("Logical error getApprovedAfterAcademicYearDays: number of calculated working days (".$workingDays.") are more than number of days in request (".$subRequest->getNumberOfDays().")");
+                //$logger->warning("Logical error getApprovedAfterAcademicYearDays: number of calculated working days (".$workingDays.") are more than number of days in request (".$subRequest->getNumberOfDays().")");
                 $workingDays = $subRequest->getNumberOfDays();
             }
+
+            if( $workingDays != $subRequest->getNumberOfDays() ) {
+                //inaccuracy
+                //echo "After: ID# ".$request->getId()." inaccurate: workingDays=".$workingDays." enteredDays=".$subRequest->getNumberOfDays()."<br>";
+                $accurate = false;
+            }
+
+            //echo $request->getId().": after: request days=".$workingDays."<br>";
             $days = $days + $workingDays;
         }
 
-        return $days;
+        $res = array(
+            'numberOfDays' => $days,
+            'accurate' => $accurate
+        );
+
+        return $res;
     }
 
     //get prior approved days for the request's academic year:
@@ -801,21 +851,26 @@ class VacReqUtil
 
         $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :status");
 
-        // |----||--s--e--||----|
+        // |----|year|-----start-----end-----|year+1|----|
+        // |----|2015-07-01|-----start-----end-----|2016-06-30|----|
         if( $type == "inside" && $startStr && $endStr ) {
             $dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'");
         }
 
-        // |--s--||--e--||----|
+        // |-----start-----|year|-----end-----|year+1|----|
+        // |-----rstart-----|2015-07-01|-----rend-----|2016-06-30|----|
         if( $type == "before" && $startStr ) {
-            $dql->andWhere("requestType.startDate < '" . $startStr . "'"); // . " AND requestType.endDate > " . "'" . $startStr . "'");
+            //echo "startStr=".$startStr."<br>";
+            $dql->andWhere("requestType.startDate < '" . $startStr . "'" . " AND requestType.endDate > '".$startStr."'"); // . " AND requestType.endDate > " . "'" . $startStr . "'");
         }
 
-        // |----||--s--||--e--|
+        // |----|year|-----start-----|year+1|-----end-----|
+        // |----|2015-07-01|-----start-----|2016-06-30|-----end-----|
         if( $type == "after" && $startStr && $endStr ) {
             //echo "sql endStr=".$endStr."<br>";
-            $dql->andWhere("requestType.endDate > '" . $endStr . "'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
+            //$dql->andWhere("requestType.endDate > '" . $endStr . "'" . " AND requestType.startDate < '".$endStr."'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
             //$dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate > " . "'" . $endStr . "'");
+            $dql->andWhere("requestType.startDate < '" . $endStr . "'" . " AND requestType.endDate > '".$endStr."'");
         }
 
         $query = $this->em->createQuery($dql);
@@ -844,8 +899,9 @@ class VacReqUtil
     public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
         $starDateStr = $starDate->format('Y-m-d');
         $endDateStr = $endDate->format('Y-m-d');
-        //$holidays = array();
-        $holidays = ['*-12-25', '*-01-01', '2013-12-23']; # variable and fixed holidays
+        //echo $starDateStr . " --- " . $endDateStr ."<br>";
+        $holidays = array();
+        //$holidays = ['*-12-25', '*-01-01', '*-07-04']; # variable and fixed holidays
         //return $this->getWorkingDays($starDateStr,$endDateStr,$holidays);
         return $this->number_of_working_days($starDateStr,$endDateStr,$holidays);
     }
@@ -933,6 +989,55 @@ class VacReqUtil
         return $days;
     }
 
+    //construct the academic year edge date between request's start and end dates, if request is completely inside then return null
+    //$position describes which academic year edge to construct. In case if the request spans over couple years (probably impossible case).
+    // rstart--|y|--|y+1|--|y+2|--rend => position==first=>return y; position==last=>return y+2
+    public function getAcademicYearEdgeDateBetweenRequestStartEnd( $request, $position="first" ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $finalStartEndDates = $request->getFinalStartEndDates();
+        $finalStartDate = $finalStartEndDates['startDate'];
+        $finalEndDate = $finalStartEndDates['endDate'];
+        $startDateMD = $finalStartDate->format('m-d');
+        $endDateMD = $finalEndDate->format('m-d');
+
+        //academicYearStart
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearStart String
+        $academicYearStartMD = $academicYearStart->format('m-d');
+
+        //academicYearEnd: June 30
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+        //academicYearEnd String
+        $academicYearEndMD = $academicYearEnd->format('m-d');
+
+        //check if request is completely inside then return null
+        if( $academicYearStart < $startDateMD && $academicYearEndMD > $endDateMD ) {
+            //echo "request is completely inside";
+            return null;
+        }
+
+        // rstart--|y|--|y+1|--|y+2|--rend => position==first=>return y; position==last=>return y+2
+        //return y-$academicYearStartMD
+        if( $position == "first" ) {
+            $year = $finalStartDate->format('Y');
+            $academicYearEdgeStr = $year . "-" . $academicYearStartMD;
+        }
+
+        //return (y+2)-$academicYearEndMD
+        if( $position == "last" ) {
+            $year = $finalEndDate->format('Y');
+            $academicYearEdgeStr = $year . "-" . $academicYearEndMD;
+        }
+
+        return $academicYearEdgeStr;
+    }
     //construct date string of the request's academical year edge - start (2016-06-30) or end (2016-07-01)
     public function getRequestEdgeAcademicYearDate( $request, $edge ) {
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1030,17 +1135,17 @@ class VacReqUtil
         $endYear = $endDate->format('Y');
 
         //calculate year difference (span)
-        $yearDiff = $endYear - $startYear;
-        $yearDiff = $yearDiff + 1;
+        //$yearDiff = $endYear - $startYear;
+        //$yearDiff = $yearDiff + 1;
 
         $academicYearStartMD = $academicYearStart->format('m-d');
-        $academicStartDateStr = $startYear."-".$academicYearStartMD;
+        //$academicStartDateStr = $startYear."-".$academicYearStartMD;
         //echo "academicStartDateStr= ".$academicStartDateStr."<br>";
         //$academicStartDate = new \DateTime($academicStartDateStr);
 
         //$endYear = $endYear + $yearDiff;
         $academicYearEndMD = $academicYearEnd->format('m-d');
-        $academicEndDateStr = $endYear."-".$academicYearEndMD;
+        //$academicEndDateStr = $endYear."-".$academicYearEndMD;
         //echo "academicEndDateStr= ".$academicEndDateStr."<br>";
         //$academicEndDate = new \DateTime($academicEndDateStr);
 
