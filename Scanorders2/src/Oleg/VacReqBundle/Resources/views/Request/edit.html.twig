@@ -854,7 +854,12 @@
             if( requestB && requestV ) {
                 //(StartDate1 <= EndDate2) and (StartDate2 <= EndDate1)
                 if( startDateBusiness <= endDateVacation && startDateVacation <= endDateBusiness ) {
-                    error = "It appears your Business Travel dates and Vacation dates overlap. Please correct the dates prior to submission";
+                    error = "It appears your Business Travel dates and Vacation dates overlap. " +
+                            "Please correct the dates prior to submission. " +
+                            "If you would like to take some vacation days before your business travel dates " +
+                            "and some after your business travel dates, please submit two separate requests: " +
+                            "one request for business travel and vacation days after business travel, " +
+                            "as well as a separate second request for vacation days before your business travel dates.";
                 }
             }
 
