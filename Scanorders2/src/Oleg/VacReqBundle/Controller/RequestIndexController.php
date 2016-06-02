@@ -122,25 +122,28 @@ class RequestIndexController extends Controller
         if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             if( $approver ) {
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
-                $approverRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName);
+                $vacreqRoles = $em->getRepository('OlegUserdirectoryBundle:User')->
+                    findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName, null, false);
 
 //                $instArr = array();
-//                foreach( $approverRoles as $approverRole ) {
-//                    $instArr[] = $approverRole->getInstitution()->getId();
+//                foreach( $vacreqRoles as $vacreqRole ) {
+//                    $instArr[] = $vacreqRole->getInstitution()->getId();
 //                }
 //                if( count($instArr) > 0 ) {
 //                    //$dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
 //                }
 
-                //select all requests with institution is equal or under approverRole institution.
-                if( count($approverRoles) > 0 ) {
+                //select all requests with institution is equal or under vacreqRole institution.
+                if( count($vacreqRoles) > 0 ) {
                     $instCriterionArr = array();
                     $addedNodes = array();
-                    foreach( $approverRoles as $approverRole ) {
-                        $roleInst = $approverRole->getInstitution();
+                    foreach( $vacreqRoles as $vacreqRole ) {
+                        $roleInst = $vacreqRole->getInstitution();
+                        //echo "roleInst=".$roleInst."<br>";
                         if( !in_array($roleInst->getId(), $addedNodes) ) {
                             $addedNodes[] = $roleInst->getId();
-                            $instCriterionArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($roleInst,"institution",false);
+                            $instCriterionArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->
+                                selectNodesUnderParentNode($roleInst,"institution",false);
                         }
                     }
                     if( count($instCriterionArr) > 0 ) {
