@@ -52,7 +52,9 @@ class MaintenanceListener {
         if( 
                 strpos($controller,'Oleg\UserdirectoryBundle') !== false || 
                 strpos($controller,'Oleg\OrderformBundle') !== false ||
-                strpos($controller,'Oleg\FellAppBundle') !== false 
+                strpos($controller,'Oleg\FellAppBundle') !== false ||
+                strpos($controller,'Oleg\DeidentifierBundle') !== false ||
+                strpos($controller,'Oleg\VacReqBundle') !== false
         ) {
             // fire custom event e.g. My.db.lookup
             //echo "Sites controller! <br>";
@@ -130,6 +132,7 @@ class MaintenanceListener {
             }
 
             if( strpos($event->getRequest()->get('_route'),'_login') !== false || strpos($event->getRequest()->get('_route'),'_logout') !== false ) {
+                //exit('login or logout page. route='.$event->getRequest()->get('_route'));
                 return;
             }
 

@@ -74,10 +74,13 @@
     {% endif %}
 
     {#add extraStatus to a status#}
+    {#{% set extraStatusStr = parentRequest.extraStatus %}#}
+    {#{% if parentRequest.extraStatus == "Cancellation Denied (Approved)" %}#}
+    {#{% endif %}#}
     <td class="{{ tdclassname }}">
         {% if request and request.status  %}
             {% if parentRequest.extraStatus %}
-                {{ request.status|capitalize ~" ["~parentRequest.extraStatus~"]" }}
+                {{ request.status|capitalize ~" ("~parentRequest.extraStatus|replace({'(Approved)':'', '(Canceled)': ''})~")" }}
             {% else %}
                 {{ request.status|capitalize }}
             {% endif %}

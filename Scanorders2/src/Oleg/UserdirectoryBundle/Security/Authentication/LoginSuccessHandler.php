@@ -67,11 +67,20 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //echo "roleBanned=".$this->roleBanned."<br>";
         //echo "siteName=".$this->siteName."<br>";
-        
-        ////////////////// set session variables //////////////////
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);       
+
         $session = $request->getSession();
-        
+
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);
+
+        //check for maintenance
+        $maintenance = $res['maintenance'];
+        if( $maintenance ) {
+            //$this->container->get('security.context')->setToken(null);
+            //$session->invalidate();
+            return new RedirectResponse( $this->router->generate('main_maintenance') );
+        }
+
+        ////////////////// set session variables //////////////////
         //set max idle time maxIdleTime
         $maxIdleTime = $res['maxIdleTime'];
         $session->set('maxIdleTime',$maxIdleTime);
