@@ -122,57 +122,9 @@ class VacReqUtil
 
     //set confirmation email to approver and email users
     public function sendConfirmationEmailToApprovers( $entity ) {
-
-//        $institution = $entity->getInstitution();
-//        if( !$institution ) {
-//            return null;
-//        }
-//
-//        $emailUtil = $this->container->get('user_mailer_utility');
-//        //$break = "\r\n";
-//
-//        $requestName = $entity->getRequestName();
-//
-//        $approvers = $this->getRequestApprovers($entity);
-//
-//        $approversNameArr = array();
-//
-//        foreach( $approvers as $approver ) {
-//
-//            //echo "approver".$approver."<br>";
-//
-//            if( !$approver->getSingleEmail() ) {
-//                continue;
-//            }
-//
-//            $approversNameArr[] = $approver;
-//
-//            //$subject = "Review ".$requestName." #" . $entity->getId() . " Confirmation";
-//            $subject = $entity->getEmailSubject();
-//
-//            $message = $this->createEmailBody($entity,$approver);
-//            $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
-//
-//        } //foreach approver
-//
-//        //send email to email users
-//        $subject = "Copy of the Confirmation Email: ".$entity->getEmailSubject();
-//        $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
-//        $settings = $this->getSettingsByInstitution($institution->getId());
-//        if( $settings ) {
-//            foreach ($settings->getEmailUsers() as $emailUser) {
-//                $emailUserEmail = $emailUser->getSingleEmail();
-//                if ($emailUserEmail) {
-//                    $message = $this->createEmailBody($entity, $emailUser, $addText);
-//                    $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
-//                }
-//            }
-//        }
-
         $subject = $entity->getEmailSubject();
         $message = $this->createEmailBody($entity);
-        $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message);
-
+        return $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message);
     }
     public function createEmailBody($entity,$emailToUser=null,$addText=null) {
 
@@ -1763,52 +1715,9 @@ class VacReqUtil
 
     //set cancel email to approver and email users
     public function sendCancelEmailToApprovers( $entity, $user, $status ) {
-
-//        $institution = $entity->getInstitution();
-//        if( !$institution ) {
-//            return null;
-//        }
-//
-//        $emailUtil = $this->container->get('user_mailer_utility');
-//        //$break = "\r\n";
-//
-//        $requestName = $entity->getRequestName();
-//
-//        $approvers = $this->getRequestApprovers($entity);
-//
-//        $approversNameArr = array();
-//
-//        $subject = $requestName." #" . $entity->getId() . " " . ucwords($status);
-//
-//        foreach( $approvers as $approver ) {
-//
-//            if( !$approver->getSingleEmail() ) {
-//                continue;
-//            }
-//
-//            $approversNameArr[] = $approver;
-//
-//            $message = $this->createCancelEmailBody($entity,$approver);
-//            $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
-//
-//        } //foreach approver
-//
-//        //send email to email users
-//        $subject = "Copy of the confirmation email for ".$requestName." #" . $entity->getId() . " " . ucwords($status);
-//        $addText = "### This is a copy of the confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
-//        $settings = $this->getSettingsByInstitution($institution->getId());
-//        if( $settings ) {
-//            foreach ($settings->getEmailUsers() as $emailUser) {
-//                $emailUserEmail = $emailUser->getSingleEmail();
-//                if ($emailUserEmail) {
-//                    $message = $this->createCancelEmailBody($entity, $emailUser, $addText);
-//                    $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
-//                }
-//            }
-//        }
         $subject = $entity->getRequestName()." ID #" . $entity->getId() . " " . ucwords($status);
         $message = $this->createCancelEmailBody($entity);
-        $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message);
+        return $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message);
     }
     public function createCancelEmailBody( $entity, $emailUser=null, $addText=null ) {
         $break = "\r\n";
@@ -1858,7 +1767,7 @@ class VacReqUtil
                 continue;
             }
 
-            $approversNameArr[] = $approver;
+            $approversNameArr[] = $approver." (".$approverSingleEmail.")";
 
             //$message = $this->createCancelEmailBody($entity,$approver);
             $message = str_replace("###emailuser###",$approver->getUsernameOptimal(),$originalMessage);
@@ -1882,6 +1791,7 @@ class VacReqUtil
             }
         }
 
+        return implode(", ",$approversNameArr);
     }
 
 

@@ -249,6 +249,13 @@
                                     <li class="divider">
                                     <li>
                                         <a
+                                            general-data-confirm="Are you sure you would like to send a reminder email to your division approvers to process this request with ID #{{ entity.id }}?"
+                                            href="{{ path(vacreq_sitename~'_send_reminder_email', { 'id': entity.id }) }}">
+                                            Send Reminder Email to Approvers
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
                                         general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"
                                         href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">
                                             Cancel (withdraw entire request)
@@ -272,9 +279,9 @@
                                     <li class="divider">
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to submit a Cancellation Request for this entire, already approved request with ID #{{ entity.id }}?"
-                                            href="{{ path(vacreq_sitename~'_status_cancellation-request', { 'id': entity.id,  'requestName':'entire', 'status': 'cancellation-request' }) }}">
-                                            Cancellation Request (withdraw entire approved request)
+                                            general-data-confirm="Are you sure you would like to Request cancellation for this entire, already approved request with ID #{{ entity.id }}? Your division approver will get an notification email and will approve or reject this cancellation request."
+                                            href="{{ path(vacreq_sitename~'_status_cancellation-request', { 'id': entity.id, 'status': 'cancellation-request' }) }}">
+                                            Request cancellation
                                         </a>
                                     </li>
                                 {% endif %}

@@ -193,6 +193,33 @@
 
     {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
+    {% set showApprove = false %}
+    {% if not entity.isOverallStatus('approved') %}
+        {% set showApprove = true %}
+    {% endif %}
+
+    {% set showReject = false %}
+    {#{% if not entity.isOverallStatus('approved') and not entity.isOverallStatus('rejected') %}#}
+    {% if not entity.isOverallStatus('rejected') %}
+        {% set showReject = true %}
+    {% endif %}
+
+    {% set showPending = false %}
+    {#{% if not entity.isOverallStatus('approved') and entity.status != 'pending' and entity.getOverallStatus() != 'pending' %}#}
+    {% if entity.status != 'pending' and entity.getOverallStatus() != 'pending' %}
+        {% set showPending = true %}
+    {% endif %}
+
+    {% set showCancel = false %}
+    {% if not entity.isOverallStatus('canceled') %}
+        {% set showCancel = true %}
+    {% endif %}
+
+    {% set showCancellation = false %}
+    {% if entity.extraStatus == 'Cancellation Requested' %}
+        {% set showCancellation = true %}
+    {% endif %}
+
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             Action <span class="caret"></span>
@@ -209,8 +236,11 @@
             {#<li class="divider"></li>#}
             {#{% if entity.status != 'completed' and entity.getOverallStatus() != 'completed' %}#}
 
-            <li class="divider">
-            {% if not entity.isOverallStatus('approved') %}
+            {% if showApprove or showReject or showPending %}
+                <li class="divider">
+            {% endif %}
+
+            {% if showApprove %}
                 <li>
                     <a
                     general-data-confirm="Are you sure you would like to approve entire request with ID #{{ entity.id }} for {{ entity.user }}?"
@@ -219,7 +249,7 @@
                     </a>
                 </li>
             {% endif %}
-            {% if not entity.isOverallStatus('approved') and not entity.isOverallStatus('rejected') %}
+            {% if showReject %}
                 <li>
                     <a
                     general-data-confirm="Are you sure you would like to reject entire request with ID #{{ entity.id }} for {{ entity.user }}?"
@@ -228,12 +258,37 @@
                     </a>
                 </li>
             {% endif %}
-            {% if not entity.isOverallStatus('approved') and entity.status != 'pending' and entity.getOverallStatus() != 'pending' %}
+            {% if showPending %}
                 <li>
                     <a
                     general-data-confirm="Are you sure you would like to set entire request with ID #{{ entity.id }} to 'pending approval' for {{ entity.user }}?"
                     href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
                         Set entire request to "Pending approval"
+                    </a>
+                </li>
+            {% endif %}
+            {% if showCancel %}
+                <li>
+                    <a
+                    general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"
+                    href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">
+                        Cancel (withdraw entire request)
+                    </a>
+                </li>
+            {% endif %}
+            {% if showCancellation %}
+                <li>
+                    <a
+                        general-data-confirm="Are you sure you would like to approve cancellation of this entire request with ID #{{ entity.id }}?"
+                        href="{{ path(vacreq_sitename~'_status_cancellation-request_change', { 'id': entity.id, 'status': 'cancellation-request-approved' }) }}">
+                        Cancellation Approved (Canceled)
+                    </a>
+                </li>
+                <li>
+                    <a
+                        general-data-confirm="Are you sure you would like to reject cancellation of this entire request with ID #{{ entity.id }}?"
+                        href="{{ path(vacreq_sitename~'_status_cancellation-request_change', { 'id': entity.id, 'status': 'cancellation-request-rejected' }) }}">
+                        Cancellation Denied (Approved)
                     </a>
                 </li>
             {% endif %}
@@ -262,23 +317,27 @@
         {% set requestNameStr = "Vacation Request" %}
     {% endif %}
 
-    {% set showApprove = false %}
-    {% if request.status != 'approved' %}
-        {% set showApprove = true %}
-    {% endif %}
 
-    {% set showReject = false %}
-    {% if request.status != 'rejected' and request.status != 'approved' %}
-        {% set showReject = true %}
-    {% endif %}
+    {% if request and hasParticulraRequest %}
 
-    {% if request and hasParticulraRequest and (showApprove or showReject) %}
-        <li class="divider">
-        <li>
-            <div align="center">
-                <strong>{{ requestNameStr }}</strong>
-            </div>
-        </li>
+        {% set showApprove = false %}
+        {% if request.status != 'approved' %}
+            {% set showApprove = true %}
+        {% endif %}
+
+        {% set showReject = false %}
+        {% if request.status != 'rejected' and request.status != 'approved' %}
+            {% set showReject = true %}
+        {% endif %}
+
+        {% if showApprove or showReject %}
+            <li class="divider">
+            <li>
+                <div align="center">
+                    <strong>{{ requestNameStr }}</strong>
+                </div>
+            </li>
+        {% endif %}
 
         {#{% if request.status != 'pending' %}#}
             {#<li>#}
@@ -309,19 +368,6 @@
 
     {% endif %}
 
-{% endmacro %}
-
-{% macro checkbox( value ) %}
-    {#<div class="row">#}
-        {#{{ form_errors(value) }}#}
-        {#<div class="col-xs-6" align="right">#}
-            {#{{ form_label(value) }}#}
-        {#</div>#}
-        {#<div class="col-xs-6 text-center" align="left" style="width: 50px;">#}
-            {#{{ form_widget(value) }}#}
-        {#</div>#}
-    {#</div>#}
-    {{ form_widget(value) }} {{ form_label(value) }}
 {% endmacro %}
 
 {% macro personAwayInfo( user, phone, vacreq_sitename ) %}
@@ -505,33 +551,7 @@
         </div>
         </p>
 
-        {#<br>#}
-
-        <p>
-        <div class="row">
-            <div class="col-xs-12" align="left">
-
-                {% if vacreqfilter.businessRequest is defined %}
-                    {{ vacreqmacros.checkbox(vacreqfilter.businessRequest) }}
-                    &nbsp;&nbsp;
-                {% endif %}
-                {% if vacreqfilter.vacationRequest is defined %}
-                    {{ vacreqmacros.checkbox(vacreqfilter.vacationRequest) }}
-                    &nbsp;&nbsp;
-                {% endif %}
-
-                {#&nbsp;&nbsp;#}
-                {#{{ vacreqmacros.checkbox(vacreqfilter.completed) }}#}
-
-                &nbsp;&nbsp;
-                {{ vacreqmacros.checkbox(vacreqfilter.pending) }}
-                &nbsp;&nbsp;
-                {{ vacreqmacros.checkbox(vacreqfilter.approved) }}
-                &nbsp;&nbsp;
-                {{ vacreqmacros.checkbox(vacreqfilter.rejected) }}
-            </div>
-        </div>
-        </p>
+        {{ vacreqmacros.commonCheckboxFilter( vacreqfilter, routename, requestTypeAbbreviation ) }}
 
         {{ form_rest(vacreqfilter) }}
 
@@ -586,7 +606,15 @@
         </div>
         </p>
 
-        <br>
+        {{ vacreqmacros.commonCheckboxFilter( vacreqfilter, routename, requestTypeAbbreviation ) }}
+
+        {{ form_rest(vacreqfilter) }}
+
+    </form>
+{% endmacro %}
+
+{% macro commonCheckboxFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
+    {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
         <p>
         <div class="row">
@@ -610,11 +638,33 @@
                 {{ vacreqmacros.checkbox(vacreqfilter.approved) }}
                 &nbsp;&nbsp;
                 {{ vacreqmacros.checkbox(vacreqfilter.rejected) }}
+
+                &nbsp;&nbsp;
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.cancellationRequest) }}
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.cancellationRequestApproved) }}
+                &nbsp;&nbsp;
+                {{ vacreqmacros.checkbox(vacreqfilter.cancellationRequestRejected) }}
             </div>
         </div>
         </p>
 
-        {{ form_rest(vacreqfilter) }}
 
     </form>
+{% endmacro %}
+
+{% macro checkbox( value ) %}
+    {#<div class="row">#}
+    {#{{ form_errors(value) }}#}
+    {#<div class="col-xs-6" align="right">#}
+    {#{{ form_label(value) }}#}
+    {#</div>#}
+    {#<div class="col-xs-6 text-center" align="left" style="width: 50px;">#}
+    {#{{ form_widget(value) }}#}
+    {#</div>#}
+    {#</div>#}
+    <div style="white-space:nowrap; display:inline">
+        {{ form_widget(value) }} {{ form_label(value) }}
+    </div>
 {% endmacro %}

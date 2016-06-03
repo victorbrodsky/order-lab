@@ -395,6 +395,10 @@ class RequestIndexController extends Controller
         $approved = $filterform['approved']->getData();
         $rejected = $filterform['rejected']->getData();
 
+        $cancellationRequest = $filterform['cancellationRequest']->getData();
+        $cancellationRequestApproved = $filterform['cancellationRequestApproved']->getData();
+        $cancellationRequestRejected = $filterform['cancellationRequestRejected']->getData();
+
         //$year = $filterform['year']->getData();
         //echo "userID=".$subjectUser."<br>";
 
@@ -492,14 +496,14 @@ class RequestIndexController extends Controller
         }
 
         if( $vacationRequest || $businessRequest ) {
-            $requestBVTypeCriterionArr = array();
+            $requestStatusCriterionArr = array();
             if( $businessRequest ) {
-                $requestBVTypeCriterionArr[] = "requestBusiness.startDate IS NOT NULL";
+                $requestStatusCriterionArr[] = "requestBusiness.startDate IS NOT NULL";
             }
             if( $vacationRequest ) {
-                $requestBVTypeCriterionArr[] = "requestVacation.startDate IS NOT NULL";
+                $requestStatusCriterionArr[] = "requestVacation.startDate IS NOT NULL";
             }
-            $dql->andWhere(implode(" OR ",$requestBVTypeCriterionArr));
+            $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
             $filtered = true;
         }
 
@@ -524,6 +528,21 @@ class RequestIndexController extends Controller
                 //$dql->andWhere("requestBusiness.status='approved' OR requestVacation.status='approved'");
                 //$filtered = true;
                 $requestStatusCriterionArr[] = "requestBusiness.status='approved' OR requestVacation.status='approved'";
+            }
+            $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
+            $filtered = true;
+        }
+
+        if( $cancellationRequest || $cancellationRequestApproved || $cancellationRequestRejected ) {
+            $requestStatusCriterionArr = array();
+            if ($cancellationRequest) {
+                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Requested'";
+            }
+            if ($cancellationRequestApproved) {
+                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Approved (Canceled)'";
+            }
+            if ($cancellationRequestRejected) {
+                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Denied (Approved)'";
             }
             $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
             $filtered = true;

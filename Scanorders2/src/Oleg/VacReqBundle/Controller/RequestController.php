@@ -145,9 +145,23 @@ class RequestController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            //Event Log
             $requestName = $entity->getRequestName();
-            $event = $requestName . " for ".$entity->getUser()." has been created";
+            $emailUtil = $this->get('user_mailer_utility');
+            $break = "\r\n";
+
+            //set confirmation email to submitter and approver and email users
+            $subject = $requestName." ID #".$entity->getId()." Confirmation";
+            $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
+            $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
+            $message .= "The approver will review your request soon.";
+            $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+            $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
+
+            //set confirmation email to approver and email users
+            $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
+
+            //Event Log
+            $event = $requestName . " for ".$entity->getUser()." has been created. Confirmation email(s) have been sent to ".$approversNameStr;
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
@@ -156,21 +170,6 @@ class RequestController extends Controller
                 'notice',
                 $event
             );
-
-            $emailUtil = $this->get('user_mailer_utility');
-            $break = "\r\n";
-
-            //set confirmation email to submitter and approver and email users
-            $subject = $requestName." #".$entity->getId()." Confirmation";
-            $subject = $requestName." #".$entity->getId()." Confirmation";
-            $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
-            $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
-            $message .= "The approver will review your request soon.";
-            $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
-            $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
-
-            //set confirmation email to approver and email users
-            $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
 
             //check if requested carry over days are already approved or denied
             if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
@@ -524,12 +523,28 @@ class RequestController extends Controller
         }
 
         //check permissions
-        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
-                return $this->redirect($this->generateUrl('vacreq-nopermission'));
-            }
-        } elseif( $this->get('security.context')->isGranted('ROLE_VACREQ_SUBMITTER') ) {
-            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
+//        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+//            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//            }
+//        } elseif( $this->get('security.context')->isGranted("update", $entity) ) {
+//            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
+//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//            }
+//        } else {
+//            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//        }
+
+        if( $this->get('security.context')->isGranted("changestatus", $entity) ) {
+            //Approvers can change status to anything
+        } elseif( $this->get('security.context')->isGranted("update", $entity) ) {
+            //Owner can only set status to: canceled, pending
+            if( $status != "canceled" && $status != "pending" ) {
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You can not change status of this ".$entity->getRequestName()." with ID #".$entity->getId()." to ".$status
+                );
                 return $this->redirect($this->generateUrl('vacreq-nopermission'));
             }
         } else {
@@ -630,12 +645,29 @@ class RequestController extends Controller
 
                 //return $this->redirectToRoute('vacreq_home');
 
+                //send respond confirmation email to a submitter
+                $vacreqUtil = $this->get('vacreq_util');
+                if( $status == 'canceled' ) {
+                    //an email should be sent to approver saying
+                    // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
+                    // and list all variable names and values in the email.
+                    $approversNameStr = $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
+                } else {
+                    $approversNameStr = null;
+                    $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
+                }
+
                 //Flash
                 $statusStr = $status;
                 if( $status == 'pending' ) {
                     $statusStr = 'set to Pending';
                 }
+
                 $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
+                if( $approversNameStr ) {
+                    $event .= ". Confirmation email(s) have been sent to ".$approversNameStr;
+                }
+
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     $event
@@ -651,17 +683,6 @@ class RequestController extends Controller
                 $userSecUtil = $this->container->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
 
-                //send respond confirmation email to a submitter
-                $vacreqUtil = $this->get('vacreq_util');
-
-                if( $status == 'canceled' ) {
-                    //an email should be sent to approver saying
-                    // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
-                    // and list all variable names and values in the email.
-                    $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
-                } else {
-                    $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
-                }
 
             }
 
@@ -720,18 +741,6 @@ class RequestController extends Controller
         $userNameOptimal = $entity->getUser()->getUsernameOptimal();
         $eventSubject = $userNameOptimal." is requesting cancellation of a ".ucwords($requestName)." ID #" . $entity->getId();
 
-        //Flash
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            $eventSubject
-        );
-
-        $eventType = 'Business/Vacation Request Updated';
-
-        //Event Log
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
-
         //send email to an approver
         $break = "\r\n";
 
@@ -781,7 +790,21 @@ class RequestController extends Controller
         $message .= $rejectLink;
 
         $vacreqUtil = $this->get('vacreq_util');
-        $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$eventSubject,$message);
+        $approversNameStr = $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$eventSubject,$message);
+
+        $eventSubject = $eventSubject.". Email(s) have been sent to ".$approversNameStr;
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $eventSubject
+        );
+
+        $eventType = 'Business/Vacation Request Updated';
+
+        //Event Log
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
         return $this->redirectToRoute('vacreq_myrequests');
     }
@@ -860,7 +883,6 @@ class RequestController extends Controller
         $message = $eventSubject;
         $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, null, $message );
 
-
         $url = $request->headers->get('referer');
 
         //when status is changed from email, then the url is a system home page
@@ -870,6 +892,42 @@ class RequestController extends Controller
 
         return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
     }
+
+    /**
+     * @Route("/send-reminder-email/{id}", name="vacreq_send_reminder_email")
+     * @Method({"GET"})
+     */
+    public function sendReminderEmailAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Request by id=' . $id);
+        }
+
+        //check permissions
+        if( false == $this->get('security.context')->isGranted("update", $entity) && false === $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        //set confirmation email to approver and email users
+        $vacreqUtil = $this->get('vacreq_util');
+        $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
+
+        $eventSubject = 'Reminder email(s) has been sent to '.$approversNameStr;
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $eventSubject
+        );
+
+        return $this->redirectToRoute('vacreq_myrequests');
+    }
+
 
 
     public function createRequestForm( $entity, $cycle, $request ) {
