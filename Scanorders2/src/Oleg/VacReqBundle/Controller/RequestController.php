@@ -733,8 +733,8 @@ class RequestController extends Controller
             array(
                 'id' => $entity->getId(),
                 'status' => 'cancellation-request-approved'
-            )
-            //UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
         );
 
         $rejectLink = $this->container->get('router')->generate(
@@ -742,8 +742,8 @@ class RequestController extends Controller
             array(
                 'id' => $entity->getId(),
                 'status' => 'cancellation-request-rejected'
-            )
-            //UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
         );
 
         $message = "Dear ###emailuser###," . $break.$break;

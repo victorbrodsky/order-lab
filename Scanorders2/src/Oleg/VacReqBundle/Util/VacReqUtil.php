@@ -1832,7 +1832,7 @@ class VacReqUtil
     }
 
     //send the general emails to approver and email users with given subject and message body
-    public function sendGeneralEmailToApproversAndEmailUsers( $entity, $subject, $message ) {
+    public function sendGeneralEmailToApproversAndEmailUsers( $entity, $subject, $originalMessage ) {
 
         $institution = $entity->getInstitution();
         if( !$institution ) {
@@ -1852,16 +1852,18 @@ class VacReqUtil
 
         foreach( $approvers as $approver ) {
 
-            if( !$approver->getSingleEmail() ) {
+            $approverSingleEmail = $approver->getSingleEmail();
+
+            if( !$approverSingleEmail ) {
                 continue;
             }
 
             $approversNameArr[] = $approver;
 
             //$message = $this->createCancelEmailBody($entity,$approver);
-            $message = str_replace("###emailuser###",$approver->getUsernameOptimal(),$message);
+            $message = str_replace("###emailuser###",$approver->getUsernameOptimal(),$originalMessage);
 
-            $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
+            $emailUtil->sendEmail($approverSingleEmail, $subject, $message, null, null);
 
         } //foreach approver
 
