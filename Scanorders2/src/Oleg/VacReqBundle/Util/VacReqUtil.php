@@ -2022,27 +2022,37 @@ class VacReqUtil
         //get month difference between now and $startAcademicYearDate
         $nowDate = new \DateTime();
         $monthCount = $this->diffInMonths($startAcademicYearDate, $nowDate);
-        $monthCount = $monthCount - 1;
+        //$monthCount = $monthCount - 1;
 
         //echo "monthCount=".$monthCount."<br>";
         $accruedDays = (int)$monthCount * (int)$vacationAccruedDaysPerMonth;
         return $accruedDays;
     }
 
-    /**
-     * Calculate the difference in months between two dates (v1 / 18.11.2013)
-     *
-     * @param \DateTime $date1
-     * @param \DateTime $date2
-     * @return int
-     */
+//    /**
+//     * Calculate the difference in months between two dates (v1 / 18.11.2013)
+//     *
+//     * @param \DateTime $date1
+//     * @param \DateTime $date2
+//     * @return int
+//     */
+//    public static function diffInMonths_Old(\DateTime $date1, \DateTime $date2)
+//    {
+//        $diff =  $date1->diff($date2);
+//
+//        $months = $diff->y * 12 + $diff->m + $diff->d / 30;
+//        $months = (int) round($months);
+//        $months = $months - 1;
+//        echo "months=".$months."<br>";
+//
+//        return $months;
+//    }
+    //http://www.tricksofit.com/2013/12/calculate-the-difference-between-two-dates-in-php#.V1GMSL69GgM
     public static function diffInMonths(\DateTime $date1, \DateTime $date2)
     {
-        $diff =  $date1->diff($date2);
-
-        $months = $diff->y * 12 + $diff->m + $diff->d / 30;
-
-        return (int) round($months);
+        $months = $date1->diff($date2)->m + ($date1->diff($date2)->y*12);
+        //echo "months=".$months."<br>";
+        return (int)$months;
     }
 
     public function getTotalAccruedDays() {
