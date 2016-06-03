@@ -801,14 +801,16 @@ class RequestController extends Controller
         //cancellation-request-approved => canceled
         //cancellation-request-rejected => approved
         if( $status == "cancellation-request-approved" ) {
+            $entity->setExtraStatus("Cancellation Approved (Canceled)");
             $status = "canceled";
             $entity->setStatus($status);
-            $entity->setExtraStatus("Cancellation Approved (Canceled)");
             $entity->setEntireStatus($status);
         }
         if( $status == "cancellation-request-rejected" ) {
-            //$status = "approved"; //for approved => the overall status is completed
             $entity->setExtraStatus("Cancellation Denied (Approved)");
+            $status = "approved"; //for approved => the overall status is completed
+            $entity->setStatus("completed");
+            $entity->setEntireStatus($status);
         }
 
         $entity->setApprover($user);
