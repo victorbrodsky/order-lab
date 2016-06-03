@@ -371,7 +371,7 @@ class RequestController extends Controller
                     $entity->setApprover($user);
                 }
 
-                $entity->setExtraStatus(NULL);
+                //$entity->setExtraStatus(NULL);
                 $em->persist($entity);
                 $em->flush();
 
@@ -641,7 +641,7 @@ class RequestController extends Controller
                     $entity->setApprover($user);
                 }
 
-                $entity->setExtraStatus(NULL);
+                //$entity->setExtraStatus(NULL);
                 $em->persist($entity);
                 $em->flush();
 
