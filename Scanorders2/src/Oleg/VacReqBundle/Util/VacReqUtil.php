@@ -123,81 +123,86 @@ class VacReqUtil
     //set confirmation email to approver and email users
     public function sendConfirmationEmailToApprovers( $entity ) {
 
-        $institution = $entity->getInstitution();
-        if( !$institution ) {
-            return null;
-        }
+//        $institution = $entity->getInstitution();
+//        if( !$institution ) {
+//            return null;
+//        }
+//
+//        $emailUtil = $this->container->get('user_mailer_utility');
+//        //$break = "\r\n";
+//
+//        $requestName = $entity->getRequestName();
+//
+//        $approvers = $this->getRequestApprovers($entity);
+//
+//        $approversNameArr = array();
+//
+//        foreach( $approvers as $approver ) {
+//
+//            //echo "approver".$approver."<br>";
+//
+//            if( !$approver->getSingleEmail() ) {
+//                continue;
+//            }
+//
+//            $approversNameArr[] = $approver;
+//
+//            //$subject = "Review ".$requestName." #" . $entity->getId() . " Confirmation";
+//            $subject = $entity->getEmailSubject();
+//
+//            $message = $this->createEmailBody($entity,$approver);
+//            $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
+//
+//        } //foreach approver
+//
+//        //send email to email users
+//        $subject = "Copy of the Confirmation Email: ".$entity->getEmailSubject();
+//        $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
+//        $settings = $this->getSettingsByInstitution($institution->getId());
+//        if( $settings ) {
+//            foreach ($settings->getEmailUsers() as $emailUser) {
+//                $emailUserEmail = $emailUser->getSingleEmail();
+//                if ($emailUserEmail) {
+//                    $message = $this->createEmailBody($entity, $emailUser, $addText);
+//                    $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+//                }
+//            }
+//        }
 
-        $emailUtil = $this->container->get('user_mailer_utility');
-        //$break = "\r\n";
-
-        $requestName = $entity->getRequestName();
-
-        $approvers = $this->getRequestApprovers($entity);
-
-        $approversNameArr = array();
-
-        foreach( $approvers as $approver ) {
-
-            //echo "approver".$approver."<br>";
-
-            if( !$approver->getSingleEmail() ) {
-                continue;
-            }
-
-            $approversNameArr[] = $approver;
-
-            //$subject = "Review ".$requestName." #" . $entity->getId() . " Confirmation";
-            $subject = $entity->getEmailSubject();
-
-            $message = $this->createEmailBody($entity,$approver);
-            $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
-
-        } //foreach approver
-
-        //send email to email users
-        $subject = "Copy of the Confirmation Email: ".$entity->getEmailSubject();
-        $addText = "### This is a copy of a confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
-        $settings = $this->getSettingsByInstitution($institution->getId());
-        if( $settings ) {
-            foreach ($settings->getEmailUsers() as $emailUser) {
-                $emailUserEmail = $emailUser->getSingleEmail();
-                if ($emailUserEmail) {
-                    $message = $this->createEmailBody($entity, $emailUser, $addText);
-                    $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
-                }
-            }
-        }
+        $subject = $entity->getEmailSubject();
+        $message = $this->createEmailBody($entity);
+        $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message);
 
     }
-    public function createEmailBody($entity,$emailToUser,$addText=null) {
+    public function createEmailBody($entity,$emailToUser=null,$addText=null) {
 
         $break = "\r\n";
 
         $submitter = $entity->getUser();
 
-        $message = "Dear " . $emailToUser->getUsernameOptimal() . "," . $break.$break;
+        //$message = "Dear " . $emailToUser->getUsernameOptimal() . "," . $break.$break;
+        $message = "Dear ###emailuser###," . $break.$break;
 
         $requestName = $entity->getRequestName();
 
-        $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." #".$entity->getId()." and it is ready for review.";
+        $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." ID #".$entity->getId()." and it is ready for review.";
 
-        $reviewRequestUrl = $url = $this->container->get('router')->generate(
+        $reviewRequestUrl = $this->container->get('router')->generate(
             'vacreq_review',
             array(
                 'id' => $entity->getId()
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $message .= $break . $break . "Please follow the link below to review ".$requestName." #".$entity->getId().":" . $break;
+        $message .= $break . $break . "Please follow the link below to review ".$requestName." ID #".$entity->getId().":" . $break;
         $message .= $reviewRequestUrl . $break . $break;
 
-        $message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." #".$entity->getId().".";
+        $message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." ID #".$entity->getId().".";
 
         if( $entity->hasBusinessRequest() ) {
             //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
             //approved
-            $actionRequestUrl = $url = $this->container->get('router')->generate(
+            $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_status_change',
                 array(
                     'id' => $entity->getId(),
@@ -206,11 +211,11 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please follow the link below to Approve the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Approve the ".$requestName." ID #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
-            $actionRequestUrl = $url = $this->container->get('router')->generate(
+            $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_status_change',
                 array(
                     'id' => $entity->getId(),
@@ -219,14 +224,14 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." ID #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
         }
 
         if( $entity->hasVacationRequest() ) {
             //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
             //approved
-            $actionRequestUrl = $url = $this->container->get('router')->generate(
+            $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_status_change',
                 array(
                     'id' => $entity->getId(),
@@ -235,11 +240,11 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please follow the link below to Approve the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Approve the ".$requestName." ID #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
 
             //rejected
-            $actionRequestUrl = $url = $this->container->get('router')->generate(
+            $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_status_change',
                 array(
                     'id' => $entity->getId(),
@@ -248,7 +253,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." #".$entity->getId().":" . $break;
+            $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." ID #".$entity->getId().":" . $break;
             $message .= $actionRequestUrl;
         }
 
@@ -301,7 +306,7 @@ class VacReqUtil
             //and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
             $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays." business travel days during ".$yearRange." so far.";
 
-            $actionRequestUrl = $url = $this->container->get('router')->generate(
+            $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_status_change',
                 array(
                     'id' => $entity->getId(),
@@ -314,7 +319,7 @@ class VacReqUtil
             $message .= $actionRequestUrl;
 
             //rejected
-            $actionRequestUrl = $url = $this->container->get('router')->generate(
+            $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_status_change',
                 array(
                     'id' => $entity->getId(),
@@ -338,7 +343,7 @@ class VacReqUtil
     }
 
     //set respond confirmation email to a submitter and email users
-    public function sendSingleRespondEmailToSubmitter( $entity, $approver, $status ) {
+    public function sendSingleRespondEmailToSubmitter( $entity, $approver, $status, $message=null ) {
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $break = "\r\n";
@@ -350,20 +355,22 @@ class VacReqUtil
 
         $requestName = $entity->getRequestName();
 
-        $subject = "Respond Confirmation for ".$requestName." #".$entity->getId();
+        $subject = "Respond Confirmation for ".$requestName." ID #".$entity->getId();
 
         $submitter = $entity->getUser();
 
-        $message = "Dear " . $submitter->getUsernameOptimal() . "," . $break.$break;
+        if( !$message ) {
+            $message = "Dear " . $submitter->getUsernameOptimal() . "," . $break . $break;
 
-        $message .= "Your ".$requestName." #" . $entity->getId();
+            $message .= "Your " . $requestName . " ID #" . $entity->getId();
 
-        if ($status == 'pending') {
-            $status = 'set to Pending';
+            if ($status == 'pending') {
+                $status = 'set to Pending';
+            }
+
+            $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . $break . $break;
+            $message .= "**** PLEASE DON'T REPLY TO THIS EMAIL ****";
         }
-
-        $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . $break.$break;
-        $message .= "**** PLEASE DON'T REPLY TO THIS EMAIL ****";
 
         //css
         $cssArr = array();
@@ -1757,21 +1764,91 @@ class VacReqUtil
     //set cancel email to approver and email users
     public function sendCancelEmailToApprovers( $entity, $user, $status ) {
 
+//        $institution = $entity->getInstitution();
+//        if( !$institution ) {
+//            return null;
+//        }
+//
+//        $emailUtil = $this->container->get('user_mailer_utility');
+//        //$break = "\r\n";
+//
+//        $requestName = $entity->getRequestName();
+//
+//        $approvers = $this->getRequestApprovers($entity);
+//
+//        $approversNameArr = array();
+//
+//        $subject = $requestName." #" . $entity->getId() . " " . ucwords($status);
+//
+//        foreach( $approvers as $approver ) {
+//
+//            if( !$approver->getSingleEmail() ) {
+//                continue;
+//            }
+//
+//            $approversNameArr[] = $approver;
+//
+//            $message = $this->createCancelEmailBody($entity,$approver);
+//            $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
+//
+//        } //foreach approver
+//
+//        //send email to email users
+//        $subject = "Copy of the confirmation email for ".$requestName." #" . $entity->getId() . " " . ucwords($status);
+//        $addText = "### This is a copy of the confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
+//        $settings = $this->getSettingsByInstitution($institution->getId());
+//        if( $settings ) {
+//            foreach ($settings->getEmailUsers() as $emailUser) {
+//                $emailUserEmail = $emailUser->getSingleEmail();
+//                if ($emailUserEmail) {
+//                    $message = $this->createCancelEmailBody($entity, $emailUser, $addText);
+//                    $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+//                }
+//            }
+//        }
+        $subject = $entity->getRequestName()." ID #" . $entity->getId() . " " . ucwords($status);
+        $message = $this->createCancelEmailBody($entity);
+        $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message);
+    }
+    public function createCancelEmailBody( $entity, $emailUser=null, $addText=null ) {
+        $break = "\r\n";
+
+        //$message = "Dear " . $emailUser->getUsernameOptimal() . "," . $break.$break;
+        $message = "Dear ###emailuser###," . $break.$break;
+
+        if( $addText ) {
+            $message .= $addText.$break.$break;
+        }
+
+        $requestName = $entity->getRequestName();
+
+        $message .= $entity->getUser()." canceled/withdrew the ".$requestName." ID #".$entity->getId()." described below:".$break.$break;
+
+        $message .= $entity."";
+
+        $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+
+        return $message;
+    }
+
+    //send the general emails to approver and email users with given subject and message body
+    public function sendGeneralEmailToApproversAndEmailUsers( $entity, $subject, $message ) {
+
         $institution = $entity->getInstitution();
         if( !$institution ) {
             return null;
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');
-        //$break = "\r\n";
+        $break = "\r\n";
 
-        $requestName = $entity->getRequestName();
+        //$requestName = $entity->getRequestName();
 
         $approvers = $this->getRequestApprovers($entity);
 
         $approversNameArr = array();
 
-        $subject = $requestName." #" . $entity->getId() . " " . ucwords($status);
+        //$subject = $requestName." #" . $entity->getId() . " " . ucwords($status);
 
         foreach( $approvers as $approver ) {
 
@@ -1781,47 +1858,29 @@ class VacReqUtil
 
             $approversNameArr[] = $approver;
 
-            $message = $this->createCancelEmailBody($entity,$approver);
+            //$message = $this->createCancelEmailBody($entity,$approver);
+            $message = str_replace("###emailuser###",$approver->getUsernameOptimal(),$message);
+
             $emailUtil->sendEmail($approver->getSingleEmail(), $subject, $message, null, null);
 
         } //foreach approver
 
         //send email to email users
-        $subject = "Copy of the confirmation email for ".$requestName." #" . $entity->getId() . " " . ucwords($status);
-        $addText = "### This is a copy of the confirmation email sent to the approvers ".implode(", ",$approversNameArr)."###";
+        $subject = "Copy of the email: ".$subject;
+        $addText = "### This is a copy of the email sent to the approvers ".implode(", ",$approversNameArr)."###";
+        $message = $addText.$break.$break.$message;
         $settings = $this->getSettingsByInstitution($institution->getId());
         if( $settings ) {
             foreach ($settings->getEmailUsers() as $emailUser) {
                 $emailUserEmail = $emailUser->getSingleEmail();
-                if ($emailUserEmail) {
-                    $message = $this->createCancelEmailBody($entity, $emailUser, $addText);
+                if( $emailUserEmail ) {
+                    //$message = $this->createCancelEmailBody($entity, $emailUser, $addText);
                     $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
                 }
             }
         }
 
     }
-    public function createCancelEmailBody( $entity, $emailUser, $addText=null ) {
-        $break = "\r\n";
-
-        $message = "Dear " . $emailUser->getUsernameOptimal() . "," . $break.$break;
-
-        if( $addText ) {
-            $message .= $addText.$break.$break;
-        }
-
-        $requestName = $entity->getRequestName();
-
-        $message .= $entity->getUser()." canceled/withdrew the ".$requestName." #".$entity->getId()." described below:".$break.$break;
-
-        $message .= $entity."";
-
-        $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
-
-        return $message;
-    }
-
-
 
 
 
@@ -2051,7 +2110,7 @@ class VacReqUtil
         $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
 
         if( $daysToRequest && $daysToRequest > 0 ) {
-            $actionRequestUrl = $url = $this->container->get('router')->generate(
+            $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_carryoverrequest',
                 array(
                     'days' => $daysToRequest,

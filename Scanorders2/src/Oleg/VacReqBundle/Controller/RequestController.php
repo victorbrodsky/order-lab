@@ -520,9 +520,19 @@ class RequestController extends Controller
             throw $this->createNotFoundException('Unable to find Request by id='.$id);
         }
 
-        if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        //check permissions
+        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            }
+        } elseif( $this->get('security.context')->isGranted('ROLE_VACREQ_SUBMITTER') ) {
+            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
+                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
+
 
         if( $status ) {
 
@@ -563,7 +573,7 @@ class RequestController extends Controller
                 $entity->setEntireStatus($status);
 
                 if( $entity->getRequestType()->getAbbreviation() == "business-vacation" ) {
-                    if ($status != 'canceled' && $status != 'pending') {
+                    if( $status != 'canceled' && $status != 'pending' ) {
                         $status = 'completed';
                     }
                 }
@@ -613,7 +623,7 @@ class RequestController extends Controller
                 if( $status == 'pending' ) {
                     $statusStr = 'set to Pending';
                 }
-                $event = ucwords($requestName)." ID " . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
+                $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     $event
@@ -645,6 +655,11 @@ class RequestController extends Controller
 
         }
 
+        //redirect to myrequests for owner
+        if( $entity->getUser()->getId() == $user->getId() ) {
+            return $this->redirectToRoute("vacreq_myrequests");
+        }
+
         $url = $request->headers->get('referer');
         //exit('url='.$url);
 
@@ -657,7 +672,178 @@ class RequestController extends Controller
         return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
     }
 
+    /**
+     * submitter can submit a "cancellation-request" for an entire, already approved request
+     * @Route("/status-cancellation-request/{id}", name="vacreq_status_cancellation-request")
+     * @Method({"GET"})
+     */
+    public function statusCancellationRequestAction(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
+        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Request by id='.$id);
+        }
+
+        //check permissions
+        if( false == $this->get('security.context')->isGranted("update", $entity) ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        if( !$entity->isOverallStatus('approved') ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You can not submit a Cancellation Requested for a not already approved request.'
+            );
+            return $this->redirectToRoute('vacreq_myrequests');
+        }
+
+        $entity->setExtraStatus("Cancellation Requested");
+        $em->flush();
+
+        $requestName = $entity->getRequestName();
+        $userNameOptimal = $entity->getUser()->getUsernameOptimal();
+        $eventSubject = $userNameOptimal." is requesting cancellation of a ".ucwords($requestName)." ID #" . $entity->getId();
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $eventSubject
+        );
+
+        $eventType = 'Business/Vacation Request Updated';
+
+        //Event Log
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
+
+        //send email to an approver
+        $break = "\r\n";
+
+        //The approver can then change the status from "Cancellation Requested" to either "Cancellation Approved (Canceled)" or "Cancellation Denied (Approved)"
+        //cancellation-request => cancellation-request-approved
+        //cancellation-request => cancellation-request-rejected
+
+        //set confirmation email to approver and email users
+        $approveLink = $this->container->get('router')->generate(
+            'vacreq_status_cancellation-request_change',
+            array(
+                'id' => $entity->getId(),
+                'status' => 'cancellation-request-approved'
+            )
+            //UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $rejectLink = $this->container->get('router')->generate(
+            'vacreq_status_cancellation-request_change',
+            array(
+                'id' => $entity->getId(),
+                'status' => 'cancellation-request-rejected'
+            )
+            //UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $message = "Dear ###emailuser###," . $break.$break;
+
+        //FirstName LastName is no longer planning to be away and is requesting cancellation of the following
+        // Business Travel / Vacation request approved on XX/XX/XXXX:
+        $message .= $userNameOptimal." is no longer planning to be away and is requesting cancellation of the following ";
+        $message .= ucwords($requestName)." approved on ".$entity->getApprovedRejectDate()->format('m/d/Y H:i:s').":".$break;
+
+        //[all form field titles and their values, 1 per line]
+        $message .= $break.$entity."".$break;
+
+        //To approve cancellation of this request, please follow this link
+        // (the days in this request will no longer count towards FirstName LastName's vacation / business travel):
+        $message .= "To approve cancellation of this request, please follow this link ";
+        $message .= "(the days in this request will no longer count towards ".$userNameOptimal."'s vacation / business travel):".$break;
+        $message .= $approveLink;
+
+        //To reject cancellation of this request, please follow this link
+        // (the days in this request will still count towards FirstName LastName's vacation / business travel):
+        $message .= $break.$break."To reject cancellation of this request, please follow this link ";
+        $message .= "(the days in this request will still count towards ".$userNameOptimal."'s vacation / business travel):".$break;
+        $message .= $rejectLink;
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$eventSubject,$message);
+
+        return $this->redirectToRoute('vacreq_myrequests');
+    }
+    /**
+     * approver can change a status of a "cancellation-request" for an entire, already approved request
+     * The approver can then change the status from "Cancellation Requested" to either "Cancellation Approved (Canceled)" or "Cancellation Denied (Approved)"
+     * cancellation-request => cancellation-request-approved => canceled
+     * cancellation-request => cancellation-request-rejected => approved
+     *
+     * @Route("/status-cancellation-request-change/{id}/{status}", name="vacreq_status_cancellation-request_change")
+     * @Method({"GET"})
+     */
+    public function statusCancellationRequestChaneAction(Request $request, $id, $status) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Request by id=' . $id);
+        }
+
+        //check permissions
+        if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        //cancellation-request-approved => canceled
+        //cancellation-request-rejected => approved
+        if( $status == "cancellation-request-approved" ) {
+            $status = "canceled";
+            $entity->setStatus($status);
+            $entity->setExtraStatus("Cancellation Approved (Canceled)");
+            $entity->setEntireStatus($status);
+        }
+        if( $status == "cancellation-request-rejected" ) {
+            //$status = "approved"; //for approved => the overall status is completed
+            $entity->setExtraStatus("Cancellation Denied (Approved)");
+        }
+
+        $entity->setApprover($user);
+        $em->flush();
+
+        $requestName = $entity->getRequestName();
+        $userNameOptimal = $entity->getUser()->getUsernameOptimal();
+        $eventSubject = $entity->getExtraStatus()." of a ".ucwords($requestName)." ID #" . $entity->getId() . " by " . $userNameOptimal;
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $eventSubject
+        );
+
+        $eventType = 'Business/Vacation Request Updated';
+
+        //Event Log
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
+
+        //set confirmation email to submitter and email users
+        $vacreqUtil = $this->get('vacreq_util');
+        $message = $eventSubject;
+        $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, null, $message );
+
+
+        $url = $request->headers->get('referer');
+
+        //when status is changed from email, then the url is a system home page
+        if( $url && strpos($url, 'incoming-requests') !== false ) {
+            return $this->redirect($url);
+        }
+
+        return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
+    }
 
 
     public function createRequestForm( $entity, $cycle, $request ) {

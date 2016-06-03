@@ -212,8 +212,8 @@
                 {% if requestTypeAbbreviation == 'carryover' %}
                     {{ vacreqmacros.request_carryover_base_body( entity, 'request' ) }}
                 {% else %}
-                    {{ vacreqmacros.request_base_body( entity.requestBusiness, 'requestBusiness' )  }}
-                    {{ vacreqmacros.request_base_body( entity.requestVacation, 'requestVacation' )  }}
+                    {{ vacreqmacros.request_base_body( entity, entity.requestBusiness, 'requestBusiness' )  }}
+                    {{ vacreqmacros.request_base_body( entity, entity.requestVacation, 'requestVacation' )  }}
                 {% endif %}
 
                 {#Action#}
@@ -243,11 +243,13 @@
                                     <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">View</a>
                                 </li>
 
+                                {% if requestTypeAbbreviation != 'carryover' %}
+
                                 {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
                                     <li class="divider">
                                     <li>
                                         <a
-                                        general-data-confirm="Are you sure you would like to Cancel this entire request for {{ entity.user }}?"
+                                        general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"
                                         href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">
                                             Cancel (withdraw entire request)
                                         </a>
@@ -258,11 +260,25 @@
                                     <li class="divider">
                                     <li>
                                         <a
-                                        general-data-confirm="Are you sure you would like to Re-Submit this entire request for {{ entity.user }}?"
+                                        general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"
                                         href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
                                             Re-Submit
                                         </a>
                                     </li>
+                                {% endif %}
+
+                                {#The change of status from Approved should only be allowable to a new status "Cancelation Requested" by submitter#}
+                                {% if entity.isOverallStatus('approved') %}
+                                    <li class="divider">
+                                    <li>
+                                        <a
+                                            general-data-confirm="Are you sure you would like to submit a Cancellation Request for this entire, already approved request with ID #{{ entity.id }}?"
+                                            href="{{ path(vacreq_sitename~'_status_cancellation-request', { 'id': entity.id,  'requestName':'entire', 'status': 'cancellation-request' }) }}">
+                                            Cancellation Request (withdraw entire approved request)
+                                        </a>
+                                    </li>
+                                {% endif %}
+
                                 {% endif %}
 
                             </ul>

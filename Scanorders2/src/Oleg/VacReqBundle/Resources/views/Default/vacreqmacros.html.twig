@@ -17,7 +17,7 @@
 {% endmacro %}
 
 
-{% macro request_base_body( request, requestStr ) %}
+{% macro request_base_body( parentRequest, request, requestStr ) %}
 
     {#Set row color#}
     {% set tdclassname = "" %}
@@ -73,9 +73,14 @@
         </td>
     {% endif %}
 
+    {#add extraStatus to a status#}
     <td class="{{ tdclassname }}">
         {% if request and request.status  %}
-            {{ request.status|capitalize }}
+            {% if parentRequest.extraStatus %}
+                {{ request.status|capitalize ~" ["~parentRequest.extraStatus~"]" }}
+            {% else %}
+                {{ request.status|capitalize }}
+            {% endif %}
         {% endif %}
     </td>
 
@@ -205,24 +210,33 @@
             {#{% if entity.status != 'completed' and entity.getOverallStatus() != 'completed' %}#}
 
             <li class="divider">
-            <li>
-                <a
-                general-data-confirm="Are you sure you would like to approve entire request for {{ entity.user }}?"
-                href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'approved' }) }}">Approve entire request
-                </a>
-            </li>
-            <li>
-                <a
-                general-data-confirm="Are you sure you would like to reject entire request for {{ entity.user }}?"
-                href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'rejected' }) }}">Reject entire request
-                </a>
-            </li>
-            <li>
-                <a
-                general-data-confirm="Are you sure you would like to set entire request to 'pending approval' for {{ entity.user }}?"
-                href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">Set entire request to "Pending approval"
-                </a>
-            </li>
+            {% if not entity.isOverallStatus('approved') %}
+                <li>
+                    <a
+                    general-data-confirm="Are you sure you would like to approve entire request with ID #{{ entity.id }} for {{ entity.user }}?"
+                    href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'approved' }) }}">
+                        Approve entire request
+                    </a>
+                </li>
+            {% endif %}
+            {% if not entity.isOverallStatus('approved') and not entity.isOverallStatus('rejected') %}
+                <li>
+                    <a
+                    general-data-confirm="Are you sure you would like to reject entire request with ID #{{ entity.id }} for {{ entity.user }}?"
+                    href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'rejected' }) }}">
+                        Reject entire request
+                    </a>
+                </li>
+            {% endif %}
+            {% if not entity.isOverallStatus('approved') and entity.status != 'pending' and entity.getOverallStatus() != 'pending' %}
+                <li>
+                    <a
+                    general-data-confirm="Are you sure you would like to set entire request with ID #{{ entity.id }} to 'pending approval' for {{ entity.user }}?"
+                    href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
+                        Set entire request to "Pending approval"
+                    </a>
+                </li>
+            {% endif %}
 
 
             {{ vacreqmacros.vacreq_ParticularRequestAction( entity, entity.requestBusiness, "business", vacreq_sitename ) }}
@@ -248,7 +262,17 @@
         {% set requestNameStr = "Vacation Request" %}
     {% endif %}
 
-    {% if request and hasParticulraRequest %}
+    {% set showApprove = false %}
+    {% if request.status != 'approved' %}
+        {% set showApprove = true %}
+    {% endif %}
+
+    {% set showReject = false %}
+    {% if request.status != 'rejected' and request.status != 'approved' %}
+        {% set showReject = true %}
+    {% endif %}
+
+    {% if request and hasParticulraRequest and (showApprove or showReject) %}
         <li class="divider">
         <li>
             <div align="center">
@@ -265,19 +289,19 @@
             {#</li>#}
         {#{% endif %}#}
 
-        {% if request.status != 'approved' %}
+        {% if showApprove %}
             <li>
                 <a
-                    general-data-confirm="Are you sure you would like to Approve the {{ requestName }} request for {{ entity.user }}?"
+                    general-data-confirm="Are you sure you would like to Approve the {{ requestName }} request with ID #{{ entity.id }} for {{ entity.user }}?"
                     href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}">Approve {{requestName|capitalize}} Request
                 </a>
             </li>
         {% endif %}
 
-        {% if request.status != 'rejected' %}
+        {% if showReject %}
             <li>
                 <a
-                    general-data-confirm="Are you sure you would like to Reject the {{ requestName }} request for {{ entity.user }}?"
+                    general-data-confirm="Are you sure you would like to Reject the {{ requestName }} request with ID #{{ entity.id }} for {{ entity.user }}?"
                     href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id, 'requestName':requestName, 'status': 'rejected' }) }}">Reject {{requestName|capitalize}} Request
                 </a>
             </li>
@@ -420,22 +444,20 @@
 {% endmacro %}
 
 {% macro incomingRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
-
     {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
-
     <form action="{{ path(routename) }}" method="get" {{ form_enctype(vacreqfilter) }} class="well form-search">
 
         <p>
         <div class="row">
 
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 <div class="input-group input-group-reg date allow-future-date">
                     {{ form_widget(vacreqfilter.startdate) }}
                     <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                 </div>
             </div>
 
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 <div class="input-group input-group-reg date allow-future-date">
                     {{ form_widget(vacreqfilter.enddate) }}
                     <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
@@ -443,33 +465,14 @@
             </div>
 
             {% if vacreqfilter.requestType is defined %}
-                <div class="col-xs-2">
+                <div class="col-xs-3">
                     {{ form_row(vacreqfilter.requestType) }}
                 </div>
             {% endif %}
 
-            {% if vacreqfilter.user is defined %}
-                <div class="col-xs-2">
-                    {{ form_row(vacreqfilter.user) }}
-                </div>
-            {% endif %}
-
-            {% if vacreqfilter.submitter is defined %}
-                <div class="col-xs-2">
-                    {{ form_row(vacreqfilter.submitter) }}
-                </div>
-            {% endif %}
-
-            {% if vacreqfilter.organizationalInstitutions is defined %}
-                <div class="col-xs-2">
-                    {{ form_row(vacreqfilter.organizationalInstitutions) }}
-                </div>
-            {% endif %}
-
-
             {% if requestTypeAbbreviation != 'carryover' %}
                 {% if vacreqfilter.academicYear is defined %}
-                    <div class="col-xs-1">
+                    <div class="col-xs-2">
                         {{ form_row(vacreqfilter.academicYear) }}
                     </div>
                 {% endif %}
@@ -478,18 +481,36 @@
             <div class="col-xs-1">
                 <button type="submit" class="btn btn-sm btn-default">Filter</button>
             </div>
+        </div>
+        </p>
+        <p>
+        <div class="row">
+            {% if vacreqfilter.user is defined %}
+                <div class="col-xs-3">
+                    {{ form_row(vacreqfilter.user) }}
+                </div>
+            {% endif %}
 
+            {% if vacreqfilter.submitter is defined %}
+                <div class="col-xs-3">
+                    {{ form_row(vacreqfilter.submitter) }}
+                </div>
+            {% endif %}
+
+            {% if vacreqfilter.organizationalInstitutions is defined %}
+                <div class="col-xs-3">
+                    {{ form_row(vacreqfilter.organizationalInstitutions) }}
+                </div>
+            {% endif %}
         </div>
         </p>
 
-        <br>
+        {#<br>#}
 
         <p>
         <div class="row">
             <div class="col-xs-12" align="left">
 
-                {#requestTypeAbbreviation={{ requestTypeAbbreviation }}#}
-                {#{% if requestTypeAbbreviation != 'carryover' %}#}
                 {% if vacreqfilter.businessRequest is defined %}
                     {{ vacreqmacros.checkbox(vacreqfilter.businessRequest) }}
                     &nbsp;&nbsp;
@@ -515,26 +536,23 @@
         {{ form_rest(vacreqfilter) }}
 
     </form>
-
 {% endmacro %}
 
 {% macro myRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
-
     {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
-
     <form action="{{ path(routename) }}" method="get" {{ form_enctype(vacreqfilter) }} class="well form-search">
 
         <p>
         <div class="row">
 
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 <div class="input-group input-group-reg date allow-future-date">
                     {{ form_widget(vacreqfilter.startdate) }}
                     <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                 </div>
             </div>
 
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 <div class="input-group input-group-reg date allow-future-date">
                     {{ form_widget(vacreqfilter.enddate) }}
                     <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
@@ -542,20 +560,8 @@
             </div>
 
             {% if vacreqfilter.requestType is defined %}
-                <div class="col-xs-2">
+                <div class="col-xs-3">
                     {{ form_row(vacreqfilter.requestType) }}
-                </div>
-            {% endif %}
-
-            {% if vacreqfilter.user is defined %}
-                <div class="col-xs-2">
-                    {{ form_row(vacreqfilter.user) }}
-                </div>
-            {% endif %}
-
-            {% if vacreqfilter.submitter is defined %}
-                <div class="col-xs-2">
-                    {{ form_row(vacreqfilter.submitter) }}
                 </div>
             {% endif %}
 
@@ -567,7 +573,7 @@
 
             {% if requestTypeAbbreviation != 'carryover' %}
                 {% if vacreqfilter.academicYear is defined %}
-                    <div class="col-xs-1">
+                    <div class="col-xs-2">
                         {{ form_row(vacreqfilter.academicYear) }}
                     </div>
                 {% endif %}
@@ -586,8 +592,6 @@
         <div class="row">
             <div class="col-xs-12" align="left">
 
-                {#requestTypeAbbreviation={{ requestTypeAbbreviation }}#}
-                {#{% if requestTypeAbbreviation != 'carryover' %}#}
                 {% if vacreqfilter.businessRequest is defined %}
                     {{ vacreqmacros.checkbox(vacreqfilter.businessRequest) }}
                     &nbsp;&nbsp;
@@ -613,5 +617,4 @@
         {{ form_rest(vacreqfilter) }}
 
     </form>
-
 {% endmacro %}

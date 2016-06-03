@@ -163,6 +163,11 @@ class VacReqRequest
 //    private $emergencyEmail;
 
 
+    /**
+     * extraStatus: cancellation-request, "Cancellation Requested", "Cancellation Approved (Canceled)", "Cancellation Denied (Approved)"
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $extraStatus;
 
     //extra not needed fields, but they are exists in the old site
     /**
@@ -704,6 +709,24 @@ class VacReqRequest
         $this->carryOverDays = $carryOverDays;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getExtraStatus()
+    {
+        return $this->extraStatus;
+    }
+
+    /**
+     * @param mixed $extraStatus
+     */
+    public function setExtraStatus($extraStatus)
+    {
+        $this->extraStatus = $extraStatus;
+    }
+
+
+
 
     public function convertYearRangeToYear($yearRangeStr) {
         if( strpos($yearRangeStr, '-') === false ) {
@@ -763,8 +786,34 @@ class VacReqRequest
 //        return $status;
 //    }
 
-    public function getOverallStatus()
-    {
+
+    public function isOverallStatus( $status ) {
+        $resB = true;
+        $resV = true;
+
+        if( $this->hasBusinessRequest() ) {
+            $resB = false;
+            if( $this->getRequestBusiness()->getStatus() == $status ) {
+                $resB = true;
+            }
+        }
+
+        if( $this->hasVacationRequest() ) {
+            $resV = false;
+            if( $this->getRequestVacation()->getStatus() == $status ) {
+                $resV = true;
+            }
+        }
+
+        if( $resB && $resV ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    //return pending or complete
+    public function getOverallStatus() {
         $statusB = null;
         $statusV = null;
 
@@ -790,6 +839,16 @@ class VacReqRequest
         }
 
         return 'completed';
+    }
+
+    //status - "Cancellation Requested", "Canceled (Approved)"-"Cancellation Approved (Canceled)", "Cancellation Denied (Approved)"
+    public function getStatusStr() {
+        $status = $this->getStatus();
+        $extraStatus = $this->getExtraStatus();
+        if( $extraStatus ) {
+            $status = $extraStatus;
+        }
+        return $status;
     }
 
     public function hasBusinessRequest() {
