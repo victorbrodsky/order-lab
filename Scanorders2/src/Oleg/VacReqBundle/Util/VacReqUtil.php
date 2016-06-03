@@ -200,10 +200,10 @@ class VacReqUtil
         $message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." ID #".$entity->getId().".";
 
         if( $entity->hasBusinessRequest() ) {
-            //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
+            //href="{{ path(vacreq_sitename~'_status_email_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
             //approved
             $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_status_change',
+                'vacreq_status_email_change',
                 array(
                     'id' => $entity->getId(),
                     'requestName' => 'business',
@@ -216,7 +216,7 @@ class VacReqUtil
 
             //rejected
             $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_status_change',
+                'vacreq_status_email_change',
                 array(
                     'id' => $entity->getId(),
                     'requestName' => 'business',
@@ -229,10 +229,10 @@ class VacReqUtil
         }
 
         if( $entity->hasVacationRequest() ) {
-            //href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
+            //href="{{ path(vacreq_sitename~'_status_email_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
             //approved
             $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_status_change',
+                'vacreq_status_email_change',
                 array(
                     'id' => $entity->getId(),
                     'requestName' => 'vacation',
@@ -245,7 +245,7 @@ class VacReqUtil
 
             //rejected
             $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_status_change',
+                'vacreq_status_email_change',
                 array(
                     'id' => $entity->getId(),
                     'requestName' => 'vacation',
@@ -307,7 +307,7 @@ class VacReqUtil
             $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays." business travel days during ".$yearRange." so far.";
 
             $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_status_change',
+                'vacreq_status_email_change',
                 array(
                     'id' => $entity->getId(),
                     'requestName' => 'entire',
@@ -320,7 +320,7 @@ class VacReqUtil
 
             //rejected
             $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_status_change',
+                'vacreq_status_email_change',
                 array(
                     'id' => $entity->getId(),
                     'requestName' => 'entire',

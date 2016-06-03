@@ -503,6 +503,7 @@ class RequestController extends Controller
     /**
      * approved, rejected, pending, canceled
      * @Route("/status/{id}/{requestName}/{status}", name="vacreq_status_change")
+     * @Route("/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change")
      * @Method({"GET"})
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
@@ -513,6 +514,7 @@ class RequestController extends Controller
         //}
 
         $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
         $user = $this->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
@@ -534,6 +536,15 @@ class RequestController extends Controller
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
+        //if not pending and vacreq_status_email_change => redirect to incoming request page
+        if( $entity->getStatus() != "pending" && $routeName == 'vacreq_status_email_change' ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
+            );
+            return $this->redirectToRoute('vacreq_incomingrequests');
+        }
 
         if( $status ) {
 
@@ -730,7 +741,7 @@ class RequestController extends Controller
 
         //set confirmation email to approver and email users
         $approveLink = $this->container->get('router')->generate(
-            'vacreq_status_cancellation-request_change',
+            'vacreq_status_cancellation-request_email_change',
             array(
                 'id' => $entity->getId(),
                 'status' => 'cancellation-request-approved'
@@ -739,7 +750,7 @@ class RequestController extends Controller
         );
 
         $rejectLink = $this->container->get('router')->generate(
-            'vacreq_status_cancellation-request_change',
+            'vacreq_status_cancellation-request_email_change',
             array(
                 'id' => $entity->getId(),
                 'status' => 'cancellation-request-rejected'
@@ -780,11 +791,13 @@ class RequestController extends Controller
      * cancellation-request => cancellation-request-approved => canceled
      * cancellation-request => cancellation-request-rejected => approved
      *
-     * @Route("/status-cancellation-request-change/{id}/{status}", name="vacreq_status_cancellation-request_change")
+     * @Route("/cancellation-request/status/{id}/{status}", name="vacreq_status_cancellation-request_change")
+     * @Route("/cancellation-request/estatus/{id}/{status}", name="vacreq_status_cancellation-request_email_change")
      * @Method({"GET"})
      */
     public function statusCancellationRequestChaneAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
         $user = $this->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
@@ -796,6 +809,16 @@ class RequestController extends Controller
         //check permissions
         if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        //if not Cancellation Requested and vacreq_status_cancellation-request_email_change => redirect to incoming request page
+        if( $entity->getExtraStatus() != "Cancellation Requested" && $routeName == 'vacreq_status_cancellation-request_email_change' ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "This cancellation request for ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
+            );
+            return $this->redirectToRoute('vacreq_incomingrequests');
         }
 
         //cancellation-request-approved => canceled
