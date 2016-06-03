@@ -513,6 +513,7 @@ class RequestController extends Controller
         //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         //}
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -546,9 +547,11 @@ class RequestController extends Controller
                     'warning',
                     "You can not change status of this ".$entity->getRequestName()." with ID #".$entity->getId()." to ".$status
                 );
+                $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId());
                 return $this->redirect($this->generateUrl('vacreq-nopermission'));
             }
         } else {
+            $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId());
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
