@@ -268,7 +268,7 @@
                                 {% endif %}
 
                                 {#The change of status from Approved should only be allowable to a new status "Cancelation Requested" by submitter#}
-                                {% if entity.isOverallStatus('approved') %}
+                                {% if entity.isOverallStatus('approved') and not entity.extraStatus %}
                                     <li class="divider">
                                     <li>
                                         <a
