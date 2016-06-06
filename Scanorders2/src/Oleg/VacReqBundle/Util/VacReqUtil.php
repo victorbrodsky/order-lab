@@ -634,6 +634,8 @@ class VacReqUtil
         $res = array();
 
         $numberOfDays = $numberOfDaysBefore+$numberOfDaysInside+$numberOfDaysAfter;
+        //echo "sum numberOfDays=".$numberOfDays."<br>";
+
         $res['numberOfDays'] = $numberOfDays;
         $res['accurate'] = true;
 
@@ -661,7 +663,7 @@ class VacReqUtil
             $subRequest = $request->$subRequestGetMethod();
             $requestEndAcademicYearStr = $this->getAcademicYearEdgeDateBetweenRequestStartEnd($request,"first");
             if( !$requestEndAcademicYearStr ) {
-                echo $request->getId()." continue <br>";
+                //echo $request->getId()." continue <br>";
                 continue;
             }
             //echo "requestStartDate=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
@@ -787,7 +789,10 @@ class VacReqUtil
         return $days;
     }
 
+    //TODO: select distinct start, end dates
     public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
+
+        $numberOfDays = 0;
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
@@ -832,6 +837,13 @@ class VacReqUtil
             $dql->andWhere("requestType.startDate < '" . $endStr . "'" . " AND requestType.endDate > '".$endStr."'");
         }
 
+        //TODO: select user, distinct start, end dates
+        //$dql->addSelect("DISTINCT (requestBusiness.startDate) as startDate ");
+        //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
+        //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
+        //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
+        $dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+
         $query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
@@ -846,13 +858,23 @@ class VacReqUtil
             $requests = $query->getResult();
             return $requests;
         } else {
-            $numberOfDaysRes = $query->getSingleResult();
-            $numberOfDays = $numberOfDaysRes['numberOfDays'];
-            //echo "numberOfDays=".$numberOfDays."<br>";
-            return $numberOfDays;
+            //$numberOfDaysRes = $query->getOneOrNullResult();
+            $numberOfDaysItems = $query->getResult();
+            if( $numberOfDaysItems ) {
+                //echo "get numberOfDays <br>";
+                //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
+                if( count($numberOfDaysItems) > 1 ) {
+                    $logger = $this->container->get('logger');
+                    $logger->warning('Logical error: pound more than one SUM: count='.count($numberOfDaysItems));
+                }
+                foreach( $numberOfDaysItems as $numberOfDaysItem ) {
+                    $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
+                }
+                //echo "get numberOfDays = ".$numberOfDays."<br>";
+            }
         }
 
-        return null;
+        return $numberOfDays;
     }
 
     public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
@@ -1289,21 +1311,24 @@ class VacReqUtil
             $roles = new ArrayCollection();
 
             if( count($roles)==0 && $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+                //echo "roles try 1<br>";
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
             }
             if( count($roles)==0 && ($this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) ) {
                 //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
+                //echo "roles try 2<br>";
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserChildRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
-            if( count($roles)==0) {
+            if( count($roles)==0 ) {
+                //echo "roles try 3<br>";
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
             //second try to get group. This is the case for changestatus-carryover action
             if( count($roles)==0 && $actionStr == "changestatus-carryover" ) {
-                //echo "second try<br>";
+                //echo "second try 4<br>";
                 //get all changestatus-carryover roles
                 $childObjectStr = $objectStr;
                 $childActionStr = "create";
@@ -1311,8 +1336,13 @@ class VacReqUtil
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
             }
 
-
             //echo "role count=".count($roles)."<br>";
+
+//            $adminRole = false;
+//            if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+//                //echo "admin<br>";
+//                $adminRole = true;
+//            }
 
             foreach($roles as $role ) {
 
@@ -1339,10 +1369,11 @@ class VacReqUtil
                     }
 
                     if( $include == false ) {
+                        //echo "exclude role=".$role."<br>";
                         continue;
                     }
 
-                    if ($asObject) {
+                    if( $asObject ) {
                         $institutions[] = $institution;
                         continue;
                     }
@@ -1360,9 +1391,10 @@ class VacReqUtil
                     $institutions[$institution->getId()] = $orgName;
 
                 }
-            }
 
-        }
+            }//foreach roles
+
+        }//foreach permissions
 
 //        foreach( $institutions as $key=>$value) {
 //            echo $key."=>".$value."<br>";
@@ -2054,7 +2086,7 @@ class VacReqUtil
 
         return count($requestsB) + count($requestsV);
     }
-    public function getTotalStatusTypeRequests( $approver, $requestTypeStr, $groupId=null, $startStr=null, $endStr=null, $asObject=true, $status = "pending" ) {
+    public function getTotalStatusTypeRequests( $approver, $requestTypeStr, $groupId=null, $asObject=true, $status = "pending" ) {
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");

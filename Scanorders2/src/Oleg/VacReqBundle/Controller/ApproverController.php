@@ -975,7 +975,7 @@ class ApproverController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
         //vacreq_util

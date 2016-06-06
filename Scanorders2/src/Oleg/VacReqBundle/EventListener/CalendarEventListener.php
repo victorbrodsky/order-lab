@@ -89,6 +89,9 @@ class CalendarEventListener
             $dql->andWhere($instStr);
         }
 
+        //select user, distinct start, end dates
+        $dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+
         $query = $this->em->createQuery($dql);
 
         $query->setParameter('statusPending', 'pending');

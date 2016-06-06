@@ -312,16 +312,16 @@
 
     {% set requestNameStr = "Request" %}
     {% if requestName == "business" %}
-        {% set hasParticulraRequest = entity.hasBusinessRequest() %}
+        {% set hasParticularRequest = entity.hasBusinessRequest() %}
         {% set requestNameStr = "Business Travel Request" %}
     {% endif %}
     {% if requestName == "vacation" %}
-        {% set hasParticulraRequest = entity.hasVacationRequest() %}
+        {% set hasParticularRequest = entity.hasVacationRequest() %}
         {% set requestNameStr = "Vacation Request" %}
     {% endif %}
 
 
-    {% if request and hasParticulraRequest %}
+    {% if request and hasParticularRequest %}
 
         {% set showApprove = false %}
         {% if request.status != 'approved' %}

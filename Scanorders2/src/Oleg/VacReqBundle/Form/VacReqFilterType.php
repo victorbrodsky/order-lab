@@ -138,15 +138,15 @@ class VacReqFilterType extends AbstractType
 
         //cancellation request
         $builder->add('cancellationRequest', 'checkbox', array(
-            'label' => 'Request Cancellations',
+            'label' => 'Requested Cancellations',
             'required' => false,
         ));
         $builder->add('cancellationRequestApproved', 'checkbox', array(
-            'label' => 'Approved Request Cancellations',
+            'label' => 'Approved Cancellations',
             'required' => false,
         ));
         $builder->add('cancellationRequestRejected', 'checkbox', array(
-            'label' => 'Rejected Request Cancellations',
+            'label' => 'Rejected Cancellations',
             'required' => false,
         ));
 

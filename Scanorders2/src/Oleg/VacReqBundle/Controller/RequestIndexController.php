@@ -204,9 +204,10 @@ class RequestIndexController extends Controller
             }
         }
 
-        if( $pagination->getTotalItemCount() > 0 ) {
+        $totalItemCount = $pagination->getTotalItemCount();
+        if( $totalItemCount > 0 ) {
             $paginationData = $pagination->getPaginationData();
-            $indexTitle = $indexTitle." (".$paginationData['firstItemNumber']."-".$paginationData['lastItemNumber']." of ".$pagination->getTotalItemCount().")";
+            $indexTitle = $indexTitle." (".$paginationData['firstItemNumber']."-".$paginationData['lastItemNumber']." of ".$totalItemCount.")";
         }
 
         return array(
