@@ -790,9 +790,240 @@ class VacReqUtil
     }
 
     //TODO: select distinct start, end dates
+    //http://stackoverflow.com/questions/7224792/sql-to-find-time-elapsed-from-multiple-overlapping-intervals
+    public function getApprovedYearDays_SingleQuery( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
+
+        echo $user.": ".$type.": requestTypeStr=".$requestTypeStr."<br>";
+        $numberOfDays = 0;
+
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+            $joinStr = " LEFT JOIN request2.requestBusiness requestType2 ";
+        }
+
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+            $joinStr = " LEFT JOIN request2.requestVacation requestType2 ";
+        }
+
+        $query = $this->em->createQuery(
+            "SELECT
+              SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount
+            FROM OlegVacReqBundle:VacReqRequest request
+            INNER JOIN request.user user
+            INNER JOIN request.requestVacation requestType
+            INNER JOIN OlegVacReqBundle:VacReqRequest request2
+              WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='".$status."'
+                    AND requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'
+                    AND request.firstDayAway < request2.firstDayAway AND request.firstDayBackInOffice < request2.firstDayBackInOffice
+                    GROUP BY request.user,requestType.startDate,requestType.endDate
+                    HAVING COUNT(request.id) = 0
+            "
+        );
+
+        //INNER JOIN request2.requestVacation requestType2
+        //WHERE user.id = ".$user->getId()." AND requestType.status='".$status."'"
+        //." AND request.firstDayAway > request2.firstDayAway AND request.firstDayAway > request2.firstDayBackInOffice "
+        //."GROUP BY request.user,requestType.startDate,requestType.endDate"
+        //.""
+
+//        $requests = $query->getResult();
+//        foreach( $requests as $request ) {
+//            $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
+//            $finalStartEndDatesArr = $request->getFinalStartEndDates();
+//            $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
+//            echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
+//            $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
+//        }
+//        echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+
+        $numberOfDaysItems = $query->getResult();
+        if( $numberOfDaysItems ) {
+            echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
+            //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
+            if( count($numberOfDaysItems) > 1 ) {
+                //$logger = $this->container->get('logger');
+                //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
+            }
+            foreach( $numberOfDaysItems as $numberOfDaysItem ) {
+                echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
+                $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
+            }
+            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+        }
+
+        return $numberOfDays;
+
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+
+        if( $asObject ) {
+            $dql->select('request');
+        } else {
+            //$dql->select('request');
+            $dql->select('SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount');
+            //$dql->select('DISTINCT request.id, user.id, SUM(requestType.numberOfDays) as numberOfDays');
+        }
+
+//        $dql->innerJoin(
+//            "OlegVacReqBundle:VacReqRequest",
+//            "request2",
+//            "WITH",
+//            "request2.id <> request.id AND request2.user = request.user"
+//        );
+
+        $dql->leftJoin("request.user", "user");
+
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+            $dql->leftJoin("request.requestBusiness", "requestType");
+            //$dql->leftJoin("request2.requestBusiness", "requestType2");
+            //$joinStr = " LEFT JOIN request2.requestBusiness requestType2";
+        }
+
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+            $dql->leftJoin("request.requestVacation", "requestType");
+            //$dql->leftJoin("request2.requestVacation", "requestType2");
+            //$joinStr = " LEFT JOIN request2.requestVacation requestType2";
+        }
+
+        $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :status");
+
+        // |----|year|-----start-----end-----|year+1|----|
+        // |----|2015-07-01|-----start-----end-----|2016-06-30|----|
+        if( $type == "inside" && $startStr && $endStr ) {
+            $dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'");
+        }
+
+        // |-----start-----|year|-----end-----|year+1|----|
+        // |-----rstart-----|2015-07-01|-----rend-----|2016-06-30|----|
+        if( $type == "before" && $startStr ) {
+            //echo "startStr=".$startStr."<br>";
+            $dql->andWhere("requestType.startDate < '" . $startStr . "'" . " AND requestType.endDate > '".$startStr."'"); // . " AND requestType.endDate > " . "'" . $startStr . "'");
+        }
+
+        // |----|year|-----start-----|year+1|-----end-----|
+        // |----|2015-07-01|-----start-----|2016-06-30|-----end-----|
+        if( $type == "after" && $startStr && $endStr ) {
+            //echo "sql endStr=".$endStr."<br>";
+            //$dql->andWhere("requestType.endDate > '" . $endStr . "'" . " AND requestType.startDate < '".$endStr."'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
+            //$dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate > " . "'" . $endStr . "'");
+            $dql->andWhere("requestType.startDate < '" . $endStr . "'" . " AND requestType.endDate > '".$endStr."'");
+        }
+
+
+        //if( !$asObject ) {
+//                $dql->innerJoin(
+//                    "OlegVacReqBundle:VacReqRequest",
+//                    "request2",
+//                    "WITH",
+//                    //"request2.firstDayAway > request.firstDayAway AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
+//                    "request2.firstDayAway > request.firstDayAway".
+//                    " AND request2.firstDayBackInOffice > request.firstDayBackInOffice".
+//                    " AND request2.user = request.user".
+//                    " AND request2.id <> request.id"
+//                );
+
+//            $dql->innerJoin(
+//                "OlegVacReqBundle:VacReqRequest",
+//                "request2",
+//                "WITH",
+//                "request2.id <> request.id AND request2.user = request.user"
+//            );
+//            $dql->andWhere(
+//                "request2.firstDayAway > request.firstDayAway"
+//                ." AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
+//                ." AND request2.firstDayAway > request.firstDayBackInOffice"
+//                //." AND request2.user = request.user"
+//                //." AND request2.id <> request.id"
+//            );
+
+//        $dql->andWhere(
+//            "requestType2.startDate > requestType.startDate"
+//            ." AND requestType2.endDate > requestType.endDate"
+//            ." AND requestType2.startDate > requestType.endDate"
+//            ." AND request2.user = request.user"
+//            ." AND request2.id <> request.id"
+//        );
+
+//        $dql->andWhere(
+//            "requestType.startDate > requestType2.startDate"
+//            ." AND requestType.endDate > requestType2.endDate"
+//            ." AND requestType.startDate > requestType2.endDate"
+//            ." AND request2.user = request.user"
+//            ." AND request2.id <> request.id"
+//        );
+
+//        $dql->andWhere( "EXISTS (SELECT 1".
+//            " FROM OlegVacReqBundle:VacReqRequest as request2 ".$joinStr
+//            ." WHERE request2.user = request.user AND request2.id <> request.id"
+//            //." AND NOT (requestType.startDate >= requestType2.endDate OR requestType.endDate <= requestType2.startDate)"  //detect overlap
+//            ." AND (requestType.startDate < requestType2.startDate AND requestType.endDate < requestType2.startDate)"     //no overlap
+//            .")"
+//        );
+
+        //TODO: select user, distinct start, end dates
+        //$dql->addSelect("DISTINCT (requestBusiness.startDate) as startDate ");
+        //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
+        //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
+        //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
+        $dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+        //$dql->groupBy('request.id');
+        //}
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+        //echo "dql=".$dql."<br>";
+
+        $query->setParameters( array(
+            'userId' => $user->getId(),
+            'status' => $status
+        ));
+
+        if( $asObject ) {
+            $requests = $query->getResult();
+            return $requests;
+        } else {
+
+            //testing
+            $requests = $query->getResult();
+            foreach( $requests as $request ) {
+                $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
+                $finalStartEndDatesArr = $request->getFinalStartEndDates();
+                $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
+                echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
+                $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
+            }
+            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+            return $numberOfDays;
+            //EOF testing
+
+            if(0) {
+                $numberOfDaysRes = $query->getSingleResult();
+                $numberOfDays = $numberOfDaysRes['numberOfDays'];
+            } else {
+                //$numberOfDaysRes = $query->getOneOrNullResult();
+                $numberOfDaysItems = $query->getResult();
+                if( $numberOfDaysItems ) {
+                    echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
+                    //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
+                    if( count($numberOfDaysItems) > 1 ) {
+                        //$logger = $this->container->get('logger');
+                        //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
+                    }
+                    foreach( $numberOfDaysItems as $numberOfDaysItem ) {
+                        echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
+                        $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
+                    }
+                    echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+                }
+            }
+        }
+
+        return $numberOfDays;
+    }
     public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
 
-        echo $type.": requestTypeStr=".$requestTypeStr."<br>";
+        //echo $type.": requestTypeStr=".$requestTypeStr."<br>";
         $numberOfDays = 0;
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
@@ -802,7 +1033,7 @@ class VacReqUtil
             $dql->select('request');
         } else {
             $dql->select('request');
-            //$dql->select('SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount');
+            //$dql->addSelect('SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount');
             //$dql->select('DISTINCT request.id, user.id, SUM(requestType.numberOfDays) as numberOfDays');
 
             //$dql->addSelect('DISTINCT request.user as requester, requestType.startDate as requestStartDate, requestType.endDate as requestEndDate');
@@ -844,13 +1075,13 @@ class VacReqUtil
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
             $dql->leftJoin("request.requestBusiness", "requestType");
             //$dql->leftJoin("request2.requestBusiness", "requestType2");
-            $joinStr = " LEFT JOIN request2.requestBusiness requestType2";
+            //$joinStr = " LEFT JOIN request2.requestBusiness requestType2";
         }
 
         if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
             $dql->leftJoin("request.requestVacation", "requestType");
             //$dql->leftJoin("request2.requestVacation", "requestType2");
-            $joinStr = " LEFT JOIN request2.requestVacation requestType2";
+            //$joinStr = " LEFT JOIN request2.requestVacation requestType2";
         }
 
         $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :status");
@@ -958,10 +1189,10 @@ class VacReqUtil
                 $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
                 $finalStartEndDatesArr = $request->getFinalStartEndDates();
                 $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
-                echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
+                //echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
                 $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
             }
-            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+            //echo "### get numberOfDays = ".$numberOfDays."<br><br>";
             return $numberOfDays;
             //EOF testing
 
