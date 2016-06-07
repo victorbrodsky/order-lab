@@ -102,6 +102,12 @@ class FellAppImportPopulateUtil {
         $logger = $this->container->get('logger');
         $logger->notice($result);
 
+        //Event Logger with event type "Import of Fellowship Applications Spreadsheet". It will be used to get lastImportTimestamps
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        $eventTypeStr = "Import of Fellowship Applications Spreadsheet";
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$result,$systemUser,null,null,$eventTypeStr);
+
         return $result;
     }
 
