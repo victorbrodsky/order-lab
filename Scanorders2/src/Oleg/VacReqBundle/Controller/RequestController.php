@@ -1272,6 +1272,12 @@ class RequestController extends Controller
 
         $emailUtil->sendEmail($toEmail, "Test Email Subject", "Test Email Message", $ccs);
 
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Test email sent to: '.$toEmail.' and ccs to:'.$ccs
+        );
+
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
 
