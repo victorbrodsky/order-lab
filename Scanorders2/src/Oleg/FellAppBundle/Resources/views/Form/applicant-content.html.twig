@@ -63,7 +63,6 @@
 {% endif %}
 
 
-
 {{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}
 
 {{ form_errors(form) }}
@@ -92,6 +91,7 @@
     </div>
 {% endif %}
 
+<div class="fellapp-application-holder">
 
 <!-- Fellowship Type, Training period, Applicant Name -->
 {% include 'OlegFellAppBundle:Form:FellowshipType.html.twig' %}
@@ -143,6 +143,7 @@
 <!-- Signature -->
 {% include 'OlegFellAppBundle:Form:Signature.html.twig' %}
 
+</div>
 
 {#{% do form.setRendered %}#}
 {#{{ form_widget(form._token) }}#}

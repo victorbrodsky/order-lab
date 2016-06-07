@@ -104,6 +104,12 @@
     /*height: 36px; //keep the same as combobox*/
 /*}*/
 
+/*change the color to Bootstrap default "black" #333333 and bold for form field content on that page only (fellowship form)*/
+div.fellapp-application-holder input {
+    color: #333333;
+    font-weight: bold;
+}
+
 /*Zooming issue*/
 /*input-group-reg to make input and button aligned horizontally*/
 /*http://stackoverflow.com/questions/18077945/twitter-bootstrap-input-group-addon-and-btn-group-not-aligning-nicely*/
