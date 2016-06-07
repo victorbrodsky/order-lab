@@ -792,6 +792,7 @@ class VacReqUtil
     //TODO: select distinct start, end dates
     public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
 
+        echo $type.": requestTypeStr=".$requestTypeStr."<br>";
         $numberOfDays = 0;
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
@@ -800,17 +801,56 @@ class VacReqUtil
         if( $asObject ) {
             $dql->select('request');
         } else {
-            $dql->select('SUM(requestType.numberOfDays) as numberOfDays');
+            $dql->select('request');
+            //$dql->select('SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount');
+            //$dql->select('DISTINCT request.id, user.id, SUM(requestType.numberOfDays) as numberOfDays');
+
+            //$dql->addSelect('DISTINCT request.user as requester, requestType.startDate as requestStartDate, requestType.endDate as requestEndDate');
+            //$dql->addSelect('request.user');
+            //$dql->addSelect('request.user as requester');
+
+            //$dql->select('request');
+            //$dql->addSelect('SUM(requestType.numberOfDays) as numberOfDays');
+            //$dql->addSelect('DISTINCT requestType.startDate as sd, requestType.endDate as ed');
+
+            // select dr1.* from date_ranges dr1
+            // inner join date_ranges dr2
+            // on dr2.start > dr1.start -- start after dr1 is started
+            //  and dr2.start < dr1.end -- start before dr1 is finished
+
+//            $dql->innerJoin(
+//                "OlegVacReqBundle:VacReqRequest",
+//                "request2",
+//                "WITH",
+//                "requestType2.startDate > requestType.startDate AND requestType2.endDate > requestType.endDate"
+//            );
+//            if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+//                $dql->leftJoin("request2.requestBusiness", "requestType2");
+//            }
+//            if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+//                $dql->leftJoin("request2.requestVacation", "requestType2");
+//            }
         }
+
+//        $dql->innerJoin(
+//            "OlegVacReqBundle:VacReqRequest",
+//            "request2",
+//            "WITH",
+//            "request2.id <> request.id AND request2.user = request.user"
+//        );
 
         $dql->leftJoin("request.user", "user");
 
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
             $dql->leftJoin("request.requestBusiness", "requestType");
+            //$dql->leftJoin("request2.requestBusiness", "requestType2");
+            $joinStr = " LEFT JOIN request2.requestBusiness requestType2";
         }
 
         if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
             $dql->leftJoin("request.requestVacation", "requestType");
+            //$dql->leftJoin("request2.requestVacation", "requestType2");
+            $joinStr = " LEFT JOIN request2.requestVacation requestType2";
         }
 
         $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :status");
@@ -837,12 +877,65 @@ class VacReqUtil
             $dql->andWhere("requestType.startDate < '" . $endStr . "'" . " AND requestType.endDate > '".$endStr."'");
         }
 
-        //TODO: select user, distinct start, end dates
-        //$dql->addSelect("DISTINCT (requestBusiness.startDate) as startDate ");
-        //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
-        //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
-        //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
-        $dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+
+        //if( !$asObject ) {
+//                $dql->innerJoin(
+//                    "OlegVacReqBundle:VacReqRequest",
+//                    "request2",
+//                    "WITH",
+//                    //"request2.firstDayAway > request.firstDayAway AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
+//                    "request2.firstDayAway > request.firstDayAway".
+//                    " AND request2.firstDayBackInOffice > request.firstDayBackInOffice".
+//                    " AND request2.user = request.user".
+//                    " AND request2.id <> request.id"
+//                );
+
+//            $dql->innerJoin(
+//                "OlegVacReqBundle:VacReqRequest",
+//                "request2",
+//                "WITH",
+//                "request2.id <> request.id AND request2.user = request.user"
+//            );
+//            $dql->andWhere(
+//                "request2.firstDayAway > request.firstDayAway"
+//                ." AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
+//                ." AND request2.firstDayAway > request.firstDayBackInOffice"
+//                //." AND request2.user = request.user"
+//                //." AND request2.id <> request.id"
+//            );
+
+//        $dql->andWhere(
+//            "requestType2.startDate > requestType.startDate"
+//            ." AND requestType2.endDate > requestType.endDate"
+//            ." AND requestType2.startDate > requestType.endDate"
+//            ." AND request2.user = request.user"
+//            ." AND request2.id <> request.id"
+//        );
+
+//        $dql->andWhere(
+//            "requestType.startDate > requestType2.startDate"
+//            ." AND requestType.endDate > requestType2.endDate"
+//            ." AND requestType.startDate > requestType2.endDate"
+//            ." AND request2.user = request.user"
+//            ." AND request2.id <> request.id"
+//        );
+
+//        $dql->andWhere( "EXISTS (SELECT 1".
+//            " FROM OlegVacReqBundle:VacReqRequest as request2 ".$joinStr
+//            ." WHERE request2.user = request.user AND request2.id <> request.id"
+//            //." AND NOT (requestType.startDate >= requestType2.endDate OR requestType.endDate <= requestType2.startDate)"  //detect overlap
+//            ." AND (requestType.startDate < requestType2.startDate AND requestType.endDate < requestType2.startDate)"     //no overlap
+//            .")"
+//        );
+
+            //TODO: select user, distinct start, end dates
+            //$dql->addSelect("DISTINCT (requestBusiness.startDate) as startDate ");
+            //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
+            //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
+            //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
+            $dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+            //$dql->groupBy('request.id');
+        //}
 
         $query = $this->em->createQuery($dql);
 
@@ -858,19 +951,39 @@ class VacReqUtil
             $requests = $query->getResult();
             return $requests;
         } else {
+
+            //testing
+            $requests = $query->getResult();
+            foreach( $requests as $request ) {
+                $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
+                $finalStartEndDatesArr = $request->getFinalStartEndDates();
+                $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
+                echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
+                $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
+            }
+            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+            return $numberOfDays;
+            //EOF testing
+
+            if(0) {
+                $numberOfDaysRes = $query->getSingleResult();
+                $numberOfDays = $numberOfDaysRes['numberOfDays'];
+            } else {
             //$numberOfDaysRes = $query->getOneOrNullResult();
             $numberOfDaysItems = $query->getResult();
             if( $numberOfDaysItems ) {
-                //echo "get numberOfDays <br>";
+                echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
                 //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
                 if( count($numberOfDaysItems) > 1 ) {
-                    $logger = $this->container->get('logger');
-                    $logger->warning('Logical error: pound more than one SUM: count='.count($numberOfDaysItems));
+                    //$logger = $this->container->get('logger');
+                    //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
                 }
                 foreach( $numberOfDaysItems as $numberOfDaysItem ) {
+                    echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
                     $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
                 }
-                //echo "get numberOfDays = ".$numberOfDays."<br>";
+                echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+            }
             }
         }
 

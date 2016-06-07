@@ -169,7 +169,6 @@ class VacReqRequest
      */
     private $extraStatus;
 
-    //extra not needed fields, but they are exists in the old site
     /**
      * REQUEST_STATUS_ID
      * status: pending, approved, rejected
@@ -875,13 +874,27 @@ class VacReqRequest
         }
     }
 
-    public function getTotalDays($status='approved') {
+    public function getTotalDays( $status='approved', $requestTypeStr=null ) {
         $days = 0;
+        $daysB = 0;
+        $daysV = 0;
         if( $this->hasBusinessRequest() && $this->getRequestBusiness()->getStatus() == $status ) {
-            $days = $days + $this->getRequestBusiness()->getNumberOfDays();
+            $daysB = $days + $this->getRequestBusiness()->getNumberOfDays();
         }
         if( $this->hasVacationRequest() && $this->getRequestVacation()->getStatus() == $status ) {
-            $days = $days + $this->getRequestVacation()->getNumberOfDays();
+            $daysV = $days + $this->getRequestVacation()->getNumberOfDays();
+        }
+
+        if( $requestTypeStr == null ) {
+            $days = $daysB + $daysV;
+        } else {
+            if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+                $days = $daysB;
+            }
+
+            if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+                $days = $daysV;
+            }
         }
 
         return $days;
