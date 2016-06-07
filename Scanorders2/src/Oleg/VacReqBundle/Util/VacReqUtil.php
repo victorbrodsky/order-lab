@@ -2345,6 +2345,7 @@ class VacReqUtil
     }
 
     //Get pending (non-approved, non-rejected) requests for the logged in approver
+    //TODO: fix it?
     public function getTotalPendingRequests( $approver, $groupId=null ) {
         $requestsB = $this->getTotalStatusTypeRequests($approver,"business",$groupId);
         $requestsV = $this->getTotalStatusTypeRequests($approver,"vacation",$groupId);

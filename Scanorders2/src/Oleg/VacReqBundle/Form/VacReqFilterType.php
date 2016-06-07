@@ -58,9 +58,9 @@ class VacReqFilterType extends AbstractType
                 'attr' => array('class' => 'combobox', 'placeholder' => 'Submitter - Name or CWID'),
                 'choices' => $this->params['filterUsers'],
             ));
-
-            $this->addGroup($builder);
         }
+
+        $this->addGroup($builder);
 
         if( $this->params['requestTypeAbbreviation'] == "business-vacation" ) {
             $builder->add('academicYear', 'datetime', array(
@@ -169,6 +169,11 @@ class VacReqFilterType extends AbstractType
     public function addGroup($builder) {
 
         if( count($this->params['organizationalInstitutions']) > 1 || $this->params['supervisor'] ) {
+
+//            echo "show group selector!!!!!! <br>";
+//            echo "<pre>";
+//            print_r($this->params['organizationalInstitutions']);
+//            echo "</pre>";
 
             if( count($this->params['organizationalInstitutions']) == 1 ) {
                 $required = true;

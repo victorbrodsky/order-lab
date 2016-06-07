@@ -309,6 +309,10 @@ class RequestIndexController extends Controller
         }
         $user = $this->get('security.context')->getToken()->getUser();
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+        //testing
+//        foreach( $organizationalInstitutions as $organizationalInstitution ) {
+//            echo "organizationalInstitution=".$organizationalInstitution."<br>";
+//        }
 
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 
@@ -322,7 +326,11 @@ class RequestIndexController extends Controller
 
         $params['routeName'] = $request->get('_route');
 
-        $params['supervisor'] = $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR');
+        $supervisorRole = false;
+        if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') || $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            $supervisorRole = true;
+        }
+        $params['supervisor'] = $supervisorRole;
 
         //create filter form
         $filterform = $this->createForm(new VacReqFilterType($params), null);
@@ -446,6 +454,16 @@ class RequestIndexController extends Controller
             $dql->andWhere($where);
 
             $filtered = true;
+        }
+
+        if( $groups == null ) {
+            $instArr = array();
+            foreach( $organizationalInstitutions as $instId => $instNameStr ) {
+                $instArr[] = $instId;
+            }
+            if( count($instArr) > 0 ) {
+                $dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
+            }
         }
 
         if( $academicYear ) {
