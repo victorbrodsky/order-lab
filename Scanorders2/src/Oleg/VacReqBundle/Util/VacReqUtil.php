@@ -1164,8 +1164,7 @@ class VacReqUtil
             //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
             //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
             //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
-            $dql->groupBy('request.user,requestType.startDate,requestType.endDate');
-            //$dql->groupBy('request.id');
+            $dql->groupBy('request.user,requestType.startDate,requestType.endDate'); //select user, distinct start, end dates
         //}
 
         $query = $this->em->createQuery($dql);
@@ -1183,18 +1182,19 @@ class VacReqUtil
             return $requests;
         } else {
 
-            //testing
+            //sum the number of days
             $requests = $query->getResult();
             foreach( $requests as $request ) {
                 $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
                 $finalStartEndDatesArr = $request->getFinalStartEndDates();
-                $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
+                //$startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
                 //echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
                 $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
             }
             //echo "### get numberOfDays = ".$numberOfDays."<br><br>";
             return $numberOfDays;
-            //EOF testing
+            //EOF sum the number of days
+            //////////////////////////////////////////////////////////////
 
             if(0) {
                 $numberOfDaysRes = $query->getSingleResult();
