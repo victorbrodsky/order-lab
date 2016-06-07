@@ -67,6 +67,11 @@ class CalendarEventListener
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql = $repository->createQueryBuilder('request');
 
+        $dql->select('request');
+        //$dql->select('DISTINCT requestType.startDate,requestType.endDate,requestType.id as requestTypeId,request.id as requestId');
+
+        //$dql->leftJoin("request.user", "user");
+
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
             $dql->leftJoin("request.requestBusiness", "requestType");
         }
@@ -90,7 +95,7 @@ class CalendarEventListener
         }
 
         //select user, distinct start, end dates
-        $dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+        //$dql->groupBy('request.user,requestType.startDate,requestType.endDate');
 
         $query = $this->em->createQuery($dql);
 
@@ -120,10 +125,25 @@ class CalendarEventListener
         // Create EventEntity instances and populate it's properties with data
         // from your own entities/database values.
 
+        $requestArr = array();
+
         foreach( $requests as $requestFull ) {
 
-            $request = $requestFull->$getMethod();
+            $request = $requestFull->$getMethod(); //sub request
             //echo "ID=".$request->getId();
+
+            //check if dates not exact
+            $subjectUserId = $requestFull->getUser()->getId();
+            //init array with key as user id
+            if( !array_key_exists($subjectUserId, $requestArr) ) {
+                $requestArr[$subjectUserId] = array();
+            }
+            //check if date is already exists
+            if( in_array($request->getStartDate(), $requestArr[$subjectUserId]) ) {
+                continue;
+            } else {
+                array_push($requestArr[$subjectUserId], $request->getStartDate());
+            }
 
             if( $this->container->get('security.context')->isGranted("read", $requestFull) ) {
                 $url = $this->container->get('router')->generate(
