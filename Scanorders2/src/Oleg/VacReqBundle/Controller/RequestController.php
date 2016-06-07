@@ -1267,8 +1267,8 @@ class RequestController extends Controller
         //$user = $this->get('security.context')->getToken()->getUser();
         //$toEmail = $user->getSingleEmail();
 
-        $toEmail = "cinava@yahoo.com";
-        $ccs = "oleg_iv@yahoo.com";
+        $toEmail = "cinava@yahoo.com,cinava10@gmail.com";
+        $ccs = "oleg_iv@yahoo.com,cinava10@gmail.com";
 
         $emailUtil->sendEmail($toEmail, "Test Email Subject", "Test Email Message", $ccs);
 

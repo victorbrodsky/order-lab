@@ -175,7 +175,7 @@ swiftmailer:
     host:      %mailer_host%
     username:  %mailer_user%
     password:  %mailer_password%
-    delivery_address: %swift_delivery_address% #disable it for production
+    delivery_addresses: %swift_delivery_addresses% #disable it for production
 #    spool:     { type: memory }
 
 knp_paginator:
