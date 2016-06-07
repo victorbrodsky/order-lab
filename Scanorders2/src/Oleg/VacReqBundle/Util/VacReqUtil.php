@@ -1032,9 +1032,10 @@ class VacReqUtil
         if( $asObject ) {
             $dql->select('request');
         } else {
-            $dql->select('request');
-            //$dql->addSelect('SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount');
-            //$dql->select('DISTINCT request.id, user.id, SUM(requestType.numberOfDays) as numberOfDays');
+            //$dql->select('request');
+            //$dql->addSelect('DISTINCT request.id, requestType.startDate, requestType.endDate, SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount');
+            //$dql->select('DISTINCT requestType.startDate, requestType.endDate, SUM(requestType.numberOfDays) as numberOfDays, COUNT(request.id) as totalCount');
+            $dql->select('DISTINCT user.id, requestType.startDate, requestType.endDate, requestType.numberOfDays as numberOfDays');
 
             //$dql->addSelect('DISTINCT request.user as requester, requestType.startDate as requestStartDate, requestType.endDate as requestEndDate');
             //$dql->addSelect('request.user');
@@ -1164,7 +1165,11 @@ class VacReqUtil
             //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
             //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
             //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
-            $dql->groupBy('request.user,requestType.startDate,requestType.endDate'); //select user, distinct start, end dates
+            //$dql->groupBy('requestType.startDate,requestType.endDate'); //select user, distinct start, end dates
+            //$dql->addGroupBy('request.id');
+        //$dql->addGroupBy('request.id');
+        //$dql->addGroupBy('request');
+        //$dql->addGroupBy('requestType.startDate,requestType.endDate');
         //}
 
         $query = $this->em->createQuery($dql);
@@ -1182,39 +1187,40 @@ class VacReqUtil
             return $requests;
         } else {
 
-            //sum the number of days
-            $requests = $query->getResult();
-            foreach( $requests as $request ) {
-                $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
-                $finalStartEndDatesArr = $request->getFinalStartEndDates();
-                //$startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
-                //echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
-                $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
-            }
-            //echo "### get numberOfDays = ".$numberOfDays."<br><br>";
-            return $numberOfDays;
-            //EOF sum the number of days
-            //////////////////////////////////////////////////////////////
+//            //sum the number of days
+//            $requests = $query->getResult();
+//            foreach( $requests as $request ) {
+//                $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
+//                $finalStartEndDatesArr = $request->getFinalStartEndDates();
+//                $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
+//                echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
+//                $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
+//            }
+//            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+//            return $numberOfDays;
+//            //EOF sum the number of days
+//            //////////////////////////////////////////////////////////////
 
             if(0) {
                 $numberOfDaysRes = $query->getSingleResult();
                 $numberOfDays = $numberOfDaysRes['numberOfDays'];
             } else {
-            //$numberOfDaysRes = $query->getOneOrNullResult();
-            $numberOfDaysItems = $query->getResult();
-            if( $numberOfDaysItems ) {
-                echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
-                //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
-                if( count($numberOfDaysItems) > 1 ) {
-                    //$logger = $this->container->get('logger');
-                    //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
+                //$numberOfDaysRes = $query->getOneOrNullResult();
+                $numberOfDaysItems = $query->getResult();
+                if( $numberOfDaysItems ) {
+                    //echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
+                    //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
+                    if( count($numberOfDaysItems) > 1 ) {
+                        //$logger = $this->container->get('logger');
+                        //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
+                    }
+                    foreach( $numberOfDaysItems as $numberOfDaysItem ) {
+                        //echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
+                        //echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."<br>";
+                        $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
+                    }
+                    //echo "### get numberOfDays = ".$numberOfDays."<br><br>";
                 }
-                foreach( $numberOfDaysItems as $numberOfDaysItem ) {
-                    echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
-                    $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
-                }
-                echo "### get numberOfDays = ".$numberOfDays."<br><br>";
-            }
             }
         }
 
