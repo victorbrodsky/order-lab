@@ -1250,4 +1250,29 @@ class RequestController extends Controller
     }
 
 
+    /**
+     * @Route("/emailtest/", name="vacreq_emailtest")
+     * @Method({"GET"})
+     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     */
+    public function emailTestAction(Request $request)
+    {
+
+        if (!$this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        //$user = $this->get('security.context')->getToken()->getUser();
+        //$toEmail = $user->getSingleEmail();
+
+        $toEmail = "cinava@yahoo.com";
+        $ccs = "oleg_iv@yahoo.com";
+
+        $emailUtil->sendEmail($toEmail, "Test Email Subject", "Test Email Message", $ccs);
+
+        return $this->redirectToRoute('vacreq_incomingrequests');
+    }
+
 }
