@@ -449,7 +449,8 @@ class FellAppUtil {
         $count = count($references);
 
         //must be 4
-        for( $count; $count < 4; $count++  ) {
+        //Remove the fourth letter of recommendation from the front end application form => 3 references
+        for( $count; $count < 3; $count++  ) {
 
             $reference = new Reference($author);
             $fellowshipApplication->addReference($reference);

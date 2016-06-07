@@ -900,11 +900,26 @@ class VacReqRequest
         return $days;
     }
 
-    public function getFirstDateAway($status) {
-        //echo "status=".$status."<br>";
+    public function getFirstDateAway($status,$requestTypeStr=null) {
+        //echo "status=".$status."; requestTypeStr=".$requestTypeStr."<br>";
         $dateB = null;
         $dateV = null;
-        if( $this->hasBusinessRequest() ) {
+
+        if( $requestTypeStr ) {
+            $processB = false;
+            $processV = false;
+            if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+                $processB = true;
+            }
+            if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+                $processV = true;
+            }
+        } else {
+            $processB = true;
+            $processV = true;
+        }
+
+        if( $this->hasBusinessRequest() && $processB ) {
             if( $status ) {
                 if( $this->getRequestBusiness()->getStatus() == $status ) {
                     $dateB = $this->getRequestBusiness()->getStartDate();
@@ -913,7 +928,7 @@ class VacReqRequest
                 $dateB = $this->getRequestBusiness()->getStartDate();
             }
         }
-        if( $this->hasVacationRequest() ) {
+        if( $this->hasVacationRequest() && $processV ) {
             if( $status ) {
                 if( $this->getRequestVacation()->getStatus() == $status ) {
                     $dateV = $this->getRequestVacation()->getStartDate();
@@ -946,13 +961,27 @@ class VacReqRequest
     }
 
 
-    public function getFinalStartEndDates() {
+    public function getFinalStartEndDates( $requestTypeStr=null ) {
 
         $startDate = null;
         $endDate = null;
         $res = array();
 
-        if( $this->hasBusinessRequest() && $this->hasVacationRequest() ) {
+        if( $requestTypeStr ) {
+            $processB = false;
+            $processV = false;
+            if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+                $processB = true;
+            }
+            if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+                $processV = true;
+            }
+        } else {
+            $processB = true;
+            $processV = true;
+        }
+
+        if( $processB && $processV && $this->hasBusinessRequest() && $this->hasVacationRequest() ) {
             $subRequestB = $this->getRequestBusiness();
             $subRequestV = $this->getRequestVacation();
 
@@ -974,7 +1003,7 @@ class VacReqRequest
             return $res;
         }
 
-        if( $this->hasBusinessRequest() ) {
+        if( $processB && $this->hasBusinessRequest() ) {
             $subRequest = $this->getRequestBusiness();
             $startDate = $subRequest->getStartDate();
             $endDate = $subRequest->getEndDate();
@@ -983,7 +1012,7 @@ class VacReqRequest
             return $res;
         }
 
-        if( $this->hasVacationRequest() ) {
+        if( $processV && $this->hasVacationRequest() ) {
             $subRequest = $this->getRequestVacation();
             $startDate = $subRequest->getStartDate();
             $endDate = $subRequest->getEndDate();
