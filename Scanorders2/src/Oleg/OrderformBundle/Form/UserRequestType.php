@@ -33,7 +33,7 @@ class UserRequestType extends AbstractType
 
         //hascwid
         $builder->add( 'hascwid', 'choice', array(
-            'label'=>'Do you (the requester) have a CWID username?',
+            'label' => 'Do you (the person for whom the account is being requested) have a CWID username?',
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
             'multiple' => false,
             'expanded' => true,
@@ -46,9 +46,15 @@ class UserRequestType extends AbstractType
             'label'=>'Password:',
             'attr' => array('class' => 'form-control form-control-modif cwid-password')
         ));
-        
+
+        $builder->add( 'firstName', 'text', array(
+            'label'=>'First Name:',
+            'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif'),
+        ));
+
         $builder->add( 'name', 'text', array(
-                'label'=>'Name:',
+                'label'=>'Last Name:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
@@ -79,7 +85,7 @@ class UserRequestType extends AbstractType
         }
         //echo "choices=".count($requestedInstitutionalPHIScope)."<br>";
         $builder->add('requestedInstitutionalPHIScope', 'entity', array(
-            'label' => 'Institutional PHI Scope:',
+            'label' => 'Organizational Group:',
             'required'=> true,
             'multiple' => true,
             'empty_value' => false,
@@ -120,6 +126,15 @@ class UserRequestType extends AbstractType
             'label'=>'Reference Phone Number:',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
+        ));
+
+        $builder->add('systemAccountRequest', 'entity', array(
+            'label' => 'System for which the account is being requested:',
+            'required'=> true,
+            //'multiple' => true,
+            //'empty_value' => false,
+            'class' => 'OlegOrderformBundle:SystemAccountRequestType',
+            'attr' => array('class' => 'combobox combobox-width')
         ));
 
     }

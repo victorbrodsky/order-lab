@@ -40,7 +40,7 @@
 
 
 
-    <title>Request an Aperio eSlide Manager Account</title>
+    <title>Account Request</title>
 
     {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}
 
@@ -64,7 +64,7 @@
         <input type="hidden" id="formcycle" value="accountreq" />
         <input type="hidden" id="orderformtype" value="single" />
 
-        <h2 class="alert alert-info well-lg safary-fix" align="center">Request an Aperio eSlide Manager Account</h2>
+        <h2 class="alert alert-info well-lg safary-fix" align="center">Account Request</h2>
 
         <br>
 
@@ -72,11 +72,13 @@
 
             {{ form_errors(form) }}
 
+            {{ myform.field(form.systemAccountRequest) }}
+
             <p>
                 <div class="row">
                     <div class="col-xs-6" align="right">
                         {#<b>Do you (the requester) have a <a href="javascript:;" onclick="window.open('http://weill.cornell.edu/its/identity-security/identity/cwid/');return false;">CWID</a> username?</b>#}
-                        <b>Do you (the requester) have a <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> username?</b>
+                        <b>Do you (the person for whom the account is being requested) have a <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> username?</b>
                     </div>
                     <div class="col-xs-6" align="left">
                         {{ form_widget(form.hascwid) }}
@@ -92,6 +94,7 @@
                 </div>
             </div>
 
+            {{ myform.field(form.firstName) }}
             {{ myform.field(form.name) }}
 
             {{ myform.field(form.email) }}

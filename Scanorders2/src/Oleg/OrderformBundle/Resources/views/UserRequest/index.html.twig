@@ -91,16 +91,19 @@
                 <th>{{ knp_pagination_sortable(entities, 'Account Request ID', 'accreq.id') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Date', 'accreq.creationdate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Request Status', 'accreq.status') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'System', 'accreq.systemAccountRequest') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'CWID', 'accreq.cwid') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Has CWID', 'accreq.cwid') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Name', 'accreq.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'First Name', 'accreq.firstName') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Last Name', 'accreq.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Email', 'accreq.email') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'accreq.phone') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.job') }}</th>
-                <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Permitted Institutional PHI Scope', 'accreq.requestedScanOrderInstitutionScope') }}</th>
+                <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Organizational Group', 'accreq.requestedScanOrderInstitutionScope') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'Service(s)', 'services.name') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Reason for Account Request', 'accreq.request') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Access Permissions Similar User', 'accreq.similaruser') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Name', 'accreq.referencename') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Phone Number', 'accreq.referencephone') }}</th>
@@ -132,8 +135,10 @@
                 </td>
                 <td>{{ entity.creationdate|date('m/d/Y H:i') }}</td>
                 <td>{{ entity.status|capitalize }}</td>
+                <td>{{ entity.systemAccountRequest }}</td>
                 <td>{{ entity.cwid }}</td>
                 <td>{{ entity.hascwid }}</td>
+                <td>{{ entity.firstName }}</td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.email }}</td>
                 <td>{{ entity.phone }}</td>
@@ -156,6 +161,7 @@
                     {#</textarea>#}
                     {{ entity.request }}
                 </td>
+                <td>{{ entity.similaruser }}</td>
                 <td>{{ entity.referencename }}</td>
                 <td>{{ entity.referenceemail }}</td>
                 <td>{{ entity.referencephone }}</td>

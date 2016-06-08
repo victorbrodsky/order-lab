@@ -283,10 +283,19 @@ class UserRequestController extends Controller
         //departments
         $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
 
-
         $params['institution'] = $department;
 
-        $requestedInstitutionalPHIScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+        //$requestedInstitutionalPHIScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Institution');
+        $dql =  $repository->createQueryBuilder("institution");
+        $dql->select('institution');
+        $dql->leftJoin("institution.types", "types");
+
+        $dql->where("institution.type = 'default' AND institution.level = 0 AND types.name != 'Collaboration'");
+        $query = $em->createQuery($dql);
+        $requestedInstitutionalPHIScope = $query->getResult();
+
         $params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
 
 

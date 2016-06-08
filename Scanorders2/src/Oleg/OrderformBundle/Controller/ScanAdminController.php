@@ -14,6 +14,7 @@ use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
+use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -150,6 +151,7 @@ class ScanAdminController extends AdminController
         $count_DiseaseOriginList = $this->generateDiseaseOriginList();
         $count_ResearchGroupType = $this->generateResearchGroupType();
         $count_CourseGroupType = $this->generateCourseGroupType();
+        $count_SystemAccountRequestType = $this->generateSystemAccountRequestType();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -178,7 +180,8 @@ class ScanAdminController extends AdminController
             'Embedder Instructions ='.$count_EmbedderInstructionList.', '.
             'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.', '.
             'Research Group Types='.$count_ResearchGroupType.', '.
-            'Educational Group Types='.$count_CourseGroupType.' '.
+            'Educational Group Types='.$count_CourseGroupType.', '.
+            'SystemAccountRequestTypes='.$count_SystemAccountRequestType.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1767,6 +1770,37 @@ class ScanAdminController extends AdminController
 
     }
 
+    public function generateSystemAccountRequestType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:SystemAccountRequestType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Aperio eSlide Manager on C.MED.CORNELL.EDU',
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new SystemAccountRequestType();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
 
     ////////////////// Scan Tree Util //////////////////////

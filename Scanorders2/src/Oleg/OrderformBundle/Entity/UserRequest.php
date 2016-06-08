@@ -37,9 +37,16 @@ class UserRequest
     private $hascwid;
 
     /**
+     * Last Name
      * @ORM\Column(type="string", nullable=true)
      */
     private $name;
+
+    /**
+     * First Name
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $firstName;
 
     /**
      * @ORM\Column(type="string")
@@ -101,49 +108,56 @@ class UserRequest
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $request;
+    private $request;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $similaruser;
+    private $similaruser;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $primaryService;
+    private $primaryService;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $status;
+    private $status;
 
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $creationdate;
+    private $creationdate;
 
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $actiondate;
+    private $actiondate;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $referencename;
+    private $referencename;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $referenceemail;
+    private $referenceemail;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $referencephone;
+    private $referencephone;
+
+    /**
+     * Systems for account requests: System for which the account is being requested
+     * @ORM\ManyToOne(targetEntity="SystemAccountRequestType")
+     **/
+    private $systemAccountRequest;
+
 
 
     function __construct()
@@ -496,6 +510,38 @@ class UserRequest
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSystemAccountRequest()
+    {
+        return $this->systemAccountRequest;
+    }
+
+    /**
+     * @param mixed $systemAccountRequest
+     */
+    public function setSystemAccountRequest($systemAccountRequest)
+    {
+        $this->systemAccountRequest = $systemAccountRequest;
     }
 
 
