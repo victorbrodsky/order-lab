@@ -109,6 +109,10 @@ div.fellapp-application-holder input {
     color: #333333;
     font-weight: bold;
 }
+div.fellapp-application-holder .select2-container .select2-choice {
+    color: #333333;
+    font-weight: bold;
+}
 
 /*Zooming issue*/
 /*input-group-reg to make input and button aligned horizontally*/
