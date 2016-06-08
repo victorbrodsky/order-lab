@@ -13,7 +13,7 @@ class UserRepository extends EntityRepository {
     public function findAllByInstitutionNodeAsUserArray( $nodeid ) {
 
         $users = $this->findAllByInstitutionNode($nodeid);
-        $output = $this->convertUsersToArray($users);
+        $output = $this->convertUsersToArray($users,$nodeid);
 
         return $output;
     }
@@ -39,7 +39,7 @@ class UserRepository extends EntityRepository {
     }
 
 
-    public function convertUsersToArray( $users ) {
+    public function convertUsersToArray( $users, $nodeid ) {
 
         $output = array();
         foreach( $users as $user ) {
@@ -63,7 +63,8 @@ class UserRepository extends EntityRepository {
             }
 
             $element = array(
-                'id' => 'addnodeid-'.$user->getId(),
+                //'id' => 'addnodeid-'.$user->getId(),
+                'id' => 'addnodeid'.$nodeid.'-'.$user->getId(),
                 'addnodeid' => $user->getId(),
                 'text' => $userStr,         //$user."",
                 'type' => 'iconUser',

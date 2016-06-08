@@ -1831,7 +1831,14 @@ class VacReqUtil
         //$dql->addGroupBy("infos");
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("user.infos", "infos");
+
         $dql->where("request.institution = :groupId");
+
+        //Add a filter to the vacation request site for the "My Group" page: show stats only for current employees,
+        // meaning check if the listed users have a non-empty "end" date in the Employment Period section of their profile.
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->andWhere("employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate IS NULL");
+
         $dql->orderBy('infos.lastName', 'ASC');
 
         $query = $this->em->createQuery($dql);
@@ -1841,7 +1848,7 @@ class VacReqUtil
         ));
 
         $results = $query->getResult();
-        //echo "count results=".count($results)."<br>";
+        echo "count results=".count($results)."<br>";
 
         $submitters = array();
         foreach( $results as $result ) {
