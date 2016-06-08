@@ -1848,7 +1848,7 @@ class VacReqUtil
         ));
 
         $results = $query->getResult();
-        echo "count results=".count($results)."<br>";
+        //echo "count results=".count($results)."<br>";
 
         $submitters = array();
         foreach( $results as $result ) {
