@@ -377,6 +377,8 @@ class VacReqUtil
     // if X = 0, show "During the current academic year, you have received no approved vacation days."
     public function getApprovedDaysString( $user ) {
 
+        $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+
         $previousYear = date("Y") - 1;
         $currentYear = date("Y");
         $yearRange = $previousYear."-".$currentYear;
@@ -386,14 +388,31 @@ class VacReqUtil
         $res = $this->getApprovedTotalDays($user,$requestTypeStr);
         $numberOfDays = $res['numberOfDays'];
         $accurate = $res['accurate'];
-        if( $numberOfDays == 0 ) {
-            $result .= "no approved ".$requestTypeStr." travel days";
+
+        if( !$numberOfDays || $numberOfDays == 0 ) {
+            $businessDaysUrlText = "no approved ".$requestTypeStr." travel days";
         }
         if( $numberOfDays == 1 ) {
-            $result .= $numberOfDays." approved ".$requestTypeStr." travel day";
+            $businessDaysUrlText = $numberOfDays." approved ".$requestTypeStr." travel day";
         }
         if( $numberOfDays > 1 ) {
-            $result .= $numberOfDays." approved ".$requestTypeStr." travel days in total";
+            $businessDaysUrlText = $numberOfDays." approved ".$requestTypeStr." travel days";
+        }
+
+        //convert "X approved business travel days" to link
+        $businessDaysUrl = $this->container->get('router')->generate(
+            'vacreq_myrequests',
+            array(
+                'filter[requestType]' => $requestType->getId(),
+                'filter[businessRequest]' => 1,
+                'filter[approved]' => 1,
+                'filter[academicYear]' => $previousYear
+            )
+        );
+        $result .= '<a href="'.$businessDaysUrl.'">'.$businessDaysUrlText.'</a>';
+
+        if( $numberOfDays > 1 ) {
+            $result .= " in total";
         }
         if( !$accurate ) {
             $result .= " (".$this->getInaccuracyMessage().")";
@@ -405,14 +424,30 @@ class VacReqUtil
         $res = $this->getApprovedTotalDays($user,$requestTypeStr);
         $numberOfDays = $res['numberOfDays'];
         $accurate = $res['accurate'];
-        if( $numberOfDays == 0 ) {
-            $result .= "no approved ".$requestTypeStr." days";
+        if( !$numberOfDays || $numberOfDays == 0 ) {
+            $vacationDaysUrlText = "no approved ".$requestTypeStr." days";
         }
         if( $numberOfDays == 1 ) {
-            $result .= $numberOfDays." approved ".$requestTypeStr." day";
+            $vacationDaysUrlText = $numberOfDays." approved ".$requestTypeStr." day";
         }
         if( $numberOfDays > 1 ) {
-            $result .= $numberOfDays." approved ".$requestTypeStr." days in total";
+            $vacationDaysUrlText = $numberOfDays." approved ".$requestTypeStr." days";
+        }
+
+        //convert "X approved vacation days" to link
+        $vacationDaysUrl = $this->container->get('router')->generate(
+            'vacreq_myrequests',
+            array(
+                'filter[requestType]' => $requestType->getId(),
+                'filter[vacationRequest]' => 1,
+                'filter[approved]' => 1,
+                'filter[academicYear]' => $previousYear
+            )
+        );
+        $result .= '<a href="'.$vacationDaysUrl.'">'.$vacationDaysUrlText.'</a>';
+
+        if( $numberOfDays > 1 ) {
+            $result .= " in total";
         }
         if( !$accurate ) {
             $result .= " (".$this->getInaccuracyMessage().")";
