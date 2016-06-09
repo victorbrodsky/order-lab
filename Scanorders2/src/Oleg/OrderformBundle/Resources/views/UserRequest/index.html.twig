@@ -29,20 +29,25 @@
             var formEl = formInputEl.closest('.order-urgent-status');
             //console.log(formEl);
 
-            var selections = formEl.find(".combobox-institution").select2("data");
-
-            var selectionsStr = "";
-            for( var i = 0; i < selections.length; i++ )  {
-
-                var delimeter = "";
-                if( selectionsStr != "" )
-                    delimeter = ", "
-                selectionsStr = selectionsStr + delimeter + selections[i].text;
+//            var selections = formEl.find(".combobox-institution").select2("data");
+//            var selectionsStr = "";
+//            for( var i = 0; i < selections.length; i++ )  {
+//
+//                var delimeter = "";
+//                if( selectionsStr != "" )
+//                    delimeter = ", "
+//                selectionsStr = selectionsStr + delimeter + selections[i].text;
+//            }
+            //var groupInstStr = formEl.find("#requestedScanOrderInstitutionScope").text();
+            var groupInst = formEl.find(".combobox-institution").select2("data");
+            var groupInstStr = null;
+            if( groupInst ) {
+                groupInstStr = groupInst.text;
             }
 
             var username = formEl.find('.username').val();
 
-            var confirmMessage = "Are you sure you want to Approve the user with username: " + username + " with Instituion(s): " + selectionsStr + "?";
+            var confirmMessage = "Are you sure you want to Approve the user with username: " + username + " with Instituion(s): " + groupInstStr + "?";
 
             //console.log('confirmMessage='+confirmMessage);
 
@@ -54,12 +59,19 @@
             if( username == "" ) {
                 errorMsg = "Aperio User Name is empty";
             }
-            if( selections.length == 0 ) {
+//            if( selections.length == 0 ) {
+//                var separator = "";
+//                if( errorMsg != "" ) {
+//                    separator = ", ";
+//                }
+//                errorMsg = errorMsg + separator + "organizational group is empty";
+//            }
+            if( !groupInstStr ) {
                 var separator = "";
                 if( errorMsg != "" ) {
                     separator = ", ";
                 }
-                errorMsg = errorMsg + separator + "Institution list is empty";
+                errorMsg = errorMsg + separator + "Organizational Group is empty";
             }
             //console.log('errorMsg='+errorMsg);
             if( errorMsg != "" ) {
@@ -145,8 +157,11 @@
                 <td>{{ entity.job }}</td>
 
                 <td>
-                    {{ form_widget(forms[loop.index0].requestedInstitutionalPHIScope) }}
+                    {#{{ form_widget(forms[loop.index0].requestedInstitutionalPHIScope) }}#}
                     {#{{ entity.institution }}#}
+                    {#{{ treemacros.compositeTreeNode(form.requestedScanOrderInstitutionScope,'','') }}#}
+                    {#<div id="requestedScanOrderInstitutionScope">{{ entity.requestedScanOrderInstitutionScope.getNodeNameWithRoot }}</div>#}
+                    {{ form_widget(forms[loop.index0].requestedScanOrderInstitutionScope) }}
                 </td>
 
                 {#<td>{{ entity.department }}</td>#}

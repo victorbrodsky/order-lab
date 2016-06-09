@@ -102,10 +102,13 @@
             {{ myform.field(form.phone) }}
             {{ myform.field(form.job) }}
 
-            {{ myform.field(form.requestedInstitutionalPHIScope) }}
+            {% if form.requestedInstitutionalPHIScope is defined %}
+                {{ myform.field(form.requestedInstitutionalPHIScope) }}
+            {% endif %}
 
             {% if form.requestedScanOrderInstitutionScope is defined %}
-                {{ treemacros.compositeTreeNode(form.requestedScanOrderInstitutionScope,'','') }}
+                {#{{ treemacros.compositeTreeNode(form.requestedScanOrderInstitutionScope,'','') }}#}
+                {{ myform.field(form.requestedScanOrderInstitutionScope) }}
             {% endif %}
 
             {#{{ myform.field(form.institution) }}#}

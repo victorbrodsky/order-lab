@@ -31,19 +31,20 @@ class UserRequestApproveType extends AbstractType
         ));
 
 
-        if( array_key_exists('requestedInstitutionalPHIScope', $this->params) ) {
-            $requestedInstitutionalPHIScope = $this->params['requestedInstitutionalPHIScope'];
+        if( array_key_exists('requestedScanOrderInstitutionScope', $this->params) ) {
+            $requestedScanOrderInstitutionScope = $this->params['requestedScanOrderInstitutionScope'];
         } else {
-            $requestedInstitutionalPHIScope = null;
+            $requestedScanOrderInstitutionScope = null;
         }
-        //echo "choices=".count($requestedInstitutionalPHIScope)."<br>";
-        $builder->add('requestedInstitutionalPHIScope', 'entity', array(
-            'label' => 'Institutional PHI Scope:',
-            'required'=> true,
-            'multiple' => true,
-            'empty_value' => false,
+        //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
+        $builder->add('requestedScanOrderInstitutionScope', 'entity', array(
+            'label' => 'Organizational Group:',
+            'required'=> false,
+            'multiple' => false,
+            //'empty_value' => false,
+            'property' => 'getNodeNameWithRoot',
             'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $requestedInstitutionalPHIScope,
+            'choices' => $requestedScanOrderInstitutionScope,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 

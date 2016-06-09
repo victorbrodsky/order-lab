@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\OrderformBundle\Entity\AccessRequest;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -101,6 +102,21 @@ class UserRequestController extends Controller
         $form = $this->createForm(new UserRequestType($params), $entity);
 
         $form->handleRequest($request);
+
+        if( !$entity->getRequestedScanOrderInstitutionScope() ) {
+            $error = new FormError("Organizational Group is empty");
+            $form->get('requestedScanOrderInstitutionScope')->addError($error);
+        }
+
+        if( !$entity->getName() ) {
+            $error = new FormError("Last Name is empty");
+            $form->get('name')->addError($error);
+        }
+
+        if( !$entity->getFirstName() ) {
+            $error = new FormError("First Name is empty");
+            $form->get('firstName')->addError($error);
+        }
 
         if ($form->isValid()) {
             //echo "form valid!";
@@ -229,10 +245,18 @@ class UserRequestController extends Controller
         $form = $this->createForm(new UserRequestApproveType($params), $entity);
         $form->handleRequest($request);
 
-        if( $entity->getId() && $entity->getId() != "" && $entity->getUsername() && $entity->getUsername() != "" && count($entity->getRequestedInstitutionalPHIScope()) != 0 ) {
+        if( $entity->getId() &&
+            $entity->getId() != "" &&
+            $entity->getUsername() &&
+            $entity->getUsername() != "" &&
+            //count($entity->getRequestedInstitutionalPHIScope()) != 0 &&
+            $entity->getRequestedScanOrderInstitutionScope() &&
+            $entity->getUsername()
+        ) {
 
-            //echo "form valid!";
-            //exit();
+//            echo "form valid!";
+//            echo "getRequestedScanOrderInstitutionScope=".$entity->getRequestedScanOrderInstitutionScope();
+//            exit();
             $em = $this->getDoctrine()->getManager();
 
             $entityDb = $em->getRepository('OlegOrderformBundle:UserRequest')->findOneById($entity->getId());
@@ -242,7 +266,8 @@ class UserRequestController extends Controller
 
             $entityDb->setStatus('approved');
             $entityDb->setUsername($entity->getUsername());
-            $entityDb->setRequestedInstitutionalPHIScope($entity->getRequestedInstitutionalPHIScope());
+            //$entityDb->setRequestedInstitutionalPHIScope($entity->getRequestedInstitutionalPHIScope());
+            $entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
 
             $em->persist($entityDb);
             $em->flush();
@@ -260,8 +285,12 @@ class UserRequestController extends Controller
                 $failedArr[] = "username is empty";
             }
 
-            if( count($entity->getRequestedInstitutionalPHIScope()) == 0 ) {
-                $failedArr[] = "Institution list is empty";
+//            if( count($entity->getRequestedInstitutionalPHIScope()) == 0 ) {
+//                $failedArr[] = "Institution list is empty";
+//            }
+
+            if( !$entity->getRequestedScanOrderInstitutionScope() ) {
+                $failedArr[] = "organizational group is empty";
             }
 
             $this->get('session')->getFlashBag()->add(
@@ -279,6 +308,7 @@ class UserRequestController extends Controller
         $params = array();
 
         $em = $this->getDoctrine()->getManager();
+        $params['em'] = $em;
 
         //departments
         $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
@@ -292,11 +322,14 @@ class UserRequestController extends Controller
         $dql->select('institution');
         $dql->leftJoin("institution.types", "types");
 
-        $dql->where("institution.type = 'default' AND institution.level = 0 AND types.name != 'Collaboration'");
-        $query = $em->createQuery($dql);
-        $requestedInstitutionalPHIScope = $query->getResult();
+        $dql->where("institution.type = 'default'");
+        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
 
-        $params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
+        $query = $em->createQuery($dql);
+        $requestedScanOrderInstitutionScope = $query->getResult();
+
+        //$params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
+        $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
 
 
         return $params;

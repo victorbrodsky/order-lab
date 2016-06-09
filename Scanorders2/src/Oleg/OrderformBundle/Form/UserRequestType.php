@@ -48,13 +48,13 @@ class UserRequestType extends AbstractType
         ));
 
         $builder->add( 'firstName', 'text', array(
-            'label'=>'First Name:',
+            'label'=>'* First Name:',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
         $builder->add( 'name', 'text', array(
-                'label'=>'Last Name:',
+                'label'=>'* Last Name:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
@@ -77,22 +77,56 @@ class UserRequestType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        //requestedInstitutionalPHIScope
-        if( array_key_exists('requestedInstitutionalPHIScope', $this->params) ) {
-            $requestedInstitutionalPHIScope = $this->params['requestedInstitutionalPHIScope'];
+
+        //requestedScanOrderInstitutionScope
+    if(1) {
+        if (array_key_exists('requestedScanOrderInstitutionScope', $this->params)) {
+            $requestedScanOrderInstitutionScope = $this->params['requestedScanOrderInstitutionScope'];
         } else {
-            $requestedInstitutionalPHIScope = null;
+            $requestedScanOrderInstitutionScope = null;
         }
-        //echo "choices=".count($requestedInstitutionalPHIScope)."<br>";
-        $builder->add('requestedInstitutionalPHIScope', 'entity', array(
-            'label' => 'Organizational Group:',
-            'required'=> true,
-            'multiple' => true,
-            'empty_value' => false,
+        //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
+        $builder->add('requestedScanOrderInstitutionScope', 'entity', array(
+            'label' => '* Organizational Group:',
+            'required' => false,
+            'multiple' => false,
+            //'empty_value' => false,
+            'property' => 'getNodeNameWithRoot',
             'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $requestedInstitutionalPHIScope,
+            'choices' => $requestedScanOrderInstitutionScope,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
+    } else {
+        ///////////////////////// tree node /////////////////////////
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $title = $event->getData();
+            $form = $event->getForm();
+
+            $label = null;
+            if( $title ) {
+                $institution = $title->getRequestedScanOrderInstitutionScope();
+                if( $institution ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                }
+            }
+            if( !$label ) {
+                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+            }
+
+            $form->add('requestedScanOrderInstitutionScope', 'employees_custom_selector', array(
+                'label' => "Organizational Group (".$label."):",
+                'required' => true,
+                'attr' => array(
+                    'class' => 'ajax-combobox-compositetree',
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                    'data-compositetree-classname' => 'Institution'
+                ),
+                'classtype' => 'institution'
+            ));
+        });
+        ///////////////////////// EOF tree node /////////////////////////
+    }
 
 
         
