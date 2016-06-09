@@ -152,13 +152,23 @@ class UserRequestController extends Controller
     {
         $entity = new UserRequest();
 
+        $em = $this->getDoctrine()->getManager();
+        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
+            array(
+                'type' => array('default', 'user-added'),
+                'abbreviation' => array('wcmc-cwid','local-user')
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
         $params = $this->getParams();
 
         $form   = $this->createForm(new UserRequestType($params), $entity);
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'usernametypes' => $usernametypes
             //'security' => 'false'
         );
     }

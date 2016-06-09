@@ -86,6 +86,29 @@
                 </div>
             </p>
 
+            {#usernametype#}
+            <div id="usernametypeid_show_holder" class="collapse">
+                <div class="well" align='center'>
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <label>Account Type:</label>
+                        </div>
+                        <div class="col-xs-6" align="left">
+                            <select id="usernametypeid_show" class="combobox limit-font-size">
+                                {% for  usernametype in usernametypes %}
+                                    {% if user_type is defined and usernametype.name == user_type %}
+                                        {% set selected = 'selected="selected"' %}
+                                    {% else %}
+                                        {% set selected = '' %}
+                                    {% endif %}
+                                    <option value="{{ usernametype.abbreviation }}" {{ selected }}>{{ usernametype.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{ myform.field(form.cwid) }}
 
             <div id="password_field" class="collapse">
@@ -166,6 +189,7 @@
         <form id="loginform" action="{{ path(scan_sitename~'_login_check') }}" method="post" style="display:none">
             <input type="hidden" name="display_height" id="display_height" value="" />
             <input type="hidden" name="display_width" id="display_width" value="" />
+
             <input type="text" id="username" name="_username" value="" class="form-control" placeholder="Username" autofocus>
             <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
         </form>
@@ -225,14 +249,16 @@
                 if( checkedValue == "Yes" ) {
                     $("#oleg_orderformbundle_userrequesttype_cwid").prop('disabled', false);
                     //disable all fields, except some
-                    var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password');
+                    var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password, #usernametypeid_show');
                     allInputs.prop('disabled', true);
                     $('#password_field').show();
+                    $('#usernametypeid_show_holder').show();
                 } else {
                     $('.cwid').val('');
                     $(":input").prop('disabled', false);
                     $("#oleg_orderformbundle_userrequesttype_cwid").prop('disabled', true);
                     $('#password_field').hide();
+                    $('#usernametypeid_show_holder').hide();
                 }
 
             });
@@ -247,7 +273,16 @@
 
                 //copy fields
                 var cwid = $('.cwid').val();
-                $('#username').val(cwid);
+                //add usertype
+                var usertypeAbbreviation = $('#usernametypeid_show').select2('val');
+                if( !usertypeAbbreviation || usertypeAbbreviation == "" || usertypeAbbreviation === null || typeof usertypeAbbreviation === 'object' ) {
+                    usertypeAbbreviation = 'wcmc-cwid';
+                }
+                //console.log(usertypeAbbreviation);
+                //alert(usertypeAbbreviation);
+                var fullusername = cwid + "_@_" + usertypeAbbreviation;
+                $('#username').val(fullusername);
+
                 var pwd = $('.cwid-password').val();
                 $('#password').val(pwd);
 
