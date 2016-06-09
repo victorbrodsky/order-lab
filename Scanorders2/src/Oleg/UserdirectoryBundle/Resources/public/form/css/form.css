@@ -113,6 +113,11 @@ div.fellapp-application-holder .select2-container .select2-choice {
     color: #333333;
     font-weight: bold;
 }
+/*hide trainingmajors placeholder for fellowship application form. Otherwise, it caused an partially obscured letter in PDF*/
+div.fellapp-application-holder .ajax-combobox-trainingmajors .select2-default {
+    display: none !important;
+}
+
 
 /*Zooming issue*/
 /*input-group-reg to make input and button aligned horizontally*/
