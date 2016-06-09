@@ -184,7 +184,18 @@
                         {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
                     </div>
                     <div class="col-xs-6">
-                        {{ form_row(training.description,{'label':'Job or Experience Description:'}) }}
+                        {% if cycle == "download" and training.description.vars.value %}
+                            {#{{ formmacros.simplefield(training.description,{'label':'Job or Experience Description:'}) }}#}
+                            {#{{ formmacros.simplefield( "Job or Experience Description:", training.description.vars.value, "", "disabled" ) }}#}
+                            <label>Job or Experience Description:</label>
+                            {#<input type="text" class="form-control" disabled="disabled" value="{{ training.description.vars.value }}">#}
+                            <div contentEditable="true" style="display:inline-block; border: solid 1px lightgray;" disabled="disabled">
+                                {{ training.description.vars.value }}
+                            </div>
+                        {% else %}
+                            {{ form_row(training.description,{'label':'Job or Experience Description:'}) }}
+                        {% endif %}
+
                     </div>
                 </div>
                 <div class="row withpaddingtop">
