@@ -153,12 +153,16 @@ function getElementTargetByHolder(holder,target) {
 }
 
 //Generic ajax combobox
-function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force) {
+function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder) {
 
     //console.log('get Combobox Generic: name='+name);
 
     var targetid = ".ajax-combobox-"+name;
     targetid = getElementTargetByHolder(holder,targetid);
+
+    if( typeof placeholder === 'undefined' ) {
+        placeholder = "Select an option or type in a new value";
+    }
 
     if( typeof force === 'undefined' ) {
         force = false;
@@ -194,10 +198,10 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
                 globalDataArray.push(val);
                 //console.log(data);
             });
-            populateSelectCombobox( targetid, globalDataArray, "Select an option or type in a new value", multipleFlag );
+            populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
         });
     } else {
-        populateSelectCombobox( targetid, globalDataArray, "Select an option or type in a new value", multipleFlag );
+        populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
     }
 
 }
