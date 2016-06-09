@@ -54,7 +54,16 @@
             {{ form_row(reference.phone) }}
         </div>
         <div class="col-xs-6">
-            {{ form_row(reference.email) }}
+            {% if cycle == 'show' or cycle == 'download' %}
+                <label>{{ reference.email.vars.label }}</label>
+                {#<a href="mailto:{{ reference.email.vars.value }}" target="_top">{{ reference.email.vars.value }}</a>#}
+                <div class="form-control" disabled>
+                    <a href="mailto:{{ reference.email.vars.value }}" target="_top">{{ reference.email.vars.value }}</a>
+                </div>
+
+            {% else %}
+                {{ form_row(reference.email) }}
+            {% endif %}
         </div>
     </div>
 
