@@ -146,10 +146,13 @@
     </p>
 {% endmacro %}
 
-{% macro fieldDateLabel( field, classname, attr ) %}
+{% macro fieldDateLabel( field, classname, attr, noerror ) %}
     <p>
     <div class="row">
-        {{ form_errors(field) }}
+        {#TODO: quick fix for vacreq form error#}
+        {% if noerror is not defined %}
+            {{ form_errors(field) }}
+        {% endif %}
         <div class="col-xs-6" align="right">
             {{ form_label(field) }}
         </div>

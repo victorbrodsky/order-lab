@@ -117,7 +117,23 @@ class RequestController extends Controller
 
         $form->handleRequest($request);
 
+        //check for overlapped date range
+        if( $routeName != "vacreq_carryoverrequest" ) {
+            $overlappedRequestIds = $vacreqUtil->checkForOverlapDates($user, $entity);
+            if (count($overlappedRequestIds) > 0) {
+                $errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
+                //$form->addError(new FormError($errorMsg));
+                $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
+                //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
+            } else {
+                //exit('no overlaps found');
+            }
+        }
+        //exit('testing');
+
         if( $form->isSubmitted() && $form->isValid() ) {
+
+            //exit('form is valid');
 
             //set final (global) fields
             $entity->setFinalFields();
@@ -357,8 +373,21 @@ class RequestController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        //check for overlapped date range
+        $routeName = $request->get('_route');
+        if( $routeName == "vacreq_edit" && $entity->getRequestType()->getAbbreviation() == "business-vacation" && $entity->getId() ) {
+            $overlappedRequestIds = $vacreqUtil->checkForOverlapDates($user, $entity);
+            if (count($overlappedRequestIds) > 0) {
+                $errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
+                $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
+                //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
+            } else {
+                //exit('no overlaps found');
+            }
+        }
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            //exit('form is valid');
             if( $routName == 'vacreq_review' ) { //review
 
                 //set final (global) fields
@@ -1279,7 +1308,9 @@ class RequestController extends Controller
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
 
+
     /**
+     * TODO: clean overlap approved vacation requests
      * @Route("/overlaps/", name="vacreq_overlaps")
      * @Method({"GET"})
      */
@@ -1299,7 +1330,7 @@ class RequestController extends Controller
         foreach( $userUniqueRequests as $userUniqueRequest ) {
 //            $logger->error($count." ########## user: ".$userUniqueRequest->getUser());
 //            echo $count." ########## user: ".$userUniqueRequest->getUser()."<br>";
-            $count = $this->analyzeRequests($userUniqueRequest,$count);
+            $count = $this->analyzeRequests($userUniqueRequest->getUser(),$count);
             //$logger->error('#########################');
             //echo "#########################<br><br>";
             //$count++;
@@ -1333,7 +1364,7 @@ class RequestController extends Controller
         //echo "requests with users=".count($requests)."<br>";
         return $requests;
     }
-    public function analyzeRequests($userUniqueRequest,$count) {
+    public function analyzeRequests($user,$count=1) {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
@@ -1348,7 +1379,7 @@ class RequestController extends Controller
 
         $dql->where("requestType.abbreviation = 'business-vacation'");
         $dql->andWhere("requestVacation.status='approved'");
-        $dql->andWhere("user.id=".$userUniqueRequest->getUser()->getId());
+        $dql->andWhere("user.id=".$user->getId());
 
         $dql->orderBy('request.id');
 
@@ -1361,11 +1392,13 @@ class RequestController extends Controller
         $overlap = $vacreqUtil->getNotOverlapNumberOfWorkingDays($requests,'requestVacation');
 
         if( $overlap ) {
-            $logger->error($count." ########## user: " . $userUniqueRequest->getUser());
-            echo $count." ########## user: " . $userUniqueRequest->getUser() . "<br><br><br>";
+            $logger->error($count." ^########## user: " . $user);
+            echo $count." ^########## user: " . $user . "<br><br><br>";
             $count++;
         }
         return $count;
     }
+
+
 
 }

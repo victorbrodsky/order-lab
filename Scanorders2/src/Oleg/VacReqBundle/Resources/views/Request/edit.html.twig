@@ -87,6 +87,12 @@
     {{ form_start(form,{'attr': {'id': 'vacreq-request-form'}}) }}
 
         {{ form_errors(form) }}
+        {% if not form.vars.valid %}
+            {#form has error!!!!!!!!!#}
+            <div class="alert alert-danger" style="background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
+                Error: This form contains not valid fields. Please check the fields below.
+            </div>
+        {% endif %}
 
         {#{{ treemacros.compositeTreeNode(form.institution,cycle,'') }}#}
 
@@ -278,7 +284,18 @@
                 </div>
                 <div id="vacreq-Vacation" class="panel-collapse collapse {{ vacationCollapse }}">
                     <div class="panel-body">
-                        {{ formmacros.fieldDateLabel(form.requestVacation.startDate,'allow-future-date') }}
+
+                        {% if not form.requestVacation.startDate.vars.valid %}
+                            {#{{ form.requestVacation.startDate.vars.errors }}#}
+                            <div class="alert alert-danger" style="background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
+                                {#form has error!!!!!!!!!#}
+                                {{ form_errors(form.requestVacation.startDate) }}
+                                {#{% do form.requestVacation.startDate.vars.errors|first.setRendered %}#}
+                                {#{{ form.requestVacation.startDate.vars.errors }}#}
+                            </div>
+                        {% endif %}
+                        {{ formmacros.fieldDateLabel(form.requestVacation.startDate,'allow-future-date','','noerror') }}
+
                         {{ formmacros.fieldDateLabel(form.requestVacation.endDate,'allow-future-date') }}
 
                         {#{{ formmacros.field(form.requestVacation.numberOfDays) }}#}

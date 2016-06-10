@@ -1264,6 +1264,52 @@ class VacReqUtil
         //echo "unique days=".$numberOfDays."<br>";
         return $numberOfDays;
     }
+    public function checkForOverlapDates( $user, $subjectRequest ) {
+        //$logger = $this->container->get('logger');
+        //get all user approved vacation requests
+        $requestTypeStr = "requestVacation";
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestType", "requestType");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+
+        $dql->where("requestType.abbreviation = 'business-vacation'");
+        $dql->andWhere("requestVacation.status='approved'");
+        $dql->andWhere("user.id=".$user->getId());
+
+        $dql->orderBy('request.id');
+
+        $query = $this->em->createQuery($dql);
+
+        $requests = $query->getResult();
+        //EOF get all user approved vacation requests
+
+        $subjectDateRange = $subjectRequest->getFinalStartEndDates($requestTypeStr);
+
+        $overlappedIds = array();
+        foreach( $requests as $request ) {
+
+            $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
+
+            $msg = "";
+            //overlap condition: (StartA <= EndB) and (EndA >= StartB)
+            if( ($thisDateRange['startDate'] <= $subjectDateRange['endDate']) && ($thisDateRange['endDate'] >= $subjectDateRange['startDate']) ) {
+                $startDateStr = $thisDateRange['startDate']->format('Y/m/d');
+                $endDateStr = $thisDateRange['endDate']->format('Y/m/d');
+                $msg .= $subjectRequest->getId() . ": overlap dates ID=" . $request->getId() . "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr;
+                echo $msg . "<br>";
+                //$logger->error($msg);
+                $overlappedIds[] = $request->getId();
+            }
+
+        }//foreach requests
+        return $overlappedIds;
+    }
 
     public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
         $starDateStr = $starDate->format('Y-m-d');
