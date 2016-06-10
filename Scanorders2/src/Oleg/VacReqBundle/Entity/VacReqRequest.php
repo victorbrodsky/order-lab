@@ -900,6 +900,25 @@ class VacReqRequest
         return $days;
     }
 
+    public function getTotalDaysByType( $requestTypeStr ) {
+
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+            $days = 0;
+            if( $this->hasBusinessRequest() ) {
+                $days = $days + $this->getRequestBusiness()->getNumberOfDays();
+            }
+        }
+
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+            $days = 0;
+            if( $this->hasVacationRequest() ) {
+                $days = $days + $this->getRequestVacation()->getNumberOfDays();
+            }
+        }
+
+        return $days;
+    }
+
     public function getFirstDateAway($status,$requestTypeStr=null) {
         //echo "status=".$status."; requestTypeStr=".$requestTypeStr."<br>";
         $dateB = null;

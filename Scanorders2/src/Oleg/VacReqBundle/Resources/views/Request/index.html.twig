@@ -10,11 +10,21 @@
 
 {% block content %}
 
-    {% if totalApprovedDaysString is defined and totalApprovedDaysString %}
-        <div class="alert alert-success">
-            <p>{{ totalApprovedDaysString }}</p>
-        </div>
-    {% endif %}
+    {#{% if totalApprovedDaysString is defined and totalApprovedDaysString %}#}
+        {#<div class="alert alert-success">#}
+            {#<p>{{ totalApprovedDaysString|raw }}</p>#}
+        {#</div>#}
+    {#{% endif %}#}
+    {#{% if totalApprovedDaysString is defined and totalApprovedDaysString %}#}
+        {#<div class="alert alert-success">#}
+            {#<p>{{ totalApprovedDaysString|raw }}</p>#}
+            {#<p>{{ accruedDaysString }}</p>#}
+            {#{% if carriedOverDaysString %}#}
+                {#<p>{{ carriedOverDaysString }}</p>#}
+            {#{% endif %}#}
+            {#<p>{{ remainingDaysString }}</p>#}
+        {#</div>#}
+    {#{% endif %}#}
 
     <h4 class="text-info" align="center">
         {#Pathology Faculty Vacation/Business Travel Requests#}

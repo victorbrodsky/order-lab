@@ -187,7 +187,8 @@ class RequestController extends Controller
         $accessreqs = $this->getActiveAccessReq();
 
         //calculate approved vacation days in total.
-        $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
+        $bruteForce = false;
+        $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user,$bruteForce);
         //echo "totalApprovedDaysString=".$totalApprovedDaysString."<br>";
 
         //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
@@ -1091,10 +1092,10 @@ class RequestController extends Controller
 
 
 
+    ////////////////////////////// service and testing methods //////////////////////////////////
     /**
      * @Route("/import-old-data/", name="vacreq_import_old_data")
      * @Method({"GET"})
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
     public function importOldDataAction(Request $request) {
 
@@ -1120,7 +1121,6 @@ class RequestController extends Controller
     /**
      * @Route("/delete-imported-old-data/", name="vacreq_delete_imported_old_data")
      * @Method({"GET"})
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
     public function deleteImportedOldDataAction(Request $request) {
 
@@ -1183,7 +1183,6 @@ class RequestController extends Controller
     /**
      * @Route("/setdates-imported-old-data/", name="vacreq_setdates_imported_old_data")
      * @Method({"GET"})
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
     public function setdatesImportedOldDataAction(Request $request) {
 
@@ -1253,7 +1252,6 @@ class RequestController extends Controller
     /**
      * @Route("/emailtest/", name="vacreq_emailtest")
      * @Method({"GET"})
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
     public function emailTestAction(Request $request)
     {
@@ -1279,6 +1277,95 @@ class RequestController extends Controller
         );
 
         return $this->redirectToRoute('vacreq_incomingrequests');
+    }
+
+    /**
+     * @Route("/overlaps/", name="vacreq_overlaps")
+     * @Method({"GET"})
+     */
+    public function getOverlapRequestsAction(Request $request)
+    {
+
+        if (!$this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        $logger = $this->container->get('logger');
+
+        //find unique users
+        $userUniqueRequests = $this->findUniqueUserRequests();
+
+        $count = 1;
+        foreach( $userUniqueRequests as $userUniqueRequest ) {
+//            $logger->error($count." ########## user: ".$userUniqueRequest->getUser());
+//            echo $count." ########## user: ".$userUniqueRequest->getUser()."<br>";
+            $count = $this->analyzeRequests($userUniqueRequest,$count);
+            //$logger->error('#########################');
+            //echo "#########################<br><br>";
+            //$count++;
+        }
+
+
+        exit();
+        return $this->redirectToRoute('vacreq_incomingrequests');
+    }
+    public function findUniqueUserRequests() {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestType", "requestType");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+
+        $dql->where("requestType.abbreviation = 'business-vacation'");
+        $dql->andWhere("requestVacation.status='approved'");
+
+        $dql->groupBy('user.id');
+
+        $dql->orderBy('request.id');
+
+        $query = $em->createQuery($dql);
+
+        $requests = $query->getResult();
+        //echo "requests with users=".count($requests)."<br>";
+        return $requests;
+    }
+    public function analyzeRequests($userUniqueRequest,$count) {
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestType", "requestType");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+
+        $dql->where("requestType.abbreviation = 'business-vacation'");
+        $dql->andWhere("requestVacation.status='approved'");
+        $dql->andWhere("user.id=".$userUniqueRequest->getUser()->getId());
+
+        $dql->orderBy('request.id');
+
+        $query = $em->createQuery($dql);
+
+        $requests = $query->getResult();
+        //echo "requests to analyze=".count($requests)."<br>";
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $overlap = $vacreqUtil->getNotOverlapNumberOfWorkingDays($requests,'requestVacation');
+
+        if( $overlap ) {
+            $logger->error($count." ########## user: " . $userUniqueRequest->getUser());
+            echo $count." ########## user: " . $userUniqueRequest->getUser() . "<br><br><br>";
+            $count++;
+        }
+        return $count;
     }
 
 }

@@ -41,13 +41,16 @@ class RequestIndexController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         //calculate approved vacation days in total.
-        $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
+        //$totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
 
         $params = array(
             'sitename' => $this->container->getParameter('vacreq.sitename'),
             'subjectUser' => $user,
             'title' => "My Business Travel & Vacation Requests",
-            'totalApprovedDaysString' => $totalApprovedDaysString,
+//            'totalApprovedDaysString' => $totalApprovedDaysString,
+//            'accruedDaysString' => $accruedDaysString,
+//            'carriedOverDaysString' => $carriedOverDaysString,
+//            'remainingDaysString' => $remainingDaysString,
             'filterShowUser' => false,
         );
         return $this->listRequests($params, $request);
@@ -218,7 +221,8 @@ class RequestIndexController extends Controller
             'filtered' => $filtered,
             'routename' => $routeName,
             'title' => $indexTitle,
-            'requestTypeAbbreviation' => $requestTypeAbbreviation
+            'requestTypeAbbreviation' => $requestTypeAbbreviation,
+            //'totalApprovedDaysString' => $params['totalApprovedDaysString']
         );
     }
 

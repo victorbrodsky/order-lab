@@ -375,7 +375,7 @@ class VacReqUtil
     //"During the current academic year, you have received X approved vacation days in total."
     // (if X = 1, show "During the current academic year, you have received X approved vacation day."
     // if X = 0, show "During the current academic year, you have received no approved vacation days."
-    public function getApprovedDaysString( $user ) {
+    public function getApprovedDaysString( $user, $bruteForce=false ) {
 
         $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
 
@@ -384,8 +384,9 @@ class VacReqUtil
         $yearRange = $previousYear."-".$currentYear;
         $result = "During the current ".$yearRange." academic year, you have received ";
 
+        //////////////////////// Business /////////////////////
         $requestTypeStr = 'business';
-        $res = $this->getApprovedTotalDays($user,$requestTypeStr);
+        $res = $this->getApprovedTotalDays($user,$requestTypeStr,$bruteForce);
         $numberOfDays = $res['numberOfDays'];
         $accurate = $res['accurate'];
 
@@ -417,11 +418,13 @@ class VacReqUtil
         if( !$accurate ) {
             $result .= " (".$this->getInaccuracyMessage().")";
         }
+        //////////////////////// Eof Business /////////////////////
 
         $result .= " and ";
 
+        //////////////////////// Vacation /////////////////////
         $requestTypeStr = 'vacation';
-        $res = $this->getApprovedTotalDays($user,$requestTypeStr);
+        $res = $this->getApprovedTotalDays($user,$requestTypeStr,$bruteForce);
         $numberOfDays = $res['numberOfDays'];
         $accurate = $res['accurate'];
         if( !$numberOfDays || $numberOfDays == 0 ) {
@@ -452,6 +455,7 @@ class VacReqUtil
         if( !$accurate ) {
             $result .= " (".$this->getInaccuracyMessage().")";
         }
+        //////////////////////// EOF Vacation /////////////////////
 
         $result .= ".";
 
@@ -603,11 +607,11 @@ class VacReqUtil
     }
 
     //calculate approved total days for current academical year
-    public function getApprovedTotalDays( $user, $requestTypeStr ) {
+    public function getApprovedTotalDays( $user, $requestTypeStr, $bruteForce=false ) {
         $previousYear = date("Y") - 1;
         $currentYear = date("Y");
         $yearRange = $previousYear."-".$currentYear;
-        $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange );
+        $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "approved", $bruteForce );
         return $res;
     }
 
@@ -616,7 +620,7 @@ class VacReqUtil
     }
 
     //calculate approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
-    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved" ) {
+    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved", $bruteForce=false ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -651,17 +655,17 @@ class VacReqUtil
         //echo "current academicYearEndStr=".$academicYearEndStr."<br>";
 
         //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
-        $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false,$status);
+        $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false,$status,$bruteForce);
         //echo "numberOfDaysInside=".$numberOfDaysInside."<br>";
 
         //step2: get requests with start date earlier than academic Year Start
-        $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status);
+        $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status,$bruteForce);
         $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
         $accurateBefore = $numberOfDaysBeforeRes['accurate'];
         //echo "numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
-        $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status);
+        $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status,$bruteForce);
         $numberOfDaysAfter = $numberOfDaysAfterRes['numberOfDays'];
         $accurateAfter = $numberOfDaysAfterRes['accurate'];
         //echo "numberOfDaysAfter=".$numberOfDaysAfter."<br>";
@@ -833,7 +837,8 @@ class VacReqUtil
     //http://stackoverflow.com/questions/7224792/sql-to-find-time-elapsed-from-multiple-overlapping-intervals
     public function getApprovedYearDays_SingleQuery( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
 
-        echo $user.": ".$type.": requestTypeStr=".$requestTypeStr."<br>";
+        echo $user.": ".$type.": requestTypeStr=".$requestTypeStr."; status=".$status."<br>";
+        echo "date range=".$startStr."<=>".$endStr."<br>";
         $numberOfDays = 0;
 
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
@@ -844,6 +849,8 @@ class VacReqUtil
             $joinStr = " LEFT JOIN request2.requestVacation requestType2 ";
         }
 
+        //WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='".$status."'
+        //AND requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'
         $query = $this->em->createQuery(
             "SELECT
               SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount
@@ -851,13 +858,40 @@ class VacReqUtil
             INNER JOIN request.user user
             INNER JOIN request.requestVacation requestType
             INNER JOIN OlegVacReqBundle:VacReqRequest request2
-              WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='".$status."'
-                    AND requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'
+              WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='$status'
                     AND request.firstDayAway < request2.firstDayAway AND request.firstDayBackInOffice < request2.firstDayBackInOffice
-                    GROUP BY request.user,requestType.startDate,requestType.endDate
-                    HAVING COUNT(request.id) = 0
+            WHERE requestType.startDate > '$startStr' AND requestType.endDate < '$endStr'
+            HAVING COUNT(request2.id) = 0
             "
         );
+
+        $query = $this->em->createQuery(
+            "SELECT request1
+            FROM OlegVacReqBundle:VacReqRequest request1
+            INNER JOIN request1.user user
+            INNER JOIN request1.requestVacation requestType
+            INNER JOIN OlegVacReqBundle:VacReqRequest request2
+              WITH
+              (request1.id <> request2.id)
+              AND ( request1.firstDayAway <> request2.firstDayAway )
+            WHERE
+            requestType.startDate > '$startStr'
+            AND requestType.endDate < '$endStr'
+            AND request1.user = request2.user
+            AND user.id = ".$user->getId()."
+            AND requestType.status='$status'
+            "
+        );
+
+        $requests = $query->getResult();
+        echo "requests count=".count($requests)."<br>";
+
+        foreach( $requests as $request ) {
+            //echo $request->getId()." days=".$request->getTotalDays($status,$requestTypeStr);
+            echo $request->getId()." days=".$request->getRequestVacation()->getNumberOfDays()."<br>";
+        }
+        exit();
+
 
         //INNER JOIN request2.requestVacation requestType2
         //WHERE user.id = ".$user->getId()." AND requestType.status='".$status."'"
@@ -876,8 +910,9 @@ class VacReqUtil
 //        echo "### get numberOfDays = ".$numberOfDays."<br><br>";
 
         $numberOfDaysItems = $query->getResult();
+        echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
+
         if( $numberOfDaysItems ) {
-            echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
             //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
             if( count($numberOfDaysItems) > 1 ) {
                 //$logger = $this->container->get('logger');
@@ -1005,7 +1040,7 @@ class VacReqUtil
         //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
         //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
         //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
-        $dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+        //$dql->groupBy('request.user,requestType.startDate,requestType.endDate');
         //$dql->groupBy('request.id');
         //}
 
@@ -1061,13 +1096,17 @@ class VacReqUtil
 
         return $numberOfDays;
     }
-    public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
+    public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved', $bruteForce=false ) {
 
         //echo $type.": requestTypeStr=".$requestTypeStr."<br>";
         $numberOfDays = 0;
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
+
+        if( $bruteForce == true ) {
+            $asObject = true;
+        }
 
         if( $asObject ) {
             $dql->select('request');
@@ -1132,6 +1171,13 @@ class VacReqUtil
             'status' => $status
         ));
 
+        if( $bruteForce == true ) {
+            $requests = $query->getResult();
+            $numberOfDays = $this->getNotOverlapNumberOfWorkingDays($requests,$requestTypeStr);
+            echo "bruteForce days=".$numberOfDays."<br>";
+            return $numberOfDays;
+        }
+
         if( $asObject ) {
             $requests = $query->getResult();
             return $requests;
@@ -1174,6 +1220,48 @@ class VacReqUtil
             }
         }
 
+        return $numberOfDays;
+    }
+
+    public function getNotOverlapNumberOfWorkingDays( $requests, $requestTypeStr ) {
+        $logger = $this->container->get('logger');
+        $overlap = false;
+        $numberOfDays = 0;
+        $dateRanges = array();
+        foreach( $requests as $request ) {
+
+            $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
+
+            foreach( $dateRanges as $requestId=>$dateRange ) {
+                $msg = "";
+                //overlap condition: (StartA <= EndB) and (EndA >= StartB)
+                if( ($thisDateRange['startDate'] <= $dateRange['endDate']) && ($thisDateRange['endDate'] >= $dateRange['startDate']) ) {
+                    if( $thisDateRange['startDate'] == $dateRange['startDate'] && $thisDateRange['endDate'] == $dateRange['endDate'] ) {
+                        $msg = "Exact ";
+                    } else {
+                        $startDateStr = $thisDateRange['startDate']->format('Y/m/d');
+                        $endDateStr = $thisDateRange['endDate']->format('Y/m/d');
+                        $msg .= $requestId . ": overlap dates ID=" . $request->getId() . "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr;
+                        echo $msg . "<br>";
+                        $logger->error($msg);
+                        $overlap = true;
+                    }
+                    //TODO:
+                } else {
+                    $dateRanges[$request->getId()] = $thisDateRange;
+                    $days = $request->getTotalDaysByType($requestTypeStr);
+                    $numberOfDays = $numberOfDays + $days;
+                    //echo "not overlap dates; days=".$days."<br>";
+                }
+            }
+
+            if( count($dateRanges) == 0 ) {
+                $dateRanges[$request->getId()] = $thisDateRange;
+            }
+        }
+
+        return $overlap;
+        //echo "unique days=".$numberOfDays."<br>";
         return $numberOfDays;
     }
 
@@ -2387,7 +2475,6 @@ class VacReqUtil
     }
 
     //Get pending (non-approved, non-rejected) requests for the logged in approver
-    //TODO: fix it?
     public function getTotalPendingRequests( $approver, $groupId=null ) {
         $requestsB = $this->getTotalStatusTypeRequests($approver,"business",$groupId);
         $requestsV = $this->getTotalStatusTypeRequests($approver,"vacation",$groupId);
