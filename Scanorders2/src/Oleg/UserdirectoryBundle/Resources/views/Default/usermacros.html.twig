@@ -80,7 +80,7 @@
             {{ usermacros.siteSingleSwitchElement(fellapp_sitename,'<span class="glyphicon glyphicon-file"></span>','Fellowship Applications') }}
             {{ usermacros.siteSingleSwitchElement(deidentifier_sitename,'<span class="glyphicon glyphicon-retweet"></span>','Deidentifier') }}
             {{ usermacros.siteSingleSwitchElement(vacreq_sitename,'<span class="glyphicon glyphicon-plane"></span>','Vacation Request') }}
-
+            {{ usermacros.siteSingleSwitchElement(calllog_sitename,'<span class="glyphicon glyphicon-phone-alt"></span>','Call Logbook') }}
 
         </ul>
     </li>
@@ -239,6 +239,9 @@
     {% endif %}
     {% if '/vacation-request/' in currentPath %}
         {% set sitename = vacreq_sitename %}
+    {% endif %}
+    {% if '/call-logbook/' in currentPath %}
+        {% set sitename = calllog_sitename %}
     {% endif %}
 
 
@@ -1982,6 +1985,9 @@
         {% endif %}
         {% if '/vacation-request/' in currentPath %}
             {% set sitename = vacreq_sitename %}
+        {% endif %}
+        {% if '/call-logbook/' in currentPath %}
+            {% set sitename = calllog_sitename %}
         {% endif %}
     {% endif %}
 

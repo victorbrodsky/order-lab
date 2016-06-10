@@ -172,9 +172,30 @@ function setNavBar(sitename) {
     else if( sitename == "vacation-request" ){
         setVacReqNavBar();
     }
+    else if( sitename == "call-log" ){
+        setCallLogNavBar();
+    }
     else {
         setDirectoryNavBar();
     }
+}
+
+function setCallLogNavBar() {
+    var id = 'callloghome';
+
+    var full = window.location.pathname;
+
+    //if( full.indexOf("/vacation-request/my-requests/") !== -1 ) {
+    //    id = 'myrequests';
+    //}
+
+    id = commonNavBar(full,id)
+
+    //if( full.indexOf("/call-logbook/re-identify") !== -1 ) {
+    //    id = null;
+    //}
+
+    $('#nav-bar-'+id).addClass('active');
 }
 
 function setVacReqNavBar() {

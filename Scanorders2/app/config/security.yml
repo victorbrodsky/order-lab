@@ -61,7 +61,7 @@ security:
 
 #        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
         #impersonate user: ?_switch_user=thomas
-        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_ALLOWED_TO_SWITCH, ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN, ROLE_VACREQ_ADMIN]
+        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_ALLOWED_TO_SWITCH, ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN, ROLE_VACREQ_ADMIN, ROLE_CALLLOG_ADMIN]
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
 
@@ -206,6 +206,29 @@ security:
                 path:     /vacation-request
 #                always_remember_me: true
 
+        ldap_calllog_firewall:
+                    pattern: ^/call-logbook
+                    context: scan_auth
+                    switch_user: true
+                    simple_form:
+                        authenticator: custom_authenticator
+                        use_referer: true
+                        success_handler: calllog_authentication_handler
+                        failure_handler: calllog_authentication_handler
+                        check_path: /call-logbook/login_check
+                        login_path: /call-logbook/login
+                    logout:
+                        path:   /call-logbook/logout
+                        target: /call-logbook/login
+                    anonymous:  true
+                    access_denied_url: /call-logbook/access-requests/new/create
+                    remember_me:
+                        key:      "%secret%"
+                        lifetime: 604800 # 1 week in seconds
+                        path:     /call-logbook
+        #                always_remember_me: true
+
+
     #Note: first match is used, the later would be ignored
     access_control:
 
@@ -303,3 +326,9 @@ security:
        - { path: ^/vacation-request/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/vacation-request/, role: ROLE_VACREQ_USER }
 
+      ############################## CallLog SITE SETTINGS ##############################
+       - { path: ^/call-logbook/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-logbook/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-logbook/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-logbook/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-logbook/, role: ROLE_CALLLOG_USER }

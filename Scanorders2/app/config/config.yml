@@ -6,6 +6,7 @@ imports:
     - { resource: "@OlegFellAppBundle/Resources/config/services.yml" }
     - { resource: "@OlegVacReqBundle/Resources/config/services.yml" }
     - { resource: "@OlegDeidentifierBundle/Resources/config/services.yml" }
+    - { resource: "@OlegCallLogBundle/Resources/config/services.yml" }
     - { resource: "@OlegUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
 
 
@@ -78,7 +79,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        ['OlegUserdirectoryBundle','OlegOrderformBundle','OlegFellAppBundle','OlegDeidentifierBundle','OlegVacReqBundle']
+    bundles:        ['OlegUserdirectoryBundle','OlegOrderformBundle','OlegFellAppBundle','OlegDeidentifierBundle','OlegVacReqBundle','OlegCallLogBundle']
     #java: /usr/bin/java
     filters:
 #         less:
@@ -132,6 +133,7 @@ doctrine:
                     OlegFellAppBundle: ~
                     OlegDeidentifierBundle: ~
                     OlegVacReqBundle: ~
+                    OlegCallLogBundle: ~
                     gedmo_tree:
                         type: annotation
                         prefix: Gedmo\Tree\Entity

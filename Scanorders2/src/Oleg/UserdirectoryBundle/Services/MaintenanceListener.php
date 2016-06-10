@@ -54,7 +54,8 @@ class MaintenanceListener {
                 strpos($controller,'Oleg\OrderformBundle') !== false ||
                 strpos($controller,'Oleg\FellAppBundle') !== false ||
                 strpos($controller,'Oleg\DeidentifierBundle') !== false ||
-                strpos($controller,'Oleg\VacReqBundle') !== false
+                strpos($controller,'Oleg\VacReqBundle') !== false ||
+                strpos($controller,'Oleg\CallLogBundle') !== false
         ) {
             // fire custom event e.g. My.db.lookup
             //echo "Sites controller! <br>";

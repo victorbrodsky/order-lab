@@ -147,7 +147,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 $fellappuploadpath = $row['fellappuploadpath'];
             }
             //vacreq
-            if (array_key_exists('fvacrequploadpath', $row)) {
+            if (array_key_exists('vacrequploadpath', $row)) {
                 $vacrequploadpath = $row['vacrequploadpath'];
             }
 

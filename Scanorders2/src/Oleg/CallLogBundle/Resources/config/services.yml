@@ -1,0 +1,38 @@
+parameters:
+
+    calllog.sitename: calllog
+    calllog.uploadpath:
+
+
+twig:
+    globals:
+        calllog_sitename: %calllog.sitename%
+        #service
+        calllog_util: "@calllog_util"
+
+
+services:
+
+    calllog_authentication_handler:
+        class: Oleg\CallLogBundle\Security\Authentication\CallLogLoginSuccessHandler
+        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+
+    calllog_role_voter:
+        class: Oleg\CallLogBundle\Security\Voter\CallLogRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    calllog_permission_voter:
+        class: Oleg\CallLogBundle\Security\Voter\CallLogPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    calllog_util:
+        class: Oleg\CallLogBundle\Util\CallLogUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
+

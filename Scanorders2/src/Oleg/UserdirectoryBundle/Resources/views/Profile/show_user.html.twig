@@ -32,6 +32,10 @@
         {% include 'OlegVacReqBundle:Default:navbar.html.twig' %}
     {% endif %}
 
+    {% if sitename == 'calllog' %}
+        {% include 'OlegCallLogBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
 {% endblock %}
 
 {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}

@@ -24,6 +24,10 @@ oleg_vacreq:
     type:     annotation
     prefix:   /vacation-request
 
+oleg_calllog:
+    resource: "@OlegCallLogBundle/Controller/"
+    type:     annotation
+    prefix:   /call-logbook
 
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
@@ -85,6 +89,11 @@ vacreq_login_check:
     path:   /vacation-request/login_check
 vacreq_logout:
     path:   /vacation-request/logout
+
+calllog_login_check:
+    path:   /call-logbook/login_check
+calllog_logout:
+    path:   /call-logbook/logout
 
 #fos user bundle
 #fos_user_security:

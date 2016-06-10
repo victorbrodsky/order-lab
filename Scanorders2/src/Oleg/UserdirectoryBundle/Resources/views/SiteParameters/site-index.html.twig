@@ -19,6 +19,10 @@
     {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
 {% endif %}
 
+{% if sitename == 'calllog' %}
+    {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
+{% endif %}
+
 {% extends extendStr%}
 
 

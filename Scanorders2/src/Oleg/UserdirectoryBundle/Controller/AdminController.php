@@ -851,6 +851,13 @@ class AdminController extends Controller
                 0
             ),
 
+            //////////// CALLLOG roles ////////////
+            "ROLE_CALLLOG_ADMIN" => array(
+                " Call Logbook Administrator",
+                "Full access for  Call Logbook site",
+                90
+            ),
+
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -1438,7 +1445,8 @@ class AdminController extends Controller
             'scan' => 'scan',
             'fellowship-applications' => 'fellapp',
             'deidentifier' => 'deidentifier',
-            'vacation-request' => 'vacreq'
+            'vacation-request' => 'vacreq',
+            'call-logbook' => 'calllog'
         );
 
 

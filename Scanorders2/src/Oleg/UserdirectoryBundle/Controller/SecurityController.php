@@ -59,6 +59,9 @@ class SecurityController extends Controller
         if( $routename == "vacreq_login" ) {
             $sitename = $this->container->getParameter('vacreq.sitename');
         }
+        if( $routename == "calllog_login" ) {
+            $sitename = $this->container->getParameter('calllog.sitename');
+        }
         //exit('sitename='.$sitename);
 
         //$sitename = $this->container->getParameter('employees.sitename');
@@ -180,6 +183,9 @@ class SecurityController extends Controller
         if( $routename == "vacreq_idlelogout" ) {
             $sitename = $this->container->getParameter('vacreq.sitename');
         }
+        if( $routename == "calllog_idlelogout" ) {
+            $sitename = $this->container->getParameter('calllog.sitename');
+        }
 
         $userSecUtil = $this->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
@@ -218,6 +224,10 @@ class SecurityController extends Controller
         if( $routename == "vacreq_setloginvisit" ) {
             $options['sitename'] = $this->container->getParameter('vacreq.sitename');
             $options['event'] = "Vacation Request login page visit";
+        }
+        if( $routename == "calllog_setloginvisit" ) {
+            $options['sitename'] = $this->container->getParameter('calllog.sitename');
+            $options['event'] = " Call Logbook login page visit";
         }
 
 

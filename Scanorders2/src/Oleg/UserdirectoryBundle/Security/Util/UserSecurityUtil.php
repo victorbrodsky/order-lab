@@ -381,6 +381,10 @@ class UserSecurityUtil {
                 $roles = array("ROLE_VACREQ_ADMIN");
             }
 
+            if( $sitename == $this->container->getParameter('calllog.sitename') ) {
+                $roles = array("ROLE_CALLLOG_ADMIN");
+            }
+
         } else {
             return null;
         }

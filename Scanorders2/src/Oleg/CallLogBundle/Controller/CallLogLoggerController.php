@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\VacReqBundle\Controller;
+namespace Oleg\CallLogBundle\Controller;
 
 
 use Symfony\Component\HttpFoundation\Request;
@@ -18,23 +18,23 @@ use Oleg\UserdirectoryBundle\Controller\LoggerController;
  *
  * @Route("/event-log")
  */
-class VacReqLoggerController extends LoggerController
+class CallLogLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
      *
-     * @Route("/", name="vacreq_logger")
+     * @Route("/", name="calllog_logger")
      * @Method("GET")
-     * @Template("OlegVacReqBundle:Logger:index.html.twig")
+     * @Template("OlegCallLogBundle:Logger:index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_VACREQ_ADMIN") ){
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_ADMIN") ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-		$params = array('sitename'=>$this->container->getParameter('vacreq.sitename'));
+		$params = array('sitename'=>$this->container->getParameter('calllog.sitename'));
         $loggerFormParams = $this->listLogger($params,$request);
 
         return $loggerFormParams;
@@ -42,9 +42,9 @@ class VacReqLoggerController extends LoggerController
 
 
     /**
-     * @Route("/user/{id}/all", name="vacreq_logger_user_all")
+     * @Route("/user/{id}/all", name="calllog_logger_user_all")
      * @Method("GET")
-     * @Template("OlegVacReqBundle:Logger:index.html.twig")
+     * @Template("OlegCallLogBundle:Logger:index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -54,7 +54,7 @@ class VacReqLoggerController extends LoggerController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->container->getParameter('vacreq.sitename'),
+            'sitename'=>$this->container->getParameter('calllog.sitename'),
             'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
@@ -72,9 +72,9 @@ class VacReqLoggerController extends LoggerController
 //    /**
 //     * Generation Log with eventTypes = "Generate Vacation Request"
 //     *
-//     * @Route("/generation-log/", name="vacreq_generation_log")
+//     * @Route("/generation-log/", name="calllog_generation_log")
 //     * @Method("GET")
-//     * @Template("OlegVacReqBundle:Logger:index.html.twig")
+//     * @Template("OlegCallLogBundle:Logger:index.html.twig")
 //     */
 //    public function generationLogAction(Request $request)
 //    {
@@ -85,9 +85,9 @@ class VacReqLoggerController extends LoggerController
 //    /**
 //     * Generation Log with eventTypes = "Generate Vacation Request" and users = current user id
 //     *
-//     * @Route("/event-log-per-user-per-event-type/", name="vacreq_my_generation_log")
+//     * @Route("/event-log-per-user-per-event-type/", name="calllog_my_generation_log")
 //     * @Method("GET")
-//     * @Template("OlegVacReqBundle:Logger:index.html.twig")
+//     * @Template("OlegCallLogBundle:Logger:index.html.twig")
 //     */
 //    public function myGenerationLogAction(Request $request)
 //    {
