@@ -853,9 +853,15 @@ class AdminController extends Controller
 
             //////////// CALLLOG roles ////////////
             "ROLE_CALLLOG_ADMIN" => array(
-                " Call Logbook Administrator",
+                "Call Logbook Administrator",
                 "Full access for  Call Logbook site",
                 90
+            ),
+
+            "ROLE_CALLLOG_USER" => array(
+                "Call Logbook User",
+                "Can create, edit and read call book entries",
+                30
             ),
 
         );

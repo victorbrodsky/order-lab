@@ -207,26 +207,26 @@ security:
 #                always_remember_me: true
 
         ldap_calllog_firewall:
-                    pattern: ^/call-logbook
-                    context: scan_auth
-                    switch_user: true
-                    simple_form:
-                        authenticator: custom_authenticator
-                        use_referer: true
-                        success_handler: calllog_authentication_handler
-                        failure_handler: calllog_authentication_handler
-                        check_path: /call-logbook/login_check
-                        login_path: /call-logbook/login
-                    logout:
-                        path:   /call-logbook/logout
-                        target: /call-logbook/login
-                    anonymous:  true
-                    access_denied_url: /call-logbook/access-requests/new/create
-                    remember_me:
-                        key:      "%secret%"
-                        lifetime: 604800 # 1 week in seconds
-                        path:     /call-logbook
-        #                always_remember_me: true
+            pattern: ^/call-logbook
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: calllog_authentication_handler
+                failure_handler: calllog_authentication_handler
+                check_path: /call-logbook/login_check
+                login_path: /call-logbook/login
+            logout:
+                path:   /call-logbook/logout
+                target: /call-logbook/login
+            anonymous:  true
+            access_denied_url: /call-logbook/access-requests/new/create
+            remember_me:
+                key:      "%secret%"
+                lifetime: 604800 # 1 week in seconds
+                path:     /call-logbook
+#                always_remember_me: true
 
 
     #Note: first match is used, the later would be ignored
@@ -332,3 +332,4 @@ security:
        - { path: ^/call-logbook/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/call-logbook/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/call-logbook/, role: ROLE_CALLLOG_USER }
+#       - { path: ^/call-logbook/, role: IS_AUTHENTICATED_ANONYMOUSLY }

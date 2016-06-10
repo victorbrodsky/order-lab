@@ -24,24 +24,6 @@ class DefaultController extends Controller
     }
 
 
-    /**
-     * @Route("/", name="calllog_home")
-     * @Template("OlegCallLogBundle:CallLog:home.html.twig")
-     */
-    public function homeAction(Request $request)
-    {
-
-        $title = "Call Case Log";
-
-        return array(
-            //'entity' => $entity,
-            //'form' => $form->createView(),
-            //'cycle' => $cycle,
-            'title' => $title,
-        );
-
-    }
-
 
     /**
      * Alerts

@@ -15,6 +15,823 @@
         {{ title }}
     </h4>
 
+    <br>
+
+
+
+    <!--*******************************      Begin Form      ***************************************-->
+
+    <form id="CallCaseForm" class="form-vertical" role="form">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-PatientInformation">
+                        Patient Information
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-PatientInformation" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <div class="form-group col-xs-5" align="left">
+                            {{ formmacros.simplefield('MRN:','','input') }}
+                            {{ formmacros.simplefield('Last Name:','','input') }}
+                        </div>
+
+                        <div class="form-group col-xs-5" align="left">
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <label>Date of Birth:</label>
+                                </div>
+                                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                                    <div class="input-group input-group-reg date allow-future-date">
+                                        <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="">
+                                        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            </p>
+
+                            {{ formmacros.simplefield('First Name:','','input') }}
+                        </div>
+
+                        <div class="form-group col-xs-1" align="left">
+                            <button id="Search_button" type="button" class="btn btn-lg btn-success" align="center" style="float:left; width:100%">Search</button>
+                        </div>
+
+                        <div class="form-group col-xs-1" align="left">
+                        </div>
+
+                    </div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-CallInformation">
+                        Call Information
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-CallInformation" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <div class="form-group col-xs-5" align="left">
+                            {#{{ formmacros.simplefield('Service:','','input') }}#}
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <label>Service:</label>
+                                </div>
+                                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                                    <select id="Service" name="Service" class="combobox" style="float:right;width: 70%">
+                                        <option value="All">Transfusion Medicine</option>
+                                        <option value="Microbiology">Microbiology</option>
+                                        <option value="Chemistry">Chemistry</option>
+                                        <option value="Coagulation">Coagulation</option>
+                                        <option value="Hematology">Hematology</option>
+                                        <option value="Molecular">Molecular</option>
+                                        <option value="Cytogenetics">Cytogenetics</option>
+                                    </select>
+                                </div>
+                            </div>
+                            </p>
+
+                            {#{{ formmacros.simplefield('Issue:','','input') }}#}
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <label>Issue:</label>
+                                </div>
+                                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                                    <select id="Service" name="Service" class="combobox" style="float:right;width: 70%">
+                                        <option value="First dose plasma">First dose plasma</option>
+                                        <option value="First dose platelets ">First dose platelets </option>
+                                        <option value="Third+ dose platelets">Third+ dose platelets</option>
+                                        <option value="Cryoprecipitate">Cryoprecipitate</option>
+                                        <option value="MTP">MTP</option>
+                                        <option value="Emergency release">Emergency release</option>
+                                        <option value="Payson transfusion">Payson transfusion</option>
+                                        <option value="Incompatible crossmatch">Incompatible crossmatch</option>
+                                        <option value="Transfusion reaction"> <a data-toggle="collapse" href="#TrfnRxnForm">Transfusion reaction</a></option>
+                                        <option value="Complex platelet summary">Complex platelet summary</option>
+                                        <option value="Complex factor summary">Complex factor summary</option>
+                                        <option value="WinRho">WinRho</option>
+                                        <option value="Special needs">Special needs</option>
+                                        <option value="Antibiotic sensitivity approval">Antibiotic sensitivity approval</option>
+                                        <option value="Viracor testing">Viracor testing</option>
+                                        <option value="Critical Value">Critical Value</option>
+                                        <option value="Aberrant analyte ">Aberrant analyte </option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            </p>
+
+
+                        </div>
+
+                        <div class="form-group col-xs-5" align="left">
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <label>Date:</label>
+                                </div>
+                                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                                    <div class="input-group input-group-reg date allow-future-date">
+                                        <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="">
+                                        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            </p>
+
+                            {{ formmacros.simplefield('Location:','','input') }}
+                        </div>
+
+                        <div class="form-group col-xs-2" align="left">
+                        </div>
+
+                    </div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-HistoryFindings">
+                        History/Findings
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-HistoryFindings" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12" align="left">
+                            <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry describing the call."></textarea>
+                        </div>
+                    </div>
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-ImpressionOutcome">
+                        Impression/Outcome
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-ImpressionOutcome" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12" align="left">
+                            <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry."></textarea>
+                        </div>
+                    </div>
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+        <p>
+            <button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>
+        </p>
+
+    </form>
+
+                                {#<div class="form-group col-xs-2" align="left" >#}
+                                    {#<input type="text" id="PatientName" name="Patient_First_Name" class="textbox form-control" placeholder="First Name" style="float:left; width:100%"/>#}
+                                    {#<input type="text" id="PatientName" name="Patient_Last_Name" class="textbox form-control" placeholder="Last Name" style="float:left; width:100%"/>#}
+                                {#</div>#}
+                                {#<div class="form-group col-xs-2" align="Left">#}
+                                    {#<div class="form-inline"><label for="MRN" class="label label-default control-label">MRN: </label>#}
+                                        {#<input type="text" id="MRN" name="MRN" class="input-small form-control" placeholder="MRN" style="float:right; width:75%"/> </div>#}
+                                    {#<button id="Search_button" type="button" class="btn btn-success" onclick="checkMRNFirstLast(this)" align="center" style="float:left; width:100%">Search</button>#}
+                                {#</div>#}
+                                {#<div class="form-group col-xs-2">#}
+                                    {#<div class="form-inline"><label for="DOB" class="label label-default" style="float:left">DOB: </label>#}
+                                        {#<input type="date" name="DOB" id="DOB" class="input-small form-control" placeholder="dd/mm/yyyy" style="width: 50%"></div>#}
+                                    {#<div class="form-inline"><label for="Age" style="float:left" class="label label-default">Age: </label><input type="text" name="Age" id="Age" class="input-small" placeholder="Age" style="width: 50%"></div>#}
+                                {#</div>#}
+                                {#<div class="form-group col-xs-2">#}
+                                    {#<div class="form-inline"><label for="DOCC" style="float:left" class="label label-default">Case Date: </label>#}
+                                        {#<input type="datetime-local" name="DOCC" id="DOCC" class="input-small form-control" placeholder="dd/mm/yyyy" style="width: 165px"> </div>#}
+
+                                {#</div>#}
+                                {#<div class="form-group col-xs-2">#}
+                                    {#<div class="form-inline"><label for="Location" style="float:left" class="label label-default">Location: </label>#}
+                                        {#<input type="text" name="Location" id="Location" class="input-small form-control" placeholder="Location" style="width: 50%"> </div>#}
+                                    {#<div class="form-inline"><label for="Callback" style="float:left" class="label label-default">Call #: </label><input type="text" name="Callback" id="Callback" class="input-small" placeholder="Callback" align="right" style="width: 50%"></div>#}
+                                {#</div>#}
+                                {#<div class="form-group col-xs-2">#}
+                                    {#<div class="form-inline"><label for="Service" class="label label-default">Service: </label>#}
+                                        {#<select id="Service" name="Service" class="combobox" style="float:right;width: 70%">#}
+                                            {#<option value="All">Transfusion Medicine</option>#}
+                                            {#<option value="Microbiology">Microbiology</option>#}
+                                            {#<option value="Chemistry">Chemistry</option>#}
+                                            {#<option value="Coagulation">Coagulation</option>#}
+                                            {#<option value="Hematology">Hematology</option>#}
+                                            {#<option value="Molecular">Molecular</option>#}
+                                            {#<option value="Cytogenetics">Cytogenetics</option>#}
+                                        {#</select></div>#}
+                                    {#<div class="form-inline"><label for="Issue" class="label label-default">Issue:</label>#}
+                                        {#<select id="Issue" name="Issue" class="combobox" style="float:right;width: 70%">#}
+                                            {#<option value="First dose plasma">First dose plasma</option>#}
+                                            {#<option value="First dose platelets ">First dose platelets </option>#}
+                                            {#<option value="Third+ dose platelets">Third+ dose platelets</option>#}
+                                            {#<option value="Cryoprecipitate">Cryoprecipitate</option>#}
+                                            {#<option value="MTP">MTP</option>#}
+                                            {#<option value="Emergency release">Emergency release</option>#}
+                                            {#<option value="Payson transfusion">Payson transfusion</option>#}
+                                            {#<option value="Incompatible crossmatch">Incompatible crossmatch</option>#}
+                                            {#<option value="Transfusion reaction"> <a data-toggle="collapse" href="#TrfnRxnForm">Transfusion reaction</a></option>#}
+                                            {#<option value="Complex platelet summary">Complex platelet summary</option>#}
+                                            {#<option value="Complex factor summary">Complex factor summary</option>#}
+                                            {#<option value="WinRho">WinRho</option>#}
+                                            {#<option value="Special needs">Special needs</option>#}
+                                            {#<option value="Antibiotic sensitivity approval">Antibiotic sensitivity approval</option>#}
+                                            {#<option value="Viracor testing">Viracor testing</option>#}
+                                            {#<option value="Critical Value">Critical Value</option>#}
+                                            {#<option value="Aberrant analyte ">Aberrant analyte </option>#}
+                                            {#<option value="Other">Other</option>#}
+                                        {#</select></div>#}
+
+                                {#</div>#}
+
+
+
+
+                            {#</div>#}
+                            {#</p>#}
+
+
+                            {#<p>#}
+                                {#<div class="form-group row">#}
+
+                                    {#<div class="col-xs-2" align="right">#}
+                            {#<p>#}
+                                {#<Label>History and Findings:</Label>#}
+                            {#</p>#}
+                        {#</div>#}
+
+                        {#<div class="col-xs-10" align="left">#}
+                            {#<textarea id="History_and_Findings" class="textarea form-control input-lg"></textarea>#}
+
+                        {#</div>#}
+
+                    {#</div>#}
+                    {#</p>#}
+
+                    {#<!--*******************************      This part for Transfusion reaction Template      ***************************************-->#}
+                    {#<div class="form-group row container">#}
+
+                        {#<div class="col-xs-2" align="right">#}
+                            {#<!-- this button is a placeholder so I could implement the hidden panel element for this template. It shouldn't be present in the final form-->#}
+                            {#<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#TrfnRxnForm" style="font-size: 10pt; float: left"><p>Transfusion</p> <p>Reaction</p></button>#}
+
+                        {#</div>#}
+
+                        {#<div class="col-xs-10" align="left">#}
+                            {#<div id="TrfnRxnForm" class="collapse">#}
+                                {#<label>Pre-Transfusion Vital Signs: </label>#}
+                                {#<div class="form-group">#}
+                                    {#<label for="PreTemp">Temp: </label>#}
+                                    {#<input type="text" name="PreTemp" id="PreTemp" class="input-small" placeholder="C" style="width: 50px">#}
+
+                                    {#<label for="PreHR">HR: </label>#}
+                                    {#<input type="text" name="PreHR" id="PreHR" class="input-small" placeholder="BPM" style="width: 50px">#}
+
+                                    {#<label for="PreRR">RR: </label>#}
+                                    {#<input type="text" name="PreRR" id="PreRR" class="input-small" placeholder="BPM" style="width: 50px">#}
+
+                                    {#<label for="PreO2sat">O2 Sat: </label>#}
+                                    {#<input type="text" name="PreO2sat" id="PreO2sat" class="input-small" placeholder="%" style="width: 50px">#}
+
+                                    {#<label for="PreSBP">BP: </label>#}
+                                    {#<input type="text" name="PreSBP" id="PreSBP" class="input-small" placeholder="SBP" style="width: 50px">#}
+                                    {#/#}
+                                    {#<input type="text" name="PreDBP" id="PreDBP" class="input-small" placeholder="DBP" style="width: 50px">#}
+
+                                {#</div>#}
+                                {#<label>Post-Transfusion Vital Signs: </label>#}
+                                {#<div class="form-group">#}
+                                    {#<label for="PostTemp">Temp: </label>#}
+                                    {#<input type="text" name="PostTemp" id="PostTemp" class="input-small" placeholder="C" style="width: 50px">#}
+
+                                    {#<label for="PostHR">HR: </label>#}
+                                    {#<input type="text" name="PostHR" id="PostHR" class="input-small" placeholder="BPM" style="width: 50px">#}
+
+                                    {#<label for="PostRR">RR: </label>#}
+                                    {#<input type="text" name="PostRR" id="PostRR" class="input-small" placeholder="BPM" style="width: 50px">#}
+
+                                    {#<label for="PostO2sat">O2 Sat: </label>#}
+                                    {#<input type="text" name="PostO2sat" id="PostO2sat" class="input-small" placeholder="%" style="width: 50px">#}
+
+                                    {#<label for="PostSBP">BP: </label>#}
+                                    {#<input type="text" name="PostSBP" id="PostSBP" class="input-small" placeholder="SBP" style="width: 50px">#}
+                                    {#/#}
+                                    {#<input type="text" name="PostDBP" id="PostDBP" class="input-small" placeholder="DBP" style="width: 50px">#}
+
+                                {#</div>#}
+                                {#<label>Blood Product Transfused:</label>#}
+                                {#<select id="#" name="filter_search_box[TrfnRxn]" class="combobox combobox-width">#}
+                                    {#<option value=""> </option>#}
+                                    {#<option value="RBC">Red blood cells</option>#}
+                                    {#<option value="Platelets">Platelets</option>#}
+                                    {#<option value="Plasma">Plasma</option>#}
+                                    {#<option value="Cryoglobulin">Cryoglobulin</option>#}
+                                    {#<option value="Stem cells">Stem cells</option>#}
+                                    {#<option value="Other">Other</option>#}
+                                {#</select>#}
+                                {#<label>Transfusion Reaction:</label>#}
+                                {#<select id="#" name="filter_search_box[TrfnRxn]" class="combobox combobox-width">#}
+                                    {#<option value=""> </option>#}
+                                    {#<option value="FNHTR">FNHTR</option>#}
+                                    {#<option value="Allergic">Allergic</option>#}
+                                    {#<option value="Underlying condition">Underlying condition</option>#}
+                                    {#<option value="No transfusion reaction">No transfusion reaction</option>#}
+                                    {#<option value="Anaphylactic">Anaphylactic</option>#}
+                                    {#<option value="TACO">TACO</option>#}
+                                    {#<option value="TRALI">TRALI</option>#}
+                                    {#<option value="Hemolytic">Hemolytic</option>#}
+                                    {#<option value="Delayed serologic">Delayed serologic</option>#}
+                                    {#<option value="Hypotensive">Hypotensive</option>#}
+                                    {#<option value="Bacterial">Bacterial</option>#}
+                                    {#<option value="Other">Other</option>#}
+                                {#</select>#}
+                                {#<p><label>Transfusion Reaction Workup:</label> <textarea id="Reaction_Workup" class="textarea form-control">The remainder of the unit (was/was not) returned to the Blood Bank along with a post-transfusion blood sample. A transfusion reaction work-up (was/was not) performed and recorded:</textarea></p>#}
+                                {#<label>Clerical Error:</label>#}
+                                {#<select id="#" name="#" class="combobox combobox-width">#}
+                                    {#<option value="None">None</option>#}
+                                    {#<option value="Yes">Yes</option>#}
+                                {#</select>#}
+                                {#<p><label>Blood type of unit:</label>#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="A+">A+</option>#}
+                                        {#<option value="A-">A-</option>#}
+                                        {#<option value="B+">B+</option>#}
+                                        {#<option value="B-">B-</option>#}
+                                        {#<option value="O+">O+</option>#}
+                                        {#<option value="O-">O-</option>#}
+                                    {#</select>#}
+                                {#</p>#}
+                                {#<p><label>Blood type of pre-/post-transfusion specimen:</label>#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="A+">A+</option>#}
+                                        {#<option value="A-">A-</option>#}
+                                        {#<option value="B+">B+</option>#}
+                                        {#<option value="B-">B-</option>#}
+                                        {#<option value="O+">O+</option>#}
+                                        {#<option value="O-">O-</option>#}
+                                    {#</select>#}
+                                    {#/#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="A+">A+</option>#}
+                                        {#<option value="A-">A-</option>#}
+                                        {#<option value="B+">B+</option>#}
+                                        {#<option value="B-">B-</option>#}
+                                        {#<option value="O+">O+</option>#}
+                                        {#<option value="O-">O-</option>#}
+                                    {#</select>#}
+                                {#</p>#}
+                                {#<p><label>Pre-/Post-transfusion antibody screen:</label>#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="Positive">Postive</option>#}
+                                        {#<option value="Negative">Negative</option>#}
+                                    {#</select>#}
+                                    {#/#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="Positive">Postive</option>#}
+                                        {#<option value="Negative">Negative</option>#}
+                                    {#</select>#}
+                                {#</p>#}
+                                {#<p><label>Pre-/Post-transfusion DAT:</label>#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="Positive">Postive</option>#}
+                                        {#<option value="Negative">Negative</option>#}
+                                    {#</select>#}
+                                    {#/#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="Positive">Postive</option>#}
+                                        {#<option value="Negative">Negative</option>#}
+                                    {#</select>#}
+                                {#</p>#}
+                                {#<p><label>Pre-/Post-transfusion crossmatch:</label>#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="Compatible">Compatible</option>#}
+                                        {#<option value="Incompatible">Incompatible</option>#}
+                                    {#</select>#}
+                                    {#/#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="Compatible">Compatible</option>#}
+                                        {#<option value="Incompatible">Incompatible</option>#}
+                                    {#</select>#}
+                                {#</p>#}
+                                {#<p><label>Pre-/Post-transfusion hemolysis check:</label>#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="Hemolysis">Hemolysis</option>#}
+                                        {#<option value="No hemolysis">No hemolysis</option>#}
+                                    {#</select>#}
+                                    {#/#}
+                                    {#<select id="#" name="#" class="combobox combobox-width">#}
+                                        {#<option value=""> </option>#}
+                                        {#<option value="Hemolysis">Hemolysis</option>#}
+                                        {#<option value="No hemolysis">No hemolysis</option>#}
+                                    {#</select>#}
+                                {#</p>#}
+                                {#<label>Microbiology:</label> <textarea id="Reaction_Workup" class="textarea form-control">a gram stain of the unit was (negative/positive). Cultures are (no growth to date/positive for...)</textarea>#}
+
+                            {#</div>#}
+
+                        {#</div>#}
+                    {#</div>#}
+
+                    {#<!--*******************************      End Transfusion reaction Template      ***************************************-->#}
+
+
+
+
+
+                    {#<!--*******************************      This part for Complex Platelet Patient Template      ***************************************-->#}
+                    {#<div class="form-group form-vertical container">#}
+
+                        {#<div class="col-xs-2" align="right">#}
+                            {#<!-- this button is a placeholder so I could implement the hidden panel element for this template. It shouldn't be present in the final form-->#}
+                            {#<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#ComplexPlateletTemplate" style="font-size: 10pt; float: left"><p>Complex</p> <p>Platelet</p></button>#}
+                        {#</div>#}
+
+                        {#<div class="col-xs-10" align="left">#}
+                            {#<div id="ComplexPlateletTemplate" Class="collapse">#}
+
+                                {#<div class="form-group row">#}
+                                    {#<div class="form-inline">#}
+                                        {#<div class="checkbox col-xs-5">#}
+                                            {#<label class="checkbox"><input type="checkbox" value=""> Active Patient </label>#}
+                                        {#</div>#}
+
+                                        {#<div class="radio col-xs-4">#}
+                                            {#<label ><input type="radio" name="optloc"> Inpatient </label>#}
+                                            {#<label ><input type="radio" name="optloc"> Outpatient </label>#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#</div>#}
+
+                                {#<div class="form-group form-inline row">#}
+                                    {#<div class="form-inline col-xs-5"><label for="HLA_A">HLA A:</label>#}
+                                        {#<input type="text" name="HLA_A" id="HLA_A" class="input-small" style="width: 50px">#}
+                                    {#</div>#}
+
+                                    {#<div class="form-inline col-xs-4"><label for="HLA_B">HLA B:</label>#}
+                                        {#<input type="text" name="HLA_B" id="HLA_B" class="input-small" style="width: 50px">#}
+                                    {#</div>#}
+                                {#</div>#}
+                                {#<div class="form-group form-inline row">#}
+                                    {#<div class="form-inline col-xs-5"><label for="RogoDate">Rogosin Date: </label>#}
+                                        {#<input type="date" name="RogoDate" id="RogoDate" class="input-small" placeholder="dd/mm/yyyy" style="width: 150px">#}
+                                    {#</div>#}
+                                    {#<div class="form-inline col-xs-4"><label for="RogoPRA">Rogosin PRA:</label>#}
+                                        {#<input type="text" name="RogoPRA" id="RogoPRA" class="input-small" style="width: 50px"> %#}
+                                    {#</div>#}
+                                {#</div>#}
+
+                                {#<div class="form-group form-inline row">#}
+                                    {#<div class="form-inline col-xs-5"><label for="NYBCDate">NYBC Date: </label>#}
+                                        {#<input type="date" name="NYBCDate" id="NYBCDate" class="input-small" placeholder="dd/mm/yyyy" style="width: 150px"> </div>#}
+                                    {#<div class="col-xs-5">#}
+                                        {#Antibodies:#}
+                                        {#<div class="checkbox">#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> HLA </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> HPA </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> None </label>#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#</div>#}
+
+                                {#<div class="form-group form-inline row">#}
+                                    {#<div class="col-xs-10">#}
+                                        {#<label>Currently Receiving: </label>#}
+                                        {#<div class="checkbox">#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> HLA Platelets </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> XM Platelets </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> Regular Platelets </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> Platelet Drip </label>#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#</div>#}
+                                {#<div class="form-group form-inline row">#}
+                                    {#<div class="col-xs-10">#}
+                                        {#<label>Should Be receiving: </label>#}
+                                        {#<div class="checkbox">#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> HLA Platelets </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> XM Platelets </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> Regular Platelets </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> Platelet Drip </label>#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#</div>#}
+                                {#<div class="form-group form-inline row">#}
+                                    {#<div class="col-xs-8">#}
+                                        {#<label>Product Status: </label>#}
+                                        {#<div class="checkbox">#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> Ordered </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> Not ordered </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> Pending </label>#}
+                                            {#<label class="checkbox-inline"><input type="checkbox" value=""> In-house </label>#}
+                                        {#</div>#}
+
+                                    {#</div>#}
+                                    {#<div class="form-inline col-xs-3"><label for="ExpiresDate">Expires: </label>#}
+                                        {#<input type="date" name="ExpiresDate" id="ExpiresDate" class="input-small" placeholder="dd/mm/yyyy" style="width: 150px">#}
+                                    {#</div>#}
+                                {#</div>#}
+
+                                {#<!-- CCI calculator#}
+                                             {#var PltInBag#}
+                                             {#PltInBag = 300       unless otherwise specified#}
+                                             {#CCI = BSA x (prePltCount - postPltCount)/PltInBag#}
+                                {#-->#}
+
+                                {#<div class="form-group" id="CCI_calculations">#}
+                                    {#<label>CCI Calculations: </label>#}
+                                    {#<div class="form-inline">#}
+                                        {#<label for="BSA" style="float:left">BSA: </label>#}
+                                        {#<input type="text" name="BSA" id="BSA" class="input-small" placeholder="BSA" style="width: 50px"> <!-- BSA is a number -->#}
+                                    {#</div>#}
+
+                                    {#<div class="form-inline" id="CCIgroup_1">#}
+                                        {#<div class="form-group">#}
+                                            {#<label for="CCIdate_1" style="float:left">CCI Date: </label>#}
+                                            {#<input type="datetime-local" name="CCIdate_1" id="CCIdate_1" class="input-small" placeholder="mm/dd/yy" style="width: 165px">#}
+                                        {#</div>#}
+
+                                        {#<div class="form-group">#}
+                                            {#<label for="prePltCount_1" style="float:left">Pre-Count: </label>#}
+                                            {#<input type="text" name="prePltCount_1" id="prePltCount_1" class="input-small" placeholder="x 10^3/uL" style="width: 70px" onblur="calcCCI(1)">#}
+                                        {#</div>#}
+                                        {#<div class="form-group">#}
+                                            {#<label for="postPltCount_1" style="float:left">Post-Count: </label>#}
+                                            {#<input type="text" name="postPltCount_1" id="postPltCount_1" class="input-small" placeholder="x 10^3/uL" style="width: 70px" onblur="calcCCI(1)">#}
+                                        {#</div>#}
+                                        {#<div class="form-group">#}
+                                            {#<label for="CCI_1" style="float:left">CCI: </label>#}
+                                            {#<input type="text" name="CCI_1" id="CCI_1" class="input-small" placeholder="CCI" style="width: 50px"></div>#}
+                                        {#<button type="button" onclick="AddCCIform()" >Add</button><button type="button" onclick="" >Delete</button>#}
+
+                                    {#</div>#}
+
+
+
+
+                                {#</div>#}
+                                {#<!-- end CCI calculator -->#}
+
+                            {#</div>#}
+
+                        {#</div>#}
+                    {#</div>#}
+
+                    {#<!--*******************************      End Complex Platelet Patient Template      ***************************************-->#}
+
+
+
+                    {#<p>#}
+                        {#<div class="form-group row">#}
+
+                            {#<div class="col-xs-2" align="right">#}
+                    {#<p>#}
+                        {#<label>Impression/ Outcome:</label>#}
+                    {#</p>#}
+                {#</div>#}
+
+                {#<div class="col-xs-10" align="left">#}
+                    {#<textarea id="Impression_Outcome" class="textarea form-control"></textarea>#}
+
+                {#</div>#}
+
+        {#</div>#}
+        {#</p>#}
+        {#<p>#}
+            {#<div class="form-inline">#}
+
+                {#<div class="col-xs-2" align="right">#}
+        {#<p>#}
+            {#<label>Laboratory Values:</label>#}
+        {#</p>#}
+    {#</div>#}
+
+    {#<div id="labresultrow_1" class="form-inline">#}
+        {#<select id="labresults_search_box_service_1" name="filter_search_box[service]" class="combobox combobox-width">#}
+            {#<option value="Hemoglobin">Hemoglobin</option>#}
+            {#<option value="Platelets">Platelets</option>#}
+            {#<option value="INR">INR</option>#}
+            {#<option value="PT">PT</option>#}
+            {#<option value="PTT">PTT</option>#}
+            {#<option value="CCI">CCI</option>#}
+            {#<option value="Fibrinogen">Fibrinogen</option>#}
+        {#</select>#}
+        {#<input type="text" name="Lab_Value" id="labvalue_1" placeholder="Value" >#}
+        {#<input type="text" name="units" id="labunits_1" placeholder="Units" >#}
+        {#<button type="button" onclick="AddLabValue(this)" >Add</button>#}
+        {#<button type="button" onclick="DeleteLabValue(this)" >Delete</button>#}
+    {#</div>#}
+
+    {#</p>#}
+    {#<p>#}
+        {#<div class="form-group row">#}
+
+            {#<div class="col-xs-2" align="right">#}
+    {#<p>#}
+        {#<Label>Contact Information:</Label>#}
+    {#</p>#}
+    {#</div>#}
+
+    {#<div class="col-xs-2" align="left">	<input type="text" name="Lab_Value" id="Lab_Value1" placeholder="Contact Name">	</div>#}
+    {#<div class="col-xs-2" align="left">	<input type="text" name="Lab_Value" id="Lab_Value1" placeholder="Contact Number">	</div>#}
+    {#<div class="col-xs-3" style="float: right"> <button id="Add_Lab_Value_button" type="button" onclick="AddLabValue(this)" align="center" style="width:50px">Add</button>#}
+        {#<button id="Delete_Lab_Value_button" type="button" onclick="DeleteLabValue(this)" style="width:60px">Delete</button> </div>#}
+    {#</div>#}
+    {#</p>#}
+
+
+    {#</div>#}
+    {#</div>#}
+
+
+    {#<div class="row">#}
+        {#<p>#}
+            {#<button class="btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>#}
+        {#</p>#}
+        {#<p>#}
+            {#<button id="save_order_onidletimeout_btn" class="btn btn-default" name="btnSaveOnIdleTimeout" type="submit" style="display: none;">Save and Continue Later</button>#}
+        {#</p>#}
+    {#</div>#}
+
+    {#</div>#}
+
+    {#</form>#}
+
+    {#<br>#}
+
+    {#<!--Historical Entries Called if Patient Name/MRN search -->#}
+    {#<div id="Historical_Entries" class="panel panel-primary">#}
+
+        {#<div class="panel-heading">#}
+            {#<h4 class="panel-title">Historical Entries</h4>#}
+        {#</div>#}
+        {#<div id="main" class="panel-body collapse in">#}
+            {#<table class="table table-hover table-condensed table-striped text-left">#}
+                {#<thead>#}
+                {#<tr>#}
+
+                    {#<th><a translationCount="" class="sortable" href="#" title="ID">ID</a></th>#}
+                    {#<th><a translationCount="" class="sortable" href="#" title="Date Last Modified">Last Modified</a></th>#}
+                    {#<th><a translationCount="" class="sortable" href="#" title="Patient Name">Patient Name</a></th>#}
+                    {#<th><a translationCount="" class="sortable" href="#" title="MRN">MRN</a></th>#}
+                    {#<th><a translationCount="" class="sortable" href="#" title="Location">Location</a></th>#}
+                    {#<th><a translationCount="" class="sortable" href="#" title="Call Issue">Call Issue</a></th>#}
+                    {#<th><a translationCount="" class="sortable" href="#" title="Author">Author</a></th>#}
+                    {#<th><a translationCount="" class="sortable" href="#" title="Date Created">Date Created</a></th>#}
+                    {#<th>Actions</th>#}
+                {#</tr>#}
+                {#</thead>#}
+
+                {#<tbody class="rowlink" data-link="row">#}
+
+
+                {#<!-- Call Entries List -->#}
+
+                {#<tr class="">#}
+
+
+                    {#<td> </td>#}
+
+                    {#<td></td>#}
+
+                    {#<td></td>#}
+
+                    {#<td class="rowlink-skip">  </td>#}
+                    {#<!-- Link to patient MRN -->#}
+
+                    {#<td></td>#}
+
+                    {#<td> </td>#}
+
+                    {#<td class="rowlink-skip"></td>#}
+                    {#<!-- Link to user, display only MRN -->#}
+
+                    {#<td></td>#}
+
+                    {#<td class="rowlink-skip">#}
+
+                        {#<!-- Modal -->#}
+                        {#<div class="modal fade" id="addComment_4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
+                            {#<div class="modal-dialog">#}
+                                {#<div class="modal-content">#}
+                                    {#<div class="modal-header">#}
+                                        {#<button type="button" class="close comment_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
+                                        {#<h4 class="modal-title text-center" id="myModalLabel">Add Comment for Entry 4</h4>#}
+                                    {#</div>#}
+                                    {#<div class="modal-body">#}
+
+                                        {#<div id="modal_error_4" class="modal_error_div"></div>#}
+
+                                        {#<form id="addcomment_form">#}
+
+
+                                            {#<select id="modal-processor-comment" class="combobox">#}
+                                                {#<option></option>#}
+                                                {#<option value="Let's Discuss this at signout">Let's Discuss this at signout</option>#}
+                                                {#<option value="Relevant resources">Relevant resources</option>#}
+                                                {#<option value="Please complete this entry">Please complete this entry</option>#}
+                                            {#</select>#}
+
+                                            {#<br>#}
+                                            {#<br>#}
+
+
+                                            {#<div class="row">#}
+                                                {#<div class="col-xs-12">#}
+
+                                                    {#<p>#}
+
+                                                        {#<input type="hidden" id="baseurl" value="c.med.cornell.edu/order" />#}
+                                                        {#<textarea id="addcomment_text" name="addcomment" type="textarea" class="textarea form-control" maxlength="5000" required></textarea>#}
+                                                    {#</p>#}
+
+                                                {#</div>#}
+                                            {#</div>#}
+
+                                            {#<div class="center-block">#}
+                                                {#<input id="AddNewComment" class="btn btn-primary center-block" type="button" value="Add Comment" onclick="submitNewComment(4);" />#}
+                                            {#</div>#}
+
+                                        {#</form>#}
+
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#</div>#}
+
+
+                        {#<div class="btn-group">#}
+                            {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                                {#Action <span class="caret"></span>#}
+                            {#</button>#}
+
+
+                            {#<ul class="dropdown-menu dropdown-menu-right">#}
+
+                                {#<li><a href="#">Edit Entry</a></li>#}
+                                {#<li><a href="#">View Entry History & Comments</a></li>#}
+                                {#<li>#}
+                                    {#<a href="#" data-toggle="modal" data-target="#addComment_4">Add Comment</a>#}
+                                {#</li>#}
+                                {#<li><a data-confirm="Are you sure you want to duplicate data?" data-ok="Duplicate" data-cancel="Do not duplicate" class="action-cancel-status" href="/order/scan/scan-order/4/status/cancel/">Generate new entry for same patient issue</a>#}
+                                {#</li>#}
+
+                            {#</ul>#}
+
+                        {#</div>#}
+
+
+                    {#</td>#}
+                {#</tr>#}
+                {#<tr>#}
+                    {#<td></td>#}
+                    {#<td colspan="7"> </td>#}
+                {#</tr>#}
+                {#<!-- Display of entry body data -->#}
+                {#</tbody>#}
+            {#</table>#}
+
+        {#</div>#}
+    {#</div>#}
+
+
 
 {% endblock %}
 

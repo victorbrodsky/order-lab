@@ -33,13 +33,13 @@ class DeidentifierPermissionVoter extends BasePermissionVoter //BasePermissionVo
     }
 
 
-    protected function canEdit($subject, TokenInterface $token) {
-        return false;
-    }
-
-    protected function canChangeStatus($subject, TokenInterface $token) {
-        return false;
-    }
+//    protected function canEdit($subject, TokenInterface $token) {
+//        return false;
+//    }
+//
+//    protected function canChangeStatus($subject, TokenInterface $token) {
+//        return false;
+//    }
 
 
 

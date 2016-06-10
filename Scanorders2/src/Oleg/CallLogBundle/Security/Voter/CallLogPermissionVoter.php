@@ -30,6 +30,14 @@ class CallLogPermissionVoter extends BasePermissionVoter //BasePermissionVoter  
     }
 
 
+    protected function canEdit($subject, TokenInterface $token) {
+        return false;
+    }
+
+    protected function canChangeStatus($subject, TokenInterface $token) {
+        return false;
+    }
+
 
 }
 
