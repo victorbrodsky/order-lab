@@ -1350,19 +1350,21 @@ class RequestController extends Controller
 
         //find unique users
         $userUniqueRequests = $this->findUniqueUserRequests();
+        //exit('1');
 
         $count = 1;
         foreach( $userUniqueRequests as $userUniqueRequest ) {
+            $userId = $userUniqueRequest['userId'];
 //            $logger->error($count." ########## user: ".$userUniqueRequest->getUser());
 //            echo $count." ########## user: ".$userUniqueRequest->getUser()."<br>";
-            $count = $this->analyzeRequests($userUniqueRequest->getUser(),$count);
+            $count = $this->analyzeRequests($userId,$count);
             //$logger->error('#########################');
             //echo "#########################<br><br>";
             //$count++;
         }
 
 
-        exit();
+        exit('2');
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
     public function findUniqueUserRequests() {
@@ -1370,7 +1372,8 @@ class RequestController extends Controller
         $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
 
         $dql =  $repository->createQueryBuilder("request");
-        $dql->select('request');
+        //$dql->select('request');
+        $dql->select('DISTINCT user.id as userId');
 
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("request.requestType", "requestType");
@@ -1379,17 +1382,18 @@ class RequestController extends Controller
         $dql->where("requestType.abbreviation = 'business-vacation'");
         $dql->andWhere("requestVacation.status='approved'");
 
-        $dql->groupBy('user.id');
+        //$dql->groupBy('user.id');
+        //$dql->addGroupBy('request');
 
-        $dql->orderBy('request.id');
+        //$dql->orderBy('request.id');
 
         $query = $em->createQuery($dql);
 
         $requests = $query->getResult();
-        //echo "requests with users=".count($requests)."<br>";
+        echo "requests with users=".count($requests)."<br>";
         return $requests;
     }
-    public function analyzeRequests($user,$count=1) {
+    public function analyzeRequests($userId,$count=1) {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
@@ -1404,9 +1408,9 @@ class RequestController extends Controller
 
         $dql->where("requestType.abbreviation = 'business-vacation'");
         $dql->andWhere("requestVacation.status='approved'");
-        $dql->andWhere("user.id=".$user->getId());
+        $dql->andWhere("user.id=".$userId);
 
-        $dql->orderBy('request.id');
+        $dql->orderBy('request.createDate', 'DESC');
 
         $query = $em->createQuery($dql);
 
@@ -1417,6 +1421,7 @@ class RequestController extends Controller
         $overlap = $vacreqUtil->getNotOverlapNumberOfWorkingDays($requests,'requestVacation');
 
         if( $overlap ) {
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
             $logger->error($count." ^########## user: " . $user);
             echo $count." ^########## user: " . $user . "<br><br><br>";
             $count++;

@@ -1241,7 +1241,9 @@ class VacReqUtil
                     } else {
                         $startDateStr = $thisDateRange['startDate']->format('Y/m/d');
                         $endDateStr = $thisDateRange['endDate']->format('Y/m/d');
-                        $msg .= $requestId . ": overlap dates ID=" . $request->getId() . "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr;
+                        $msg .= $requestId . ": overlap dates ID=" . $request->getId() .
+                            "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr.
+                            "; created=".$request->getCreateDate()->format('Y/m/d');
                         echo $msg . "<br>";
                         $logger->error($msg);
                         $overlap = true;
