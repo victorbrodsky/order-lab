@@ -374,16 +374,23 @@ class RequestController extends Controller
         $form->handleRequest($request);
 
         //check for overlapped date range
-        $routeName = $request->get('_route');
-        if( $routeName == "vacreq_edit" && $entity->getRequestType()->getAbbreviation() == "business-vacation" && $entity->getId() ) {
-            $overlappedRequestIds = $vacreqUtil->checkForOverlapDates($user, $entity);
-            if (count($overlappedRequestIds) > 0) {
-                $errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
-                $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
-                //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
-            } else {
-                //exit('no overlaps found');
-            }
+        //$overallStatus = $entity->getStatus();
+        //$routeName = $request->get('_route');
+        if( $entity->getRequestType()->getAbbreviation() == "business-vacation" ) {
+//            if (
+//                $routeName == "vacreq_edit"
+//                ||
+//                $routeName == "vacreq_review" && $overallStatus == "completed"
+//            ) {
+                $overlappedRequestIds = $vacreqUtil->checkForOverlapDates($user, $entity);
+                if (count($overlappedRequestIds) > 0) {
+                    $errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
+                    $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
+                    //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
+                } else {
+                    //exit('no overlaps found');
+                }
+//            }
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -594,6 +601,24 @@ class RequestController extends Controller
             );
             return $this->redirectToRoute('vacreq_incomingrequests');
         }
+
+
+        //check for overlapped date range if a new status is approved
+        if( $status == "approved" ) {
+            $vacreqUtil = $this->get('vacreq_util');
+            $overlappedRequestIds = $vacreqUtil->checkForOverlapDates($user, $entity);
+            if (count($overlappedRequestIds) > 0) {
+                $errorMsg = 'This request ID #'.$entity->getId().' has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $errorMsg
+                );
+                return $this->redirectToRoute('vacreq_show',array('id'=>$entity->getId()));
+            } else {
+                //exit('no overlaps found');
+            }
+        }
+
 
         if( $status ) {
 
