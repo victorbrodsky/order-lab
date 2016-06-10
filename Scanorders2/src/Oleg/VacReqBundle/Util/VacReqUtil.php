@@ -1174,7 +1174,7 @@ class VacReqUtil
         if( $bruteForce == true ) {
             $requests = $query->getResult();
             $numberOfDays = $this->getNotOverlapNumberOfWorkingDays($requests,$requestTypeStr);
-            echo "bruteForce days=".$numberOfDays."<br>";
+            //echo "bruteForce days=".$numberOfDays."<br>";
             return $numberOfDays;
         }
 
@@ -1296,13 +1296,13 @@ class VacReqUtil
 
             $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
 
-            $msg = "";
+            //$msg = "";
             //overlap condition: (StartA <= EndB) and (EndA >= StartB)
             if( ($thisDateRange['startDate'] <= $subjectDateRange['endDate']) && ($thisDateRange['endDate'] >= $subjectDateRange['startDate']) ) {
-                $startDateStr = $thisDateRange['startDate']->format('Y/m/d');
-                $endDateStr = $thisDateRange['endDate']->format('Y/m/d');
-                $msg .= $subjectRequest->getId() . ": overlap dates ID=" . $request->getId() . "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr;
-                echo $msg . "<br>";
+                //$startDateStr = $thisDateRange['startDate']->format('Y/m/d');
+                //$endDateStr = $thisDateRange['endDate']->format('Y/m/d');
+                //$msg .= $subjectRequest->getId() . ": overlap dates ID=" . $request->getId() . "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr;
+                //echo $msg . "<br>";
                 //$logger->error($msg);
                 $overlappedIds[] = $request->getId();
             }
