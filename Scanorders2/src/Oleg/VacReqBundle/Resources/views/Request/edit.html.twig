@@ -289,7 +289,7 @@
                             {#{{ form.requestVacation.startDate.vars.errors }}#}
                             <div class="alert alert-danger" style="background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
                                 {#form has error!!!!!!!!!#}
-                                {{ form_errors(form.requestVacation.startDate) }}
+                                {{ form_errors(form.requestVacation.startDate)|raw }}
                                 {#{% do form.requestVacation.startDate.vars.errors|first.setRendered %}#}
                                 {#{{ form.requestVacation.startDate.vars.errors }}#}
                             </div>

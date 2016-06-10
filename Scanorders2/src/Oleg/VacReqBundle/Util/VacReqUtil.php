@@ -1293,7 +1293,8 @@ class VacReqUtil
 
         $subjectDateRange = $subjectRequest->getFinalStartEndDates($requestTypeStr);
 
-        $overlappedIds = array();
+        $overlappedRequests = array();
+        //$overlappedIds = array();
         foreach( $requests as $request ) {
 
             $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
@@ -1306,11 +1307,51 @@ class VacReqUtil
                 //$msg .= $subjectRequest->getId() . ": overlap dates ID=" . $request->getId() . "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr;
                 //echo $msg . "<br>";
                 //$logger->error($msg);
-                $overlappedIds[] = $request->getId();
+                //$overlappedIds[] = $request->getId();
+                $overlappedRequests[] = $request;
             }
 
         }//foreach requests
-        return $overlappedIds;
+        return $overlappedRequests;
+    }
+    public function getOverlappedMessage( $request, $overlappedRequests, $absolute=null ) {
+        //$errorMsg = 'This request ID #'.$entity->getId().' has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
+        $errorMsg = null;
+        //Your request includes dates (MM/DD/YYYY, MM/DD/YYYY, MM/DD/YYYY) already covered by your previous request(s) (Request ID LINK #1, Request ID LINK #2, Request ID LINK #3). Please exclude these dates from this request before re-submitting.
+        if( count($overlappedRequests) > 1 ) {
+            $dates = array();
+            $hrefs = array();
+            foreach( $overlappedRequests as $overlappedRequest ) {
+                $finalDates = $overlappedRequest->getFinalStartEndDates('requestVacation');
+                $dates[] = $finalDates['startDate']->format('m/d/Y')."-".$finalDates['endDate']->format('m/d/Y');
+
+                if( $absolute ) {
+                    $absoluteFlag = UrlGeneratorInterface::ABSOLUTE_URL;
+                } else {
+                    $absoluteFlag = null;
+                }
+                $link = $this->container->get('router')->generate(
+                    'vacreq_show',
+                    array(
+                        'id' => $overlappedRequest->getId(),
+                    ),
+                    $absoluteFlag
+                    //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                if( $absolute ) {
+                    $href = 'Request ID '.$overlappedRequest->getId()." ".$link;
+                } else {
+                    $href = '<a href="'.$link.'">Request ID '.$overlappedRequest->getId().'</a>';
+                }
+
+                $hrefs[] = $href;
+            }
+
+            $errorMsg = "This request includes dates ".implode(", ",$dates)." already covered by your previous request(s) (".implode(", ",$hrefs).").";
+            $errorMsg .= " Please exclude these dates from this request before re-submitting.";
+        }
+
+        return $errorMsg;
     }
 
     public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
