@@ -164,7 +164,7 @@
 
 
         <!-- Call Entries List -->
-
+        {% if not alerts %}
         <tr class="">
 
 
@@ -265,11 +265,13 @@
         </tr>
         <tr>
             <td></td>
-            <td colspan="7"> <p>History/Findings: This is an example of a previously entered call.</p>
+            <td colspan="8"> <p>History/Findings: This is an example of a previously entered call.</p>
                 <p>Impression/Outcome: This is an example of an impression and outcome.</p>
                 <p>Laboratory Results: </p>
             </td>
         </tr>
+
+
         <tr class="">
 
 
@@ -370,11 +372,119 @@
         </tr>
         <tr>
             <td></td>
-            <td colspan="7"> <p>History/Findings: This is an example of a previously entered call.</p>
+            <td colspan="8"> <p>History/Findings: This is an example of a previously entered call.</p>
                 <p>Impression/Outcome: This is an example of an impression and outcome.</p>
                 <p>Laboratory Results: 3/31/2016 09:00 Hgb 6.7 g/dL, 3/31/2016 09:00 Platelets 33 x 10^3/uL</p>
             </td>
         </tr>
+
+        {% else %}
+
+        <tr class="danger">
+
+            <td> <a href="#">5</a> </td>
+
+            <td>3/31/2016 09:00</td>
+
+            <td>Juan, Don</td>
+
+            <td class="rowlink-skip">
+                <a href="#">1234568</a>
+            </td>
+            <!-- Link to patient MRN -->
+
+            <td>G4N</td>
+
+            <td>Transfusion Reaction</td>
+
+            <td class="rowlink-skip"><a href="#">hat9010</a></td>
+            <!-- Link to user, display only MRN -->
+
+            <td>3/31/2016 09:00</td>
+
+            <td class="rowlink-skip">
+
+                <!-- Modal -->
+                <div class="modal fade" id="addComment_4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close comment_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title text-center" id="myModalLabel">Add Comment for Entry 4</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div id="modal_error_4" class="modal_error_div"></div>
+
+                                <form id="addcomment_form">
+
+
+                                    <select id="modal-processor-comment" class="combobox">
+                                        <option></option>
+                                        <option value="Let's Discuss this at signout">Let's Discuss this at signout</option>
+                                        <option value="Relevant resources">Relevant resources</option>
+                                        <option value="Please complete this entry">Please complete this entry</option>
+                                    </select>
+
+                                    <br>
+                                    <br>
+
+
+                                    <div class="row">
+                                        <div class="col-xs-12">
+
+                                            <p>
+
+                                                <input type="hidden" id="baseurl" value="c.med.cornell.edu/order" />
+                                                <textarea id="addcomment_text" name="addcomment" type="textarea" class="textarea form-control" maxlength="5000" required></textarea>
+                                            </p>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="center-block">
+                                        <input id="AddNewComment" class="btn btn-primary center-block" type="button" value="Add Comment" onclick="submitNewComment(4);" />
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Action <span class="caret"></span>
+                    </button>
+
+
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+                        <li><a href="#">Edit Entry</a></li>
+                        <li><a href="#">View Entry History & Comments</a></li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#addComment_4">Add Comment</a>
+                        </li>
+                        <li><a data-confirm="Are you sure you want to duplicate data?" data-ok="Duplicate" data-cancel="Do not duplicate" class="action-cancel-status" href="#">Generate new entry for same patient issue</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+            </td>
+        </tr>
+        <tr class="danger">
+            <td></td>
+            <td colspan="8"> <p>History/Findings: This is an example of a previously entered call.</p>
+                <p>Impression/Outcome: This is an example of an impression and outcome.</p>
+                <p>Laboratory Results: 3/31/2016 09:00 Hgb 6.7 g/dL, 3/31/2016 09:00 Platelets 33 x 10^3/uL</p>
+            </td>
+        </tr>
+        {% endif %}
 
         <!-- Display of entry body data -->
         </tbody>
