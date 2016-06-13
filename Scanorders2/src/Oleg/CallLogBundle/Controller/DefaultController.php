@@ -51,12 +51,18 @@ class DefaultController extends Controller
     /**
      * Resources
      * @Route("/resources/", name="calllog_resources")
-     * @Template("OlegCallLogBundle:Default:under_construction.html.twig")
+     * @Template("OlegCallLogBundle:CallLog:resources.html.twig")
      */
     public function resourcesAction(Request $request)
     {
-        return $this->redirectToRoute('user_admin_index');
-        return;
+        //return $this->redirectToRoute('user_admin_index');
+
+        return array(
+            //'entity' => $entity,
+            //'form' => $form->createView(),
+            //'cycle' => $cycle,
+            'title' => "Resources",
+        );
     }
 
 }
