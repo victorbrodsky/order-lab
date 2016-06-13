@@ -170,6 +170,9 @@ class RequestController extends Controller
             $css = null;
             $personAway = $entity->getUser();
             $personAwayEmail = $personAway->getSingleEmail();
+            if( !$personAwayEmail ) {
+                exit("Person email is null ".$personAwayEmail);
+            }
             if( $personAway->getId() != $user->getId() ) {
                 //cc to submitter
                 $css = $user->getSingleEmail();
