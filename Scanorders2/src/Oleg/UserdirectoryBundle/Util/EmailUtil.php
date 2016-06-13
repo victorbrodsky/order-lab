@@ -80,9 +80,10 @@ class EmailUtil {
         if( strpos($emails, ',') !== false ) {
             return explode(',', $emails);
         } else {
-            return array($emails);
+            if( $emails ) {
+                return array($emails);
+            }
         }
-        //never execute below
         return $emails;
     }
 
