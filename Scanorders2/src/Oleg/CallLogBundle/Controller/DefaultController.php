@@ -25,25 +25,16 @@ class DefaultController extends Controller
 
 
 
-    /**
-     * Alerts
-     * @Route("/alerts/", name="calllog_alerts")
-     * @Template("OlegCallLogBundle:Default:under_construction.html.twig")
-     */
-    public function alertsAction(Request $request)
-    {
-        return;
-    }
+//    /**
+//     * Alerts
+//     * @Route("/alerts/", name="calllog_alerts")
+//     * @Template("OlegCallLogBundle:Default:under_construction.html.twig")
+//     */
+//    public function alertsAction(Request $request)
+//    {
+//        return;
+//    }
 
-    /**
-     * Call Entry
-     * @Route("/call-entry/", name="calllog_callentry")
-     * @Template("OlegCallLogBundle:Default:under_construction.html.twig")
-     */
-    public function callEntryAction(Request $request)
-    {
-        return;
-    }
 
     /**
      * Complex Patient List
@@ -52,6 +43,7 @@ class DefaultController extends Controller
      */
     public function complexPatientListAction(Request $request)
     {
+
         return;
     }
 
@@ -63,6 +55,7 @@ class DefaultController extends Controller
      */
     public function resourcesAction(Request $request)
     {
+        return $this->redirectToRoute('user_admin_index');
         return;
     }
 

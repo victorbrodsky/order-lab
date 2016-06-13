@@ -38,7 +38,26 @@
                         </a>
                     </li>
 
-                    <li><a href="{{ path(calllog_sitename~'_alerts') }}">Alerts</a></li>
+                    {#<li><a href="{{ path(calllog_sitename~'_alerts') }}">Alerts</a></li>#}
+                    <li id="nav-bar-incomingrequests" class="divider-vertical">
+                        {#<a href="{{ path('vacreq_incomingrequests') }}">#}
+                        {#Incoming Requests#}
+                        {#</a>#}
+                        {% set alerts = 2 %}
+                        {% if alerts is defined and alerts > 0 %}
+                            <a id="incoming-orders-menu-title" href="{{ path(calllog_sitename~'_alerts') }}">Alerts</a><!--
+                                            --><a id="incoming-orders-menu-badge"
+                                                  class="element-with-tooltip-always"
+                                                  title="Signout Issues" data-toggle="tooltip"
+                                                  data-placement="bottom"
+                                                  href="{{ path(calllog_sitename~'_alerts') }}"
+                                            ><span class="badge alert-danger">({{ alerts }} New)</span></a>
+                        {% else %}
+                            <a href="{{ path(calllog_sitename~'_alerts') }}">
+                                Alerts
+                            </a>
+                        {% endif %}
+                    </li>
 
                     <li><a href="{{ path(calllog_sitename~'_callentry') }}">Call Entry</a></li>
 

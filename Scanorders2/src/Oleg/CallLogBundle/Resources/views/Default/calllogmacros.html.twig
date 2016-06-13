@@ -1,0 +1,26 @@
+{% macro simpleDateField(label,value,placeholder) %}
+
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            <label>{{ label|raw }}</label>
+        </div>
+        <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+            <div class="input-group input-group-reg date allow-future-date">
+                <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value }}" placeholder="{{ placeholder }}">
+                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </div>
+    </div>
+    </p>
+
+{% endmacro %}
+
+{% macro singleDateField(value,placeholder) %}
+    <p>
+        <div class="input-group input-group-reg date allow-future-date">
+            <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value }}" placeholder="{{ placeholder }}">
+            <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+        </div>
+    </p>
+{% endmacro %}

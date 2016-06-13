@@ -1,0 +1,221 @@
+{% extends "OlegCallLogBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <br>
+
+
+    <form id="CallCaseForm" class="form-vertical" role="form">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-PatientInformation">
+                        Patient Information
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-PatientInformation" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <div class="form-group col-xs-5" align="left">
+                            {{ formmacros.simplefield('MRN:','','input') }}
+                            {{ formmacros.simplefield('Last Name:','','input') }}
+                        </div>
+
+                        <div class="col-xs-5" align="left">
+                            {#<p>#}
+                            {#<div class="row">#}
+                            {#<div class="col-xs-6" align="right">#}
+                            {#<label>Date of Birth:</label>#}
+                            {#</div>#}
+                            {#<div class="col-xs-6" align="left" class="form_body_toggle_btn">#}
+                            {#<div class="input-group input-group-reg date allow-future-date">#}
+                            {#<input class="form-control form-control-modif not-mapped-simplefield" type="text" value="">#}
+                            {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+                            {#</div>#}
+                            {#</div>#}
+                            {#</div>#}
+                            {#</p>#}
+                            {{ calllogmacros.simpleDateField('Date of Birth:','') }}
+
+                            {{ formmacros.simplefield('First Name:','','input') }}
+                        </div>
+
+                        <div class="col-xs-1" align="left">
+                            <button id="Search_button" type="button" class="btn btn-lg btn-success" align="center" style="float:left; width:100%">Search</button>
+                        </div>
+
+                        <div class="col-xs-1" align="left"></div>
+
+                    </div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-CallInformation">
+                        Call Information
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-CallInformation" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <div class="form-group col-xs-5" align="left">
+                            {#{{ formmacros.simplefield('Service:','','input') }}#}
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <label>Service:</label>
+                                </div>
+                                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                                    <select id="Service" name="Service" class="combobox" style="float:right;width: 70%">
+                                        <option value="All">Transfusion Medicine</option>
+                                        <option value="Microbiology">Microbiology</option>
+                                        <option value="Chemistry">Chemistry</option>
+                                        <option value="Coagulation">Coagulation</option>
+                                        <option value="Hematology">Hematology</option>
+                                        <option value="Molecular">Molecular</option>
+                                        <option value="Cytogenetics">Cytogenetics</option>
+                                    </select>
+                                </div>
+                            </div>
+                            </p>
+
+                            {#{{ formmacros.simplefield('Issue:','','input') }}#}
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <label>Issue:</label>
+                                </div>
+                                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                                    <select id="Service" name="Service" class="combobox" style="float:right;width: 70%">
+                                        <option value="First dose plasma">First dose plasma</option>
+                                        <option value="First dose platelets ">First dose platelets </option>
+                                        <option value="Third+ dose platelets">Third+ dose platelets</option>
+                                        <option value="Cryoprecipitate">Cryoprecipitate</option>
+                                        <option value="MTP">MTP</option>
+                                        <option value="Emergency release">Emergency release</option>
+                                        <option value="Payson transfusion">Payson transfusion</option>
+                                        <option value="Incompatible crossmatch">Incompatible crossmatch</option>
+                                        <option value="Transfusion reaction"> <a data-toggle="collapse" href="#TrfnRxnForm">Transfusion reaction</a></option>
+                                        <option value="Complex platelet summary">Complex platelet summary</option>
+                                        <option value="Complex factor summary">Complex factor summary</option>
+                                        <option value="WinRho">WinRho</option>
+                                        <option value="Special needs">Special needs</option>
+                                        <option value="Antibiotic sensitivity approval">Antibiotic sensitivity approval</option>
+                                        <option value="Viracor testing">Viracor testing</option>
+                                        <option value="Critical Value">Critical Value</option>
+                                        <option value="Aberrant analyte ">Aberrant analyte </option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            </p>
+
+
+                        </div>
+
+                        <div class="form-group col-xs-5" align="left">
+                            {#<p>#}
+                            {#<div class="row">#}
+                            {#<div class="col-xs-6" align="right">#}
+                            {#<label>Date:</label>#}
+                            {#</div>#}
+                            {#<div class="col-xs-6" align="left" class="form_body_toggle_btn">#}
+                            {#<div class="input-group input-group-reg date allow-future-date">#}
+                            {#<input class="form-control form-control-modif not-mapped-simplefield" type="text" value="">#}
+                            {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+                            {#</div>#}
+                            {#</div>#}
+                            {#</div>#}
+                            {#</p>#}
+                            {{ calllogmacros.simpleDateField('Date:','') }}
+
+                            {{ formmacros.simplefield('Location:','','input') }}
+                        </div>
+
+                        <div class="form-group col-xs-2" align="left">
+                        </div>
+
+                    </div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-HistoryFindings">
+                        History/Findings
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-HistoryFindings" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12" align="left">
+                            <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry describing the call."></textarea>
+                        </div>
+                    </div>
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-ImpressionOutcome">
+                        Impression/Outcome
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-ImpressionOutcome" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12" align="left">
+                            <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry."></textarea>
+                        </div>
+                    </div>
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+        <p>
+            <button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>
+        </p>
+
+    </form>
+
+
+
+
+
+
+{% endblock %}
+

@@ -15,15 +15,45 @@ class CallEntryController extends Controller
 {
 
     /**
+     * Case List Page
      * @Route("/", name="calllog_home")
+     *
+     * Alerts: filtered case list
+     * @Route("/alerts/", name="calllog_alerts")
+     *
      * @Template("OlegCallLogBundle:CallLog:home.html.twig")
      */
     public function homeAction(Request $request)
     {
 
-        //1) search box: MRN,
+        $title = "Call Case List";
+        $alerts = false;
+
+        if( $request->get('_route') == "calllog_alerts" ) {
+            $alerts = true;
+            $title = $title . " (Alerts)";
+        }
+
+        return array(
+            //'entity' => $entity,
+            //'form' => $form->createView(),
+            //'cycle' => $cycle,
+            'alerts' => $alerts,
+            'title' => $title,
+        );
+
+    }
 
 
+
+    /**
+     * Call Entry
+     * @Route("/call-entry/", name="calllog_callentry")
+     * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
+     */
+    public function callEntryAction(Request $request)
+    {
+        //1) search box: MRN,Name...
 
         $title = "Call Entry";
 
@@ -33,9 +63,7 @@ class CallEntryController extends Controller
             //'cycle' => $cycle,
             'title' => $title,
         );
-
     }
-
 
 
 }
