@@ -39,12 +39,17 @@ class DefaultController extends Controller
     /**
      * Complex Patient List
      * @Route("/complex-patient-list/", name="calllog_complex_patient_list")
-     * @Template("OlegCallLogBundle:Default:under_construction.html.twig")
+     * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
      */
     public function complexPatientListAction(Request $request)
     {
-
-        return;
+        //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
+        return array(
+            //'entity' => $entity,
+            //'form' => $form->createView(),
+            //'cycle' => $cycle,
+            'title' => "Complex Patient List",
+        );
     }
 
 

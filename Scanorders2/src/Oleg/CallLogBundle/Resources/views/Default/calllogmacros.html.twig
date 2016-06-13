@@ -24,3 +24,84 @@
         </div>
     </p>
 {% endmacro %}
+
+
+{% macro complexPatient(ID,Active,lastName,firstName,MRN,InOut,HLAA,HLAB,RogosinDate,RogosinPRA,NYBCDate,ProductStatus,Expires) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+
+    <tr class="">
+        <td> <a href="#">{{ ID }}</a> </td>
+        <td>{{ Active }}</td>
+        <td>{{ lastName }}</td>
+        <td>{{ firstName }}</td>
+        <td>{{ MRN }}</td>
+        <td>{{ InOut }}</td>
+        <td>{{ HLAA }}</td>
+        <td>{{ HLAB }}</td>
+        <td>{{ RogosinDate }}</td>
+        <td>{{ RogosinPRA }}</td>
+        <td>{{ NYBCDate }}</td>
+        <td>{{ ProductStatus }}</td>
+        <td>{{ Expires }}</td>
+
+        <td class="rowlink-skip">
+
+            <!-- Modal -->
+            <div class="modal fade" id="edit_{{ ID }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close comment_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title text-center" id="myModalLabel">Edit Complex Patient ID {{ ID }}</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div id="modal_error_4" class="modal_error_div"></div>
+
+                            <form id="addcomment_form">
+
+                                {{ formmacros.simplefield('Active:',Active,'input') }}
+                                {{ formmacros.simplefield('Last Name:',lastName,'input') }}
+                                {{ formmacros.simplefield('First Name:',firstName,'input') }}
+                                {{ formmacros.simplefield('In/Out:',InOut,'input') }}
+                                {{ formmacros.simplefield('HLAA:',HLAA,'input') }}
+                                {{ formmacros.simplefield('HLAB:',HLAB,'input') }}
+                                {{ calllogmacros.simpleDateField('Rogosin Date:',RogosinDate,'Rogosin Date') }}
+                                {{ formmacros.simplefield('RogosinPRA:',RogosinPRA,'input') }}
+                                {{ calllogmacros.simpleDateField('NYBC Date:',NYBCDate,'NYBC Date') }}
+                                {{ formmacros.simplefield('Product Status:',ProductStatus,'input') }}
+                                {{ calllogmacros.simpleDateField('Expires:',Expires,'Expires') }}
+
+                                <div class="center-block">
+                                    <input id="edit_{{ ID }}" class="btn btn-primary center-block" type="button" value="Edit"/>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Action <span class="caret"></span>
+                </button>
+
+
+                <ul class="dropdown-menu dropdown-menu-right">
+
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#edit_{{ ID }}">Edit</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+        </td>
+    </tr>
+{% endmacro %}

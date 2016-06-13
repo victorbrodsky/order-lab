@@ -172,7 +172,7 @@ function setNavBar(sitename) {
     else if( sitename == "vacation-request" ){
         setVacReqNavBar();
     }
-    else if( sitename == "call-log" ){
+    else if( sitename == "call-logbook" ){
         setCallLogNavBar();
     }
     else {
@@ -185,9 +185,21 @@ function setCallLogNavBar() {
 
     var full = window.location.pathname;
 
-    //if( full.indexOf("/vacation-request/my-requests/") !== -1 ) {
-    //    id = 'myrequests';
-    //}
+    if( full.indexOf("/call-logbook/alerts/") !== -1 ) {
+        id = 'alerts';
+    }
+
+    if( full.indexOf("/call-logbook/call-entry/") !== -1 ) {
+        id = 'callentry';
+    }
+
+    if( full.indexOf("/call-logbook/complex-patient-list/") !== -1 ) {
+        id = 'complexpatientlist';
+    }
+
+    if( full.indexOf("/call-logbook/resources/") !== -1 ) {
+        id = 'resources';
+    }
 
     id = commonNavBar(full,id)
 
@@ -427,9 +439,6 @@ function commonNavBar(full,id) {
 
     if( full.indexOf("/users") !== -1 ) {
         id = 'userlist';
-    }
-    if( full.indexOf("/about") !== -1 ) {
-        id = 'user';
     }
     if( full.indexOf("/about") !== -1 ) {
         id = 'user';

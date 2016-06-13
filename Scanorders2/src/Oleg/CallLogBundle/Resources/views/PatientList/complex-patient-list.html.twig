@@ -1,0 +1,138 @@
+{% extends "OlegCallLogBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+
+
+    {#Search Form#}
+
+    <form id="CallCaseSearchForm" class="form-vertical" role="form">
+
+        <div class="well">
+
+            <div id="calllog-AdvancedSearch" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <div class="col-xs-5" align="left">
+                            <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="" placeholder="Search free text">
+                        </div>
+
+                        <div class="col-xs-4" align="left" class="form_body_toggle_btn">
+                            <select id="Field" name="Field" class="combobox" style="float:right;width: 70%">
+                                <option value="All Fields">All Fields</option>
+                                <option value="MRN">ID</option>
+                                <option value="MRN">Active</option>
+                                <option value="Patient Name">Patient Name</option>
+                                <option value="MRN">MRN</option>
+                                <option value="In/Out">In/Out</option>
+                                <option value="Educational">HLA A</option>
+                                <option value="Pending Signout">HLA B</option>
+                                <option value="Call Issue">Rogosin PRA</option>
+                                <option value="Product Status">Product Status</option>
+                            </select>
+                        </div>
+
+                        <div class="col-xs-2" align="left" class="form_body_toggle_btn">
+                            <select id="Logic" name="Logic" class="combobox" style="float:right;width: 70%">
+                                <option value="And">And</option>
+                                <option value="Not">Not</option>
+                                <option value="Or">Or</option>
+                                <option value="Exact Match">Exact Match</option>
+                            </select>
+                        </div>
+
+                        {#<div class="col-xs-1" align="left">#}
+                        {#<button id="Search_button" type="button" class="btn btn-lg btn-info" align="center" style="float:left; width:100%">Search</button>#}
+                        {#</div>#}
+                        {#<div class="col-xs-1" align="left">#}
+                        {#</div>#}
+
+                    </div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+
+        </div>
+
+    </form>
+
+
+
+
+
+    {#Call Case List#}
+    <table class="table table-hover table-condensed table-striped text-left">
+        <thead>
+        <tr>
+            <th><a translationCount="" class="sortable" href="#">ID</a></th>
+            <th><a translationCount="" class="sortable" href="#">Active</a></th>
+            <th><a translationCount="" class="sortable" href="#">Last Name</a></th>
+            <th><a translationCount="" class="sortable" href="#">First Name</a></th>
+            <th><a translationCount="" class="sortable" href="#">MRN</a></th>
+            <th><a translationCount="" class="sortable" href="#">In/Out</a></th>
+            <th><a translationCount="" class="sortable" href="#">HLA A</a></th>
+            <th><a translationCount="" class="sortable" href="#">HLA B</a></th>
+            <th><a translationCount="" class="sortable" href="#">Rogosin Date</a></th>
+            <th><a translationCount="" class="sortable" href="#">Rogosin PRA</a></th>
+            <th><a translationCount="" class="sortable" href="#">NYBC Date</a></th>
+            <th><a translationCount="" class="sortable" href="#">Product Status</a></th>
+            <th><a translationCount="" class="sortable" href="#">Expires</a></th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody class="rowlink" data-link="row">
+
+            {#ID,Active,lastName,firstName,MRN,InOut,HLAA,HLAB,RogosinDate,RogosinPRA,NYBCDate,ProductStatus,Expires#}
+            {{ calllogmacros.complexPatient('14','Yes','Doe','Linda','7412345','IN','A(074))','B(074)','2/2/2015','80%','2/2/2015','Ordered','2/14/2015') }}
+            {{ calllogmacros.complexPatient('15','Yes','Doe','Joe','7412346','IN','A(074))','B(074)','2/12/2015','80%','2/12/2015','Ordered','2/16/2015') }}
+            {{ calllogmacros.complexPatient('16','Yes','Doe','John','7412347','IN','A(074))','B(074)','2/12/2015','80%','2/12/2015','Ordered','2/16/2015') }}
+
+        <!-- Display of entry body data -->
+        </tbody>
+    </table>
+
+
+    <div class="navigation">
+        <div class="row">
+            <hr />
+            <div class="col-lg-12">
+                <ul class="pagination">
+                    <li class="disabled"><a href="#">&laquo;</a></li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <p>
+        <input id="edit_{{ ID }}" class="btn btn-primary center-block" type="button" value="Add"/>
+    </p>
+
+    <br><br>
+
+
+
+
+{% endblock %}

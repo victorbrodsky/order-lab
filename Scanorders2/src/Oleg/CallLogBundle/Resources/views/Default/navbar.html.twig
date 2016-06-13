@@ -39,7 +39,7 @@
                     </li>
 
                     {#<li><a href="{{ path(calllog_sitename~'_alerts') }}">Alerts</a></li>#}
-                    <li id="nav-bar-incomingrequests" class="divider-vertical">
+                    <li id="nav-bar-alerts" class="divider-vertical">
                         {#<a href="{{ path('vacreq_incomingrequests') }}">#}
                         {#Incoming Requests#}
                         {#</a>#}
@@ -59,11 +59,11 @@
                         {% endif %}
                     </li>
 
-                    <li><a href="{{ path(calllog_sitename~'_callentry') }}">Call Entry</a></li>
+                    <li id="nav-bar-callentry"><a href="{{ path(calllog_sitename~'_callentry') }}">Call Entry</a></li>
 
-                    <li><a href="{{ path(calllog_sitename~'_complex_patient_list') }}">Complex Patient List</a></li>
+                    <li id="nav-bar-complexpatientlist"><a href="{{ path(calllog_sitename~'_complex_patient_list') }}">Complex Patient List</a></li>
 
-                    <li><a href="{{ path(calllog_sitename~'_resources') }}">Resources</a></li>
+                    <li id="nav-bar-resources"><a href="{{ path(calllog_sitename~'_resources') }}">Resources</a></li>
 
 
                 </ul>
