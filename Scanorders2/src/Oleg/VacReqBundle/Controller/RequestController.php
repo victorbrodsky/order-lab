@@ -171,7 +171,7 @@ class RequestController extends Controller
             $personAway = $entity->getUser();
             $personAwayEmail = $personAway->getSingleEmail();
             if( !$personAwayEmail ) {
-                exit("Person email is null ".$personAwayEmail);
+                throw $this->createNotFoundException("Person email is null: personAwayEmail=".$personAwayEmail);
             }
             if( $personAway->getId() != $user->getId() ) {
                 //cc to submitter

@@ -24,8 +24,8 @@ class EmailUtil {
     //$ccs: single or array of emails
     public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
 
-        echo "emails=".$emails."<br>";
-        echo "ccs=".$ccs."<br>";
+        //echo "emails=".$emails."<br>";
+        //echo "ccs=".$ccs."<br>";
 
         if( $this->hasConnection() == false ) {
             //exit('no connection');

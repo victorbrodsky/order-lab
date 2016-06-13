@@ -25,7 +25,7 @@ class VacReqRequestBusiness extends VacReqRequestBase
     private $description;
 
     /**
-     * @ORM\Column(type="decimal", precision=7, scale=2, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $expenses;
 
