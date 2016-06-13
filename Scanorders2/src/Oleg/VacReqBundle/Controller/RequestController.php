@@ -167,12 +167,20 @@ class RequestController extends Controller
             $break = "\r\n";
 
             //set confirmation email to submitter and approver and email users
+            $css = null;
+            $personAway = $entity->getUser();
+            $personAwayEmail = $personAway->getSingleEmail();
+            if( $personAway->getId() != $user->getId() ) {
+                //cc to submitter
+                $css = $user->getSingleEmail();
+            }
+            $personAway = $entity->getUser()->getSingleEmail();
             $subject = $requestName." ID #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
             $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
             $message .= "The approver will review your request soon.";
             $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
-            $emailUtil->sendEmail( $user->getSingleEmail(), $subject, $message, null, null );
+            $emailUtil->sendEmail( $personAwayEmail, $subject, $message, $css, null );
 
             //set confirmation email to approver and email users
             $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );

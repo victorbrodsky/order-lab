@@ -40,29 +40,13 @@
                         </div>
 
                         <div class="col-xs-5" align="left">
-                            {#<p>#}
-                            {#<div class="row">#}
-                            {#<div class="col-xs-6" align="right">#}
-                            {#<label>Date of Birth:</label>#}
-                            {#</div>#}
-                            {#<div class="col-xs-6" align="left" class="form_body_toggle_btn">#}
-                            {#<div class="input-group input-group-reg date allow-future-date">#}
-                            {#<input class="form-control form-control-modif not-mapped-simplefield" type="text" value="">#}
-                            {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
-                            {#</div>#}
-                            {#</div>#}
-                            {#</div>#}
-                            {#</p>#}
                             {{ calllogmacros.simpleDateField('Date of Birth:','') }}
-
                             {{ formmacros.simplefield('First Name:','','input') }}
                         </div>
 
-                        <div class="col-xs-1" align="left">
+                        <div class="col-xs-2" align="left">
                             <button id="Search_button" type="button" class="btn btn-lg btn-success" align="center" style="float:left; width:100%">Search</button>
                         </div>
-
-                        <div class="col-xs-1" align="left"></div>
 
                     </div>
 
@@ -140,21 +124,7 @@
                         </div>
 
                         <div class="form-group col-xs-5" align="left">
-                            {#<p>#}
-                            {#<div class="row">#}
-                            {#<div class="col-xs-6" align="right">#}
-                            {#<label>Date:</label>#}
-                            {#</div>#}
-                            {#<div class="col-xs-6" align="left" class="form_body_toggle_btn">#}
-                            {#<div class="input-group input-group-reg date allow-future-date">#}
-                            {#<input class="form-control form-control-modif not-mapped-simplefield" type="text" value="">#}
-                            {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
-                            {#</div>#}
-                            {#</div>#}
-                            {#</div>#}
-                            {#</p>#}
                             {{ calllogmacros.simpleDateField('Date:','') }}
-
                             {{ formmacros.simplefield('Location:','','input') }}
                         </div>
 
