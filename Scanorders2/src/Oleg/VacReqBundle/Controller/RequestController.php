@@ -174,7 +174,6 @@ class RequestController extends Controller
                 //cc to submitter
                 $css = $user->getSingleEmail();
             }
-            $personAway = $entity->getUser()->getSingleEmail();
             $subject = $requestName." ID #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
             $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
