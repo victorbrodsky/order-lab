@@ -110,14 +110,16 @@
     {#<p>#}
         {#<a class="btn-sm btn-danger" href="#">Update</a>#}
     {#</p>#}
-    <p>
-        <a
-            general-data-confirm="Are you sure you want to remove this organizational group by removing approver and submiiter roles?"
-            class="btn-sm btn-danger" href="{{ path('vacreq_group_remove',{'instid':organizationalGroupId}) }}"
-        >
-            Delete Group
-        </a>
-    </p>
+    {% if is_granted('ROLE_VACREQ_ADMIN') %}
+        <p>
+            <a
+                general-data-confirm="Are you sure you want to remove this organizational group by removing approver and submiiter roles?"
+                class="btn-sm btn-danger" href="{{ path('vacreq_group_remove',{'instid':organizationalGroupId}) }}"
+            >
+                Delete Group
+            </a>
+        </p>
+    {% endif %}
 
     <br>
 
