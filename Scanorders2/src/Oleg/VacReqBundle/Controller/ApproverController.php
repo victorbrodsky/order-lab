@@ -54,6 +54,7 @@ class ApproverController extends Controller
         //get submitter groups
         $groupParams = array('asObject'=>true);
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
@@ -986,6 +987,7 @@ class ApproverController extends Controller
         //$groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
         $groupParams = array('asObject'=>true);
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
         $groups = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "groups=".count($groups)."<br>";
