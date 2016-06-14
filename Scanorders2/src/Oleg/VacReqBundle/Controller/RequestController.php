@@ -352,6 +352,17 @@ class RequestController extends Controller
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
 
+        //can't edit or review if request is not pending
+        if( $entity->getStatus() != "pending" && $entity->getOverallStatus() != "pending" ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'This request can not be modified because it is not pending anymore.'
+            );
+            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+        }
+
+
         //check permission
         $routName = $request->get('_route');
         if( $routName == 'vacreq_review' ) {

@@ -395,6 +395,11 @@
         </p>
     {% endif %}
 
+    {% set statusPending = false %}
+    {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
+        {% set statusPending = true %}
+    {% endif %}
+
     {% if cycle == "edit" or review %}
         <p>
             <button class="btn btn-warning" name="btnUpdate" type="button" onclick="validateVacReqForm(this)">Update</button>
@@ -406,7 +411,7 @@
         </p>
     {% endif %}
 
-    {% if cycle == "show" %}
+    {% if cycle == "show" and statusPending %}
         <p>
             <a class="btn btn_margin_top btn-primary" href="{{ path(vacreq_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
         </p>
