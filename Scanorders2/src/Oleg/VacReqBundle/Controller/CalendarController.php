@@ -43,8 +43,15 @@ class CalendarController extends Controller
             $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
         }
 
+        //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
         $user = $this->get('security.context')->getToken()->getUser();
-        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+        if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+            $subjectUser = $user;
+        } else {
+            $groupParams['asSupervisor'] = true;
+            $subjectUser = $vacreqUtil->getClosestSupervisor( $user );
+        }
+        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($subjectUser,$groupParams);
 
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 

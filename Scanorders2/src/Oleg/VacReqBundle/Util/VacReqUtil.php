@@ -1768,14 +1768,44 @@ class VacReqUtil
         return $requests;
     }
 
+    //find the first upper supervisor of this user's group
+    public function getClosestSupervisor( $user ) {
+
+        //1) get the submitter group Id of this user
+        $groupParams = array('asObjectRole'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $supervisorRoles = $this->getGroupsByPermission($user,$groupParams);
+        //echo "supervisorRoles=".count($supervisorRoles)."<br>";
+
+        //2) get a user with this role
+        $supervisorsArr = array();
+        foreach( $supervisorRoles as $supervisorRole ) {
+            //echo "supervisorRole=".$supervisorRole."<br>";
+//            //find users with this role
+            $supervisors = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($supervisorRole->getName());
+            foreach( $supervisors as $supervisor ) {
+                $supervisorsArr[] = $supervisor;
+            }
+
+        }
+
+        //we can see which user to pick (user with the lowest role's institution) in case of multiple supervisors
+        $supervisorUser = $supervisorsArr[0];
+        //echo "supervisorUser=".$supervisorUser."<br>";
+
+        return $supervisorUser;
+    }
+
     //get all user's organizational groups and children specified to permission
     //get only institutions from the same institutional tree:
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
     public function getGroupsByPermission( $user, $params=array() ) {
 
         $asObject = ( array_key_exists('asObject', $params) ? $params['asObject'] : false);
+        $asObjectRole = ( array_key_exists('asObjectRole', $params) ? $params['asObjectRole'] : false);
         $permissions = ( array_key_exists('permissions', $params) ? $params['permissions'] : null);
         $exceptPermissions = ( array_key_exists('exceptPermissions', $params) ? $params['exceptPermissions'] : null);
+        $asSupervisor = ( array_key_exists('asSupervisor', $params) ? $params['asSupervisor'] : false);
 
         $institutions = array();
 
@@ -1792,7 +1822,7 @@ class VacReqUtil
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
             }
-            if( count($roles)==0 && ($this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) ) {
+            if( count($roles)==0 && ($this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') || $asSupervisor) ) {
                 //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
                 //echo "roles try 2<br>";
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
@@ -1847,6 +1877,11 @@ class VacReqUtil
 
                     if( $include == false ) {
                         //echo "exclude role=".$role."<br>";
+                        continue;
+                    }
+
+                    if( $asObjectRole ) {
+                        $institutions[] = $role;
                         continue;
                     }
 
