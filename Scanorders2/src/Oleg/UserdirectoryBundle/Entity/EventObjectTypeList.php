@@ -25,4 +25,30 @@ class EventObjectTypeList extends ListAbstract
      **/
     protected $original;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $url;
+
+
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+
 }

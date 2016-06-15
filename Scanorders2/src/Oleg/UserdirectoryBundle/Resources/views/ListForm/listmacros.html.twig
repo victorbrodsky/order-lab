@@ -90,6 +90,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
             {% endif %}
 
+            {% if entities|first.url is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'URL', 'ent.url') }}</th>
+            {% endif %}
+
             {% if entities|first.sites is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
             {% endif %}
@@ -114,6 +118,7 @@
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.shortname }}</td>
                 <td>{{ entity.abbreviation }}</td>
+
 
                 {% if entity.institution is defined %}
                     <td>
@@ -223,6 +228,10 @@
                             <p>{{ synonym }}</p>
                         {% endfor %}
                     </td>
+                {% endif %}
+
+                {% if entity.url is defined %}
+                    <td>{{ entity.url }}</td>
                 {% endif %}
 
                 {% if entity.sites is defined %}
@@ -551,6 +560,10 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <hr>
+
+    {% if form.url is defined %}
+        {{ formmacros.field(form.url) }}
+    {% endif %}
 
     {% if form.sites is defined %}
         {{ formmacros.field(form.sites) }}

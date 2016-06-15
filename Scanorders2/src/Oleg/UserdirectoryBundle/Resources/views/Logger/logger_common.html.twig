@@ -142,7 +142,9 @@
                 {% endif %}
 
                 {% if hideObjectId is not defined or hideObjectId == false %}
-                    <th>{{ knp_pagination_sortable(pagination, 'Object ID', 'logger.entityId') }}</th>
+                    <th>
+                        {{ knp_pagination_sortable(pagination, 'Object ID', 'logger.entityId') }}
+                    </th>
                 {% endif %}
                 {#<th>Actions</th>#}
             </tr>
@@ -227,7 +229,17 @@
                 {% endif %}
 
                 {% if hideObjectId is not defined or hideObjectId == false %}
-                    <td>{{ entity.entityId }}</td>
+                    <td>
+                        {% if entity.objectType and entity.objectType.url %}
+                            {% set url = app.request.host~app.request.getBaseURL() %}
+                            url={{ url }}<br>
+                            {% set fullUrl = url ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}
+                            fullUrl={{ fullUrl }}
+                            <a href="{{ fullUrl }}">{{ entity.entityId }}</a>
+                        {% else %}
+                            {{ entity.entityId }}
+                        {% endif %}
+                    </td>
                 {% endif %}
             </tr>
         {% endfor %}

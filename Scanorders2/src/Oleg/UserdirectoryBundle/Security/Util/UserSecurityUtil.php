@@ -254,13 +254,12 @@ class UserSecurityUtil {
     function constructEventLog( $sitename, $user, $request ) {
 
         //get abbreviation from sitename:
-        $sitenameAbbreviation = $this->getSitenameAbbreviation($sitename);
+        $siteObject = $this->getSiteBySitename($sitename,true);
 
-        $logger = new Logger($sitenameAbbreviation);
+        $logger = new Logger($siteObject);
         $logger->setUser($user);
         $logger->setRoles($user->getRoles());
         $logger->setUsername($user."");
-
 
         if( $request ) {
             $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
@@ -275,7 +274,7 @@ class UserSecurityUtil {
     //get abbreviation from sitename:
     // fellowship-applications => fellapp
     // fellapp => fellapp
-    public function getSitenameAbbreviation($sitename) {
+    public function getSiteBySitename( $sitename, $asObject=true ) {
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:SiteList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
@@ -285,6 +284,13 @@ class UserSecurityUtil {
         $query->setParameters(array('sitename'=>$sitename));
 
         $sitenameObject = $query->getSingleResult();
+
+        if( $asObject ) {
+            if( !$sitenameObject ) {
+                throw $this->createNotFoundException('Unable to find SiteList entity by site name string='.$sitename);
+            }
+            return $sitenameObject;
+        }
 
         if( !$sitenameObject ) {
             return $sitename;

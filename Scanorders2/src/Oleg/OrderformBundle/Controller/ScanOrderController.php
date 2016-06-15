@@ -817,7 +817,9 @@ class ScanOrderController extends Controller {
                 $count = $count . "+";
             }
 
-            $logger = new Logger($this->container->getParameter('scan.sitename'));
+            $userSecUtil = $this->get('user_security_utility');
+            $site = $userSecUtil->getSiteBySitename($this->container->getParameter('scan.sitename'));
+            $logger = new Logger($site);
             $logger->setUser($user);
             $logger->setRoles($roles);
             $logger->setUsername($user."");
@@ -869,7 +871,10 @@ class ScanOrderController extends Controller {
                 $count = $count . "+";
             }
 
-            $logger = new Logger($this->container->getParameter('scan.sitename'));            
+            $userSecUtil = $this->get('user_security_utility');
+            $site = $userSecUtil->getSiteBySitename($this->container->getParameter('scan.sitename'));
+
+            $logger = new Logger($site);
             $logger->setUser($user);
             $logger->setRoles($roles);
             $logger->setUsername($user."");

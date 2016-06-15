@@ -303,6 +303,14 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //url
+        if( method_exists($this->params['entity'],'getUrl') ) {
+            $builder->add('url',null,array(
+                'label' => 'Url:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
         //PermissionList
         if( strtolower($this->mapper['className']) == strtolower("PermissionList") ) {
             $builder->add('permissionObjectList','entity',array(

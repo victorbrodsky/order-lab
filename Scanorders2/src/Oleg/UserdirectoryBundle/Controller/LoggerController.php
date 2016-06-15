@@ -131,13 +131,16 @@ class LoggerController extends Controller
 
         $dql->innerJoin('logger.eventType', 'eventType');
         $dql->leftJoin('logger.objectType', 'objectType');
+        $dql->leftJoin('logger.site', 'site');
 
         $dql = $this->addCustomDql($dql);
 
         //$dql->where("logger.entityId IS NOT NULL AND loggerEntity IS NULL");
 
         if( $allsites == null || $allsites == false ) {
-            $dql->andWhere("logger.siteName = '".$sitename."'");
+            echo "sitename=".$sitename."<br>";
+            //$dql->andWhere("logger.siteName = '".$sitename."'");
+            $dql->andWhere("site.abbreviation = '".$sitename."' OR logger.siteName ='".$sitename."'");
         }
 
         $createLogger = null;
@@ -514,7 +517,9 @@ class LoggerController extends Controller
     }
 
     protected function createLogger(Request $request, $sitename) {
-        $entity = new Logger($sitename);
+        $userSecUtil = $this->get('user_security_utility');
+        $site = $userSecUtil->getSiteBySitename($sitename);
+        $entity = new Logger($site);
         $form = $this->createCreateForm($entity, $sitename);
         $form->handleRequest($request);
 
@@ -567,7 +572,10 @@ class LoggerController extends Controller
      */
     public function newAction()
     {
-        $entity = new Logger($this->container->getParameter('employees.sitename'));
+        $userSecUtil = $this->get('user_security_utility');
+        $site = $userSecUtil->getSiteBySitename($this->container->getParameter('employees.sitename'));
+
+        $entity = new Logger($site);
         $form   = $this->createCreateForm($entity,$this->container->getParameter('employees.sitename'));
 
         return array(
@@ -721,4 +729,5 @@ class LoggerController extends Controller
             ->getForm()
         ;
     }
+
 }

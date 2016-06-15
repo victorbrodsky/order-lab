@@ -23,9 +23,14 @@ class Logger
     private $id;
 
     /**
-     * @ORM\Column(name="siteName", type="string")
+     * @ORM\Column(name="siteName", type="string", nullable=true)
      */
     private $siteName;
+    /**
+     * @ORM\ManyToOne(targetEntity="SiteList")
+     * @ORM\JoinColumn(name="site_id", referencedColumnName="id", nullable=true)
+     */
+    private $site;
 
     /**
      * @var \DateTime
@@ -124,8 +129,10 @@ class Logger
 
 
 
-    public function __construct($siteName) {
-        $this->siteName = $siteName;
+    public function __construct($site) {
+        //$this->siteName = $siteName;
+        $this->site = $site;
+
         $this->institutionTrees = new ArrayCollection();
 
         //make sure timezone set to UTC
@@ -145,7 +152,6 @@ class Logger
     {
         $this->siteName = $siteName;
     }
-
     /**
      * @return mixed
      */
@@ -153,6 +159,21 @@ class Logger
     {
         return $this->siteName;
     }
+    /**
+     * @return mixed
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+    /**
+     * @param mixed $site
+     */
+    public function setSite($site)
+    {
+        $this->site = $site;
+    }
+
 
     /**
      * @ORM\PrePersist
