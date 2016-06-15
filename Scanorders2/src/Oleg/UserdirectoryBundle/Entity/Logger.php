@@ -130,8 +130,11 @@ class Logger
 
 
     public function __construct($site) {
-        //$this->siteName = $siteName;
+
         $this->site = $site;
+        if( $site ) {
+            $this->siteName = $site->getAbbreviation();
+        }
 
         $this->institutionTrees = new ArrayCollection();
 
