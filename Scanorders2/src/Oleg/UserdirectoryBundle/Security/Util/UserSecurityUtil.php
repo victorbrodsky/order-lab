@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Entity\Logger;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UserSecurityUtil {
 
@@ -1125,5 +1126,45 @@ class UserSecurityUtil {
     }
 
 
+    public function getAbsoluetFullLoggerUrl( $logger ) {
+        $url = null;
+        //{% set baseUrl = app.request.scheme ~'://'~app.request.host~app.request.getBaseURL() %}
+        //baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId
+
+        if( $logger->getobjectType() == 'Accession' ) {
+            ///re-identify/?accessionType=WHATEVER-YOU-NEED-TO-SET-THIS-TO&accessionNumber=
+
+            $accessionType = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName('Deidentifier ID');
+            //echo "accessionType=".$accessionType."<br>";
+
+            //find one valid accession
+            $accessionAccession = $this->em->getRepository('OlegOrderformBundle:AccessionAccession')->findOneBy(
+                array(
+                    'accession' => $logger->getEntityId(),
+                    'status' => 'deidentified-valid'
+                )
+            );
+
+            if( $accessionAccession && $accessionType ) {
+
+                $accessionNumber = $accessionAccession->getField();
+
+                //path=deidentifier_search
+                $url = $this->container->get('router')->generate(
+                    'deidentifier_search',
+                    array(
+                        'accessionType' => $accessionType->getId(),
+                        'accessionNumber' => $accessionNumber
+                    )
+                    //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                //echo "url=".$url."<br>";
+
+            }//if accession
+
+        }
+
+        return $url;
+    }
 
 }

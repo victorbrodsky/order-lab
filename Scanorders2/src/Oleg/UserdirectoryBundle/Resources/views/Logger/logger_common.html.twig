@@ -231,8 +231,14 @@
                 {% if hideObjectId is not defined or hideObjectId == false %}
                     <td>
                         {% if entity.objectType and entity.objectType.url %}
+
                             {% set baseUrl = app.request.scheme ~'://'~app.request.host~app.request.getBaseURL() %}
-                            {% set fullUrl = baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}
+                            {% if entity.objectType == 'Accession' %}
+                                {#{% set fullUrl = baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}#}
+                                {% set fullUrl = user_security_utility.getAbsoluetFullLoggerUrl(entity) %}
+                            {% else %}
+                                {% set fullUrl = baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}
+                            {% endif %}
                             {#fullUrl=###{{ fullUrl }}###<br>#}
                             <a href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
                             {#http://localhost/order/app_dev.php/fellowship-applications/user/2#}
