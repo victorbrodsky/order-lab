@@ -4616,6 +4616,59 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+    /**
+     * @Route("/convert-logger-site/", name="user_convert-logger-site")
+     * @Method("GET")
+     */
+    public function convertLoggerSitenameToSiteObectAction() {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$logger = $em->getRepository('OlegUserdirectoryBundle:Logger')->find(7789);
+        //$loggers = array($logger);
+        $loggers = $em->getRepository('OlegUserdirectoryBundle:Logger')->findAll();
+
+        //map sitename to object
+        $siteMap = array(
+            'employees' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('employees'),
+            'scan' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan'),
+            'fellapp' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp'),
+            'deidentifier' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('deidentifier'),
+            'vacreq' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq'),
+            'calllog' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('calllog'),
+        );
+
+        $count = 1;
+        foreach( $loggers as $logger ) {
+
+            $site = $logger->getSite();
+            if( $site ) {
+                continue;
+            }
+
+            $site = $siteMap[$logger->getSiteName()];
+            if( $site ) {
+                $logger->setSite($site);
+                $em->flush($logger);
+
+                $count++;
+            }
+        }
+
+        exit('Inserted site objects to loggers count='.$count);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Inserted site objects to loggers count='.$count
+        );
+
+        return $this->redirect($this->generateUrl('user_admin_index'));
+    }
+
 
 
     /**

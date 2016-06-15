@@ -118,6 +118,10 @@ class LoggerController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        //get site name from abbreviation $sitename
+        $userSecUtil = $this->get('user_security_utility');
+        $sitenameFull = $userSecUtil->getSiteBySitename($sitename)->getName();
+
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
         //if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
@@ -138,9 +142,10 @@ class LoggerController extends Controller
         //$dql->where("logger.entityId IS NOT NULL AND loggerEntity IS NULL");
 
         if( $allsites == null || $allsites == false ) {
-            echo "sitename=".$sitename."<br>";
+            //echo "sitename=".$sitename."<br>";
             //$dql->andWhere("logger.siteName = '".$sitename."'");
-            $dql->andWhere("site.abbreviation = '".$sitename."' OR logger.siteName ='".$sitename."'");
+            //$dql->andWhere("site.abbreviation = '".$sitename."' OR logger.siteName ='".$sitename."'");
+            $dql->andWhere("site.abbreviation = '".$sitename."'");
         }
 
         $createLogger = null;
@@ -199,7 +204,8 @@ class LoggerController extends Controller
 
                 return array(
                     'roles' => $rolesArr,
-                    'sitename' => $sitename,
+                    'sitename' => $sitename,            //fellapp
+                    'sitenameFull' => $sitenameFull,    //fellowship-applications
                     'createLogger' => $createLogger,
                     'updateLogger' => $updateLogger
                 );
@@ -269,7 +275,8 @@ class LoggerController extends Controller
             'loggerfilter' => $filterform->createView(),
             'pagination' => $pagination,
             'roles' => $rolesArr,
-            'sitename' => $sitename,
+            'sitename' => $sitename,            //fellapp
+            'sitenameFull' => $sitenameFull,    //fellowship-applications
             'createLogger' => $createLogger,
             'updateLogger' => $updateLogger,
             'filtered' => $filtered,

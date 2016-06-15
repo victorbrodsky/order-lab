@@ -231,11 +231,20 @@
                 {% if hideObjectId is not defined or hideObjectId == false %}
                     <td>
                         {% if entity.objectType and entity.objectType.url %}
-                            {% set url = app.request.host~app.request.getBaseURL() %}
-                            url={{ url }}<br>
-                            {% set fullUrl = url ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}
-                            fullUrl={{ fullUrl }}
-                            <a href="{{ fullUrl }}">{{ entity.entityId }}</a>
+                            {% set baseUrl = app.request.scheme ~'://'~app.request.host~app.request.getBaseURL() %}
+                            {% set fullUrl = baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}
+                            {#fullUrl=###{{ fullUrl }}###<br>#}
+                            <a href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
+                            {#http://localhost/order/app_dev.php/fellowship-applications/user/2#}
+
+                            {#{% set fullUrl = '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}#}
+                            {#<a href="{{ absolute_url(fullUrl) }}">{{ entity.entityId }}</a><br>#}
+                            {#<a href="{{ fullUrl }}">{{ entity.entityId }}</a>#}
+                            {#http://localhost/fellowship-applications/user/2#}
+
+                            {#{% set fullUrl = app.request.getSchemeAndHttpHost() ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}#}
+                            {#<br><a href="{{ fullUrl }}">{{ entity.entityId }}</a>#}
+
                         {% else %}
                             {{ entity.entityId }}
                         {% endif %}
