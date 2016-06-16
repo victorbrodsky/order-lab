@@ -1510,34 +1510,6 @@ class ListController extends Controller
 
 
 
-//* @Template("OlegUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
-    /**
-     * Platform List Manager Root List
-     * /order/list-manager/list?id=70 => show Roles list (assuming that listName=Roles == listId=70)
-     *
-     * @Route("/list-manager/list/{listId}", name="platform_list_manager")
-     * @Method("GET")
-     */
-    public function platformListManagerAction(Request $request, $listId)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
-        if( !$rootList ) {
-            throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listId='.$listId);
-        }
-
-        //$listName = $rootList->getListName();
-        $listRootName = $rootList->getListRootName();
-
-        if( $listRootName ) {
-            return $this->redirect( $this->generateUrl($listRootName) );
-        }
-
-        return;
-    }
-
-
     /////////////////// DELETE IS NOT USED /////////////////////////
     /**
      * Deletes a entity.
@@ -1665,5 +1637,73 @@ class ListController extends Controller
         ;
     }
     /////////////////// DELETE IS NOT USED /////////////////////////
+
+
+
+    /**
+     * Platform List Manager Root List
+     * /order/list-manager/list?id=70 => show Roles list (assuming that listName=Roles == listId=70)
+     *
+     * @Route("/list-manager/{listId}", name="platform_list_manager")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
+     */
+    public function platformListManagerAction(Request $request, $listId)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+        if( !$rootList ) {
+            throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listId='.$listId);
+        }
+
+        //$listName = $rootList->getListName();
+        $listRootName = $rootList->getListRootName(); //roles-list
+
+        if( $listRootName ) {
+            //return $this->redirect( $this->generateUrl($listRootName) );
+
+            $request->attributes->set('_route',$listRootName);
+
+            return $this->forward('OlegUserdirectoryBundle:List:index', array('request' => $request));
+        }
+
+        return array(
+            'routename' => $listRootName,
+            'displayName' => 'Platform List Manager Root List with List ID #'.$listId
+        );
+    }
+
+    /**
+     * populate Platform List Manager Root List
+     * @Route("/list-manager-populate/", name="populate_platform_list_manager")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
+     */
+    public function populatePlatformListManagerAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+        if( !$rootList ) {
+            throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listId='.$listId);
+        }
+
+        //$listName = $rootList->getListName();
+        $listRootName = $rootList->getListRootName(); //roles-list
+
+        if( $listRootName ) {
+            //return $this->redirect( $this->generateUrl($listRootName) );
+
+            $request->attributes->set('_route',$listRootName);
+
+            return $this->forward('OlegUserdirectoryBundle:List:index', array('request' => $request));
+        }
+
+        return array(
+            'routename' => $listRootName,
+            'displayName' => 'Platform List Manager Root List with List ID #'.$listId
+        );
+    }
 
 }

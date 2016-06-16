@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Entity\PermissionActionList;
 use Oleg\UserdirectoryBundle\Entity\PermissionList;
 use Oleg\UserdirectoryBundle\Entity\PermissionObjectList;
+use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
 use Oleg\UserdirectoryBundle\Entity\PositionTrackTypeList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
@@ -4615,6 +4616,63 @@ class AdminController extends Controller
 
         return round($count/10);
     }
+
+    /**
+     * populate Platform List Manager Root List
+     * @Route("/list-manager-populate/", name="user_populate_platform_list_manager")
+     * @Method("GET")
+     */
+    public function generatePlatformListManagerList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "10" => array('SiteList','sites-list'),
+            "20" => array('SourceSystemList','sourcesystems-list'),
+            "30" => array('Roles','role-list'),
+            "40" => array('Institution','institutions-list'),
+            "50" => array('States','states-list'),
+            "60" => array('Countries','countries-list'),
+            "70" => array('BoardCertifiedSpecialties','boardcertifications-list'),
+            "80" => array('EmploymentType','employmenttypes-list'),
+            "90" => array('EmploymentTerminationType','employmentterminations-list'),
+            "40" => array('Institution','institutions-list'),
+            "40" => array('Institution','institutions-list'),
+            "40" => array('Institution','institutions-list'),
+            "40" => array('Institution','institutions-list'),
+        );
+
+        $count = 10;
+        foreach( $types as $listId => $listArr ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListID($listId);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listName = $listArr[0];
+            $listRootName = $listArr[1];
+
+            $name = $listName;
+
+            $listEntity = new PlatformListManagerRootList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setListId($listId);
+            $listEntity->setListName($listName);
+            $listEntity->setListRootName($listRootName);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
 
     /**
      * @Route("/convert-logger-site/", name="user_convert-logger-site")
