@@ -1510,6 +1510,34 @@ class ListController extends Controller
 
 
 
+//* @Template("OlegUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
+    /**
+     * Platform List Manager Root List
+     * /order/list-manager/list?id=70 => show Roles list (assuming that listName=Roles == listId=70)
+     *
+     * @Route("/list-manager/list/{listId}", name="platform_list_manager")
+     * @Method("GET")
+     */
+    public function platformListManagerAction(Request $request, $listId)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+        if( !$rootList ) {
+            throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listId='.$listId);
+        }
+
+        //$listName = $rootList->getListName();
+        $listRootName = $rootList->getListRootName();
+
+        if( $listRootName ) {
+            return $this->redirect( $this->generateUrl($listRootName) );
+        }
+
+        return;
+    }
+
+
     /////////////////// DELETE IS NOT USED /////////////////////////
     /**
      * Deletes a entity.

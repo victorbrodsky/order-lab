@@ -5,14 +5,13 @@ namespace Oleg\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//* @ORM\Table(name="user_platformListManagerRootList",
-// *     uniqueConstraints={@ORM\UniqueConstraint(name="list_unique", columns={"listId", "listName"})}
-// * )
 
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_platformListManagerRootList")
+ * @ORM\Table(name="user_platformListManagerRootList",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="platformlist_unique", columns={"listId", "listName"})}
+ * )
  */
 class PlatformListManagerRootList extends ListAbstract
 {
@@ -37,6 +36,11 @@ class PlatformListManagerRootList extends ListAbstract
      * @ORM\Column(type="string")
      */
     protected $listName;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $listRootName;
 
 
 
@@ -71,6 +75,22 @@ class PlatformListManagerRootList extends ListAbstract
     public function setListName($listName)
     {
         $this->listName = $listName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getListRootName()
+    {
+        return $this->listRootName;
+    }
+
+    /**
+     * @param mixed $listRootName
+     */
+    public function setListRootName($listRootName)
+    {
+        $this->listRootName = $listRootName;
     }
 
 

@@ -101,11 +101,11 @@ abstract class ListAbstract
      */
     protected $fulltitle;
 
-//    /**
-//     * Link to List ID
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $linkToListId;
+    /**
+     * Link to List ID
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $linkToListId;
 
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
@@ -364,21 +364,21 @@ abstract class ListAbstract
         return $this->orderinlist;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getLinkToListId()
-//    {
-//        return $this->linkToListId;
-//    }
-//
-//    /**
-//     * @param mixed $linkToListId
-//     */
-//    public function setLinkToListId($linkToListId)
-//    {
-//        $this->linkToListId = $linkToListId;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getLinkToListId()
+    {
+        return $this->linkToListId;
+    }
+
+    /**
+     * @param mixed $linkToListId
+     */
+    public function setLinkToListId($linkToListId)
+    {
+        $this->linkToListId = $linkToListId;
+    }
 
 
 

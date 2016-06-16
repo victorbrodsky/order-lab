@@ -157,10 +157,10 @@ class ListType extends AbstractType
             },
         ));
 
-//        $builder->add('linkToListId',null,array(
-//            'label' => 'Link to List ID:',
-//            'attr' => array('class' => 'form-control')
-//        ));
+        $builder->add('linkToListId',null,array(
+            'label' => 'Link to List ID:',
+            'attr' => array('class' => 'form-control')
+        ));
 
     }
 

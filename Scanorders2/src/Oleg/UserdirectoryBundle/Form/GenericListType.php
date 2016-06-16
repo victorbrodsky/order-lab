@@ -321,6 +321,10 @@ class GenericListType extends AbstractType
                 'label'=>'List Name:',
                 'attr' => array('class'=>'form-control'),
             ));
+            $builder->add( 'listRootName', null, array(
+                'label'=>'List Root Name:',
+                'attr' => array('class'=>'form-control'),
+            ));
         }
 
         //PermissionList
