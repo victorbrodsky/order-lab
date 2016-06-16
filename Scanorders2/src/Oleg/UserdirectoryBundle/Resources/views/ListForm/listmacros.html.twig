@@ -94,12 +94,18 @@
                 <th>{{ knp_pagination_sortable(entities, 'URL', 'ent.url') }}</th>
             {% endif %}
 
+            {% if entities|first.listId is defined and entities|first.listName is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'List ID', 'ent.listId') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'List Name', 'ent.listName') }}</th>
+            {% endif %}
+
             {% if entities|first.sites is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
             {% endif %}
 
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
+            {#<th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>#}
 
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
@@ -234,6 +240,11 @@
                     <td>{{ entity.url }}</td>
                 {% endif %}
 
+                {% if entities|first.listId is defined and entities|first.listName is defined %}
+                    <td>{{ entity.listId }}</td>
+                    <td>{{ entity.listName }}</td>
+                {% endif %}
+
                 {% if entity.sites is defined %}
                     <td>
                         {% for site in entity.sites %}
@@ -244,6 +255,7 @@
 
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.orderinlist }}</td>
+                {#<td>{{ entity.linkToListId }}</td>#}
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
@@ -378,6 +390,8 @@
 
     {{ formmacros.field(form.list.orderinlist) }}
 
+    {#{{ formmacros.field(form.list.linkToListId) }}#}
+
     {#{% if form.list.updatedby is defined %}#}
         {#{{ formmacros.field(form.list.updatedby) }}#}
     {#{% endif %}#}
@@ -483,6 +497,8 @@
 
     {{ formmacros.field(edit_form.list.orderinlist) }}
 
+    {#{{ formmacros.field(edit_form.list.linkToListId) }}#}
+
     {{ formmacros.field(edit_form.list.creator) }}
 
     {{ formmacros.field(edit_form.list.createdate) }}
@@ -563,6 +579,11 @@
 
     {% if form.url is defined %}
         {{ formmacros.field(form.url) }}
+    {% endif %}
+
+    {% if form.listId is defined and form.listName is defined %}
+        {{ formmacros.field(form.listId) }}
+        {{ formmacros.field(form.listName) }}
     {% endif %}
 
     {% if form.sites is defined %}

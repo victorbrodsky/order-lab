@@ -102,6 +102,12 @@ abstract class ListAbstract
     protected $fulltitle;
 
 //    /**
+//     * Link to List ID
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $linkToListId;
+
+//    /**
 //     * @ORM\Column(type="string", nullable=true)
 //     */
 //    protected $fulltitleunique;
@@ -357,6 +363,24 @@ abstract class ListAbstract
     {
         return $this->orderinlist;
     }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getLinkToListId()
+//    {
+//        return $this->linkToListId;
+//    }
+//
+//    /**
+//     * @param mixed $linkToListId
+//     */
+//    public function setLinkToListId($linkToListId)
+//    {
+//        $this->linkToListId = $linkToListId;
+//    }
+
+
 
 
     /////////////// full titles ////////////////////

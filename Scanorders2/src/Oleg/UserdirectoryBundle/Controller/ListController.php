@@ -26,6 +26,8 @@ class ListController extends Controller
     /**
      * Lists all entities.
      *
+     * //Platform List Manager Root List
+     * @Route("/platform-list-manager/", name="platformlistmanager-list")
      * @Route("/source-systems/", name="sourcesystems-list")
      * @Route("/roles/", name="role-list")
      * @Route("/institutions/", name="institutions-list", options={"expose"=true})
@@ -264,6 +266,7 @@ class ListController extends Controller
     /**
      * Creates a new entity.
      *
+     * @Route("/platform-list-manager/", name="platformlistmanager_create")
      * @Route("/source-systems/", name="sourcesystems_create")
      * @Route("/roles/", name="role_create")
      * @Route("/institutions/", name="institutions_create")
@@ -418,6 +421,7 @@ class ListController extends Controller
     /**
      * Displays a form to create a new entity.
      *
+     * @Route("/platform-list-manager/new", name="platformlistmanager_new")
      * @Route("/source-systems/new", name="sourcesystems_new")
      * @Route("/roles/new", name="role_new")
      * @Route("/institutions/new", name="institutions_new")
@@ -543,6 +547,7 @@ class ListController extends Controller
     /**
      * Finds and displays a entity.
      *
+     * @Route("/platform-list-manager/{id}", name="platformlistmanager_show")
      * @Route("/source-systems/{id}", name="sourcesystems_show")
      * @Route("/roles/{id}", name="role_show")
      * @Route("/institutions/{id}", name="institutions_show", options={"expose"=true})
@@ -658,6 +663,7 @@ class ListController extends Controller
     /**
      * Displays a form to edit an existing entity.
      *
+     * @Route("/platform-list-manager/{id}/edit", name="platformlistmanager_edit")
      * @Route("/source-systems/{id}/edit", name="sourcesystems_edit")
      * @Route("/roles/{id}/edit", name="role_edit")
      * @Route("/institutions/{id}/edit", name="institutions_edit")
@@ -816,6 +822,7 @@ class ListController extends Controller
     /**
      * Edits an existing entity.
      *
+     * @Route("/platform-list-manager/{id}", name="platformlistmanager_update")
      * @Route("/source-systems/{id}", name="sourcesystems_update")
      * @Route("/roles/{id}", name="role_update")
      * @Route("/institutions/{id}", name="institutions_update")
@@ -1190,6 +1197,10 @@ class ListController extends Controller
 
         switch( $route ) {
 
+            case "platformlistmanager":
+                $className = "PlatformListManagerRootList";
+                $displayName = "Platform List Manager Root List";
+                break;
             case "sourcesystems":
                 $className = "SourceSystemList";
                 $displayName = "Systems";
@@ -1503,6 +1514,7 @@ class ListController extends Controller
     /**
      * Deletes a entity.
      *
+     * @Route("/platform-list-manager/{id}", name="platformlistmanager_delete")
      * @Route("/source-systems/{id}", name="sourcesystems_delete")
      * @Route("/roles/{id}", name="role_delete")
      * @Route("/institutions/{id}", name="institutions_delete")
