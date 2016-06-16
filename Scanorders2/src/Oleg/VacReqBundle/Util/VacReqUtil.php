@@ -285,7 +285,7 @@ class VacReqUtil
         }
 
         $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site";
-        $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+        $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
 
         if( $addText ) {
             $message = $addText.$break.$break.$message;
@@ -321,7 +321,7 @@ class VacReqUtil
             }
 
             $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . $break . $break;
-            $message .= "**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+            $message .= "**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
         }
 
         //css
@@ -2286,7 +2286,7 @@ class VacReqUtil
 
         $message .= $entity."";
 
-        $message .= $break.$break."**** PLEASE DON'T REPLY TO THIS EMAIL ****";
+        $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
 
         return $message;
     }

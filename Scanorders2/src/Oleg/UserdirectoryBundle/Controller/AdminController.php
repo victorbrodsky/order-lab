@@ -4295,8 +4295,8 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "Business Travel / Vacation Requests" => "business-vacation",
-            "Carry Over Requests" => "carryover",
+            "Business Travel / Vacation Request" => "business-vacation",
+            "Carry Over Request" => "carryover",
         );
 
         $count = 10;
