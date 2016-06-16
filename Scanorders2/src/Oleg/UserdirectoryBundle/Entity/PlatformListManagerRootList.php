@@ -10,7 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_platformListManagerRootList",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="platformlist_unique", columns={"listId", "listName"})}
+ *     uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="platformlistid_unique", columns={"listId"}),
+ *          @ORM\UniqueConstraint(name="platformlist_unique", columns={"listId", "listName"})
+ *     }
  * )
  */
 class PlatformListManagerRootList extends ListAbstract

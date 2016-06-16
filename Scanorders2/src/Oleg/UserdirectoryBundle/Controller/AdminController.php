@@ -4638,16 +4638,18 @@ class AdminController extends Controller
             "70" => array('BoardCertifiedSpecialties','boardcertifications-list'),
             "80" => array('EmploymentType','employmenttypes-list'),
             "90" => array('EmploymentTerminationType','employmentterminations-list'),
-            "40" => array('Institution','institutions-list'),
-            "40" => array('Institution','institutions-list'),
-            "40" => array('Institution','institutions-list'),
-            "40" => array('Institution','institutions-list'),
+            "100" => array('EventTypeList','loggereventtypes-list'),
+            "110" => array('UsernameType','usernametypes-list'),
+            "120" => array('IdentifierTypeList','identifiers-list'),
+            "130" => array('ResidencyTrackList','residencytracks-list'),
+            "140" => array('FellowshipTypeList','fellowshiptypes-list'),
+            "150" => array('LocationTypeList','locationtypes-list'),
         );
 
         $count = 10;
         foreach( $types as $listId => $listArr ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListID($listId);
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
             if( $listEntity ) {
                 continue;
             }
@@ -4670,7 +4672,14 @@ class AdminController extends Controller
             $count = $count + 10;
         }
 
-        return round($count/10);
+        $res = 'Inserted PlatformListManagerRootList objects count='.round($count/10);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $res
+        );
+
+        return $this->redirect($this->generateUrl('user_admin_index'));
     }
 
 
