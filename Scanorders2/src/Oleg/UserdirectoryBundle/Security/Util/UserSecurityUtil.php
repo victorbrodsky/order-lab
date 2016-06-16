@@ -1126,12 +1126,15 @@ class UserSecurityUtil {
     }
 
 
-    public function getAbsoluetFullLoggerUrl( $logger ) {
+    //{% set baseUrl = app.request.scheme ~'://'~app.request.host~app.request.getBaseURL() %}
+    //{% set fullUrl = baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}
+    public function getAbsoluetFullLoggerUrl( $logger, $request ) {
         $url = null;
         //{% set baseUrl = app.request.scheme ~'://'~app.request.host~app.request.getBaseURL() %}
         //baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId
 
-        if( $logger->getobjectType() == 'Accession' ) {
+        //exception for "Accession"
+        if( $logger->getObjectType() == 'Accession' ) {
             ///re-identify/?accessionType=WHATEVER-YOU-NEED-TO-SET-THIS-TO&accessionNumber=
 
             $accessionType = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName('Deidentifier ID');
@@ -1162,6 +1165,16 @@ class UserSecurityUtil {
 
             }//if accession
 
+        }
+
+        $siteName = $logger->getSite()->getName();
+        if( $logger->getObjectType() == "SiteList" ) {
+            $siteName = "directory";
+        }
+
+        if( !$url ) {
+            $baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
+            $url = $baseUrl . '/' . $siteName . '/' . $logger->getObjectType()->getUrl() . '/' . $logger->getEntityId();
         }
 
         return $url;

@@ -232,15 +232,15 @@
                     <td>
                         {% if entity.objectType and entity.objectType.url %}
 
-                            {% set baseUrl = app.request.scheme ~'://'~app.request.host~app.request.getBaseURL() %}
-                            {% if entity.objectType == 'Accession' %}
+                            {#{% set baseUrl = app.request.scheme ~'://'~app.request.host~app.request.getBaseURL() %}#}
+                            {#{% if entity.objectType == 'Accession' %}#}
                                 {#{% set fullUrl = baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}#}
-                                {% set fullUrl = user_security_utility.getAbsoluetFullLoggerUrl(entity) %}
-                            {% else %}
-                                {% set fullUrl = baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}
-                            {% endif %}
+                                {#{% set fullUrl = user_security_utility.getAbsoluetFullLoggerUrl(entity) %}#}
+                            {#{% else %}#}
+                                {#{% set fullUrl = baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}#}
+                            {#{% endif %}#}
                             {#fullUrl=###{{ fullUrl }}###<br>#}
-                            <a href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
+                            {#<a href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>#}
                             {#http://localhost/order/app_dev.php/fellowship-applications/user/2#}
 
                             {#{% set fullUrl = '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}#}
@@ -250,6 +250,10 @@
 
                             {#{% set fullUrl = app.request.getSchemeAndHttpHost() ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId %}#}
                             {#<br><a href="{{ fullUrl }}">{{ entity.entityId }}</a>#}
+
+                            {% set fullUrl = user_security_utility.getAbsoluetFullLoggerUrl(entity,app.request) %}
+                            {#fullUrl=###{{ fullUrl }}###<br>#}
+                            <a href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
 
                         {% else %}
                             {{ entity.entityId }}
