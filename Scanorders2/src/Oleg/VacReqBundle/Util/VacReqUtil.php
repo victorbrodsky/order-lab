@@ -1272,7 +1272,7 @@ class VacReqUtil
 //    }
 
     //get all user's overlapped requests
-    public function getOverlappedUserRequests( $user ) {
+    public function getOverlappedUserRequests( $user, $currentYear=true ) {
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
 
         $dql =  $repository->createQueryBuilder("request");
@@ -1285,6 +1285,13 @@ class VacReqUtil
         $dql->where("requestType.abbreviation = 'business-vacation'");
         $dql->andWhere("requestVacation.status='approved'");
         $dql->andWhere("user.id=".$user->getId());
+
+        if( $currentYear ) {
+            $dates = $this->getCurrentAcademicYearStartEndDates();
+            //echo "dates=".$dates['startDate']." == ".$dates['endDate']."<br>";
+            $currentYearStartDate = $dates['startDate'];
+            $dql->andWhere("requestVacation.startDate > '".$currentYearStartDate."'");
+        }
 
         $dql->orderBy('request.createDate', 'DESC');
 
@@ -1734,6 +1741,31 @@ class VacReqUtil
         return $academicYearArr;
     }
 
+    public function getCurrentAcademicYearStartEndDates() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        //academicYearStart: July 01
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearEnd: June 30
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+
+        $startDateMD = $academicYearStart->format('m-d');
+        $endDateMD = $academicYearEnd->format('m-d');
+
+        $currentYear = new \DateTime();
+        $currentYear = $currentYear->format('Y');
+        $previousYear = $currentYear - 1;
+
+        return array(
+            'startDate'=> $previousYear."-".$startDateMD,
+            'endDate'=> $currentYear."-".$endDateMD,
+        );
+    }
 
     public function getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate ) {
 

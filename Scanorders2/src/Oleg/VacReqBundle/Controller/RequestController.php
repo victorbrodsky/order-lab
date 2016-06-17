@@ -287,10 +287,14 @@ class RequestController extends Controller
                     )
                     //UrlGeneratorInterface::ABSOLUTE_URL
                 );
-                $overlapRequestHref = '<a href="'.$overlapRequestLink.'">ID #'.$overlapRequest->getId().'</a>';
+                $thisDateRange = $overlapRequest->getFinalStartEndDates('requestVacation');
+                //$startDateStr = $thisDateRange['startDate']->format('Y/m/d');
+                //$endDateStr = $thisDateRange['endDate']->format('Y/m/d');
+                $thisDateRange = "(".$thisDateRange['startDate']->format('Y/m/d')."-".$thisDateRange['endDate']->format('Y/m/d').")";
+                $overlapRequestHref = '<a href="'.$overlapRequestLink.'">ID #'.$overlapRequest->getId().' '.$thisDateRange.'</a>';
                 $overlappedRequestHrefs[] = $overlapRequestHref;
             }
-            $overlappedMessage = "You have ".count($overlapRequests)." overlapped approved vacation request(s): ".implode(", ",$overlappedRequestHrefs).".";
+            $overlappedMessage = "You have ".count($overlapRequests)." overlapped approved vacation request(s) for the current academic year: <br>".implode("<br>",$overlappedRequestHrefs);
             $overlappedMessage .= "<br>This will affect the accuracy of the calculations of the total approved and carry over days.";
             $overlappedMessage .= "<br>You can fix these overlapped vacation requests by canceling them (click a 'Request Cancellation' action link in 'My Requests' page).";
         }
