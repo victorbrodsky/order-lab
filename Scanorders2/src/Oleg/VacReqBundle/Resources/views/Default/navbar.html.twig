@@ -32,11 +32,16 @@
                     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {{ usermacros.siteSwitch() }}
 
-                    <li id="nav-bar-vacreqhome" class="hidden-xs divider-vertical">
-                        <a href="{{ path(vacreq_sitename~'_home') }}">
-                            <span class="glyphicon glyphicon-plane"></span> Home
-                        </a>
-                    </li>
+                    {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
+                            is_granted('ROLE_VACREQ_APPROVER') or
+                            is_granted('ROLE_VACREQ_SUPERVISOR')
+                    %}
+                        <li id="nav-bar-vacreqhome" class="hidden-xs divider-vertical">
+                            <a href="{{ path(vacreq_sitename~'_home') }}">
+                                <span class="glyphicon glyphicon-plane"></span> Home
+                            </a>
+                        </li>
+                    {% endif %}
 
                     {#{% if is_granted('ROLE_VACREQ_SUBMITTER') %}#}
                         {#<li id="nav-bar-vacreqnew" class="divider-vertical">#}
@@ -44,20 +49,26 @@
                         {#</li>#}
                     {#{% endif %}#}
 
-                    {#{% if is_granted('ROLE_VACREQ_SUBMITTER') %}#}
+                    {% if is_granted('ROLE_VACREQ_SUBMITTER') or is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                         <li id="nav-bar-myrequests" class="divider-vertical">
                             <a href="{{ path('vacreq_myrequests') }}">
                                 My Requests
                             </a>
                         </li>
-                    {#{% endif %}#}
+                    {% endif %}
 
                     {#Away Calendar#}
-                    <li id="nav-bar-awaycalendar" class="divider-vertical">
-                        <a href="{{ path('vacreq_awaycalendar') }}">
-                            Away Calendar
-                        </a>
-                    </li>
+                    {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
+                            is_granted('ROLE_VACREQ_APPROVER') or
+                            is_granted('ROLE_VACREQ_SUPERVISOR') or
+                            is_granted('ROLE_VACREQ_OBSERVER')
+                    %}
+                        <li id="nav-bar-awaycalendar" class="divider-vertical">
+                            <a href="{{ path('vacreq_awaycalendar') }}">
+                                Away Calendar
+                            </a>
+                        </li>
+                    {% endif %}
 
                     {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                         <li id="nav-bar-incomingrequests" class="divider-vertical">
@@ -97,11 +108,17 @@
                         </li>
                     {% endif %}
 
-                    <li id="nav-bar-carryoverrequest" class="divider-vertical">
-                        <a href="{{ path('vacreq_carryoverrequest') }}">
-                            Request Carry Over
-                        </a>
-                    </li>
+                    {#Request Carry Over#}
+                    {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
+                            is_granted('ROLE_VACREQ_APPROVER') or
+                            is_granted('ROLE_VACREQ_SUPERVISOR')
+                    %}
+                        <li id="nav-bar-carryoverrequest" class="divider-vertical">
+                            <a href="{{ path('vacreq_carryoverrequest') }}">
+                                Request Carry Over
+                            </a>
+                        </li>
+                    {% endif %}
 
                 </ul>
 

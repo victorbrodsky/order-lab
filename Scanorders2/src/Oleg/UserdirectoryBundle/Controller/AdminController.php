@@ -4539,7 +4539,8 @@ class AdminController extends Controller
             "delete",
             "changestatus",
 
-            "changestatus-carryover"
+            "changestatus-carryover",
+            "view-away-calendar"
         );
 
         $count = 10;

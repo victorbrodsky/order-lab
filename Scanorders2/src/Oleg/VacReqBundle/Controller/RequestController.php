@@ -36,6 +36,14 @@ class RequestController extends Controller
     public function newAction(Request $request)
     {
 
+        if( $this->get('security.context')->isGranted('ROLE_VACREQ_OBSERVER') &&
+            !$this->get('security.context')->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            !$this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            !$this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq_awaycalendar') );
+        }
+
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
 
@@ -177,7 +185,7 @@ class RequestController extends Controller
                 //cc to submitter
                 $css = $user->getSingleEmail();
             }
-            //TODO: change body according to https://bitbucket.org/weillcornellpathology/scanorder/issues/493/correct-spelling-for-carry-over-request
+
             $subject = $requestName." ID #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
 

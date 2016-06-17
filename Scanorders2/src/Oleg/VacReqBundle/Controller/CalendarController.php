@@ -29,6 +29,15 @@ class CalendarController extends Controller
      */
     public function awayCalendarAction(Request $request) {
 
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_OBSERVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
@@ -50,6 +59,10 @@ class CalendarController extends Controller
         } else {
             $groupParams['asSupervisor'] = true;
             $subjectUser = $vacreqUtil->getClosestSupervisor( $user );
+        }
+        //echo "subjectUser=".$subjectUser."<br>";
+        if( !$subjectUser ) {
+            $subjectUser = $user;
         }
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($subjectUser,$groupParams);
 
