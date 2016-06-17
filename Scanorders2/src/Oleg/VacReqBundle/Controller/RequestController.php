@@ -180,8 +180,16 @@ class RequestController extends Controller
             //TODO: change body according to https://bitbucket.org/weillcornellpathology/scanorder/issues/493/correct-spelling-for-carry-over-request
             $subject = $requestName." ID #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
-            $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
-            $message .= "The approver will review your request soon.";
+
+            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                //You have successfully submitted request #1781 for X vacation days to be carried over from 20XX-20YY to 20YY-20ZZ.
+                $message .= "You have successfully submitted the request #".$entity->getId()." for ".$entity->getCarryOverDays();
+                $message .= " vacation days to be carried over from ".$entity->getSourceYearRange()." to ".$entity->getDestinationYearRange().". ";
+            } else {
+                $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
+            }
+
+            $message .= "You will be notified once your request is reviewed and its status changes.";
             $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
             $emailUtil->sendEmail( $personAwayEmail, $subject, $message, $css, null );
 
@@ -189,7 +197,7 @@ class RequestController extends Controller
             $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
 
             //Event Log
-            $event = $requestName . " for ".$entity->getUser()." has been submitted. Confirmation email have been sent to ".$approversNameStr;
+            $event = $requestName . " for ".$entity->getUser()." has been submitted. Confirmation email has been sent to ".$approversNameStr;
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
