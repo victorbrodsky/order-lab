@@ -1171,6 +1171,7 @@ class VacReqUtil
             'status' => $status
         ));
 
+        //bruteForce not used!!! Instead, we prevent to submit and approve overlap requests
         if( $bruteForce == true ) {
             $requests = $query->getResult();
             $numberOfDays = $this->getNotOverlapNumberOfWorkingDays($requests,$requestTypeStr);
@@ -1223,50 +1224,131 @@ class VacReqUtil
         return $numberOfDays;
     }
 
-    public function getNotOverlapNumberOfWorkingDays( $requests, $requestTypeStr ) {
-        $logger = $this->container->get('logger');
-        $overlap = false;
-        $numberOfDays = 0;
+//    //check for overlapped requests
+//    public function getNotOverlapNumberOfWorkingDays( $requests, $requestTypeStr ) {
+//        $logger = $this->container->get('logger');
+//        $overlap = false;
+//        $numberOfDays = 0;
+//        $dateRanges = array();
+//        foreach( $requests as $request ) {
+//
+//            $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
+//
+//            foreach( $dateRanges as $requestId=>$dateRange ) {
+//                $msg = "";
+//                //overlap condition: (StartA <= EndB) and (EndA >= StartB)
+//                if( ($thisDateRange['startDate'] <= $dateRange['endDate']) && ($thisDateRange['endDate'] >= $dateRange['startDate']) ) {
+//                    //overlap!
+//                    if( $thisDateRange['startDate'] == $dateRange['startDate'] && $thisDateRange['endDate'] == $dateRange['endDate'] ) {
+//                        $msg = "Exact ";
+//                    } else {
+//                        $startDateStr = $thisDateRange['startDate']->format('Y/m/d');
+//                        $endDateStr = $thisDateRange['endDate']->format('Y/m/d');
+//                        $msg .= $requestId . ": overlap dates ID=" . $request->getId() .
+//                            "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr.
+//                            "; created=".$request->getCreateDate()->format('Y/m/d');
+//                        echo $msg . "<br>";
+//                        $logger->error($msg);
+//                        $overlap = true;
+//                    }
+//                    //TODO:
+//                } else {
+//                    //not overlap
+//                    $dateRanges[$request->getId()] = $thisDateRange;
+//                    $days = $request->getTotalDaysByType($requestTypeStr);
+//                    $numberOfDays = $numberOfDays + $days;
+//                    //echo "not overlap dates; days=".$days."<br>";
+//                }
+//            }
+//
+//            if( count($dateRanges) == 0 ) {
+//                $dateRanges[$request->getId()] = $thisDateRange;
+//            }
+//        }
+//
+//        return $overlap;
+//        //echo "unique days=".$numberOfDays."<br>";
+//        return $numberOfDays;
+//    }
+
+    //get all user's overlapped requests
+    public function getOverlappedUserRequests( $user ) {
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestType", "requestType");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+
+        $dql->where("requestType.abbreviation = 'business-vacation'");
+        $dql->andWhere("requestVacation.status='approved'");
+        $dql->andWhere("user.id=".$user->getId());
+
+        $dql->orderBy('request.createDate', 'DESC');
+
+        $query = $this->em->createQuery($dql);
+
+        $requests = $query->getResult();
+        //echo "requests to analyze=".count($requests)."<br>";
+
+        $overlapRequests = $this->checkOverlapRequests($requests,'requestVacation');
+        //echo "overlapRequests=".count($overlapRequests)."<br>";
+
+        return $overlapRequests;
+    }
+    //check for overlapped requests
+    public function checkOverlapRequests( $requests, $requestTypeStr ) {
+        //$logger = $this->container->get('logger');
+        //$overlap = false;
+        $overlapRequests = array();
         $dateRanges = array();
         foreach( $requests as $request ) {
 
             $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
+            //echo "check ID=" .$request->getId(). "<br>";
 
             foreach( $dateRanges as $requestId=>$dateRange ) {
-                $msg = "";
                 //overlap condition: (StartA <= EndB) and (EndA >= StartB)
                 if( ($thisDateRange['startDate'] <= $dateRange['endDate']) && ($thisDateRange['endDate'] >= $dateRange['startDate']) ) {
-                    if( $thisDateRange['startDate'] == $dateRange['startDate'] && $thisDateRange['endDate'] == $dateRange['endDate'] ) {
-                        $msg = "Exact ";
-                    } else {
-                        $startDateStr = $thisDateRange['startDate']->format('Y/m/d');
-                        $endDateStr = $thisDateRange['endDate']->format('Y/m/d');
-                        $msg .= $requestId . ": overlap dates ID=" . $request->getId() .
-                            "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr.
-                            "; created=".$request->getCreateDate()->format('Y/m/d');
-                        echo $msg . "<br>";
-                        $logger->error($msg);
-                        $overlap = true;
-                    }
-                    //TODO:
+                    //overlap!
+                    //echo "overlap ID=" .$requestId. "<br>";
+                    $overlapRequests[] = $request;
+//                    if( $thisDateRange['startDate'] == $dateRange['startDate'] && $thisDateRange['endDate'] == $dateRange['endDate'] ) {
+//                        //$msg = "Exact ";
+//                    } else {
+////                        if( $log ) {
+////                            $startDateStr = $thisDateRange['startDate']->format('Y/m/d');
+////                            $endDateStr = $thisDateRange['endDate']->format('Y/m/d');
+////                            $msg = $requestId . ": overlap dates ID=" . $request->getId() .
+////                                "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr.
+////                                "; created=".$request->getCreateDate()->format('Y/m/d');
+////
+////                            echo $msg . "<br>";
+////                            //$logger->error($msg);
+////                        }
+//                        //$overlap = true;
+//                        //$overlapRequests[] = $request;
+//                    }
                 } else {
+                    //not overlap
+                    //echo "not overlap ID=" .$requestId. "<br>";
                     $dateRanges[$request->getId()] = $thisDateRange;
-                    $days = $request->getTotalDaysByType($requestTypeStr);
-                    $numberOfDays = $numberOfDays + $days;
-                    //echo "not overlap dates; days=".$days."<br>";
                 }
-            }
+
+            }//foreach $dateRanges
 
             if( count($dateRanges) == 0 ) {
                 $dateRanges[$request->getId()] = $thisDateRange;
             }
-        }
 
-        return $overlap;
-        //echo "unique days=".$numberOfDays."<br>";
-        return $numberOfDays;
+        }//foreach $requests
+
+        //return $overlap;
+        return $overlapRequests;
     }
-    public function checkForOverlapDates( $user, $subjectRequest ) {
+    public function checkRequestForOverlapDates( $user, $subjectRequest ) {
         //$logger = $this->container->get('logger');
         //get all user approved vacation requests
         $requestTypeStr = "requestVacation";

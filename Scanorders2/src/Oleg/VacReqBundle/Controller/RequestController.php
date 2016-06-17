@@ -127,7 +127,7 @@ class RequestController extends Controller
 
         //check for overlapped date range
         if( $routeName != "vacreq_carryoverrequest" ) {
-            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity); //check for newAction
+            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for newAction
             if (count($overlappedRequests) > 0) {
                 //$errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true );
@@ -274,6 +274,27 @@ class RequestController extends Controller
         }
         $remainingDaysString .= ".";
 
+        //check for overlapped requests
+        $overlappedMessage = null;
+        $overlapRequests = $vacreqUtil->getOverlappedUserRequests($user);
+        if( count($overlapRequests) > 0 ) {
+            $overlappedRequestHrefs = array();
+            foreach( $overlapRequests as $overlapRequest ) {
+                $overlapRequestLink = $this->container->get('router')->generate(
+                    'vacreq_show',
+                    array(
+                        'id' => $overlapRequest->getId(),
+                    )
+                    //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $overlapRequestHref = '<a href="'.$overlapRequestLink.'">ID #'.$overlapRequest->getId().'</a>';
+                $overlappedRequestHrefs[] = $overlapRequestHref;
+            }
+            $overlappedMessage = "You have ".count($overlapRequests)." overlapped approved vacation request(s): ".implode(", ",$overlappedRequestHrefs).".";
+            $overlappedMessage .= "<br>This will affect the accuracy of the calculations of the total approved and carry over days.";
+            $overlappedMessage .= "<br>You can fix these overlapped vacation requests by canceling them (click a 'Request Cancellation' action link in 'My Requests' page).";
+        }
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -286,7 +307,8 @@ class RequestController extends Controller
             'carriedOverDaysString' => $carriedOverDaysString,
             'remainingDaysString' => $remainingDaysString,
             'title' => $title,
-            'newCarryOverRequest' => $newCarryOverRequest
+            'newCarryOverRequest' => $newCarryOverRequest,
+            'overlappedMessage' => $overlappedMessage
         );
     }
 
@@ -421,7 +443,7 @@ class RequestController extends Controller
 //                ||
 //                $routeName == "vacreq_review" && $overallStatus == "completed"
 //            ) {
-            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity);    //check for editAction
+            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity);    //check for editAction
                 if (count($overlappedRequests) > 0) {
                     //$errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true );
@@ -646,7 +668,7 @@ class RequestController extends Controller
         //check for overlapped date range if a new status is approved
         if( $status == "approved" ) {
             $vacreqUtil = $this->get('vacreq_util');
-            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity); //check for statusAction
+            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for statusAction
             if (count($overlappedRequests) > 0) {
 
                 //If the dates overlap with the dates of another APPROVED request EXACTLY =>
@@ -1451,6 +1473,18 @@ class RequestController extends Controller
     public function analyzeRequests($userId,$count=1) {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+        $overlapRequests = $this->getOverlappedUserRequests($user);
+
+        if( $overlapRequests ) {
+            $logger->error($count." ^########## user: " . $user);
+            echo $count." ^########## user: " . $user . "<br><br><br>";
+            $count++;
+        }
+        return $count;
+    }
+    public function getOverlappedUserRequests( $user ) {
+        $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
 
@@ -1463,7 +1497,7 @@ class RequestController extends Controller
 
         $dql->where("requestType.abbreviation = 'business-vacation'");
         $dql->andWhere("requestVacation.status='approved'");
-        $dql->andWhere("user.id=".$userId);
+        $dql->andWhere("user.id=".$user->getId());
 
         $dql->orderBy('request.createDate', 'DESC');
 
@@ -1473,17 +1507,10 @@ class RequestController extends Controller
         //echo "requests to analyze=".count($requests)."<br>";
 
         $vacreqUtil = $this->get('vacreq_util');
-        $overlap = $vacreqUtil->getNotOverlapNumberOfWorkingDays($requests,'requestVacation');
+        $overlapRequests = $vacreqUtil->checkOverlapRequests($requests,'requestVacation');
 
-        if( $overlap ) {
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
-            $logger->error($count." ^########## user: " . $user);
-            echo $count." ^########## user: " . $user . "<br><br><br>";
-            $count++;
-        }
-        return $count;
+        return $overlapRequests;
     }
-
 
 
 }

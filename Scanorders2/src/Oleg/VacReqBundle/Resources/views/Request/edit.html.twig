@@ -29,6 +29,12 @@
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="requestType" value="{{ entity.getRequestType().getAbbreviation() }}" />
 
+    {% if overlappedMessage %}
+        <div class="alert alert-danger">
+            {{ overlappedMessage|raw }}
+        </div>
+    {% endif %}
+
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         {% if accessreqs is defined and accessreqs and accessreqs > 0 %}
             {% set prefixStr = "There is" %}
