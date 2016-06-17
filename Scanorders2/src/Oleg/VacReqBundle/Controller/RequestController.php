@@ -294,7 +294,7 @@ class RequestController extends Controller
                 $overlapRequestHref = '<a href="'.$overlapRequestLink.'">ID #'.$overlapRequest->getId().' '.$thisDateRange.'</a>';
                 $overlappedRequestHrefs[] = $overlapRequestHref;
             }
-            $overlappedMessage = "You have ".count($overlapRequests)." overlapped approved vacation request(s) for the current academic year: <br>".implode("<br>",$overlappedRequestHrefs);
+            $overlappedMessage = "You have ".count($overlapRequests)." overlapping approved vacation request(s) for the current academic year: <br>".implode("<br>",$overlappedRequestHrefs);
             $overlappedMessage .= "<br>This will affect the accuracy of the calculations of the total approved and carry over days.";
             $overlappedMessage .= "<br>You can fix these overlapped vacation requests by canceling them (click a 'Request Cancellation' action link in 'My Requests' page).";
         }
@@ -1492,34 +1492,7 @@ class RequestController extends Controller
         }
         return $count;
     }
-//    public function getOverlappedUserRequests( $user ) {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
-//
-//        $dql =  $repository->createQueryBuilder("request");
-//        $dql->select('request');
-//
-//        $dql->leftJoin("request.user", "user");
-//        $dql->leftJoin("request.requestType", "requestType");
-//        $dql->leftJoin("request.requestVacation", "requestVacation");
-//
-//        $dql->where("requestType.abbreviation = 'business-vacation'");
-//        $dql->andWhere("requestVacation.status='approved'");
-//        $dql->andWhere("user.id=".$user->getId());
-//
-//        $dql->orderBy('request.createDate', 'DESC');
-//
-//        $query = $em->createQuery($dql);
-//
-//        $requests = $query->getResult();
-//        //echo "requests to analyze=".count($requests)."<br>";
-//
-//        $vacreqUtil = $this->get('vacreq_util');
-//        $overlapRequests = $vacreqUtil->checkOverlapRequests($requests,'requestVacation');
-//
-//        return $overlapRequests;
-//    }
+
 
 
 }
