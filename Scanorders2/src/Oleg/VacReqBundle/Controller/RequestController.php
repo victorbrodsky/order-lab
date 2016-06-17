@@ -1478,46 +1478,48 @@ class RequestController extends Controller
         return $requests;
     }
     public function analyzeRequests($userId,$count=1) {
+        $vacreqUtil = $this->get('vacreq_util');
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
-        $overlapRequests = $this->getOverlappedUserRequests($user);
+        $overlapRequests = $vacreqUtil->getOverlappedUserRequests($user,true,true);
+        //$overlapRequests = $vacreqUtil->getNotOverlapNumberOfWorkingDays($user,'requestVacation');
 
-        if( $overlapRequests ) {
+        if( count($overlapRequests) > 0 ) {
             $logger->error($count." ^########## user: " . $user);
             echo $count." ^########## user: " . $user . "<br><br><br>";
             $count++;
         }
         return $count;
     }
-    public function getOverlappedUserRequests( $user ) {
-        $em = $this->getDoctrine()->getManager();
-
-        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
-
-        $dql =  $repository->createQueryBuilder("request");
-        $dql->select('request');
-
-        $dql->leftJoin("request.user", "user");
-        $dql->leftJoin("request.requestType", "requestType");
-        $dql->leftJoin("request.requestVacation", "requestVacation");
-
-        $dql->where("requestType.abbreviation = 'business-vacation'");
-        $dql->andWhere("requestVacation.status='approved'");
-        $dql->andWhere("user.id=".$user->getId());
-
-        $dql->orderBy('request.createDate', 'DESC');
-
-        $query = $em->createQuery($dql);
-
-        $requests = $query->getResult();
-        //echo "requests to analyze=".count($requests)."<br>";
-
-        $vacreqUtil = $this->get('vacreq_util');
-        $overlapRequests = $vacreqUtil->checkOverlapRequests($requests,'requestVacation');
-
-        return $overlapRequests;
-    }
+//    public function getOverlappedUserRequests( $user ) {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+//
+//        $dql =  $repository->createQueryBuilder("request");
+//        $dql->select('request');
+//
+//        $dql->leftJoin("request.user", "user");
+//        $dql->leftJoin("request.requestType", "requestType");
+//        $dql->leftJoin("request.requestVacation", "requestVacation");
+//
+//        $dql->where("requestType.abbreviation = 'business-vacation'");
+//        $dql->andWhere("requestVacation.status='approved'");
+//        $dql->andWhere("user.id=".$user->getId());
+//
+//        $dql->orderBy('request.createDate', 'DESC');
+//
+//        $query = $em->createQuery($dql);
+//
+//        $requests = $query->getResult();
+//        //echo "requests to analyze=".count($requests)."<br>";
+//
+//        $vacreqUtil = $this->get('vacreq_util');
+//        $overlapRequests = $vacreqUtil->checkOverlapRequests($requests,'requestVacation');
+//
+//        return $overlapRequests;
+//    }
 
 
 }
