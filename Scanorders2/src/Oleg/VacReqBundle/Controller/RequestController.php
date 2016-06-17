@@ -676,21 +676,27 @@ class RequestController extends Controller
                 if( $vacreqUtil->hasOverlappedExactly( $entity, $overlappedRequests ) ) {
 
                     //set status to cancel
-                    $entity->setStatus('canceled');
-                    $em->persist($entity);
-                    $em->flush($entity);
+                    //$entity->setStatus('canceled');
+                    //$em->persist($entity);
+                    //$em->flush($entity);
+                    $status = 'canceled';
 
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, null, true );
-                    $errorMsg .= "<br>This request has been canceled as a duplicate.";
+                    $errorMsg .= "<br>This request has been canceled as a duplicate.<br><br>";
+
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        $errorMsg
+                    );
                 } else {
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        $errorMsg
+                    );
+                    return $this->redirectToRoute('vacreq_show',array('id'=>$entity->getId()));
                 }
 
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    $errorMsg
-                );
-                return $this->redirectToRoute('vacreq_show',array('id'=>$entity->getId()));
             } else {
                 //exit('no overlaps found');
             }
