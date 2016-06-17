@@ -676,13 +676,10 @@ class RequestController extends Controller
                 if( $vacreqUtil->hasOverlappedExactly( $entity, $overlappedRequests ) ) {
 
                     //set status to cancel
-                    //$entity->setStatus('canceled');
-                    //$em->persist($entity);
-                    //$em->flush($entity);
                     $status = 'canceled';
 
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, null, true );
-                    $errorMsg .= "<br>This request has been canceled as a duplicate.<br><br>";
+                    $errorMsg .= "<br>This request has been canceled as a duplicate.<br>";
 
                     $this->get('session')->getFlashBag()->add(
                         'warning',
