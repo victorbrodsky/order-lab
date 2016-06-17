@@ -1314,7 +1314,18 @@ class VacReqUtil
         }//foreach requests
         return $overlappedRequests;
     }
-    public function getOverlappedMessage( $request, $overlappedRequests, $absolute=null ) {
+    public function hasOverlappedExactly( $subjectRequest, $overlappedRequests ) {
+        $requestTypeStr = "requestVacation";
+        $subjectDateRange = $subjectRequest->getFinalStartEndDates($requestTypeStr);
+        foreach( $overlappedRequests as $overlappedRequest ) {
+            $thisDateRange = $overlappedRequest->getFinalStartEndDates($requestTypeStr);
+            if( ($thisDateRange['startDate'] == $subjectDateRange['startDate']) && ($thisDateRange['endDate'] == $subjectDateRange['endDate']) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public function getOverlappedMessage( $subjectRequest, $overlappedRequests, $absolute=null, $short=false ) {
         //$errorMsg = 'This request ID #'.$entity->getId().' has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
         $errorMsg = null;
         //Your request includes dates (MM/DD/YYYY, MM/DD/YYYY, MM/DD/YYYY) already covered by your previous request(s) (Request ID LINK #1, Request ID LINK #2, Request ID LINK #3). Please exclude these dates from this request before re-submitting.
@@ -1348,7 +1359,10 @@ class VacReqUtil
             }
 
             $errorMsg = "This request includes dates ".implode(", ",$dates)." already covered by your previous request(s) (".implode(", ",$hrefs).").";
-            $errorMsg .= " Please exclude these dates from this request before re-submitting.";
+
+            if( !$short ) {
+                $errorMsg .= " Please exclude these dates from this request before re-submitting.";
+            }
         }
 
         return $errorMsg;

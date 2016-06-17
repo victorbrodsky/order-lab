@@ -127,7 +127,7 @@ class RequestController extends Controller
 
         //check for overlapped date range
         if( $routeName != "vacreq_carryoverrequest" ) {
-            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity);
+            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity); //check for newAction
             if (count($overlappedRequests) > 0) {
                 //$errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true );
@@ -421,7 +421,7 @@ class RequestController extends Controller
 //                ||
 //                $routeName == "vacreq_review" && $overallStatus == "completed"
 //            ) {
-            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity);
+            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity);    //check for editAction
                 if (count($overlappedRequests) > 0) {
                     //$errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true );
@@ -646,10 +646,24 @@ class RequestController extends Controller
         //check for overlapped date range if a new status is approved
         if( $status == "approved" ) {
             $vacreqUtil = $this->get('vacreq_util');
-            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity);
+            $overlappedRequests = $vacreqUtil->checkForOverlapDates($user, $entity); //check for statusAction
             if (count($overlappedRequests) > 0) {
-                //$errorMsg = 'This request ID #'.$entity->getId().' has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
-                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );
+
+                //If the dates overlap with the dates of another APPROVED request EXACTLY =>
+                //This request has been canceled as a duplicate." and set the status to "Canceled" instead of "Approved".
+                if( $vacreqUtil->hasOverlappedExactly( $entity, $overlappedRequests ) ) {
+
+                    //set status to cancel
+                    $entity->setStatus('canceled');
+                    $em->persist($entity);
+                    $em->flush();
+
+                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, null, true );
+                    $errorMsg .= " This request has been canceled as a duplicate.";
+                } else {
+                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );
+                }
+
                 $this->get('session')->getFlashBag()->add(
                     'warning',
                     $errorMsg
