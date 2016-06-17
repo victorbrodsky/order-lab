@@ -678,10 +678,10 @@ class RequestController extends Controller
                     //set status to cancel
                     $entity->setStatus('canceled');
                     $em->persist($entity);
-                    $em->flush();
+                    $em->flush($entity);
 
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, null, true );
-                    $errorMsg .= " This request has been canceled as a duplicate.";
+                    $errorMsg .= "<br>This request has been canceled as a duplicate.";
                 } else {
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );
                 }
