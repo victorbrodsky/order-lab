@@ -189,7 +189,7 @@ class RequestController extends Controller
                 $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
             }
 
-            $message .= "You will be notified once your request is reviewed and its status changes.";
+            $message .= $break."You will be notified once your request is reviewed and its status changes.";
             $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
             $emailUtil->sendEmail( $personAwayEmail, $subject, $message, $css, null );
 
