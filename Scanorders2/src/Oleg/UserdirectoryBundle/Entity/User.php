@@ -1689,7 +1689,7 @@ class User extends BaseUser {
 
         $instArr = $this->addTitleInfo($instArr,'medicalTitle',$this->getMedicalTitles());
 
-        $instArr = $this->groupByInst($instArr);
+        //$instArr = $this->groupByInst($instArr);
 
         return $instArr;
     }
@@ -1714,24 +1714,14 @@ class User extends BaseUser {
                 $instId = $title->getInstitution()->getId();
             }
 
-            //if not exists
-            //$infoArr = array(
-            //    'instInfo' => $this->getHeadInstitutionInfoArr($institution),
-            //    'titleInfo'    => $elementInfo
-            //);
-
-            //$instArr[$title->getInstitution()->getId()] = array();
-            //array_push( $instArr[$title->getInstitution()->getId()], $infoArr );
-
             if( array_key_exists($instId,$instArr) ) {
                 //echo $instId." => instId already exists<br>";
-                //$instArr[$instId]['titleInfo'][] = $elementInfo;
             } else {
                 //echo $instId." => instId does not exists<br>";
                 $instArr[$instId]['instInfo'] = $this->getHeadInstitutionInfoArr($institution);
-                //$instArr[$instId]['titleInfo'][] = $elementInfo;
             }
             $instArr[$instId]['titleInfo'][] = $elementInfo;
+            $instArr[$instId]['old'] = 1;
         }//foreach titles
 
         return $instArr;
