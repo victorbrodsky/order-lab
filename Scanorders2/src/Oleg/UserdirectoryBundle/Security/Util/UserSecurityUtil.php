@@ -1180,4 +1180,305 @@ class UserSecurityUtil {
         return $url;
     }
 
+
+    /////////////////////// getHeadInfo Return: Chief, Eyebrow Pathology ///////////////////////
+    //Group by institutions
+    public function getHeadInfo( $user ) {
+        $instArr = array();
+
+        $instArr = $this->addTitleInfo($instArr,'administrativeTitle',$user->getAdministrativeTitles());
+
+        $instArr = $this->addTitleInfo($instArr,'appointmentTitle',$user->getAppointmentTitles());
+
+        $instArr = $this->addTitleInfo($instArr,'medicalTitle',$user->getMedicalTitles());
+
+        //$instArr = $this->groupByInst($instArr);
+
+        return $instArr;
+    }
+    public function addTitleInfo($instArr,$tablename,$titles) {
+        foreach( $titles as $title ) {
+            $elementInfo = null;
+            if( $title->getName() ) {
+                $name = $title->getName()->getName()."";
+                $titleId = null;
+                if( $title->getName()->getId() ) {
+                    $titleId = $title->getName()->getId();
+                }
+                $elementInfo = array('tablename'=>$tablename,'id'=>$titleId,'name'=>$name);
+                $elementInfo = $this->getSearchSameObjectUrl($elementInfo);
+            }
+
+            //$headInfo[] = 'break-br';
+
+            $instId = 0;
+            $institution = null;
+            if( $title->getInstitution() ) {
+                $institution = $title->getInstitution();
+                $instId = $title->getInstitution()->getId();
+            }
+
+            //if not exists
+            //$infoArr = array(
+            //    'instInfo' => $this->getHeadInstitutionInfoArr($institution),
+            //    'titleInfo'    => $elementInfo
+            //);
+
+            //$instArr[$title->getInstitution()->getId()] = array();
+            //array_push( $instArr[$title->getInstitution()->getId()], $infoArr );
+
+            if( array_key_exists($instId,$instArr) ) {
+                //echo $instId." => instId already exists<br>";
+                //$instArr[$instId]['titleInfo'][] = $elementInfo;
+            } else {
+                //echo $instId." => instId does not exists<br>";
+                $instArr[$instId]['instInfo'] = $this->getHeadInstitutionInfoArr($institution);
+                //$instArr[$instId]['titleInfo'][] = $elementInfo;
+            }
+            $instArr[$titleId]['titleInfo'][] = $elementInfo;
+        }//foreach titles
+
+        return $instArr;
+    }
+    public function getHeadInstitutionInfoArr($institution) {
+
+        //echo "inst=".$institution."<br>";
+        //echo "count=".count($headInfo)."<br>";
+        $pid = null;
+
+        $headInfo = array();
+
+        //service
+        if( $institution ) {
+
+            $institutionThis = $institution;
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $pid = null;
+            $parent = $institutionThis->getParent();
+            if( $parent && $parent->getId() ) {
+                $pid = $parent->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'pid'=>$pid,'name'=>$name);
+            $headInfo[] = $this->getSearchSameObjectUrl($elementInfo);
+
+        }
+
+        //division
+        if( $institution && $institution->getParent() ) {
+
+            $institutionThis = $institution->getParent();
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $pid = null;
+            $parent = $institutionThis->getParent();
+            if( $parent && $parent->getId() ) {
+                $pid = $parent->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'pid'=>$pid,'name'=>$name);
+            $headInfo[] = $this->getSearchSameObjectUrl($elementInfo);
+
+        }
+
+        //department
+        if( $institution && $institution->getParent() && $institution->getParent()->getParent() ) {
+
+            $institutionThis = $institution->getParent()->getParent();
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $pid = null;
+            $parent = $institutionThis->getParent();
+            if( $parent && $parent->getId() ) {
+                $pid = $parent->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'pid'=>$pid,'name'=>$name);
+            $headInfo[] = $this->getSearchSameObjectUrl($elementInfo);
+
+        }
+
+        //institution
+        if( $institution && $institution->getParent() && $institution->getParent()->getParent() && $institution->getParent()->getParent()->getParent() ) {
+
+            $institutionThis = $institution->getParent()->getParent()->getParent();
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $pid = null;
+            $parent = $institutionThis->getParent();
+            if( $parent && $parent->getId() ) {
+                $pid = $parent->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'pid'=>$pid,'name'=>$name);
+            $headInfo[] = $this->getSearchSameObjectUrl($elementInfo);
+
+            //$headInfo[] = 'break-hr';
+        }
+
+        //$headInfo[] = 'break-hr';
+
+        return $headInfo;
+    }
+    public function getSearchSameObjectUrl($elementInfo) {
+        $url = $this->container->get('router')->generate(
+            'employees_search_same_object',
+            array(
+                'tablename' => $elementInfo['tablename'],
+                'id' => $elementInfo['id'],
+                'name'=> $elementInfo['name']
+            )
+            //UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $elementInfo = '<a href="'.$url.'">'.$elementInfo['name'].'</a>';
+        return $elementInfo;
+    }
+    public function groupByInst($instArr) {
+        //group by last institution only:
+        //Assistant Professor of Pathology and Laboratory Medicine
+        //Cytopathology, Gynecologic Pathology
+        //Anatomic Pathology
+        //Pathology and Laboratory Medicine
+        //Weill Cornell Medical College
+
+        echo "<pre>";
+        print_r($instArr);
+        echo "</pre><br>";
+
+        //1) get pid group
+//        $firstInstPidArr = array();
+//        foreach( $instArr as $instInfoArr ) {
+//            $firstInstPid = $instInfoArr['instInfo'][0]['pid'];
+//            $firstInstId = $instInfoArr['instInfo'][0]['id'];
+//            $firstInstPidArr[$firstInstPid][] = $firstInstId;
+//        }
+//        echo "<pre>";
+//        print_r($firstInstPidArr);
+//        echo "</pre><br>";
+
+
+        $groupInstArr = array();
+        $firstInstPidArr = array();
+        foreach( $instArr as $instInfoArr ) {
+
+            $firstInstPid = $instInfoArr['instInfo'][0]['pid'];
+            $firstInstId = $instInfoArr['instInfo'][0]['id'];
+            $firstInstPidArr[$firstInstPid][] = $firstInstId;
+
+            if( !in_array($firstInstPid,$firstInstPidArr) ) {
+                $firstInstPidArr[] = $firstInstPid;
+            }
+
+        }
+        echo "<pre>";
+        print_r($firstInstPidArr);
+        echo "</pre><br>";
+
+
+        //iterate and check if firstInstId is in $firstInstPidArr
+//        $groupInstArr = array();
+//        $firstInstArr = array();
+//
+//        $groupCount = 0;
+//        foreach( $instArr as $instInfoArr ) {
+////            echo "<pre>";
+////            print_r($instInfoArr);
+////            echo "</pre>";
+//
+//            $firstInstPid = $instInfoArr['instInfo'][0]['pid'];
+//
+//            $instInfoHref = array();
+//
+//            $instCount = 0;
+//            foreach( $instInfoArr['instInfo'] as $instInfo ) {
+//
+//                //reconstruct $instInfo as href: $instInfoHref
+//                $url = $this->container->get('router')->generate(
+//                    'employees_search_same_object',
+//                    array(
+//                        'tablename' => $instInfo['tablename'],
+//                        'id' => $instInfo['id'],
+//                        'name' => $instInfo['name']
+//                    )
+//                    //UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $instInfo = '<a href="'.$url.'">'.$instInfo['name'].'</a>';
+//
+//                //$instInfoArrRev = array_reverse($instInfoArr['instInfo']);
+//
+//                //$lastindex = count($instInfoArr['instInfo']) - 1;
+//                //$firstInstPid = $instInfoArr['instInfo'][0]['pid'];
+//
+//
+//
+//                if (!in_array($firstInstPid, $lastInstPidArr)) {
+//                    echo "lastInstPid=" . $firstInstPid . "<br>";
+//                    $lastInstPidArr[] = $firstInstPid;
+//
+//                    //$lastInstArr[$firstInstPid][] = $instInfoArr['instInfo'][0];
+//
+//                    //convert first element to array
+//                    $newInstInfoArr = $instInfoArr['instInfo'];
+//                    $firstEl = $newInstInfoArr[0];
+//                    $firstInstArr[] = $instInfoArr['instInfo'];
+//
+//                    //$instInfoArr['instInfo'][0][] = ;
+//
+//                    //$groupInstArr[$firstInstPid]['instInfo'] = $instInfoArr['instInfo'];
+//                    //$instArr[$firstInstPid]['titleInfo'][] = $elementInfo;
+//                } else {
+//
+//                }
+//
+//                if( $instCount == 0 ) {
+//                    $firstInstInfo = array($instInfo);
+//
+//
+//
+//                } else {
+//                    $instInfoHref[] = $instInfo;
+//                }
+//
+//                $instCount++;
+//            }//foreach inst in group
+//
+//            echo "<br>";
+//
+//            $groupInstArr[$firstInstPid]['titleInfo'] = $instInfoArr['titleInfo'];
+//            $groupInstArr[$firstInstPid]['instInfo'] = $instInfoHref;
+//            $groupCount++;
+//
+//        }//foreach group
+
+        echo "<br>final:<br>";
+        echo "<pre>";
+        print_r($groupInstArr);
+        echo "</pre>";
+
+//        echo "<pre>";
+//        print_r($groupInstArr);
+//        echo "</pre>";
+
+        return $groupInstArr;
+    }
+    /////////////////////// EOF getHeadInfo ///////////////////////
+
+
 }

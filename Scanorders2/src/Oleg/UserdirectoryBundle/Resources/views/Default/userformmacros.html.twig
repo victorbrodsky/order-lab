@@ -714,34 +714,47 @@
 
                     {#head/cheaf#}
                     {#Chief, Eyebrow Pathology, Assistant Professor of Pathology and Laboratory Medicine#}
-                    {% set headInfos = user.getHeadInfo %}
+                    {% set headInfos = user_security_utility.getHeadInfo(user) %}
                     {% if headInfos|length > 0 %}
                         <h4>
                         {% for headInfoArr in headInfos %}
 
                             {#Institutions#}
-                            {% for titleInfo in headInfoArr.titleInfo if titleInfo.name is defined %}
-                                <a href="{{
-                                    path( employees_sitename~'_search_same_object',{
-                                        'tablename':titleInfo['tablename'],
-                                        'id': titleInfo['id'],
-                                        'name': titleInfo['name']
-                                    })
-                                    }}">{{ titleInfo['name']|raw }}
-                                </a>
+                            {#{% for titleInfo in headInfoArr.titleInfo if titleInfo.name is defined %}#}
+                                {#<a href="{{#}
+                                    {#path( employees_sitename~'_search_same_object',{#}
+                                        {#'tablename':titleInfo['tablename'],#}
+                                        {#'id': titleInfo['id'],#}
+                                        {#'name': titleInfo['name']#}
+                                    {#})#}
+                                    {#}}">{{ titleInfo['name']|raw }}#}
+                                {#</a>#}
+                                {#<br>#}
+                            {#{% endfor %}#}
+
+                            {#Titles#}
+                            {#{% for titleInfo in headInfoArr.instInfo if titleInfo|length > 0 %}#}
+                                {#<a href="{{#}
+                                    {#path( employees_sitename~'_search_same_object',{#}
+                                        {#'tablename':titleInfo['tablename'],#}
+                                        {#'id': titleInfo['id'],#}
+                                        {#'name': titleInfo['name']#}
+                                    {#})#}
+                                    {#}}"><small>{{ titleInfo['name']|raw }}</small>#}
+                                {#</a>#}
+                                {#<br>#}
+                            {#{% endfor %}#}
+                            {#<br>#}
+
+                            {#Institutions#}
+                            {% for titleInfo in headInfoArr.titleInfo %}
+                                {{ titleInfo|raw }}
                                 <br>
                             {% endfor %}
 
                             {#Titles#}
-                            {% for titleInfo in headInfoArr.instInfo if titleInfo|length > 0 %}
-                                <a href="{{
-                                    path( employees_sitename~'_search_same_object',{
-                                        'tablename':titleInfo['tablename'],
-                                        'id': titleInfo['id'],
-                                        'name': titleInfo['name']
-                                    })
-                                    }}"><small>{{ titleInfo['name']|raw }}</small>
-                                </a>
+                            {% for instInfo in headInfoArr.instInfo %}
+                                {{ instInfo|raw }}
                                 <br>
                             {% endfor %}
                             <br>
@@ -749,6 +762,7 @@
                         {% endfor %}
                         </h4>
                     {% endif %}
+                    {#EOF headInfos#}
 
                 </div>
             </div>
