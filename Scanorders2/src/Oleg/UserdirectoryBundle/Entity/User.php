@@ -1678,7 +1678,7 @@ class User extends BaseUser {
     }
 
 
-    /////////////////////// Return: Chief, Eyebrow Pathology ///////////////////////
+    /////////////////////// NOT USED!!! Return: Chief, Eyebrow Pathology ///////////////////////
     //Group by institutions
     public function getHeadInfo() {
         $instArr = array();
@@ -1688,8 +1688,6 @@ class User extends BaseUser {
         $instArr = $this->addTitleInfo($instArr,'appointmentTitle',$this->getAppointmentTitles());
 
         $instArr = $this->addTitleInfo($instArr,'medicalTitle',$this->getMedicalTitles());
-
-        //$instArr = $this->groupByInst($instArr);
 
         return $instArr;
     }
@@ -1822,69 +1820,6 @@ class User extends BaseUser {
         //$headInfo[] = 'break-hr';
 
         return $headInfo;
-    }
-    public function groupByInst($instArr) {
-        //group by last institution only:
-        //Assistant Professor of Pathology and Laboratory Medicine
-        //Cytopathology, Gynecologic Pathology
-        //Anatomic Pathology
-        //Pathology and Laboratory Medicine
-        //Weill Cornell Medical College
-
-        $groupInstArr = array();
-        $lastInstPidArr = array();
-        $lastInstArr = array();
-
-        $count = 0;
-
-        foreach( $instArr as $instInfoArr ) {
-//            echo "<pre>";
-//            print_r($instInfoArr);
-//            echo "</pre>";
-
-            //$instInfoArrRev = array_reverse($instInfoArr['instInfo']);
-
-            $lastindex = count($instInfoArr['instInfo'])-1;
-            $firstInstPid = $instInfoArr['instInfo'][0]['pid'];
-            echo "lastInstPid=".$firstInstPid."<br>";
-            if( !in_array($firstInstPid,$lastInstPidArr) ) {
-                $lastInstPidArr[] = $firstInstPid;
-
-                //$lastInstArr[$firstInstPid][] = $instInfoArr['instInfo'][0];
-
-                //convert first element to array
-                $newInstInfoArr = $instInfoArr['instInfo'];
-                $firstEl = $newInstInfoArr[0];
-
-                //$groupInstArr[$firstInstPid]['instInfo'] = $instInfoArr['instInfo'];
-                //$instArr[$firstInstPid]['titleInfo'][] = $elementInfo;
-            }
-            //$lastInstArr[$firstInstPid][] = $instInfoArr['instInfo'][0];
-
-//            foreach( $instInfoArr['instInfo'] as $instInfo ) {
-//                $instId = $instInfo['id'];
-//                echo "instInfo=".$instInfo['name']." (".$instId.") <br>";
-//
-//                if( !array_key_exists($instInfo['id'],$groupInstArr) ) {
-//                    //$groupInstArr[$instId] =
-//                    $groupInstArr[$instId]['instInfo'] = $this->getHeadInstitutionInfoArr($institution);
-//                }
-//            }
-
-            echo "<br>";
-
-            $count++;
-        }
-
-        echo "<pre>";
-        print_r($instArr);
-        echo "</pre>";
-
-//        echo "<pre>";
-//        print_r($groupInstArr);
-//        echo "</pre>";
-
-        return $instArr;
     }
 
     public function getUniqueTitles( $titles ) {

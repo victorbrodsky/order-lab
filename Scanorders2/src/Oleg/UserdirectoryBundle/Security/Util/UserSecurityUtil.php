@@ -1388,14 +1388,14 @@ class UserSecurityUtil {
             $firstInstPid = $recordArr['instInfo'][0]['pid'];
             $firstInstId = $recordArr['instInfo'][0]['id'];
             $firstTitleId = $recordArr['titleInfo'][0]['id'];
-            //if( $firstTitleId ) {
+            if( $firstTitleId ) {
                 $firstCombineId = $firstTitleId . "-" . $firstInstPid;
                 $firstCombinedArr[$firstCombineId][] = $recordArr['instInfo'][0];
-            //}
+            }
         }
-        //echo "<pre>";
-        //print_r($firstCombinedArr);
-        //echo "</pre><br>";
+//        echo "<pre>";
+//        print_r($firstCombinedArr);
+//        echo "</pre><br>";
 
         //2) construct a new array using $firstCombinedArr
         $groupInstArr = array();
