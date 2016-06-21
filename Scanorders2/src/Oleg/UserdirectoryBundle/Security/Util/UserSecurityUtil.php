@@ -1385,7 +1385,7 @@ class UserSecurityUtil {
         //1) get pid group
         $firstCombinedArr = array();
         foreach( $instArr as $recordArr ) {
-            if( count($recordArr['titleInfo']) > 0 ) {
+            if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
                 $firstInstPid = $recordArr['instInfo'][0]['pid'];
                 $firstInstId = $recordArr['instInfo'][0]['id'];
                 $firstTitleId = $recordArr['titleInfo'][0]['id'];
