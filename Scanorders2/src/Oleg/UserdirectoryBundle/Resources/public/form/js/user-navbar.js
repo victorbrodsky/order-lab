@@ -28,6 +28,36 @@ function ordersearchNavbarBoxInit() {
 }
 
 //get search input field with id=ordersearchform-search and redirect to path /patients/search?searchtype=search
+function setCallLogSearchtypeAction(searchType) {
+
+    //console.log('searchtype='+key);
+
+    if( typeof searchType === 'undefined' || searchType == "" ) {
+        searchType = $('#ordersearchform-searchtype').val();
+    }
+
+    //override searchtype in dropdown menu
+    var searchtypeButton = $('#ordersearch-searchtype-button');
+    searchtypeButton.html(searchType+' <span class="caret"></span>');
+    $('#ordersearchform-searchtype').val(searchType);
+
+    //console.log('searchType='+searchType);
+
+    var searchValue = $('#ordersearchform-search').val();
+
+    if( searchValue == '' ) {
+        //alert('Please specify a search criterion');
+        return false;
+    }
+
+    //$('#ordersearchform').submit();
+
+    var searchUrl = getCommonBaseUrl("callentry/search?"+searchType+'='+searchValue);
+
+    window.location = searchUrl;
+}
+
+//get search input field with id=ordersearchform-search and redirect to path /patients/search?searchtype=search
 function setSearchtypeAction(searchType) {
 
     //console.log('searchtype='+key);
@@ -172,7 +202,7 @@ function setNavBar(sitename) {
     else if( sitename == "vacation-request" ){
         setVacReqNavBar();
     }
-    else if( sitename == "call-logbook" ){
+    else if( sitename == "call-log-book" ){
         setCallLogNavBar();
     }
     else {
@@ -185,25 +215,25 @@ function setCallLogNavBar() {
 
     var full = window.location.pathname;
 
-    if( full.indexOf("/call-logbook/alerts/") !== -1 ) {
+    if( full.indexOf("/call-log-book/alerts/") !== -1 ) {
         id = 'alerts';
     }
 
-    if( full.indexOf("/call-logbook/call-entry/") !== -1 ) {
+    if( full.indexOf("/call-log-book/call-entry/") !== -1 ) {
         id = 'callentry';
     }
 
-    if( full.indexOf("/call-logbook/complex-patient-list/") !== -1 ) {
+    if( full.indexOf("/call-log-book/complex-patient-list/") !== -1 ) {
         id = 'complexpatientlist';
     }
 
-    if( full.indexOf("/call-logbook/resources/") !== -1 ) {
+    if( full.indexOf("/call-log-book/resources/") !== -1 ) {
         id = 'resources';
     }
 
     id = commonNavBar(full,id)
 
-    //if( full.indexOf("/call-logbook/re-identify") !== -1 ) {
+    //if( full.indexOf("/call-log-book/re-identify") !== -1 ) {
     //    id = null;
     //}
 

@@ -102,81 +102,81 @@
                 {#Search in navbar#}
                 {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
 
-                        <li id="nav-bar-ordersearch">
-                            {#Search for a name, service, division, etc#}
-                            {% if  patientsearch is not defined %}
-                                {% set  patientsearch = "" %}
-                            {% endif %}
-                            {% if  patientsearchtype is not defined %}
-                                {% set  patientsearchtype = 'MRN' %}
-                            {% endif %}
-                            <form class="navbar-form navbar-left" role="search" id="ordersearchform" name="ordersearchform" action="{{ path(scan_sitename~'_search_patients') }}" method="get">
-                                <input type="hidden" id="ordersearchform-searchtype" class="form-control" name="searchtype" value="{{ patientsearchtype }}">
-                                <div class="form-group">
+                    <li id="nav-bar-ordersearch">
+                        {#Search for a name, service, division, etc#}
+                        {% if  patientsearch is not defined %}
+                            {% set  patientsearch = "" %}
+                        {% endif %}
+                        {% if  patientsearchtype is not defined %}
+                            {% set  patientsearchtype = 'MRN' %}
+                        {% endif %}
+                        <form class="navbar-form navbar-left" role="search" id="ordersearchform" name="ordersearchform" action="{{ path(scan_sitename~'_search_patients') }}" method="get">
+                            <input type="hidden" id="ordersearchform-searchtype" class="form-control" name="searchtype" value="{{ patientsearchtype }}">
+                            <div class="form-group">
 
 
-                                    <div class="input-group">
-                                        <div class="input-group-btn">
-                                            <button id="ordersearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                {{  patientsearchtype }} <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                {{ navbarmacros.searchBoxContent('MRN') }}
-                                                {{ navbarmacros.searchBoxContent('Patient Name') }}
-                                                {{ navbarmacros.searchBoxContent('Accession Number') }}
-                                                {{ navbarmacros.searchBoxContent('Organ Source for Part') }}
-                                                {{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}
-                                                {{ navbarmacros.searchBoxContent('Part Type') }}
-                                                {{ navbarmacros.searchBoxContent('Procedure Type') }}
-                                                {#<li class="divider"></li>#}
-                                            </ul>
-                                        </div><!-- /btn-group -->
-                                        <div class="form-group has-feedback">
-                                            <input type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{  patientsearch }}" placeholder="">
-                                            <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>
-                                        </div>
-                                    </div><!-- /input-group -->
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button id="ordersearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            {{  patientsearchtype }} <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            {{ navbarmacros.searchBoxContent('MRN') }}
+                                            {{ navbarmacros.searchBoxContent('Patient Name') }}
+                                            {{ navbarmacros.searchBoxContent('Accession Number') }}
+                                            {{ navbarmacros.searchBoxContent('Organ Source for Part') }}
+                                            {{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}
+                                            {{ navbarmacros.searchBoxContent('Part Type') }}
+                                            {{ navbarmacros.searchBoxContent('Procedure Type') }}
+                                            {#<li class="divider"></li>#}
+                                        </ul>
+                                    </div><!-- /btn-group -->
+                                    <div class="form-group has-feedback">
+                                        <input type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{  patientsearch }}" placeholder="">
+                                        <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>
+                                    </div>
+                                </div><!-- /input-group -->
 
-                                    {#<div id="multiple-datasets-typeahead-ordersearch">#}
-                                        {#&#123;&#35;version 3: input field has inside button&#35;&#125;#}
-                                        {#<div class="form-group has-feedback">#}
-                                            {#<input#}
-                                                    {#type="text"#}
-                                                    {#class="typeahead submit-on-enter-field form-control"#}
-                                                    {#name="search" value="{{ search }}"#}
-                                                    {#placeholder="Search"#}
-                                                    {#style="font-size: 14px !important;"#}
-                                                    {#aria-describedby="inputSuccess2Status">#}
-                                            {#<span class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeahead-ordersearch-form.submit();" aria-hidden="true"></span>#}
-                                            {#<span id="inputSuccess2Status" class="sr-only">(success)</span>#}
-                                        {#</div>#}
+                                {#<div id="multiple-datasets-typeahead-ordersearch">#}
+                                    {#&#123;&#35;version 3: input field has inside button&#35;&#125;#}
+                                    {#<div class="form-group has-feedback">#}
+                                        {#<input#}
+                                                {#type="text"#}
+                                                {#class="typeahead submit-on-enter-field form-control"#}
+                                                {#name="search" value="{{ search }}"#}
+                                                {#placeholder="Search"#}
+                                                {#style="font-size: 14px !important;"#}
+                                                {#aria-describedby="inputSuccess2Status">#}
+                                        {#<span class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeahead-ordersearch-form.submit();" aria-hidden="true"></span>#}
+                                        {#<span id="inputSuccess2Status" class="sr-only">(success)</span>#}
                                     {#</div>#}
+                                {#</div>#}
 
-                                    {#<div id="ordersearch-fields-group" class="input-group ordersearch-fields-group">#}
+                                {#<div id="ordersearch-fields-group" class="input-group ordersearch-fields-group">#}
 
-                                        {#<div class="input-group-btn">#}
-                                            {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Search <span class="caret"></span></button>#}
-                                            {#<ul class="dropdown-menu" role="menu">#}
-                                                {#{{ navbarmacros.searchBoxContent('MRN') }}#}
-                                                {#{{ navbarmacros.searchBoxContent('Patient Name') }}#}
-                                                {#{{ navbarmacros.searchBoxContent('Accession Number') }}#}
-                                                {#{{ navbarmacros.searchBoxContent('Organ Source for Part') }}#}
-                                                {#{{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}#}
-                                                {#{{ navbarmacros.searchBoxContent('Part Type') }}#}
-                                                {#{{ navbarmacros.searchBoxContent('Procedure Type') }}#}
-                                                {#<li class="divider"></li>#}
-                                            {#</ul>#}
-                                        {#</div><!-- /btn-group -->#}
-                                        {#<div class="form-group has-feedback">#}
-                                            {#{{ navbarmacros.searchSelect2BoxContent() }}#}
-                                            {#<input style="border-bottom-left-radius: 0; border-top-left-radius:0" type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">#}
-                                            {#<span class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>#}
-                                        {#</div>#}
+                                    {#<div class="input-group-btn">#}
+                                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Search <span class="caret"></span></button>#}
+                                        {#<ul class="dropdown-menu" role="menu">#}
+                                            {#{{ navbarmacros.searchBoxContent('MRN') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Patient Name') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Accession Number') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Organ Source for Part') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Part Type') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Procedure Type') }}#}
+                                            {#<li class="divider"></li>#}
+                                        {#</ul>#}
+                                    {#</div><!-- /btn-group -->#}
+                                    {#<div class="form-group has-feedback">#}
+                                        {#{{ navbarmacros.searchSelect2BoxContent() }}#}
+                                        {#<input style="border-bottom-left-radius: 0; border-top-left-radius:0" type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">#}
+                                        {#<span class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>#}
                                     {#</div>#}
+                                {#</div>#}
 
-                                </div>
-                            </form>
-                        </li>
+                            </div>
+                        </form>
+                    </li>
 
                 {% endif %}
 
@@ -204,12 +204,13 @@
                                 <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
                                 <li><a href="{{ path(scan_sitename~'_authorized_users') }}">Authorized Users</a></li>
                                 {#<li><a href="{{ path(scan_sitename~'_listusers') }}">Users</a></li>#}
-                                <li><a href="{{ path('admin_index') }}">List Manager</a></li>
+                                <li><a href="{{ path('admin_index') }}">ScanOrder List Manager</a></li>
                                 <li><a href="{{ path('scan_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
                                 <li><a href="{{ path(scan_sitename~'_logger') }}">Event Log</a></li>
                             {% endif %}
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
                                 <li><a href="{{ path(scan_sitename~'_siteparameters') }}">Site Settings</a></li>
                             {% endif %}
 

@@ -207,7 +207,7 @@ security:
 #                always_remember_me: true
 
         ldap_calllog_firewall:
-            pattern: ^/call-logbook
+            pattern: ^/call-log-book
             context: scan_auth
             switch_user: true
             simple_form:
@@ -215,17 +215,17 @@ security:
                 use_referer: true
                 success_handler: calllog_authentication_handler
                 failure_handler: calllog_authentication_handler
-                check_path: /call-logbook/login_check
-                login_path: /call-logbook/login
+                check_path: /call-log-book/login_check
+                login_path: /call-log-book/login
             logout:
-                path:   /call-logbook/logout
-                target: /call-logbook/login
+                path:   /call-log-book/logout
+                target: /call-log-book/login
             anonymous:  true
-            access_denied_url: /call-logbook/access-requests/new/create
+            access_denied_url: /call-log-book/access-requests/new/create
             remember_me:
                 key:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
-                path:     /call-logbook
+                path:     /call-log-book
 #                always_remember_me: true
 
 
@@ -328,9 +328,9 @@ security:
        - { path: ^/vacation-request/, role: ROLE_VACREQ_USER }
 
       ############################## CallLog SITE SETTINGS ##############################
-       - { path: ^/call-logbook/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-logbook/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-logbook/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-logbook/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-logbook/, role: ROLE_CALLLOG_USER }
-#       - { path: ^/call-logbook/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/, role: ROLE_CALLLOG_USER }
+#       - { path: ^/call-log-book/, role: IS_AUTHENTICATED_ANONYMOUSLY }

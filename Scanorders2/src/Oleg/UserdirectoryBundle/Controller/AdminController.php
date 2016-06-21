@@ -1453,7 +1453,7 @@ class AdminController extends Controller
             'fellowship-applications' => 'fellapp',
             'deidentifier' => 'deidentifier',
             'vacation-request' => 'vacreq',
-            'call-logbook' => 'calllog'
+            'call-log-book' => 'calllog'
         );
 
 

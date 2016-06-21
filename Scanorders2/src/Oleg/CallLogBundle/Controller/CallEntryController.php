@@ -66,4 +66,60 @@ class CallEntryController extends Controller
     }
 
 
+    /**
+     * Call Entry
+     * @Route("/callentry/search", name="calllog_search_callentry")
+     * @Method("GET")
+     * @Template()
+     */
+    public function searchCallEntryAction(Request $request)
+    {
+        if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $entities = null;
+
+        $allgets = $request->query->all();;
+        //$patientid = trim( $request->get('patientid') );
+        //print_r($allgets);
+        //echo "<br>";
+
+        $searchtype = null;
+        $search = null;
+
+        foreach( $allgets as $thiskey => $thisvalue ) {
+            $searchtype = $thiskey;
+            $search = $thisvalue;
+            break;
+        }
+
+        $searchtype = str_replace("_"," ",$searchtype);
+
+        //$searchtype = trim( $request->get('searchtype') );
+        //$search = trim( $request->get('search') );
+        //echo "searchtype=".$searchtype."<br>";
+        //echo "search=".$search."<br>";
+
+        if( $searchtype != "" && $search != "" ) {
+
+//            $searchUtil = $this->get('search_utility');
+//            $object = 'patient';
+//            $params = array('request'=>$request,'object'=>$object,'searchtype'=>$searchtype,'search'=>$search,'exactmatch'=>false);
+//            $res = $searchUtil->searchAction($params);
+//            $entities = $res[$object];
+            $entities = null;
+        }
+
+
+        //echo "entities count=".count($entities)."<br>";
+
+        return $this->render('OlegCallLogBundle:CallLog:home.html.twig', array(
+            'patientsearch' => $search,
+            'patientsearchtype' => $searchtype,
+            'patiententities' => $entities,
+        ));
+    }
+
+
 }
