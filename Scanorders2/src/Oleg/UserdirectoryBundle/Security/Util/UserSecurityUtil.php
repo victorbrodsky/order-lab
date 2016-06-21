@@ -1385,13 +1385,15 @@ class UserSecurityUtil {
         //1) get pid group
         $firstCombinedArr = array();
         foreach( $instArr as $recordArr ) {
-            $firstInstPid = $recordArr['instInfo'][0]['pid'];
-            $firstInstId = $recordArr['instInfo'][0]['id'];
-            $firstTitleId = $recordArr['titleInfo'][0]['id'];
-            //if( $firstTitleId ) {
-                $firstCombineId = $firstTitleId . "-" . $firstInstPid;
-                $firstCombinedArr[$firstCombineId][] = $recordArr['instInfo'][0];
-            //}
+            if( count($recordArr['instInfo']) > 0 ) {
+                $firstInstPid = $recordArr['instInfo'][0]['pid'];
+                $firstInstId = $recordArr['instInfo'][0]['id'];
+                $firstTitleId = $recordArr['titleInfo'][0]['id'];
+                if( $firstTitleId ) {
+                    $firstCombineId = $firstTitleId . "-" . $firstInstPid;
+                    $firstCombinedArr[$firstCombineId][] = $recordArr['instInfo'][0];
+                }
+            }
         }
 //        echo "<pre>";
 //        print_r($firstCombinedArr);
