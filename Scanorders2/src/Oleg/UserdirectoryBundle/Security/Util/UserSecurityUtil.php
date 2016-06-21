@@ -1385,7 +1385,7 @@ class UserSecurityUtil {
         //1) get pid group
         $firstCombinedArr = array();
         foreach( $instArr as $recordArr ) {
-            if( count($recordArr['instInfo']) > 0 ) {
+            if( count($recordArr['titleInfo']) > 0 ) {
                 $firstInstPid = $recordArr['instInfo'][0]['pid'];
                 $firstInstId = $recordArr['instInfo'][0]['id'];
                 $firstTitleId = $recordArr['titleInfo'][0]['id'];
@@ -1403,13 +1403,15 @@ class UserSecurityUtil {
         $groupInstArr = array();
         foreach( $instArr as $recordArr ) {
 
-            $firstInstPid = $recordArr['instInfo'][0]['pid'];
-            $firstInstId = $recordArr['instInfo'][0]['id'];
-            $firstTitleId = $recordArr['titleInfo'][0]['id'];
-            //$firstCombineId = $firstTitleId."-".$firstInstPid;
+            //if( count($recordArr['titleInfo']) > 0 ) {
+                $firstInstPid = $recordArr['instInfo'][0]['pid'];
+                $firstInstId = $recordArr['instInfo'][0]['id'];
+                $firstTitleId = $recordArr['titleInfo'][0]['id'];
+                //$firstCombineId = $firstTitleId."-".$firstInstPid;
+            //}
 
             if( $firstTitleId ) {
-                foreach ($recordArr['titleInfo'] as $titleInfoArr) {
+                foreach( $recordArr['titleInfo'] as $titleInfoArr ) {
                     //echo "<pre>";
                     //print_r($titleInfoArr);
                     //echo "</pre><br>";
