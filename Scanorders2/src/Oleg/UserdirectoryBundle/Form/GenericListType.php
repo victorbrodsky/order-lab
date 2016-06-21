@@ -372,13 +372,13 @@ class GenericListType extends AbstractType
                 'prototype_name' => '__permissions__',
             ));
 
-            $builder->add('sites','entity',array(
-                'class' => 'OlegUserdirectoryBundle:SiteList',
-                'label' => "Site(s):",
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'required' => false,
-            ));
+//            $builder->add('sites','entity',array(
+//                'class' => 'OlegUserdirectoryBundle:SiteList',
+//                'label' => "Site(s):",
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'required' => false,
+//            ));
 
             $builder->add('level',null,array(
                 'label' => "Level:",
@@ -392,6 +392,16 @@ class GenericListType extends AbstractType
                 'multiple' => false,
                 'required' => false,
                 'attr' => array('class'=>'combobox combobox-width')
+            ));
+        }
+
+        if( method_exists($this->params['entity'],'getSites') ) {
+            $builder->add('sites','entity',array(
+                'class' => 'OlegUserdirectoryBundle:SiteList',
+                'label' => "Site(s):",
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false,
             ));
         }
 

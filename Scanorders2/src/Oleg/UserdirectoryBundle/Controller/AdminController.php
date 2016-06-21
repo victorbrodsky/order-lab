@@ -859,6 +859,22 @@ class AdminController extends Controller
                 90
             ),
 
+            "ROLE_CALLLOG_PATHOLOGY_RESIDENT" => array(
+                "Pathology Resident",
+                "",
+                50
+            ),
+            "ROLE_CALLLOG_PATHOLOGY_FELLOW" => array(
+                "Pathology Fellow",
+                "",
+                50
+            ),
+            "ROLE_CALLLOG_PATHOLOGY_ATTENDING" => array(
+                "Pathology Attending",
+                "",
+                50
+            ),
+
             "ROLE_CALLLOG_USER" => array(
                 "Call Logbook User",
                 "Can create, edit and read call book entries",
@@ -4336,7 +4352,7 @@ class AdminController extends Controller
 //        "Submit Action" - "Submit orders for collaboration institution"
 
         $elements = array(
-            "Union" => 'Bidirectional collaboration: Users withini this type of collaboration have full access to the patient data.'.
+            "Union" => 'Bidirectional collaboration: Users within this type of collaboration have full access to the patient data.'.
                        'Supported actions: "Menu Search Action", "Check Button Retrieve Action", "View Action", "Submit Action""',
             "Intersection" => 'Unidirectional trusted collaboration: Users withini this type of collaboration can view and submit new orders in the same way as bidirectional collaboration.'.
                               'Supported actions: "Check Button Retrieve Action", "View Action", "Submit Action"',
@@ -4411,7 +4427,20 @@ class AdminController extends Controller
 
             "Submit a Vacation Request",
             "Approve a Vacation Request",
-            "Approve a Carry Over Request"
+            "Approve a Carry Over Request",
+
+            "Create Call Log Entry",
+            "Edit Call Log Entry",
+            "Change Status of Call Log Entry",
+            "Hide Call Log Entry",
+            "Change Status of Patient to Complex",
+            "Change Status of Patient away from Complex",
+            "Create Patient Record",
+            "Edit Patient Record",
+            "Hide Patient Record",
+            "Delete Patient Record",
+            "Read Patient Record",
+            "Merge Patient Record"
         );
 
         $count = 10;
@@ -4447,7 +4476,7 @@ class AdminController extends Controller
 
         $types = array(
             "Patient" => array("",array("scan")),
-            "Patient Data" => array("",array("scan")),
+            "Patient Record" => array("",array("scan","calllog")),
             "Encounter" => array("",array("scan")),
             "Procedure" => array("",array("scan")),
 
@@ -4465,6 +4494,11 @@ class AdminController extends Controller
             "FellowshipApplication" => array("",array("fellapp")),
 
             "VacReqRequest" => array("",array("vacreq")), //"Business/Vacation Request"
+
+            "Call Log Entry" => array("",array("calllog")),
+            "Complex Patient" => array("",array("calllog")),
+
+
         );
 
         $count = 10;
@@ -4540,7 +4574,13 @@ class AdminController extends Controller
             "changestatus",
 
             "changestatus-carryover",
-            "view-away-calendar"
+            "view-away-calendar",
+
+            "merge",
+            "hide",
+            "changestatus-to-complex",
+            "changestatus-from-complex",
+
         );
 
         $count = 10;

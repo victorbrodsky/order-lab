@@ -2,6 +2,8 @@
 
 namespace Oleg\CallLogBundle\Controller;
 
+use Oleg\CallLogBundle\Form\PatientType;
+use Oleg\OrderformBundle\Entity\Patient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -48,23 +50,50 @@ class CallEntryController extends Controller
 
     /**
      * Call Entry
-     * @Route("/call-entry/", name="calllog_callentry")
+     * @Route("/entry/new", name="calllog_callentry")
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
      */
     public function callEntryAction(Request $request)
     {
         //1) search box: MRN,Name...
 
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        $em = $this->getDoctrine()->getManager();
+
         $title = "Call Entry";
+
+        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $status = 'valid';
+
+        $patient = new Patient(true,$status,$user,$system);
+
+
+        $form = $this->createPatientForm($patient);
 
         return array(
             //'entity' => $entity,
-            //'form' => $form->createView(),
+            'form' => $form->createView(),
             //'cycle' => $cycle,
             'title' => $title,
         );
     }
 
+    public function createPatientForm($patient) {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $params = array(
+            'cycle' => 'new',
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+        );
+
+        $form = $this->createForm(new PatientType($params,$patient), $patient);
+
+        return $form;
+    }
 
     /**
      * Call Entry

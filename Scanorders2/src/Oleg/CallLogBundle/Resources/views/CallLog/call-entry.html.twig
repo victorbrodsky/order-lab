@@ -19,36 +19,65 @@
     <br>
 
 
-    <form id="CallCaseForm" class="form-vertical" role="form">
+    {#<form id="CallCaseForm" class="form-vertical" role="form">#}
+    {{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}
+
+        {{ form_errors(form) }}
 
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" href="#calllog-PatientInformation">
-                        Patient Information
+                        Patient Info
                     </a>
                 </h4>
             </div>
             <div id="calllog-PatientInformation" class="panel-collapse collapse in">
                 <div class="panel-body">
 
-                    <div class="row">
+                    {% for mrn in form.mrn %}
+                        {{ formmacros.field(mrn.keytype) }}
+                        {{ formmacros.field(mrn.field) }}
+                    {% endfor %}
 
-                        <div class="form-group col-xs-5" align="left">
-                            {{ formmacros.simplefield('MRN:','','input') }}
-                            {{ formmacros.simplefield('Last Name:','','input') }}
-                        </div>
+                    {% for dob in form.dob %}
+                        {{ formmacros.fieldDateLabel(dob,'regular-datepicker') }}
+                    {% endfor %}
 
-                        <div class="col-xs-5" align="left">
-                            {{ calllogmacros.simpleDateField('Date of Birth:','') }}
-                            {{ formmacros.simplefield('First Name:','','input') }}
-                        </div>
+                    {% for encounter in form.encounter %}
+                        {{ formmacros.field(encounter.patlastname) }}
+                        {{ formmacros.field(encounter.patfirstname) }}
+                        {{ formmacros.field(encounter.patmiddlename) }}
+                    {% endfor %}
 
-                        <div class="col-xs-2" align="left">
-                            <button id="Search_button" type="button" class="btn btn-lg btn-success" align="center" style="float:left; width:100%">Search</button>
-                        </div>
+                    {#{{ formmacros.field(form.encounter.patlastname) }}#}
+                    {#{{ formmacros.field(form.encounter.patfirstname) }}#}
+                    {#{{ formmacros.field(form.encounter.patmiddlename) }}#}
+                    {#{{ formmacros.field(form.encounter.patsuffix) }}#}
+                    {#{{ formmacros.field(form.encounter.patsex) }}#}
 
-                    </div>
+
+                    {#<div class="row">#}
+
+                        {#<div class="form-group col-xs-5" align="left">#}
+                            {#{{ formmacros.simplefield('MRN:','','input') }}#}
+                            {#{{ formmacros.simplefield('Last Name:','','input') }}#}
+
+                            {#{{ formmacros.field(form.mrn) }}#}
+                            {#{{ formmacros.field(form.lastname) }}#}
+
+                        {#</div>#}
+
+                        {#<div class="col-xs-5" align="left">#}
+                            {#{{ calllogmacros.simpleDateField('Date of Birth:','') }}#}
+                            {#{{ formmacros.simplefield('First Name:','','input') }}#}
+                        {#</div>#}
+
+                        {#<div class="col-xs-2" align="left">#}
+                            {#<button id="Search_button" type="button" class="btn btn-lg btn-success" align="center" style="float:left; width:100%">Search</button>#}
+                        {#</div>#}
+
+                    {#</div>#}
 
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
@@ -180,7 +209,8 @@
             <button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>
         </p>
 
-    </form>
+    {#</form>#}
+    {{ form_end(form,{'render_rest': false}) }}
 
 
 
