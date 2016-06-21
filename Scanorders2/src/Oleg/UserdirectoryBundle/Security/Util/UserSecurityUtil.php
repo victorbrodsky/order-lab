@@ -1186,7 +1186,7 @@ class UserSecurityUtil {
     public function getHeadInfo( $user ) {
 
         //testing
-        //return $user->getHeadInfo();
+        return $user->getHeadInfo();
 
         $instArr = array();
 
@@ -1403,7 +1403,8 @@ class UserSecurityUtil {
         $groupInstArr = array();
         foreach( $instArr as $recordArr ) {
 
-            //if( count($recordArr['titleInfo']) > 0 ) {
+            $firstTitleId = null;
+            //if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
                 $firstInstPid = $recordArr['instInfo'][0]['pid'];
                 $firstInstId = $recordArr['instInfo'][0]['id'];
                 $firstTitleId = $recordArr['titleInfo'][0]['id'];
