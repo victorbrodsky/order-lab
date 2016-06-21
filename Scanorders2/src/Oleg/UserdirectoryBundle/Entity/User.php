@@ -229,6 +229,7 @@ class User extends BaseUser {
     private $perSiteSettings;
 
 
+
     function __construct( $addobjects=true )
     {
         $this->infos = new ArrayCollection();
