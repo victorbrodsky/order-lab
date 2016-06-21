@@ -41,7 +41,7 @@
                     {% endfor %}
 
                     {% for dob in form.dob %}
-                        {{ formmacros.fieldDateLabel(dob,'regular-datepicker') }}
+                        {{ formmacros.fieldDateLabel(dob.field,'regular-datepicker') }}
                     {% endfor %}
 
                     {% for encounter in form.encounter %}
