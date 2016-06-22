@@ -18,6 +18,9 @@
 
     <br>
 
+    <div class="calllog-holder">
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="orderformtype" value="calllog" />
 
     {#<form id="CallCaseForm" class="form-vertical" role="form">#}
     {{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}
@@ -44,17 +47,31 @@
                         {{ formmacros.fieldDateLabel(dob.field,'regular-datepicker') }}
                     {% endfor %}
 
+                    {% set status = 'Submitted' %}
+
                     {% for encounter in form.encounter %}
-                        {{ formmacros.field(encounter.patlastname) }}
-                        {{ formmacros.field(encounter.patfirstname) }}
-                        {{ formmacros.field(encounter.patmiddlename) }}
+                        {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
                     {% endfor %}
 
-                    {#{{ formmacros.field(form.encounter.patlastname) }}#}
-                    {#{{ formmacros.field(form.encounter.patfirstname) }}#}
-                    {#{{ formmacros.field(form.encounter.patmiddlename) }}#}
-                    {#{{ formmacros.field(form.encounter.patsuffix) }}#}
-                    {#{{ formmacros.field(form.encounter.patsex) }}#}
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>
+                    <div id="encounter-info" class="panel-collapse collapse">
+                    {% for encounter in form.encounter %}
+
+                        {#{{ formmacros.field(encounter.patlastname) }}#}
+                        {#{{ formmacros.field(encounter.patfirstname) }}#}
+                        {#{{ formmacros.field(encounter.patmiddlename) }}#}
+                        {#{{ formmacros.field(encounter.patsuffix) }}#}
+                        {#{{ formmacros.field(encounter.patsex) }}#}
+
+                        {#{{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}#}
+                        {#{{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}#}
+                        {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
+
+                    {% endfor %}
+                    </div>
 
 
                     {#<div class="row">#}
@@ -79,10 +96,25 @@
 
                     {#</div>#}
 
+                    <div class="row">
+                        <div class="col-xs-5"></div>
+                        <div class="col-xs-2">
+                            <button id="Search_button" type="button"
+                                    class="btn btn-lg btn-success" align="center"
+                                    onclick="findCalllogPatient()"
+                                    style="float:left; width:100%">Find Patient</button>
+                        </div>
+                        <div class="col-xs-5"></div>
+                    </div>
+
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
         </div> <!-- panel panel-info -->
 
+        <a class="collapsed" role="button" data-toggle="collapse" href="#callentry-form">
+            No single patient is referenced by this entry or I'll add the patient info later
+        </a>
+        <div id="callentry-form" class="panel-collapse collapse">
 
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -209,13 +241,117 @@
             <button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>
         </p>
 
+        </div> {#callentry-form#}
+
     {#</form>#}
     {{ form_end(form,{'render_rest': false}) }}
 
 
-
-
-
+    </div>
 
 {% endblock %}
 
+
+{% block additionaljs %}
+<script language="Javascript">
+
+    $(document).ready(function() {
+
+
+
+    });
+
+    function findCalllogPatient() {
+
+        var mrntype = $(".mrntype-combobox").select2('val');
+        mrntype = trimWithCheck(mrntype);
+
+        var mrn = $(".patientmrn-mask").val();
+        mrn = trimWithCheck(mrn);
+
+        var dob = $(".patient-dob-date").val();
+        dob = trimWithCheck(dob);
+
+        var lastname = $(".encounter-lastName").val();
+        lastname = trimWithCheck(lastname);
+
+        var firstname = $(".encounter-firstName").val();
+        firstname = trimWithCheck(firstname);
+
+        console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
+
+        //ajax
+        var url = Routing.generate('calllog_search_patient');
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: false,
+            data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname },
+        }).success(function(data) {
+            console.log(data);
+            if( data.length > 0 ) {
+                console.log(data);
+                populatePatientsInfo(data);
+            } else {
+                populatePatientInfo(null);
+                console.log("Patient not found");
+            }
+        });
+
+    }
+
+    function populatePatientsInfo(patients) {
+        populatePatientInfo(patients[0]);
+    }
+
+    function populatePatientInfo(data) {
+
+        var dob = null;
+        var lastname = null;
+        var firstname = null;
+        var middlename = null;
+        var suffix = null;
+        var sex = null;
+
+
+        if( data && data.dob ) {
+            dob = data.dob
+        }
+        $(".patient-dob-date").val(dob);
+
+        if( data && data.lastname ) {
+            lastname = data.lastname;
+        }
+        $(".encounter-lastName").val(lastname);
+
+        if( data && data.firstname ) {
+            firstname = data.firstname;
+        }
+        $(".encounter-firstName").val(firstname);
+
+        if( data && data.middlename ) {
+            middlename = data.middlename;
+        }
+        $(".encounter-middleName").val(middlename);
+
+        if( data && data.suffix ) {
+            suffix = data.suffix;
+        }
+        $(".patient-suffix").val(suffix);
+
+        if( data && data.sex ) {
+            sex = data.sex;
+        }
+        $(".encountersex-field").val(sex);
+
+        console.log('middlename='+middlename+'; suffix='+suffix+'; sex='+sex);
+        if( middlename || suffix || sex  ) {
+            $('#encounter-info').collapse("show");
+        } else {
+            $('#encounter-info').collapse("hide");
+        }
+
+    }
+
+</script>
+{% endblock %}

@@ -102,7 +102,7 @@ function fieldInputMask( holder ) {
 
     }
 
-
+    //console.log("cycle="+cycle);
     if( cycle == "new" || cycle == "create" ) {
 
         if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
@@ -188,6 +188,7 @@ function setMrntypeMask( elem, clean ) {
     //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var mrnField = getKeyGroupParent(elem).find('.patientmrn-mask');
+    //printF(mrnField,"mrnField=");
     var value = elem.select2("val");
     //console.log("value=" + value);
     var text = elem.select2("data").text;
@@ -620,12 +621,19 @@ function getRepeatMask( repeat, char, allsame ) {
 
 //elem: button, combobox (keytype) or input field
 function getKeyGroupParent(elem) {
-    //printF(elem, "@@@@@@@@@@@@@ Get parent for element:");
-    if( orderformtype == "single" && elem.attr('class').indexOf("mrn") == -1) {
+    //printF(elem, orderformtype+": @@@@@@@@@@@@@ Get parent for element:");
+    if( orderformtype == "single" && elem.attr('class').indexOf("mrn") == -1 ) {
+        //console.log('find by class singlemessage');
         var parent = $('.singlemessage');
     } else if( orderformtype == "deidentifier" ) {
+        //console.log('find by class accession-holder');
         var parent = elem.closest('.accession-holder');
-    } else {
+    } else if( orderformtype == "calllog" ) {
+        //console.log('find by class calllog-holder');
+        var parent = elem.closest('.calllog-holder');
+    }
+    else {
+        //console.log('find by class row');
         var parent = elem.closest('.row');
     }
 

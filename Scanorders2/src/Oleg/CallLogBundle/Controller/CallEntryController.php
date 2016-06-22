@@ -3,6 +3,7 @@
 namespace Oleg\CallLogBundle\Controller;
 
 use Oleg\CallLogBundle\Form\PatientType;
+use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\Patient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -65,8 +66,12 @@ class CallEntryController extends Controller
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
+        $cycle = 'new';
 
         $patient = new Patient(true,$status,$user,$system);
+
+        $encounter = new Encounter(true,$status,$user,$system);
+        $patient->addEncounter($encounter);
 
 
         $form = $this->createPatientForm($patient);
@@ -74,7 +79,7 @@ class CallEntryController extends Controller
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
-            //'cycle' => $cycle,
+            'cycle' => $cycle,
             'title' => $title,
         );
     }
@@ -96,7 +101,7 @@ class CallEntryController extends Controller
     }
 
     /**
-     * Call Entry
+     * Search Call Entry
      * @Route("/callentry/search", name="calllog_search_callentry")
      * @Method("GET")
      * @Template()
@@ -150,5 +155,111 @@ class CallEntryController extends Controller
         ));
     }
 
+    /**
+     * Search Patient
+     * @Route("/patient/search", name="calllog_search_patient", options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function searchPatientAction(Request $request)
+    {
+        if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $entities = null;
+
+        //$allgets = $request->query->all();;
+        $mrn = trim( $request->get('mrn') );
+        $mrntype = trim( $request->get('mrntype') );
+        $dob = trim( $request->get('dob') );
+        $lastname = trim( $request->get('lastname') );
+        $firstname = trim( $request->get('firstname') );
+        //print_r($allgets);
+        //echo "mrn=".$mrn."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Patient', 'patient')
+            ->select("patient")
+            ->leftJoin("patient.mrn", "mrn")
+            ->leftJoin("patient.dob", "dob")
+            ->leftJoin("patient.lastname", "lastname")
+            ->leftJoin("patient.firstname", "firstname")
+            ->where("mrn.keytype = :keytype AND mrn.field = :mrn AND mrn.status = :status")
+            ->setParameters( array('keytype'=>$mrntype, 'mrn'=>$mrn, 'status'=>'valid') )
+            ->getQuery();
+
+        $patients = $query->getResult();
+        //echo "patients=".count($patients)."<br>";
+
+        $output = array();
+        $status = 'valid';
+
+        foreach( $patients as $patient ) {
+
+            //to get a single field only use obtainStatusField
+            //obtainStatusFieldArray - get array of fields
+            //$mrntypeArr = $this->obtainStatusFieldArray('keytype', $status);
+            $mrnArr = $patient->obtainStatusFieldArray('mrn', $status);
+            $dobArr = $patient->obtainStatusFieldArray('dob', $status);
+            $firstNameArr = $patient->obtainStatusFieldArray('firstname', $status);
+            $middleNameArr = $patient->obtainStatusFieldArray('middlename', $status);
+            $lastNameArr = $patient->obtainStatusFieldArray('lastname', $status);
+            $suffixArr = $patient->obtainStatusFieldArray('suffix', $status);
+            $sexArr = $patient->obtainStatusFieldArray('sex', $status);
+
+            if( count($mrnArr) > 0 && $mrnArr[0] ) {
+                $mrntypeRes = $mrnArr[0]->getKeytype()->getId();
+                $mrnRes = $mrnArr[0]->getField();
+            }
+
+            if( count($dobArr) > 0 && $dobArr[0] ) {
+                $dobRes = $dobArr[0]."";
+            }
+
+            if( count($firstNameArr) > 0 && $firstNameArr[0] ) {
+                $firstnameRes = $firstNameArr[0]->getField();
+            }
+
+            if( count($lastNameArr) > 0 && $lastNameArr[0] ) {
+                $lastnameRes = $lastNameArr[0]->getField();
+            }
+
+            if( count($middleNameArr) > 0 && $middleNameArr[0] ) {
+                $middlenameRes = $middleNameArr[0]->getField();
+            }
+
+            if( count($suffixArr) > 0 && $suffixArr[0] ) {
+                $suffixRes = $suffixArr[0]->getField();
+            }
+
+            if( count($sexArr) > 0 && $sexArr[0] ) {
+                $sexRes = $sexArr[0]->getId();
+            }
+
+            if( $dobRes ) {
+
+                $patientInfo = array(
+                    'mrntype' => $mrntypeRes,
+                    'mrn' => $mrnRes,
+                    'dob' => $dobRes,
+                    'lastname' => $lastnameRes,
+                    'firstname' => $firstnameRes,
+                    'middlename' => $middlenameRes,
+                    'suffix' => $suffixRes,
+                    'sex' => $sexRes,
+                );
+                $output[] = $patientInfo;
+
+            }//if
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
 
 }

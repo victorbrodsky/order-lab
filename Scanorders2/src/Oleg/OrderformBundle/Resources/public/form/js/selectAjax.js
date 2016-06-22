@@ -441,7 +441,7 @@ function getComboboxAccessionType(holder,force) {
 //#############  Mrn Type  ##############//
 function getComboboxMrnType(holder,force) {
 
-    var url = getCommonBaseUrl("util/"+"mrntype");    //urlCommon+"mrntype";
+    var url = getCommonBaseUrl("util/"+"mrntype", 'scan');    //urlCommon+"mrntype";
 
     var targetid = ".mrntype-combobox";
     targetid = getElementTargetByHolder(holder,targetid);
@@ -470,11 +470,13 @@ function getComboboxMrnType(holder,force) {
             async: asyncflag
         }).success(function(data) {
                 _mrntype = data;
-                populateSelectCombobox( targetid, _mrntype, null );
+                //console.log('1 populate mrn type');
+                populateSelectCombobox( targetid, _mrntype, 'Please select MRN type' );
                 setAccessionMask();
             });
     } else {
-        populateSelectCombobox( targetid, _mrntype, null );
+        //console.log('2 populate mrn type');
+        populateSelectCombobox( targetid, _mrntype, 'Please select MRN type' );
     }
 
     if( cycle == "new"  ) {

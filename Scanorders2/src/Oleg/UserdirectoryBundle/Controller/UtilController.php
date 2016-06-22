@@ -1110,8 +1110,7 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $keytype = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
-
+//        $keytype = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
 //        //construct patient
 //        $patientMrn = new PatientMrn();
 //        $patient = new Patient();

@@ -23,15 +23,18 @@ class PatientMrnType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('keytype', null, array(
+        $builder->add('keytype', 'custom_selector', array(
             'label'=>'MRN Type:',
-            'required'=>false,
-            'attr' => array('class' => 'combobox')
+            'required' => true,
+            //'multiple' => false,
+            'data' => 1,
+            'attr' => array('class' => 'ajax-combobox combobox combobox-width mrntype-combobox'),
+            'classtype' => 'mrntype'
         ));
 
         $builder->add('field', null, array(
-            'label'=>'MRN:',
-            'required'=>false,
+            'label' => 'MRN:',
+            'required' => false,
             'attr' => array('class' => 'form-control keyfield patientmrn-mask')
         ));
 

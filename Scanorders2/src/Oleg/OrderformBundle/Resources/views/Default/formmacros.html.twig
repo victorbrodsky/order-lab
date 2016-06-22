@@ -1354,28 +1354,32 @@
     {#{{form_label(field)}}#}
     {% set label = field.vars.label %}
 
-    {% set creationDate = fieldThis.creationdate|date('Y-m-d')~" at "~fieldThis.creationdate|date('h:i a (T)') %}
+    {% if fieldThis %}
 
-    {% set postfixDate = null %}
-    {% set postfixProvider = null %}
+        {% set creationDate = fieldThis.creationdate|date('Y-m-d')~" at "~fieldThis.creationdate|date('h:i a (T)') %}
 
-    {% if showInfoDate == 1 %}
-        {% set postfixDate = "entered on "~creationDate %}
+        {% set postfixDate = null %}
+        {% set postfixProvider = null %}
+
+        {% if showInfoDate == 1 %}
+            {% set postfixDate = "entered on "~creationDate %}
+        {% endif %}
+
+        {% if showInfoProvider == 1 and fullfield.vars.value %}
+            {% set postfixProvider = '<a href='~path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id })~'>' %}
+            {% set postfixProvider = postfixProvider~'<span class="glyphicon glyphicon-question-sign element-with-tooltip-always" aria-hidden="true"' %}
+            {% set postfixProvider = postfixProvider~'data-toggle="tooltip"' %}
+            {% set postfixProvider = postfixProvider~'title="by '~fieldThis.provider.getUserNameStr()~' on '~creationDate~'">' %}
+            {% set postfixProvider = postfixProvider~'</span></a>' %}
+        {% endif %}
+
+        {% if postfixDate or showInfoProvider %}
+            {% set label = label|replace({":":""}) %}
+            {% set label = label ~ " " ~ postfixDate ~ postfixProvider ~ ":" %}
+        {% endif %}
+        {#{{ form_label(field, label|raw) }}#}
+
     {% endif %}
-
-    {% if showInfoProvider == 1 and fullfield.vars.value %}
-        {% set postfixProvider = '<a href='~path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id })~'>' %}
-        {% set postfixProvider = postfixProvider~'<span class="glyphicon glyphicon-question-sign element-with-tooltip-always" aria-hidden="true"' %}
-        {% set postfixProvider = postfixProvider~'data-toggle="tooltip"' %}
-        {% set postfixProvider = postfixProvider~'title="by '~fieldThis.provider.getUserNameStr()~' on '~creationDate~'">' %}
-        {% set postfixProvider = postfixProvider~'</span></a>' %}
-    {% endif %}
-
-    {% if postfixDate or showInfoProvider %}
-        {% set label = label|replace({":":""}) %}
-        {% set label = label ~ " " ~ postfixDate ~ postfixProvider ~ ":" %}
-    {% endif %}
-    {#{{ form_label(field, label|raw) }}#}
 
     {#render label#}
     <p>

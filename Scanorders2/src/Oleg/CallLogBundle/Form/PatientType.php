@@ -64,11 +64,6 @@ class PatientType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__encounter__',
         ));
-//        $builder->add('encounter', new PatientMrnType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
-//            'label' => false,
-//            'required' => false,
-//        ));
 
 //        $builder->add('lastname', 'collection', array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),

@@ -231,8 +231,10 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     }
 
     if( multipleFlag ) {
+        //console.log('multiple true');
         var multiple = true;
     } else {
+        //console.log('multiple false');
         var multiple = false;
     }
 
