@@ -178,7 +178,7 @@ swiftmailer:
     username:  %mailer_user%
     password:  %mailer_password%
     encryption: ssl
-    port: 587
+#    port: 587
     delivery_addresses: %swift_delivery_addresses% #disable it for production
 #    spool:     { type: memory }
 
