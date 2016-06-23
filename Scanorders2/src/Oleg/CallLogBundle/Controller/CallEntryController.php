@@ -194,71 +194,92 @@ class CallEntryController extends Controller
         $patients = $query->getResult();
         //echo "patients=".count($patients)."<br>";
 
-        $output = array();
+        $patientsArr = array();
         $status = 'valid';
 
         foreach( $patients as $patient ) {
 
+//            //to get a single field only use obtainStatusField
+//            //obtainStatusFieldArray - get array of fields
+//            $mrnArr = $patient->obtainStatusFieldArray('mrn', $status);
+//            $dobArr = $patient->obtainStatusFieldArray('dob', $status);
+//            $firstNameArr = $patient->obtainStatusFieldArray('firstname', $status);
+//            $middleNameArr = $patient->obtainStatusFieldArray('middlename', $status);
+//            $lastNameArr = $patient->obtainStatusFieldArray('lastname', $status);
+//            $suffixArr = $patient->obtainStatusFieldArray('suffix', $status);
+//            $sexArr = $patient->obtainStatusFieldArray('sex', $status);
+//
+//            if( count($mrnArr) > 0 && $mrnArr[0] ) {
+//                $mrntypeRes = $mrnArr[0]->getKeytype()->getId();
+//                $mrnRes = $mrnArr[0]->getField();
+//            }
+//
+//            if( count($dobArr) > 0 && $dobArr[0] ) {
+//                $dobRes = $dobArr[0]."";
+//            }
+//
+//            if( count($firstNameArr) > 0 && $firstNameArr[0] ) {
+//                $firstnameRes = $firstNameArr[0]->getField();
+//            }
+//
+//            if( count($lastNameArr) > 0 && $lastNameArr[0] ) {
+//                $lastnameRes = $lastNameArr[0]->getField();
+//            }
+//
+//            if( count($middleNameArr) > 0 && $middleNameArr[0] ) {
+//                $middlenameRes = $middleNameArr[0]->getField();
+//            }
+//
+//            if( count($suffixArr) > 0 && $suffixArr[0] ) {
+//                $suffixRes = $suffixArr[0]->getField();
+//            }
+//
+//            if( count($sexArr) > 0 && $sexArr[0] ) {
+//                $sexRes = $sexArr[0]->getId();
+//            }
+
+//            if( $dobRes ) {
+//                $patientInfo = array(
+//                    'id' => $patient->getId(),
+//                    'mrntype' => $mrntypeRes,
+//                    'mrn' => $mrnRes,
+//                    'dob' => $dobRes,
+//                    'lastname' => $lastnameRes,
+//                    'firstname' => $firstnameRes,
+//                    'middlename' => $middlenameRes,
+//                    'suffix' => $suffixRes,
+//                    'sex' => $sexRes,
+//                );
+//                $output[] = $patientInfo;
+//            }//if
+
             //to get a single field only use obtainStatusField
-            //obtainStatusFieldArray - get array of fields
-            //$mrntypeArr = $this->obtainStatusFieldArray('keytype', $status);
-            $mrnArr = $patient->obtainStatusFieldArray('mrn', $status);
-            $dobArr = $patient->obtainStatusFieldArray('dob', $status);
-            $firstNameArr = $patient->obtainStatusFieldArray('firstname', $status);
-            $middleNameArr = $patient->obtainStatusFieldArray('middlename', $status);
-            $lastNameArr = $patient->obtainStatusFieldArray('lastname', $status);
-            $suffixArr = $patient->obtainStatusFieldArray('suffix', $status);
-            $sexArr = $patient->obtainStatusFieldArray('sex', $status);
+            $mrnRes = $patient->obtainStatusField('mrn', $status);
+            $dobRes = $patient->obtainStatusField('dob', $status);
+            $firstNameRes = $patient->obtainStatusField('firstname', $status);
+            $middleNameRes = $patient->obtainStatusField('middlename', $status);
+            $lastNameRes = $patient->obtainStatusField('lastname', $status);
+            $suffixRes = $patient->obtainStatusField('suffix', $status);
+            $sexRes = $patient->obtainStatusField('sex', $status);
 
-            if( count($mrnArr) > 0 && $mrnArr[0] ) {
-                $mrntypeRes = $mrnArr[0]->getKeytype()->getId();
-                $mrnRes = $mrnArr[0]->getField();
-            }
+            $patientInfo = array(
+                'id' => $patient->getId(),
+                'mrntype' => $mrnRes->getKeytype()->getId(),
+                'mrn' => $mrnRes->getField(),
+                'dob' => $dobRes."",
+                'lastname' => $lastNameRes->getField(),
+                'firstname' => $firstNameRes->getField(),
+                'middlename' => $middleNameRes->getField(),
+                'suffix' => $suffixRes->getField(),
+                'sex' => $sexRes->getId(),
+            );
+            $patientsArr[] = $patientInfo;
 
-            if( count($dobArr) > 0 && $dobArr[0] ) {
-                $dobRes = $dobArr[0]."";
-            }
-
-            if( count($firstNameArr) > 0 && $firstNameArr[0] ) {
-                $firstnameRes = $firstNameArr[0]->getField();
-            }
-
-            if( count($lastNameArr) > 0 && $lastNameArr[0] ) {
-                $lastnameRes = $lastNameArr[0]->getField();
-            }
-
-            if( count($middleNameArr) > 0 && $middleNameArr[0] ) {
-                $middlenameRes = $middleNameArr[0]->getField();
-            }
-
-            if( count($suffixArr) > 0 && $suffixArr[0] ) {
-                $suffixRes = $suffixArr[0]->getField();
-            }
-
-            if( count($sexArr) > 0 && $sexArr[0] ) {
-                $sexRes = $sexArr[0]->getId();
-            }
-
-            if( $dobRes ) {
-
-                $patientInfo = array(
-                    'mrntype' => $mrntypeRes,
-                    'mrn' => $mrnRes,
-                    'dob' => $dobRes,
-                    'lastname' => $lastnameRes,
-                    'firstname' => $firstnameRes,
-                    'middlename' => $middlenameRes,
-                    'suffix' => $suffixRes,
-                    'sex' => $sexRes,
-                );
-                $output[] = $patientInfo;
-
-            }//if
-        }
+        }//foreach
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
+        $response->setContent(json_encode($patientsArr));
         return $response;
     }
 

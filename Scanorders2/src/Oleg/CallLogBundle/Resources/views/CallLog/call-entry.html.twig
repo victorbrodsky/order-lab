@@ -107,6 +107,8 @@
                         <div class="col-xs-5"></div>
                     </div>
 
+                    <div id="calllog-danger-box" class="alert alert-danger" style="display: none"></div>
+
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
         </div> <!-- panel panel-info -->
@@ -288,9 +290,10 @@
             async: false,
             data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname },
         }).success(function(data) {
+            console.log("data.length="+data.length);
             console.log(data);
             if( data.length > 0 ) {
-                console.log(data);
+                console.log("Patient found");
                 populatePatientsInfo(data);
             } else {
                 populatePatientInfo(null);
@@ -301,56 +304,124 @@
     }
 
     function populatePatientsInfo(patients) {
-        populatePatientInfo(patients[0]);
+
+        var patLen = patients.length;
+        console.log('patLen='+patLen);
+
+        if( patLen == 1 ) {
+            populatePatientInfo(patients[0]);
+        } else if( patLen == 0 ) {
+            //"No matching patient records found." and unlock fields
+            $('#calllog-danger-box').html("No matching patient records found.");
+            $('#calllog-danger-box').show();
+            populatePatientInfo(null);
+        } else if( patLen > 1 ) {
+            //show table with found patients
+            populatePatientInfo(patients[0]);
+        } else {
+            console.log('This condition should not be reached');
+        }
+
     }
 
     function populatePatientInfo(data) {
 
-        var dob = null;
-        var lastname = null;
-        var firstname = null;
-        var middlename = null;
-        var suffix = null;
-        var sex = null;
+//        var dob = null;
+//        var lastname = null;
+//        var firstname = null;
+//        var middlename = null;
+//        var suffix = null;
+//        var sex = null;
 
 
-        if( data && data.dob ) {
-            dob = data.dob
-        }
-        $(".patient-dob-date").val(dob);
+//        var dobField = $(".patient-dob-date");
+//        if( data && data.dob ) {
+//            dob = data.dob
+//            //lock field
+//            dobField.prop('disabled', true);
+//        } else {
+//            //unlock field
+//            dobField.prop('disabled', false);
+//        }
+//        dobField.val(dob);
+        populateInputFieldCalllog($(".patient-dob-date"),data,'dob');
 
-        if( data && data.lastname ) {
-            lastname = data.lastname;
-        }
-        $(".encounter-lastName").val(lastname);
+//        if( data && data.lastname ) {
+//            lastname = data.lastname;
+//        }
+//        $(".encounter-lastName").val(lastname);
+        populateInputFieldCalllog($(".encounter-lastName"),data,'lastname');
 
-        if( data && data.firstname ) {
-            firstname = data.firstname;
-        }
-        $(".encounter-firstName").val(firstname);
+//        if( data && data.firstname ) {
+//            firstname = data.firstname;
+//        }
+//        $(".encounter-firstName").val(firstname);
+        populateInputFieldCalllog($(".encounter-firstName"),data,'firstname');
 
-        if( data && data.middlename ) {
-            middlename = data.middlename;
-        }
-        $(".encounter-middleName").val(middlename);
+//        if( data && data.middlename ) {
+//            middlename = data.middlename;
+//        }
+//        $(".encounter-middleName").val(middlename);
+        populateInputFieldCalllog($(".encounter-middleName"),data,'middlename');
 
-        if( data && data.suffix ) {
-            suffix = data.suffix;
-        }
-        $(".patient-suffix").val(suffix);
+//        if( data && data.suffix ) {
+//            suffix = data.suffix;
+//        }
+//        $(".encounter-suffix").val(suffix);
+        populateInputFieldCalllog($(".encounter-suffix"),data,'suffix');
 
-        if( data && data.sex ) {
-            sex = data.sex;
-        }
-        $(".encountersex-field").val(sex);
+//        if( data && data.sex ) {
+//            sex = data.sex;
+//        }
+//        $(".encountersex-field").select2('val',sex);
+        populateSelectFieldCalllog($(".encountersex-field"),data,'sex');
 
-        console.log('middlename='+middlename+'; suffix='+suffix+'; sex='+sex);
-        if( middlename || suffix || sex  ) {
+        //console.log('middlename='+middlename+'; suffix='+suffix+'; sex='+sex);
+        if( data && data.id ) {
             $('#encounter-info').collapse("show");
         } else {
             $('#encounter-info').collapse("hide");
         }
 
+    }
+
+    function populateInputFieldCalllog( fieldEl, data, index ) {
+        var value = null;
+        if( data && data[index] ) {
+            value = data[index];
+            //lock field
+            fieldEl.prop('disabled', true);
+            fieldEl.closest('.input-group').find('input').prop('disabled', true);
+            if( fieldEl.hasClass('datepicker') ) {
+                var elementDatepicker = fieldEl.closest('.input-group.date');
+                elementDatepicker.datepicker("remove");
+            }
+        } else {
+            //unlock field
+            fieldEl.prop('disabled', false);
+            fieldEl.closest('.input-group').find('input').prop('disabled', false);
+            if( fieldEl.hasClass('datepicker') ) {
+                var elementDatepicker = fieldEl.closest('.input-group.date');
+                initSingleDatepicker(elementDatepicker);
+            }
+        }
+        //console.log(index+': value='+value);
+        fieldEl.val(value);
+        return value;
+    }
+
+    function populateSelectFieldCalllog( fieldEl, data, index ) {
+        var value = null;
+        if( data && data[index] ) {
+            value = data[index];
+            //lock field
+            fieldEl.prop('disabled', true);
+        } else {
+            //unlock field
+            fieldEl.prop('disabled', false);
+        }
+        fieldEl.select2('val',value);
+        return value;
     }
 
 </script>
