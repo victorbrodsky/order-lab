@@ -180,16 +180,37 @@ class CallEntryController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Patient', 'patient')
-            ->select("patient")
-            ->leftJoin("patient.mrn", "mrn")
-            ->leftJoin("patient.dob", "dob")
-            ->leftJoin("patient.lastname", "lastname")
-            ->leftJoin("patient.firstname", "firstname")
-            ->where("mrn.keytype = :keytype AND mrn.field = :mrn AND mrn.status = :status")
-            ->setParameters( array('keytype'=>$mrntype, 'mrn'=>$mrn, 'status'=>'valid') )
-            ->getQuery();
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:Patient', 'patient')
+//            ->select("patient")
+//            ->leftJoin("patient.mrn", "mrn")
+//            ->leftJoin("patient.dob", "dob")
+//            ->leftJoin("patient.lastname", "lastname")
+//            ->leftJoin("patient.firstname", "firstname")
+//            ->where("mrn.keytype = :keytype AND mrn.field = :mrn AND mrn.status = :status")
+//            ->setParameters( array('keytype'=>$mrntype, 'mrn'=>$mrn, 'status'=>'valid') )
+//            ->getQuery();
+
+        $parameters = array('status'=>'valid');
+
+        $repository = $em->getRepository('OlegOrderformBundle:Patient');
+        $dql =  $repository->createQueryBuilder("patient");
+        $dql->leftJoin("patient.mrn", "mrn");
+        $dql->leftJoin("patient.dob", "dob");
+        $dql->leftJoin("patient.lastname", "lastname");
+        $dql->leftJoin("patient.firstname", "firstname");
+
+        $dql->where("mrn.status = :status");
+
+        if( $mrntype && $mrn ) {
+            $dql->andWhere("mrn.keytype = :keytype AND mrn.field = :mrn");
+            $parameters['keytype'] = $mrntype;
+            $parameters['mrn'] = $mrn;
+        }
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters($parameters);
 
         $patients = $query->getResult();
         //echo "patients=".count($patients)."<br>";

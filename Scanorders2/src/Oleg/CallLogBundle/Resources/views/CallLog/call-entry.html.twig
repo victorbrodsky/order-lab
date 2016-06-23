@@ -107,7 +107,7 @@
                         <div class="col-xs-5"></div>
                     </div>
 
-                    <div id="calllog-danger-box" class="alert alert-danger" style="display: none"></div>
+                    <div id="calllog-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px;"></div>
 
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
@@ -292,13 +292,13 @@
         }).success(function(data) {
             console.log("data.length="+data.length);
             console.log(data);
-            if( data.length > 0 ) {
-                console.log("Patient found");
+//            if( data.length > 0 ) {
+//                console.log("Patient found");
                 populatePatientsInfo(data);
-            } else {
-                populatePatientInfo(null);
-                console.log("Patient not found");
-            }
+//            } else {
+//                populatePatientInfo(null);
+//                console.log("Patient not found");
+//            }
         });
 
     }
@@ -311,11 +311,13 @@
         if( patLen == 1 ) {
             populatePatientInfo(patients[0]);
         } else if( patLen == 0 ) {
+            console.log("No matching patient records found.");
             //"No matching patient records found." and unlock fields
             $('#calllog-danger-box').html("No matching patient records found.");
             $('#calllog-danger-box').show();
             populatePatientInfo(null);
         } else if( patLen > 1 ) {
+            console.log("show table with found patients");
             //show table with found patients
             populatePatientInfo(patients[0]);
         } else {
@@ -324,7 +326,7 @@
 
     }
 
-    function populatePatientInfo(data) {
+    function populatePatientInfo( data ) {
 
 //        var dob = null;
 //        var lastname = null;

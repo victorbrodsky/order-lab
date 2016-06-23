@@ -380,6 +380,7 @@ class RequestController extends Controller
         //$deleteForm = $this->createDeleteForm($vacReqRequest);
         //$editForm = $this->createForm('Oleg\VacReqBundle\Form\VacReqRequestType', $vacReqRequest);
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -460,6 +461,20 @@ class RequestController extends Controller
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /////////////// log status ////////////////////////
+            $statusMsg = $entity->getId()." (".$routName.")".": set by user=".$user;
+            if( $this->hasBusinessRequest() ) {
+                $statusB = $this->getRequestBusiness()->getStatus();
+                $statusMsg = $statusMsg . " statusBusiness=".$statusB;
+            }
+            if( $this->hasVacationRequest() ) {
+                $statusV = $this->getRequestVacation()->getStatus();
+                $statusMsg = $statusMsg . " statusVacation=".$statusV;
+            }
+            $logger->notice($statusMsg);
+            /////////////// EOF log status ////////////////////////
+
             //exit('form is valid');
             if( $routName == 'vacreq_review' ) { //review
 
@@ -639,6 +654,11 @@ class RequestController extends Controller
 //        } else {
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
+
+
+        /////////////// log status ////////////////////////
+        $logger->notice($entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+        /////////////// EOF log status ////////////////////////
 
         if( $this->get('security.context')->isGranted("changestatus", $entity) ) {
             //Approvers can change status to anything
@@ -971,6 +991,9 @@ class RequestController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Request by id=' . $id);
         }
+
+        $logger = $this->container->get('logger');
+        $logger->notice($entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
 
         //check permissions
         if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
