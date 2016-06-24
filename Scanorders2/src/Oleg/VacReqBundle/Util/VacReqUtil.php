@@ -138,6 +138,7 @@ class VacReqUtil
         $requestName = $entity->getRequestName();
 
         $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." ID #".$entity->getId()." and it is ready for review.";
+        $message .= $break.$break.$entity."";
 
         $reviewRequestUrl = $this->container->get('router')->generate(
             'vacreq_review',
@@ -322,6 +323,9 @@ class VacReqUtil
 
             $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . ":" . $break;
             $message .= $entity->getDetailedStatus().".".$break.$break;
+
+            $message .= $entity."".$break.$break;
+
             $message .= "**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
         }
 
@@ -2493,13 +2497,16 @@ class VacReqUtil
         $message = $addText.$break.$break.$message;
         $settings = $this->getSettingsByInstitution($institution->getId());
         if( $settings ) {
+            $emailUserEmailArr = array();
             foreach ($settings->getEmailUsers() as $emailUser) {
                 $emailUserEmail = $emailUser->getSingleEmail();
                 if( $emailUserEmail ) {
                     //$message = $this->createCancelEmailBody($entity, $emailUser, $addText);
-                    $emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+                    //$emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+                    $emailUserEmailArr[] = $emailUserEmail;
                 }
             }
+            $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
         }
 
         return implode(", ",$approversNameArr);

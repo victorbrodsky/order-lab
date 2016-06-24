@@ -195,10 +195,11 @@ class RequestController extends Controller
             if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
                 //You have successfully submitted request #1781 for X vacation days to be carried over from 20XX-20YY to 20YY-20ZZ.
                 $message .= "You have successfully submitted the request #".$entity->getId()." for ".$entity->getCarryOverDays();
-                $message .= " vacation days to be carried over from ".$entity->getSourceYearRange()." to ".$entity->getDestinationYearRange().". ";
+                $message .= " vacation days to be carried over from ".$entity->getSourceYearRange()." to ".$entity->getDestinationYearRange().".";
             } else {
-                $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().". ";
+                $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().".";
             }
+            $message .= $break.$break.$entity."".$break;
 
             $message .= $break."You will be notified once your request is reviewed and its status changes.";
             $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
