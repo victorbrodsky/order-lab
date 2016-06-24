@@ -320,7 +320,7 @@ class VacReqUtil
                 $status = 'set to Pending';
             }
 
-            $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . $break;
+            $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . $break.":";
             $message .= $entity->getDetailedStatus().$break.$break;
             $message .= "**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
         }
