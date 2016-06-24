@@ -59,7 +59,7 @@ class EmailUtil {
         if( $this->em ) {
             $smtp = $userutil->getSiteSetting($this->em,'smtpServerAddress');
             $smtp_host_ip = gethostbyname($smtp);
-            $transport = \Swift_Message::newInstance($smtp_host_ip,25);
+            $transport = \Swift_Message::newInstance($smtp_host_ip);
         } else {
             $logger = $this->container->get('logger');
             $logger->error("this->em is null in sendEmail: use default Swift_Message::newInstance(). subject=".$subject);
