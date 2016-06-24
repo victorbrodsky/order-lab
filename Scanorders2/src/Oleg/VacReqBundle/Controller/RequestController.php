@@ -148,7 +148,7 @@ class RequestController extends Controller
             $entity->setFinalFirstDayAway(); //new
 
             //set entire request to 'pending'
-            $this->setBusinessVacationEntireStatus('pending');
+            $entity->setBusinessVacationEntireStatus('pending');
 
             //remove sub requests if empty
             if( !$entity->hasBusinessRequest() ) {
