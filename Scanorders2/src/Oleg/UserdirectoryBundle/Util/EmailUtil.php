@@ -24,7 +24,7 @@ class EmailUtil {
     //$ccs: single or array of emails
     public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
 
-        set_time_limit(300); //set time limit to 300 sec == 5 min
+        set_time_limit(600); //set time limit to 600 sec == 10 min
 
         //echo "emails=".$emails."<br>";
         //echo "ccs=".$ccs."<br>";
