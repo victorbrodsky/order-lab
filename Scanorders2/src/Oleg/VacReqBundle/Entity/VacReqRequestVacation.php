@@ -33,6 +33,10 @@ class VacReqRequestVacation extends VacReqRequestBase
         $res .= "Vacation Days Requested: ".$this->getNumberOfDays().$break;
         //$res .= "First Day Back in Office: ".$transformer->transform($this->getFirstDayBackInOffice()).$break;
 
+        if( $this->getApproverComment() ) {
+            $res .= "Approver Comment: ".$this->getApproverComment().$break;
+        }
+
         return $res;
     }
 

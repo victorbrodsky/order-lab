@@ -117,6 +117,10 @@ class VacReqRequestBusiness extends VacReqRequestBase
 
         $res .= "Description: ".$this->getDescription().$break;
 
+        if( $this->getApproverComment() ) {
+            $res .= "Approver Comment: ".$this->getApproverComment().$break;
+        }
+
         return $res;
     }
 
