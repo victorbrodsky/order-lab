@@ -294,6 +294,7 @@ class CallEntryController extends Controller
                 'middlename' => $middleNameRes->getField(),
                 'suffix' => $suffixRes->getField(),
                 'sex' => $sexRes->getId(),
+                'sexstr' => $sexRes."",
             );
             $patientsArr[] = $patientInfo;
 
