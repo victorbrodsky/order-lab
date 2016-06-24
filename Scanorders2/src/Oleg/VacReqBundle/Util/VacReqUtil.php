@@ -2498,12 +2498,11 @@ class VacReqUtil
 
             $approverSingleEmail = $approver->getSingleEmail();
 
-            if( !$approverSingleEmail ) {
-                continue;
+            if( $approverSingleEmail ) {
+                $approverEmailArr[] = $approverSingleEmail;
+                $approversNameArr[] = $approver." (".$approverSingleEmail.")";
+                $approversShortNameArr[] = $approver->getUsernameOptimal();
             }
-
-            $approversNameArr[] = $approver." (".$approverSingleEmail.")";
-            $approversShortNameArr[] = $approver->getUsernameOptimal();
 
             //$message = $this->createCancelEmailBody($entity,$approver);
             //$message = str_replace("###emailuser###",$approver->getUsernameOptimal(),$originalMessage);
