@@ -145,7 +145,7 @@ class RequestController extends Controller
             //exit('form is valid');
 
             //set final (global) first day away
-            $entity->setFinalFirstDayAway();
+            $entity->setFinalFirstDayAway(); //new
 
             //set entire request to 'pending'
             $this->setBusinessVacationEntireStatus('pending');
@@ -834,8 +834,9 @@ class RequestController extends Controller
                 }
 
                 $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
+                $event .= ": ".$entity->getDetailedStatus().".";
                 if( $approversNameStr ) {
-                    $event .= ". Confirmation email(s) have been sent to ".$approversNameStr;
+                    $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
                 }
 
                 $this->get('session')->getFlashBag()->add(
