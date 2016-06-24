@@ -286,6 +286,7 @@ class CallEntryController extends Controller
             $patientInfo = array(
                 'id' => $patient->getId(),
                 'mrntype' => $mrnRes->getKeytype()->getId(),
+                'mrntypestr' => $mrnRes->getKeytype()->getName(),
                 'mrn' => $mrnRes->getField(),
                 'dob' => $dobRes."",
                 'lastname' => $lastNameRes->getField(),

@@ -54,7 +54,7 @@
                         {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
                     {% endfor %}
 
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>
+                    {#<a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>#}
                     <div id="encounter-info" class="panel-collapse collapse">
                     {% for encounter in form.encounter %}
 
@@ -99,15 +99,15 @@
                     <div class="row">
                         <div class="col-xs-5"></div>
                         <div class="col-xs-2">
-                            <button id="Search_button" type="button"
-                                    class="btn btn-lg btn-success" align="center"
-                                    onclick="findCalllogPatient()"
-                                    style="float:left; width:100%">Find Patient</button>
+                            <button id="Search_button" type="button" class="btn btn-lg btn-success span4" align="center"
+                                onclick="findCalllogPatient()" style="float:left; width:100%">Find Patient</button>
                         </div>
                         <div class="col-xs-5"></div>
                     </div>
 
                     <div id="calllog-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px;"></div>
+
+                    <div id="calllog-matching-patients" style="display: none; margin-top: 5px;"></div>
 
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
@@ -308,78 +308,115 @@
         var patLen = patients.length;
         console.log('patLen='+patLen);
 
+        //clear matching patient section
+        $('#calllog-matching-patients').hide();
+        $('#calllog-matching-patients').html('');
+
+        //clear no matching box
+        $('#calllog-danger-box').hide();
+        $('#calllog-danger-box').html("");
+
         if( patLen == 1 ) {
-            populatePatientInfo(patients[0]);
+            populatePatientInfo(patients[0],null);
         } else if( patLen == 0 ) {
             console.log("No matching patient records found.");
             //"No matching patient records found." and unlock fields
             $('#calllog-danger-box').html("No matching patient records found.");
             $('#calllog-danger-box').show();
-            populatePatientInfo(null);
+            populatePatientInfo(null,true);
         } else if( patLen > 1 ) {
             console.log("show table with found patients");
             //show table with found patients
-            populatePatientInfo(patients[0]);
+            //populatePatientInfo(patients[0],null);
+            populatePatientInfo(null,null);
+
+            createPatientsTableCalllog(patients);
+
         } else {
             console.log('This condition should not be reached');
         }
 
     }
 
-    function populatePatientInfo( data ) {
+    function createPatientsTableCalllog( patients ) {
 
-//        var dob = null;
-//        var lastname = null;
-//        var firstname = null;
-//        var middlename = null;
-//        var suffix = null;
-//        var sex = null;
+        //Matching Patients
+        var matchingPatientsHtml = '<div class="table-responsive"><table id="calllog-matching-patients-table" class="table table-bordered">' +
+            '<thead><tr>' +
+                '<th>MRN</th>' +
+                '<th>Last Name</th>' +
+                '<th>First Name</th>' +
+                '<th>Middle Name</th>' +
+                '<th>Suffix</th>' +
+                '<th>Sex</th>' +
+                '<th>DOB</th>' +
+            '</tr></thead>' +
+            '<tbody>';
+
+        for( var i = 0; i < patients.length; i++ ) {
+            var patient = patients[i];
+            console.log('patient id='+patient.id);
+
+            matchingPatientsHtml = matchingPatientsHtml +
+                '<tr class="clickable-row">' +
+                    '<td>'+patient.mrn+' ('+patient.mrntypestr+')</td>'+
+                    '<td>'+patient.lastname+'</td>'+
+                    '<td>'+patient.firstname+'</td>'+
+                    '<td>'+patient.middlename+'</td>'+
+                    '<td>'+patient.suffix+'</td>'+
+                    '<td>'+patient.sex+'</td>'+
+                    '<td>'+patient.dob+'</td>'+
+                '</tr>';
+
+        }
+
+        matchingPatientsHtml = matchingPatientsHtml + "</tbody></table></div>";
+
+        matchingPatientsHtml = matchingPatientsHtml +
+                        '<p data-toggle="tooltip" title="Please select the patient"><button type="button"'+
+                        ' id="matchingPatientBtn"'+
+                        ' class="btn btn-lg span4" align="center"'+
+                        ' disabled'+
+                        //' onclick="populatePatientInfo('+patient+')"'+
+                        '>Select Patient</button></p>';
+
+        $('#calllog-matching-patients').html(matchingPatientsHtml);
+        $('#calllog-matching-patients').show();
 
 
-//        var dobField = $(".patient-dob-date");
-//        if( data && data.dob ) {
-//            dob = data.dob
-//            //lock field
-//            dobField.prop('disabled', true);
-//        } else {
-//            //unlock field
-//            dobField.prop('disabled', false);
-//        }
-//        dobField.val(dob);
-        populateInputFieldCalllog($(".patient-dob-date"),data,'dob');
+        $('#matchingPatientBtn').parent().tooltip();
 
-//        if( data && data.lastname ) {
-//            lastname = data.lastname;
-//        }
-//        $(".encounter-lastName").val(lastname);
-        populateInputFieldCalllog($(".encounter-lastName"),data,'lastname');
+        $('#calllog-matching-patients-table').on('click', '.clickable-row', function(event) {
+            $(this).addClass('active').siblings().removeClass('active');
 
-//        if( data && data.firstname ) {
-//            firstname = data.firstname;
-//        }
-//        $(".encounter-firstName").val(firstname);
-        populateInputFieldCalllog($(".encounter-firstName"),data,'firstname');
+            $('#matchingPatientBtn').prop('disabled', false);
+            $('#matchingPatientBtn').parent().tooltip('destroy');
 
-//        if( data && data.middlename ) {
-//            middlename = data.middlename;
-//        }
-//        $(".encounter-middleName").val(middlename);
-        populateInputFieldCalllog($(".encounter-middleName"),data,'middlename');
+//            if($(this).hasClass('active')){
+//                $(this).removeClass('active');
+//            } else {
+//                $(this).addClass('active').siblings().removeClass('active');
+//            }
+        });
 
-//        if( data && data.suffix ) {
-//            suffix = data.suffix;
-//        }
-//        $(".encounter-suffix").val(suffix);
-        populateInputFieldCalllog($(".encounter-suffix"),data,'suffix');
+    }
 
-//        if( data && data.sex ) {
-//            sex = data.sex;
-//        }
-//        $(".encountersex-field").select2('val',sex);
-        populateSelectFieldCalllog($(".encountersex-field"),data,'sex');
+    function populatePatientInfo( patient, showinfo ) {
+
+        populateInputFieldCalllog($(".patient-dob-date"),patient,'dob');
+
+        populateInputFieldCalllog($(".encounter-lastName"),patient,'lastname');
+
+        populateInputFieldCalllog($(".encounter-firstName"),patient,'firstname');
+
+        populateInputFieldCalllog($(".encounter-middleName"),patient,'middlename');
+
+        populateInputFieldCalllog($(".encounter-suffix"),patient,'suffix');
+
+        populateSelectFieldCalllog($(".encountersex-field"),patient,'sex');
 
         //console.log('middlename='+middlename+'; suffix='+suffix+'; sex='+sex);
-        if( data && data.id ) {
+        if( patient && patient.id || showinfo ) {
             $('#encounter-info').collapse("show");
         } else {
             $('#encounter-info').collapse("hide");
