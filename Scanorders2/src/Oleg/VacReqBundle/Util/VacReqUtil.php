@@ -2529,9 +2529,9 @@ class VacReqUtil
                     $emailUserEmailArr[] = $emailUserEmail;
                 }
             }
-//            if( count($emailUserEmailArr) > 0 ) {
-//                $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
-//            }
+            //if( count($emailUserEmailArr) > 0 ) {
+                //$emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
+            //}
         }
 
         if( count($approverEmailArr) > 0 ) {
