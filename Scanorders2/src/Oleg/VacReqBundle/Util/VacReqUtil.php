@@ -2498,7 +2498,7 @@ class VacReqUtil
         $settings = $this->getSettingsByInstitution($institution->getId());
         if( $settings ) {
             $emailUserEmailArr = array();
-            foreach ($settings->getEmailUsers() as $emailUser) {
+            foreach( $settings->getEmailUsers() as $emailUser ) {
                 $emailUserEmail = $emailUser->getSingleEmail();
                 if( $emailUserEmail ) {
                     //$message = $this->createCancelEmailBody($entity, $emailUser, $addText);
@@ -2506,7 +2506,9 @@ class VacReqUtil
                     $emailUserEmailArr[] = $emailUserEmail;
                 }
             }
-            $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
+            if( count($emailUserEmailArr) > 0 ) {
+                $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
+            }
         }
 
         return implode(", ",$approversNameArr);

@@ -1186,7 +1186,7 @@ class VacReqRequest
         $res .= "Organizational Group: ".$this->getInstitution().$break;
         $res .= "Phone Number for the person away: ".$this->getPhone().$break;
 
-        $res .= "Emergency COntact Info:".$break.implode($break,$this->getEmergencyConatcsArr()).$break.$break;
+        $res .= "Emergency Contact Info:".$break.implode($break,$this->getEmergencyConatcsArr()).$break.$break;
 
         if( $this->hasBusinessRequest() ) {
             $subRequest = $this->getRequestBusiness();
