@@ -851,14 +851,14 @@ class VacReqRequest
     }
 
     public function hasBusinessRequest() {
-        if( $this->getRequestBusiness() && $this->getRequestBusiness()->getStartDate() ) {
+        if( $this->getRequestBusiness() && $this->getRequestBusiness()->getStartDate() && $this->getRequestBusiness()->getEndDate() ) {
             return true;
         }
         return false;
     }
 
     public function hasVacationRequest() {
-        if( $this->getRequestVacation() && $this->getRequestVacation()->getStartDate() ) {
+        if( $this->getRequestVacation() && $this->getRequestVacation()->getStartDate() && $this->getRequestVacation()->getEndDate() ) {
             return true;
         }
         return false;

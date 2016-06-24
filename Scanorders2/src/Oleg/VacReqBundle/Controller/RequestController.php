@@ -464,12 +464,12 @@ class RequestController extends Controller
 
             /////////////// log status ////////////////////////
             $statusMsg = $entity->getId()." (".$routName.")".": set by user=".$user;
-            if( $this->hasBusinessRequest() ) {
-                $statusB = $this->getRequestBusiness()->getStatus();
+            if( $entity->hasBusinessRequest() ) {
+                $statusB = $entity->getRequestBusiness()->getStatus();
                 $statusMsg = $statusMsg . " statusBusiness=".$statusB;
             }
-            if( $this->hasVacationRequest() ) {
-                $statusV = $this->getRequestVacation()->getStatus();
+            if( $entity->hasVacationRequest() ) {
+                $statusV = $entity->getRequestVacation()->getStatus();
                 $statusMsg = $statusMsg . " statusVacation=".$statusV;
             }
             $logger->notice($statusMsg);
