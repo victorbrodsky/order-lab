@@ -30,6 +30,7 @@ class EmailUtil {
     public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
 
         set_time_limit(600); //set time limit to 600 sec == 10 min
+        $userutil = new UserUtil();
 
         //echo "emails=".$emails."<br>";
         //echo "ccs=".$ccs."<br>";
@@ -49,21 +50,19 @@ class EmailUtil {
         }
 
         if( !$fromEmail ) {
-            $userutil = new UserUtil();
             $fromEmail = $userutil->getSiteSetting($this->em,'siteEmail');
         }
 
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
-        if( $this->em ) {
-            $userutil = new UserUtil();
+        //if( $this->em ) {
             $smtp = $userutil->getSiteSetting($this->em,'smtpServerAddress');
             $smtp_host_ip = gethostbyname($smtp);
             $transport = \Swift_Message::newInstance($smtp_host_ip,25);
-        } else {
-            $transport = \Swift_Message::newInstance();
-        }
+        //} else {
+        //    $transport = \Swift_Message::newInstance();
+        //}
 
         $transport->setSubject($subject);
         $transport->setFrom($fromEmail);
