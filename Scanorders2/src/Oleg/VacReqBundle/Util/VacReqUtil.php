@@ -329,7 +329,7 @@ class VacReqUtil
             $message .= "**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
         }
 
-        $emailUtil->sendEmail( $submitter->getSingleEmail(), $subject, $message, null, null );
+        //$emailUtil->sendEmail( $submitter->getSingleEmail(), $subject, $message, null, null );
 
         //css to email users
         $approversNameArr = array();
@@ -355,10 +355,12 @@ class VacReqUtil
             }
         } //foreach approver
 
-        $subject = "Copy of the email: ".$subject;
-        $addText = "### This is a copy of the email sent to the approvers ".implode(", ",$approversNameArr)."###";
-        $message = $addText.$break.$break.$message;
-        $emailUtil->sendEmail( $cssArr, $subject, $message, null, null );
+        $emailUtil->sendEmail( $submitter->getSingleEmail(), $subject, $message, $cssArr, null );
+
+        //$subject = "Copy of the email: ".$subject;
+        //$addText = "### This is a copy of the email sent to the approvers ".implode(", ",$approversNameArr)."###";
+        //$message = $addText.$break.$break.$message;
+        //$emailUtil->sendEmail( $cssArr, $subject, $message, null, null );
     }
 
     //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
@@ -2511,14 +2513,11 @@ class VacReqUtil
         } //foreach approver
 
         $message = str_replace("###emailuser###",implode(", ",$approversShortNameArr),$originalMessage);
-        if( count($approverEmailArr) > 0 ) {
-            $emailUtil->sendEmail($approverEmailArr, $subject, $message, null, null);
-        }
 
         //send email to email users
-        $subject = "Copy of the email: ".$subject;
-        $addText = "### This is a copy of the email sent to the approvers ".implode(", ",$approversNameArr)."###";
-        $message = $addText.$break.$break.$message;
+        //$subject = "Copy of the email: ".$subject;
+        //$addText = "### This is a copy of the email sent to the approvers ".implode(", ",$approversNameArr)."###";
+        //$message = $addText.$break.$break.$message;
         $settings = $this->getSettingsByInstitution($institution->getId());
         if( $settings ) {
             $emailUserEmailArr = array();
@@ -2530,9 +2529,13 @@ class VacReqUtil
                     $emailUserEmailArr[] = $emailUserEmail;
                 }
             }
-            if( count($emailUserEmailArr) > 0 ) {
-                $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
-            }
+//            if( count($emailUserEmailArr) > 0 ) {
+//                $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
+//            }
+        }
+
+        if( count($approverEmailArr) > 0 ) {
+            $emailUtil->sendEmail($approverEmailArr, $subject, $message, $emailUserEmailArr, null);
         }
 
         return implode(", ",$approversNameArr);
