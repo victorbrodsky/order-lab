@@ -56,13 +56,15 @@ class EmailUtil {
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
-        //if( $this->em ) {
+        if( $this->em ) {
             $smtp = $userutil->getSiteSetting($this->em,'smtpServerAddress');
             $smtp_host_ip = gethostbyname($smtp);
             $transport = \Swift_Message::newInstance($smtp_host_ip,25);
-        //} else {
-        //    $transport = \Swift_Message::newInstance();
-        //}
+        } else {
+            $logger = $this->container->get('logger');
+            $logger->error("this->em is null in sendEmail: use default Swift_Message::newInstance(). subject=".$subject);
+            $transport = \Swift_Message::newInstance();
+        }
 
         $transport->setSubject($subject);
         $transport->setFrom($fromEmail);
