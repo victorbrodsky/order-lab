@@ -60,7 +60,7 @@ class EmailUtil {
         if( $this->em ) {
             $smtpServerAddress = $userutil->getSiteSetting($this->em,'smtpServerAddress');
             $smtp_host_ip = gethostbyname($smtpServerAddress);
-            $logger->notice("smtpServerAddress=".$smtpServerAddress." => smtp_host_ip=".$smtp_host_ip);
+            //$logger->notice("smtpServerAddress=".$smtpServerAddress." => smtp_host_ip=".$smtp_host_ip);
             $transport = \Swift_Message::newInstance($smtp_host_ip);
         } else {
             $logger = $this->container->get('logger');
