@@ -20,6 +20,11 @@ class EmailUtil {
         $this->container = $container;
     }
 
+    //[2016-06-24 14:20:39] request.CRITICAL: Uncaught PHP Exception Swift_TransportException: "Connection to smtp.med.cornell.edu:25 Timed Out" at E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\swiftmailer\swiftmailer\lib\classes\Swift\Transport\AbstractSmtpTransport.php line 404 {"exception":"[object] (Swift_TransportException(code: 0): Connection to smtp.med.cornell.edu:25 Timed Out at E:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\vendor\\swiftmailer\\swiftmailer\\lib\\classes\\Swift\\Transport\\AbstractSmtpTransport.php:404)"} []
+    //one possible solution: http://stackoverflow.com/questions/25449496/swiftmailer-gmail-connection-timed-out-110
+    //$smtp_host_ip = gethostbyname('smtp.gmail.com');
+    //$transport = Swift_SmtpTransport::newInstance($smtp_host_ip,465,'ssl')
+
     //$emails: single or array of emails
     //$ccs: single or array of emails
     public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
@@ -51,17 +56,25 @@ class EmailUtil {
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($fromEmail)
-            ->setTo($emails)
-            ->setBody(
-                $message,
-                'text/plain'
+        if( $this->em ) {
+            $userutil = new UserUtil();
+            $smtp = $userutil->getSiteSetting($this->em,'smtpServerAddress');
+            $smtp_host_ip = gethostbyname($smtp);
+            $transport = \Swift_Message::newInstance($smtp_host_ip,25);
+        } else {
+            $transport = \Swift_Message::newInstance();
+        }
+
+        $transport->setSubject($subject);
+        $transport->setFrom($fromEmail);
+        $transport->setTo($emails);
+        $transport->setBody(
+            $message,
+            'text/plain'
         );
 
         if( $ccs ) {
-            $message->setCc($ccs);
+            $transport->setCc($ccs);
         }
 
             /*
@@ -75,7 +88,7 @@ class EmailUtil {
             )
             */
 
-        return $this->container->get('mailer')->send($message);
+        return $this->container->get('mailer')->send($transport);
     }
 
     public function checkEmails($emails) {
