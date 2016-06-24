@@ -737,18 +737,27 @@ class VacReqRequest
     }
 
 
-
-
-    public function setFinalFields() {
-
+    public function setFinalStatus() {
         $requestType = $this->getRequestType();
-
         if( $requestType && $requestType->getAbbreviation() == "business-vacation" ) {
             //set overall status
             $overallStatus = $this->getOverallStatus();
             $this->setStatus($overallStatus);
-            $this->setEntireStatus($overallStatus);
+            //$this->setEntireStatus($overallStatus);
+        }
+    }
 
+    public function setBusinessVacationEntireStatus( $status ) {
+        $requestType = $this->getRequestType();
+        if( $requestType && $requestType->getAbbreviation() == "business-vacation" ) {
+            $this->setStatus($status);
+            $this->setEntireStatus($status);
+        }
+    }
+
+    public function setFinalFirstDayAway() {
+        $requestType = $this->getRequestType();
+        if( $requestType && $requestType->getAbbreviation() == "business-vacation" ) {
             //set first day away
             $firstDateAway = $this->getFirstDateAway(null);
             $this->setFirstDayAway($firstDateAway);
@@ -838,6 +847,26 @@ class VacReqRequest
         }
 
         return 'completed';
+    }
+
+    public function getDetailedStatus() {
+        $statusArr = array();
+
+        if( $this->hasBusinessRequest() ) {
+            $statusB = $this->getRequestBusiness()->getStatus();
+            $statusArr[] = "Business Travel Request ".$statusB;
+        }
+
+        if( $this->hasVacationRequest() ) {
+            $statusV = $this->getRequestVacation()->getStatus();
+            $statusArr[] =  "Vacation Request ".$statusV;
+        }
+
+        if( count($statusArr) > 0 ) {
+            return implode(", ",$statusArr);
+        }
+
+        return null;
     }
 
     //status - "Cancellation Requested", "Canceled (Approved)"-"Cancellation Approved (Canceled)", "Cancellation Denied (Approved)"

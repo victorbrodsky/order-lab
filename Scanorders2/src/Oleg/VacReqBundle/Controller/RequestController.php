@@ -144,8 +144,11 @@ class RequestController extends Controller
 
             //exit('form is valid');
 
-            //set final (global) fields
-            $entity->setFinalFields();
+            //set final (global) first day away
+            $entity->setFinalFirstDayAway();
+
+            //set entire request to 'pending'
+            $this->setBusinessVacationEntireStatus('pending');
 
             //remove sub requests if empty
             if( !$entity->hasBusinessRequest() ) {
@@ -478,8 +481,9 @@ class RequestController extends Controller
             //exit('form is valid');
             if( $routName == 'vacreq_review' ) { //review
 
-                //set final (global) fields
-                $entity->setFinalFields();
+                //set final (global) status according to sub-requests status:
+                //only two possible actions: reject or approved
+                $entity->setFinalStatus(); //vacreq_review
 
                 $overallStatus = $entity->getStatus();
 
@@ -534,8 +538,8 @@ class RequestController extends Controller
                 /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
                 $changedInfoArr = $vacreqUtil->setEventLogChanges($entity);
 
-                //set final (global) fields
-                $entity->setFinalFields();
+                //re-set final (global) first day away
+                $entity->setFinalFirstDayAway(); //update
 
                 //echo "0 business req=".$entity->getRequestBusiness()."<br>";
                 //exit('1');
@@ -552,7 +556,8 @@ class RequestController extends Controller
                 } else {
                     $eventType = 'Business/Vacation Request Updated';
                 }
-            }
+
+            } //if else: review or update
 
             if( $action == 'pending' ) {
                 $action = 'set to Pending';
@@ -560,7 +565,8 @@ class RequestController extends Controller
 
             //Event Log
             $break = "\r\n";
-            $event = "Request for ".$entity->getUser()." has been ".$action." by ".$user.$break.$break;
+            $event = "Request for ".$entity->getUser()." has been ".$action." by ".$user.$break;
+            $event .= $entity->getDetailedStatus().$break.$break;
             $userSecUtil = $this->container->get('user_security_utility');
 
             //Flash
