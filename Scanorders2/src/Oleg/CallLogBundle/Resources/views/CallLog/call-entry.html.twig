@@ -38,21 +38,25 @@
             <div id="calllog-PatientInformation" class="panel-collapse collapse in">
                 <div class="panel-body">
 
-                    {% for mrn in form.mrn %}
-                        {{ formmacros.field(mrn.keytype) }}
-                        {{ formmacros.field(mrn.field) }}
-                    {% endfor %}
+                    <div class="calllog-search-fields">
 
-                    {% for dob in form.dob %}
-                        {{ formmacros.fieldDateLabel(dob.field,'regular-datepicker') }}
-                    {% endfor %}
+                        {% for mrn in form.mrn %}
+                            {{ formmacros.field(mrn.keytype) }}
+                            {{ formmacros.field(mrn.field) }}
+                        {% endfor %}
 
-                    {% set status = 'Submitted' %}
+                        {% for dob in form.dob %}
+                            {{ formmacros.fieldDateLabel(dob.field,'regular-datepicker') }}
+                        {% endfor %}
 
-                    {% for encounter in form.encounter %}
-                        {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
-                        {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
-                    {% endfor %}
+                        {% set status = 'Submitted' %}
+
+                        {% for encounter in form.encounter %}
+                            {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                            {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                        {% endfor %}
+
+                    </div>
 
                     {#<a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>#}
                     <div id="encounter-info" class="panel-collapse collapse">
@@ -265,15 +269,14 @@
 <script language="Javascript">
 
     var _patients = [];
+    var _mrntype_original = null;
 
     $(document).ready(function() {
-
-
 
     });
 
     function clearCalllogPatient() {
-        populatePatientInfo(null,null);
+        populatePatientInfo(null,null,true);
 
         //change the "Re-enter Patient" to "Find Patient"
         $('#reenter_patient_button').hide();
@@ -284,6 +287,11 @@
 
         var mrntype = $(".mrntype-combobox").select2('val');
         mrntype = trimWithCheck(mrntype);
+
+        //set _mrntype_original
+        if( _mrntype_original == null && _mrntype && _mrntype.length > 0 ) {
+            _mrntype_original = _mrntype[0].id;
+        }
 
         var mrn = $(".patientmrn-mask").val();
         mrn = trimWithCheck(mrn);
@@ -347,12 +355,12 @@
             //"No matching patient records found." and unlock fields
             $('#calllog-danger-box').html("No matching patient records found.");
             $('#calllog-danger-box').show();
-            populatePatientInfo(null,true);
+            populatePatientInfo(null,true,false);
         } else if( patLen > 1 ) {
             console.log("show table with found patients");
             //show table with found patients
             //populatePatientInfo(patients[0],null);
-            populatePatientInfo(null,null);
+            populatePatientInfo(null,null,false);
 
             createPatientsTableCalllog(patients);
 
@@ -430,13 +438,15 @@
         $('#search_patient_button').hide();
     }
 
-    function populatePatientInfo( patient, showinfo ) {
+    function populatePatientInfo( patient, showinfo, modify ) {
 
-        populateInputFieldCalllog($(".patient-dob-date"),patient,'dob');
+        processMrnFieldsCalllog(patient,modify);
 
-        populateInputFieldCalllog($(".encounter-lastName"),patient,'lastname');
+        populateInputFieldCalllog($(".patient-dob-date"),patient,'dob',modify);
 
-        populateInputFieldCalllog($(".encounter-firstName"),patient,'firstname');
+        populateInputFieldCalllog($(".encounter-lastName"),patient,'lastname',modify);
+
+        populateInputFieldCalllog($(".encounter-firstName"),patient,'firstname',modify);
 
         populateInputFieldCalllog($(".encounter-middleName"),patient,'middlename');
 
@@ -459,7 +469,7 @@
 //        }
     }
 
-    function populateInputFieldCalllog( fieldEl, data, index ) {
+    function populateInputFieldCalllog( fieldEl, data, index, modify ) {
         var value = null;
         if( data && data[index] ) {
             value = data[index];
@@ -480,7 +490,15 @@
             }
         }
         //console.log(index+': value='+value);
-        fieldEl.val(value);
+
+        if( typeof modify === 'undefined' ){
+            modify = true;
+        }
+
+        if( modify ) {
+            fieldEl.val(value);
+        }
+
         return value;
     }
 
@@ -496,6 +514,37 @@
         }
         fieldEl.select2('val',value);
         return value;
+    }
+
+    function processMrnFieldsCalllog( patient, modify ) {
+
+        if( typeof modify === 'undefined' ){
+            modify = true;
+        }
+
+        if( patient && patient.mrntype && patient.mrn ) {
+
+            $('.mrntype-combobox').prop('disabled', true);
+            $('.mrntype-combobox').select2('val',patient.mrntype);
+
+            $('.patientmrn-mask').prop('disabled', true);
+            $('.patientmrn-mask').val(patient.mrn);
+
+        } else {
+
+            $('.mrntype-combobox').prop('disabled', false);
+
+            if( modify ) {
+                $('.mrntype-combobox').select2('val', _mrntype_original);
+            }
+
+            $('.patientmrn-mask').prop('disabled', false);
+
+            if( modify ) {
+                $('.patientmrn-mask').val(null);
+            }
+
+        }
     }
 
 </script>

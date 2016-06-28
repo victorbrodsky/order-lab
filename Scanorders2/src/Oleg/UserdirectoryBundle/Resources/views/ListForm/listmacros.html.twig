@@ -83,7 +83,7 @@
             {% endif %}
 
             {% if entities|first.original is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Original', 'original.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Canonical', 'original.name') }}</th>
             {% endif %}
 
             {% if entities|first.synonyms is defined %}
@@ -94,11 +94,11 @@
                 <th>{{ knp_pagination_sortable(entities, 'URL', 'ent.url') }}</th>
             {% endif %}
 
-            {% if entities|first.listId is defined and entities|first.listName is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'List ID', 'ent.listId') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'List Name', 'ent.listName') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'List Root Name', 'ent.listRootName') }}</th>
-            {% endif %}
+            {#{% if entities|first.listId is defined and entities|first.listName is defined %}#}
+                {#<th>{{ knp_pagination_sortable(entities, 'List ID', 'ent.listId') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'List Name', 'ent.listName') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'List Root Name', 'ent.listRootName') }}</th>#}
+            {#{% endif %}#}
 
             {% if entities|first.sites is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
@@ -106,7 +106,11 @@
 
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>
+
+            {% if entities|first.listId is defined and entities|first.listRootName is defined %}
+                {#<th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>#}
+                <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.listId') }}</th>
+            {% endif %}
 
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
@@ -241,14 +245,14 @@
                     <td>{{ entity.url }}</td>
                 {% endif %}
 
-                {% if entity.listId is defined and entity.listName is defined %}
-                    <td class="rowlink-skip">
+                {#{% if entity.listId is defined and entity.listName is defined %}#}
+                    {#<td class="rowlink-skip">#}
                         {#{{ entity.listId }}#}
-                        <a href="{{ path('platform_list_manager', { 'listId': entity.listId }) }}">{{ entity.listId }}</a>
-                    </td>
-                    <td>{{ entity.listName }}</td>
-                    <td>{{ entity.listRootName }}</td>
-                {% endif %}
+                        {#<a href="{{ path('platform_list_manager', { 'listId': entity.listId }) }}">{{ entity.listId }}</a>#}
+                    {#</td>#}
+                    {#<td>{{ entity.listName }}</td>#}
+                    {#<td>{{ entity.listRootName }}</td>#}
+                {#{% endif %}#}
 
                 {% if entity.sites is defined %}
                     <td>
@@ -260,7 +264,14 @@
 
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.orderinlist }}</td>
-                <td>{{ entity.linkToListId }}</td>
+
+                {#<td>{{ entity.linkToListId }}</td>#}
+                {% if entity.listId is defined and entity.listRootName is defined %}
+                    <td class="rowlink-skip">
+                        <a href="{{ path('platform_list_manager', { 'listId': entity.listId }) }}" target="_blank">{{ entity.listId }}</a>
+                    </td>
+                {% endif %}
+
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
@@ -395,7 +406,7 @@
 
     {{ formmacros.field(form.list.orderinlist) }}
 
-    {{ formmacros.field(form.list.linkToListId) }}
+    {#{{ formmacros.field(form.list.linkToListId) }}#}
 
     {#{% if form.list.updatedby is defined %}#}
         {#{{ formmacros.field(form.list.updatedby) }}#}
@@ -502,7 +513,7 @@
 
     {{ formmacros.field(edit_form.list.orderinlist) }}
 
-    {{ formmacros.field(edit_form.list.linkToListId) }}
+    {#{{ formmacros.field(edit_form.list.linkToListId) }}#}
 
     {{ formmacros.field(edit_form.list.creator) }}
 

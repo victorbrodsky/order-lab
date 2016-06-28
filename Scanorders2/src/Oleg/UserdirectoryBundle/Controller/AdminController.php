@@ -4670,6 +4670,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
+            "1" => array('PlatformListManagerRootList','platformlistmanager-list'),
             "10" => array('SiteList','sites-list'),
             "20" => array('SourceSystemList','sourcesystems-list'),
             "30" => array('Roles','role-list'),
@@ -4685,6 +4686,18 @@ class AdminController extends Controller
             "130" => array('ResidencyTrackList','residencytracks-list'),
             "140" => array('FellowshipTypeList','fellowshiptypes-list'),
             "150" => array('LocationTypeList','locationtypes-list'),
+            "160" => array('Equipment','equipments-list'),
+
+            "170" => array('EquipmentType','equipmenttypes-list'),
+            "180" => array('LocationPrivacyList','locationprivacy-list'),
+            "190" => array('RoleAttributeList','roleattributes-list'),
+            "200" => array('BuildingList','buildings-list'),
+            "210" => array('Equipment','equipments-list'),
+            "220" => array('Equipment','equipments-list'),
+            "230" => array('Equipment','equipments-list'),
+            "240" => array('Equipment','equipments-list'),
+            "250" => array('Equipment','equipments-list'),
+            "260" => array('Equipment','equipments-list'),
         );
 
         $count = 10;

@@ -163,38 +163,27 @@ class CallEntryController extends Controller
      */
     public function searchPatientAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
-            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
         $entities = null;
 
         //$allgets = $request->query->all();;
-        $mrn = trim( $request->get('mrn') );
-        $mrntype = trim( $request->get('mrntype') );
-        $dob = trim( $request->get('dob') );
-        $lastname = trim( $request->get('lastname') );
-        $firstname = trim( $request->get('firstname') );
+        $mrn = trim($request->get('mrn'));
+        $mrntype = trim($request->get('mrntype'));
+        $dob = trim($request->get('dob'));
+        $lastname = trim($request->get('lastname'));
+        $firstname = trim($request->get('firstname'));
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
 
         $em = $this->getDoctrine()->getManager();
 
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegOrderformBundle:Patient', 'patient')
-//            ->select("patient")
-//            ->leftJoin("patient.mrn", "mrn")
-//            ->leftJoin("patient.dob", "dob")
-//            ->leftJoin("patient.lastname", "lastname")
-//            ->leftJoin("patient.firstname", "firstname")
-//            ->where("mrn.keytype = :keytype AND mrn.field = :mrn AND mrn.status = :status")
-//            ->setParameters( array('keytype'=>$mrntype, 'mrn'=>$mrn, 'status'=>'valid') )
-//            ->getQuery();
-
-        $parameters = array('status'=>'valid');
+        $parameters = array('status' => 'valid');
 
         $repository = $em->getRepository('OlegOrderformBundle:Patient');
-        $dql =  $repository->createQueryBuilder("patient");
+        $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
         $dql->leftJoin("patient.dob", "dob");
         $dql->leftJoin("patient.lastname", "lastname");
@@ -202,17 +191,42 @@ class CallEntryController extends Controller
 
         $dql->where("mrn.status = :status");
 
+        $where = false;
+
+        //mrn
         if( $mrntype && $mrn ) {
             $dql->andWhere("mrn.keytype = :keytype AND mrn.field = :mrn");
             $parameters['keytype'] = $mrntype;
             $parameters['mrn'] = $mrn;
+            $where = true;
         }
 
-        $query = $em->createQuery($dql);
+        //Last Name AND DOB
+        if( $where == false && $lastname && $dob ) {
+            $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
+            //echo "dob=".$dob." => ".$dobDateTime."<br>";
+            $dql->andWhere("lastname.field = :lastname AND dob.field = :dob");
+            $parameters['lastname'] = $lastname;
+            $parameters['dob'] = $dobDateTime;
+            $where = true;
+        }
 
-        $query->setParameters($parameters);
+//        //firstname, Last Name AND DOB
+//        if( $lastname && $firstname && $dob ) {
+//            $dql->andWhere("lastname.field = :lastname AND firstname.field = :firstname");
+//            $parameters['lastname'] = $lastname;
+//            $parameters['firstname'] = $firstname;
+//            $where = true;
+//        }
 
-        $patients = $query->getResult();
+        if( $where ) {
+            $query = $em->createQuery($dql);
+            $query->setParameters($parameters);
+            //echo "sql=".$query->getSql()."<br>";
+            $patients = $query->getResult();
+        } else {
+            $patients = array();
+        }
         //echo "patients=".count($patients)."<br>";
 
         $patientsArr = array();

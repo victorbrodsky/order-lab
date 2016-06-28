@@ -46,13 +46,14 @@ class HomeController extends Controller {
 
 
 //    /**
-//     * @Route("/list-manager/", name="main_list_manager")
+//     * @Route("/admin/list-manager/", name="platformlistmanager-list")
 //     */
 //    public function listManagerAction() {
 //        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            exit('no access');
-//            //return $this->redirect( $this->generateUrl('employees-nopermission') );
+//            //exit('no access');
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }
+//        return $this->getList($request);
 //    }
 
 }
