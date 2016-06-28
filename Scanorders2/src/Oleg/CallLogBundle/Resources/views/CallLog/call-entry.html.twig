@@ -99,8 +99,15 @@
                     <div class="row">
                         <div class="col-xs-5"></div>
                         <div class="col-xs-2">
-                            <button id="Search_button" type="button" class="btn btn-lg btn-success span4" align="center"
-                                onclick="findCalllogPatient()" style="float:left; width:100%">Find Patient</button>
+                            <button id="search_patient_button" type="button"
+                                class="btn btn-lg btn-success span4" align="center"
+                                onclick="findCalllogPatient()" style="float:left; width:100%"
+                            >Find Patient</button>
+                            <button
+                                id="reenter_patient_button" type="button"
+                                class="btn btn-lg btn-success span4" align="center"
+                                onclick="clearCalllogPatient()" style="float:left; width:100%; display:none;"
+                            >Re-enter Patient</button>
                         </div>
                         <div class="col-xs-5"></div>
                     </div>
@@ -257,11 +264,21 @@
 {% block additionaljs %}
 <script language="Javascript">
 
+    var _patients = [];
+
     $(document).ready(function() {
 
 
 
     });
+
+    function clearCalllogPatient() {
+        populatePatientInfo(null,null);
+
+        //change the "Re-enter Patient" to "Find Patient"
+        $('#reenter_patient_button').hide();
+        $('#search_patient_button').show();
+    }
 
     function findCalllogPatient() {
 
@@ -316,8 +333,15 @@
         $('#calllog-danger-box').hide();
         $('#calllog-danger-box').html("");
 
+        _patients = patients;
+
         if( patLen == 1 ) {
             populatePatientInfo(patients[0],null);
+
+            //change the "Find or Add Patient" button title to "Re-enter Patient"
+            $('#reenter_patient_button').show();
+            $('#search_patient_button').hide();
+
         } else if( patLen == 0 ) {
             console.log("No matching patient records found.");
             //"No matching patient records found." and unlock fields
@@ -358,7 +382,7 @@
             console.log('patient id='+patient.id);
 
             matchingPatientsHtml = matchingPatientsHtml +
-                '<tr class="clickable-row">' +
+                '<tr class="clickable-row" id="'+i+'">' +
                     '<td>'+patient.mrn+' ('+patient.mrntypestr+')</td>'+
                     '<td>'+patient.lastname+'</td>'+
                     '<td>'+patient.firstname+'</td>'+
@@ -377,7 +401,7 @@
                         ' id="matchingPatientBtn"'+
                         ' class="btn btn-lg span4" align="center"'+
                         ' disabled'+
-                        //' onclick="populatePatientInfo('+patient+')"'+
+                        ' onclick="matchingPatientBtnClick()"'+
                         '>Select Patient</button></p>';
 
         $('#calllog-matching-patients').html(matchingPatientsHtml);
@@ -387,18 +411,23 @@
         $('#matchingPatientBtn').parent().tooltip();
 
         $('#calllog-matching-patients-table').on('click', '.clickable-row', function(event) {
-            $(this).addClass('active').siblings().removeClass('active');
-
+            $(this).addClass('active').addClass('success').siblings().removeClass('active').removeClass('success');
+            //enable button
             $('#matchingPatientBtn').prop('disabled', false);
             $('#matchingPatientBtn').parent().tooltip('destroy');
-
-//            if($(this).hasClass('active')){
-//                $(this).removeClass('active');
-//            } else {
-//                $(this).addClass('active').siblings().removeClass('active');
-//            }
         });
 
+    }
+
+    function matchingPatientBtnClick() {
+
+        var index = $('#calllog-matching-patients-table').find('.active').attr('id');
+        console.log('index='+index);
+        populatePatientInfo(_patients[index], null);
+
+        //change the "Find or Add Patient" button title to "Re-enter Patient"
+        $('#reenter_patient_button').show();
+        $('#search_patient_button').hide();
     }
 
     function populatePatientInfo( patient, showinfo ) {
@@ -422,6 +451,12 @@
             $('#encounter-info').collapse("hide");
         }
 
+//        //change the "Find or Add Patient" button title to "Re-enter Patient"
+//        if( patient && patient.id && patient.lastname && patient.firstname && patient.dob ) {
+//            $('#search_patient_button').html('Re-enter Patient');
+//        } else {
+//            $('#search_patient_button').html('Find Patient');
+//        }
     }
 
     function populateInputFieldCalllog( fieldEl, data, index ) {
