@@ -4680,6 +4680,7 @@ class AdminController extends Controller
             "70" => array('BoardCertifiedSpecialties','boardcertifications-list'),
             "80" => array('EmploymentType','employmenttypes-list'),
             "90" => array('EmploymentTerminationType','employmentterminations-list'),
+
             "100" => array('EventTypeList','loggereventtypes-list'),
             "110" => array('UsernameType','usernametypes-list'),
             "120" => array('IdentifierTypeList','identifiers-list'),
@@ -4687,29 +4688,89 @@ class AdminController extends Controller
             "140" => array('FellowshipTypeList','fellowshiptypes-list'),
             "150" => array('LocationTypeList','locationtypes-list'),
             "160" => array('Equipment','equipments-list'),
-
             "170" => array('EquipmentType','equipmenttypes-list'),
             "180" => array('LocationPrivacyList','locationprivacy-list'),
             "190" => array('RoleAttributeList','roleattributes-list'),
+
             "200" => array('BuildingList','buildings-list'),
-            "210" => array('Equipment','equipments-list'),
-            "220" => array('Equipment','equipments-list'),
-            "230" => array('Equipment','equipments-list'),
-            "240" => array('Equipment','equipments-list'),
-            "250" => array('Equipment','equipments-list'),
-            "260" => array('Equipment','equipments-list'),
+            "210" => array('RoomList','rooms-list'),
+            "220" => array('SuiteList','suites-list'),
+            "230" => array('FloorList','floors-list'),
+            "240" => array('MailboxList','mailboxes-list'),
+            "250" => array('EffortList','efforts-list'),
+            "260" => array('AdminTitleList','admintitles-list'),
+            "270" => array('AppTitleList','apptitles-list'),
+            "280" => array('CompletionReasonList','completionreasons-list'),
+            "290" => array('TrainingDegreeList','trainingdegrees-list'),
+
+            "300" => array('MajorTrainingList','trainingmajors-list'),
+            "310" => array('MinorTrainingList','trainingminors-list'),
+            "320" => array('HonorTrainingList','traininghonors-list'),
+            "330" => array('FellowshipTitleList','fellowshiptitles-list'),
+            "340" => array('ResidencySpecialty','residencyspecialtys-list'),
+            "350" => array('FellowshipSubspecialty','fellowshipsubspecialtys-list'),
+            "360" => array('InstitutionType','institutiontypes-list'),
+            "370" => array('DocumentTypeList','documenttypes-list'),
+            "380" => array('MedicalTitleList','medicaltitles-list'),
+            "390" => array('MedicalSpecialties','medicalspecialties-list'),
+
+            "400" => array('SourceOrganization','sourceorganizations-list'),
+            "410" => array('LanguageList','languages-list'),
+            "420" => array('ImportanceList','importances-list'),
+            "430" => array('LocaleList','locales-list'),
+            //"440" => array('AppTitleList','apptitles-list'),
+            "450" => array('AuthorshipRoles','authorshiproles-list'),
+            "460" => array('OrganizationList','organizations-list'),
+            "470" => array('CityList','cities-list'),
+            "480" => array('LinkTypeList','linktypes-list'),
+            "490" => array('SexList','sexes-list'),
+
+            "500" => array('PositionTypeList','positiontypes-list'),
+            "510" => array('OrganizationalGroupType','organizationalgrouptypes-list'),
+            "520" => array('CommentTypeList','commenttypes-list'),
+            "530" => array('CommentGroupType','commentgrouptypes-list'),
+            "540" => array('UserWrapper','userwrappers-list'),
+            "550" => array('SpotPurpose','spotpurposes-list'),
+            "560" => array('MedicalLicenseStatus','medicalstatuses-list'),
+            "570" => array('CertifyingBoardOrganization','certifyingboardorganizations-list'),
+            "580" => array('TrainingTypeList','trainingtypes-list'),
+            "590" => array('JobTitleList','joblists-list'),
+
+            "600" => array('FellAppStatus','fellappstatuses-list'),
+            "610" => array('FellAppRank','fellappranks-list'),
+            "620" => array('LanguageProficiency','fellapplanguageproficiency-list'),
+            "630" => array('CollaborationTypeList','collaborationtypes-list'),
+            "640" => array('PermissionList','permission-list'),
+            "650" => array('PermissionObjectList','permissionobject-list'),
+            "660" => array('PermissionActionList','permissionaction-list'),
+            //"670" => array('SiteList','sites-list'),
+            "670" => array('EventObjectTypeList','eventobjecttypes-list'),
+            "680" => array('VacReqRequestTypeList','vacreqrequesttypes-list'),
         );
 
         $count = 10;
         foreach( $types as $listId => $listArr ) {
 
+            $listName = $listArr[0];
+            $listRootName = $listArr[1];
+
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
             if( $listEntity ) {
+                echo 'exists listId='.$listId."<br>";
                 continue;
             }
 
-            $listName = $listArr[0];
-            $listRootName = $listArr[1];
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($listRootName);
+            if( $listEntity ) {
+                exit('exists listRootName='.$listRootName);
+                continue;
+            }
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($listName);
+            if( $listEntity ) {
+                exit('exists listName='.$listName);
+                continue;
+            }
 
             $name = $listName;
 
