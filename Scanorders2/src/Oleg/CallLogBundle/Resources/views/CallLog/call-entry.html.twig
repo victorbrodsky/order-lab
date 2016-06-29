@@ -112,6 +112,11 @@
                                 class="btn btn-lg btn-success span4" align="center"
                                 onclick="clearCalllogPatient()" style="float:left; width:100%; display:none;"
                             >Re-enter Patient</button>
+                            <button
+                                id="addnew_patient_button" type="button"
+                                class="btn btn-lg btn-success span4" align="center"
+                                onclick="addnewCalllogPatient()" style="float:left; width:100%; display:none;"
+                            >Add New Patient Registration</button>
                         </div>
                         <div class="col-xs-5"></div>
                     </div>
@@ -275,6 +280,104 @@
 
     });
 
+
+
+    function addnewCalllogPatient() {
+        var mrntype = $(".mrntype-combobox").select2('val');
+        mrntype = trimWithCheck(mrntype);
+
+        var mrn = $(".patientmrn-mask").val();
+        mrn = trimWithCheck(mrn);
+
+        var dob = $(".patient-dob-date").val();
+        dob = trimWithCheck(dob);
+
+        var lastname = $(".encounter-lastName").val();
+        lastname = trimWithCheck(lastname);
+
+        var firstname = $(".encounter-firstName").val();
+        firstname = trimWithCheck(firstname);
+
+        var middlename = $(".encounter-middleName").val();
+        middlename = trimWithCheck(middlename);
+
+        var suffix = $(".encounter-suffix").val();
+        suffix = trimWithCheck(suffix);
+
+        var sex = $(".encountersex-field").select2('val');
+        sex = trimWithCheck(sex);
+
+        //check if "Last Name" field + DOB field, or "MRN" fields are not empty
+        //if( !mrn || !mrntype || !lastname || !dob ) {
+        if( mrntype && mrn || lastname && dob ) {
+            //ok
+        } else {
+            $('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+            $('#calllog-danger-box').show();
+            return false;
+        }
+
+
+        //"Are You sure you would like to create a new patient registration record for
+        //MRN: Last Name: First Name: Middle Name: Suffix: Sex: DOB: Alias(es):
+        var confirmMsg = "Are You sure you would like to create a new patient registration record for";
+
+        if( mrn )
+            confirmMsg += " MRN:"+mrn;
+        if( lastname )
+            confirmMsg += " Last Name:"+lastname;
+        if( firstname )
+            confirmMsg += " First Name:"+firstname;
+        if( middlename )
+            confirmMsg += " Middle Name:"+middlename;
+        if( suffix )
+            confirmMsg += " Suffix:"+suffix;
+        if( sex )
+            confirmMsg += " Sex:"+sex;
+        if( dob )
+            confirmMsg += " DOB:"+dob;
+
+        if( confirm(confirmMsg) == true ) {
+            //x = "You pressed OK!";
+        } else {
+            //x = "You pressed Cancel!";
+            return false;
+        }
+
+        //Clicking "Ok" in the Dialog confirmation box should use the variables
+        // to create a create the new patient on the server via AJAX/Promise,
+        // then lock the Patient Info fields, and change the title of the "Find Patient" button to "Re-enter Patient"
+        //ajax
+        var url = Routing.generate('calllog_create_patient');
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: false,
+            data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex  },
+        }).success(function(data) {
+            console.log("output="+data);
+            if( data == "OK" ) {
+                console.log("Patient has been created");
+                //hide find patient and add new patient
+                $('#search_patient_button').hide();
+                $('#addnew_patient_button').hide();
+                //show Re-enter Patient
+                $('#reenter_patient_button').show();
+                //clean error message
+                $('#calllog-danger-box').html('');
+                $('#calllog-danger-box').hide();
+            } else {
+                console.log("Patient has not been created");
+                $('#calllog-danger-box').html(data);
+                $('#calllog-danger-box').show();
+            }
+        });
+
+
+    }
+
+
+
     function clearCalllogPatient() {
         populatePatientInfo(null,null,true);
 
@@ -356,6 +459,10 @@
             $('#calllog-danger-box').html("No matching patient records found.");
             $('#calllog-danger-box').show();
             populatePatientInfo(null,true,false);
+
+            //un-hide/show a button called "Add New Patient Registration"
+            $('#addnew_patient_button').show();
+
         } else if( patLen > 1 ) {
             console.log("show table with found patients");
             //show table with found patients
