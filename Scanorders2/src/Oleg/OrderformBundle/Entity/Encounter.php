@@ -609,6 +609,35 @@ class Encounter extends ObjectAbstract
     }
     ///////////////////////// EOF Extra fields /////////////////////////
 
+    public function obtainEncounterNames() {
+        $exists = false;
+        $patfirstname = "First Name:";
+        foreach( $this->getpatfirstname() as $name ) {
+            if( $name."" ) {
+                $patfirstname = $patfirstname . $name . " (" . $name->getStatus() . ")";
+                $exists = true;
+            }
+        }
+
+        $patlastname = "Last Name:";
+        foreach( $this->getpatlastname() as $name ) {
+            if( $name."" ) {
+                $patlastname = $patlastname . $name . " (" . $name->getStatus() . ") ";
+                $exists = true;
+            }
+        }
+
+        if( !$exists ) {
+            return null;
+        }
+
+        $creationDateStr = "";
+        if( $this->getCreationdate() ) {
+            $creationDateStr = " created on ".$this->getCreationdate()->format('m/d/Y');
+        }
+
+        return "Encounter".$creationDateStr.": ".$patlastname . " " . $patfirstname;
+    }
 
     public function __toString() {
 

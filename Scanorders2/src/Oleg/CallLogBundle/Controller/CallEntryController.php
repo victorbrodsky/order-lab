@@ -4,7 +4,19 @@ namespace Oleg\CallLogBundle\Controller;
 
 use Oleg\CallLogBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
+use Oleg\OrderformBundle\Entity\EncounterPatlastname;
+use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
+use Oleg\OrderformBundle\Entity\EncounterPatsex;
+use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
 use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\PatientDob;
+use Oleg\OrderformBundle\Entity\PatientFirstName;
+use Oleg\OrderformBundle\Entity\PatientLastName;
+use Oleg\OrderformBundle\Entity\PatientMiddleName;
+use Oleg\OrderformBundle\Entity\PatientMrn;
+use Oleg\OrderformBundle\Entity\PatientSex;
+use Oleg\OrderformBundle\Entity\PatientSuffix;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -167,65 +179,6 @@ class CallEntryController extends Controller
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        //$allgets = $request->query->all();;
-//        $mrn = trim($request->get('mrn'));
-//        $mrntype = trim($request->get('mrntype'));
-//        $dob = trim($request->get('dob'));
-//        $lastname = trim($request->get('lastname'));
-//        $firstname = trim($request->get('firstname'));
-//        //print_r($allgets);
-//        //echo "mrn=".$mrn."<br>";
-
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $parameters = array('status' => 'valid');
-//
-//        $repository = $em->getRepository('OlegOrderformBundle:Patient');
-//        $dql = $repository->createQueryBuilder("patient");
-//        $dql->leftJoin("patient.mrn", "mrn");
-//        $dql->leftJoin("patient.dob", "dob");
-//        $dql->leftJoin("patient.lastname", "lastname");
-//        $dql->leftJoin("patient.firstname", "firstname");
-//
-//        $dql->where("mrn.status = :status");
-//
-//        $where = false;
-//
-//        //mrn
-//        if( $mrntype && $mrn ) {
-//            $dql->andWhere("mrn.keytype = :keytype AND mrn.field = :mrn");
-//            $parameters['keytype'] = $mrntype;
-//            $parameters['mrn'] = $mrn;
-//            $where = true;
-//        }
-//
-//        //Last Name AND DOB
-//        if( $where == false && $lastname && $dob ) {
-//            $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
-//            //echo "dob=".$dob." => ".$dobDateTime."<br>";
-//            $dql->andWhere("lastname.field = :lastname AND dob.field = :dob");
-//            $parameters['lastname'] = $lastname;
-//            $parameters['dob'] = $dobDateTime;
-//            $where = true;
-//        }
-//
-////        //firstname, Last Name AND DOB
-////        if( $lastname && $firstname && $dob ) {
-////            $dql->andWhere("lastname.field = :lastname AND firstname.field = :firstname");
-////            $parameters['lastname'] = $lastname;
-////            $parameters['firstname'] = $firstname;
-////            $where = true;
-////        }
-//
-//        if( $where ) {
-//            $query = $em->createQuery($dql);
-//            $query->setParameters($parameters);
-//            //echo "sql=".$query->getSql()."<br>";
-//            $patients = $query->getResult();
-//        } else {
-//            $patients = array();
-//        }
-
         $patients = $this->searchPatient( $request );
         //echo "patients=".count($patients)."<br>";
 
@@ -233,60 +186,6 @@ class CallEntryController extends Controller
         $status = 'valid';
 
         foreach( $patients as $patient ) {
-
-//            //to get a single field only use obtainStatusField
-//            //obtainStatusFieldArray - get array of fields
-//            $mrnArr = $patient->obtainStatusFieldArray('mrn', $status);
-//            $dobArr = $patient->obtainStatusFieldArray('dob', $status);
-//            $firstNameArr = $patient->obtainStatusFieldArray('firstname', $status);
-//            $middleNameArr = $patient->obtainStatusFieldArray('middlename', $status);
-//            $lastNameArr = $patient->obtainStatusFieldArray('lastname', $status);
-//            $suffixArr = $patient->obtainStatusFieldArray('suffix', $status);
-//            $sexArr = $patient->obtainStatusFieldArray('sex', $status);
-//
-//            if( count($mrnArr) > 0 && $mrnArr[0] ) {
-//                $mrntypeRes = $mrnArr[0]->getKeytype()->getId();
-//                $mrnRes = $mrnArr[0]->getField();
-//            }
-//
-//            if( count($dobArr) > 0 && $dobArr[0] ) {
-//                $dobRes = $dobArr[0]."";
-//            }
-//
-//            if( count($firstNameArr) > 0 && $firstNameArr[0] ) {
-//                $firstnameRes = $firstNameArr[0]->getField();
-//            }
-//
-//            if( count($lastNameArr) > 0 && $lastNameArr[0] ) {
-//                $lastnameRes = $lastNameArr[0]->getField();
-//            }
-//
-//            if( count($middleNameArr) > 0 && $middleNameArr[0] ) {
-//                $middlenameRes = $middleNameArr[0]->getField();
-//            }
-//
-//            if( count($suffixArr) > 0 && $suffixArr[0] ) {
-//                $suffixRes = $suffixArr[0]->getField();
-//            }
-//
-//            if( count($sexArr) > 0 && $sexArr[0] ) {
-//                $sexRes = $sexArr[0]->getId();
-//            }
-
-//            if( $dobRes ) {
-//                $patientInfo = array(
-//                    'id' => $patient->getId(),
-//                    'mrntype' => $mrntypeRes,
-//                    'mrn' => $mrnRes,
-//                    'dob' => $dobRes,
-//                    'lastname' => $lastnameRes,
-//                    'firstname' => $firstnameRes,
-//                    'middlename' => $middlenameRes,
-//                    'suffix' => $suffixRes,
-//                    'sex' => $sexRes,
-//                );
-//                $output[] = $patientInfo;
-//            }//if
 
             //to get a single field only use obtainStatusField
             $mrnRes = $patient->obtainStatusField('mrn', $status);
@@ -303,11 +202,11 @@ class CallEntryController extends Controller
                 'mrntypestr' => $mrnRes->getKeytype()->getName(),
                 'mrn' => $mrnRes->getField(),
                 'dob' => $dobRes."",
-                'lastname' => $lastNameRes->getField(),
-                'firstname' => $firstNameRes->getField(),
-                'middlename' => $middleNameRes->getField(),
-                'suffix' => $suffixRes->getField(),
-                'sex' => $sexRes->getId(),
+                'lastname' => (($lastNameRes) ? $lastNameRes->getField() : null),  //$lastNameRes->getField(),
+                'firstname' => (($firstNameRes) ? $firstNameRes->getField() : null),  //$firstNameStr,
+                'middlename' => (($middleNameRes) ? $middleNameRes->getField() : null), //$middleNameRes->getField(),
+                'suffix' => (($suffixRes) ? $suffixRes->getField() : null),   //$suffixRes->getField(),
+                'sex' => (($sexRes) ? $sexRes->getId() : null),    //$sexRes->getId(),
                 'sexstr' => $sexRes."",
             );
             $patientsArr[] = $patientInfo;
@@ -347,7 +246,9 @@ class CallEntryController extends Controller
         $dql->leftJoin("patient.mrn", "mrn");
         $dql->leftJoin("patient.dob", "dob");
         $dql->leftJoin("patient.lastname", "lastname");
-        $dql->leftJoin("patient.firstname", "firstname");
+        //$dql->leftJoin("patient.firstname", "firstname");
+        $dql->leftJoin("patient.encounter", "encounter");
+        $dql->leftJoin("encounter.patlastname", "encounterLastname");
 
         $dql->where("mrn.status = :status");
 
@@ -365,7 +266,7 @@ class CallEntryController extends Controller
         if( $where == false && $lastname && $dob ) {
             $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
             //echo "dob=".$dob." => ".$dobDateTime."<br>";
-            $dql->andWhere("lastname.field = :lastname AND dob.field = :dob");
+            $dql->andWhere("dob.field = :dob AND (lastname.field = :lastname OR encounterLastname.field = :lastname)");
             $parameters['lastname'] = $lastname;
             $parameters['dob'] = $dobDateTime;
             $where = true;
@@ -406,6 +307,7 @@ class CallEntryController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrntype'));
@@ -421,6 +323,12 @@ class CallEntryController extends Controller
         $output = 'OK';
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
+
+        //TODO: set institution
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        $institution = $userSiteSettings->getDefaultInstitution();
+
 
         //first check if the patient already exists
         $patients = $this->searchPatient( $request );
@@ -445,18 +353,132 @@ class CallEntryController extends Controller
         }
 
         //Create a new Patient
-        $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $sourcesystem = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
 
-        $patient = new Patient(false,$status,$user,$sourcesystem);
-        $patient->addMrn( new PatientMrn($status,$user,$sourcesystem) );
-        $patient->addDob( new PatientDob($status,$user,$sourcesystem) );
+        //$patient = new Patient(false,$status,$user,$sourcesystem);
+        //$patient->setInstitution($institution);
 
+        //create a new patient
+        if( $mrn ) {
+            $fieldValue = $mrn;
+        } else {
+            $fieldValue = null;
+        }
+
+        if( $mrntype ) {
+            $keytype = $mrntype;
+        } else {
+            $keytypeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+            $keytype = $keytypeEntity->getId() . ""; //id of "New York Hospital MRN" in DB
+        }
+
+        $extra = array();
+        $extra["keytype"] = $keytype;
+
+        //echo "keytype=".$keytype."<br>";
+        //exit();
+
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(
+            $institution,
+            $status,       //status
+            $user,      //provider
+            "Patient",  //$className
+            "mrn",      //$fieldName
+            null,       //$parent
+            $fieldValue,       //$fieldValue
+            $extra,     //$extra
+            false        //$withfields
+        );
+
+//        if( $mrntype ) {
+//            $mrntypeObj = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrntype );
+//        } else {
+//            //Auto-Generated
+//        }
+//        if( $mrn ) {
+//            //
+//        } else {
+//            //generate a new unique MRN: getNextNonProvided
+//            $em->getRepository('OlegOrderformBundle:Patient')->getNextNonProvided($patient);
+//        }
+
+//        $PatientMrn = new PatientMrn($status, $user, $sourcesystem);
+//        $PatientMrn->setKeytype($mrntypeObj);
+//        $PatientMrn->setField($mrn);
+//        $patient->addMrn($PatientMrn);
+
+        $patient->addDob( new PatientDob($status,$user,$sourcesystem) );
+        if( $dob ) {
+            $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob);
+            $PatientDob = new PatientDob($status, $user, $sourcesystem);
+            $PatientDob->setField($dobDateTime);
+            $patient->addDob($PatientDob);
+        }
+
+        //create an encounter for this new patient with the First Name, Last Name, Middle Name, Suffix, and sex (if any)
         $encounter = new Encounter(false,$status,$user,$sourcesystem);
+        $encounter->setInstitution($institution);
+
+        if( $firstname ) {
+            $EncounterPatfirstname = new EncounterPatfirstname($status, $user, $sourcesystem);
+            $EncounterPatfirstname->setField($firstname);
+            $encounter->addPatfirstname($EncounterPatfirstname);
+
+            $PatientFirstname = new PatientFirstName($status,$user,$sourcesystem);
+            $PatientFirstname->setField($firstname);
+            $patient->addFirstname( $PatientFirstname );
+        }
+
+        if( $lastname ) {
+            $EncounterPatlastname = new EncounterPatlastname($status, $user, $sourcesystem);
+            $EncounterPatlastname->setField($lastname);
+            $encounter->addPatlastname($EncounterPatlastname);
+
+            $PatientLastname = new PatientLastName($status,$user,$sourcesystem);
+            $PatientLastname->setField($lastname);
+            $patient->addLastname( $PatientLastname );
+        }
+
+        if( $middlename ) {
+            $EncounterPatmiddlename = new EncounterPatmiddlename($status, $user, $sourcesystem);
+            $EncounterPatmiddlename->setField($middlename);
+            $encounter->addPatmiddlename($EncounterPatmiddlename);
+
+            $PatientMiddlename = new PatientMiddleName($status,$user,$sourcesystem);
+            $PatientMiddlename->setField($middlename);
+            $patient->addMiddlename( $PatientMiddlename );
+        }
+
+        if( $suffix ) {
+            $EncounterPatsuffix = new EncounterPatsuffix($status, $user, $sourcesystem);
+            $EncounterPatsuffix->setField($suffix);
+            $encounter->addPatsuffix($EncounterPatsuffix);
+
+            $PatientSuffix = new PatientSuffix($status,$user,$sourcesystem);
+            $PatientSuffix->setField($suffix);
+            $patient->addSuffix( $PatientSuffix );
+        }
+
+        if( $sex ) {
+            //echo "sex=".$sex."<br>";
+            $sexObj = $em->getRepository('OlegUserdirectoryBundle:SexList')->findOneById( $sex );
+            $EncounterPatsex = new EncounterPatsex($status, $user, $sourcesystem);
+            $EncounterPatsex->setField($sexObj);
+            $encounter->addPatsex($EncounterPatsex);
+
+            $PatientSex = new PatientSex($status,$user,$sourcesystem);
+            $PatientSex->setField($sex);
+            $patient->addSex( $sex );
+        }
+
         $patient->addEncounter($encounter);
 
+        $em->persist($patient);
+        $em->persist($encounter);
+        $em->flush();
 
         $response->setContent(json_encode($output));
         return $response;

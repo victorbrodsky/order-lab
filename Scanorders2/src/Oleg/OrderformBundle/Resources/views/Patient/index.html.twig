@@ -50,11 +50,23 @@
                             {#{{ mrn }} (status={{ mrn.status }})<br>#}
                         {#{% endfor %}#}
                         {#{{ entity.obtainValidField('mrn') }}#}
-                        <a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.obtainValidField('mrn').obtainOptimalName() }}</a>
+                        {% set mrnStr = 'mrn' %}
+                        {% set mrnValidField = entity.obtainValidField('mrn') %}
+                        {% if mrnValidField %}
+                            {% set mrnStr = mrnValidField.obtainOptimalName() %}
+                        {% endif %}
+                        <a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ mrnStr }}</a>
                     </td>
 
                     <td>
                         {{ entity.getFullPatientName|raw }}
+                        {#encounter's name#}
+                        {% for encounter in entity.encounter %}
+                            {% set encounterName = encounter.obtainEncounterNames() %}
+                            {% if encounterName %}
+                                <br>{{ encounterName }}
+                            {% endif %}
+                        {% endfor %}
                     </td>
 
                     <td>

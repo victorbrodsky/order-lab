@@ -75,10 +75,22 @@ class SearchUtil {
                 $dql->leftJoin("patient.lastname", "lastname");
                 $dql->leftJoin("patient.firstname", "firstname");
                 $dql->leftJoin("patient.middlename", "middlename");
+
+                $dql->leftJoin("patient.encounter", "encounter");
+                $dql->leftJoin("encounter.patlastname", "patlastname");
+                $dql->leftJoin("encounter.patfirstname", "patfirstname");
+                $dql->leftJoin("encounter.patmiddlename", "patmiddlename");
+
                 $criteriastr .= "(";
+
                 $criteriastr .= $this->getSearchStr('lastname.field',$search,$exactmatch);
                 $criteriastr .= " OR " . $this->getSearchStr('firstname.field',$search,$exactmatch);
                 $criteriastr .= " OR " . $this->getSearchStr('middlename.field',$search,$exactmatch);
+
+                $criteriastr .= " OR " . $this->getSearchStr('patlastname.field',$search,$exactmatch);
+                $criteriastr .= " OR " . $this->getSearchStr('patfirstname.field',$search,$exactmatch);
+                $criteriastr .= " OR " . $this->getSearchStr('patmiddlename.field',$search,$exactmatch);
+
                 $criteriastr .= ")";
                 break;
             case 'Accession Number':
@@ -99,7 +111,7 @@ class SearchUtil {
         //check for institution and collaboration (only union)
         $user = $this->sc->getToken()->getUser();
         $orderUtil = $this->container->get('scanorder_utility');
-        $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr,array("Union"));
+        //$criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr,array("Union"));
 
         if( $criteriastr ) {
             //echo "criteriastr=".$criteriastr."<br>";
@@ -133,7 +145,7 @@ class SearchUtil {
             $pagination = $query->getResult();
         }
 
-//        echo "pagination count=".count($pagination)."<br>";
+        //echo "pagination count=".count($pagination)."<br>";
 //        foreach( $pagination as $item ) {
 //            echo $object." ID=".$item->getId().", inst=".$item->getInstitution()."<br>";
 //        }
