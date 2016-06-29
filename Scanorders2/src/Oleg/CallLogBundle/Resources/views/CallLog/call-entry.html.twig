@@ -112,6 +112,8 @@
                                 class="btn btn-lg btn-success span4" align="center"
                                 onclick="clearCalllogPatient()" style="float:left; width:100%; display:none;"
                             >Re-enter Patient</button>
+                        </div>
+                        <div class="col-xs-2">
                             <button
                                 id="addnew_patient_button" type="button"
                                 class="btn btn-lg btn-success span4" align="center"
@@ -366,6 +368,9 @@
                 //clean error message
                 $('#calllog-danger-box').html('');
                 $('#calllog-danger-box').hide();
+
+                //disable all fields
+                disableAllFields(true);
             } else {
                 console.log("Patient has not been created");
                 $('#calllog-danger-box').html(data);
@@ -448,6 +453,7 @@
 
         if( patLen == 1 ) {
             populatePatientInfo(patients[0],null);
+            disableAllFields(true);
 
             //change the "Find or Add Patient" button title to "Re-enter Patient"
             $('#reenter_patient_button').show();
@@ -459,6 +465,7 @@
             $('#calllog-danger-box').html("No matching patient records found.");
             $('#calllog-danger-box').show();
             populatePatientInfo(null,true,false);
+            disableAllFields(false);
 
             //un-hide/show a button called "Add New Patient Registration"
             $('#addnew_patient_button').show();
@@ -468,6 +475,7 @@
             //show table with found patients
             //populatePatientInfo(patients[0],null);
             populatePatientInfo(null,null,false);
+            disableAllFields(false);
 
             createPatientsTableCalllog(patients);
 
@@ -544,6 +552,53 @@
         $('#reenter_patient_button').show();
         $('#search_patient_button').hide();
     }
+
+    function disableAllFields(disable) {
+
+        disableField($(".mrntype-combobox"),disable);
+
+        disableField($(".patientmrn-mask"),disable);
+
+        disableField($(".patient-dob-date"),disable);
+
+        disableField($(".patient-dob-date"),disable);
+
+        disableField($(".encounter-lastName"),disable);
+
+        disableField($(".encounter-firstName"),disable);
+
+        disableField($(".encounter-middleName"),disable);
+
+        disableField($(".encounter-suffix"),disable);
+
+        //disableSelectFieldCalllog($(".encountersex-field"),true);
+        disableField($(".encountersex-field"),disable);
+    }
+    function disableField(fieldEl,disable) {
+        if( disable ) {
+            fieldEl.prop('disabled', true);
+            fieldEl.closest('.input-group').find('input').prop('disabled', true);
+            if( fieldEl.hasClass('datepicker') ) {
+                var elementDatepicker = fieldEl.closest('.input-group.date');
+                elementDatepicker.datepicker("remove");
+            }
+        } else {
+            //unlock field
+            fieldEl.prop('disabled', false);
+            fieldEl.closest('.input-group').find('input').prop('disabled', false);
+            if( fieldEl.hasClass('datepicker') ) {
+                var elementDatepicker = fieldEl.closest('.input-group.date');
+                initSingleDatepicker(elementDatepicker);
+            }
+        }
+    }
+//    function disableSelectFieldCalllog(fieldEl,disable) {
+//        if( disable ) {
+//            fieldEl.prop('disabled', true);
+//        } else {
+//            fieldEl.prop('disabled', false);
+//        }
+//    }
 
     function populatePatientInfo( patient, showinfo, modify ) {
 

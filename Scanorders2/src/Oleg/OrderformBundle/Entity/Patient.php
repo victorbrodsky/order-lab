@@ -1040,6 +1040,9 @@ class Patient extends ObjectAbstract
     public function rearangeNameArrByOrder( $orderArr, $sourceArr, $destArr, $htmlTags = null ) {
         $resArr = array();
         foreach( $sourceArr as $name ) {
+            if( !$name->getMessage() ) {
+                continue;
+            }
             $orderId = $name->getMessage()->getId();
             //echo "orderId=".$orderId."<br>";
             if( !in_array($orderId,$orderArr) ) {

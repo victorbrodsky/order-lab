@@ -190,6 +190,9 @@ class CallEntryController extends Controller
             //to get a single field only use obtainStatusField
             $mrnRes = $patient->obtainStatusField('mrn', $status);
             $dobRes = $patient->obtainStatusField('dob', $status);
+
+            //encounters?
+
             $firstNameRes = $patient->obtainStatusField('firstname', $status);
             $middleNameRes = $patient->obtainStatusField('middlename', $status);
             $lastNameRes = $patient->obtainStatusField('lastname', $status);
@@ -383,14 +386,14 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(
             $institution,
-            $status,       //status
-            $user,      //provider
-            "Patient",  //$className
-            "mrn",      //$fieldName
-            null,       //$parent
-            $fieldValue,       //$fieldValue
-            $extra,     //$extra
-            false        //$withfields
+            $status,            //status
+            $user,              //provider
+            "Patient",          //$className
+            "mrn",              //$fieldName
+            null,               //$parent
+            $fieldValue,        //$fieldValue
+            $extra,             //$extra
+            false               //$withfields
         );
 
 //        if( $mrntype ) {
@@ -470,8 +473,8 @@ class CallEntryController extends Controller
             $encounter->addPatsex($EncounterPatsex);
 
             $PatientSex = new PatientSex($status,$user,$sourcesystem);
-            $PatientSex->setField($sex);
-            $patient->addSex( $sex );
+            $PatientSex->setField($sexObj);
+            $patient->addSex( $PatientSex );
         }
 
         $patient->addEncounter($encounter);
