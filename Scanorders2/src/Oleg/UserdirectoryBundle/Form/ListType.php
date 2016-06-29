@@ -145,7 +145,7 @@ class ListType extends AbstractType
 
         $builder->add('original', 'entity', array(
             'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
-            'label'=>'Original Synonymous Term:',
+            'label'=>'Original (Canonical) Synonymous Term:',
             'required' => false,
             'multiple' => false,
             //'by_reference' => false,
