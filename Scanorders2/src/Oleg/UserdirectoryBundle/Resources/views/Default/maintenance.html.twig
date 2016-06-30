@@ -34,6 +34,9 @@
 
         <br>
 
+        {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+        {{ usermacros.nonLiveSiteWarning() }}
+
         <p>
         {% for flashMessage in app.session.flashbag.get('notice') %}
             <div class="flash-notice">

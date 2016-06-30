@@ -28,10 +28,12 @@
 
     <div class="text-center">
 
+        {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+        {{ usermacros.nonLiveSiteWarning() }}
+
         <h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R</h2>
 
         <br>
-
 
         {% for flashMessage in app.session.flashbag.get('warning') %}
             <div style="height: 1%;">&nbsp;</div>
