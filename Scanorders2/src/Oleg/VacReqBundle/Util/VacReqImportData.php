@@ -86,7 +86,7 @@ class VacReqImportData
         $notExistingUsers = array();
         $count = 0;
 
-        $inputFileName = __DIR__ . '/vacreqExportData.xls';
+        $inputFileName = __DIR__ . '/vacreqExportData_full_before_27May2016.xls';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
