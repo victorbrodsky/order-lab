@@ -146,6 +146,12 @@ class VacReqImportData
 
             $emailParts = explode("@", $email);
             $cwid = $emailParts[0];
+
+            //exceptions for some users
+            if( $cwid == "lora.ellenson" ) {
+                $cwid = "lhellens";
+            }
+
             //echo "cwid=".$cwid."<br>";
 
             $BUS_FIRST_DAY_AWAY = $this->getValueByHeaderName('BUS_FIRST_DAY_AWAY', $rowData, $headers); //24-OCT-12
