@@ -184,6 +184,7 @@ class CallEntryController extends Controller
 
         $patientsArr = array();
         $status = 'valid';
+        $fieldnameArr = array('patlastname','patfirstname','patmiddlename','patsuffix','patsex');
 
         foreach( $patients as $patient ) {
 
@@ -191,13 +192,17 @@ class CallEntryController extends Controller
             $mrnRes = $patient->obtainStatusField('mrn', $status);
             $dobRes = $patient->obtainStatusField('dob', $status);
 
-            //encounters?
+            //values: patient vs encounters
+            //Show the "Valid" values for First Name, Last Name, etc from the encounter (not from patient object).
+            // If there are multiple "Valid" values, show the ones with the most recent time stamp.
 
-            $firstNameRes = $patient->obtainStatusField('firstname', $status);
-            $middleNameRes = $patient->obtainStatusField('middlename', $status);
-            $lastNameRes = $patient->obtainStatusField('lastname', $status);
-            $suffixRes = $patient->obtainStatusField('suffix', $status);
-            $sexRes = $patient->obtainStatusField('sex', $status);
+            $fieldnameResArr = $patient->obtainSingleEncounterValues($fieldnameArr,$status);
+
+            $firstNameRes = $fieldnameResArr['patfirstname']; //$patient->obtainStatusField('firstname', $status);
+            $middleNameRes = $fieldnameResArr['patmiddlename'];  //$patient->obtainStatusField('middlename', $status);
+            $lastNameRes = $fieldnameResArr['patlastname']; //$patient->obtainStatusField('lastname', $status);
+            $suffixRes = $fieldnameResArr['patsuffix'];   //$patient->obtainStatusField('suffix', $status);
+            $sexRes = $fieldnameResArr['patsex'];    //$patient->obtainStatusField('sex', $status);
 
             $patientInfo = array(
                 'id' => $patient->getId(),
@@ -228,7 +233,7 @@ class CallEntryController extends Controller
         $mrntype = trim($request->get('mrntype'));
         $dob = trim($request->get('dob'));
         $lastname = trim($request->get('lastname'));
-        $firstname = trim($request->get('firstname'));
+        //$firstname = trim($request->get('firstname'));
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
 
@@ -237,7 +242,7 @@ class CallEntryController extends Controller
             $mrn = ( array_key_exists('mrn', $params) ? $params['mrn'] : null);
             $dob = ( array_key_exists('dob', $params) ? $params['dob'] : null);
             $lastname = ( array_key_exists('lastname', $params) ? $params['lastname'] : null);
-            $firstname = ( array_key_exists('firstname', $params) ? $params['firstname'] : null);
+            //$firstname = ( array_key_exists('firstname', $params) ? $params['firstname'] : null);
         }
 
         $em = $this->getDoctrine()->getManager();

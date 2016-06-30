@@ -1041,7 +1041,7 @@ class Patient extends ObjectAbstract
         $resArr = array();
         foreach( $sourceArr as $name ) {
             if( !$name->getMessage() ) {
-                continue;
+                continue; //is it correct: if there is no message
             }
             $orderId = $name->getMessage()->getId();
             //echo "orderId=".$orderId."<br>";
@@ -1085,6 +1085,48 @@ class Patient extends ObjectAbstract
         return $patientFullName;
     }
 
+    //obtain only one encounter's the most recent value (i.e. last name: $fieldname='patlastname') with $status
+    public function obtainSingleEncounterValues( $fieldnameArr, $status ) {
+
+        $resArr = array();
+
+        foreach( $this->getEncounter() as $encounter ) {
+
+            foreach( $fieldnameArr as $fieldname) {
+
+                $getMethod = "get".$fieldname;
+
+                $mostRecentFieldEntity = null;
+
+                //for each encounter's fieldname array (i.e. patlastname)
+                foreach( $encounter->$getMethod() as $fieldEntity ) {
+
+                    if( !$mostRecentFieldEntity ) {
+                        $mostRecentFieldEntity = $fieldEntity;
+                        continue;
+                    }
+
+                    $mostRecentFieldnameDate = $mostRecentFieldEntity->getCreationdate();
+                    $currentFieldnameDate = $fieldEntity->getCreationdate();
+
+                    if( !$mostRecentFieldnameDate || !$currentFieldnameDate ) {
+                        continue;
+                    }
+
+                    if( $fieldEntity->getStatus() == $status && $currentFieldnameDate > $mostRecentFieldnameDate ) {
+                        $mostRecentFieldEntity = $fieldEntity;
+                    }
+
+                }//$encounter->$getMethod()
+
+                $resArr[$fieldname] = $mostRecentFieldEntity;
+
+            }//foreach fieldnameArr
+
+        }//foreach encounter
+
+        return $resArr;
+    }
 
     //if simple field already exists. Compare by field name. This is to prevent creating similar fields
     public function hasSimpleField( $field, $getMethod ) {
@@ -1122,22 +1164,26 @@ class Patient extends ObjectAbstract
 //        return $extra;
 //    }
 
-    public function obtainOneValidObjectPatient() {
-        //mrn
-        $mrn = $this->obtainValidField('mrn');
-        $this->mrn->clear();
-        $this->addMrn($mrn);
+    //Not Used!!!
+    //Danger: it will overwrite the patient with the valid values
+//    public function obtainOneValidObjectPatient() {
+//        //mrn
+//        $mrn = $this->obtainValidField('mrn');
+//        $this->mrn->clear();
+//        $this->addMrn($mrn);
+//
+//        //dob
+//        $dob = $this->obtainValidField('dob');
+//        $this->dob->clear();
+//        $this->addDob($dob);
+//
+//        //clinical history
+//        $clinicalHistory = $this->obtainValidField('clinicalHistory');
+//        $this->clinicalHistory->clear();
+//        $this->addClinicalHistory($clinicalHistory);
+//    }
 
-        //dob
-        $dob = $this->obtainValidField('dob');
-        $this->dob->clear();
-        $this->addDob($dob);
 
-        //clinical history
-        $clinicalHistory = $this->obtainValidField('clinicalHistory');
-        $this->clinicalHistory->clear();
-        $this->addClinicalHistory($clinicalHistory);
-    }
 
     public function obtainKeyFieldName() {
         return "mrn";

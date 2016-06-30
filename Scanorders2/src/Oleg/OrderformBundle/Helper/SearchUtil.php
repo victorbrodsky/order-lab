@@ -134,7 +134,7 @@ class SearchUtil {
         //echo "page=".$pageNumber."<br>";
 
         if( $limitFlag ) {
-            $limit = 10;
+            $limit = 20;
             $paginator  = $this->container->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,

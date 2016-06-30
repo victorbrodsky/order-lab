@@ -677,11 +677,11 @@ class RequestController extends Controller
                     'warning',
                     "You can not change status of this ".$entity->getRequestName()." with ID #".$entity->getId()." to ".$status
                 );
-                $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId());
+                $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId().". Reason: request is not pending or canceled");
                 return $this->redirect($this->generateUrl('vacreq-nopermission'));
             }
         } else {
-            $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId());
+            $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId().". Reason: user does not have permission to changestatus or update for this request");
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 

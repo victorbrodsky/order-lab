@@ -393,6 +393,10 @@
 
     function findCalllogPatient() {
 
+        //clear no matching box
+        $('#calllog-danger-box').hide();
+        $('#calllog-danger-box').html("");
+
         var mrntype = $(".mrntype-combobox").select2('val');
         mrntype = trimWithCheck(mrntype);
 
@@ -414,6 +418,13 @@
         firstname = trimWithCheck(firstname);
 
         console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
+
+        if( mrn && mrntype || dob && lastname ) {
+            //ok
+        } else {
+            $('#calllog-danger-box').html("No matching patient records found.");
+            $('#calllog-danger-box').show();
+        }
 
         //ajax
         var url = Routing.generate('calllog_search_patient');
@@ -547,10 +558,16 @@
         var index = $('#calllog-matching-patients-table').find('.active').attr('id');
         console.log('index='+index);
         populatePatientInfo(_patients[index], null);
+        disableAllFields(true);
 
         //change the "Find or Add Patient" button title to "Re-enter Patient"
         $('#reenter_patient_button').show();
         $('#search_patient_button').hide();
+
+        //remove and hide matching patients table
+        $('#calllog-matching-patients-table').remove();
+        $('#calllog-matching-patients').html('');
+        $('#calllog-matching-patients').hide();
     }
 
     function disableAllFields(disable) {
