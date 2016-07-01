@@ -173,13 +173,13 @@ class CallEntryController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function searchPatientAction(Request $request)
+    public function patientSearchAction(Request $request)
     {
         if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        $patients = $this->searchPatient( $request );
+        $patients = $this->searchPatient( $request, true );
         //echo "patients=".count($patients)."<br>";
 
         $patientsArr = array();
@@ -227,7 +227,7 @@ class CallEntryController extends Controller
         return $response;
     }
 
-    public function searchPatient( $request, $params=null ) {
+    public function searchPatient( $request, $evenlog=false, $params=null ) {
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrntype'));
@@ -247,7 +247,7 @@ class CallEntryController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $parameters = array('status' => 'valid');
+        $parameters = array();
 
         $repository = $em->getRepository('OlegOrderformBundle:Patient');
         $dql = $repository->createQueryBuilder("patient");
@@ -258,16 +258,23 @@ class CallEntryController extends Controller
         $dql->leftJoin("patient.encounter", "encounter");
         $dql->leftJoin("encounter.patlastname", "encounterLastname");
 
-        $dql->where("mrn.status = :status");
+        //$dql->where("mrn.status = :statusValid");
 
         $where = false;
+        $searchBy = "unknown parameters";
 
         //mrn
         if( $mrntype && $mrn ) {
             $dql->andWhere("mrn.keytype = :keytype AND mrn.field = :mrn");
             $parameters['keytype'] = $mrntype;
             $parameters['mrn'] = $mrn;
+
+            $dql->andWhere("mrn.status = :statusValid OR mrn.status = :statusAlias");
+            $parameters['statusValid'] = 'valid';
+            $parameters['statusAlias'] = 'alias';
+
             $where = true;
+            $searchBy = "mrntype=".$mrntype." and mrn=".$mrn;
         }
 
         //Last Name AND DOB
@@ -277,7 +284,15 @@ class CallEntryController extends Controller
             $dql->andWhere("dob.field = :dob AND (lastname.field = :lastname OR encounterLastname.field = :lastname)");
             $parameters['lastname'] = $lastname;
             $parameters['dob'] = $dobDateTime;
+
+            $dql->andWhere("dob.status = :statusValid OR dob.status = :statusAlias");
+            $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
+            $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
+            $parameters['statusValid'] = 'valid';
+            $parameters['statusAlias'] = 'alias';
+
             $where = true;
+            $searchBy = "dob=".$dob." and lastname=".$lastname;
         }
 
 //        //firstname, Last Name AND DOB
@@ -289,10 +304,27 @@ class CallEntryController extends Controller
 //        }
 
         if( $where ) {
+
             $query = $em->createQuery($dql);
             $query->setParameters($parameters);
             //echo "sql=".$query->getSql()."<br>";
             $patients = $query->getResult();
+
+            //log search action
+            if( $evenlog ) {
+                if( count($patients) == 0 ) {
+                    $patientEntities = null;
+                } else {
+                    $patientEntities = $patients;
+                }
+                $user = $this->get('security.context')->getToken()->getUser();
+                $userSecUtil = $this->container->get('user_security_utility');
+                $eventType = "Patient Searched";
+                $event = "Patient searched by ".$searchBy;
+                $event = $event . "; found ".count($patients)." patient(s).";
+                $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$patientEntities,$request,$eventType);
+            }
+
         } else {
             $patients = array();
         }
@@ -337,6 +369,11 @@ class CallEntryController extends Controller
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $institution = $userSiteSettings->getDefaultInstitution();
 
+        if( $mrntype ) {
+            $mrntypeObj = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrntype );
+        } else {
+            $mrntypeObj = null;
+        }
 
         //first check if the patient already exists
         $patients = $this->searchPatient( $request );
@@ -344,7 +381,6 @@ class CallEntryController extends Controller
             $output = "Can not create a new Patient. The patient with specified parameters already exists:<br>";
 
             if( $mrntype ) {
-                $mrntypeObj = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrntype );
                 $output .= "MRN Type:".$mrntypeObj."<br>";
             }
             if( $mrn )
@@ -388,6 +424,10 @@ class CallEntryController extends Controller
         //echo "keytype=".$keytype."<br>";
         //exit();
 
+        $createdWithArr = array();
+        $createdWithArr[] = "MRN Type: ".$mrntypeObj;
+        $createdWithArr[] = "MRN: ".$mrn;
+
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(
             $institution,
@@ -401,22 +441,6 @@ class CallEntryController extends Controller
             false               //$withfields
         );
 
-//        if( $mrntype ) {
-//            $mrntypeObj = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrntype );
-//        } else {
-//            //Auto-Generated
-//        }
-//        if( $mrn ) {
-//            //
-//        } else {
-//            //generate a new unique MRN: getNextNonProvided
-//            $em->getRepository('OlegOrderformBundle:Patient')->getNextNonProvided($patient);
-//        }
-
-//        $PatientMrn = new PatientMrn($status, $user, $sourcesystem);
-//        $PatientMrn->setKeytype($mrntypeObj);
-//        $PatientMrn->setField($mrn);
-//        $patient->addMrn($PatientMrn);
 
         $patient->addDob( new PatientDob($status,$user,$sourcesystem) );
         if( $dob ) {
@@ -424,21 +448,12 @@ class CallEntryController extends Controller
             $PatientDob = new PatientDob($status, $user, $sourcesystem);
             $PatientDob->setField($dobDateTime);
             $patient->addDob($PatientDob);
+            $createdWithArr[] = "DOB: " . $dob;
         }
 
         //create an encounter for this new patient with the First Name, Last Name, Middle Name, Suffix, and sex (if any)
         $encounter = new Encounter(false,$status,$user,$sourcesystem);
         $encounter->setInstitution($institution);
-
-        if( $firstname ) {
-            $EncounterPatfirstname = new EncounterPatfirstname($status, $user, $sourcesystem);
-            $EncounterPatfirstname->setField($firstname);
-            $encounter->addPatfirstname($EncounterPatfirstname);
-
-            $PatientFirstname = new PatientFirstName($status,$user,$sourcesystem);
-            $PatientFirstname->setField($firstname);
-            $patient->addFirstname( $PatientFirstname );
-        }
 
         if( $lastname ) {
             $EncounterPatlastname = new EncounterPatlastname($status, $user, $sourcesystem);
@@ -448,6 +463,20 @@ class CallEntryController extends Controller
             $PatientLastname = new PatientLastName($status,$user,$sourcesystem);
             $PatientLastname->setField($lastname);
             $patient->addLastname( $PatientLastname );
+
+            $createdWithArr[] = "Last Name: " . $lastname;
+        }
+
+        if( $firstname ) {
+            $EncounterPatfirstname = new EncounterPatfirstname($status, $user, $sourcesystem);
+            $EncounterPatfirstname->setField($firstname);
+            $encounter->addPatfirstname($EncounterPatfirstname);
+
+            $PatientFirstname = new PatientFirstName($status,$user,$sourcesystem);
+            $PatientFirstname->setField($firstname);
+            $patient->addFirstname( $PatientFirstname );
+
+            $createdWithArr[] = "First Name: " . $firstname;
         }
 
         if( $middlename ) {
@@ -458,6 +487,8 @@ class CallEntryController extends Controller
             $PatientMiddlename = new PatientMiddleName($status,$user,$sourcesystem);
             $PatientMiddlename->setField($middlename);
             $patient->addMiddlename( $PatientMiddlename );
+
+            $createdWithArr[] = "Middle Name: " . $middlename;
         }
 
         if( $suffix ) {
@@ -468,6 +499,8 @@ class CallEntryController extends Controller
             $PatientSuffix = new PatientSuffix($status,$user,$sourcesystem);
             $PatientSuffix->setField($suffix);
             $patient->addSuffix( $PatientSuffix );
+
+            $createdWithArr[] = "Suffix: " . $suffix;
         }
 
         if( $sex ) {
@@ -480,6 +513,8 @@ class CallEntryController extends Controller
             $PatientSex = new PatientSex($status,$user,$sourcesystem);
             $PatientSex->setField($sexObj);
             $patient->addSex( $PatientSex );
+
+            $createdWithArr[] = "Sex: " . $sexObj;
         }
 
         $patient->addEncounter($encounter);
@@ -487,6 +522,13 @@ class CallEntryController extends Controller
         $em->persist($patient);
         $em->persist($encounter);
         $em->flush();
+
+        //log patient creation action
+        $userSecUtil = $this->container->get('user_security_utility');
+        $eventType = "Patient Created";
+        $event = "New Patient has been created:<br>".implode("<br>",$createdWithArr);
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$patient,$request,$eventType);
+
 
         $response->setContent(json_encode($output));
         return $response;
