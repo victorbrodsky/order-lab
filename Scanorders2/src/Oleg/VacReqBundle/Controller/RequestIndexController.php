@@ -33,7 +33,7 @@ class RequestIndexController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
 
         //$em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
@@ -460,7 +460,7 @@ class RequestIndexController extends Controller
             $filtered = true;
         }
 
-        if( $groups == null ) {
+        if( $groups == null && $request->get('_route') == "vacreq_incomingrequests" ) {
             $instArr = array();
             foreach( $organizationalInstitutions as $instId => $instNameStr ) {
                 $instArr[] = $instId;
