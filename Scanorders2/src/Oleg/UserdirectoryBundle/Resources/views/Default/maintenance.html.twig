@@ -16,6 +16,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {{ usermacros.nonLiveSiteRedirect() }}
+
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
 </head>
@@ -29,7 +32,6 @@
 
     <div class="text-center">
 
-        {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
         {{ usermacros.nonLiveSiteWarning() }}
 
         <h2 class="alert alert-info well-lg safary-fix" align="center">Maintenance</h2>

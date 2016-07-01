@@ -583,6 +583,14 @@ class SiteParameters {
      */
     private $vacationAccruedDaysPerMonth;
 
+    //Live Site Root URL: http://c.med.cornell.edu/order/
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $liveSiteRootUrl;
+
+
+
 
     /**
      * @param mixed $maxIdleTime
@@ -2170,9 +2178,21 @@ class SiteParameters {
         $this->vacationAccruedDaysPerMonth = $vacationAccruedDaysPerMonth;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLiveSiteRootUrl()
+    {
+        return $this->liveSiteRootUrl;
+    }
 
-
-
+    /**
+     * @param mixed $liveSiteRootUrl
+     */
+    public function setLiveSiteRootUrl($liveSiteRootUrl)
+    {
+        $this->liveSiteRootUrl = $liveSiteRootUrl;
+    }
 
 
 

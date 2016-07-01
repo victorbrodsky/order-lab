@@ -88,6 +88,9 @@
     <!-- we want to force people to click a button, so hide the close link in the toolbar -->
     {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}
 
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {{ usermacros.nonLiveSiteRedirect() }}
+
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
 </head>
@@ -98,6 +101,8 @@
     <div class="container col-xs-12">
 
         <div class="header col-xs-12">
+
+            {{ usermacros.nonLiveSiteWarning() }}
 
             {% block header %}
                 {#Simpler way: find out how to pass array from controller to twig#}

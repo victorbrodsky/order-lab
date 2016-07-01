@@ -107,6 +107,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {{ usermacros.nonLiveSiteRedirect() }}
+
     <!-- we want to force people to click a button, so hide the close link in the toolbar -->
     {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}
 
@@ -120,6 +123,7 @@
 
     <div class="container col-xs-12">
 
+        {{ usermacros.nonLiveSiteWarning() }}
 
         <div class="header col-xs-12">
 

@@ -40,7 +40,7 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'environment' )
         $builder->add('environment','choice',array(
             'label'=>'Environment:',
-            'choices' => array("live"=>"live", "dev"=>"dev"),
+            'choices' => array("live"=>"live", "test"=>"test", "dev"=>"dev"),
             'attr' => array('class'=>'form-control')
         ));
 
@@ -661,6 +661,13 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'LISVersionDevelopment' )
             $builder->add('LISVersionDevelopment',null,array(
                 'label'=>'Development LIS Version:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'liveSiteRootUrl' )
+            $builder->add('liveSiteRootUrl',null,array(
+                'label'=>'Live Site Root URL (http://c.med.cornell.edu/order/):',
                 'attr' => array('class'=>'form-control')
             ));
 

@@ -1,8 +1,19 @@
+{% macro nonLiveSiteRedirect() %}
+    {% if app.environment == 'prod' %}
+        {% if user_security_utility.getSiteSettingParameter('environment') != 'live' %}
+            {% if user_security_utility.getSiteSettingParameter('environment') != 'dev' %}
+                {#{{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}#}
+                {#http://www.google.ca/#}
+                {#<meta http-equiv="refresh" content="0; url=http://www.google.ca/" />#}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
 {% macro nonLiveSiteWarning() %}
     {% if user_security_utility.getSiteSettingParameter('environment') != 'live' %}
         <p>
-        <div class="alert alert-danger">
-            THIS IS A TEST SERVER. USE ONLY FOR TESTING. LIVE SITE IS <a href="http://c.med.cornell.edu/order/">HERE</a>.
+        <div class="alert alert-danger text-center">
+            THIS IS A TEST SERVER. USE ONLY FOR TESTING. LIVE SITE IS <a href="{{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}">HERE</a>.
         </div>
         </p>
     {% endif %}
