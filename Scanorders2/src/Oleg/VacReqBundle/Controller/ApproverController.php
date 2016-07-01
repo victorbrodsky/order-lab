@@ -57,6 +57,7 @@ class ApproverController extends Controller
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+        //echo "organizationalInstitutions=".count($organizationalInstitutions)."<br>";
 
         //get carryover approver groups
         $carryOverRequestGroups = array();
@@ -65,6 +66,7 @@ class ApproverController extends Controller
             $carryOverGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
             $carryOverRequestGroups = $vacreqUtil->getGroupsByPermission($user,$carryOverGroupParams);
         }
+        //echo "carryOverRequestGroups=".count($carryOverRequestGroups)."<br>";
 
 
         return array(

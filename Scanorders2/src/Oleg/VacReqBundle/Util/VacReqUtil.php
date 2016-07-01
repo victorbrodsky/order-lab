@@ -1984,6 +1984,7 @@ class VacReqUtil
         $asSupervisor = ( array_key_exists('asSupervisor', $params) ? $params['asSupervisor'] : false);
 
         $institutions = array();
+        $addedArr = array();
 
         foreach( $permissions as $permission ) {
 
@@ -2041,6 +2042,13 @@ class VacReqUtil
                 $institution = $role->getInstitution();
 
                 if( $institution ) {
+
+                    //avoid duplication
+                    if( !in_array($institution->getId(), $addedArr) ) {
+                        $addedArr[] = $institution->getId();
+                    } else {
+                        continue;
+                    }
 
                     if( $exceptPermissions ) {
                         foreach( $exceptPermissions as $exceptPermission ) {
