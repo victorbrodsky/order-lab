@@ -17,6 +17,10 @@ class EncounterType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
+        if( !array_key_exists('alias', $this->params) ) {
+            $this->params['alias'] = true;
+        }
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)

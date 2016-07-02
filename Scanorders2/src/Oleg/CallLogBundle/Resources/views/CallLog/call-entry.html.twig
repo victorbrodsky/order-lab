@@ -52,8 +52,12 @@
                         {% set status = 'Submitted' %}
 
                         {% for encounter in form.encounter %}
+                            <div class="alias-group">
                             {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
                             {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                            {#{{ formmacros.inputArrayField(encounter.patlastname,cycle,"","","","","",status) }}#}
+                            {#{{ formmacros.inputArrayField(encounter.patfirstname,cycle,"","","","","",status) }}#}
+                            </div>
                         {% endfor %}
 
                     </div>
@@ -70,8 +74,10 @@
 
                         {#{{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}#}
                         {#{{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}#}
+                        <div class="alias-group">
                         {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
                         {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                        </div>
                         {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
 
                     {% endfor %}
@@ -113,15 +119,24 @@
                                 onclick="clearCalllogPatient()" style="float:left; width:100%; display:none;"
                             >Re-enter Patient</button>
                         </div>
-                        <div class="col-xs-2">
+                        <div class="col-xs-3">
                             <button
                                 id="addnew_patient_button" type="button"
                                 class="btn btn-lg btn-success span4" align="center"
                                 onclick="addnewCalllogPatient()" style="float:left; width:100%; display:none;"
                             >Add New Patient Registration</button>
                         </div>
+                        <div class="col-xs-3">
+                            <button
+                                    id="edit_patient_button" type="button"
+                                    class="btn btn-lg btn-success span4" align="center"
+                                    onclick="editPatientBtn()" style="float:left; width:100%; display:none;"
+                            >Edit Patient Info</button>
+                        </div>
                         <div class="col-xs-5"></div>
                     </div>
+
+                    <br>
 
                     <div id="calllog-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px;"></div>
 
@@ -131,7 +146,7 @@
             </div> <!-- panel-collapse -->
         </div> <!-- panel panel-info -->
 
-        <a class="collapsed" role="button" data-toggle="collapse" href="#callentry-form">
+        <a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">
             No single patient is referenced by this entry or I'll add the patient info later
         </a>
         <div id="callentry-form" class="panel-collapse collapse">
@@ -280,6 +295,9 @@
 
     $(document).ready(function() {
 
+        //hide all alias
+        calllogHideAllAlias(true,true);
+
     });
 
 
@@ -371,6 +389,12 @@
 
                 //disable all fields
                 disableAllFields(true);
+
+                //show edit patient info button
+                $('#edit_patient_button').show();
+                //hide "No single patient is referenced by this entry or I'll add the patient info later" link
+                $('#callentry-nosinglepatient-link').hide();
+
             } else {
                 console.log("Patient has not been created");
                 $('#calllog-danger-box').html(data);
@@ -389,6 +413,8 @@
         //change the "Re-enter Patient" to "Find Patient"
         $('#reenter_patient_button').hide();
         $('#search_patient_button').show();
+
+        calllogHideAllAlias(true,true);
     }
 
     function findCalllogPatient() {
@@ -422,8 +448,9 @@
         if( mrn && mrntype || dob && lastname ) {
             //ok
         } else {
-            $('#calllog-danger-box').html("No matching patient records found.");
+            $('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
             $('#calllog-danger-box').show();
+            return false;
         }
 
         //ajax
@@ -460,11 +487,21 @@
         $('#calllog-danger-box').hide();
         $('#calllog-danger-box').html("");
 
+        //hide edit patient info button
+        $('#edit_patient_button').hide();
+        //hide "No single patient is referenced by this entry or I'll add the patient info later" link
+        $('#callentry-nosinglepatient-link').show();
+
         _patients = patients;
 
         if( patLen == 1 ) {
             populatePatientInfo(patients[0],null);
             disableAllFields(true);
+
+            //show edit patient info button
+            $('#edit_patient_button').show();
+            //hide "No single patient is referenced by this entry or I'll add the patient info later" link
+            $('#callentry-nosinglepatient-link').hide();
 
             //change the "Find or Add Patient" button title to "Re-enter Patient"
             $('#reenter_patient_button').show();
@@ -508,6 +545,7 @@
                 '<th>Suffix</th>' +
                 '<th>Sex</th>' +
                 '<th>DOB</th>' +
+                '<th>Contact Info</th>' +
             '</tr></thead>' +
             '<tbody>';
 
@@ -524,6 +562,7 @@
                     '<td>'+patient.suffix+'</td>'+
                     '<td>'+patient.sexstr+'</td>'+
                     '<td>'+patient.dob+'</td>'+
+                    '<td>'+patient.contactinfo+'</td>'+
                 '</tr>';
 
         }
@@ -559,6 +598,11 @@
         console.log('index='+index);
         populatePatientInfo(_patients[index], null);
         disableAllFields(true);
+
+        //show edit patient info button
+        $('#edit_patient_button').show();
+        //hide "No single patient is referenced by this entry or I'll add the patient info later" link
+        $('#callentry-nosinglepatient-link').hide();
 
         //change the "Find or Add Patient" button title to "Re-enter Patient"
         $('#reenter_patient_button').show();
@@ -653,20 +697,22 @@
         if( data && data[index] ) {
             value = data[index];
             //lock field
-            fieldEl.prop('disabled', true);
-            fieldEl.closest('.input-group').find('input').prop('disabled', true);
-            if( fieldEl.hasClass('datepicker') ) {
-                var elementDatepicker = fieldEl.closest('.input-group.date');
-                elementDatepicker.datepicker("remove");
-            }
+//            fieldEl.prop('disabled', true);
+//            fieldEl.closest('.input-group').find('input').prop('disabled', true);
+//            if( fieldEl.hasClass('datepicker') ) {
+//                var elementDatepicker = fieldEl.closest('.input-group.date');
+//                elementDatepicker.datepicker("remove");
+//            }
+            disableField(fieldEl,true);
         } else {
             //unlock field
-            fieldEl.prop('disabled', false);
-            fieldEl.closest('.input-group').find('input').prop('disabled', false);
-            if( fieldEl.hasClass('datepicker') ) {
-                var elementDatepicker = fieldEl.closest('.input-group.date');
-                initSingleDatepicker(elementDatepicker);
-            }
+//            fieldEl.prop('disabled', false);
+//            fieldEl.closest('.input-group').find('input').prop('disabled', false);
+//            if( fieldEl.hasClass('datepicker') ) {
+//                var elementDatepicker = fieldEl.closest('.input-group.date');
+//                initSingleDatepicker(elementDatepicker);
+//            }
+            disableField(fieldEl,false);
         }
         //console.log(index+': value='+value);
 
@@ -677,6 +723,30 @@
         if( modify ) {
             fieldEl.val(value);
         }
+
+        //attache alias
+        //if( index == "lastname" || index == "firstname" || index == "middlename" || index == "suffix" ) {
+            var statusIndex = index+"Status";
+            if( data && statusIndex in data && data[statusIndex] == 'alias' ) {
+
+//                var aliasHtml =
+//                    '<span class="input-group-addon">'+
+//                        '<input'+
+//                            ' type="checkbox" id="oleg_calllogbundle_patienttype_encounter_0_patfirstname_0_alias"'+
+//                            ' name="oleg_calllogbundle_patienttype[encounter][0][patfirstname][0][alias]"'+
+//                            ' value="1"'+
+//                        '>'+
+//                        '<label style="margin:0;" for="oleg_calllogbundle_patienttype_encounter_0_patfirstname_0_alias">Alias</label>'+
+//                '</span>';
+
+                //show alias with checked checkbox
+                var parentEl = fieldEl.parent();
+                parentEl.find('.input-group-addon').show();
+                parentEl.removeClass('input-group-hidden').addClass('input-group');
+                parentEl.find('input[type=checkbox]').prop('checked', true);
+            }
+
+        //}
 
         return value;
     }
@@ -723,6 +793,31 @@
                 $('.patientmrn-mask').val(null);
             }
 
+        }
+    }
+
+    function editPatientBtn() {
+        disableAllFields(false);
+
+        //show all alias
+        //$('.alias-group').find('.input-group-addon').show();
+        //$('.alias-group').find('.input-group-hidden').removeClass('input-group-hidden').addClass('input-group');
+        //$('.alias-group').find('input[type=checkbox]').prop('checked', false);
+        calllogHideAllAlias(false,false);
+    }
+
+    function calllogHideAllAlias(hide,clear) {
+        if( hide ) {
+            //hide all alias
+            $('.alias-group').find('.input-group-addon').hide();
+            $('.alias-group').find('.input-group').removeClass('input-group').addClass('input-group-hidden');
+        } else {
+            //show all alias
+            $('.alias-group').find('.input-group-addon').show();
+            $('.alias-group').find('.input-group-hidden').removeClass('input-group-hidden').addClass('input-group');
+        }
+        if( clear ) {
+            $('.alias-group').find('input[type=checkbox]').prop('checked', false);
         }
     }
 

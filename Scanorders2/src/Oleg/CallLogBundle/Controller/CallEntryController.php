@@ -105,6 +105,7 @@ class CallEntryController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
+            //'alias' => true
         );
 
         $form = $this->createForm(new PatientType($params,$patient), $patient);
@@ -204,18 +205,32 @@ class CallEntryController extends Controller
             $suffixRes = $fieldnameResArr['patsuffix'];   //$patient->obtainStatusField('suffix', $status);
             $sexRes = $fieldnameResArr['patsex'];    //$patient->obtainStatusField('sex', $status);
 
+            $contactinfo = $patient->obtainPatientContactinfo("Patient's Primary Contact Information");
+
             $patientInfo = array(
                 'id' => $patient->getId(),
                 'mrntype' => $mrnRes->getKeytype()->getId(),
                 'mrntypestr' => $mrnRes->getKeytype()->getName(),
                 'mrn' => $mrnRes->getField(),
                 'dob' => $dobRes."",
+
                 'lastname' => (($lastNameRes) ? $lastNameRes->getField() : null),  //$lastNameRes->getField(),
+                'lastnameStatus' => (($lastNameRes) ? $lastNameRes->getStatus() : null),
+                //'lastnameStatus' => 'alias',
+
                 'firstname' => (($firstNameRes) ? $firstNameRes->getField() : null),  //$firstNameStr,
+                'firstnameStatus' => (($firstNameRes) ? $firstNameRes->getStatus() : null),
+
                 'middlename' => (($middleNameRes) ? $middleNameRes->getField() : null), //$middleNameRes->getField(),
+                'middlenameStatus' => (($middleNameRes) ? $middleNameRes->getStatus() : null),
+
                 'suffix' => (($suffixRes) ? $suffixRes->getField() : null),   //$suffixRes->getField(),
+                'suffixStatus' => (($suffixRes) ? $suffixRes->getStatus() : null),
+
                 'sex' => (($sexRes) ? $sexRes->getId() : null),    //$sexRes->getId(),
                 'sexstr' => $sexRes."",
+
+                'contactinfo' => $contactinfo
             );
             $patientsArr[] = $patientInfo;
 

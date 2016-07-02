@@ -44,6 +44,8 @@ var _organizations = [];
 
 function initAllComboboxGeneric(newForm) {
 
+    //console.log('init All Combobox Generic');
+
     getComboboxGeneric(newForm,'identifierkeytype',_identifiers,false);
     getComboboxGeneric(newForm,'fellowshiptype',_fellowshiptype,false);
     getComboboxGeneric(newForm,'researchlab',_researchlabs,false);

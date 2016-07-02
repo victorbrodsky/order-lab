@@ -684,7 +684,7 @@ class Patient extends ObjectAbstract
         $this->addType( new PatientType($status,$provider,$source) );
     }
 
-    public function addContactinfoByTypeAndName($user,$system,$locationType,$locationName,$spotEntity,$withdummyfields=false) {
+    public function addContactinfoByTypeAndName($user,$system,$locationType,$locationName,$spotEntity,$withdummyfields=false,$em) {
         $patientLocation = new Location($user);
 
         $patientLocation->addLocationType($locationType);
@@ -693,12 +693,19 @@ class Patient extends ObjectAbstract
         $patientLocation->setRemovable(1);
 
         if( $withdummyfields ) {
+            $patientLocation->setEmail("dummyemail@myemail.com");
             $patientLocation->setPhone("(212) 123-4567");
             $geoLocation = new GeoLocation();
             $geoLocation->setStreet1("100");
-            $geoLocation->setStreet1("Broadway");
+            $geoLocation->setStreet2("Broadway");
             $geoLocation->setZip("10001");
             $patientLocation->setGeoLocation($geoLocation);
+
+            $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
+            $geoLocation->setCity($city);
+
+            $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
+            $geoLocation->setCountry($country);
         }
 
         $tracker = $this->getTracker();
@@ -715,6 +722,36 @@ class Patient extends ObjectAbstract
         $spotEntity->setSpottedOn(new \DateTime());
 
         $tracker->addSpot($spotEntity);
+    }
+
+    //$locationTypeStr = "Patient's Primary Contact Information"
+    public function obtainPatientContactinfo($locationTypeStr) {
+
+        $locationArr = array();
+
+        if( $this->getTracker() ) {
+            foreach ($this->getTracker()->getSpots() as $spot) {
+                $currentLocation = $spot->getCurrentLocation();
+                if( $currentLocation->hasLocationTypeName($locationTypeStr) ) {
+
+                    $emailStr = "";
+                    if( $currentLocation->getEmail() ) {
+                        $emailStr = '<a href="mailto:'.$currentLocation->getPhone().'" target="_top">'.$currentLocation->getPhone().'</a> ';
+                    }
+
+                    $phoneStr = "";
+                    if( $currentLocation->getPhone() ) {
+                        $phoneStr = '<a href="tel:'.$currentLocation->getPhone().'" target="_top">'.$currentLocation->getPhone().'</a> ';
+                    }
+
+                    $locationArr[] = $emailStr.$phoneStr.$currentLocation->getLocationFullName();
+
+                }
+
+            }
+        }
+
+        return implode("<br>",$locationArr);
     }
 
     public function getRace()

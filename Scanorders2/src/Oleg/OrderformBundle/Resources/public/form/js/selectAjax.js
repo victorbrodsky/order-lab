@@ -46,6 +46,7 @@ var _embedderinstruction = [];
 
 var _buildings = [];
 var _floors = [];
+var _cities = [];
 
 
 
@@ -121,6 +122,7 @@ function customCombobox() {
 //    getComboboxGeneric(newForm,'room',_rooms,false);
 //    getComboboxGeneric(newForm,'suite',_suites,false);
     getComboboxGeneric(null,'floor',_floors,false);
+    getComboboxGeneric(null,'city',_cities,false);
 
 }
 

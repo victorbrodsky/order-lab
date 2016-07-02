@@ -27,11 +27,13 @@ class EncounterPatlastnameType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif encounter-lastName')
         ));
 
-        $builder->add('alias', 'checkbox', array(
-            'required' => false,
-            'label' => 'Alias',
-            //'attr' => array('style'=>'margin:0')
-        ));
+        if( $this->params['alias'] ) {
+            $builder->add('alias', 'checkbox', array(
+                'required' => false,
+                'label' => 'Alias',
+                //'attr' => array('style'=>'margin:0')
+            ));
+        }
 
         $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterPatlastname',

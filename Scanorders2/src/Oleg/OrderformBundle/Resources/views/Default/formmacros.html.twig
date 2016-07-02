@@ -1538,21 +1538,27 @@
 
 {% macro encounterNameWithAlias(field) %}
     {% if field.alias is defined %}
-        {% import _self as formmacros %}
         {{ form_errors(field) }}
         {{ form_widget(field.others) }}
         <div class="form-group oleg-form-nomargin-bottom">
             <div class="input-group">
                 {{ form_widget(field.field) }}
                 {#<span class="input-group-addon">{{ form_widget(field.alias) }} {{ form_label(field.alias) }}</span>#}
-                <span class="input-group-addon">
-                    {{ form_widget(field.alias) }}
-                    {{ form_label(field.alias, null, { 'label_attr': {'style': 'margin:0;'} }) }}
-                </span>
+                {#{% if field.alias is defined %}#}
+                    <span class="input-group-addon">
+                        {{ form_widget(field.alias) }}
+                        {{ form_label(field.alias, null, { 'label_attr': {'style': 'margin:0;'} }) }}
+                    </span>
+                {#{% endif %}#}
             </div>
         </div>
+    {% else %}
+        {#{% import _self as formmacros %}#}
+        {{ form_errors(field) }}
+        {{ form_widget(field.others) }}
+        {{ form_widget(field.field) }}
+        {#{{ formmacros.field(field) }}#}
     {% endif %}
-
 {% endmacro %}
 
 {#{% macro dataQualityWidgetExisting( field, cycle ) %}#}

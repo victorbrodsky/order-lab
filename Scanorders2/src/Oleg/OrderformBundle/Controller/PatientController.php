@@ -128,7 +128,7 @@ class PatientController extends Controller
         //$patient = $res['patient'];
 
         $disabled = true;
-        //$disabled = false;
+        //$disabled = false; //testing
 
         $params = array(
             'type' => 'multy',
@@ -755,9 +755,9 @@ class PatientController extends Controller
         $patientSpotPurpose = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
         $spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
         $locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
-        $patient->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Test Patient's Primary Residence",$spotEntityPatient,true);
+        $patient->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Test Patient's Primary Residence",$spotEntityPatient,true,$em);
         $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Contact Information");
-        $patient->addContactinfoByTypeAndName($user,$system,$locationType,"Test Patient's Secondary Residence",$spotEntityPatient,true);
+        $patient->addContactinfoByTypeAndName($user,$system,$locationType,"Test Patient's Secondary Residence",$spotEntityPatient,true,$em);
 
         if( $withscanorder ) {
             $MultiSlideScanOrder = $this->createSpecificMessage("Multi-Slide Scan Order");
