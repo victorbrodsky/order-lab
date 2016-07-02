@@ -248,7 +248,7 @@ class CallEntryController extends Controller
         $mrntype = trim($request->get('mrntype'));
         $dob = trim($request->get('dob'));
         $lastname = trim($request->get('lastname'));
-        //$firstname = trim($request->get('firstname'));
+        $firstname = trim($request->get('firstname'));
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
 
@@ -269,9 +269,10 @@ class CallEntryController extends Controller
         $dql->leftJoin("patient.mrn", "mrn");
         $dql->leftJoin("patient.dob", "dob");
         $dql->leftJoin("patient.lastname", "lastname");
-        //$dql->leftJoin("patient.firstname", "firstname");
+        $dql->leftJoin("patient.firstname", "firstname");
         $dql->leftJoin("patient.encounter", "encounter");
         $dql->leftJoin("encounter.patlastname", "encounterLastname");
+        $dql->leftJoin("encounter.patfirstname", "encounterFirsttname");
 
         //$dql->where("mrn.status = :statusValid");
 
@@ -306,8 +307,18 @@ class CallEntryController extends Controller
             $parameters['statusValid'] = 'valid';
             $parameters['statusAlias'] = 'alias';
 
-            $where = true;
             $searchBy = "dob=".$dob." and lastname=".$lastname;
+
+            if( $firstname ) {
+                $dql->andWhere("firstname.field = :firstname OR encounterFirsttname.field = :firstname");
+                $dql->andWhere("encounterFirsttname.status = :statusValid OR encounterFirsttname.status = :statusAlias");
+                $parameters['firstname'] = $firstname;
+
+                $searchBy = " and firstname=".$firstname;
+            }
+
+            $where = true;
+
         }
 
 //        //firstname, Last Name AND DOB
@@ -402,8 +413,8 @@ class CallEntryController extends Controller
                 $output .= "MRN:".$mrn."<br>";
             if( $lastname )
                 $output .= "Last Name:".$lastname."<br>";
-            //if( $firstname )
-            //    $output .= "First Name:".$firstname."<br>";
+            if( $firstname )
+                $output .= "First Name:".$firstname."<br>";
             if( $dob )
                 $output .= "DOB:".$dob."<br>";
 

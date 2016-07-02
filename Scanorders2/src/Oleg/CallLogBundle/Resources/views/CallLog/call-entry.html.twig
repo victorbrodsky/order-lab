@@ -423,6 +423,8 @@
         $('#calllog-danger-box').hide();
         $('#calllog-danger-box').html("");
 
+        var searchedStr = "";
+
         var mrntype = $(".mrntype-combobox").select2('val');
         mrntype = trimWithCheck(mrntype);
 
@@ -445,8 +447,18 @@
 
         //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
 
-        if( mrn && mrntype || dob && lastname ) {
+        if( mrn && mrntype || dob && lastname || dob && lastname || dob && lastname && firstname ) {
             //ok
+            if( mrn && mrntype ) {
+                searchedStr = " (searched for MRN Type: "+$(".mrntype-combobox").select2('data').text+"; MRN: "+mrn+")";
+            }
+            if( dob && lastname ) {
+                var firstnameStr = "";
+                if( firstname ) {
+                    firstnameStr = "; First Name: "+firstname;
+                }
+                searchedStr = " (searched for DOB: "+dob+"; Last Name: "+lastname+firstnameStr+")";
+            }
         } else {
             $('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
             $('#calllog-danger-box').show();
@@ -465,7 +477,7 @@
             //console.log(data);
 //            if( data.length > 0 ) {
 //                console.log("Patient found");
-                populatePatientsInfo(data);
+                populatePatientsInfo(data,searchedStr);
 //            } else {
 //                populatePatientInfo(null);
 //                console.log("Patient not found");
@@ -474,7 +486,7 @@
 
     }
 
-    function populatePatientsInfo(patients) {
+    function populatePatientsInfo(patients,searchedStr) {
 
         var patLen = patients.length;
         //console.log('patLen='+patLen);
@@ -506,11 +518,12 @@
             //change the "Find or Add Patient" button title to "Re-enter Patient"
             $('#reenter_patient_button').show();
             $('#search_patient_button').hide();
+            $('#addnew_patient_button').hide();
 
         } else if( patLen == 0 ) {
             //console.log("No matching patient records found.");
             //"No matching patient records found." and unlock fields
-            $('#calllog-danger-box').html("No matching patient records found.");
+            $('#calllog-danger-box').html("No matching patient records found"+searchedStr+".");
             $('#calllog-danger-box').show();
             populatePatientInfo(null,true,false);
             disableAllFields(false);
