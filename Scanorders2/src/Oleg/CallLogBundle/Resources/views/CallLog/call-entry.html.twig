@@ -375,9 +375,9 @@
             async: false,
             data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex  },
         }).success(function(data) {
-            console.log("output="+data);
+            //console.log("output="+data);
             if( data == "OK" ) {
-                console.log("Patient has been created");
+                //console.log("Patient has been created");
                 //hide find patient and add new patient
                 $('#search_patient_button').hide();
                 $('#addnew_patient_button').hide();
@@ -396,7 +396,7 @@
                 $('#callentry-nosinglepatient-link').hide();
 
             } else {
-                console.log("Patient has not been created");
+                //console.log("Patient has not been created");
                 $('#calllog-danger-box').html(data);
                 $('#calllog-danger-box').show();
             }
@@ -443,7 +443,7 @@
         var firstname = $(".encounter-firstName").val();
         firstname = trimWithCheck(firstname);
 
-        console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
+        //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
 
         if( mrn && mrntype || dob && lastname ) {
             //ok
@@ -461,8 +461,8 @@
             async: false,
             data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname },
         }).success(function(data) {
-            console.log("data.length="+data.length);
-            console.log(data);
+            //console.log("data.length="+data.length);
+            //console.log(data);
 //            if( data.length > 0 ) {
 //                console.log("Patient found");
                 populatePatientsInfo(data);
@@ -477,7 +477,7 @@
     function populatePatientsInfo(patients) {
 
         var patLen = patients.length;
-        console.log('patLen='+patLen);
+        //console.log('patLen='+patLen);
 
         //clear matching patient section
         $('#calllog-matching-patients').hide();
@@ -508,7 +508,7 @@
             $('#search_patient_button').hide();
 
         } else if( patLen == 0 ) {
-            console.log("No matching patient records found.");
+            //console.log("No matching patient records found.");
             //"No matching patient records found." and unlock fields
             $('#calllog-danger-box').html("No matching patient records found.");
             $('#calllog-danger-box').show();
@@ -519,7 +519,7 @@
             $('#addnew_patient_button').show();
 
         } else if( patLen > 1 ) {
-            console.log("show table with found patients");
+            //console.log("show table with found patients");
             //show table with found patients
             //populatePatientInfo(patients[0],null);
             populatePatientInfo(null,null,false);
@@ -528,7 +528,7 @@
             createPatientsTableCalllog(patients);
 
         } else {
-            console.log('This condition should not be reached');
+            //console.log('This condition should not be reached');
         }
 
     }
@@ -551,7 +551,7 @@
 
         for( var i = 0; i < patients.length; i++ ) {
             var patient = patients[i];
-            console.log('patient id='+patient.id);
+            //console.log('patient id='+patient.id);
 
             matchingPatientsHtml = matchingPatientsHtml +
                 '<tr class="clickable-row" id="'+i+'">' +
@@ -595,7 +595,7 @@
     function matchingPatientBtnClick() {
 
         var index = $('#calllog-matching-patients-table').find('.active').attr('id');
-        console.log('index='+index);
+        //console.log('index='+index);
         populatePatientInfo(_patients[index], null);
         disableAllFields(true);
 
