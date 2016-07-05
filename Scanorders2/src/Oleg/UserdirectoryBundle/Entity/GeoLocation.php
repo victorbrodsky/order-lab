@@ -187,6 +187,34 @@ class GeoLocation
     }
 
 
+    //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
+    public function getFullGeoLocation() {
+
+        $resArr = array();
+
+        if( $this->getStreet1() && $this->getStreet2() ) {
+            $resArr[] =  $this->getStreet1() . ", " .  $this->getStreet2();
+        }
+
+        if( $this->getStreet1() ) {
+            $resArr[] = $this->getStreet1() . "";
+        }
+
+        if( $this->getStreet2() ) {
+            $resArr[] = $this->getStreet2() . "";
+        }
+
+        if( $this->getCity() ) {
+            $resArr[] = $this->getCity() . "";
+        }
+
+        if( $this->getCountry() ) {
+            $resArr[] = $this->getCountry()->getOptimalName() . "";
+        }
+
+        return implode(", ",$resArr);
+    }
+
     public function __toString() {
 
         if( $this->getStreet1() && $this->getStreet2() ) {

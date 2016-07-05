@@ -1152,7 +1152,7 @@ class FellowshipApplication extends BaseUserAttributes {
     }
     
     //$trainingTypeName: Medical, Residency, GME
-    public function getSchoolByTrainingTypeName( $trainingTypeName ) {
+    public function getSchoolByTrainingTypeName( $trainingTypeName, $withGeoLocation=false, $withResidencySpecialty=false ) {
         $schoolName = "";
         
         $items = $this->getTrainings();
@@ -1163,6 +1163,15 @@ class FellowshipApplication extends BaseUserAttributes {
                 if( $item->getCompletionDate() ) {
                     $transformer = new DateTimeToStringTransformer(null,null,'Y');                            
                     $schoolName = $schoolName . ", " . $transformer->transform($item->getCompletionDate());
+                }
+                if( $withGeoLocation && $item->getGeoLocation() ) {
+                    $locationStr = $item->getGeoLocation()->getFullGeoLocation();
+                    if( $locationStr ) {
+                        $schoolName = $schoolName . "<br>" . $locationStr;
+                    }
+                }
+                if( $withResidencySpecialty && $item->getResidencySpecialty() ) {
+                    $schoolName = $schoolName . "<br>" . $item->getResidencySpecialty();
                 }
                 break;
             }
@@ -1284,6 +1293,38 @@ class FellowshipApplication extends BaseUserAttributes {
 //    }
 
 
+    //School Name, Finish Date
+    //City, Country Abbreviation such as USA (Full name of country if not available)
+    public function getMedicalSchoolDescription() {
+        $resArr = array();
+        $name = $this->getSchoolByTrainingTypeName("Medical",true);
+        $resArr[] = $name;
+
+        return implode(", ",$resArr);
+    }
+
+    //AP, CP, AP/CP, other
+    //Residency Institution, Finish Date
+    //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
+    public function getResidencyDescription() {
+        $resArr = array();
+
+        $name = $this->getSchoolByTrainingTypeName("Residency",true,true);
+        $resArr[] = $name;
+
+        return implode(", ",$resArr);
+    }
+
+    //Area of training
+    //GME Institution, Finish Date
+    //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
+    public function getPostResidencyFellowshipDescription() {
+        $resArr = array();
+        $name = $this->getSchoolByTrainingTypeName("Post-Residency Fellowship",true,true);
+        $resArr[] = $name;
+
+        return implode(", ",$resArr);
+    }
 
     public function __toString() {
         return "FellowshipApplication";

@@ -290,6 +290,10 @@
                 {#<th>{{ knp_pagination_sortable(entities, 'C2', 'examinations.COMLEXLevel2Score') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>#}
 
+                <th>Medical School</th>
+                <th>Residency</th>
+                <th>Post-Residency trainings</th>
+
                 <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
 
@@ -486,6 +490,15 @@
                     {#<td>#}
                         {#{{ c3 }}#}
                     {#</td>#}
+                    <td>
+                        {{ entity.getMedicalSchoolDescription()|raw }}
+                    </td>
+                    <td>
+                        {{ entity.getResidencyDescription()|raw }}
+                    </td>
+                    <td>
+                        {{ entity.getPostResidencyFellowshipDescription()|raw }}
+                    </td>
 
                     {#Add a black tooltip over the interview date link in the Interview Date column with text "Download Itinerary"#}
                     <td class="rowlink-skip">

@@ -7,7 +7,7 @@ parameters:
 twig:
     globals:
         fellapp_sitename: %fellapp.sitename%
-
+        fellapp_util: "@fellapp_util"
 
 services:
 
