@@ -175,7 +175,7 @@ class FellAppImportPopulateUtil {
 
         $datafiles = $query->getResult();
 
-        //$logger->notice("Start populating " . count($datafiles) . " data files on the server.");
+        $logger->notice("Start populating " . count($datafiles) . " data files (not populated applications) on the server.");
 
         $populatedCount = 0;
 
