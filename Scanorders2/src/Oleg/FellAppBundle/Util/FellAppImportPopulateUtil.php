@@ -638,6 +638,10 @@ class FellAppImportPopulateUtil {
 
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
+            if( !$googleFormId ) {
+                $logger->notice('Skip this fell application, because googleFormId does not exists. googleFormId='.$googleFormId);
+                continue; //skip this fell application, because it already exists in DB
+            }
 
             try {
 
@@ -665,7 +669,7 @@ class FellAppImportPopulateUtil {
 
                 $googleForm = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
                 if( $googleForm ) {
-                    $logger->notice('skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
+                    $logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this fell application, because it already exists in DB
                 }
 
