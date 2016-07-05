@@ -2,9 +2,8 @@
     {% if app.environment == 'prod' %}
         {% if user_security_utility.getSiteSettingParameter('environment') != 'live' %}
             {% if user_security_utility.getSiteSettingParameter('environment') != 'dev' %}
-                {#{{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}#}
-                {#http://www.google.ca/#}
-                <meta http-equiv="refresh" content="0; url={{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}" />
+                {#redirect#}
+                {#<meta http-equiv="refresh" content="0; url={{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}" />#}
             {% endif %}
         {% endif %}
     {% endif %}

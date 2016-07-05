@@ -1467,7 +1467,12 @@ class FellAppImportPopulateUtil {
             $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Residency');
             $training->setTrainingType($trainingType);
         }
-        if( strpos($typeStr,'gme') !== false ) {
+        if( strpos($typeStr,'gme1') !== false ) {
+            //Post-Residency Fellowship
+            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Post-Residency Fellowship');
+            $training->setTrainingType($trainingType);
+        }
+        if( strpos($typeStr,'gme2') !== false ) {
             $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('GME');
             $training->setTrainingType($trainingType);
         }

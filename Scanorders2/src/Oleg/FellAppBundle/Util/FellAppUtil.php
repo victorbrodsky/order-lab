@@ -555,9 +555,10 @@ class FellAppUtil {
         $this->addTrainingByType($fellowshipApplication,"Graduate",2);
         $this->addTrainingByType($fellowshipApplication,"Medical",3);
         $this->addTrainingByType($fellowshipApplication,"Residency",4);
+        $this->addTrainingByType($fellowshipApplication,"Post-Residency Fellowship",5);
 
-        $maxNumber = 2;
-        $this->addTrainingByType($fellowshipApplication,"GME",5,$maxNumber);
+        $maxNumber = 1;
+        $this->addTrainingByType($fellowshipApplication,"GME",6,$maxNumber);
         //$this->addTrainingByType($fellowshipApplication,"GME",6,$maxNumber);
 
         $maxNumber = 3;

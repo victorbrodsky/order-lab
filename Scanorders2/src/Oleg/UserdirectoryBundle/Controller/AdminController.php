@@ -4123,17 +4123,18 @@ class AdminController extends Controller
     public function generateTrainingTypeList() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+        //$entities = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findAll();
+        //if( $entities ) {
+        //    return -1;
+        //}
 
         $elements = array(
             'Undergraduate',
             'Graduate',
             'Medical',
             'Residency',
+            'Post-Residency Fellowship',
             'GME',
             'Other'
         );
@@ -4142,6 +4143,11 @@ class AdminController extends Controller
 
         $count = 10;
         foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
 
             $entity = new TrainingTypeList();
             $this->setDefaultList($entity,$count,$username,$name);

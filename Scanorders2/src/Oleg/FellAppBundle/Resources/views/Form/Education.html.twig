@@ -42,6 +42,12 @@
             {% set degreeLabel = null %}
             {% set showTraining = true %}
         {% endif %}
+        {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Post-Residency Fellowship' %}
+            {% set trainingLabel = "Post-Residency Fellowship:" %}
+            {% set majorLabel = "Area of training:" %}
+            {% set degreeLabel = null %}
+            {% set showTraining = true %}
+        {% endif %}
         {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'GME' %}
             {% set trainingLabel = "Other GME, if applicable:" %}
             {% set majorLabel = "Area of training:" %}
@@ -88,7 +94,7 @@
 
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
-                            {{ form_row(training.residencySpecialty,{'label':'AP, CP, AP/CP, other'}) }}
+                            {{ form_row(training.residencySpecialty,{'label':'Area of Training (AP, CP, AP/CP, other)'}) }}
                         </div>
                     </div>
 

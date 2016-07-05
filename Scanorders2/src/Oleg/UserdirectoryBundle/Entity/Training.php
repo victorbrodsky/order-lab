@@ -89,15 +89,13 @@ class Training extends BaseUserAttributes
     private $institution;
 
     /**
-     * Graduate, Undergraduate, Medical, Residency, GME, Other
+     * Graduate, Undergraduate, Medical, Residency, Post-Residency Fellowship, GME, Other
      *
      * @ORM\ManyToOne(targetEntity="TrainingTypeList")
      */
     private $trainingType;
 
-    /**
-     * Graduate, Undergraduate, Medical, Residency, GME, Other
-     *
+    /***
      * @ORM\ManyToOne(targetEntity="JobTitleList", cascade={"persist","remove"})
      */
     private $jobTitle;
