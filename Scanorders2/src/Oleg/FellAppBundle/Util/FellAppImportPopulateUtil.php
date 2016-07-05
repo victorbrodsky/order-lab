@@ -639,7 +639,8 @@ class FellAppImportPopulateUtil {
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
             if( !$googleFormId ) {
-                $logger->notice('Skip this fell application, because googleFormId does not exists. googleFormId='.$googleFormId);
+                $logger->error('Skip this fell application, because googleFormId does not exists. googleFormId='.$googleFormId);
+                $logger->error('rowData='.print_r($rowData));
                 continue; //skip this fell application, because it already exists in DB
             }
 
