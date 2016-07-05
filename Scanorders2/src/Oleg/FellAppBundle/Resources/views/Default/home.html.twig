@@ -282,13 +282,13 @@
                 <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicantinfos.lastName') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicantinfos.firstName') }}</th>
 
-                <th>{{ knp_pagination_sortable(entities, 'U1', 'examinations.USMLEStep1Score') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'U2', 'examinations.USMLEStep2CKScore')}}</th>
-                <th>{{ knp_pagination_sortable(entities, 'U3', 'examinations.USMLEStep3Score') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'U1 [C1]', 'examinations.USMLEStep1Score') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'U2 CK [C2]', 'examinations.USMLEStep2CKScore')}}</th>
+                <th>{{ knp_pagination_sortable(entities, 'U3 [C3]', 'examinations.USMLEStep3Score') }}</th>
 
-                <th>{{ knp_pagination_sortable(entities, 'C1', 'examinations.COMLEXLevel1Score') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'C2', 'examinations.COMLEXLevel2Score') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>
+                {#<th>{{ knp_pagination_sortable(entities, 'C1', 'examinations.COMLEXLevel1Score') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'C2', 'examinations.COMLEXLevel2Score') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>#}
 
                 <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
@@ -464,29 +464,28 @@
 
 
                     <td>
-                        {{ u1 }}
+                        {{ u1 }}{% if c1 %} [{{ c1 }}]{% endif %}
                     </td>
 
                     <td>
-                        {{ u2 }}
+                        {{ u2 }}{% if c2 %} [{{ c2 }}]{% endif %}
                     </td>
 
                     <td>
-                        {{ u3 }}
+                        {{ u3 }}{% if c3 %} [{{ c3 }}]{% endif %}
                     </td>
 
+                    {#<td>#}
+                        {#{{ c1 }}#}
+                    {#</td>#}
 
-                    <td>
-                        {{ c1 }}
-                    </td>
+                    {#<td>#}
+                        {#{{ c2 }}#}
+                    {#</td>#}
 
-                    <td>
-                        {{ c2 }}
-                    </td>
-
-                    <td>
-                        {{ c3 }}
-                    </td>
+                    {#<td>#}
+                        {#{{ c3 }}#}
+                    {#</td>#}
 
                     {#Add a black tooltip over the interview date link in the Interview Date column with text "Download Itinerary"#}
                     <td class="rowlink-skip">
@@ -987,18 +986,18 @@
 
         function attachTitleToScores() {
             $('.sortable').each( function() {
-                var title = this.title;
-                //console.log("title="+title);
+                //var title = this.title;
+                console.log("this.title="+this.title);
                 var tooltipStr = null;
                 switch( this.title ) {
-                    case 'U1':
-                        tooltipStr = 'USMLE Step 1 Score';
+                    case 'U1 [C1]':
+                        tooltipStr = 'USMLE Step 1 and/or COMLEX 1 Score';
                         break;
-                    case 'U2':
-                        tooltipStr = 'USMLE Step 2 CK Score';
+                    case 'U2 CK [C2]':
+                        tooltipStr = 'USMLE Step 2 CK and/or COMLEX 2 Score';
                         break;
-                    case 'U3':
-                        tooltipStr = 'USMLE Step 3 Score';
+                    case 'U3 [C3]':
+                        tooltipStr = 'USMLE Step 3 and/or COMLEX 3 Score';
                         break;
                     case 'C1':
                         tooltipStr = 'COMLEX 1 Score';
