@@ -12,7 +12,7 @@ parameters:
   department_name:
 
   #ldap
-  ldaphost: cumcdcp02.a.wcmc-ad.net
+  ldaphost: a.wcmc-ad.net
   ldapport: 389
   ldapou: a.wcmc-ad.net
   ldapusername: svc_aperio_spectrum

@@ -1116,7 +1116,7 @@ class AdminController extends Controller
 
             "smtpServerAddress" => "smtp.med.cornell.edu",
 
-            "aDLDAPServerAddress" => "cumcdcp02.a.wcmc-ad.net",
+            "aDLDAPServerAddress" => "a.wcmc-ad.net",
             "aDLDAPServerPort" => "389",
             "aDLDAPServerOu" => "a.wcmc-ad.net",    //used for DC
             "aDLDAPServerAccountUserName" => "svc_aperio_spectrum",

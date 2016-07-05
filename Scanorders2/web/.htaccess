@@ -44,6 +44,11 @@ DirectoryIndex app.php
 
     # Rewrite all other queries to the front controller.
     RewriteRule .? %{ENV:BASE}/app.php [L]
+
+    # MAINTENANCE-PAGE REDIRECT
+#    RewriteRule .* /under-construction [R=302,L]
+#    RewriteRule .* http://www.google.com/ [R=302,L]
+
 </IfModule>
 
 <IfModule !mod_rewrite.c>
@@ -55,3 +60,5 @@ DirectoryIndex app.php
         # RedirectTemp cannot be used instead
     </IfModule>
 </IfModule>
+
+

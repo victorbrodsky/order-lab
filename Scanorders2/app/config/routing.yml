@@ -3,6 +3,10 @@ main_common_home:
     path:      /
     defaults:  { _controller: OlegUserdirectoryBundle:Home:mainCommonHome }
 
+main_under_construction:
+    path:      /under-construction
+    defaults:  { _controller: OlegUserdirectoryBundle:Home:underConstruction }
+
 #order is important: base bundle userdirectory must be the last one
 oleg_orderform:
     resource: "@OlegOrderformBundle/Controller/"

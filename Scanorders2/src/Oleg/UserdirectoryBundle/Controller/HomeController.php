@@ -44,6 +44,14 @@ class HomeController extends Controller {
         );
     }
 
+    /**
+     * @Route("/under-construction", name="under_construction")
+     */
+    public function underConstructionAction() {
+        return $this->render('OlegUserdirectoryBundle:Default:under_construction.html.twig');
+    }
+
+
 
 //    /**
 //     * @Route("/admin/list-manager/", name="platformlistmanager-list")
