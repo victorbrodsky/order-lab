@@ -382,7 +382,7 @@ class FellAppUtil {
     }
 
     //send confirmation email to the corresponding Fellowship director and coordinator
-    public function sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $user ) {
+    public function sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $applicant ) {
         $fellappUtil = $this->container->get('fellapp_util');
         $logger = $this->container->get('logger');
 
@@ -392,7 +392,7 @@ class FellAppUtil {
         $logger->notice("Send confirmation email (fellowship application ".$fellowshipApplication->getId()." populated in DB) to the directors and coordinators emails " . implode(", ",$responsibleEmails));
 
         //[FellowshipType Fellowship] FirstNameOfApplicant LastNameOfApplicant's application received
-        $populatedSubjectFellApp = "[".$fellowshipApplication->getFellowshipSubspecialty()." Fellowship] ".$user->getUsernameShortest()."'s application received";
+        $populatedSubjectFellApp = "[".$fellowshipApplication->getFellowshipSubspecialty()." Fellowship] ".$applicant->getUsernameShortest()."'s application received";
 
         //FirstNameOfApplicant LastNameOfApplicant has submitted a new application to your FellowshipType StartDate'sYear(suchAs2018) fellowship
         // on SubmissionDate and you can access it here: LinkToGeneratedApplicantPDF.
@@ -407,7 +407,7 @@ class FellAppUtil {
         );
 
         $linkToChangeStatusOfApplicationToPriority = $this->container->get('router')->generate(
-            'fellapp_status',
+            'fellapp_status_email',
             array(
                 'id' => $fellowshipApplication->getId(),
                 'status' => 'priority'
@@ -420,7 +420,7 @@ class FellAppUtil {
         $creationDateStr = $creationDate->format('m/d/Y h:i A T');
 
         $break = "\r\n";
-        $populatedBodyFellApp = $user->getUsernameShortest()." has submitted a new application to your ".$fellowshipApplication->getFellowshipSubspecialty().
+        $populatedBodyFellApp = $applicant->getUsernameShortest()." has submitted a new application to your ".$fellowshipApplication->getFellowshipSubspecialty().
             " ".$fellowshipApplication->getStartDate()->format('Y')."'s fellowship on ".$creationDateStr.
             " and you can access it here: ".$break.$linkToGeneratedApplicantPDF;
         $populatedBodyFellApp .= $break.$break."To mark this application as priority, please click the following link and log in if prompted:".

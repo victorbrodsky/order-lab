@@ -1186,7 +1186,8 @@ class FellAppController extends Controller {
 
 
     /**
-     * @Route("/status/{id}/{status}", name="fellapp_status")
+     * @Route("/change-status/{id}/{status}", name="fellapp_status")
+     * @Route("/status/{id}/{status}", name="fellapp_status_email")
      * @Method("GET")
      */
     public function statusAction( Request $request, $id, $status ) {
