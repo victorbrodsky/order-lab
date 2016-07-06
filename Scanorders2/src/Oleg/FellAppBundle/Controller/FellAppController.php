@@ -1212,6 +1212,10 @@ class FellAppController extends Controller {
             $event
         );
 
+        if( $request->get('_route') == 'fellapp_status_email' ) {
+            return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
+        }
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode("ok"));
