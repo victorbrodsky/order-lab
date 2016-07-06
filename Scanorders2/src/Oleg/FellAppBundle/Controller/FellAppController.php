@@ -436,19 +436,6 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        //testing
-        $fellappUtil = $this->container->get('fellapp_util');
-//        $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($entity);
-//        print_r($directorEmails);
-//        echo "<br><br>";
-//        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
-//        print_r($coordinatorEmails);
-//        echo "<br><br>";
-//        $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
-//        print_r($responsibleEmails);
-//        echo "<br><br>";
-        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation( $entity, $user );
-
         //user who has the same fell type can view or edit
         //can use hasFellappPermission or isGranted("read",$entity). isGranted("read",$entity) fellapp voter contains hasFellappPermission
         $fellappUtil = $this->container->get('fellapp_util');

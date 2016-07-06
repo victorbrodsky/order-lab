@@ -1092,53 +1092,11 @@ class FellAppImportPopulateUtil {
                     }
                 }
 
-                if( $environment == "live" || 1 ) {
+                //if( $environment == "live" ) {
                     //send confirmation email to the corresponding Fellowship director and coordinator
-//                    $fellappUtil = $this->container->get('fellapp_util');
-//                    $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellowshipApplication);
-//                    $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellowshipApplication);
-//                    $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
-//                    $logger->notice("Send confirmation email (fellowship application ".$fellowshipApplication->getId()." populated in DB) to the directors and coordinators emails " . implode(", ",$responsibleEmails));
-//
-//                    //[FellowshipType Fellowship] FirstNameOfApplicant LastNameOfApplicant's application received
-//                    $populatedSubjectFellApp = "[".$fellowshipApplication->getFellowshipSubspecialty()." Fellowship] ".$user->getUsernameShortest()."'s application received";
-//
-//                    //FirstNameOfApplicant LastNameOfApplicant has submitted a new application to your FellowshipType StartDate'sYear(suchAs2018) fellowship
-//                    // on SubmissionDate and you can access it here: LinkToGeneratedApplicantPDF.
-//                    //To mark this application as priority, please click the following link and log in if prompted:
-//                    //LinkToChangeStatusOfApplicationToPriority
-//                    $linkToGeneratedApplicantPDF = $this->container->get('router')->generate(
-//                        'fellapp_view_pdf',
-//                        array(
-//                            'id' => $fellowshipApplication->getId()
-//                        ),
-//                        UrlGeneratorInterface::ABSOLUTE_URL
-//                    );
-//
-//                    $linkToChangeStatusOfApplicationToPriority = $this->container->get('router')->generate(
-//                        'fellapp_status',
-//                        array(
-//                            'id' => $fellowshipApplication->getId(),
-//                            'status' => 'priority'
-//                        ),
-//                        UrlGeneratorInterface::ABSOLUTE_URL
-//                    );
-//
-//                    $creationDate = $fellowshipApplication->getCreatedate();
-//                    $creationDate->setTimezone(new DateTimeZone('America/New_York'));
-//                    $creationDateStr = format('m/d/Y h:i A T');
-//
-//                    $break = "\r\n";
-//                    $populatedBodyFellApp = $user->getUsernameShortest()." has submitted a new application to your ".$fellowshipApplication->getFellowshipSubspecialty().
-//                        " ".$fellowshipApplication->getStartDate()->format('Y')."'s fellowship on ".$creationDateStr.
-//                        " and you can access it here: ".$break.$linkToGeneratedApplicantPDF;
-//                    $populatedBodyFellApp .= $break.$break."To mark this application as priority, please click the following link and log in if prompted:".
-//                        $break.$linkToChangeStatusOfApplicationToPriority;
-//
-//                    $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
                     $fellappUtil = $this->container->get('fellapp_util');
                     $fellappUtil->sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $user );
-                }
+                //}
 
                 //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
                 if( $deleteSourceRow ) {
