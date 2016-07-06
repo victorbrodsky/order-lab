@@ -4202,11 +4202,11 @@ class AdminController extends Controller
     public function generateFellAppStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+        //$entities = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findAll();
+        //if( $entities ) {
+        //    return -1;
+        //}
 
         $elements = array(
             'active'=>'Active',
@@ -4214,7 +4214,8 @@ class AdminController extends Controller
             'interviewee'=>'Interviewee',
             'onhold'=>'On Hold',
             'reject'=>'Rejected',
-            'hide'=>'Hidden',
+            //'hide'=>'Hidden',
+            'priority'=>'Priority',
             'archive'=>'Archived',
         );
 
@@ -4222,6 +4223,11 @@ class AdminController extends Controller
 
         $count = 10;
         foreach( $elements as $name=>$action ) {
+
+            $listEntity = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
 
             $entity = new FellAppStatus();
             $this->setDefaultList($entity,$count,$username,$name);

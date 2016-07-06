@@ -29,6 +29,9 @@
 {% if entity.appStatus.name == 'onhold' %}
     {% set trclassname = "order-onhold-status" %}
 {% endif %}
+    {% if entity.appStatus.name == 'priority' %}
+        {% set trclassname = "alert alert-success" %}
+    {% endif %}
 {% endif %}
 
 {% if cycle != "new" %}

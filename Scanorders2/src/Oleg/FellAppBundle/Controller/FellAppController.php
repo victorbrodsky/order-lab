@@ -86,7 +86,8 @@ class FellAppController extends Controller {
         $interviewee = $filterform['interviewee']->getData();
         $active = $filterform['active']->getData();
         $reject = $filterform['reject']->getData();
-        $onhold = $filterform['onhold']->getData();
+        //$onhold = $filterform['onhold']->getData();
+        $priority = $filterform['priority']->getData();
         //$page = $request->get('page');
         //echo "active=".$active."<br>";
         //echo "filter=".$filter."<br>";
@@ -113,7 +114,8 @@ class FellAppController extends Controller {
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
-                    'filter[onhold]' => 1,
+                    //'filter[onhold]' => 1,
+                    'filter[priority]' => 1,
                     'filter[filter]' => $fellowshipTypeId,
                 )
             ) );
@@ -210,8 +212,13 @@ class FellAppController extends Controller {
             $searchFlag = true;
         }
 
-        if( $onhold ) {
-            $orWhere[] = "appStatus.name = 'onhold'";
+//        if( $onhold ) {
+//            $orWhere[] = "appStatus.name = 'onhold'";
+//            $searchFlag = true;
+//        }
+
+        if( $priority ) {
+            $orWhere[] = "appStatus.name = 'priority'";
             $searchFlag = true;
         }
 
@@ -287,8 +294,11 @@ class FellAppController extends Controller {
         $reject = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId,$startYearStr);
         $rejectTotal = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId);
 
-        $onhold = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId,$startYearStr);
-        $onholdTotal = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId);
+        //$onhold = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId,$startYearStr);
+        //$onholdTotal = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId);
+
+        $priority = $fellappUtil->getFellAppByStatusAndYear('priority',$fellSubspecId,$startYearStr);
+        $priorityTotal = $fellappUtil->getFellAppByStatusAndYear('priority',$fellSubspecId);
 
         $idsArr = array();
         foreach( $fellApps as $fellApp ) {
@@ -334,8 +344,10 @@ class FellAppController extends Controller {
             'activeTotal' => count($activeTotal),
             'reject' => count($reject),
             'rejectTotal' => count($rejectTotal),
-            'onhold' => count($onhold),
-            'onholdTotal' => count($onholdTotal),
+            //'onhold' => count($onhold),
+            //'onholdTotal' => count($onholdTotal),
+            'priority' => count($priority),
+            'priorityTotal' => count($priorityTotal),
             'complete' => count($complete),
             'completeTotal' => count($completeTotal),
             'interviewee' => count($interviewee),
@@ -1165,20 +1177,19 @@ class FellAppController extends Controller {
      */
     public function statusAction( Request $request, $id, $status ) {
 
-        //echo "status <br>";
-        if( false == $this->get('security.context')->isGranted("changestatus","FellowshipApplication") ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-        }
-
-        $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
+        //$logger = $this->container->get('logger');
+        //$logger->notice('statusAction: status='.$status);
 
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
-        
+
+        if( false == $this->get('security.context')->isGranted("update","FellowshipApplication") ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         $event = $this->changeFellAppStatus($entity, $status, $request);
 
         $this->get('session')->getFlashBag()->add(

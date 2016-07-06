@@ -162,6 +162,21 @@
                     &nbsp;&nbsp;
 
                     <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.priority) }}   {{ form_label(fellappfilter.priority) }}
+                        <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[priority]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ priority }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[priority]':1,'filter[filter]':filter}) }}">{{ priorityTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('priority') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, complete, completeTotal, 'complete' ) }}#}
                     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
@@ -193,21 +208,21 @@
                     </div>
                     &nbsp;&nbsp;
 
-                    <div style="white-space: nowrap; display: inline;">
-                    {{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }}
-                    {#{{ fellappmacros.addBadge( filter, currentYear, onhold, onholdTotal, 'onhold' ) }}#}
-                    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-                        {{ onhold }}
-                    </a>
-                    </span>
-                    {{ fellappmacros.addSlush() }}
-                    <span class="badge" data-toggle="tooltip" title="Total">
-                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">{{ onholdTotal }}</a>
-                    </span>
-                    {{ fellappmacros.addLegend('onhold') }}
-                    </div>
-                    &nbsp;&nbsp;
+                    {#<div style="white-space: nowrap; display: inline;">#}
+                    {#{{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }}#}
+                    {#<span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">#}
+                    {#<a style="color: white;" href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+                        {#{{ onhold }}#}
+                    {#</a>#}
+                    {#</span>#}
+                    {#{{ fellappmacros.addSlush() }}#}
+                    {#<span class="badge" data-toggle="tooltip" title="Total">#}
+                    {#<a style="color: white;" href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">{{ onholdTotal }}</a>#}
+                    {#</span>#}
+                    {#{{ fellappmacros.addLegend('onhold') }}#}
+                    {#</div>#}
+                    {#&nbsp;&nbsp;#}
+
 
                     <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }}
@@ -350,8 +365,12 @@
                     {% set trclassname = "order-reject-status" %}
                 {% endif %}
 
-                {% if entity.appStatus.name == 'onhold' %}
-                    {% set trclassname = "order-onhold-status" %}
+                {#{% if entity.appStatus.name == 'onhold' %}#}
+                    {#{% set trclassname = "order-onhold-status" %}#}
+                {#{% endif %}#}
+
+                {% if entity.appStatus.name == 'priority' %}
+                    {% set trclassname = "success" %}
                 {% endif %}
                 {#EOF Set row color#}
 
@@ -706,6 +725,16 @@
                                             </li>
                                         {% endif %}
 
+                                        {% if entity.appStatus.name != 'priority' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to mark this Application as Priority?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priority' }, true) }}">Mark as Priority
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
                                         {% if entity.appStatus.name != 'complete' %}
                                             {% set filter = app.request.get('filter') %}
                                             <li>
@@ -720,9 +749,9 @@
                                         {% if entity.appStatus.name != 'interviewee' %}
                                             <li>
                                                 <a
-                                                        general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
+                                                    general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -732,23 +761,23 @@
                                         {% if entity.appStatus.name != 'reject' %}
                                             <li>
                                                 <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected
                                                 </a>
                                             </li>
                                         {% endif %}
 
 
-                                        {% if entity.appStatus.name != 'onhold' %}
-                                            <li>
-                                                <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'On Hold'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'onhold' }, true) }}">Put On Hold
-                                                </a>
-                                            </li>
-                                        {% endif %}
+                                        {#{% if entity.appStatus.name != 'onhold' %}#}
+                                            {#<li>#}
+                                                {#<a#}
+                                                        {#general-data-confirm="Are you sure you want to change status of this Application to 'On Hold'?"#}
+                                                        {#general-data-callback="refreshpage"#}
+                                                        {#href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'onhold' }, true) }}">Put On Hold#}
+                                                {#</a>#}
+                                            {#</li>#}
+                                        {#{% endif %}#}
 
 
                                         {% if entity.appStatus.name != 'hide' %}
