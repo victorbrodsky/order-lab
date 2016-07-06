@@ -1257,7 +1257,9 @@ class FellAppController extends Controller {
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-            $emailBody = $emailSubject." on ".date('m/d/Y H:i').".".$break.$break;
+            $currentDate = new \DateTime("now", new \DateTimeZone('America/New_York') );
+            $currentDateStr = $currentDate->format('m/d/Y H:i A');
+            $emailBody = $emailSubject." on ".$currentDateStr.".".$break.$break;
             $emailBody .= "Link to the application:".$break;
             $emailBody .= $applicationLink;
             $emailBody .= $break.$break."Download the Application PDF:".$break;

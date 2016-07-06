@@ -1122,9 +1122,13 @@ class FellAppImportPopulateUtil {
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
 
+                    $creationDate = $fellowshipApplication->getCreatedate();
+                    $creationDate->setTimezone(new DateTimeZone('America/New_York'));
+                    $creationDateStr = format('m/d/Y H:i A');
+
                     $break = "\r\n";
                     $populatedBodyFellApp = $user->getUsernameShortest()." has submitted a new application to your ".$fellowshipApplication->getFellowshipSubspecialty().
-                        " ".$fellowshipApplication->getStartDate()->format('Y')."'s fellowship on ".$fellowshipApplication->getCreatedate()->format('m/d/Y H:i').
+                        " ".$fellowshipApplication->getStartDate()->format('Y')."'s fellowship on ".$creationDateStr.
                         " and you can access it here: ".$break.$linkToGeneratedApplicantPDF;
                     $populatedBodyFellApp .= $break.$break."To mark this application as priority, please click the following link and log in if prompted:".
                         $break.$linkToChangeStatusOfApplicationToPriority;
