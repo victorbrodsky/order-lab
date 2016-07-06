@@ -1223,7 +1223,7 @@ class FellAppController extends Controller {
         $em->persist($fellapp);
         $em->flush();
 
-        //TODO: Every time an application is marked as "Priority", send an email to the user(s) with the corresponding "Fellowship Prpgram Coordinator" role (Cytopathology, etc), - in our case it will be Jessica - saying:
+        //Every time an application is marked as "Priority", send an email to the user(s) with the corresponding "Fellowship Prpgram Coordinator" role (Cytopathology, etc), - in our case it will be Jessica - saying:
         if( $status == 'priority' ) {
             $break = "\r\n";
             $fellappUtil = $this->container->get('fellapp_util');
@@ -1258,7 +1258,7 @@ class FellAppController extends Controller {
             );
 
             $currentDate = new \DateTime("now", new \DateTimeZone('America/New_York') );
-            $currentDateStr = $currentDate->format('m/d/Y H:i TZ');
+            $currentDateStr = $currentDate->format('m/d/Y H:i U');
             $emailBody = $emailSubject." on ".$currentDateStr.".".$break.$break;
             $emailBody .= "Link to the application:".$break;
             $emailBody .= $applicationLink;
