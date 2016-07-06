@@ -42,7 +42,7 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('USMLEStep1Score', null, array(
             'label' => 'Score:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control digit-mask')
         ));
         $builder->add('USMLEStep1Percentile', null, array(
             'label' => 'Percentile:',
@@ -59,7 +59,7 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('USMLEStep2CKScore', null, array(
             'label' => 'CK - Score (optional):',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control digit-mask')
         ));
         $builder->add('USMLEStep2CKPercentile', null, array(
             'label' => 'Percentile:',
@@ -75,7 +75,7 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('USMLEStep2CSScore', null, array(
             'label' => 'CS - Score (optional):',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control digit-mask')
         ));
         $builder->add('USMLEStep2CSPercentile', null, array(
             'label' => 'Percentile:',
@@ -92,7 +92,7 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('USMLEStep3Score', null, array(
             'label' => 'Score (optional):',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control digit-mask')
         ));
         $builder->add('USMLEStep3Percentile', null, array(
             'label' => 'Percentile:',
@@ -126,7 +126,7 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('COMLEXLevel1Score', null, array(
             'label' => 'Score:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control digit-mask')
         ));
         $builder->add('COMLEXLevel1Percentile', null, array(
             'label' => 'Percentile:',
@@ -142,7 +142,7 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('COMLEXLevel2Score', null, array(
             'label' => 'Score (optional):',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control digit-mask')
         ));
         $builder->add('COMLEXLevel2Percentile', null, array(
             'label' => 'Percentile:',
@@ -158,7 +158,7 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('COMLEXLevel3Score', null, array(
             'label' => 'Score (optional):',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control digit-mask')
         ));
         $builder->add('COMLEXLevel3Percentile', null, array(
             'label' => 'Percentile:',

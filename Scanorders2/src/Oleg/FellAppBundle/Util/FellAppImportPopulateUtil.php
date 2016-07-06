@@ -98,7 +98,7 @@ class FellAppImportPopulateUtil {
         $result = "Finish processing Fellowship Application on Google Drive and on server.<br>".
             "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
             ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".count($populatedBackupApplications).
-            ", Forst generated report in queue=".$generatedReport;
+            ", First generated report in queue=".$generatedReport;
 
         $logger = $this->container->get('logger');
         $logger->notice($result);

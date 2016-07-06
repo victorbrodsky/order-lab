@@ -12,6 +12,7 @@ function getAgeDefaultMask() {
     return "f[9][9]";
 }
 
+
 //holder - element holding all fields to apply masking
 function fieldInputMask( holder ) {
 
@@ -80,6 +81,9 @@ function fieldInputMask( holder ) {
         "mask": "[n]", "repeat": 50, "greedy": false
     });
 
+    $('.digit-mask').inputmask("mask", {
+        "mask": "9", "repeat": 50, "greedy": false
+    });
 
     //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
