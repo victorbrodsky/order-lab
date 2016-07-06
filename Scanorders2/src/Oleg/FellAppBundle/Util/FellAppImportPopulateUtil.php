@@ -1124,7 +1124,7 @@ class FellAppImportPopulateUtil {
 
                     $creationDate = $fellowshipApplication->getCreatedate();
                     $creationDate->setTimezone(new DateTimeZone('America/New_York'));
-                    $creationDateStr = format('m/d/Y H:i U');
+                    $creationDateStr = format('m/d/Y H:i T');
 
                     $break = "\r\n";
                     $populatedBodyFellApp = $user->getUsernameShortest()." has submitted a new application to your ".$fellowshipApplication->getFellowshipSubspecialty().
