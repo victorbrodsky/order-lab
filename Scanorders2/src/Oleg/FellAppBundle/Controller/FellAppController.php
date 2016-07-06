@@ -1258,7 +1258,7 @@ class FellAppController extends Controller {
             );
 
             $currentDate = new \DateTime("now", new \DateTimeZone('America/New_York') );
-            $currentDateStr = $currentDate->format('m/d/Y H:i A');
+            $currentDateStr = $currentDate->format('m/d/Y H:i TZD');
             $emailBody = $emailSubject." on ".$currentDateStr.".".$break.$break;
             $emailBody .= "Link to the application:".$break;
             $emailBody .= $applicationLink;
