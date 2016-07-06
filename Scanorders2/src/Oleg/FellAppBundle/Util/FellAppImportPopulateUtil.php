@@ -1094,7 +1094,7 @@ class FellAppImportPopulateUtil {
                 if( $environment == "live" || 1 ) {
                     //send confirmation email to the corresponding Fellowship director and coordinator
                     $fellappUtil = $this->container->get('fellapp_util');
-                    $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellowshipApplication);
+                    $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellowshipApplication);
                     $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellowshipApplication);
                     $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
                     $logger->notice("Send confirmation email (fellowship application ".$fellowshipApplication->getId()." populated in DB) to the directors and coordinators emails " . implode(", ",$responsibleEmails));

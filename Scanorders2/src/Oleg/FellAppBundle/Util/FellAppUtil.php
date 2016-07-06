@@ -32,7 +32,7 @@ use Oleg\UserdirectoryBundle\Util\EmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
-
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class FellAppUtil {
@@ -379,6 +379,55 @@ class FellAppUtil {
         //exit('1');
 
         return $emails;
+    }
+
+    //send confirmation email to the corresponding Fellowship director and coordinator
+    public function sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $user ) {
+        $fellappUtil = $this->container->get('fellapp_util');
+        $logger = $this->container->get('logger');
+
+        $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellowshipApplication);
+        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellowshipApplication);
+        $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+        $logger->notice("Send confirmation email (fellowship application ".$fellowshipApplication->getId()." populated in DB) to the directors and coordinators emails " . implode(", ",$responsibleEmails));
+
+        //[FellowshipType Fellowship] FirstNameOfApplicant LastNameOfApplicant's application received
+        $populatedSubjectFellApp = "[".$fellowshipApplication->getFellowshipSubspecialty()." Fellowship] ".$user->getUsernameShortest()."'s application received";
+
+        //FirstNameOfApplicant LastNameOfApplicant has submitted a new application to your FellowshipType StartDate'sYear(suchAs2018) fellowship
+        // on SubmissionDate and you can access it here: LinkToGeneratedApplicantPDF.
+        //To mark this application as priority, please click the following link and log in if prompted:
+        //LinkToChangeStatusOfApplicationToPriority
+        $linkToGeneratedApplicantPDF = $this->container->get('router')->generate(
+            'fellapp_view_pdf',
+            array(
+                'id' => $fellowshipApplication->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $linkToChangeStatusOfApplicationToPriority = $this->container->get('router')->generate(
+            'fellapp_status',
+            array(
+                'id' => $fellowshipApplication->getId(),
+                'status' => 'priority'
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $creationDate = $fellowshipApplication->getCreatedate();
+        $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
+        $creationDateStr = $creationDate->format('m/d/Y h:i A T');
+
+        $break = "\r\n";
+        $populatedBodyFellApp = $user->getUsernameShortest()." has submitted a new application to your ".$fellowshipApplication->getFellowshipSubspecialty().
+            " ".$fellowshipApplication->getStartDate()->format('Y')."'s fellowship on ".$creationDateStr.
+            " and you can access it here: ".$break.$linkToGeneratedApplicantPDF;
+        $populatedBodyFellApp .= $break.$break."To mark this application as priority, please click the following link and log in if prompted:".
+            $break.$linkToChangeStatusOfApplicationToPriority;
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
     }
 
     public function addDefaultInterviewers( $fellapp ) {
