@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
@@ -1206,6 +1207,7 @@ class FellAppController extends Controller {
     public function changeFellAppStatus($fellapp, $status, $request) {
         
         $logger = $this->container->get('logger');
+        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         
         //get status object
@@ -1221,10 +1223,52 @@ class FellAppController extends Controller {
         $em->persist($fellapp);
         $em->flush();
 
+        //TODO: Every time an application is marked as "Priority", send an email to the user(s) with the corresponding "Fellowship Prpgram Coordinator" role (Cytopathology, etc), - in our case it will be Jessica - saying:
+        if( $status == 'priority' ) {
+            $break = "\r\n";
+            $fellappUtil = $this->container->get('fellapp_util');
+            $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+            $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+            $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+            $logger->notice("Fellowship application ".$fellapp->getId()." status has been marked as Priority to the directors and coordinators emails " . implode(", ",$responsibleEmails));
+
+            //Subject: FirstName LastName has marked FirstName LastName's FellowshipType fellowship application (ID:id#) as "Priority"
+            $emailSubject = $user." has marked ".$fellapp->getUser()->getUsernameShortest()."'s ".$fellapp->getFellowshipSubspecialty().
+                " fellowship application (ID:".$fellapp->getId()." as 'Priority'";
+
+            //Body: FirstName LastName (WCMC CWID: xxx1234) has marked FirstName LastName's FellowshipType
+            // fellowship application (ID:id#) as "Priority" on MM/DD/YYY at HH:MM.
+            //Link to the application:
+            //Clickable Link leading to the application web page
+            //Download the Application PDF:
+            //Clickable link to the PDF of the entire application
+            $applicationLink = $this->container->get('router')->generate(
+                'fellapp_show',
+                array(
+                    'id' => $fellapp->getId(),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $linkToGeneratedApplicantPDF = $this->container->get('router')->generate(
+                'fellapp_view_pdf',
+                array(
+                    'id' => $fellapp->getId()
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $emailBody = $emailSubject." on ".date('m/d/Y H:i').".".$break.$break;
+            $emailBody .= "Link to the application:".$break;
+            $emailBody .= $applicationLink;
+            $emailBody .= $break.$break."Download the Application PDF:".$break;
+            $emailBody .= $linkToGeneratedApplicantPDF;
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->sendEmail( $responsibleEmails, $emailSubject, $emailBody );
+        }
+
         $eventType = 'Fellowship Application Status changed to ' . $statusObj->getAction();
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->get('security.context')->getToken()->getUser();
         $event = $eventType . '; application ID ' . $fellapp->getID() . ' by user ' . $user;
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
         

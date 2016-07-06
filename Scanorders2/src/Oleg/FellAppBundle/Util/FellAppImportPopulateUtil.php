@@ -32,6 +32,7 @@ use Oleg\UserdirectoryBundle\Util\EmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //$fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
@@ -1079,14 +1080,56 @@ class FellAppImportPopulateUtil {
                 //send confirmation email to this applicant for prod server
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
                 if( $environment == "live" ) {
+
+                    //send confirmation email to this applicant
                     $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
                     $confirmationSubjectFellApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectFellApp');
                     $confirmationBodyFellApp = $userSecUtil->getSiteSettingParameter('confirmationBodyFellApp');
                     //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
                     if( $email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp ) {
-                        $logger->notice("Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
+                        $logger->notice("Send confirmation email (fellowship application ".$fellowshipApplication->getId()." populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
                         $emailUtil->sendEmail( $email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp );
                     }
+
+                    //send confirmation email to the corresponding Fellowship director and coordinator
+                    $fellappUtil = $this->container->get('fellapp_util');
+                    $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellowshipApplication);
+                    $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellowshipApplication);
+                    $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+                    $logger->notice("Send confirmation email (fellowship application ".$fellowshipApplication->getId()." populated in DB) to the directors and coordinators emails " . implode(", ",$responsibleEmails));
+
+                    //[FellowshipType Fellowship] FirstNameOfApplicant LastNameOfApplicant's application received
+                    $populatedSubjectFellApp = "[".$fellowshipApplication->getFellowshipSubspecialty()." Fellowship] ".$user->getUsernameShortest()."'s application received";
+
+                    //FirstNameOfApplicant LastNameOfApplicant has submitted a new application to your FellowshipType StartDate'sYear(suchAs2018) fellowship
+                    // on SubmissionDate and you can access it here: LinkToGeneratedApplicantPDF.
+                    //To mark this application as priority, please click the following link and log in if prompted:
+                    //LinkToChangeStatusOfApplicationToPriority
+                    $linkToGeneratedApplicantPDF = $this->container->get('router')->generate(
+                        'fellapp_view_pdf',
+                        array(
+                            'id' => $fellowshipApplication->getId()
+                        ),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $linkToChangeStatusOfApplicationToPriority = $this->container->get('router')->generate(
+                        'fellapp_status',
+                        array(
+                            'id' => $fellowshipApplication->getId(),
+                            'status' => 'priority'
+                        ),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $break = "\r\n";
+                    $populatedBodyFellApp = $user->getUsernameShortest()." has submitted a new application to your ".$fellowshipApplication->getFellowshipSubspecialty().
+                        " ".$fellowshipApplication->getStartDate()->format('Y')."'s fellowship on ".$fellowshipApplication->getCreatedate()->format('m/d/Y H:i').
+                        " and you can access it here: ".$break.$linkToGeneratedApplicantPDF;
+                    $populatedBodyFellApp .= $break.$break."To mark this application as priority, please click the following link and log in if prompted:".
+                        $break.$linkToChangeStatusOfApplicationToPriority;
+
+                    $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
                 }
 
                 //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.

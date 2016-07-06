@@ -319,8 +319,21 @@ class FellAppUtil {
         return false;
     }
 
-    //get coordinator of given fellapp
+    public function getCoordinatorsOfFellAppEmails($fellapp) {
+        return $this->getEmailsOfFellApp( $fellapp, "_COORDINATOR_" );
+    }
+    public function getDirectorsOfFellAppEmails($fellapp) {
+        return $this->getEmailsOfFellApp( $fellapp, "_DIRECTOR_" );
+    }
     public function getCoordinatorsOfFellApp( $fellapp ) {
+        return $this->getUsersOfFellAppByRole( $fellapp, "_COORDINATOR_" );
+    }
+    public function getDirectorsOfFellApp( $fellapp ) {
+        return $this->getUsersOfFellAppByRole( $fellapp, "_DIRECTOR_" );
+    }
+
+    //get coordinator of given fellapp
+    public function getUsersOfFellAppByRole( $fellapp, $roleName ) {
 
         if( !$fellapp ) {
             return null;
@@ -339,7 +352,7 @@ class FellAppUtil {
 
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $roles as $role ) {
-            if( strpos($role,'_COORDINATOR_') !== false ) {
+            if( strpos($role,$roleName) !== false ) {
                 $coordinatorFellTypeRole = $role;
                 break;
             }
@@ -350,14 +363,14 @@ class FellAppUtil {
         return $users;
     }
 
-    public function getCoordinatorsOfFellAppEmails($fellapp) {
+    public function getEmailsOfFellApp( $fellapp, $roleName ) {
 
-        $coordinators = $this->getCoordinatorsOfFellApp( $fellapp );
+        $users = $this->getUsersOfFellAppByRole( $fellapp, $roleName );
 
         $emails = array();
-        if( $coordinators && count($coordinators) > 0 ) {
-            foreach( $coordinators as $coordinator ) {
-                $emails[] = $coordinator->getEmail();
+        if( $users && count($users) > 0 ) {
+            foreach( $users as $user ) {
+                $emails[] = $user->getEmail();
             }
         }
 
