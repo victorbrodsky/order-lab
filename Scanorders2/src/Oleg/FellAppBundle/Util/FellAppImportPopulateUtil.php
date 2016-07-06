@@ -1086,11 +1086,12 @@ class FellAppImportPopulateUtil {
                     $confirmationSubjectFellApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectFellApp');
                     $confirmationBodyFellApp = $userSecUtil->getSiteSettingParameter('confirmationBodyFellApp');
                     //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
-                    if( $email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp ) {
-                        $logger->notice("Send confirmation email (fellowship application ".$fellowshipApplication->getId()." populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
-                        $emailUtil->sendEmail( $email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp );
+                    if ($email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp) {
+                        $logger->notice("Send confirmation email (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
+                        $emailUtil->sendEmail($email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp);
                     }
-
+                }
+                if( $environment == "live" || 1 ) {
                     //send confirmation email to the corresponding Fellowship director and coordinator
                     $fellappUtil = $this->container->get('fellapp_util');
                     $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellowshipApplication);
