@@ -112,6 +112,8 @@ class EmailUtil {
     }
 
     public function checkEmails($emails) {
+        return $emails;
+
         $logger = $this->container->get('logger');
         //$logger->notice("checkEmails: input emails=".print_r($emails));
         if( strpos($emails, ',') !== false ) {
