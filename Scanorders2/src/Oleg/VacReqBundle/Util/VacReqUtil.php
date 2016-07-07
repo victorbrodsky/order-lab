@@ -1438,7 +1438,7 @@ class VacReqUtil
         $overlappedRequests = array();
         //$overlappedIds = array();
         foreach( $requests as $request ) {
-
+            echo 'check reqid='.$request->getId()."<br>";
             $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
 
             //$msg = "";
@@ -1471,10 +1471,12 @@ class VacReqUtil
         //$errorMsg = 'This request ID #'.$entity->getId().' has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
         $errorMsg = null;
         //Your request includes dates (MM/DD/YYYY, MM/DD/YYYY, MM/DD/YYYY) already covered by your previous request(s) (Request ID LINK #1, Request ID LINK #2, Request ID LINK #3). Please exclude these dates from this request before re-submitting.
-        if( count($overlappedRequests) > 1 ) {
+        if( count($overlappedRequests) > 0 ) {
             $dates = array();
             $hrefs = array();
             foreach( $overlappedRequests as $overlappedRequest ) {
+                //echo "overlapped re id=".$overlappedRequest->getId()."<br>";
+
                 $finalDates = $overlappedRequest->getFinalStartEndDates('requestVacation');
                 $dates[] = $finalDates['startDate']->format('m/d/Y')."-".$finalDates['endDate']->format('m/d/Y');
 

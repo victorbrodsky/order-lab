@@ -129,6 +129,7 @@ class RequestController extends Controller
         if( $routeName != "vacreq_carryoverrequest" ) {
             $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for newAction
             if (count($overlappedRequests) > 0) {
+                //exit('error: count overlappedRequests='.count($overlappedRequests));
                 //$errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true );
                 //$form->addError(new FormError($errorMsg));
