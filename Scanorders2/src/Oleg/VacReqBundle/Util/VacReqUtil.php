@@ -2492,8 +2492,11 @@ class VacReqUtil
     //send the general emails to approver and email users with given subject and message body
     public function sendGeneralEmailToApproversAndEmailUsers( $entity, $subject, $originalMessage ) {
 
+        $logger = $this->container->get('logger');
+
         $institution = $entity->getInstitution();
         if( !$institution ) {
+            $logger->error("sendGeneralEmailToApproversAndEmailUsers: Request ".$entity->getId()." does not have institution");
             return null;
         }
 
@@ -2503,7 +2506,6 @@ class VacReqUtil
         //$requestName = $entity->getRequestName();
 
         $approvers = $this->getRequestApprovers($entity);
-
 
 
         //$subject = $requestName." #" . $entity->getId() . " " . ucwords($status);
@@ -2548,7 +2550,9 @@ class VacReqUtil
                     $emailUserEmailArr[] = $emailUserEmail;
                 }
             }
+            $logger->error("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
             if( count($emailUserEmailArr) > 0 ) {
+                $logger->error("sendGeneralEmailToApproversAndEmailUsers: send confirmation emails to ".implode("; ",$emailUserEmailArr));
                 $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
             }
         }
