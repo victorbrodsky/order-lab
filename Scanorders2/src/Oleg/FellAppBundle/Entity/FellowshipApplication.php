@@ -1171,7 +1171,7 @@ class FellowshipApplication extends BaseUserAttributes {
                     if( $schoolName ) {
                         $separator = "<br>";
                     }
-                    $schoolName = $schoolName . $separator . $this->capitalizeIfNotAllCapital($item->getInstitution()) . "";
+                    $schoolName = $schoolName . $separator . $this->capitalizeMultiIfNotAllCapital($item->getInstitution()) . "";
                 }
 
                 //Finish Date
@@ -1193,6 +1193,14 @@ class FellowshipApplication extends BaseUserAttributes {
         }                    
  
         return $schoolName;
+    }
+    function capitalizeMultiIfNotAllCapital($s) {
+        $sArr = explode(' ',$s);
+        $resArr = array();
+        foreach( $sArr as $str ) {
+            $resArr[] = $this->capitalizeIfNotAllCapital($str);
+        }
+        return implode(' ',$resArr);
     }
     function capitalizeIfNotAllCapital($s) {
         if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
