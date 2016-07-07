@@ -2550,9 +2550,9 @@ class VacReqUtil
                     $emailUserEmailArr[] = $emailUserEmail;
                 }
             }
-            $logger->error("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
+            //$logger->notice("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
             if( count($emailUserEmailArr) > 0 ) {
-                $logger->error("sendGeneralEmailToApproversAndEmailUsers: send confirmation emails to ".implode("; ",$emailUserEmailArr));
+                $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send confirmation emails to ".implode("; ",$emailUserEmailArr)." subject=".$subject."; message=".$message);
                 $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
             }
         }
