@@ -93,6 +93,7 @@ class EmailUtil {
 
         $emailRes = $this->container->get('mailer')->send($transport);
 
+        //$logger->notice("sendEmail: email sent. To:".implode(";",$emails)."; CC:".implode("; ",$ccs)."; emailRes=".$emailRes);
         $logger->notice("sendEmail: email sent. emailRes=".$emailRes);
 
         return $emailRes;
