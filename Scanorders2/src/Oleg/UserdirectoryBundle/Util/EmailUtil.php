@@ -33,8 +33,8 @@ class EmailUtil {
         //set_time_limit(0); //set time limit to 600 sec == 10 min
         $userutil = new UserUtil();
 
-        //echo "emails=".$emails."<br>";
-        //echo "ccs=".$ccs."<br>";
+        echo "emails=".$emails."<br>";
+        echo "ccs=".$ccs."<br>";
 
         if( $this->hasConnection() == false ) {
             //exit('no connection');
@@ -57,7 +57,6 @@ class EmailUtil {
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
-        $logger = $this->container->get('logger');
         if( $this->em ) {
             $smtpServerAddress = $userutil->getSiteSetting($this->em,'smtpServerAddress');
             $smtp_host_ip = gethostbyname($smtpServerAddress);
@@ -113,6 +112,8 @@ class EmailUtil {
     }
 
     public function checkEmails($emails) {
+        $logger = $this->container->get('logger');
+        $logger->notice("checkEmails: input emails=".print_r($emails));
         if( strpos($emails, ',') !== false ) {
             return explode(',', $emails);
         } else {
@@ -120,6 +121,9 @@ class EmailUtil {
                 return array($emails);
             }
         }
+        //echo "checkEmails: output emails:<br>";
+        //print_r($emails);
+        $logger->notice("checkEmails: output emails=".print_r($emails));
         return $emails;
     }
 
