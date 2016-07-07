@@ -141,14 +141,24 @@ class TreeController extends Controller {
 
         //echo "type=".$type."<br>";
         if( $type ) {
-            if( $thisid ) {
-                $where = $this->addToWhere($where,"(list.id=:thisid OR list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
-                $params['thisid'] = $thisid;
+            if( $userid ) {
+                if ($thisid) {
+                    $where = $this->addToWhere($where, "(list.id=:thisid OR list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+                    $params['thisid'] = $thisid;
+                } else {
+                    $where = $this->addToWhere($where, "(list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+                }
+                $params['user'] = $userid;
+                $params['type'] = $type;
             } else {
-                $where = $this->addToWhere($where,"(list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+                if ($thisid) {
+                    $where = $this->addToWhere($where, "(list.id=:thisid OR list.type=:type)");
+                    $params['thisid'] = $thisid;
+                } else {
+                    $where = $this->addToWhere($where, "(list.type=:type)");
+                }
+                $params['type'] = $type;
             }
-            $params['user'] = $userid;
-            $params['type'] = $type;
         }
 
         //$query->where($where)->setParameters($params);
@@ -156,7 +166,7 @@ class TreeController extends Controller {
 
         $query = $em->createQuery($dql);
         $query->setParameters($params);
-        echo "dql=".$dql." <br>";
+        //echo "dql=".$dql." <br>";
 
         $entities = $query->getResult();
         //echo "count=".count($entities)."<br>";
