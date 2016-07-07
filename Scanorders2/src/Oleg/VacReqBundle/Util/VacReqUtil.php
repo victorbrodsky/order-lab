@@ -1438,7 +1438,7 @@ class VacReqUtil
         $overlappedRequests = array();
         //$overlappedIds = array();
         foreach( $requests as $request ) {
-            echo 'check reqid='.$request->getId()."<br>";
+            //echo 'check reqid='.$request->getId()."<br>";
             $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
 
             //$msg = "";
