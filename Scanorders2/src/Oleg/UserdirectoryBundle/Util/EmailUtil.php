@@ -29,7 +29,8 @@ class EmailUtil {
     //$ccs: single or array of emails
     public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
 
-        set_time_limit(0); //set time limit to 600 sec == 10 min
+        $logger = $this->container->get('logger');
+        //set_time_limit(0); //set time limit to 600 sec == 10 min
         $userutil = new UserUtil();
 
         //echo "emails=".$emails."<br>";
@@ -63,7 +64,6 @@ class EmailUtil {
             //$logger->notice("smtpServerAddress=".$smtpServerAddress." => smtp_host_ip=".$smtp_host_ip);
             $transport = \Swift_Message::newInstance($smtp_host_ip);
         } else {
-            $logger = $this->container->get('logger');
             $logger->error("this->em is null in sendEmail: use default Swift_Message::newInstance(). subject=".$subject);
             $transport = \Swift_Message::newInstance();
         }
@@ -91,7 +91,11 @@ class EmailUtil {
             )
             */
 
-        return $this->container->get('mailer')->send($transport);
+        $emailRes = $this->container->get('mailer')->send($transport);
+
+        $logger->notice("sendEmail: email sent. emailRes=".$emailRes);
+
+        return $emailRes;
     }
 
     public function checkEmails($emails) {

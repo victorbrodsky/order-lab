@@ -2532,6 +2532,7 @@ class VacReqUtil
         $message = str_replace("###emailuser###",implode("; ",$approversShortNameArr),$originalMessage);
 
         if( count($approverEmailArr) > 0 ) {
+            $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send confirmation emails to approvers=".implode("; ",$approverEmailArr)."; subject=".$subject."; message=".$message);
             $emailUtil->sendEmail($approverEmailArr, $subject, $message, null, null);
         }
 
@@ -2552,7 +2553,7 @@ class VacReqUtil
             }
             //$logger->notice("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
             if( count($emailUserEmailArr) > 0 ) {
-                $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send confirmation emails to ".implode("; ",$emailUserEmailArr)." subject=".$subject."; message=".$message);
+                $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send a copy of the confirmation emails to email users=".implode("; ",$emailUserEmailArr)."; subject=".$subject."; message=".$message);
                 $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
             }
         }
