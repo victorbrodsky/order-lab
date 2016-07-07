@@ -112,9 +112,12 @@ class EmailUtil {
     }
 
     public function checkEmails($emails) {
-        return $emails;
 
-        $logger = $this->container->get('logger');
+        if( is_array($emails) ) {
+            return $emails;
+        }
+
+        //$logger = $this->container->get('logger');
         //$logger->notice("checkEmails: input emails=".print_r($emails));
         if( strpos($emails, ',') !== false ) {
             return explode(',', $emails);
@@ -123,9 +126,7 @@ class EmailUtil {
                 return array($emails);
             }
         }
-        //echo "checkEmails: output emails:<br>";
-        //print_r($emails);
-        $logger->notice("checkEmails: output emails=".implode(";",$emails));
+        //$logger->notice("checkEmails: output emails=".implode(";",$emails));
         return $emails;
     }
 
