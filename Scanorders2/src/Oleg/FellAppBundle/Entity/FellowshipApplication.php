@@ -264,12 +264,14 @@ class FellowshipApplication extends BaseUserAttributes {
     private $avatars;
 
     /**
+     * //"completionDate" = "DESC", "orderinlist" = "ASC"
+     *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Training", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_training",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id")}
      *      )
-     * @ORM\OrderBy({"completionDate" = "DESC", "orderinlist" = "ASC"})
+     * @ORM\OrderBy({"orderinlist" = "ASC"})
      **/
     private $trainings;
 
