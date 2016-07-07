@@ -205,7 +205,11 @@ class GeoLocation
         }
 
         if( $this->getCity() ) {
-            $resArr[] = $this->getCity() . "";
+            $resArr[] = $this->getCity()->getOptimalName() . "";
+        }
+
+        if( $this->getState() ) {
+            $resArr[] = $this->getState()->getOptimalName() . "";
         }
 
         if( $this->getCountry() ) {
