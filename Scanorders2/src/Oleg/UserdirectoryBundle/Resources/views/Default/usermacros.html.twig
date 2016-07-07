@@ -9,6 +9,13 @@
     {% endif %}
 {% endmacro %}
 {% macro nonLiveSiteWarning() %}
+    {% if user_security_utility.getSiteSettingParameter('maintenance') == true %}
+        <p>
+        <div class="alert alert-danger text-center">
+            THE SYSTEM IS ON THE MAINTENANCE.
+        </div>
+        </p>
+    {% endif %}
     {% if user_security_utility.getSiteSettingParameter('environment') != 'live' %}
         <p>
         <div class="alert alert-danger text-center">
