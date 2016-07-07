@@ -102,6 +102,12 @@ class RequestController extends Controller
             if( $carryOverRequestDays ) {
                 $entity->setCarryOverDays($carryOverRequestDays);
             }
+
+            //set tentativeStatus
+            if( !$entity->getTentativeStatus() ) {
+                $entity->setTentativeInstitution('pending');
+            }
+
         } else {
             //business/vacation request
             $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
@@ -1129,9 +1135,23 @@ class RequestController extends Controller
         $requestType = $entity->getRequestType();
 
         //get submitter groups: VacReqRequest, create
+        $tentativeInstitutions = null;
         $groupParams = array();
         if( $requestType->getAbbreviation() == "carryover" ) {
+            $tentativeGroupParams = array();
+            $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+            }
+            $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
+
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+
+            $roleCarryOverApprover = false;
+            if( $this->get('security.context')->isGranted("changestatus-carryover", $entity) ) {
+                $roleCarryOverApprover = true;
+            }
+
         } else {
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
             if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
@@ -1176,7 +1196,9 @@ class RequestController extends Controller
             'cycle' => $cycle,
             'roleAdmin' => $admin,
             'roleApprover' => $roleApprover,
+            'roleCarryOverApprover' => $roleCarryOverApprover,
             'organizationalInstitutions' => $organizationalInstitutions,
+            'tentativeInstitutions' => $tentativeInstitutions,
             'holidaysUrl' => $holidaysUrl
         );
 

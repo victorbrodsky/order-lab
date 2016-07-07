@@ -146,6 +146,11 @@
         {{ form_widget(request.status) }}
     {% endif %}
 {% endmacro %}
+{% macro request_radio_tentativeStatus_choice( request ) %}
+    {% if request.tentativeStatus is defined %}
+        {{ form_widget(request.tentativeStatus) }}
+    {% endif %}
+{% endmacro %}
 
 {% macro request_inputWithCalculateBtn( field ) %}
     <p>

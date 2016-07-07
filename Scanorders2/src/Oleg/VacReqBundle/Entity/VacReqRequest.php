@@ -79,6 +79,17 @@ class VacReqRequest
      */
     private $institution;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $tentativeInstitution;
+
+    /**
+     * status: pending, approved, rejected
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $tentativeStatus;
+
 
     /**
      * @ORM\OneToOne(targetEntity="VacReqRequestBusiness", cascade={"persist","remove"})
@@ -529,6 +540,40 @@ class VacReqRequest
     {
         $this->institution = $institution;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTentativeInstitution()
+    {
+        return $this->tentativeInstitution;
+    }
+
+    /**
+     * @param mixed $tentativeInstitution
+     */
+    public function setTentativeInstitution($tentativeInstitution)
+    {
+        $this->tentativeInstitution = $tentativeInstitution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTentativeStatus()
+    {
+        return $this->tentativeStatus;
+    }
+
+    /**
+     * @param mixed $tentativeStatus
+     */
+    public function setTentativeStatus($tentativeStatus)
+    {
+        $this->tentativeStatus = $tentativeStatus;
+    }
+
+
 
     /**
      * @return \DateTime
