@@ -298,6 +298,7 @@ class VacReqUtil
     //set respond confirmation email to a submitter and email users
     public function sendSingleRespondEmailToSubmitter( $entity, $approver, $status, $message=null ) {
 
+        $logger = $this->container->get('logger');
         $emailUtil = $this->container->get('user_mailer_utility');
         $break = "\r\n";
 
@@ -330,6 +331,7 @@ class VacReqUtil
         }
 
         $emailUtil->sendEmail( $submitter->getSingleEmail(), $subject, $message, null, null );
+        $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to submitter ".$submitter->getSingleEmail());
 
         //css to email users
         $approversNameArr = array();
@@ -361,6 +363,9 @@ class VacReqUtil
         $addText = "### This is a copy of the email sent to the approvers ".implode("; ",$approversNameArr)."###";
         $message = $addText.$break.$break.$message;
         $emailUtil->sendEmail( $cssArr, $subject, $message, null, null );
+
+
+        $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to all related users ".$cssArr);
     }
 
     //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
