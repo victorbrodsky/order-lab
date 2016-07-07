@@ -90,6 +90,12 @@ class VacReqRequest
      */
     private $tentativeStatus;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $tentativeApprover;
+
 
     /**
      * @ORM\OneToOne(targetEntity="VacReqRequestBusiness", cascade={"persist","remove"})
@@ -573,6 +579,21 @@ class VacReqRequest
         $this->tentativeStatus = $tentativeStatus;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTentativeApprover()
+    {
+        return $this->tentativeApprover;
+    }
+
+    /**
+     * @param mixed $tentativeApprover
+     */
+    public function setTentativeApprover($tentativeApprover)
+    {
+        $this->tentativeApprover = $tentativeApprover;
+    }
 
 
     /**

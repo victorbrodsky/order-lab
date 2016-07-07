@@ -332,12 +332,24 @@ class CarryOverController extends Controller
 
             $entity->setTentativeStatus($status);
 
+            if( $status == "pending" ) {
+                $entity->setTentativeApprover(null);
+            } else {
+                $entity->setTentativeApprover($user);
+            }
+
             //send email to supervisor for a final approve
 
         } else {
             //second step: supervisor
 
             $entity->setStatus($status);
+
+            if( $status == "pending" ) {
+                $entity->setApprover(null);
+            } else {
+                $entity->setApprover($user);
+            }
 
             //send a confirmation email to submitter
         }
