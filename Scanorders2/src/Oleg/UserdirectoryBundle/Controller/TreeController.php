@@ -156,7 +156,7 @@ class TreeController extends Controller {
 
         $query = $em->createQuery($dql);
         $query->setParameters($params);
-        //echo "dql=".$dql." <br>";
+        echo "dql=".$dql." <br>";
 
         $entities = $query->getResult();
         //echo "count=".count($entities)."<br>";
