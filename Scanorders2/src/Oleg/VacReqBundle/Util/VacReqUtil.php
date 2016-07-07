@@ -104,7 +104,13 @@ class VacReqUtil
         }
 
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
-            $approverRole = "ROLE_VACREQ_SUPERVISOR";
+
+            if( $entity->getTentativeStatus() == 'pending' ) {
+                $approverRole = "ROLE_VACREQ_APPROVER";
+            } else {
+                $approverRole = "ROLE_VACREQ_SUPERVISOR";
+            }
+
         } else {
             $approverRole = "ROLE_VACREQ_APPROVER";
         }
@@ -119,6 +125,7 @@ class VacReqUtil
 
         return $approvers;
     }
+
 
     //set confirmation email to approver and email users
     public function sendConfirmationEmailToApprovers( $entity ) {
@@ -259,8 +266,8 @@ class VacReqUtil
             //and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
             $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays." business travel days during ".$yearRange." so far.";
 
-            $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_status_email_change',
+            $actionRequestApproveUrl = $this->container->get('router')->generate(
+                'vacreq_status_email_change_carryover',
                 array(
                     'id' => $entity->getId(),
                     'requestName' => 'entire',
@@ -269,11 +276,11 @@ class VacReqUtil
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
             $message .= $break . $break . "To approve this request, please follow this link:" . $break;
-            $message .= $actionRequestUrl;
+            $message .= $actionRequestApproveUrl;
 
             //rejected
-            $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_status_email_change',
+            $actionRequestRejectUrl = $this->container->get('router')->generate(
+                'vacreq_status_email_change_carryover',
                 array(
                     'id' => $entity->getId(),
                     'requestName' => 'entire',
@@ -282,7 +289,7 @@ class VacReqUtil
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
             $message .= $break . $break . "To deny this request, please follow this link:" . $break;
-            $message .= $actionRequestUrl;
+            $message .= $actionRequestRejectUrl;
         }
 
         $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site";

@@ -225,4 +225,191 @@ class CarryOverController extends Controller
         }
     }
 
+
+
+
+
+    /**
+     * approved, rejected, pending, canceled
+     * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_change_carryover")
+     * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_email_change_carryover")
+     * @Method({"GET"})
+     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     */
+    public function statusAction(Request $request, $id, $requestName, $status) {
+
+//        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
+//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//        }
+
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( !$status ) {
+            throw $this->createNotFoundException('Status is invalid: status='.$status);
+        }
+
+        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Request by id='.$id);
+        }
+
+        //check permissions
+//        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+//            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//            }
+//        } elseif( $this->get('security.context')->isGranted("update", $entity) ) {
+//            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
+//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//            }
+//        } else {
+//            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//        }
+
+        if( $entity->getTentativeStatus() == 'pending' ) {
+            //first step: group approver
+            if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+                $this->get('security.context')->isGranted("changestatus", $entity)
+            ) {
+                //OK
+            } else {
+                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+            }
+        } else {
+            //second step: supervisor
+            if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+                $this->get('security.context')->isGranted("changestatus-carryover", $entity)
+            ) {
+                //OK
+            } else {
+                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+            }
+        }
+
+        /////////////// log status ////////////////////////
+        $logger->notice($entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+        /////////////// EOF log status ////////////////////////
+
+
+        if( $status == "approved" ) {
+            //process carry over request days if request is approved
+            $vacreqUtil = $this->get('vacreq_util');
+            $res = $vacreqUtil->processVacReqCarryOverRequest($entity);
+            if( $res && $res['exists'] == true ) {
+                //warning for overwrite:
+                //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
+                // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
+                // Please enter the total amount of days that should be carried over 20YY-20ZZ academic year to the 20ZZ-20MM academic year: [ ]"
+                //exit('exists days='.$res['days']);
+                return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
+            }
+            if( $res && $res['exists'] == false ) {
+                //save
+                $userCarryOver = $res['userCarryOver'];
+                $em->persist($userCarryOver);
+            }
+        }
+
+//        //if not pending and vacreq_status_email_change => redirect to incoming request page
+//        if( $entity->getStatus() != "pending" && $routeName == 'vacreq_status_email_change' ) {
+//            //Flash
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                "This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
+//            );
+//            return $this->redirectToRoute('vacreq_incomingrequests');
+//        }
+
+        $statusSet = false;
+
+        if( $entity->getTentativeStatus() == 'pending' ) {
+            //first step: group approver
+            //setTentativeInstitution to approved or rejected
+
+            $entity->setTentativeStatus($status);
+
+            //send email to supervisor for a final approve
+
+        } else {
+            //second step: supervisor
+
+            $entity->setStatus($status);
+
+            //send a confirmation email to submitter
+        }
+
+
+        if( $statusSet ) {
+
+            if( $status == "pending" ) {
+                $entity->setApprover(null);
+            } else {
+                $entity->setApprover($user);
+            }
+
+            $entity->setExtraStatus(NULL);
+            $em->persist($entity);
+            $em->flush();
+
+            //return $this->redirectToRoute('vacreq_home');
+
+            //send respond confirmation email to a submitter
+            $vacreqUtil = $this->get('vacreq_util');
+            if( $status == 'canceled' ) {
+                //an email should be sent to approver saying
+                // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
+                // and list all variable names and values in the email.
+                $approversNameStr = $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
+            } else {
+                $approversNameStr = null;
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
+            }
+
+            //Flash
+            $statusStr = $status;
+            if( $status == 'pending' ) {
+                $statusStr = 'set to Pending';
+            }
+
+            $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
+            $event .= ": ".$entity->getDetailedStatus().".";
+            if( $approversNameStr ) {
+                $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
+            }
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+
+            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                $eventType = 'Carry Over Request Updated';
+            } else {
+                $eventType = 'Business/Vacation Request Updated';
+            }
+
+            //Event Log
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
+
+        }
+
+        $url = $request->headers->get('referer');
+        //exit('url='.$url);
+
+        //when status is changed from email, then the url is a system home page
+        if( $url && strpos($url, 'incoming-requests') !== false ) {
+            return $this->redirect($url);
+        }
+
+        //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+        return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
+    }
+
+
+
 }

@@ -103,9 +103,10 @@ class RequestController extends Controller
                 $entity->setCarryOverDays($carryOverRequestDays);
             }
 
-            //set tentativeStatus
-            if( !$entity->getTentativeStatus() ) {
-                $entity->setTentativeInstitution('pending');
+            //set tentativeStatus only for non executive submitter
+            $userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+            if( !$userExecutiveSubmitter && $entity->getTentativeStatus() == NULL ) {
+                $entity->setTentativeStatus('pending');
             }
 
         } else {
