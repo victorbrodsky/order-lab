@@ -365,7 +365,7 @@ class VacReqUtil
         $emailUtil->sendEmail( $cssArr, $subject, $message, null, null );
 
 
-        $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to all related users ".$cssArr);
+        $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to all related users ".implode("; ",$cssArr));
     }
 
     //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
