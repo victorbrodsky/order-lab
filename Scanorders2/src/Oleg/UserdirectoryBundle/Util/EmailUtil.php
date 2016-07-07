@@ -91,10 +91,23 @@ class EmailUtil {
             )
             */
 
-        $emailRes = $this->container->get('mailer')->send($transport);
+        //When using send() the message will be sent just like it would be sent if you used your mail client.
+        // An integer is returned which includes the number of successful recipients.
+        // If none of the recipients could be sent to then zero will be returned, which equates to a boolean false.
+        // If you set two To: recipients and three Bcc: recipients in the message and all of the recipients
+        // are delivered to successfully then the value 5 will be returned.
+        $emailRes = $this->container->get('mailer')->send($transport); //
 
-        //$logger->notice("sendEmail: email sent. To:".implode(";",$emails)."; CC:".implode("; ",$ccs)."; emailRes=".$emailRes);
-        $logger->notice("sendEmail: email sent. emailRes=".$emailRes);
+        $ccStr = "";
+        if( $ccs && count($ccs)>0 ) {
+            $ccStr = implode("; ",$ccs);
+        }
+        $emailsStr = "";
+        if( $emails && count($emails)>0 ) {
+            $emailsStr = implode("; ",$emails);
+        }
+        $logger->notice("sendEmail: email sent. To:".$emailsStr."; CC:".$ccStr."; emailRes=".$emailRes);
+        //$logger->notice("sendEmail: email sent. emailRes=".$emailRes);
 
         return $emailRes;
     }
