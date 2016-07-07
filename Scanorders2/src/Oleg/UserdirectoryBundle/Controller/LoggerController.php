@@ -360,7 +360,7 @@ class LoggerController extends Controller
                 if( $user->getId() ) {
                     $where .= "logger.user=".$user->getId();
                 } else {
-                    $where .= "logger.user IS NULL";
+                    $where .= "logger.user.id IS NULL";
                 }
             }
             $dql->andWhere($where);
