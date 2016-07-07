@@ -63,6 +63,10 @@ class TreeController extends Controller {
             $pid = null;
         }
 
+        if( $userid == 'null' ) {
+            $userid = null;
+        }
+
         if( !$pid && $thisid == 0 ) {
             //echo "get root if thisid is 0 <br>";
             $pid = '0';
