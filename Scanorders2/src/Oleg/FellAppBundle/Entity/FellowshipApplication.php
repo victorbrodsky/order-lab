@@ -1154,25 +1154,40 @@ class FellowshipApplication extends BaseUserAttributes {
     //$trainingTypeName: Medical, Residency, GME
     public function getSchoolByTrainingTypeName( $trainingTypeName, $withGeoLocation=false, $withResidencySpecialty=false ) {
         $schoolName = "";
-        
-        $items = $this->getTrainings();
-        
-        foreach( $items as $item ) {
+
+        foreach( $this->getTrainings() as $item ) {
             if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
-                $schoolName = $item->getInstitution()."";
+
+                $schoolName = "";
+
+                //AP, CP, AP/CP, other or Area of Training
+                if( $withResidencySpecialty && $item->getResidencySpecialty() ) {
+                    $schoolName = $schoolName . $item->getResidencySpecialty();
+                }
+
+                //Institution
+                if( $item->getInstitution() ) {
+                    $separator = "";
+                    if( $schoolName ) {
+                        $separator = "<br>";
+                    }
+                    $schoolName = $schoolName . $separator . $item->getInstitution() . "";
+                }
+
+                //Finish Date
                 if( $item->getCompletionDate() ) {
                     $transformer = new DateTimeToStringTransformer(null,null,'Y');                            
                     $schoolName = $schoolName . ", " . $transformer->transform($item->getCompletionDate());
                 }
+
+                //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
                 if( $withGeoLocation && $item->getGeoLocation() ) {
                     $locationStr = $item->getGeoLocation()->getFullGeoLocation();
                     if( $locationStr ) {
                         $schoolName = $schoolName . "<br>" . $locationStr;
                     }
                 }
-                if( $withResidencySpecialty && $item->getResidencySpecialty() ) {
-                    $schoolName = $schoolName . "<br>" . $item->getResidencySpecialty();
-                }
+
                 break;
             }
         }                    
@@ -1299,7 +1314,6 @@ class FellowshipApplication extends BaseUserAttributes {
         $resArr = array();
         $name = $this->getSchoolByTrainingTypeName("Medical",true);
         $resArr[] = $name;
-
         return implode(", ",$resArr);
     }
 
@@ -1308,10 +1322,8 @@ class FellowshipApplication extends BaseUserAttributes {
     //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
     public function getResidencyDescription() {
         $resArr = array();
-
         $name = $this->getSchoolByTrainingTypeName("Residency",true,true);
         $resArr[] = $name;
-
         return implode(", ",$resArr);
     }
 
@@ -1322,7 +1334,6 @@ class FellowshipApplication extends BaseUserAttributes {
         $resArr = array();
         $name = $this->getSchoolByTrainingTypeName("Post-Residency Fellowship",true,true);
         $resArr[] = $name;
-
         return implode(", ",$resArr);
     }
 

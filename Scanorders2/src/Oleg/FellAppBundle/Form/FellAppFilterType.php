@@ -98,10 +98,10 @@ class FellAppFilterType extends AbstractType
             'label' => 'Rejected',
         ));
 
-        $builder->add('onhold', 'checkbox', array(
-            'required'=>false,
-            'label' => 'On Hold',
-        ));
+//        $builder->add('onhold', 'checkbox', array(
+//            'required'=>false,
+//            'label' => 'On Hold',
+//        ));
 
         $builder->add('priority', 'checkbox', array(
             'required'=>false,
