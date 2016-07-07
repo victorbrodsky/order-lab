@@ -7,37 +7,40 @@
 
 
 {% set trclassname = "well well-sm" %}
-{% if entity.appStatus %}
-{% if entity.appStatus.name == 'archive' %}
-    {% set trclassname = "alert alert-info" %}
-{% endif %}
-{% if entity.appStatus.name == 'hide' %}
-    {% set trclassname = "alert alert-danger" %}
-{% endif %}
-{% if entity.appStatus.name == 'complete' %}
-    {% set trclassname = "alert order-neutral-status" %}
-{% endif %}
-{% if entity.appStatus.name == 'active' %}
-    {#{% set trclassname = "alert order-neutral-status" %}#}
-{% endif %}
-{% if entity.appStatus.name == 'interviewee' %}
-    {% set trclassname = "order-interviewee-status" %}
-{% endif %}
-{% if entity.appStatus.name == 'reject' %}
-    {% set trclassname = "order-reject-status" %}
-{% endif %}
-{% if entity.appStatus.name == 'onhold' %}
-    {% set trclassname = "order-onhold-status" %}
-{% endif %}
-    {% if entity.appStatus.name == 'priority' %}
-        {% set trclassname = "alert alert-success" %}
+
+{% if cycle != "download" %}
+    {% if entity.appStatus %}
+        {% if entity.appStatus.name == 'archive' %}
+            {% set trclassname = "alert alert-info" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'hide' %}
+            {% set trclassname = "alert alert-danger" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'complete' %}
+            {% set trclassname = "alert order-neutral-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'active' %}
+            {#{% set trclassname = "alert order-neutral-status" %}#}
+        {% endif %}
+        {% if entity.appStatus.name == 'interviewee' %}
+            {% set trclassname = "order-interviewee-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'reject' %}
+            {% set trclassname = "order-reject-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'onhold' %}
+            {% set trclassname = "order-onhold-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'priority' %}
+            {% set trclassname = "alert alert-success" %}
+        {% endif %}
     {% endif %}
 {% endif %}
 
 {% if cycle != "new" %}
     <h4 class="text-info" align="center">
         <div class="{{ trclassname }}">
-            {% if entity.appStatus %}
+            {% if entity.appStatus and cycle != "download" %}
                 <p>{{ entity.appStatus.action }}</p>
             {% endif %}
             Fellowship Application ID {{ entity.id }}, submitted on {{ entity.timestamp|date('m/d/Y H:i A (T)','UTC') }}, imported on {{ entity.createdate|date('m/d/Y H:i A (T)','UTC') }}
