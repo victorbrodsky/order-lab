@@ -232,7 +232,7 @@ class CarryOverController extends Controller
     /**
      * approved, rejected, pending, canceled
      * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_change_carryover")
-     * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_email_change_carryover")
+     * @Route("/carry-over-vacation-days/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change_carryover")
      * @Method({"GET"})
      * @Template("OlegVacReqBundle:Request:edit.html.twig")
      */
