@@ -65,11 +65,15 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
             //add if user has appropriate admin role: overwrite in the particular permission voter
             //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
-            $user = $token->getUser();
+            //$user = $token->getUser();
             if( $this->hasApproverRoleInstitution($subject,$token) ) {
                 return true;
             }
 
+            //check for tentative pre-approval: use tentativeInstitution
+            if( $this->hasApproverRoleInstitution($subject,$token) ) {
+                return true;
+            }
         }
 
         return false;
@@ -91,18 +95,24 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         }
 
         //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
-        if( $this->hasApproverRoleInstitution($subject,$token) ) {
+        if( $this->hasApproverRoleInstitution($subject,$token,true) ) {
             return true;
         }
 
         return false;
     }
 
-    private function hasApproverRoleInstitution( $subject, TokenInterface $token ) {
+    private function hasApproverRoleInstitution( $subject, TokenInterface $token, $tentative=false ) {
         $user = $token->getUser();
 
+        if( $tentative ) {
+            $inst = $subject->getTentativeInstitution();
+        } else {
+            $inst = $subject->getInstitution();
+        }
+
         //get approver role for subject institution
-        if( $subject->getInstitution() ) {
+        if( $inst ) {
 
             //get user allowed groups
             $vacreqUtil = $this->container->get('vacreq_util');
@@ -114,7 +124,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
             //check if subject has at least one of the $groupInstitutions
             foreach( $groupInstitutions as $inst ) {
-                if( $inst->getId() == $subject->getInstitution()->getId() ) {
+                if( $inst->getId() == $$inst->getId() ) {
                     return true;
                 }
             }
