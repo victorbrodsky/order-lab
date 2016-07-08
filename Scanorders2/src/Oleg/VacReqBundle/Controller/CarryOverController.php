@@ -364,6 +364,18 @@ class CarryOverController extends Controller
 
         //Now we have two cases: first and second step approval
 
+        //don't allow to change final status
+        if( $entity->getStatus() != 'pending' ) {
+            $event = "This request ID #".$entity->getId()." has been already ".$entity->getStatus()." by ".$entity->getApprover().
+            " on ".$entity->getApprovedRejectDate()->format('m-d-Y');
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+            return $this->redirectToRoute('vacreq_show',array('id'=>$entity->getId()));
+        }
+
         //check if requested carry over days are already approved or denied
         $onlyCheck = true;
         $res = $vacreqUtil->processVacReqCarryOverRequest($entity,$onlyCheck);
