@@ -107,6 +107,7 @@ class RequestIndexController extends Controller
         //$dql->leftJoin("request.submitter", "submitter");
         $dql->leftJoin("user.infos", "infos");
         $dql->leftJoin("request.institution", "institution");
+        $dql->leftJoin("request.tentativeInstitution", "tentativeInstitution");
 
         $dql->leftJoin("request.requestBusiness", "requestBusiness");
         $dql->leftJoin("request.requestVacation", "requestVacation");
@@ -129,9 +130,10 @@ class RequestIndexController extends Controller
                     findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName, null, false);
 
 //                $instArr = array();
-//                foreach( $vacreqRoles as $vacreqRole ) {
-//                    $instArr[] = $vacreqRole->getInstitution()->getId();
-//                }
+                //foreach( $vacreqRoles as $vacreqRole ) {
+                    //$instArr[] = $vacreqRole->getInstitution()->getId();
+                    //echo "vacreqRole=".$vacreqRole."<br>";
+                //}
 //                if( count($instArr) > 0 ) {
 //                    //$dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
 //                }
@@ -145,8 +147,12 @@ class RequestIndexController extends Controller
                         //echo "roleInst=".$roleInst."<br>";
                         if( !in_array($roleInst->getId(), $addedNodes) ) {
                             $addedNodes[] = $roleInst->getId();
+                            //regular institution
                             $instCriterionArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->
                                 selectNodesUnderParentNode($roleInst,"institution",false);
+                            //regular tentativeInstitution
+                            $instCriterionArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->
+                                selectNodesUnderParentNode($roleInst,"tentativeInstitution",false);
                         }
                     }
                     if( count($instCriterionArr) > 0 ) {
@@ -320,6 +326,18 @@ class RequestIndexController extends Controller
 
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 
+        //tentative institutions
+        $tentativeGroupParams = array(); //'asObject'=>true
+        $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+            $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+        }
+        $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
+        //testing
+        //foreach( $tentativeInstitutions as $tentativeInstitution ) {
+            //echo "tentativeInstitution=".$tentativeInstitution."<br>";
+        //}
+
         //tooltip for Academic Year:
         //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
         $previousYear = date("Y") - 1;
@@ -471,13 +489,29 @@ class RequestIndexController extends Controller
         }
 
         if( $groups == null && $request->get('_route') == "vacreq_incomingrequests" ) {
+
+            $instWhereArr = array();
+
             $instArr = array();
             foreach( $organizationalInstitutions as $instId => $instNameStr ) {
                 $instArr[] = $instId;
             }
             if( count($instArr) > 0 ) {
-                $dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
+                //$dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
+                $instWhereArr[] = "institution.id IN (" . implode(",", $instArr) . ")";
             }
+
+            $tentativeInstArr = array();
+            foreach( $tentativeInstitutions as $instId => $instNameStr ) {
+                //echo "tentativeInstitution: id=".$instId."; name=".$instNameStr."<br>";
+                $tentativeInstArr[] = $instId;
+            }
+            if( count($tentativeInstArr) > 0 ) {
+                //$dql->andWhere("tentativeInstitution.id IN (" . implode(",", $tentativeInstArr) . ")");
+                $instWhereArr[] = "tentativeInstitution.id IN (" . implode(",", $tentativeInstArr) . ")";
+            }
+
+            $dql->andWhere( implode(" OR ",$instWhereArr) );
         }
 
         if( $academicYear ) {
