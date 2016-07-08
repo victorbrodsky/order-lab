@@ -106,13 +106,13 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         $user = $token->getUser();
 
         if( $tentative ) {
-            $inst = $subject->getTentativeInstitution();
+            $subjectInst = $subject->getTentativeInstitution();
         } else {
-            $inst = $subject->getInstitution();
+            $subjectInst = $subject->getInstitution();
         }
 
         //get approver role for subject institution
-        if( $inst ) {
+        if( $subjectInst ) {
 
             //get user allowed groups
             $vacreqUtil = $this->container->get('vacreq_util');
@@ -124,7 +124,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
             //check if subject has at least one of the $groupInstitutions
             foreach( $groupInstitutions as $inst ) {
-                if( $inst->getId() == $$inst->getId() ) {
+                if( $inst->getId() == $subjectInst->getId() ) {
                     return true;
                 }
             }
