@@ -366,6 +366,7 @@ class CarryOverController extends Controller
                 $entity->setTentativeApprover(null);
             } else {
                 $entity->setTentativeApprover($user);
+                $entity->setTentativeApprovedRejectDate(new \DateTime());
             }
 
             //send email to supervisor for a final approval
@@ -375,8 +376,8 @@ class CarryOverController extends Controller
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " for ".$entity->getUser()." has been tentatively approved by ".$entity->getTentativeApprover().". ".
-                    "<br>Email for a final approval has been sent to ".$approversNameStr;
+                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively approved by ".$entity->getTentativeApprover().". ".
+                    "Email for a final approval has been sent to ".$approversNameStr;
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
@@ -403,8 +404,8 @@ class CarryOverController extends Controller
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " for ".$entity->getUser()." has been tentatively rejected by.".$entity->getTentativeApprover().
-                    "<br>Email for a final approval has been sent to ".$approversNameStr;
+                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively rejected by.".$entity->getTentativeApprover().". ".
+                    "Email for a final approval has been sent to ".$approversNameStr;
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
