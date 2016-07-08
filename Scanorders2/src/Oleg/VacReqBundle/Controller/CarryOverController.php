@@ -273,6 +273,7 @@ class CarryOverController extends Controller
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
 
+        echo "tent status=".$entity->getTentativeStatus()."<br>";
         if( $entity->getTentativeStatus() == 'pending' ) {
             //first step: group approver
             if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
@@ -280,6 +281,7 @@ class CarryOverController extends Controller
             ) {
                 //OK
             } else {
+                exit('TentativeStatus: no permission to approve/reject');
                 return $this->redirect( $this->generateUrl('vacreq-nopermission') );
             }
         } else {
@@ -289,6 +291,7 @@ class CarryOverController extends Controller
             ) {
                 //OK
             } else {
+                exit('Status: no permission to approve/reject');
                 return $this->redirect( $this->generateUrl('vacreq-nopermission') );
             }
         }
