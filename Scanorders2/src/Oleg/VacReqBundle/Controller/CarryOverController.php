@@ -388,6 +388,11 @@ class CarryOverController extends Controller
 
             //send email to submitter
             if( $status == 'rejected' ) {
+
+                //since it's rejected then set status to rejected
+                $entity->setApprover($user);
+                $entity->setStatus($status);
+
                 //Subject: Your request to carry over X vacation days from 20XX-20YY to 20YY-20ZZ was rejected.
                 $subjectRejected = "Your request ID #".$entity->getId()." to carry over ".$entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange()." was rejected.";
