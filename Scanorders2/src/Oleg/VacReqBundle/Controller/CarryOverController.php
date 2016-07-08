@@ -367,7 +367,7 @@ class CarryOverController extends Controller
         //don't allow to change final status
         if( $entity->getStatus() != 'pending' ) {
             $event = "This request ID #".$entity->getId()." has been already ".$entity->getStatus()." by ".$entity->getApprover().
-            " on ".$entity->getApprovedRejectDate()->format('m-d-Y');
+            " on ".$entity->getApprovedRejectDate()->format('F jS, Y');
             //Flash
             $this->get('session')->getFlashBag()->add(
                 'notice',
