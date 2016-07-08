@@ -408,8 +408,9 @@ class CarryOverController extends Controller
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively rejected by.".$entity->getTentativeApprover().". ".
-                    "Email for a final approval has been sent to ".$approversNameStr;
+                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively rejected by.".
+                    $entity->getTentativeApprover().". ".
+                    "Confirmation email has been sent to the submitter ".$entity->getUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
