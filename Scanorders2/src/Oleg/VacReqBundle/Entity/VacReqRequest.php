@@ -1278,6 +1278,7 @@ class VacReqRequest
         $res .= "Approver: ".$this->getApprover().$break;
         $res .= "Approved/Rejected on: ".$this->getApprovedRejectDate()->format('m-d-Y').$break;
         $res .= "Organizational Group: ".$this->getInstitution().$break;
+        
         $res .= "Phone Number for the person away: ".$this->getPhone().$break;
         $res .= "Emergency Contact Info:".$break.implode($break,$this->getEmergencyConatcsArr()).$break.$break;
 
@@ -1299,7 +1300,7 @@ class VacReqRequest
             $res .= "Person Away: ".$this->getUser().$break;
             $res .= "Approver: ".$this->getApprover().$break;
             $res .= "Approved/Rejected on: ".$this->getApprovedRejectDate()->format('m-d-Y').$break;
-            $res .= "Organizational Group: ".$this->getInstitution().$break;
+            $res .= "Organizational Group: ".$this->getInstitution().$break.$break;
 
             $res .= "### Carry Over Request ###".$break;
             $res .= "Tentative Organizational Group: ".$this->getTentativeInstitution().$break;
