@@ -71,7 +71,8 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             }
 
             //check for tentative pre-approval: use tentativeInstitution
-            if( $this->hasApproverRoleInstitution($subject,$token) ) {
+            $tentative = true;
+            if( $this->hasApproverRoleInstitution($subject,$token,$tentative) ) {
                 return true;
             }
         }
@@ -95,7 +96,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         }
 
         //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
-        if( $this->hasApproverRoleInstitution($subject,$token,true) ) {
+        if( $this->hasApproverRoleInstitution($subject,$token) ) {
             return true;
         }
 
