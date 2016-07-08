@@ -1985,19 +1985,6 @@ class VacReqUtil
     }
 
 
-    public function getTentativeGroups( $user, $asObject=false ) {
-        $tentativeGroupParams = array();
-        if( $asObject ) {
-            $tentativeGroupParams['asObject'] = true;
-        }
-        $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-        if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-            $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-        }
-        $tentativeInstitutions = $this->getGroupsByPermission($user,$tentativeGroupParams);
-        return $tentativeInstitutions;
-    }
-
     //find the first upper supervisor of this user's group
     public function getClosestSupervisor( $user ) {
 

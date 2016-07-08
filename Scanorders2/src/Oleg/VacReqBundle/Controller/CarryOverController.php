@@ -273,31 +273,24 @@ class CarryOverController extends Controller
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
 
-        //testing
-        if( $entity->getTentativeStatus() == 'pending' ) {
-            $tentative = true;
-        } else {
-            $tentative = false;
-        }
-        if( $tentative ) {
-            $subjectInst = $entity->getTentativeInstitution();
-        } else {
-            $subjectInst = $entity->getInstitution();
-        }
-
-        //get approver role for subject institution
-        if( $subjectInst ) {
-
-            //get user allowed groups
-            $vacreqUtil = $this->container->get('vacreq_util');
-
-            //old get groups method
-//            $groupParams = array(
-//                'roleSubStrArr' => array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'),
-//                'asObject' => true
-//            );
-//            $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
-
+//        //testing
+//        if( $entity->getTentativeStatus() == 'pending' ) {
+//            $tentative = true;
+//        } else {
+//            $tentative = false;
+//        }
+//        if( $tentative ) {
+//            $subjectInst = $entity->getTentativeInstitution();
+//        } else {
+//            $subjectInst = $entity->getInstitution();
+//        }
+//
+//        //get approver role for subject institution
+//        if( $subjectInst ) {
+//
+//            //get user allowed groups
+//            $vacreqUtil = $this->container->get('vacreq_util');
+//
 //            if( $tentative ) {
 //                $tentativeGroupParams = array();
 //                $tentativeGroupParams['asObject'] = true;
@@ -309,22 +302,17 @@ class CarryOverController extends Controller
 //                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
 //                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 //            }
-
-            $groupParams = array('asObject'=>true);
-            $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
-            $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-
-            //check if subject has at least one of the $groupInstitutions
-            foreach( $groupInstitutions as $inst ) {
-                echo $inst." == ".$subjectInst."<br>";
-                if( $inst->getId() == $subjectInst->getId() ) {
-                    exit('permission ok!');
-                }
-            }
-
-        }
-        exit('permission not ok');
+//
+//            //check if subject has at least one of the $groupInstitutions
+//            foreach( $groupInstitutions as $inst ) {
+//                echo $inst." == ".$subjectInst."<br>";
+//                if( $inst->getId() == $subjectInst->getId() ) {
+//                    exit('permission ok!');
+//                }
+//            }
+//
+//        }
+//        exit('permission not ok');
 
         echo "tent status=".$entity->getTentativeStatus()."<br>";
         if( $entity->getTentativeStatus() == 'pending' ) {

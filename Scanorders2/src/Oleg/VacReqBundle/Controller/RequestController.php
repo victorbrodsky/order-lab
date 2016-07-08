@@ -1143,13 +1143,12 @@ class RequestController extends Controller
         if( $requestType->getAbbreviation() == "carryover" ) {
 
             //tentative institutions
-//            $tentativeGroupParams = array();
-//            $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-//            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-//                $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-//            }
-//            $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
-            $tentativeInstitutions = $vacreqUtil->getTentativeGroups($user);
+            $tentativeGroupParams = array();
+            $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+            }
+            $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
 
             //carry-over institution
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
