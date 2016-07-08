@@ -246,6 +246,9 @@ class CarryOverController extends Controller
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->get('security.context')->getToken()->getUser();
+        $vacreqUtil = $this->get('vacreq_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         if( !$status ) {
             throw $this->createNotFoundException('Status is invalid: status='.$status);
@@ -295,25 +298,6 @@ class CarryOverController extends Controller
         /////////////// EOF log status ////////////////////////
 
 
-        if( $status == "approved" ) {
-            //process carry over request days if request is approved
-            $vacreqUtil = $this->get('vacreq_util');
-            $res = $vacreqUtil->processVacReqCarryOverRequest($entity);
-            if( $res && $res['exists'] == true ) {
-                //warning for overwrite:
-                //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
-                // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
-                // Please enter the total amount of days that should be carried over 20YY-20ZZ academic year to the 20ZZ-20MM academic year: [ ]"
-                //exit('exists days='.$res['days']);
-                return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
-            }
-            if( $res && $res['exists'] == false ) {
-                //save
-                $userCarryOver = $res['userCarryOver'];
-                $em->persist($userCarryOver);
-            }
-        }
-
 //        //if not pending and vacreq_status_email_change => redirect to incoming request page
 //        if( $entity->getStatus() != "pending" && $routeName == 'vacreq_status_email_change' ) {
 //            //Flash
@@ -324,10 +308,12 @@ class CarryOverController extends Controller
 //            return $this->redirectToRoute('vacreq_incomingrequests');
 //        }
 
+        //Now we have two cases: first and second step approval
+
         $statusSet = false;
 
         if( $entity->getTentativeStatus() == 'pending' ) {
-            //first step: group approver
+            ////////////// first step: group approver ///////////////////
             //setTentativeInstitution to approved or rejected
 
             $entity->setTentativeStatus($status);
@@ -338,10 +324,55 @@ class CarryOverController extends Controller
                 $entity->setTentativeApprover($user);
             }
 
-            //send email to supervisor for a final approve
+            //send email to supervisor for a final approval
+            if( $status == 'approved' ) {
+                $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers($entity);
+
+                //Event Log
+                $requestName = $entity->getRequestName();
+                $eventType = 'Carry Over Request Updated';
+                $event = $requestName . " for ".$entity->getUser()." has been tentatively approved by ".$entity->getTentativeApprover().". ".
+                    "<br>Email for a final approval has been sent to ".$approversNameStr;
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+            }
+
+            //send email to submitter
+            if( $status == 'rejected' ) {
+                //Subject: Your request to carry over X vacation days from 20XX-20YY to 20YY-20ZZ was rejected.
+                $subjectRejected = "Your request to carry over ".$entity->getCarryOverDays()." vacation days from ".
+                    $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange()." was rejected.";
+
+                //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
+                // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
+                $bodyRejected = $entity->getTentativeApprover(). " has rejected your request to carry over ".
+                    $entity->getCarryOverDays()." vacation days from ".
+                    $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
+
+                $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectRejected, $bodyRejected, null, null );
+
+                //Event Log
+                $requestName = $entity->getRequestName();
+                $eventType = 'Carry Over Request Updated';
+                $event = $requestName . " for ".$entity->getUser()." has been tentatively rejected by.".$entity->getTentativeApprover().
+                    "<br>Email for a final approval has been sent to ".$approversNameStr;
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+            }
+
 
         } else {
-            //second step: supervisor
+            ////////////// second step: supervisor //////////////
 
             $entity->setStatus($status);
 
@@ -351,7 +382,65 @@ class CarryOverController extends Controller
                 $entity->setApprover($user);
             }
 
-            //send a confirmation email to submitter
+            if( $status == "approved" ) {
+                //process carry over request days if request is approved
+                $res = $vacreqUtil->processVacReqCarryOverRequest($entity);
+                if( $res && $res['exists'] == true ) {
+                    //warning for overwrite:
+                    //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
+                    // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
+                    // Please enter the total amount of days that should be carried over 20YY-20ZZ academic year to the 20ZZ-20MM academic year: [ ]"
+                    //exit('exists days='.$res['days']);
+                    return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
+                }
+                if( $res && $res['exists'] == false ) {
+                    //save
+                    $userCarryOver = $res['userCarryOver'];
+                    $em->persist($userCarryOver);
+                }
+
+                //send a confirmation email to submitter
+                //Subject: Your request to carry over X vacation days from 20XX-20YY to 20YY-20ZZ was approved.
+                $subjectApproved = "Your request to carry over ".$entity->getCarryOverDays()." vacation days from ".
+                    $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange() . " was approved.";
+
+                //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
+                // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
+                $bodyApproved = $entity->getTentativeApprover(). " has approved your request to carry over ".
+                    $entity->getCarryOverDays()." vacation days from ".
+                    $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
+
+                $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectApproved, $bodyApproved, null, null );
+            }
+
+
+            //send email to submitter
+            if( $status == 'rejected' ) {
+                //Subject: Your request to carry over X vacation days from 20XX-20YY to 20YY-20ZZ was rejected.
+                $subjectRejected = "Your request to carry over ".$entity->getCarryOverDays()." vacation days from ".
+                    $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
+
+                //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
+                // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
+                $bodyRejected = $entity->getTentativeApprover(). " has rejected your request to carry over ".
+                    $entity->getCarryOverDays()." vacation days from ".
+                    $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
+
+                $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectRejected, $bodyRejected, null, null );
+
+                //Event Log
+                $requestName = $entity->getRequestName();
+                $eventType = 'Carry Over Request Updated';
+                $event = $requestName . " for ".$entity->getUser()." has been tentatively rejected by.".$entity->getTentativeApprover().
+                    "Email for a final approval has been sent to ".$approversNameStr;
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+            }
         }
 
 

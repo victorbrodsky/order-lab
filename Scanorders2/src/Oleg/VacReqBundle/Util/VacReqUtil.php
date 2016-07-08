@@ -217,6 +217,7 @@ class VacReqUtil
             $message .= $actionRequestUrl;
         }
 
+        //CARRYOVER body
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
             $previousYear = date("Y") - 1;
@@ -264,7 +265,15 @@ class VacReqUtil
             //had Z days carried over from [current academic year -1] to [current academic year],
             $message .= " had ".$carriedOverDays." days carried over from ".$previousYear." to ".$currentYear.",";
             //and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
-            $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays." business travel days during ".$yearRange." so far.";
+            $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays.
+                " business travel days during ".$yearRange." so far.";
+
+            if( $entity->getTentativeStatus() != 'approved'  ) {
+                //This request has been tentatively approved by [VacationApproverFirstName, VacationApproverLastName] on
+                // DateOfStatusChange at TimeOfStatusChange.
+                $message .= $break.$break."This request has been tentatively approved by ".$entity->getTentativeApprover().
+                    " on ".$entity->getTentativeApprovedRejectDate()->format("M d Y h:i A T").".";
+            }
 
             $actionRequestApproveUrl = $this->container->get('router')->generate(
                 'vacreq_status_email_change_carryover',
@@ -290,6 +299,19 @@ class VacReqUtil
             );
             $message .= $break . $break . "To deny this request, please follow this link:" . $break;
             $message .= $actionRequestRejectUrl;
+
+            //To review SubmitterFirstName SubmitterLastName's past requests, please follow this link:
+            //[link to incoming requests filtered by person away = submitter]
+            $reviewUrl = $this->container->get('router')->generate(
+                'vacreq_incomingrequests',
+                array(
+                    'filter[requestType]' => $entity->getRequestType()->getId(),
+                    'filter[user]' => $submitter->getId()
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $message .= $break . $break . "To review " . $submitter->getUsernameShortest() . "'s past requests, please follow this link:".$break;
+            $message .= $reviewUrl;
         }
 
         $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site";

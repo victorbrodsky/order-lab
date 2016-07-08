@@ -79,23 +79,6 @@ class VacReqRequest
      */
     private $institution;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
-     */
-    private $tentativeInstitution;
-
-    /**
-     * status: pending, approved, rejected
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $tentativeStatus;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
-    private $tentativeApprover;
-
 
     /**
      * @ORM\OneToOne(targetEntity="VacReqRequestBusiness", cascade={"persist","remove"})
@@ -238,6 +221,29 @@ class VacReqRequest
      * @ORM\Column(type="integer", nullable=true)
      */
     private $carryOverDays;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $tentativeInstitution;
+
+    /**
+     * status: pending, approved, rejected
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $tentativeStatus;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $tentativeApprover;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tentativeApprovedRejectDate;
 
 
 
@@ -594,6 +600,23 @@ class VacReqRequest
     {
         $this->tentativeApprover = $tentativeApprover;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getTentativeApprovedRejectDate()
+    {
+        return $this->tentativeApprovedRejectDate;
+    }
+
+    /**
+     * @param \DateTime $tentativeApprovedRejectDate
+     */
+    public function setTentativeApprovedRejectDate($tentativeApprovedRejectDate)
+    {
+        $this->tentativeApprovedRejectDate = $tentativeApprovedRejectDate;
+    }
+
 
 
     /**
