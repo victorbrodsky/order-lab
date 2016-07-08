@@ -102,12 +102,14 @@ class VacReqUtil
         if( !$institution ) {
             return null;
         }
+        echo "institution=".$institution."<br>";
 
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
             echo "getTentativeStatus=".$entity->getTentativeStatus()."<br>";
             if( $entity->getTentativeStatus() == 'pending' ) {
                 $approverRole = "ROLE_VACREQ_APPROVER";
+                $institution = $entity->getTentativeInstitution();
             } else {
                 $approverRole = "ROLE_VACREQ_SUPERVISOR";
             }
@@ -117,7 +119,8 @@ class VacReqUtil
         }
 
         $approvers = array();
-        $roleApprovers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", $approverRole, $institution->getId());
+        $roleApprovers = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+            findRolesBySiteAndPartialRoleName( "vacreq", $approverRole, $institution->getId());
         $roleApprover = $roleApprovers[0];
         echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
