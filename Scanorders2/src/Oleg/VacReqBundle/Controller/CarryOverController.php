@@ -298,16 +298,22 @@ class CarryOverController extends Controller
 //            );
 //            $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
 
-            if( $tentative ) {
-                $tentativeGroupParams = array();
-                $tentativeGroupParams['asObject'] = true;
-                $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
-            } else {
-                $groupParams = array('asObject'=>true);
-                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-            }
+//            if( $tentative ) {
+//                $tentativeGroupParams = array();
+//                $tentativeGroupParams['asObject'] = true;
+//                $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+//                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
+//            } else {
+//                $groupParams = array('asObject'=>true);
+//                $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+//                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+//                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+//            }
+
+            $groupParams = array('asObject'=>true);
+            $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+            $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
             //check if subject has at least one of the $groupInstitutions
             foreach( $groupInstitutions as $inst ) {
