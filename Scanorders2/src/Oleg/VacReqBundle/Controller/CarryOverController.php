@@ -379,6 +379,10 @@ class CarryOverController extends Controller
 
             //send email to supervisor for a final approval
             if( $status == 'approved' ) {
+
+                $entity->setApprover(null);
+                $entity->setStatus('pending');
+
                 $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers($entity);
 
                 //Event Log
