@@ -221,7 +221,7 @@ class RequestController extends Controller
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
-            exit('exit event='.$event);
+            //exit('exit event='.$event);
 
             //Flash
             $this->get('session')->getFlashBag()->add(
