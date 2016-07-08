@@ -126,9 +126,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 //            $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
 
             if( $tentative ) {
-                $groupInstitutions = $vacreqUtil->getTentativeGroups($user);
+                $groupInstitutions = $vacreqUtil->getTentativeGroups($user,true);
             } else {
-                $groupParams = array();
+                $groupParams = array('asObject'=>true);
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
                 $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
             }
