@@ -364,6 +364,18 @@ class CarryOverController extends Controller
 
         //Now we have two cases: first and second step approval
 
+        //check if requested carry over days are already approved or denied
+        $onlyCheck = true;
+        $res = $vacreqUtil->processVacReqCarryOverRequest($entity,$onlyCheck);
+        if( $res && $res['exists'] == true ) {
+            //warning for overwrite:
+            //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
+            // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
+            // Please enter the total amount of days that should be carried over 20YY-20ZZ academic year to the 20ZZ-20MM academic year: [ ]"
+            //exit('exists days='.$res['days']);
+            return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
+        }
+
         if( $entity->getTentativeStatus() == 'pending' ) {
             ////////////// first step: group approver ///////////////////
             //setTentativeInstitution to approved or rejected
