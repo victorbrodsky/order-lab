@@ -275,8 +275,9 @@ class VacReqUtil
             if( $entity->getTentativeStatus() == 'approved' && $entity->getTentativeApprovedRejectDate() && $entity->getTentativeApprover() ) {
                 //This request has been tentatively approved by [VacationApproverFirstName, VacationApproverLastName] on
                 // DateOfStatusChange at TimeOfStatusChange.
+                $tentativeApprovedRejectDate = $entity->getTentativeApprovedRejectDate()->setTimezone(new \DateTimeZone('America/New_York'));
                 $message .= $break.$break."This request has been tentatively approved by ".$entity->getTentativeApprover().
-                    " on ".$entity->getTentativeApprovedRejectDate()->format("M d Y h:i A T").".";
+                    " on ".$tentativeApprovedRejectDate->format("M d Y h:i A T").".";
             }
 
             $actionRequestApproveUrl = $this->container->get('router')->generate(
