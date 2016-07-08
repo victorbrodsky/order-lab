@@ -308,6 +308,7 @@ class CarryOverController extends Controller
 
             //check if subject has at least one of the $groupInstitutions
             foreach( $groupInstitutions as $inst ) {
+                echo $inst." == ".$subjectInst."<br>";
                 if( $inst->getId() == $subjectInst->getId() ) {
                     exit('permission ok!');
                 }
