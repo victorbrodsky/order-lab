@@ -273,6 +273,49 @@ class CarryOverController extends Controller
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
 
+        //testing
+        if( $entity->getTentativeStatus() == 'pending' ) {
+            $tentative = true;
+        } else {
+            $tentative = false;
+        }
+        if( $tentative ) {
+            $subjectInst = $entity->getTentativeInstitution();
+        } else {
+            $subjectInst = $entity->getInstitution();
+        }
+
+        //get approver role for subject institution
+        if( $subjectInst ) {
+
+            //get user allowed groups
+            $vacreqUtil = $this->container->get('vacreq_util');
+
+            //old get groups method
+//            $groupParams = array(
+//                'roleSubStrArr' => array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'),
+//                'asObject' => true
+//            );
+//            $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
+
+            if( $tentative ) {
+                $groupInstitutions = $vacreqUtil->getTentativeGroups($user);
+            } else {
+                $groupParams = array();
+                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+            }
+
+            //check if subject has at least one of the $groupInstitutions
+            foreach( $groupInstitutions as $inst ) {
+                if( $inst->getId() == $subjectInst->getId() ) {
+                    exit('permission ok!');
+                }
+            }
+
+        }
+        exit('permission not ok');
+
         echo "tent status=".$entity->getTentativeStatus()."<br>";
         if( $entity->getTentativeStatus() == 'pending' ) {
             //first step: group approver
