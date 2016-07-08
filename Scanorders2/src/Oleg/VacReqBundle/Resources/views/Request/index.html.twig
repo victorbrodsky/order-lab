@@ -108,6 +108,10 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Group', 'institution.name') }}</th>
 
+            {% if requestTypeAbbreviation == 'carryover' %}
+                <th>{{ knp_pagination_sortable(pagination, 'Tentative Group', 'tentativeInstitution.name') }}</th>
+            {% endif %}
+
             {% if showUserInfo %}
                 <th>{{ knp_pagination_sortable(pagination, 'Date Status Changed', 'request.approvedRejectDate') }}</th>
             {% endif %}
@@ -184,6 +188,14 @@
                         {{ entity.institution }}
                     {% endif %}
                 </td>
+
+                {% if requestTypeAbbreviation == 'carryover' %}
+                    <td>
+                        {% if entity.tentativeInstitution %}
+                            {{ entity.tentativeInstitution }}
+                        {% endif %}
+                    </td>
+                {% endif %}
 
                 {% if showUserInfo %}
                     <td>
