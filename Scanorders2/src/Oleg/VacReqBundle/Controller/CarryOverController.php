@@ -316,27 +316,36 @@ class CarryOverController extends Controller
 //        exit('permission not ok');
 
         echo "tent status=".$entity->getTentativeStatus()."<br>";
-        if( $entity->getTentativeStatus() == 'pending' ) {
-            //first step: group approver
-            if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
-                $this->get('security.context')->isGranted("changestatus", $entity)
-            ) {
-                //OK
-            } else {
-                exit('TentativeStatus: no permission to approve/reject');
-                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-            }
+        if(
+            $this->get('security.context')->isGranted("changestatus", $entity)
+        ) {
+            //OK
         } else {
-            //second step: supervisor
-            if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
-                $this->get('security.context')->isGranted("changestatus-carryover", $entity)
-            ) {
-                //OK
-            } else {
-                exit('Status: no permission to approve/reject');
-                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-            }
+            exit('TentativeStatus: no permission to approve/reject');
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
+
+//        if( $entity->getTentativeStatus() == 'pending' ) {
+//            //first step: group approver
+//            if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
+//                $this->get('security.context')->isGranted("changestatus", $entity)
+//            ) {
+//                //OK
+//            } else {
+//                exit('TentativeStatus: no permission to approve/reject');
+//                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//            }
+//        } else {
+//            //second step: supervisor
+//            if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+//                $this->get('security.context')->isGranted("changestatus-carryover", $entity)
+//            ) {
+//                //OK
+//            } else {
+//                exit('Status: no permission to approve/reject');
+//                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//            }
+//        }
 
         /////////////// log status ////////////////////////
         $logger->notice($entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);

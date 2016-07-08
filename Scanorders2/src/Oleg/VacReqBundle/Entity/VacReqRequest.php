@@ -1293,7 +1293,7 @@ class VacReqRequest
             $res .= "### Carry Over Request ###".$break;
             $res .= "Carry Over Days: ".$this->getCarryOverDays().$break;
             $res .= "from: ".$this->getSourceYearRange().$break;
-            $res .= "to:" . $this->getDestinationYearRange().$break;
+            $res .= "to: " . $this->getDestinationYearRange().$break;
         }
 
         return $res;
