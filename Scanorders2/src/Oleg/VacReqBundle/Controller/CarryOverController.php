@@ -321,7 +321,7 @@ class CarryOverController extends Controller
         ) {
             //OK
         } else {
-            exit('TentativeStatus: no permission to approve/reject');
+            exit('Status: no permission to approve/reject');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -412,7 +412,7 @@ class CarryOverController extends Controller
                     $entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
-                //$bodyRejected
+                //request info
                 $bodyRejected .= $break.$break.$entity;
 
                 $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectRejected, $bodyRejected, null, null );
@@ -463,7 +463,7 @@ class CarryOverController extends Controller
 
                 //send a confirmation email to submitter
                 //Subject: Your request to carry over X vacation days from 20XX-20YY to 20YY-20ZZ was approved.
-                $subjectApproved = "Your request to carry over ".$entity->getCarryOverDays()." vacation days from ".
+                $subjectApproved = "Your request ID #".$entity->getId()." to carry over ".$entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange() . " was approved.";
 
                 //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
@@ -472,6 +472,9 @@ class CarryOverController extends Controller
                     $entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
+                //request info
+                $bodyApproved .= $break.$break.$entity;
+
                 $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectApproved, $bodyApproved, null, null );
             }
 
@@ -479,8 +482,8 @@ class CarryOverController extends Controller
             //send email to submitter
             if( $status == 'rejected' ) {
                 //Subject: Your request to carry over X vacation days from 20XX-20YY to 20YY-20ZZ was rejected.
-                $subjectRejected = "Your request to carry over ".$entity->getCarryOverDays()." vacation days from ".
-                    $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
+                $subjectRejected = "Your request ID #".$entity->getId()." to carry over ".$entity->getCarryOverDays()." vacation days from ".
+                    $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange() . " was rejected.";
 
                 //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
                 // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
@@ -488,13 +491,16 @@ class CarryOverController extends Controller
                     $entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
+                //request info
+                $bodyRejected .= $break.$break.$entity;
+
                 $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectRejected, $bodyRejected, null, null );
 
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
                 $event = $requestName . " for ".$entity->getUser()." has been tentatively rejected by.".$entity->getTentativeApprover().
-                    "Email for a final approval has been sent to ".$approversNameStr;
+                    "Email for a final approval has been sent to the submitter ".$entity->getUser()->getSingleEmail();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
