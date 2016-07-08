@@ -2535,7 +2535,7 @@ class VacReqUtil
         //$requestName = $entity->getRequestName();
 
         $approvers = $this->getRequestApprovers($entity);
-
+        echo "approvers=".count($approvers)."<br>";
 
         //$subject = $requestName." #" . $entity->getId() . " " . ucwords($status);
         $approversNameArr = array();
