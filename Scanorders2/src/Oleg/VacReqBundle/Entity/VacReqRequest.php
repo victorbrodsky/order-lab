@@ -953,12 +953,13 @@ class VacReqRequest
 
         $requestType = $this->getRequestType();
         if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
-            $statusArr[] =  "Carry Vacation Request: ";
+            $res =  "Carry Vacation Request: ";
             $tentativeStatus = $this->getTentativeStatus();
             if( $tentativeStatus ) {
-                $statusArr[] = "Tentative Status: ".$tentativeStatus;
+                $res .= "Tentative Status: ".$tentativeStatus."; ";
             }
-            $statusArr[] = "Status: ".$this->getStatus();
+            $res .= "Status: ".$this->getStatus();
+            $statusArr[] = $res;
         }
 
         if( count($statusArr) > 0 ) {
@@ -1316,6 +1317,7 @@ class VacReqRequest
             }
             $res .= "Organizational Group: ".$this->getInstitution().$break;
 
+            $res .= $break;
             $res .= "### Carry Over Request ###".$break;
             $res .= "Tentative Organizational Group: ".$this->getTentativeInstitution().$break;
             $res .= "Carry Over Days: ".$this->getCarryOverDays().$break;
