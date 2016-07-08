@@ -1272,10 +1272,13 @@ class VacReqRequest
         //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
         $res = "Request ID: ".$this->getId().$break;
+        $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
+        $res .= "Submitter: ".$this->getSubmitter().$break;
         $res .= "Person Away: ".$this->getUser().$break;
+        $res .= "Approver: ".$this->getApprover().$break;
+        $res .= "Approved/Rejected on: ".$this->getApprovedRejectDate()->format('m-d-Y').$break;
         $res .= "Organizational Group: ".$this->getInstitution().$break;
         $res .= "Phone Number for the person away: ".$this->getPhone().$break;
-
         $res .= "Emergency Contact Info:".$break.implode($break,$this->getEmergencyConatcsArr()).$break.$break;
 
         if( $this->hasBusinessRequest() ) {
@@ -1290,7 +1293,16 @@ class VacReqRequest
 
         $requestType = $this->getRequestType();
         if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+            $res = "Request ID: ".$this->getId().$break;
+            $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
+            $res .= "Submitter: ".$this->getSubmitter().$break;
+            $res .= "Person Away: ".$this->getUser().$break;
+            $res .= "Approver: ".$this->getApprover().$break;
+            $res .= "Approved/Rejected on: ".$this->getApprovedRejectDate()->format('m-d-Y').$break;
+            $res .= "Organizational Group: ".$this->getInstitution().$break;
+
             $res .= "### Carry Over Request ###".$break;
+            $res .= "Tentative Organizational Group: ".$this->getTentativeInstitution().$break;
             $res .= "Carry Over Days: ".$this->getCarryOverDays().$break;
             $res .= "from: ".$this->getSourceYearRange().$break;
             $res .= "to: " . $this->getDestinationYearRange().$break;
