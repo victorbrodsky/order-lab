@@ -249,6 +249,7 @@ class CarryOverController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
+        $break = "\r\n";
 
         if( !$status ) {
             throw $this->createNotFoundException('Status is invalid: status='.$status);
@@ -390,14 +391,17 @@ class CarryOverController extends Controller
             //send email to submitter
             if( $status == 'rejected' ) {
                 //Subject: Your request to carry over X vacation days from 20XX-20YY to 20YY-20ZZ was rejected.
-                $subjectRejected = "Your request to carry over ".$entity->getCarryOverDays()." vacation days from ".
+                $subjectRejected = "Your request ID #".$entity->getId()." to carry over ".$entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange()." was rejected.";
 
                 //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
                 // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
-                $bodyRejected = $entity->getTentativeApprover(). " has rejected your request to carry over ".
+                $bodyRejected = $entity->getTentativeApprover(). " has rejected your request ID #".$entity->getId()." to carry over ".
                     $entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
+
+                //$bodyRejected
+                $bodyRejected .= $break.$break.$entity;
 
                 $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectRejected, $bodyRejected, null, null );
 
