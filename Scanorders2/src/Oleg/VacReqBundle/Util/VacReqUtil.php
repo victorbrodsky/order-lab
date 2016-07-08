@@ -102,11 +102,11 @@ class VacReqUtil
         if( !$institution ) {
             return null;
         }
-        echo "institution=".$institution."<br>";
+        //echo "institution=".$institution."<br>";
 
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
-            echo "getTentativeStatus=".$entity->getTentativeStatus()."<br>";
+            //echo "getTentativeStatus=".$entity->getTentativeStatus()."<br>";
             if( $entity->getTentativeStatus() == 'pending' ) {
                 $approverRole = "ROLE_VACREQ_APPROVER";
                 $institution = $entity->getTentativeInstitution();
@@ -272,12 +272,18 @@ class VacReqUtil
             $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays.
                 " business travel days during ".$yearRange." so far.";
 
+            $prefix = " ";
+            if( $entity->getTentativeStatus() == 'pending' ) {
+                $prefix = " tentatively ";
+            }
+
             if( $entity->getTentativeStatus() == 'approved' && $entity->getTentativeApprovedRejectDate() && $entity->getTentativeApprover() ) {
                 //This request has been tentatively approved by [VacationApproverFirstName, VacationApproverLastName] on
                 // DateOfStatusChange at TimeOfStatusChange.
                 $tentativeApprovedRejectDate = $entity->getTentativeApprovedRejectDate()->setTimezone(new \DateTimeZone('America/New_York'));
                 $message .= $break.$break."This request has been tentatively approved by ".$entity->getTentativeApprover().
                     " on ".$tentativeApprovedRejectDate->format("M d Y h:i A T").".";
+                $prefix = " final ";
             }
 
             $actionRequestApproveUrl = $this->container->get('router')->generate(
@@ -289,7 +295,7 @@ class VacReqUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $message .= $break . $break . "To approve this request, please follow this link:" . $break;
+            $message .= $break . $break . "To".$prefix."approve this request, please follow this link:" . $break;
             $message .= $actionRequestApproveUrl;
 
             //rejected
