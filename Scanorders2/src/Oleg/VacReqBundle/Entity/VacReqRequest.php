@@ -951,6 +951,16 @@ class VacReqRequest
             $statusArr[] =  "Vacation Request ".$statusV;
         }
 
+        $requestType = $this->getRequestType();
+        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+            $statusArr[] =  "Carry Vacation Request: ";
+            $tentativeStatus = $this->getTentativeStatus();
+            if( $tentativeStatus ) {
+                $statusArr[] = "Tentative Status: ".$tentativeStatus;
+            }
+            $statusArr[] = "Status: ".$this->getStatus();
+        }
+
         if( count($statusArr) > 0 ) {
             return implode(", ",$statusArr);
         }
