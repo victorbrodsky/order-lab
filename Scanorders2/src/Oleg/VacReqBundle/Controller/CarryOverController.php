@@ -365,7 +365,7 @@ class CarryOverController extends Controller
         //Now we have two cases: first and second step approval
 
         //don't allow to change final status
-        if( $entity->getStatus() != 'pending' ) {
+        if( $entity->getStatus() && $entity->getStatus() != 'pending' ) {
             $event = "This request ID #".$entity->getId()." has been already ".$entity->getStatus()." by ".$entity->getApprover().
             " on ".$entity->getApprovedRejectDate()->format('F jS, Y');
             //Flash
