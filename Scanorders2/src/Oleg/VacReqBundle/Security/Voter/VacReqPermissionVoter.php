@@ -117,11 +117,21 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
             //get user allowed groups
             $vacreqUtil = $this->container->get('vacreq_util');
-            $groupParams = array(
-                'roleSubStrArr' => array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'),
-                'asObject' => true
-            );
-            $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
+
+            //old get groups method
+//            $groupParams = array(
+//                'roleSubStrArr' => array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'),
+//                'asObject' => true
+//            );
+//            $groupInstitutions = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$groupParams);
+
+            if( $tentative ) {
+                $groupInstitutions = $vacreqUtil->getTentativeGroups($user);
+            } else {
+                $groupParams = array();
+                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+            }
 
             //check if subject has at least one of the $groupInstitutions
             foreach( $groupInstitutions as $inst ) {
