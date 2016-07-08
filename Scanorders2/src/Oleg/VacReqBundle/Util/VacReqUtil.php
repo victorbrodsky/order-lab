@@ -268,7 +268,7 @@ class VacReqUtil
             $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays.
                 " business travel days during ".$yearRange." so far.";
 
-            if( $entity->getTentativeStatus() != 'approved'  ) {
+            if( $entity->getTentativeStatus() == 'approved' && $entity->getTentativeApprovedRejectDate() && $entity->getTentativeApprover() ) {
                 //This request has been tentatively approved by [VacationApproverFirstName, VacationApproverLastName] on
                 // DateOfStatusChange at TimeOfStatusChange.
                 $message .= $break.$break."This request has been tentatively approved by ".$entity->getTentativeApprover().
