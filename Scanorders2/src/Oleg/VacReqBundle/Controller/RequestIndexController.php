@@ -314,9 +314,9 @@ class RequestIndexController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //testing
-//        foreach( $organizationalInstitutions as $organizationalInstitution ) {
-//            echo "organizationalInstitution=".$organizationalInstitution."<br>";
-//        }
+        //foreach( $organizationalInstitutions as $organizationalInstitution ) {
+            //echo "organizationalInstitution=".$organizationalInstitution."<br>";
+        //}
 
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 
@@ -330,8 +330,18 @@ class RequestIndexController extends Controller
 
         $params['routeName'] = $request->get('_route');
 
+        $approverRole = false;
+        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ||
+            $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            $approverRole = true;
+        }
+        $params['approverRole'] = $approverRole;
+
         $supervisorRole = false;
-        if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') || $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ||
+            $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
             $supervisorRole = true;
         }
         $params['supervisor'] = $supervisorRole;

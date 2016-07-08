@@ -26,7 +26,7 @@ class VacReqFilterType extends AbstractType
     {
 
         //visible only for my request and incoming requests for SUPERVISOR users
-        if( $this->params['routeName'] == 'vacreq_myrequests' || $this->params['supervisor'] ) {
+        if( $this->params['routeName'] == 'vacreq_myrequests' || $this->params['supervisor'] || $this->params['approverRole'] ) {
             $builder->add('requestType', 'entity', array(
                 'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
                 'property' => 'name',

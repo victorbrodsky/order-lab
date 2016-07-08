@@ -355,8 +355,6 @@ class CarryOverController extends Controller
 
         //Now we have two cases: first and second step approval
 
-        $statusSet = false;
-
         if( $entity->getTentativeStatus() == 'pending' ) {
             ////////////// first step: group approver ///////////////////
             //setTentativeInstitution to approved or rejected
@@ -408,9 +406,9 @@ class CarryOverController extends Controller
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively rejected by.".
+                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively rejected by ".
                     $entity->getTentativeApprover().". ".
-                    "Confirmation email has been sent to the submitter ".$entity->getUser();
+                    "Confirmation email has been sent to the submitter ".$entity->getUser().".";
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
@@ -494,60 +492,9 @@ class CarryOverController extends Controller
         }
 
 
-        if( $statusSet ) {
+        $em->persist($entity);
+        $em->flush();
 
-            if( $status == "pending" ) {
-                $entity->setApprover(null);
-            } else {
-                $entity->setApprover($user);
-            }
-
-            $entity->setExtraStatus(NULL);
-            $em->persist($entity);
-            $em->flush();
-
-            //return $this->redirectToRoute('vacreq_home');
-
-            //send respond confirmation email to a submitter
-            $vacreqUtil = $this->get('vacreq_util');
-            if( $status == 'canceled' ) {
-                //an email should be sent to approver saying
-                // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
-                // and list all variable names and values in the email.
-                $approversNameStr = $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
-            } else {
-                $approversNameStr = null;
-                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
-            }
-
-            //Flash
-            $statusStr = $status;
-            if( $status == 'pending' ) {
-                $statusStr = 'set to Pending';
-            }
-
-            $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
-            $event .= ": ".$entity->getDetailedStatus().".";
-            if( $approversNameStr ) {
-                $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
-            }
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                $event
-            );
-
-            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
-                $eventType = 'Carry Over Request Updated';
-            } else {
-                $eventType = 'Business/Vacation Request Updated';
-            }
-
-            //Event Log
-            $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
-
-        }
 
         $url = $request->headers->get('referer');
         //exit('url='.$url);
