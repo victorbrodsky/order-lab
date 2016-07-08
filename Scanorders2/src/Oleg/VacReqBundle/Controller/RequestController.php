@@ -1139,10 +1139,11 @@ class RequestController extends Controller
         $tentativeInstitutions = null;
         $groupParams = array();
         if( $requestType->getAbbreviation() == "carryover" ) {
+
             $tentativeGroupParams = array();
             $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
             if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+                $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
             }
             $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
 
@@ -1160,6 +1161,7 @@ class RequestController extends Controller
             }
         }
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+        //echo "organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
 
         if( count($organizationalInstitutions) == 0 ) {
             $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN");
