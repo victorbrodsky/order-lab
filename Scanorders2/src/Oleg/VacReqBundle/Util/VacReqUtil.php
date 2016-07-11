@@ -374,7 +374,7 @@ class VacReqUtil
         $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to submitter ".$submitter->getSingleEmail());
 
         //css to email users
-        $approversNameArr = array();
+        //$approversNameArr = array();
         $cssArr = array();
         $settings = $this->getSettingsByInstitution($institution->getId());
         if( $settings ) {
@@ -388,24 +388,27 @@ class VacReqUtil
         }
 
         //add approvers to css
-        $approvers = $this->getRequestApprovers($entity);
-        foreach( $approvers as $approver ) {
-            $approverSingleEmail = $approver->getSingleEmail();
-            if( $approverSingleEmail ) {
-                $cssArr[] = $approverSingleEmail;
-                $approversNameArr[] = $approver."";
-            }
-        } //foreach approver
+        if( 0 ) { //don't send a copy of the confirmation email to approvers
+            $approvers = $this->getRequestApprovers($entity);
+            foreach ($approvers as $approver) {
+                $approverSingleEmail = $approver->getSingleEmail();
+                if ($approverSingleEmail) {
+                    $cssArr[] = $approverSingleEmail;
+                    //$approversNameArr[] = $approver . "";
+                }
+            } //foreach approver
+        }
 
         //$emailUtil->sendEmail( $submitter->getSingleEmail(), $subject, $message, $cssArr, null );
 
-        $subject = "Copy of the email: ".$subject;
-        $addText = "### This is a copy of the email sent to the approvers ".implode("; ",$approversNameArr)."###";
-        $message = $addText.$break.$break.$message;
-        $emailUtil->sendEmail( $cssArr, $subject, $message, null, null );
+        if( count($cssArr) > 0 ) {
+            $subject = "Copy of the email: " . $subject;
+            $addText = "### This is a copy of the email sent to the submitter " . $submitter . "###";
+            $message = $addText . $break . $break . $message;
+            $emailUtil->sendEmail($cssArr, $subject, $message, null, null);
 
-
-        $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to all related users ".implode("; ",$cssArr));
+            $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to all related users " . implode("; ", $cssArr));
+        }
     }
 
     //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
