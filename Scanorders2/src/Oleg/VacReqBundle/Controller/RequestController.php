@@ -871,7 +871,7 @@ class RequestController extends Controller
 
         //redirect to myrequests for owner
         if( $entity->getUser()->getId() == $user->getId() ) {
-            return $this->redirectToRoute("vacreq_myrequests");
+            return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
         }
 
         $url = $request->headers->get('referer');
