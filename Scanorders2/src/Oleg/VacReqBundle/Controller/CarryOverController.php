@@ -255,6 +255,11 @@ class CarryOverController extends Controller
             throw $this->createNotFoundException('Status is invalid: status='.$status);
         }
 
+        //supported statuses: approved, rejected
+        if( $status != 'approved' || $status != 'rejected' ) {
+            throw $this->createNotFoundException('Status is not supported (supported statuses: approved, rejected): status='.$status);
+        }
+
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
         if( !$entity ) {
@@ -394,8 +399,10 @@ class CarryOverController extends Controller
 
             $entity->setTentativeStatus($status);
 
-            if( $status == "pending" ) {
+            if( $status == "pending" ) { //set tentative status back to pending
                 $entity->setTentativeApprover(null);
+                $entity->setApprover(null);
+                $entity->setStatus('pending');
             } else {
                 $entity->setTentativeApprover($user);
                 $entity->setTentativeApprovedRejectDate(new \DateTime());

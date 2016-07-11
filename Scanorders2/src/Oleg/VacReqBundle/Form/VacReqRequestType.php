@@ -39,6 +39,7 @@ class VacReqRequestType extends AbstractType
         }
 
 
+        //show final status and tentative status only for carryover requests
         if( $this->params['requestType']->getAbbreviation() == "carryover" && ($this->params['cycle'] == 'review' || $this->params['cycle'] == 'show') ) {
 
             //enable tentativeStatus radio only when review and not roleCarryOverApprover
@@ -47,13 +48,15 @@ class VacReqRequestType extends AbstractType
 //                $tentativereadOnly = false;
 //            }
             $tentativereadOnly = true;
-            if( $this->params['review'] === true || $this->params['roleAdmin'] || $this->params['roleApprover'] ) {
+            if( $this->params['roleAdmin'] ||
+                ($this->params['review'] == true && $this->params['roleApprover'])
+            ) {
                 $tentativereadOnly = false;
             }
 
             $builder->add('tentativeStatus', 'choice', array(
-                //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
-                'read_only' => $tentativereadOnly,
+                'disabled' => $tentativereadOnly,    //($this->params['roleAdmin'] ? false : true),
+                //'read_only' => $tentativereadOnly,
                 'choices' => array(
                     //'pending' => 'Pending',
                     'approved' => 'Approved',
@@ -69,13 +72,14 @@ class VacReqRequestType extends AbstractType
 
             //enable status radio only for admin or for reviewer
             $readOnly = true;
-            if( $this->params['review'] === true || $this->params['roleAdmin'] || $this->params['roleApprover'] ) {
+            if( $this->params['roleAdmin'] ||
+                ($this->params['review'] == true && $this->params['roleCarryOverApprover']) ) {
                 $readOnly = false;
             }
 
             $builder->add('status', 'choice', array(
-                //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
-                'read_only' => $readOnly,
+                'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+                //'read_only' => $readOnly,
                 'choices' => array(
                     //'pending' => 'Pending',
                     'approved' => 'Approved',
