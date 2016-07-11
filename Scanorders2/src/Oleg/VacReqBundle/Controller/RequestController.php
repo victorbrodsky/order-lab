@@ -601,7 +601,7 @@ class RequestController extends Controller
             }
 
             if( $routName == 'vacreq_review' ) {
-                return $this->redirectToRoute('vacreq_incomingrequests');
+                return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
             } else {
                 return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
             }
@@ -702,7 +702,7 @@ class RequestController extends Controller
                 'notice',
                 "This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
             );
-            return $this->redirectToRoute('vacreq_incomingrequests');
+            return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
         }
 
 
@@ -912,7 +912,7 @@ class RequestController extends Controller
                 'notice',
                 'You can not submit a Cancellation Requested for a not already approved request.'
             );
-            return $this->redirectToRoute('vacreq_myrequests');
+            return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
         }
 
         $entity->setExtraStatus("Cancellation Requested");
@@ -987,7 +987,7 @@ class RequestController extends Controller
         $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
-        return $this->redirectToRoute('vacreq_myrequests');
+        return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
     }
     /**
      * approver can change a status of a "cancellation-request" for an entire, already approved request
@@ -1025,7 +1025,7 @@ class RequestController extends Controller
                 'notice',
                 "This cancellation request for ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
             );
-            return $this->redirectToRoute('vacreq_incomingrequests');
+            return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
         }
 
         //cancellation-request-approved => canceled
@@ -1109,7 +1109,7 @@ class RequestController extends Controller
             $eventSubject
         );
 
-        return $this->redirectToRoute('vacreq_myrequests');
+        return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
     }
 
 

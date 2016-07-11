@@ -968,7 +968,7 @@ class VacReqRequest
             if( $tentativeStatus ) {
                 $res .= "Tentative Status: ".$tentativeStatus."; ";
             }
-            $res .= "Status: ".$this->getStatus();
+            $res .= "Final Status: ".$this->getStatus();
             $statusArr[] = $res;
         }
 
