@@ -438,6 +438,9 @@ class RequestController extends Controller
             $cycle = 'review';
         }
 
+        $originalTentativeStatus = $entity->getTentativeStatus();
+        $originalStatus = $entity->getStatus();
+
         //check if requested carry over days are already approved or denied
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
             //check if requested carry over days are already approved or denied
@@ -474,7 +477,7 @@ class RequestController extends Controller
 //            }
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if( $form->isSubmitted() && $form->isValid() ) {
 
             /////////////// log status ////////////////////////
             $statusMsg = $entity->getId()." (".$routName.")".": set by user=".$user;
@@ -492,27 +495,48 @@ class RequestController extends Controller
             //exit('form is valid');
             if( $routName == 'vacreq_review' ) { //review
 
-                //set final (global) status according to sub-requests status:
-                //only two possible actions: reject or approved
-                $entity->setFinalStatus(); //vacreq_review
-
-                $overallStatus = $entity->getStatus();
-
-                if( $overallStatus == "pending" ) {
-                    $entity->setApprover(null);
+                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                    $action = "Undefined Action";
+                    $changedStatusCount = 0;
+                    if( $originalTentativeStatus != $entity->getTentativeStatus() ) {
+                        $status = $entity->getTentativeStatus();
+                        $changedStatusCount++;
+                    }
+                    if( $originalStatus != $entity->getStatus() ) {
+                        $status = $entity->getStatus();
+                        $changedStatusCount++;
+                    }
+                    //if two statuses are changed (only admin can do it), then use one step (as executive) approval with the final status
+                    if( $changedStatusCount > 1 ) {
+                        $entity->setTentativeStatus(NULL);
+                        $status = $entity->getStatus();
+                    }
+                    if( $changedStatusCount > 0 ) {
+                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request );
+                    }
                 } else {
-                    $entity->setApprover($user);
+                    //set final (global) status according to sub-requests status:
+                    //only two possible actions: reject or approved
+                    $entity->setFinalStatus(); //vacreq_review
+
+                    $overallStatus = $entity->getStatus();
+
+                    if( $overallStatus == "pending" ) {
+                        $entity->setApprover(null);
+                    } else {
+                        $entity->setApprover($user);
+                    }
+
+                    $entity->setExtraStatus(NULL);
+                    $em->persist($entity);
+                    $em->flush();
+
+                    $eventType = 'Business/Vacation Request '.ucwords($overallStatus);
+                    $action = $overallStatus;
+
+                    //send respond email
+                    $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $overallStatus );
                 }
-
-                $entity->setExtraStatus(NULL);
-                $em->persist($entity);
-                $em->flush();
-
-                $eventType = 'Business/Vacation Request '.ucwords($overallStatus);
-                $action = $overallStatus;
-
-                //send respond email
-                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $overallStatus );
 
             } else { //update
 
