@@ -73,7 +73,7 @@
             {% endif %}
 
             {% if requestTypeAbbreviation == 'carryover' %}
-                <th colspan="4" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                <th colspan="5" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
                     Carry Over
                 </th>
             {% else %}
@@ -285,16 +285,16 @@
                                         {#</li>#}
                                     {% endif %}
 
-                                    {#{% if entity.status == 'canceled' %}#}
-                                        {#<li class="divider">#}
-                                        {#<li>#}
-                                            {#<a#}
-                                            {#general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"#}
-                                            {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">#}
-                                                {#Re-Submit#}
-                                            {#</a>#}
-                                        {#</li>#}
-                                    {#{% endif %}#}
+                                    {% if entity.status == 'canceled' %}
+                                        <li class="divider">
+                                        <li>
+                                            <a
+                                            general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"
+                                            href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
+                                                Re-Submit
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
                                     {#The change of status from Approved should only be allowable to a new status "Cancelation Requested" by submitter#}
                                     {% if entity.isOverallStatus('approved') and not entity.extraStatus %}
@@ -311,13 +311,13 @@
                                 {% endif %}
 
 
-                                {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
+                                {% if not entity.isOverallStatus('canceled') and (entity.status == 'pending' or entity.getOverallStatus() == 'pending') %}
                                     <li class="divider">
                                     <li>
                                         <a
                                             general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"
                                             href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">
-                                            Cancel (withdraw entire request)
+                                                Cancel (withdraw entire request)
                                         </a>
                                     </li>
                                 {% endif %}
@@ -328,7 +328,7 @@
                                         <a
                                             general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"
                                             href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
-                                            Re-Submit
+                                                Re-Submit
                                         </a>
                                     </li>
                                 {% endif %}

@@ -1166,6 +1166,16 @@ class FellowshipApplication extends BaseUserAttributes {
                 if( $withResidencySpecialty && $item->getResidencySpecialty() ) {
                     $schoolName = $schoolName . $item->getResidencySpecialty();
                 }
+                if( $withResidencySpecialty && $item->getMajors() ) {
+                    $majorArr = array();
+                    foreach( $item->getMajors() as $major ) {
+                        $majorArr[] = $major."";
+                    }
+                    if( $schoolName && count($majorArr)>0 ) {
+                        $schoolName = $schoolName . "; ";
+                    }
+                    $schoolName = $schoolName . implode(", ",$majorArr);
+                }
 
                 //Institution
                 if( $item->getInstitution() ) {

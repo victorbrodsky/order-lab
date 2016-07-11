@@ -885,6 +885,16 @@ class VacReqRequest
 
 
     public function isOverallStatus( $status ) {
+
+        $requestType = $this->getRequestType();
+        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+            if( $this->getStatus() == $status ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         $resB = true;
         $resV = true;
 

@@ -201,14 +201,19 @@
 
     {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
+    {% set carryOver = false %}
+    {% if entity.getRequestType() and entity.getRequestType().getAbbreviation() == "carryover" %}
+        {% set carryOver = true %}
+    {% endif %}
+
     {% set showApprove = false %}
-    {% if not entity.isOverallStatus('approved') %}
+    {% if not entity.isOverallStatus('approved') and not carryOver %}
         {% set showApprove = true %}
     {% endif %}
 
     {% set showReject = false %}
     {#{% if not entity.isOverallStatus('approved') and not entity.isOverallStatus('rejected') %}#}
-    {% if not entity.isOverallStatus('rejected') %}
+    {% if not entity.isOverallStatus('rejected') and not carryOver %}
         {% set showReject = true %}
     {% endif %}
 
@@ -224,7 +229,7 @@
     {% endif %}
 
     {% set showCancellation = false %}
-    {% if entity.extraStatus == 'Cancellation Requested' %}
+    {% if entity.extraStatus == 'Cancellation Requested' and not carryOver %}
         {% set showCancellation = true %}
     {% endif %}
 
@@ -235,7 +240,9 @@
 
         <ul class="dropdown-menu dropdown-menu-right">
 
-            <li><a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>
+            <li>
+                <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">View User Details</a>
+            </li>
 
             <li>
                 <a href="{{ path(vacreq_sitename~'_review', { 'id': entity.id }) }}">Review</a>
