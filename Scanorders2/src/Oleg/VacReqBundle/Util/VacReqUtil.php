@@ -2942,6 +2942,7 @@ class VacReqUtil
     //$status - pre-approval or final status (the one has been changed)
     public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withCheck=true ) {
 
+        $logger = $this->container->get('logger');
         $em = $this->em;
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');

@@ -495,7 +495,7 @@ class RequestController extends Controller
             //exit('form is valid');
             if( $routName == 'vacreq_review' ) { //review
 
-                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                if( $entity->getRequestType() && $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
                     $action = "Undefined Action";
                     $changedStatusCount = 0;
@@ -513,6 +513,10 @@ class RequestController extends Controller
                         $status = $entity->getStatus();
                     }
                     if( $changedStatusCount > 0 ) {
+                        //reset statuses to original
+                        $entity->setTentativeStatus($originalTentativeStatus);
+                        $entity->setStatus($originalStatus);
+                        
                         $withCheck = false;
                         $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withCheck );
                         $logger->notice("Review CarryOver request ID=".$entity->getId()."; status=".$status."; resulting action=".$action);
