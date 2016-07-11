@@ -606,7 +606,7 @@ class RequestController extends Controller
 
             //Event Log
             $break = "\r\n";
-            $event = "Request for ".$entity->getUser()." has been ".$action." by ".$user.$break;
+            $event = "Request ID #".$entity->getID()." for ".$entity->getUser()." has been ".$action." by ".$user.$break;
             $event .= $entity->getDetailedStatus().$break.$break;
             $userSecUtil = $this->container->get('user_security_utility');
 
