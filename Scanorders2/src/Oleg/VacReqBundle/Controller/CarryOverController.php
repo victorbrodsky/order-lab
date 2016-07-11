@@ -256,7 +256,7 @@ class CarryOverController extends Controller
         }
 
         //supported statuses: approved, rejected
-        if( $status != 'approved' || $status != 'rejected' ) {
+        if( $status != 'approved' && $status != 'rejected' ) {
             throw $this->createNotFoundException('Status is not supported (supported statuses: approved, rejected): status='.$status);
         }
 
