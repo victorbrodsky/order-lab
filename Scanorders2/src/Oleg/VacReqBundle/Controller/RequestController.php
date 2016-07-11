@@ -515,6 +515,9 @@ class RequestController extends Controller
                     if( $changedStatusCount > 0 ) {
                         $withCheck = false;
                         $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withCheck );
+                        $logger->notice("Review CarryOver request ID=".$entity->getId()."; status=".$status."; resulting action=".$action);
+                    } else {
+                        $logger->warning("Review CarryOver request ID=".$entity->getId()."; failed to process: changedStatusCount=".$changedStatusCount);
                     }
 
                 } else {
