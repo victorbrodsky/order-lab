@@ -34,7 +34,7 @@ class CronCommand extends ContainerAwareCommand {
         //test
         $fellappUtil = $this->getContainer()->get('fellapp_util');
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
-        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8); //162
+        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162); //162
         $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
         exit('email test');
         //EOF test
