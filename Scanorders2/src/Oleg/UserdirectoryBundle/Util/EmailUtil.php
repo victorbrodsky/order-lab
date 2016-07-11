@@ -30,7 +30,8 @@ class EmailUtil {
     public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
 
         //testing
-        $emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
+        //$emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
+        $emails = "oli2002@med.cornell.edu";
         $ccs = null;
 
         $logger = $this->container->get('logger');
