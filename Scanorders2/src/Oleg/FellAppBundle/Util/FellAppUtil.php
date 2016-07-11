@@ -394,16 +394,17 @@ class FellAppUtil {
         //[FellowshipType Fellowship] FirstNameOfApplicant LastNameOfApplicant's application received
         $populatedSubjectFellApp = "[".$fellowshipApplication->getFellowshipSubspecialty()." Fellowship] ".$applicant->getUsernameShortest()."'s application received";
 
-        //Configuring the Request Context per Command
+        /////////////// Configuring the Request Context per Command ///////////////
         // http://symfony.com/doc/current/cookbook/console/request_context.html
         $userSecUtil = $this->container->get('user_security_utility');
         $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
-        $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST);
+        $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu
         //echo "liveSiteHost=".$liveSiteHost."; ";
         $context = $this->container->get('router')->getContext();
         $context->setHost($liveSiteHost);
         $context->setScheme('http');
         $context->setBaseUrl('/order');
+        /////////////// EOF Configuring the Request Context per Command ///////////////
 
         //FirstNameOfApplicant LastNameOfApplicant has submitted a new application to your FellowshipType StartDate'sYear(suchAs2018) fellowship
         // on SubmissionDate and you can access it here: LinkToGeneratedApplicantPDF.
@@ -416,7 +417,7 @@ class FellAppUtil {
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        echo "linkToGeneratedApplicantPDF=".$linkToGeneratedApplicantPDF."; ";
+        //echo "linkToGeneratedApplicantPDF=".$linkToGeneratedApplicantPDF."; ";
 
         $linkToChangeStatusOfApplicationToPriority = $this->container->get('router')->generate(
             'fellapp_status_email',

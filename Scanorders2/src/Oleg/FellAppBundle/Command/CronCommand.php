@@ -31,13 +31,13 @@ class CronCommand extends ContainerAwareCommand {
 
         $logger = $this->getContainer()->get('logger');
 
-        //test
-        $fellappUtil = $this->getContainer()->get('fellapp_util');
-        $em = $this->getContainer()->get('doctrine')->getEntityManager();
-        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162); //162
-        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
-        exit('email test');
-        //EOF test
+        //testing
+//        $fellappUtil = $this->getContainer()->get('fellapp_util');
+//        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+//        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162); //162
+//        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
+//        exit('email test');
+        //EOF testing
 
         $fellappImportPopulateUtil = $this->getContainer()->get('fellapp_importpopulate_util');
 
