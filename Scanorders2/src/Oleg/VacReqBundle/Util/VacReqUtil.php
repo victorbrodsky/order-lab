@@ -2955,6 +2955,7 @@ class VacReqUtil
             //setTentativeInstitution to approved or rejected
 
             $action = "Tentatively ".$status;
+            $logger->notice("processChangeStatusCarryOverRequest: action=".$action);
 
             $entity->setTentativeStatus($status);
 
@@ -3031,6 +3032,7 @@ class VacReqUtil
             ////////////// SECOND STEP: supervisor //////////////
 
             $action = "Final ".$status;
+            $logger->notice("processChangeStatusCarryOverRequest: action=".$action);
 
             $entity->setStatus($status);
 
