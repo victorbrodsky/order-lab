@@ -2940,7 +2940,7 @@ class VacReqUtil
     }
 
     //$status - pre-approval or final status (the one has been changed)
-    public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request ) {
+    public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withCheck=true ) {
 
         $em = $this->em;
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -2950,7 +2950,7 @@ class VacReqUtil
 
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
         if( $entity->getTentativeStatus() == 'pending' ) {
-            ////////////// first step: group approver ///////////////////
+            ////////////// FIRST STEP: group pre-approver ///////////////////
             //setTentativeInstitution to approved or rejected
 
             $action = "Tentatively ".$status;
@@ -3027,7 +3027,7 @@ class VacReqUtil
 
 
         } else {
-            ////////////// second step: supervisor //////////////
+            ////////////// SECOND STEP: supervisor //////////////
 
             $action = "Final ".$status;
 
@@ -3040,15 +3040,17 @@ class VacReqUtil
             }
 
             if( $status == "approved" ) {
+
                 //process carry over request days if request is approved
                 $res = $this->processVacReqCarryOverRequest($entity);
-                if( $res && $res['exists'] == true ) {
+                if( $res && $res['exists'] == true && $withCheck ) {
                     //warning for overwrite:
                     //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
                     // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
                     // Please enter the total amount of days that should be carried over 20YY-20ZZ academic year to the 20ZZ-20MM academic year: [ ]"
                     //exit('exists days='.$res['days']);
-                    return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
+                    //return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
+                    return "vacreq_review";
                 }
                 if( $res && $res['exists'] == false ) {
                     //save

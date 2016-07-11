@@ -496,6 +496,7 @@ class RequestController extends Controller
             if( $routName == 'vacreq_review' ) { //review
 
                 if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+
                     $action = "Undefined Action";
                     $changedStatusCount = 0;
                     if( $originalTentativeStatus != $entity->getTentativeStatus() ) {
@@ -512,8 +513,10 @@ class RequestController extends Controller
                         $status = $entity->getStatus();
                     }
                     if( $changedStatusCount > 0 ) {
-                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request );
+                        $withCheck = false;
+                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withCheck );
                     }
+
                 } else {
                     //set final (global) status according to sub-requests status:
                     //only two possible actions: reject or approved
