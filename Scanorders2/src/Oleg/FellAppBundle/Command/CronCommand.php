@@ -30,6 +30,15 @@ class CronCommand extends ContainerAwareCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $logger = $this->getContainer()->get('logger');
+
+        //test
+        $fellappUtil = $this->getContainer()->get('fellapp_util');
+        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8); //162
+        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
+        exit('email test');
+        //EOF test
+
         $fellappImportPopulateUtil = $this->getContainer()->get('fellapp_importpopulate_util');
 
         $result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();

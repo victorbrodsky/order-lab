@@ -105,8 +105,7 @@ class EmailUtil {
         if( $emails && count($emails)>0 ) {
             $emailsStr = implode("; ",$emails);
         }
-        $logger->notice("sendEmail: email sent. To:".$emailsStr."; CC:".$ccStr."; emailRes=".$emailRes);
-        //$logger->notice("sendEmail: email sent. emailRes=".$emailRes);
+        $logger->notice("sendEmail res=".$emailRes."; From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
 
         return $emailRes;
     }
