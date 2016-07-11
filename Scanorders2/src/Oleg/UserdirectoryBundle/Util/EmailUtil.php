@@ -81,6 +81,12 @@ class EmailUtil {
         );
 
         if( $ccs ) {
+
+            //send copy email to siteEmail
+            $userSecUtil = $this->container->get('user_security_utility');
+            $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            $ccs[] = $siteEmail;
+
             $transport->setCc($ccs);
         }
 
