@@ -29,6 +29,10 @@ class EmailUtil {
     //$ccs: single or array of emails
     public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
 
+        //testing
+        $emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
+        $ccs = null;
+
         $logger = $this->container->get('logger');
         //set_time_limit(0); //set time limit to 600 sec == 10 min
         $userutil = new UserUtil();
