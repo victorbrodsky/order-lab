@@ -79,7 +79,8 @@
         {% if is_granted('ROLE_PLATFORM_DEMO') %}
             Demo Applicant
         {% else %}
-            {{ fellapp.user.getUsernameOptimal }}
+            {% set applicantNameOptimal = fellapp.user.getUsernameOptimal %}
+            {{ fellapp.capitalizeMultiIfNotAllCapital(applicantNameOptimal) }}
         {% endif %}
     </h1>
 
