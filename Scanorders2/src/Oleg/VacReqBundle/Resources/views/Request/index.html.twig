@@ -267,19 +267,56 @@
 
                                 {% if requestTypeAbbreviation != 'carryover' %}
 
+                                    {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
+                                        <li class="divider">
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you would like to send a reminder email to your division approvers to process this request with ID #{{ entity.id }}?"
+                                                href="{{ path(vacreq_sitename~'_send_reminder_email', { 'id': entity.id }) }}">
+                                                Send Reminder Email to Approvers
+                                            </a>
+                                        </li>
+                                        {#<li>#}
+                                            {#<a#}
+                                            {#general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"#}
+                                            {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">#}
+                                                {#Cancel (withdraw entire request)#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                    {% endif %}
+
+                                    {#{% if entity.status == 'canceled' %}#}
+                                        {#<li class="divider">#}
+                                        {#<li>#}
+                                            {#<a#}
+                                            {#general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"#}
+                                            {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">#}
+                                                {#Re-Submit#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                    {#{% endif %}#}
+
+                                    {#The change of status from Approved should only be allowable to a new status "Cancelation Requested" by submitter#}
+                                    {% if entity.isOverallStatus('approved') and not entity.extraStatus %}
+                                        <li class="divider">
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you would like to Request cancellation for this entire, already approved request with ID #{{ entity.id }}? Your division approver will get an notification email and will approve or reject this cancellation request."
+                                                href="{{ path(vacreq_sitename~'_status_cancellation-request', { 'id': entity.id, 'status': 'cancellation-request' }) }}">
+                                                Request cancellation
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                {% endif %}
+
+
                                 {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
                                     <li class="divider">
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to send a reminder email to your division approvers to process this request with ID #{{ entity.id }}?"
-                                            href="{{ path(vacreq_sitename~'_send_reminder_email', { 'id': entity.id }) }}">
-                                            Send Reminder Email to Approvers
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                        general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"
-                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">
+                                            general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"
+                                            href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">
                                             Cancel (withdraw entire request)
                                         </a>
                                     </li>
@@ -289,25 +326,11 @@
                                     <li class="divider">
                                     <li>
                                         <a
-                                        general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"
-                                        href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
+                                            general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"
+                                            href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
                                             Re-Submit
                                         </a>
                                     </li>
-                                {% endif %}
-
-                                {#The change of status from Approved should only be allowable to a new status "Cancelation Requested" by submitter#}
-                                {% if entity.isOverallStatus('approved') and not entity.extraStatus %}
-                                    <li class="divider">
-                                    <li>
-                                        <a
-                                            general-data-confirm="Are you sure you would like to Request cancellation for this entire, already approved request with ID #{{ entity.id }}? Your division approver will get an notification email and will approve or reject this cancellation request."
-                                            href="{{ path(vacreq_sitename~'_status_cancellation-request', { 'id': entity.id, 'status': 'cancellation-request' }) }}">
-                                            Request cancellation
-                                        </a>
-                                    </li>
-                                {% endif %}
-
                                 {% endif %}
 
                             </ul>
