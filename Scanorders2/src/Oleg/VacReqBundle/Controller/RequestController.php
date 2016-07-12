@@ -516,9 +516,13 @@ class RequestController extends Controller
                         //reset statuses to original
                         $entity->setTentativeStatus($originalTentativeStatus);
                         $entity->setStatus($originalStatus);
-                        
+
                         $withCheck = false;
                         $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withCheck );
+
+                        $em->persist($entity);
+                        $em->flush();
+                        
                         $logger->notice("Review CarryOver request ID=".$entity->getId()."; status=".$status."; resulting action=".$action);
                     } else {
                         $logger->warning("Review CarryOver request ID=".$entity->getId()."; failed to process: changedStatusCount=".$changedStatusCount);
