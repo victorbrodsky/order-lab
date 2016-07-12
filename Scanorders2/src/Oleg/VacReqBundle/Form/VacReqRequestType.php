@@ -49,7 +49,7 @@ class VacReqRequestType extends AbstractType
 //            }
             $tentativereadOnly = true;
             if( $this->params['roleAdmin'] ||
-                ($this->params['review'] == true && $this->params['roleApprover'])
+                ($this->params['review'] == true && $this->params['roleApprover'] && !$this->params['roleCarryOverApprover'])
             ) {
                 $tentativereadOnly = false;
             }

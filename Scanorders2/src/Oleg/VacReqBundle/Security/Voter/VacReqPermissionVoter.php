@@ -21,6 +21,33 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   //PatientHierarchyVoter
 {
 
+    const CHANGESTATUS_CARRYOVER = 'changestatus-carryover';
+    // if the attribute isn't one we support, return false
+    protected function supportAttribute($attribute, $subject) {
+        if( parent::supportAttribute($attribute, $subject) ) {
+            return true;
+        } else {
+            if( in_array($attribute, array(self::CHANGESTATUS_CARRYOVER)) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) {
+        if( parent::voteOnAttribute($attribute, $subject, $token) ) {
+            return true;
+        } else {
+            switch($attribute) {
+                case self::CHANGESTATUS_CARRYOVER:
+                    return $this->canChangeCarryoverStatus($subject, $token);
+            }
+        }
+
+        return false;
+    }
+
+
     protected function getSiteRoleBase() {
         //exit('111');
         return 'VACREQ';
@@ -29,6 +56,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
     protected function getSitename() {
         return 'vacreq';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
+
 
 
     protected function canView($subject, TokenInterface $token) {
@@ -80,6 +108,37 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         return false;
     }
 
+    public function canChangeCarryoverStatus($subject, TokenInterface $token) {
+        if( $this->canChangeStatus($subject, $token) ) {
+            $user = $token->getUser();
+            //ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY
+            $roleName = "ROLE_VACREQ_SUPERVISOR";
+            $hasSupervisorRole = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                isUserHasSiteAndPartialRoleName($user, $this->getSitename(), $roleName);
+            if( $hasSupervisorRole ) {
+                return true;
+            }
+
+//            //additionally check for supervisor role
+//            $user = $token->getUser();
+//            $vacreqUtil = $this->container->get('vacreq_util');
+//            $groupParams = array('asObject'=>true);
+//            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+//            $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+//            //check if subject has at least one of the $groupInstitutions
+////            foreach( $groupInstitutions as $inst ) {
+////                if( $inst->getId() == $subjectInst->getId() ) {
+////                    return true;
+////                }
+////            }
+//            if( count($groupInstitutions) > 0 ) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+        }
+        return false;
+    }
 
     private function checkLocalPermission($subject, TokenInterface $token) {
         //check if owner

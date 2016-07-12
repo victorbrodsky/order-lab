@@ -522,7 +522,7 @@ class RequestController extends Controller
 
                         $em->persist($entity);
                         $em->flush();
-                        
+
                         $logger->notice("Review CarryOver request ID=".$entity->getId()."; status=".$status."; resulting action=".$action);
                     } else {
                         $logger->warning("Review CarryOver request ID=".$entity->getId()."; failed to process: changedStatusCount=".$changedStatusCount);
@@ -1163,6 +1163,8 @@ class RequestController extends Controller
 //            $entity = new VacReqRequest($user);
 //        }
 
+        $supervisorRole =
+
         $admin = false;
         if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             $admin = true;
@@ -1233,6 +1235,9 @@ class RequestController extends Controller
             throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
         }
         $holidaysUrl = '<a target="_blank" href="'.$holidaysUrl.'">holidays</a>';
+
+        echo "roleApprover=".$roleApprover."<br>";
+        echo "roleCarryOverApprover=".$roleCarryOverApprover."<br>";
 
         $params = array(
             'sc' => $this->get('security.context'),

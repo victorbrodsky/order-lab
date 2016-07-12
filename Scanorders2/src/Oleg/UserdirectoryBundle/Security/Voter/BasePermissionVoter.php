@@ -129,7 +129,8 @@ abstract class BasePermissionVoter extends Voter {
                 return $this->canChangeStatus($subject, $token);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        //throw new \LogicException('This code should not be reached!');
+        return false;
     }
 
     protected function canView($subject, TokenInterface $token)

@@ -25,7 +25,6 @@ class VacReqRoleVoter extends BaseRoleVoter {
         return 'vacreq';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 
-
 }
 
 
