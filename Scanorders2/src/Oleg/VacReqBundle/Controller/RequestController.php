@@ -269,10 +269,16 @@ class RequestController extends Controller
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonth();
         $totalAccruedDays = $vacreqUtil->getTotalAccruedDays();
-        $currentStartYear = date("Y")+1; //2016
-        $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $currentStartYear, "Start" );
+
+        //$currentStartYear = date("Y")+1; //2016
+        $yearRange = $vacreqUtil->getCurrentAcademicYearRange();
+        $yearRangeArr = explode("-",$yearRange);
+        $currentStartYear = $yearRangeArr[1];
+
+        $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $currentStartYear, "End" );
         $startAcademicYearDate = new \DateTime($startAcademicYearStr);
         $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
+
 //        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
 //                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
 

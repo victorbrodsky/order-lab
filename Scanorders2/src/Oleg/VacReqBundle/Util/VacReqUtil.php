@@ -455,10 +455,14 @@ class VacReqUtil
 
         $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
 
-        $previousYear = date("Y") - 1;
-        $currentYear = date("Y");
-        $yearRange = $previousYear."-".$currentYear;
+        //$previousYear = date("Y") - 1;
+        //$currentYear = date("Y");
+        //$yearRange = $previousYear."-".$currentYear;
+        $yearRange = $this->getCurrentAcademicYearRange();
         $result = "During the current ".$yearRange." academic year, you have received ";
+
+        $yearRangeArr = explode("-",$yearRange);
+        $academicYear = $yearRangeArr[0];
 
         //////////////////////// Business /////////////////////
         $requestTypeStr = 'business';
@@ -483,7 +487,7 @@ class VacReqUtil
                 'filter[requestType]' => $requestType->getId(),
                 'filter[businessRequest]' => 1,
                 'filter[approved]' => 1,
-                'filter[academicYear]' => $previousYear
+                'filter[academicYear]' => $academicYear
             )
         );
         $result .= '<a href="'.$businessDaysUrl.'">'.$businessDaysUrlText.'</a>';
@@ -520,7 +524,7 @@ class VacReqUtil
                 'filter[requestType]' => $requestType->getId(),
                 'filter[vacationRequest]' => 1,
                 'filter[approved]' => 1,
-                'filter[academicYear]' => $previousYear
+                'filter[academicYear]' => $academicYear
             )
         );
         $result .= '<a href="'.$vacationDaysUrl.'">'.$vacationDaysUrlText.'</a>';
