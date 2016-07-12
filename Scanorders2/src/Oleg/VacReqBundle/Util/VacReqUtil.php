@@ -3069,7 +3069,7 @@ class VacReqUtil
 
                 //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
                 // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
-                $bodyApproved = $entity->getTentativeApprover(). " has approved your request to carry over ".
+                $bodyApproved = $entity->getApprover(). " has approved your request to carry over ".
                     $entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
@@ -3088,7 +3088,7 @@ class VacReqUtil
 
                 //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
                 // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
-                $bodyRejected = $entity->getTentativeApprover(). " has rejected your request to carry over ".
+                $bodyRejected = $entity->getApprover(). " has rejected your request to carry over ".
                     $entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
@@ -3100,7 +3100,7 @@ class VacReqUtil
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " for ".$entity->getUser()." has been tentatively rejected by.".$entity->getTentativeApprover().
+                $event = $requestName . " for ".$entity->getUser()." has been tentatively rejected by.".$entity->getApprover().
                     "Email for a final approval has been sent to the submitter ".$entity->getUser()->getSingleEmail();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
