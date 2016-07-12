@@ -64,11 +64,11 @@
     {% if totalApprovedDaysString is defined and totalApprovedDaysString %}
         <div class="alert alert-success">
             <p>{{ totalApprovedDaysString|raw }}</p>
-            <p>{{ accruedDaysString }}</p>
+            <p>{{ accruedDaysString|raw }}</p>
             {% if carriedOverDaysString %}
                 <p>{{ carriedOverDaysString }}</p>
             {% endif %}
-            <p>{{ remainingDaysString }}</p>
+            <p>{{ remainingDaysString|raw }}</p>
         </div>
     {% endif %}
 

@@ -286,7 +286,7 @@ class RequestController extends Controller
         // between your start date and the subsequent [July 1st] by [2].
         $accruedDaysString = "If you have worked here since July 1st or before, You have so far accrued ".
             $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").".
-            " Alternatively you can calculate the amount of days you have accrued by multiplying the number of months".
+            "<br>Alternatively you can calculate the amount of days you have accrued by multiplying the number of months".
             " between your start date and the subsequent July 1st by ".$vacationAccruedDaysPerMonth.".";
 
         //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
