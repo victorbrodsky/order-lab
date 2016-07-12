@@ -117,13 +117,15 @@
 
     <td class="{{ tdclassname }}" style="border-left: 2px solid gray;">
         {% if request and request.sourceYear %}
-            {{ request.sourceYear }}
+            {#{{ request.sourceYear }}#}
+            {{ request.getSourceYearRange() }}
         {% endif %}
     </td>
 
     <td class="{{ tdclassname }}">
         {% if request and request.destinationYear %}
-            {{ request.destinationYear }}
+            {#{{ request.destinationYear }}#}
+            {{ request.getDestinationYearRange() }}
         {% endif %}
     </td>
 

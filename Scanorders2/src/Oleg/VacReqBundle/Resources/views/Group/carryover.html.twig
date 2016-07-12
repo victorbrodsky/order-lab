@@ -25,7 +25,7 @@
             <div class="well well-sm">
                 {#ID:{{ carryOver.vars.value.id }}#}
                 {% set yearRange = carryOver.vars.value.getYearRange() %}
-                {{ formmacros.simplefield( "Academic Year:", yearRange, "input", "disabled" ) }}
+                {{ formmacros.simplefield( "Destination Academic Year:", yearRange, "input", "disabled" ) }}
 
                 {{ formmacros.field(carryOver.days) }}
             </div>
