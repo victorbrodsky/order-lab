@@ -600,7 +600,15 @@ class VacReqUtil
 
         //get VacReqCarryOver for request's destination year
         $carryOverYear = $entity->getDestinationYear();
-        $carryOver = $this->getUserCarryOverDays( $subjectUser, $carryOverYear, true );
+
+        //$carryOver = $this->getUserCarryOverDays( $subjectUser, $carryOverYear, true );
+        $carryOver = null;
+        foreach( $userCarryOver->getCarryOvers() as $carryOverThis ) {
+            if( $carryOverThis->getYear() == $carryOverYear ) {
+                $carryOver = $carryOverThis;
+                break;
+            }
+        }
 
         $carryOverDays = null;
 
@@ -634,9 +642,12 @@ class VacReqUtil
             $res['carryOverWarningMessageLog'] = $carryOverWarningMessageLog;
 
         } else {
+
             $carryOverDays = $entity->getCarryOverDays();
             if( $carryOver ) {
-                $carryOver->setDays($carryOverDays);
+                if( $onlyCheck == false ) {
+                    $carryOver->setDays($carryOverDays);
+                }
             }
             $res['exists'] = false;
             $res['days'] = $carryOverDays;

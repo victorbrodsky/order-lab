@@ -232,7 +232,7 @@ class RequestController extends Controller
             //check if requested carry over days are already approved or denied
             if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
                 //check if requested carry over days are already approved or denied
-                $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true);
+                $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true); //new carryover request
                 $carryOverWarningMessageLog = $resCarryOverRequest['carryOverWarningMessageLog'];
                 $eventType = "Existing Days Carry Over Request Created";
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
@@ -444,7 +444,7 @@ class RequestController extends Controller
         //check if requested carry over days are already approved or denied
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
             //check if requested carry over days are already approved or denied
-            $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true);
+            $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true);    //review carryover request
             $carryOverWarningMessage = $resCarryOverRequest['carryOverWarningMessage'];
             $carryOverWarningMessageLog = $resCarryOverRequest['carryOverWarningMessageLog'];
         } else {
@@ -829,7 +829,7 @@ class RequestController extends Controller
                     if( $status == "approved" ) {
                         //process carry over request days if request is approved
                         $vacreqUtil = $this->get('vacreq_util');
-                        $res = $vacreqUtil->processVacReqCarryOverRequest($entity);
+                        $res = $vacreqUtil->processVacReqCarryOverRequest($entity); //change status
                         if( $res && $res['exists'] == true ) {
                             //warning for overwrite:
                             //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
