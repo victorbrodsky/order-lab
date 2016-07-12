@@ -428,6 +428,15 @@ class FellAppUtil {
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        $linkToList = $this->container->get('router')->generate(
+            'fellapp_home',
+            array(
+                'startDate' => $fellowshipApplication->getStartDate()->format('Y'), //2018
+                'filter' => $fellowshipApplication->getFellowshipSubspecialty()->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
         $creationDate = $fellowshipApplication->getCreatedate();
         $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
         $creationDateStr = $creationDate->format('m/d/Y h:i A T');
@@ -438,6 +447,14 @@ class FellAppUtil {
             " and you can access it here: ".$break.$linkToGeneratedApplicantPDF;
         $populatedBodyFellApp .= $break.$break."To mark this application as priority, please click the following link and log in if prompted:".
             $break.$linkToChangeStatusOfApplicationToPriority;
+
+        //To view the list of all received FellowshipType FellowshipYear applications, please follow this link:
+        $populatedBodyFellApp .= $break.$break."To view the list of all received ".
+            $fellowshipApplication->getFellowshipSubspecialty()." ".$fellowshipApplication->getStartDate()->format('Y')." applications, please follow this link:".$break;
+        $populatedBodyFellApp .= $linkToList;
+
+        //If you are off site, please connect via VPN first ( https://its.weill.cornell.edu/services/wifi-networks/vpn ) and then follow the links above.
+        $populatedBodyFellApp .= $break.$break."If you are off site, please connect via VPN first (https://webvpn.med.cornell.edu/) and then follow the links above.";
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );

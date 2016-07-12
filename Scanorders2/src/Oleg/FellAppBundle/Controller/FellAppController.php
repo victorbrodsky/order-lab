@@ -2083,11 +2083,11 @@ class FellAppController extends Controller {
     public function testAction() {
 
         //test url on console
-//        $fellappUtil = $this->container->get('fellapp_util');
-//        $em = $this->getDoctrine()->getManager();
-//        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162);
-//        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
-//        exit('email test');
+        $fellappUtil = $this->container->get('fellapp_util');
+        $em = $this->getDoctrine()->getManager();
+        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162);
+        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
+        exit('email test');
 
         $googleSheetManagement = $this->container->get('fellapp_googleSheetManagement');
 
