@@ -2871,7 +2871,13 @@ class VacReqUtil
     //If the current month is July or August, AND the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
     public function getNewCarryOverRequestString( $user ) {
 
-        $year = date("Y")-1; //2015: current academic year
+        //$year = date("Y")-1; //2015: current academic year
+        $dates = $this->getCurrentAcademicYearStartEndDates();
+        //echo "dates=".$dates['startDate']." == ".$dates['endDate']."<br>";
+        $currentYearStartDate = $dates['startDate'];
+        $currentYearStartDateArr = explode("-",$currentYearStartDate);
+        $year = $currentYearStartDateArr[0];
+        echo "year=".$year."<br>";
 
         $totalAccruedDays = $this->getTotalAccruedDays();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$year);
