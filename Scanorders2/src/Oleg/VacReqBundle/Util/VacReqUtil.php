@@ -2944,6 +2944,7 @@ class VacReqUtil
 
         $logger = $this->container->get('logger');
         $em = $this->em;
+        $session = $this->container->get('session');
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $break = "\r\n";
@@ -2984,7 +2985,7 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $session->getFlashBag()->add(
                     'notice',
                     $event
                 );
@@ -3021,7 +3022,7 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $session->getFlashBag()->add(
                     'notice',
                     $event
                 );
@@ -3104,7 +3105,7 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $session->getFlashBag()->add(
                     'notice',
                     $event
                 );
