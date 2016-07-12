@@ -742,6 +742,7 @@ class RequestController extends Controller
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
 
+        $originalStatus = $entity->getStatus();
 
         /////////////// log status ////////////////////////
         $logger->notice($entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
@@ -912,6 +913,13 @@ class RequestController extends Controller
                 $statusStr = $status;
                 if( $status == 'pending' ) {
                     $statusStr = 'set to Pending';
+                }
+
+                //re-submit request
+                if( $status == "pending" && $originalStatus != "canceled" ) {
+                    //send a confirmation email to approver
+                    $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
+                    $statusStr = 're-submitted';
                 }
 
                 $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
