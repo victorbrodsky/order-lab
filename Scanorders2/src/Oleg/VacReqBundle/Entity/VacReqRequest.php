@@ -1261,9 +1261,14 @@ class VacReqRequest
 
         if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year]
-            $subject = $this->getUser()->getUsernameOptimal(). " requested carry over of " .
-                $this->getCarryOverDays() . " vacation days from " .
-                $this->getSourceYearRange() . " to " . $this->getDestinationYearRange().
+//            $subject = $this->getUser()->getUsernameOptimal(). " requested carry over of " .
+//                $this->getCarryOverDays() . " vacation days from " .
+//                $this->getSourceYearRange() . " to " . $this->getDestinationYearRange().
+//                " via request ID #".$this->getId();
+
+            //SubmitterFirstName SubmitterLastName requests your approval to carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
+            $subject = $this->getUser()->getUsernameOptimal()." requests your approval to carry over ".$this->getCarryOverDays().
+                " vacation days from ".$this->getSourceYearRange() . " to " . $this->getDestinationYearRange().
                 " via request ID #".$this->getId();
         }
 

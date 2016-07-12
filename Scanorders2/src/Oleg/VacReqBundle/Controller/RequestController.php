@@ -46,6 +46,7 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -103,6 +104,16 @@ class RequestController extends Controller
                 $entity->setCarryOverDays($carryOverRequestDays);
             }
 
+            $sourceYear = $request->query->get('sourceYear');
+            if( $sourceYear ) {
+                $entity->setSourceYear($sourceYear);
+            }
+
+            $destinationYear = $request->query->get('destinationYear');
+            if( $destinationYear ) {
+                $entity->setDestinationYear($destinationYear);
+            }
+
             //set tentativeStatus only for non executive submitter
             $userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
             if( !$userExecutiveSubmitter && $entity->getTentativeStatus() == NULL ) {
@@ -117,6 +128,10 @@ class RequestController extends Controller
 
             $newCarryOverRequest = $vacreqUtil->getNewCarryOverRequestString($user);
         }
+
+        //If the current month is July or August, AND the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
+        //$previousCarryOverRequest = $vacreqUtil->getNewCarryOverRequestString($user);
+
         $entity->setRequestType($requestType);
 
         //set phone
@@ -218,7 +233,6 @@ class RequestController extends Controller
 
             //Event Log
             $event = $requestName . " for ".$entity->getUser()." has been submitted. Confirmation email has been sent to ".$approversNameStr;
-            $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
             //exit('exit event='.$event);
@@ -259,8 +273,21 @@ class RequestController extends Controller
         $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $currentStartYear, "Start" );
         $startAcademicYearDate = new \DateTime($startAcademicYearStr);
         $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
-        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
-                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
+//        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
+//                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
+
+        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
+        if( !$vacationAccruedDaysPerMonth ) {
+            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+        }
+        //If you have worked here since [July 1st] or before,
+        // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
+        // Alternatively you can calculate the amount of days you have accrued by multiplying the number of months
+        // between your start date and the subsequent [July 1st] by [2].
+        $accruedDaysString = "If you have worked here since July 1st or before, You have so far accrued ".
+            $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").".
+            " Alternatively you can calculate the amount of days you have accrued by multiplying the number of months".
+            " between your start date and the subsequent July 1st by ".$vacationAccruedDaysPerMonth.".";
 
         //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
         // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
@@ -282,7 +309,11 @@ class RequestController extends Controller
 
         //totalAllocatedDays - vacationDays + carryOverDays
         $remainingDaysRes = $vacreqUtil->totalVacationRemainingDays($user);
-        $remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+        //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+        ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
+        // You have [17] remaining vacation days during the current academic year.
+        $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over requests documented in this system,".
+            " You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
         if( !$remainingDaysRes['accurate'] ) {
             $remainingDaysString .= " (".$vacreqUtil->getInaccuracyMessage().")";
         }

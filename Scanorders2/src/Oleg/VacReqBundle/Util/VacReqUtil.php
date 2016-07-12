@@ -263,14 +263,17 @@ class VacReqUtil
 
             $message .= $break.$break;
 
-            //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
-            $message .= "As of ".$entity->getCreateDate()->format("F jS Y").", ".$entity->getUser()->getUsernameOptimal()." has accrued ".
-                $accruedDays." days in the current ".$yearRange." academic year,";
-            //had Z days carried over from [current academic year -1] to [current academic year],
-            $message .= " had ".$carriedOverDays." days carried over from ".$previousYear." to ".$currentYear.",";
-            //and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
-            $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays.
-                " business travel days during ".$yearRange." so far.";
+//            //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
+//            $message .= "As of ".$entity->getCreateDate()->format("F jS Y").", ".$entity->getUser()->getUsernameOptimal()." has accrued ".
+//                $accruedDays." days in the current ".$yearRange." academic year,";
+//            //had Z days carried over from [current academic year -1] to [current academic year],
+//            $message .= " had ".$carriedOverDays." days carried over from ".$previousYear." to ".$currentYear.",";
+//            //and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
+//            $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays.
+//                " business travel days during ".$yearRange." so far.";
+
+            //subject + SubmitterFirstName SubmitterLastName has M approved vacation days during [CURRENT 20XX-20YY] year.
+            $message .= $entity->getUser()->getUsernameOptimal()." has ".$approvedVacationDays." approved vacation days during ".$yearRange." year.";
 
             $prefix = " ";
             if( $entity->getTentativeStatus() == 'pending' ) {
@@ -2865,27 +2868,60 @@ class VacReqUtil
     //(number of days accrued per month from site settings x 12) + days carried over from previous academic year
     // - approved vacation days for this academic year based on the requests
     // with the status of "Approved" or "Cancelation denied (Approved)"
+    //If the current month is July or August, AND the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
     public function getNewCarryOverRequestString( $user ) {
+
+        $year = date("Y")-1; //2015: current academic year
+
         $totalAccruedDays = $this->getTotalAccruedDays();
-        $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,date("Y")-1); //2015
+        $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$year);
 
         $requestTypeStr = 'vacation';
         $res = $this->getApprovedTotalDays($user,$requestTypeStr);
         $approvedVacationDays = $res['numberOfDays'];
         //$accurate = $res['accurate'];
 
+        //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
         $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
 
+        //If the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
         if( $daysToRequest && $daysToRequest > 0 ) {
-            $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_carryoverrequest',
-                array(
-                    'days' => $daysToRequest,
-                )
-                //UrlGeneratorInterface::ABSOLUTE_URL
-            );
 
-            $link = '<a href="'.$actionRequestUrl.'">Request to carry over the remaining '.$daysToRequest.' vacation days</a>';
+            //If the current month is July or August => 7,8
+            $currentMonth = date('m');
+            //echo "currentMonth=".$currentMonth."<br>";
+            if( $currentMonth == '07' || $currentMonth == '08' ) {
+                //"You have X unused vacation days in the previous 20XX-20YY academic year.
+                // Request to carry them over to the current 20YY-20ZZ academic year."
+
+                $actionRequestUrl = $this->container->get('router')->generate(
+                    'vacreq_carryoverrequest',
+                    array(
+                        'days' => $daysToRequest,
+                        'sourceYear' => $year,
+                        'destinationYear' => date("Y"),
+                    )
+                //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $yearRange = $year."-".date("Y");
+                $link = "You have ".$daysToRequest." unused vacation days in the previous ".$yearRange." academic year.";
+                $link .= ' <a href="'.$actionRequestUrl.'" target="_blank">Request to carry over the remaining '.$daysToRequest.' vacation days</a>';
+
+            } else {
+
+                $actionRequestUrl = $this->container->get('router')->generate(
+                    'vacreq_carryoverrequest',
+                    array(
+                        'days' => $daysToRequest,
+                    )
+                //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $daysToRequest . ' vacation days</a>';
+
+            }
+
             return $link;
         }
 

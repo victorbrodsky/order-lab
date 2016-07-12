@@ -38,13 +38,14 @@ class VacReqCarryOver
 
 
     /**
-     * Start academic year
+     * Start academic year. For example, (2015-2016) $year=2015
+     * Days carry over to the this (destination) academic year
      * @ORM\Column(type="string", nullable=true)
      */
     private $year;
 
     /**
-     * Carry over days from $year from previous year
+     * Carry over days to $year from previous year
      * @ORM\Column(type="integer", nullable=true)
      */
     private $days;
