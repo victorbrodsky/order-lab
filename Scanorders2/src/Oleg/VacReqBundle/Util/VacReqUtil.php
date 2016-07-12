@@ -647,6 +647,7 @@ class VacReqUtil
 
             $carryOverDays = $entity->getCarryOverDays();
             if( $carryOver ) {
+                $logger->notice("exists carryover=".$carryOver);
                 if( $onlyCheck == false ) {
                     $logger->notice("set carryover days=".$carryOverDays);
                     $carryOver->setDays($carryOverDays);
@@ -659,6 +660,18 @@ class VacReqUtil
             $res['days'] = $carryOverDays;
             $res['carryOverWarningMessage'] = null;
             $res['carryOverWarningMessageLog'] = null;
+        }
+
+        if( $carryOver ) {
+            $logger->notice("exists carryover=".$carryOver);
+            if( $onlyCheck == false ) {
+                $carryOverDays = $entity->getCarryOverDays();
+                $logger->notice("final set carryover days=".$carryOverDays);
+                $carryOver->setDays($carryOverDays);
+                //$em = $this->getDoctrine()->getManager();
+                //$em->persist($carryOver);
+                //$em->flush($carryOver);
+            }
         }
 
         return $res;
