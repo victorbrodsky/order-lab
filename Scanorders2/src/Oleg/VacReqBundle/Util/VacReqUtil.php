@@ -583,6 +583,7 @@ class VacReqUtil
 
     public function processVacReqCarryOverRequest( $entity, $onlyCheck=false ) {
 
+        $logger = $this->container->get('logger');
         $requestType = $entity->getRequestType();
 
         if( !$requestType || ($requestType && $requestType->getAbbreviation() != "carryover") ) {
@@ -609,6 +610,7 @@ class VacReqUtil
                 break;
             }
         }
+        $logger->notice("carryOver=".$carryOver);
 
         $carryOverDays = null;
 
@@ -646,7 +648,11 @@ class VacReqUtil
             $carryOverDays = $entity->getCarryOverDays();
             if( $carryOver ) {
                 if( $onlyCheck == false ) {
+                    $logger->notice("set carryover days=".$carryOverDays);
                     $carryOver->setDays($carryOverDays);
+                    //$em = $this->getDoctrine()->getManager();
+                    //$em->persist($carryOver);
+                    //$em->flush($carryOver);
                 }
             }
             $res['exists'] = false;
@@ -2951,7 +2957,7 @@ class VacReqUtil
     }
 
     //$status - pre-approval or final status (the one has been changed)
-    public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withCheck=true ) {
+    public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect=true, $update=true ) {
 
         $logger = $this->container->get('logger');
         $em = $this->em;
@@ -3058,7 +3064,7 @@ class VacReqUtil
 
                 //process carry over request days if request is approved
                 $res = $this->processVacReqCarryOverRequest($entity);
-                if( $res && $res['exists'] == true && $withCheck ) {
+                if( $res && $res['exists'] == true && $withRedirect ) {
                     //warning for overwrite:
                     //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
                     // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
@@ -3067,10 +3073,12 @@ class VacReqUtil
                     //return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
                     return "vacreq_review";
                 }
-                if( $res && $res['exists'] == false ) {
+                if( $res && ($res['exists'] == false || $update == true) ) {
                     //save
                     $userCarryOver = $res['userCarryOver'];
+                    $logger->notice("processChangeStatusCarryOverRequest: update userCarryOver=".$userCarryOver);
                     $em->persist($userCarryOver);
+                    $em->flush($userCarryOver);
                 }
 
                 //send a confirmation email to submitter

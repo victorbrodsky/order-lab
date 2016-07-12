@@ -517,8 +517,9 @@ class RequestController extends Controller
                         $entity->setTentativeStatus($originalTentativeStatus);
                         $entity->setStatus($originalStatus);
 
-                        $withCheck = false;
-                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withCheck );
+                        $withRedirect = false;
+                        $update=true;
+                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update );
 
                         $em->persist($entity);
                         $em->flush();

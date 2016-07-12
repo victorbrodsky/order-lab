@@ -394,7 +394,8 @@ class CarryOverController extends Controller
         }
 
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
-        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request );
+        //$withRedirect=true; $update=true;
+        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, true, true );
 
         if( $action == 'vacreq_review' ) {
             return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
