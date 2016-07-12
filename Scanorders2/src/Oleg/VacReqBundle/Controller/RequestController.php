@@ -1236,8 +1236,8 @@ class RequestController extends Controller
         }
         $holidaysUrl = '<a target="_blank" href="'.$holidaysUrl.'">holidays</a>';
 
-        echo "roleApprover=".$roleApprover."<br>";
-        echo "roleCarryOverApprover=".$roleCarryOverApprover."<br>";
+        //echo "roleApprover=".$roleApprover."<br>";
+        //echo "roleCarryOverApprover=".$roleCarryOverApprover."<br>";
 
         $params = array(
             'sc' => $this->get('security.context'),
