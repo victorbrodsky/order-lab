@@ -2087,6 +2087,7 @@ class FellAppController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162);
         $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
+        return new Response("OK Test");
         exit('email test');
 
         $googleSheetManagement = $this->container->get('fellapp_googleSheetManagement');
