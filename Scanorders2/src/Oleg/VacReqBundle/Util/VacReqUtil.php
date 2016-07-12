@@ -2881,6 +2881,8 @@ class VacReqUtil
         $approvedVacationDays = $res['numberOfDays'];
         //$accurate = $res['accurate'];
 
+        echo "$totalAccruedDays + $carryOverDaysPreviousYear - $approvedVacationDays <br>";
+
         //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
         $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
 
