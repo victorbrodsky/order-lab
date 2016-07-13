@@ -1939,7 +1939,7 @@ class VacReqUtil
     }
 
     //return format: Y-m-d
-    public function getCurrentAcademicYearStartEndDates($asDateTimeObject=false) {
+    public function getCurrentAcademicYearStartEndDates($asDateTimeObject=false, $yearOffset=null) {
         $userSecUtil = $this->container->get('user_security_utility');
         //academicYearStart: July 01
         $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
@@ -1966,6 +1966,11 @@ class VacReqUtil
         if( $nowDate > $currentYearStartDate ) {
             $previousYear = $currentYear;
             $currentYear = $currentYear + 1;
+        }
+
+        if( $yearOffset ) {
+            $previousYear = $previousYear + $yearOffset;
+            $currentYear = $currentYear + $yearOffset;
         }
 
         $startDate = $previousYear."-".$startDateMD;
@@ -3099,6 +3104,7 @@ class VacReqUtil
     public function getPreviousYearUnusedDays( $user, $asString=true ) {
         $totalAccruedDays = $this->getTotalAccruedDays();
         $requestTypeStr = 'vacation';
+        //$break = "\r\n";
 
         $yearRange = $this->getPreviousAcademicYearRange();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
@@ -3136,8 +3142,17 @@ class VacReqUtil
             // show the following statement in the second well INSTEAD of the one that is shown now (link the word "request" to the request page):
             //"Your request to carry over X vacation days from the 20XX-20YY academic year to the 20YY-20ZZ academic year
             // has been approved by FirstName LastName."
-            if(  ) {
-
+            $finalApprovedRequests = $this->getCarryOverRequests( $user, -1, "approved" );
+            $countFinalApprovedRequests = count($finalApprovedRequests);
+            foreach( $finalApprovedRequests as $thisRequest ) {
+                $reqId = "";
+                if( $countFinalApprovedRequests > 1 ) {
+                    $reqId = " (ID #" . $thisRequest->getId() . ") ";
+                }
+                $link .= "<br> Your request $reqId to carry over ".$thisRequest->getCarryOverDays().
+                    " vacation days from the ".$thisRequest->getSourceYearRange().
+                    " academic year to the ".$thisRequest->getDestinationYearRange()." academic year".
+                    " has been approved by ".$thisRequest->getApprover().".";
             }
 
             //If the carry over request has a status of "Tentatively Approved", show the following statement
@@ -3145,11 +3160,46 @@ class VacReqUtil
             //"Your request to carry over X vacation days from the 20XX-20YY academic year to the 20YY-20ZZ academic year
             // has been tentatively approved by FirstName LastName.
             // Your request still has to be approved by FirstName LastName in order for the X vacation days to carried over to 20YY-20ZZ."
+            $tentativelyApprovedRequests = $this->getCarryOverRequests( $user, -1, "pending", "approved" );
+            $countTentativelyApprovedRequests = count($tentativelyApprovedRequests);
+            foreach( $tentativelyApprovedRequests as $thisRequest ) {
+                $reqId = "";
+                if( $countTentativelyApprovedRequests > 1 ) {
+                    $reqId = " (ID #" . $thisRequest->getId() . ") ";
+                }
+                $link .= "<br> Your request $reqId to carry over ".$thisRequest->getCarryOverDays().
+                    " vacation days from the ".$thisRequest->getSourceYearRange().
+                    " academic year to the ".$thisRequest->getDestinationYearRange()." academic year".
+                    " has been tentatively approved by ".$thisRequest->getApprover().".";
+
+                $approvers = $this->getRequestApprovers($thisRequest);
+                $approverNamesArr = array();
+                foreach( $approvers as $approver ) {
+                    $approverNamesArr[] = $approver;
+                }
+                $finalApproversStr = implode(", ",$approverNamesArr);
+
+                $link .= "<br>Your request still has to be approved by ".$finalApproversStr.
+                    " in order for the ".$thisRequest->getCarryOverDays()." vacation days to carried over to ".
+                    $thisRequest->getDestinationYearRange().".";
+            }
 
             //If the carry over request has a status of "Submitted" (before "tentatively approved"), show the following statement in
             // the second well INSTEAD of the one that is shown now:
             //"Your request to carry over X vacation days from the 20XX-20YY academic year to the 20YY-20ZZ academic year
             // is awaiting tentative approval of FirstName LastName."
+            $pendingRequests = $this->getCarryOverRequests( $user, -1, "pending", "pending" );
+            $countPendingRequests = count($pendingRequests);
+            foreach( $countPendingRequests as $thisRequest ) {
+                $reqId = "";
+                if( $countPendingRequests > 1 ) {
+                    $reqId = " (ID #" . $thisRequest->getId() . ") ";
+                }
+                $link .= "<br> Your request $reqId to carry over ".$thisRequest->getCarryOverDays().
+                    " vacation days from the ".$thisRequest->getSourceYearRange().
+                    " academic year to the ".$thisRequest->getDestinationYearRange()." academic year".
+                    " is awaiting tentative approval of ".$thisRequest->getApprover().".";
+            }
 
             return $link;
         }
@@ -3157,16 +3207,16 @@ class VacReqUtil
         return $unusedDays;
     }
 
-    public function getCarryOverRequests( $user, $yearRange=null, $finalStatus=null, $tentativeStatus=null ) {
+    //$yearOffset: 0=>current year, -1=>previous year
+    public function getCarryOverRequests( $user, $yearOffset=null, $finalStatus=null, $tentativeStatus=null ) {
 
         $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
         $dql = $repository->createQueryBuilder('request');
+
         $dql->leftJoin("request.user", "user");
         $dql->leftJoin("request.requestType", "requestType");
 
-        $dql->where("user.id = :userId AND requestType.abbreviation = 'carryover' AND request.status = :status");
-
-        $dql->andWhere('(requestType.startDate BETWEEN :startDate and :endDate)');
+        $dql->where("user.id = :userId AND requestType.abbreviation = 'carryover'");
 
         if( $finalStatus ) {
             $dql->andWhere('request.status = :finalStatus');
@@ -3175,21 +3225,31 @@ class VacReqUtil
             $dql->andWhere('request.tentativeStatus = :tentativeStatus');
         }
 
+        if( $yearOffset != null ) {
+            //previous year: $yearOffset = -1;
+            $dates = $this->getCurrentAcademicYearStartEndDates(false,$yearOffset); //in July 12: 2016-2017
+            $startAcademicYearDate = $dates['startDate'];
+            //$endAcademicYearDate = $dates['startDate'];
+            $startAcademicYearDateArr = explode("-",$startAcademicYearDate);
+            $startAcademicYearStr = $startAcademicYearDateArr[0];
+
+            $dql->andWhere("request.destinationYear = '".$startAcademicYearStr."'");
+        }
+
         $query = $this->em->createQuery($dql);
 
         $query->setParameter('userId', $user->getId());
-        $query->setParameter('status', $finalStatus);
 
         if( $finalStatus ) {
-            $query->setParameter('request.status', $finalStatus);
+            $query->setParameter('finalStatus', $finalStatus);
         }
         if( $tentativeStatus ) {
-            $query->setParameter('request.tentativeStatus', $tentativeStatus);
+            $query->setParameter('tentativeStatus', $tentativeStatus);
         }
 
-        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
-        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+        $requests = $query->getResult();
 
+        return $requests;
     }
 
     //Get available carry over days for the CURRENT academical year.
