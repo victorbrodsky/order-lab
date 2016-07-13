@@ -683,6 +683,8 @@ class VacReqUtil
     public function deleteCanceledVacReqCarryOverRequest( $entity )
     {
 
+        echo "start deleteCanceledVacReqCarryOverRequest <br>";
+
         $logger = $this->container->get('logger');
         $requestType = $entity->getRequestType();
 

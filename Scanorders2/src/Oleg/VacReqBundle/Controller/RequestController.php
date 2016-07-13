@@ -876,6 +876,7 @@ class RequestController extends Controller
                     //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
                     $removeCarryoverStr = " ".$vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity).".";
                 }
+                exit("test");
 
                 //Flash
                 $statusStr = $status;
