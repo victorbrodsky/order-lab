@@ -683,7 +683,7 @@ class VacReqUtil
     public function deleteCanceledVacReqCarryOverRequest( $entity )
     {
 
-        echo "start deleteCanceledVacReqCarryOverRequest <br>";
+        //echo "start deleteCanceledVacReqCarryOverRequest <br>";
 
         $logger = $this->container->get('logger');
         $requestType = $entity->getRequestType();
@@ -698,17 +698,18 @@ class VacReqUtil
         $userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
 
         if (!$userCarryOver) {
-            $logger->notice("VacReqUserCarryOver not found by userid=".$subjectUser->getId());
+            //$logger->notice("VacReqUserCarryOver not found by userid=".$subjectUser->getId());
             return;
         }
 
         //get VacReqCarryOver for request's destination year
         $carryOverYear = $entity->getDestinationYear();
+        $carryOverDays = $entity->getCarryOverDays();
 
         $carryOver = null;
         foreach ($userCarryOver->getCarryOvers() as $carryOverThis) {
-            $logger->notice("carryOverThis->getYear()=".$carryOverThis->getYear());
-            if( $carryOverThis->getYear() == $carryOverYear ) {
+            //$logger->notice("carryOverThis->getYear()=".$carryOverThis->getYear());
+            if( $carryOverThis->getYear() == $carryOverYear && $carryOverThis->getDays() == $carryOverDays ) {
                 $carryOver = $carryOverThis;
                 break;
             }
@@ -728,9 +729,9 @@ class VacReqUtil
             $this->em->persist($userCarryOver);
             $this->em->flush();
 
-            $logger->notice($removeCarryoverStr);
+            //$logger->notice($removeCarryoverStr);
         } else {
-            $logger->notice("VacReqUserCarryOver does not carryOver object with destination year=".$carryOverYear);
+            //$logger->notice("VacReqUserCarryOver does not carryOver object with destination year=".$carryOverYear);
         }
 
         return $removeCarryoverStr;
