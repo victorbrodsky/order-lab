@@ -225,14 +225,15 @@ class VacReqUtil
         //CARRYOVER body
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
-            $previousYear = date("Y") - 1;
-            $currentYear = date("Y");
-            $yearRange = $previousYear."-".$currentYear;
-            $accruedDays = $this->getAccruedDaysUpToThisMonth();
-            $carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear());
-            if( !$carriedOverDays ) {
-                $carriedOverDays = 0;
-            }
+            //$previousYear = date("Y") - 1;
+            //$currentYear = date("Y");
+            //$yearRange = $previousYear."-".$currentYear;
+            $yearRange = $this->getCurrentAcademicYearRange();
+            //$accruedDays = $this->getAccruedDaysUpToThisMonth();
+            //$carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear());
+            //if( !$carriedOverDays ) {
+            //    $carriedOverDays = 0;
+            //}
 
             //vacation
             $resVacationDays = $this->getApprovedTotalDays($entity->getUser(),"vacation");
@@ -423,10 +424,12 @@ class VacReqUtil
         }
 
         if( !$yearRange ) {
-            $currentYear = new \DateTime();
-            $currentYear = $currentYear->format('Y');
-            $previousYear = $currentYear - 1;
-            $yearRange = $previousYear."-".$currentYear;
+//            $currentYear = new \DateTime();
+//            $currentYear = $currentYear->format('Y');
+//            $previousYear = $currentYear - 1;
+//            $yearRange = $previousYear."-".$currentYear;
+
+            $yearRange = $this->getCurrentAcademicYearRange();
         }
 
         $vacationAccurate = true;
@@ -3039,7 +3042,8 @@ class VacReqUtil
         //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
         ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
         // You have [17] remaining vacation days during the current academic year.
-        $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over requests documented in this system,".
+        $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over ".
+            "requests documented in this system,".
             " You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
         if( !$remainingDaysRes['accurate'] ) {
             $remainingDaysString .= " (".$this->getInaccuracyMessage().")";
