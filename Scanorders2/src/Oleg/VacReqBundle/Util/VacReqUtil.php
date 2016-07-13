@@ -1969,7 +1969,7 @@ class VacReqUtil
     }
 
     //return format: Y-m-d
-    public function getCurrentAcademicYearStartEndDates() {
+    public function getCurrentAcademicYearStartEndDates($asDateTimeObject=false) {
         $userSecUtil = $this->container->get('user_security_utility');
         //academicYearStart: July 01
         $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
@@ -1998,9 +1998,17 @@ class VacReqUtil
             $currentYear = $currentYear + 1;
         }
 
+        $startDate = $previousYear."-".$startDateMD;
+        $endDate = $currentYear."-".$endDateMD;
+
+        if( $asDateTimeObject ) {
+            $startDate = \DateTime::createFromFormat('Y-m-d', $startDate);
+            $endDate = \DateTime::createFromFormat('Y-m-d', $endDate);
+        }
+
         return array(
-            'startDate'=> $previousYear."-".$startDateMD,
-            'endDate'=> $currentYear."-".$endDateMD,
+            'startDate'=> $startDate,
+            'endDate'=> $endDate,
         );
     }
 
@@ -2878,10 +2886,8 @@ class VacReqUtil
         }
 
         //get start academic date
-        $currentStartYear = date("Y");
-        $startAcademicYearStr = $this->getEdgeAcademicYearDate( $currentStartYear, "Start" );
-        $startAcademicYearDate = new \DateTime($startAcademicYearStr);
-        //echo "startAcademicYearDate=".$startAcademicYearDate->format("Y-m-d")."<br>";
+        $dates = $this->getCurrentAcademicYearStartEndDates(true);
+        $startAcademicYearDate = $dates['startDate'];
 
         //get month difference between now and $startAcademicYearDate
         $nowDate = new \DateTime();
@@ -2996,6 +3002,12 @@ class VacReqUtil
 //        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
 //                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
 
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        $academicYearStartString = $academicYearStart->format("F jS");
+
         $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
@@ -3004,10 +3016,10 @@ class VacReqUtil
         // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
         // Alternatively you can calculate the amount of days you have accrued by multiplying the number of months
         // between your start date and the subsequent [July 1st] by [2].
-        $accruedDaysString = "If you have worked here since July 1st or before, You have so far accrued ".
+        $accruedDaysString = "If you have worked here since $academicYearStartString or before, You have so far accrued ".
             $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").".
             "<br>Alternatively you can calculate the amount of days you have accrued by multiplying the number of months".
-            " between your start date and the subsequent July 1st by ".$vacationAccruedDaysPerMonth.".";
+            " between your start date and the subsequent $academicYearStartString by ".$vacationAccruedDaysPerMonth.".";
 
 
 
