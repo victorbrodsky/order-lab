@@ -718,7 +718,7 @@ class VacReqUtil
 
         if( $carryOver ) {
 
-            $removeCarryoverStr = "Removed CarryOver data for a destination year ".$carryOverYear." ".$carryOver->getDays()." days for ".$subjectUser;
+            $removeCarryoverStr = "Removed CarryOver data (".$carryOver->getDays()." day from destination ".$carryOverYear." year for ".$subjectUser;
 
             $userCarryOver->removeCarryOver($carryOver);
 
