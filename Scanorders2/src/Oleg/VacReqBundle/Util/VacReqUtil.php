@@ -720,11 +720,10 @@ class VacReqUtil
 
             $removeCarryoverStr = "Removed CarryOver data for a destination year ".$carryOverYear." ".$carryOver->getDays()." days for ".$subjectUser;
 
-            $em = $this->getDoctrine()->getManager();
             $userCarryOver->removeCarryOver($carryOver);
-            $em->remove($carryOver);
-            //$em->persist($userCarryOver);
-            $em->flush();
+            $this->em->remove($carryOver);
+            //$this->em->persist($userCarryOver);
+            $this->em->flush();
 
             $logger->notice($removeCarryoverStr);
         } else {
