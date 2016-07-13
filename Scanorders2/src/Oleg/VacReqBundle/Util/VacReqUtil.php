@@ -2989,11 +2989,12 @@ class VacReqUtil
         }
         //If you have worked here since [July 1st] or before,
         // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
-        $accruedDaysString = "If you have worked here since $academicYearStartString or before, You have so far accrued ".
+        $accruedDaysString = "If you have worked here since $academicYearStartString or before, you have so far accrued ".
             $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
-        //Alternatively you can calculate the amount of days you have accrued by multiplying the number of months between your start date and today's date by 2.
-        $accruedDaysString .= "<br>Alternatively you can calculate the amount of days you have accrued by multiplying".
-            " the number of months between your start date and today's date by ".$vacationAccruedDaysPerMonth.".";
+        //Alternatively, if you started after July 1st, you can calculate the amount of vacation days
+        // you have accrued by multiplying the number of months since your start date by 2.
+        $accruedDaysString .= "<br>Alternatively, if you started after $academicYearStartString, you can calculate the amount of vacation days".
+            " you have accrued by multiplying the number of months since your start date by $vacationAccruedDaysPerMonth.";
 
 
         //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
@@ -3015,7 +3016,7 @@ class VacReqUtil
         // You have [17] remaining vacation days during the current academic year.
         $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over ".
             "requests documented in this system,".
-            " You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+            " you have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
         if( !$remainingDaysRes['accurate'] ) {
             $remainingDaysString .= " (".$this->getInaccuracyMessage().")";
         }
