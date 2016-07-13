@@ -3170,7 +3170,7 @@ class VacReqUtil
                 $link .= "<br> Your request $reqId to carry over ".$thisRequest->getCarryOverDays().
                     " vacation days from the ".$thisRequest->getSourceYearRange().
                     " academic year to the ".$thisRequest->getDestinationYearRange()." academic year".
-                    " has been tentatively approved by ".$thisRequest->getApprover().".";
+                    " has been tentatively approved by ".$thisRequest->getTentativeApprover().".";
 
                 $approvers = $this->getRequestApprovers($thisRequest);
                 $approverNamesArr = array();
@@ -3195,10 +3195,18 @@ class VacReqUtil
                 if( $countPendingRequests > 1 ) {
                     $reqId = " (ID #" . $thisRequest->getId() . ") ";
                 }
+
+                $approvers = $this->getRequestApprovers($thisRequest);
+                $approverNamesArr = array();
+                foreach( $approvers as $approver ) {
+                    $approverNamesArr[] = $approver;
+                }
+                $approversStr = implode(", ",$approverNamesArr);
+
                 $link .= "<br> Your request $reqId to carry over ".$thisRequest->getCarryOverDays().
                     " vacation days from the ".$thisRequest->getSourceYearRange().
                     " academic year to the ".$thisRequest->getDestinationYearRange()." academic year".
-                    " is awaiting tentative approval of ".$thisRequest->getApprover().".";
+                    " is awaiting tentative approval of ".$approversStr.".";
             }
 
             return $link;
