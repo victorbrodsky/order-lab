@@ -3190,7 +3190,7 @@ class VacReqUtil
             // is awaiting tentative approval of FirstName LastName."
             $pendingRequests = $this->getCarryOverRequests( $user, -1, "pending", "pending" );
             $countPendingRequests = count($pendingRequests);
-            foreach( $countPendingRequests as $thisRequest ) {
+            foreach( $pendingRequests as $thisRequest ) {
                 $reqId = "";
                 if( $countPendingRequests > 1 ) {
                     $reqId = " (ID #" . $thisRequest->getId() . ") ";
