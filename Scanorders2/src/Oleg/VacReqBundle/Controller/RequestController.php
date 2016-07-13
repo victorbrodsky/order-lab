@@ -663,6 +663,7 @@ class RequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->get('security.context')->getToken()->getUser();
+        $vacreqUtil = $this->get('vacreq_util');
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
@@ -720,7 +721,6 @@ class RequestController extends Controller
 
         //check for overlapped date range if a new status is approved
         if( $status == "approved" ) {
-            $vacreqUtil = $this->get('vacreq_util');
             $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for statusAction
             if (count($overlappedRequests) > 0) {
 
@@ -802,7 +802,6 @@ class RequestController extends Controller
                     //#489 (41)
                     if( $status == "approved" ) {
                         //process carry over request days if request is approved
-                        $vacreqUtil = $this->get('vacreq_util');
                         $res = $vacreqUtil->processVacReqCarryOverRequest($entity); //change status
                         if( $res && $res['exists'] == true ) {
                             //warning for overwrite:
@@ -832,7 +831,13 @@ class RequestController extends Controller
                             $entity->setTentativeStatus(NULL);
                         }
                     }
-                    //exit('1re-submit');
+
+                    if( $status == "canceled" && $originalStatus == "approved" ) {
+                        //TODO: reset user's VacReqUserCarryOver object?
+                        //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
+                        $vacreqUtil->deleteOnCancelVacReqCarryOverRequest($entity);
+                    }
+
                 }
 
 
@@ -855,7 +860,6 @@ class RequestController extends Controller
                 //return $this->redirectToRoute('vacreq_home');
 
                 //send respond confirmation email to a submitter
-                $vacreqUtil = $this->get('vacreq_util');
                 if( $status == 'canceled' ) {
                     //an email should be sent to approver saying
                     // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
@@ -864,6 +868,13 @@ class RequestController extends Controller
                 } else {
                     $approversNameStr = null;
                     $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
+                }
+
+                $removeCarryoverStr = "";
+                if( $entity->getRequestType()->getAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
+                    //TODO: reset user's VacReqUserCarryOver object?
+                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
+                    $removeCarryoverStr = $vacreqUtil->deleteOnCancelVacReqCarryOverRequest($entity);
                 }
 
                 //Flash

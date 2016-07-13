@@ -680,6 +680,54 @@ class VacReqUtil
         return $res;
     }
 
+    public function deleteOnCancelVacReqCarryOverRequest( $entity )
+    {
+
+        $logger = $this->container->get('logger');
+        $requestType = $entity->getRequestType();
+
+        if (!$requestType || ($requestType && $requestType->getAbbreviation() != "carryover")) {
+            return;
+        }
+
+        $subjectUser = $entity->getUser();
+
+        //get userCarryOver
+        $userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+
+        if (!$userCarryOver) {
+            $userCarryOver = new VacReqUserCarryOver($subjectUser);
+        }
+
+        //get VacReqCarryOver for request's destination year
+        $carryOverYear = $entity->getDestinationYear();
+
+        $carryOver = null;
+        foreach ($userCarryOver->getCarryOvers() as $carryOverThis) {
+            if( $carryOverThis->getYear() == $carryOverYear ) {
+                $carryOver = $carryOverThis;
+                break;
+            }
+        }
+
+        $removeCarryoverStr = "";
+
+        if( $carryOver ) {
+
+            $removeCarryoverStr = "Removed destinationYear=".$carryOverYear."; carryOver=".$carryOver."; user ".$subjectUser;
+
+            $em = $this->getDoctrine()->getManager();
+            $userCarryOver->removeCarryOver($carryOver);
+            $em->remove($carryOver);
+            //$em->persist($userCarryOver);
+            $em->flush();
+
+            $logger->notice($removeCarryoverStr);
+        }
+
+        return $removeCarryoverStr;
+    }
+
     public function getYearsFromYearRangeStr($yearRangeStr) {
         if( !$yearRangeStr ) {
             throw new \InvalidArgumentException('Year Range of the Academic year is not defined: yearRangeStr='.$yearRangeStr);
