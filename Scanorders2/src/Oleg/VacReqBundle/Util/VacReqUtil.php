@@ -240,12 +240,12 @@ class VacReqUtil
             }
 
             //business
-            $resBusinessDays = $this->getApprovedTotalDays($entity->getUser(),"business");
-            $approvedBusinessDays = $resBusinessDays['numberOfDays'];
-            $accurateBusiness = $resBusinessDays['accurate'];
-            if( !$accurateBusiness ) {
-                $approvedBusinessDays .= " (".$this->getInaccuracyMessage().")";
-            }
+//            $resBusinessDays = $this->getApprovedTotalDays($entity->getUser(),"business");
+//            $approvedBusinessDays = $resBusinessDays['numberOfDays'];
+//            $accurateBusiness = $resBusinessDays['accurate'];
+//            if( !$accurateBusiness ) {
+//                $approvedBusinessDays .= " (".$this->getInaccuracyMessage().")";
+//            }
 
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
             //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
@@ -3447,6 +3447,41 @@ class VacReqUtil
     public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect=true, $update=true ) {
 
         $logger = $this->container->get('logger');
+
+        //check permissions
+//        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+//            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//            }
+//        } elseif( $this->get('security.context')->isGranted("update", $entity) ) {
+//            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
+//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//            }
+//        } else {
+//            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//        }
+        /////////////// check permission: if user is in approvers => ok ///////////////
+        $permitted = false;
+        $approvers = $this->getRequestApprovers($entity);
+        $approversName = array();
+        foreach( $approvers as $approver ) {
+            if( $user->getId() == $approver->getId() ) {
+                //ok
+                $permitted = true;
+            }
+            $approversName[] = $approver."";
+        }
+        if( $permitted == false ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "You can not review this request. This request can be approved or rejected by ".implode("; ",$approversName)
+            );
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+        /////////////// EOF check permission: if user is in approvers => ok ///////////////
+
+
         $em = $this->em;
         $session = $this->container->get('session');
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -3457,10 +3492,11 @@ class VacReqUtil
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
         if( $entity->getTentativeInstitution() && $entity->getTentativeStatus() == 'pending' ) {
             ////////////// FIRST STEP: group pre-approver ///////////////////
+
             //setTentativeInstitution to approved or rejected
 
             $action = "Tentatively ".$status;
-            $logger->notice("processChangeStatusCarryOverRequest: action=".$action);
+            $logger->notice("process ChangeStatusCarryOverRequest: action=".$action);
 
             $entity->setTentativeStatus($status);
 
@@ -3537,7 +3573,7 @@ class VacReqUtil
             ////////////// SECOND STEP: supervisor //////////////
 
             $action = "Final ".$status;
-            $logger->notice("processChangeStatusCarryOverRequest: action=".$action);
+            $logger->notice("process ChangeStatusCarryOverRequest: action=".$action);
 
             $entity->setStatus($status);
 
@@ -3563,7 +3599,7 @@ class VacReqUtil
                 if( $res && ($res['exists'] == false || $update == true) ) {
                     //save
                     $userCarryOver = $res['userCarryOver'];
-                    $logger->notice("processChangeStatusCarryOverRequest: update userCarryOver=".$userCarryOver);
+                    $logger->notice("process ChangeStatusCarryOverRequest: update userCarryOver=".$userCarryOver);
                     $em->persist($userCarryOver);
                     $em->flush($userCarryOver);
                 }

@@ -327,7 +327,7 @@ class CarryOverController extends Controller
         ) {
             //OK
         } else {
-            exit('Status: no permission to approve/reject');
+            //exit('Status: no permission to approve/reject');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
