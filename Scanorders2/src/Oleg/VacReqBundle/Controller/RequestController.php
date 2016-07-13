@@ -1209,7 +1209,7 @@ class RequestController extends Controller
 //            $entity = new VacReqRequest($user);
 //        }
 
-        $supervisorRole =
+        $roleCarryOverApprover = false;
 
         $admin = false;
         if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
