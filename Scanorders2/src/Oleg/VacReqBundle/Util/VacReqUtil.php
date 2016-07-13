@@ -696,7 +696,8 @@ class VacReqUtil
         $userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
 
         if (!$userCarryOver) {
-            $userCarryOver = new VacReqUserCarryOver($subjectUser);
+            $logger->notice("VacReqUserCarryOver not found by userid=".$subjectUser->getId());
+            return;
         }
 
         //get VacReqCarryOver for request's destination year
@@ -704,6 +705,7 @@ class VacReqUtil
 
         $carryOver = null;
         foreach ($userCarryOver->getCarryOvers() as $carryOverThis) {
+            $logger->notice("carryOverThis->getYear()=".$carryOverThis->getYear());
             if( $carryOverThis->getYear() == $carryOverYear ) {
                 $carryOver = $carryOverThis;
                 break;
@@ -723,6 +725,8 @@ class VacReqUtil
             $em->flush();
 
             $logger->notice($removeCarryoverStr);
+        } else {
+            $logger->notice("VacReqUserCarryOver does not carryOver object with destination year=".$carryOverYear);
         }
 
         return $removeCarryoverStr;
