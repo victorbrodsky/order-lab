@@ -263,47 +263,52 @@ class RequestController extends Controller
         $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user,$bruteForce);
         //echo "totalApprovedDaysString=".$totalApprovedDaysString."<br>";
 
-        //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
-        //"You have accrued X vacation days this academic year (and will accrue X*12 by [date of academic year start from site settings, show as July 1st, 20XX]."
-        //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
-        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-        $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonth();
-        $totalAccruedDays = $vacreqUtil->getTotalAccruedDays();
+        $messages = $vacreqUtil->getHeaderInfoMessages( $user );
+        $accruedDaysString = $messages['accruedDaysString'];
+        $carriedOverDaysString = $messages['carriedOverDaysString'];
+        $remainingDaysString = $messages['remainingDaysString'];
 
-        //$currentStartYear = date("Y")+1; //2016
-        $yearRange = $vacreqUtil->getCurrentAcademicYearRange();
-        $yearRangeArr = explode("-",$yearRange);
-        $currentStartYear = $yearRangeArr[1];
+//        //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
+//        //"You have accrued X vacation days this academic year (and will accrue X*12 by [date of academic year start from site settings, show as July 1st, 20XX]."
+//        //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
+//        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+//        $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonth();
+//        $totalAccruedDays = $vacreqUtil->getTotalAccruedDays();
 
-        $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $currentStartYear, "End" );
-        $startAcademicYearDate = new \DateTime($startAcademicYearStr);
-        $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
+//        //$currentStartYear = date("Y")+1; //2016
+//        $yearRange = $vacreqUtil->getCurrentAcademicYearRange();
+//        $yearRangeArr = explode("-",$yearRange);
+//        $currentStartYear = $yearRangeArr[1];
+//
+//        $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $currentStartYear, "End" );
+//        $startAcademicYearDate = new \DateTime($startAcademicYearStr);
+//        $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
+//
+////        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
+////                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
+//
+//        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
+//        if( !$vacationAccruedDaysPerMonth ) {
+//            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+//        }
+//        //If you have worked here since [July 1st] or before,
+//        // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
+//        // Alternatively you can calculate the amount of days you have accrued by multiplying the number of months
+//        // between your start date and the subsequent [July 1st] by [2].
+//        $accruedDaysString = "If you have worked here since July 1st or before, You have so far accrued ".
+//            $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").".
+//            "<br>Alternatively you can calculate the amount of days you have accrued by multiplying the number of months".
+//            " between your start date and the subsequent July 1st by ".$vacationAccruedDaysPerMonth.".";
 
-//        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
-//                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
-
-        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
-        if( !$vacationAccruedDaysPerMonth ) {
-            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
-        }
-        //If you have worked here since [July 1st] or before,
-        // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
-        // Alternatively you can calculate the amount of days you have accrued by multiplying the number of months
-        // between your start date and the subsequent [July 1st] by [2].
-        $accruedDaysString = "If you have worked here since July 1st or before, You have so far accrued ".
-            $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").".
-            "<br>Alternatively you can calculate the amount of days you have accrued by multiplying the number of months".
-            " between your start date and the subsequent July 1st by ".$vacationAccruedDaysPerMonth.".";
-
-        //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
-        // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
-        $carriedOverDays = $vacreqUtil->getUserCarryOverDays($user, date("Y")-1); //2015
-        //echo "carriedOverDays=".$carriedOverDays."<br>";
-        $carriedOverDaysString = null;
-        if( $carriedOverDays ) {
-            $lastYearRange = (date("Y")-2)."-".(date("Y")-1);
-            $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange.".";
-        }
+//        //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
+//        // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
+//        $carriedOverDays = $vacreqUtil->getUserCarryOverDays($user, date("Y")-1); //2015
+//        //echo "carriedOverDays=".$carriedOverDays."<br>";
+//        $carriedOverDaysString = null;
+//        if( $carriedOverDays ) {
+//            $lastYearRange = (date("Y")-2)."-".(date("Y")-1);
+//            $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange.".";
+//        }
 
         $carryoverPendingRequests = $vacreqUtil->getPendingCarryOverRequests($user);
         $requestTypeCarryOver = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
@@ -313,42 +318,43 @@ class RequestController extends Controller
             $requestTypeCarryOverId = null;
         }
 
-        //totalAllocatedDays - vacationDays + carryOverDays
-        $remainingDaysRes = $vacreqUtil->totalVacationRemainingDays($user);
-        //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
-        ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
-        // You have [17] remaining vacation days during the current academic year.
-        $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over requests documented in this system,".
-            " You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
-        if( !$remainingDaysRes['accurate'] ) {
-            $remainingDaysString .= " (".$vacreqUtil->getInaccuracyMessage().")";
-        }
-        $remainingDaysString .= ".";
+//        //totalAllocatedDays - vacationDays + carryOverDays
+//        $remainingDaysRes = $vacreqUtil->totalVacationRemainingDays($user);
+//        //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+//        ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
+//        // You have [17] remaining vacation days during the current academic year.
+//        $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over requests documented in this system,".
+//            " You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+//        if( !$remainingDaysRes['accurate'] ) {
+//            $remainingDaysString .= " (".$vacreqUtil->getInaccuracyMessage().")";
+//        }
+//        $remainingDaysString .= ".";
 
-        //check for overlapped requests
-        $overlappedMessage = null;
-        $overlapRequests = $vacreqUtil->getOverlappedUserRequests($user);
-        if( count($overlapRequests) > 0 ) {
-            $overlappedRequestHrefs = array();
-            foreach( $overlapRequests as $overlapRequest ) {
-                $overlapRequestLink = $this->container->get('router')->generate(
-                    'vacreq_show',
-                    array(
-                        'id' => $overlapRequest->getId(),
-                    )
-                    //UrlGeneratorInterface::ABSOLUTE_URL
-                );
-                $thisDateRange = $overlapRequest->getFinalStartEndDates('requestVacation');
-                //$startDateStr = $thisDateRange['startDate']->format('Y/m/d');
-                //$endDateStr = $thisDateRange['endDate']->format('Y/m/d');
-                $thisDateRange = "(".$thisDateRange['startDate']->format('Y/m/d')."-".$thisDateRange['endDate']->format('Y/m/d').")";
-                $overlapRequestHref = '<a href="'.$overlapRequestLink.'">ID #'.$overlapRequest->getId().' '.$thisDateRange.'</a>';
-                $overlappedRequestHrefs[] = $overlapRequestHref;
-            }
-            $overlappedMessage = "You have ".count($overlapRequests)." overlapping approved vacation request(s) for the current academic year: <br>".implode("<br>",$overlappedRequestHrefs);
-            $overlappedMessage .= "<br>This will affect the accuracy of the calculations of the total approved and carry over days.";
-            $overlappedMessage .= "<br>You can fix these overlapped vacation requests by canceling them (click a 'Request Cancellation' action link in 'My Requests' page).";
-        }
+//        //check for overlapped requests
+//        $overlappedMessage = null;
+//        $overlapRequests = $vacreqUtil->getOverlappedUserRequests($user);
+//        if( count($overlapRequests) > 0 ) {
+//            $overlappedRequestHrefs = array();
+//            foreach( $overlapRequests as $overlapRequest ) {
+//                $overlapRequestLink = $this->container->get('router')->generate(
+//                    'vacreq_show',
+//                    array(
+//                        'id' => $overlapRequest->getId(),
+//                    )
+//                    //UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $thisDateRange = $overlapRequest->getFinalStartEndDates('requestVacation');
+//                //$startDateStr = $thisDateRange['startDate']->format('Y/m/d');
+//                //$endDateStr = $thisDateRange['endDate']->format('Y/m/d');
+//                $thisDateRange = "(".$thisDateRange['startDate']->format('Y/m/d')."-".$thisDateRange['endDate']->format('Y/m/d').")";
+//                $overlapRequestHref = '<a href="'.$overlapRequestLink.'">ID #'.$overlapRequest->getId().' '.$thisDateRange.'</a>';
+//                $overlappedRequestHrefs[] = $overlapRequestHref;
+//            }
+//            $overlappedMessage = "You have ".count($overlapRequests)." overlapping approved vacation request(s) for the current academic year: <br>".implode("<br>",$overlappedRequestHrefs);
+//            $overlappedMessage .= "<br>This will affect the accuracy of the calculations of the total approved and carry over days.";
+//            $overlappedMessage .= "<br>You can fix these overlapped vacation requests by canceling them (click a 'Request Cancellation' action link in 'My Requests' page).";
+//        }
+        $overlappedMessage = $vacreqUtil->getHeaderOverlappedMessage($user);
 
         return array(
             'entity' => $entity,
@@ -356,14 +362,14 @@ class RequestController extends Controller
             'cycle' => $cycle,
             'accessreqs' => count($accessreqs),
             'carryoverPendingRequests' => count($carryoverPendingRequests),
-            'requestTypeCarryOverId' => $requestTypeCarryOverId,
-            'totalApprovedDaysString' => $totalApprovedDaysString,
-            'accruedDaysString' => $accruedDaysString,
-            'carriedOverDaysString' => $carriedOverDaysString,
-            'remainingDaysString' => $remainingDaysString,
+            'requestTypeCarryOverId' => $requestTypeCarryOverId, //function
+            'totalApprovedDaysString' => $totalApprovedDaysString, //function
+            'accruedDaysString' => $accruedDaysString, //function
+            'carriedOverDaysString' => $carriedOverDaysString, //function
+            'remainingDaysString' => $remainingDaysString, //function
             'title' => $title,
-            'newCarryOverRequest' => $newCarryOverRequest,
-            'overlappedMessage' => $overlappedMessage
+            'newCarryOverRequest' => $newCarryOverRequest, //function
+            'overlappedMessage' => $overlappedMessage //
         );
     }
 
