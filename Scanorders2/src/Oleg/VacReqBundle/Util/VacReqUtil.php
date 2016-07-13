@@ -680,7 +680,7 @@ class VacReqUtil
         return $res;
     }
 
-    public function deleteOnCancelVacReqCarryOverRequest( $entity )
+    public function deleteCanceledVacReqCarryOverRequest( $entity )
     {
 
         $logger = $this->container->get('logger');
@@ -714,7 +714,7 @@ class VacReqUtil
 
         if( $carryOver ) {
 
-            $removeCarryoverStr = "Removed destinationYear=".$carryOverYear."; carryOver=".$carryOver."; user ".$subjectUser;
+            $removeCarryoverStr = "Removed CarryOver data for a destination year ".$carryOverYear." ".$carryOver->getDays()." days for ".$subjectUser;
 
             $em = $this->getDoctrine()->getManager();
             $userCarryOver->removeCarryOver($carryOver);

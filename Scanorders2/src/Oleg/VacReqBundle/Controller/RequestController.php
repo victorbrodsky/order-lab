@@ -832,11 +832,11 @@ class RequestController extends Controller
                         }
                     }
 
-                    if( $status == "canceled" && $originalStatus == "approved" ) {
-                        //TODO: reset user's VacReqUserCarryOver object?
-                        //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
-                        $vacreqUtil->deleteOnCancelVacReqCarryOverRequest($entity);
-                    }
+//                    if( $status == "canceled" && $originalStatus == "approved" ) {
+//                        //TODO: reset user's VacReqUserCarryOver object?
+//                        //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
+//                        $vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity);
+//                    }
 
                 }
 
@@ -874,7 +874,7 @@ class RequestController extends Controller
                 if( $entity->getRequestType()->getAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
                     //TODO: reset user's VacReqUserCarryOver object?
                     //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
-                    $removeCarryoverStr = $vacreqUtil->deleteOnCancelVacReqCarryOverRequest($entity);
+                    $removeCarryoverStr = $vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity);
                 }
 
                 //Flash
@@ -895,6 +895,8 @@ class RequestController extends Controller
                 if( $approversNameStr ) {
                     $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
                 }
+
+                $event .= $removeCarryoverStr;
 
                 $this->get('session')->getFlashBag()->add(
                     'notice',
