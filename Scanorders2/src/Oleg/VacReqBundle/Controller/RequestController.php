@@ -493,6 +493,10 @@ class RequestController extends Controller
                         $update=true;
                         $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update );
 
+                        if( $action == 'vacreq-nopermission' ) {
+                            return $this->redirectToRoute('vacreq-nopermission');
+                        }
+
                         $em->persist($entity);
                         $em->flush();
 

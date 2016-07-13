@@ -401,6 +401,9 @@ class CarryOverController extends Controller
         if( $action == 'vacreq_review' ) {
             return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
         }
+        if( $action == 'vacreq-nopermission' ) {
+            return $this->redirectToRoute('vacreq-nopermission');
+        }
 
         $em->persist($entity);
         $em->flush();

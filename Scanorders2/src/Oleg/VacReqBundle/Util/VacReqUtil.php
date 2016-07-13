@@ -3447,6 +3447,7 @@ class VacReqUtil
     public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect=true, $update=true ) {
 
         $logger = $this->container->get('logger');
+        $session = $this->container->get('session');
 
         //check permissions
 //        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
@@ -3473,17 +3474,17 @@ class VacReqUtil
         }
         if( $permitted == false ) {
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $session->getFlashBag()->add(
                 'notice',
                 "You can not review this request. This request can be approved or rejected by ".implode("; ",$approversName)
             );
-            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            //return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            return 'vacreq-nopermission';
         }
         /////////////// EOF check permission: if user is in approvers => ok ///////////////
 
 
         $em = $this->em;
-        $session = $this->container->get('session');
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $break = "\r\n";
