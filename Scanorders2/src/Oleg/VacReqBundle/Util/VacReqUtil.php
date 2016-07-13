@@ -225,9 +225,6 @@ class VacReqUtil
         //CARRYOVER body
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
-            //$previousYear = date("Y") - 1;
-            //$currentYear = date("Y");
-            //$yearRange = $previousYear."-".$currentYear;
             $yearRange = $this->getCurrentAcademicYearRange();
             //$accruedDays = $this->getAccruedDaysUpToThisMonth();
             //$carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear());
@@ -424,11 +421,6 @@ class VacReqUtil
         }
 
         if( !$yearRange ) {
-//            $currentYear = new \DateTime();
-//            $currentYear = $currentYear->format('Y');
-//            $previousYear = $currentYear - 1;
-//            $yearRange = $previousYear."-".$currentYear;
-
             $yearRange = $this->getCurrentAcademicYearRange();
         }
 
@@ -458,9 +450,6 @@ class VacReqUtil
 
         $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
 
-        //$previousYear = date("Y") - 1;
-        //$currentYear = date("Y");
-        //$yearRange = $previousYear."-".$currentYear;
         $yearRange = $this->getCurrentAcademicYearRange();
         $result = "During the current ".$yearRange." academic year, you have received ";
 
@@ -617,7 +606,6 @@ class VacReqUtil
         //get VacReqCarryOver for request's destination year
         $carryOverYear = $entity->getDestinationYear();
 
-        //$carryOver = $this->getUserCarryOverDays( $subjectUser, $carryOverYear, true );
         $carryOver = null;
         foreach( $userCarryOver->getCarryOvers() as $carryOverThis ) {
             if( $carryOverThis->getYear() == $carryOverYear ) {
@@ -757,9 +745,6 @@ class VacReqUtil
 
     //calculate approved total days for current academical year
     public function getApprovedTotalDays( $user, $requestTypeStr, $bruteForce=false ) {
-        //$previousYear = date("Y") - 1;
-        //$currentYear = date("Y");
-        //$yearRange = $previousYear."-".$currentYear;
         $yearRange = $this->getCurrentAcademicYearRange();
         //echo "getApprovedTotalDays yearRange=".$yearRange."<br>";
         $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "approved", $bruteForce );
@@ -768,26 +753,6 @@ class VacReqUtil
 
     //calculate approved total days for current academical year
     public function getPreviousYearApprovedTotalDays( $user, $requestTypeStr, $bruteForce=false ) {
-
-//        $previousYear = date("Y") - 2;
-//        $currentYear = date("Y") - 1;
-//        $yearRange = $previousYear."-".$currentYear;
-
-//        echo "################<br>";
-//        $dates = $this->getCurrentAcademicYearStartEndDates();
-//        $startDate = $dates['startDate']; //Y-m-d
-//        //echo "startDate=".$startDate."<br>";
-//        //$endDate = $dates['endDate']; //Y-m-d
-//        //echo "endDate=".$endDate."<br>";
-//
-//        $currentYearStartDateArr = explode("-",$startDate);
-//        $year = $currentYearStartDateArr[0];
-//        $endYear = ((int)$year);   //previous year end
-//        $startYear = $endYear - 1;   //previous year start
-//        echo "previous year=".$year."<br>";
-//        $yearRange = $startYear."-".$endYear;
-//        echo "################<br>";
-
         $yearRange = $this->getPreviousAcademicYearRange();
         //echo "getPreviousYearApprovedTotalDays yearRange=".$yearRange."<br>";
         $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "approved", $bruteForce );
@@ -824,13 +789,11 @@ class VacReqUtil
         $previousYear = $yearRangeArr[0];
         $currentYear = $yearRangeArr[1];
 
-        //$previousYear = date("Y") - 1;
         $academicYearStartStr = $previousYear."-".$academicYearStartStr;
         //echo "current academicYearStartStr=".$academicYearStartStr."<br>";
         //academicYearEnd
         $academicYearEndStr = $academicYearEnd->format('m-d');
 
-        //$currentYear = date("Y");
         $academicYearEndStr = $currentYear."-".$academicYearEndStr;
         //echo "current academicYearEndStr=".$academicYearEndStr."<br>";
 
@@ -2997,7 +2960,7 @@ class VacReqUtil
         $totalAccruedDays = $this->getTotalAccruedDays();
 
 
-        //$currentStartYear = date("Y")+1; //2016
+        //$currentStartYear
         $yearRange = $this->getCurrentAcademicYearRange();
         $yearRangeArr = explode("-",$yearRange);
         $currentStartYear = $yearRangeArr[1];
@@ -3028,14 +2991,14 @@ class VacReqUtil
             " the number of months between your start date and today's date by ".$vacationAccruedDaysPerMonth.".";
 
 
-
         //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
         // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
-        $carriedOverDays = $this->getUserCarryOverDays($user, date("Y")-1); //2015
+        $currentYearRange = $this->getCurrentAcademicYearRange();
+        $carriedOverDays = $this->getUserCarryOverDays($user, $currentYearRange);
         //echo "carriedOverDays=".$carriedOverDays."<br>";
         $carriedOverDaysString = null;
         if( $carriedOverDays ) {
-            $lastYearRange = (date("Y")-2)."-".(date("Y")-1);
+            $lastYearRange = $this->getPreviousAcademicYearRange();
             $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange.".";
         }
 
@@ -3083,69 +3046,11 @@ class VacReqUtil
 
         if( $previousYearUnusedDaysMessage && ($currentMonth == '07' || $currentMonth == '08') ) {
 
-//            $yearRange = $this->getPreviousAcademicYearRange();
-//            $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
-//            $res = $this->getPreviousYearApprovedTotalDays($user,$requestTypeStr);
-//            $approvedVacationDays = $res['numberOfDays'];
-//            //echo "previous: $totalAccruedDays + $carryOverDaysPreviousYear - $approvedVacationDays <br>";
-//            //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
-//            $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
-
-            //"You have X unused vacation days in the previous 20XX-20YY academic year.
-            // Request to carry them over to the current 20YY-20ZZ academic year."
-
-//            if( $previosuYearUnusedDays && $previosuYearUnusedDays > 0 ) {
-//                $yearRangeArr = explode("-", $yearRange);
-//                $sourceYear = $yearRangeArr[0];
-//
-//                $actionRequestUrl = $this->container->get('router')->generate(
-//                    'vacreq_carryoverrequest',
-//                    array(
-//                        'days' => $daysToRequest,
-//                        'sourceYear' => $sourceYear,
-//                        'destinationYear' => date("Y"),
-//                    )
-//                //UrlGeneratorInterface::ABSOLUTE_URL
-//                );
-//
-//                $link = "You have " . $daysToRequest . " unused vacation days in the previous " . $yearRange . " academic year.";
-//                $link .= ' <a href="' . $actionRequestUrl . '" target="_blank">Request to carry over the remaining ' . $daysToRequest . ' vacation days</a>';
-//                return $link;
-//           }
-
             return $previousYearUnusedDaysMessage;
 
         } else {
 
-//            $totalAccruedDays = $this->getTotalAccruedDays();
-//            $requestTypeStr = 'vacation';
-//
-//            $currentYearRange = $this->getCurrentAcademicYearRange();
-//            $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$currentYearRange);
-//
-//            $res = $this->getApprovedTotalDays($user,$requestTypeStr);
-//            $approvedVacationDays = $res['numberOfDays'];
-//            //$accurate = $res['accurate'];
-//
-//            //echo "current $totalAccruedDays + $carryOverDaysPreviousYear - $approvedVacationDays <br>";
-//
-//            //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
-//            $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
-//
-//            if( $daysToRequest && $daysToRequest > 0 ) {
-//                $actionRequestUrl = $this->container->get('router')->generate(
-//                    'vacreq_carryoverrequest',
-//                    array(
-//                        'days' => $daysToRequest,
-//                    )
-//                //UrlGeneratorInterface::ABSOLUTE_URL
-//                );
-//
-//                $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $daysToRequest . ' vacation days</a>';
-//                return $link;
-//            }
             $currentYearUnusedDaysMessage = $this->getCurrentYearUnusedDays($user);
-
             if( $currentYearUnusedDaysMessage ) {
                 return $currentYearUnusedDaysMessage;
             }
@@ -3207,26 +3112,84 @@ class VacReqUtil
             return $unusedDays;
         }
 
+        // if the logged in user has a carry over request from the previous academic year to the current academic year
         if( $asString && $unusedDays > 0 ) {
+
             $yearRangeArr = explode("-", $yearRange);
             $sourceYear = $yearRangeArr[0];
+            $destinationYear = $yearRangeArr[1];
 
             $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_carryoverrequest',
                 array(
                     'days' => $unusedDays,
                     'sourceYear' => $sourceYear,
-                    'destinationYear' => date("Y"),
+                    'destinationYear' => $destinationYear,
                 )
             //UrlGeneratorInterface::ABSOLUTE_URL
             );
 
             $link = "You have " . $unusedDays . " unused vacation days in the previous " . $yearRange . " academic year.";
             $link .= ' <a href="' . $actionRequestUrl . '" target="_blank">Request to carry over the remaining ' . $unusedDays . ' vacation days</a>';
+
+            // If the carry over request has a status of "Approved" (final),
+            // show the following statement in the second well INSTEAD of the one that is shown now (link the word "request" to the request page):
+            //"Your request to carry over X vacation days from the 20XX-20YY academic year to the 20YY-20ZZ academic year
+            // has been approved by FirstName LastName."
+            if(  ) {
+
+            }
+
+            //If the carry over request has a status of "Tentatively Approved", show the following statement
+            // in the second well INSTEAD of the one that is shown now:
+            //"Your request to carry over X vacation days from the 20XX-20YY academic year to the 20YY-20ZZ academic year
+            // has been tentatively approved by FirstName LastName.
+            // Your request still has to be approved by FirstName LastName in order for the X vacation days to carried over to 20YY-20ZZ."
+
+            //If the carry over request has a status of "Submitted" (before "tentatively approved"), show the following statement in
+            // the second well INSTEAD of the one that is shown now:
+            //"Your request to carry over X vacation days from the 20XX-20YY academic year to the 20YY-20ZZ academic year
+            // is awaiting tentative approval of FirstName LastName."
+
             return $link;
         }
 
         return $unusedDays;
+    }
+
+    public function getCarryOverRequests( $user, $yearRange=null, $finalStatus=null, $tentativeStatus=null ) {
+
+        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql = $repository->createQueryBuilder('request');
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestType", "requestType");
+
+        $dql->where("user.id = :userId AND requestType.abbreviation = 'carryover' AND request.status = :status");
+
+        $dql->andWhere('(requestType.startDate BETWEEN :startDate and :endDate)');
+
+        if( $finalStatus ) {
+            $dql->andWhere('request.status = :finalStatus');
+        }
+        if( $tentativeStatus ) {
+            $dql->andWhere('request.tentativeStatus = :tentativeStatus');
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('status', $finalStatus);
+
+        if( $finalStatus ) {
+            $query->setParameter('request.status', $finalStatus);
+        }
+        if( $tentativeStatus ) {
+            $query->setParameter('request.tentativeStatus', $tentativeStatus);
+        }
+
+        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+
     }
 
     //Get available carry over days for the CURRENT academical year.
@@ -3236,8 +3199,6 @@ class VacReqUtil
     // - approved vacation days for this academic year based on the requests
     // with the status of "Approved" or "Cancelation denied (Approved)"
     public function getAvailableCurrentYearCarryOverRequestString( $user ) {
-
-        //$year = date("Y")-1; //2015
 
         $dates = $this->getCurrentAcademicYearStartEndDates();
         //echo "dates=".$dates['startDate']." == ".$dates['endDate']."<br>";
