@@ -114,11 +114,11 @@ class RequestController extends Controller
                 $entity->setDestinationYear($destinationYear);
             }
 
-            //set tentativeStatus only for non executive submitter
-            $userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
-            if( !$userExecutiveSubmitter && $entity->getTentativeStatus() == NULL ) {
-                $entity->setTentativeStatus('pending');
-            }
+//            //set tentativeStatus only for non executive submitter
+//            $userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+//            if( !$userExecutiveSubmitter && $entity->getTentativeStatus() == NULL ) {
+//                $entity->setTentativeStatus('pending');
+//            }
 
         } else {
             //business/vacation request
@@ -187,6 +187,11 @@ class RequestController extends Controller
                     $entity->setRequestVacation(null);
                     $em->remove($subRequestV);
                 }
+            }
+
+            //set tentativeStatus only if tentativeInstitution is set (for non executive submitter)
+            if( $entity->getTentativeInstitution() ) {
+                $entity->setTentativeStatus('pending');
             }
 
             //testing
@@ -813,7 +818,23 @@ class RequestController extends Controller
                             $em->persist($userCarryOver);
                         }
                     }
+
+                    //re-submit request
+                    //echo "statuses:".$status." && ".$originalStatus."<br>";
+                    if( $status == "pending" && $originalStatus == "canceled" ) {
+                        //re-set tentative status according to the submitter group
+                        //set tentativeStatus only for non executive submitter
+                        //$userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+                        //re-set tentative status according to the TentativeInstitution
+                        if( $entity->getTentativeInstitution() ) {
+                            $entity->setTentativeStatus('pending');
+                        } else {
+                            $entity->setTentativeStatus(NULL);
+                        }
+                    }
+                    //exit('1re-submit');
                 }
+
 
                 $entity->setStatus($status);
                 $statusSet = true;
@@ -852,7 +873,7 @@ class RequestController extends Controller
                 }
 
                 //re-submit request
-                if( $status == "pending" && $originalStatus != "canceled" ) {
+                if( $status == "pending" && $originalStatus == "canceled" ) {
                     //send a confirmation email to approver
                     $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
                     $statusStr = 're-submitted';

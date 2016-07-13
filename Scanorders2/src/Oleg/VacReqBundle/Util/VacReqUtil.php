@@ -108,7 +108,7 @@ class VacReqUtil
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
             //echo "getTentativeStatus=".$entity->getTentativeStatus()."<br>";
-            if( $entity->getTentativeStatus() == 'pending' ) {
+            if( $entity->getTentativeInstitution() && $entity->getTentativeStatus() == 'pending' ) {
                 $approverRole = "ROLE_VACREQ_APPROVER";
                 $institution = $entity->getTentativeInstitution();
             } else {
@@ -3398,7 +3398,7 @@ class VacReqUtil
         $action = null;
 
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
-        if( $entity->getTentativeStatus() == 'pending' ) {
+        if( $entity->getTentativeInstitution() && $entity->getTentativeStatus() == 'pending' ) {
             ////////////// FIRST STEP: group pre-approver ///////////////////
             //setTentativeInstitution to approved or rejected
 
