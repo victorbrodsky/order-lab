@@ -543,14 +543,18 @@ class VacReqUtil
         $result .= ".";
 
         //if your requests included holidays, they are not automatically removed from these counts
-        $userSecUtil = $this->container->get('user_security_utility');
-        $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl');
-        if( !$holidaysUrl ) {
-            throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
-        }
-        $holidayLink = '<a href="'.$holidaysUrl.'" target="_blank">holidays</a>';
+        //If the number of days in the current academic year for both vacation and business travel = 0, this sentence should not be shown.
+        if( $numberOfDays > 0 ) {
 
-        $result .= "<br>If your requests included ".$holidayLink.", they are not automatically removed from these counts.";
+            $userSecUtil = $this->container->get('user_security_utility');
+            $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl');
+            if (!$holidaysUrl) {
+                throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
+            }
+            $holidayLink = '<a href="' . $holidaysUrl . '" target="_blank">holidays</a>';
+
+            $result .= "<br>If your requests included " . $holidayLink . ", they are not automatically removed from these counts.";
+        }
 
         return $result;
     }
@@ -3017,12 +3021,11 @@ class VacReqUtil
         }
         //If you have worked here since [July 1st] or before,
         // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
-        // Alternatively you can calculate the amount of days you have accrued by multiplying the number of months
-        // between your start date and the subsequent [July 1st] by [2].
         $accruedDaysString = "If you have worked here since $academicYearStartString or before, You have so far accrued ".
-            $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").".
-            "<br>Alternatively you can calculate the amount of days you have accrued by multiplying the number of months".
-            " between your start date and the subsequent $academicYearStartString by ".$vacationAccruedDaysPerMonth.".";
+            $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
+        //Alternatively you can calculate the amount of days you have accrued by multiplying the number of months between your start date and today's date by 2.
+        $accruedDaysString .= "<br>Alternatively you can calculate the amount of days you have accrued by multiplying".
+            " the number of months between your start date and today's date by ".$vacationAccruedDaysPerMonth.".";
 
 
 
