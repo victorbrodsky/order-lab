@@ -267,6 +267,27 @@ class CarryOverController extends Controller
             throw $this->createNotFoundException('Unable to find Request by id='.$id);
         }
 
+        /////////////// check permission: if user is in approvers => ok ///////////////
+        $permitted = false;
+        $approvers = $this->getRequestApprovers($entity);
+        $approversName = array();
+        foreach( $approvers as $approver ) {
+            if( $user->getId() == $approver->getId() ) {
+                //ok
+                $permitted = true;
+            }
+            $approversName[] = $approver."";
+        }
+        if( $permitted == false ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "You can not review this request. This request can be approved or rejected by ".implode("; ",$approversName)
+            );
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+        /////////////// EOF check permission: if user is in approvers => ok ///////////////
+
         //check permissions
 //        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
 //            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
