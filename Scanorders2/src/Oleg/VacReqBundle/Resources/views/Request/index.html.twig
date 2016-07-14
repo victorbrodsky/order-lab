@@ -267,7 +267,7 @@
 
                                 {% if requestTypeAbbreviation != 'carryover' %}
 
-                                    {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
+                                    {#{% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}#}
                                         {#<li class="divider">#}
                                         {#<li>#}
                                             {#<a#}
@@ -283,7 +283,7 @@
                                                 {#Cancel (withdraw entire request)#}
                                             {#</a>#}
                                         {#</li>#}
-                                    {% endif %}
+                                    {#{% endif %}#}
 
                                     {#{% if entity.status == 'canceled' %}#}
                                         {#<li class="divider">#}

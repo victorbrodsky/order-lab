@@ -921,6 +921,12 @@ class VacReqRequest
 
     //return pending or complete
     public function getOverallStatus() {
+
+        $requestType = $this->getRequestType();
+        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+            return $this->getStatus();
+        }
+
         $statusB = null;
         $statusV = null;
 
