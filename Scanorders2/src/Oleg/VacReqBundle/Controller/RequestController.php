@@ -1634,7 +1634,7 @@ class RequestController extends Controller
 
         if (!$this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             //exit('no permission');
-            //return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
         $logger = $this->container->get('logger');
