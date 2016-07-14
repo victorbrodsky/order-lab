@@ -1625,5 +1625,38 @@ class RequestController extends Controller
     }
 
 
+    /**
+     * @Route("/update-carryover/", name="vacreq_update_carryover")
+     * @Method({"GET"})
+     */
+    public function getUpdateCarryOverRequestsAction(Request $request)
+    {
+
+        if (!$this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        $logger = $this->container->get('logger');
+
+        //find unique users
+        $userUniqueRequests = $this->findUniqueUserRequests();
+        //exit('1');
+
+        $count = 1;
+        foreach( $userUniqueRequests as $userUniqueRequest ) {
+            $userId = $userUniqueRequest['userId'];
+//            $logger->error($count." ########## user: ".$userUniqueRequest->getUser());
+//            echo $count." ########## user: ".$userUniqueRequest->getUser()."<br>";
+            $count = $this->analyzeRequests($userId,$count);
+            //$logger->error('#########################');
+            //echo "#########################<br><br>";
+            //$count++;
+        }
+
+
+        exit('2');
+        return $this->redirectToRoute('vacreq_incomingrequests');
+    }
+
 
 }
