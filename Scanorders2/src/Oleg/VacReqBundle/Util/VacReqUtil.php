@@ -133,10 +133,10 @@ class VacReqUtil
 
 
     //set confirmation email to approver and email users
-    public function sendConfirmationEmailToApprovers( $entity ) {
+    public function sendConfirmationEmailToApprovers( $entity, $sendCopy=true ) {
         $subject = $entity->getEmailSubject();
         $message = $this->createEmailBody($entity);
-        return $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message);
+        return $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message,$sendCopy);
     }
     public function createEmailBody($entity,$emailToUser=null,$addText=null) {
 
@@ -252,8 +252,11 @@ class VacReqUtil
             // had Z days carried over from [current academic year -1] to [current academic year],
             // and has been approved for M vacation days and N business travel days during [current academic year as 2015-2016] so far.
 
+            //Dear ...
+            $message = "Dear ###emailuser###," . $break.$break;
+
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
-            $message = $entity->getEmailSubject().".";
+            $message .= $entity->getEmailSubject().".";
 
             //comment
             if( $entity->getComment() ) {
@@ -2694,10 +2697,10 @@ class VacReqUtil
 
 
     //set cancel email to approver and email users
-    public function sendCancelEmailToApprovers( $entity, $user, $status ) {
+    public function sendCancelEmailToApprovers( $entity, $user, $status, $sendCopy=true ) {
         $subject = $entity->getRequestName()." ID #" . $entity->getId() . " " . ucwords($status);
         $message = $this->createCancelEmailBody($entity);
-        return $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message);
+        return $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message,$sendCopy);
     }
     public function createCancelEmailBody( $entity, $emailUser=null, $addText=null ) {
         $break = "\r\n";
@@ -2721,7 +2724,7 @@ class VacReqUtil
     }
 
     //send the general emails to approver and email users with given subject and message body
-    public function sendGeneralEmailToApproversAndEmailUsers( $entity, $subject, $originalMessage ) {
+    public function sendGeneralEmailToApproversAndEmailUsers( $entity, $subject, $originalMessage, $sendCopy=true ) {
 
         $logger = $this->container->get('logger');
 
@@ -2768,24 +2771,26 @@ class VacReqUtil
         }
 
         //send email to email users
-        $subject = "Copy of the email: ".$subject;
-        $addText = "### This is a copy of the email sent to the approvers ".implode("; ",$approversNameArr)."###";
-        $message = $addText.$break.$break.$message;
-        $settings = $this->getSettingsByInstitution($institution->getId());
-        if( $settings ) {
-            $emailUserEmailArr = array();
-            foreach( $settings->getEmailUsers() as $emailUser ) {
-                $emailUserEmail = $emailUser->getSingleEmail();
-                if( $emailUserEmail ) {
-                    //$message = $this->createCancelEmailBody($entity, $emailUser, $addText);
-                    //$emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
-                    $emailUserEmailArr[] = $emailUserEmail;
+        if( $sendCopy ) {
+            $subject = "Copy of the email: " . $subject;
+            $addText = "### This is a copy of the email sent to the approvers " . implode("; ", $approversNameArr) . "###";
+            $message = $addText . $break . $break . $message;
+            $settings = $this->getSettingsByInstitution($institution->getId());
+            if ($settings) {
+                $emailUserEmailArr = array();
+                foreach ($settings->getEmailUsers() as $emailUser) {
+                    $emailUserEmail = $emailUser->getSingleEmail();
+                    if ($emailUserEmail) {
+                        //$message = $this->createCancelEmailBody($entity, $emailUser, $addText);
+                        //$emailUtil->sendEmail($emailUserEmail, $subject, $message, null, null);
+                        $emailUserEmailArr[] = $emailUserEmail;
+                    }
                 }
-            }
-            //$logger->notice("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
-            if( count($emailUserEmailArr) > 0 ) {
-                $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send a copy of the confirmation emails to email users=".implode("; ",$emailUserEmailArr)."; subject=".$subject."; message=".$message);
-                $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
+                //$logger->notice("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
+                if (count($emailUserEmailArr) > 0) {
+                    $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send a copy of the confirmation emails to email users=" . implode("; ", $emailUserEmailArr) . "; subject=" . $subject . "; message=" . $message);
+                    $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
+                }
             }
         }
 
@@ -3015,6 +3020,11 @@ class VacReqUtil
         $requests = $query->getResult();
 
         return $requests;
+    }
+
+    //used in navbar. return HTML
+    public function getTotalPendingCarryoverRequests($user) {
+        return "";
     }
 
     public function getHeaderInfoMessages( $user ) {

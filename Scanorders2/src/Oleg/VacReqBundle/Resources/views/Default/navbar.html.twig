@@ -76,6 +76,7 @@
                                 {#Incoming Requests#}
                             {#</a>#}
                             {% set pendingRequests = vacreq_util.getTotalPendingRequests(app.security.getToken().getUser()) %}
+                            {% set pendingCarryoverRequests = vacreq_util.getTotalPendingCarryoverRequests(app.security.getToken().getUser()) %}
                             {% if pendingRequests is defined and pendingRequests > 0 %}
                                 <a id="incoming-orders-menu-title" href="{{ path('vacreq_incomingrequests') }}">Incoming Requests</a><!--
                                             --><a id="incoming-orders-menu-badge"
@@ -83,8 +84,10 @@
                                                   title="Pending Approval" data-toggle="tooltip"
                                                   data-placement="bottom"
                                                   href="{{ path('vacreq_incomingrequests',{'filter[pending]':1}) }}"
-                                                ><span class="badge">{{ pendingRequests }}</span></a>
+                                                ><span class="badge">{{ pendingRequests }}</span></a><!--
                             {% else %}
+                                -->{{ pendingCarryoverRequests }}
+
                                 <a href="{{ path('vacreq_incomingrequests') }}">
                                     Incoming Requests
                                 </a>
