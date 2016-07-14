@@ -1672,10 +1672,10 @@ class RequestController extends Controller
 
                 $tentativeGroupParams = array('asObject'=>true);
                 $tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
-                $tentativeGroupParams['asSupervisor'] = true;
+                $tentativeGroupParams['asUser'] = true;
                 //$tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
                 //if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-                    $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+                    //$tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
                 //}
                 $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($submitter, $tentativeGroupParams);
                 echo "tentativeInstitutions count=".count($tentativeInstitutions)."<br>";
@@ -1724,6 +1724,8 @@ class RequestController extends Controller
         exit('finished');
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
+    public function getInst() {
 
+    }
 
 }

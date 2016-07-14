@@ -2215,6 +2215,7 @@ class VacReqUtil
         $permissions = ( array_key_exists('permissions', $params) ? $params['permissions'] : null);
         $exceptPermissions = ( array_key_exists('exceptPermissions', $params) ? $params['exceptPermissions'] : null);
         $asSupervisor = ( array_key_exists('asSupervisor', $params) ? $params['asSupervisor'] : false);
+        $asUser = ( array_key_exists('asUser', $params) ? $params['asUser'] : false);
 
         $institutions = array();
         $addedArr = array();
@@ -2229,14 +2230,18 @@ class VacReqUtil
 
             if( count($roles)==0 && $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //echo "roles try 1<br>";
-                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                if( !$asUser ) {
+                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
+                }
             }
             if( count($roles)==0 && ($this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') || $asSupervisor) ) {
                 //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
                 //echo "roles try 2<br>";
-                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
-                    findUserChildRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
+                if( !$asUser ) {
+                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                    findUserChildRolesBySitePermissionObjectAction($user, 'vacreq', $objectStr, $actionStr);
+                }
             }
             if( count($roles)==0 ) {
                 //echo "roles try 3<br>";
