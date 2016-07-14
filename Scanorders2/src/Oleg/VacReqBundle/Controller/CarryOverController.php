@@ -342,7 +342,7 @@ class CarryOverController extends Controller
 //        }
 //        exit('permission not ok');
 
-        echo "tent status=".$entity->getTentativeStatus()."<br>";
+        //echo "tent status=".$entity->getTentativeStatus()."<br>";
         if(
             $this->get('security.context')->isGranted("changestatus", $entity)
         ) {

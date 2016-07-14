@@ -613,7 +613,7 @@ class VacReqUtil
                 break;
             }
         }
-        $logger->notice("carryOver=".$carryOver);
+        //$logger->notice("carryOver=".$carryOver);
 
         $carryOverDays = null;
 
@@ -650,9 +650,9 @@ class VacReqUtil
 
             $carryOverDays = $entity->getCarryOverDays();
             if( $carryOver ) {
-                $logger->notice("exists carryover=".$carryOver);
+                //$logger->notice("exists carryover=".$carryOver);
                 if( $onlyCheck == false ) {
-                    $logger->notice("set carryover days=".$carryOverDays);
+                    //$logger->notice("set carryover days=".$carryOverDays);
                     $carryOver->setDays($carryOverDays);
                     //$em = $this->getDoctrine()->getManager();
                     //$em->persist($carryOver);
@@ -666,10 +666,10 @@ class VacReqUtil
         }
 
         if( $carryOver ) {
-            $logger->notice("exists carryover=".$carryOver);
+            //$logger->notice("exists carryover=".$carryOver);
             if( $onlyCheck == false ) {
                 $carryOverDays = $entity->getCarryOverDays();
-                $logger->notice("final set carryover days=".$carryOverDays);
+                //$logger->notice("final set carryover days=".$carryOverDays);
                 $carryOver->setDays($carryOverDays);
                 //$em = $this->getDoctrine()->getManager();
                 //$em->persist($carryOver);
@@ -2722,7 +2722,7 @@ class VacReqUtil
 
         $institution = $entity->getInstitution();
         if( !$institution ) {
-            $logger->error("sendGeneralEmailToApproversAndEmailUsers: Request ".$entity->getId()." does not have institution");
+            //$logger->error("sendGeneralEmailToApproversAndEmailUsers: Request ".$entity->getId()." does not have institution");
             return null;
         }
 
@@ -3332,14 +3332,14 @@ class VacReqUtil
         $dates = $this->getCurrentAcademicYearStartEndDates();
         //echo "dates=".$dates['startDate']." == ".$dates['endDate']."<br>";
         $currentYearStart = $dates['startDate']; //Y-m-d
-        echo "currentYearStart=".$currentYearStart."<br>";
+        //echo "currentYearStart=".$currentYearStart."<br>";
         $endDate = $dates['endDate']; //Y-m-d
-        echo "endDate=".$endDate."<br>";
+        //echo "endDate=".$endDate."<br>";
 
         $currentYearStartDateArr = explode("-",$currentYearStart);
         $year = $currentYearStartDateArr[0];
         $year = ((int)$year) - 1;   //previous year
-        echo "year=".$year."<br>";
+        //echo "year=".$year."<br>";
 
         $totalAccruedDays = $this->getTotalAccruedDays();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$year); //2015
@@ -3349,7 +3349,7 @@ class VacReqUtil
         $approvedVacationDays = $res['numberOfDays'];
         //$accurate = $res['accurate'];
 
-        echo "$totalAccruedDays + $carryOverDaysPreviousYear - $approvedVacationDays <br>";
+        //echo "$totalAccruedDays + $carryOverDaysPreviousYear - $approvedVacationDays <br>";
 
         //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
         $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
@@ -3604,7 +3604,7 @@ class VacReqUtil
                 if( $res && ($res['exists'] == false || $update == true) ) {
                     //save
                     $userCarryOver = $res['userCarryOver'];
-                    $logger->notice("process ChangeStatusCarryOverRequest: update userCarryOver=".$userCarryOver);
+                    //$logger->notice("process ChangeStatusCarryOverRequest: update userCarryOver=".$userCarryOver);
                     $em->persist($userCarryOver);
                     $em->flush($userCarryOver);
                 }
