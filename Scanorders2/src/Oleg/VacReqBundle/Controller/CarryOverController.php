@@ -269,7 +269,7 @@ class CarryOverController extends Controller
 
         /////////////// check permission: if user is in approvers => ok ///////////////
         $permitted = false;
-        $approvers = $this->getRequestApprovers($entity);
+        $approvers = $vacreqUtil->getRequestApprovers($entity);
         $approversName = array();
         foreach( $approvers as $approver ) {
             if( $user->getId() == $approver->getId() ) {
