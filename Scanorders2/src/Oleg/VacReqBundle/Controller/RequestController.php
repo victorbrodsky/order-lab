@@ -1692,7 +1692,7 @@ class RequestController extends Controller
                     //2) set tentative status
                     $pendingRequest->setTentativeStatus('pending');
 
-                    $msg = "Set tentative inst $tentativeInstitution and status reqID=".$pendingRequest->getId()."<br>";
+                    $msg = "ID #".$pendingRequest->getId().": set tentative inst $tentativeInstitution and tentative status=pending for ".$submitter."<br>";
                     $logger->notice($msg);
                     echo $msg;
                     $sendEmail = true;
