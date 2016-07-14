@@ -1680,7 +1680,15 @@ class RequestController extends Controller
                 $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($submitter, $tentativeGroupParams);
                 echo "tentativeInstitutions count=".count($tentativeInstitutions)."<br>";
                 if( count($tentativeInstitutions) > 1 ) {
-                    echo "Multiple tentative institutions!!! <br>";
+                    $tentativeInstitutionArr = array();
+                    foreach( $tentativeInstitutions as $tentativeInstitution ) {
+                        $tentativeInstitutionArr[] = $tentativeInstitution."";
+                    }
+                    $tentativeInstitutionStr = implode(", ",$tentativeInstitutionArr);
+                    $msg = "Multiple tentative institutions: ";
+                    $msg .= "ID #".$pendingRequest->getId().":  $tentativeInstitutionStr for ".$submitter."<br>";
+                    $logger->notice($msg);
+                    echo $msg;
                 }
                 if( count($tentativeInstitutions) == 1 ) {
                     $tentativeInstitution = $tentativeInstitutions[0];
