@@ -3036,7 +3036,7 @@ class VacReqUtil
 
         $html = "test";
 
-        return $html;
+        return "";
     }
 
     public function getHeaderInfoMessages( $user ) {
