@@ -1142,7 +1142,7 @@ class RequestController extends Controller
     public function sendReminderEmailAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
@@ -1637,24 +1637,81 @@ class RequestController extends Controller
         }
 
         $logger = $this->container->get('logger');
+        $vacreqUtil = $this->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
 
-        //find unique users
-        $userUniqueRequests = $this->findUniqueUserRequests();
-        //exit('1');
+        //find pending carryover request
+        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->leftJoin("request.institution", "institution");
+        $dql->leftJoin("request.requestType", "requestType");
+
+        $dql->where("request.status = 'pending' AND requestType.abbreviation = 'carryover'");
+
+        $query = $em->createQuery($dql);
+
+        $pendingRequests = $query->getResult();
+        echo "pending request count=".count($pendingRequests)."<br><br>";
+        //exit('exit');
 
         $count = 1;
-        foreach( $userUniqueRequests as $userUniqueRequest ) {
-            $userId = $userUniqueRequest['userId'];
-//            $logger->error($count." ########## user: ".$userUniqueRequest->getUser());
-//            echo $count." ########## user: ".$userUniqueRequest->getUser()."<br>";
-            $count = $this->analyzeRequests($userId,$count);
-            //$logger->error('#########################');
-            //echo "#########################<br><br>";
-            //$count++;
+        foreach( $pendingRequests as $pendingRequest ) {
+
+            echo "<br>req ID=".$pendingRequest->getId()."<br>";
+
+            $submitter = $pendingRequest->getUser();
+
+            $userExecutiveSubmitter = $submitter->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+
+            $sendEmail = false;
+
+            if( !$userExecutiveSubmitter ) {
+                //1) set tentativeInstitution
+                $tentativeInstitution = null;
+
+                $tentativeGroupParams = array('asObject'=>true);
+                $tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
+                //$tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
+                //if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                    $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+                //}
+                $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($submitter, $tentativeGroupParams);
+                echo "tentativeInstitutions count=".count($tentativeInstitutions)."<br>";
+                if( count($tentativeInstitutions) > 0 ) {
+                    echo "Multiple tentative institutions!!! <br>";
+                }
+                if( count($tentativeInstitutions) == 1 ) {
+                    $tentativeInstitution = $tentativeInstitutions[0];
+                }
+
+                if( $tentativeInstitution ) {
+                    $pendingRequest->setTentativeInstitution($tentativeInstitution);
+
+                    //2) set tentative status
+                    $pendingRequest->setTentativeStatus('pending');
+
+                    $msg = "Set tentative inst and status reqID=".$pendingRequest->getId()."<br>";
+                    $logger->notice($msg);
+                    echo $msg;
+                    $sendEmail = true;
+                }
+
+            } else {
+
+            }
+
+            //resend email to approvers
+            if( $sendEmail ) {
+                $approversNameStr = "";
+                //$approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers($pendingRequest);
+
+                $logger->notice("Sent confirmation email to ".$approversNameStr);
+            }
+
         }
 
 
-        exit('2');
+        exit('finished');
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
 
