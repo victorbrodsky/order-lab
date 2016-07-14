@@ -680,6 +680,9 @@ class VacReqUtil
         return $res;
     }
 
+    //TODO: if multiple carry over requests are existed, then the VacReqUserCarryOver should be changed according to them.
+    //TODO: we might have one carry over request approved and one denied for the same year.
+    //TODO: Currently, VacReqUserCarryOver is synchronised to the latest approved request.
     public function deleteCanceledVacReqCarryOverRequest( $entity )
     {
 

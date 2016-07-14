@@ -114,11 +114,11 @@ class RequestController extends Controller
                 $entity->setDestinationYear($destinationYear);
             }
 
-//            //set tentativeStatus only for non executive submitter
-//            $userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
-//            if( !$userExecutiveSubmitter && $entity->getTentativeStatus() == NULL ) {
-//                $entity->setTentativeStatus('pending');
-//            }
+            //set tentativeStatus only for non executive submitter
+            //$userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+            //if( !$userExecutiveSubmitter && $entity->getTentativeStatus() == NULL ) {
+            //    $entity->setTentativeStatus('pending');
+            //}
 
         } else {
             //business/vacation request
@@ -190,8 +190,12 @@ class RequestController extends Controller
             }
 
             //set tentativeStatus only if tentativeInstitution is set (for non executive submitter)
-            if( $entity->getTentativeInstitution() ) {
+            $userExecutiveSubmitter = $entity->getUser()->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+            if( !$userExecutiveSubmitter && $entity->getTentativeInstitution() ) {
                 $entity->setTentativeStatus('pending');
+            } else {
+                $entity->setTentativeInstitution(NULL);
+                $entity->setTentativeStatus(NULL);
             }
 
             //testing
@@ -482,6 +486,7 @@ class RequestController extends Controller
                     //if two statuses are changed (only admin can do it), then use one step (as executive) approval with the final status
                     if( $changedStatusCount > 1 ) {
                         $entity->setTentativeStatus(NULL);
+                        $entity->setTentativeInstitution(NULL);
                         $status = $entity->getStatus();
                     }
                     if( $changedStatusCount > 0 ) {
@@ -827,9 +832,9 @@ class RequestController extends Controller
                     if( $status == "pending" && $originalStatus == "canceled" ) {
                         //re-set tentative status according to the submitter group
                         //set tentativeStatus only for non executive submitter
-                        //$userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+                        $userExecutiveSubmitter = $entity->getUser()->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
                         //re-set tentative status according to the TentativeInstitution
-                        if( $entity->getTentativeInstitution() ) {
+                        if( !$userExecutiveSubmitter && $entity->getTentativeInstitution() ) {
                             $entity->setTentativeStatus('pending');
                         } else {
                             $entity->setTentativeStatus(NULL);
@@ -1199,11 +1204,18 @@ class RequestController extends Controller
 
             //tentative institutions
             $tentativeGroupParams = array();
-            $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-                $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+            if( $entity->getUser() ) {
+                $userExecutiveSubmitter = $entity->getUser()->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+            } else {
+                $userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
             }
-            $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
+            if( !$userExecutiveSubmitter ) {
+                $tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
+                if ($this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false) {
+                    $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+                }
+                $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user, $tentativeGroupParams);
+            }
 
             //carry-over institution
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
