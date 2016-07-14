@@ -1689,6 +1689,7 @@ class RequestController extends Controller
                     $msg .= "ID #".$pendingRequest->getId().":  $tentativeInstitutionStr for ".$submitter."<br>";
                     $logger->notice($msg);
                     echo $msg;
+                    continue;
                 }
                 if( count($tentativeInstitutions) == 1 ) {
                     $tentativeInstitution = $tentativeInstitutions[0];
@@ -1707,7 +1708,10 @@ class RequestController extends Controller
                 }
 
             } else {
-
+                $msg = "EXECUTIVE: ";
+                $msg .= "ID #".$pendingRequest->getId().$submitter."<br>";
+                echo $msg;
+                $logger->notice($msg);
             }
 
             //resend email to approvers

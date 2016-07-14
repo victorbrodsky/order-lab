@@ -3024,7 +3024,19 @@ class VacReqUtil
 
     //used in navbar. return HTML
     public function getTotalPendingCarryoverRequests($user) {
-        return "";
+
+        //{{ path('vacreq_incomingrequests',{'filter[pending]':1}) }}
+        $html = '
+                <a id="incoming-orders-menu-badge"
+                      class="element-with-tooltip-always"
+                      title="Pending Approval" data-toggle="tooltip"
+                      data-placement="bottom"
+                      href="www.google.com"
+                    ><span class="badge">33</span></a>';
+
+        $html = "test";
+
+        return $html;
     }
 
     public function getHeaderInfoMessages( $user ) {
