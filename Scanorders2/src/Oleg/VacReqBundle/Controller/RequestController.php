@@ -1633,7 +1633,8 @@ class RequestController extends Controller
     {
 
         if (!$this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            //exit('no permission');
+            //return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
         $logger = $this->container->get('logger');
@@ -1671,13 +1672,14 @@ class RequestController extends Controller
 
                 $tentativeGroupParams = array('asObject'=>true);
                 $tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
+                $tentativeGroupParams['asSupervisor'] = true;
                 //$tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
                 //if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
                     $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
                 //}
                 $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($submitter, $tentativeGroupParams);
                 echo "tentativeInstitutions count=".count($tentativeInstitutions)."<br>";
-                if( count($tentativeInstitutions) > 0 ) {
+                if( count($tentativeInstitutions) > 1 ) {
                     echo "Multiple tentative institutions!!! <br>";
                 }
                 if( count($tentativeInstitutions) == 1 ) {
@@ -1690,7 +1692,7 @@ class RequestController extends Controller
                     //2) set tentative status
                     $pendingRequest->setTentativeStatus('pending');
 
-                    $msg = "Set tentative inst and status reqID=".$pendingRequest->getId()."<br>";
+                    $msg = "Set tentative inst $tentativeInstitution and status reqID=".$pendingRequest->getId()."<br>";
                     $logger->notice($msg);
                     echo $msg;
                     $sendEmail = true;
