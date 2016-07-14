@@ -1701,6 +1701,9 @@ class RequestController extends Controller
                     //2) set tentative status
                     $pendingRequest->setTentativeStatus('pending');
 
+                    $em->persist($pendingRequest);
+                    $em->flush();
+
                     $msg = "ID #".$pendingRequest->getId().": set tentative inst $tentativeInstitution and tentative status=pending for ".$submitter."<br>";
                     $logger->notice($msg);
                     echo $msg;
@@ -1712,12 +1715,14 @@ class RequestController extends Controller
                 $msg .= "ID #".$pendingRequest->getId().$submitter."<br>";
                 echo $msg;
                 $logger->notice($msg);
+                //$sendEmail = true;
             }
 
             //resend email to approvers
             if( $sendEmail ) {
                 $approversNameStr = "";
-                //$approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers($pendingRequest);
+                $sendCopy = false;
+                $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers($pendingRequest,$sendCopy);
 
                 $logger->notice("Sent confirmation email to ".$approversNameStr);
             }
