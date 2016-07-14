@@ -1724,7 +1724,7 @@ class RequestController extends Controller
             //resend email to approvers
             if( $sendEmail ) {
                 $approversNameStr = "";
-                $sendCopy = true;
+                $sendCopy = false;
                 $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers($pendingRequest,$sendCopy);
 
                 $logger->notice("Sent confirmation email to ".$approversNameStr);
