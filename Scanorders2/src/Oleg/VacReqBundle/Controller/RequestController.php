@@ -1695,11 +1695,14 @@ class RequestController extends Controller
                     $tentativeInstitution = $tentativeInstitutions[0];
                 }
 
-                if( $tentativeInstitution ) {
+                if( $tentativeInstitution && !$pendingRequest->getTentativeInstitution() ) {
+
                     $pendingRequest->setTentativeInstitution($tentativeInstitution);
 
                     //2) set tentative status
-                    $pendingRequest->setTentativeStatus('pending');
+                    if( !$pendingRequest->getTentativeStatus() ) {
+                        $pendingRequest->setTentativeStatus('pending');
+                    }
 
                     $em->persist($pendingRequest);
                     $em->flush();
@@ -1715,7 +1718,7 @@ class RequestController extends Controller
                 $msg .= "ID #".$pendingRequest->getId().$submitter."<br>";
                 echo $msg;
                 $logger->notice($msg);
-                //$sendEmail = true;
+                $sendEmail = true;
             }
 
             //resend email to approvers
@@ -1725,12 +1728,18 @@ class RequestController extends Controller
                 $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers($pendingRequest,$sendCopy);
 
                 $logger->notice("Sent confirmation email to ".$approversNameStr);
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $msg. " Sent emails=".$approversNameStr
+                );
             }
 
         }
 
 
-        exit('finished');
+        //exit('finished');
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
     public function getInst() {
