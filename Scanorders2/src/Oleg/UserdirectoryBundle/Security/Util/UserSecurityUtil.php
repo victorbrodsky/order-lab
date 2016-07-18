@@ -1414,7 +1414,7 @@ class UserSecurityUtil {
                 $firstInstId = $recordArr['instInfo'][0]['id'];
                 $firstTitleId = $recordArr['titleInfo'][0]['id'];
                 //$firstCombineId = $firstTitleId."-".$firstInstPid;
-            //}
+            }
 
             if( $firstTitleId ) {
                 foreach( $recordArr['titleInfo'] as $titleInfoArr ) {
