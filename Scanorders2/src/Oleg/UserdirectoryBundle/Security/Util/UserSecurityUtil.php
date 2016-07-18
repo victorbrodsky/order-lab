@@ -1408,15 +1408,15 @@ class UserSecurityUtil {
         foreach( $instArr as $recordArr ) {
 
             $firstTitleId = null;
-            //if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
-            if( array_key_exists('titleInfo',$recordArr) ) {
+            if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
+            //if( array_key_exists('titleInfo',$recordArr) ) {
                 $firstInstPid = $recordArr['instInfo'][0]['pid'];
                 $firstInstId = $recordArr['instInfo'][0]['id'];
                 $firstTitleId = $recordArr['titleInfo'][0]['id'];
                 //$firstCombineId = $firstTitleId."-".$firstInstPid;
             }
 
-            if( $firstTitleId ) {
+            //if( $firstTitleId ) {
                 foreach( $recordArr['titleInfo'] as $titleInfoArr ) {
                     //echo "PID:$firstInstPid; titleInfoID:$firstTitleId; titleInfoArr:<pre>";
                     //print_r($titleInfoArr);
@@ -1424,7 +1424,7 @@ class UserSecurityUtil {
                     $firstTitleId = $titleInfoArr['id'];
                     $groupInstArr[$firstInstPid]['titleInfo'][$firstTitleId] = $this->getSearchSameObjectUrl($titleInfoArr);
                 }
-            }
+            //}
 
             $instHrefArr = array();
             foreach( $recordArr['instInfo'] as $instInfoArr ) {
