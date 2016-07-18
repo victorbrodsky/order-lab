@@ -1409,17 +1409,17 @@ class UserSecurityUtil {
 
             $firstTitleId = null;
             if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
-                //$firstInstPid = $recordArr['instInfo'][0]['pid'];
-                //$firstInstId = $recordArr['instInfo'][0]['id'];
+                $firstInstPid = $recordArr['instInfo'][0]['pid'];
+                $firstInstId = $recordArr['instInfo'][0]['id'];
                 $firstTitleId = $recordArr['titleInfo'][0]['id'];
                 //$firstCombineId = $firstTitleId."-".$firstInstPid;
             }
-            if( array_key_exists('instInfo',$recordArr) && count($recordArr['instInfo']) > 0 ) {
-                $firstInstPid = $recordArr['instInfo'][0]['pid'];
-                $firstInstId = $recordArr['instInfo'][0]['id'];
-                //$firstTitleId = $recordArr['titleInfo'][0]['id'];
-                //$firstCombineId = $firstTitleId."-".$firstInstPid;
-            }
+//            if( array_key_exists('instInfo',$recordArr) && count($recordArr['instInfo']) > 0 ) {
+//                $firstInstPid = $recordArr['instInfo'][0]['pid'];
+//                $firstInstId = $recordArr['instInfo'][0]['id'];
+//                //$firstTitleId = $recordArr['titleInfo'][0]['id'];
+//                //$firstCombineId = $firstTitleId."-".$firstInstPid;
+//            }
 
             if( $firstTitleId ) {
                 foreach( $recordArr['titleInfo'] as $titleInfoArr ) {
