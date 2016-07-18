@@ -106,6 +106,7 @@ class CallEntryController extends Controller
             'em' => $em,
             'container' => $this->container,
             //'alias' => true
+            'type' => null
         );
 
         $form = $this->createForm(new PatientType($params,$patient), $patient);
