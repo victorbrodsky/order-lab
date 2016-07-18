@@ -1555,7 +1555,7 @@ class UserController extends Controller
             }
 
             //encrypt password
-            $this->encryptPassword($user,null); //createUser
+            $this->encryptPassword($user,$user->getPassword()); //createUser
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setDocumentForCommentType($user);
@@ -2726,12 +2726,12 @@ class UserController extends Controller
         //echo "getPassword=".$user->getPassword()."<br>";
         //echo "getPlainPassword=".$user->getPlainPassword()."<br>";
 
-        $compare = true;
-        if( !$originalPassword ) {
-            $originalPassword = $user->getPassword(); //new user
-            $compare = false;
-            //return;
-        }
+//        $compare = true;
+//        if( !$originalPassword ) {
+//            $originalPassword = $user->getPassword(); //new user
+//            $compare = false;
+//            //return;
+//        }
 
         if( !$originalPassword ) {
             exit('no original password');
@@ -2739,7 +2739,7 @@ class UserController extends Controller
         }
 
         //password is the same as original one
-        if( $compare && hash_equals($originalPassword, $user->getPassword()) ) {
+        if( hash_equals($originalPassword, $user->getPassword()) ) {
             exit('password is the same');
             return;
         }
