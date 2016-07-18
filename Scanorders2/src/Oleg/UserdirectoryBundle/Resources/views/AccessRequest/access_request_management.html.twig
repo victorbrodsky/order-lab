@@ -75,7 +75,8 @@
         <hr>
     {% endif %}
 
-    {% if accreq is defined %}
+    {#{% if accreq is defined %}#}
+    {% if routenameshort == 'accessrequest_management' %}
         {% set actionPath = path(sitename~'_accessrequest_management_submit',{'id':accreq.id}) %}
     {% else %}
         {% set actionPath = path(sitename~'_authorization_user_management_submit',{'id':entity.id}) %}
@@ -102,7 +103,8 @@
 
         <div class="row">
 
-            {% if accreq is defined %}
+            {#{% if accreq is defined %}#}
+            {% if routenameshort == 'accessrequest_management' %}
                 <div class="col-xs-6" align="right">
                     {#Approve#}
                     <button name="accessrequest-approve" type='submit' class="btn btn-info btn-sm">Update</button>

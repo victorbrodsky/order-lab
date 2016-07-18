@@ -696,6 +696,7 @@ class AccessRequestController extends Controller
             'sitenameshowuser' => $this->siteNameShowuser,
             'sitenamefull'=>$this->siteNameStr,
             'routename' => $request->get('_route'),
+            'routenameshort' => 'accessrequest_management'
         );
 
 
@@ -741,14 +742,14 @@ class AccessRequestController extends Controller
         );
         $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
 
-        $userViewArr = array(
-            'form' => $form->createView(),
-            'accreq' => $accReq,
-            'entity' => $entity,
-            'sitename' => $this->siteName,
-            'sitenameshowuser' => $this->siteNameShowuser,
-            'sitenamefull'=>$this->siteNameStr
-        );
+//        $userViewArr = array(
+//            'form' => $form->createView(),
+//            'accreq' => $accReq,
+//            'entity' => $entity,
+//            'sitename' => $this->siteName,
+//            'sitenameshowuser' => $this->siteNameShowuser,
+//            'sitenamefull'=>$this->siteNameStr
+//        );
 
         //save original for log
         $originalInsts = new ArrayCollection();
@@ -935,6 +936,7 @@ class AccessRequestController extends Controller
             'siteRoles'=>$siteRoles,
             'accreq' => $accReq,
             'routename' => $request->get('_route'),
+            'routenameshort' => 'authorization_user_management'
         );
 
         return $userViewArr;
@@ -973,14 +975,14 @@ class AccessRequestController extends Controller
         );
         $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
 
-        $userViewArr = array(
-            'form' => $form->createView(),
-            //'accreq' => $accReq,
-            'entity' => $entity,
-            'sitename' => $this->siteName,
-            'sitenameshowuser' => $this->siteNameShowuser,
-            'sitenamefull'=>$this->siteNameStr
-        );
+//        $userViewArr = array(
+//            'form' => $form->createView(),
+//            //'accreq' => $accReq,
+//            'entity' => $entity,
+//            'sitename' => $this->siteName,
+//            'sitenameshowuser' => $this->siteNameShowuser,
+//            'sitenamefull'=>$this->siteNameStr
+//        );
 
         //save original for log
         $originalInsts = new ArrayCollection();
