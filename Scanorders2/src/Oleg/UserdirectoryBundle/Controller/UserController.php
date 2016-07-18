@@ -2734,13 +2734,13 @@ class UserController extends Controller
         }
 
         if( !$originalPassword ) {
-            //exit('no original password');
+            exit('no original password');
             return;
         }
 
         //password is the same as original one
         if( $compare && hash_equals($originalPassword, $user->getPassword()) ) {
-            //exit('password is the same');
+            exit('password is the same');
             return;
         }
 
