@@ -1210,7 +1210,26 @@ class UserSecurityUtil {
                     $titleId = $title->getName()->getId();
                     //echo "titleId=".$titleId."<br>";
                 }
-                $elementInfo = array('tablename'=>$tablename,'id'=>$titleId,'name'=>$name);
+
+                //If a title has Position Type = Head of Service, don't merge this title with any others.
+                //$headService = false;
+                $headServiceId = null;
+                if( method_exists($title,'getUserPositions') ) {
+                    foreach( $title->getUserPositions() as $userPosition ) {
+                        if ($userPosition && $userPosition->getName() == 'Head of Service') {
+                            //$headService = true;
+                            $headServiceId = $title->getId();
+                            break;
+                        }
+                    }
+                }
+
+                $elementInfo = array(
+                    'tablename'=>$tablename,
+                    'id'=>$titleId,
+                    'name'=>$name,
+                    //'headService'=>$headServiceId
+                );
                 //$elementInfo = $this->getSearchSameObjectUrl($elementInfo);
             }
 
@@ -1221,13 +1240,18 @@ class UserSecurityUtil {
             if( $title->getInstitution() ) {
                 $institution = $title->getInstitution();
                 $instId = $title->getInstitution()->getId();
+
+                if( $headServiceId ) {
+                    $instId = $instId."-".$headServiceId;
+                }
+
             }
 
             if( array_key_exists($instId,$instArr) ) {
                 //echo $instId." => instId already exists<br>";
             } else {
                 //echo $instId." => instId does not exists<br>";
-                $instArr[$instId]['instInfo'] = $this->getHeadInstitutionInfoArr($institution);
+                $instArr[$instId]['instInfo'] = $this->getHeadInstitutionInfoArr($institution,$headServiceId);
             }
 
             if( $elementInfo ) {
@@ -1238,7 +1262,7 @@ class UserSecurityUtil {
 
         return $instArr;
     }
-    public function getHeadInstitutionInfoArr($institution) {
+    public function getHeadInstitutionInfoArr($institution,$headServiceId) {
 
         //echo "inst=".$institution."<br>";
         //echo "count=".count($headInfo)."<br>";
@@ -1263,7 +1287,12 @@ class UserSecurityUtil {
                 $pid = $parent->getId();
             }
 
-            if($name) {
+            if( $headServiceId ) {
+                //$titleId = $titleId."-".$headServiceId;
+                $pid = $pid."-".$headServiceId;
+            }
+
+            if( $name ) {
                 $elementInfo = array('tablename' => 'Institution', 'id' => $titleId, 'pid' => $pid, 'name' => $name);
                 //$elementInfo = $this->getSearchSameObjectUrl($elementInfo, 'small');
                 $headInfo[] = $elementInfo;
@@ -1379,9 +1408,9 @@ class UserSecurityUtil {
         //Pathology and Laboratory Medicine
         //Weill Cornell Medical College
 
-        //echo "<pre>";
-        //print_r($instArr);
-        //echo "</pre><br>";
+//        echo "Input instArr: <pre>";
+//        print_r($instArr);
+//        echo "</pre><br>";
         //return $instArr;
 
         //1) get pid group
@@ -1390,7 +1419,7 @@ class UserSecurityUtil {
             //echo "0firstTitleId=".$recordArr['titleInfo'][0]['id']."<br>";
             if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
                 $firstInstPid = $recordArr['instInfo'][0]['pid'];
-                $firstInstId = $recordArr['instInfo'][0]['id'];
+                //$firstInstId = $recordArr['instInfo'][0]['id'];
                 $firstTitleId = $recordArr['titleInfo'][0]['id'];
                 if( $firstTitleId ) {
                     $firstCombineId = $firstTitleId . "-" . $firstInstPid;
@@ -1399,8 +1428,11 @@ class UserSecurityUtil {
                 //echo "1firstTitleId=$firstTitleId<br>";
             }
         }
-//        echo "<pre>";
+//        echo "firstCombinedArr:<pre>";
 //        print_r($firstCombinedArr);
+//        echo "</pre><br>";
+//        echo "After 1 instArr:<pre>";
+//        print_r($instArr);
 //        echo "</pre><br>";
 
         //2) construct a new array using $firstCombinedArr
@@ -1423,15 +1455,17 @@ class UserSecurityUtil {
             }
 
             //if( $firstTitleId ) {
-            if( array_key_exists('titleInfo',$recordArr) ) {
-                foreach( $recordArr['titleInfo'] as $titleInfoArr ) {
-                    //echo "PID:$firstInstPid; titleInfoID:$firstTitleId; titleInfoArr:<pre>";
-                    //print_r($titleInfoArr);
-                    //echo "</pre><br>";
-                    $firstTitleId = $titleInfoArr['id'];
-                    $groupInstArr[$firstInstPid]['titleInfo'][$firstTitleId] = $this->getSearchSameObjectUrl($titleInfoArr);
+            //if( $recordArr['headService'] === false ) {
+                if (array_key_exists('titleInfo', $recordArr)) {
+                    foreach ($recordArr['titleInfo'] as $titleInfoArr) {
+                        //echo "PID:$firstInstPid; titleInfoID:$firstTitleId; titleInfoArr:<pre>";
+                        //print_r($titleInfoArr);
+                        //echo "</pre><br>";
+                        $firstTitleId = $titleInfoArr['id'];
+                        $groupInstArr[$firstInstPid]['titleInfo'][$firstTitleId] = $this->getSearchSameObjectUrl($titleInfoArr);
+                    }
                 }
-            }
+            //}
 
             $instHrefArr = array();
             foreach( $recordArr['instInfo'] as $instInfoArr ) {
@@ -1461,9 +1495,9 @@ class UserSecurityUtil {
 
 
         }
-        //echo "<pre>";
-        //print_r($groupInstArr);
-        //echo "</pre><br>";
+//        echo "Final groupInstArr:<pre>";
+//        print_r($groupInstArr);
+//        echo "</pre><br>";
 
         return $groupInstArr;
     }
