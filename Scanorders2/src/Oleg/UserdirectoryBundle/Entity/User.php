@@ -1720,7 +1720,7 @@ class User extends BaseUser {
                 $instArr[$instId]['instInfo'] = $this->getHeadInstitutionInfoArr($institution);
             }
             $instArr[$instId]['titleInfo'][] = $elementInfo;
-            $instArr[$instId]['old'] = 0;
+            $instArr[$instId]['old'] = 1;
         }//foreach titles
 
         return $instArr;

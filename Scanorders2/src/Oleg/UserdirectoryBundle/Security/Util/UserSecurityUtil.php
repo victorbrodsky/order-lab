@@ -1200,7 +1200,7 @@ class UserSecurityUtil {
 
         return $instArr;
     }
-    public function addTitleInfo($instArr,$tablename,$titles) {
+    public function addTitleInfo( $instArr, $tablename, $titles ) {
         foreach( $titles as $title ) {
             $elementInfo = null;
             if( $title->getName() ) {
@@ -1208,6 +1208,7 @@ class UserSecurityUtil {
                 $titleId = null;
                 if( $title->getName()->getId() ) {
                     $titleId = $title->getName()->getId();
+                    //echo "titleId=".$titleId."<br>";
                 }
                 $elementInfo = array('tablename'=>$tablename,'id'=>$titleId,'name'=>$name);
                 //$elementInfo = $this->getSearchSameObjectUrl($elementInfo);
@@ -1230,6 +1231,7 @@ class UserSecurityUtil {
             }
 
             if( $elementInfo ) {
+                //echo "titleInfo titleId=".$elementInfo['id']."<br>";
                 $instArr[$instId]['titleInfo'][] = $elementInfo;
             }
         }//foreach titles
@@ -1385,6 +1387,7 @@ class UserSecurityUtil {
         //1) get pid group
         $firstCombinedArr = array();
         foreach( $instArr as $recordArr ) {
+            //echo "0firstTitleId=".$recordArr['titleInfo'][0]['id']."<br>";
             if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
                 $firstInstPid = $recordArr['instInfo'][0]['pid'];
                 $firstInstId = $recordArr['instInfo'][0]['id'];
@@ -1393,6 +1396,7 @@ class UserSecurityUtil {
                     $firstCombineId = $firstTitleId . "-" . $firstInstPid;
                     $firstCombinedArr[$firstCombineId][] = $recordArr['instInfo'][0];
                 }
+                //echo "1firstTitleId=$firstTitleId<br>";
             }
         }
 //        echo "<pre>";
@@ -1413,9 +1417,10 @@ class UserSecurityUtil {
 
             if( $firstTitleId ) {
                 foreach( $recordArr['titleInfo'] as $titleInfoArr ) {
-                    //echo "<pre>";
+                    //echo "PID:$firstInstPid; titleInfoID:$firstTitleId; titleInfoArr:<pre>";
                     //print_r($titleInfoArr);
                     //echo "</pre><br>";
+                    $firstTitleId = $titleInfoArr['id'];
                     $groupInstArr[$firstInstPid]['titleInfo'][$firstTitleId] = $this->getSearchSameObjectUrl($titleInfoArr);
                 }
             }
