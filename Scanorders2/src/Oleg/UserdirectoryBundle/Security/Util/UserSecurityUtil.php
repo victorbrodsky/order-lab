@@ -1202,6 +1202,7 @@ class UserSecurityUtil {
     }
     public function addTitleInfo( $instArr, $tablename, $titles ) {
         foreach( $titles as $title ) {
+            $headServiceId = null;
             $elementInfo = null;
             if( $title->getName() ) {
                 $name = $title->getName()->getName()."";
@@ -1213,7 +1214,6 @@ class UserSecurityUtil {
 
                 //If a title has Position Type = Head of Service, don't merge this title with any others.
                 //$headService = false;
-                $headServiceId = null;
                 if( method_exists($title,'getUserPositions') ) {
                     foreach( $title->getUserPositions() as $userPosition ) {
                         if ($userPosition && $userPosition->getName() == 'Head of Service') {
