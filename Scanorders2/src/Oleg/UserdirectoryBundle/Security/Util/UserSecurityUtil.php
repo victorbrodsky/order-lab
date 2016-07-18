@@ -1186,7 +1186,7 @@ class UserSecurityUtil {
     public function getHeadInfo( $user ) {
 
         //testing
-        return $user->getHeadInfo();
+        //return $user->getHeadInfo();
 
         $instArr = array();
 
