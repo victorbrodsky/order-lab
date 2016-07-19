@@ -4682,7 +4682,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "1" => array('PlatformListManagerRootList','platformlistmanager-list'),
+            "1"  => array('PlatformListManagerRootList','platformlistmanager-list'),
             "10" => array('SiteList','sites-list'),
             "20" => array('SourceSystemList','sourcesystems-list'),
             "30" => array('Roles','role-list'),
@@ -4730,7 +4730,6 @@ class AdminController extends Controller
             "410" => array('LanguageList','languages-list'),
             "420" => array('ImportanceList','importances-list'),
             "430" => array('LocaleList','locales-list'),
-            //"440" => array('AppTitleList','apptitles-list'),
             "450" => array('AuthorshipRoles','authorshiproles-list'),
             "460" => array('OrganizationList','organizations-list'),
             "470" => array('CityList','cities-list'),
@@ -4748,16 +4747,15 @@ class AdminController extends Controller
             "580" => array('TrainingTypeList','trainingtypes-list'),
             "590" => array('JobTitleList','joblists-list'),
 
-            "600" => array('FellAppStatus','fellappstatuses-list'),
-            "610" => array('FellAppRank','fellappranks-list'),
+            "600" => array('FellAppStatus','fellappstatuses-list','Fellowship Application Status'),
+            "610" => array('FellAppRank','fellappranks-list','Fellowship Application Rank'),
             "620" => array('LanguageProficiency','fellapplanguageproficiency-list'),
             "630" => array('CollaborationTypeList','collaborationtypes-list'),
             "640" => array('PermissionList','permission-list'),
             "650" => array('PermissionObjectList','permissionobject-list'),
             "660" => array('PermissionActionList','permissionaction-list'),
-            //"670" => array('SiteList','sites-list'),
             "670" => array('EventObjectTypeList','eventobjecttypes-list'),
-            "680" => array('VacReqRequestTypeList','vacreqrequesttypes-list'),
+            "680" => array('VacReqRequestTypeList','vacreqrequesttypes-list','Vacation Request Type'),
         );
 
         $count = 10;
@@ -4766,11 +4764,17 @@ class AdminController extends Controller
             $listName = $listArr[0];
             $listRootName = $listArr[1];
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
-            if( $listEntity ) {
-                echo 'exists listId='.$listId."<br>";
-                continue;
+            if( count($listArr) == 3 ) {
+                $nameClean = $listArr[2];
+            } else {
+                $nameClean = null;
             }
+
+//            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+//            if( $listEntity ) {
+//                echo 'exists listId='.$listId."<br>";
+//                continue;
+//            }
 
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($listRootName);
             if( $listEntity ) {
@@ -4784,17 +4788,60 @@ class AdminController extends Controller
                 continue;
             }
 
-            $name = $listName;
+            //construct the "Name" from the entity name:
+            // "SourceSystemList" => "Source System", "BoardCertifiedSpecialties" => "Board Certified Specialty"
+            if( !$nameClean ) {
+                //1) split with upper case
+                $nameArr = $this->splitAtUpperCase($listName);
+
+                //2) remove the last element if == "List"
+                $lastIndex = count($nameArr) - 1;
+                if ($nameArr[$lastIndex] == "List") {
+                    unset($nameArr[$lastIndex]);
+                }
+
+                //3) singularize
+                $nameArrClean = array();
+                foreach ($nameArr as $thisName) {
+                    //Countries => Country
+                    if (substr($thisName, -3) == "ies") {
+                        //$len = strlen($thisName);
+                        //$thisName = substr_replace("ies", "y", $len-3, $len);
+                        $thisName = $this->str_lreplace("ies", "y", $thisName);
+                    }
+
+                    //Roles => Role
+                    if (substr($thisName, -2) == "es") {
+                        //$len = strlen($thisName);
+                        //$thisName = substr_replace("es", "e", $len-2, $len);
+                        $thisName = $this->str_lreplace("es", "e", $thisName);
+                    }
+
+                    $nameArrClean[] = $thisName;
+                }
+
+                $nameClean = implode(" ", $nameArrClean);
+            }
+
+            //echo "nameClean=$nameClean || listName=$listName, listRootName=$listRootName <br>";
+            //echo "nameClean=$nameClean <br>";
 
             $listEntity = new PlatformListManagerRootList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
+            $this->setDefaultList($listEntity,$count,$username,$nameClean);
 
-            $listEntity->setListId($listId);
+            //$listEntity->setLinkToListId($listId);
             $listEntity->setListName($listName);
             $listEntity->setListRootName($listRootName);
 
             $em->persist($listEntity);
-            $em->flush();
+            $em->flush($listEntity);
+
+            //set linkToListId the same as ID
+            if( $listEntity->getId() ) {
+                $listEntity->setLinkToListId($listEntity->getId());
+                $em->persist($listEntity);
+                $em->flush($listEntity);
+            }
 
             $count = $count + 10;
         }
@@ -4806,7 +4853,22 @@ class AdminController extends Controller
             $res
         );
 
+        exit('1');
         return $this->redirect($this->generateUrl('user_admin_index'));
+    }
+    function splitAtUpperCase($s) {
+        return preg_split('/(?=[A-Z])/', $s, -1, PREG_SPLIT_NO_EMPTY);
+    }
+    function str_lreplace($search, $replace, $subject)
+    {
+        $pos = strrpos($subject, $search);
+
+        if($pos !== false)
+        {
+            $subject = substr_replace($subject, $replace, $pos, strlen($search));
+        }
+
+        return $subject;
     }
 
 

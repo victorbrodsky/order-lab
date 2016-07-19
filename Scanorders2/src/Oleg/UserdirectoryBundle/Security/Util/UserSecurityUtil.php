@@ -142,7 +142,7 @@ class UserSecurityUtil {
             //return false;
         }
         if( $hideInstitution ) {
-            exit('hideInstitution');
+            //exit('hideInstitution');
             //return false;
         }
         if( $hideRole ) {

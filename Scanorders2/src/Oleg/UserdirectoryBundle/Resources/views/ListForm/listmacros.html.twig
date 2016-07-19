@@ -107,9 +107,11 @@
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
 
-            {% if entities|first.listId is defined and entities|first.listRootName is defined %}
-                {#<th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>#}
-                <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.listId') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>
+
+            {% if entities|first.listName is defined and entities|first.listRootName is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Database Entity Name', 'ent.listName') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Root Name', 'ent.listRootName') }}</th>
             {% endif %}
 
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
@@ -266,10 +268,18 @@
                 <td>{{ entity.orderinlist }}</td>
 
                 {#<td>{{ entity.linkToListId }}</td>#}
-                {% if entity.listId is defined and entity.listRootName is defined %}
+                {#{% if entity.linkToListId is defined and entity.listRootName is defined %}#}
+                {% if entity.linkToListId %}
                     <td class="rowlink-skip">
-                        <a href="{{ path('platform_list_manager', { 'listId': entity.listId }) }}" target="_blank">{{ entity.listId }}</a>
+                        <a href="{{ path('platform_list_manager', { 'listId': entity.linkToListId }) }}" target="_blank">{{ entity.linkToListId }}</a>
                     </td>
+                {% else %}
+                    <td>{{ entity.linkToListId }}</td>
+                {% endif %}
+
+                {% if entity.listName is defined and entity.listRootName is defined %}
+                    <td>{{ entity.listName }}</td>
+                    <td>{{ entity.listRootName }}</td>
                 {% endif %}
 
                 <td>{{ entity.creator }}</td>
@@ -406,7 +416,7 @@
 
     {{ formmacros.field(form.list.orderinlist) }}
 
-    {#{{ formmacros.field(form.list.linkToListId) }}#}
+    {{ formmacros.field(form.list.linkToListId) }}
 
     {#{% if form.list.updatedby is defined %}#}
         {#{{ formmacros.field(form.list.updatedby) }}#}
@@ -513,7 +523,7 @@
 
     {{ formmacros.field(edit_form.list.orderinlist) }}
 
-    {#{{ formmacros.field(edit_form.list.linkToListId) }}#}
+    {{ formmacros.field(edit_form.list.linkToListId) }}
 
     {{ formmacros.field(edit_form.list.creator) }}
 
@@ -597,8 +607,8 @@
         {{ formmacros.field(form.url) }}
     {% endif %}
 
-    {% if form.listId is defined and form.listName is defined %}
-        {{ formmacros.field(form.listId) }}
+    {% if form.listName is defined and form.listRootName is defined %}
+        {#{{ formmacros.field(form.linkToListId) }}#}
         {{ formmacros.field(form.listName) }}
         {{ formmacros.field(form.listRootName) }}
     {% endif %}

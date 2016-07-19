@@ -330,9 +330,11 @@
         //check if "Last Name" field + DOB field, or "MRN" fields are not empty
         //if( !mrn || !mrntype || !lastname || !dob ) {
         if( mrntype && mrn || lastname && dob ) {
+        //if( mrntype && mrn || lastname ) {
             //ok
         } else {
             $('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+            //$('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
             $('#calllog-danger-box').show();
             return false;
         }
@@ -447,7 +449,7 @@
 
         //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
 
-        if( mrn && mrntype || dob && lastname || dob && lastname || dob && lastname && firstname ) {
+        if( mrn && mrntype || dob && lastname || dob && lastname && firstname || lastname ) {
             //ok
             if( mrn && mrntype ) {
                 searchedStr = " (searched for MRN Type: "+$(".mrntype-combobox").select2('data').text+"; MRN: "+mrn+")";
@@ -459,8 +461,16 @@
                 }
                 searchedStr = " (searched for DOB: "+dob+"; Last Name: "+lastname+firstnameStr+")";
             }
+            if( lastname ) {
+                var firstnameStr = "";
+                if( firstname ) {
+                    firstnameStr = "; First Name: "+firstname;
+                }
+                searchedStr = " (searched for Last Name: "+lastname+firstnameStr+")";
+            }
         } else {
-            $('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+            //$('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+            $('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
             $('#calllog-danger-box').show();
             return false;
         }

@@ -1652,9 +1652,10 @@ class ListController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+        //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByLinkToListId($listId);
         if( !$rootList ) {
-            throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listId='.$listId);
+            throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by linkToListId='.$listId);
         }
 
         //$listName = $rootList->getListName();

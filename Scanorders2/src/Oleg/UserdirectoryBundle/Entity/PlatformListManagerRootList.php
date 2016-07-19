@@ -11,8 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="user_platformListManagerRootList",
  *     uniqueConstraints={
- *          @ORM\UniqueConstraint(name="platformlistid_unique", columns={"listId"}),
- *          @ORM\UniqueConstraint(name="platformlist_unique", columns={"listId", "listName"})
+ *          @ORM\UniqueConstraint(name="platformlistid_unique", columns={"linkToListId"}),
+ *          @ORM\UniqueConstraint(name="platformlist_unique", columns={"linkToListId", "listName"})
  *     }
  * )
  */
@@ -30,12 +30,13 @@ class PlatformListManagerRootList extends ListAbstract
     protected $original;
 
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $listId;
+//    /**
+//     * @ORM\Column(type="string")
+//     */
+//    protected $listId;
 
     /**
+     * Database Entity Name
      * @ORM\Column(type="string")
      */
     protected $listName;
@@ -48,21 +49,21 @@ class PlatformListManagerRootList extends ListAbstract
 
 
 
-    /**
-     * @return mixed
-     */
-    public function getListId()
-    {
-        return $this->listId;
-    }
-
-    /**
-     * @param mixed $listId
-     */
-    public function setListId($listId)
-    {
-        $this->listId = $listId;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getListId()
+//    {
+//        return $this->listId;
+//    }
+//
+//    /**
+//     * @param mixed $listId
+//     */
+//    public function setListId($listId)
+//    {
+//        $this->listId = $listId;
+//    }
 
     /**
      * @return mixed

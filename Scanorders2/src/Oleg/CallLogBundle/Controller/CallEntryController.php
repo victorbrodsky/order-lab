@@ -319,8 +319,31 @@ class CallEntryController extends Controller
             }
 
             $where = true;
-
         }
+
+        //Last Name only
+        if( $where == false && $lastname ) {
+            $dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
+            $parameters['lastname'] = $lastname;
+
+            $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
+            $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
+            $parameters['statusValid'] = 'valid';
+            $parameters['statusAlias'] = 'alias';
+
+            $searchBy = "lastname=".$lastname;
+
+            if( $firstname ) {
+                $dql->andWhere("firstname.field = :firstname OR encounterFirsttname.field = :firstname");
+                $dql->andWhere("encounterFirsttname.status = :statusValid OR encounterFirsttname.status = :statusAlias");
+                $parameters['firstname'] = $firstname;
+
+                $searchBy = " and firstname=".$firstname;
+            }
+
+            $where = true;
+        }
+
 
 //        //firstname, Last Name AND DOB
 //        if( $lastname && $firstname && $dob ) {

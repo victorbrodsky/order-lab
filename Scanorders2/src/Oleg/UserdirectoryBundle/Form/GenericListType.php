@@ -5,6 +5,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Oleg\UserdirectoryBundle\Entity\Institution;
+use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
@@ -450,6 +451,16 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( $this->params['entity'] instanceof PlatformListManagerRootList ) {
+            $builder->add('listName',null,array(
+                'label'=>'Database Entity Name:',
+                'attr' => array('class'=>'form-control')
+            ));
+            $builder->add('listRootName',null,array(
+                'label'=>'Root Name:',
+                'attr' => array('class'=>'form-control')
+            ));
+        }
 
 
         ///////////////// Many To Many relationship /////////////////
