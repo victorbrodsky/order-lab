@@ -808,7 +808,7 @@ class ListController extends Controller
 
         $newForm = new GenericListType($options,$mapper);
 
-        $linkToListId = $mapper['linkToListId'];
+        //$linkToListId = $mapper['linkToListId'];
 
         $form = $this->createForm($newForm, $entity, array(
             'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
