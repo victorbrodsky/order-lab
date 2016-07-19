@@ -46,7 +46,7 @@ class ComplexListController extends Controller
 
         $routeName = $request->get('_route');
 
-        $mapper = $this->classListMapper($routeName);
+        $mapper = $this->classListMapper($routeName,$request);
 
         $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
         $dql =  $repository->createQueryBuilder("ent");
@@ -168,7 +168,7 @@ class ComplexListController extends Controller
 
         $routeName = $request->get('_route');
 
-        $mapper = $this->classListMapper($routeName);
+        $mapper = $this->classListMapper($routeName,$request);
 
         //get cycle
         $pieces = explode("_pathaction_", $routeName);
@@ -220,7 +220,7 @@ class ComplexListController extends Controller
 
         $routeName = $request->get('_route');
 
-        $mapper = $this->classListMapper($routeName);
+        $mapper = $this->classListMapper($routeName,$request);
 
         $entityClass = $mapper['fullClassName'];
 
@@ -274,7 +274,7 @@ class ComplexListController extends Controller
 
         $routeName = $request->get('_route');
 
-        $mapper = $this->classListMapper($routeName);
+        $mapper = $this->classListMapper($routeName,$request);
 
         $entityClass = $mapper['fullClassName'];
 
@@ -386,7 +386,7 @@ class ComplexListController extends Controller
     {
 
         $routeName = $request->get('_route');
-        $mapper = $this->classListMapper($routeName);
+        $mapper = $this->classListMapper($routeName,$request);
 
         $cycle = 'edit_put_standalone';
 
@@ -545,7 +545,7 @@ class ComplexListController extends Controller
 
 
 
-    public function classListMapper( $route ) {
+    public function classListMapper( $route, $request ) {
 
         //$route = employees_locations_pathaction_list
         $pieces = explode("_pathaction_", $route);

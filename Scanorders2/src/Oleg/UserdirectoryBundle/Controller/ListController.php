@@ -112,13 +112,13 @@ class ListController extends Controller
     }
     public function getList($request, $limit=50) {
 
-        $type = $request->get('_route');
+        $routeName = $request->get('_route');
 
         //get object name: stain-list => stain
-        $pieces = explode("-", $type);
+        $pieces = explode("-", $routeName);
         $pathbase = $pieces[0];
 
-        $mapper= $this->classListMapper($pathbase);
+        $mapper = $this->classListMapper($pathbase,$request);
 
         $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
         $dql =  $repository->createQueryBuilder("ent");
@@ -234,9 +234,9 @@ class ListController extends Controller
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
-            $limit                          /*limit per page*/
+            $limit,                          /*limit per page*/
             //array('wrap-queries'=>true)   //this cause sorting impossible, but without it "site" sorting does not work (mssql: "There is no component aliased by [sites] in the given Query" )
-            //array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
+            array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
         );
         //echo "list count=".count($entities)."<br>";
         //exit();
@@ -256,10 +256,11 @@ class ListController extends Controller
         return array(
             'entities' => $entities,
             'displayName' => $mapper['displayName'],
+            'linkToListId' => $mapper['linkToListId'],
             'pathbase' => $pathbase,
             'withCreateNewEntityLink' => $createNew,
             'filterform' => $filterform->createView(),
-            'routename' => $request->get('_route')
+            'routename' => $routeName
         );
     }
 
@@ -354,7 +355,7 @@ class ListController extends Controller
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
 
-        $mapper= $this->classListMapper($pathbase);
+        $mapper= $this->classListMapper($pathbase,$request);
 
         $entityClass = $mapper['fullClassName'];    //"Oleg\\OrderformBundle\\Entity\\".$mapper['className'];
 
@@ -511,7 +512,7 @@ class ListController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $mapper= $this->classListMapper($pathbase);
+        $mapper= $this->classListMapper($pathbase,$request);
 
         $entityClass = $mapper['fullClassName'];    //"Oleg\\OrderformBundle\\Entity\\".$mapper['className'];
 
@@ -639,10 +640,10 @@ class ListController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $mapper= $this->classListMapper($pathbase);
+        $mapper = $this->classListMapper($pathbase,$request);
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
-        //echo "entity=".$entity."<br>";
+        //echo "entity ID=".$entity->getId()."; name=".$entity->getName()."<br>";
         $form = $this->createEditForm($entity,$mapper,$pathbase,'edit',true);
 
         if (!$entity) {
@@ -752,7 +753,7 @@ class ListController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $mapper= $this->classListMapper($pathbase);
+        $mapper= $this->classListMapper($pathbase,$request);
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
 
@@ -807,8 +808,11 @@ class ListController extends Controller
 
         $newForm = new GenericListType($options,$mapper);
 
+        $linkToListId = $mapper['linkToListId'];
+
         $form = $this->createForm($newForm, $entity, array(
-            'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
+            //'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('platform_list_manager_element', array('linkToListId'=>$linkToListId,'entityId'=>$entity->getId())),
             'method' => 'PUT',
             'disabled' => $disabled
         ));
@@ -911,7 +915,7 @@ class ListController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $mapper= $this->classListMapper($pathbase);
+        $mapper= $this->classListMapper($pathbase,$request);
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
 
@@ -1189,11 +1193,23 @@ class ListController extends Controller
 
 
 
-    public function classListMapper( $route ) {
+    public function classListMapper( $route, $request ) {
 
         $labels = null;
 
         $bundleName = "UserdirectoryBundle";
+
+        if( strpos($route, "-") !== false ) {
+            //sites-list
+            $pieces = explode("-", $route);
+            $route = $pieces[0];
+        }
+
+        if( strpos($route, "_") !== false ) {
+            //sites_show
+            $pieces = explode("_", $route);
+            $route = $pieces[0];
+        }
 
         switch( $route ) {
 
@@ -1490,7 +1506,7 @@ class ListController extends Controller
                 $labels = null;
         }
 
-        //echo "className=".$className.", displayName=".$displayName."<br>";
+        //echo $route.": className=".$className.", displayName=".$displayName."<br>";
 
         $res = array();
         $res['className'] = $className;
@@ -1503,6 +1519,24 @@ class ListController extends Controller
         $parentMapper = $this->getParentName($className);
         if( $parentMapper ) {
             $res['parentClassName'] = $parentMapper['className'];
+        }
+
+        //get linkId
+        $res['linkToListId'] = null;
+        if( $className ) {
+            //$routeName = $request->get('_route');
+            $em = $this->getDoctrine()->getManager();
+            //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+            //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($routeName);
+            $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($className);
+            if( !$rootList ) {
+                throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listName=' . $className);
+            }
+            $linkToListId = $rootList->getLinkToListId();
+            //echo "linkToListId=$linkToListId<br>";
+            if( $linkToListId ) {
+                $res['linkToListId'] = $linkToListId;
+            }
         }
 
         return $res;
@@ -1600,7 +1634,7 @@ class ListController extends Controller
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
 
-        $mapper= $this->classListMapper($pathbase);
+        $mapper= $this->classListMapper($pathbase,$routeName);
 
         $form = $this->createDeleteForm($id,$pathbase);
         $form->handleRequest($request);
@@ -1675,5 +1709,47 @@ class ListController extends Controller
         );
     }
 
+    /**
+     * Platform Element Manager Root Element
+     * /order/directory/admin/list/sites/1 it goes to /order/directory/admin/list-manager/id/10/1 use role_show
+     *
+     * @Route("/list-manager/id/{linkToListId}/{entityId}", name="platform_list_manager_element")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
+     */
+    public function platformElementManagerRootElementAction( Request $request, $linkToListId, $entityId ) {
+
+        $em = $this->getDoctrine()->getManager();
+        //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByLinkToListId($linkToListId);
+        if( !$rootList ) {
+            throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by linkToListId='.$linkToListId);
+        }
+
+        //$listName = $rootList->getListName();
+        $listRootName = $rootList->getListRootName(); //roles-list
+
+        if( $listRootName ) {
+            //return $this->redirect( $this->generateUrl($listRootName) );
+
+            //$request->attributes->set('_route',$listRootName);
+            //return $this->showList($request,$entityId);
+
+            $pieces = explode("-", $listRootName);
+            $pathbase = $pieces[0];
+            $newRootName = $pathbase."_show";
+
+            $request->attributes->set('_route',$newRootName);
+
+            //exit('1');
+            return $this->forward('OlegUserdirectoryBundle:List:show', array('request' => $request, 'id' => $entityId));
+        }
+
+        //exit('2');
+        return array(
+            'routename' => $listRootName,
+            'displayName' => 'Platform List Manager Root List with List ID #'.$linkToListId
+        );
+    }
 
 }

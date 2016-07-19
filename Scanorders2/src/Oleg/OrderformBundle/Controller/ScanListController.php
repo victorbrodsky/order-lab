@@ -415,7 +415,7 @@ class ScanListController extends ListController
     }
 
 
-    public function classListMapper( $route ) {
+    public function classListMapper( $route, $request ) {
 
         $classPath = "Oleg\\OrderformBundle\\Entity\\";
         $bundleName = "OlegOrderformBundle";

@@ -4853,7 +4853,7 @@ class AdminController extends Controller
             $res
         );
 
-        exit('1');
+        //exit('1');
         return $this->redirect($this->generateUrl('user_admin_index'));
     }
     function splitAtUpperCase($s) {

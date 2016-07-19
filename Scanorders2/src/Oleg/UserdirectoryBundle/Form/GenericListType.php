@@ -312,22 +312,6 @@ class GenericListType extends AbstractType
             ));
         }
 
-        //PlatformListManagerRootList
-        if( method_exists($this->params['entity'],'getListId') && method_exists($this->params['entity'],'getListName') ) {
-            $builder->add( 'listId', null, array(
-                'label'=>'List ID:',
-                'attr' => array('class'=>'form-control'),
-            ));
-            $builder->add( 'listName', null, array(
-                'label'=>'List Name:',
-                'attr' => array('class'=>'form-control'),
-            ));
-            $builder->add( 'listRootName', null, array(
-                'label'=>'List Root Name:',
-                'attr' => array('class'=>'form-control'),
-            ));
-        }
-
         //PermissionList
         if( strtolower($this->mapper['className']) == strtolower("PermissionList") ) {
             $builder->add('permissionObjectList','entity',array(
@@ -451,6 +435,7 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //PlatformListManagerRootList
         if( $this->params['entity'] instanceof PlatformListManagerRootList ) {
             $builder->add('listName',null,array(
                 'label'=>'Database Entity Name:',

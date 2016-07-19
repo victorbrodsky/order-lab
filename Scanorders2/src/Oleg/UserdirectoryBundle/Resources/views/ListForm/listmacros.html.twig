@@ -1,7 +1,7 @@
 {#macro for list#}
 
 
-{% macro listIndex( entities, pathbase, withCreateNewEntityLink ) %}
+{% macro listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId ) %}
 
     {% import _self as listmacros %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -126,7 +126,11 @@
         {% for entity in entities %}
             <tr>
                 <td>
-                    <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                    {% if linkToListId %}
+                        <a href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'entityId': entity.id }) }}">{{ entity.id }}</a>
+                    {% else %}
+                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                    {% endif %}
                 </td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.shortname }}</td>
@@ -567,6 +571,7 @@
         <p>
             {{ form_widget(edit_form.submit) }}
             <a class="btn btn-info" type="button" href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">Cancel</a>
+            {#<a href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'id': entity.id }) }}">Cancel</a>#}
         </p>
     {% endif %}
 

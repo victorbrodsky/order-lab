@@ -123,7 +123,7 @@ class ScanComplexListController extends ComplexListController
 
 
 
-    public function classListMapper( $route ) {
+    public function classListMapper( $route, $request ) {
 
         //$route = scan_locations_pathaction_list
         $pieces = explode("_pathaction_", $route);
