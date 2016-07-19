@@ -811,8 +811,8 @@ class ListController extends Controller
         $linkToListId = $mapper['linkToListId'];
 
         $form = $this->createForm($newForm, $entity, array(
-            //'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
-            'action' => $this->generateUrl('platform_list_manager_element', array('linkToListId'=>$linkToListId,'entityId'=>$entity->getId())),
+            'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
+            //'action' => $this->generateUrl('platform_list_manager_element', array('linkToListId'=>$linkToListId,'entityId'=>$entity->getId())),
             'method' => 'PUT',
             'disabled' => $disabled
         ));
