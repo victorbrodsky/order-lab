@@ -43,6 +43,9 @@ class LargeFileDownloader {
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
         }
 
+        //remove commas
+        $filename = str_replace(",","_",$filename);
+
         $mimeType = $this->getMimeType($filename);
 
         //header('Content-Description: File Transfer');
