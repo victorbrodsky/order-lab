@@ -164,6 +164,7 @@ class AdminController extends Controller
 
         //$count_EventTypeListSync = $this->syncEventTypeListDb(); //must be the first to update already existing objects. Can run on empty DB
 
+
         $count_sitenameList = $this->generateSitenameList();
 
         $count_institutiontypes = $this->generateInstitutionTypes();                                //must be first
@@ -254,6 +255,8 @@ class AdminController extends Controller
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
         $count_VacReqRequestTypeList = $this->generateVacReqRequestTypeList();
 
+        $adminRes = $this->generateAdministratorAction();
+
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -318,6 +321,7 @@ class AdminController extends Controller
             'Collaboration Types='.$collaborationtypes.', '.
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
+            'Administrator generation='.$adminRes.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -5253,6 +5257,92 @@ class AdminController extends Controller
         );
 
         return $mapper;
+    }
+
+    public function generateAdministratorAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$user = $this->get('security.context')->getToken()->getUser();
+        $primaryPublicUserId = 'Administrator';
+        //$primaryPublicUserId = 'Administrator1';
+
+        $localUserType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
+
+        $administrators = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(
+            array(
+                'primaryPublicUserId' => $primaryPublicUserId,
+                'keytype' => $localUserType->getId()
+            )
+        );
+
+        if( count($administrators) > 1 ) {
+            throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users" );
+        }
+
+        if( count($administrators) == 1 ) {
+            $administrator = $administrators[0];
+        }
+
+
+        $encoder = $this->container->get('security.password_encoder');
+
+        if( $administrator ) {
+
+            $flush = false;
+            $res = "$primaryPublicUserId user already exists.";
+
+            $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+
+            $bool = hash_equals($administrator->getPassword(), $encodedPassword);
+
+            if( !$bool ) {
+                $administrator->setPassword($encodedPassword);
+                $flush = true;
+                $res .= " Password updated.";
+            }
+
+            if( !$administrator->hasRole('ROLE_PLATFORM_ADMIN') ) {
+                $administrator->addRole('ROLE_PLATFORM_ADMIN');
+                $flush = true;
+                $res .= " Role ROLE_PLATFORM_ADMIN added.";
+            }
+
+            if( $flush ) {
+                $em->persist($administrator);
+                $em->flush($administrator);
+                //echo "flash ";
+            } else {
+                //echo "no flash ";
+            }
+
+        } else {
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $administrator = $userSecUtil->constractNewUser($primaryPublicUserId.'_@_local-user');
+
+            $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            $administrator->setEmail($systemEmail);
+            $administrator->setEmailCanonical($systemEmail);
+            $administrator->setCreatedby('system');
+            $administrator->addRole('ROLE_PLATFORM_ADMIN');
+            $administrator->setEnabled(true);
+            $administrator->setLocked(true);
+            $administrator->setExpired(false);
+
+            $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+            $administrator->setPassword($encodedPassword);
+
+            $default_time_zone = $this->container->getParameter('default_time_zone');
+            $administrator->getPreferences()->setTimezone($default_time_zone);
+
+            $res = "New $primaryPublicUserId account has been created";
+
+            $em->persist($administrator);
+            $em->flush($administrator);
+        }
+
+        return $res;
     }
 
 }
