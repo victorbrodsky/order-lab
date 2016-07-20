@@ -246,7 +246,7 @@ class AuthUtil {
 
         //$identifierUsername = "oli2002";
 
-        echo "username=".$username."<br>";
+        //echo "username=".$username."<br>";
         //exit('1');
 
         //"ORDER Local User", "NYP CWID", "WCMC CWID"
@@ -260,6 +260,12 @@ class AuthUtil {
                 $token->setUser($subjectUser);
                 $this->logger->warning('Trying authenticating the local user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
                 $user = $this->LocalAuthentication($token, $userProvider);
+
+                if( $user ) {
+                    //Logger: "Logged in using [PublicIdentifierType] [PublicIdentifier ID]"
+                    $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
+                }
+
                 return $user;
             }
 
@@ -275,6 +281,11 @@ class AuthUtil {
                 $token->setUser($subjectUser);
                 $this->logger->warning('Trying authenticating the LDAP user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
                 $user = $this->LdapAuthentication($token, $userProvider);
+
+                if( $user ) {
+                    $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
+                }
+
                 return $user;
             }
 
@@ -285,11 +296,16 @@ class AuthUtil {
                 $token->setUser($subjectUser);
                 $this->logger->warning('Trying authenticating the LDAP user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
                 $user = $this->LdapAuthentication($token, $userProvider);
+
+                if( $user ) {
+                    $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
+                }
+
                 return $user;
             }
         }
 
-        exit("no user found by username=$identifierUsername keytype=$identifierKeytype");
+        //exit("no user found by username=$identifierUsername keytype=$identifierKeytype");
         return NULL;
     }
     //find a user by "External ID" and "External Type"
@@ -349,8 +365,26 @@ class AuthUtil {
 
         return NULL;
     }
+    //"Logged in using [PublicIdentifierType] [PublicIdentifier ID]"
+    //$identifierKeytypeStr, $identifierUsername
+    public function addEventLog( $subjectUser, $identifierKeytypeStr, $identifierUsername ) {
+        //record edit user to Event Log
+        $event = "Logged in using identifier keytype '$identifierKeytypeStr' and username '$identifierUsername'";
+        $request = $this->sc->get('request'); //http://localhost/order/directory/login_check
 
+        //get sitename as "fellowship-applications" or "directory"
+        $currentUrl = $request->getUri();
 
+        $sitenameFull = parse_url($currentUrl, PHP_URL_PATH); ///order/directory/login_check
+        $sitenameArr = explode("/",$sitenameFull); ///order/directory/login_check
+        $sitename = $sitenameArr[count($sitenameArr)-2];
+
+        //exit("sitename=$sitename");
+
+        $userSecUtil = $this->sc->get('user_security_utility');
+        //$sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event'
+        $userSecUtil->createUserEditEvent($sitename,$event,$subjectUser,$subjectUser,$request,'Successful Login');
+    }
 
 
 
