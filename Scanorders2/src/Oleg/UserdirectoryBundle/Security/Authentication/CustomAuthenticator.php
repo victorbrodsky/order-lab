@@ -51,7 +51,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
 
 
         //////////////////////////////////////////////////////////////////////
-        //                       1) aperio authentication                   //
+        //                       2) aperio authentication                   //
         //////////////////////////////////////////////////////////////////////
         $user = $authUtil->AperioAuthentication($token, $userProvider);
         if( $user ) {
@@ -62,13 +62,23 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
 
 
         //////////////////////////////////////////////////////////////////////
-        //                       2) ldap authentication                     //
+        //                       3) ldap authentication                     //
         //////////////////////////////////////////////////////////////////////
         $user = $authUtil->LdapAuthentication($token, $userProvider);
         if( $user ) {
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
         ////////////////////EOF first ldap authentication ////////////////////
+
+
+        //////////////////////////////////////////////////////////////////////
+        //                       4) External IDs                            //
+        //////////////////////////////////////////////////////////////////////
+        $user = $authUtil->ExternalIdAuthentication($token, $userProvider);
+        if( $user ) {
+            return $this->getUsernamePasswordToken($user,$providerKey);
+        }
+        ////////////////////EOF External IDs authentication //////////////////
 
 
         //exit('all failed');

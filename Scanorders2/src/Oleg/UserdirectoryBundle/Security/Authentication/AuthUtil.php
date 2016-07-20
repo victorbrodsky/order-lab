@@ -228,6 +228,133 @@ class AuthUtil {
     }
 
 
+    //check identifier by keytype "ORDER Local User", "NYP CWID", "WCMC CWID" and field username
+    public function ExternalIdAuthentication($token, $userProvider) {
+
+        $username = $token->getUsername();
+        //$credentials = $token->getCredentials();
+
+        //oli2002c_@_local-user, oli2002c_@_wcmc-cwid
+        $usernameArr = explode("_@_", $username);
+        if( count($usernameArr) != 2 ) {
+            $this->logger->warning("Invalid username ".$username);
+            return NULL;
+        }
+
+        $identifierUsername = $usernameArr[0];
+        $identifierKeytype = $usernameArr[1];
+
+        //$identifierUsername = "oli2002";
+
+        echo "username=".$username."<br>";
+        //exit('1');
+
+        //"ORDER Local User", "NYP CWID", "WCMC CWID"
+
+        //Case 1: "ORDER Local User"
+        if( $identifierKeytype == 'local-user' ) {
+
+            $identifierKeytypeStr = "ORDER Local User";
+            $subjectUser = $this->findUserByIdentifierType($identifierKeytypeStr, $identifierUsername);
+            if ($subjectUser) {
+                $token->setUser($subjectUser);
+                $this->logger->warning('Trying authenticating the local user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
+                $user = $this->LocalAuthentication($token, $userProvider);
+                return $user;
+            }
+
+        }
+
+        //Case 2 and 3: LDAP - "NYP CWID", "WCMC CWID"
+        if( $identifierKeytype == 'wcmc-cwid' ) {
+
+            //Case 2: "NYP CWID"
+            $identifierKeytypeStr = "NYP CWID";
+            $subjectUser = $this->findUserByIdentifierType($identifierKeytypeStr, $identifierUsername);
+            if ($subjectUser) {
+                $token->setUser($subjectUser);
+                $this->logger->warning('Trying authenticating the LDAP user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
+                $user = $this->LdapAuthentication($token, $userProvider);
+                return $user;
+            }
+
+            //Case 3: "WCMC CWID"
+            $identifierKeytypeStr = "WCMC CWID";
+            $subjectUser = $this->findUserByIdentifierType($identifierKeytypeStr, $identifierUsername);
+            if ($subjectUser) {
+                $token->setUser($subjectUser);
+                $this->logger->warning('Trying authenticating the LDAP user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
+                $user = $this->LdapAuthentication($token, $userProvider);
+                return $user;
+            }
+        }
+
+        exit("no user found by username=$identifierUsername keytype=$identifierKeytype");
+        return NULL;
+    }
+    //find a user by "External ID" and "External Type"
+    public function findUserByIdentifierType( $identifierKeytypeStr, $identifierUsername ) {
+
+        $identifierKeytype = $this->em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName($identifierKeytypeStr);
+        if( !$identifierKeytype ) {
+            return NULL;
+        }
+
+        //STATUS_VERIFIED = 1
+        $identifierStatus = 1;
+
+        //enableAccess = true
+        $identifierEnableAccess = true;
+
+        //External Type": oleg_userdirectorybundle_user_credentials_identifiers_1_keytype
+        //"External ID":  oleg_userdirectorybundle_user_credentials_identifiers_1_field
+        //Status:         oleg_userdirectorybundle_user_credentials_identifiers_1_status
+        //Enabled:        oleg_userdirectorybundle_user_credentials_identifiers_1_enableAccess
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+
+        $dql->leftJoin("user.credentials", "credentials");
+        $dql->leftJoin("credentials.identifiers", "identifiers");
+        //$dql->leftJoin("identifiers.keytype", "keytype");
+
+        $dql->where("identifiers.field = :identifierField AND identifiers.keytype = :identifierKeytype");
+        $dql->andWhere("identifiers.status = :identifierStatus AND identifiers.enableAccess = :identifierEnableAccess");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(array(
+            'identifierKeytype' => $identifierKeytype->getId(),
+            'identifierField' => $identifierUsername,
+            'identifierStatus' => $identifierStatus,
+            'identifierEnableAccess' => $identifierEnableAccess,
+        ));
+
+        $users = $query->getResult();
+
+        if( count($users) == 1 ) {
+            $singleUser = $users[0];
+            return $singleUser;
+        }
+
+        if( count($users) == 0  ) {
+            $this->logger->warning('No user found with identifierUsername='.$identifierUsername);
+            return NULL;
+        }
+
+        if( count($users) > 1 ) {
+            $this->logger->warning('Multiple users found with identifierUsername='.$identifierUsername);
+            return NULL;
+        }
+
+        return NULL;
+    }
+
+
+
+
+
+
     public function findUserByUsername($username) {
 
         $userManager = $this->sc->get('fos_user.user_manager');

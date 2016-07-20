@@ -2748,22 +2748,29 @@ class AdminController extends Controller
 
     public function generateIdentifierTypeList() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $elements = array(
             'WCMC Employee Identification Number (EIN)',
             'National Provider Identifier (NPI)',
-            'MRN'
+            'MRN',
+            'ORDER Local User',
+            'NYP CWID',
+            'WCMC CWID'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
+
+            if( $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName($value) ) {
+                continue;
+            }
 
             $entity = new IdentifierTypeList();
             $this->setDefaultList($entity,$count,$username,null);
@@ -5260,6 +5267,10 @@ class AdminController extends Controller
     }
 
     public function generateAdministratorAction() {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
 
         $em = $this->getDoctrine()->getManager();
 
