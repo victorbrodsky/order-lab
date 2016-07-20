@@ -80,7 +80,7 @@ class AuthUtil {
         //TODO: remove the code below on testing and production!
         //////////////////// Testing: constract a new user ////////////////////
         $user = $userSecUtil->constractNewUser($token->getUsername());
-        echo "user=".$user->getUsername()."<br>";
+        //echo "user=".$user->getUsername()."<br>";
 
         $user->setCreatedby('local');
 
