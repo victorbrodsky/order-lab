@@ -210,4 +210,14 @@ class EmailUtil {
     
 }
 
+
+//Notes:
+// 1) make a command with
+// public function boot() {
+//$tmpDir = $this->container->getParameter('my_website.swift_tmp_dir');
+//
+//\Swift_Preferences::getInstance()->setTempDir($tmpDir);
+//}
+//2) then php app/console swiftmailer:spool:send --env=prod > /dev/null 2>>app/logs/swift-error.log
+
 ?>
