@@ -109,10 +109,10 @@
 
             <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>
 
-            {% if entities|first.listName is defined and entities|first.listRootName is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Database Entity Name', 'ent.listName') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Root Name', 'ent.listRootName') }}</th>
-            {% endif %}
+            {#{% if entities|first.listName is defined and entities|first.listRootName is defined %}#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Database Entity Name', 'ent.listName') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Root Name', 'ent.listRootName') }}</th>#}
+            {#{% endif %}#}
 
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
@@ -281,10 +281,10 @@
                     <td>{{ entity.linkToListId }}</td>
                 {% endif %}
 
-                {% if entity.listName is defined and entity.listRootName is defined %}
-                    <td>{{ entity.listName }}</td>
-                    <td>{{ entity.listRootName }}</td>
-                {% endif %}
+                {#{% if entity.listName is defined and entity.listRootName is defined %}#}
+                    {#<td>{{ entity.listName }}</td>#}
+                    {#<td>{{ entity.listRootName }}</td>#}
+                {#{% endif %}#}
 
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
