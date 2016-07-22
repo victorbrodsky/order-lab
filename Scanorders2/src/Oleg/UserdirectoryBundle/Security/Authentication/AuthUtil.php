@@ -43,7 +43,7 @@ class AuthUtil {
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
         if( in_array($usernamePrefix, $this->supportedUsertypesLocal) == false ) {
-            $this->logger->notice('Local Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesLocal));
+            $this->logger->notice('Local Authentication: the '.$token->getUsername().' with usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesLocal));
             return NULL;
         }
 
