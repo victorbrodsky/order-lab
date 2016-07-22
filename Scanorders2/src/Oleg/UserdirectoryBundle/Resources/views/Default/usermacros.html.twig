@@ -1,9 +1,12 @@
 {% macro nonLiveSiteRedirect() %}
     {% if app.environment == 'prod' %}
-        {% if user_security_utility.getSiteSettingParameter('environment') != 'live' %}
-            {% if user_security_utility.getSiteSettingParameter('environment') != 'dev' %}
-                {#redirect#}
-                {#<meta http-equiv="refresh" content="0; url={{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}" />#}
+        {% set environmentServer = user_security_utility.getSiteSettingParameter('environment') %}
+        {% if environmentServer != 'live' %}
+            {% if environmentServer != 'dev' %}
+                {#redirect for non admin users#}
+                {% if not is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                    <meta http-equiv="refresh" content="0; url={{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}" />
+                {% endif %}
             {% endif %}
         {% endif %}
     {% endif %}
