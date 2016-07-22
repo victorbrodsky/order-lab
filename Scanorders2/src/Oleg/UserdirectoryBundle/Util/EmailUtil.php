@@ -214,12 +214,16 @@ class EmailUtil {
 //Notes:
 // for testing use: swift_delivery_addresses: [oli2002@med.cornell.edu]
 // for live: swift_delivery_addresses: []
-// 1) make a command with
-// public function boot() {
-//$tmpDir = $this->container->getParameter('my_website.swift_tmp_dir');
-//
-//\Swift_Preferences::getInstance()->setTempDir($tmpDir);
+//to run spool file: then php app/console swiftmailer:spool:send --env=prod > /dev/null 2>>app/logs/swift-error.log
+
+//To prevent tmp file not found (http://stackoverflow.com/questions/27323662/symfony2-send-email-warning-mkdir-no-such-file-or-directory-in):
+//After comment this:
+//if (is_writable($tmpDir = sys_get_temp_dir())) {
+//    $preferences->setTempDir($tmpDir)->setCacheType('disk');
 //}
-//2) then php app/console swiftmailer:spool:send --env=prod > /dev/null 2>>app/logs/swift-error.log
+//in the /vendor/swiftmailer/swiftmailer/lib/preferences.php everything works fine.
+// I think that the problem was in the permission to the directory.
+// Swiftmailer uses sys_get_temp_dir() function which trying refer to /tmp directory.
+
 
 ?>
