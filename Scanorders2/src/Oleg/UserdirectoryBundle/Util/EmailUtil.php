@@ -212,6 +212,8 @@ class EmailUtil {
 
 
 //Notes:
+// for testing use: swift_delivery_addresses: [oli2002@med.cornell.edu]
+// for live: swift_delivery_addresses: []
 // 1) make a command with
 // public function boot() {
 //$tmpDir = $this->container->getParameter('my_website.swift_tmp_dir');

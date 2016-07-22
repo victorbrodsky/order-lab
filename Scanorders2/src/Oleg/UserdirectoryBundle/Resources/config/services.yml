@@ -27,8 +27,8 @@ parameters:
   sitesettings_title:
   contentabout_page:
 
-  #swiftmailer
-#  swift_delivery_addresses:
+  #swiftmailer default
+  swift_delivery_addresses: []
 
 
 #  maintenance:
