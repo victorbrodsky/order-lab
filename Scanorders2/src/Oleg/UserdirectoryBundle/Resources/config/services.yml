@@ -28,7 +28,7 @@ parameters:
   contentabout_page:
 
   #swiftmailer default [] - use originals emails in live
-  swift_delivery_addresses: []
+#  swift_delivery_addresses: []
 
 
 #  maintenance:

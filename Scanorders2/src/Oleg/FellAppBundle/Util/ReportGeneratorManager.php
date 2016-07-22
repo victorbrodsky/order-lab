@@ -12,6 +12,7 @@ namespace Oleg\FellAppBundle\Util;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+//NOT USED
 class ReportGeneratorManager {
 
     /**
@@ -218,8 +219,8 @@ class ReportGeneratorManager {
 
             
             //reset all queue related parameters
-            $self::$running = false;
-            $self::$timestamp = null;
+            self::$running = false;
+            self::$timestamp = null;
             $this->currentQueueElementId = null;
 
             //run next in queue

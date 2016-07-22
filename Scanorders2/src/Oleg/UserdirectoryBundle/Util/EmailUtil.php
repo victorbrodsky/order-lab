@@ -215,6 +215,7 @@ class EmailUtil {
 // for testing use: swift_delivery_addresses: [oli2002@med.cornell.edu]
 // for live: swift_delivery_addresses: []
 //to run spool file: then php app/console swiftmailer:spool:send --env=prod > /dev/null 2>>app/logs/swift-error.log
+//cmd /c YourProgram.exe >> app/logs/swiftlog.txt 2>&1
 
 //To prevent tmp file not found (http://stackoverflow.com/questions/27323662/symfony2-send-email-warning-mkdir-no-such-file-or-directory-in):
 //After comment this:
