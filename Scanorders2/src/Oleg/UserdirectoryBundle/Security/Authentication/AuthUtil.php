@@ -62,10 +62,13 @@ class AuthUtil {
             //echo "getPassword=".$user->getPassword()."<br>";
             //echo "encoded=".$encoded."<br>";
             //exit();
+            //echo "compare: [".$user->getPassword()."] == [$encoded] <br>";
             //if( StringUtils::equals($user->getPassword(), $encoded) ) { //depreciated
             if( hash_equals($user->getPassword(), $encoded) ) {
+                //exit('equal');
                 return $user;
             } else {
+                //exit('not equal');
                 return NULL;
             }
 

@@ -2,12 +2,12 @@
     {% if app.environment == 'prod' %}
         {% set environmentServer = user_security_utility.getSiteSettingParameter('environment') %}
         {% if environmentServer != 'live' %}
-            {% if environmentServer != 'dev' %}
+            {#{% if environmentServer != 'dev' %}#}
                 {#redirect for non admin users#}
-                {#{% if app.user and is_granted('IS_AUTHENTICATED_FULLY') and not is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
-                    {#<meta http-equiv="refresh" content="0; url={{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}" />#}
-                {#{% endif %}#}
-            {% endif %}
+                {% if app.user and is_granted('IS_AUTHENTICATED_FULLY') and not is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                    <meta http-equiv="refresh" content="0; url={{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}" />
+                {% endif %}
+            {#{% endif %}#}
         {% endif %}
     {% endif %}
 {% endmacro %}

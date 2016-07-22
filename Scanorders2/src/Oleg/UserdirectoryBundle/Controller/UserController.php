@@ -2746,9 +2746,9 @@ class UserController extends Controller
 
         $encoder = $this->container->get('security.password_encoder');
         $encoded = $encoder->encodePassword($user, $user->getPassword());
-        $bool = hash_equals($originalPassword, $encoded);
 
-        //echo "encoded=".$encoded."<br>";
+        //echo "compare: $originalPassword == $encoded <br>";
+        $bool = hash_equals($originalPassword, $encoded);
 
         if( !$bool && $user->getPassword() != "" ) {
             // 3) Encode the password (you could also do this via Doctrine listener)
