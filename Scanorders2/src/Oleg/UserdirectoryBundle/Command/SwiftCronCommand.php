@@ -37,11 +37,20 @@ class SwiftCronCommand extends ContainerAwareCommand {
         $cmd = 'php app/console swiftmailer:spool:send --env=prod';
 
         //$oExec = pclose(popen("start /B ". $cmd, "r"));
-        $result = exec($cmd);
+        //$result = exec($cmd);
 
-        $logger->notice("cron:swift: ".$result);
+        // Outputs all the result of shellcommand "ls", and returns
+        // the last output line into $last_line. Stores the return value
+        // of the shell command in $retval.
+        $last_line = system($cmd, $retval);
 
-        $output->writeln($result);
+        // Printing additional info
+        //Last line of the output: ' . $last_line . '
+        //Return value: ' . $retval;
+
+        $logger->notice("cron:swift: Last line of the output:".$last_line."; Return value:".$retval);
+
+        $output->writeln($retval);
     }
 
 } 
