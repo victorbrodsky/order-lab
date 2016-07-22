@@ -27,7 +27,7 @@ parameters:
   sitesettings_title:
   contentabout_page:
 
-  #swiftmailer default
+  #swiftmailer default [] - use originals emails in live
   swift_delivery_addresses: []
 
 
