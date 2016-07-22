@@ -10,7 +10,7 @@ namespace Oleg\UserdirectoryBundle\Security\Authentication;
 
 
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
-use Symfony\Component\Security\Core\Util\StringUtils;
+//use Symfony\Component\Security\Core\Util\StringUtils;
 
 class AuthUtil {
 
@@ -62,7 +62,8 @@ class AuthUtil {
             //echo "getPassword=".$user->getPassword()."<br>";
             //echo "encoded=".$encoded."<br>";
             //exit();
-            if( StringUtils::equals($user->getPassword(), $encoded) ) {
+            //if( StringUtils::equals($user->getPassword(), $encoded) ) { //depreciated
+            if( hash_equals($user->getPassword(), $encoded) ) {
                 return $user;
             } else {
                 return NULL;
