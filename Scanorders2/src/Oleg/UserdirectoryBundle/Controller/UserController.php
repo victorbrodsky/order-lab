@@ -2740,8 +2740,8 @@ class UserController extends Controller
 
         //password is the same as original one
         if( !$newUser && hash_equals($originalPassword, $user->getPassword()) ) {
-            //exit('password is the same');
-            return;
+                //exit('password is the same');
+                return;
         }
 
         $encoder = $this->container->get('security.password_encoder');
