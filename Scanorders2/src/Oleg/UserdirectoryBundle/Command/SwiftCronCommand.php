@@ -39,7 +39,7 @@ class SwiftCronCommand extends ContainerAwareCommand {
         //$oExec = pclose(popen("start /B ". $cmd, "r"));
         $result = exec($cmd);
 
-        $logger->notice($result);
+        $logger->notice("cron:swift: ".$result);
 
         $output->writeln($result);
     }
