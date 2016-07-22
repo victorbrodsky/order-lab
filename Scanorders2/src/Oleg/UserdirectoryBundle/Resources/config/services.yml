@@ -27,6 +27,9 @@ parameters:
   sitesettings_title:
   contentabout_page:
 
+  #swiftmailer
+#  swift_delivery_addresses:
+
 
 #  maintenance:
 #  maintenanceenddate:
