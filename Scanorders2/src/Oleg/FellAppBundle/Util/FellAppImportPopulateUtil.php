@@ -435,12 +435,12 @@ class FellAppImportPopulateUtil {
     //return newly created DataFile object
     public function addFileToDataFileDB( $document ) {
 
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         $dataFile = $this->em->getRepository('OlegFellAppBundle:DataFile')->findOneByDocument($document->getId());
         if( $dataFile ) {
-            $event = "DataFile already exists with document ID=".$document->getId();
-            $logger->notice($event);
+            //$event = "DataFile already exists with document ID=".$document->getId();
+            //$logger->notice($event);
             return null;
         }
 

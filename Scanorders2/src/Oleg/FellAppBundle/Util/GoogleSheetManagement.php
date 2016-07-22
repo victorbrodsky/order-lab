@@ -272,9 +272,9 @@ class GoogleSheetManagement {
             //check if file already exists by file id
             $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
             if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
-                $logger = $this->container->get('logger');
-                $event = "Document already exists with uniqueid=".$file->getId();
-                $logger->warning($event);
+                //$logger = $this->container->get('logger');
+                //$event = "Document already exists with uniqueid=".$file->getId();
+                //$logger->warning($event);
                 return $documentDb;
             }
 
