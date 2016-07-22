@@ -34,7 +34,7 @@ class SwiftCronCommand extends ContainerAwareCommand {
 
         //$userSecUtil = $this->getContainer()->get('user_security_utility');
 
-        $cmd = 'php ../app/console swiftmailer:spool:send --env=prod';
+        $cmd = 'php app/console swiftmailer:spool:send --env=prod';
 
         //$oExec = pclose(popen("start /B ". $cmd, "r"));
         $result = exec($cmd);
