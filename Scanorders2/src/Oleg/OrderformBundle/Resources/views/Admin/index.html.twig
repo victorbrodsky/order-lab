@@ -203,7 +203,8 @@
 
 
     <!--show this only for dev. Don't show for live-->
-    {% if is_granted('ROLE_SCANORDER_ADMIN') and environment == 'dev' %}
+    {#{% if is_granted('ROLE_SCANORDER_ADMIN') and environment == 'dev' %}#}
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         <p><a  data-confirm="Are you sure? This action will overwrite all values on all lists with defaults."
                href="{{ path('generate_all') }}">Populate All Lists With Default Values</a>
         </p>

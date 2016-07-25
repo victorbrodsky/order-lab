@@ -569,6 +569,7 @@ class ScanListController extends ListController
         $res['fullClassName'] = $classPath.$className;
         $res['bundleName'] = $bundleName;
         $res['displayName'] = $displayName;
+        $res['linkToListId'] = null;
 
         return $res;
     }
