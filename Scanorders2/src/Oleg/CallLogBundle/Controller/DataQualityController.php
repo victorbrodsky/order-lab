@@ -26,39 +26,43 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class DataQualityController extends Controller
+class DataQualityController extends CallEntryController
 {
 
 
     /**
      * @Route("/merge-patient-records", name="calllog_merge_patient_records")
-     * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
+     * @Template("OlegCallLogBundle:DataQuality:merge-records.html.twig")
      */
     public function mergePatientAction(Request $request)
     {
-        //1) search box: MRN,Name...
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $title = "Call Entry";
+        $title = "Merge Patient Records";
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
         $cycle = 'new';
 
-        $patient = new Patient(true,$status,$user,$system);
 
-        $encounter = new Encounter(true,$status,$user,$system);
-        $patient->addEncounter($encounter);
+        $patient1 = new Patient(true,$status,$user,$system);
+        $encounter1 = new Encounter(true,$status,$user,$system);
+        $patient1->addEncounter($encounter1);
+        $form1 = $this->createPatientForm($patient1);
 
+        $patient2 = new Patient(true,$status,$user,$system);
+        $encounter2 = new Encounter(true,$status,$user,$system);
+        $patient2->addEncounter($encounter2);
+        $form2 = $this->createPatientForm($patient2);
 
-        $form = $this->createPatientForm($patient);
 
         return array(
             //'entity' => $entity,
-            'form' => $form->createView(),
+            'form1' => $form1->createView(),
+            'form2' => $form2->createView(),
             'cycle' => $cycle,
             'title' => $title,
         );
@@ -68,33 +72,35 @@ class DataQualityController extends Controller
 
     /**
      * @Route("/un-merge-patient-records", name="calllog_unmerge_patient_records")
-     * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
+     * @Template("OlegCallLogBundle:DataQuality:un-merge-records.html.twig")
      */
     public function unmergePatientAction(Request $request)
     {
-        //1) search box: MRN,Name...
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $title = "Call Entry";
+        $title = "Un-merge Patient Records";
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
         $cycle = 'new';
 
-        $patient = new Patient(true,$status,$user,$system);
+        $patient1 = new Patient(true,$status,$user,$system);
+        $encounter1 = new Encounter(true,$status,$user,$system);
+        $patient1->addEncounter($encounter1);
+        $form1 = $this->createPatientForm($patient1);
 
-        $encounter = new Encounter(true,$status,$user,$system);
-        $patient->addEncounter($encounter);
-
-
-        $form = $this->createPatientForm($patient);
+        $patient2 = new Patient(true,$status,$user,$system);
+        $encounter2 = new Encounter(true,$status,$user,$system);
+        $patient2->addEncounter($encounter2);
+        $form2 = $this->createPatientForm($patient2);
 
         return array(
             //'entity' => $entity,
-            'form' => $form->createView(),
+            'form1' => $form1->createView(),
+            'form2' => $form2->createView(),
             'cycle' => $cycle,
             'title' => $title,
         );

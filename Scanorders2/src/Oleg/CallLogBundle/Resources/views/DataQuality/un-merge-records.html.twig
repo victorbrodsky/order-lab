@@ -1,0 +1,31 @@
+{% extends "OlegCallLogBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+
+    {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info') }}
+
+    {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info') }}
+
+
+{% endblock %}
+
+
+{% block additionaljs %}
+    <script language="Javascript">
+        $(document).ready(function() {
+            //hide all alias
+            calllogHideAllAlias(true,true);
+        });
+    </script>
+{% endblock %}
