@@ -863,6 +863,12 @@ class AdminController extends Controller
                 90
             ),
 
+            "ROLE_CALLLOG_DATA_QUALITY" => array(
+                "Data Quality Manager for WCMC-NYP",
+                "Merge or un-merge patient records",
+                60
+            ),
+
             "ROLE_CALLLOG_PATHOLOGY_RESIDENT" => array(
                 "Pathology Resident",
                 "",

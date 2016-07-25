@@ -231,6 +231,12 @@ function setCallLogNavBar() {
         id = 'resources';
     }
 
+    if( full.indexOf("/call-log-book/merge-patient-records") !== -1 ||
+        full.indexOf("/call-log-book/un-merge-patient-records") !== -1
+    ) {
+        id = 'dataquality';
+    }
+
     id = commonNavBar(full,id)
 
     //if( full.indexOf("/call-log-book/re-identify") !== -1 ) {

@@ -954,11 +954,10 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:MrnType')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegOrderformBundle:MrnType')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $types = array(
             'New York Hospital MRN',
@@ -974,11 +973,17 @@ class ScanAdminController extends AdminController
             'California Tumor Registry Patient ID',
             'Specify Another Patient ID Issuer',
             'Auto-generated MRN',
-            'Existing Auto-generated MRN'
+            'Existing Auto-generated MRN',
+            'Merge ID'
         );
 
         $count = 10;
         foreach( $types as $type ) {
+
+            $mrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName($type);
+            if( $mrnType ) {
+                continue;
+            }
 
             $mrnType = new MrnType();
             $this->setDefaultList($mrnType,$count,$username,$type);
