@@ -28,11 +28,11 @@
         {% endif %}
 
         <button
-                id="merge_patient_button" type="button"
+                id="unmerge_patient_button" type="button"
                 class="btn btn-lg btn-success" align="center"
-                onclick="mergePatientBtn()"
+                onclick="unmergePatientBtn()"
                 {#style="float:left; width:100%; display:none;"#}
-        >Merge</button>
+        >Unmerge</button>
 
     </div>
 
@@ -45,5 +45,29 @@
             //hide all alias
             calllogHideAllAlias(true,true);
         });
+
+        function unmergePatientBtn() {
+
+            var id1 = $('#patient-holder-1').find('.calllog-patient-id').val();
+            var id2 = $('#patient-holder-2').find('.calllog-patient-id').val();
+            console.log("id1="+id1+", id2="+id2);
+
+            var url = Routing.generate('calllog_merge_patient_records_ajax');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                async: false,
+                data: {id1: id1, id2: id2},
+            }).success(function(data) {
+                //console.log("output="+data);
+                if( data == "OK" ) {
+                    console.log("merged OK; data="+data);
+                } else {
+                    console.log("merged failed; data="+data);
+                }
+            });
+
+        }
+
     </script>
 {% endblock %}

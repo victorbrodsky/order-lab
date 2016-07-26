@@ -1262,4 +1262,13 @@ class Patient extends ObjectAbstract
         return $res;
     }
 
+    public function obtainMergeMrn() {
+        foreach( $this->getMrn() as $mrn ) {
+            if( $mrn->getKeytype()->getName() == "Merge ID" ) {
+                return $mrn;
+            }
+        }
+        return null;
+    }
+
 }

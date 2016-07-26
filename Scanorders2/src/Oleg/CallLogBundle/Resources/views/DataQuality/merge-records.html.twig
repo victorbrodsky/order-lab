@@ -15,7 +15,7 @@
     {% set formtype = 'merge' %}
 
     <div class="calllog-holder">
-        
+
         <input type="hidden" id="formcycle" value="{{ cycle }}" />
         <input type="hidden" id="orderformtype" value="calllog" />
 
@@ -59,11 +59,12 @@
                 async: false,
                 data: {id1: id1, id2: id2},
             }).success(function(data) {
-                //console.log("output="+data);
-                if( data == "OK" ) {
-                    console.log("merged OK; data="+data);
+                console.log("output data.res="+data.res);
+                console.log(data);
+                if( data.res == "OK" ) {
+                    console.log("merged OK; data="+data.msg);
                 } else {
-                    console.log("merged failed; data="+data);
+                    console.log("merged failed; data="+data.msg);
                 }
             });
 
