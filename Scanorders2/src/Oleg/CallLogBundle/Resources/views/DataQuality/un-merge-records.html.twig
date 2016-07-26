@@ -12,11 +12,29 @@
 
 {% block content %}
 
+    {% set formtype = 'unmerge' %}
 
-    {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info') }}
+    <div class="calllog-holder">
 
-    {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info') }}
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+        <input type="hidden" id="orderformtype" value="calllog" />
 
+        {% if form1 is defined %}
+            {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info',formtype) }}
+        {% endif %}
+
+        {% if form2 is defined %}
+            {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info',formtype) }}
+        {% endif %}
+
+        <button
+                id="merge_patient_button" type="button"
+                class="btn btn-lg btn-success" align="center"
+                onclick="mergePatientBtn()"
+                {#style="float:left; width:100%; display:none;"#}
+        >Merge</button>
+
+    </div>
 
 {% endblock %}
 

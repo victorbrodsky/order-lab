@@ -12,11 +12,29 @@
 
 {% block content %}
 
+    {% set formtype = 'merge' %}
 
-    {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info') }}
+    <div class="calllog-holder">
+        
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+        <input type="hidden" id="orderformtype" value="calllog" />
 
-    {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info') }}
+        {% if form1 is defined %}
+            {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info',formtype) }}
+        {% endif %}
 
+        {% if form2 is defined %}
+            {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info',formtype) }}
+        {% endif %}
+
+        <button
+                id="merge_patient_button" type="button"
+                class="btn btn-lg btn-success" align="center"
+                onclick="mergePatientBtn()"
+                {#style="float:left; width:100%; display:none;"#}
+        >Merge</button>
+
+    </div>
 
 {% endblock %}
 
@@ -27,5 +45,29 @@
             //hide all alias
             calllogHideAllAlias(true,true);
         });
+
+        function mergePatientBtn() {
+
+            var id1 = $('#patient-holder-1').find('.calllog-patient-id').val();
+            var id2 = $('#patient-holder-2').find('.calllog-patient-id').val();
+            console.log("id1="+id1+", id2="+id2);
+
+            var url = Routing.generate('calllog_merge_patient_records_ajax');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                async: false,
+                data: {id1: id1, id2: id2},
+            }).success(function(data) {
+                //console.log("output="+data);
+                if( data == "OK" ) {
+                    console.log("merged OK; data="+data);
+                } else {
+                    console.log("merged failed; data="+data);
+                }
+            });
+
+        }
+
     </script>
 {% endblock %}

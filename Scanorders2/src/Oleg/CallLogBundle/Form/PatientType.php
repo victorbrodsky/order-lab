@@ -31,6 +31,12 @@ class PatientType extends AbstractType
 
         //echo "patient: type=".$this->params['type']."<br>";
 
+//        $builder->add('id', null, array(
+//            'label' => false,
+//            'required' => false,
+//            'attr' => array('class' => 'form-control', 'type' => 'hidden'),
+//        ));
+
         $builder->add('mrn', 'collection', array(
             'type' => new PatientMrnType($this->params, null),
             //'allow_add' => true,

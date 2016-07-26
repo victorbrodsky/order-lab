@@ -106,4 +106,32 @@ class DataQualityController extends CallEntryController
         );
     }
 
+
+
+
+
+    /**
+     * @Route("/merge-patient-records-ajax", name="calllog_merge_patient_records_ajax", options={"expose"=true})
+     */
+    public function mergePatientAjaxAction(Request $request)
+    {
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $title = "Un-merge Patient Records";
+
+        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $status = 'valid';
+        $cycle = 'new';
+
+        $result = 'OK';
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
+    }
+
 }

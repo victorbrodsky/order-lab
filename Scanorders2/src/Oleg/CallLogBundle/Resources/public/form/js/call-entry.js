@@ -10,28 +10,28 @@ function addnewCalllogPatient(holderId) {
 
     var holder = getHolder(holderId);
 
-    var mrntype = find.holder(".mrntype-combobox").select2('val');
+    var mrntype = holder.find(".mrntype-combobox").select2('val');
     mrntype = trimWithCheck(mrntype);
 
-    var mrn = find.holder(".patientmrn-mask").val();
+    var mrn = holder.find(".patientmrn-mask").val();
     mrn = trimWithCheck(mrn);
 
-    var dob = find.holder(".patient-dob-date").val();
+    var dob = holder.find(".patient-dob-date").val();
     dob = trimWithCheck(dob);
 
-    var lastname = find.holder(".encounter-lastName").val();
+    var lastname = holder.find(".encounter-lastName").val();
     lastname = trimWithCheck(lastname);
 
-    var firstname = find.holder(".encounter-firstName").val();
+    var firstname = holder.find(".encounter-firstName").val();
     firstname = trimWithCheck(firstname);
 
-    var middlename = find.holder(".encounter-middleName").val();
+    var middlename = holder.find(".encounter-middleName").val();
     middlename = trimWithCheck(middlename);
 
-    var suffix = find.holder(".encounter-suffix").val();
+    var suffix = holder.find(".encounter-suffix").val();
     suffix = trimWithCheck(suffix);
 
-    var sex = find.holder(".encountersex-field").select2('val');
+    var sex = holder.find(".encountersex-field").select2('val');
     sex = trimWithCheck(sex);
 
     //check if "Last Name" field + DOB field, or "MRN" fields are not empty
@@ -40,9 +40,9 @@ function addnewCalllogPatient(holderId) {
         //if( mrntype && mrn || lastname ) {
         //ok
     } else {
-        find.holder('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
-        //find.holder('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
-        find.holder('#calllog-danger-box').show();
+        holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+        //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
+        holder.find('#calllog-danger-box').show();
         return false;
     }
 
@@ -88,26 +88,26 @@ function addnewCalllogPatient(holderId) {
         if( data == "OK" ) {
             //console.log("Patient has been created");
             //hide find patient and add new patient
-            find.holder('#search_patient_button').hide();
-            find.holder('#addnew_patient_button').hide();
+            holder.find('#search_patient_button').hide();
+            holder.find('#addnew_patient_button').hide();
             //show Re-enter Patient
-            find.holder('#reenter_patient_button').show();
+            holder.find('#reenter_patient_button').show();
             //clean error message
-            find.holder('#calllog-danger-box').html('');
-            find.holder('#calllog-danger-box').hide();
+            holder.find('#calllog-danger-box').html('');
+            holder.find('#calllog-danger-box').hide();
 
             //disable all fields
-            disableAllFields(true);
+            disableAllFields(true,holderId);
 
             //show edit patient info button
-            find.holder('#edit_patient_button').show();
+            holder.find('#edit_patient_button').show();
             //hide "No single patient is referenced by this entry or I'll add the patient info later" link
-            find.holder('#callentry-nosinglepatient-link').hide();
+            holder.find('#callentry-nosinglepatient-link').hide();
 
         } else {
             //console.log("Patient has not been created");
-            find.holder('#calllog-danger-box').html(data);
-            find.holder('#calllog-danger-box').show();
+            holder.find('#calllog-danger-box').html(data);
+            holder.find('#calllog-danger-box').show();
         }
     });
 
@@ -230,7 +230,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
     if( patLen == 1 ) {
         populatePatientInfo(patients[0],null,true,holderId);
-        disableAllFields(true);
+        disableAllFields(true,holderId);
 
         //show edit patient info button
         holder.find('#edit_patient_button').show();
@@ -248,7 +248,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
         holder.find('#calllog-danger-box').html("No matching patient records found"+searchedStr+".");
         holder.find('#calllog-danger-box').show();
         populatePatientInfo(null,true,false,holderId);
-        disableAllFields(false);
+        disableAllFields(false,holderId);
 
         //un-hide/show a button called "Add New Patient Registration"
         holder.find('#addnew_patient_button').show();
@@ -258,9 +258,9 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
         //show table with found patients
         //populatePatientInfo(patients[0],null);
         populatePatientInfo(null,null,false,holderId);
-        disableAllFields(false);
+        disableAllFields(false,holderId);
 
-        createPatientsTableCalllog(patients);
+        createPatientsTableCalllog(patients,holderId);
 
     } else {
         //console.log('This condition should not be reached');
@@ -273,7 +273,7 @@ function createPatientsTableCalllog( patients, holderId ) {
     var holder = getHolder(holderId);
 
     //Matching Patients
-    var matchingPatientsHtml = '<div class="table-responsive"><table id="calllog-matching-patients-table" class="table table-bordered">' +
+    var matchingPatientsHtml = '<div class="table-responsive"><table id="calllog-matching-patients-table-'+holderId+'" class="table table-bordered">' +
         '<thead><tr>' +
         '<th>MRN</th>' +
         '<th>Last Name</th>' +
@@ -291,7 +291,7 @@ function createPatientsTableCalllog( patients, holderId ) {
         //console.log('patient id='+patient.id);
 
         matchingPatientsHtml = matchingPatientsHtml +
-            '<tr class="clickable-row" id="'+i+'">' +
+            '<tr class="clickable-row" id="'+i+'-'+holderId+'">' +
             '<td>'+patient.mrn+' ('+patient.mrntypestr+')</td>'+
             '<td>'+patient.lastname+'</td>'+
             '<td>'+patient.firstname+'</td>'+
@@ -308,8 +308,8 @@ function createPatientsTableCalllog( patients, holderId ) {
 
     matchingPatientsHtml = matchingPatientsHtml +
         '<p data-toggle="tooltip" title="Please select the patient"><button type="button"'+
-        ' id="matchingPatientBtn"'+
-        ' class="btn btn-lg span4" align="center"'+
+        //' id="matchingPatientBtn-'+holderId+'"'+
+        ' class="btn btn-lg span4 matchingPatientBtn" align="center"'+
         ' disabled'+
         ' onclick="matchingPatientBtnClick(\''+holderId+'\')"'+
         '>Select Patient</button></p>';
@@ -318,25 +318,27 @@ function createPatientsTableCalllog( patients, holderId ) {
     holder.find('#calllog-matching-patients').show();
 
 
-    holder.find('#matchingPatientBtn').parent().tooltip();
+    holder.find('.matchingPatientBtn').parent().tooltip();
 
-    holder.find('#calllog-matching-patients-table').on('click', '.clickable-row', function(event) {
+    holder.find('#calllog-matching-patients-table-'+holderId).on('click', '.clickable-row', function(event) {
         $(this).addClass('active').addClass('success').siblings().removeClass('active').removeClass('success');
         //enable button
-        holder.find('#matchingPatientBtn').prop('disabled', false);
-        holder.find('#matchingPatientBtn').parent().tooltip('destroy');
+        holder.find('.matchingPatientBtn').prop('disabled', false);
+        holder.find('.matchingPatientBtn').parent().tooltip('destroy');
     });
 
 }
 
 function matchingPatientBtnClick(holderId) {
-
+    console.log('holderId='+holderId);
     var holder = getHolder(holderId);
 
-    var index = holder.find('#calllog-matching-patients-table').find('.active').attr('id');
-    //console.log('index='+index);
+    var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
+    //remove holderId from index
+    index = index.replace("-"+holderId, "");
+    console.log('index='+index);
     populatePatientInfo(_patients[index],null,true,holderId);
-    disableAllFields(true);
+    disableAllFields(true,holderId);
 
     //show edit patient info button
     holder.find('#edit_patient_button').show();
@@ -348,7 +350,7 @@ function matchingPatientBtnClick(holderId) {
     holder.find('#search_patient_button').hide();
 
     //remove and hide matching patients table
-    holder.find('#calllog-matching-patients-table').remove();
+    holder.find('#calllog-matching-patients-table-'+holderId).remove();
     holder.find('#calllog-matching-patients').html('');
     holder.find('#calllog-matching-patients').hide();
 }
@@ -363,7 +365,7 @@ function disableAllFields(disable,holderId) {
 
     disableField(holder.find(".patient-dob-date"),disable);
 
-    disableField(holder.find(".patient-dob-date"),disable);
+    //disableField(holder.find(".patient-dob-date"),disable);
 
     disableField(holder.find(".encounter-lastName"),disable);
 
@@ -405,6 +407,8 @@ function disableField(fieldEl,disable) {
 function populatePatientInfo( patient, showinfo, modify, holderId ) {
 
     var holder = getHolder(holderId);
+
+    populateInputFieldCalllog(holder.find(".calllog-patient-id"),patient,'id',modify);
 
     processMrnFieldsCalllog(patient,modify,holderId);
 
@@ -542,7 +546,7 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
 }
 
 function editPatientBtn(holderId) {
-    disableAllFields(false);
+    disableAllFields(false,holderId);
 
     //show all alias
     //holder.find('.alias-group').find('.input-group-addon').show();

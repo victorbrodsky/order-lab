@@ -146,7 +146,8 @@
             {#</div> <!-- panel-collapse -->#}
         {#</div> <!-- panel panel-info -->#}
 
-        {{ calllogmacros.patientInfoSection(form,cycle,'patient-holder-1','Patient Info') }}
+        {% set formtype = 'call-entry' %}
+        {{ calllogmacros.patientInfoSection(form,cycle,'patient-holder-1','Patient Info',formtype) }}
 
         <a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">
             No single patient is referenced by this entry or I'll add the patient info later
