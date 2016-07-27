@@ -2470,21 +2470,22 @@ class AdminController extends Controller
     public function generateSourceSystems() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+        //$entities = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findAll();
+        //if( $entities ) {
+        //    return -1;
+        //}
 
         $elements = array(
-            'Scan Order',
+            'ORDER Scan Order', //used as default in getDefaultSourceSystem //'Scan Order',
             'WCMC Epic Practice Management',
             'WCMC Epic Ambulatory EMR',
             'NYH Paper Requisition',
             'Written or oral referral',
             'Aperio eSlide Manager on C.MED.CORNELL.EDU',
             'Indica HALO',
-            'Deidentifier'
+            'Deidentifier',
+            'ORDER Call Log Book'
         );
 
 
@@ -2492,6 +2493,10 @@ class AdminController extends Controller
 
         $count = 10;
         foreach( $elements as $value ) {
+
+            if( $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($value) ) {
+                continue;
+            }
 
             $entity = new SourceSystemList();
             $this->setDefaultList($entity,$count,$username,$value);

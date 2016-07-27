@@ -566,7 +566,7 @@ class UserSecurityUtil {
     }
 
     public function getDefaultSourceSystem() {
-        $defaultSourceSystemName = 'Scan Order';
+        $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
         $source = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
         if( !$source ) {
             if( $this->container ) {
