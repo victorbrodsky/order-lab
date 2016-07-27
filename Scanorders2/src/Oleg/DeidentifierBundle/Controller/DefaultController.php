@@ -438,9 +438,9 @@ class DefaultController extends Controller
         }
 
         //set source
-        $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("Deidentifier");
+        $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Deidentifier");
         if( !$source ) {
-            throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."Deidentifier");
+            throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
         }
         $accession->setSource($source);
 
@@ -654,9 +654,9 @@ class DefaultController extends Controller
 
         $status = 'deidentified-valid';
         //$source = null; //SourceSystemList
-        $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("Deidentifier");
+        $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Deidentifier");
         if( !$source ) {
-            throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."Deidentifier");
+            throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
         }
 
         $accessionAccession = new AccessionAccession($status,$user,$source);

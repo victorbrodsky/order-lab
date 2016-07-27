@@ -51,10 +51,16 @@ class CallLogUtil
 
         //$this->addMrn( new PatientMrn($status,$provider,$sourcesystem) );
 
-        //Source System: Call Log
-        $sourcesystem = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        //Source System: ORDER Call Log Book
+        $sourcesystem = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Call Log Book");
+        if( !$sourcesystem ) {
+            throw new \Exception( 'Source system not found by name '."ORDER Call Log Book" );
+        }
+
         $status = 'valid';
         $newMrn = new PatientMrn($status,$provider,$sourcesystem);
+
+        $patient->addMrn($newMrn);
 
     }
 

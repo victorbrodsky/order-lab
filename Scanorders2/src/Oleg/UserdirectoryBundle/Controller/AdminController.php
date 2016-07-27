@@ -2484,7 +2484,7 @@ class AdminController extends Controller
             'Written or oral referral',
             'Aperio eSlide Manager on C.MED.CORNELL.EDU',
             'Indica HALO',
-            'Deidentifier',
+            'ORDER Deidentifier', //'Deidentifier',
             'ORDER Call Log Book'
         );
 
