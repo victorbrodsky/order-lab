@@ -179,7 +179,7 @@ function mrnTypeListener() {
 
 function getMrnAutoGenMask() {
     var placeholderStr = getCleanMaskStr( _mrnplaceholder );
-    var mask = {"mask": placeholderStr+"9999999999" };
+    var mask = {"mask": placeholderStr+"9999999999999" };
     return mask;
 }
 
@@ -290,7 +290,7 @@ function accessionTypeListener() {
 
 function getAccessionAutoGenMask() {
     var placeholderStr = getCleanMaskStr( _accplaceholder );
-    var mask = {"mask": placeholderStr+"9999999999" };
+    var mask = {"mask": placeholderStr+"9999999999999" };
     return mask;
 }
 

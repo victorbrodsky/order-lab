@@ -119,7 +119,7 @@ class DataQualityController extends CallEntryController
         $user = $this->get('security.context')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
         $calllogUtil = $this->get('calllog_util');
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -134,6 +134,7 @@ class DataQualityController extends CallEntryController
         $error = false;
         $patient1 = null;
         $patient2 = null;
+        $patientsArr = array();
 
         if( $id1 ) {
             $patient1 = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($id1);
@@ -142,6 +143,7 @@ class DataQualityController extends CallEntryController
                 $error = true;
             }
             //$res = $patient1->getId();
+            $patientsArr[] = $patient1;
         } else {
             $msg .= "Patient 1 id is invalid";
         }
@@ -153,6 +155,7 @@ class DataQualityController extends CallEntryController
                 $error = true;
             }
             //$res = $patient2->getId();
+            $patientsArr[] = $patient2;
         } else {
             $msg .= "Patient 2 id is invalid";
         }
@@ -183,11 +186,28 @@ class DataQualityController extends CallEntryController
                 }
             }
 
+
+
+
             if( !$error ) {
-                //save patients to DB
+
+                //set master patient
+                $ids = array();
+                foreach( $patientsArr as $patient ) {
+                    $ids[] = $patient->getId();
+                    if( $masterMergeRecordId == $patient->getId() ) {
+                        $patient->setMasterMergeRecord(true);
+                    } else {
+                        $patient->setMasterMergeRecord(false);
+                    }
+
+                    //save patients to DB
+                    $em->persist($patient);
+                    $em->flush($patient);
+                }
 
                 //"You have successfully merged patient records: Master Patient ID #."
-                $msg = "You have successfully merged patient records (IDs $id1, $id2) with Master Patient ID # $masterMergeRecordId.";
+                $msg = "You have successfully merged patient records (IDs ".implode(", ",$ids).") with Master Patient ID # $masterMergeRecordId.";
             }
 
             //$result['res'] = 'OK';
