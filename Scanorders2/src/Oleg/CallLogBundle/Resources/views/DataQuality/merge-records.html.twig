@@ -19,6 +19,8 @@
         <input type="hidden" id="formcycle" value="{{ cycle }}" />
         <input type="hidden" id="orderformtype" value="calllog" />
 
+        {#<input type="hidden" id="calllog-patient-master-id" value="" />#}
+
         {% if form1 is defined %}
             {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info',formtype) }}
         {% endif %}
@@ -27,12 +29,18 @@
             {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info',formtype) }}
         {% endif %}
 
+        <div id="calllog-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
+
+        <div id="calllog-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
+
+        <p>
         <button
                 id="merge_patient_button" type="button"
                 class="btn btn-lg btn-success" align="center"
                 onclick="mergePatientBtn()"
-                {#style="float:left; width:100%; display:none;"#}
+                style="display:none;"
         >Merge</button>
+        </p>
 
     </div>
 
@@ -44,27 +52,74 @@
         $(document).ready(function() {
             //hide all alias
             calllogHideAllAlias(true,true);
+            showHideMergeButton();
         });
+
+        //triggered by class calllog-patient-id
+        function showHideMergeButton() {
+            $('.calllog-patient-id').on('change', function() {
+                console.log('calllog-patient-id changed; value='+$(this).val());
+                var counter = 0;
+                var totalCounter = 0;
+                $('.calllog-patient-id').each(function() {
+                    if( $(this).val() ) {
+                        counter++;
+                    }
+                    totalCounter++;
+                });
+                console.log("counter="+counter+" ?= "+totalCounter);
+                if( counter > 0 && counter == totalCounter ) {
+                    $('#merge_patient_button').show();
+                } else {
+                    $('#merge_patient_button').hide();
+                }
+            });
+        }
 
         function mergePatientBtn() {
 
+            $('#calllog-msg-danger-box').html("");
+            $('#calllog-msg-danger-box').hide();
+
             var id1 = $('#patient-holder-1').find('.calllog-patient-id').val();
             var id2 = $('#patient-holder-2').find('.calllog-patient-id').val();
-            console.log("id1="+id1+", id2="+id2);
+
+            //var masterMergeRecordId = $('#calllog-patient-master-id').val();
+            var masterMergeRecordId = $("input[name=calllog-patient-master-record]:checked").val();
+
+            console.log("id1="+id1+", id2="+id2+", masterMergeRecordId="+masterMergeRecordId);
+
+            if( id1 == id2 ) {
+                $('#calllog-msg-danger-box').html("You chose the same patients to merge.");
+                $('#calllog-msg-danger-box').show();
+                return;
+            }
+
+            if( !masterMergeRecordId ) {
+                $('#calllog-msg-danger-box').html("You have to choose the Master merge patient record.");
+                $('#calllog-msg-danger-box').show();
+                return;
+            }
 
             var url = Routing.generate('calllog_merge_patient_records_ajax');
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
-                async: false,
-                data: {id1: id1, id2: id2},
+                async: true,
+                data: {id1: id1, id2: id2, masterMergeRecordId: masterMergeRecordId},
             }).success(function(data) {
-                console.log("output data.res="+data.res);
+                console.log("output data.msg="+data.msg);
                 console.log(data);
-                if( data.res == "OK" ) {
+                if( data.error == false ) {
                     console.log("merged OK; data="+data.msg);
+                    $('#calllog-msg-success-box').html(data.msg);
+                    $('#calllog-msg-success-box').show();
+                    //remove all buttons
+                    $("button").hide();
                 } else {
                     console.log("merged failed; data="+data.msg);
+                    $('#calllog-msg-danger-box').html(data.msg);
+                    $('#calllog-msg-danger-box').show();
                 }
             });
 

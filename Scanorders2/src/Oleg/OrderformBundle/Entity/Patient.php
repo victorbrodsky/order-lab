@@ -101,7 +101,11 @@ class Patient extends ObjectAbstract
     private $type;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
-
+    /**
+     * Master Merge Record
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $masterMergeRecord;
 
     
     /**
@@ -675,6 +679,26 @@ class Patient extends ObjectAbstract
     {
         $this->dob->removeElement($dob);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMasterMergeRecord()
+    {
+        return $this->masterMergeRecord;
+    }
+
+    /**
+     * @param mixed $masterMergeRecord
+     */
+    public function setMasterMergeRecord($masterMergeRecord)
+    {
+        $this->masterMergeRecord = $masterMergeRecord;
+    }
+
+
+
+
 
 
     ///////////////////////// Extra fields /////////////////////////

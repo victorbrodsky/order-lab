@@ -1142,13 +1142,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$name: NOMRNPROVIDED
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
-    public function getNextNonProvided( $entity, $extra=null, $message=null ) { //$name, $className, $fieldName ) {
+    public function getNextNonProvided( $entity, $extra=null, $message=null, $prefixname=null ) { //$name, $className, $fieldName ) {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
         $fieldName = $entity->obtainKeyFieldName();
         //$name = "NO".strtoupper($className)."IDPROVIDED";
-        $name = $entity->obtainNoprovidedKeyPrefix();
+
+        if( !$prefixname ) {
+            $prefixname = $entity->obtainNoprovidedKeyPrefix();
+        }
 
         //get extra key by $extra optional parameter or get it from entity
         $extraStr = "";
@@ -1169,7 +1172,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo $message;
         //echo $entity;
-        //echo "name=".$name.", fieldName=".$fieldName.", className=".$className."<br>";
+        //echo "prefixname=".$prefixname.", fieldName=".$fieldName.", className=".$className."<br>";
         //echo "extraStr=".$extraStr.",<br>";
 
         //institution
@@ -1194,7 +1197,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "queryStr=".$queryStr."<br>";
 
         $query = $this->getEntityManager()
-        ->createQuery($queryStr)->setParameter('field', '%'.$name.'%');
+        ->createQuery($queryStr)->setParameter('field', '%'.$prefixname.'%');
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -1206,7 +1209,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //$fieldIndexArr = explode("-",$lastFieldStr);
         //echo "count=".count($fieldIndexArr)."<br>";
 
-        $maxKey = $this->getNextByMax($lastFieldStr, $name);
+        $maxKey = $this->getNextByMax($lastFieldStr, $prefixname);
 
         //check if the valid bigger key was already assigned to the element of the same class attached to this order
         if( $message ) {
@@ -1214,7 +1217,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             foreach( $message->$getSameEntity() as $same ) {
                 if( $same->getStatus() == self::STATUS_VALID ) {
                     $key = $same->obtainValidKeyfield()->getField()."";
-                    $newBiggerKey = $this->getBiggerKey($maxKey,$key,$name);
+                    $newBiggerKey = $this->getBiggerKey($maxKey,$key,$prefixname);
                     if( $newBiggerKey != -1 ) {
                         $maxKey = $newBiggerKey;
                     }
@@ -1226,7 +1229,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //if( $className == 'Encounter') {
         //    exit();
         //}
-        //return $this->getNextByMax($lastFieldStr, $name);
+        //return $this->getNextByMax($lastFieldStr, $prefixname);
         return $maxKey;
     }
     
@@ -1239,14 +1242,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $fieldIndex = 0;
         }
         $fieldIndex = ltrim($fieldIndex,'0') + 1;
-        $paddedfield = str_pad($fieldIndex,10,'0',STR_PAD_LEFT);
+        $paddedfield = str_pad($fieldIndex,13,'0',STR_PAD_LEFT);
         //echo "paddedfield=".$paddedfield."<br>";
         //exit();
         return $name.'-'.$paddedfield;
     }
 
     //compare two keys:
-    //$keyDb: generated from DB: NOMRNPROVIDED-0000000001
+    //$keyDb: generated from DB: NOMRNPROVIDED-0000000000001
     //$key  : key founded in the entity
     public function getBiggerKey( $keyDb, $key, $name ) {
 

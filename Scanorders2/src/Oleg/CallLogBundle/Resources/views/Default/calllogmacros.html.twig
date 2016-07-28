@@ -129,8 +129,23 @@
         <div id="calllog-PatientInformation-{{holderId}}" class="panel-collapse collapse in">
             <div class="panel-body">
 
+                {{ form_errors(form) }}
+
                 {#{{ form_widget(form.id) }}#}
                 {#{{ form_row(form.id) }}#}
+
+                {#Master radio#}
+                {#<input type="radio" name="gender" value="male"> Male<br>#}
+                <p>
+                <div class="row">
+                    <div class="col-xs-6" align="right">
+                        <strong>Master Merge Record:</strong>
+                    </div>
+                    <div class="col-xs-6" align="left">
+                        <input type="radio" name="calllog-patient-master-record" value="{{ form.vars.value.id }}" class="calllog-patient-id-radio">
+                    </div>
+                </div>
+                </p>
 
                 <div class="calllog-search-fields">
 

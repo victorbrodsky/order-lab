@@ -81,7 +81,7 @@ function addnewCalllogPatient(holderId) {
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
-        async: false,
+        async: true,
         data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex  },
     }).success(function(data) {
         //console.log("output="+data);
@@ -190,7 +190,7 @@ function findCalllogPatient(holderId) {
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
-        async: false,
+        async: true,
         data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname },
     }).success(function(data) {
         //console.log("data.length="+data.length);
@@ -408,7 +408,12 @@ function populatePatientInfo( patient, showinfo, modify, holderId ) {
 
     var holder = getHolder(holderId);
 
+    populateInputFieldCalllog(holder.find(".calllog-patient-id-radio"),patient,'id',modify);
+    disableField(holder.find(".calllog-patient-id-radio"),false);
+
     populateInputFieldCalllog(holder.find(".calllog-patient-id"),patient,'id',modify);
+    holder.find(".calllog-patient-id").trigger('change');
+    holder.find(".calllog-patient-id").change();
 
     processMrnFieldsCalllog(patient,modify,holderId);
 
