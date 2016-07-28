@@ -379,6 +379,32 @@ class CallEntryController extends Controller
             $patients = array();
         }
 
+        //search for merged
+        $calllogUtil = $this->get('calllog_util');
+        $existingPatientIds = array();
+        foreach( $patients as $patient ) {
+            $existingPatientIds[] = $patient->getId();
+        }
+        $searchedMergeIdsArr = array();
+        $mergedPatients = array();
+        foreach( $patients as $patient ) {
+            $mergedMrn = $patient->obtainMergeMrn();
+            if( $mergedMrn ) {
+                $mergeId = $mergedMrn->getField();
+                //searched other patients except $idsArr
+                if( !in_array($mergeId, $searchedMergeIdsArr) ) {
+                    $mergedPatients = $calllogUtil->getMergedPatients($mergedPatients, $mergeId, $existingPatientIds);
+                }
+                $searchedMergeIdsArr[] = $mergeId;
+            }
+        }
+
+        //add $newPatients to $patients
+        foreach( $mergedPatients as $mergedPatient ) {
+            //echo "add merged patient = ".$mergedPatient->getId()."<br>";
+            $patients[] = $mergedPatient;
+        }
+
         return $patients;
     }
 

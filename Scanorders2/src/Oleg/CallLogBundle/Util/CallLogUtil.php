@@ -56,7 +56,7 @@ class CallLogUtil
         $sourcesystem = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Call Log Book");
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
-            throw new \Exception($msg);
+            //throw new \Exception($msg);
             return $msg;
         }
 
@@ -68,9 +68,9 @@ class CallLogUtil
 
         //set keytype MrnType "Merge ID"
         $keyTypeMergeID = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
-        if( !$sourcesystem ) {
+        if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
-            throw new \Exception($msg);
+            //throw new \Exception($msg);
             return $msg;
         }
         $newMrn->setKeytype($keyTypeMergeID);
@@ -80,5 +80,40 @@ class CallLogUtil
         return $patient;
     }
 
+    public function getMergedPatients( $mergedPatients, $mergeId, $existingPatientIds=null ) {
+
+        $keyTypeMergeID = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
+        if( !$keyTypeMergeID ) {
+            $msg = 'MrnType not found by name Merge ID';
+            throw new \Exception($msg);
+            //return $msg;
+        }
+
+        $parameters = array();
+
+        $repository = $this->em->getRepository('OlegOrderformBundle:Patient');
+        $dql = $repository->createQueryBuilder("patient");
+        $dql->leftJoin("patient.mrn", "mrn");
+
+        $dql->andWhere("mrn.keytype = :keytype AND mrn.field = :mrn");
+        $parameters['keytype'] = $keyTypeMergeID->getId();
+        $parameters['mrn'] = $mergeId;
+
+        if( $existingPatientIds ) {
+            $dql->andWhere("patient.id NOT IN (" . implode(",", $existingPatientIds) . ")");
+        }
+
+        $query = $this->em->createQuery($dql);
+        $query->setParameters($parameters);
+        //echo $mergeId.":sql=".$query->getSql()."<br>";
+        $patients = $query->getResult();
+        //echo "merged patients = ".count($patients)."<br>";
+
+        foreach( $patients as $patient ) {
+            $mergedPatients[] = $patient;
+        }
+
+        return $mergedPatients;
+    }
 
 }
