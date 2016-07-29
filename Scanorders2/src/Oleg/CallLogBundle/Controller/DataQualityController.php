@@ -9,6 +9,7 @@ use Oleg\OrderformBundle\Entity\EncounterPatlastname;
 use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
 use Oleg\OrderformBundle\Entity\EncounterPatsex;
 use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
+use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\PatientDob;
 use Oleg\OrderformBundle\Entity\PatientFirstName;
@@ -192,17 +193,32 @@ class DataQualityController extends CallEntryController
             // copy that MRN with the type of "Merge ID" to the second patient as a new MRN.
             if( !$mergedMrn1 && $mergedMrn2 || $mergedMrn1 && !$mergedMrn2 ) {
 
-                $merged = true;
                 $msg .= 'Case (b): one of the patients has one MRN of type = "Merge ID".';
 
                 if( $mergedMrn1 ) {
-                    $msg .= " Patient with ID ".$id1." has Merged MRN.";
-                    $patient2->addMrn($mergedMrn1);
+                    $msg .= " Patient with ID ".$id1." has Merged MRN. ";
+
+                    $newMrn = $calllogUtil->createPatientMergeMrn($user);
+                    if( $newMrn instanceof PatientMrn ) {
+                        $merged = true;
+                        $newMrn->setField($mergedMrn1->getField());
+                        $patient2->addMrn($newMrn);
+                    } else {
+                        $msg .= $newMrn;
+                    }
                 }
 
                 if( $mergedMrn2 ) {
-                    $msg .= " Patient with ID ".$id2." has Merged MRN.";
-                    $patient1->addMrn($mergedMrn2);
+                    $msg .= " Patient with ID ".$id2." has Merged MRN. ";
+
+                    $newMrn = $calllogUtil->createPatientMergeMrn($user);
+                    if( $newMrn instanceof PatientMrn ) {
+                        $merged = true;
+                        $newMrn->setField($mergedMrn2->getField());
+                        $patient1->addMrn($newMrn);
+                    } else {
+                        $msg .= $newMrn;
+                    }
                 }
 
             }
@@ -211,6 +227,13 @@ class DataQualityController extends CallEntryController
             if( !$error && $merged ) {
 
                 //set master patient
+//                $msg .= "<br>";
+//                foreach( $patientsArr as $patient ) {
+//                    foreach( $patient->getMrn() as $mrn ) {
+//                        $msg .= $patient->getId().": before mrn=".$mrn->obtainOptimalName()."<br>";
+//                    }
+//                }
+
                 $ids = array();
                 foreach( $patientsArr as $patient ) {
                     $ids[] = $patient->getId();
@@ -220,10 +243,19 @@ class DataQualityController extends CallEntryController
                         $patient->setMasterMergeRecord(false);
                     }
 
+                    //$msg .= $patient->getId().": before patient mrn count=".count($patient->getMrn())."<br>";
+
                     //save patients to DB
                     $em->persist($patient);
                     $em->flush($patient);
+                    //$msg .= $patient->getId().": after patient mrn count=".count($patient->getMrn())."<br>";
                 }
+
+//                foreach( $patientsArr as $patient ) {
+//                    foreach( $patient->getMrn() as $mrn ) {
+//                        $msg .= $patient->getId().": after mrn=".$mrn->obtainOptimalName()."<br>";
+//                    }
+//                }
 
                 //"You have successfully merged patient records: Master Patient ID #."
                 $msg .= "You have successfully merged patient records (IDs ".implode(", ",$ids).") with Master Patient ID # $masterMergeRecordId.";

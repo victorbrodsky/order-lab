@@ -115,8 +115,8 @@
 
     <div id="{{holderId}}" class="calllog-patient-holder">
 
-        {#form.vars.value.id={{ form.vars.value.id }}#}
-        <input type="hidden" id="calllog-patient-id-{{holderId}}" class="calllog-patient-id" value="{{ form.vars.value.id }}" />
+    {#form.vars.value.id={{ form.vars.value.id }}#}
+    <input type="hidden" id="calllog-patient-id-{{holderId}}" class="calllog-patient-id" value="{{ form.vars.value.id }}" />
 
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -135,17 +135,19 @@
                 {#{{ form_row(form.id) }}#}
 
                 {#Master radio#}
-                {#<input type="radio" name="gender" value="male"> Male<br>#}
-                <p>
-                <div class="row">
-                    <div class="col-xs-6" align="right">
-                        <strong>Master Merge Record:</strong>
+                {% if formtype == 'merge' %}
+                    {#<input type="radio" name="gender" value="male"> Male<br>#}
+                    <p>
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <strong>Master Merge Record:</strong>
+                        </div>
+                        <div class="col-xs-6" align="left">
+                            <input type="radio" name="calllog-patient-master-record" value="{{ form.vars.value.id }}" class="calllog-patient-id-radio">
+                        </div>
                     </div>
-                    <div class="col-xs-6" align="left">
-                        <input type="radio" name="calllog-patient-master-record" value="{{ form.vars.value.id }}" class="calllog-patient-id-radio">
-                    </div>
-                </div>
-                </p>
+                    </p>
+                {% endif %}
 
                 <div class="calllog-search-fields">
 

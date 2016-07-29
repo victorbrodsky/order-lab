@@ -629,8 +629,8 @@ function getKeyGroupParent(elem) {
         //console.log('find by class accession-holder');
         var parent = elem.closest('.accession-holder');
     } else if( orderformtype == "calllog" ) {
-        //console.log('find by class calllog-holder');
-        var parent = elem.closest('.calllog-holder');
+        //console.log('find by class calllog-patient-holder);
+        var parent = elem.closest('.calllog-patient-holder');
     }
     else {
         //console.log('find by class row');

@@ -495,8 +495,23 @@ abstract class ObjectAbstract
 
         $resArr = $this->obtainStatusFieldArray($fieldname, $status, $orderid);
 
-        if( count($resArr) > 0 ) {
+        if( count($resArr) == 1 ) {
             $res = $resArr[0];
+        }
+
+        //if multiple found, get the latest one (with the latest timestamp getCreationdate)
+        if( count($resArr) > 1 ) {
+            $latestField = null;
+            foreach( $resArr as $field ) {
+                if( !$latestField ) {
+                    $latestField = $field;
+                    continue;
+                }
+                if( $field->getCreationdate() > $latestField->getCreationdate() ) {
+                    $latestField = $field;
+                }
+            }
+            $res = $latestField;
         }
 
         //echo "res=".$res."<br>";

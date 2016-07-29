@@ -1295,4 +1295,53 @@ class Patient extends ObjectAbstract
         return null;
     }
 
+    //overwrite obtainStatusField method in ObjectAbstract object
+    //get only one field with $status belongs to order with id $orderid
+    //if status is null, get the first field belongs to the given order id
+    public function obtainStatusField( $fieldname, $status, $orderid=null ) {
+
+        if( $fieldname == "mrn" ) {
+
+            $res = null;
+
+            $resArr = $this->obtainStatusFieldArray($fieldname, $status, $orderid);
+
+            if( count($resArr) == 1 ) {
+                $res = $resArr[0];
+            }
+
+            //if multiple found, get the latest one (with the latest timestamp getCreationdate) except Merge ID
+            if( count($resArr) > 1 ) {
+
+                $latestField = null;
+                foreach( $resArr as $field ) {
+
+                    //ignore MERGE ID mrn
+                    if( $field->getKeytype()->getName() == "Merge ID" ) {
+                        //echo " >>ignore mergeid<< ";
+                        continue;
+                    }
+
+                    if( !$latestField ) {
+                        //echo " >>update null mrn ".$field->getField()."<< ";
+                        $latestField = $field;
+                        continue;
+                    }
+
+                    if( $field->getCreationdate() > $latestField->getCreationdate() ) {
+                        //echo " >>update latest mrn ".$field->getField()."<< ";
+                        $latestField = $field;
+                    }
+
+                }
+                $res = $latestField;
+            }
+
+            //echo "res=".$res."<br>|||||||";
+            return $res;
+        }
+
+        return parent::obtainStatusField( $fieldname, $status, $orderid );
+    }
+
 }
