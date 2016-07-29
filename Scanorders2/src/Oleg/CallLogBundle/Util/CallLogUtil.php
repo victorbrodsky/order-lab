@@ -150,4 +150,71 @@ class CallLogUtil
         return $mergedPatients;
     }
 
+    //FirstNameOfAuthorOfMRN LastNameofAuthorOfMRN on DateOfMergeIDAdditionToPatientOne /
+    // DateOfMergeIDAdditionToPatientTwo via Merge ID [MergeID-MRN]
+    public function obtainSameMergeMrnInfoStr( $mrn1, $mrn2 ) {
+        if( $mrn1->getField() != $mrn2->getField() ) {
+            return null;
+        }
+        //1) get earliest author and creationdate
+        if( $mrn1->getCreationdate() > $mrn2->getCreationdate() ) {
+            //$mrn2 is the earliest one
+            $author = $mrn2->getProvider();
+            $creationDate = $mrn2->getCreationdate();
+            $creationDateTwo = $mrn1->getCreationdate();
+        } else {
+            //$mrn1 is the earliest one
+            $author = $mrn1->getProvider();
+            $creationDate = $mrn1->getCreationdate();
+            $creationDateTwo = $mrn2->getCreationdate();
+        }
+        $resStr = $author." on ".$creationDate->format("m/d/Y");
+
+        //DateOfMergeIDAdditionToPatientTwo
+        $resStr .= " / ".$creationDateTwo->format("m/d/Y");
+
+        //via Merge ID [MergeID-MRN]
+        $resStr .= " via Merge ID ".$mrn1->getField();
+
+        return $resStr;
+    }
+
+    public function hasSameID( $patient1, $patient2 ) {
+        $mergedMrn1Arr = $patient1->obtainMergeMrnArr();
+        $mergedMrn2Arr = $patient2->obtainMergeMrnArr();
+
+        foreach( $mergedMrn1Arr as $mergedMrn1 ) {
+            foreach( $mergedMrn2Arr as $mergedMrn2 ) {
+                if( $mergedMrn1->getField() == $mergedMrn2->getField() ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //If not equal, copy the MRN with the oldest timestamp of the ones available from
+    // one patient with the type of "Merge ID" to the second patient as a new MRN
+    public function copyOldestMrnToSecondPatient( $user, $patient1, $mergedMrn1, $patient2, $mergedMrn2 ) {
+        if( $mergedMrn1->getCreationdate() > $mergedMrn2->getCreationdate() ) {
+            //$mergedMrn2 is the oldest (earliest) one
+            $oldestMrnId = $mergedMrn2->getField();
+            $secondPatient = $patient1;
+        } else {
+            //$mergedMrn1 is the oldest (earliest) one
+            $oldestMrnId = $mergedMrn1->getField();
+            $secondPatient = $patient2;
+        }
+
+        $newMrn = $this->createPatientMergeMrn($user);
+
+        if( $newMrn instanceof PatientMrn ) {
+            $newMrn->setField($oldestMrnId);
+            $secondPatient->addMrn($newMrn);
+        }
+
+        return $newMrn;
+    }
+
 }

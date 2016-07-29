@@ -1286,13 +1286,38 @@ class Patient extends ObjectAbstract
         return $res;
     }
 
+    //return latest Merge MRN, if not exists, return NULL
     public function obtainMergeMrn() {
+        $latestMergeMrn = null;
         foreach( $this->getMrn() as $mrn ) {
             if( $mrn->getKeytype()->getName() == "Merge ID" ) {
-                return $mrn;
+                if( !$latestMergeMrn ) {
+                    $latestMergeMrn = $mrn;
+                    continue;
+                }
+                if( $mrn->getCreationdate() > $latestMergeMrn->getCreationdate() ) {
+                    $latestMergeMrn = $mrn;
+                }
             }
         }
-        return null;
+        return $latestMergeMrn;
+    }
+    public function hasOnlyOneMergeMrn() {
+        if( count($this->obtainMergeMrnArr()) == 1 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //return Merge MRN array
+    public function obtainMergeMrnArr() {
+        $mergeMrnArr = array();
+        foreach( $this->getMrn() as $mrn ) {
+            if( $mrn->getKeytype()->getName() == "Merge ID" ) {
+                $mergeMrnArr[] = $mrn;
+            }
+        }
+        return $mergeMrnArr;
     }
 
     //overwrite obtainStatusField method in ObjectAbstract object

@@ -191,9 +191,11 @@ class DataQualityController extends CallEntryController
 
             //b) If one of the patients has one MRN of type = "Merge ID",
             // copy that MRN with the type of "Merge ID" to the second patient as a new MRN.
-            if( !$mergedMrn1 && $mergedMrn2 || $mergedMrn1 && !$mergedMrn2 ) {
+            //(c) If one of the patients has more than one (two, three, etc) MRNs of type= "Merge ID",
+            // copy the MRN with the oldest timestamp of the ones available with the type of "Merge ID" to the second patient as a new MRN
+            if( (!$mergedMrn1 && $mergedMrn2) || ($mergedMrn1 && !$mergedMrn2) ) {
 
-                $msg .= 'Case (b): one of the patients has one MRN of type = "Merge ID".';
+                $msg .= 'Case (b,c): one of the patients has one MRN of type = "Merge ID".';
 
                 if( $mergedMrn1 ) {
                     $msg .= " Patient with ID ".$id1." has Merged MRN. ";
@@ -223,6 +225,64 @@ class DataQualityController extends CallEntryController
 
             }
 
+            //If both patients have at least one MRN of type = "Merge ID"
+            if( $mergedMrn1 && $mergedMrn2 ) {
+                $msg .= 'Case (d,e,f): If both patients have at least one MRN of type = "Merge ID". ';
+
+                //(d) If both patients have (only) one MRN of type = "Merge ID" each and they are equal to each other
+                if( $patient1->hasOnlyOneMergeMrn() && $patient2->hasOnlyOneMergeMrn() ) {
+                    if( $mergedMrn1->getField() == $mergedMrn2->getField() ) {
+                        //"Patient Records have already been merged by FirstNameOfAuthorOfMRN LastNameofAuthorOfMRN on
+                        // DateOfMergeIDAdditionToPatientOne / DateOfMergeIDAdditionToPatientTwo via Merge ID [MergeID-MRN]
+                        $msg .= "Patient Records have already been merged by ".$calllogUtil->obtainSameMergeMrnInfoStr($mergedMrn1,$mergedMrn2);
+                        $error = true;
+                    } else {
+                        //If not equal, copy the MRN with the oldest (earliest) timestamp of the ones available from one
+                        // patient with the type of "Merge ID" to the second patient as a new MRN
+//                        if( $mergedMrn1->getCreationdate() > $mergedMrn2->getCreationdate() ) {
+//                            //$mergedMrn2 is the oldest (earliest) one
+//                            $oldestMrnId = $mergedMrn2->getField();
+//                            $secondPatient = $patient1;
+//                        } else {
+//                            //$mergedMrn1 is the oldest (earliest) one
+//                            $oldestMrnId = $mergedMrn1->getField();
+//                            $secondPatient = $patient2;
+//                        }
+//                        $newMrn = $calllogUtil->createPatientMergeMrn($user);
+//                        if( $newMrn instanceof PatientMrn ) {
+//                            $merged = true;
+//                            $newMrn->setField($oldestMrnId);
+//                            $secondPatient->addMrn($newMrn);
+//                        } else {
+//                            $msg .= $newMrn;
+//                        }
+                        $newMrn = $calllogUtil->copyOldestMrnToSecondPatient( $user, $patient1, $mergedMrn1, $patient2, $mergedMrn2 );
+                        if( $newMrn instanceof PatientMrn ) {
+                            $merged = true;
+                        } else {
+                            $msg .= $newMrn;
+                        }
+                    }
+                }//(d)
+
+                //(e) (one has 1 and the other 3), the Merge ID of one is equal to any of the Merge IDs of another
+                //(f) (one has 4 and the other 3), any of the Merge IDs of one is equal to any of the Merge IDs of another
+                //(e,f): check if MRNs have overlapped (the same) MRN ID.
+                if( $calllogUtil->hasSameID($patient1,$patient2) ) {
+                    $msg .= "Patient Records have already been merged by ".$calllogUtil->obtainSameMergeMrnInfoStr($mergedMrn1,$mergedMrn2);
+                    $error = true;
+                } else {
+                    //If not equal, copy the MRN with the oldest timestamp of the ones available from
+                    // one patient with the type of "Merge ID" to the second patient as a new MRN
+                    $newMrn = $calllogUtil->copyOldestMrnToSecondPatient( $user, $patient1, $mergedMrn1, $patient2, $mergedMrn2 );
+                    if( $newMrn instanceof PatientMrn ) {
+                        $merged = true;
+                    } else {
+                        $msg .= $newMrn;
+                    }
+                }
+
+            }
 
             if( !$error && $merged ) {
 
@@ -247,7 +307,7 @@ class DataQualityController extends CallEntryController
 
                     //save patients to DB
                     $em->persist($patient);
-                    $em->flush($patient);
+                    //$em->flush($patient);
                     //$msg .= $patient->getId().": after patient mrn count=".count($patient->getMrn())."<br>";
                 }
 
