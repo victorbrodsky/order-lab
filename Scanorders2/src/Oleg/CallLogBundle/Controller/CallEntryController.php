@@ -190,7 +190,7 @@ class CallEntryController extends Controller
         //echo "patients=".count($patients)."<br>";
 
         $patientsArr = array();
-        //$status = 'valid';
+        $status = 'valid';
         //$fieldnameArr = array('patlastname','patfirstname','patmiddlename','patsuffix','patsex');
 
         foreach( $patients as $patient ) {
@@ -247,7 +247,7 @@ class CallEntryController extends Controller
             $mergedPatientsInfo = array();
             //$mergedPatientsIds = array();
             if( strpos($currentUrl, 'un-merge-patient-records') !== false ) {
-                $mergedMrn = $patient->obtainMergeMrn();
+                $mergedMrn = $patient->obtainMergeMrn($status);
                 if( $mergedMrn ) {
                     $mergeId = $mergedMrn->getField();
                     //searched other patients except $idsArr
@@ -443,8 +443,9 @@ class CallEntryController extends Controller
         }
         $searchedMergeIdsArr = array();
         $mergedPatients = array();
+        $status = 'valid';
         foreach( $patients as $patient ) {
-            $mergedMrn = $patient->obtainMergeMrn();
+            $mergedMrn = $patient->obtainMergeMrn($status);
             if( $mergedMrn ) {
                 $mergeId = $mergedMrn->getField();
                 //searched other patients except $idsArr

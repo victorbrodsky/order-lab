@@ -1287,10 +1287,16 @@ class Patient extends ObjectAbstract
     }
 
     //return latest Merge MRN, if not exists, return NULL
-    public function obtainMergeMrn() {
+    public function obtainMergeMrn( $status=null ) {
         $latestMergeMrn = null;
         foreach( $this->getMrn() as $mrn ) {
-            if( $mrn->getKeytype()->getName() == "Merge ID" ) {
+            $compare = true;
+            if( $status ) {
+                if( $status != $mrn->getStatus() ) {
+                    $compare = false;
+                }
+            }
+            if( $compare && $mrn->getKeytype()->getName() == "Merge ID" ) {
                 if( !$latestMergeMrn ) {
                     $latestMergeMrn = $mrn;
                     continue;
@@ -1302,18 +1308,24 @@ class Patient extends ObjectAbstract
         }
         return $latestMergeMrn;
     }
-    public function hasOnlyOneMergeMrn() {
-        if( count($this->obtainMergeMrnArr()) == 1 ) {
+    public function hasOnlyOneMergeMrn( $status=null ) {
+        if( count($this->obtainMergeMrnArr($status)) == 1 ) {
             return true;
         } else {
             return false;
         }
     }
     //return Merge MRN array
-    public function obtainMergeMrnArr() {
+    public function obtainMergeMrnArr( $status=null ) {
         $mergeMrnArr = array();
         foreach( $this->getMrn() as $mrn ) {
-            if( $mrn->getKeytype()->getName() == "Merge ID" ) {
+            $compare = true;
+            if( $status ) {
+                if( $status != $mrn->getStatus() ) {
+                    $compare = false;
+                }
+            }
+            if( $compare && $mrn->getKeytype()->getName() == "Merge ID" ) {
                 $mergeMrnArr[] = $mrn;
             }
         }

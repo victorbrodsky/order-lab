@@ -180,8 +180,9 @@ class CallLogUtil
     }
 
     public function hasSameID( $patient1, $patient2 ) {
-        $mergedMrn1Arr = $patient1->obtainMergeMrnArr();
-        $mergedMrn2Arr = $patient2->obtainMergeMrnArr();
+        $status = 'valid';
+        $mergedMrn1Arr = $patient1->obtainMergeMrnArr($status);
+        $mergedMrn2Arr = $patient2->obtainMergeMrnArr($status);
 
         foreach( $mergedMrn1Arr as $mergedMrn1 ) {
             foreach( $mergedMrn2Arr as $mergedMrn2 ) {

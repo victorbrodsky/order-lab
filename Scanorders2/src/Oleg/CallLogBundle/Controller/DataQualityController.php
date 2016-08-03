@@ -95,6 +95,7 @@ class DataQualityController extends CallEntryController
         $patient1 = null;
         $patient2 = null;
         $patientsArr = array();
+        $status = 'valid';
 
         if( $id1 ) {
             $patient1 = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($id1);
@@ -122,9 +123,8 @@ class DataQualityController extends CallEntryController
 
 
         if( !$error && $patient1 && $patient2 ) {
-
-            $mergedMrn1 = $patient1->obtainMergeMrn();
-            $mergedMrn2 = $patient2->obtainMergeMrn();
+            $mergedMrn1 = $patient1->obtainMergeMrn($status);
+            $mergedMrn2 = $patient2->obtainMergeMrn($status);
 
             //a) If neither of the patients has an MRN of type="Merge ID"
             //Add the generated MRN to both patients with an MRN Type of "Merge ID"
@@ -189,7 +189,7 @@ class DataQualityController extends CallEntryController
 
                 //(d) If both patients have (only) one MRN of type = "Merge ID" each and they are equal to each other
                 if( !$error && !$merged ) {
-                    if ($patient1->hasOnlyOneMergeMrn() && $patient2->hasOnlyOneMergeMrn()) {
+                    if ($patient1->hasOnlyOneMergeMrn($status) && $patient2->hasOnlyOneMergeMrn($status)) {
                         if ($mergedMrn1->getField() == $mergedMrn2->getField()) {
                             //"Patient Records have already been merged by FirstNameOfAuthorOfMRN LastNameofAuthorOfMRN on
                             // DateOfMergeIDAdditionToPatientOne / DateOfMergeIDAdditionToPatientTwo via Merge ID [MergeID-MRN]

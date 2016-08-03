@@ -324,6 +324,9 @@ function createPatientsTableCalllog( patients, holderId ) {
         ' onclick="matchingPatientBtnClick(\''+holderId+'\')"'+
         '>Select Patient</button></p>';
 
+    matchingPatientsHtml = matchingPatientsHtml +
+            '<div id="calllog-select-patient-danger-box" class="alert alert-danger" style="display: none; margin: 5px;"></div>';
+
     holder.find('#calllog-matching-patients').html(matchingPatientsHtml);
     holder.find('#calllog-matching-patients').show();
 
@@ -339,7 +342,8 @@ function createPatientsTableCalllog( patients, holderId ) {
 
 }
 
-function matchingPatientBtnClick(holderId) {
+//function matchingPatientBtnClick(holderId) {
+var matchingPatientBtnClick = function(holderId) {
     console.log('holderId='+holderId);
     var holder = getHolder(holderId);
 
