@@ -322,9 +322,13 @@ class CallEntryController extends Controller
 
         //mrn
         if( $mrntype && $mrn ) {
-            $dql->andWhere("mrn.keytype = :keytype AND mrn.field = :mrn");
+            $dql->andWhere("mrn.keytype = :keytype");
             $parameters['keytype'] = $mrntype;
-            $parameters['mrn'] = $mrn;
+
+            //$dql->andWhere("mrn.field = :mrn");
+            //$parameters['mrn'] = $mrn;
+            $dql->andWhere("mrn.field LIKE :mrn");
+            $parameters['mrn'] = '%' . $mrn . '%';
 
             $dql->andWhere("mrn.status = :statusValid OR mrn.status = :statusAlias");
             $parameters['statusValid'] = 'valid';
@@ -338,9 +342,17 @@ class CallEntryController extends Controller
         if( $where == false && $lastname && $dob ) {
             $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
             //echo "dob=".$dob." => ".$dobDateTime."<br>";
-            $dql->andWhere("dob.field = :dob AND (lastname.field = :lastname OR encounterLastname.field = :lastname)");
-            $parameters['lastname'] = $lastname;
+//            $dql->andWhere("dob.field = :dob AND (lastname.field = :lastname OR encounterLastname.field = :lastname)");
+//            $parameters['lastname'] = $lastname;
+//            $parameters['dob'] = $dobDateTime;
+
+            $dql->andWhere("dob.field = :dob");
             $parameters['dob'] = $dobDateTime;
+
+            //$dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
+            //$parameters['lastname'] = $lastname;
+            $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
+            $parameters['lastname'] = '%' . $lastname . '%';
 
             $dql->andWhere("dob.status = :statusValid OR dob.status = :statusAlias");
             $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
@@ -363,8 +375,10 @@ class CallEntryController extends Controller
 
         //Last Name only
         if( $where == false && $lastname ) {
-            $dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
-            $parameters['lastname'] = $lastname;
+            //$dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
+            //$parameters['lastname'] = $lastname;
+            $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
+            $parameters['lastname'] = '%' . $lastname . '%';
 
             $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
             $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
@@ -374,9 +388,11 @@ class CallEntryController extends Controller
             $searchBy = "lastname=".$lastname;
 
             if( $firstname ) {
-                $dql->andWhere("firstname.field = :firstname OR encounterFirsttname.field = :firstname");
                 $dql->andWhere("encounterFirsttname.status = :statusValid OR encounterFirsttname.status = :statusAlias");
-                $parameters['firstname'] = $firstname;
+                //$dql->andWhere("firstname.field = :firstname OR encounterFirsttname.field = :firstname");
+                //$parameters['firstname'] = $firstname;
+                $dql->andWhere("firstname.field LIKE :firstname OR encounterFirsttname.field LIKE :firstname");
+                $parameters['firstname'] = '%' . $firstname . '%';
 
                 $searchBy = " and firstname=".$firstname;
             }
