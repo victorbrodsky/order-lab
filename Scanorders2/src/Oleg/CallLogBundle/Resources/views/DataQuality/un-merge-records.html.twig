@@ -31,7 +31,7 @@
                 id="unmerge_patient_button" type="button"
                 class="btn btn-lg btn-success" align="center"
                 onclick="unmergePatientBtn()"
-                {#style="float:left; width:100%; display:none;"#}
+                style="display:none;"
         >Unmerge</button>
 
     {#</div>#}
@@ -44,7 +44,29 @@
         $(document).ready(function() {
             //hide all alias
             calllogHideAllAlias(true,true);
+            showHideUnMergeButton();
         });
+
+        //triggered by class calllog-patient-id
+        function showHideUnMergeButton() {
+            $('.calllog-patient-id').on('change', function() {
+                //console.log('calllog-patient-id changed; value='+$(this).val());
+                var counter = 0;
+                var totalCounter = 0;
+                $('.calllog-patient-id').each(function() {
+                    if( $(this).val() ) {
+                        counter++;
+                    }
+                    totalCounter++;
+                });
+                //console.log("counter="+counter+" ?= "+totalCounter);
+                if( counter > 0 && counter == totalCounter ) {
+                    $('#unmerge_patient_button').show();
+                } else {
+                    $('#unmerge_patient_button').hide();
+                }
+            });
+        }
 
         function unmergePatientBtn() {
 

@@ -181,58 +181,98 @@ class CallEntryController extends Controller
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
+        $calllogUtil = $this->get('calllog_util');
+
+        $currentUrl = trim($request->get('currentUrl'));
+        //echo "currentUrl=".$currentUrl."<br>";
+
         $patients = $this->searchPatient( $request, true );
         //echo "patients=".count($patients)."<br>";
 
         $patientsArr = array();
-        $status = 'valid';
-        $fieldnameArr = array('patlastname','patfirstname','patmiddlename','patsuffix','patsex');
+        //$status = 'valid';
+        //$fieldnameArr = array('patlastname','patfirstname','patmiddlename','patsuffix','patsex');
 
         foreach( $patients as $patient ) {
 
-            //to get a single field only use obtainStatusField
-            $mrnRes = $patient->obtainStatusField('mrn', $status);
-            $dobRes = $patient->obtainStatusField('dob', $status);
+//            //to get a single field only use obtainStatusField
+//            $mrnRes = $patient->obtainStatusField('mrn', $status);
+//            $dobRes = $patient->obtainStatusField('dob', $status);
+//
+//            //values: patient vs encounters
+//            //Show the "Valid" values for First Name, Last Name, etc from the encounter (not from patient object).
+//            // If there are multiple "Valid" values, show the ones with the most recent time stamp.
+//
+//            $fieldnameResArr = $patient->obtainSingleEncounterValues($fieldnameArr,$status);
+//
+//            $firstNameRes = $fieldnameResArr['patfirstname']; //$patient->obtainStatusField('firstname', $status);
+//            $middleNameRes = $fieldnameResArr['patmiddlename'];  //$patient->obtainStatusField('middlename', $status);
+//            $lastNameRes = $fieldnameResArr['patlastname']; //$patient->obtainStatusField('lastname', $status);
+//            $suffixRes = $fieldnameResArr['patsuffix'];   //$patient->obtainStatusField('suffix', $status);
+//            $sexRes = $fieldnameResArr['patsex'];    //$patient->obtainStatusField('sex', $status);
+//
+//            $contactinfo = $patient->obtainPatientContactinfo("Patient's Primary Contact Information");
+//
+//            $patientInfo = array(
+//                'id' => $patient->getId(),
+//                'mrntype' => $mrnRes->getKeytype()->getId(),
+//                'mrntypestr' => $mrnRes->getKeytype()->getName(),
+//                'mrn' => $mrnRes->getField(),
+//                'dob' => $dobRes."",
+//
+//                'lastname' => (($lastNameRes) ? $lastNameRes->getField() : null),  //$lastNameRes->getField(),
+//                'lastnameStatus' => (($lastNameRes) ? $lastNameRes->getStatus() : null),
+//                //'lastnameStatus' => 'alias',
+//
+//                'firstname' => (($firstNameRes) ? $firstNameRes->getField() : null),  //$firstNameStr,
+//                'firstnameStatus' => (($firstNameRes) ? $firstNameRes->getStatus() : null),
+//
+//                'middlename' => (($middleNameRes) ? $middleNameRes->getField() : null), //$middleNameRes->getField(),
+//                'middlenameStatus' => (($middleNameRes) ? $middleNameRes->getStatus() : null),
+//
+//                'suffix' => (($suffixRes) ? $suffixRes->getField() : null),   //$suffixRes->getField(),
+//                'suffixStatus' => (($suffixRes) ? $suffixRes->getStatus() : null),
+//
+//                'sex' => (($sexRes) ? $sexRes->getId() : null),    //$sexRes->getId(),
+//                'sexstr' => $sexRes."",
+//
+//                'contactinfo' => $contactinfo,
+//
+//                'mergedPatientsInfo' => $mergedPatientsInfo
+//            );
 
-            //values: patient vs encounters
-            //Show the "Valid" values for First Name, Last Name, etc from the encounter (not from patient object).
-            // If there are multiple "Valid" values, show the ones with the most recent time stamp.
+            $patientInfo = $calllogUtil->getJsonEncodedPatient($patient);
 
-            $fieldnameResArr = $patient->obtainSingleEncounterValues($fieldnameArr,$status);
+            ///////////////////// check for merged /////////////////////
+            $mergedPatientsInfo = array();
+            //$mergedPatientsIds = array();
+            if( strpos($currentUrl, 'un-merge-patient-records') !== false ) {
+                $mergedMrn = $patient->obtainMergeMrn();
+                if( $mergedMrn ) {
+                    $mergeId = $mergedMrn->getField();
+                    //searched other patients except $idsArr
+                    $mergedPatients = array();
+                    $existingPatientIds = array($patient->getId());
+                    $mergedPatients = $calllogUtil->getMergedPatients($mergedPatients, $mergeId, $existingPatientIds);
+                    //echo "###Merged patient count=".count($mergedPatients)."<br>";
+                    foreach( $mergedPatients as $mergedPatient ) {
+                        if( $mergedPatient->getId() != $patient->getId() ) {
+                            //echo "Merged patient=".$mergedPatient->getId()."<br>";
+                            $mergedPatientsInfo[] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
+                            //$mergedPatientsIds[] = "ID#" . $mergedPatient->getId() . " " . $mergedPatient->getFullPatientName();
+                        }
+                    }
+                }
+            }
+            $patientInfo['mergedPatientsInfo'] = $mergedPatientsInfo;
 
-            $firstNameRes = $fieldnameResArr['patfirstname']; //$patient->obtainStatusField('firstname', $status);
-            $middleNameRes = $fieldnameResArr['patmiddlename'];  //$patient->obtainStatusField('middlename', $status);
-            $lastNameRes = $fieldnameResArr['patlastname']; //$patient->obtainStatusField('lastname', $status);
-            $suffixRes = $fieldnameResArr['patsuffix'];   //$patient->obtainStatusField('suffix', $status);
-            $sexRes = $fieldnameResArr['patsex'];    //$patient->obtainStatusField('sex', $status);
+            //testing: mrntypestr
+            //if( count($mergedPatientsInfo) ) {
+                //$patientInfo['mrn'] = "ID#" . $patient->getId() . ": " . $patientInfo['mrn'];
+                //$patientInfo['mrntypestr'] = $patientInfo['mrntypestr'] . " | Merged: ".implode("; ",$mergedPatientsIds);
+            //}
+            ///////////////////// EOF check for merged /////////////////////
 
-            $contactinfo = $patient->obtainPatientContactinfo("Patient's Primary Contact Information");
-
-            $patientInfo = array(
-                'id' => $patient->getId(),
-                'mrntype' => $mrnRes->getKeytype()->getId(),
-                'mrntypestr' => $mrnRes->getKeytype()->getName(),
-                'mrn' => $mrnRes->getField(),
-                'dob' => $dobRes."",
-
-                'lastname' => (($lastNameRes) ? $lastNameRes->getField() : null),  //$lastNameRes->getField(),
-                'lastnameStatus' => (($lastNameRes) ? $lastNameRes->getStatus() : null),
-                //'lastnameStatus' => 'alias',
-
-                'firstname' => (($firstNameRes) ? $firstNameRes->getField() : null),  //$firstNameStr,
-                'firstnameStatus' => (($firstNameRes) ? $firstNameRes->getStatus() : null),
-
-                'middlename' => (($middleNameRes) ? $middleNameRes->getField() : null), //$middleNameRes->getField(),
-                'middlenameStatus' => (($middleNameRes) ? $middleNameRes->getStatus() : null),
-
-                'suffix' => (($suffixRes) ? $suffixRes->getField() : null),   //$suffixRes->getField(),
-                'suffixStatus' => (($suffixRes) ? $suffixRes->getStatus() : null),
-
-                'sex' => (($sexRes) ? $sexRes->getId() : null),    //$sexRes->getId(),
-                'sexstr' => $sexRes."",
-
-                'contactinfo' => $contactinfo
-            );
             $patientsArr[] = $patientInfo;
 
         }//foreach

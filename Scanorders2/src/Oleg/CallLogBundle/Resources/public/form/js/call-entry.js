@@ -185,13 +185,15 @@ function findCalllogPatient(holderId) {
         return false;
     }
 
+    var currentUrl = window.location.href;
+
     //ajax
     var url = Routing.generate('calllog_search_patient');
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname },
+        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, currentUrl: currentUrl },
     }).success(function(data) {
         //console.log("data.length="+data.length);
         //console.log(data);
@@ -290,9 +292,17 @@ function createPatientsTableCalllog( patients, holderId ) {
         var patient = patients[i];
         //console.log('patient id='+patient.id);
 
+        var hasMergedPatients = "";
+        if( patient.mergedPatientsInfo && patient.mergedPatientsInfo.length ) {
+            hasMergedPatients = '<br><span class="label label-info">Has '+patient.mergedPatientsInfo.length+' Merged Patients</span>';
+        }
+
         matchingPatientsHtml = matchingPatientsHtml +
             '<tr class="clickable-row" id="'+i+'-'+holderId+'">' +
-            '<td>'+patient.mrn+' ('+patient.mrntypestr+')</td>'+
+            '<td>'+
+                patient.mrn+' ('+patient.mrntypestr+')'+
+                hasMergedPatients+
+            '</td>'+
             '<td>'+patient.lastname+'</td>'+
             '<td>'+patient.firstname+'</td>'+
             '<td>'+patient.middlename+'</td>'+
