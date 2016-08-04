@@ -284,9 +284,11 @@ class CallEntryController extends Controller
                         if( $mergedPatient->getId() != $patient->getId() ) {
                             //echo "Merged patient=".$mergedPatient->getId()."<br>";
                             $mergedPatientMrn = $mergedPatient->obtainMergeMrnById($mergeId,$status);
-                            //insert merged patient
-                            $mergedPatientsInfo[$mergeId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
-                            $mergedPatientsInfo[$mergeId]['mergeInfo'][] = "Merged by ".$mergedPatientMrn->getProvider()." on ".$mergedPatientMrn->getCreationdate()->format('m/d/Y');
+                            if( $mergedPatientMrn ) {
+                                //insert merged patient
+                                $mergedPatientsInfo[$mergeId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
+                                $mergedPatientsInfo[$mergeId]['mergeInfo'][] = "Merged by " . $mergedPatientMrn->getProvider() . " on " . $mergedPatientMrn->getCreationdate()->format('m/d/Y');
+                            }
                         }
                     }//foreach merge Patient
 
@@ -322,6 +324,8 @@ class CallEntryController extends Controller
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
 
+        $exactMatch = true;
+
         if( $params ) {
             $mrntype = ( array_key_exists('mrntype', $params) ? $params['mrntype'] : null);
             $mrn = ( array_key_exists('mrn', $params) ? $params['mrn'] : null);
@@ -354,10 +358,13 @@ class CallEntryController extends Controller
             $dql->andWhere("mrn.keytype = :keytype");
             $parameters['keytype'] = $mrntype;
 
-            //$dql->andWhere("mrn.field = :mrn");
-            //$parameters['mrn'] = $mrn;
-            $dql->andWhere("mrn.field LIKE :mrn");
-            $parameters['mrn'] = '%' . $mrn . '%';
+            if( $exactMatch ) {
+                $dql->andWhere("mrn.field = :mrn");
+                $parameters['mrn'] = $mrn;
+            } else {
+                $dql->andWhere("mrn.field LIKE :mrn");
+                $parameters['mrn'] = '%' . $mrn . '%';
+            }
 
             $dql->andWhere("mrn.status = :statusValid OR mrn.status = :statusAlias");
             $parameters['statusValid'] = 'valid';
@@ -378,10 +385,13 @@ class CallEntryController extends Controller
             $dql->andWhere("dob.field = :dob");
             $parameters['dob'] = $dobDateTime;
 
-            //$dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
-            //$parameters['lastname'] = $lastname;
-            $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
-            $parameters['lastname'] = '%' . $lastname . '%';
+            if( $exactMatch ) {
+                $dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
+                $parameters['lastname'] = $lastname;
+            } else {
+                $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
+                $parameters['lastname'] = '%' . $lastname . '%';
+            }
 
             $dql->andWhere("dob.status = :statusValid OR dob.status = :statusAlias");
             $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
@@ -404,10 +414,13 @@ class CallEntryController extends Controller
 
         //Last Name only
         if( $where == false && $lastname ) {
-            //$dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
-            //$parameters['lastname'] = $lastname;
-            $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
-            $parameters['lastname'] = '%' . $lastname . '%';
+            if( $exactMatch ) {
+                $dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
+                $parameters['lastname'] = $lastname;
+            } else {
+                $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
+                $parameters['lastname'] = '%' . $lastname . '%';
+            }
 
             $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
             $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
@@ -418,10 +431,14 @@ class CallEntryController extends Controller
 
             if( $firstname ) {
                 $dql->andWhere("encounterFirsttname.status = :statusValid OR encounterFirsttname.status = :statusAlias");
-                //$dql->andWhere("firstname.field = :firstname OR encounterFirsttname.field = :firstname");
-                //$parameters['firstname'] = $firstname;
-                $dql->andWhere("firstname.field LIKE :firstname OR encounterFirsttname.field LIKE :firstname");
-                $parameters['firstname'] = '%' . $firstname . '%';
+
+                if( $exactMatch ) {
+                    $dql->andWhere("firstname.field = :firstname OR encounterFirsttname.field = :firstname");
+                    $parameters['firstname'] = $firstname;
+                } else {
+                    $dql->andWhere("firstname.field LIKE :firstname OR encounterFirsttname.field LIKE :firstname");
+                    $parameters['firstname'] = '%' . $firstname . '%';
+                }
 
                 $searchBy = " and firstname=".$firstname;
             }
