@@ -124,7 +124,6 @@ class CallLogUtil
             $newMrn = new PatientMrn($status,$provider,$sourcesystem);
             $newMrn->setKeytype($keyTypeMergeID);
             $patient->addMRn($newMrn);
-            //$this->em->persist($newMrn);
         }
 
         if( count($patientMrns) > 1 ) {
@@ -132,7 +131,8 @@ class CallLogUtil
                 if( $patientMrn->getField() == $mrnId && $patientMrn->getStatus() == 'invalid' ) {
                     $newMrn = $patientMrn;
                     $newMrn->setStatus($status);
-                    //$this->em->persist($newMrn);
+                    $newMrn->setProvider($provider);
+                    $newMrn->setCreationdate();
                     break;
                 }
             }
@@ -142,7 +142,8 @@ class CallLogUtil
             if( $patientMrns[0]->getField() == $mrnId && $patientMrns[0]->getStatus() == 'invalid' ) {
                 $newMrn = $patientMrns[0];
                 $newMrn->setStatus($status);
-                //$this->em->persist($newMrn);
+                $newMrn->setProvider($provider);
+                $newMrn->setCreationdate();
                 //return "Found 1 invalid Merged MRN ID=".$patientMrns[0]->getField()."; status=".$patientMrns[0]->getStatus().".<br>";
             }
         }
