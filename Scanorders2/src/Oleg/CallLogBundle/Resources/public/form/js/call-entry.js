@@ -290,10 +290,10 @@ function createPatientsTableCalllog( patients, holderId ) {
 
     for( var i = 0; i < patients.length; i++ ) {
         var patient = patients[i];
-        console.log('patient id='+patient.id);
+        //console.log('patient id='+patient.id);
 
         var mergedPatientsInfoLength = getMergedPatientsInfoLength(patient['mergedPatientsInfo']);
-        console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
+        //console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
         //console.log('patient.mergedPatientsInfo:');
         //console.log(patient.mergedPatientsInfo);
         var mergedPatientsInfoLength = (mergedPatientsInfoLength-1);
@@ -360,13 +360,13 @@ function getMergedPatientsInfoLength( targetArr ) {
 
 //function matchingPatientBtnClick(holderId) {
 var matchingPatientBtnClick = function(holderId) {
-    console.log('holderId='+holderId);
+    //console.log('holderId='+holderId);
     var holder = getHolder(holderId);
 
     var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
     //remove holderId from index
     index = index.replace("-"+holderId, "");
-    console.log('index='+index);
+    //console.log('index='+index);
     populatePatientInfo(_patients[index],null,true,holderId);
     disableAllFields(true,holderId);
 
