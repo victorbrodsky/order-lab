@@ -290,11 +290,16 @@ function createPatientsTableCalllog( patients, holderId ) {
 
     for( var i = 0; i < patients.length; i++ ) {
         var patient = patients[i];
-        //console.log('patient id='+patient.id);
+        console.log('patient id='+patient.id);
 
+        var mergedPatientsInfoLength = getMergedPatientsInfoLength(patient['mergedPatientsInfo']);
+        console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
+        //console.log('patient.mergedPatientsInfo:');
+        //console.log(patient.mergedPatientsInfo);
+        var mergedPatientsInfoLength = (mergedPatientsInfoLength-1);
         var hasMergedPatients = "";
-        if( patient.mergedPatientsInfo && patient.mergedPatientsInfo.length ) {
-            hasMergedPatients = '<br><span class="label label-info">Has '+patient.mergedPatientsInfo.length+' Merged Patients</span>';
+        if( patient.mergedPatientsInfo && mergedPatientsInfoLength > 0 ) {
+            hasMergedPatients = '<br><span class="label label-info">Has '+mergedPatientsInfoLength+' Merged Patients</span>';
         }
 
         matchingPatientsHtml = matchingPatientsHtml +
@@ -340,6 +345,17 @@ function createPatientsTableCalllog( patients, holderId ) {
         holder.find('.matchingPatientBtn').parent().tooltip('destroy');
     });
 
+}
+
+function getMergedPatientsInfoLength( targetArr ) {
+    var count = 0;
+    for( var mergedId in targetArr ) {
+        if( targetArr.hasOwnProperty(mergedId) ) {
+            //alert("Key is " + mergedId + ", value is" + targetArr[mergedId]);
+            count = count + targetArr[mergedId]['patientInfo'].length;
+        }
+    }
+    return count;
 }
 
 //function matchingPatientBtnClick(holderId) {

@@ -1331,6 +1331,20 @@ class Patient extends ObjectAbstract
         }
         return $mergeMrnArr;
     }
+    public function obtainMergeMrnById( $mrnId, $status=null ) {
+        foreach( $this->obtainMergeMrnArr($status) as $mrn ) {
+            $compare = true;
+            if( $status ) {
+                if( $status != $mrn->getStatus() ) {
+                    $compare = false;
+                }
+            }
+            if( $compare && $mrn->getKeytype()->getName() == "Merge ID" && $mrn->getField() == $mrnId ) {
+                return $mrn;
+            }
+        }
+        return null;
+    }
 
     //overwrite obtainStatusField method in ObjectAbstract object
     //get only one field with $status belongs to order with id $orderid

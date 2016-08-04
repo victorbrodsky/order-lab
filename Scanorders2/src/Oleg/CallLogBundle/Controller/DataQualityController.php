@@ -273,6 +273,7 @@ class DataQualityController extends CallEntryController
             //$result['res'] = 'OK';
         }
 
+        $result = array();
         $result['error'] = $error;
         $result['msg'] = $msg;
 
@@ -327,15 +328,49 @@ class DataQualityController extends CallEntryController
     public function unmergePatientAjaxAction(Request $request)
     {
 
-        $user = $this->get('security.context')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        //$user = $this->get('security.context')->getToken()->getUser();
+        //$securityUtil = $this->get('order_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        //$system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
-        $cycle = 'new';
+        //$cycle = 'new';
 
-        $result = 'OK';
+        $error = false;
+        $msg = "";
+
+        $patientIds = trim($request->get('patientIds'));
+        //echo "patientIds=".$patientIds."<br>";
+
+        $patientIdsArr = explode(",",$patientIds);
+
+        foreach( $patientIdsArr as $patientIdStr ) {
+
+            $patientIdStrArr = explode("mergeid",$patientIdStr);
+            $patientId = $patientIdStrArr[0];
+            $patientMergeId = $patientIdStrArr[1];
+            //echo "patientId=".$patientId."; patientMergeId=".$patientMergeId."<br>";
+
+            //set MERGE ID MRN to invalid
+            $patient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+            if( !$patient ) {
+                $error = true;
+                $msg .= ' Patient not found by ID# '.$patientId.'<br>';
+                break;
+            }
+
+            $mergeMrn = $patient->obtainMergeMrnById($patientMergeId,$status);
+            $mergeMrn->setStatus('invalid');
+
+            $msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
+            $em->persist($patient);
+            $em->flush($patient);
+
+        }//foreach
+
+        $result = array();
+        $result['error'] = $error;
+        $result['msg'] = $msg;
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

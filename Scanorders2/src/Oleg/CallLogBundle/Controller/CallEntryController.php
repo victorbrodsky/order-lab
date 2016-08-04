@@ -244,27 +244,56 @@ class CallEntryController extends Controller
             $patientInfo = $calllogUtil->getJsonEncodedPatient($patient);
 
             ///////////////////// check for merged /////////////////////
-            $mergedPatientsInfo = array();
-            //$mergedPatientsIds = array();
-            if( strpos($currentUrl, 'un-merge-patient-records') !== false ) {
-                $mergedMrn = $patient->obtainMergeMrn($status);
-                if( $mergedMrn ) {
+            if (strpos($currentUrl, 'un-merge-patient-records') !== false) {
+
+                $mergedPatientsInfo = array();
+
+                if (0) {
+                    //$mergedPatientsIds = array();
+                    $mergedMrn = $patient->obtainMergeMrn($status);
+                    if ($mergedMrn) {
+                        $mergeId = $mergedMrn->getField();
+                        //searched other patients except $idsArr
+                        $mergedPatients = array();
+                        $existingPatientIds = array($patient->getId());
+                        $mergedPatients = $calllogUtil->getMergedPatients($mergedPatients, $mergeId, $existingPatientIds);
+                        //echo "###Merged patient count=".count($mergedPatients)."<br>";
+                        foreach ($mergedPatients as $mergedPatient) {
+                            if ($mergedPatient->getId() != $patient->getId()) {
+                                //echo "Merged patient=".$mergedPatient->getId()."<br>";
+                                $mergedPatientsInfo[] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
+                                //$mergedPatientsIds[] = "ID#" . $mergedPatient->getId() . " " . $mergedPatient->getFullPatientName();
+                            }
+                        }
+                    }
+                }//if 0
+
+                $mergedMrnArr = $patient->obtainMergeMrnArr($status);
+                foreach( $mergedMrnArr as $mergedMrn ) {
                     $mergeId = $mergedMrn->getField();
-                    //searched other patients except $idsArr
+
+                    //insert current patient
+                    $mergedPatientsInfo[$mergeId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($patient);
+                    $mergedPatientsInfo[$mergeId]['mergeInfo'][] = "Merged by ".$mergedMrn->getProvider()." on ".$mergedMrn->getCreationdate()->format('m/d/Y');
+
                     $mergedPatients = array();
                     $existingPatientIds = array($patient->getId());
                     $mergedPatients = $calllogUtil->getMergedPatients($mergedPatients, $mergeId, $existingPatientIds);
-                    //echo "###Merged patient count=".count($mergedPatients)."<br>";
+
                     foreach( $mergedPatients as $mergedPatient ) {
                         if( $mergedPatient->getId() != $patient->getId() ) {
                             //echo "Merged patient=".$mergedPatient->getId()."<br>";
-                            $mergedPatientsInfo[] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
-                            //$mergedPatientsIds[] = "ID#" . $mergedPatient->getId() . " " . $mergedPatient->getFullPatientName();
+                            $mergedPatientMrn = $mergedPatient->obtainMergeMrnById($mergeId,$status);
+                            //insert merged patient
+                            $mergedPatientsInfo[$mergeId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
+                            $mergedPatientsInfo[$mergeId]['mergeInfo'][] = "Merged by ".$mergedPatientMrn->getProvider()." on ".$mergedPatientMrn->getCreationdate()->format('m/d/Y');
                         }
-                    }
-                }
+                    }//foreach merge Patient
+
+                }//foreach merge MRN
+
+                $patientInfo['mergedPatientsInfo'] = $mergedPatientsInfo;
             }
-            $patientInfo['mergedPatientsInfo'] = $mergedPatientsInfo;
 
             //testing: mrntypestr
             //if( count($mergedPatientsInfo) ) {
