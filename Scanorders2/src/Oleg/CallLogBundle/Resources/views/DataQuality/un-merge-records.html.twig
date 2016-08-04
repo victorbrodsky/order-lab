@@ -84,7 +84,7 @@
 
             var patientIds = [];
             $('input[name="un-merge-patients"]:checked').each(function() {
-                console.log(this.value);
+                //console.log(this.value);
                 //get mergeId
                 var mergeId = $('#calllog-patient-mergeid-'+this.value).val();
                 patientIds.push(this.value+"mergeid"+mergeId);
@@ -100,7 +100,7 @@
             }).success(function(data) {
                 //console.log("output="+data);
                 if( data.error == false ) {
-                    console.log("unmerged OK; data="+data.msg);
+                    //console.log("unmerged OK; data="+data.msg);
                     $('#calllog-msg-success-box').html(data.msg);
                     $('#calllog-msg-success-box').show();
                     //remove all buttons
@@ -116,7 +116,7 @@
 
         //overwrite function
         matchingPatientBtnClick = function(holderId) {
-            console.log('un-merged holderId='+holderId);
+            //console.log('un-merged holderId='+holderId);
 
             var holder = getHolder(holderId);
 
@@ -127,18 +127,18 @@
             var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
             //remove holderId from index
             index = index.replace("-"+holderId, "");
-            console.log('index='+index);
+            //console.log('index='+index);
 
             //This patient record has not been merged with any other patient records.
             var mergedPatientsInfo = _patients[index]['mergedPatientsInfo'];
             var mergedPatientsInfoLength = getMergedPatientsInfoLength(_patients[index]['mergedPatientsInfo']);
-            console.log('mergedPatientsInfo='+mergedPatientsInfo);
-            console.log('mergedPatientsInfo count='+mergedPatientsInfoLength);
+            //console.log('mergedPatientsInfo='+mergedPatientsInfo);
+            //console.log('mergedPatientsInfo count='+mergedPatientsInfoLength);
             if( mergedPatientsInfo && mergedPatientsInfoLength > 0 ) {
                 //ok
-                console.log('mergedPatientsInfo ok');
+                //console.log('mergedPatientsInfo ok');
             } else {
-                console.log('mergedPatientsInfo not ok');
+                //console.log('mergedPatientsInfo not ok');
                 //alert("This patient record has not been merged with any other patient records.");
                 holder.find('#calllog-select-patient-danger-box').html("This patient record has not been merged with any other patient records.");
                 holder.find('#calllog-select-patient-danger-box').show();
@@ -174,7 +174,7 @@
 
         function createPatientInfos( patient, mergedPatients ) {
 
-            console.log('createPatientInfos; id='+patient.id);
+            //console.log('createPatientInfos; id='+patient.id);
 
             var infosHtml = "";
             //var infosHtml = "patient id " + patient.id + "<br>";
@@ -187,7 +187,7 @@
 
             for( var mergedId in mergedPatients ) {
                 if( mergedPatients.hasOwnProperty(mergedId) ) {
-                    infosHtml = infosHtml + "<p>"+mergedId+"</p>";
+                    infosHtml = infosHtml + '<p><div class="alert alert-info">'+mergedId+'</div></p>';
                     for( var i = 0; i < mergedPatients[mergedId]['patientInfo'].length; i++ ) {
                         infosHtml = infosHtml +
                                 patientInfoHtml(

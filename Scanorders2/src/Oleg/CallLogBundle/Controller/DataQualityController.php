@@ -121,6 +121,13 @@ class DataQualityController extends CallEntryController
             $msg .= "Patient 2 id is invalid";
         }
 
+        //testing
+//        foreach( $patientsArr as $patient ) {
+//            foreach( $patient->getMrn() as $mrn ) {
+//                $msg .= $patient->getId().": init MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
+//            }
+//        }
+
 
         if( !$error && $patient1 && $patient2 ) {
             $mergedMrn1 = $patient1->obtainMergeMrn($status);
@@ -249,16 +256,22 @@ class DataQualityController extends CallEntryController
                     }
 
                     //$msg .= $patient->getId().": before patient mrn count=".count($patient->getMrn())."<br>";
+                    //testing
+//                    foreach( $patient->getMrn() as $mrn ) {
+//                        $msg .= $patient->getId().": before MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
+//                    }
 
                     //save patients to DB
                     $em->persist($patient);
-                    $em->flush($patient);
+                    $em->flush();
                     //$msg .= $patient->getId().": after patient mrn count=".count($patient->getMrn())."<br>";
                 }
 
-//                foreach( $patientsArr as $patient ) {
+                //testing
+//                foreach( $ids as $patientId ) {
+//                    $patient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
 //                    foreach( $patient->getMrn() as $mrn ) {
-//                        $msg .= $patient->getId().": after mrn=".$mrn->obtainOptimalName()."<br>";
+//                        $msg .= $patient->getId().": after MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
 //                    }
 //                }
 
