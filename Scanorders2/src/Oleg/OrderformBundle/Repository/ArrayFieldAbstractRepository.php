@@ -1232,20 +1232,30 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //return $this->getNextByMax($lastFieldStr, $prefixname);
         return $maxKey;
     }
-    
-    public function getNextByMax( $lastFieldStr, $name ) {
-        $fieldIndexArr = explode("-",$lastFieldStr);
-        //echo "count=".count($fieldIndexArr)."<br>";
-        if( count($fieldIndexArr) > 1 ) {
-            $fieldIndex = $fieldIndexArr[1];
+
+    //$prefixname: NOMRNPROVIDED or MERGE-ID
+    public function getNextByMax( $lastFieldStr, $prefixname ) {
+//        $fieldIndexArr = explode("-",$lastFieldStr);
+//        echo "count=".count($fieldIndexArr)."<br>";
+//        if( count($fieldIndexArr) > 1 ) {
+//            $fieldIndex = $fieldIndexArr[1];
+//        } else {
+//            $fieldIndex = 0;
+//        }
+
+        if( $lastFieldStr ) {
+            $fieldIndex = str_replace($prefixname."-","",$lastFieldStr);
         } else {
             $fieldIndex = 0;
         }
+
+        //echo "fieldIndex=".$fieldIndex."<br>";
+
         $fieldIndex = ltrim($fieldIndex,'0') + 1;
         $paddedfield = str_pad($fieldIndex,13,'0',STR_PAD_LEFT);
         //echo "paddedfield=".$paddedfield."<br>";
         //exit();
-        return $name.'-'.$paddedfield;
+        return $prefixname.'-'.$paddedfield;
     }
 
     //compare two keys:

@@ -195,15 +195,7 @@ function findCalllogPatient(holderId) {
         async: true,
         data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, currentUrl: currentUrl },
     }).success(function(data) {
-        //console.log("data.length="+data.length);
-        //console.log(data);
-//            if( data.length > 0 ) {
-//                console.log("Patient found");
         populatePatientsInfo(data,searchedStr,holderId);
-//            } else {
-//                populatePatientInfo(null);
-//                console.log("Patient not found");
-//            }
     });
 
 }
@@ -304,7 +296,7 @@ function createPatientsTableCalllog( patients, holderId ) {
 
         matchingPatientsHtml = matchingPatientsHtml +
             '<tr class="clickable-row" id="'+i+'-'+holderId+'">' +
-            '<td>'+
+            '<td id="calllog-patientid-'+patient.id+'">'+
                 patient.patientInfoStr +
                 patient.mrn+' ('+patient.mrntypestr+')'+
                 hasMergedPatients +
@@ -367,13 +359,21 @@ var matchingPatientBtnClick = function(holderId) {
     var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
     //remove holderId from index
     index = index.replace("-"+holderId, "");
-    console.log('index='+index);
+    //console.log('index='+index);
 
     var patientToPopulate = _patients[index];
+    //console.log(patientToPopulate);
+    //console.log('patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
 
     //check for master patient
     if( patientToPopulate.masterPatientId ) {
-        patientToPopulate = patientToPopulate.masterPatientId;
+        //console.log('reset to patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
+        //patientToPopulate = patientToPopulate.masterPatientId;
+        //find index by patient id
+        index = $('#calllog-patientid-'+patientToPopulate.masterPatientId).closest('tr').attr('id');
+        index = index.replace("-"+holderId, "");
+        //console.log('new index='+index);
+        patientToPopulate = _patients[index];
     }
 
     populatePatientInfo(patientToPopulate,null,true,holderId);

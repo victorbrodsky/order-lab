@@ -198,7 +198,7 @@ class CallEntryController extends Controller
             $patientInfo = $calllogUtil->getJsonEncodedPatient($patient);
 
             ///////////////////// check for merged /////////////////////
-            if (strpos($currentUrl, 'un-merge-patient-records') !== false) {
+            //if (strpos($currentUrl, 'un-merge-patient-records') !== false) {
 
                 $mergedPatientsInfo = array();
 
@@ -261,7 +261,8 @@ class CallEntryController extends Controller
 
                 $patientInfo['masterPatientId'] = $masterPatientId;
                 $patientInfo['mergedPatientsInfo'] = $mergedPatientsInfo;
-            }
+
+            //}//if un-merge-patient-records
 
             //testing: mrntypestr
             //if( count($mergedPatientsInfo) ) {

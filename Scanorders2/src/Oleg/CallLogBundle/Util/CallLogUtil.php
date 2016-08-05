@@ -38,13 +38,22 @@ class CallLogUtil
     //auto-generating a unique MRN on Scan Order, but prepend a prefix "MERGE"
     public function autoGenerateMergeMrn( $patient ) {
 
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Patient')->getNextNonProvided($patient,null,null,"MERGE-ID");
+        $keyTypeMergeID = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
+        if( !$keyTypeMergeID ) {
+            $msg = 'MrnType not found by name Merge ID';
+            throw new \Exception($msg);
+            //return $msg;
+        }
+        $extra = array( "keytype" => $keyTypeMergeID->getId() );
+        //$extra = null;
+
+        $nextKey = $this->em->getRepository('OlegOrderformBundle:Patient')->getNextNonProvided($patient,$extra,null,"MERGE-ID");
 
         //convert NOMRNPROVIDED-0000000002 to MERGE-ID-0000000002
         //$nextKey = str_replace("NOMRNPROVIDED","",$nextKey);
         //$nextKey = "MERGE-ID".$nextKey;
-        echo "nextKey=".$nextKey."<br>";
-        exit('1');
+        //echo "nextKey=".$nextKey."<br>";
+        //exit('1');
 
         return $nextKey;
     }
@@ -82,8 +91,10 @@ class CallLogUtil
         //Create a new MRN
         $newMrn = new PatientMrn($status,$provider,$sourcesystem);
         $newMrn->setKeytype($keyTypeMergeID);
+        $newMrn->setField($mrnId);
         $patient->addMRn($newMrn);
 
+        //exit('create Patient Merge Mrn exit; mrnId='.$mrnId);
         return $newMrn;
     }
     //NOT USED: check if invalid MRN already exists or create a new one
