@@ -1235,6 +1235,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //$prefixname: NOMRNPROVIDED or MERGE-ID
     public function getNextByMax( $lastFieldStr, $prefixname ) {
+
+//        //get fieldIndex as 0000000000002: It's not working for prefixname with "-", so replace it with the second method below
 //        $fieldIndexArr = explode("-",$lastFieldStr);
 //        echo "count=".count($fieldIndexArr)."<br>";
 //        if( count($fieldIndexArr) > 1 ) {
@@ -1243,6 +1245,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 //            $fieldIndex = 0;
 //        }
 
+        //get fieldIndex as 0000000000002
         if( $lastFieldStr ) {
             $fieldIndex = str_replace($prefixname."-","",$lastFieldStr);
         } else {
