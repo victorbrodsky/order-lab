@@ -195,52 +195,6 @@ class CallEntryController extends Controller
 
         foreach( $patients as $patient ) {
 
-//            //to get a single field only use obtainStatusField
-//            $mrnRes = $patient->obtainStatusField('mrn', $status);
-//            $dobRes = $patient->obtainStatusField('dob', $status);
-//
-//            //values: patient vs encounters
-//            //Show the "Valid" values for First Name, Last Name, etc from the encounter (not from patient object).
-//            // If there are multiple "Valid" values, show the ones with the most recent time stamp.
-//
-//            $fieldnameResArr = $patient->obtainSingleEncounterValues($fieldnameArr,$status);
-//
-//            $firstNameRes = $fieldnameResArr['patfirstname']; //$patient->obtainStatusField('firstname', $status);
-//            $middleNameRes = $fieldnameResArr['patmiddlename'];  //$patient->obtainStatusField('middlename', $status);
-//            $lastNameRes = $fieldnameResArr['patlastname']; //$patient->obtainStatusField('lastname', $status);
-//            $suffixRes = $fieldnameResArr['patsuffix'];   //$patient->obtainStatusField('suffix', $status);
-//            $sexRes = $fieldnameResArr['patsex'];    //$patient->obtainStatusField('sex', $status);
-//
-//            $contactinfo = $patient->obtainPatientContactinfo("Patient's Primary Contact Information");
-//
-//            $patientInfo = array(
-//                'id' => $patient->getId(),
-//                'mrntype' => $mrnRes->getKeytype()->getId(),
-//                'mrntypestr' => $mrnRes->getKeytype()->getName(),
-//                'mrn' => $mrnRes->getField(),
-//                'dob' => $dobRes."",
-//
-//                'lastname' => (($lastNameRes) ? $lastNameRes->getField() : null),  //$lastNameRes->getField(),
-//                'lastnameStatus' => (($lastNameRes) ? $lastNameRes->getStatus() : null),
-//                //'lastnameStatus' => 'alias',
-//
-//                'firstname' => (($firstNameRes) ? $firstNameRes->getField() : null),  //$firstNameStr,
-//                'firstnameStatus' => (($firstNameRes) ? $firstNameRes->getStatus() : null),
-//
-//                'middlename' => (($middleNameRes) ? $middleNameRes->getField() : null), //$middleNameRes->getField(),
-//                'middlenameStatus' => (($middleNameRes) ? $middleNameRes->getStatus() : null),
-//
-//                'suffix' => (($suffixRes) ? $suffixRes->getField() : null),   //$suffixRes->getField(),
-//                'suffixStatus' => (($suffixRes) ? $suffixRes->getStatus() : null),
-//
-//                'sex' => (($sexRes) ? $sexRes->getId() : null),    //$sexRes->getId(),
-//                'sexstr' => $sexRes."",
-//
-//                'contactinfo' => $contactinfo,
-//
-//                'mergedPatientsInfo' => $mergedPatientsInfo
-//            );
-
             $patientInfo = $calllogUtil->getJsonEncodedPatient($patient);
 
             ///////////////////// check for merged /////////////////////
@@ -268,6 +222,12 @@ class CallEntryController extends Controller
                     }
                 }//if 0
 
+                //set Master Patient
+                $masterPatientId = null;
+                if( $patient->getMasterMergeRecord() ) {
+                    $masterPatientId = $patient->getId();
+                }
+
                 $mergedMrnArr = $patient->obtainMergeMrnArr($status);
                 foreach( $mergedMrnArr as $mergedMrn ) {
                     $mergeId = $mergedMrn->getField();
@@ -288,12 +248,18 @@ class CallEntryController extends Controller
                                 //insert merged patient
                                 $mergedPatientsInfo[$mergeId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
                                 $mergedPatientsInfo[$mergeId]['mergeInfo'][] = "Merged by " . $mergedPatientMrn->getProvider() . " on " . $mergedPatientMrn->getCreationdate()->format('m/d/Y');
+
+                                //set Master Patient
+                                if( $mergedPatient->getMasterMergeRecord() ) {
+                                    $masterPatientId = $mergedPatient->getId();
+                                }
                             }
                         }
                     }//foreach merge Patient
 
                 }//foreach merge MRN
 
+                $patientInfo['masterPatientId'] = $masterPatientId;
                 $patientInfo['mergedPatientsInfo'] = $mergedPatientsInfo;
             }
 

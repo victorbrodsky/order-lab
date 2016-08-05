@@ -305,8 +305,9 @@ function createPatientsTableCalllog( patients, holderId ) {
         matchingPatientsHtml = matchingPatientsHtml +
             '<tr class="clickable-row" id="'+i+'-'+holderId+'">' +
             '<td>'+
+                patient.patientInfoStr +
                 patient.mrn+' ('+patient.mrntypestr+')'+
-                hasMergedPatients+
+                hasMergedPatients +
             '</td>'+
             '<td>'+patient.lastname+'</td>'+
             '<td>'+patient.firstname+'</td>'+
@@ -366,8 +367,16 @@ var matchingPatientBtnClick = function(holderId) {
     var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
     //remove holderId from index
     index = index.replace("-"+holderId, "");
-    //console.log('index='+index);
-    populatePatientInfo(_patients[index],null,true,holderId);
+    console.log('index='+index);
+
+    var patientToPopulate = _patients[index];
+
+    //check for master patient
+    if( patientToPopulate.masterPatientId ) {
+        patientToPopulate = patientToPopulate.masterPatientId;
+    }
+
+    populatePatientInfo(patientToPopulate,null,true,holderId);
     disableAllFields(true,holderId);
 
     //show edit patient info button
