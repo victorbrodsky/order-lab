@@ -33,7 +33,8 @@ use FOS\UserBundle\Model\User as BaseUser;
  * @ORM\Table(name="user_fosuser",
  *  indexes={
  *      @ORM\Index( name="keytype_idx", columns={"keytype"} ),
- *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} )
+ *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} ),
+ *      @ORM\Index( name="username_idx", columns={"username"} )
  *  }
  * )
  * @ORM\AttributeOverrides({
