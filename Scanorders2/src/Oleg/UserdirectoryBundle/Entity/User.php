@@ -16,6 +16,12 @@ use FOS\UserBundle\Model\User as BaseUser;
 //User is a reserved keyword in SQL so you cannot use it as table name
 //Generate unique username (post): primaryPublicUserId + "_" + keytype + "_" _ id
 
+
+//[Doctrine\DBAL\DBALException]
+// An exception occurred while executing 'ALTER TABLE user_fosuser ALTER COLUMN username NVARCHAR(180) NOT NULL':
+// SQLSTATE[42000]: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]The index 'username_idx' is dependent on column 'username'.
+//removed:  *      @ORM\Index( name="username_idx", columns={"username"} )
+
 /**
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserRepository")
  * @UniqueEntity(
@@ -27,8 +33,7 @@ use FOS\UserBundle\Model\User as BaseUser;
  * @ORM\Table(name="user_fosuser",
  *  indexes={
  *      @ORM\Index( name="keytype_idx", columns={"keytype"} ),
- *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} ),
- *      @ORM\Index( name="username_idx", columns={"username"} )
+ *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} )
  *  }
  * )
  * @ORM\AttributeOverrides({
