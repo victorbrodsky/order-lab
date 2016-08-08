@@ -2,6 +2,7 @@
 
 namespace Oleg\CallLogBundle\Util;
 use Oleg\OrderformBundle\Entity\MrnType;
+use Oleg\OrderformBundle\Entity\PatientMasterMergeRecord;
 use Oleg\OrderformBundle\Entity\PatientMrn;
 
 /**
@@ -324,10 +325,55 @@ class CallLogUtil
 
             'masterPatientId' => NULL,
 
-            'patientInfoStr' => "Patient ID# ".$patient->getId()." (Master:".$patient->getMasterMergeRecord()."): "//testing
+            'patientInfoStr' => "Patient ID# ".$patient->getId()." (Master:".$patient->isMasterMergeRecord()."): "//testing
         );
 
         return $patientInfo;
     }
 
+    //set master patient: create a new, valid masterMergeRecord and set all others to invalid
+    public function setMasterPatientRecord( $patients, $masterMergeRecordId, $provider ) {
+
+        $sourcesystem = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Call Log Book");
+        if( !$sourcesystem ) {
+            $msg = 'Source system not found by name ORDER Call Log Book';
+            throw new \Exception($msg);
+            //return $msg;
+        }
+
+        $ids = array();
+
+        foreach( $patients as $patient ) {
+
+            $ids[] = $patient->getId();
+
+            $patient->invalidateMasterMergeRecord();
+//            foreach( $patient->getMasterMergeRecord() as $masterMergeRecord ) {
+//                $masterMergeRecord->setStatus('invalid');
+//                $masterMergeRecord->setField(false);
+//                $this->em->persist($patient);
+//            }
+
+            if( $masterMergeRecordId == $patient->getId() ) {
+                //$status = 'valid', $provider = null, $source = null
+                $masterMergeRecord = new PatientMasterMergeRecord('valid',$provider,$sourcesystem);
+                $masterMergeRecord->setField(true);
+                $patient->addMasterMergeRecord($masterMergeRecord);
+            } else {
+                //$patient->setMasterMergeRecord(false);
+            }
+
+            //$msg .= $patient->getId().": before patient mrn count=".count($patient->getMrn())."<br>";
+            //testing
+//                    foreach( $patient->getMrn() as $mrn ) {
+//                        $msg .= $patient->getId().": before MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
+//                    }
+
+            //save patients to DB
+            $this->em->persist($patient);
+            //$msg .= $patient->getId().": after patient mrn count=".count($patient->getMrn())."<br>";
+        }
+
+        return $ids;
+    }
 }

@@ -20,7 +20,9 @@ use FOS\UserBundle\Model\User as BaseUser;
 //[Doctrine\DBAL\DBALException]
 // An exception occurred while executing 'ALTER TABLE user_fosuser ALTER COLUMN username NVARCHAR(180) NOT NULL':
 // SQLSTATE[42000]: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]The index 'username_idx' is dependent on column 'username'.
-//removed:  *      @ORM\Index( name="username_idx", columns={"username"} )
+//Caused by FriendsOfSymfony/FOSUserBundle forked from KnpLabs/KnpUserBundle commit 6fefb7212dfc629ebc74af67d75a62d274a44c95
+//Make username and email length compatible with actual database limitations regarding key and index length
+//So use "friendsofsymfony/user-bundle": "v2.0.0-alpha3"
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserRepository")

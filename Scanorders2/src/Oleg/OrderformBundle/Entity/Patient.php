@@ -101,9 +101,14 @@ class Patient extends ObjectAbstract
     private $type;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
+//    /**
+//     * Master Merge Record
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $masterMergeRecord;
     /**
      * Master Merge Record
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\OneToMany(targetEntity="PatientMasterMergeRecord", mappedBy="patient", cascade={"persist"})
      */
     private $masterMergeRecord;
 
@@ -691,12 +696,32 @@ class Patient extends ObjectAbstract
     /**
      * @param mixed $masterMergeRecord
      */
-    public function setMasterMergeRecord($masterMergeRecord)
+    public function addMasterMergeRecord( $masterMergeRecord )
     {
-        $this->masterMergeRecord = $masterMergeRecord;
+        if( $masterMergeRecord && !$this->masterMergeRecord->contains($masterMergeRecord) ) {
+            $this->masterMergeRecord->add($masterMergeRecord);
+            $masterMergeRecord->setPatient($this);
+        }
+
+        return $this;
     }
 
-
+    public function isMasterMergeRecord( $status='valid' )
+    {
+        foreach( $this->getMasterMergeRecord() as $masterMergeRecord ) {
+            if( $masterMergeRecord->getStatus() == $status && $masterMergeRecord->getField() == true ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public function invalidateMasterMergeRecord( $status='invalid' )
+    {
+        foreach( $this->getMasterMergeRecord() as $masterMergeRecord ) {
+            $masterMergeRecord->setStatus($status);
+            $masterMergeRecord->setField(false);
+        }
+    }
 
 
 

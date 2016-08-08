@@ -224,7 +224,7 @@ class CallEntryController extends Controller
 
                 //set Master Patient
                 $masterPatientId = null;
-                if( $patient->getMasterMergeRecord() ) {
+                if( $patient->isMasterMergeRecord() ) {
                     $masterPatientId = $patient->getId();
                 }
 
@@ -250,7 +250,7 @@ class CallEntryController extends Controller
                                 $mergedPatientsInfo[$mergeId]['mergeInfo'][] = "Merged by " . $mergedPatientMrn->getProvider() . " on " . $mergedPatientMrn->getCreationdate()->format('m/d/Y');
 
                                 //set Master Patient
-                                if( $mergedPatient->getMasterMergeRecord() ) {
+                                if( $mergedPatient->isMasterMergeRecord() ) {
                                     $masterPatientId = $mergedPatient->getId();
                                 }
                             }

@@ -246,26 +246,30 @@ class DataQualityController extends CallEntryController
 //                    }
 //                }
 
-                $ids = array();
-                foreach( $patientsArr as $patient ) {
-                    $ids[] = $patient->getId();
-                    if( $masterMergeRecordId == $patient->getId() ) {
-                        $patient->setMasterMergeRecord(true);
-                    } else {
-                        $patient->setMasterMergeRecord(false);
-                    }
-
-                    //$msg .= $patient->getId().": before patient mrn count=".count($patient->getMrn())."<br>";
-                    //testing
-//                    foreach( $patient->getMrn() as $mrn ) {
-//                        $msg .= $patient->getId().": before MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
+                //set master patient
+//                $ids = array();
+//                foreach( $patientsArr as $patient ) {
+//                    $ids[] = $patient->getId();
+//                    if( $masterMergeRecordId == $patient->getId() ) {
+//                        $patient->setMasterMergeRecord(true);
+//                    } else {
+//                        $patient->setMasterMergeRecord(false);
 //                    }
+//
+//                    //$msg .= $patient->getId().": before patient mrn count=".count($patient->getMrn())."<br>";
+//                    //testing
+////                    foreach( $patient->getMrn() as $mrn ) {
+////                        $msg .= $patient->getId().": before MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
+////                    }
+//
+//                    //save patients to DB
+//                    $em->persist($patient);
+//                    //$em->flush();
+//                    //$msg .= $patient->getId().": after patient mrn count=".count($patient->getMrn())."<br>";
+//                }
+                $ids = $calllogUtil->setMasterPatientRecord($patientsArr,$masterMergeRecordId,$user);
 
-                    //save patients to DB
-                    $em->persist($patient);
-                    $em->flush();
-                    //$msg .= $patient->getId().": after patient mrn count=".count($patient->getMrn())."<br>";
-                }
+                $em->flush();
 
                 //testing
 //                foreach( $ids as $patientId ) {
@@ -374,6 +378,8 @@ class DataQualityController extends CallEntryController
 
             $mergeMrn = $patient->obtainMergeMrnById($patientMergeId,$status);
             $mergeMrn->setStatus('invalid');
+
+            $patient->invalidateMasterMergeRecord();
 
             $msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
             $em->persist($patient);
