@@ -22,3 +22,5 @@ parameters:
     database_name_aperio: Aperio
     database_user_aperio: symfony2_aperio
     database_password_aperio: ~
+
+    swift_delivery_addresses: [oli2002@med.cornell.edu]
