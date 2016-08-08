@@ -13,7 +13,7 @@
 
         "doctrine/orm": "v2.4.8",
         "doctrine/doctrine-bundle": "~1.6",
-        "stof/doctrine-extensions-bundle": "v1.2.2",
+        "stof/doctrine-extensions-bundle": "v1.2.1",
 
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
