@@ -791,16 +791,26 @@ class VacReqUtil
         return $yearRange;
     }
 
-    public function getPreviousAcademicYearRange() {
+    //$offset = 0 => previous year
+    //$offset = 1 => previous previous year
+    public function getPreviousAcademicYearRange( $offset = null ) {
         $dates = $this->getCurrentAcademicYearStartEndDates();
         $startDate = $dates['startDate']; //Y-m-d
         //echo "startDate=".$startDate."<br>";
 
         $currentYearStartDateArr = explode("-",$startDate);
         $year = $currentYearStartDateArr[0];
+
         $endYear = ((int)$year);     //previous year end
         $startYear = $endYear - 1;   //previous year start
+
+        if( $offset ) {
+            $endYear = $endYear - 1;
+            $startYear = $startYear - 1;
+        }
+
         //echo "previous year=".$year."<br>";
+
         $yearRange = $startYear."-".$endYear;
 
         return $yearRange;

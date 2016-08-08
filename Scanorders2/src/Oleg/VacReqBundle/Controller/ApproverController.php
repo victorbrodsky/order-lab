@@ -998,10 +998,11 @@ class ApproverController extends Controller
         $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonth();
 
         //Current Academic Year
-        $currentYear = new \DateTime();
-        $currentYear = $currentYear->format('Y');
-        $previousYear = $currentYear - 1;
-        $yearRange = $previousYear."-".$currentYear;
+//        $currentYear = new \DateTime();
+//        $currentYear = $currentYear->format('Y');
+//        $previousYear = $currentYear - 1;
+//        $yearRange = $previousYear."-".$currentYear;
+        $yearRange = $vacreqUtil->getCurrentAcademicYearRange();
 
         return array(
             'groups' => $groups,
@@ -1040,20 +1041,24 @@ class ApproverController extends Controller
 
         $yearRanges = array();
         //Current Academic Year
-        $currentYear = new \DateTime();
-        $currentYear = $currentYear->format('Y');
-        $previousYear = $currentYear - 1;
-        $yearRanges[] = $previousYear."-".$currentYear;
+        //$currentYear = new \DateTime();
+        //$currentYear = $currentYear->format('Y');
+        //$previousYear = $currentYear - 1;
+        //$yearRanges[] = $previousYear."-".$currentYear;
+        //$yearRange = $vacreqUtil->getCurrentAcademicYearRange();
+        $yearRanges[] = $vacreqUtil->getCurrentAcademicYearRange();
 
         //Current Academic Year - 1
-        $currentYear = $currentYear - 1;
-        $previousYear = $currentYear - 1;
-        $yearRanges[] = $previousYear."-".$currentYear;
+        //$currentYear = $currentYear - 1;
+        //$previousYear = $currentYear - 1;
+        //$yearRanges[] = $previousYear."-".$currentYear;
+        $yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange();
 
         //Current Academic Year - 2
-        $currentYear = $currentYear - 1;
-        $previousYear = $currentYear - 1;
-        $yearRanges[] = $previousYear."-".$currentYear;
+        //$currentYear = $currentYear - 1;
+        //$previousYear = $currentYear - 1;
+        //$yearRanges[] = $previousYear."-".$currentYear;
+        $yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange(1);
 
         $yearRangesColor = array('#c1e2b3','#d0e9c6','#dff0d8');
 
