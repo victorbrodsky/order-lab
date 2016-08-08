@@ -12,8 +12,8 @@
         "symfony/symfony": "~2.8@dev",
 
         "doctrine/orm": "v2.4.8",
-        "doctrine/doctrine-bundle": "1.6.2",
-        "stof/doctrine-extensions-bundle": "v1.2.1",
+        "doctrine/doctrine-bundle": "~1.6",
+        "stof/doctrine-extensions-bundle": "~1.1@dev",
 
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
@@ -24,7 +24,7 @@
         "twig/twig": "~1.23|~2.0",
         "twig/extensions": "^1.3",
 
-        "friendsofsymfony/user-bundle": "2.0.*@dev",
+        "friendsofsymfony/user-bundle": "v2.0.0-alpha3",
         "friendsofsymfony/jsrouting-bundle": "@stable",
 
         "knplabs/knp-components": "~1.3",
