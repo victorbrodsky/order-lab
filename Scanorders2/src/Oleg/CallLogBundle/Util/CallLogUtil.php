@@ -396,11 +396,6 @@ class CallLogUtil
 
     public function getAllMergedPatients( $patients ) {
 
-        //testing
-        foreach( $patients as $patient ) {
-            //echo "0 patient ID=".$patient->getId()."<br>";
-        }
-
         $existingPatientIds = array();
         foreach( $patients as $patient ) {
             $existingPatientIds[] = $patient->getId();
@@ -423,12 +418,6 @@ class CallLogUtil
             }
 
         }//foreach
-
-        //testing
-        foreach( $resPatients as $patient ) {
-            //echo "1 patient ID=".$patient->getId()."<br>";
-        }
-        //exit('1');
 
         return $resPatients;
     }
