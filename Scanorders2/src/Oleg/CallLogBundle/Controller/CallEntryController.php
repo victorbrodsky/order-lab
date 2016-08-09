@@ -2,6 +2,7 @@
 
 namespace Oleg\CallLogBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\CallLogBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
@@ -202,25 +203,24 @@ class CallEntryController extends Controller
 
                 $mergedPatientsInfo = array();
 
-                if (0) {
-                    //$mergedPatientsIds = array();
-                    $mergedMrn = $patient->obtainMergeMrn($status);
-                    if ($mergedMrn) {
-                        $mergeId = $mergedMrn->getField();
-                        //searched other patients except $idsArr
-                        $mergedPatients = array();
-                        $existingPatientIds = array($patient->getId());
-                        $mergedPatients = $calllogUtil->getMergedPatients($mergedPatients, $mergeId, $existingPatientIds);
-                        //echo "###Merged patient count=".count($mergedPatients)."<br>";
-                        foreach ($mergedPatients as $mergedPatient) {
-                            if ($mergedPatient->getId() != $patient->getId()) {
-                                //echo "Merged patient=".$mergedPatient->getId()."<br>";
-                                $mergedPatientsInfo[] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
-                                //$mergedPatientsIds[] = "ID#" . $mergedPatient->getId() . " " . $mergedPatient->getFullPatientName();
-                            }
-                        }
-                    }
-                }//if 0
+//                if (0) {
+//                    //$mergedPatientsIds = array();
+//                    $mergedMrn = $patient->obtainMergeMrn($status);
+//                    if ($mergedMrn) {
+//                        $mergeId = $mergedMrn->getField();
+//                        //searched other patients except $idsArr
+//                        $existingPatientIds = array($patient->getId());
+//                        $mergedPatients = $calllogUtil->getMergedPatients($mergeId, null, $existingPatientIds);
+//                        //echo "###Merged patient count=".count($mergedPatients)."<br>";
+//                        foreach ($mergedPatients as $mergedPatient) {
+//                            if ($mergedPatient->getId() != $patient->getId()) {
+//                                //echo "Merged patient=".$mergedPatient->getId()."<br>";
+//                                $mergedPatientsInfo[] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
+//                                //$mergedPatientsIds[] = "ID#" . $mergedPatient->getId() . " " . $mergedPatient->getFullPatientName();
+//                            }
+//                        }
+//                    }
+//                }//if 0
 
                 //set Master Patient
                 $masterPatientId = null;
@@ -236,9 +236,8 @@ class CallEntryController extends Controller
                     $mergedPatientsInfo[$mergeId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($patient);
                     $mergedPatientsInfo[$mergeId]['mergeInfo'][] = "Merged by ".$mergedMrn->getProvider()." on ".$mergedMrn->getCreationdate()->format('m/d/Y');
 
-                    $mergedPatients = array();
                     $existingPatientIds = array($patient->getId());
-                    $mergedPatients = $calllogUtil->getMergedPatients($mergedPatients, $mergeId, $existingPatientIds);
+                    $mergedPatients = $calllogUtil->getMergedPatients($mergeId, null, $existingPatientIds);
 
                     foreach( $mergedPatients as $mergedPatient ) {
                         if( $mergedPatient->getId() != $patient->getId() ) {
@@ -450,30 +449,35 @@ class CallEntryController extends Controller
 
         //search for merged
         $calllogUtil = $this->get('calllog_util');
-        $existingPatientIds = array();
-        foreach( $patients as $patient ) {
-            $existingPatientIds[] = $patient->getId();
-        }
-        $searchedMergeIdsArr = array();
-        $mergedPatients = array();
-        $status = 'valid';
-        foreach( $patients as $patient ) {
-            $mergedMrn = $patient->obtainMergeMrn($status);
-            if( $mergedMrn ) {
-                $mergeId = $mergedMrn->getField();
-                //searched other patients except $idsArr
-                if( !in_array($mergeId, $searchedMergeIdsArr) ) {
-                    $mergedPatients = $calllogUtil->getMergedPatients($mergedPatients, $mergeId, $existingPatientIds);
+
+        if(0) {
+            $existingPatientIds = array();
+            foreach ($patients as $patient) {
+                $existingPatientIds[] = $patient->getId();
+            }
+            $searchedMergeIdsArr = array();
+            $mergedPatients = new ArrayCollection();
+            $status = 'valid';
+            foreach ($patients as $patient) {
+                $mergedMrn = $patient->obtainMergeMrn($status);
+                if ($mergedMrn) {
+                    $mergeId = $mergedMrn->getField();
+                    //searched other patients except $idsArr
+                    if (!in_array($mergeId, $searchedMergeIdsArr)) {
+                        $mergedPatients = $calllogUtil->getMergedPatients($mergeId, $mergedPatients, $existingPatientIds);
+                    }
+                    $searchedMergeIdsArr[] = $mergeId;
                 }
-                $searchedMergeIdsArr[] = $mergeId;
+            }
+
+            //add $newPatients to $patients
+            foreach ($mergedPatients as $mergedPatient) {
+                //echo "add merged patient = ".$mergedPatient->getId()."<br>";
+                $patients[] = $mergedPatient;
             }
         }
 
-        //add $newPatients to $patients
-        foreach( $mergedPatients as $mergedPatient ) {
-            //echo "add merged patient = ".$mergedPatient->getId()."<br>";
-            $patients[] = $mergedPatient;
-        }
+        $patients = $calllogUtil->getAllMergedPatients( $patients );
 
         return $patients;
     }

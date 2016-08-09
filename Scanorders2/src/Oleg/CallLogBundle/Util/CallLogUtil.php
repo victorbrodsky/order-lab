@@ -1,6 +1,7 @@
 <?php
 
 namespace Oleg\CallLogBundle\Util;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Entity\PatientMasterMergeRecord;
 use Oleg\OrderformBundle\Entity\PatientMrn;
@@ -166,7 +167,7 @@ class CallLogUtil
         return $newMrn;
     }
 
-    public function getMergedPatients( $mergedPatients, $mergeId, $existingPatientIds=null ) {
+    public function getMergedPatients( $mergeId, $mergedPatients=null, $existingPatientIds=null ) {
 
         $keyTypeMergeID = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
@@ -197,8 +198,16 @@ class CallLogUtil
         $patients = $query->getResult();
         //echo "merged patients = ".count($patients)."<br>";
 
+        if( $mergedPatients == null ) {
+            $mergedPatients = new ArrayCollection();
+        }
+
+        //make unique array of the merged patients
         foreach( $patients as $patient ) {
-            $mergedPatients[] = $patient;
+            //$mergedPatients[] = $patient;
+            if( !$mergedPatients->contains($patient) ) {
+                $mergedPatients->add($patient);
+            }
         }
 
         return $mergedPatients;
@@ -295,6 +304,11 @@ class CallLogUtil
 
         $contactinfo = $patient->obtainPatientContactinfo("Patient's Primary Contact Information");
 
+        if( $patient->isMasterMergeRecord() ) {
+            $masterStr = "+";
+        } else {
+            $masterStr = "";
+        }
 
         $patientInfo = array(
             'id' => $patient->getId(),
@@ -325,7 +339,7 @@ class CallLogUtil
 
             'masterPatientId' => NULL,
 
-            'patientInfoStr' => "Patient ID# ".$patient->getId()." (Master:".$patient->isMasterMergeRecord()."): "//testing
+            'patientInfoStr' => "Patient ID# ".$patient->getId().$masterStr.": "//testing
         );
 
         return $patientInfo;
@@ -340,6 +354,9 @@ class CallLogUtil
             throw new \Exception($msg);
             //return $msg;
         }
+
+        //add all merged patients
+        $patients = $this->getAllMergedPatients($patients);
 
         $ids = array();
 
@@ -376,4 +393,44 @@ class CallLogUtil
 
         return $ids;
     }
+
+    public function getAllMergedPatients( $patients ) {
+
+        //testing
+        foreach( $patients as $patient ) {
+            //echo "0 patient ID=".$patient->getId()."<br>";
+        }
+
+        $existingPatientIds = array();
+        foreach( $patients as $patient ) {
+            $existingPatientIds[] = $patient->getId();
+        }
+        //$existingPatientIds = null;
+
+        $resPatients = new ArrayCollection();
+
+        foreach( $patients as $patient ) {
+
+            if( !$resPatients->contains($patient) ) {
+                $resPatients->add($patient);
+            }
+
+            //get valid mrns
+            $mergeMrns = $patient->obtainMergeMrnArr('valid');
+
+            foreach( $mergeMrns as $mergeMrn ) {
+                $resPatients = $this->getMergedPatients($mergeMrn->getField(), $resPatients, $existingPatientIds);
+            }
+
+        }//foreach
+
+        //testing
+        foreach( $resPatients as $patient ) {
+            //echo "1 patient ID=".$patient->getId()."<br>";
+        }
+        //exit('1');
+
+        return $resPatients;
+    }
+
 }
