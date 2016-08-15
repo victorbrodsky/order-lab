@@ -127,7 +127,7 @@ function clearCalllogPatient(holderId) {
     calllogHideAllAlias(true,true,holderId);
 }
 
-function findCalllogPatient(holderId) {
+function findCalllogPatient(holderId,formtype) {
 
     var holder = getHolder(holderId);
 
@@ -185,7 +185,7 @@ function findCalllogPatient(holderId) {
         return false;
     }
 
-    var currentUrl = window.location.href;
+    //var currentUrl = window.location.href;
 
     //ajax
     var url = Routing.generate('calllog_search_patient');
@@ -193,7 +193,7 @@ function findCalllogPatient(holderId) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, currentUrl: currentUrl },
+        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, formtype: formtype },
     }).success(function(data) {
         populatePatientsInfo(data,searchedStr,holderId);
     });

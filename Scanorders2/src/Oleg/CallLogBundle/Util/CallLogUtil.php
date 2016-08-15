@@ -364,20 +364,15 @@ class CallLogUtil
 
             $ids[] = $patient->getId();
 
-            $patient->invalidateMasterMergeRecord();
-//            foreach( $patient->getMasterMergeRecord() as $masterMergeRecord ) {
-//                $masterMergeRecord->setStatus('invalid');
-//                $masterMergeRecord->setField(false);
-//                $this->em->persist($patient);
-//            }
+            //invalidate all merge master records objects
+            $patient->invalidateMasterMergeRecord('invalid');
 
+            //create a new merge record object with new timestamp and creator
             if( $masterMergeRecordId == $patient->getId() ) {
                 //$status = 'valid', $provider = null, $source = null
                 $masterMergeRecord = new PatientMasterMergeRecord('valid',$provider,$sourcesystem);
                 $masterMergeRecord->setField(true);
                 $patient->addMasterMergeRecord($masterMergeRecord);
-            } else {
-                //$patient->setMasterMergeRecord(false);
             }
 
             //$msg .= $patient->getId().": before patient mrn count=".count($patient->getMrn())."<br>";

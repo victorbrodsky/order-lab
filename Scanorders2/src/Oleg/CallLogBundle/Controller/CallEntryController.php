@@ -184,8 +184,10 @@ class CallEntryController extends Controller
 
         $calllogUtil = $this->get('calllog_util');
 
-        $currentUrl = trim($request->get('currentUrl'));
+        //$currentUrl = trim($request->get('currentUrl'));
         //echo "currentUrl=".$currentUrl."<br>";
+
+        $formtype = trim($request->get('formtype'));
 
         $patients = $this->searchPatient( $request, true );
         //echo "patients=".count($patients)."<br>";
@@ -224,7 +226,7 @@ class CallEntryController extends Controller
 
                 //set Master Patient
                 $masterPatientId = null;
-                if( $patient->isMasterMergeRecord() ) {
+                if( $patient->isMasterMergeRecord() && $formtype == "call-entry" ) {
                     $masterPatientId = $patient->getId();
                 }
 
@@ -249,7 +251,7 @@ class CallEntryController extends Controller
                                 $mergedPatientsInfo[$mergeId]['mergeInfo'][] = "Merged by " . $mergedPatientMrn->getProvider() . " on " . $mergedPatientMrn->getCreationdate()->format('m/d/Y');
 
                                 //set Master Patient
-                                if( $mergedPatient->isMasterMergeRecord() ) {
+                                if( $mergedPatient->isMasterMergeRecord() && $formtype == "call-entry" ) {
                                     $masterPatientId = $mergedPatient->getId();
                                 }
                             }

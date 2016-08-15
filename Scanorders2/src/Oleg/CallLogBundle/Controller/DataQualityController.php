@@ -238,7 +238,7 @@ class DataQualityController extends CallEntryController
 
             if( !$error && $merged ) {
 
-                //set master patient
+                //merge: set master patient
                 $ids = $calllogUtil->setMasterPatientRecord($patientsArr,$masterMergeRecordId,$user);
 
                 $em->flush();
@@ -348,10 +348,22 @@ class DataQualityController extends CallEntryController
                 break;
             }
 
+            //Note: un-merge patient from the chain:
+            // 1) invalidate Merge MRN object for this patient
+            // 2) invalidate all merge master records objects for this patient
+            // 3) check for orphans: if there is only single orphan merge patient with this patient,
+            //      then un-merge this orphan patient (invalidate Merge MRN object, invalidate all merge master records for this orphan patient)
+
+            //get valid Merge MRN object
             $mergeMrn = $patient->obtainMergeMrnById($patientMergeId,$status);
+
+            //1) un-merge: set valid status Merge MRN object to invalid
             $mergeMrn->setStatus('invalid');
 
-            $patient->invalidateMasterMergeRecord();
+            //2) un-merge: invalidate all merge master records objects
+            $patient->invalidateMasterMergeRecord('invalid');
+
+            // 3) check for orphans
 
             $msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
             $em->persist($patient);
