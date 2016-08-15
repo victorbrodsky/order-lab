@@ -267,7 +267,7 @@ class FellAppApplicantController extends Controller {
 
         if( !$fellapp->getRecentItinerary() ) {
             $appLink = $this->generateUrl( 'fellapp_show', array("id"=>$fellapp->getId()), true );
-            $appHref = '<a href="'.$appLink.'">'.$applicant->getUsernameOptimal().' (ID: '.$fellapp->getId().')'.'</a>';
+            $appHref = '<a href="'.$appLink.'">'.$applicant->getUsernameOptimal().' (fellowship application ID# '.$fellapp->getId().')'.'</a>';
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 'Email invitations to evaluate '.$appHref.' have not been sent. Please upload Itinerary and try again.'
