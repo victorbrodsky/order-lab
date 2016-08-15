@@ -417,4 +417,31 @@ class CallLogUtil
         return $resPatients;
     }
 
+    //check for orphans for the same MRN ID for each valid MRN ID for this patient.
+    //If there is only one sibling with the same valid MRN ID, then this sibling is orphan.
+    //un-merge this orphan patient:
+    // 1) invalidate Merge MRN object
+    // 2) invalidate all merge master records for this orphan patient
+    // 3) if removed patient is the linked node (holding MID for different chains, i.e. 1,2,3)
+    //
+    // 1) A*-B(MID1) C*-D(MID2)
+    // 2) Merge B and C (B - master record)
+    // 3) Result: A-B*-C(MID1) and C-D(MID2); node - C(MID1,MID2)
+    // 4) E*-F(MID3)
+    // 5) Merge C and E (B - master record; find a way to display to choose master record)
+    // 6) Result: A-B*-C-E(MID1) C-D(MID2) E-F(MID3); node - C(MID1,MID2), E(MID2,MID3)
+    // 7) Un-merge C: Un-merging C in this case should merge A, B, D, E, F by copying the oldest time-stamped Merge ID to E and ...
+    // 8) a) Find all patients with MID1,2
+    // 8) b) Add not existing MID2 to the first node (D)
+    public function processOrphans( $patient ) {
+
+        //get valid mrns
+        $mergeMrns = $patient->obtainMergeMrnArr('valid');
+
+        foreach( $mergeMrns as $mergeMrn ) {
+            $resPatients = $this->getMergedPatients($mergeMrn->getField(), null, array($patient->getId()));
+        }
+
+    }
+
 }

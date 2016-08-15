@@ -319,6 +319,7 @@ class DataQualityController extends CallEntryController
 
         //$user = $this->get('security.context')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
+        $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         //$system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
@@ -363,7 +364,9 @@ class DataQualityController extends CallEntryController
             //2) un-merge: invalidate all merge master records objects
             $patient->invalidateMasterMergeRecord('invalid');
 
-            // 3) check for orphans
+            //3) check for orphans for the same MRN ID for each valid MRN ID for this patient
+            $calllogUtil->processOrphans($patient);
+
 
             $msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
             $em->persist($patient);
