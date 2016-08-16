@@ -197,43 +197,66 @@ class CallEntryController extends Controller
         //$fieldnameArr = array('patlastname','patfirstname','patmiddlename','patsuffix','patsex');
 
         foreach( $patients as $patient ) {
-            echo "<br>found patient=".$patient->getId()."<br>";
+            //echo "<br>found patient=".$patient->getId()."<br>";
 
             //add all merged patients to the master patient
             $mergedPatients = $calllogUtil->getAllMergedPatients( array($patient) );
-            echo "mergedPatients count=" . count($mergedPatients) . "<br>";
+            //echo "mergedPatients count=" . count($mergedPatients) . "<br>";
 
-            $masterPatientId = $calllogUtil->getMasterRecordPatients($mergedPatients);
+//            foreach( $mergedPatients as $mergedPatient ) {
+//                echo "merged Patient=" . $mergedPatient->getId() . "<br>";
+//
+//                if( $mergedPatient->isMasterMergeRecord() ) {
+//                    $masterPatientId = $mergedPatient->getId();
+//                    echo "master=" . $masterPatientId . "<br>";
+//
+//                }
+//
+//            }//foreach $mergedPatient
+//            exit('1');
 
-            if( $masterPatientId ) {
+            $masterPatient = $calllogUtil->getMasterRecordPatients($mergedPatients);
+
+            if( $masterPatient ) {
+
+                $masterPatientId = $masterPatient->getId();
+                //echo "###masterPatientId=" . $masterPatientId . "<br>";
+
+                $patientInfo = array();
+
+                $mergedPatientsInfo = array();
+                $mergedPatientsInfo[$masterPatientId] = array();
 
                 foreach( $mergedPatients as $mergedPatient ) {
-                    echo "merged Patient=" . $mergedPatient->getId() . "<br>";
+                    //echo "merged Patient=" . $mergedPatient->getId() . "<br>";
 
-                    $masterPatientId = null;
-                    if( $mergedPatient->isMasterMergeRecord() ) {
-                        $masterPatientId = $mergedPatient->getId();
-                        echo "master=" . $masterPatientId . "<br>";
+                    //first iteration: first create master record $patientInfo
+                    if( $masterPatientId == $mergedPatient->getId() ) {
                         $patientInfo = $calllogUtil->getJsonEncodedPatient($mergedPatient);
-
-                    } else {
-                        //just display this patient
-                        $patientInfo = $calllogUtil->getJsonEncodedPatient($mergedPatient);
-
-                        $mergedPatientsInfo[$masterPatientId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
-                        //$mergedPatientsInfo[$masterPatientId]['mergeInfo'][] = "Merged by " . $mergedPatientMrn->getProvider() . " on " . $mergedPatientMrn->getCreationdate()->format('m/d/Y');
-
-                        $patientsArr[] = $patientInfo;
+                        continue;
                     }
 
+                    //other iterations: add as merged patients to $patientInfo
+                    $mergedPatientsInfo[$masterPatientId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
+                    $mergedPatientsInfo[$masterPatientId]['mergeInfo'][] = $mergedPatient->obtainMergeInfo();
+
+
+
                 }//foreach $mergedPatient
+
+                $patientInfo['masterPatientId'] = $masterPatientId;
+                $patientInfo['mergedPatientsInfo'] = $mergedPatientsInfo;
 
             } else {
                 //just display this patient
                 $patientInfo = $calllogUtil->getJsonEncodedPatient($patient);
-                $patientsArr[] = $patientInfo;
+                //$patientsArr[] = $patientInfo;
             }
 
+            $patientsArr[] = $patientInfo;
+
+
+            //////////////////////////////////////
 
             if( 0 && $patient->isMasterMergeRecord() ) {
                 $masterPatientId = $patient->getId();
@@ -271,7 +294,7 @@ class CallEntryController extends Controller
             }
 
         }
-        exit('1');
+        //exit('1');
 
         if(0) {
             foreach ($patients as $patient) {

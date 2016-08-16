@@ -1371,6 +1371,15 @@ class Patient extends ObjectAbstract
         return null;
     }
 
+    public function obtainMergeInfo() {
+        $mergedMrnArr = $this->obtainMergeMrnArr("valid");
+        $str = "";
+        foreach( $mergedMrnArr as $mergedMrn ) {
+            $str .= "Merge ID ".$mergedMrn->getField().", merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y');
+        }
+        return $str;
+    }
+
     //overwrite obtainStatusField method in ObjectAbstract object
     //get only one field with $status belongs to order with id $orderid
     //if status is null, get the first field belongs to the given order id

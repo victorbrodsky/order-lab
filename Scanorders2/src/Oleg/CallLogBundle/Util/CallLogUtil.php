@@ -391,7 +391,7 @@ class CallLogUtil
         return $ids;
     }
 
-    public function getAllMergedPatients( $patients, $mergeMrnsArr=array() ) {
+    public function getAllMergedPatients( $patients, $mergeMrnsArr=array(), $masterFirst=true ) {
 
         $existingPatientIds = array();
         foreach( $patients as $patient ) {
@@ -407,7 +407,28 @@ class CallLogUtil
             //continue;
 
             if( !$resPatients->contains($patient) ) {
+
                 $resPatients->add($patient);
+
+                //set master patient as the first record
+                if( $masterFirst ) {
+                    if( $patient->isMasterMergeRecord() ) {
+
+                        //get current first element
+                        $firstPatient = $resPatients->get(0);
+
+                        //set master patient as the first element
+                        $resPatients->set(0,$patient);
+
+                        //add the original first element to the end
+                        if( $firstPatient ) {
+                            if( !$resPatients->contains($firstPatient) ) {
+                                $resPatients->add($firstPatient);
+                            }
+                        }
+                    }
+                }
+
             }
 
             //get valid mrns
@@ -447,6 +468,15 @@ class CallLogUtil
             }
         }
         return null;
+    }
+
+    public function getMergeInfo( $patient ) {
+        $mergedMrnArr = $patient->obtainMergeMrnArr("valid");
+        $str = "";
+        foreach( $mergedMrnArr as $mergedMrn ) {
+            $str .= "Merge ID ".$mergedMrn->getField().", merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y');
+        }
+        return $str;
     }
 
     //check for orphans for the same MRN ID for each valid MRN ID for this patient.
