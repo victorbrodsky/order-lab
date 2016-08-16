@@ -294,21 +294,24 @@ function createPatientsTableCalllog( patients, holderId ) {
             hasMergedPatients = '<br><span class="label label-info">Has '+mergedPatientsInfoLength+' Merged Patients</span>';
         }
 
-        matchingPatientsHtml = matchingPatientsHtml +
-            '<tr class="clickable-row" id="'+i+'-'+holderId+'">' +
-            '<td id="calllog-patientid-'+patient.id+'">'+
-                patient.patientInfoStr +
-                patient.mrn+' ('+patient.mrntypestr+')'+
-                hasMergedPatients +
-            '</td>'+
-            '<td>'+patient.lastname+'</td>'+
-            '<td>'+patient.firstname+'</td>'+
-            '<td>'+patient.middlename+'</td>'+
-            '<td>'+patient.suffix+'</td>'+
-            '<td>'+patient.sexstr+'</td>'+
-            '<td>'+patient.dob+'</td>'+
-            '<td>'+patient.contactinfo+'</td>'+
-            '</tr>';
+        //matchingPatientsHtml = matchingPatientsHtml +
+        //    '<tr class="clickable-row" id="'+i+'-'+holderId+'">' +
+        //    '<td id="calllog-patientid-'+patient.id+'">'+
+        //        patient.patientInfoStr +
+        //        patient.mrn+' ('+patient.mrntypestr+')'+
+        //        hasMergedPatients +
+        //    '</td>'+
+        //    '<td>'+patient.lastname+'</td>'+
+        //    '<td>'+patient.firstname+'</td>'+
+        //    '<td>'+patient.middlename+'</td>'+
+        //    '<td>'+patient.suffix+'</td>'+
+        //    '<td>'+patient.sexstr+'</td>'+
+        //    '<td>'+patient.dob+'</td>'+
+        //    '<td>'+patient.contactinfo+'</td>'+
+        //    '</tr>';
+        matchingPatientsHtml = matchingPatientsHtml + constractPatientInfoRow( patient, i+'-'+holderId, "" );
+
+        matchingPatientsHtml = matchingPatientsHtml + constractMergedPatientInfoRow( patient, i+'-'+holderId );
 
     }
 
@@ -338,6 +341,43 @@ function createPatientsTableCalllog( patients, holderId ) {
         holder.find('.matchingPatientBtn').parent().tooltip('destroy');
     });
 
+}
+function constractPatientInfoRow( patient, rowId, rowClass ) {
+    var patientsHtml =
+        '<tr class="clickable-row '+rowClass+'" id="'+rowId+'">' +
+        '<td id="calllog-patientid-'+patient.id+'">'+
+        patient.patientInfoStr +
+        patient.mrn+' ('+patient.mrntypestr+')'+
+        //hasMergedPatients +
+        '</td>'+
+        '<td>'+patient.lastname+'</td>'+
+        '<td>'+patient.firstname+'</td>'+
+        '<td>'+patient.middlename+'</td>'+
+        '<td>'+patient.suffix+'</td>'+
+        '<td>'+patient.sexstr+'</td>'+
+        '<td>'+patient.dob+'</td>'+
+        '<td>'+patient.contactinfo+'</td>'+
+        '</tr>';
+    return patientsHtml;
+}
+function constractMergedPatientInfoRow( patient, rowId ) {
+    var mergedPatientsHtml = "";
+    var mergedPatients = patient['mergedPatientsInfo'];
+    for( var mergedId in mergedPatients ) {
+        if( mergedPatients.hasOwnProperty(mergedId) ) {
+            //alert("Key is " + mergedId + ", value is" + targetArr[mergedId]);
+            //count = count + mergedPatients[mergedId]['patientInfo'].length;
+            var patientsInfo = mergedPatients[mergedId]['patientInfo'];
+            for( var index in patientsInfo ) {
+                var patientInfo = patientsInfo[index];
+                console.log('merged Patient ID=' + patientInfo['id']);
+                console.log(patientInfo);
+                rowId = rowId + "-" + patientInfo['id'];
+                mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, rowId, "alert alert-info");
+            }
+        }
+    }
+    return mergedPatientsHtml;
 }
 
 function getMergedPatientsInfoLength( targetArr ) {

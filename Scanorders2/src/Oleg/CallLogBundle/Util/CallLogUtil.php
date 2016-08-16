@@ -204,8 +204,10 @@ class CallLogUtil
 
         //make unique array of the merged patients
         foreach( $patients as $patient ) {
+            //echo "tryingAddPatient=".$patient->getId()."<br>";
             //$mergedPatients[] = $patient;
             if( !$mergedPatients->contains($patient) ) {
+                //echo "addedPatient=".$patient->getId()."<br>";
                 $mergedPatients->add($patient);
             }
         }
@@ -389,7 +391,7 @@ class CallLogUtil
         return $ids;
     }
 
-    public function getAllMergedPatients( $patients ) {
+    public function getAllMergedPatients( $patients, $mergeMrnsArr=array() ) {
 
         $existingPatientIds = array();
         foreach( $patients as $patient ) {
@@ -401,6 +403,9 @@ class CallLogUtil
 
         foreach( $patients as $patient ) {
 
+            //echo "!!!checkPatient=".$patient->getId()."<br>";
+            //continue;
+
             if( !$resPatients->contains($patient) ) {
                 $resPatients->add($patient);
             }
@@ -409,12 +414,39 @@ class CallLogUtil
             $mergeMrns = $patient->obtainMergeMrnArr('valid');
 
             foreach( $mergeMrns as $mergeMrn ) {
-                $resPatients = $this->getMergedPatients($mergeMrn->getField(), $resPatients, $existingPatientIds);
+
+                $mid = $mergeMrn->getField();
+
+                if( in_array($mid,$mergeMrnsArr) ) {
+                    //this MID has already processed => skip it
+                } else {
+                    //echo "process MID=".$mid."<br>";
+                    $mergeMrnsArr[] = $mid;
+                    $resPatients = $this->getMergedPatients($mid, $resPatients, $existingPatientIds);
+
+                    //recursive call
+                    $resPatients = $this->getAllMergedPatients($resPatients,$mergeMrnsArr);
+                }
+
             }
 
         }//foreach
 
+        //foreach( $resPatients as $resPatient ) {
+        //    echo "###resPatient=".$resPatient->getId()."<br>";
+        //}
+        //echo "<br><br>";
+
         return $resPatients;
+    }
+
+    public function getMasterRecordPatients( $patients ) {
+        foreach( $patients as $patient ) {
+            if( $patient->isMasterMergeRecord() ) {
+                return $patient;
+            }
+        }
+        return null;
     }
 
     //check for orphans for the same MRN ID for each valid MRN ID for this patient.
@@ -439,7 +471,14 @@ class CallLogUtil
         $mergeMrns = $patient->obtainMergeMrnArr('valid');
 
         foreach( $mergeMrns as $mergeMrn ) {
-            $resPatients = $this->getMergedPatients($mergeMrn->getField(), null, array($patient->getId()));
+            echo "<br><br>Merge ID ".$mergeMrn->getField().":<br>";
+
+            $patients = $this->getMergedPatients($mergeMrn->getField(), null, array($patient->getId()));
+
+            foreach( $patients as $thisPatient ) {
+                echo "Patient ID ".$thisPatient->getId().":<br>";
+            }
+
         }
 
     }
