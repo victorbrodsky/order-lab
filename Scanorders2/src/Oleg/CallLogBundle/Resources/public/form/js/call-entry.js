@@ -6,6 +6,10 @@
 var _patients = [];
 var _mrntype_original = null;
 
+function initCallLogPage() {
+    listnereAccordionMasterPatientParent();
+}
+
 function addnewCalllogPatient(holderId) {
 
     var holder = getHolder(holderId);
@@ -269,6 +273,7 @@ function createPatientsTableCalllog( patients, holderId ) {
     //Matching Patients
     var matchingPatientsHtml = '<div class="table-responsive"><table id="calllog-matching-patients-table-'+holderId+'" class="table table-bordered">' +
         '<thead><tr>' +
+        '<th>&nbsp;</th>'+
         '<th>MRN</th>' +
         '<th>Last Name</th>' +
         '<th>First Name</th>' +
@@ -309,7 +314,7 @@ function createPatientsTableCalllog( patients, holderId ) {
         //    '<td>'+patient.dob+'</td>'+
         //    '<td>'+patient.contactinfo+'</td>'+
         //    '</tr>';
-        matchingPatientsHtml = matchingPatientsHtml + constractPatientInfoRow( patient, i+'-'+holderId, "" );
+        matchingPatientsHtml = matchingPatientsHtml + constractPatientInfoRow( patient, i+'-'+holderId, "master" );
 
         matchingPatientsHtml = matchingPatientsHtml + constractMergedPatientInfoRow( patient, i+'-'+holderId );
 
@@ -342,21 +347,34 @@ function createPatientsTableCalllog( patients, holderId ) {
     });
 
 }
-function constractPatientInfoRow( patient, rowId, rowClass ) {
-    var patientsHtml =
-        '<tr class="clickable-row '+rowClass+'" id="'+rowId+'">' +
-        '<td id="calllog-patientid-'+patient.id+'">'+
+function constractPatientInfoRow( patient, rowId, type ) {
+
+    var tdClass = "";
+
+    if( type == "master" ) {
+        var patientsHtml = '<tr class="clickable-row" id="'+rowId+'">';
+        patientsHtml += '<td><button class="btn btn-default btn-xs accordion-toggle accordion-master-patient-parent"'+
+        ' id="accordion-'+patient.id+'-parent" data-toggle="collapse" data-target="#accordion'+patient.id+'">'+
+        '<span id="button-icon" class="glyphicon glyphicon-plus-sign"></span></button></td>';
+    } else {
+        var patientsHtml = '<tr class="clickable-row accordion-body collapse collapseme1 out" id="'+rowId+'" style="color: #fff; background: grey;">';
+        tdClass = "hiddenRow";
+        patientsHtml += '<td class="hiddenRow">&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
+    }
+
+    patientsHtml +=
+        '<td class="'+tdClass+'" id="calllog-patientid-'+patient.id+'">'+
         patient.patientInfoStr +
         patient.mrn+' ('+patient.mrntypestr+')'+
         //hasMergedPatients +
-        '</td>'+
-        '<td>'+patient.lastname+'</td>'+
-        '<td>'+patient.firstname+'</td>'+
-        '<td>'+patient.middlename+'</td>'+
-        '<td>'+patient.suffix+'</td>'+
-        '<td>'+patient.sexstr+'</td>'+
-        '<td>'+patient.dob+'</td>'+
-        '<td>'+patient.contactinfo+'</td>'+
+        '</td class="'+tdClass+'">'+
+        '<td class="'+tdClass+'">'+patient.lastname+'</td>'+
+        '<td class="'+tdClass+'">'+patient.firstname+'</td>'+
+        '<td class="'+tdClass+'">'+patient.middlename+'</td>'+
+        '<td class="'+tdClass+'">'+patient.suffix+'</td>'+
+        '<td class="'+tdClass+'">'+patient.sexstr+'</td>'+
+        '<td class="'+tdClass+'">'+patient.dob+'</td>'+
+        '<td class="'+tdClass+'">'+patient.contactinfo+'</td>'+
         '</tr>';
     return patientsHtml;
 }
@@ -371,13 +389,31 @@ function constractMergedPatientInfoRow( patient, rowId ) {
             for( var index in patientsInfo ) {
                 var patientInfo = patientsInfo[index];
                 console.log('merged Patient ID=' + patientInfo['id']);
-                console.log(patientInfo);
+                //console.log(patientInfo);
                 rowId = rowId + "-" + patientInfo['id'];
                 mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, rowId, "alert alert-info");
             }
         }
     }
     return mergedPatientsHtml;
+}
+
+function listnereAccordionMasterPatientParent() {
+    $(".accordion-master-patient-parent").click(function() {
+        if($(".collapseme1").hasClass("out")) {
+            $(".collapseme1").removeClass("collapse");
+            $(".collapseme1").addClass("in");
+            $(".collapseme1").removeClass("out");
+            //$("#accordion-1-parent span.glyphicon")
+            $(this).find('span.glyphicon').removeClass("glyphicon-plus-sign").addClass("glyphicon-minus-sign");
+        } else {
+            $(".collapseme1").addClass("collapse");
+            $(".collapseme1").addClass("out");
+            $(".collapseme1").removeClass("in");
+            //$("#accordion-1-parent span.glyphicon")
+            $(this).find('span.glyphicon').removeClass("glyphicon-minus-sign").addClass("glyphicon-plus-sign");
+        }
+    });
 }
 
 function getMergedPatientsInfoLength( targetArr ) {
