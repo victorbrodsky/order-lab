@@ -100,7 +100,7 @@ class AccessRequest
      * Organizational Group
      *
      * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
      **/
     private $organizationalGroup;
 
