@@ -2738,14 +2738,19 @@ class UserController extends Controller
             return;
         }
 
-        //password is the same as original one
-        if( !$newUser && hash_equals($originalPassword, $user->getPassword()) ) {
-            //exit('password is the same');
-            return;
-        }
-
         $encoder = $this->container->get('security.password_encoder');
         $encoded = $encoder->encodePassword($user, $user->getPassword());
+
+        //password is the same as original one
+        if( !$newUser && hash_equals($originalPassword, $user->getPassword()) ) {
+            if( $this->isEncodedPassword($user->getPassword()) ) {
+                //exit('password is already encoded and it is the same');
+                return;
+            }
+        }
+
+        //$encoder = $this->container->get('security.password_encoder');
+        //$encoded = $encoder->encodePassword($user, $user->getPassword());
 
         //echo "compare: $originalPassword == $encoded <br>";
         $equals = hash_equals($originalPassword, $encoded);
@@ -2759,6 +2764,14 @@ class UserController extends Controller
             //echo "old password<br>";
         }
         //exit();
+    }
+    function isEncodedPassword($password) {
+        //return preg_match('/^[a-f0-9]{32}$/', $password);
+        //check the length of the password
+        if( strlen($password) >= 32 ) {
+            return true;
+        }
+        return false;
     }
 
     //explicitly set a new avatar
