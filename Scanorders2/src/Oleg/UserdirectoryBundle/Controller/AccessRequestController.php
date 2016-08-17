@@ -422,8 +422,8 @@ class AccessRequestController extends Controller
         }
 
         //$emails = "oli2002@med.cornell.edu";
-        //echo "user emails=".$emails."<br>";
-        //echo "user headers=".$headers."<br>";
+        echo "user emails=".implode(";",$emails)."<br>";
+        echo "user headers=".implode(";",$headers)."<br>";
         //exit('1');
 
         $emailUtil->sendEmail( $emails, $subject, $msg, $headers );
