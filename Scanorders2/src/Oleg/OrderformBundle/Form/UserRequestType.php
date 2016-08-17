@@ -23,7 +23,7 @@ class UserRequestType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {     
-        $helper = new FormHelper();
+        //$helper = new FormHelper();
         
         $builder->add( 'cwid', 'text', array(
                 'label'=>'WCMC CWID:',

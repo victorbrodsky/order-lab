@@ -23,7 +23,7 @@
 
 <body>
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div class="container">
 
@@ -58,6 +58,46 @@
                     <a class="btn btn-info" href="{{ path('employees_no_thanks_accessrequest',{"sitename":sitename}) }}">No, thanks!</a>
                 </p>
 
+                {{ form_errors(form) }}
+                {{ formmacros.field(form.email) }}
+                {{ formmacros.field(form.phone) }}
+                {{ formmacros.field(form.job) }}
+
+                {% if form.organizationalGroup is defined %}
+                    {{ formmacros.field(form.organizationalGroup) }}
+                {% endif %}
+
+                {{ formmacros.field(form.reason) }}
+                {{ formmacros.field(form.similaruser) }}
+
+                <p style="padding-top:5px;">
+                {#<div class="row">#}
+                    {#<div class="col-xs-6" align="right">#}
+                        {#<label>#}
+                            {#For reference, please provide the name and contact information of your supervisor or of the person who can confirm the validity of your request below.#}
+                        {#</label>#}
+                    {#</div>#}
+                    {#<div class="col-xs-6" align="left">#}
+                    {#</div>#}
+                {#</div>#}
+                {#<div class="row">#}
+                    {#<div class="col-xs-6" align="right">#}
+                        {#{{ form_label(form.referencename) }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-6" align="left">#}
+                        {#{{ form_widget(form.referencename) }}#}
+                    {#</div>#}
+                {#</div>#}
+                    {#<label>#}
+                        For reference, please provide the name and contact information of your supervisor
+                        or of the person who can confirm the validity of your request below.
+                    {#</label>#}
+                </p>
+
+                {{ formmacros.field(form.referencename) }}
+                {{ formmacros.field(form.referenceemail) }}
+                {{ formmacros.field(form.referencephone) }}
+
             </form>
 
             {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
@@ -67,13 +107,76 @@
     </div> <!-- /container -->
 
 
+    {#{% javascripts#}
+        {#'@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'#}
+        {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+        {#'@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+        {#'@OlegUserdirectoryBundle/Resources/public/select2/select2.js'#}
+        {#'@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'#}
+        {#'@OlegUserdirectoryBundle/Resources/public/q-1/q.js'#}
+
+        {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+
+        {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'#}
+        {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'#}
+
+        {#'@OlegOrderformBundle/Resources/public/form/js/masking.js'#}
+        {#'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+        {#'@OlegOrderformBundle/Resources/public/form/js/form.js'#}
+        {#'@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+        '@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
+        '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+        '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+        '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
+        '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+        '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
+
+        '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+
+        '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
+        '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
+
+        '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+        '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+        '@OlegOrderformBundle/Resources/public/form/js/form.js'
+        '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
     %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
+        <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            _ajaxTimeout = 60000;
+
+            //regularCombobox();
+            //customCombobox();
+            //fieldInputMask();
+            //expandTextarea();
+            //initConvertEnterToTab();
+            //getComboboxCompositetree();
+
+            $("select.combobox").select2({
+                width: '100%',
+                dropdownAutoWidth: true,
+                placeholder: "Select an option",
+                allowClear: true,
+                selectOnBlur: false,
+                matcher: select2Matcher
+                //containerCssClass: 'combobox-width'
+            });
+
+        });
+        
+
+    </script>
 
 </body>
 

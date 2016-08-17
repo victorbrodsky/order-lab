@@ -65,18 +65,77 @@ class AccessRequest
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
      */
-    protected $updatedby;
+    private $updatedby;
 
     /**
      * @var array
      * @ORM\Column(type="array", nullable=true)
      */
-    protected $updateAuthorRoles = array();
+    private $updateAuthorRoles = array();
+
+    /////////////////////// access request details //////////////////////////
+    /**
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank(
+     *     message = "The email value should not be blank."
+     * )
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $phone;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $job;
+
+    /**
+     * Organizational Group
+     *
+     * @ORM\ManyToOne(targetEntity="Institution")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
+     **/
+    private $organizationalGroup;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $reason;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $similaruser;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $referencename;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $referenceemail;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $referencephone;
+
 
 
     public function __construct() {
         $this->setStatus(self::STATUS_ACTIVE);
     }
+
+
 
     /**
      * @param mixed $id
@@ -194,6 +253,151 @@ class AccessRequest
             $this->updateAuthorRoles[] = $role;
         }
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJob()
+    {
+        return $this->job;
+    }
+
+    /**
+     * @param mixed $job
+     */
+    public function setJob($job)
+    {
+        $this->job = $job;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrganizationalGroup()
+    {
+        return $this->organizationalGroup;
+    }
+
+    /**
+     * @param mixed $organizationalGroup
+     */
+    public function setOrganizationalGroup($organizationalGroup)
+    {
+        $this->organizationalGroup = $organizationalGroup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReason()
+    {
+        return $this->reason;
+    }
+
+    /**
+     * @param mixed $reason
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSimilaruser()
+    {
+        return $this->similaruser;
+    }
+
+    /**
+     * @param mixed $similaruser
+     */
+    public function setSimilaruser($similaruser)
+    {
+        $this->similaruser = $similaruser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencename()
+    {
+        return $this->referencename;
+    }
+
+    /**
+     * @param mixed $referencename
+     */
+    public function setReferencename($referencename)
+    {
+        $this->referencename = $referencename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferenceemail()
+    {
+        return $this->referenceemail;
+    }
+
+    /**
+     * @param mixed $referenceemail
+     */
+    public function setReferenceemail($referenceemail)
+    {
+        $this->referenceemail = $referenceemail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencephone()
+    {
+        return $this->referencephone;
+    }
+
+    /**
+     * @param mixed $referencephone
+     */
+    public function setReferencephone($referencephone)
+    {
+        $this->referencephone = $referencephone;
+    }
+
 
 
     /**

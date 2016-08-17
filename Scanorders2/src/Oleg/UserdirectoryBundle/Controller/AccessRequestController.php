@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
+use Oleg\UserdirectoryBundle\Form\AccessRequestType;
 use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\AuthorizitaionUserType;
@@ -46,17 +47,20 @@ class AccessRequestController extends Controller
     }
 
     /**
+     * This url "/access-requests/new/create" is set in security.yml as access_denied_url parameter
+     *
      * @Route("/access-requests/new/create", name="employees_access_request_new_plain")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreatePlainAction()
     {
-        //exit('directory: accessRequestCreatePlainAction');
         return $this->accessRequestCreatePlain();
     }
     public function accessRequestCreatePlain()
     {
+
+        //exit('access Request Create Plain');
 
         $userSecUtil = $this->get('user_security_utility');
 
@@ -95,6 +99,8 @@ class AccessRequestController extends Controller
 
 
     /**
+     * Used to reqdirect from LoginSuccessHandler if a user has role roleBanned or roleUnapproved
+     *
      * @Route("/access-requests/new", name="employees_access_request_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
@@ -127,7 +133,7 @@ class AccessRequestController extends Controller
     // 4) user has approved accreq, but user has ROLE_UNAPPROVED
     public function accessRequestCreateNew($id,$sitename,$roles) {
 
-        //echo "create new accreq <br>";
+        echo "create new accreq <br>";
 
         $em = $this->getDoctrine()->getManager();
 
@@ -191,18 +197,84 @@ class AccessRequestController extends Controller
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
 
-        //echo "create new accreq, exit??? <br>";
+        echo "create new accreq, exit??? <br>";
+
+        //create a form for AccessRequest entity:
+        // when the user clicks "Yes" in answer to "would you like to request access to this site?",
+        // show a page with the following fields
+        // (all are from http://c.med.cornell.edu/order/scan/account-requests/new except
+        // the name of the field "Reason for account request" is changed to "Reason for access request)
+        $params = $this->getParams();
+        $accReq = new AccessRequest();
+        $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
+        $accReq->setUser($user);
+        $accReq->setSiteName($sitename);
+        $form = $this->createForm(new AccessRequestType($params), $accReq);
 
         return array(
+            'form' => $form->createView(),
             'sitename' => $sitename,
             'sitenamefull' => $sitenameFull,
             'pendinguser' => true
         );
     }
+    public function getParams() {
+
+        $params = array();
+
+        $em = $this->getDoctrine()->getManager();
+        $params['em'] = $em;
+
+        //departments
+        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+
+        $params['institution'] = $department;
+
+        //$requestedInstitutionalPHIScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Institution');
+        $dql =  $repository->createQueryBuilder("institution");
+        $dql->select('institution');
+        $dql->leftJoin("institution.types", "types");
+
+        $dql->where("institution.type = 'default'");
+        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
+
+        $query = $em->createQuery($dql);
+        $requestedScanOrderInstitutionScope = $query->getResult();
+
+        //$params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
+        $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
 
 
+        return $params;
+    }
+
+
+
+//    /**
+//     * when the user clicks "Yes" in answer to "would you like to request access to this site?",
+//     * show a page with the following fields
+//     * (all are from http://c.med.cornell.edu/order/scan/account-requests/new except
+//     * the name of the field "Reason for account request" is changed to "Reason for access request)
+//     *
+//     * @Route("/access-requests/details/new", name="employees_access_request_details_new")
+//     * @Method("GET")
+//     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+//     */
+//    public function accessRequestDetailsAction()
+//    {
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        $id = $user->getId();
+//        $sitename = $this->siteName;
+//
+//        return $this->accessRequestCreate($id,$sitename);
+//
+//    }
 
      /**
+      * On click button: Yes, please!
+      *
       * @Route("/access-requests/new/pending", name="employees_access_request_create")
       * @Method("POST")
       * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
@@ -289,12 +361,12 @@ class AccessRequestController extends Controller
         $text = 'Your access request was successfully submitted and will be reviewed.'.$emailStr;
 
         ///////////////// Send an email to the preferred emails of the users who have Administrator role for a given site and CC the users with Platform Administrator role when an access request is submitted
-        $incomingReqPage = $this->generateUrl( $sitename.'_home', array(), true );
-        $subject = "[O R D E R] Access request for ".$sitenameFull." received from ".$user->getUsernameOptimal();
-        $msg = $user->getUsernameOptimal()." submitted a request to access ".$sitenameFull.".";
+        //$incomingReqPage = $this->generateUrl( $sitename.'_home', array(), true );
+        $subject = "[O R D E R] Access request for the ".$sitenameFull." site received from ".$user->getUsernameOptimal();
+        $msg = $user->getUsernameOptimal()." submitted a request to access the ".$sitenameFull." site (".$siteurl.").";
         //$msg = $msg . " Please visit ".$incomingReqPage." to approve or deny it.";
 
-        $approveDeclineMsg = "the access request from ".$user->getUsernameOptimal()." to access ".$sitenameFull.", visit the following link:";
+        $approveDeclineMsg = "the access request from ".$user->getUsernameOptimal()." for the ".$sitenameFull." site, visit the following link:";
 
 //        //add approve link
 //        $approvedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"approve"), true );
@@ -308,9 +380,21 @@ class AccessRequestController extends Controller
 
         //add access request management link
         $managementLink = $this->generateUrl( $sitename.'_accessrequest_management', array("id"=>$accReq->getId()), true );
-        $managementMsg = "To review " . $approveDeclineMsg . "\r\n" . $managementLink;
+        $managementMsg = "To review, approve, or deny " . $approveDeclineMsg . "\r\n" . $managementLink;
 
         $msg = $msg . "\r\n"."\r\n" . $managementMsg;
+
+        //Verena-Wilberth Sailer has supplied the following information:
+        $msg .= "\r\n"."\r\n" . $user->getUsernameOptimal() . "has supplied the following information:";
+//        $msg .= "\r\n"."E-Mail: ".;
+//        $msg .= "\r\n"."Phone Number: ".;
+//        $msg .= "\r\n"."Job Title: ".;
+//        $msg .= "\r\n"."Organizational Group: ".;
+//        $msg .= "\r\n"."Reason for Access Request: ".;
+//        $msg .= "\r\n"."Access permissions similar to (user name): ".;
+//        $msg .= "\r\n"."Reference Name: ".;
+//        $msg .= "\r\n"."Reference E-Mail: ".;
+//        $msg .= "\r\n"."Reference Phone Number: ".;
 
         $userSecUtil = $this->get('user_security_utility');
         $emails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
@@ -923,7 +1007,7 @@ class AccessRequestController extends Controller
         //user's roles associated with this site
         $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
 
-        //TODO: check if this user is already athorized to access this site
+        //TODO: check if this user is already authorized to access this site
         $userSecUtil = $this->get('user_security_utility');
         $accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
 
