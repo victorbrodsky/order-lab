@@ -621,6 +621,11 @@ function getRepeatMask( repeat, char, allsame ) {
 
 //elem: button, combobox (keytype) or input field
 function getKeyGroupParent(elem) {
+
+    if( typeof orderformtype === 'undefined' ) {
+        orderformtype = null;
+    }
+
     //printF(elem, orderformtype+": @@@@@@@@@@@@@ Get parent for element:");
     if( orderformtype == "single" && elem.attr('class').indexOf("mrn") == -1 ) {
         //console.log('find by class singlemessage');
@@ -644,6 +649,7 @@ function getKeyGroupParent(elem) {
 function getButtonParent(elem) {
 
     var parent = elem.closest('.row');
+
 
     if( orderformtype == "single") {
         if( elem.hasClass('mrntype-combobox') ) {

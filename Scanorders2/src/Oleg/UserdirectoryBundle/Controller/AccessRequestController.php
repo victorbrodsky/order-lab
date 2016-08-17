@@ -338,6 +338,7 @@ class AccessRequestController extends Controller
         $accReq->setUser($user);
         $accReq->setSiteName($sitename);
 
+        exit('new access request flush');
         $em->persist($accReq);
         $em->flush();
 

@@ -42,29 +42,21 @@ class AccessRequestType extends AbstractType
         ));
 
 
-//        if (array_key_exists('requestedScanOrderInstitutionScope', $this->params)) {
-//            $requestedScanOrderInstitutionScope = $this->params['requestedScanOrderInstitutionScope'];
-//        } else {
-//            $requestedScanOrderInstitutionScope = null;
-//        }
-//        //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
-//        $builder->add('organizationalGroup', 'entity', array(
-//            'label' => '* Organizational Group:',
-//            'required' => false,
-//            'multiple' => false,
-//            //'empty_value' => false,
-//            //'property' => 'getNodeNameWithRoot',
-//            'class' => 'OlegUserdirectoryBundle:Institution',
-//            'choices' => $requestedScanOrderInstitutionScope,
-//            'attr' => array('class' => 'combobox combobox-width combobox-institution')
-//        ));
-
-        $builder->add('organizationalGroup', null, array(
+        if (array_key_exists('requestedScanOrderInstitutionScope', $this->params)) {
+            $requestedScanOrderInstitutionScope = $this->params['requestedScanOrderInstitutionScope'];
+        } else {
+            $requestedScanOrderInstitutionScope = null;
+        }
+        $builder->add('organizationalGroup', 'entity', array(
             'label' => '* Organizational Group:',
             'required' => false,
             'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width')
+            'property' => 'getNodeNameWithRoot',
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'choices' => $requestedScanOrderInstitutionScope,
+            'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
+
 
 //        //requestedScanOrderInstitutionScope
 //    if(1) {
