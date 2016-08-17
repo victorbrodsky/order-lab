@@ -75,7 +75,7 @@ class AccessRequest
 
     /////////////////////// access request details //////////////////////////
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @Assert\NotBlank(
      *     message = "The email value should not be blank."
      * )
