@@ -346,9 +346,7 @@ class AccessRequestController extends Controller
 
         if( $form->isSubmitted() && $form->isValid() ) {
             //exit('new access request valid !!!');
-
-            echo "email=".$accReq->getEmail()."<br>";
-
+            //echo "email=".$accReq->getEmail()."<br>";
         } else {
             exit('Access Request form is not valid.');
         }
@@ -422,8 +420,11 @@ class AccessRequestController extends Controller
         }
 
         //$emails = "oli2002@med.cornell.edu";
-        echo "user emails=".implode(";",$emails)."<br>";
-        echo "user headers=".implode(";",$headers)."<br>";
+        $logstr = "user emails=".implode(";",$emails)."<br>";
+        $logstr .= "user headers=".implode(";",$headers)."<br>";
+        echo $logstr;
+        $logger = $this->container->get('logger');
+        $logger->notice($logstr);
         //exit('1');
 
         $emailUtil->sendEmail( $emails, $subject, $msg, $headers );
