@@ -133,7 +133,7 @@ class AccessRequestController extends Controller
     // 4) user has approved accreq, but user has ROLE_UNAPPROVED
     public function accessRequestCreateNew($id,$sitename,$roles) {
 
-        echo "create new accreq <br>";
+        //echo "create new accreq <br>";
 
         $em = $this->getDoctrine()->getManager();
 
@@ -197,7 +197,7 @@ class AccessRequestController extends Controller
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
 
-        echo "create new accreq, exit??? <br>";
+        //echo "create new accreq, exit??? <br>";
 
         //create a form for AccessRequest entity:
         // when the user clicks "Yes" in answer to "would you like to request access to this site?",
@@ -337,6 +337,8 @@ class AccessRequestController extends Controller
         $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         $accReq->setUser($user);
         $accReq->setSiteName($sitename);
+
+        //pre-populate the First Name, Last Name, Email, Phone Number, Job Title, and Organizational Group fields
 
         $params = $this->getParams();
         $form = $this->createForm(new AccessRequestType($params), $accReq);

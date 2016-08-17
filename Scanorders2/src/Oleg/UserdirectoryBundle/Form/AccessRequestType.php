@@ -49,7 +49,7 @@ class AccessRequestType extends AbstractType
             $requestedScanOrderInstitutionScope = null;
         }
         $builder->add('organizationalGroup', 'entity', array(
-            'label' => '* Organizational Group:',
+            'label' => 'Organizational Group:',
             'required' => false,
             'multiple' => false,
             'property' => 'getNodeNameWithRoot',

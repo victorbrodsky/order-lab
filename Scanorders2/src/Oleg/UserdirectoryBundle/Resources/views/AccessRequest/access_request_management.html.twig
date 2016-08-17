@@ -73,6 +73,17 @@
         {{ formmacros.simplefield( "Status Updated By:", updatedby, "", "disabled" ) }}
 
         <hr>
+            {#access request details#}
+            {{ formmacros.simplefield( "Email:", accreq.email, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Phone Number:", accreq.phone, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Job title:", accreq.job, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Organizational Group:", accreq.organizationalGroup, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Reason for access request:", accreq.reason, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Access permissions similar to (user name):", accreq.similaruser, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Reference Name:", accreq.referencename, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Reference Email:", accreq.referenceemail, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Reference Phone Number:", accreq.referencephone, "", "disabled" ) }}
+        <hr>
     {% endif %}
 
     {#{% if accreq is defined %}#}
