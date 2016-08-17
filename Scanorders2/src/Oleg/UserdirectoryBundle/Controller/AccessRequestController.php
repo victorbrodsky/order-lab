@@ -399,7 +399,7 @@ class AccessRequestController extends Controller
         $msg = $msg . "\r\n"."\r\n" . $managementMsg;
 
         //Verena-Wilberth Sailer has supplied the following information:
-        $msg .= "\r\n"."\r\n" . $user->getUsernameOptimal() . "has supplied the following information:";
+        $msg .= "\r\n"."\r\n" . $user->getUsernameOptimal() . "has supplied the following information:"."\r\n";
         $msg .= "\r\n"."E-Mail: ".$accReq->getEmail();
         $msg .= "\r\n"."Phone Number: ".$accReq->getPhone();
         $msg .= "\r\n"."Job Title: ".$accReq->getJob();
