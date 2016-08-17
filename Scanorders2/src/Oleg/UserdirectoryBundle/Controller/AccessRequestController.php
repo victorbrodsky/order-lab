@@ -353,7 +353,7 @@ class AccessRequestController extends Controller
 
         //exit('new access request flush');
         $em->persist($accReq);
-        //$em->flush();
+        $em->flush();
 
         $email = $user->getEmail();
         $emailStr = "";
@@ -420,11 +420,11 @@ class AccessRequestController extends Controller
         }
 
         //$emails = "oli2002@med.cornell.edu";
-        $logstr = "user emails=".implode(";",$emails)."<br>";
-        $logstr .= "user headers=".implode(";",$headers)."<br>";
-        echo $logstr;
-        $logger = $this->container->get('logger');
-        $logger->notice($logstr);
+//        $logstr = "user emails=".implode(";",$emails)."<br>";
+//        $logstr .= "user headers=".implode(";",$headers)."<br>";
+//        echo $logstr;
+//        $logger = $this->container->get('logger');
+//        $logger->notice($logstr);
         //exit('1');
 
         $emailUtil->sendEmail( $emails, $subject, $msg, $headers );
