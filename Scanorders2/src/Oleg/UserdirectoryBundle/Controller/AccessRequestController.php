@@ -338,9 +338,24 @@ class AccessRequestController extends Controller
         $accReq->setUser($user);
         $accReq->setSiteName($sitename);
 
-        exit('new access request flush');
+        $params = $this->getParams();
+        $form = $this->createForm(new AccessRequestType($params), $accReq);
+
+        $request = $this->get('request');
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+            //exit('new access request valid !!!');
+
+            echo "email=".$accReq->getEmail()."<br>";
+
+        } else {
+            exit('Access Request form is not valid.');
+        }
+
+        //exit('new access request flush');
         $em->persist($accReq);
-        $em->flush();
+        //$em->flush();
 
         $email = $user->getEmail();
         $emailStr = "";
@@ -387,15 +402,15 @@ class AccessRequestController extends Controller
 
         //Verena-Wilberth Sailer has supplied the following information:
         $msg .= "\r\n"."\r\n" . $user->getUsernameOptimal() . "has supplied the following information:";
-//        $msg .= "\r\n"."E-Mail: ".;
-//        $msg .= "\r\n"."Phone Number: ".;
-//        $msg .= "\r\n"."Job Title: ".;
-//        $msg .= "\r\n"."Organizational Group: ".;
-//        $msg .= "\r\n"."Reason for Access Request: ".;
-//        $msg .= "\r\n"."Access permissions similar to (user name): ".;
-//        $msg .= "\r\n"."Reference Name: ".;
-//        $msg .= "\r\n"."Reference E-Mail: ".;
-//        $msg .= "\r\n"."Reference Phone Number: ".;
+        $msg .= "\r\n"."E-Mail: ".$accReq->getEmail();
+        $msg .= "\r\n"."Phone Number: ".$accReq->getPhone();
+        $msg .= "\r\n"."Job Title: ".$accReq->getJob();
+        $msg .= "\r\n"."Organizational Group: ".$accReq->getOrganizationalGroup();
+        $msg .= "\r\n"."Reason for Access Request: ".$accReq->getReason();
+        $msg .= "\r\n"."Access permissions similar to (user name): ".$accReq->getSimilaruser();
+        $msg .= "\r\n"."Reference Name: ".$accReq->getReferencename();
+        $msg .= "\r\n"."Reference E-Mail: ".$accReq->getReferenceemail();
+        $msg .= "\r\n"."Reference Phone Number: ".$accReq->getReferencephone();
 
         $userSecUtil = $this->get('user_security_utility');
         $emails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
