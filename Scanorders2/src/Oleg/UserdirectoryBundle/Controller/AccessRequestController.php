@@ -209,9 +209,29 @@ class AccessRequestController extends Controller
         $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         $accReq->setUser($user);
         $accReq->setSiteName($sitename);
+
+        //pre-populate the First Name, Last Name, Email, Phone Number, Job Title, and Organizational Group fields
+        $userDetalsArr = $user->getDetailsArr();
+        //firstName
+        $accReq->setFirstName($user->getFirstName());
+        //lastName
+        $accReq->setLastName($user->getLastName());
+        //email
+        $accReq->setEmail($user->getSingleEmail());
+        //phone
+        $phonesArr = $user->getAllPhones();
+        if( count($phonesArr)>0 && $phonesArr[0]['phone'] ) {
+            $accReq->setPhone($phonesArr[0]['phone']);
+        }
+        //job title
+        $accReq->setJob($userDetalsArr["title"]);
+        //organizationalGroup
+        $accReq->setOrganizationalGroup($userDetalsArr["institution"]);
+
         $form = $this->createForm(new AccessRequestType($params), $accReq);
 
         return array(
+            'user' => $user,
             'form' => $form->createView(),
             'sitename' => $sitename,
             'sitenamefull' => $sitenameFull,
@@ -337,8 +357,6 @@ class AccessRequestController extends Controller
         $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         $accReq->setUser($user);
         $accReq->setSiteName($sitename);
-
-        //pre-populate the First Name, Last Name, Email, Phone Number, Job Title, and Organizational Group fields
 
         $params = $this->getParams();
         $form = $this->createForm(new AccessRequestType($params), $accReq);

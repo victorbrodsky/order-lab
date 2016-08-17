@@ -64,6 +64,9 @@
                 {#style="display: none"#}
                 <div id="details-div" class="collapse">
                     {{ form_errors(form) }}
+
+                    {{ formmacros.field(form.firstName) }}
+                    {{ formmacros.field(form.lastName) }}
                     {{ formmacros.field(form.email) }}
                     {{ formmacros.field(form.phone) }}
                     {{ formmacros.field(form.job) }}

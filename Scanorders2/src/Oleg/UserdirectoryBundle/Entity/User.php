@@ -1514,6 +1514,46 @@ class User extends BaseUser {
         return "[" . $admintitle->getName() . "] " . $this->getUsernameOptimal();
     }
 
+    //from any (first) "Administrative Title" if available, if not - from any/first title
+    public function getDetailsArr() {
+
+        $res = array("title"=>null,"institution"=>null);
+
+//        $adminTitles = $this->getAdministrativeTitles();
+//        if( count($adminTitles)>0 ) {
+//            $title = $adminTitles->first();
+//            if( !$res["title"] ) {
+//                $res["title"] = $title->getName()."";
+//            }
+//            if( !$res["institution"] ) {
+//                $res["institution"] = $title->getInstitution()."";
+//            }
+//        }
+        $adminTitles = $this->getAppointmentTitles();
+        $res = $this->getDetailsArrFromTitles($adminTitles,$res);
+
+        $appTitles = $this->getAppointmentTitles();
+        $res = $this->getDetailsArrFromTitles($appTitles,$res);
+
+        $medTitles = $this->getMedicalTitles();
+        $res = $this->getDetailsArrFromTitles($medTitles,$res);
+
+        return $res;
+    }
+    public function getDetailsArrFromTitles($titles,$res) {
+        if( count($titles)>0 ) {
+            $title = $titles->first();
+            if( !$res["title"] ) {
+                $res["title"] = $title->getName()."";
+            }
+            if( !$res["institution"] ) {
+                $res["institution"] = $title->getInstitution();
+            }
+        }
+        return $res;
+    }
+
+
     //Testing
     public function getMemoryUsage() {
         //return round(memory_get_usage() / 1024);

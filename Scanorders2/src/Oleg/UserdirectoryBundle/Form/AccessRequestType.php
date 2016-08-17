@@ -23,6 +23,17 @@ class AccessRequestType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add( 'firstName', 'text', array(
+            'label'=>'First Name:',
+            'required'=> false,
+            'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add( 'lastName', 'text', array(
+            'label'=>'Last Name:',
+            'required'=> false,
+            'attr' => array('class'=>'form-control'),
+        ));
         
         $builder->add( 'email', 'email', array(
                 'label'=>'* Email:',

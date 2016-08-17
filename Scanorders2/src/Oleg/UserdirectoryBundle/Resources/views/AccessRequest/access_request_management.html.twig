@@ -74,6 +74,8 @@
 
         <hr>
             {#access request details#}
+            {{ formmacros.simplefield( "First Name:", accreq.firstName, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Last Name:", accreq.lastName, "", "disabled" ) }}
             {{ formmacros.simplefield( "Email:", accreq.email, "", "disabled" ) }}
             {{ formmacros.simplefield( "Phone Number:", accreq.phone, "", "disabled" ) }}
             {{ formmacros.simplefield( "Job title:", accreq.job, "", "disabled" ) }}
