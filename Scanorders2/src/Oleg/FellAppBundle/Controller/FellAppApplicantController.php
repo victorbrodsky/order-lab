@@ -245,17 +245,23 @@ class FellAppApplicantController extends Controller {
         $this->sendConfirmationEmail($emails,$fellapp,$event,$emailUtil,$request);
 
 
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode("ok"));
-        return $response;
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode("ok"));
+//        return $response;
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            "A personal invitation email has been sent to ".$interview->getInterviewer()." ".$email
+        );
+        return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
     }
 
 
     public function sendInvitationEmail( $interview, $emailUtil=null) {
 
         $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $fellapp = $interview->getFellapp();
         $applicant = $fellapp->getUser();
         $interviewer = $interview->getInterviewer();

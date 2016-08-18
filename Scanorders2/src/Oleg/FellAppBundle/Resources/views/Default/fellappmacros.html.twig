@@ -23,6 +23,11 @@
                 <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
             <br>
+        {% else %}
+            {#add link to invite this interviewer to rate#}
+            <a target="_blank" href="{{ path('fellapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">
+                Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>
+            </a>
         {% endif %}
 
         {{ formmacros.field(forminterview.interviewer) }}
