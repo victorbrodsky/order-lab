@@ -360,7 +360,7 @@ function constractPatientInfoRow( patient, masterId, type ) {
         }
         patientsHtml += '</td>';
     } else {
-        patientsHtml += '<tr class="collapseme'+masterId+' collapse out" style="color: #fff; background: grey;">';
+        patientsHtml += '<tr class="collapseme'+masterId+' collapse out" style="color: #fff; background: #A9A9A9;">';
         patientsHtml += '<td>&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
     }
 
