@@ -347,35 +347,40 @@ function createPatientsTableCalllog( patients, holderId ) {
     });
 
 }
-function constractPatientInfoRow( patient, rowId, type ) {
-
-    var tdClass = "";
+function constractPatientInfoRow( patient, masterId, type ) {
+    //to test use: http://www.bootply.com/4lsCo5q101
+    var patientsHtml = "";
 
     if( type == "master" ) {
-        var patientsHtml = '<tr class="clickable-row" id="'+rowId+'">';
-        patientsHtml += '<td><button class="btn btn-default btn-xs accordion-toggle accordion-master-patient-parent"'+
-        ' id="accordion-'+patient.id+'-parent" data-toggle="collapse" data-target="#accordion'+patient.id+'">'+
-        '<span id="button-icon" class="glyphicon glyphicon-plus-sign"></span></button></td>';
+        patientsHtml += '<tr class="clickable-row" id="'+masterId+'">';
+        patientsHtml += '<td>';
+        if( patient['masterPatientId'] ) {
+            patientsHtml += '<button type="button" class="btn btn-default btn-xs" onclick="clickMasterPatientBtn(this);" id="' + masterId + '">';
+            patientsHtml += '<span class="glyphicon glyphicon-plus-sign"></span></button>';
+        }
+        patientsHtml += '</td>';
     } else {
-        var patientsHtml = '<tr class="clickable-row accordion-body collapse collapseme1 out" id="'+rowId+'" style="color: #fff; background: grey;">';
-        tdClass = "hiddenRow";
-        patientsHtml += '<td class="hiddenRow">&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
+        patientsHtml += '<tr class="collapseme'+masterId+' collapse out" style="color: #fff; background: grey;">';
+        patientsHtml += '<td>&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
     }
 
     patientsHtml +=
-        '<td class="'+tdClass+'" id="calllog-patientid-'+patient.id+'">'+
+        '<td id="calllog-patientid-'+patient.id+'">'+
         patient.patientInfoStr +
         patient.mrn+' ('+patient.mrntypestr+')'+
         //hasMergedPatients +
-        '</td class="'+tdClass+'">'+
-        '<td class="'+tdClass+'">'+patient.lastname+'</td>'+
-        '<td class="'+tdClass+'">'+patient.firstname+'</td>'+
-        '<td class="'+tdClass+'">'+patient.middlename+'</td>'+
-        '<td class="'+tdClass+'">'+patient.suffix+'</td>'+
-        '<td class="'+tdClass+'">'+patient.sexstr+'</td>'+
-        '<td class="'+tdClass+'">'+patient.dob+'</td>'+
-        '<td class="'+tdClass+'">'+patient.contactinfo+'</td>'+
+        '</td>'+
+        '<td>'+patient.lastname+'</td>'+
+        '<td>'+patient.firstname+'</td>'+
+        '<td>'+patient.middlename+'</td>'+
+        '<td>'+patient.suffix+'</td>'+
+        '<td>'+patient.sexstr+'</td>'+
+        '<td>'+patient.dob+'</td>'+
+        '<td>'+ //class="rowlink-skip"
+            patient.contactinfo+
+        '</td>'+
         '</tr>';
+
     return patientsHtml;
 }
 function constractMergedPatientInfoRow( patient, rowId ) {
@@ -388,9 +393,9 @@ function constractMergedPatientInfoRow( patient, rowId ) {
             var patientsInfo = mergedPatients[mergedId]['patientInfo'];
             for( var index in patientsInfo ) {
                 var patientInfo = patientsInfo[index];
-                console.log('merged Patient ID=' + patientInfo['id']);
+                //console.log('merged Patient ID=' + patientInfo['id']);
                 //console.log(patientInfo);
-                rowId = rowId + "-" + patientInfo['id'];
+                //rowId = rowId + "-" + patientInfo['id'];
                 mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, rowId, "alert alert-info");
             }
         }
@@ -399,21 +404,22 @@ function constractMergedPatientInfoRow( patient, rowId ) {
 }
 
 function listnereAccordionMasterPatientParent() {
-    $(".accordion-master-patient-parent").click(function() {
-        if($(".collapseme1").hasClass("out")) {
-            $(".collapseme1").removeClass("collapse");
-            $(".collapseme1").addClass("in");
-            $(".collapseme1").removeClass("out");
-            //$("#accordion-1-parent span.glyphicon")
-            $(this).find('span.glyphicon').removeClass("glyphicon-plus-sign").addClass("glyphicon-minus-sign");
-        } else {
-            $(".collapseme1").addClass("collapse");
-            $(".collapseme1").addClass("out");
-            $(".collapseme1").removeClass("in");
-            //$("#accordion-1-parent span.glyphicon")
-            $(this).find('span.glyphicon').removeClass("glyphicon-minus-sign").addClass("glyphicon-plus-sign");
-        }
-    });
+    //testing
+}
+function clickMasterPatientBtn(btn) {
+    var id = $(btn).attr('id');
+
+    if( $(".collapseme"+id).hasClass("out") ) {
+        //console.log('show');
+        $(".collapseme"+id).show();
+        $(".collapseme"+id).removeClass('out').addClass('in');
+        $(btn).parent().find("span.glyphicon").removeClass("glyphicon-plus-sign").addClass("glyphicon-minus-sign");
+    } else {
+        //console.log('hide');
+        $(".collapseme"+id).hide();
+        $(".collapseme"+id).removeClass('in').addClass('out');
+        $(btn).parent().find("span.glyphicon").removeClass("glyphicon-minus-sign").addClass("glyphicon-plus-sign");
+    }
 }
 
 function getMergedPatientsInfoLength( targetArr ) {
