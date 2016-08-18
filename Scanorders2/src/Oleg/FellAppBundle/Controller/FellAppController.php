@@ -1819,7 +1819,10 @@ class FellAppController extends Controller {
         if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
-        if( false == $this->get('security.context')->isGranted("read",$entity) ){
+        if(
+            false == $this->get('security.context')->isGranted("read",$entity) &&
+            false == $this->get('security.context')->isGranted("create","Interview")
+        ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
