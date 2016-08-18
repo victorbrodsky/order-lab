@@ -45,7 +45,11 @@ class FellAppController extends Controller {
 //        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
-        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+//        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+//            exit('no permission as interviewer: FellowshipApplication');
+//            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+        if( false == $this->get('security.context')->isGranted("create","Interview") ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -264,7 +268,6 @@ class FellAppController extends Controller {
         );
 
 
-        $em = $this->getDoctrine()->getManager();
         $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications Spreadsheet");
         $lastImportTimestamps = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
         if( count($lastImportTimestamps) != 1 ) {
