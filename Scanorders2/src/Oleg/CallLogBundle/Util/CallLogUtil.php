@@ -306,11 +306,11 @@ class CallLogUtil
 
         $contactinfo = $patient->obtainPatientContactinfo("Patient's Primary Contact Information");
 
-        if( $patient->isMasterMergeRecord() ) {
-            $masterStr = "+";
-        } else {
-            $masterStr = "";
-        }
+//        if( $patient->isMasterMergeRecord() ) {
+//            $masterStr = "+";
+//        } else {
+//            $masterStr = "";
+//        }
 
         $patientInfo = array(
             'id' => $patient->getId(),
@@ -341,7 +341,7 @@ class CallLogUtil
 
             'masterPatientId' => NULL,
 
-            'patientInfoStr' => "Patient ID# ".$patient->getId().$masterStr.": "//testing
+            'patientInfoStr' => "Patient ID# ".$patient->getId().": "    //.$masterStr.": "//testing
         );
 
         return $patientInfo;

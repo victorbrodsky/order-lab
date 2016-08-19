@@ -360,7 +360,7 @@ function constractPatientInfoRow( patient, masterId, type ) {
         }
         patientsHtml += '</td>';
     } else {
-        patientsHtml += '<tr class="collapseme'+masterId+' collapse out" style="color: #fff; background: #A9A9A9;">';
+        patientsHtml += '<tr id="'+masterId+'" class="clickable-row collapseme'+masterId+' collapse out" style="background: #A9A9A9;">';
         patientsHtml += '<td>&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
     }
 
@@ -433,7 +433,6 @@ function getMergedPatientsInfoLength( targetArr ) {
     return count;
 }
 
-//function matchingPatientBtnClick(holderId) {
 var matchingPatientBtnClick = function(holderId) {
     //console.log('holderId='+holderId);
     var holder = getHolder(holderId);
@@ -448,15 +447,16 @@ var matchingPatientBtnClick = function(holderId) {
     //console.log('patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
 
     //check for master patient
-    if( patientToPopulate.masterPatientId ) {
-        //console.log('reset to patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
-        //patientToPopulate = patientToPopulate.masterPatientId;
-        //find index by patient id
-        index = $('#calllog-patientid-'+patientToPopulate.masterPatientId).closest('tr').attr('id');
-        index = index.replace("-"+holderId, "");
-        //console.log('new index='+index);
-        patientToPopulate = _patients[index];
-    }
+    //if( patientToPopulate.masterPatientId ) {
+    //    //console.log('reset to patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
+    //    //patientToPopulate = patientToPopulate.masterPatientId;
+    //    //find index by patient id
+    //    index = $('#calllog-patientid-'+patientToPopulate.masterPatientId).closest('tr').attr('id');
+    //    index = index.replace("-"+holderId, "");
+    //    //console.log('new index='+index);
+    //    patientToPopulate = _patients[index];
+    //}
+    patientToPopulate = replaceCalllogPatientToPopulate(patientToPopulate,holderId);
 
     populatePatientInfo(patientToPopulate,null,true,holderId);
     disableAllFields(true,holderId);
@@ -474,6 +474,20 @@ var matchingPatientBtnClick = function(holderId) {
     holder.find('#calllog-matching-patients-table-'+holderId).remove();
     holder.find('#calllog-matching-patients').html('');
     holder.find('#calllog-matching-patients').hide();
+}
+var replaceCalllogPatientToPopulate = function(patientToPopulate,holderId) {
+    console.log("original replace Calllog PatientToPopulate");
+    //check for master patient
+    if( patientToPopulate.masterPatientId ) {
+        //console.log('reset to patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
+        //patientToPopulate = patientToPopulate.masterPatientId;
+        //find index by patient id
+        var index = $('#calllog-patientid-'+patientToPopulate.masterPatientId).closest('tr').attr('id');
+        index = index.replace("-"+holderId, "");
+        //console.log('new index='+index);
+        patientToPopulate = _patients[index];
+    }
+    return patientToPopulate;
 }
 
 function disableAllFields(disable,holderId) {

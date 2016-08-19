@@ -48,12 +48,27 @@
 
 
 {% block additionaljs %}
+
     <script language="Javascript">
         $(document).ready(function() {
             //hide all alias
             calllogHideAllAlias(true,true);
             showHideMergeButton();
+
+
+//            //overwrite
+//            replaceCalllogPatientToPopulate = function(patientToPopulate,holderId) {
+//                console.log("merge recrords overwrite replace Calllog PatientToPopulate");
+//                return patientToPopulate;
+//            }
+
         });
+
+        //overwrite
+        replaceCalllogPatientToPopulate = function(patientToPopulate,holderId) {
+            console.log("merge recrords overwrite replace Calllog PatientToPopulate");
+            return patientToPopulate;
+        }
 
         //triggered by class calllog-patient-id
         function showHideMergeButton() {
