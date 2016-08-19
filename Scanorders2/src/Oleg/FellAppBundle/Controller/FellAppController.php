@@ -67,9 +67,6 @@ class FellAppController extends Controller {
         }
 
         if( $route == "fellapp_myinterviewees" ) {
-//            if( false == $this->get('security.context')->isGranted("create","Interview") ){
-//                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//            }
             if(
                 false == $this->get('security.context')->isGranted("read","FellowshipApplication") &&
                 false == $this->get('security.context')->isGranted("create","Interview")
@@ -1363,14 +1360,14 @@ class FellAppController extends Controller {
         //check if the interviewer is the same as current user
         $interviewer = $interview->getInterviewer();
         //echo "interviewer=".$interviewer."<br>";
-        $interviewId = null;
+        $interviewerId = null;
         if( $interviewer ) {
-            $interviewId = $interviewer->getId();
+            $interviewerId = $interviewer->getId();
         } else {
             throw $this->createNotFoundException('Interviewer is undefined');
         }
-        //echo $user->getId()."?=".$interviewId."<br>";
-        if( $user->getId() != $interviewId ) {
+        //echo $user->getId()."?=".$interviewerId."<br>";
+        if( $user->getId() != $interviewerId ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
