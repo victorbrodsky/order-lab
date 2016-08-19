@@ -197,6 +197,8 @@ class CallEntryController extends Controller
         //$fieldnameArr = array('patlastname','patfirstname','patmiddlename','patsuffix','patsex');
 
         foreach( $patients as $patient ) {
+
+            $patientId = $patient->getId();
             //echo "<br>found patient=".$patient->getId()."<br>";
 
             //add all merged patients to the master patient
@@ -219,6 +221,7 @@ class CallEntryController extends Controller
 
             if( $masterPatient ) {
 
+                $patientId = $masterPatient->getId();
                 $masterPatientId = $masterPatient->getId();
                 //echo "###masterPatientId=" . $masterPatientId . "<br>";
 
@@ -237,10 +240,8 @@ class CallEntryController extends Controller
                     }
 
                     //other iterations: add as merged patients to $patientInfo
-                    $mergedPatientsInfo[$masterPatientId]['patientInfo'][] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
-                    $mergedPatientsInfo[$masterPatientId]['mergeInfo'][] = $mergedPatient->obtainMergeInfo();
-
-
+                    $mergedPatientsInfo[$masterPatientId]['patientInfo'][$mergedPatient->getId()] = $calllogUtil->getJsonEncodedPatient($mergedPatient);
+                    $mergedPatientsInfo[$masterPatientId]['mergeInfo'][$mergedPatient->getId()] = $mergedPatient->obtainMergeInfo();
 
                 }//foreach $mergedPatient
 
@@ -260,7 +261,7 @@ class CallEntryController extends Controller
                 //$patientsArr[] = $patientInfo;
             }
 
-            $patientsArr[] = $patientInfo;
+            $patientsArr[$patientId] = $patientInfo;
         }
         //exit('1');
 

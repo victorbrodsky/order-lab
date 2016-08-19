@@ -208,8 +208,9 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
     var holder = getHolder(holderId);
 
-    var patLen = patients.length;
-    //console.log('patLen='+patLen);
+    //var patLen = patients.length;
+    var patLen = getPatientsLength(patients);
+    console.log('patLen='+patLen);
 
     //clear matching patient section
     holder.find('#calllog-matching-patients').hide();
@@ -225,9 +226,19 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
     holder.find('#callentry-nosinglepatient-link').show();
 
     _patients = patients;
+    console.log("_patients:");
+    console.log(_patients);
 
     if( patLen == 1 ) {
-        populatePatientInfo(patients[0],null,true,holderId);
+
+        //var patient = patients[0];
+        var patient = getFirstPatient(patients);
+        if( patient == null ) {
+            alert("No first patient found in the patient array");
+        }
+        console.log('patient id='+patient.id);
+
+        populatePatientInfo(patient,null,true,holderId);
         disableAllFields(true,holderId);
 
         //show edit patient info button
@@ -285,39 +296,30 @@ function createPatientsTableCalllog( patients, holderId ) {
         '</tr></thead>' +
         '<tbody>';
 
-    for( var i = 0; i < patients.length; i++ ) {
-        var patient = patients[i];
-        //console.log('patient id='+patient.id);
+    //for( var i = 0; i < patients.length; i++ ) {
+    for( var i in patients ) {
+        if (patients.hasOwnProperty(i)) {
 
-        var mergedPatientsInfoLength = getMergedPatientsInfoLength(patient['mergedPatientsInfo']);
-        //console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
-        //console.log('patient.mergedPatientsInfo:');
-        //console.log(patient.mergedPatientsInfo);
-        var mergedPatientsInfoLength = (mergedPatientsInfoLength-1);
-        var hasMergedPatients = "";
-        if( patient.mergedPatientsInfo && mergedPatientsInfoLength > 0 ) {
-            hasMergedPatients = '<br><span class="label label-info">Has '+mergedPatientsInfoLength+' Merged Patients</span>';
+            var patient = patients[i];
+            console.log('patient id='+patient.id);
+
+            var mergedPatientsInfoLength = getMergedPatientsInfoLength(patient['mergedPatientsInfo']);
+            //console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
+            //console.log('patient.mergedPatientsInfo:');
+            //console.log(patient.mergedPatientsInfo);
+            var mergedPatientsInfoLength = (mergedPatientsInfoLength - 1);
+            var hasMergedPatients = "";
+            if( patient.mergedPatientsInfo && mergedPatientsInfoLength > 0 ) {
+                hasMergedPatients = '<br><span class="label label-info">Has ' + mergedPatientsInfoLength + ' Merged Patients</span>';
+            }
+
+            var masterId = patient['masterPatientId'];  //i+'-'+holderId
+            console.log('masterId='+masterId);
+
+            matchingPatientsHtml = matchingPatientsHtml + constractPatientInfoRow(patient, masterId, "master");
+
+            matchingPatientsHtml = matchingPatientsHtml + constractMergedPatientInfoRow(patient, masterId);
         }
-
-        //matchingPatientsHtml = matchingPatientsHtml +
-        //    '<tr class="clickable-row" id="'+i+'-'+holderId+'">' +
-        //    '<td id="calllog-patientid-'+patient.id+'">'+
-        //        patient.patientInfoStr +
-        //        patient.mrn+' ('+patient.mrntypestr+')'+
-        //        hasMergedPatients +
-        //    '</td>'+
-        //    '<td>'+patient.lastname+'</td>'+
-        //    '<td>'+patient.firstname+'</td>'+
-        //    '<td>'+patient.middlename+'</td>'+
-        //    '<td>'+patient.suffix+'</td>'+
-        //    '<td>'+patient.sexstr+'</td>'+
-        //    '<td>'+patient.dob+'</td>'+
-        //    '<td>'+patient.contactinfo+'</td>'+
-        //    '</tr>';
-        matchingPatientsHtml = matchingPatientsHtml + constractPatientInfoRow( patient, i+'-'+holderId, "master" );
-
-        matchingPatientsHtml = matchingPatientsHtml + constractMergedPatientInfoRow( patient, i+'-'+holderId );
-
     }
 
     matchingPatientsHtml = matchingPatientsHtml + "</tbody></table></div>";
@@ -352,7 +354,7 @@ function constractPatientInfoRow( patient, masterId, type ) {
     var patientsHtml = "";
 
     if( type == "master" ) {
-        patientsHtml += '<tr class="clickable-row" id="'+masterId+'">';
+        patientsHtml += '<tr id="'+patient.id+'" class="clickable-row">';
         patientsHtml += '<td>';
         if( patient['masterPatientId'] ) {
             patientsHtml += '<button type="button" class="btn btn-default btn-xs" onclick="clickMasterPatientBtn(this);" id="' + masterId + '">';
@@ -360,7 +362,8 @@ function constractPatientInfoRow( patient, masterId, type ) {
         }
         patientsHtml += '</td>';
     } else {
-        patientsHtml += '<tr id="'+masterId+'" class="clickable-row collapseme'+masterId+' collapse out" style="background: #A9A9A9;">';
+        //masterId
+        patientsHtml += '<tr id="'+patient.id+'" class="clickable-row collapseme'+masterId+' collapse out" style="background: #A9A9A9;">';
         patientsHtml += '<td>&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
     }
 
@@ -383,7 +386,7 @@ function constractPatientInfoRow( patient, masterId, type ) {
 
     return patientsHtml;
 }
-function constractMergedPatientInfoRow( patient, rowId ) {
+function constractMergedPatientInfoRow( patient, masterId ) {
     var mergedPatientsHtml = "";
     var mergedPatients = patient['mergedPatientsInfo'];
     for( var mergedId in mergedPatients ) {
@@ -395,8 +398,8 @@ function constractMergedPatientInfoRow( patient, rowId ) {
                 var patientInfo = patientsInfo[index];
                 //console.log('merged Patient ID=' + patientInfo['id']);
                 //console.log(patientInfo);
-                //rowId = rowId + "-" + patientInfo['id'];
-                mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, rowId, "alert alert-info");
+                //masterId = masterId + "-" + patientInfo['id'];
+                mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, masterId, "alert alert-info");
             }
         }
     }
@@ -432,17 +435,38 @@ function getMergedPatientsInfoLength( targetArr ) {
     }
     return count;
 }
+function getPatientsLength( patients ) {
+    var count = 0;
+    for( var k in patients ) {
+        if( patients.hasOwnProperty(k) ) {
+            //console.log("Key is " + k + ", value id is " + patients[k].id);
+            count++;
+        }
+    }
+    return count;
+}
+function getFirstPatient(patients) {
+    for( var k in patients ){
+        if( patients.hasOwnProperty(k) ) {
+            //console.log("Key is " + k + ", value id is " + patients[k].id);
+            return patients[k];
+        }
+    }
+    return null;
+}
 
 var matchingPatientBtnClick = function(holderId) {
     //console.log('holderId='+holderId);
     var holder = getHolder(holderId);
 
-    var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
-    //remove holderId from index
-    index = index.replace("-"+holderId, "");
+    //var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
+    //console.log('id index='+index);
+    ////remove holderId from index
+    //index = index.replace("-"+holderId, "");
     //console.log('index='+index);
 
-    var patientToPopulate = _patients[index];
+    //var patientToPopulate = _patients[index];
+    //console.log('patientToPopulate='+patientToPopulate.id);
     //console.log(patientToPopulate);
     //console.log('patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
 
@@ -456,7 +480,8 @@ var matchingPatientBtnClick = function(holderId) {
     //    //console.log('new index='+index);
     //    patientToPopulate = _patients[index];
     //}
-    patientToPopulate = replaceCalllogPatientToPopulate(patientToPopulate,holderId);
+    var patientToPopulate = getCalllogPatientToPopulate(holderId);
+    console.log('patientToPopulate='+patientToPopulate.id);
 
     populatePatientInfo(patientToPopulate,null,true,holderId);
     disableAllFields(true,holderId);
@@ -475,19 +500,61 @@ var matchingPatientBtnClick = function(holderId) {
     holder.find('#calllog-matching-patients').html('');
     holder.find('#calllog-matching-patients').hide();
 }
-var replaceCalllogPatientToPopulate = function(patientToPopulate,holderId) {
+//
+var getCalllogPatientToPopulate = function(holderId) {
     console.log("original replace Calllog PatientToPopulate");
-    //check for master patient
-    if( patientToPopulate.masterPatientId ) {
-        //console.log('reset to patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
-        //patientToPopulate = patientToPopulate.masterPatientId;
-        //find index by patient id
-        var index = $('#calllog-patientid-'+patientToPopulate.masterPatientId).closest('tr').attr('id');
-        index = index.replace("-"+holderId, "");
-        //console.log('new index='+index);
-        patientToPopulate = _patients[index];
-    }
+    var holder = getHolder(holderId);
+    var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
+    console.log('patient id to populate='+index);
+    //remove holderId from index
+    //index = index.replace("-"+holderId, "");
+    //console.log('index='+index);
+
+    //find patient with id from _patients array
+    //TODO: get master patient for call entry: index = masterId of this group
+    var patientToPopulate = getPatientByIdFromPatients(index,_patients);
     return patientToPopulate;
+
+    ////check for master patient
+    //if( patientToPopulate.masterPatientId ) {
+    //    //console.log('reset to patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
+    //    //patientToPopulate = patientToPopulate.masterPatientId;
+    //    //find index by patient id
+    //    var index = $('#calllog-patientid-'+patientToPopulate.masterPatientId).closest('tr').attr('id');
+    //    index = index.replace("-"+holderId, "");
+    //    //console.log('new index='+index);
+    //    patientToPopulate = _patients[index];
+    //}
+    //return patientToPopulate;
+}
+function getPatientByIdFromPatients(index,patients) {
+    console.log("get patients by id="+index);
+    for( var k in patients ) {
+        if( patients.hasOwnProperty(k) ) {
+            var patient = patients[k];
+            var masterPatientId = patient['masterPatientId'];
+            console.log("Key is " + k + ", value id is " + patient.id);
+            console.log("masterPatientId=" + masterPatientId);
+            //if( patient['mergedPatientsInfo'] && patient['mergedPatientsInfo'].length > 0 ) {
+            if( patient['masterPatientId'] ) {
+                var mergedPatients = patient['mergedPatientsInfo'][masterPatientId]['patientInfo'];
+                console.log("check merged patient");
+                for( var mergedIndex in mergedPatients ) {
+                    console.log("mergedIndex="+mergedIndex);
+                    if( mergedPatients.hasOwnProperty(mergedIndex) ) {
+                        if( mergedIndex == index ) {
+                            return mergedPatients[mergedIndex];
+                        }
+                    }
+                }
+            } else {
+                if( k == index ) {
+                    return patients[k];
+                }
+            }
+        }
+    }
+    return null;
 }
 
 function disableAllFields(disable,holderId) {
