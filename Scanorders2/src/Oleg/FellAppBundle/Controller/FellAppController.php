@@ -49,11 +49,27 @@ class FellAppController extends Controller {
 //            exit('no permission as interviewer: FellowshipApplication');
 //            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
-        if(
-            false == $this->get('security.context')->isGranted("read","FellowshipApplication") &&
-            false == $this->get('security.context')->isGranted("create","Interview")
-        ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        if(
+//            false == $this->get('security.context')->isGranted("read","FellowshipApplication") &&
+//            false == $this->get('security.context')->isGranted("create","Interview")
+//        ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+
+        $route = $request->get('_route');
+        //echo "route".$route."<br>";
+        //exit();
+
+        if( $route == "fellapp_home" ) {
+            if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            }
+        }
+
+        if( $route == "fellapp_myinterviewees" ) {
+            if( false == $this->get('security.context')->isGranted("create","Interview") ){
+                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            }
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -101,10 +117,6 @@ class FellAppController extends Controller {
         //echo "filter=".$filter."<br>";
         //echo "<br>search=".$search."<br>";
         //exit('1');
-
-        $route = $request->get('_route');
-        //echo "route".$route."<br>";
-        //exit();
 
         $filterParams = $request->query->all();
 
