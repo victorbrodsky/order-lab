@@ -49,7 +49,10 @@ class FellAppController extends Controller {
 //            exit('no permission as interviewer: FellowshipApplication');
 //            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
-        if( false == $this->get('security.context')->isGranted("create","Interview") ){
+        if(
+            false == $this->get('security.context')->isGranted("read","FellowshipApplication") &&
+            false == $this->get('security.context')->isGranted("create","Interview")
+        ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
