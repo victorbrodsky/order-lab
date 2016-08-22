@@ -93,29 +93,43 @@
             var patientIds = [];
 
             var formtype = $('#formtype').val();
-            console.log('formtype='+formtype);
+            //console.log('formtype='+formtype);
+
+            //console.log('calllog-patient-master-record length='+$("input[name=calllog-patient-master-record]").length);
+            var masterMergeRecordId = $("input[name=calllog-patient-master-record]:checked").val();
+            //console.log('masterMergeRecordId='+masterMergeRecordId);
 
             if( formtype == 'unmerge' ) {
+                var error = false;
+                var msg = "";
                 $('input[name="un-merge-patients"]:checked').each(function() {
-                    //TODO: use only patient ids from calllog-patient-id-
+
+                    if( this.value == masterMergeRecordId ) {
+                        msg += "You are going to un-merge a Master Patient Record with ID # "+masterMergeRecordId+".";
+                        msg += " Please choose an alternative Master Patient Record to continue.";
+                        $('#calllog-msg-danger-box').html(msg);
+                        $('#calllog-msg-danger-box').show();
+                        error = true;
+                    }
+
+                    //use only patient ids from calllog-patient-id-
                     patientIds.push(this.value);
                 });
+                if( error ) {
+                    return;
+                }
                 var url = Routing.generate('calllog_unmerge_patient_records_ajax');
             } else {
-                console.log('calllog-patient-master-record length='+$("input[name=calllog-patient-master-record]").length);
-                var masterMergeRecordId = $("input[name=calllog-patient-master-record]:checked").val();
-                console.log('masterMergeRecordId='+masterMergeRecordId);
-                patientIds.push(masterMergeRecordId);
                 var url = Routing.generate('calllog_set_master_patient_record_ajax');
             }
-            console.log('patientIds:');
-            console.log(patientIds);
+            //console.log('patientIds:');
+            //console.log(patientIds);
 
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
                 async: true,
-                data: {patientIds: patientIds.join(",")},
+                data: {masterId: masterMergeRecordId, patientIds: patientIds.join(",")},
             }).success(function(data) {
                 //console.log("output="+data);
                 if( data.error == false ) {

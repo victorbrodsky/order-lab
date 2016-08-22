@@ -344,11 +344,7 @@ class DataQualityController extends CallEntryController
         $error = false;
         $msg = "";
 
-        $patientIds = trim($request->get('patientIds'));
-        //echo "patientIds=".$patientIds."<br>";
-
-        $patientIdsArr = explode(",",$patientIds);
-        $patientId = $patientIdsArr[0];
+        $patientId = trim($request->get('masterId'));
         //echo "patientId=".$patientId."<br>";
 
         //set master patient
@@ -391,8 +387,11 @@ class DataQualityController extends CallEntryController
         $error = false;
         $msg = "";
 
+        $masterId = trim($request->get('masterId'));
         $patientIds = trim($request->get('patientIds'));
-        //echo "patientIds=".$patientIds."<br>";
+        echo "masterId=".$masterId."<br>";
+        echo "patientIds=".$patientIds."<br>";
+        exit('1');
 
         //TODO: change to patient ID only: patientIds is a comma separated patient's ids.
 
@@ -435,7 +434,7 @@ class DataQualityController extends CallEntryController
             $msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
             $em->persist($patient);
             $em->persist($mergeMrn);
-            $em->flush();
+//            $em->flush();
 
         }//foreach
 
