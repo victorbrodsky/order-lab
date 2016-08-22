@@ -332,6 +332,8 @@ class DataQualityController extends CallEntryController
         $patientIds = trim($request->get('patientIds'));
         //echo "patientIds=".$patientIds."<br>";
 
+        //TODO: change to patient ID only: patientIds is a comma separated patient's ids.
+
         $patientIdsArr = explode(",",$patientIds);
 
         foreach( $patientIdsArr as $patientIdStr ) {

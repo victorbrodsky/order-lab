@@ -85,9 +85,13 @@
             var patientIds = [];
             $('input[name="un-merge-patients"]:checked').each(function() {
                 //console.log(this.value);
-                //get mergeId
-                var mergeId = $('#calllog-patient-mergeid-'+this.value).val();
-                patientIds.push(this.value+"mergeid"+mergeId);
+
+                //get mergeId. But each patient can have multiple merge ID, but belongs only to a single chain with a single master Patient
+                //var mergeId = $('#calllog-patient-mergeid-'+this.value).val();
+                //patientIds.push(this.value+"mergeid"+mergeId);
+
+                //TODO: use only patient ids from calllog-patient-id-
+                patientIds.push(this.value);
             });
 
 
@@ -129,11 +133,27 @@
             index = index.replace("-"+holderId, "");
             //console.log('index='+index);
 
+            //find patient with id from _patients array
+            var selectedPatient = getPatientByIdFromPatients(index,_patients);
+
+            //for call_entry return master record instead of the actual clicked patient record
+            //var masterPatient = null;
+            var mergedPatientsInfo = null;
+            var mergedPatientsInfoLength = null;
+            var masterPatientId = selectedPatient['masterPatientId'];
+            console.log("masterPatientId=" + masterPatientId);
+            if( masterPatientId ) {
+                //console.log("masterPatientId=" + masterPatientId);
+                selectedPatient = getPatientByIdFromPatients(masterPatientId,_patients);
+                mergedPatientsInfo = selectedPatient['mergedPatientsInfo'][masterPatientId]['patientInfo'];
+                mergedPatientsInfoLength = getPatientsLength(mergedPatientsInfo);
+            }
+
             //This patient record has not been merged with any other patient records.
-            var mergedPatientsInfo = _patients[index]['mergedPatientsInfo'];
-            var mergedPatientsInfoLength = getMergedPatientsInfoLength(_patients[index]['mergedPatientsInfo']);
-            //console.log('mergedPatientsInfo='+mergedPatientsInfo);
-            //console.log('mergedPatientsInfo count='+mergedPatientsInfoLength);
+            //var mergedPatientsInfo = selectedPatient['mergedPatientsInfo'][masterPatientId];
+            //var mergedPatientsInfoLength = getMergedPatientsInfoLength(mergedPatientsInfo);
+            console.log('mergedPatientsInfo='+mergedPatientsInfo);
+            console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
             if( mergedPatientsInfo && mergedPatientsInfoLength > 0 ) {
                 //ok
                 //console.log('mergedPatientsInfo ok');
@@ -148,7 +168,7 @@
             //populatePatientInfo(_patients[index],null,true,holderId);
             //disableAllFields(true,holderId);
 
-            populateInputFieldCalllog(holder.find(".calllog-patient-id"),_patients[index],'id',true);
+            populateInputFieldCalllog(holder.find(".calllog-patient-id"),selectedPatient,'id',true);
             holder.find(".calllog-patient-id").trigger('change');
             holder.find(".calllog-patient-id").change();
 
@@ -168,34 +188,41 @@
 
             //remove old and create a new list of the "Patient Info"
             $('.calllog-patient-holder').remove();
-            createPatientInfos( _patients[index], mergedPatientsInfo );
+            createPatientInfos( selectedPatient );
 
         }
 
-        function createPatientInfos( patient, mergedPatients ) {
+        function createPatientInfos( patient ) {
 
             //console.log('createPatientInfos; id='+patient.id);
 
-            var infosHtml = "";
+            var patientInfo = patient['mergedPatientsInfo'][patient.id]['patientInfo'];
+            //var mergeInfo = patient['mergedPatientsInfo'][patient.id]['mergeInfo'];
+
+            //var infosHtml = "";
+
             //var infosHtml = "patient id " + patient.id + "<br>";
-            //var infosHtml = patientInfoHtml(patient);
+            var infosHtml = patientInfoHtml(patient, true);
 
 //            for( var i = 0; i < mergedPatients.length; i++ ) {
 //                //infosHtml = infosHtml + "patient id " + mergedPatients[i][id] + "<br>";
 //                infosHtml = infosHtml + patientInfoHtml(mergedPatients[i]);
 //            }
 
-            for( var mergedId in mergedPatients ) {
-                if( mergedPatients.hasOwnProperty(mergedId) ) {
-                    infosHtml = infosHtml + '<p><div class="alert alert-info">'+mergedId+'</div></p>';
-                    for( var i = 0; i < mergedPatients[mergedId]['patientInfo'].length; i++ ) {
-                        infosHtml = infosHtml +
-                                patientInfoHtml(
-                                    mergedPatients[mergedId]['patientInfo'][i],
-                                    mergedPatients[mergedId]['mergeInfo'][i],
-                                    mergedId
-                                );
-                    }
+            for( var patientId in patientInfo ) {
+                if( patientInfo.hasOwnProperty(patientId) ) {
+                    //infosHtml = infosHtml + '<p><div class="alert alert-info">'+mergedId+'</div></p>';
+
+                    infosHtml = infosHtml + patientInfoHtml(patientInfo[patientId],false);
+
+//                    for( var i = 0; i < mergedPatients[mergedId]['patientInfo'].length; i++ ) {
+//                        infosHtml = infosHtml +
+//                                patientInfoHtml(
+//                                    mergedPatients[mergedId]['patientInfo'][i],
+//                                    mergedPatients[mergedId]['mergeInfo'][i],
+//                                    mergedId
+//                                );
+//                    }
                 }
             }
 
@@ -204,7 +231,17 @@
             $("#calllog-patient-list").append(infosHtml);
         }
 
-        function patientInfoHtml( patient, mergeInfo, mergedId ) {
+        //function patientInfoHtml( patient, mergeInfo, mergedId ) {
+        function patientInfoHtml( patient, masterPatient ) {
+            var mergedId = null;
+
+            var selectedMaser = "";
+            if( masterPatient ) {
+                selectedMaser = 'checked';
+            }
+
+            var radioBox = '<input type="radio" name="calllog-patient-master-record" '+
+                    'value="{{ patient.id }}" class="calllog-patient-id-radio" '+selectedMaser+'>';
 
             var patientInfoHtml =
                 '<div class="calllog-patient-holder">'+
@@ -213,15 +250,19 @@
                     '<div class="panel panel-primary">'+
                         '<div class="panel-heading">'+
                             '<h4 class="panel-title">'+
-                                '<input type="checkbox" name="un-merge-patients" value="'+patient.id+'" style="margin-right: 5px;">'+
+                                '<label>Un-Merge</label>'+
+                                '<input type="checkbox" name="un-merge-patients" value="'+patient.id+'" style="margin-right: 10px;">'+
+                                'Un-Merge '+
                                 '<a data-toggle="collapse" href="#calllog-PatientInformation-'+patient.id+'">'+
                                     //'Patient Info'+' ID# '+patient.id+' Merge ID# '+mergedId+' '+mergeInfo+
-                                    'Patient Info'+' Merge ID# '+mergedId+' '+mergeInfo+
+                                    //'Patient Info'+' Merge ID# '+mergedId+' '+mergeInfo+
+                                    'Patient Info'+' ID# '+patient.id+": "+patient.mergeInfo+
                                 '</a>'+
                             '</h4>'+
                         '</div>'+
                         '<div id="calllog-PatientInformation-'+patient.id+'" class="panel-collapse collapse in">'+
                             '<div class="panel-body">'+
+                                simpleRadioField("Master Merge Record:",radioBox)+
                                 simpleField("MRN Type:",patient.mrntypestr)+
                                 simpleField("MRN:",patient.mrn)+
                                 simpleField("DOB:",patient.dob)+
@@ -252,6 +293,20 @@
                         '</div>'+
                     '</div>'+
                 '</p>';
+            return field;
+        }
+        function simpleRadioField(label,value) {
+            var field =
+                    '<p>'+
+                        '<div class="row">'+
+                            '<div class="col-xs-6" align="right">'+
+                                '<label>'+label+'</label>'+
+                            '</div>'+
+                            '<div class="col-xs-6" align="left">'+
+                                value+
+                            '</div>'+
+                        '</div>'+
+                    '</p>';
             return field;
         }
 
