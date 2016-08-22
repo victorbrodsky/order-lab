@@ -324,6 +324,55 @@ class DataQualityController extends CallEntryController
         );
     }
 
+
+
+    /**
+     * @Route("/set-master-patient-record-ajax", name="calllog_set_master_patient_record_ajax", options={"expose"=true})
+     */
+    public function setMasterPatientAjaxAction(Request $request)
+    {
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        //$securityUtil = $this->get('order_security_utility');
+        $calllogUtil = $this->get('calllog_util');
+        $em = $this->getDoctrine()->getManager();
+
+        //$system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        //$status = 'valid';
+        //$cycle = 'new';
+
+        $error = false;
+        $msg = "";
+
+        $patientIds = trim($request->get('patientIds'));
+        //echo "patientIds=".$patientIds."<br>";
+
+        $patientIdsArr = explode(",",$patientIds);
+        $patientId = $patientIdsArr[0];
+        //echo "patientId=".$patientId."<br>";
+
+        //set master patient
+        if( $patientId ) {
+            $patientObject = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+            $patients = $calllogUtil->getAllMergedPatients(array($patientObject));
+            $ids = $calllogUtil->setMasterPatientRecord($patients, $patientId, $user);
+            $em->flush();
+            $msg .= "Patient with ID $patientId has been set as a Master Record Patient; Patients affected ids=".implode(", ",$ids);
+        } else {
+            $error = true;
+            $msg .= "Patient ID is not provided; patientId=".$patientId;
+        }
+
+        $result = array();
+        $result['error'] = $error;
+        $result['msg'] = $msg;
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
+    }
+
     /**
      * @Route("/unmerge-patient-records-ajax", name="calllog_unmerge_patient_records_ajax", options={"expose"=true})
      */
@@ -399,5 +448,7 @@ class DataQualityController extends CallEntryController
         $response->setContent(json_encode($result));
         return $response;
     }
+
+
 
 }

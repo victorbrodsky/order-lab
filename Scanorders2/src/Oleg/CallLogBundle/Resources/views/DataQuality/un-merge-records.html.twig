@@ -42,7 +42,13 @@
             class="btn btn-lg btn-success" align="center"
             onclick="unmergePatientBtn()"
             style="display:none;"
-    >Unmerge</button>
+    >
+    {% if formtype == "unmerge" %}
+        Unmerge
+    {% else %}
+        Set Master Record
+    {% endif %}
+    </button>
 
 
 {% endblock %}
@@ -85,19 +91,26 @@
             $('#calllog-msg-danger-box').hide();
 
             var patientIds = [];
-            $('input[name="un-merge-patients"]:checked').each(function() {
-                //console.log(this.value);
 
-                //get mergeId. But each patient can have multiple merge ID, but belongs only to a single chain with a single master Patient
-                //var mergeId = $('#calllog-patient-mergeid-'+this.value).val();
-                //patientIds.push(this.value+"mergeid"+mergeId);
+            var formtype = $('#formtype').val();
+            console.log('formtype='+formtype);
 
-                //TODO: use only patient ids from calllog-patient-id-
-                patientIds.push(this.value);
-            });
+            if( formtype == 'unmerge' ) {
+                $('input[name="un-merge-patients"]:checked').each(function() {
+                    //TODO: use only patient ids from calllog-patient-id-
+                    patientIds.push(this.value);
+                });
+                var url = Routing.generate('calllog_unmerge_patient_records_ajax');
+            } else {
+                console.log('calllog-patient-master-record length='+$("input[name=calllog-patient-master-record]").length);
+                var masterMergeRecordId = $("input[name=calllog-patient-master-record]:checked").val();
+                console.log('masterMergeRecordId='+masterMergeRecordId);
+                patientIds.push(masterMergeRecordId);
+                var url = Routing.generate('calllog_set_master_patient_record_ajax');
+            }
+            console.log('patientIds:');
+            console.log(patientIds);
 
-
-            var url = Routing.generate('calllog_unmerge_patient_records_ajax');
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
@@ -201,15 +214,9 @@
             var patientInfo = patient['mergedPatientsInfo'][patient.id]['patientInfo'];
             //var mergeInfo = patient['mergedPatientsInfo'][patient.id]['mergeInfo'];
 
-            //var infosHtml = "";
-
             //var infosHtml = "patient id " + patient.id + "<br>";
             var infosHtml = patientInfoHtml(patient, true);
 
-//            for( var i = 0; i < mergedPatients.length; i++ ) {
-//                //infosHtml = infosHtml + "patient id " + mergedPatients[i][id] + "<br>";
-//                infosHtml = infosHtml + patientInfoHtml(mergedPatients[i]);
-//            }
 
             for( var patientId in patientInfo ) {
                 if( patientInfo.hasOwnProperty(patientId) ) {
@@ -217,14 +224,6 @@
 
                     infosHtml = infosHtml + patientInfoHtml(patientInfo[patientId],false);
 
-//                    for( var i = 0; i < mergedPatients[mergedId]['patientInfo'].length; i++ ) {
-//                        infosHtml = infosHtml +
-//                                patientInfoHtml(
-//                                    mergedPatients[mergedId]['patientInfo'][i],
-//                                    mergedPatients[mergedId]['mergeInfo'][i],
-//                                    mergedId
-//                                );
-//                    }
                 }
             }
 
@@ -237,7 +236,7 @@
         function patientInfoHtml( patient, masterPatient ) {
 
             var formtype = $('#formtype').val();
-            console.log('formtype='+formtype);
+            //console.log('formtype='+formtype);
             var unMergeBox = "";
             if( formtype == 'unmerge' ) {
                 unMergeBox = '<label style="margin-right: 5px;">Un-Merge</label>' +
@@ -252,7 +251,7 @@
             }
 
             var radioBox = '<input type="radio" name="calllog-patient-master-record" '+
-                    'value="{{ patient.id }}" class="calllog-patient-id-radio" '+selectedMaser+'>';
+                    'value="'+patient.id+'" class="calllog-patient-id-radio" '+selectedMaser+'>';
 
             var patientInfoHtml =
                 '<div class="calllog-patient-holder">'+
