@@ -277,6 +277,8 @@ class DataQualityController extends CallEntryController
 
     /**
      * @Route("/un-merge-patient-records", name="calllog_unmerge_patient_records")
+     * @Route("/set-master-patient-record", name="calllog_set_master_patient_record")
+     *
      * @Template("OlegCallLogBundle:DataQuality:un-merge-records.html.twig")
      */
     public function unmergePatientAction(Request $request)
@@ -284,13 +286,23 @@ class DataQualityController extends CallEntryController
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        $em = $this->getDoctrine()->getManager();
-
-        $title = "Un-merge Patient Records";
+        //$em = $this->getDoctrine()->getManager();
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
         $cycle = 'new';
+
+        $route = $request->get('_route');
+
+        if( $route == "calllog_unmerge_patient_records" ) {
+            $title = "Un-merge Patient Records";
+            $formtype = 'unmerge';
+        } else {
+            $title = "Set Master Patient Records";
+            $formtype = 'set-master-record';
+        }
+
+
 
         $patient1 = new Patient(true,$status,$user,$system);
         $encounter1 = new Encounter(true,$status,$user,$system);
@@ -308,6 +320,7 @@ class DataQualityController extends CallEntryController
             //'form2' => $form2->createView(),
             'cycle' => $cycle,
             'title' => $title,
+            'formtype' => $formtype
         );
     }
 

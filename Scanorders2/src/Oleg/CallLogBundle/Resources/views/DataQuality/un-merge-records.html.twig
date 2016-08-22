@@ -12,36 +12,38 @@
 
 {% block content %}
 
-    {% set formtype = 'unmerge' %}
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
 
-    {#<div class="calllog-holder">#}
 
-        <input type="hidden" id="formcycle" value="{{ cycle }}" />
-        <input type="hidden" id="orderformtype" value="calllog" />
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="orderformtype" value="calllog" />
+    <input type="hidden" id="formtype" value="{{ formtype }}" />
 
-        <div id="calllog-patient-list">
+    <div id="calllog-patient-list">
 
-        {% if form1 is defined %}
-            {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info',formtype) }}
-        {% endif %}
+    {% if form1 is defined %}
+        {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info',formtype) }}
+    {% endif %}
 
-        {% if form2 is defined %}
-            {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info',formtype) }}
-        {% endif %}
+    {% if form2 is defined %}
+        {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info',formtype) }}
+    {% endif %}
 
-        </div>
+    </div>
 
-        <div id="calllog-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
-        <div id="calllog-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
+    <div id="calllog-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
+    <div id="calllog-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
 
-        <button
-                id="unmerge_patient_button" type="button"
-                class="btn btn-lg btn-success" align="center"
-                onclick="unmergePatientBtn()"
-                style="display:none;"
-        >Unmerge</button>
+    <button
+            id="unmerge_patient_button" type="button"
+            class="btn btn-lg btn-success" align="center"
+            onclick="unmergePatientBtn()"
+            style="display:none;"
+    >Unmerge</button>
 
-    {#</div>#}
 
 {% endblock %}
 
@@ -233,6 +235,15 @@
 
         //function patientInfoHtml( patient, mergeInfo, mergedId ) {
         function patientInfoHtml( patient, masterPatient ) {
+
+            var formtype = $('#formtype').val();
+            console.log('formtype='+formtype);
+            var unMergeBox = "";
+            if( formtype == 'unmerge' ) {
+                unMergeBox = '<label style="margin-right: 5px;">Un-Merge</label>' +
+                '<input type="checkbox" name="un-merge-patients" value="' + patient.id + '" style="margin-right: 15px;">';
+            }
+
             var mergedId = null;
 
             var selectedMaser = "";
@@ -250,9 +261,7 @@
                     '<div class="panel panel-primary">'+
                         '<div class="panel-heading">'+
                             '<h4 class="panel-title">'+
-                                '<label>Un-Merge</label>'+
-                                '<input type="checkbox" name="un-merge-patients" value="'+patient.id+'" style="margin-right: 10px;">'+
-                                'Un-Merge '+
+                                unMergeBox+
                                 '<a data-toggle="collapse" href="#calllog-PatientInformation-'+patient.id+'">'+
                                     //'Patient Info'+' ID# '+patient.id+' Merge ID# '+mergedId+' '+mergeInfo+
                                     //'Patient Info'+' Merge ID# '+mergedId+' '+mergeInfo+
