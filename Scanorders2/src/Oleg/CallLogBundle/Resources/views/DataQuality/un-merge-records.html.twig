@@ -254,15 +254,33 @@
             var unMergeBox = "";
             if( formtype == 'unmerge' ) {
                 var unMergeBoxArr = [];
-                patient.mergeInfo.forEach(function(entry) {
-                    console.log("MID="+entry.mergeId+"; details="+entry.mergeDetails);
-                    var details = '<label style="margin-right: 5px;">Un-Merge</label>' +
-                            '<input type="checkbox" name="un-merge-patients" value="' + patient.id + '" style="margin-right: 15px;">';
-                    unMergeBoxArr.push(details);
-                });
+                //patient.mergeInfo.forEach(function(entry) {
+                //for( var mergeInfo in patient.mergeInfo ) {
+//                for( var i = 0; i < arrayLength; i++ ) {
+//                    console.log("MID=" + mergeInfo.mergeId + "; details=" + mergeInfo.mergeDetails);
+//                    console.log(mergeInfo);
+//                    var boxId = patient.id+"mergeid"+mergeInfo.mergeId;
+//                    var details = '<input type="checkbox" name="un-merge-patients" value="' + boxId + '" style="margin-right: 5px;">';
+//                    details += '<label style="margin-right: 15px;">Un-Merge '+mergeInfo.mergeId+' '+mergeInfo.mergeDetails+'</label>';
+//                    unMergeBoxArr.push(details);
+//                }
+                var mergeInfoArr = patient.mergeInfo;
+                console.log("mergeInfoArr length="+mergeInfoArr.length);
+                for( var index in mergeInfoArr ) {
+                    if( mergeInfoArr.hasOwnProperty(index) ) {
+                        var mergeInfo = mergeInfoArr[index];
+                        console.log("MID=" + mergeInfo.mergeId + "; details=" + mergeInfo.mergeDetails);
+                        console.log(mergeInfo);
+                        var boxId = patient.id+"mergeid"+mergeInfo.mergeId;
+                        var details = '<input type="checkbox" name="un-merge-patients" value="' + boxId + '" style="margin-right: 5px;">';
+                        details += '<label style="margin-right: 15px;">Un-Merge '+mergeInfo.mergeId+' '+mergeInfo.mergeDetails+'</label>';
+                        unMergeBoxArr.push(details);
+                    }
+                }
+                //});
                 //unMergeBox = '<label style="margin-right: 5px;">Un-Merge</label>' +
                 //'<input type="checkbox" name="un-merge-patients" value="' + patient.id + '" style="margin-right: 15px;">';
-                unMergeBox = unMergeBoxArr.join("<br>");
+                unMergeBox = "<p>"+unMergeBoxArr.join("<br>")+"</p>";
             }
 
             var mergedId = null;
@@ -287,8 +305,8 @@
                                     //'Patient Info'+' Merge ID# '+mergedId+' '+mergeInfo+
                                     'Patient '+' ID# '+ patient.id +
                                     //": "+patient.mergeInfo+
-                                    unMergeBox+
                                 '</a>'+
+                                unMergeBox+
                             '</h4>'+
                         '</div>'+
                         '<div id="calllog-PatientInformation-'+patient.id+'" class="panel-collapse collapse in">'+

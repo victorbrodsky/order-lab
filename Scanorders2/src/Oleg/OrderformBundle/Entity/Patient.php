@@ -1390,7 +1390,7 @@ class Patient extends ObjectAbstract
             );
             $resArr[] = $mergeArr;
         }
-        return implode(", ",$resArr);
+        return $resArr;
     }
 
     //overwrite obtainStatusField method in ObjectAbstract object

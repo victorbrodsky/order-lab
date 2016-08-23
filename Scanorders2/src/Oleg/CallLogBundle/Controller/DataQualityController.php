@@ -389,20 +389,21 @@ class DataQualityController extends CallEntryController
 
         $masterId = trim($request->get('masterId'));
         $patientIds = trim($request->get('patientIds'));
-        //echo "masterId=".$masterId."<br>";
-        //echo "patientIds=".$patientIds."<br>";
+        echo "masterId=".$masterId."<br>";
+        echo "patientIds=".$patientIds."<br>";
         //exit('1');
 
         //TODO: change to patient ID only: patientIds is a comma separated patient's ids.
 
         $patientIdsArr = explode(",",$patientIds);
 
-        foreach( $patientIdsArr as $patientId ) {
+        foreach( $patientIdsArr as $patientIdStr ) {
 
-            //$patientIdStrArr = explode("mergeid",$patientIdStr);
-            //$patientId = $patientIdStrArr[0];
-            //$patientMergeId = $patientIdStrArr[1];
-            //echo "patientId=".$patientId."; patientMergeId=".$patientMergeId."<br>";
+            $patientIdStrArr = explode("mergeid",$patientIdStr);
+            $patientId = $patientIdStrArr[0];
+            $patientMergeId = $patientIdStrArr[1];
+            echo "patientId=".$patientId."; patientMergeId=".$patientMergeId."<br>";
+            //continue;
 
             //set MERGE ID MRN to invalid
             $patient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
@@ -441,6 +442,7 @@ class DataQualityController extends CallEntryController
         $result = array();
         $result['error'] = $error;
         $result['msg'] = $msg;
+        exit('1');
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
