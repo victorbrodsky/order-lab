@@ -375,7 +375,7 @@ class DataQualityController extends CallEntryController
     public function unmergePatientAjaxAction(Request $request)
     {
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
         $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
@@ -393,19 +393,19 @@ class DataQualityController extends CallEntryController
         echo "patientIds=".$patientIds."<br>";
         //exit('1');
 
-        //TODO: change to patient ID only: patientIds is a comma separated patient's ids.
-
         $patientIdsArr = explode(",",$patientIds);
+
+        $unmergedPatients = array();
 
         foreach( $patientIdsArr as $patientIdStr ) {
 
-            $patientIdStrArr = explode("mergeid",$patientIdStr);
+            $patientIdStrArr = explode("-mergeid-",$patientIdStr);
             $patientId = $patientIdStrArr[0];
             $patientMergeId = $patientIdStrArr[1];
             echo "patientId=".$patientId."; patientMergeId=".$patientMergeId."<br>";
             //continue;
 
-            //set MERGE ID MRN to invalid
+            //find patient object
             $patient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
             if( !$patient ) {
                 $error = true;
@@ -413,11 +413,14 @@ class DataQualityController extends CallEntryController
                 break;
             }
 
+            $unmergedPatients[] = $patient;
+
             //Note: un-merge patient from the chain:
             // 1) invalidate Merge MRN object for this patient
             // 2) invalidate all merge master records objects for this patient
-            // 3) check for orphans: if there is only single orphan merge patient with this patient,
+            // //3) check for orphans: if there is only single orphan merge patient with this patient,
             //      then un-merge this orphan patient (invalidate Merge MRN object, invalidate all merge master records for this orphan patient)
+            // //4) check for linked node - un-merge node which holds many MergeID linking many chains (copy all MergeIDs from this node to the latest node)
 
             //get valid Merge MRN object
             $mergeMrn = $patient->obtainMergeMrnById($patientMergeId,$status);
@@ -429,8 +432,17 @@ class DataQualityController extends CallEntryController
             $patient->invalidateMasterMergeRecord('invalid');
 
             //3) check for orphans for the same MRN ID for each valid MRN ID for this patient
-            $calllogUtil->processOrphans($patient);
+            //$calllogUtil->processOrphan($patient,$patientMergeId);
 
+            //4) check for linked node
+            //$calllogUtil->processLinkedNode($patient,$patientMergeId);
+
+            //3) process un-merged patient
+            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($patient,$patientMergeId,$user);
+            if( $processUnmergePatientRes['error'] ) {
+                $error = true;
+            }
+            $msg .= $processUnmergePatientRes['msg'];
 
             $msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
             $em->persist($patient);
@@ -438,6 +450,13 @@ class DataQualityController extends CallEntryController
 //            $em->flush();
 
         }//foreach
+
+        //check masterRecord
+        $processMasterRes = $calllogUtil->processMasterRecordPatients($unmergedPatients,$masterId,$user);
+        if( $processMasterRes['error'] ) {
+            $error = true;
+        }
+        $msg .= $processMasterRes['msg'];
 
         $result = array();
         $result['error'] = $error;

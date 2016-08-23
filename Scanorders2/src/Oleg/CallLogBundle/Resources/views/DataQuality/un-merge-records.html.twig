@@ -271,7 +271,7 @@
                         var mergeInfo = mergeInfoArr[index];
                         console.log("MID=" + mergeInfo.mergeId + "; details=" + mergeInfo.mergeDetails);
                         console.log(mergeInfo);
-                        var boxId = patient.id+"mergeid"+mergeInfo.mergeId;
+                        var boxId = patient.id+"-mergeid-"+mergeInfo.mergeId;
                         var details = '<input type="checkbox" name="un-merge-patients" value="' + boxId + '" style="margin-right: 5px;">';
                         details += '<label style="margin-right: 15px;">Un-Merge '+mergeInfo.mergeId+' '+mergeInfo.mergeDetails+'</label>';
                         unMergeBoxArr.push(details);
