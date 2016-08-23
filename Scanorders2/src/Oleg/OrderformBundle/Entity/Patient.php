@@ -1373,11 +1373,24 @@ class Patient extends ObjectAbstract
 
     public function obtainMergeInfo() {
         $mergedMrnArr = $this->obtainMergeMrnArr("valid");
-        $str = "";
+        $resArr = array();
         foreach( $mergedMrnArr as $mergedMrn ) {
-            $str .= "Merge ID ".$mergedMrn->getField().", merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y');
+            $resArr[] = "Merge ID ".$mergedMrn->getField().", merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y');
         }
-        return $str;
+        return implode(", ",$resArr);
+    }
+    public function obtainMergeInfoArr() {
+        $mergedMrnArr = $this->obtainMergeMrnArr("valid");
+        $resArr = array();
+        foreach( $mergedMrnArr as $mergedMrn ) {
+            //$resArr[] = "Merge ID ".$mergedMrn->getField().", merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y');
+            $mergeArr = array(
+                "mergeId" => $mergedMrn->getField(),
+                "mergeDetails" => "merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y')
+            );
+            $resArr[] = $mergeArr;
+        }
+        return implode(", ",$resArr);
     }
 
     //overwrite obtainStatusField method in ObjectAbstract object

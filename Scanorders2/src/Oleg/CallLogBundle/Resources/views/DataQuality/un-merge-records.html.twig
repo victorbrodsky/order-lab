@@ -253,8 +253,16 @@
             //console.log('formtype='+formtype);
             var unMergeBox = "";
             if( formtype == 'unmerge' ) {
-                unMergeBox = '<label style="margin-right: 5px;">Un-Merge</label>' +
-                '<input type="checkbox" name="un-merge-patients" value="' + patient.id + '" style="margin-right: 15px;">';
+                var unMergeBoxArr = [];
+                patient.mergeInfo.forEach(function(entry) {
+                    console.log("MID="+entry.mergeId+"; details="+entry.mergeDetails);
+                    var details = '<label style="margin-right: 5px;">Un-Merge</label>' +
+                            '<input type="checkbox" name="un-merge-patients" value="' + patient.id + '" style="margin-right: 15px;">';
+                    unMergeBoxArr.push(details);
+                });
+                //unMergeBox = '<label style="margin-right: 5px;">Un-Merge</label>' +
+                //'<input type="checkbox" name="un-merge-patients" value="' + patient.id + '" style="margin-right: 15px;">';
+                unMergeBox = unMergeBoxArr.join("<br>");
             }
 
             var mergedId = null;
@@ -274,11 +282,12 @@
                     '<div class="panel panel-primary">'+
                         '<div class="panel-heading">'+
                             '<h4 class="panel-title">'+
-                                unMergeBox+
                                 '<a data-toggle="collapse" href="#calllog-PatientInformation-'+patient.id+'">'+
                                     //'Patient Info'+' ID# '+patient.id+' Merge ID# '+mergedId+' '+mergeInfo+
                                     //'Patient Info'+' Merge ID# '+mergedId+' '+mergeInfo+
-                                    'Patient Info'+' ID# '+patient.id+": "+patient.mergeInfo+
+                                    'Patient '+' ID# '+ patient.id +
+                                    //": "+patient.mergeInfo+
+                                    unMergeBox+
                                 '</a>'+
                             '</h4>'+
                         '</div>'+
