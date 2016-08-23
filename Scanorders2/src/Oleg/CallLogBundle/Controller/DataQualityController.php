@@ -438,6 +438,8 @@ class DataQualityController extends CallEntryController
             //$calllogUtil->processLinkedNode($patient,$patientMergeId);
 
             //3) process un-merged patient
+            // A) if only one merged patient exists with this mergeId (except this patient) => orphan
+            // B) if multiple patients found (except this patient) => copy all merged IDs to the first patient in the chain
             $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($patient,$patientMergeId,$user);
             if( $processUnmergePatientRes['error'] ) {
                 $error = true;

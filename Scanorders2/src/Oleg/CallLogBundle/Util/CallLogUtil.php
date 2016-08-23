@@ -612,7 +612,7 @@ class CallLogUtil
             $mergedPatient->invalidateMasterMergeRecord('invalid');
         }
 
-        // B) if multiple patients found (except this patient)
+        // B) if multiple patients found (except this patient) => copy all merged IDs to the first patient in the chain
         if( count($patients) > 1 ) {
             //copy all valid merged IDs to the first patient in the chain
             $mergedPatient = $patients[0];
@@ -622,7 +622,7 @@ class CallLogUtil
 
             foreach( $mergeMrns as $mergeMrn ) {
                 //create new merge mrn and add it to the $mergedPatient
-                $newMrn = $this->createPatientMergeMrn($user,$mergedPatient,$mergeId);
+                $newMrn = $this->createPatientMergeMrn($user,$mergedPatient,$mergeMrn->getField());
                 if( !($newMrn instanceof PatientMrn) ) {
                     $res['error'] = true;
                     $res['msg'] .= $newMrn.". "; //this is an error message
