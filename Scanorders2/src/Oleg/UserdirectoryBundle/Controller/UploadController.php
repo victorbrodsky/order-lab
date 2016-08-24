@@ -35,7 +35,7 @@ class UploadController extends Controller {
     public function deleteFileMethod(Request $request) {
         //exit('deleteFileMethod exit');
         if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
-            exit('no permission');
+            //exit('no permission');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -43,11 +43,11 @@ class UploadController extends Controller {
         $commentid = $request->get('commentid');
         $commentclass = $request->get('commenttype');    //comment class
         $sitename = $request->get('sitename');
-        echo "documentid=".$documentid."<br>";
-        echo "commentid=".$commentid."<br>";
-        echo "commentclass=".$commentclass."<br>";
+        //echo "documentid=".$documentid."<br>";
+        //echo "commentid=".$commentid."<br>";
+        //echo "commentclass=".$commentclass."<br>";
 
-        exit('my uploader');
+        //exit('my uploader');
 
         //find document with id
         $em = $this->getDoctrine()->getManager();
