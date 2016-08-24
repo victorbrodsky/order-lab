@@ -269,7 +269,7 @@ function constractShowLink(id,name) {
 function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
 
     var documentid = $(previewElement).find('.file-upload-id').val();
-    //console.log('remove documentid='+documentid+", confirmFlag="+confirmFlag);
+    console.log('remove documentid='+documentid+", confirmFlag="+confirmFlag);
 
     if( confirmFlag == false ) {
         var _ref;
@@ -336,7 +336,7 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
     //if( commenttype != null ) {
 
         var url = getCommonBaseUrl("file-delete","employees");
-        //console.log('url='+url);
+        console.log('url='+url);
         //use comment id and documentid
         $.ajax({
             type: "DELETE",
