@@ -339,7 +339,7 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
         console.log('url='+url);
         //use comment id and documentid
         $.ajax({
-            type: "GET",   //"DELETE",
+            type: "DELETE",   //"DELETE",
             url: url,
             timeout: _ajaxTimeout,
             async: true,
