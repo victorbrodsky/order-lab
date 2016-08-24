@@ -785,6 +785,7 @@ class ReportGenerator {
     protected function mergeByPDFMerger( $filesArr, $filenameMerged ) {
 
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $filesStr = $this->convertFilesArrToString($filesArr);
 
@@ -860,9 +861,7 @@ class ReportGenerator {
             $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
             //echo $event."<br>";
             $logger->notice($event);
-            $userSecUtil = $this->container->get('user_security_utility');
             $systemUser = $userSecUtil->findSystemUser();
-            $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
 
             $filesInArr = $this->processFilesGostscript($filesArr);
@@ -891,12 +890,13 @@ class ReportGenerator {
 
             if( $return == 1 ) { //error
                 //event log
-                $event = "ERROR: 'Complete Application PDF' will not be generated! pdftk failed: " . $cmd;
+                $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk failed: " . $cmd;
                 $logger->error($event);
-                $fellappUtil = $this->container->get('fellapp_util');
-                $fellappUtil->sendEmailToSystemEmail("Complete Application PDF will not be generated - pdftk failed", $event);
 
-                $userSecUtil = $this->container->get('user_security_utility');
+                //send email
+                $fellappUtil = $this->container->get('fellapp_util');
+                $fellappUtil->sendEmailToSystemEmail("ERROR: Probably there is an encrypted pdf. Complete Application PDF will not be generated - pdftk failed", $event);
+
                 $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
             }
