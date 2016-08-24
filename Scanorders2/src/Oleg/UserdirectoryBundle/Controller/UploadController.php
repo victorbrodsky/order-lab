@@ -28,12 +28,12 @@ class UploadController extends Controller {
      * @Method({"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
-        exit('deleteFileAction employees exit');
+        //exit('deleteFileAction employees exit');
         return $this->deleteFileMethod($request);
     }
 
     public function deleteFileMethod(Request $request) {
-        exit('deleteFileMethod exit');
+        //exit('deleteFileMethod exit');
         if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
             exit('no permission');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
