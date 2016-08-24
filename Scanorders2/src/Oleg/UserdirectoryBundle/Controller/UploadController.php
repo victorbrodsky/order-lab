@@ -28,6 +28,7 @@ class UploadController extends Controller {
      * @Method("DELETE")
      */
     public function deleteFileAction(Request $request) {
+        exit('deleteFileAction employees exit');
         return $this->deleteFileMethod($request);
     }
 
