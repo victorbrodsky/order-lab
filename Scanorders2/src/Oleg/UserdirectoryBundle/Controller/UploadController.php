@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UploadController extends Controller {
 
-//@Method("DELETE")
+    //@Method("DELETE") causes problem: no permission
     /**
      * @Route("/file-delete", name="employees_file_delete")
      * @Method({"GET", "POST", "DELETE"})

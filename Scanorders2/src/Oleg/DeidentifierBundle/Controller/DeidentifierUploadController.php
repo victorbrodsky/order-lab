@@ -21,7 +21,7 @@ class DeidentifierUploadController extends UploadController {
 
     /**
      * @Route("/file-delete", name="deidentifier_file_delete")
-     * @Method("DELETE")
+     * @Method({"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);

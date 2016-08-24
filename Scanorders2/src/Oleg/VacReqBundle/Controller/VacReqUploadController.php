@@ -21,7 +21,7 @@ class VacReqUploadController extends UploadController {
 
     /**
      * @Route("/file-delete", name="vacreq_file_delete")
-     * @Method("DELETE")
+     * @Method({"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
