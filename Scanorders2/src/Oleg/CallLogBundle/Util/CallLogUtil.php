@@ -612,23 +612,32 @@ class CallLogUtil
             $mergedPatient->invalidateMasterMergeRecord('invalid');
         }
 
-        // B) if multiple patients found (except this patient) => copy all merged IDs to the first patient in the chain
-        if( count($patients) > 1 ) {
-            //copy all valid merged IDs to the first patient in the chain
-            $mergedPatient = $patients[0];
+        // B) if multiple patients found (except this patient) in the same group specified by the merge ID =>
+        // copy all merged IDs to the first patient in the chain (group)
+        // By diagram:
+        // un-merge C3: 2 other merged patients in this group (E,F) => two independent chains: A-B-C-D and E-F
+        // ////////
+        // This method: copy all other merged IDs to the first patient in the group:
+        // copy merge IDs 1 and 2 to the first patient E => now E has merge IDs 1,2,3
+        // Result: A(1)-B(1)-C(1,2), C(2,1)-D(2), E(3,1,2)-F(3) => we have the same chain A-B-C-D-E-F wrong!
+        if(0) { //disable because it is wrong!
+            if (count($patients) > 1) {
+                //copy all valid merged IDs to the first patient in the same group
+                $mergedPatient = $patients[0];
 
-            //get valid mrns
-            $mergeMrns = $patient->obtainMergeMrnArr('valid');
+                //get valid mrns
+                $mergeMrns = $patient->obtainMergeMrnArr('valid');
 
-            foreach( $mergeMrns as $mergeMrn ) {
-                //create new merge mrn and add it to the $mergedPatient
-                $newMrn = $this->createPatientMergeMrn($user,$mergedPatient,$mergeMrn->getField());
-                if( !($newMrn instanceof PatientMrn) ) {
-                    $res['error'] = true;
-                    $res['msg'] .= $newMrn.". "; //this is an error message
+                foreach ($mergeMrns as $mergeMrn) {
+                    //create new merge mrn and add it to the $mergedPatient
+                    $newMrn = $this->createPatientMergeMrn($user, $mergedPatient, $mergeMrn->getField());
+                    if (!($newMrn instanceof PatientMrn)) {
+                        $res['error'] = true;
+                        $res['msg'] .= $newMrn . ". "; //this is an error message
+                    }
                 }
-            }
 
+            }
         }
 
 

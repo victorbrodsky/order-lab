@@ -239,12 +239,12 @@ class PatientController extends Controller
         );
         $params['labels'] = $labels;
 
-        $time_pre = microtime(true);
+        //$time_pre = microtime(true);
 
         $form = $this->createForm( new PatientType($params), $entity, array('disabled' => true) );
 
-        $time_post = microtime(true);
-        $exec_time = $time_post - $time_pre;
+        //$time_post = microtime(true);
+        //$exec_time = $time_post - $time_pre;
         //exit('form created: exec_time='.round($exec_time));
         //echo 'form created: exec_time='.round($exec_time)."<br>";
         //phpinfo();
@@ -263,7 +263,7 @@ class PatientController extends Controller
      *
      * @Route("/{id}/edit", name="scan-patient-edit")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
     public function editAction($id)
     {
@@ -281,13 +281,48 @@ class PatientController extends Controller
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $editForm = $this->createForm(new PatientType(), $entity);
+
+        //////////////// params ////////////////
+        $params = array(
+            'type' => 'multy',
+            'cycle' => "show",
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+            'datastructure' => 'datastructure'
+        );
+
+        $params['endpoint.system'] = true;
+        $params['message.orderdate'] = true;
+        $params['message.provider'] = true;
+        $params['message.proxyuser'] = true;
+        $params['message.idnumber'] = false;
+        $params['message.sources'] = false;
+        $params['message.destinations'] = false;
+        $params['message.inputs'] = false;
+        $params['message.outputs'] = false;
+
+        $labels = array(
+            'proxyuser' => 'Signing Provider(s):',
+        );
+        $params['labels'] = $labels;
+        //////////////// EOF params ////////////////
+
+        $form = $this->createForm(new PatientType($params), $entity);
         //$deleteForm = $this->createDeleteForm($id);
 
+//        return array(
+//            'entity'      => $entity,
+//            'edit_form'   => $form->createView(),
+//            //'delete_form' => $deleteForm->createView(),
+//        );
+
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            //'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'formtype' => 'Update Patient Data Structure',
+            'type' => 'show',
+            'datastructure' => 'datastructure'
         );
     }
 
@@ -296,7 +331,7 @@ class PatientController extends Controller
      *
      * @Route("/{id}", name="patient_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Patient:edit.html.twig")
+     * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
