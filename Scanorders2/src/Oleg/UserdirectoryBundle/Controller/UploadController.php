@@ -22,10 +22,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UploadController extends Controller {
 
-
+//@Method("DELETE")
     /**
      * @Route("/file-delete", name="employees_file_delete")
-     * @Method("DELETE")
+     * @Method({"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
         exit('deleteFileAction employees exit');
