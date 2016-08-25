@@ -683,17 +683,23 @@ class CallLogUtil
             //3) if more than one merge IDs (linked node) =>
             // add these (that does not exist yet) to the master Patient (making this patient as a linked node)
             if( $copyToMaster ) {
-                //create new merge mrn and add it to the $masterPatient
-                $newMrn = $this->createPatientMergeMrn($user, $masterPatient, $mergeMrn->getField());
-                if( !($newMrn instanceof PatientMrn) ) {
-                    //error
-                    $res['error'] = true;
-                    $res['msg'] .= $newMrn . ". "; //this is an error message
-                } else {
-                    //ok
-                    $res['msg'] .= "Copy merge MRN ".$newMrn->getField()." to master patient ID# ".$masterPatient->getId()."<br>";
-                    $this->em->persist($newMrn);
-                    $this->em->persist($masterPatient);
+                //get valid Merge MRN object
+                $masterPatientMergeMrn = $masterPatient->obtainMergeMrnById($mergeMrn->getField(),'valid');
+
+                //add if not exists yet
+                if( !$masterPatientMergeMrn ) {
+                    //create new merge mrn and add it to the $masterPatient
+                    $newMrn = $this->createPatientMergeMrn($user, $masterPatient, $mergeMrn->getField());
+                    if (!($newMrn instanceof PatientMrn)) {
+                        //error
+                        $res['error'] = true;
+                        $res['msg'] .= $newMrn . ". "; //this is an error message
+                    } else {
+                        //ok
+                        $res['msg'] .= "Copy merge MRN " . $newMrn->getField() . " to master patient ID# " . $masterPatient->getId() . "<br>";
+                        $this->em->persist($newMrn);
+                        $this->em->persist($masterPatient);
+                    }
                 }
             }
 
