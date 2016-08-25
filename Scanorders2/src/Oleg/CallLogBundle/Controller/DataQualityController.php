@@ -423,13 +423,13 @@ class DataQualityController extends CallEntryController
             // //4) check for linked node - un-merge node which holds many MergeID linking many chains (copy all MergeIDs from this node to the latest node)
 
             //get valid Merge MRN object
-            $mergeMrn = $patient->obtainMergeMrnById($patientMergeId,$status);
+            //$mergeMrn = $patient->obtainMergeMrnById($patientMergeId,$status);
 
             //1) un-merge: set valid status Merge MRN object to invalid
-            $mergeMrn->setStatus('invalid');
+            //$mergeMrn->setStatus('invalid');
 
             //2) un-merge: invalidate all merge master records objects
-            $patient->invalidateMasterMergeRecord('invalid');
+            //$patient->invalidateMasterMergeRecord('invalid');
 
             //3) check for orphans for the same MRN ID for each valid MRN ID for this patient
             //$calllogUtil->processOrphan($patient,$patientMergeId);
@@ -439,16 +439,16 @@ class DataQualityController extends CallEntryController
 
             //3) process un-merged patient
             // A) if only one merged patient exists with this mergeId (except this patient) => orphan
-            // B) if multiple patients found (except this patient) => copy all merged IDs to the first patient in the chain
-            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($patient,$patientMergeId,$user);
+            // B) if multiple patients found (except this patient) => copy all merged IDs to the master patient in the chain
+            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($patient,$user);
             if( $processUnmergePatientRes['error'] ) {
                 $error = true;
             }
-            $msg .= $processUnmergePatientRes['msg'];
+            $msg .= "Unmerged Patient ".$patient->getFullPatientName() . "; " . $processUnmergePatientRes['msg'];
+            //$msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
 
-            $msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
             $em->persist($patient);
-            $em->persist($mergeMrn);
+            //$em->persist($mergeMrn);
 //            $em->flush();
 
         }//foreach
