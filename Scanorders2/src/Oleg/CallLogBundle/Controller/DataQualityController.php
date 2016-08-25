@@ -440,16 +440,16 @@ class DataQualityController extends CallEntryController
             //3) process un-merged patient
             // A) if only one merged patient exists with this mergeId (except this patient) => orphan
             // B) if multiple patients found (except this patient) => copy all merged IDs to the master patient in the chain
-            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($patient,$user);
-            if( $processUnmergePatientRes['error'] ) {
-                $error = true;
-            }
-            $msg .= "Unmerged Patient ".$patient->getFullPatientName() . "; " . $processUnmergePatientRes['msg'];
-            //$msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
-
-            $em->persist($patient);
-            //$em->persist($mergeMrn);
-//            $em->flush();
+//            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($patient,$user);
+//            if( $processUnmergePatientRes['error'] ) {
+//                $error = true;
+//            }
+//            $msg .= "Unmerged Patient ".$patient->getFullPatientName() . "; " . $processUnmergePatientRes['msg'];
+//            //$msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
+//
+//            $em->persist($patient);
+//            //$em->persist($mergeMrn);
+////            $em->flush();
 
         }//foreach
 
@@ -459,6 +459,22 @@ class DataQualityController extends CallEntryController
             $error = true;
         }
         $msg .= $processMasterRes['msg'];
+
+        foreach( $unmergedPatients as $unmergedPatient ) {
+            //3) process un-merged patient
+            // A) if only one merged patient exists with this mergeId (except this patient) => orphan
+            // B) if multiple patients found (except this patient) => copy all merged IDs to the master patient in the chain
+            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($unmergedPatient,$user);
+            if( $processUnmergePatientRes['error'] ) {
+                $error = true;
+            }
+            $msg .= "Unmerged Patient ".$unmergedPatient->getFullPatientName() . "; " . $processUnmergePatientRes['msg'];
+            //$msg .= "Unmerged Patient ".$unmergedPatient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
+
+            $em->persist($unmergedPatient);
+            //$em->persist($mergeMrn);
+//            $em->flush();
+        }
 
         $result = array();
         $result['error'] = $error;

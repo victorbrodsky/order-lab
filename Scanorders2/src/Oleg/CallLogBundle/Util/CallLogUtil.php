@@ -681,12 +681,14 @@ class CallLogUtil
             if( $copyToMaster ) {
                 //create new merge mrn and add it to the $masterPatient
                 $newMrn = $this->createPatientMergeMrn($user, $masterPatient, $mergeMrn->getField());
-                if (!($newMrn instanceof PatientMrn)) {
+                if( !($newMrn instanceof PatientMrn) ) {
                     //error
                     $res['error'] = true;
                     $res['msg'] .= $newMrn . ". "; //this is an error message
                 } else {
                     //ok
+                    $this->em->persist($newMrn);
+                    $this->em->persist($masterPatient);
                 }
             }
 
@@ -776,6 +778,9 @@ class CallLogUtil
 
             //2) un-merge: invalidate all merge master records objects
             $orphanMergedPatient->invalidateMasterMergeRecord('invalid');
+
+            $this->em->persist($orphanMergedPatient);
+            //$this->em->persist($mergeMrn);
         }
     }
 }
