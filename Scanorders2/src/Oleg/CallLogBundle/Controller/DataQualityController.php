@@ -446,7 +446,7 @@ class DataQualityController extends CallEntryController
         foreach( $unmergedPatients as $unmergedPatient ) {
             // A) if only one merged patient exists with this mergeId (except this patient) => orphan
             // B) if multiple patients found (except this patient) => copy all merged IDs to the master patient in the chain
-            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($unmergedPatient,$user);
+            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($unmergedPatient,$masterId,$user);
             if( $processUnmergePatientRes['error'] ) {
                 $error = true;
             } else {

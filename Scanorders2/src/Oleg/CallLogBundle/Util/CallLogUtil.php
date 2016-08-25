@@ -650,8 +650,9 @@ class CallLogUtil
     //2) invalidate each mergeID in this patient (if there is only one merge ID => just invalidate this merge ID)
     //3) if more than one merge IDs (linked node) => add these (that does not exist yet) to the master Patient (making this patient as a linked node)
     //4) check for the orphans: for each mergeID if only one merged patient exists with this mergeId (except this patient) => orphan
-    //5) record all steps to the event log
-    public function processUnmergedPatient( $patient, $user ) {
+    //5) invalidate all merge master records objects for this patient
+    //6) record all steps to the event log
+    public function processUnmergedPatient( $patient, $masterId, $user ) {
 
         $res = array();
         $res['error'] = false;
@@ -673,8 +674,14 @@ class CallLogUtil
             $masterPatient = $this->getMasterRecordPatients($mergedPatients);
         }
 
+        $orphansArr = array();
+
         //invalidate each merge ID check for the orphans for each mergeIDs
         foreach( $mergeMrns as $mergeMrn ) {
+
+            //get other merged patients in the same group
+            $orphansArr[$mergeMrn->getField()] = $this->getMergedPatients($mergeMrn->getField(), null, array($patient->getId()));
+            //$res .= "Orphan check: other patients found = ".count($patients)."; ";
 
             //2) invalidate this merge ID
             $mergeMrn->setStatus('invalid');
@@ -704,13 +711,59 @@ class CallLogUtil
             }
 
             //4) check for the orphans for each mergeIDs
-            $resOrphanMsg = $this->processOrphan($patient,$mergeMrn);
+            $resOrphanMsg = $this->processOrphansArr($patient,$orphansArr,$masterId);  //$patient,$mergeMrn);
             $res['msg'] .= $resOrphanMsg."<br>";
 
         }
 
+        //2) invalidate all merge master records objects for this patient
+        $patient->invalidateMasterMergeRecord('invalid');
+
+        //exit('exit processUnmergedPatient. res: <br>'.$res['msg']);
+
         return $res;
     }
+
+//    //check for orphan for the same MRN ID for each valid MRN ID for this patient.
+//    //If there is only one sibling with the same valid MRN ID, then this sibling is orphan.
+//    //un-merge this orphan patient:
+//    // 1) invalidate Merge MRN object
+//    // 2) invalidate all merge master records for this orphan patient
+//    // 3) if removed patient is the linked node (holding MID for different chains, i.e. 1,2,3)
+//    public function processOrphan( $patient, $mergeId ) {
+//
+//        $res = "";
+//
+//        //get other merged patients in the same group
+//        $patients = $this->getMergedPatients($mergeId, null, array($patient->getId()));
+//        $res .= "Orphan check: other patients found = ".count($patients)."; ";
+//
+//        if( count($patients) == 0 ) {
+//            //do nothing
+//        }
+//
+//        // A) if only one merged patient exists with this mergeId (except this patient) => orphan
+//        if( count($patients) == 1 ) {
+//            // un-merge this orphan patient
+//            $orphanMergedPatient = $patients[0];
+//
+//            //get valid Merge MRN object
+//            $mergeMrn = $orphanMergedPatient->obtainMergeMrnById($mergeId,'valid');
+//
+//            //1) un-merge: set valid status Merge MRN object to invalid
+//            $mergeMrn->setStatus('invalid');
+//
+//            //2) un-merge: invalidate all merge master records objects
+//            $orphanMergedPatient->invalidateMasterMergeRecord('invalid');
+//
+//            $this->em->persist($orphanMergedPatient);
+//            //$this->em->persist($mergeMrn);
+//
+//            $res .= "Invalidate merge MRN ".$mergeId." for the orphan patient ID# ".$orphanMergedPatient->getId();
+//        }
+//
+//        return $res;
+//    }
 
     //check for orphan for the same MRN ID for each valid MRN ID for this patient.
     //If there is only one sibling with the same valid MRN ID, then this sibling is orphan.
@@ -718,36 +771,35 @@ class CallLogUtil
     // 1) invalidate Merge MRN object
     // 2) invalidate all merge master records for this orphan patient
     // 3) if removed patient is the linked node (holding MID for different chains, i.e. 1,2,3)
-    public function processOrphan( $patient, $mergeId ) {
+    public function processOrphansArr( $patient, $orphansArr, $masterId ) {
 
         $res = "";
 
-        //get other merged patients in the same group
-        $patients = $this->getMergedPatients($mergeId, null, array($patient->getId()));
-        $res .= "Orphan check: other patients found = ".count($patients)."; ";
+        foreach( $orphansArr as $mergeId => $patients ) {
 
-        if( count($patients) == 0 ) {
-            //do nothing
-        }
+            //echo "orphans count=".count($patients)."<br>";
 
-        // A) if only one merged patient exists with this mergeId (except this patient) => orphan
-        if( count($patients) == 1 ) {
-            // un-merge this orphan patient
-            $orphanMergedPatient = $patients[0];
+            if( count($patients) == 1 ) {
+                // un-merge this orphan patient
+                $orphanMergedPatient = $patients[0];
 
-            //get valid Merge MRN object
-            $mergeMrn = $orphanMergedPatient->obtainMergeMrnById($mergeId,'valid');
+                //get valid Merge MRN object
+                $mergeMrn = $orphanMergedPatient->obtainMergeMrnById($mergeId,'valid');
 
-            //1) un-merge: set valid status Merge MRN object to invalid
-            $mergeMrn->setStatus('invalid');
+                //1) un-merge: set valid status Merge MRN object to invalid
+                $mergeMrn->setStatus('invalid');
 
-            //2) un-merge: invalidate all merge master records objects
-            $orphanMergedPatient->invalidateMasterMergeRecord('invalid');
+                //2) un-merge: invalidate all merge master records objects
+                if( $masterId != $orphanMergedPatient->getId() ) {
+                    $orphanMergedPatient->invalidateMasterMergeRecord('invalid');
+                }
 
-            $this->em->persist($orphanMergedPatient);
-            //$this->em->persist($mergeMrn);
+                $this->em->persist($orphanMergedPatient);
+                //$this->em->persist($mergeMrn);
 
-            $res .= "Invalidate merge MRN ".$mergeId." for the orphan patient ID# ".$orphanMergedPatient->getId();
+                $res .= "Invalidate merge MRN ".$mergeId." for the orphan patient ID# ".$orphanMergedPatient->getId();
+            }
+
         }
 
         return $res;
