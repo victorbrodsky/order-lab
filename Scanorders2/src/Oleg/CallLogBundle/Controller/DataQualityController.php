@@ -397,6 +397,7 @@ class DataQualityController extends CallEntryController
 
         $unmergedPatients = array();
 
+        //1) get all patients as $unmergedPatients array
         foreach( $patientIdsArr as $patientId ) {
 
             //$patientIdStrArr = explode("-mergeid-",$patientIdStr);
@@ -415,65 +416,28 @@ class DataQualityController extends CallEntryController
 
             $unmergedPatients[] = $patient;
 
-            //Note: un-merge patient from the chain:
-            // 1) invalidate Merge MRN object for this patient
-            // 2) invalidate all merge master records objects for this patient
-            // //3) check for orphans: if there is only single orphan merge patient with this patient,
-            //      then un-merge this orphan patient (invalidate Merge MRN object, invalidate all merge master records for this orphan patient)
-            // //4) check for linked node - un-merge node which holds many MergeID linking many chains (copy all MergeIDs from this node to the latest node)
-
-            //get valid Merge MRN object
-            //$mergeMrn = $patient->obtainMergeMrnById($patientMergeId,$status);
-
-            //1) un-merge: set valid status Merge MRN object to invalid
-            //$mergeMrn->setStatus('invalid');
-
-            //2) un-merge: invalidate all merge master records objects
-            //$patient->invalidateMasterMergeRecord('invalid');
-
-            //3) check for orphans for the same MRN ID for each valid MRN ID for this patient
-            //$calllogUtil->processOrphan($patient,$patientMergeId);
-
-            //4) check for linked node
-            //$calllogUtil->processLinkedNode($patient,$patientMergeId);
-
-            //3) process un-merged patient
-            // A) if only one merged patient exists with this mergeId (except this patient) => orphan
-            // B) if multiple patients found (except this patient) => copy all merged IDs to the master patient in the chain
-//            $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($patient,$user);
-//            if( $processUnmergePatientRes['error'] ) {
-//                $error = true;
-//            }
-//            $msg .= "Unmerged Patient ".$patient->getFullPatientName() . "; " . $processUnmergePatientRes['msg'];
-//            //$msg .= "Unmerged Patient ".$patient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
-//
-//            $em->persist($patient);
-//            //$em->persist($mergeMrn);
-////            $em->flush();
-
         }//foreach
 
-        //check masterRecord
+        //2) check and change (if required) the masterRecord
         $processMasterRes = $calllogUtil->processMasterRecordPatients($unmergedPatients,$masterId,$user);
         if( $processMasterRes['error'] ) {
             $error = true;
         }
         $msg .= $processMasterRes['msg'];
 
+        //3) process each un-merged patient
         foreach( $unmergedPatients as $unmergedPatient ) {
-            //3) process un-merged patient
             // A) if only one merged patient exists with this mergeId (except this patient) => orphan
             // B) if multiple patients found (except this patient) => copy all merged IDs to the master patient in the chain
             $processUnmergePatientRes = $calllogUtil->processUnmergedPatient($unmergedPatient,$user);
             if( $processUnmergePatientRes['error'] ) {
                 $error = true;
+            } else {
+                $em->persist($unmergedPatient);
+                //$em->persist($mergeMrn);
+                //$em->flush(); //testing
             }
             $msg .= "Unmerged Patient ".$unmergedPatient->getFullPatientName() . "; " . $processUnmergePatientRes['msg'];
-            //$msg .= "Unmerged Patient ".$unmergedPatient->getFullPatientName()." with Merge ID# ".$patientMergeId.".<br>";
-
-            $em->persist($unmergedPatient);
-            //$em->persist($mergeMrn);
-//            $em->flush();
         }
 
         $result = array();
