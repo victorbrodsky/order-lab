@@ -397,12 +397,12 @@ class DataQualityController extends CallEntryController
 
         $unmergedPatients = array();
 
-        foreach( $patientIdsArr as $patientIdStr ) {
+        foreach( $patientIdsArr as $patientId ) {
 
-            $patientIdStrArr = explode("-mergeid-",$patientIdStr);
-            $patientId = $patientIdStrArr[0];
-            $patientMergeId = $patientIdStrArr[1];
-            echo "patientId=".$patientId."; patientMergeId=".$patientMergeId."<br>";
+            //$patientIdStrArr = explode("-mergeid-",$patientIdStr);
+            //$patientId = $patientIdStrArr[0];
+            //$patientMergeId = $patientIdStrArr[1];
+            echo "patientId=".$patientId."<br>";
             //continue;
 
             //find patient object

@@ -339,7 +339,7 @@ class CallLogUtil
 
             'contactinfo' => $contactinfo,
 
-            'mergeInfo' => $patient->obtainMergeInfoArr(),
+            'mergeInfo' => $patient->obtainMergeInfo("<br>"),
 
             'mergedPatientsInfo' => NULL,
 

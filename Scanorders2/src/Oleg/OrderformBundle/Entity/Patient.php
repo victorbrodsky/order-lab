@@ -1371,13 +1371,17 @@ class Patient extends ObjectAbstract
         return null;
     }
 
-    public function obtainMergeInfo() {
+    public function obtainMergeInfo($separator=", ") {
         $mergedMrnArr = $this->obtainMergeMrnArr("valid");
         $resArr = array();
         foreach( $mergedMrnArr as $mergedMrn ) {
-            $resArr[] = "Merge ID ".$mergedMrn->getField().", merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y');
+            $resArr[] = $mergedMrn->getField()." merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y');
         }
-        return implode(", ",$resArr);
+        if( $separator ) {
+            return implode($separator, $resArr);
+        } else {
+            return $resArr;
+        }
     }
     public function obtainMergeInfoArr() {
         $mergedMrnArr = $this->obtainMergeMrnArr("valid");
@@ -1386,7 +1390,7 @@ class Patient extends ObjectAbstract
             //$resArr[] = "Merge ID ".$mergedMrn->getField().", merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y');
             $mergeArr = array(
                 "mergeId" => $mergedMrn->getField(),
-                "mergeDetails" => "merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y')
+                "mergeDetails" => $mergedMrn->getField() . " merged by " . $mergedMrn->getProvider() . " on " . $mergedMrn->getCreationdate()->format('m/d/Y')
             );
             $resArr[] = $mergeArr;
         }
