@@ -210,7 +210,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
     //var patLen = patients.length;
     var patLen = getPatientsLength(patients);
-    //console.log('patLen='+patLen);
+    console.log('patLen='+patLen);
 
     //clear matching patient section
     holder.find('#calllog-matching-patients').hide();
@@ -229,29 +229,42 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
     console.log("_patients:");
     console.log(_patients);
 
+    var processed = false;
+
     if( patLen == 1 ) {
 
         //var patient = patients[0];
         var patient = getFirstPatient(patients);
-        if( patient == null ) {
+        if (patient == null) {
             alert("No first patient found in the patient array");
         }
-        //console.log('patient id='+patient.id);
+        //console.log('single found patient id=' + patient.id);
 
-        populatePatientInfo(patient,null,true,holderId);
-        disableAllFields(true,holderId);
+        var patMergedLen = getMergedPatientInfoLength(patient);
+        console.log('patMergedLen='+patMergedLen);
 
-        //show edit patient info button
-        holder.find('#edit_patient_button').show();
-        //hide "No single patient is referenced by this entry or I'll add the patient info later" link
-        holder.find('#callentry-nosinglepatient-link').hide();
+        if( patMergedLen == 0 && processed == false ) {
 
-        //change the "Find or Add Patient" button title to "Re-enter Patient"
-        holder.find('#reenter_patient_button').show();
-        holder.find('#search_patient_button').hide();
-        holder.find('#addnew_patient_button').hide();
+            populatePatientInfo(patient, null, true, holderId);
+            disableAllFields(true, holderId);
 
-    } else if( patLen == 0 ) {
+            //show edit patient info button
+            holder.find('#edit_patient_button').show();
+            //hide "No single patient is referenced by this entry or I'll add the patient info later" link
+            holder.find('#callentry-nosinglepatient-link').hide();
+
+            //change the "Find or Add Patient" button title to "Re-enter Patient"
+            holder.find('#reenter_patient_button').show();
+            holder.find('#search_patient_button').hide();
+            holder.find('#addnew_patient_button').hide();
+
+            processed = true;
+        }
+
+    }
+
+    if( patLen == 0 && processed == false ) {
+
         //console.log("No matching patient records found.");
         //"No matching patient records found." and unlock fields
         holder.find('#calllog-danger-box').html("No matching patient records found"+searchedStr+".");
@@ -262,7 +275,10 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
         //un-hide/show a button called "Add New Patient Registration"
         holder.find('#addnew_patient_button').show();
 
-    } else if( patLen > 1 ) {
+    }
+
+    if( patLen >= 1 && processed == false ) {
+
         //console.log("show table with found patients");
         //show table with found patients
         //populatePatientInfo(patients[0],null);
@@ -271,8 +287,10 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
         createPatientsTableCalllog(patients,holderId);
 
-    } else {
-        //console.log('This condition should not be reached');
+    }
+
+    if( processed == false ){
+        console.log("Logical error. Search patients not processed. patLen="+patLen);
     }
 
 }
@@ -303,7 +321,7 @@ function createPatientsTableCalllog( patients, holderId ) {
             var patient = patients[i];
             //console.log('patient id='+patient.id);
 
-            //var mergedPatientsInfoLength = getMergedPatientsInfoLength(patient['mergedPatientsInfo']);
+            //var mergedPatientsInfoLength = getMergedPatientInfoLength(patient['mergedPatientsInfo']);
             //console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
             //console.log('patient.mergedPatientsInfo:');
             //console.log(patient.mergedPatientsInfo);
@@ -396,7 +414,7 @@ function constractMergedPatientInfoRow( patient, masterId ) {
             var patientsInfo = mergedPatients[mergedId]['patientInfo'];
             for( var index in patientsInfo ) {
                 var patientInfo = patientsInfo[index];
-                //console.log('merged Patient ID=' + patientInfo['id']);
+                console.log('merged Patient ID=' + patientInfo['id']);
                 //console.log(patientInfo);
                 //masterId = masterId + "-" + patientInfo['id'];
                 mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, masterId, "alert alert-info");
@@ -425,16 +443,14 @@ function clickMasterPatientBtn(btn) {
     }
 }
 
-//function getMergedPatientsInfoLength( patientInfoArr ) {
-//    var count = 0;
-//    for( var mergedId in targetArr ) {
-//        if( targetArr.hasOwnProperty(mergedId) ) {
-//            //alert("Key is " + mergedId + ", value is" + targetArr[mergedId]);
-//            count = count + targetArr[mergedId]['patientInfo'].length;
-//        }
-//    }
-//    return count;
-//}
+function getMergedPatientInfoLength( patient ) {
+    if( patient['mergedPatientsInfo'] ) {
+        var mergedPatientsInfo = patient['mergedPatientsInfo'][patient.id]['patientInfo'];
+        return getPatientsLength(mergedPatientsInfo);
+    } else {
+        return 0;
+    }
+}
 function getPatientsLength( patients ) {
     var count = 0;
     for( var k in patients ) {

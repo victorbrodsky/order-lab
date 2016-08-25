@@ -491,6 +491,7 @@ class CallLogUtil
 
         $unmergedMasterPatients = array();
         foreach( $unmergedPatients as $unmergedPatient ) {
+            //echo "patientID=".$unmergedPatient->getId()."<br>";
             if( $unmergedPatient->isMasterMergeRecord() ) {
                 $unmergedMasterPatients[] = $unmergedPatient;
             }
@@ -506,10 +507,12 @@ class CallLogUtil
                 $res['error'] = true;
                 $res['msg'] = " You are trying to un-merge master patient ID #$masterId without providing a new master patient record.";
             }
-        } else {
+        }
+
+        if( count($unmergedMasterPatients) > 1 ) {
             //logical error
             $res['error'] = true;
-            $res['msg'] = " Found invalid number of master records: ".count($unmergedMasterPatients)." master record found.";
+            $res['msg'] = " Found multiple number of master records: ".count($unmergedMasterPatients)." master record found.";
         }
 
         return $res;
@@ -675,6 +678,7 @@ class CallLogUtil
 
             //2) invalidate this merge ID
             $mergeMrn->setStatus('invalid');
+            $res['msg'] .= "Invalidate merge MRN ".$mergeMrn->getField()." for patient ID# ".$patient->getId()."<br>";
 
             //3) if more than one merge IDs (linked node) =>
             // add these (that does not exist yet) to the master Patient (making this patient as a linked node)
@@ -687,65 +691,17 @@ class CallLogUtil
                     $res['msg'] .= $newMrn . ". "; //this is an error message
                 } else {
                     //ok
+                    $res['msg'] .= "Copy merge MRN ".$newMrn->getField()." to master patient ID# ".$masterPatient->getId()."<br>";
                     $this->em->persist($newMrn);
                     $this->em->persist($masterPatient);
                 }
             }
 
             //4) check for the orphans for each mergeIDs
-            $this->processOrphan($patient,$mergeMrn);
+            $resOrphanMsg = $this->processOrphan($patient,$mergeMrn);
+            $res['msg'] .= $resOrphanMsg."<br>";
 
         }
-
-//        //get other merged patients in the same group
-//        $patients = $this->getMergedPatients($mergeId, null, array($patient->getId()));
-//
-//        if( count($patients) == 0 ) {
-//            //do nothing
-//        }
-//
-//        // A) if only one merged patient exists with this mergeId (except this patient) => orphan
-//        if( count($patients) == 1 ) {
-//            // un-merge this orphan patient
-//            $mergedPatient = $patients[0];
-//
-//            //get valid Merge MRN object
-//            $mergeMrn = $mergedPatient->obtainMergeMrnById($mergeId,'valid');
-//
-//            //1) un-merge: set valid status Merge MRN object to invalid
-//            $mergeMrn->setStatus('invalid');
-//
-//            //2) un-merge: invalidate all merge master records objects
-//            $mergedPatient->invalidateMasterMergeRecord('invalid');
-//        }
-
-        // B) if multiple patients found (except this patient) in the same group specified by the merge ID =>
-        // copy all merged IDs to the first patient in the chain (group)
-        // By diagram:
-        // un-merge C3: 2 other merged patients in this group (E,F) => two independent chains: A-B-C-D and E-F
-        // ////////
-        // This method: copy all other merged IDs to the first patient in the group:
-        // copy merge IDs 1 and 2 to the first patient E => now E has merge IDs 1,2,3
-        // Result: A(1)-B(1)-C(1,2), C(2,1)-D(2), E(3,1,2)-F(3) => we have the same chain A-B-C-D-E-F wrong!
-//        if(0) { //disable because it is wrong!
-//            if (count($patients) > 1) {
-//                //copy all valid merged IDs to the first patient in the same group
-//                $mergedPatient = $patients[0];
-//
-//                //get valid mrns
-//                $mergeMrns = $patient->obtainMergeMrnArr('valid');
-//
-//                foreach ($mergeMrns as $mergeMrn) {
-//                    //create new merge mrn and add it to the $mergedPatient
-//                    $newMrn = $this->createPatientMergeMrn($user, $mergedPatient, $mergeMrn->getField());
-//                    if (!($newMrn instanceof PatientMrn)) {
-//                        $res['error'] = true;
-//                        $res['msg'] .= $newMrn . ". "; //this is an error message
-//                    }
-//                }
-//
-//            }
-//        }
 
         return $res;
     }
@@ -757,6 +713,8 @@ class CallLogUtil
     // 2) invalidate all merge master records for this orphan patient
     // 3) if removed patient is the linked node (holding MID for different chains, i.e. 1,2,3)
     public function processOrphan( $patient, $mergeId ) {
+
+        $res = "";
 
         //get other merged patients in the same group
         $patients = $this->getMergedPatients($mergeId, null, array($patient->getId()));
@@ -781,6 +739,10 @@ class CallLogUtil
 
             $this->em->persist($orphanMergedPatient);
             //$this->em->persist($mergeMrn);
+
+            $res = "Invalidate merge MRN ".$mergeId." for the orphan patient ID# ".$orphanMergedPatient->getId();
         }
+
+        return $res;
     }
 }

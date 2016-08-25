@@ -389,8 +389,8 @@ class DataQualityController extends CallEntryController
 
         $masterId = trim($request->get('masterId'));
         $patientIds = trim($request->get('patientIds'));
-        echo "masterId=".$masterId."<br>";
-        echo "patientIds=".$patientIds."<br>";
+        //echo "masterId=".$masterId."<br>";
+        //echo "patientIds=".$patientIds."<br>";
         //exit('1');
 
         $patientIdsArr = explode(",",$patientIds);
@@ -403,7 +403,7 @@ class DataQualityController extends CallEntryController
             //$patientIdStrArr = explode("-mergeid-",$patientIdStr);
             //$patientId = $patientIdStrArr[0];
             //$patientMergeId = $patientIdStrArr[1];
-            echo "patientId=".$patientId."<br>";
+            //echo "patientId=".$patientId."<br>";
             //continue;
 
             //find patient object
@@ -423,7 +423,7 @@ class DataQualityController extends CallEntryController
         if( $processMasterRes['error'] ) {
             $error = true;
         }
-        $msg .= $processMasterRes['msg'];
+        $msg .= $processMasterRes['msg']."<br>";
 
         //3) process each un-merged patient
         foreach( $unmergedPatients as $unmergedPatient ) {
@@ -435,15 +435,23 @@ class DataQualityController extends CallEntryController
             } else {
                 $em->persist($unmergedPatient);
                 //$em->persist($mergeMrn);
-                //$em->flush(); //testing
+                $em->flush(); //testing
             }
-            $msg .= "Unmerged Patient ".$unmergedPatient->getFullPatientName() . "; " . $processUnmergePatientRes['msg'];
+            $msg .= "Unmerged Patient ID# ".$unmergedPatient->getId()." ".$unmergedPatient->getFullPatientName() . "; " . $processUnmergePatientRes['msg']."<br>";
+        }
+
+        if( count($unmergedPatients) > 0 ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $eventType = "Un-Merged Patient";
+            $event = "Un-Merged " . count($unmergedPatients) . " Patient(s) with a master patient " . $masterId.":";
+            $event = $event . $msg;
+            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $unmergedPatients, $request, $eventType);
         }
 
         $result = array();
         $result['error'] = $error;
         $result['msg'] = $msg;
-        exit('1');
+        //exit('exit:'.$msg);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
