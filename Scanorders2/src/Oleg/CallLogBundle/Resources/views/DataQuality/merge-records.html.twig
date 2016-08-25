@@ -98,6 +98,9 @@
 
         function mergePatientBtn() {
 
+            var lbtn = Ladda.create( document.getElementById("merge_patient_button") );
+            lbtn.start();
+
             $('#calllog-msg-danger-box').html("");
             $('#calllog-msg-danger-box').hide();
 
@@ -112,14 +115,18 @@
             if( id1 == id2 ) {
                 $('#calllog-msg-danger-box').html("You chose the same patients to merge.");
                 $('#calllog-msg-danger-box').show();
+                lbtn.stop();
                 return;
             }
 
             if( !masterMergeRecordId ) {
                 $('#calllog-msg-danger-box').html("You have to choose the Master merge patient record.");
                 $('#calllog-msg-danger-box').show();
+                lbtn.stop();
                 return;
             }
+
+
 
             var url = Routing.generate('calllog_merge_patient_records_ajax');
             $.ajax({
@@ -141,6 +148,8 @@
                     $('#calllog-msg-danger-box').html(data.msg);
                     $('#calllog-msg-danger-box').show();
                 }
+            }).done(function() {
+                lbtn.stop();
             });
 
         }

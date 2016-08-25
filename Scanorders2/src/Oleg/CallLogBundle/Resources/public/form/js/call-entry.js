@@ -14,6 +14,10 @@ function addnewCalllogPatient(holderId) {
 
     var holder = getHolder(holderId);
 
+    var addBtn = holder.find("#addnew_patient_button").get(0);
+    var lbtn = Ladda.create( addBtn );
+    lbtn.start();
+
     var mrntype = holder.find(".mrntype-combobox").select2('val');
     mrntype = trimWithCheck(mrntype);
 
@@ -47,6 +51,8 @@ function addnewCalllogPatient(holderId) {
         holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
         holder.find('#calllog-danger-box').show();
+
+        lbtn.stop();
         return false;
     }
 
@@ -74,6 +80,7 @@ function addnewCalllogPatient(holderId) {
         //x = "You pressed OK!";
     } else {
         //x = "You pressed Cancel!";
+        lbtn.stop();
         return false;
     }
 
@@ -113,6 +120,8 @@ function addnewCalllogPatient(holderId) {
             holder.find('#calllog-danger-box').html(data);
             holder.find('#calllog-danger-box').show();
         }
+    }).done(function() {
+        lbtn.stop();
     });
 
 
@@ -134,6 +143,10 @@ function clearCalllogPatient(holderId) {
 function findCalllogPatient(holderId,formtype) {
 
     var holder = getHolder(holderId);
+
+    var searchBtn = holder.find("#search_patient_button").get(0);
+    var lbtn = Ladda.create( searchBtn );
+    lbtn.start();
 
     //clear no matching box
     holder.find('#calllog-danger-box').hide();
@@ -186,6 +199,7 @@ function findCalllogPatient(holderId,formtype) {
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
         holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
         holder.find('#calllog-danger-box').show();
+        lbtn.stop();
         return false;
     }
 
@@ -200,6 +214,8 @@ function findCalllogPatient(holderId,formtype) {
         data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, formtype: formtype },
     }).success(function(data) {
         populatePatientsInfo(data,searchedStr,holderId);
+    }).done(function() {
+        lbtn.stop();
     });
 
 }

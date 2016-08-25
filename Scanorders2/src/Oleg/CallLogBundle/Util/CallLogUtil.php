@@ -724,6 +724,7 @@ class CallLogUtil
 
         //get other merged patients in the same group
         $patients = $this->getMergedPatients($mergeId, null, array($patient->getId()));
+        $res .= "Orphan check: other patients found = ".count($patients)."; ";
 
         if( count($patients) == 0 ) {
             //do nothing
@@ -746,7 +747,7 @@ class CallLogUtil
             $this->em->persist($orphanMergedPatient);
             //$this->em->persist($mergeMrn);
 
-            $res = "Invalidate merge MRN ".$mergeId." for the orphan patient ID# ".$orphanMergedPatient->getId();
+            $res .= "Invalidate merge MRN ".$mergeId." for the orphan patient ID# ".$orphanMergedPatient->getId();
         }
 
         return $res;

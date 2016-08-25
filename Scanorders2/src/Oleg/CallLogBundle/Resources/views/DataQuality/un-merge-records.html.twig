@@ -85,6 +85,9 @@
 
         function unmergePatientBtn() {
 
+            var lbtn = Ladda.create( document.getElementById("unmerge_patient_button") );
+            lbtn.start();
+
             $('#calllog-msg-success-box').html("");
             $('#calllog-msg-success-box').hide();
             $('#calllog-msg-danger-box').html("");
@@ -116,6 +119,7 @@
                     patientIds.push(this.value);
                 });
                 if( error ) {
+                    lbtn.stop();
                     return;
                 }
                 var url = Routing.generate('calllog_unmerge_patient_records_ajax');
@@ -143,6 +147,8 @@
                     $('#calllog-msg-danger-box').html(data.msg);
                     $('#calllog-msg-danger-box').show();
                 }
+            }).done(function() {
+                lbtn.stop();
             });
 
         }
