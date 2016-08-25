@@ -226,7 +226,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
     //var patLen = patients.length;
     var patLen = getPatientsLength(patients);
-    console.log('patLen='+patLen);
+    //console.log('patLen='+patLen);
 
     //clear matching patient section
     holder.find('#calllog-matching-patients').hide();
@@ -242,8 +242,8 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
     holder.find('#callentry-nosinglepatient-link').show();
 
     _patients = patients;
-    console.log("_patients:");
-    console.log(_patients);
+    //console.log("_patients:");
+    //console.log(_patients);
 
     var processed = false;
 
@@ -257,7 +257,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
         //console.log('single found patient id=' + patient.id);
 
         var patMergedLen = getMergedPatientInfoLength(patient);
-        console.log('patMergedLen='+patMergedLen);
+        //console.log('patMergedLen='+patMergedLen);
 
         if( patMergedLen == 0 && processed == false ) {
 
@@ -430,7 +430,7 @@ function constractMergedPatientInfoRow( patient, masterId ) {
             var patientsInfo = mergedPatients[mergedId]['patientInfo'];
             for( var index in patientsInfo ) {
                 var patientInfo = patientsInfo[index];
-                console.log('merged Patient ID=' + patientInfo['id']);
+                //console.log('merged Patient ID=' + patientInfo['id']);
                 //console.log(patientInfo);
                 //masterId = masterId + "-" + patientInfo['id'];
                 mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, masterId, "alert alert-info");

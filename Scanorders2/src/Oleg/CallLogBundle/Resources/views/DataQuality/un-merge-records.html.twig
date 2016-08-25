@@ -100,7 +100,7 @@
 
             //console.log('calllog-patient-master-record length='+$("input[name=calllog-patient-master-record]").length);
             var masterMergeRecordId = $("input[name=calllog-patient-master-record]:checked").val();
-            console.log('masterMergeRecordId='+masterMergeRecordId);
+            //console.log('masterMergeRecordId='+masterMergeRecordId);
 
             if( formtype == 'unmerge' ) {
                 var error = false;
@@ -176,7 +176,7 @@
             var mergedPatientsInfo = null;
             var mergedPatientsInfoLength = null;
             var masterPatientId = selectedPatient['masterPatientId'];
-            console.log("masterPatientId=" + masterPatientId);
+            //console.log("masterPatientId=" + masterPatientId);
             if( masterPatientId ) {
                 //console.log("masterPatientId=" + masterPatientId);
                 selectedPatient = getPatientByIdFromPatients(masterPatientId,_patients);
@@ -187,8 +187,8 @@
             //This patient record has not been merged with any other patient records.
             //var mergedPatientsInfo = selectedPatient['mergedPatientsInfo'][masterPatientId];
             //var mergedPatientsInfoLength = getMergedPatientsInfoLength(mergedPatientsInfo);
-            console.log('mergedPatientsInfo='+mergedPatientsInfo);
-            console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
+            //console.log('mergedPatientsInfo='+mergedPatientsInfo);
+            //console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
             if( mergedPatientsInfo && mergedPatientsInfoLength > 0 ) {
                 //ok
                 //console.log('mergedPatientsInfo ok');
