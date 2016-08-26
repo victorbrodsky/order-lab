@@ -23,6 +23,8 @@
 
         <input type="hidden" id="formcycle" value="{{ cycle }}" />
         <input type="hidden" id="orderformtype" value="calllog" />
+        <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
+        <input type="hidden" id="mrntype" value="{{ mrntype }}" />
 
         {#<input type="hidden" id="calllog-patient-master-id" value="" />#}
 
@@ -66,6 +68,8 @@
 //                console.log("merge recrords overwrite replace Calllog PatientToPopulate");
 //                return patientToPopulate;
 //            }
+
+            calllogTriggerSearch('patient-holder-1','merge');
 
         });
 

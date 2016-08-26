@@ -10,6 +10,39 @@ function initCallLogPage() {
     listnereAccordionMasterPatientParent();
 }
 
+function calllogTriggerSearch(holderId,formtype) {
+    if( holderId == null ) {
+        holderId = 'patient-holder-1';
+    }
+    var triggerSearch = $('#triggerSearch').val();
+    console.log('triggerSearch='+triggerSearch);
+
+    //var holder = getHolder(holderId);
+
+    var mrntype = $('#mrntype').val();
+    findCalllogPatient(holderId,formtype,mrntype);
+
+    //setTimeout(calllogTryTriggerSearch(holder), 10000);
+    //function calllogTryTriggerSearch(holder) {
+    //    var mrntype = holder.find(".mrntype-combobox").select2('val');
+    //    mrntype = trimWithCheck(mrntype);
+    //    console.log("click: mrntype="+mrntype);
+    //    holder.find('#search_patient_button').click();
+    //    //call directly search function findCalllogPatient(holderId,formtype)
+    //}
+
+    //if( triggerSearch == 1 ) {
+    //    var holder = getHolder(holderId);
+    //    //select2-loaded
+    //    //oleg_calllogbundle_patienttype_mrn_0_keytype
+    //    holder.find('.mrntype-combobox').select2().on("change", function(e) {
+    //        console.log('select2-loaded');
+    //        holder.find('#search_patient_button').click();
+    //    });
+    //}
+}
+
+
 function addnewCalllogPatient(holderId) {
 
     var holder = getHolder(holderId);
@@ -140,7 +173,7 @@ function clearCalllogPatient(holderId) {
     calllogHideAllAlias(true,true,holderId);
 }
 
-function findCalllogPatient(holderId,formtype) {
+function findCalllogPatient(holderId,formtype,mrntype) {
 
     var holder = getHolder(holderId);
 
@@ -154,8 +187,12 @@ function findCalllogPatient(holderId,formtype) {
 
     var searchedStr = "";
 
-    var mrntype = holder.find(".mrntype-combobox").select2('val');
-    mrntype = trimWithCheck(mrntype);
+    if( mrntype ) {
+
+    } else {
+        mrntype = holder.find(".mrntype-combobox").select2('val');
+        mrntype = trimWithCheck(mrntype);
+    }
 
     //set _mrntype_original
     if( _mrntype_original == null && _mrntype && _mrntype.length > 0 ) {
@@ -411,9 +448,12 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
             '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">'+
             'Action <span class="caret"></span></button>'+
         '<ul class="dropdown-menu dropdown-menu-right">'+
-            '<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'unmerge\')">Un-merge patient record</a></li>'+
-            '<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'set-master-record\')">Set Master record</a></li>'+
+            //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'unmerge\')">Un-merge patient record</a></li>'+
+            //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'set-master-record\')">Set Master record</a></li>'+
             '<li><a href="'+mergeUrl+'">Merge patient record</a></li>'+
+            '<li><a href="'+unmergeUrl+'">Un-merge patient record</a></li>'+
+            '<li><a href="'+setmasterUrl+'">Set Master record</a></li>'+
+            '<li><a href="'+editUrl+'">Edit patient record</a></li>'+
         '</ul></div>';
 
     patientsHtml +=

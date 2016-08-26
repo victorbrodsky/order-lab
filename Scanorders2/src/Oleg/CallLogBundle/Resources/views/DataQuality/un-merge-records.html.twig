@@ -21,6 +21,7 @@
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="orderformtype" value="calllog" />
     <input type="hidden" id="formtype" value="{{ formtype }}" />
+    <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
 
     <div id="calllog-patient-list">
 
@@ -60,6 +61,7 @@
             //hide all alias
             calllogHideAllAlias(true,true);
             showHideUnMergeButton();
+            calllogTriggerSearch();
         });
 
         //triggered by class calllog-patient-id

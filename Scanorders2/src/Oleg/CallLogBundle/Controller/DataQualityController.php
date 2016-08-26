@@ -48,19 +48,23 @@ class DataQualityController extends CallEntryController
         $status = 'valid';
         $cycle = 'new';
 
+        $patient1 = new Patient(true,$status,$user,$system);
+
+        $triggerSearch = 0;
         $mrntype = trim($request->get('mrn-type'));
         $mrnid = trim($request->get('mrn'));
-        $id1 = null;
-
-        if( $id1 ) {
-            $patient1 = $em->getRepository('OlegOrderformBundle:Patient')->find($id1);
-            $form1 = $this->createPatientForm($patient1,array('disabled'=>'disabled'));
-        } else {
-            $patient1 = new Patient(true,$status,$user,$system);
-            $encounter1 = new Encounter(true,$status,$user,$system);
-            $patient1->addEncounter($encounter1);
-            $form1 = $this->createPatientForm($patient1);
+        if( $mrntype && $mrnid ) {
+            $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
+            $mrnPatient1->setKeytype($mrntype);
+            $mrnPatient1->setField($mrnid);
+            $triggerSearch = 1;
         }
+        echo "triggerSearch=".$triggerSearch."<br>";
+
+        $encounter1 = new Encounter(true,$status,$user,$system);
+        $patient1->addEncounter($encounter1);
+        $form1 = $this->createPatientForm($patient1);
+
 
         $patient2 = new Patient(true,$status,$user,$system);
         $encounter2 = new Encounter(true,$status,$user,$system);
@@ -74,6 +78,8 @@ class DataQualityController extends CallEntryController
             'form2' => $form2->createView(),
             'cycle' => $cycle,
             'title' => $title,
+            'triggerSearch' => $triggerSearch,
+            'mrntype' => $mrntype
         );
     }
 
@@ -328,9 +334,18 @@ class DataQualityController extends CallEntryController
             $formtype = 'set-master-record';
         }
 
-
-
         $patient1 = new Patient(true,$status,$user,$system);
+
+        $triggerSearch = 0;
+        $mrntype = trim($request->get('mrn-type'));
+        $mrnid = trim($request->get('mrn'));
+        if( $mrntype && $mrnid ) {
+            $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
+            $mrnPatient1->setKeytype($mrntype);
+            $mrnPatient1->setField($mrnid);
+            $triggerSearch = 1;
+        }
+
         $encounter1 = new Encounter(true,$status,$user,$system);
         $patient1->addEncounter($encounter1);
         $form1 = $this->createPatientForm($patient1);
@@ -346,7 +361,8 @@ class DataQualityController extends CallEntryController
             //'form2' => $form2->createView(),
             'cycle' => $cycle,
             'title' => $title,
-            'formtype' => $formtype
+            'formtype' => $formtype,
+            'triggerSearch' => $triggerSearch
         );
     }
 
