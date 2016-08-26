@@ -32,7 +32,7 @@ class DataQualityController extends CallEntryController
 
 
     /**
-     * @Route("/merge-patient-records", name="calllog_merge_patient_records")
+     * @Route("/merge-patient-records", name="calllog_merge_patient_records", options={"expose"=true})
      * @Template("OlegCallLogBundle:DataQuality:merge-records.html.twig")
      */
     public function mergePatientAction(Request $request)
@@ -48,11 +48,19 @@ class DataQualityController extends CallEntryController
         $status = 'valid';
         $cycle = 'new';
 
+        $mrntype = trim($request->get('mrn-type'));
+        $mrnid = trim($request->get('mrn'));
+        $id1 = null;
 
-        $patient1 = new Patient(true,$status,$user,$system);
-        $encounter1 = new Encounter(true,$status,$user,$system);
-        $patient1->addEncounter($encounter1);
-        $form1 = $this->createPatientForm($patient1);
+        if( $id1 ) {
+            $patient1 = $em->getRepository('OlegOrderformBundle:Patient')->find($id1);
+            $form1 = $this->createPatientForm($patient1,array('disabled'=>'disabled'));
+        } else {
+            $patient1 = new Patient(true,$status,$user,$system);
+            $encounter1 = new Encounter(true,$status,$user,$system);
+            $patient1->addEncounter($encounter1);
+            $form1 = $this->createPatientForm($patient1);
+        }
 
         $patient2 = new Patient(true,$status,$user,$system);
         $encounter2 = new Encounter(true,$status,$user,$system);
@@ -86,7 +94,8 @@ class DataQualityController extends CallEntryController
         $id1 = trim($request->get('id1'));
         $id2 = trim($request->get('id2'));
         $masterMergeRecordId = trim($request->get('masterMergeRecordId'));
-        //echo "id1=$id1; id2=$id2 <br>";
+        echo "id1=$id1; id2=$id2 <br>";
+        exit('exit');
 
         $msg = "";
         //$res = null;
@@ -293,8 +302,8 @@ class DataQualityController extends CallEntryController
 
 
     /**
-     * @Route("/un-merge-patient-records", name="calllog_unmerge_patient_records")
-     * @Route("/set-master-patient-record", name="calllog_set_master_patient_record")
+     * @Route("/un-merge-patient-records", name="calllog_unmerge_patient_records", options={"expose"=true})
+     * @Route("/set-master-patient-record", name="calllog_set_master_patient_record", options={"expose"=true})
      *
      * @Template("OlegCallLogBundle:DataQuality:un-merge-records.html.twig")
      */
@@ -315,7 +324,7 @@ class DataQualityController extends CallEntryController
             $title = "Un-merge Patient Records";
             $formtype = 'unmerge';
         } else {
-            $title = "Set Master Patient Records";
+            $title = "Set Master Patient Record";
             $formtype = 'set-master-record';
         }
 
@@ -398,7 +407,7 @@ class DataQualityController extends CallEntryController
         $em = $this->getDoctrine()->getManager();
 
         //$system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
-        $status = 'valid';
+        //$status = 'valid';
         //$cycle = 'new';
 
         $error = false;
@@ -476,6 +485,12 @@ class DataQualityController extends CallEntryController
         return $response;
     }
 
+    /**
+     * @Route("/edit-patient-record", name="calllog_edit_patient_record", options={"expose"=true})
+     */
+    public function editPatientAction(Request $request)
+    {
 
+    }
 
 }

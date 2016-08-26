@@ -97,7 +97,7 @@ class CallEntryController extends Controller
         );
     }
 
-    public function createPatientForm($patient) {
+    public function createPatientForm($patient, $formparams=null) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -110,7 +110,11 @@ class CallEntryController extends Controller
             'type' => null
         );
 
-        $form = $this->createForm(new PatientType($params,$patient), $patient);
+        if( $formparams ) {
+            $form = $this->createForm(new PatientType($params, $patient), $patient, $formparams);
+        } else {
+            $form = $this->createForm(new PatientType($params, $patient), $patient);
+        }
 
         return $form;
     }

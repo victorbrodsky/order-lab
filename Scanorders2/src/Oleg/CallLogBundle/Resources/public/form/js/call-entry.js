@@ -327,6 +327,7 @@ function createPatientsTableCalllog( patients, holderId ) {
         '<th>Sex</th>' +
         '<th>DOB</th>' +
         '<th>Contact Info</th>' +
+        '<th>Action</th>' +
         '</tr></thead>' +
         '<tbody>';
 
@@ -350,9 +351,9 @@ function createPatientsTableCalllog( patients, holderId ) {
             var masterId = patient['masterPatientId'];  //i+'-'+holderId
             //console.log('masterId='+masterId);
 
-            matchingPatientsHtml = matchingPatientsHtml + constractPatientInfoRow(patient, masterId, "master");
+            matchingPatientsHtml = matchingPatientsHtml + constractPatientInfoRow(patient, masterId, "master", holderId);
 
-            matchingPatientsHtml = matchingPatientsHtml + constractMergedPatientInfoRow(patient, masterId);
+            matchingPatientsHtml = matchingPatientsHtml + constractMergedPatientInfoRow(patient, masterId, holderId);
         }
     }
 
@@ -383,7 +384,7 @@ function createPatientsTableCalllog( patients, holderId ) {
     });
 
 }
-function constractPatientInfoRow( patient, masterId, type ) {
+function constractPatientInfoRow( patient, masterId, type, holderId ) {
     //to test use: http://www.bootply.com/4lsCo5q101
     var patientsHtml = "";
 
@@ -401,6 +402,20 @@ function constractPatientInfoRow( patient, masterId, type ) {
         patientsHtml += '<td>&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
     }
 
+    var mergeUrl = Routing.generate('calllog_merge_patient_records')+"?mrn-type="+patient.mrntype+"&mrn="+patient.mrn;
+    var unmergeUrl = Routing.generate('calllog_unmerge_patient_records')+"?mrn-type="+patient.mrntype+"&mrn="+patient.mrn;
+    var setmasterUrl = Routing.generate('calllog_set_master_patient_record')+"?mrn-type="+patient.mrntype+"&mrn="+patient.mrn;
+    var editUrl = Routing.generate('calllog_edit_patient_record')+"?mrn-type="+patient.mrntype+"&mrn="+patient.mrn;
+    var action =
+        '<div class="btn-group">'+
+            '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">'+
+            'Action <span class="caret"></span></button>'+
+        '<ul class="dropdown-menu dropdown-menu-right">'+
+            '<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'unmerge\')">Un-merge patient record</a></li>'+
+            '<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'set-master-record\')">Set Master record</a></li>'+
+            '<li><a href="'+mergeUrl+'">Merge patient record</a></li>'+
+        '</ul></div>';
+
     patientsHtml +=
         '<td id="calllog-patientid-'+patient.id+'">'+
         patient.patientInfoStr +
@@ -413,14 +428,13 @@ function constractPatientInfoRow( patient, masterId, type ) {
         '<td>'+patient.suffix+'</td>'+
         '<td>'+patient.sexstr+'</td>'+
         '<td>'+patient.dob+'</td>'+
-        '<td>'+ //class="rowlink-skip"
-            patient.contactinfo+
-        '</td>'+
+        '<td>'+patient.contactinfo+'</td>'+
+        '<td>'+action+'</td>'+
         '</tr>';
 
     return patientsHtml;
 }
-function constractMergedPatientInfoRow( patient, masterId ) {
+function constractMergedPatientInfoRow( patient, masterId, holderId ) {
     var mergedPatientsHtml = "";
     var mergedPatients = patient['mergedPatientsInfo'];
     for( var mergedId in mergedPatients ) {
@@ -433,7 +447,7 @@ function constractMergedPatientInfoRow( patient, masterId ) {
                 //console.log('merged Patient ID=' + patientInfo['id']);
                 //console.log(patientInfo);
                 //masterId = masterId + "-" + patientInfo['id'];
-                mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, masterId, "alert alert-info");
+                mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, masterId, "alert alert-info", holderId);
             }
         }
     }

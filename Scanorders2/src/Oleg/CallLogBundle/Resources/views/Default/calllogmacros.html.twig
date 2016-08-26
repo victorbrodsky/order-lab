@@ -152,8 +152,10 @@
                 <div class="calllog-search-fields">
 
                     {% for mrn in form.mrn %}
-                        {{ formmacros.field(mrn.keytype) }}
-                        {{ formmacros.field(mrn.field) }}
+                        {% if mrn.status == 'valid' or not mrn.vars.value.field %}
+                            {{ formmacros.field(mrn.keytype) }}
+                            {{ formmacros.field(mrn.field) }}
+                        {% endif %}
                     {% endfor %}
 
                     {% for dob in form.dob %}
