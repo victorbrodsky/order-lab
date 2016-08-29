@@ -843,7 +843,7 @@ class ReportGenerator {
         //return 0 => ok, return 1 => failed
         if( $return == 1 ) {
 
-            $logger->error("pdftk return: " . $return);
+            //$logger->error("pdftk return: " . implode("; ",$return));
 
             //from command cause Error:
             //ERROR: 'Complete Application PDF' will not be generated! pdftk failed:
@@ -860,17 +860,17 @@ class ReportGenerator {
             //actual : E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
 
             //event log
-            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
+            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd. "; pdftk return: " . implode("; ",$return);
             //echo $event."<br>";
             $logger->warning($event);
             $systemUser = $userSecUtil->findSystemUser();
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
 
             $filesInArr = $this->processFilesGostscript($filesArr);
-            $logger->notice("GS output; filesInArr=".implode("; ",$filesInArr));
+            //$logger->notice("GS output; filesInArr=".implode("; ",$filesInArr));
 
             $filesInStr = $this->convertFilesArrToString($filesInArr, false);
-            $logger->warning('pdftk encrypted filesInStr='.$filesInStr);
+            //$logger->warning('pdftk encrypted filesInStr='.$filesInStr);
 
             //$cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
 
@@ -898,8 +898,9 @@ class ReportGenerator {
 
             if( $return == 1 ) { //error
                 //event log
-                $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk failed: " . $cmd;
+                $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd."; pdftk return: " . implode("; ",$return);
                 $logger->error($event);
+                //$logger->error("GS return=".implode("; ",$return));
 
                 //send email
                 $fellappUtil = $this->container->get('fellapp_util');
@@ -990,8 +991,8 @@ class ReportGenerator {
             $outFilename = str_replace("/","\\", $outFilename);
             $outFilename = str_replace("app\..","", $outFilename);
 
-            $logger->notice('GS: inputFiles='.$filesStr);
-            $logger->notice('GS: outFilename='.$outFilename);
+            //$logger->notice('GS: inputFiles='.$filesStr);
+            //$logger->notice('GS: outFilename='.$outFilename);
 
             //gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=unencrypted.pdf -c .setpdfwrite -f encrypted.pdf
             //$cmd = $cmd . '-sOutputFile=' . $outFilename . ' -c .setpdfwrite -f ' . $filesStr ;
@@ -1001,11 +1002,11 @@ class ReportGenerator {
             //$logger->notice('0 gsArgumentsFellApp='.$gsArgumentsFellApp);
             $gsArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$gsArgumentsFellApp);
             $gsArgumentsFellApp = str_replace('###outputFile###',$outFilename,$gsArgumentsFellApp);
-            $logger->notice('gsArgumentsFellApp='.$gsArgumentsFellApp);
+            //$logger->notice('gsArgumentsFellApp='.$gsArgumentsFellApp);
 
             $cmd = $gsLocation . ' ' . $gsArgumentsFellApp;
 
-            $logger->notice('GS cmd='.$cmd);
+            //$logger->notice('GS cmd='.$cmd);
 
             $output = null;
             $return = null;
@@ -1016,7 +1017,7 @@ class ReportGenerator {
 
             if( $return == 1 ) {
                 //event log
-                $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd;
+                $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd."; GS return=".implode("; ",$return);
                 $logger->error($event);
                 $fellappUtil = $this->container->get('fellapp_util');
                 $fellappUtil->sendEmailToSystemEmail("Complete Application PDF will no be generated - GS failed", $event);
@@ -1025,10 +1026,10 @@ class ReportGenerator {
                 $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
             } else {
-                $logger->notice("GS converter OK: cmd=".$cmd."; output=".implode(";",$output));
+                //$logger->notice("GS converter OK: cmd=".$cmd."; output=".implode(";",$output));
             }
 
-            $logger->notice("GS final outFilename=".$outFilename);
+            //$logger->notice("GS final outFilename=".$outFilename);
             $filesOutArr[] = $outFilename;
 
         }
