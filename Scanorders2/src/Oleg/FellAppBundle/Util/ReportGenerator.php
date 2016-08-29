@@ -896,7 +896,7 @@ class ReportGenerator {
             //$logger->error("pdftk 2 output: " . print_r($output));
             //$logger->error("pdftk 2 return: " . $return);
 
-            if( 1 || $return == 1 ) { //error
+            if( $return == 1 ) { //error
                 //event log
                 $subjectUser = $fellapp->getUser();
                 $fellappInfoStr = "ID #".$fellapp->getId()." (".$subjectUser."): ";
