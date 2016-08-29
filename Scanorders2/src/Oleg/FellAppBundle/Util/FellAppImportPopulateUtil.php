@@ -1656,6 +1656,10 @@ class FellAppImportPopulateUtil {
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
         $emailUtil = $this->container->get('user_mailer_utility');
+
+        $logger = $this->container->get('logger');
+        $logger->error("sendEmailToSystemEmail: systemEmail=".$systemEmail."; subject=".$subject."; message=".$message);
+
         $emailUtil->sendEmail( $systemEmail, $subject, $message );
     }
 

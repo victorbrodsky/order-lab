@@ -42,16 +42,19 @@ class EmailUtil {
         //echo "ccs=".$ccs."<br>";
 
         if( $this->hasConnection() == false ) {
+            $logger->error("sendEmail: connection error");
             //exit('no connection');
             return false;
         }
         //exit('yes connection');
 
         if( !$emails || $emails == "" ) {
+            $logger->error("sendEmail: emails empty=".$emails);
             return false;
         }
 
         if( !$message || $message == "" ) {
+            $logger->error("sendEmail: message empty=".$message);
             return false;
         }
 
