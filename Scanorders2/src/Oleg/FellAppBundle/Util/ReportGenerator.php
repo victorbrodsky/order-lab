@@ -865,6 +865,7 @@ class ReportGenerator {
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
 
             $filesInArr = $this->processFilesGostscript($filesArr);
+            $logger->notice("GS output; filesInArr=".implode("; ",$filesInArr));
 
             $filesInStr = $this->convertFilesArrToString($filesInArr, false);
             //$logger->warning('pdftk encrypted filesInStr='.$filesInStr);
@@ -1017,15 +1018,13 @@ class ReportGenerator {
                 $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
             } else {
-                $logger->notice("GS converter OK: cmd=".$cmd."; output=".print_r($output));
+                $logger->notice("GS converter OK: cmd=".$cmd."; output=".implode(";",$output));
             }
 
             $logger->notice("GS final outFilename=".$outFilename);
             $filesOutArr[] = $outFilename;
 
         }
-
-        $logger->notice("GS finished; filesOutArr=".print_r($filesOutArr));
 
         return $filesOutArr;
     }
