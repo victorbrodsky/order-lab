@@ -860,7 +860,7 @@ class ReportGenerator {
             //event log
             $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
             //echo $event."<br>";
-            $logger->notice($event);
+            $logger->warning($event);
             $systemUser = $userSecUtil->findSystemUser();
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
 
@@ -1013,6 +1013,8 @@ class ReportGenerator {
                 $userSecUtil = $this->container->get('user_security_utility');
                 $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+            } else {
+                $logger->notice("GS converter OK: cmd=".$cmd."; output=".$output);
             }
 
             $filesOutArr[] = $outFilename;
