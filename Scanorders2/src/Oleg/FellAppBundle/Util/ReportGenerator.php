@@ -648,7 +648,6 @@ class ReportGenerator {
     protected function convertToPdf( $filePathsArr, $outdir ) {
 
         $logger = $this->container->get('logger');
-        $fellappUtil = $this->container->get('fellapp_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $fileNamesArr = array();
 
@@ -684,7 +683,7 @@ class ReportGenerator {
             if( !file_exists($filePath) ) {
                 $event = "Convert to PDF: Input file does not exist!!!: filePath=".$filePath;
                 $logger->error($event);
-                $fellappUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist!!!", $event);
+                $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist!!!", $event);
             }
 
             //$outFilename = $outdir . basename($filePath);
@@ -724,7 +723,7 @@ class ReportGenerator {
                 if( !file_exists($outFilename) ) {
                     $event = "Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
                     $logger->error($event);
-                    $fellappUtil->sendEmailToSystemEmail("Output file does not exist after PDF generation!!!", $event);
+                    $userSecUtil->sendEmailToSystemEmail("Output file does not exist after PDF generation!!!", $event);
                 }
 
             } else {
@@ -905,8 +904,7 @@ class ReportGenerator {
                 //$logger->error("GS return=".implode("; ",$return));
 
                 //send email
-                $fellappUtil = $this->container->get('fellapp_util');
-                $fellappUtil->sendEmailToSystemEmail("ERROR: Probably there is an encrypted pdf. Complete Application PDF will not be generated - pdftk failed", $event);
+                $userSecUtil->sendEmailToSystemEmail("ERROR: Probably there is an encrypted pdf. Complete Application PDF will not be generated - pdftk failed", $event);
 
                 $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
@@ -947,6 +945,8 @@ class ReportGenerator {
     public function processFilesGostscript( $filesArr ) {
 
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
 
         $filesOutArr = array();
 
@@ -1021,11 +1021,8 @@ class ReportGenerator {
                 //event log
                 $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd."; GS output=".implode("; ",$output);
                 $logger->error($event);
-                $fellappUtil = $this->container->get('fellapp_util');
-                $fellappUtil->sendEmailToSystemEmail("Complete Application PDF will no be generated - GS failed", $event);
+                $userSecUtil->sendEmailToSystemEmail("Complete Application PDF will no be generated - GS failed", $event);
 
-                $userSecUtil = $this->container->get('user_security_utility');
-                $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
             } else {
                 //$logger->notice("GS converter OK: cmd=".$cmd."; output=".implode(";",$output));

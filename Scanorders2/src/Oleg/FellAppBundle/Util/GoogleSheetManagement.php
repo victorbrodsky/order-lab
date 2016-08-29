@@ -148,7 +148,6 @@ class GoogleSheetManagement {
     public function getSheetByFileId( $fileId ) {
 
         $logger = $this->container->get('logger');
-        $fellappUtil = $this->container->get('fellapp_util');
         $userSecUtil = $this->container->get('user_security_utility');
 
         //get Google access token
@@ -159,7 +158,7 @@ class GoogleSheetManagement {
             $event = "Google API access Token empty";
             $logger->warning($event);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $fellappUtil->sendEmailToSystemEmail($event, $event);
+            $userSecUtil->sendEmailToSystemEmail($event, $event);
             return null;
         }
 
@@ -594,8 +593,7 @@ class GoogleSheetManagement {
             $event = "Failed to authenticate to Google using P12: " . $e->getMessage();
             $logger->error($event);
             //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $fellappUtil = $this->container->get('fellapp_util');
-            $fellappUtil->sendEmailToSystemEmail($subject, $event);
+            $userSecUtil->sendEmailToSystemEmail($subject, $event);
         }
 
         $res = array(
