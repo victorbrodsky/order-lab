@@ -504,10 +504,66 @@ class DataQualityController extends CallEntryController
 
     /**
      * @Route("/edit-patient-record", name="calllog_edit_patient_record", options={"expose"=true})
+     * @Template("OlegCallLogBundle:DataQuality:un-merge-records.html.twig")
      */
     public function editPatientAction(Request $request)
     {
 
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        //$em = $this->getDoctrine()->getManager();
+
+        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $status = 'valid';
+        $cycle = 'new';
+
+        $title = "Edit Patient Info";
+        $formtype = 'edit-patient';
+
+        $patient1 = new Patient(true,$status,$user,$system);
+
+        $triggerSearch = 0;
+        $mrntype = trim($request->get('mrn-type'));
+        $mrnid = trim($request->get('mrn'));
+        if( $mrntype && $mrnid ) {
+            $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
+            $mrnPatient1->setKeytype($mrntype);
+            $mrnPatient1->setField($mrnid);
+            $triggerSearch = 1;
+        }
+
+        $encounter1 = new Encounter(true,$status,$user,$system);
+        $patient1->addEncounter($encounter1);
+        $form1 = $this->createPatientForm($patient1);
+
+        return array(
+            'form1' => $form1->createView(),
+            'cycle' => $cycle,
+            'title' => $title,
+            'formtype' => $formtype,
+            'triggerSearch' => $triggerSearch,
+            'mrntype' => $mrntype
+        );
+    }
+
+    /**
+     * @Route("/edit-patient-record-ajax", name="calllog_edit_patient_record_ajax", options={"expose"=true})
+     */
+    public function editPatientAjaxAction(Request $request)
+    {
+
+        $result = array();
+        $result['error'] = false;
+        $result['msg'] = "";
+
+
+        $result['error'] = true;
+        $result['msg'] = "Under construction.";
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
     }
 
 }

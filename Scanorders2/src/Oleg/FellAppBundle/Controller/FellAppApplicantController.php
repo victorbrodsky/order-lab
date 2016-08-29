@@ -202,7 +202,7 @@ class FellAppApplicantController extends Controller {
             }
         }
 
-        $event = "Invited interviewers to rate fellowship application ID " . $id . ".";
+        $event = "Invited interviewers to rate fellowship application ID " . $id . " ".$entity->getUser().".";
         $this->sendConfirmationEmail($emails,$entity,$event,$emailUtil,$request);
 
         $response = new Response();
@@ -241,7 +241,7 @@ class FellAppApplicantController extends Controller {
         $emails = array();
         $emails[] = $email;
 
-        $event = "Invited interviewer to rate fellowship application ID " . $fellapp->getId() . ".";
+        $event = "Invited interviewer to rate fellowship application ID " . $fellapp->getId() . " ".$fellapp->getUser().".";
         $this->sendConfirmationEmail($emails,$fellapp,$event,$emailUtil,$request);
 
 
@@ -373,9 +373,9 @@ class FellAppApplicantController extends Controller {
         }
 
         $applicant = $fellapp->getUser();
-        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, null, $senderEmail );
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, null, $senderEmail );
 
-        $logger->notice("sendConfirmationEmail: Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
+        $logger->notice("sendConfirmationEmail: "."Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().": Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
     }
 
 
@@ -443,7 +443,7 @@ class FellAppApplicantController extends Controller {
             $logger->notice("inviteObserversToRateAction: Send observer invitation email from " . $senderEmail . " to :".$email);
         }
 
-        $event = "Invited observers to view fellowship application ID " . $id . ".";
+        $event = "Invited observers to view fellowship application ID " . $id . " ".$entity->getUser().".";
         $this->sendConfirmationEmail($emails,$entity,$event,$emailUtil,$request);
 
         $response = new Response();
