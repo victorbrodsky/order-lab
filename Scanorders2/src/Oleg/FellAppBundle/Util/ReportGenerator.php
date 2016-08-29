@@ -990,14 +990,14 @@ class ReportGenerator {
 
             //replace ###parameter### by appropriate variable
             //-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
-            $logger->notice('0 gsArgumentsFellApp='.$gsArgumentsFellApp);
+            //$logger->notice('0 gsArgumentsFellApp='.$gsArgumentsFellApp);
             $gsArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$gsArgumentsFellApp);
             $gsArgumentsFellApp = str_replace('###outputFile###',$outFilename,$gsArgumentsFellApp);
             $logger->notice('gsArgumentsFellApp='.$gsArgumentsFellApp);
 
             $cmd = $gsLocation . ' ' . $gsArgumentsFellApp;
 
-            $logger->notice($filesStr.': GS cmd='.$cmd);
+            $logger->notice('GS cmd='.$cmd);
 
             $output = null;
             $return = null;
@@ -1020,9 +1020,12 @@ class ReportGenerator {
                 $logger->notice("GS converter OK: cmd=".$cmd."; output=".print_r($output));
             }
 
+            $logger->notice("GS final outFilename=".$outFilename);
             $filesOutArr[] = $outFilename;
 
         }
+
+        $logger->notice("GS finished; filesOutArr=".print_r($filesOutArr));
 
         return $filesOutArr;
     }
