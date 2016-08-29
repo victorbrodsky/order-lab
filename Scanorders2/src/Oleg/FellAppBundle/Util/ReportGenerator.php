@@ -860,7 +860,7 @@ class ReportGenerator {
             //actual : E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
 
             //event log
-            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd. "; pdftk return: " . implode("; ",$return);
+            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd. "; pdftk output=" . implode("; ",$output);
             //echo $event."<br>";
             $logger->warning($event);
             $systemUser = $userSecUtil->findSystemUser();
