@@ -982,7 +982,8 @@ class ReportGenerator {
             $outFilename = str_replace("/","\\", $outFilename);
             $outFilename = str_replace("app\..","", $outFilename);
 
-            //$logger->notice('GS: outFilename='.$outFilename);
+            $logger->notice('GS: inputFiles='.$filesStr);
+            $logger->notice('GS: outFilename='.$outFilename);
 
             //gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=unencrypted.pdf -c .setpdfwrite -f encrypted.pdf
             //$cmd = $cmd . '-sOutputFile=' . $outFilename . ' -c .setpdfwrite -f ' . $filesStr ;
