@@ -900,6 +900,7 @@ class ReportGenerator {
                 //event log
                 $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd."; pdftk output=" . implode("; ",$output);
                 $logger->error($event);
+                $logger->error("return=".$return."; output=".print_r($output));
                 //$logger->error("GS return=".implode("; ",$return));
 
                 //send email
