@@ -141,6 +141,128 @@ function addnewCalllogPatient(holderId) {
 
 }
 
+function submitPatientBtn(holderId) {
+
+    var holder = getHolder(holderId);
+
+    var addBtn = $("#submit_patient_button").get(0);
+    var lbtn = Ladda.create( addBtn );
+    lbtn.start();
+
+    //calllog-patient-id-patient-holder-1
+    console.log("id="+"#calllog-patient-id-"+holderId);
+    var patientId = holder.find("#calllog-patient-id-"+holderId).val();
+    //console.log(patientIdField);
+    //var patientId = $("#calllog-patient-id-"+holderId).val();
+    console.log("patientId="+patientId);
+
+    var mrntype = holder.find(".mrntype-combobox").select2('val');
+    mrntype = trimWithCheck(mrntype);
+
+    var mrn = holder.find(".patientmrn-mask").val();
+    mrn = trimWithCheck(mrn);
+
+    var dob = holder.find(".patient-dob-date").val();
+    dob = trimWithCheck(dob);
+
+    var lastname = holder.find(".encounter-lastName").val();
+    lastname = trimWithCheck(lastname);
+
+    var firstname = holder.find(".encounter-firstName").val();
+    firstname = trimWithCheck(firstname);
+
+    var middlename = holder.find(".encounter-middleName").val();
+    middlename = trimWithCheck(middlename);
+
+    var suffix = holder.find(".encounter-suffix").val();
+    suffix = trimWithCheck(suffix);
+
+    var sex = holder.find(".encountersex-field").select2('val');
+    sex = trimWithCheck(sex);
+
+    //check if "Last Name" field + DOB field, or "MRN" fields are not empty
+    //if( !mrn || !mrntype || !lastname || !dob ) {
+    if( mrntype && mrn || lastname && dob ) {
+        //if( mrntype && mrn || lastname ) {
+        //ok
+    } else {
+        holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+        //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
+        holder.find('#calllog-danger-box').show();
+
+        lbtn.stop();
+        return false;
+    }
+
+    //"Are You sure you would like to create a new patient registration record for
+    //MRN: Last Name: First Name: Middle Name: Suffix: Sex: DOB: Alias(es):
+    var confirmMsg = "Are You sure you would like to update the patient record for patient ID #"+patientId+". ";
+
+    if( mrn )
+        confirmMsg += " MRN:"+mrn;
+    if( lastname )
+        confirmMsg += " Last Name:"+lastname;
+    if( firstname )
+        confirmMsg += " First Name:"+firstname;
+    if( middlename )
+        confirmMsg += " Middle Name:"+middlename;
+    if( suffix )
+        confirmMsg += " Suffix:"+suffix;
+    if( sex )
+        confirmMsg += " Sex:"+sex;
+    if( dob )
+        confirmMsg += " DOB:"+dob;
+
+    if( confirm(confirmMsg) == true ) {
+        //x = "You pressed OK!";
+    } else {
+        //x = "You pressed Cancel!";
+        lbtn.stop();
+        return false;
+    }
+
+    //Clicking "Ok" in the Dialog confirmation box should use the variables
+    // to create a create the new patient on the server via AJAX/Promise,
+    // then lock the Patient Info fields, and change the title of the "Find Patient" button to "Re-enter Patient"
+    //ajax
+    var url = Routing.generate('calllog_edit_patient_record_ajax');
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: true,
+        data: {patientId: patientId, mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex  },
+    }).success(function(data) {
+        //console.log("output="+data);
+        if( data == "OK" ) {
+            //console.log("Patient has been created");
+            //hide find patient and add new patient
+            holder.find('#search_patient_button').hide();
+            holder.find('#addnew_patient_button').hide();
+            //show Re-enter Patient
+            holder.find('#reenter_patient_button').show();
+            //clean error message
+            holder.find('#calllog-danger-box').html('');
+            holder.find('#calllog-danger-box').hide();
+
+            //disable all fields
+            disableAllFields(true,holderId);
+
+            //show edit patient info button
+            holder.find('#edit_patient_button').show();
+            //hide "No single patient is referenced by this entry or I'll add the patient info later" link
+            holder.find('#callentry-nosinglepatient-link').hide();
+
+        } else {
+            //console.log("Patient has not been created");
+            holder.find('#calllog-danger-box').html(data);
+            holder.find('#calllog-danger-box').show();
+        }
+    }).done(function() {
+        lbtn.stop();
+    });
+
+
+}
 
 
 function clearCalllogPatient(holderId) {

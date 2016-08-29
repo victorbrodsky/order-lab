@@ -469,7 +469,10 @@ class UserSecurityUtil {
     //$subjectEntities: single object or array of objects
     public function createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event') {
 
+        $logger = $this->container->get('logger');
+
         if( !$user ) {
+            $logger->warning("createUserEditEvent: "."User is not defined for $sitename for event=".$event);
             return null;
         }
 
@@ -477,6 +480,11 @@ class UserSecurityUtil {
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
 
         $eventLog = $this->constructEventLog($sitename,$user,$request);
+
+        if( !$eventLog ) {
+            $logger->warning("createUserEditEvent: "."eventLog entity has not been generated for sitename ".$sitename);
+        }
+
         $eventLog->setEvent($event);
 
         //make sure timezone set to UTC
@@ -538,6 +546,8 @@ class UserSecurityUtil {
                 $eventLog->setObjectType($eventObjectType);
             }
 
+        } else {
+            //$logger->warning("createUserEditEvent: "."subjectEntities are not provided");
         }
 
         //$logger = $this->container->get('logger');

@@ -557,6 +557,25 @@ class DataQualityController extends CallEntryController
         $result['msg'] = "";
 
 
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $patientId = trim($request->get('patientId'));
+        $mrn = trim($request->get('mrn'));
+        $mrntype = trim($request->get('mrntype'));
+        $dob = trim($request->get('dob'));
+        $lastname = trim($request->get('lastname'));
+        $firstname = trim($request->get('firstname'));
+        $middlename = trim($request->get('middlename'));
+        $suffix = trim($request->get('suffix'));
+        $sex = trim($request->get('sex'));
+        //print_r($allgets);
+        echo "patientId=".$patientId."; mrn=".$mrn."<br>";
+
+
+
+
+
         $result['error'] = true;
         $result['msg'] = "Under construction.";
 
