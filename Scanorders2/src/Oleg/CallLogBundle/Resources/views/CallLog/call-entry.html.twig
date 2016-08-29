@@ -20,6 +20,7 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="orderformtype" value="calllog" />
+    <input type="hidden" id="formtype" value="{{ formtype }}" />
     <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
 
     <div id="calllog-patient-list">
@@ -29,7 +30,7 @@
 
         {{ form_errors(form) }}
 
-        {% set formtype = 'call-entry' %}
+        {#{% set formtype = 'call-entry' %}#}
         {{ calllogmacros.patientInfoSection(form,cycle,'patient-holder-1','Patient Info',formtype) }}
 
         <a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">

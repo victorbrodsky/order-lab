@@ -15,31 +15,12 @@ function calllogTriggerSearch(holderId,formtype) {
         holderId = 'patient-holder-1';
     }
     var triggerSearch = $('#triggerSearch').val();
-    console.log('triggerSearch='+triggerSearch);
+    //console.log('triggerSearch='+triggerSearch);
 
-    //var holder = getHolder(holderId);
-
-    var mrntype = $('#mrntype').val();
-    findCalllogPatient(holderId,formtype,mrntype);
-
-    //setTimeout(calllogTryTriggerSearch(holder), 10000);
-    //function calllogTryTriggerSearch(holder) {
-    //    var mrntype = holder.find(".mrntype-combobox").select2('val');
-    //    mrntype = trimWithCheck(mrntype);
-    //    console.log("click: mrntype="+mrntype);
-    //    holder.find('#search_patient_button').click();
-    //    //call directly search function findCalllogPatient(holderId,formtype)
-    //}
-
-    //if( triggerSearch == 1 ) {
-    //    var holder = getHolder(holderId);
-    //    //select2-loaded
-    //    //oleg_calllogbundle_patienttype_mrn_0_keytype
-    //    holder.find('.mrntype-combobox').select2().on("change", function(e) {
-    //        console.log('select2-loaded');
-    //        holder.find('#search_patient_button').click();
-    //    });
-    //}
+    if( triggerSearch == 1 ) {
+        var mrntype = $('#mrntype').val();
+        findCalllogPatient(holderId, formtype, mrntype);
+    }
 }
 
 
@@ -311,9 +292,15 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
             holder.find('#search_patient_button').hide();
             holder.find('#addnew_patient_button').hide();
 
+            //warning that no merge patients for set master record and un-merge
+            var formtype = $('#formtype').val();
+            if( formtype == "unmerge" || formtype == "set-master-record" ) {
+                holder.find('#calllog-danger-box').html("This patient does not have any merged patient records");
+                holder.find('#calllog-danger-box').show();
+            }
+
             processed = true;
         }
-
     }
 
     if( patLen == 0 && processed == false ) {
@@ -327,7 +314,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
         //un-hide/show a button called "Add New Patient Registration"
         holder.find('#addnew_patient_button').show();
-
+        processed = true;
     }
 
     if( patLen >= 1 && processed == false ) {
@@ -339,7 +326,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
         disableAllFields(false,holderId);
 
         createPatientsTableCalllog(patients,holderId);
-
+        processed = true;
     }
 
     if( processed == false ){
@@ -439,22 +426,40 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
         patientsHtml += '<td>&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
     }
 
-    var mergeUrl = Routing.generate('calllog_merge_patient_records')+"?mrn-type="+patient.mrntype+"&mrn="+patient.mrn;
-    var unmergeUrl = Routing.generate('calllog_unmerge_patient_records')+"?mrn-type="+patient.mrntype+"&mrn="+patient.mrn;
-    var setmasterUrl = Routing.generate('calllog_set_master_patient_record')+"?mrn-type="+patient.mrntype+"&mrn="+patient.mrn;
-    var editUrl = Routing.generate('calllog_edit_patient_record')+"?mrn-type="+patient.mrntype+"&mrn="+patient.mrn;
-    var action =
-        '<div class="btn-group">'+
-            '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">'+
-            'Action <span class="caret"></span></button>'+
-        '<ul class="dropdown-menu dropdown-menu-right">'+
-            //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'unmerge\')">Un-merge patient record</a></li>'+
-            //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'set-master-record\')">Set Master record</a></li>'+
-            '<li><a href="'+mergeUrl+'">Merge patient record</a></li>'+
-            '<li><a href="'+unmergeUrl+'">Un-merge patient record</a></li>'+
-            '<li><a href="'+setmasterUrl+'">Set Master record</a></li>'+
-            '<li><a href="'+editUrl+'">Edit patient record</a></li>'+
-        '</ul></div>';
+    //action menu (only for call-entry form)
+    var action = "";
+    var formtype = $('#formtype').val();
+    if( formtype == 'call-entry' ) {
+        //var patMergedLen = getMergedPatientInfoLength(patient);
+        //console.log('patMergedLen='+patMergedLen);
+        var mergeUrl = Routing.generate('calllog_merge_patient_records') + "?mrn-type=" + patient.mrntype + "&mrn=" + patient.mrn;
+        var editUrl = Routing.generate('calllog_edit_patient_record') + "?mrn-type=" + patient.mrntype + "&mrn=" + patient.mrn;
+
+        var unmergeMenu = "";
+        var setrecordMenu = "";
+        //if( patMergedLen > 0 || ( patMergedLen == 0 && masterId && masterId != patient.id) ) {
+        if (masterId) {
+            var unmergeUrl = Routing.generate('calllog_unmerge_patient_records') + "?mrn-type=" + patient.mrntype + "&mrn=" + patient.mrn;
+            var setmasterUrl = Routing.generate('calllog_set_master_patient_record') + "?mrn-type=" + patient.mrntype + "&mrn=" + patient.mrn;
+            unmergeMenu = '<li><a href="' + unmergeUrl + '">Un-merge patient record</a></li>';
+            setrecordMenu = '<li><a href="' + setmasterUrl + '">Set Master record</a></li>';
+        }
+
+        action =
+            '<div class="btn-group">' +
+            '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">' +
+            'Action <span class="caret"></span></button>' +
+            '<ul class="dropdown-menu dropdown-menu-right">' +
+                //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'unmerge\')">Un-merge patient record</a></li>'+
+                //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'set-master-record\')">Set Master record</a></li>'+
+            '<li><a href="' + editUrl + '">Edit patient record</a></li>' +
+            '<li><a href="' + mergeUrl + '">Merge patient record</a></li>' +
+                //'<li><a href="' + unmergeUrl + '">Un-merge patient record</a></li>' +
+                //'<li><a href="' + setmasterUrl + '">Set Master record</a></li>' +
+            unmergeMenu +
+            setrecordMenu +
+            '</ul></div>';
+    }
 
     patientsHtml +=
         '<td id="calllog-patientid-'+patient.id+'">'+

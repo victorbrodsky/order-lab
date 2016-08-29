@@ -362,7 +362,8 @@ class DataQualityController extends CallEntryController
             'cycle' => $cycle,
             'title' => $title,
             'formtype' => $formtype,
-            'triggerSearch' => $triggerSearch
+            'triggerSearch' => $triggerSearch,
+            'mrntype' => $mrntype
         );
     }
 
