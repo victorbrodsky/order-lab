@@ -994,7 +994,7 @@ class ReportGenerator {
 
             $cmd = $gsLocation . ' ' . $gsArgumentsFellApp;
 
-            //$logger->warning('GS: cmd='.$cmd);
+            $logger->notice($filesStr.': GS cmd='.$cmd);
 
             $output = null;
             $return = null;
@@ -1011,7 +1011,7 @@ class ReportGenerator {
                 $fellappUtil->sendEmailToSystemEmail("Complete Application PDF will no be generated - GS failed", $event);
 
                 $userSecUtil = $this->container->get('user_security_utility');
-                $systemUser = $userSecUtil->findSystemUser(); 
+                $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
             } else {
                 $logger->notice("GS converter OK: cmd=".$cmd."; output=".print_r($output));
