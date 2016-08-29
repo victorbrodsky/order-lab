@@ -861,7 +861,7 @@ class ReportGenerator {
             //actual : E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
 
             //event log
-            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd. "; pdftk output=" . implode("; ",$output);
+            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
             //echo $event."<br>";
             $logger->warning($event);
             $systemUser = $userSecUtil->findSystemUser();
@@ -897,9 +897,9 @@ class ReportGenerator {
             //$logger->error("pdftk 2 output: " . print_r($output));
             //$logger->error("pdftk 2 return: " . $return);
 
-            if( $return == 1 ) { //error
+            if( 1 || $return == 1 ) { //error
                 //event log
-                $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd."; pdftk output=" . implode("; ",$output);
+                $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd;
                 $logger->error($event);
                 $logger->error("pdftk second run return=".$return."; output=".print_r($output));
                 //$logger->error("GS return=".implode("; ",$return));
