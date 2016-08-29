@@ -844,6 +844,7 @@ class ReportGenerator {
         if( $return == 1 ) {
 
             //$logger->error("pdftk return: " . implode("; ",$return));
+            $logger->error("pdftk return=".$return."; output=".print_r($output));
 
             //from command cause Error:
             //ERROR: 'Complete Application PDF' will not be generated! pdftk failed:
@@ -900,7 +901,7 @@ class ReportGenerator {
                 //event log
                 $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd."; pdftk output=" . implode("; ",$output);
                 $logger->error($event);
-                $logger->error("return=".$return."; output=".print_r($output));
+                $logger->error("pdftk second run return=".$return."; output=".print_r($output));
                 //$logger->error("GS return=".implode("; ",$return));
 
                 //send email
