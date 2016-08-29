@@ -951,11 +951,6 @@ class ReportGenerator {
             throw new \InvalidArgumentException('gsFilenameFellApp is not defined in Site Parameters.');
         }
 
-        $gsArgumentsFellApp = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
-        if( !$gsArgumentsFellApp ) {
-            throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
-        }
-
         $gsLocation = '"' . $gsPathFellApp . '\\' . $gsFilenameFellApp . '"';
 
         //quick fix for c.med running on E:
@@ -964,6 +959,11 @@ class ReportGenerator {
 //        }
 
         foreach( $filesArr as $file ) {
+
+            $gsArgumentsFellApp = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
+            if( !$gsArgumentsFellApp ) {
+                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
+            }
 
             //$ "C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe" -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="C:\Temp New\out\out.pdf" -c .setpdfwrite -f "C:\Temp New\test.pdf"
             //"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64.exe"
