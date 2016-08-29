@@ -510,7 +510,7 @@ class ReportGenerator {
         //$uniqueid = $filename;  //"report_ID" . $id;
         //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
         $filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
-        $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
+        $this->mergeByPDFMerger($fileNamesArr,$filenameMerged,$entity);
         //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
         if( count($entity->getReports()) > 0 ) {
@@ -781,7 +781,7 @@ class ReportGenerator {
 //        $pdf->merge('file', $filenameMerged);
 //    }
 
-    protected function mergeByPDFMerger( $filesArr, $filenameMerged ) {
+    protected function mergeByPDFMerger( $filesArr, $filenameMerged, $fellapp ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -898,13 +898,15 @@ class ReportGenerator {
 
             if( 1 || $return == 1 ) { //error
                 //event log
-                $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd;
+                $subjectUser = $fellapp->getUser();
+                $fellappInfoStr = "ID #".$fellapp->getId()." (".$subjectUser."): ";
+                $event = "ERROR: ".$fellappInfoStr."'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd;
                 $logger->error($event);
                 $logger->error("pdftk second run return=".$return."; output=".print_r($output));
                 //$logger->error("GS return=".implode("; ",$return));
 
                 //send email
-                $userSecUtil->sendEmailToSystemEmail("ERROR: Probably there is an encrypted pdf. Complete Application PDF will not be generated - pdftk failed", $event);
+                $userSecUtil->sendEmailToSystemEmail("ERROR: ".$fellappInfoStr."Probably there is an encrypted pdf. Complete Application PDF will not be generated - pdftk failed", $event);
 
                 $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
