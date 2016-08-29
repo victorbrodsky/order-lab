@@ -898,7 +898,7 @@ class ReportGenerator {
 
             if( $return == 1 ) { //error
                 //event log
-                $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd."; pdftk return: " . implode("; ",$return);
+                $event = "ERROR: 'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd."; pdftk output=" . implode("; ",$output);
                 $logger->error($event);
                 //$logger->error("GS return=".implode("; ",$return));
 
@@ -1017,7 +1017,7 @@ class ReportGenerator {
 
             if( $return == 1 ) {
                 //event log
-                $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd."; GS return=".implode("; ",$return);
+                $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd."; GS output=".implode("; ",$output);
                 $logger->error($event);
                 $fellappUtil = $this->container->get('fellapp_util');
                 $fellappUtil->sendEmailToSystemEmail("Complete Application PDF will no be generated - GS failed", $event);
