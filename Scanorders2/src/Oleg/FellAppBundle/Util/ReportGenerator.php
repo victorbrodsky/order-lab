@@ -843,6 +843,8 @@ class ReportGenerator {
         //return 0 => ok, return 1 => failed
         if( $return == 1 ) {
 
+            $logger->error("pdftk return: " . $return);
+
             //from command cause Error:
             //ERROR: 'Complete Application PDF' will not be generated! pdftk failed:
             // "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"
@@ -868,11 +870,16 @@ class ReportGenerator {
             $logger->notice("GS output; filesInArr=".implode("; ",$filesInArr));
 
             $filesInStr = $this->convertFilesArrToString($filesInArr, false);
-            //$logger->warning('pdftk encrypted filesInStr='.$filesInStr);
+            $logger->warning('pdftk encrypted filesInStr='.$filesInStr);
 
             //$cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
 
             //replace ###parameter### by appropriate variable
+            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em,'pdftkArgumentsFellApp');
+            if( !$pdftkArgumentsFellApp ) {
+                throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
+            }
+
             //###inputFiles### cat output ###outputFile### dont_ask
             $pdftkArgumentsFellApp = str_replace('###inputFiles###',$filesInStr,$pdftkArgumentsFellApp);
             $pdftkArgumentsFellApp = str_replace('###outputFile###',$filenameMerged,$pdftkArgumentsFellApp);
