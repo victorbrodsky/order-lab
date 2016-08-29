@@ -992,6 +992,7 @@ class ReportGenerator {
             //-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
             $gsArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$gsArgumentsFellApp);
             $gsArgumentsFellApp = str_replace('###outputFile###',$outFilename,$gsArgumentsFellApp);
+            $logger->notice('gsArgumentsFellApp='.$gsArgumentsFellApp);
 
             $cmd = $gsLocation . ' ' . $gsArgumentsFellApp;
 
