@@ -59,7 +59,7 @@ class DataQualityController extends CallEntryController
             $mrnPatient1->setField($mrnid);
             $triggerSearch = 1;
         }
-        echo "triggerSearch=".$triggerSearch."<br>";
+        //echo "triggerSearch=".$triggerSearch."<br>";
 
         $encounter1 = new Encounter(true,$status,$user,$system);
         $patient1->addEncounter($encounter1);
@@ -504,7 +504,7 @@ class DataQualityController extends CallEntryController
 
     /**
      * @Route("/edit-patient-record", name="calllog_edit_patient_record", options={"expose"=true})
-     * @Template("OlegCallLogBundle:DataQuality:un-merge-records.html.twig")
+     * @Template("OlegCallLogBundle:DataQuality:edit-patient-record.html.twig")
      */
     public function editPatientAction(Request $request)
     {
