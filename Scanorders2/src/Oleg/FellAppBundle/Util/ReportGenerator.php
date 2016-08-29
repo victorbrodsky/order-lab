@@ -1014,7 +1014,7 @@ class ReportGenerator {
                 $systemUser = $userSecUtil->findSystemUser();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
             } else {
-                $logger->notice("GS converter OK: cmd=".$cmd."; output=".$output);
+                $logger->notice("GS converter OK: cmd=".$cmd."; output=".print_r($output));
             }
 
             $filesOutArr[] = $outFilename;
