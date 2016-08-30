@@ -22,12 +22,33 @@
     <input type="hidden" id="orderformtype" value="multi" />
     <input type="hidden" id="formcycle" value="{{ type }}" />
 
+    {% if updatepath is not defined %}
+        {%  set updatepath = 'scan_patient_update' %}
+    {% endif %}
+
+<form id="patient-form" action="{{ path(updatepath,{'id':entity.id}) }}" method="POST">
+
     <div id="form-prototype-data"
          data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
          data-userid = "{{ app.security.getToken().getUser().getId() }}"
     ></div>
 
+    {{ form_errors(form) }}
 
     {{ patientmacros.displayPatient(form,0,'Submitted',datastructure,type,formtype) }}
+
+    {% if cycle == "edit" %}
+        <p>
+            <button id="patient_update_btn" class="btn_margin_top btn btn-primary btn-success" name="btnUpdate" type="submit">
+                Update Patient
+            </button>
+        </p>
+    {% endif %}
+
+    {{ form_row(form._token) }}
+    {#{{ form_rest(form) }}#}
+
+{#</form>#}
+{{ form_end(form, {'render_rest': false}) }}
 
 {% endblock %}

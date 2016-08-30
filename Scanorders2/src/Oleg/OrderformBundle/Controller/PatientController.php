@@ -2,7 +2,11 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
-
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
@@ -11,11 +15,7 @@ use Oleg\OrderformBundle\Entity\ReportBlock;
 use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
 use Oleg\UserdirectoryBundle\Entity\Link;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Oleg\OrderformBundle\Helper\ErrorHelper;
 
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\Encounter;
@@ -178,17 +178,31 @@ class PatientController extends Controller
      * Finds and displays a Patient entity.
      *
      * @Route("/{id}", name="scan-patient-show")
+     * @Route("/info/{id}", name="scan-patient-info-show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
-    public function showAction($id)
+    public function showAction( Request $request, $id )
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+            return $this->redirect($this->generateUrl('scan-nopermission'));
         }
+
+        $route = $request->get('_route');
+        if( $route == "scan-patient-show" ) {
+            $datastructure = 'datastructure';
+        } else {
+            $datastructure = '';
+        }
+
+        return $this->showPatient($request,$id,$datastructure);
+    }
+
+    public function showPatient( $request, $id, $datastructure ) {
+
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
@@ -220,7 +234,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => 'datastructure'
+            'datastructure' => $datastructure
         );
 
         //message fields
@@ -254,7 +268,8 @@ class PatientController extends Controller
             'form' => $form->createView(),
             'formtype' => 'Patient Data Structure',
             'type' => 'show',
-            'datastructure' => 'datastructure'
+            'cycle' => 'show',
+            'datastructure' => $datastructure
         );
     }
 
@@ -265,8 +280,20 @@ class PatientController extends Controller
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
-    public function editAction($id)
+    public function editAction( Request $request, $id )
     {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        ) {
+            return $this->redirect($this->generateUrl('scan-nopermission'));
+        }
+
+        $updatepath = 'scan_patient_update';
+        $datastructure = '';
+        return $this->editPatient($request,$id,$datastructure,$updatepath);
+    }
+    public function editPatient( $request, $id, $datastructure, $updatepath ) {
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
@@ -285,11 +312,11 @@ class PatientController extends Controller
         //////////////// params ////////////////
         $params = array(
             'type' => 'multy',
-            'cycle' => "show",
+            'cycle' => "edit",
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => 'datastructure'
+            'datastructure' => $datastructure
         );
 
         $params['endpoint.system'] = true;
@@ -322,19 +349,34 @@ class PatientController extends Controller
             'form' => $form->createView(),
             'formtype' => 'Update Patient Data Structure',
             'type' => 'show',
-            'datastructure' => 'datastructure'
+            'cycle' => 'edit',
+            'datastructure' => $datastructure,
+            'updatepath' => $updatepath
         );
     }
 
     /**
      * Edits an existing Patient entity.
      *
-     * @Route("/{id}", name="patient_update")
-     * @Method("PUT")
+     * @Route("/{id}/edit", name="scan_patient_update")
+     * @Method("POST")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction( Request $request, $id )
     {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        ) {
+            return $this->redirect($this->generateUrl('scan-nopermission'));
+        }
+
+        $updatepath = 'scan_patient_update';
+        $datastructure = '';
+        $showpath = 'scan-patient-info-show';
+        return $this->updatePatient($request,$id,$datastructure,$showpath,$updatepath);
+    }
+
+    public function updatePatient( $request, $id, $datastructure, $showpath, $updatepath) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
@@ -345,25 +387,83 @@ class PatientController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union"),array("edit")) ) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        if ($entity && !$securityUtil->hasUserPermission($entity, $user, array("Union"), array("edit"))) {
+            return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
-        //$deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new PatientType(), $entity);
-        $editForm->bind($request);
+        //exit("2 Form scan_patient_update");
 
-        if ($editForm->isValid()) {
+
+        //$deleteForm = $this->createDeleteForm($id);
+        //////////////// params ////////////////
+        $params = array(
+            'type' => 'multy',
+            'cycle' => "edit",
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+            'datastructure' => $datastructure
+        );
+
+        $params['endpoint.system'] = true;
+        $params['message.orderdate'] = true;
+        $params['message.provider'] = true;
+        $params['message.proxyuser'] = true;
+        $params['message.idnumber'] = false;
+        $params['message.sources'] = false;
+        $params['message.destinations'] = false;
+        $params['message.inputs'] = false;
+        $params['message.outputs'] = false;
+
+        $labels = array(
+            'proxyuser' => 'Signing Provider(s):',
+        );
+        $params['labels'] = $labels;
+        //////////////// EOF params ////////////////
+        $form = $this->createForm(new PatientType($params), $entity);
+
+        //exit("3 Form scan_patient_update");
+
+        //$editForm->bind($request);
+        $form->handleRequest($request);
+
+        //exit("4 Form scan_patient_update");
+
+        if (0) {
+            $errorHelper = new ErrorHelper();
+            $errors = $errorHelper->getErrorMessages($form);
+            echo "<br>form errors:<br>";
+            print_r($errors);
+
+            echo "loc errors:<br>";
+            print_r($form->getErrors());
+            //echo "<br>loc string errors:<br>";
+            //print_r($form->getErrorsAsString());
+            //echo "<br>";
+            exit();
+        }
+
+
+        if( $form->isValid() ) {
+
+            //TODO: set patient's name
+
+            //exit("Form is valid");
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('patient_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl($showpath, array('id' => $id)));
         }
+        //exit("Form is not valid");
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            //'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'formtype' => 'Update Patient Data Structure',
+            'type' => 'show',
+            'cycle' => 'edit',
+            'datastructure' => $datastructure,
+            'updatepath' => $updatepath
         );
     }
 
