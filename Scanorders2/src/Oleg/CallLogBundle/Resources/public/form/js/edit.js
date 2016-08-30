@@ -5,8 +5,20 @@
 //overwrite function
 var matchingPatientForEditBtnClick = function(holderId,formtype) {
     console.log('matching PatientForEdit BtnClick: holderId='+holderId);
-    var holder = getHolder(holderId);
 
+    var patientToPopulate = getCalllogPatientToPopulate(holderId);
+
+    var url = Routing.generate('calllog_patient_edit',{'id':patientToPopulate.id});
+    //alert("url="+url);
+    window.location.href = url;
+}
+
+var matchingPatientForEditBtnClick_ORIG = function(holderId,formtype) {
+    console.log('matching PatientForEdit BtnClick: holderId='+holderId);
+
+    editPatientBtn(holderId);
+
+    var holder = getHolder(holderId);
     var patientToPopulate = getCalllogPatientToPopulate(holderId);
     //console.log('patientToPopulate='+patientToPopulate.id);
 

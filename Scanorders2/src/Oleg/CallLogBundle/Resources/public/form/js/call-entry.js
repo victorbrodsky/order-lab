@@ -141,6 +141,7 @@ function addnewCalllogPatient(holderId) {
 
 }
 
+//JS method: NOT USED
 function submitPatientBtn(holderId) {
 
     var holder = getHolder(holderId);
@@ -419,6 +420,13 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
             if( formtype == "unmerge" || formtype == "set-master-record" ) {
                 holder.find('#calllog-danger-box').html("This patient does not have any merged patient records");
                 holder.find('#calllog-danger-box').show();
+            }
+
+            if( formtype == "edit-patient" ) {
+                //console.log("patientId="+patientId);
+                var url = Routing.generate('calllog_patient_edit',{'id':patient.id});
+                //alert("url="+url);
+                window.location.href = url;
             }
 
             processed = true;
@@ -969,13 +977,18 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
 }
 
 function editPatientBtn(holderId) {
-    disableAllFields(false,holderId);
+    //disableAllFields(false,holderId);
+    //calllogHideAllAlias(false,false,holderId);
 
-    //show all alias
-    //holder.find('.alias-group').find('.input-group-addon').show();
-    //holder.find('.alias-group').find('.input-group-hidden').removeClass('input-group-hidden').addClass('input-group');
-    //holder.find('.alias-group').find('input[type=checkbox]').prop('checked', false);
-    calllogHideAllAlias(false,false,holderId);
+    var holder = getHolder(holderId);
+    //calllog-patient-id-patient-holder-1
+    //calllog-patient-id-patient-holder-1
+    console.log("id="+"#calllog-patient-id-"+holderId);
+    var patientId = holder.find("#calllog-patient-id-"+holderId).val();
+    console.log("patientId="+patientId);
+    var url = Routing.generate('calllog_patient_edit',{'id':patientId});
+    alert("url="+url);
+    window.location.href = url;
 }
 
 function calllogHideAllAlias(hide,clear,holderId) {

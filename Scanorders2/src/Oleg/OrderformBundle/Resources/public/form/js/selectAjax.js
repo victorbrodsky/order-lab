@@ -162,7 +162,7 @@ function customCombobox() {
 //#############  stains  ##############//
 function getComboboxStain(holder,force) {
 
-    var url = getCommonBaseUrl("util/"+"stain");
+    var url = getCommonBaseUrl("util/"+"stain", 'scan');
 
     if( typeof cycle === 'undefined' ) {
         cycle = 'new';
@@ -211,7 +211,7 @@ function getComboboxStain(holder,force) {
 
 function getComboboxSpecialStain(ids, preset, setId) {
 
-    var url = getCommonBaseUrl("util/"+"stain");    //urlCommon+"stain";
+    var url = getCommonBaseUrl("util/"+"stain", 'scan');    //urlCommon+"stain";
 
     if( typeof cycle === 'undefined' ) {
         cycle = 'new';
@@ -259,7 +259,7 @@ function getComboboxSpecialStain(ids, preset, setId) {
 //#############  scan regions  ##############//
 function getComboboxScanregion(holder,force) {
 
-    var url = getCommonBaseUrl("util/"+"scanregion"); //urlCommon+"scanregion";
+    var url = getCommonBaseUrl("util/"+"scanregion", 'scan'); //urlCommon+"scanregion";
     //console.log("scanregion.length="+scanregion.length);
 
     var targetid = ".ajax-combobox-scanregion";
@@ -306,7 +306,7 @@ function getComboboxScanregion(holder,force) {
 
 //#############  source organs  ##############//
 function getComboboxOrgan(holder,force) {
-    var url = getCommonBaseUrl("util/"+"organ");   //urlCommon+"organ";
+    var url = getCommonBaseUrl("util/"+"organ", 'scan');   //urlCommon+"organ";
 
     var targetid = ".ajax-combobox-organ";
     targetid = getElementTargetByHolder(holder,targetid);
@@ -346,7 +346,7 @@ function getComboboxOrgan(holder,force) {
 
 //#############  procedure types  ##############//
 function getComboboxProcedure(holder,force) {
-    var url = getCommonBaseUrl("util/"+"procedure"); //urlCommon+"procedure";
+    var url = getCommonBaseUrl("util/"+"procedure", 'scan'); //urlCommon+"procedure";
 
     var targetid = ".ajax-combobox-procedure";
     targetid = getElementTargetByHolder(holder,targetid);
@@ -386,7 +386,7 @@ function getComboboxProcedure(holder,force) {
 //#############  Accession Type  ##############//
 function getComboboxAccessionType(holder,force) {
 
-    var url = getCommonBaseUrl("util/"+"accessiontype");    //urlCommon+"accessiontype";
+    var url = getCommonBaseUrl("util/"+"accessiontype", 'scan');    //urlCommon+"accessiontype";
     //console.log("getComboboxAccessionType url="+url);
 
     var targetid = ".accessiontype-combobox";
@@ -494,7 +494,7 @@ function getComboboxMrnType(holder,force) {
 //#############  partname types  ##############//
 function getComboboxPartname(holder,force) {
 
-    var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
+    var url = getCommonBaseUrl("util/"+"partname", 'scan');  //urlCommon+"partname";
 
     var targetid = ".ajax-combobox-partname";
     targetid = getElementTargetByHolder(holder,targetid);
@@ -552,7 +552,7 @@ function getComboboxPartname(holder,force) {
 //#############  blockname types  ##############//
 function getComboboxBlockname(holder,force) {
 
-    var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
+    var url = getCommonBaseUrl("util/"+"blockname", 'scan'); //urlCommon+"blockname";
 
     var targetid = ".ajax-combobox-blockname";
     targetid = getElementTargetByHolder(holder,targetid);

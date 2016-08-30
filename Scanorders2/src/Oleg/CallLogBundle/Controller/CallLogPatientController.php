@@ -28,7 +28,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Finds and displays a Patient entity.
      *
-     * @Route("/{id}", name="calllog_patient_show")
+     * @Route("/info/{id}", name="calllog_patient_show", options={"expose"=true})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -39,15 +39,20 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $datastructure = '';
-        return $this->showPatient($request,$id,$datastructure);
+        $params = array(
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'datastructure' => '',
+            'editpath' => 'calllog_patient_edit'
+        );
+
+        return $this->showPatient($request,$id,$params);
     }
 
 
     /**
      * Displays a form to edit an existing Patient entity.
      *
-     * @Route("/{id}/edit", name="calllog_patient_edit")
+     * @Route("/{id}/edit", name="calllog_patient_edit", options={"expose"=true})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -57,15 +62,20 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $updatepath = 'calllog_patient_update';
-        $datastructure = '';
-        return $this->editPatient($request,$id,$datastructure,$updatepath);
+
+        $params = array(
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'datastructure' => '',
+            'updatepath' => 'calllog_patient_update'
+        );
+
+        return $this->editPatient($request,$id,$params);
     }
 
     /**
      * Edits an existing Patient entity.
      *
-     * @Route("/{id}/edit", name="calllog_patient_update")
+     * @Route("/{id}/edit", name="calllog_patient_update", options={"expose"=true})
      * @Method("POST")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -77,10 +87,14 @@ class CallLogPatientController extends PatientController {
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
-        $datastructure = 'datastructure';
-        $showpath = 'calllog_patient_show';
-        $updatepath = 'calllog_patient_update';
-        return $this->updatePatient($request,$id,$datastructure,$showpath,$updatepath);
+        $params = array(
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'datastructure' => '',
+            'updatepath' => 'calllog_patient_update',
+            'showpath' => 'calllog_patient_show'
+        );
+
+        return $this->updatePatient($request,$id,$params);  //$datastructure,$showpath,$updatepath);
     }
 
 }

@@ -169,7 +169,8 @@ class PatientController extends Controller
             'form' => $form->createView(),
             'formtype' => 'Patient Data Structure',
             'type' => 'show',
-            'datastructure' => 'datastructure'
+            'datastructure' => 'datastructure',
+            'sitename' => $this->container->getParameter('scan.sitename')
         );
     }
 
@@ -191,6 +192,7 @@ class PatientController extends Controller
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
+
         $route = $request->get('_route');
         if( $route == "scan-patient-show" ) {
             $datastructure = 'datastructure';
@@ -198,11 +200,15 @@ class PatientController extends Controller
             $datastructure = '';
         }
 
-        return $this->showPatient($request,$id,$datastructure);
+        $parameters = array(
+            'sitename' => $this->container->getParameter('scan.sitename'),
+            'datastructure' => $datastructure,
+            'editpath' => 'scan-patient-edit'
+        );
+
+        return $this->showPatient($request,$id,$parameters);
     }
-
-    public function showPatient( $request, $id, $datastructure ) {
-
+    public function showPatient( $request, $id, $parameters ) {
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
@@ -234,7 +240,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => $datastructure
+            'datastructure' => $parameters['datastructure']
         );
 
         //message fields
@@ -269,7 +275,9 @@ class PatientController extends Controller
             'formtype' => 'Patient Data Structure',
             'type' => 'show',
             'cycle' => 'show',
-            'datastructure' => $datastructure
+            'datastructure' => $parameters['datastructure'],
+            'sitename' => $parameters['sitename'],
+            'editpath' => $parameters['editpath']
         );
     }
 
@@ -288,11 +296,15 @@ class PatientController extends Controller
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
-        $updatepath = 'scan_patient_update';
-        $datastructure = '';
-        return $this->editPatient($request,$id,$datastructure,$updatepath);
+        $parameters = array(
+            'sitename' => $this->container->getParameter('scan.sitename'),
+            'datastructure' => '',
+            'updatepath' => 'scan_patient_update'
+        );
+
+        return $this->editPatient($request,$id,$parameters);
     }
-    public function editPatient( $request, $id, $datastructure, $updatepath ) {
+    public function editPatient( $request, $id, $parameters ) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -316,7 +328,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => $datastructure
+            'datastructure' => $parameters['datastructure']
         );
 
         $params['endpoint.system'] = true;
@@ -350,8 +362,9 @@ class PatientController extends Controller
             'formtype' => 'Update Patient Data Structure',
             'type' => 'show',
             'cycle' => 'edit',
-            'datastructure' => $datastructure,
-            'updatepath' => $updatepath
+            'datastructure' => $parameters['datastructure'],
+            'updatepath' => $parameters['updatepath'],
+            'sitename' => $parameters['sitename']
         );
     }
 
@@ -370,13 +383,16 @@ class PatientController extends Controller
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
-        $updatepath = 'scan_patient_update';
-        $datastructure = '';
-        $showpath = 'scan-patient-info-show';
-        return $this->updatePatient($request,$id,$datastructure,$showpath,$updatepath);
-    }
+        $parameters = array(
+            'sitename' => $this->container->getParameter('scan.sitename'),
+            'datastructure' => '',
+            'updatepath' => 'scan_patient_update',
+            'showpath' => 'scan-patient-info-show'
+        );
 
-    public function updatePatient( $request, $id, $datastructure, $showpath, $updatepath) {
+        return $this->updatePatient($request,$id,$parameters);
+    }
+    public function updatePatient( $request, $id, $parameters ) {   //$datastructure, $showpath, $updatepath) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
@@ -402,7 +418,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => $datastructure
+            'datastructure' => $parameters['datastructure']
         );
 
         $params['endpoint.system'] = true;
@@ -452,7 +468,7 @@ class PatientController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl($showpath, array('id' => $id)));
+            return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
         }
         //exit("Form is not valid");
 
@@ -462,8 +478,9 @@ class PatientController extends Controller
             'formtype' => 'Update Patient Data Structure',
             'type' => 'show',
             'cycle' => 'edit',
-            'datastructure' => $datastructure,
-            'updatepath' => $updatepath
+            'datastructure' => $parameters['datastructure'],
+            'updatepath' => $parameters['updatepath'],
+            'sitename' => $parameters['sitename']
         );
     }
 
