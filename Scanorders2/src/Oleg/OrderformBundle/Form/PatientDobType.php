@@ -27,7 +27,7 @@ class PatientDobType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
-            'attr' => array('class' => 'datepicker form-control patient-dob-date'), //, 'style'=>'margin-top: 0;'
+            'attr' => array('class' => 'datepicker form-control patient-dob-date'), //, 'style'=>'margin-top: 0;' //addable-prototype-field
         ));
 
         $builder->add('others', new ArrayFieldType(), array(

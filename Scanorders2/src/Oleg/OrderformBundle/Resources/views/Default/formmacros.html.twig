@@ -1274,6 +1274,7 @@
 
             {#field input/value#}
             <div class="col-xs-6" align="left">
+
                 {% if fieldtype == "key" and ( cycle == 'new' or cycle == 'amend' ) %}
                     {% if classname == "patientmrn" %}
                         {{ formmacros.fieldicon(fieldThis.field,fieldThis.keytype,classname) }}
@@ -1324,6 +1325,14 @@
                         {{ form_widget(fieldThis.field) }}
                     {% endif %}
                 {% endif %}
+
+                {#TESTING + style="color:#fff;"#}
+                {% if cycle != "show" %}
+                    <button onClick="addPrototypeField(this,'{{ classname }}')" type="button" class="btn btn-sm delbtnCollField">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                    </button>
+                {% endif %}
+                {#TESTING +#}
 
             </div>
 
@@ -1846,10 +1855,13 @@
         </div>
 
         {% if dobHtml is not defined or dobHtml == "" %}
+            no dobHtml
             {{ formmacros.inputArrayField(patient.dob,cycle,"patientdob","date","","","",status) }}
         {% else  %}
+            dobHtml exists!
             <p><div class="patientdob">{{ dobHtml }}</div></p>
         {% endif %}
+
 
         <div class="patientage">
             {% if patient.vars.value != NULL %}

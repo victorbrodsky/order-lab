@@ -926,3 +926,18 @@ function toggleSinglePanel(btn,panel) {
 //
 //}
 
+
+//TESTING + button
+function addPrototypeField( btn, classname ) {
+
+    console.log("add field: classname="+classname);
+
+    var collectionHolder =  $('#form-prototype-data');
+    console.log("collectionHolder:");
+    console.log(collectionHolder);
+
+    //data-prototype-patientdob
+    var prototype = collectionHolder.data('prototype-'+classname);
+    console.log("prototype="+prototype);
+
+}

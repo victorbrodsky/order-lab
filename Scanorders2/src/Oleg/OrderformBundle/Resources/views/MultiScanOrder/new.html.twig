@@ -79,7 +79,7 @@
     <br />
 
     {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' with {"type": type} %}
-
+type={{ type }}
     {% if type != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
         {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"date","prototype") %}
@@ -133,13 +133,24 @@
     {% endif %}
 
     {% set uid = '__patient_____encounter_____procedure_____accession_____part_____block_____slide_____scan_____stain__' %}
+
+    type={{ type }} data-prototype-patient:<br>
     <div id="form-prototype-data"
 
       {% if type != 'show' %}
 
           data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype)|e }}"
 
-          data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type,form.vars.value.status,mrnHtml,dobHtml,clinicalhistoryHtml)|e }}"
+          data-prototype-patient="{{ formmacros.patientForm(
+            form.patient.vars.prototype,
+            "check",
+            uid,
+            type,
+            form.vars.value.status,
+            mrnHtml,
+            dobHtml,
+            clinicalhistoryHtml
+          )|e }}"
 
           data-prototype-patientmrn=               "{{ mrnHtml|e }}"
           data-prototype-patientdob=               "{{ dobHtml|e }}"

@@ -17,7 +17,14 @@
             <div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
 
                 {#patient form#}
-                {{ formmacros.patientForm(patient,datastructure,uid,type,status) }}
+                patientmacros: patientForm:<br>
+                {{ formmacros.patientForm(
+                    patient,
+                    datastructure,
+                    uid,
+                    type,
+                    status
+                ) }}
 
                 {############# encounter #############}
                 {% set encounterCount = 0 %}
