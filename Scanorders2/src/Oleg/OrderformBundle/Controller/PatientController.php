@@ -462,7 +462,8 @@ class PatientController extends Controller
 
         if( $form->isValid() ) {
 
-            //TODO: set patient's name
+            //TODO: set patient's name if does not exists
+            //copyCommonFieldsToPatient($encounter,$user): add Encounter's name, sex to the corresponding patient fields
 
             //exit("Form is valid");
             $em->persist($entity);

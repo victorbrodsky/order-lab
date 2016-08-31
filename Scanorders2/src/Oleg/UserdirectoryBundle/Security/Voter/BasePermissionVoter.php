@@ -308,7 +308,7 @@ abstract class BasePermissionVoter extends Voter {
     //status change: user can view and update the subject
     protected function canChangeStatus($subject, TokenInterface $token) {
 
-        exit("canChangeStatus: not implemented yet: overwrite in the particular permission voter");
+        //exit("canChangeStatus: not implemented yet: overwrite in the particular permission voter");
 
         // if they can edit, they can view
         if( $this->canEdit($subject, $token) ) {

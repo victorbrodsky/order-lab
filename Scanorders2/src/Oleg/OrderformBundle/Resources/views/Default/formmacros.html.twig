@@ -1360,9 +1360,14 @@
 
         {% set postfixDate = null %}
         {% set postfixProvider = null %}
+        {% set invalidStatus = "" %}
 
         {% if showInfoDate == 1 %}
             {% set postfixDate = "entered on "~creationDate %}
+        {% endif %}
+
+        {% if fieldThis.status == 'invalid' %}
+            {% set invalidStatus = ' (invalid)' %}
         {% endif %}
 
         {% if showInfoProvider == 1 and fullfield.vars.value %}
@@ -1375,7 +1380,7 @@
 
         {% if postfixDate or showInfoProvider %}
             {% set label = label|replace({":":""}) %}
-            {% set label = label ~ " " ~ postfixDate ~ postfixProvider ~ ":" %}
+            {% set label = label ~ invalidStatus ~ " " ~ postfixDate ~ postfixProvider ~ ":" %}
         {% endif %}
         {#{{ form_label(field, label|raw) }}#}
 

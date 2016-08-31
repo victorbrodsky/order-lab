@@ -4,7 +4,7 @@
 
 //overwrite function
 var matchingPatientForEditBtnClick = function(holderId,formtype) {
-    console.log('matching PatientForEdit BtnClick: holderId='+holderId);
+    //console.log('matching PatientForEdit BtnClick: holderId='+holderId);
 
     var patientToPopulate = getCalllogPatientToPopulate(holderId);
 
@@ -13,6 +13,7 @@ var matchingPatientForEditBtnClick = function(holderId,formtype) {
     window.location.href = url;
 }
 
+//JS: NOT USED
 var matchingPatientForEditBtnClick_ORIG = function(holderId,formtype) {
     console.log('matching PatientForEdit BtnClick: holderId='+holderId);
 
