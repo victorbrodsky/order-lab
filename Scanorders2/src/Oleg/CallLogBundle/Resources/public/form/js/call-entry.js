@@ -983,11 +983,11 @@ function editPatientBtn(holderId) {
     var holder = getHolder(holderId);
     //calllog-patient-id-patient-holder-1
     //calllog-patient-id-patient-holder-1
-    console.log("id="+"#calllog-patient-id-"+holderId);
+    //console.log("id="+"#calllog-patient-id-"+holderId);
     var patientId = holder.find("#calllog-patient-id-"+holderId).val();
-    console.log("patientId="+patientId);
+    //console.log("patientId="+patientId);
     var url = Routing.generate('calllog_patient_edit',{'id':patientId});
-    alert("url="+url);
+    //alert("url="+url);
     window.location.href = url;
 }
 
