@@ -687,7 +687,7 @@ class UtilController extends Controller {
                         $documentJson = array();
                         $documentJson['id'] =  $document->getId();
                         $documentJson["uniquename"] = $document->getUniquename();
-                        $documentJson["originalname"] = $document->getOriginalname();
+                        $documentJson["originalname"] = $document->getOriginalnameClean();
                         $documentJson["size"] = $document->getSize();
                         $documentJson["url"] = $document->getAbsoluteUploadFullPath();
                         $documents[] = $documentJson;

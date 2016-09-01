@@ -504,8 +504,28 @@ class Document {
     }
 
     public function getFullDescriptionStr() {
-        return "Document: id=".$this->getId().", originalname=".$this->getOriginalname().", uniquename=".$this->getUniquename()."<br>";
+        return "Document: id=".$this->getId().", originalname=".$this->getOriginalnameClean().", uniquename=".$this->getUniquename()."<br>";
     }
 
+    //replace commas and dots in the filename with "_"
+    public function getOriginalnameClean()
+    {
+        $filename = $this->getOriginalname();
+
+        //remove commas
+        $filename = str_replace(",", "_", $filename);
+
+        $dotscount = substr_count($filename, '.');
+        if ($dotscount > 1) {
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if ($ext) {
+                $filename = str_replace("." . $ext, "", $filename);
+                $filename = str_replace(".", "_", $filename);
+                $filename = $filename . "." . $ext;
+            }
+        }
+
+        return $filename;
+    }
 
 }

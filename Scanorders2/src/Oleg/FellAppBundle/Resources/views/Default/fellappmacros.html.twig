@@ -97,7 +97,7 @@
                 {% if cycle == "download" %}
                     {% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath() %}
                     <img src="{{ avatarPath }}"
-                         alt="{{ "Avatar "~fellapp.avatars|last.getOriginalname }}"
+                         alt="{{ "Avatar "~fellapp.avatars|last.getOriginalnameClean }}"
                          style="max-width: 250px;"
                     >
                 {% else %}
@@ -223,7 +223,7 @@
                 {% else %}
                     {#<a href="{{ fellapp.avatars|last.getAbsoluteUploadFullPath }}" target="_blank">#}
                     <img
-                        alt="{{ fellapp.avatars|last.getOriginalname }}"
+                        alt="{{ fellapp.avatars|last.getOriginalnameClean }}"
                         src="{{ fellapp.avatars|last.getAbsoluteUploadFullPath }}"
                         height="120"
                         width="{{ fellapp.avatars|last.getWidthByHeight(120) }}"

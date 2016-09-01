@@ -27,35 +27,38 @@ class LargeFileDownloader {
 
     //download large files
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/Aperio%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
-    public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
+    public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null )
+    {
 
-        $filenameClean = str_replace("\\","/",$filepath);
+        $filenameClean = str_replace("\\", "/", $filepath);
 
-        if( empty($filenameClean) ) {
+        if (empty($filenameClean)) {
             exit;
         }
 
-        if( !$filename ) {
+        if (!$filename) {
             $filename = basename($filenameClean);
         }
 
-        if( !$size ) {
+        if (!$size) {
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
         }
 
         //echo "filename=".$filename."<br>";
         //remove commas
-        $filename = str_replace(",","_",$filename);
+        $filename = str_replace(",", "_", $filename);
 
-        //remove dots except extension
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-        //echo "ext=".$ext."<br>";
-        if( $ext ) {
-            $filename = str_replace(".".$ext,"",$filename);
-            $filename = str_replace(".","_",$filename);
-            $filename = $filename . "." . $ext;
+        ///// remove dots except extension /////
+        $dotscount = substr_count($filename, '.');
+        if ($dotscount > 1) {
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if ($ext) {
+                $filename = str_replace("." . $ext, "", $filename);
+                $filename = str_replace(".", "_", $filename);
+                $filename = $filename . "." . $ext;
+            }
         }
-        //echo "filename=".$filename."<br>";
+        ///// EOF remove dots except extension /////
 
         $mimeType = $this->getMimeType($filename);
 

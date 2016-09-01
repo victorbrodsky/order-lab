@@ -2033,7 +2033,7 @@
         {#</object>#}
         {#</a>#}
         <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
-            <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalname }}"
+            <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
                   data="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
                   type="application/pdf"
                   class="{{ objectClass }}"
@@ -2052,7 +2052,7 @@
         {#</object>#}
         {#</a>#}
         <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
-            <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalname }}"
+            <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
                   data="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
                   type="application/msword"
                   class="{{ objectClass }}"
@@ -2071,7 +2071,7 @@
             {#/>#}
             <img {{ atr }}
                 src="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
-                alt="{{ alt~" "~documentEntity.getOriginalname }}"
+                alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
                 class="{{ objectClass }}"
             />
         </a>

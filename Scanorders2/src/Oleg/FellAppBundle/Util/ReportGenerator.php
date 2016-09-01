@@ -448,7 +448,7 @@ class ReportGenerator {
         //check if photo is not image
         $photo = $entity->getRecentAvatar();
         if( $photo ) {
-            $ext = pathinfo($photo->getOriginalName(), PATHINFO_EXTENSION);
+            $ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
             $photoUrl = null;
             if( $ext == 'pdf' ) {
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($photo);

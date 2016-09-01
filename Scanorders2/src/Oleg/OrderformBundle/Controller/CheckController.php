@@ -76,7 +76,7 @@ class CheckController extends Controller {
                                 $childArr = array();
                                 $childArr["id"] = $onechild->getId();
                                 $childArr["uniquename"] = $onechild->getUniquename();
-                                $childArr["originalname"] = $onechild->getOriginalname();
+                                $childArr["originalname"] = $onechild->getOriginalnameClean();
                                 $childArr["size"] = $onechild->getSize();
                                 $childArr["url"] = $onechild->getAbsoluteUploadFullPath();
                                 $children[] = $childArr;

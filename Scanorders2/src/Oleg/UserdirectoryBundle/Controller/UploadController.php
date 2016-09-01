@@ -180,7 +180,7 @@ class UploadController extends Controller {
             $eventDescription = "Document has been downloaded by " . $user;
             $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
 
-            $originalname = $document->getOriginalname();
+            $originalname = $document->getOriginalnameClean();
             $abspath = $document->getAbsoluteUploadFullPath();
             $size = $document->getSize();
 
@@ -243,7 +243,7 @@ class UploadController extends Controller {
                 $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
             }
 
-            $originalname = $document->getOriginalname();
+            $originalname = $document->getOriginalnameClean();
             $abspath = $document->getAbsoluteUploadFullPath();
             $size = $document->getSize();
 
