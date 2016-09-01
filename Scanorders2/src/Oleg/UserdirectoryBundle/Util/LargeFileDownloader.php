@@ -50,11 +50,23 @@ class LargeFileDownloader {
 
         ///// remove dots except extension /////
         $dotscount = substr_count($filename, '.');
-        if ($dotscount > 1) {
+        if( $dotscount > 1 ) {
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
             if ($ext) {
                 $filename = str_replace("." . $ext, "", $filename);
+
+                //sanitize http://stackoverflow.com/questions/2021624/string-sanitizer-for-filename
+                // Remove anything which isn't a word, whitespace, number
+                // or any of the following caracters -_~,;[]().
+                // If you don't need to handle multi-byte characters
+                // you can use preg_replace rather than mb_ereg_replace
+                // Thanks @Lukasz Rysiak!
+                $filename = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '_', $filename);
+                // Remove any runs of periods (thanks falstro!)
+                $filename = mb_ereg_replace("([\.]{2,})", '_', $filename);
+
                 $filename = str_replace(".", "_", $filename);
+
                 $filename = $filename . "." . $ext;
             }
         }

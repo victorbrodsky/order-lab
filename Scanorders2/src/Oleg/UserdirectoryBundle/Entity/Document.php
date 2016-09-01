@@ -523,6 +523,7 @@ class Document {
         }
 
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
         if ($ext) {
             $filename = str_replace("." . $ext, "", $filename);
 
@@ -542,6 +543,9 @@ class Document {
 
             $filename = $filename . "." . $ext;
         }
+
+        //echo "filename=".$filename."<br>";
+        //exit('1');
 
         return $filename;
 
