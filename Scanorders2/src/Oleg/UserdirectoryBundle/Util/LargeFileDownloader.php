@@ -46,6 +46,14 @@ class LargeFileDownloader {
         //remove commas
         $filename = str_replace(",","_",$filename);
 
+        //remove dots except extension
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if( $ext ) {
+            $filename = str_replace(".".$ext,"",$filename);
+            $filename = str_replace(".","_",$filename);
+            $filename = $filename . "." . $ext;
+        }
+
         $mimeType = $this->getMimeType($filename);
 
         //header('Content-Description: File Transfer');

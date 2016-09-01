@@ -930,13 +930,9 @@ function toggleSinglePanel(btn,panel) {
 //TESTING + button
 function addPrototypeField( btn, classname ) {
 
-    console.log("add field: classname="+classname);
+    console.log("add field: classname=" + classname);
 
-    var collectionHolder =  $('#form-prototype-data');
-    console.log("collectionHolder:");
-    console.log(collectionHolder);
-
-    var holder = $(btn).closest('.'+classname);
+    var holder = $(btn).closest('.' + classname);
 
     //get indexes by patientdob and replace __patient__ and __patientdob__
     // id=oleg_orderformbundle_messagetype_patient_0_dob_0_field
@@ -947,25 +943,32 @@ function addPrototypeField( btn, classname ) {
     //get previous id
     var fieldEl = holder.find('.patient-dob-date').last();
     var fieldId = fieldEl.attr('id');
-    console.log("fieldId="+fieldId);
-    var fieldName = fieldEl.attr('name');
-    console.log("fieldName="+fieldName);
+    console.log("fieldId=" + fieldId);
+    //var fieldName = fieldEl.attr('name');
+    //console.log("fieldName=" + fieldName);
 
+    //get array of replace indexes
+    var indexArr = getPatientIndexes(classname,fieldId);
 
-    //data-prototype-patientdob
-    var prototype = collectionHolder.data('prototype-'+classname);
-    //console.log("prototype="+prototype);
+    if( indexArr ) {
 
-    var indexArr = getPatientIndexes(classname,fieldEl.attr('id'));
-    for( var k in indexArr ){
-        if( indexArr.hasOwnProperty(k) ) {
-            //alert("Key is " + k + ", value is" + indexArr[k]);
-            prototype = prototype.replace(new RegExp("__"+k+"__", 'g'), indexArr[k]);
+        //data-prototype-patientdob
+        var collectionHolder = $('#form-prototype-data');
+        //console.log("collectionHolder:");
+        //console.log(collectionHolder);
+        var prototype = collectionHolder.data('prototype-' + classname);
+        //console.log("prototype="+prototype);
+
+        for (var k in indexArr) {
+            if (indexArr.hasOwnProperty(k)) {
+                //alert("Key is " + k + ", value is" + indexArr[k]);
+                prototype = prototype.replace(new RegExp("__" + k + "__", 'g'), indexArr[k]);
+            }
         }
-    }
 
-    //$(holder).append( getForm( name, ids, withDelBtn  ) );
-    $(btn).closest('.field-button').before(prototype);
+        //$(holder).append( getForm( name, ids, withDelBtn  ) );
+        $(btn).closest('.field-button').before(prototype);
+    }
 }
 
 //     0          1             2         3    4  5  6   7
@@ -974,6 +977,10 @@ function addPrototypeField( btn, classname ) {
 // name=oleg_orderformbundle_messagetype[patient][0][dob][0][field]
 // name=oleg_orderformbundle_messagetype[patient][__patient__][dob][__patientdob__][field]
 function getPatientIndexes( classname, id ) {
+
+    if( !id ) {
+        return null;
+    }
 
     var resArr = [];
 

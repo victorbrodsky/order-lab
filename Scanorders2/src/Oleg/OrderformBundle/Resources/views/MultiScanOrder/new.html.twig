@@ -246,6 +246,7 @@
         {% set patientCount = 0 %}
 
         {#Patient hierarchy form#}
+        MultiScanOrder\new.html.twig<br>
         {{ patientmacros.displayPatient(patient,patientCount,form.vars.value.status,datastructure,type,formtype) }}
 
         {% set patientCount = patientCount + 1 %}
