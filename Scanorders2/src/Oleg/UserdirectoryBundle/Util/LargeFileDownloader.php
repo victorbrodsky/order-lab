@@ -42,17 +42,19 @@ class LargeFileDownloader {
         if( !$size ) {
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
         }
-
+echo "filename=".$filename."<br>";
         //remove commas
         $filename = str_replace(",","_",$filename);
 
         //remove dots except extension
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        echo "ext=".$ext."<br>";
         if( $ext ) {
             $filename = str_replace(".".$ext,"",$filename);
             $filename = str_replace(".","_",$filename);
             $filename = $filename . "." . $ext;
         }
+        echo "filename=".$filename."<br>";
 
         $mimeType = $this->getMimeType($filename);
 
