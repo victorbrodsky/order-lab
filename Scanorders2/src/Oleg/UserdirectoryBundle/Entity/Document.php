@@ -536,6 +536,7 @@ class Document {
             // Remove any runs of periods (thanks falstro!)
             $filename = mb_ereg_replace("([\.]{2,})", '_', $filename);
 
+            $filename = str_replace(".", "_", $filename);
             $filename = str_replace("(", "_", $filename);
             $filename = str_replace(")", "_", $filename);
 
