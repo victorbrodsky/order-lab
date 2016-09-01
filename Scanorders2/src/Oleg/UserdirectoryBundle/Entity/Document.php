@@ -531,10 +531,13 @@ class Document {
             // or any of the following caracters -_~,;[]().
             // If you don't need to handle multi-byte characters
             // you can use preg_replace rather than mb_ereg_replace
-            // Thanks @Łukasz Rysiak!
-            $filename = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $filename);
+            // Thanks @Lukasz Rysiak!
+            $filename = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '_', $filename);
             // Remove any runs of periods (thanks falstro!)
-            $filename = mb_ereg_replace("([\.]{2,})", '', $filename);
+            $filename = mb_ereg_replace("([\.]{2,})", '_', $filename);
+
+            $filename = str_replace("(", "_", $filename);
+            $filename = str_replace(")", "_", $filename);
 
             $filename = $filename . "." . $ext;
         }
