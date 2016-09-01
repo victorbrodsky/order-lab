@@ -2061,12 +2061,18 @@
         </a>
     {% elseif '.tif' in documentEntity.getAbsoluteUploadFullPath %}
         <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
-            <embed  {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
-                              src="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
+            {#<embed  {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"#}
+                              {#src="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"#}
+                              {#type="image/tiff"#}
+                              {#class="{{ objectClass }}"#}
+                              {#negative=yes#}
+            {#>#}
+            <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
+                              data="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
                               type="image/tiff"
                               class="{{ objectClass }}"
-                              negative=yes
             >
+            </object>
         </a>
     {% else %}
         {#img!!!#}

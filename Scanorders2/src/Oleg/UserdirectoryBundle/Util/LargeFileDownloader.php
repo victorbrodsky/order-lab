@@ -66,6 +66,9 @@ class LargeFileDownloader {
                 $filename = mb_ereg_replace("([\.]{2,})", '_', $filename);
 
                 $filename = str_replace(".", "_", $filename);
+                $filename = str_replace("(", "_", $filename);
+                $filename = str_replace(")", "_", $filename);
+                $filename = str_replace(" ", "_", $filename);
 
                 $filename = $filename . "." . $ext;
             }

@@ -540,6 +540,7 @@ class Document {
             $filename = str_replace(".", "_", $filename);
             $filename = str_replace("(", "_", $filename);
             $filename = str_replace(")", "_", $filename);
+            $filename = str_replace(" ", "_", $filename);
 
             $filename = $filename . "." . $ext;
         }
