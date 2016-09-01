@@ -1151,6 +1151,7 @@
 
     <p>
     <div class="{{ classname }}">
+
     {% for field in fields|reverse %}
 
         {% if field.vars.value.status is defined %}
@@ -1202,6 +1203,23 @@
         {% endif %}
         {% set count = count + 1 %}
     {% endfor %}
+
+    {#TESTING + style="color:#fff;"#}
+    {% if cycle != "show" %}
+        <div class="row field-button">
+            <div class="col-xs-6" align="right">
+            </div>
+            <div class="col-xs-6" align="left">
+                {#<button onClick="addPrototypeField(this,'{{ classname }}')"#}
+                        {#type="button" class="btn btn-sm delbtnCollField">#}
+                    {#<span class="glyphicon glyphicon-plus-sign"></span>#}
+                {#</button>#}
+                <a href="javascript:;" onClick="addPrototypeField(this,'{{ classname }}')">Add</a>
+            </div>
+        </div>
+    {% endif %}
+    {#TESTING +#}
+
     </div>
     </p>
 {% endmacro %}
@@ -1327,11 +1345,11 @@
                 {% endif %}
 
                 {#TESTING + style="color:#fff;"#}
-                {% if cycle != "show" %}
-                    <button onClick="addPrototypeField(this,'{{ classname }}')" type="button" class="btn btn-sm delbtnCollField">
-                        <span class="glyphicon glyphicon-plus-sign"></span>
-                    </button>
-                {% endif %}
+                {#{% if cycle != "show" %}#}
+                    {#<button onClick="addPrototypeField(this,'{{ classname }}')" type="button" class="btn btn-sm delbtnCollField">#}
+                        {#<span class="glyphicon glyphicon-plus-sign"></span>#}
+                    {#</button>#}
+                {#{% endif %}#}
                 {#TESTING +#}
 
             </div>

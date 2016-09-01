@@ -936,8 +936,60 @@ function addPrototypeField( btn, classname ) {
     console.log("collectionHolder:");
     console.log(collectionHolder);
 
+    var holder = $(btn).closest('.'+classname);
+
+    //get indexes by patientdob and replace __patient__ and __patientdob__
+    // id=oleg_orderformbundle_messagetype_patient_0_dob_0_field
+    // id=oleg_orderformbundle_messagetype_patient___patient___dob___patientdob___field
+    // name=oleg_orderformbundle_messagetype[patient][0][dob][0][field]
+    // name=oleg_orderformbundle_messagetype[patient][__patient__][dob][__patientdob__][field]
+
+    //get previous id
+    var fieldEl = holder.find('.patient-dob-date').last();
+    var fieldId = fieldEl.attr('id');
+    console.log("fieldId="+fieldId);
+    var fieldName = fieldEl.attr('name');
+    console.log("fieldName="+fieldName);
+
+
     //data-prototype-patientdob
     var prototype = collectionHolder.data('prototype-'+classname);
-    console.log("prototype="+prototype);
+    //console.log("prototype="+prototype);
 
+    var indexArr = getPatientIndexes(classname,fieldEl.attr('id'));
+    for( var k in indexArr ){
+        if( indexArr.hasOwnProperty(k) ) {
+            //alert("Key is " + k + ", value is" + indexArr[k]);
+            prototype = prototype.replace(new RegExp("__"+k+"__", 'g'), indexArr[k]);
+        }
+    }
+
+    //$(holder).append( getForm( name, ids, withDelBtn  ) );
+    $(btn).closest('.field-button').before(prototype);
+}
+
+//     0          1             2         3    4  5  6   7
+// id=oleg_orderformbundle_messagetype_patient_0_dob_0_field
+// id=oleg_orderformbundle_messagetype_patient___patient___dob___patientdob___field
+// name=oleg_orderformbundle_messagetype[patient][0][dob][0][field]
+// name=oleg_orderformbundle_messagetype[patient][__patient__][dob][__patientdob__][field]
+function getPatientIndexes( classname, id ) {
+
+    var resArr = [];
+
+    var classnameArr = id.split("_");
+
+    switch(classname) {
+        case 'patientdob':
+            resArr['patient'] = classnameArr[4];
+            resArr['patientdob'] = parseInt(classnameArr[6]) + 1;
+            break;
+        case 'encounterpatlastname':
+            resArr
+            break;
+        default:
+            //
+    }
+
+    return resArr;
 }

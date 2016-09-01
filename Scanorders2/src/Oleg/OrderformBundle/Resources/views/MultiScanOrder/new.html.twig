@@ -79,7 +79,7 @@
     <br />
 
     {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' with {"type": type} %}
-type={{ type }}
+
     {% if type != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
         {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"date","prototype") %}
@@ -134,7 +134,6 @@ type={{ type }}
 
     {% set uid = '__patient_____encounter_____procedure_____accession_____part_____block_____slide_____scan_____stain__' %}
 
-    type={{ type }} data-prototype-patient:<br>
     <div id="form-prototype-data"
 
       {% if type != 'show' %}
