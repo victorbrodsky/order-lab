@@ -3345,7 +3345,7 @@ class UserController extends Controller
             $user = $this->get('security.context')->getToken()->getUser();
 
             $object = new Document($user);
-            $object->setOriginalname(NULL);
+            $object->setCleanOriginalname(NULL);
             $object->setUniquename($uniquefilename);
             $object->setUploadDirectory($uploadDir);
             $object->setSize($size);

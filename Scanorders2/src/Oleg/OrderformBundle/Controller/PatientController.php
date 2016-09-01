@@ -850,7 +850,7 @@ class PatientController extends Controller
 
         if( !$document ) {
             $document = new Document($user);
-            $document->setOriginalname('testimage.jpg');
+            $document->setCleanOriginalname('testimage.jpg');
             $document->setUniquename($uniqueName);
             //$dir = 'Uploaded/scan-order/documents';
             //scan.uploadpath

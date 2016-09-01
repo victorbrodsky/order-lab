@@ -63,7 +63,7 @@ class UploadListener {
         $authUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($authUserId);
 
         $object = new Document($user);
-        $object->setOriginalname($originalfilename);
+        $object->setCleanOriginalname($originalfilename);
         $object->setUniquename($uniquefilename);
         $object->setUploadDirectory($path);
         $object->setSize($size);

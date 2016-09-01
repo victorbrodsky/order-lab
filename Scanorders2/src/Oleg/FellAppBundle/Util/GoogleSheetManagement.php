@@ -306,12 +306,16 @@ class GoogleSheetManagement {
                 $filesize = mb_strlen($response) / 1024; //KBs,
             }
 
+
             $object = new Document($author);
             $object->setUniqueid($file->getId());
-            $object->setOriginalname($file->getTitle());
             $object->setUniquename($fileUniqueName);
             $object->setUploadDirectory($path);
             $object->setSize($filesize);
+
+            //clean originalname
+            $object->setCleanOriginalname($file->getTitle());
+
 
 //            if( $type && $type == 'excel' ) {
 //                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');

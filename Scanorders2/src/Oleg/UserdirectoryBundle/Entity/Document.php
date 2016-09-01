@@ -510,7 +510,17 @@ class Document {
     //replace commas and dots in the filename with "_"
     public function getOriginalnameClean()
     {
-        $filename = $this->getOriginalname();
+        return $this->cleanFileName($this->getOriginalname());
+    }
+
+    public function setCleanOriginalname( $filename ) {
+        $this->setOriginalname( $this->cleanFileName( $filename ) );
+    }
+
+    public function cleanFileName( $filename ) {
+        if( !$filename ) {
+            return $filename;
+        }
 
         //remove commas
         $filename = str_replace(",", "_", $filename);

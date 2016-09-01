@@ -1067,7 +1067,7 @@ class ReportGenerator {
         $object = new Document($author);
 
         $object->setUniqueid($uniqueTitle);
-        $object->setOriginalname($uniqueTitle);
+        $object->setCleanOriginalname($uniqueTitle);
         $object->setTitle($uniqueTitle);
         $object->setUniquename($uniqueTitle);
 
