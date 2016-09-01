@@ -170,7 +170,7 @@
                                         {% if cycle != "show" %}
                                             {{ form_row(location.phone) }}
                                         {% else %}
-                                            {{ form_label(location.phone) }}<br>
+                                            <strong>Home</strong> {{ form_label(location.phone) }}<br>
                                             <div class="form-control form-control-modif" disabled>
                                                 {{ usermacros.phoneHref(location.phone.vars.value) }}
                                             </div>
@@ -188,7 +188,7 @@
                                         {% if cycle != "show" %}
                                             {{ form_row(location.phone,{'label': 'Work:'}) }}
                                         {% else %}
-                                            {{ form_label(location.phone) }}<br>
+                                            <strong>Work</strong> {{ form_label(location.phone) }}<br>
                                             <div class="form-control form-control-modif" disabled>
                                                 {{ usermacros.phoneHref(location.phone.vars.value) }}
                                             </div>
