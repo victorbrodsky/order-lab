@@ -151,11 +151,11 @@ function submitPatientBtn(holderId) {
     lbtn.start();
 
     //calllog-patient-id-patient-holder-1
-    console.log("id="+"#calllog-patient-id-"+holderId);
+    //console.log("id="+"#calllog-patient-id-"+holderId);
     var patientId = holder.find("#calllog-patient-id-"+holderId).val();
     //console.log(patientIdField);
     //var patientId = $("#calllog-patient-id-"+holderId).val();
-    console.log("patientId="+patientId);
+    //console.log("patientId="+patientId);
 
     var mrntype = holder.find(".mrntype-combobox").select2('val');
     mrntype = trimWithCheck(mrntype);
@@ -427,7 +427,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
             //warning that no merge patients for set master record and un-merge
             var formtype = $('#formtype').val();
-            console.log('formtype='+formtype);
+            //console.log('formtype='+formtype);
 
             if( formtype == "unmerge" || formtype == "set-master-record" ) {
                 holder.find('#calllog-danger-box').html("This patient does not have any merged patient records");
