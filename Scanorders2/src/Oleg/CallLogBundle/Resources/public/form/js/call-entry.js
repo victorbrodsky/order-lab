@@ -275,6 +275,13 @@ function clearCalllogPatient(holderId) {
     holder.find('#search_patient_button').show();
 
     calllogHideAllAlias(true,true,holderId);
+
+    //callentry-nosinglepatient-link
+    $('#callentry-nosinglepatient-link').show();
+    $('#callentry-nosinglepatient-link').click();
+
+    //edit_patient_button
+    holder.find('#edit_patient_button').hide();
 }
 
 function findCalllogPatient(holderId,formtype,mrntype) {
@@ -288,6 +295,9 @@ function findCalllogPatient(holderId,formtype,mrntype) {
     //clear no matching box
     holder.find('#calllog-danger-box').hide();
     holder.find('#calllog-danger-box').html("");
+
+    //addnew_patient_button
+    holder.find('#addnew_patient_button').hide();
 
     var searchedStr = "";
 
@@ -417,6 +427,8 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
             //warning that no merge patients for set master record and un-merge
             var formtype = $('#formtype').val();
+            console.log('formtype='+formtype);
+
             if( formtype == "unmerge" || formtype == "set-master-record" ) {
                 holder.find('#calllog-danger-box').html("This patient does not have any merged patient records");
                 holder.find('#calllog-danger-box').show();
@@ -427,6 +439,10 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
                 var url = Routing.generate('calllog_patient_edit',{'id':patient.id});
                 //alert("url="+url);
                 window.location.href = url;
+            }
+
+            if( formtype == "call-entry" ) {
+                $('#callentry-nosinglepatient-link').click();
             }
 
             processed = true;
@@ -720,6 +736,11 @@ var matchingPatientBtnClick = function(holderId) {
     holder.find('#calllog-matching-patients-table-'+holderId).remove();
     holder.find('#calllog-matching-patients').html('');
     holder.find('#calllog-matching-patients').hide();
+
+    var formtype = $('#formtype').val();
+    if( formtype == "call-entry" ) {
+        $('#callentry-nosinglepatient-link').click();
+    }
 }
 //
 var getCalllogPatientToPopulate = function(holderId) {
