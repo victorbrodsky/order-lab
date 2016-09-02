@@ -126,8 +126,8 @@ function addnewCalllogPatient(holderId) {
 
             //show edit patient info button
             holder.find('#edit_patient_button').show();
-            //hide "No single patient is referenced by this entry or I'll add the patient info later" link
-            holder.find('#callentry-nosinglepatient-link').hide();
+
+            showCalllogCallentryForm(true);
 
         } else {
             //console.log("Patient has not been created");
@@ -250,8 +250,6 @@ function submitPatientBtn(holderId) {
 
             //show edit patient info button
             holder.find('#edit_patient_button').show();
-            //hide "No single patient is referenced by this entry or I'll add the patient info later" link
-            holder.find('#callentry-nosinglepatient-link').hide();
 
         } else {
             //console.log("Patient has not been created");
@@ -265,6 +263,15 @@ function submitPatientBtn(holderId) {
 
 }
 
+function showCalllogCallentryForm(show) {
+    if( show == true ) {
+        $('#callentry-nosinglepatient-link').hide();
+        $('#callentry-form').show();
+    } else {
+        $('#callentry-nosinglepatient-link').show();
+        $('#callentry-form').hide();
+    }
+}
 
 function clearCalllogPatient(holderId) {
     var holder = getHolder(holderId);
@@ -276,9 +283,8 @@ function clearCalllogPatient(holderId) {
 
     calllogHideAllAlias(true,true,holderId);
 
-    //callentry-nosinglepatient-link
-    $('#callentry-nosinglepatient-link').show();
-    $('#callentry-nosinglepatient-link').click();
+    //callentry-nosinglepatient-link: hide
+    showCalllogCallentryForm(false);
 
     //edit_patient_button
     holder.find('#edit_patient_button').hide();
@@ -390,7 +396,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
     //hide edit patient info button
     holder.find('#edit_patient_button').hide();
     //hide "No single patient is referenced by this entry or I'll add the patient info later" link
-    holder.find('#callentry-nosinglepatient-link').show();
+    showCalllogCallentryForm(false);
 
     _patients = patients;
     //console.log("_patients:");
@@ -418,7 +424,6 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
             //show edit patient info button
             holder.find('#edit_patient_button').show();
             //hide "No single patient is referenced by this entry or I'll add the patient info later" link
-            holder.find('#callentry-nosinglepatient-link').hide();
 
             //change the "Find or Add Patient" button title to "Re-enter Patient"
             holder.find('#reenter_patient_button').show();
@@ -442,7 +447,9 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
             }
 
             if( formtype == "call-entry" ) {
-                $('#callentry-nosinglepatient-link').click();
+                //show
+                //console.log('callentry-nosinglepatient-link show');
+                showCalllogCallentryForm(true);
             }
 
             processed = true;
@@ -725,8 +732,6 @@ var matchingPatientBtnClick = function(holderId) {
 
     //show edit patient info button
     holder.find('#edit_patient_button').show();
-    //hide "No single patient is referenced by this entry or I'll add the patient info later" link
-    holder.find('#callentry-nosinglepatient-link').hide();
 
     //change the "Find or Add Patient" button title to "Re-enter Patient"
     holder.find('#reenter_patient_button').show();
@@ -738,8 +743,11 @@ var matchingPatientBtnClick = function(holderId) {
     holder.find('#calllog-matching-patients').hide();
 
     var formtype = $('#formtype').val();
+    //console.log('formtype='+formtype);
     if( formtype == "call-entry" ) {
-        $('#callentry-nosinglepatient-link').click();
+        //console.log('callentry-nosinglepatient-link show');
+        //show
+        showCalllogCallentryForm(true);
     }
 }
 //
