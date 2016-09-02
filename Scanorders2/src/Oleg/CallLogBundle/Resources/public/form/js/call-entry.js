@@ -8,6 +8,7 @@ var _mrntype_original = null;
 
 function initCallLogPage() {
     listnereAccordionMasterPatientParent();
+    calllogInputListenerErrorWellRemove('patient-holder-1');
 }
 
 function calllogTriggerSearch(holderId,formtype) {
@@ -288,6 +289,9 @@ function clearCalllogPatient(holderId) {
 
     //edit_patient_button
     holder.find('#edit_patient_button').hide();
+
+    //change the accordion title back to "Patient Info"
+    calllogSetPatientAccordionTitle(null,holderId);
 }
 
 function findCalllogPatient(holderId,formtype,mrntype) {
@@ -301,6 +305,10 @@ function findCalllogPatient(holderId,formtype,mrntype) {
     //clear no matching box
     holder.find('#calllog-danger-box').hide();
     holder.find('#calllog-danger-box').html("");
+
+    //clear matching patient section
+    holder.find('#calllog-matching-patients').hide();
+    holder.find('#calllog-matching-patients').html('');
 
     //addnew_patient_button
     holder.find('#addnew_patient_button').hide();
@@ -897,6 +905,13 @@ function populatePatientInfo( patient, showinfo, modify, holderId ) {
 //        } else {
 //            holder.find('#search_patient_button').html('Find Patient');
 //        }
+
+    //when the patient is selected change the title of the accordion from "Patient Info" to:
+    // "LastName, FirstName MiddleName Suffix | MM-DD-YYYYY | M | MRN Type: MRN"
+    if( patient ) {
+        calllogSetPatientAccordionTitle(patient, holderId);
+    }
+
 }
 
 function populateInputFieldCalllog( fieldEl, data, index, modify ) {
@@ -1041,4 +1056,47 @@ function getHolder(holderId) {
         return $('#'+holderId);
     }
     return $('.calllog-patient-holder');
+}
+
+//Any subsequent click or tap on any element (button, field, etc) should hide this red well.
+function calllogInputListenerErrorWellRemove( holderId ) {
+    var holder = getHolder(holderId);
+    holder.find('input').on('focus', function(event) {
+        console.log("calllogInputListenerErrorWellRemove click id="+$(this).attr("id"));
+        holder.find('#calllog-danger-box').hide();
+        holder.find('#calllog-danger-box').html("");
+    });
+}
+
+//when the patient is selected change the title of the accordion from "Patient Info" to:
+// "LastName, FirstName MiddleName Suffix | MM-DD-YYYYY | M | MRN Type: MRN"
+function calllogSetPatientAccordionTitle( patient, holderId ) {
+    console.log("calllog SetPatientAccordionTitle");
+    //if( !patient ) {
+    //    return;
+    //}
+    var holder = getHolder(holderId);
+    var panelEl = holder.find(".calllog-patient-information-panel");
+    if( patient ) {
+        var patientInfoArr = [];
+        if( patient.fullName )
+            patientInfoArr.push(patient.fullName); //"LastName, FirstName MiddleName Suffix
+        if( patient.dob )
+            patientInfoArr.push(patient.dob); //MM-DD-YYYYY
+        if( patient.sexstr )
+            patientInfoArr.push(patient.sexstr); //M
+        patientInfoArr.push(patient.mrntypestr + ": "+patient.mrn); //MRN Type: MRN
+        var patientInfo = patientInfoArr.join(" | ");
+        console.log("patientInfo="+patientInfo);
+        if( patientInfo ) {
+            holder.find('.calllog-patient-panel-title').html(patientInfo);
+            //holder.find('.calllog-patient-panel-title').collapse('hide');
+            panelEl.collapse('hide');
+        }
+    } else {
+        holder.find('.calllog-patient-panel-title').html("Patient Info");
+        //holder.find('.calllog-patient-panel-title').collapse('show');
+        //panelEl.show();
+        panelEl.collapse('show');
+    }
 }

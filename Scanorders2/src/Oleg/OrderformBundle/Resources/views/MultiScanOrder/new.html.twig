@@ -80,6 +80,7 @@
 
     {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' with {"type": type} %}
 
+{% if 0 %}
     {% if type != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
         {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"date","prototype") %}
@@ -251,6 +252,9 @@
 
         {% set patientCount = patientCount + 1 %}
     {% endfor %} {# patient loop #}
+{% endif %} {#if 0#}
+
+    {{ patientmacros.displayFullPatientForm( form.patient, status, datastructure, type, formtype, form.patient, form.conflicts.vars.prototype ) }}
 
     </br>
 

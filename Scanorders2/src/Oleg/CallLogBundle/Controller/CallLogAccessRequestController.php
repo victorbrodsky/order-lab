@@ -22,7 +22,7 @@ class CallLogAccessRequestController extends AccessRequestController
     public function __construct() {
         $this->siteName = 'calllog';
         $this->siteNameShowuser = 'employees';
-        $this->siteNameStr = 'Call Logbook';
+        $this->siteNameStr = 'Call Log Book';
         $this->roleBanned = 'ROLE_CALLLOG_BANNED';
         $this->roleUser = 'ROLE_CALLLOG_USER';
         $this->roleUnapproved = 'ROLE_CALLLOG_UNAPPROVED';

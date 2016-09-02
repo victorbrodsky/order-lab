@@ -1,7 +1,4 @@
 
-
-
-
 {% macro displayPatient( patient, patientCount, status, datastructure, type, formtype ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -207,181 +204,214 @@
 
 
 
+{#Macros to display a patient form #}
+{#patient - is patient form#}
+{% macro displayFullPatientForm( formPatient, status, datastructure, type, formtype, patientParentForm, dataqualityPrototype ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
+
+    {% if type != 'show' %}
+        {% set mrnHtml = formmacros.inputField(formPatient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
+        {% set dobHtml = formmacros.inputField(formPatient.vars.prototype.dob,type,"date","prototype") %}
+        {% set clinicalhistoryHtml = formmacros.inputField(formPatient.vars.prototype.clinicalHistory,type,"","prototype") %}
+
+        {% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
+
+        {#{% set encounterHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.name,type,"","prototype") %}#}
+        {#{% set encounternumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
+        {% set encounterdateHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.date,type,"date","prototype") %}
+
+        {% set procedurenameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
+        {#{% set procedurenumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
+        {#{% set proceduredateHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype") %}#}
+
+        {% set patsuffixHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patsuffix,type,"","prototype","","","","encounterpatsuffix") %}
+        {% set patlastnameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patlastname,type,"","prototype","","","","encounterpatlastname") %}
+        {% set patfirstnameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patfirstname,type,"","prototype","","","","encounterpatfirstname") %}
+        {% set patmiddlenameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patmiddlename,type,"","prototype","","","","encounterpatmiddlename") %}
+
+        {% set patageHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patage,type,"","prototype") %}
+        {% set patsexHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patsex,type,"","prototype") %}
+        {% set patpathistoryHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.pathistory,type,"","prototype") %}
+
+        {% set accessiondateHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accessionDate,type,"date","prototype") %}
+
+        {% set partnameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
+        {% set sourceorganHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
+        {% set parttitleHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.parttitle,type,"","prototype") %}
+        {% set paperHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"paper","prototype") %}
+        {% set descriptionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
+        {% set diagnosisHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
+
+        {% set diffDiagnosesField = formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}
+        {% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}
+        {% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"") %}
+
+        {% set diseaseTypeHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,type,"diseaseType","prototype") %}
+
+        {% set blocknameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.blockname,type,"key","prototype") %}
+        {% set sectionsourceHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.sectionsource,type,"","prototype") %}
+
+        {% set relevantScansField = formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans %}
+        {% set relevantScansWidget = formmacros.fieldWidgetNoOther(relevantScansField) %}
+        {% set relevantScansHtml = formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"") %}
+
+        {% set specialStainsField = formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.specialStains %}
+        {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
+        {% set specialStainsHtml = formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
+
+    {% endif %}
+
+    {% set uid = '__patient_____encounter_____procedure_____accession_____part_____block_____slide_____scan_____stain__' %}
+
+    <div id="form-prototype-data"
+
+            {% if type != 'show' %}
+
+                {#data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype)|e }}"#}
+                {% if dataqualityPrototype is defined and dataqualityPrototype %}
+                    data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(dataqualityPrototype)|e }}"
+                {% endif %}
+
+                data-prototype-patient="{{ formmacros.patientForm(
+                formPatient.vars.prototype,
+                "check",
+                uid,
+                type,
+                status,
+                mrnHtml,
+                dobHtml,
+                clinicalhistoryHtml
+                )|e }}"
+
+                data-prototype-patientmrn=               "{{ mrnHtml|e }}"
+                data-prototype-patientdob=               "{{ dobHtml|e }}"
+                data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
+
+                data-prototype-encounter="
+         {{ formmacros.accessionForm(
+                formPatient.vars.prototype.encounter.vars.prototype,
+                formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype,
+                formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype,
+                "check",uid,type,status,
+                procedurenameHtml,
+                accessionHtml,
+                accessiondateHtml,
+                encounterdateHtml,
+                patsuffixHtml,
+                patlastnameHtml,
+                patfirstnameHtml,
+                patmiddlenameHtml,
+                patageHtml,
+                patsexHtml,
+                patpathistoryHtml
+                )|e }}
+         "
+                data-prototype-accessionaccession= "{{ accessionHtml|e }}"
+                data-prototype-accessionaccessiondate= "{{ accessiondateHtml|e }}"
+                {#data-prototype-encounternumber= "{{ encounternumberHtml|e }}"#}
+                data-prototype-procedurename= "{{ procedurenameHtml|e }}"
+                {#data-prototype-procedurenumber= "{{ procedurenumberHtml|e }}"#}
+                data-prototype-encounterdate= "{{ encounterdateHtml|e }}"
+                data-prototype-encounterpatsuffix= "{{ patsuffixHtml|e }}"
+                data-prototype-encounterpatlastname= "{{ patlastnameHtml|e }}"
+                data-prototype-encounterpatage= "{{ patageHtml|e }}"
+                data-prototype-encounterpatsex= "{{ patsexHtml|e }}"
+                data-prototype-encounterpatpathistory= "{{ patpathistoryHtml|e }}"
+
+                data-prototype-part="
+            {{ formmacros.partForm( formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, status,
+                partnameHtml,
+                sourceorganHtml,
+                parttitleHtml,
+                paperHtml,
+                descriptionHtml,
+                diagnosisHtml,
+                diffDiagnosesHtml,
+                diseaseTypeHtml
+                )|e }}
+          "
+
+                {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"; withspace=""#}
+                data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","","","","minusplusbtn")|e }}"
+                {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+                data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","","","","plusbtn")|e }}"
+                data-prototype-partpaper= "{{ paperHtml|e }}"
+
+                data-prototype-block="
+        {{ formmacros.blockForm( formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, status, blocknameHtml, sectionsourceHtml, specialStainsHtml)|e }}
+        "
+                data-prototype-slide="
+        {{ formmacros.slideForm( formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype, "", uid, type,
+                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.slidetype),
+                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.field),
+                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.magnification),
+                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion),
+                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note),
+                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr),
+                relevantScansHtml
+                )|e }}
+        "
+
+                {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+                data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","","","","minusplusbtn")|e }}"
+                {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+                data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","","","","plusbtn")|e }}"
+
+                {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+                data-prototype-addblockspecialStains="{{ formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"","","","withspace","minusplusbtn")|e }}"
+                {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+                data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"","","","","plusbtn")|e }}"
+
+            {% endif %}
+
+         data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
+         data-userid = "{{ app.security.getToken().getUser().getId() }}"
+
+    ></div>
+    {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
+
+    {% set patientCount = 0 %}
+
+    {% if patientParentForm is defined and patientParentForm %}
+
+        {#patient; form - is order form#}
+        {% for thisFormPatient in patientParentForm %}
+
+            {#{% set patientCount = 0 %}#}
+
+            {#Patient hierarchy form#}
+            {{ patientmacros.displayPatient(
+                thisFormPatient,
+                patientCount,
+                status,
+                datastructure,
+                type,
+                formtype
+            ) }}
+
+            {% set patientCount = patientCount + 1 %}
+
+        {% endfor %} {# patient loop #}
+
+    {% else %}
+
+        {#status: 'Submitted'#}
+        {{ patientmacros.displayPatient(
+            formPatient,
+            patientCount,
+            status,
+            datastructure,
+            type,
+            formtype
+        ) }}
+
+    {% endif %}
+
+
+{% endmacro %}
 
 
 
 
-
-
-
-{#Below can be deleted#}
-{#{% macro displayPatient_New( patient, patientCount, status, datastructure, type, formtype ) %}#}
-
-    {#{% import _self as patientmacros %}#}
-
-    {#{% set objects = [#}
-            {#{'object':'patient','display':'show','count':0},#}
-            {#{'object':'encounter','display':'show','count':0},#}
-            {#{'object':'procedure','display':'show','count':0},#}
-            {#{'object':'accession','display':'show','count':0},#}
-            {#{'object':'part','display':'show','count':0},#}
-            {#{'object':'block','display':'show','count':0},#}
-            {#{'object':'slide','display':'show','count':0}#}
-        {#]#}
-    {#%}#}
-
-
-    {#&#123;&#35;{% set objects = [&#35;&#125;#}
-            {#&#123;&#35;{'object':'patient','display':'show','count':0},&#35;&#125;#}
-            {#&#123;&#35;{'object':'encounter','display':'show','count':0},&#35;&#125;#}
-            {#&#123;&#35;{'object':'part','display':'show','count':0},&#35;&#125;#}
-            {#&#123;&#35;{'object':'block','display':'show','count':0},&#35;&#125;#}
-            {#&#123;&#35;{'object':'slide','display':'show','count':0}&#35;&#125;#}
-        {#&#123;&#35;]&#35;&#125;#}
-    {#&#123;&#35;%}&#35;&#125;#}
-
-    {#&#123;&#35;start index: 0 means start with patient&#35;&#125;#}
-    {#{% set startIndex = 0 %}#}
-
-    {#{{  patientmacros.displayObjectRecursive( patient, objects, startIndex, status, datastructure, type, formtype ) }}#}
-
-{#{% endmacro %}#}
-
-
-{#{% macro displayObjectRecursive( formObject, objects, index, startCount, status, datastructure, type, formtype ) %}#}
-
-    {#{% import _self as patientmacros %}#}
-    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-
-    {#&#123;&#35;{% set uid = "" %}&#35;&#125;#}
-    {#{% set uidArr = [] %}#}
-    {#{% for object in objects %}#}
-        {#&#123;&#35;object={{ object['object'] }}&#35;&#125;#}
-        {#&#123;&#35;{% set uid = uid ~ "_" ~ object['count'] %}&#35;&#125;#}
-        {#{% set uidArr = uidArr|merge([object['count']]) %}#}
-    {#{% endfor %}#}
-
-    {#{% set uid = uidArr|join('_') %}#}
-
-    {#uid:{{ uid }}#}
-
-    {#{% set object = objects[index] %}#}
-
-    {#&#123;&#35;              patient          encounter   procedure     accession          part          block           slide           scan            stain   &#35;&#125;#}
-    {#&#123;&#35;{% set uid = object['count'] ~  '_' ~0~   '_'   ~0~   '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0 %}&#35;&#125;#}
-
-
-    {#&#123;&#35;panel&#35;&#125;#}
-    {#<div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">#}
-
-        {#&#123;&#35;header&#35;&#125;#}
-        {#{{ formmacros.message_panel_header_object(formObject,object,objects,datastructure,type,formtype,uidArr) }}#}
-
-        {#&#123;&#35;body&#35;&#125;#}
-        {#<div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">#}
-
-            {#&#123;&#35;object form&#35;&#125;#}
-            {#{{ patientmacros.callObjectForm( object,formObject,datastructure,uid,type,status ) }}#}
-
-            {#&#123;&#35;children&#35;&#125;#}
-            {#{{ patientmacros.callObjectChildren( formObject, objects, index, status, datastructure, type, formtype ) }}#}
-
-        {#</div>#}
-        {#&#123;&#35;body&#35;&#125;#}
-
-        {#</div>#}
-        {#&#123;&#35;header&#35;&#125;#}
-
-    {#</div>#}
-    {#&#123;&#35;panel&#35;&#125;#}
-
-{#{% endmacro %}#}
-
-
-{#{% macro callObjectChildren( formObject, objects, index, status, datastructure, type, formtype ) %}#}
-
-    {#{% import _self as patientmacros %}#}
-
-    {#{% set object = objects[index] %}#}
-    {#{% set objectName = object['object'] %}#}
-
-    {#{% if objectName == 'patient' %}#}
-        {#{% for child in formObject.encounter %}#}
-            {#{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}#}
-        {#{% endfor %}#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'encounter' %}#}
-        {#{% for child in formObject.procedure %}#}
-            {#{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}#}
-        {#{% endfor %}#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'procedure' %}#}
-        {#&#123;&#35;{% for child in formObject.accession %}&#35;&#125;#}
-            {#&#123;&#35;{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}&#35;&#125;#}
-        {#&#123;&#35;{% endfor %}&#35;&#125;#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'accession' %}#}
-        {#&#123;&#35;{% for child in formObject.part %}&#35;&#125;#}
-            {#&#123;&#35;{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}&#35;&#125;#}
-        {#&#123;&#35;{% endfor %}&#35;&#125;#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'part' %}#}
-        {#{% for child in formObject.block %}#}
-            {#{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}#}
-        {#{% endfor %}#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'block' %}#}
-        {#{% for child in formObject.slide %}#}
-            {#{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}#}
-        {#{% endfor %}#}
-    {#{% endif %}#}
-
-
-{#{% endmacro %}#}
-
-{#{% macro callObjectForm( object,formObject,datastructure,uid,type,status ) %}#}
-    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-
-    {#{% set objectName = object['object'] %}#}
-
-    {#{% if objectName == 'patient' %}#}
-        {#{{ formmacros.patientForm(formObject,datastructure,uid,type,status) }}#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'encounter' %}#}
-        {#&#123;&#35;{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}&#35;&#125;#}
-
-        {#{% set procedure = formObject.procedure|first %}#}
-        {#{% set accession = procedure.accession|first %}#}
-
-        {#{{ formmacros.accessionForm(formObject,procedure,accession,datastructure,uid,type,status) }}#}
-
-    {#{% endif %}#}
-
-    {#{% if objectName == 'procedure' %}#}
-        {#&#123;&#35;{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}&#35;&#125;#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'accession' %}#}
-        {#&#123;&#35;{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}&#35;&#125;#}
-        {#&#123;&#35;{{ formmacros.accessionForm(encounter,procedure,formObject,datastructure,uid,type,status) }}&#35;&#125;#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'part' %}#}
-        {#{{ formmacros.partForm(encounter,procedure,formObject,datastructure,uid,type,status) }}#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'block' %}#}
-        {#{{ formmacros.blockForm(formObject,datastructure,uid,type,status) }}#}
-    {#{% endif %}#}
-
-    {#{% if objectName == 'slide' %}#}
-        {#{{ formmacros.slideForm(formObject,datastructure,uid,type,status) }}#}
-    {#{% endif %}#}
-
-{#{% endmacro %}#}

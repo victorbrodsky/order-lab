@@ -32,7 +32,7 @@ class CallLogLoginSuccessHandler extends LoginSuccessHandler {
         $this->security = $security;
         $this->em = $em;
         $this->siteName = $container->getParameter('calllog.sitename');
-        $this->siteNameStr = 'Call Logbook';
+        $this->siteNameStr = 'Call Log Book';
         $this->roleBanned = 'ROLE_CALLLOG_BANNED';
         $this->roleUser = 'ROLE_CALLLOG_USER';
         $this->roleUnapproved = 'ROLE_CALLLOG_UNAPPROVED';

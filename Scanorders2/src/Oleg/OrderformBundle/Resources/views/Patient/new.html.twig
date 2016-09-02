@@ -66,7 +66,11 @@
     {{ form_errors(form) }}
 
     Patient\new.html.twig<br>
-    {{ patientmacros.displayPatient(form,0,'Submitted',datastructure,type,formtype) }}
+    {#{{ patientmacros.displayPatient(form,0,'Submitted',datastructure,type,formtype) }}#}
+
+    status={{ status }}
+    {% set status = 'Submitted' %}
+    {{ patientmacros.displayFullPatientForm( form, status, datastructure, type, formtype, null, null ) }}
 
     {% if cycle == "edit" %}
         <br>

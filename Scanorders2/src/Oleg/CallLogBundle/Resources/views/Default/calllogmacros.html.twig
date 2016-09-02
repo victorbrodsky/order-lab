@@ -121,12 +121,12 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" href="#calllog-PatientInformation-{{holderId}}">
+                <a class="calllog-patient-panel-title" data-toggle="collapse" href="#calllog-PatientInformation-{{holderId}}">
                     {{ title }}
                 </a>
             </h4>
         </div>
-        <div id="calllog-PatientInformation-{{holderId}}" class="panel-collapse collapse in">
+        <div id="calllog-PatientInformation-{{holderId}}" class="calllog-patient-information-panel panel-collapse collapse in">
             <div class="panel-body">
 
                 {{ form_errors(form) }}

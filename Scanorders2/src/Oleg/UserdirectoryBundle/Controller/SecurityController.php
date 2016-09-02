@@ -227,7 +227,7 @@ class SecurityController extends Controller
         }
         if( $routename == "calllog_setloginvisit" ) {
             $options['sitename'] = $this->container->getParameter('calllog.sitename');
-            $options['event'] = " Call Logbook login page visit";
+            $options['event'] = " Call Log Book login page visit";
         }
 
 
