@@ -1409,7 +1409,7 @@ class ListController extends Controller
                 break;
             case "sexes":
                 $className = "SexList";
-                $displayName = "Sexes";
+                $displayName = "Genders";
                 break;
             case "positiontypes":
                 $className = "PositionTypeList";

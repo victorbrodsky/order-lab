@@ -86,7 +86,7 @@ function addnewCalllogPatient(holderId) {
     if( suffix )
         confirmMsg += " Suffix:"+suffix;
     if( sex )
-        confirmMsg += " Sex:"+sex;
+        confirmMsg += " Gender:"+sex;
     if( dob )
         confirmMsg += " DOB:"+dob;
 
@@ -210,7 +210,7 @@ function submitPatientBtn(holderId) {
     if( suffix )
         confirmMsg += " Suffix:"+suffix;
     if( sex )
-        confirmMsg += " Sex:"+sex;
+        confirmMsg += " Gender:"+sex;
     if( dob )
         confirmMsg += " DOB:"+dob;
 
@@ -478,7 +478,7 @@ function createPatientsTableCalllog( patients, holderId ) {
         '<th>First Name</th>' +
         '<th>Middle Name</th>' +
         '<th>Suffix</th>' +
-        '<th>Sex</th>' +
+        '<th>Gender</th>' +
         '<th>DOB</th>' +
         '<th>Contact Info</th>' +
         '<th>Action</th>' +

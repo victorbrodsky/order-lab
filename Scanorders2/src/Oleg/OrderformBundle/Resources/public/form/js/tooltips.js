@@ -23,7 +23,7 @@ function attachPatientNameSexAgeLockedTooltip() {
     //patient's sex
     var patsex = $('.patientsex').find('.not-mapped-simplefield');
     patsex.parent().tooltip({
-        'title': "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the "+sexname+" section."
+        'title': "This is the current gender of the patient (if known). To enter a new gender, use the field \"Patient's Gender (at the time of encounter)\" in the "+sexname+" section."
     });
     highlightEncounterSexElement( patsex.parent(), '.encountersex-field' );
 

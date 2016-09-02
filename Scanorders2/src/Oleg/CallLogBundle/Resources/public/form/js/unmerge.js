@@ -201,7 +201,7 @@ function patientInfoHtml( patient, masterPatient, formtype ) {
         simpleField("Patient's First Name (at the time of encounter):",patient.firstname)+
         simpleField("Patient's Middle Name (at the time of encounter):",patient.middlename)+
         simpleField("Patient's Suffix (at the time of encounter):",patient.suffix)+
-        simpleField("Patient's Sex (at the time of encounter):",patient.sexstr)+
+        simpleField("Patient's Gender (at the time of encounter):",patient.sexstr)+
         '</div>'+
         '</div>'+
         '</div>'+

@@ -636,7 +636,7 @@ class CallEntryController extends Controller
             $PatientSex->setField($sexObj);
             $patient->addSex( $PatientSex );
 
-            $createdWithArr[] = "Sex: " . $sexObj;
+            $createdWithArr[] = "Gender: " . $sexObj;
         }
 
         $patient->addEncounter($encounter);

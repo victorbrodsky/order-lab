@@ -39,7 +39,7 @@ class EncounterPatsexType extends AbstractType
         $builder->add( 'field', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:SexList',
             'property' => 'name',
-            'label' => "Patient's Sex (at the time of encounter):",
+            'label' => "Patient's Gender (at the time of encounter):",
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width encountersex-field'),

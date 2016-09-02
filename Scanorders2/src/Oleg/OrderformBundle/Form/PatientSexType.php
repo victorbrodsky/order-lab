@@ -30,7 +30,7 @@ class PatientSexType extends AbstractType
 //            'attr' => array('class' => 'horizontal_type patientsex-field', 'disabled' => 'disabled')
 //        ));
         $builder->add( 'field', null, array(
-            'label' => 'Sex',
+            'label' => 'Gender',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width patientsex-field')
         ));
