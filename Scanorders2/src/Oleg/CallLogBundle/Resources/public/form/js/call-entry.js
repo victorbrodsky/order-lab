@@ -9,6 +9,7 @@ var _mrntype_original = null;
 function initCallLogPage() {
     listnereAccordionMasterPatientParent();
     calllogInputListenerErrorWellRemove('patient-holder-1');
+    calllogPressEnterOnKeyboardAction('patient-holder-1');
 }
 
 function calllogTriggerSearch(holderId,formtype) {
@@ -91,13 +92,22 @@ function addnewCalllogPatient(holderId) {
     if( dob )
         confirmMsg += " DOB:"+dob;
 
+
+    //TODO: lock all fields
+    //console.log("lock all fields");
+    disableAllFields(true, holderId);
+
     if( confirm(confirmMsg) == true ) {
         //x = "You pressed OK!";
     } else {
         //x = "You pressed Cancel!";
+        //TODO: unlock all fields
+        disableAllFields(false, holderId);
+
         lbtn.stop();
         return false;
     }
+
 
     //Clicking "Ok" in the Dialog confirmation box should use the variables
     // to create a create the new patient on the server via AJAX/Promise,
@@ -136,6 +146,7 @@ function addnewCalllogPatient(holderId) {
             holder.find('#calllog-danger-box').show();
         }
     }).done(function() {
+        //console.log("add new CalllogPatient done");
         lbtn.stop();
     });
 
@@ -1062,7 +1073,7 @@ function getHolder(holderId) {
 function calllogInputListenerErrorWellRemove( holderId ) {
     var holder = getHolder(holderId);
     holder.find('input').on('focus', function(event) {
-        console.log("calllogInputListenerErrorWellRemove click id="+$(this).attr("id"));
+        //console.log("calllogInputListenerErrorWellRemove click id="+$(this).attr("id"));
         holder.find('#calllog-danger-box').hide();
         holder.find('#calllog-danger-box').html("");
     });
@@ -1071,7 +1082,7 @@ function calllogInputListenerErrorWellRemove( holderId ) {
 //when the patient is selected change the title of the accordion from "Patient Info" to:
 // "LastName, FirstName MiddleName Suffix | MM-DD-YYYYY | M | MRN Type: MRN"
 function calllogSetPatientAccordionTitle( patient, holderId ) {
-    console.log("calllog SetPatientAccordionTitle");
+    //console.log("calllog SetPatientAccordionTitle");
     //if( !patient ) {
     //    return;
     //}
@@ -1087,7 +1098,7 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
             patientInfoArr.push(patient.sexstr); //M
         patientInfoArr.push(patient.mrntypestr + ": "+patient.mrn); //MRN Type: MRN
         var patientInfo = patientInfoArr.join(" | ");
-        console.log("patientInfo="+patientInfo);
+        //console.log("patientInfo="+patientInfo);
         if( patientInfo ) {
             holder.find('.calllog-patient-panel-title').html(patientInfo);
             //holder.find('.calllog-patient-panel-title').collapse('hide');
@@ -1098,5 +1109,27 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
         //holder.find('.calllog-patient-panel-title').collapse('show');
         //panelEl.show();
         panelEl.collapse('show');
+    }
+}
+
+
+//Pressing "Enter" on the keyboard while the cursor is in the MRN, DOB, Last Name, or First Name field should press the "Find Patient" button.
+function calllogPressEnterOnKeyboardAction( holderId ) {
+    //console.log("calllog Press EnterOnKeyboardAction");
+    var formtype = $('#formtype').val();
+    //console.log("formtype=" + formtype);
+    if( formtype == 'call-entry' ) {
+        var holder = getHolder(holderId);
+        holder.find('.patientmrn-mask, .patient-dob-date, .encounter-lastName, .encounter-firstName').on('keydown', function (event) {
+        //holder.find('.patientmrn-mask').on('keydown', function (event) {
+            //console.log("calllog PressEnterOnKeyboardAction val=" + $(this).val()+", event="+event.which);
+            if( event.which == 13 ) {
+                event.preventDefault();
+                //alert('You pressed enter!');
+                if( $(this).val() ) {
+                    holder.find('#search_patient_button').click();
+                }
+            }
+        });
     }
 }

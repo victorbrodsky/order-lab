@@ -518,6 +518,10 @@ class CallEntryController extends Controller
             return $response;
         }
 
+        //testing
+        $response->setContent(json_encode($output));
+        return $response;
+
         //Create a new Patient
         $securityUtil = $this->get('order_security_utility');
         $sourcesystem = $securityUtil->getDefaultSourceSystem(); //'scanorder';
@@ -641,16 +645,17 @@ class CallEntryController extends Controller
 
         $patient->addEncounter($encounter);
 
-        $em->persist($patient);
-        $em->persist($encounter);
-        $em->flush();
+        if(1) {
+            $em->persist($patient);
+            $em->persist($encounter);
+            $em->flush();
 
-        //log patient creation action
-        $userSecUtil = $this->container->get('user_security_utility');
-        $eventType = "Patient Created";
-        $event = "New Patient has been created:<br>".implode("<br>",$createdWithArr);
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$patient,$request,$eventType);
-
+            //log patient creation action
+            $userSecUtil = $this->container->get('user_security_utility');
+            $eventType = "Patient Created";
+            $event = "New Patient has been created:<br>" . implode("<br>", $createdWithArr);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $patient, $request, $eventType);
+        }
 
         $response->setContent(json_encode($output));
         return $response;
