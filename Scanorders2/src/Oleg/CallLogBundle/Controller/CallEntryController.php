@@ -75,7 +75,7 @@ class CallEntryController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $title = "Call Entry";
+        $title = "New Entry";
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
@@ -447,8 +447,7 @@ class CallEntryController extends Controller
         }
 
         //search for merged
-        $calllogUtil = $this->get('calllog_util');
-
+        //$calllogUtil = $this->get('calllog_util');
         //$patients = $calllogUtil->getAllMergedPatients( $patients );
 
         return $patients;
@@ -463,13 +462,24 @@ class CallEntryController extends Controller
      */
     public function createPatientAction(Request $request)
     {
+
+        $res = array();
+        $output = 'OK';
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+
         //TODO: The server should DOUBLECHECK that the user has a role with a permission of "Create Patient Record"
         if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
-            return $this->redirect($this->generateUrl('calllog-nopermission'));
+            //return $this->redirect($this->generateUrl('calllog-nopermission'));
+            $res['patients'] = null;
+            $res['output'] = "You don't have a permission to create a new patient record";
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
+        $calllogUtil = $this->get('calllog_util');
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrntype'));
@@ -482,9 +492,6 @@ class CallEntryController extends Controller
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
 
-        $output = 'OK';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
 
         //TODO: set institution
         $securityUtil = $this->get('order_security_utility');
@@ -514,13 +521,23 @@ class CallEntryController extends Controller
             if( $dob )
                 $output .= "DOB:".$dob."<br>";
 
-            $response->setContent(json_encode($output));
+            $res['patients'] = null;
+            $res['output'] = $output;
+            $response->setContent(json_encode($res));
             return $response;
         }
 
         //testing
-        $response->setContent(json_encode($output));
-        return $response;
+        if(0) {
+            $patient = $em->getRepository('OlegOrderformBundle:Patient')->find(32);
+            $patientsArr = array(); //return json data
+            $patientInfo = $calllogUtil->getJsonEncodedPatient($patient);
+            $patientsArr[$patient->getId()] = $patientInfo;
+            $res['patients'] = $patientsArr;
+            $res['output'] = $output;
+            $response->setContent(json_encode($res));
+            return $response;
+        }
 
         //Create a new Patient
         $securityUtil = $this->get('order_security_utility');
@@ -645,19 +662,25 @@ class CallEntryController extends Controller
 
         $patient->addEncounter($encounter);
 
-        if(1) {
-            $em->persist($patient);
-            $em->persist($encounter);
-            $em->flush();
+        $em->persist($patient);
+        $em->persist($encounter);
+        $em->flush();
 
-            //log patient creation action
-            $userSecUtil = $this->container->get('user_security_utility');
-            $eventType = "Patient Created";
-            $event = "New Patient has been created:<br>" . implode("<br>", $createdWithArr);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $patient, $request, $eventType);
-        }
+        //convert patient to json
+        $patientsArr = array(); //return json data
+        $patientInfo = $calllogUtil->getJsonEncodedPatient($patient);
+        $patientsArr[$patient->getId()] = $patientInfo;
+        $res['patients'] = $patientsArr;
+        $res['output'] = $output;
 
-        $response->setContent(json_encode($output));
+        $eventType = "Patient Created";
+        $event = "New Patient has been created:<br>" . implode("<br>", $createdWithArr);
+
+        //log patient creation action
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $patient, $request, $eventType);
+
+        $response->setContent(json_encode($res));
         return $response;
     }
 }

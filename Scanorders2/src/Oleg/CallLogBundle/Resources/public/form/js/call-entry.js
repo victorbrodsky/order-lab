@@ -77,21 +77,23 @@ function addnewCalllogPatient(holderId) {
     //MRN: Last Name: First Name: Middle Name: Suffix: Sex: DOB: Alias(es):
     var confirmMsg = "Are You sure you would like to create a new patient registration record for";
 
+    var creationStr = "";
     if( mrn )
-        confirmMsg += " MRN:"+mrn;
+        creationStr += " MRN:"+mrn;
     if( lastname )
-        confirmMsg += " Last Name:"+lastname;
+        creationStr += " Last Name:"+lastname;
     if( firstname )
-        confirmMsg += " First Name:"+firstname;
+        creationStr += " First Name:"+firstname;
     if( middlename )
-        confirmMsg += " Middle Name:"+middlename;
+        creationStr += " Middle Name:"+middlename;
     if( suffix )
-        confirmMsg += " Suffix:"+suffix;
+        creationStr += " Suffix:"+suffix;
     if( sex )
-        confirmMsg += " Gender:"+sex;
+        creationStr += " Gender:"+sex;
     if( dob )
-        confirmMsg += " DOB:"+dob;
+        creationStr += " DOB:"+dob;
 
+    confirmMsg = confirmMsg + creationStr;
 
     //TODO: lock all fields
     //console.log("lock all fields");
@@ -121,24 +123,30 @@ function addnewCalllogPatient(holderId) {
         data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex  },
     }).success(function(data) {
         //console.log("output="+data);
-        if( data == "OK" ) {
-            //console.log("Patient has been created");
-            //hide find patient and add new patient
-            holder.find('#search_patient_button').hide();
-            holder.find('#addnew_patient_button').hide();
-            //show Re-enter Patient
-            holder.find('#reenter_patient_button').show();
-            //clean error message
-            holder.find('#calllog-danger-box').html('');
-            holder.find('#calllog-danger-box').hide();
 
-            //disable all fields
-            disableAllFields(true,holderId);
+        if( data.output == "OK" ) {
 
-            //show edit patient info button
-            holder.find('#edit_patient_button').show();
+            populatePatientsInfo(data.patients,creationStr,holderId);
 
-            showCalllogCallentryForm(true);
+            //if(0) {
+                //console.log("Patient has been created");
+                //hide find patient and add new patient
+                holder.find('#search_patient_button').hide();
+                holder.find('#addnew_patient_button').hide();
+                //show Re-enter Patient
+                holder.find('#reenter_patient_button').show();
+                //clean error message
+                holder.find('#calllog-danger-box').html('');
+                holder.find('#calllog-danger-box').hide();
+
+                //disable all fields
+                disableAllFields(true, holderId);
+
+                //show edit patient info button
+                holder.find('#edit_patient_button').show();
+
+                showCalllogCallentryForm(true);
+            //}
 
         } else {
             //console.log("Patient has not been created");
@@ -1006,26 +1014,31 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
         modify = true;
     }
 
+    var mrntype = holder.find('.mrntype-combobox');
+    var mrnid = holder.find('.patientmrn-mask');
+
     if( patient && patient.mrntype && patient.mrn ) {
 
-        holder.find('.mrntype-combobox').prop('disabled', true);
-        holder.find('.mrntype-combobox').select2('val',patient.mrntype);
+        mrntype.prop('disabled', true);
+        mrntype.select2('val',patient.mrntype);
+        setMrntypeMask(mrntype,false);
 
-        holder.find('.patientmrn-mask').prop('disabled', true);
-        holder.find('.patientmrn-mask').val(patient.mrn);
+        mrnid.prop('disabled', true);
+        mrnid.val(patient.mrn);
 
     } else {
 
-        holder.find('.mrntype-combobox').prop('disabled', false);
+        mrntype.prop('disabled', false);
 
         if( modify ) {
-            holder.find('.mrntype-combobox').select2('val', _mrntype_original);
+            mrntype.select2('val', _mrntype_original);
+            setMrntypeMask(mrntype,false);
         }
 
-        holder.find('.patientmrn-mask').prop('disabled', false);
+        mrnid.prop('disabled', false);
 
         if( modify ) {
-            holder.find('.patientmrn-mask').val(null);
+            mrnid.val(null);
         }
 
     }

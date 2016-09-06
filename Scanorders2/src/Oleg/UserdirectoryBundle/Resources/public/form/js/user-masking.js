@@ -16,6 +16,8 @@ function getAgeDefaultMask() {
 //holder - element holding all fields to apply masking
 function fieldInputMask( holder ) {
 
+    //console.log("user-masking.js: field Input Mask");
+
     $.extend($.inputmask.defaults.definitions, {
         'f': {  //masksymbol
             "validator": "[1-9]",

@@ -49,30 +49,26 @@
                         </a>
                     </li>
 
-                    {#<li><a href="{{ path(calllog_sitename~'_alerts') }}">Alerts</a></li>#}
-                    <li id="nav-bar-alerts" class="divider-vertical">
-                        {#<a href="{{ path('vacreq_incomingrequests') }}">#}
-                        {#Incoming Requests#}
-                        {#</a>#}
-                        {% set alerts = 2 %}
-                        {% if alerts is defined and alerts > 0 %}
-                            <a id="incoming-orders-menu-title" href="{{ path(calllog_sitename~'_alerts') }}">Alerts</a><!--
-                                            --><a id="incoming-orders-menu-badge"
-                                                  class="element-with-tooltip-always"
-                                                  title="Signout Issues" data-toggle="tooltip"
-                                                  data-placement="bottom"
-                                                  href="{{ path(calllog_sitename~'_alerts') }}"
-                                            ><span class="badge alert-danger">({{ alerts }} New)</span></a>
-                        {% else %}
-                            <a href="{{ path(calllog_sitename~'_alerts') }}">
-                                Alerts
-                            </a>
-                        {% endif %}
-                    </li>
+                    {#<li id="nav-bar-alerts" class="divider-vertical">#}
+                        {#{% set alerts = 2 %}#}
+                        {#{% if alerts is defined and alerts > 0 %}#}
+                            {#<a id="incoming-orders-menu-title" href="{{ path(calllog_sitename~'_alerts') }}">Alerts</a><!--#}
+                                            {#--><a id="incoming-orders-menu-badge"#}
+                                                  {#class="element-with-tooltip-always"#}
+                                                  {#title="Signout Issues" data-toggle="tooltip"#}
+                                                  {#data-placement="bottom"#}
+                                                  {#href="{{ path(calllog_sitename~'_alerts') }}"#}
+                                            {#><span class="badge alert-danger">({{ alerts }} New)</span></a>#}
+                        {#{% else %}#}
+                            {#<a href="{{ path(calllog_sitename~'_alerts') }}">#}
+                                {#Alerts#}
+                            {#</a>#}
+                        {#{% endif %}#}
+                    {#</li>#}
 
-                    <li id="nav-bar-callentry"><a href="{{ path(calllog_sitename~'_callentry') }}">Call Entry</a></li>
+                    <li id="nav-bar-callentry"><a href="{{ path(calllog_sitename~'_callentry') }}">New Entry</a></li>
 
-                    <li id="nav-bar-complexpatientlist"><a href="{{ path(calllog_sitename~'_complex_patient_list') }}">Complex Patient List</a></li>
+                    <li id="nav-bar-complexpatientlist"><a href="{{ path(calllog_sitename~'_complex_patient_list') }}">Complex Patients</a></li>
 
                     <li id="nav-bar-resources"><a href="{{ path(calllog_sitename~'_resources') }}">Resources</a></li>
 

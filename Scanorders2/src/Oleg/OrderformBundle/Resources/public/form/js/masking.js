@@ -50,7 +50,7 @@ function getAccessionDefaultMask() {
 //holder - element holding all fields to apply masking
 function fieldInputMask( holder ) {
 
-    //console.log("field Input Mask");
+    //console.log("masking.js: field Input Mask");
 
     $.extend($.inputmask.defaults.definitions, {
         'f': {  //masksymbol
