@@ -79,7 +79,7 @@ class CallEntryController extends Controller
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
-        $cycle = 'new';
+        $cycle = 'show';
         $formtype = 'call-entry';
 
         $patient = new Patient(true,$status,$user,$system);

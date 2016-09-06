@@ -283,11 +283,14 @@ function submitPatientBtn(holderId) {
 
 }
 
+//show call entry form and hide link
 function showCalllogCallentryForm(show) {
     if( show == true ) {
+        //console.log('show patient info');
         $('#callentry-nosinglepatient-link').hide();
         $('#callentry-form').show();
     } else {
+        //console.log('hide patient info');
         $('#callentry-nosinglepatient-link').show();
         $('#callentry-form').hide();
     }
@@ -303,14 +306,14 @@ function clearCalllogPatient(holderId) {
 
     calllogHideAllAlias(true,true,holderId);
 
-    //callentry-nosinglepatient-link: hide
-    showCalllogCallentryForm(false);
-
     //edit_patient_button
     holder.find('#edit_patient_button').hide();
 
     //change the accordion title back to "Patient Info"
     calllogSetPatientAccordionTitle(null,holderId);
+
+    //hide call entry form
+    showCalllogCallentryForm(false);
 }
 
 function findCalllogPatient(holderId,formtype,mrntype) {
@@ -1099,6 +1102,8 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
     //if( !patient ) {
     //    return;
     //}
+    var formtype = $('#formtype').val();
+    //console.log('formtype='+formtype);
     var holder = getHolder(holderId);
     var panelEl = holder.find(".calllog-patient-information-panel");
     if( patient ) {
@@ -1115,13 +1120,17 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
         if( patientInfo ) {
             holder.find('.calllog-patient-panel-title').html(patientInfo);
             //holder.find('.calllog-patient-panel-title').collapse('hide');
-            panelEl.collapse('hide');
+            if( formtype == "call-entry" ) {
+                panelEl.collapse('hide');
+            }
         }
     } else {
         holder.find('.calllog-patient-panel-title').html("Patient Info");
         //holder.find('.calllog-patient-panel-title').collapse('show');
         //panelEl.show();
-        panelEl.collapse('show');
+        if( formtype == "call-entry" ) {
+            panelEl.collapse('show');
+        }
     }
 }
 

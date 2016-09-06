@@ -4,7 +4,7 @@
 
 //overwrite function
 var matchingPatientUnmergeBtnClick = function(holderId,formtype) {
-    console.log('un-merged holderId='+holderId);
+    //console.log('un-merged holderId='+holderId);
 
     var holder = getHolder(holderId);
 
@@ -15,19 +15,19 @@ var matchingPatientUnmergeBtnClick = function(holderId,formtype) {
     var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
     //remove holderId from index
     index = index.replace("-"+holderId, "");
-    console.log('index='+index);
+    //console.log('index='+index);
 
     //find patient with id from _patients array
     var selectedPatient = getPatientByIdFromPatients(index,_patients);
-    console.log('selectedPatient:');
-    console.log(selectedPatient);
+    //console.log('selectedPatient:');
+    //console.log(selectedPatient);
 
     //for call_entry return master record instead of the actual clicked patient record
     //var masterPatient = null;
     var mergedPatientsInfo = null;
     var mergedPatientsInfoLength = null;
     var masterPatientId = selectedPatient['masterPatientId'];
-    console.log("masterPatientId=" + masterPatientId);
+    //console.log("masterPatientId=" + masterPatientId);
     if( masterPatientId ) {
         //console.log("masterPatientId=" + masterPatientId);
         selectedPatient = getPatientByIdFromPatients(masterPatientId,_patients);
@@ -42,7 +42,7 @@ var matchingPatientUnmergeBtnClick = function(holderId,formtype) {
     //console.log('mergedPatientsInfoLength='+mergedPatientsInfoLength);
     if( mergedPatientsInfo && mergedPatientsInfoLength > 0 ) {
         //ok
-        console.log('mergedPatientsInfo ok');
+        //console.log('mergedPatientsInfo ok');
     } else {
         //console.log('mergedPatientsInfo not ok');
         //alert("This patient record has not been merged with any other patient records.");
@@ -80,7 +80,7 @@ var matchingPatientUnmergeBtnClick = function(holderId,formtype) {
 
 function createPatientInfos( patient, formtype ) {
 
-    console.log('createPatientInfos; id='+patient.id);
+    //console.log('createPatientInfos; id='+patient.id);
 
     var patientInfo = patient['mergedPatientsInfo'][patient.id]['patientInfo'];
     //var mergeInfo = patient['mergedPatientsInfo'][patient.id]['mergeInfo'];

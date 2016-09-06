@@ -46,7 +46,7 @@ class DataQualityController extends CallEntryController
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
-        $cycle = 'new';
+        $cycle = 'show';
 
         $patient1 = new Patient(true,$status,$user,$system);
 
@@ -322,7 +322,7 @@ class DataQualityController extends CallEntryController
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
-        $cycle = 'new';
+        $cycle = 'show';
 
         $route = $request->get('_route');
 
