@@ -515,7 +515,7 @@ class DataQualityController extends CallEntryController
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
-        $cycle = 'new';
+        $cycle = 'show';
 
         $title = "Edit Patient Info";
         $formtype = 'edit-patient';

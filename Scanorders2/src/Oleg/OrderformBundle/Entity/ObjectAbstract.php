@@ -503,6 +503,10 @@ abstract class ObjectAbstract
         if( count($resArr) > 1 ) {
             $latestField = null;
             foreach( $resArr as $field ) {
+                //echo $field->getId()."field=".$field."<br>";
+                if( !$field->getField() ) {
+                    continue; //ignore empty value
+                }
                 if( !$latestField ) {
                     $latestField = $field;
                     continue;
@@ -511,10 +515,11 @@ abstract class ObjectAbstract
                     $latestField = $field;
                 }
             }
+            //echo $latestField->getId()."res=".$latestField."<br>";
             $res = $latestField;
         }
 
-        //echo "res=".$res."<br>";
+        //echo $res->getId()."res=".$res."<br>";
         return $res;
     }
 
@@ -557,7 +562,7 @@ abstract class ObjectAbstract
 
         } //foreach
 
-        //echo "res count=".count($res)."<br>";
+        //echo $fieldname.": res count=".count($res)."<br>";
         return $res;
     }
 

@@ -429,8 +429,8 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
     showCalllogCallentryForm(false);
 
     _patients = patients;
-    //console.log("_patients:");
-    //console.log(_patients);
+    console.log("_patients:");
+    console.log(_patients);
 
     var processed = false;
 
@@ -1010,7 +1010,7 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
 }
 
 function processMrnFieldsCalllog( patient, modify, holderId ) {
-
+    console.log("process Mrn FieldsCalllog patient id="+patient.id);
     var holder = getHolder(holderId);
 
     if( typeof modify === 'undefined' ){
