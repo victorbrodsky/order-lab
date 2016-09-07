@@ -16,7 +16,7 @@ class PatientMasterMergeRecord extends PatientArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="PatientMasterMergeRecord")
+     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="masterMergeRecord")
      * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $patient;

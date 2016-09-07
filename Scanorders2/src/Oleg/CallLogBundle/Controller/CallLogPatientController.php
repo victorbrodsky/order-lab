@@ -66,7 +66,8 @@ class CallLogPatientController extends PatientController {
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'datastructure' => '',
-            'updatepath' => 'calllog_patient_update'
+            'updatepath' => 'calllog_patient_update',
+            'showPlus' => 'showPlus'
         );
 
         return $this->editPatient($request,$id,$params);

@@ -58,19 +58,21 @@
 {#<form id="patient-form" action="{{ path(updatepath,{'id':entity.id}) }}" method="POST">#}
 {{ form_start(form,{'method': 'POST', 'action': path(updatepath,{'id':entity.id})}) }}
 
-    <div id="form-prototype-data"
-         data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
-         data-userid = "{{ app.security.getToken().getUser().getId() }}"
-    ></div>
+    {#<div id="form-prototype-data"#}
+         {#data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"#}
+         {#data-userid = "{{ app.security.getToken().getUser().getId() }}"#}
+    {#></div>#}
 
     {{ form_errors(form) }}
 
     Patient\new.html.twig<br>
     {#{{ patientmacros.displayPatient(form,0,'Submitted',datastructure,type,formtype) }}#}
 
-    status={{ status }}
     {% set status = 'Submitted' %}
-    {{ patientmacros.displayFullPatientForm( form, status, datastructure, type, formtype, null, null ) }}
+    {% if showPlus is not defined %}
+        {% set showPlus = null %}
+    {% endif %}
+    {{ patientmacros.displayFullPatientForm( form, status, showPlus, datastructure, type, formtype, null, null ) }}
 
     {% if cycle == "edit" %}
         <br>

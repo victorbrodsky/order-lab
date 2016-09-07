@@ -1,5 +1,5 @@
 
-{% macro displayPatient( patient, patientCount, status, datastructure, type, formtype ) %}
+{% macro displayPatient( patient, patientCount, status, showPlus, datastructure, type, formtype ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
@@ -17,13 +17,13 @@
             <div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
 
                 {#patient form#}
-                patientmacros: patientForm:<br>
                 {{ formmacros.patientForm(
                     patient,
                     datastructure,
                     uid,
                     type,
-                    status
+                    status,
+                    showPlus
                 ) }}
 
                 {############# encounter #############}
@@ -45,7 +45,7 @@
 
                         {#encounter form#}
                         {% if datastructure and datastructure == "datastructure" %}
-                            {{ formmacros.encounterForm(encounter,datastructure,uid,type,status) }}
+                            {{ formmacros.encounterForm(encounter,datastructure,uid,type,status,showPlus) }}
                         {% endif %}
 
                         {############# procedure #############}
@@ -64,7 +64,7 @@
 
                                     {#procedure body#}
                                     <div id="form_body_procedure_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
-                                        {{ formmacros.procedureForm(procedure,datastructure,uid,type,status) }}
+                                        {{ formmacros.procedureForm(procedure,datastructure,uid,type,status,showPlus) }}
                             {% endif %}
 
 
@@ -84,7 +84,7 @@
                                 {% endif %}
 
                                 {#accession form#}
-                                {{ formmacros.accessionForm(encounter,procedure,accession,datastructure,uid,type,status) }}
+                                {{ formmacros.accessionForm(encounter,procedure,accession,datastructure,uid,type,status,showPlus) }}
 
                                 {#############  part    #############}
                                 {% set partCount = 0 %}
@@ -99,7 +99,7 @@
 
                                         <div id="form_body_part_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
 
-                                            {{ formmacros.partForm( part, datastructure, uid, type, status, "","","","","","","") }}
+                                            {{ formmacros.partForm( part, datastructure, uid, type, status, showPlus, "","","","","","","") }}
 
 
                                             {#block#}
@@ -115,7 +115,7 @@
 
                                                     <div id="form_body_block_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
                                                         {#{{ formmacros.field(block.name) }}#}
-                                                        {{ formmacros.blockForm( block, datastructure, uid, type, status) }}
+                                                        {{ formmacros.blockForm( block, datastructure, uid, type, status, showPlus) }}
 
 
                                                         {#slide#}
@@ -205,59 +205,75 @@
 
 
 {#Macros to display a patient form #}
-{#patient - is patient form#}
-{% macro displayFullPatientForm( formPatient, status, datastructure, type, formtype, patientParentForm, dataqualityPrototype ) %}
+{#patient - is patient form; type == cycle#}
+{% macro displayFullPatientForm( formPatient, status, showPlus, datastructure, type, formtype, patientParentForm, dataqualityPrototype ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
-
+    type={{ type }}
     {% if type != 'show' %}
-        {% set mrnHtml = formmacros.inputField(formPatient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
-        {% set dobHtml = formmacros.inputField(formPatient.vars.prototype.dob,type,"date","prototype") %}
-        {% set clinicalhistoryHtml = formmacros.inputField(formPatient.vars.prototype.clinicalHistory,type,"","prototype") %}
+        {#{% set mrnHtml = formmacros.inputField(formPatient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}#}
+        {% if formPatient.vars.prototype is defined and formPatient.vars.prototype %}
+            {% set patientPrototype = formPatient.vars.prototype %}
+            {% set patientMrn = formPatient.vars.prototype.mrn %}
+            {% set patientDob = formPatient.vars.prototype.dob %}
+            {% set patientClinicalHistory = formPatient.vars.prototype.clinicalHistory %}
+            {% set patientEncounter = formPatient.vars.prototype.encounter %}
+        {% else %}
+            {% set patientPrototype = formPatient %}
+            {% set patientMrn = formPatient.mrn %}
+            {% set patientDob = formPatient.dob %}
+            {% set patientClinicalHistory = formPatient.clinicalHistory %}
+            {% set patientEncounter = formPatient.encounter %}
+        {% endif %}
 
-        {% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
+        {% set mrnHtml = formmacros.inputField(patientMrn,type,"key","prototype","","","","patientmrn","") %}
+        {% set dobHtml = formmacros.inputField(patientDob,type,"date","prototype") %}
+        {% set clinicalhistoryHtml = formmacros.inputField(patientClinicalHistory,type,"","prototype") %}
+
+        {#{% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}#}
+        {% set accessionHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
 
         {#{% set encounterHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.name,type,"","prototype") %}#}
         {#{% set encounternumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
-        {% set encounterdateHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.date,type,"date","prototype") %}
+        {% set encounterdateHtml = formmacros.inputField(patientEncounter.vars.prototype.date,type,"date","prototype") %}
 
-        {% set procedurenameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
+        {% set procedurenameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
         {#{% set procedurenumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
         {#{% set proceduredateHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype") %}#}
 
-        {% set patsuffixHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patsuffix,type,"","prototype","","","","encounterpatsuffix") %}
-        {% set patlastnameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patlastname,type,"","prototype","","","","encounterpatlastname") %}
-        {% set patfirstnameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patfirstname,type,"","prototype","","","","encounterpatfirstname") %}
-        {% set patmiddlenameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patmiddlename,type,"","prototype","","","","encounterpatmiddlename") %}
+        {% set patsuffixHtml = formmacros.inputField(patientEncounter.vars.prototype.patsuffix,type,"","prototype","","","","encounterpatsuffix") %}
+        {% set patlastnameHtml = formmacros.inputField(patientEncounter.vars.prototype.patlastname,type,"","prototype","","","","encounterpatlastname") %}
+        {% set patfirstnameHtml = formmacros.inputField(patientEncounter.vars.prototype.patfirstname,type,"","prototype","","","","encounterpatfirstname") %}
+        {% set patmiddlenameHtml = formmacros.inputField(patientEncounter.vars.prototype.patmiddlename,type,"","prototype","","","","encounterpatmiddlename") %}
 
-        {% set patageHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patage,type,"","prototype") %}
-        {% set patsexHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.patsex,type,"","prototype") %}
-        {% set patpathistoryHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.pathistory,type,"","prototype") %}
+        {% set patageHtml = formmacros.inputField(patientEncounter.vars.prototype.patage,type,"","prototype") %}
+        {% set patsexHtml = formmacros.inputField(patientEncounter.vars.prototype.patsex,type,"","prototype") %}
+        {% set patpathistoryHtml = formmacros.inputField(patientEncounter.vars.prototype.pathistory,type,"","prototype") %}
 
-        {% set accessiondateHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accessionDate,type,"date","prototype") %}
+        {% set accessiondateHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accessionDate,type,"date","prototype") %}
 
-        {% set partnameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
-        {% set sourceorganHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
-        {% set parttitleHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.parttitle,type,"","prototype") %}
-        {% set paperHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"paper","prototype") %}
-        {% set descriptionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
-        {% set diagnosisHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
+        {% set partnameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
+        {% set sourceorganHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
+        {% set parttitleHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.parttitle,type,"","prototype") %}
+        {% set paperHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"paper","prototype") %}
+        {% set descriptionHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
+        {% set diagnosisHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
 
-        {% set diffDiagnosesField = formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}
+        {% set diffDiagnosesField = patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}
         {% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}
         {% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"") %}
 
-        {% set diseaseTypeHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,type,"diseaseType","prototype") %}
+        {% set diseaseTypeHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,type,"diseaseType","prototype") %}
 
-        {% set blocknameHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.blockname,type,"key","prototype") %}
-        {% set sectionsourceHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.sectionsource,type,"","prototype") %}
+        {% set blocknameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.blockname,type,"key","prototype") %}
+        {% set sectionsourceHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.sectionsource,type,"","prototype") %}
 
-        {% set relevantScansField = formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans %}
+        {% set relevantScansField = patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans %}
         {% set relevantScansWidget = formmacros.fieldWidgetNoOther(relevantScansField) %}
         {% set relevantScansHtml = formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"") %}
 
-        {% set specialStainsField = formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.specialStains %}
+        {% set specialStainsField = patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.specialStains %}
         {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
         {% set specialStainsHtml = formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
 
@@ -275,11 +291,12 @@
                 {% endif %}
 
                 data-prototype-patient="{{ formmacros.patientForm(
-                formPatient.vars.prototype,
+                patientPrototype,
                 "check",
                 uid,
                 type,
                 status,
+                showPlus,
                 mrnHtml,
                 dobHtml,
                 clinicalhistoryHtml
@@ -291,10 +308,10 @@
 
                 data-prototype-encounter="
          {{ formmacros.accessionForm(
-                formPatient.vars.prototype.encounter.vars.prototype,
-                formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype,
-                formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype,
-                "check",uid,type,status,
+                patientEncounter.vars.prototype,
+                patientEncounter.vars.prototype.procedure.vars.prototype,
+                patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype,
+                "check",uid,type,status,showPlus,
                 procedurenameHtml,
                 accessionHtml,
                 accessiondateHtml,
@@ -321,7 +338,9 @@
                 data-prototype-encounterpatpathistory= "{{ patpathistoryHtml|e }}"
 
                 data-prototype-part="
-            {{ formmacros.partForm( formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, status,
+            {{ formmacros.partForm(
+                patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype,
+                "check", uid, type, status, showPlus,
                 partnameHtml,
                 sourceorganHtml,
                 parttitleHtml,
@@ -340,16 +359,20 @@
                 data-prototype-partpaper= "{{ paperHtml|e }}"
 
                 data-prototype-block="
-        {{ formmacros.blockForm( formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, status, blocknameHtml, sectionsourceHtml, specialStainsHtml)|e }}
+        {{ formmacros.blockForm(
+                patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype,
+                "check", uid, type, status, showPlus,
+                blocknameHtml, sectionsourceHtml, specialStainsHtml
+                )|e }}
         "
                 data-prototype-slide="
-        {{ formmacros.slideForm( formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype, "", uid, type,
-                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.slidetype),
-                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.field),
-                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.magnification),
-                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion),
-                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note),
-                formmacros.field(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr),
+        {{ formmacros.slideForm( patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype, "", uid, type,
+                formmacros.field(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.slidetype),
+                formmacros.field(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.field),
+                formmacros.field(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.magnification),
+                formmacros.field(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion),
+                formmacros.field(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note),
+                formmacros.field(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr),
                 relevantScansHtml
                 )|e }}
         "
@@ -386,6 +409,7 @@
                 thisFormPatient,
                 patientCount,
                 status,
+                showPlus,
                 datastructure,
                 type,
                 formtype
@@ -402,6 +426,7 @@
             formPatient,
             patientCount,
             status,
+            showPlus,
             datastructure,
             type,
             formtype

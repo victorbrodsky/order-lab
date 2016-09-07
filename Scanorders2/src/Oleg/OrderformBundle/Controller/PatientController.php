@@ -299,7 +299,8 @@ class PatientController extends Controller
         $parameters = array(
             'sitename' => $this->container->getParameter('scan.sitename'),
             'datastructure' => '',
-            'updatepath' => 'scan_patient_update'
+            'updatepath' => 'scan_patient_update',
+            'showPlus' => 'showPlus'
         );
 
         return $this->editPatient($request,$id,$parameters);
@@ -360,11 +361,12 @@ class PatientController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'formtype' => 'Update Patient Data Structure',
-            'type' => 'show',
+            'type' => 'edit',//'show'
             'cycle' => 'edit',
             'datastructure' => $parameters['datastructure'],
             'updatepath' => $parameters['updatepath'],
-            'sitename' => $parameters['sitename']
+            'sitename' => $parameters['sitename'],
+            'showPlus' => $parameters['showPlus']
         );
     }
 

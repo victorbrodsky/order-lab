@@ -940,22 +940,22 @@ function addPrototypeField( btn, classname ) {
     // name=oleg_orderformbundle_messagetype[patient][0][dob][0][field]
     // name=oleg_orderformbundle_messagetype[patient][__patient__][dob][__patientdob__][field]
 
-    //get previous id
-    var fieldEl = holder.find('.patient-dob-date').last();
-    var fieldId = fieldEl.attr('id');
-    console.log("fieldId=" + fieldId);
-    //var fieldName = fieldEl.attr('name');
-    //console.log("fieldName=" + fieldName);
+    ////get previous id
+    //var fieldEl = holder.find('.patient-dob-date').last();
+    //var fieldId = fieldEl.attr('id');
+    //console.log("fieldId=" + fieldId);
+    ////var fieldName = fieldEl.attr('name');
+    ////console.log("fieldName=" + fieldName);
 
     //get array of replace indexes
-    var indexArr = getPatientIndexes(classname,fieldId);
+    var indexArr = getPatientIndexes(classname,holder);
 
     if( indexArr ) {
 
         //data-prototype-patientdob
         var collectionHolder = $('#form-prototype-data');
-        //console.log("collectionHolder:");
-        //console.log(collectionHolder);
+        console.log("collectionHolder:");
+        console.log(collectionHolder);
         var prototype = collectionHolder.data('prototype-' + classname);
         //console.log("prototype="+prototype);
 
@@ -973,27 +973,90 @@ function addPrototypeField( btn, classname ) {
 
 //     0          1             2         3    4  5  6   7
 // id=oleg_orderformbundle_messagetype_patient_0_dob_0_field
+// id=oleg_orderformbundle_patienttype_dob_0_field
 // id=oleg_orderformbundle_messagetype_patient___patient___dob___patientdob___field
 // name=oleg_orderformbundle_messagetype[patient][0][dob][0][field]
 // name=oleg_orderformbundle_messagetype[patient][__patient__][dob][__patientdob__][field]
-function getPatientIndexes( classname, id ) {
-
-    if( !id ) {
-        return null;
-    }
+function getPatientIndexes( classname, holder ) {
 
     var resArr = [];
 
-    var classnameArr = id.split("_");
-
     switch(classname) {
+
         case 'patientdob':
-            resArr['patient'] = classnameArr[4];
-            resArr['patientdob'] = parseInt(classnameArr[6]) + 1;
+            var fieldEl = holder.find('.patient-dob-date').last();
+            var id = fieldEl.attr('id');
+            //console.log("fieldId=" + id);
+            var classnameArr = id.split("_");
+            //     0          1             2         3    4  5  6   7
+            // id=oleg_orderformbundle_messagetype_patient_0_dob_0_field
+            //     0          1             2       3  4  5
+            // id=oleg_orderformbundle_patienttype_dob_0_field
+            if( classnameArr[2] == "messagetype" ) {
+                resArr['patient'] = classnameArr[4];
+                resArr['patientdob'] = parseInt(classnameArr[6]) + 1;
+            } else {
+                resArr['patientdob'] = parseInt(classnameArr[4]) + 1;
+            }
             break;
+
         case 'encounterpatlastname':
-            resArr
+            var fieldEl = holder.find('.encounter-lastName').last();
+            var id = fieldEl.attr('id');
+            //console.log("fieldId=" + id);
+            var classnameArr = id.split("_");
+            //     0          1           2         3     4     5     6     7       8   9
+            //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patlastname_0_field
+            //     0          1            2        3       4     5       6   7
+            //id=oleg_orderformbundle_patienttype_encounter_0_patlastname_0_field
+            if( classnameArr[2] == "messagetype" ) {
+                resArr['patient'] = classnameArr[4];
+                resArr['encounter'] = classnameArr[6];
+                resArr['encounterpatlastname'] = parseInt(classnameArr[8]) + 1;
+            } else {
+                resArr['encounter'] = classnameArr[4];
+                resArr['encounterpatlastname'] = parseInt(classnameArr[6]) + 1;
+            }
             break;
+
+        case 'encounterpatfirstname':
+            var fieldEl = holder.find('.encounter-firstName').last();
+            var id = fieldEl.attr('id');
+            //console.log("fieldId=" + id);
+            var classnameArr = id.split("_");
+            //     0          1           2         3     4     5     6     7       8   9
+            //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patfirstname_0_field
+            //     0          1            2        3       4     5       6   7
+            //id=oleg_orderformbundle_patienttype_encounter_0_patfirstname_0_field
+            if( classnameArr[2] == "messagetype" ) {
+                resArr['patient'] = classnameArr[4];
+                resArr['encounter'] = classnameArr[6];
+                resArr['encounterpatfirstname'] = parseInt(classnameArr[8]) + 1;
+            } else {
+                resArr['encounter'] = classnameArr[4];
+                resArr['encounterpatfirstname'] = parseInt(classnameArr[6]) + 1;
+            }
+            break;
+
+        case 'encounterpatmiddlename':
+            var fieldEl = holder.find('.encounter-middleName').last();
+            var id = fieldEl.attr('id');
+            //console.log("fieldId=" + id);
+            var classnameArr = id.split("_");
+            //     0          1           2         3     4     5     6     7       8   9
+            //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patmiddlename_0_field
+            //     0          1            2        3       4     5       6   7
+            //id=oleg_orderformbundle_patienttype_encounter_0_patmiddlename_0_field
+            if( classnameArr[2] == "messagetype" ) {
+                resArr['patient'] = classnameArr[4];
+                resArr['encounter'] = classnameArr[6];
+                resArr['encounterpatmiddlename'] = parseInt(classnameArr[8]) + 1;
+            } else {
+                resArr['encounter'] = classnameArr[4];
+                resArr['encounterpatmiddlename'] = parseInt(classnameArr[6]) + 1;
+            }
+            break;
+
         default:
             //
     }

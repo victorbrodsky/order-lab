@@ -95,7 +95,8 @@ class CallEntryController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => $title,
-            'formtype' => $formtype
+            'formtype' => $formtype,
+            'triggerSearch' => 0
         );
     }
 
