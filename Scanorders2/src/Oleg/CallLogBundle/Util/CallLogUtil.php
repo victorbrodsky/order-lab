@@ -294,6 +294,8 @@ class CallLogUtil
         $mrnRes = $patient->obtainStatusField('mrn', $status);
         $dobRes = $patient->obtainStatusField('dob', $status);
         //echo "dob=".$dobRes."<br>";
+        //echo "mrntype=".$mrnRes->getKeytype()->getId()."<br>";
+        //exit("1");
 
         //values: patient vs encounters
         //Show the "Valid" values for First Name, Last Name, etc from the encounter (not from patient object).

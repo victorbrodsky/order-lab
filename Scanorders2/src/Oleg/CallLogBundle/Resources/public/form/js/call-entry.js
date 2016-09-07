@@ -150,7 +150,7 @@ function addnewCalllogPatient(holderId) {
 
         } else {
             //console.log("Patient has not been created");
-            holder.find('#calllog-danger-box').html(data);
+            holder.find('#calllog-danger-box').html(data.output);
             holder.find('#calllog-danger-box').show();
         }
     }).done(function() {
@@ -1010,7 +1010,9 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
 }
 
 function processMrnFieldsCalllog( patient, modify, holderId ) {
-    console.log("process Mrn FieldsCalllog patient id="+patient.id);
+    console.log("process Mrn FieldsCalllog patient:");
+    console.log(patient);
+
     var holder = getHolder(holderId);
 
     if( typeof modify === 'undefined' ){
@@ -1022,23 +1024,23 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
 
     if( patient && patient.mrntype && patient.mrn ) {
 
-        mrntype.prop('disabled', true);
         mrntype.select2('val',patient.mrntype);
         setMrntypeMask(mrntype,false);
 
-        mrnid.prop('disabled', true);
         mrnid.val(patient.mrn);
+
+        mrntype.prop('disabled', true);
+        mrnid.prop('disabled', true);
 
     } else {
 
         mrntype.prop('disabled', false);
+        mrnid.prop('disabled', false);
 
         if( modify ) {
             mrntype.select2('val', _mrntype_original);
             setMrntypeMask(mrntype,false);
         }
-
-        mrnid.prop('disabled', false);
 
         if( modify ) {
             mrnid.val(null);

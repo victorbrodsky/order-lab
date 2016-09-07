@@ -491,6 +491,7 @@ class CallEntryController extends Controller
         $sex = trim($request->get('sex'));
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
+        //echo "mrntype=".$mrntype."<br>";
 
 
         //TODO: set institution
@@ -498,10 +499,12 @@ class CallEntryController extends Controller
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $institution = $userSiteSettings->getDefaultInstitution();
 
-        if( $mrntype ) {
-            $mrntypeObj = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrntype );
+        //get correct mrn type
+        if( $mrntype && $mrn ) {
+            $keytype = $mrntype;
         } else {
-            $mrntypeObj = null;
+            $keytypeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+            $keytype = $keytypeEntity->getId() . ""; //id of "New York Hospital MRN" in DB
         }
 
         //first check if the patient already exists
@@ -510,7 +513,7 @@ class CallEntryController extends Controller
             $output = "Can not create a new Patient. The patient with specified parameters already exists:<br>";
 
             if( $mrntype ) {
-                $output .= "MRN Type:".$mrntypeObj."<br>";
+                $output .= "MRN Type:".$keytypeEntity."<br>";
             }
             if( $mrn )
                 $output .= "MRN:".$mrn."<br>";
@@ -554,12 +557,16 @@ class CallEntryController extends Controller
             $fieldValue = null;
         }
 
-        if( $mrntype ) {
-            $keytype = $mrntype;
-        } else {
-            $keytypeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
-            $keytype = $keytypeEntity->getId() . ""; //id of "New York Hospital MRN" in DB
-        }
+//        if( $mrntype ) {
+//            $keytype = $mrntype;
+//        } else {
+//            $keytypeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+//            $keytype = $keytypeEntity->getId() . ""; //id of "New York Hospital MRN" in DB
+//        }
+
+        //echo "mrn=".$fieldValue."<br>";
+        //echo "keytype=".$keytype." (".$keytypeEntity.")<br>";
+        //exit("1");
 
         $extra = array();
         $extra["keytype"] = $keytype;
@@ -567,9 +574,6 @@ class CallEntryController extends Controller
         //echo "keytype=".$keytype."<br>";
         //exit();
 
-        $createdWithArr = array();
-        $createdWithArr[] = "MRN Type: ".$mrntypeObj;
-        $createdWithArr[] = "MRN: ".$mrn;
 
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(
@@ -584,8 +588,12 @@ class CallEntryController extends Controller
             false               //$withfields
         );
 
+        $mrnRes = $patient->obtainStatusField('mrn', $status);
+        $createdWithArr = array();
+        $createdWithArr[] = "MRN Type: ".$mrnRes->getKeytype()->getName();
+        $createdWithArr[] = "MRN: ".$mrnRes->getField();
 
-        $patient->addDob( new PatientDob($status,$user,$sourcesystem) );
+        //$patient->addDob( new PatientDob($status,$user,$sourcesystem) );
         if( $dob ) {
             $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob);
             $PatientDob = new PatientDob($status, $user, $sourcesystem);

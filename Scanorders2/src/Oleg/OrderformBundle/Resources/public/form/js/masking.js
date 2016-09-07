@@ -169,6 +169,7 @@ function setDefaultMask( btnObj ) {
 
 
 function mrnTypeListener() {
+    //console.log("mrn Type Listener");
     $('.mrntype-combobox').on("change", function(e) {
         //console.log("mrn type change listener!!!");
         setMrntypeMask($(this),true);
@@ -176,6 +177,7 @@ function mrnTypeListener() {
         setTypeTooltip($(this));
     });
 }
+
 
 function getMrnAutoGenMask() {
     var placeholderStr = getCleanMaskStr( _mrnplaceholder );
@@ -189,7 +191,7 @@ function setMrntypeMask( elem, clean ) {
 
     var mrnField = getKeyGroupParent(elem).find('.patientmrn-mask');
     //printF(mrnField,"mrnField=");
-    var value = elem.select2("val");
+    //var value = elem.select2("val");
     //console.log("value=" + value);
     var text = elem.select2("data").text;
     //console.log("text=" + text + ", value=" + value);
