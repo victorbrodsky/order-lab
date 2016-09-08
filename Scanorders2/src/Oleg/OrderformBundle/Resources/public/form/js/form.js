@@ -756,7 +756,7 @@ function processDatepicker( element, remove ) {
 //function setResearch() {
 //    //get value of project title field on change
 ////    $('.combobox-research-projectTitle').on("change", function(e) {
-////        console.log('listener: project Title changed');
+////        //console.log('listener: project Title changed');
 ////        //getSetTitle();
 ////        getOptionalUserResearch();
 ////    });
@@ -930,7 +930,7 @@ function toggleSinglePanel(btn,panel) {
 //TESTING + button
 function addPrototypeField( btn, classname ) {
 
-    console.log("add field: classname=" + classname);
+    //console.log("add field: classname=" + classname);
 
     var holder = $(btn).closest('.' + classname);
 
@@ -954,8 +954,8 @@ function addPrototypeField( btn, classname ) {
 
         //data-prototype-patientdob
         var collectionHolder = $('#form-prototype-data');
-        console.log("collectionHolder:");
-        console.log(collectionHolder);
+        //console.log("collectionHolder:");
+        //console.log(collectionHolder);
         var prototype = collectionHolder.data('prototype-' + classname);
         //console.log("prototype="+prototype);
 
@@ -1019,7 +1019,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.encounter-lastName').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1           2         3     4     5     6     7       8   9
                 //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patlastname_0_field
@@ -1040,7 +1040,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.encounter-firstName').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1           2         3     4     5     6     7       8   9
                 //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patfirstname_0_field
@@ -1061,7 +1061,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.encounter-middleName').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1           2         3     4     5     6     7       8   9
                 //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patmiddlename_0_field
@@ -1082,7 +1082,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.encounter-suffix').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1           2         3     4     5     6     7       8   9
                 //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patmiddlename_0_field
@@ -1103,7 +1103,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.encountersex-field').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1           2         3     4     5     6     7       8   9
                 //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patmiddlename_0_field
@@ -1129,7 +1129,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.encounter-date').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1            2         3      4   5  6   7
                 //id=oleg_orderformbundle_patienttype_encounter_0_date_0_field
@@ -1152,7 +1152,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.encounterage-field').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1            2         3      4   5  6   7
                 //id=oleg_orderformbundle_patienttype_encounter_0_date_0_field
@@ -1171,7 +1171,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.encounterhistory-field').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1            2         3      4   5  6   7
                 //id=oleg_orderformbundle_patienttype_encounter_0_date_0_field
@@ -1194,7 +1194,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.ajax-combobox-procedure').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1           2         3     4     5     6     7     8   9  10
                 //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_name_0_field
@@ -1227,7 +1227,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var fieldEl = holder.find('.accessionaccessiondate').first();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
-                console.log("fieldId=" + id);
+                //console.log("fieldId=" + id);
                 var classnameArr = id.split("_");
                 //     0          1           2         3     4     5     6     7       8   9
                 //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patlastname_0_field

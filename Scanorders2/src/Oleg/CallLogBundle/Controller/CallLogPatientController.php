@@ -42,6 +42,7 @@ class CallLogPatientController extends PatientController {
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'datastructure' => '',
+            'tracker' => 'tracker',
             'editpath' => 'calllog_patient_edit'
         );
 
@@ -66,6 +67,7 @@ class CallLogPatientController extends PatientController {
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'datastructure' => '',
+            'tracker' => 'tracker',
             'updatepath' => 'calllog_patient_update',
             'showPlus' => 'showPlus'
         );
@@ -91,6 +93,7 @@ class CallLogPatientController extends PatientController {
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'datastructure' => '',
+            'tracker' => 'tracker',
             'updatepath' => 'calllog_patient_update',
             'showpath' => 'calllog_patient_show'
         );

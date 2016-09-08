@@ -2366,7 +2366,7 @@
             {{ formmacros.inputArrayField(patient.race,cycle,"patientrace","","","","",status,showPlus) }}
         {% endif %}
 
-        {{ formmacros.patientContactinfoForm(patient,datastructure,uid,cycle,status) }}
+        {{ formmacros.patientContactinfoForm(patient,datastructure,uid,cycle,status,showPlus) }}
 
         {{ formmacros.patientDeceasedForm(patient,datastructure,uid,cycle,status) }}
 
@@ -2374,8 +2374,8 @@
 
 {% endmacro %}
 
-{% macro patientContactinfoForm( patient, datastructure, uid, cycle, status ) %}
-    {% if datastructure and datastructure == "datastructure" %}
+{% macro patientContactinfoForm( patient, datastructure, uid, cycle, status, showPlus ) %}
+    {#{% if datastructure and datastructure == "datastructure" %}#}
 
         {% if patient.tracker.spots is defined and patient.tracker.spots|length > 0 %}
 
@@ -2417,7 +2417,7 @@
                 {% set counter = counter + 1 %}
             {% endfor %}
         {% endif %}
-    {% endif %}
+    {#{% endif %}#}
 {% endmacro %}
 
 {% macro patientDeceasedForm( patient, datastructure, uid, cycle, status ) %}

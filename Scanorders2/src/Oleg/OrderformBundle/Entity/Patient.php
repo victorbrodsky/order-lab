@@ -143,6 +143,8 @@ class Patient extends ObjectAbstract
             $this->addDob( new PatientDob($status,$provider,$sourcesystem) );
             $this->addClinicalHistory( new PatientClinicalHistory($status,$provider,$sourcesystem) );
 
+            //TODO: add tracker
+
             //$this->addLastname( new PatientLastname($status,$provider,$sourcesystem) );
             //$this->addFirstname( new PatientFirstname($status,$provider,$sourcesystem) );
             //$this->addMiddlename( new PatientMiddlename($status,$provider,$sourcesystem) );
@@ -663,6 +665,7 @@ class Patient extends ObjectAbstract
      */
     public function addDob($dob)
     {
+        //exit("add dob: ".$dob);
         if( $dob == null ) {
             $dob = new PatientDob();
         }

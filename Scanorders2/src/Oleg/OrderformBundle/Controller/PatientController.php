@@ -203,6 +203,7 @@ class PatientController extends Controller
         $parameters = array(
             'sitename' => $this->container->getParameter('scan.sitename'),
             'datastructure' => $datastructure,
+            'tracker' => 'tracker',
             'editpath' => 'scan-patient-edit'
         );
 
@@ -240,7 +241,8 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => $parameters['datastructure']
+            'datastructure' => $parameters['datastructure'],
+            'tracker' => $parameters['tracker']
         );
 
         //message fields
@@ -276,6 +278,7 @@ class PatientController extends Controller
             'type' => 'show',
             'cycle' => 'show',
             'datastructure' => $parameters['datastructure'],
+            'tracker' => $parameters['tracker'],
             'sitename' => $parameters['sitename'],
             'editpath' => $parameters['editpath']
         );
@@ -299,6 +302,7 @@ class PatientController extends Controller
         $parameters = array(
             'sitename' => $this->container->getParameter('scan.sitename'),
             'datastructure' => '',
+            'tracker' => 'tracker',
             'updatepath' => 'scan_patient_update',
             'showPlus' => 'showPlus'
         );
@@ -329,7 +333,8 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => $parameters['datastructure']
+            'datastructure' => $parameters['datastructure'],
+            'tracker' => $parameters['tracker']
         );
 
         $params['endpoint.system'] = true;
@@ -364,6 +369,7 @@ class PatientController extends Controller
             'type' => 'edit',//'show'
             'cycle' => 'edit',
             'datastructure' => $parameters['datastructure'],
+            'tracker' => $parameters['tracker'],
             'updatepath' => $parameters['updatepath'],
             'sitename' => $parameters['sitename'],
             'showPlus' => $parameters['showPlus']
@@ -388,6 +394,7 @@ class PatientController extends Controller
         $parameters = array(
             'sitename' => $this->container->getParameter('scan.sitename'),
             'datastructure' => '',
+            'tracker' => 'tracker',
             'updatepath' => 'scan_patient_update',
             'showpath' => 'scan-patient-info-show'
         );
@@ -420,7 +427,8 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => $parameters['datastructure']
+            'datastructure' => $parameters['datastructure'],
+            'tracker' => $parameters['tracker']
         );
 
         $params['endpoint.system'] = true;
@@ -467,6 +475,10 @@ class PatientController extends Controller
             //TODO: set patient's name if does not exists
             //copyCommonFieldsToPatient($encounter,$user): add Encounter's name, sex to the corresponding patient fields
 
+            //TODO: calculate changes: get original 'valid' fields. If the updated 'valid' field has different ID => this is a new value.
+
+            //TODO: set provider, source, status='valid'. All other fields - 'invalid'.
+
             //exit("Form is valid");
             $em->persist($entity);
             $em->flush();
@@ -482,6 +494,7 @@ class PatientController extends Controller
             'type' => 'show',
             'cycle' => 'edit',
             'datastructure' => $parameters['datastructure'],
+            'tracker' => $parameters['tracker'],
             'updatepath' => $parameters['updatepath'],
             'sitename' => $parameters['sitename']
         );
