@@ -959,12 +959,12 @@ class VacReqRequest
 
         if( $this->hasBusinessRequest() ) {
             $statusB = $this->getRequestBusiness()->getStatus();
-            $statusArr[] = "Business Travel Request ".$statusB;
+            $statusArr[] = "Business Travel Request ".strtoupper($statusB);
         }
 
         if( $this->hasVacationRequest() ) {
             $statusV = $this->getRequestVacation()->getStatus();
-            $statusArr[] =  "Vacation Request ".$statusV;
+            $statusArr[] =  "Vacation Request ".strtoupper($statusV);
         }
 
         $requestType = $this->getRequestType();
@@ -972,9 +972,9 @@ class VacReqRequest
             $res =  "Carry Vacation Request: ";
             $tentativeStatus = $this->getTentativeStatus();
             if( $tentativeStatus ) {
-                $res .= "Tentative Status: ".$tentativeStatus."; ";
+                $res .= "Tentative Status: ".strtoupper($tentativeStatus)."; ";
             }
-            $res .= "Final Status: ".$this->getStatus();
+            $res .= "Final Status: ".strtoupper($this->getStatus());
             $statusArr[] = $res;
         }
 
