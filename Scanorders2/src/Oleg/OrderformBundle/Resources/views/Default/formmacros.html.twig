@@ -1198,7 +1198,7 @@
                 {% set btntype = 'none' %}
             {% endif %}
 
-            {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}
+            {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype,"",showPlus) }}
 
         {% endif %}
         {% set count = count + 1 %}
@@ -1225,7 +1225,7 @@
 {% endmacro %}
 
 {#input array field with separate label#}
-{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname,withspace,btntype,norest) %}
+{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname,withspace,btntype,norest,showPlus) %}
     {% import _self as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -1271,6 +1271,10 @@
 
             {#field label#}
             <div class="col-xs-6" align="right">
+
+                {#{% if showPlus is defined and showPlus == 'showPlus' or prototype == "prototype" %}#}
+                    {#<a href="javascript:;" onClick="deletePrototypeField(this,'{{ classname }}')">-</a>#}
+                {#{% endif %}#}
 
                 {% if nolabel is defined and nolabel != "" %}
                     {#no label#}
@@ -1346,9 +1350,12 @@
 
                 {#TESTING + style="color:#fff;"#}
                 {#{% if cycle != "show" %}#}
-                    {#<button onClick="addPrototypeField(this,'{{ classname }}')" type="button" class="btn btn-sm delbtnCollField">#}
-                        {#<span class="glyphicon glyphicon-plus-sign"></span>#}
-                    {#</button>#}
+                    {#{% if showPlus is defined and showPlus == 'showPlus' %}#}
+                        {#<button onClick="addPrototypeField(this,'{{ classname }}')" type="button" class="btn btn-sm delbtnCollField">#}
+                            {#<span class="glyphicon glyphicon-plus-sign"></span>#}
+                        {#</button>#}
+                        {#<a href="javascript:;" onClick="deletePrototypeField(this,'{{ classname }}')">-</a>#}
+                    {#{% endif %}#}
                 {#{% endif %}#}
                 {#TESTING +#}
 

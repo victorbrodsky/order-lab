@@ -210,7 +210,7 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
-    type={{ type }}
+
     {% if type != 'show' %}
         {#{% set mrnHtml = formmacros.inputField(formPatient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}#}
         {% if formPatient.vars.prototype is defined and formPatient.vars.prototype %}

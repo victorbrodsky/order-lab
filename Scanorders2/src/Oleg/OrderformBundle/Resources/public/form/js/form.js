@@ -1258,3 +1258,11 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
 
     return resArr;
 }
+
+function deletePrototypeField( btn, classname ) {
+    console.log("delete field: classname=" + classname);
+
+    //var holder = $(btn).closest('.' + classname);
+    $(btn).closest('.row').remove();
+
+}
