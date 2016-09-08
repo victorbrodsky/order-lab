@@ -1995,7 +1995,7 @@
 
         {% if accessiondateHtml is not defined or accessiondateHtml == "" %}
             {#{% if not (flag and flag == "datastructure") %}#}
-                {{ formmacros.inputArrayField(accession.accessionDate,cycle,"accessionaccessiondate","date","","","",status) }}
+                {{ formmacros.inputArrayField(accession.accessionDate,cycle,"accessionaccessiondate","date","","","",status,showPlus) }}
             {#{% else %}#}
                 {#{{ formmacros.inputArrayField(accession.accessionDate,"new","accessionaccessiondate","date","","","",status) }}#}
             {#{% endif %}#}

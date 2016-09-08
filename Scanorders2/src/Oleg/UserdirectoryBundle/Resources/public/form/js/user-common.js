@@ -118,6 +118,8 @@ function regularCombobox(holder) {
     });
 }
 function specificRegularCombobox( comboboxEl ) {
+    //console.log('comboboxEl:');
+    //console.log(comboboxEl);
 
     comboboxEl.select2({
         width: combobox_width,

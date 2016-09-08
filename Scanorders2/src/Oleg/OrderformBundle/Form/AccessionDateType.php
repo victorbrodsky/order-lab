@@ -27,7 +27,7 @@ class AccessionDateType extends AbstractType
             //'input'  => 'datetime',
             'required' => false,
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
-            'attr' => array('class' => 'datepicker form-control'),
+            'attr' => array('class' => 'datepicker form-control accessionaccessiondate'),
         ));
 
         $builder->add('others', new ArrayFieldType(), array(
