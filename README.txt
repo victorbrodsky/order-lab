@@ -86,6 +86,12 @@ git rm -r --cached .
 git add .
 git commit -m ".gitignore is now working"
 
+#To checking only a specific file from remote repository
+#//git fetch will download all the recent changes, but it will not put it in your current checked out code (working area).
+git fetch
+//git checkout origin/master -- path/to/file will checkout the particular file from the the downloaded changes (origin/master).
+git checkout origin/master -- path/to/file
+
 #To revert a specific file to a specific version (abcde-commit you want)
 git checkout abcde file/to/restore
 
