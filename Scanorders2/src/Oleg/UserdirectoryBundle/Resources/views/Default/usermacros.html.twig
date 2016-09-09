@@ -422,6 +422,7 @@
         {% set formfield = field %}
     {% endif %}
 
+
     {% if   prototype == "prototype" or
             formfield.vars.value and
             (
@@ -434,7 +435,7 @@
     {% else %}
         {% set homeLocation = true %}
     {% endif %}
-
+    homeLocation:{{ homeLocation }}
 
     {% if formfield.vars.value and formfield.vars.value.status == constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') or prototype == 'prototype' %}
         {% set wellclass = "user-alert-warning" %}
@@ -537,6 +538,7 @@
     {% endif %}
 
     {% if showRegularFields1 or showRegularFields2 %}
+        show tracker!!!
         <div class="user-collection-holder {{ alertClass }} {{ classname }} {{ wellclass }}">
 
             {% if not showFlag and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
@@ -550,6 +552,7 @@
             {% endif %}
 
             {% if showRegularFields1 %}
+                showRegularFields1!!!
                 {{ formmacros.field(formfield.id) }}
                 {{ usermacros.statusVerifiedField(formfield,cycle) }}
 
@@ -592,7 +595,7 @@
             {% endif %}{#showRegularFields1#}
 
             {% if showRegularFields2 %}
-
+                showRegularFields2!!!
                 {{ usermacros.emailPhoneField(formfield.phone,cycle,'phone',"") }}
 
                 {{ usermacros.emailPhoneField_notempty(formfield.pager,cycle,'phone',"") }}
@@ -608,6 +611,7 @@
             {% endif %}{#showRegularFields2#}
 
             {% if showRegularFields1 %}
+                showRegularFields1!!!
                 {% if homeLocation == false %}
 
                     {#On "Common Location" view pages, (for locations where Inhabitant is not set) hide "Assistant(s):" field and value.#}

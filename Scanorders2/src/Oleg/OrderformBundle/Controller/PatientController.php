@@ -325,6 +325,23 @@ class PatientController extends Controller
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
+        //add tracker if does not exists
+        if( !$entity->getTracker() ) {
+            $system = $securityUtil->getDefaultSourceSystem();
+            //$entity->addContactinfoByTypeAndName($user, $system);
+
+            $patientSpotPurpose = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
+            $spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
+            $locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
+
+            $locationTypePrimary = null;
+            $spotEntityPatient = null;
+            $withdummyfields = false; //true;
+
+            $entity->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Patient's Primary Residence",$spotEntityPatient,$withdummyfields,$em);
+
+            echo "spots=".count($entity->getTracker()->getSpots())."<br>";
+        }
 
         //////////////// params ////////////////
         $params = array(
@@ -366,7 +383,7 @@ class PatientController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'formtype' => 'Update Patient Data Structure',
-            'type' => 'edit',//'show'
+            'type' => 'edit',//'edit' 'show'
             'cycle' => 'edit',
             'datastructure' => $parameters['datastructure'],
             'tracker' => $parameters['tracker'],

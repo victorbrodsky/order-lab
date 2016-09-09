@@ -10,9 +10,10 @@
         <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">
 
             {{ formmacros.message_panel_header(
-            patient,'patient', datastructure, type, formtype, patientCount, uid,
-            patientCount, 0, 0, 0, 0, 0, 0, 0, 0)
+                patient,'patient', datastructure, type, formtype, patientCount, uid,
+                patientCount, 0, 0, 0, 0, 0, 0, 0, 0)
             }}
+
 
             <div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
 
@@ -210,6 +211,9 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {#{{ formmacros.testSpotShow(formPatient) }}#}
 
     {% if type != 'show' %}
         {#{% set mrnHtml = formmacros.inputField(formPatient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}#}
@@ -219,17 +223,26 @@
             {% set patientDob = formPatient.vars.prototype.dob %}
             {% set patientClinicalHistory = formPatient.vars.prototype.clinicalHistory %}
             {% set patientEncounter = formPatient.vars.prototype.encounter %}
+            {% set patientTracker = formPatient.vars.prototype.tracker %}
         {% else %}
             {% set patientPrototype = formPatient %}
             {% set patientMrn = formPatient.mrn %}
             {% set patientDob = formPatient.dob %}
             {% set patientClinicalHistory = formPatient.clinicalHistory %}
             {% set patientEncounter = formPatient.encounter %}
+            {% set patientTracker = formPatient.tracker %}
         {% endif %}
 
         {% set mrnHtml = formmacros.inputField(patientMrn,type,"key","prototype","","","","patientmrn","") %}
         {% set dobHtml = formmacros.inputField(patientDob,type,"date","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(patientClinicalHistory,type,"","prototype") %}
+
+
+        {% set patientSpotField = formPatient.tracker.spots %}
+        {#{% set patienttrackerHtml = formmacros.inputField(patientTracker,type,"","prototype") %}#}
+        {% set patientspotWidget = formmacros.fieldPatientSpotWidget(patientSpotField,type,"employees","prototype") %}
+        {% set spotHtml = formmacros.inputField(patientSpotField,type,"patienttrackerspot","prototype",patientspotWidget,"buttonbottom","") %}
+
 
         {#{% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}#}
         {% set accessionHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
@@ -281,6 +294,9 @@
 
     {% set uid = '__patient_____encounter_____procedure_____accession_____part_____block_____slide_____scan_____stain__' %}
 
+    type:{{ type }}<br>
+    {#{{ formmacros.testSpotShow(formPatient) }}#}
+
     <div id="form-prototype-data"
 
             {% if type != 'show' %}
@@ -299,12 +315,14 @@
                 showPlus,
                 mrnHtml,
                 dobHtml,
-                clinicalhistoryHtml
+                clinicalhistoryHtml,
+                spotHtml
                 )|e }}"
 
                 data-prototype-patientmrn=               "{{ mrnHtml|e }}"
                 data-prototype-patientdob=               "{{ dobHtml|e }}"
                 data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
+                data-prototype-patienttrackerspot=       "{{ spotHtml|e }}"
 
                 data-prototype-encounter="
          {{ formmacros.accessionForm(
@@ -398,6 +416,8 @@
 
     ></div>
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
+
+    {#{{ formmacros.testSpotShow(formPatient) }}#}
 
     {% set patientCount = 0 %}
 

@@ -1241,6 +1241,13 @@
 
         {{ formmacros.diseaseTypeForm(fieldThis) }}
 
+    {% elseif classname == "patienttrackerspot" %}
+
+        patienttrackerspot:<br>
+        {#{{ formmacros.fieldSpotLocationCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}#}
+        {#{{ widget }}#}
+        {{ formmacros.fieldPatientSpotWidget(fieldThis,cycle,"employees","noprototype") }}
+
     {%  else %}
 
         {#show provider and status to dataquality specialist#}
@@ -1442,6 +1449,48 @@
 
 {% macro fieldWidgetNoOther(field) %}
     {{ form_widget(field.vars.prototype.field) }}
+{% endmacro %}
+
+{#patienttrackerspot#}
+{% macro fieldPatientSpotWidget(spot,cycle,sitename,prototype) %}
+
+    {% import _self as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if prototype == "prototype" %}
+        {% set spotfield = spot.vars.prototype %}
+    {% else %}
+        {% set spotfield = spot %}
+    {% endif %}
+
+    fieldPatientSpotWidget!!!<br>
+    {#patient.tracker.spots.currentLocation#}
+    {#Location's Name:#}
+    {{ formmacros.field(spotfield.currentLocation.name) }}
+    {{ formmacros.field(spotfield.currentLocation.locationTypes) }}
+    {#{{ formmacros.field(spotfield.currentLocation.phone) }}#}
+    {{ usermacros.emailPhoneField(spotfield.currentLocation.phone,cycle,'phone',"") }}
+    {{ formmacros.field(spotfield.currentLocation.floor) }}
+
+    {% do spotfield.setRendered %}
+    {#{% do spotfield.currentLocation.associatedCode.setRendered %}#}
+    {#{% do spotfield.currentLocation.associatedPfi.setRendered %}#}
+
+    EOF fieldPatientSpotWidget!!!<br>
+
+    {#added others#}
+    {#{{ form_widget(field.vars.prototype.others) }}#}
+    {#{{ form_widget(field.vars.prototype.staintype) }}#}
+    {#{{ form_widget(field.vars.prototype.field) }}#}
+
+    {#{{ formmacros.field(spot.id) }}#}
+    {#{{ formmacros.field(spot.currentLocation.id) }}#}
+    {#{{ formmacros.field(spot.currentLocation.name) }}#}
+    {#{{ formmacros.field(spot.currentLocation.phone) }}#}
+    {#{{ formmacros.field(spot.currentLocation.pager) }}#}
+
+    {#{{ usermacros.locationObject(currentLocation,cycle,'user-locations','prototype',sitename,entity) }}#}
+
 {% endmacro %}
 
 
@@ -1841,7 +1890,7 @@
 
 {############################ Objects ###########################}
 
-{% macro patientForm( patient, flag, uid, cycle, status, showPlus, mrnHtml, dobHtml, clinicalhistoryHtml ) %}
+{% macro patientForm( patient, flag, uid, cycle, status, showPlus, mrnHtml, dobHtml, clinicalhistoryHtml, spotHtml ) %}
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}
@@ -1849,6 +1898,8 @@
     {% else %}
         {% set key = "" %}
     {% endif %}
+
+                {#{{ formmacros.testSpotShow(patient) }}#}
 
     {#messages#}
     {{ formmacros.renderMessages(patient,flag,uid,cycle) }}
@@ -1900,6 +1951,14 @@
             {{ formmacros.inputArrayField(patient.clinicalHistory,cycle,"patientclinicalhistory","","","","",status) }}
         {% else  %}
             <p><div class="patientclinicalhistory">{{ clinicalhistoryHtml }}</div></p>
+        {% endif %}
+
+        {% if spotHtml is not defined or spotHtml == "" %}
+            {% if patient.tracker is defined %}
+                {{ formmacros.inputArrayField(patient.tracker.spots,cycle,"patienttrackerspot","","","","",status) }}
+            {% endif %}
+        {% else  %}
+            <p><div class="patienttrackerspot">{{ spotHtml }}</div></p>
         {% endif %}
 
         {{ formmacros.patientExtraForm(patient,flag,uid,cycle,status,showPlus) }}
@@ -2348,13 +2407,29 @@
 
 {############################ END OF Objects ###########################}
 
+
+{% macro testSpotShow( patient ) %}
+    {% import _self as formmacros %}
+    {% for spot in patient.tracker.spots %}
+
+        {{ formmacros.field(spot.id) }}
+        {{ formmacros.field(spot.currentLocation.id) }}
+        {{ formmacros.field(spot.currentLocation.name) }}
+        {{ formmacros.field(spot.currentLocation.phone) }}
+        {{ formmacros.field(spot.currentLocation.pager) }}
+
+    {% endfor %}
+{% endmacro %}
+
+
 {############################ Extra Fields ###########################}
 {% macro patientExtraForm( patient, datastructure, uid, cycle, status, showPlus ) %}
 
+    {% import _self as formmacros %}
+
     {% if datastructure and datastructure == "datastructure" %}
 
-        {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-        {% import _self as formmacros %}
+        {#{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
 
         {#<h5>Extra data structure fields:</h5>#}
 
@@ -2366,10 +2441,15 @@
             {{ formmacros.inputArrayField(patient.race,cycle,"patientrace","","","","",status,showPlus) }}
         {% endif %}
 
-        {{ formmacros.patientContactinfoForm(patient,datastructure,uid,cycle,status,showPlus) }}
+        {#{{ formmacros.patientContactinfoForm(patient,datastructure,uid,cycle,status,showPlus) }}#}
+        {#{{ formmacros.patientDeceasedForm(patient,datastructure,uid,cycle,status) }}#}
 
+    {% endif %}
+
+    {#{{ formmacros.patientContactinfoForm(patient,datastructure,uid,cycle,status,showPlus) }}#}
+
+    {% if datastructure and datastructure == "datastructure" %}
         {{ formmacros.patientDeceasedForm(patient,datastructure,uid,cycle,status) }}
-
     {% endif %}
 
 {% endmacro %}
@@ -2379,7 +2459,6 @@
 
         {% if patient.tracker.spots is defined and patient.tracker.spots|length > 0 %}
 
-            {% import _self as formmacros %}
             {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
             {% set sitename = 'scan' %}
@@ -2409,7 +2488,7 @@
                         <h4 class="panel-title">{{ spot.currentLocation.vars.value.name }}</h4>
                     </div>
 
-                    <div id="form_body_patientcontactinfo_{{ uniqueId }}" class="panel-body collapse">
+                    <div id="form_body_patientcontactinfo_{{ uniqueId }}" class="panel-body collapse in">
                         {{ usermacros.locationObject(spot.currentLocation,cycle,'user-locations','noprototype',sitename,entity) }}
                     </div>
                 </div>

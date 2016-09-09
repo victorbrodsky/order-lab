@@ -23,6 +23,11 @@ class SpotType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+//        $builder->add('id',null,array(
+//            'label' => "ID:",
+//            'attr' => array('class'=>'form-control')
+//        ));
+
         $currentUser = true;
         $cycle = $this->params['cycle'];
         $em = $this->params['em'];
