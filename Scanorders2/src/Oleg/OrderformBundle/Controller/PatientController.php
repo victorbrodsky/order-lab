@@ -330,17 +330,17 @@ class PatientController extends Controller
             $system = $securityUtil->getDefaultSourceSystem();
             //$entity->addContactinfoByTypeAndName($user, $system);
 
-            $patientSpotPurpose = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
-            $spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
-            $locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
+            //$patientSpotPurpose = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
+            //$spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
+            //$locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
 
             $locationTypePrimary = null;
             $spotEntityPatient = null;
             $withdummyfields = false; //true;
 
-            $entity->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Patient's Primary Residence",$spotEntityPatient,$withdummyfields,$em);
+            $entity->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Patient's Current Location",$spotEntityPatient,$withdummyfields,$em);
 
-            echo "spots=".count($entity->getTracker()->getSpots())."<br>";
+            //echo "spots=".count($entity->getTracker()->getSpots())."<br>";
         }
 
         //////////////// params ////////////////

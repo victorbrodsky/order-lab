@@ -962,6 +962,7 @@ function addPrototypeField( btn, classname ) {
         for( var k in indexArr ) {
             if( indexArr.hasOwnProperty(k) ) {
                 //alert("Key is " + k + ", value is" + indexArr[k]);
+                console.log("index="+indexArr[k]);
                 prototype = prototype.replace(new RegExp("__" + k + "__", 'g'), indexArr[k]);
             }
         }
@@ -1011,6 +1012,36 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
                 //do nothing for this field
                 fieldEl = holder.find('.patient-dob-date').last();
                 initDatepicker(fieldEl.closest('.row'));
+            }
+        break;
+
+
+        case 'patienttrackerspot':
+
+            var fieldEl = holder.find('.user-location-name-field').first();
+            if( action == "index" ) {
+                var id = fieldEl.attr('id');
+                console.log("fieldId=" + id);
+                var classnameArr = id.split("_");
+                //     0          1             2         3    4     5      6  7      8
+                // id=oleg_orderformbundle_messagetype_patient_0_tracker_spots_0_currentLocation_name
+                //     0          1             2         3      4   5
+                // id=oleg_orderformbundle_patienttype_tracker_spots_0_currentLocation_name
+                if (classnameArr[2] == "messagetype") {
+                    resArr['patient'] = classnameArr[4];
+                    resArr['spots'] = parseInt(classnameArr[7]) + 1;
+                } else {
+                    var spotIndex = parseInt(classnameArr[5]) + 1;
+                    console.log("spotIndex="+spotIndex);
+                    resArr['spots'] = spotIndex;
+                }
+            }
+            if( action == "jsinit" ) {
+                //do nothing for this field
+                //fieldEl = holder.find('.patient-dob-date').last();
+                //initDatepicker(fieldEl.closest('.row'));
+                //fieldEl = holder.find('.encountersex-field').last();
+                regularCombobox(holder);
             }
         break;
 

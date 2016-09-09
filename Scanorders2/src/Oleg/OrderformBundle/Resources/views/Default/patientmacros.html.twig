@@ -240,8 +240,8 @@
 
         {% set patientSpotField = formPatient.tracker.spots %}
         {#{% set patienttrackerHtml = formmacros.inputField(patientTracker,type,"","prototype") %}#}
-        {% set patientspotWidget = formmacros.fieldPatientSpotWidget(patientSpotField,type,"employees","prototype") %}
-        {% set spotHtml = formmacros.inputField(patientSpotField,type,"patienttrackerspot","prototype",patientspotWidget,"buttonbottom","") %}
+        {% set patientspotWidget = formmacros.fieldPatientSpotWidget(patientSpotField,type,"employees","prototype","patienttrackerspot") %}
+        {% set spotHtml = formmacros.inputField(patientSpotField,type,"patienttrackerspot","prototype",patientspotWidget) %}
 
 
         {#{% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}#}
@@ -322,7 +322,7 @@
                 data-prototype-patientmrn=               "{{ mrnHtml|e }}"
                 data-prototype-patientdob=               "{{ dobHtml|e }}"
                 data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
-                data-prototype-patienttrackerspot=       "{{ spotHtml|e }}"
+                data-prototype-patienttrackerspot=       "{{ patientspotWidget|e }}"
 
                 data-prototype-encounter="
          {{ formmacros.accessionForm(
