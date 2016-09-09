@@ -1029,7 +1029,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
                 // id=oleg_orderformbundle_patienttype_tracker_spots_0_currentLocation_name
                 if (classnameArr[2] == "messagetype") {
                     resArr['patient'] = classnameArr[4];
-                    resArr['spots'] = parseInt(classnameArr[7]) + 1; 
+                    resArr['spots'] = parseInt(classnameArr[7]) + 1;
                 } else {
                     var spotIndex = parseInt(classnameArr[5]) + 1;
                     console.log("spotIndex="+spotIndex);

@@ -223,26 +223,29 @@
             {% set patientDob = formPatient.vars.prototype.dob %}
             {% set patientClinicalHistory = formPatient.vars.prototype.clinicalHistory %}
             {% set patientEncounter = formPatient.vars.prototype.encounter %}
-            {% set patientTracker = formPatient.vars.prototype.tracker %}
+            {#{% set patientSpotField = formPatient.tracker.spots %}#}
         {% else %}
             {% set patientPrototype = formPatient %}
             {% set patientMrn = formPatient.mrn %}
             {% set patientDob = formPatient.dob %}
             {% set patientClinicalHistory = formPatient.clinicalHistory %}
             {% set patientEncounter = formPatient.encounter %}
-            {% set patientTracker = formPatient.tracker %}
+            {#{% set patientSpotField = formPatient.tracker.spots %}#}
         {% endif %}
 
         {% set mrnHtml = formmacros.inputField(patientMrn,type,"key","prototype","","","","patientmrn","") %}
         {% set dobHtml = formmacros.inputField(patientDob,type,"date","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(patientClinicalHistory,type,"","prototype") %}
 
-
-        {% set patientSpotField = formPatient.tracker.spots %}
-        {#{% set patienttrackerHtml = formmacros.inputField(patientTracker,type,"","prototype") %}#}
-        {% set patientspotWidget = formmacros.fieldPatientSpotWidget(patientSpotField,type,"employees","prototype","patienttrackerspot") %}
-        {% set spotHtml = formmacros.inputField(patientSpotField,type,"patienttrackerspot","prototype",patientspotWidget) %}
-
+        {% if formPatient.tracker is defined %}
+            {% set patientSpotField = formPatient.tracker.spots %}
+            {#{% set patienttrackerHtml = formmacros.inputField(patientTracker,type,"","prototype") %}#}
+            {% set patientspotWidget = formmacros.fieldPatientSpotWidget(patientSpotField,type,"employees","prototype","patienttrackerspot") %}
+            {% set spotHtml = formmacros.inputField(patientSpotField,type,"patienttrackerspot","prototype",patientspotWidget) %}
+        {% else %}
+            {% set patientspotWidget = "" %}
+            {% set spotHtml = "" %}
+        {% endif %}
 
         {#{% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}#}
         {% set accessionHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
