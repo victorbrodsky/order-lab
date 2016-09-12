@@ -515,7 +515,7 @@
     {#{% set scanCount        = 0 %}#}
     {#{% set stainCount       = 0 %}#}
 
-    {% if name == 'encounter' and not (datastructure and datastructure == "datastructure")%}
+    {% if name == 'encounter' and not (datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient"))%}
         {% set title = 'accession' %}
         {% set procedure = formObject.vars.value.procedure|first %}
         {% set formObject = procedure.accession|first %}
@@ -556,8 +556,19 @@
                 {#{% endif %}#}
             </div>
         </h4>
-
-        {% if name != "scan" and name != "stain" %}
+        {% set addHeaderBtn = true %}
+        {% if name == "scan" or name == "stain" %}
+            {% set addHeaderBtn = false %}
+        {% endif %}
+        {% if name == "patient" and formtype == "Update Patient Data Structure" %}
+            {% set addHeaderBtn = false %}
+        {% endif %}
+        {#don't add add btn for now for all datastructure == "datastructure-patient"; JS will require changes to add separate sections (encounter, procedure, accession)#}
+        {% if datastructure == "datastructure-patient" %}
+            {% set addHeaderBtn = false %}
+        {% endif %}
+        {#{% if name != "scan" and name != "stain" %}#}
+        {% if addHeaderBtn %}
             {% if type == 'new' or type == 'edit' or (type == 'amend' and formtype != 'One-Slide Scan Order' ) %}
 
                 <div class="form-btn-options">
@@ -1930,7 +1941,7 @@
 
 {############################ Objects ###########################}
 
-{% macro patientForm( patient, flag, uid, cycle, status, showPlus, mrnHtml, dobHtml, clinicalhistoryHtml, spotHtml ) %}
+{% macro patientForm( patient, flag, uid, cycle, status, showPlus, formtype, mrnHtml, dobHtml, clinicalhistoryHtml, spotHtml ) %}
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}
@@ -1993,7 +2004,7 @@
             <p><div class="patientclinicalhistory">{{ clinicalhistoryHtml }}</div></p>
         {% endif %}
 
-        {% if flag != "datastructure" %}
+        {% if formtype == "Update Patient Data Structure" %}
             {% if spotHtml is not defined or spotHtml == "" %}
                 {% if patient.tracker is defined %}
                     {{ formmacros.inputArrayField(patient.tracker.spots,cycle,"patienttrackerspot","","","","",status,showPlus) }}
@@ -2112,7 +2123,7 @@
         {% endif %}
 
 
-        {% if not (flag and flag == "datastructure") %}
+        {% if not (flag and (flag == "datastructure" or flag == "datastructure-patient")) %}
 
             {#{{ formmacros.field(procedure.name) }}#}
             {% if procedurenameHtml is not defined or procedurenameHtml == "" %}
@@ -2135,7 +2146,7 @@
                 <p><div class="encounterpatlastname">{{ patlastnameHtml }}</div></p>
             {% endif %}
 
-            {% if patfirstameHtml is not defined or patfirstnameHtml == "" %}
+            {% if patfirstnameHtml is not defined or patfirstnameHtml == "" %}
                 {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status,showPlus) }}
             {% else  %}
                 <p><div class="encounterpatfirstname">{{ patfirstnameHtml }}</div></p>
@@ -2588,7 +2599,7 @@
 
 {% macro encounterExtraForm( encounter, datastructure, uid, cycle, status, showPlus ) %}
 
-    {% if datastructure and datastructure == "datastructure" %}
+    {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") %}
 
         {% import _self as formmacros %}
 
@@ -2651,7 +2662,7 @@
 
 {% macro procedureExtraForm( procedure, datastructure, uid, cycle, status, showPlus ) %}
 
-    {% if datastructure and datastructure == "datastructure" %}
+    {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") %}
 
         {% import _self as formmacros %}
 
@@ -2702,7 +2713,7 @@
 
 {% macro accessionExtraForm( accession, datastructure, uid, cycle, status ) %}
 
-    {% if datastructure and datastructure == "datastructure" %}
+    {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") %}
 
         {% import _self as formmacros %}
 

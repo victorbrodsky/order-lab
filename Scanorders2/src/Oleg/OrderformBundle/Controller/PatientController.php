@@ -136,7 +136,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'datastructure' => 'datastructure',
+            'datastructure' => 'datastructure', //'datastructure-patient'
         );
 
         //message fields
@@ -197,7 +197,7 @@ class PatientController extends Controller
         if( $route == "scan-patient-show" ) {
             $datastructure = 'datastructure';
         } else {
-            $datastructure = '';
+            $datastructure = 'datastructure-patient';
         }
 
         $parameters = array(
@@ -301,7 +301,7 @@ class PatientController extends Controller
 
         $parameters = array(
             'sitename' => $this->container->getParameter('scan.sitename'),
-            'datastructure' => '',
+            'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'scan_patient_update',
             'showPlus' => 'showPlus'
@@ -410,7 +410,7 @@ class PatientController extends Controller
 
         $parameters = array(
             'sitename' => $this->container->getParameter('scan.sitename'),
-            'datastructure' => '',
+            'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'scan_patient_update',
             'showpath' => 'scan-patient-info-show'
