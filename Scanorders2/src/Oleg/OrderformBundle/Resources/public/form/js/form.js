@@ -637,7 +637,7 @@ function bindToggleBtn( uid ) {
     $('#form_body_toggle_'+ uid).on('click', function(e) {
         // prevent the link from creating a "#" on the URL
         //e.preventDefault();
-        var className = $(this).attr("class");
+        //var className = $(this).attr("class");
         var id = this.id;
         //alert(className);
 
@@ -862,12 +862,13 @@ function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
 
 function toggleSinglePanel(btn,panel) {
 
-    //console.log("toggle SinglePanel");
+    console.log("toggle SinglePanel");
 
     var btnEl = $(btn);
     var panelEl = $(panel);
 
     if( btnEl.hasClass('glyphicon-folder-close') ) {
+        console.log("toggle SinglePanel: open");
         //open
         panelEl.show(400);
         //panelEl.slideUp();
@@ -879,7 +880,8 @@ function toggleSinglePanel(btn,panel) {
     }
 
     if( btnEl.hasClass('glyphicon-folder-open') ) {
-        //open
+        //close
+        console.log("toggle SinglePanel: close");
         panelEl.hide(400);
     }
 }
@@ -992,20 +994,25 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
 
         case 'patientdob':
 
-            var fieldEl = holder.find('.patient-dob-date').first();
-            if( action == "index" ) {
-                var id = fieldEl.attr('id');
-                //console.log("fieldId=" + id);
-                var classnameArr = id.split("_");
-                //     0          1             2         3    4  5  6   7
-                // id=oleg_orderformbundle_messagetype_patient_0_dob_0_field
-                //     0          1             2       3  4  5
-                // id=oleg_orderformbundle_patienttype_dob_0_field
-                if (classnameArr[2] == "messagetype") {
-                    resArr['patient'] = classnameArr[4];
-                    resArr['patientdob'] = parseInt(classnameArr[6]) + 1;
-                } else {
-                    resArr['patientdob'] = parseInt(classnameArr[4]) + 1;
+            var nameArr = ['patient','patientdob'];
+            resArr = getMaxIndexByArrayName(holder,'.patient-dob-date',nameArr);
+
+            if(0) {
+                var fieldEl = holder.find('.patient-dob-date').first();
+                if (action == "index") {
+                    var id = fieldEl.attr('id');
+                    //console.log("fieldId=" + id);
+                    var classnameArr = id.split("_");
+                    //     0          1             2         3    4  5  6   7
+                    // id=oleg_orderformbundle_messagetype_patient_0_dob_0_field
+                    //     0          1             2       3  4  5
+                    // id=oleg_orderformbundle_patienttype_dob_0_field
+                    if (classnameArr[2] == "messagetype") {
+                        resArr['patient'] = classnameArr[4];
+                        resArr['patientdob'] = parseInt(classnameArr[6]) + 1;
+                    } else {
+                        resArr['patientdob'] = parseInt(classnameArr[4]) + 1;
+                    }
                 }
             }
             if( action == "jsinit" ) {
@@ -1018,7 +1025,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
 
         case 'patienttrackerspot':
 
-            var fieldEl = holder.find('.user-location-name-field').first();
+            var fieldEl = holder.find('.user-location-name-field').last();
             if( action == "index" ) {
                 var id = fieldEl.attr('id');
                 console.log("fieldId=" + id);
@@ -1027,6 +1034,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
                 // id=oleg_orderformbundle_messagetype_patient_0_tracker_spots_0_currentLocation_name
                 //     0          1             2         3      4   5
                 // id=oleg_orderformbundle_patienttype_tracker_spots_0_currentLocation_name
+                // id=oleg_orderformbundle_patienttype_tracker_spots_1_currentLocation_name
                 if (classnameArr[2] == "messagetype") {
                     resArr['patient'] = classnameArr[4];
                     resArr['spots'] = parseInt(classnameArr[7]) + 1;
@@ -1042,6 +1050,14 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
                 //initDatepicker(fieldEl.closest('.row'));
                 //fieldEl = holder.find('.encountersex-field').last();
                 regularCombobox(holder);
+                var btnEl = holder.find('.form_body_toggle_btn ').last();
+                //btnId='form_body_toggle_patientcontactinfo_1'
+                var btnId = btnEl.attr("id");
+                //'#form_body_toggle_'+ uid
+                //var btnIdArr = btnId.split("form_body_toggle_")
+                //var uid = "patientcontactinfo_1";
+                var uid = btnId.replace("form_body_toggle_", "");
+                bindToggleBtn( uid );
             }
         break;
 
@@ -1288,6 +1304,47 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
     }
 
     return resArr;
+}
+function getMaxIndexByArrayName(holder,target,nameArr) {
+    var resArr = [];
+    for( var i = 0; i < nameArr.length; i++ ) {
+        //var maxIndex = getNextIndexByName(holder,target,nameArr[i]);
+        resArr[nameArr[i]] = getNextIndexByName(holder,target,nameArr[i]);
+    }
+    return resArr;
+}
+//find max index the name
+//     0          1            2        3       4     5     6   7       8       9       10
+//id=oleg_orderformbundle_patienttype_encounter_0_procedure_0_accession_0_accessionDate_2_field
+//name="accessionDate" => index is the next value => index=2
+function getNextIndexByName(holder,target,name) {
+    var maxIndex = 0;
+    holder.find(target).each( function(){
+        //id: formpanel_block_0_0_0_0_1_0_0_0
+        var fieldId = $(this).attr('id');
+        console.log(name+": fieldId="+fieldId);
+        if( !fieldId ) {
+            alert('ERROR getNextIndexByName: fieldId is not defined');
+            return maxIndex;
+        }
+        var idsArr = fieldId.split("_"+name+"_");
+        if( idsArr.length == 2 ) { //must be 2
+            var secondPart = idsArr[1].split("_");
+            var index = parseInt(secondPart[0]);
+            console.log("index="+index);
+            if( !index ) {
+                return maxIndex;
+            }
+            if( index > maxIndex ) {
+                maxIndex = index;
+            }
+            console.log(fieldId+": maxIndex="+maxIndex);
+        } else {
+            return maxIndex;
+        }
+    });
+    maxIndex = maxIndex + 1;
+    return maxIndex;
 }
 
 function deletePrototypeField( btn, classname ) {
