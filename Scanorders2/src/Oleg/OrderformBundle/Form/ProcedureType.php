@@ -128,16 +128,18 @@ class ProcedureType extends AbstractType
         if( array_key_exists('datastructure',$this->params) &&
             ($this->params['datastructure'] == 'datastructure' || $this->params['datastructure'] == 'datastructure-patient' )
         ) {
-            $builder->add('date', 'collection', array(
-                'type' => new ProcedureDateType($this->params, null),
-                //'read_only' => $readonly,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__proceduredate__',
-            ));
+            if(0) {
+                $builder->add('date', 'collection', array(
+                    'type' => new ProcedureDateType($this->params, null),
+                    //'read_only' => $readonly,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'required' => false,
+                    'by_reference' => false,
+                    'prototype' => true,
+                    'prototype_name' => '__proceduredate__',
+                ));
+            }
         }
 
         //messages

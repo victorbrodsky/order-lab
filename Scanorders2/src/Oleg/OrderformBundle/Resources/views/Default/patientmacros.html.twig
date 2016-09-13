@@ -257,7 +257,12 @@
 
         {% set procedurenameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype","","","","procedurename") %}
         {#{% set procedurenumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
-        {% set proceduredateHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype","","","","proceduredate") %}
+
+        {% if patientEncounter.vars.prototype.procedure.vars.prototype.date is defined %}
+            {% set proceduredateHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype","","","","proceduredate") %}
+        {% else %}
+            {% set proceduredateHtml = "" %}
+        {% endif %}
 
         {% set patsuffixHtml = formmacros.inputField(patientEncounter.vars.prototype.patsuffix,type,"","prototype","","","","encounterpatsuffix") %}
         {% set patlastnameHtml = formmacros.inputField(patientEncounter.vars.prototype.patlastname,type,"","prototype","","","","encounterpatlastname") %}
