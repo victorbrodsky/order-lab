@@ -1184,6 +1184,9 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         //console.log("statusFieldEl="+statusFieldEl.attr("id"));
         specificRegularCombobox(statusFieldEl);
 
+        //set status to invalid
+        statusFieldEl.select2('val','invalid');
+
         //attach event listener to this combobox to set value
         listenerComboboxStatusField(statusFieldEl); //,holder,'.other-status');
     }
