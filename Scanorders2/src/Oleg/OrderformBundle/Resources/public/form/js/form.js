@@ -871,13 +871,13 @@ function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
 
 function toggleSinglePanel(btn,panel) {
 
-    console.log("toggle SinglePanel");
+    //console.log("toggle SinglePanel");
 
     var btnEl = $(btn);
     var panelEl = $(panel);
 
     if( btnEl.hasClass('glyphicon-folder-close') ) {
-        console.log("toggle SinglePanel: open");
+        //console.log("toggle SinglePanel: open");
         //open
         panelEl.show(400);
         //panelEl.slideUp();
@@ -890,7 +890,7 @@ function toggleSinglePanel(btn,panel) {
 
     if( btnEl.hasClass('glyphicon-folder-open') ) {
         //close
-        console.log("toggle SinglePanel: close");
+        //console.log("toggle SinglePanel: close");
         panelEl.hide(400);
     }
 }
@@ -1180,8 +1180,8 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
     //for all fields
     if( action == "jsinit" ) {
         //init select box
-        var statusFieldEl = holder.find('.other-status').last();
-        console.log("statusFieldEl="+statusFieldEl.attr("id"));
+        var statusFieldEl = holder.find('select.other-status').last();
+        //console.log("statusFieldEl="+statusFieldEl.attr("id"));
         specificRegularCombobox(statusFieldEl);
 
         //attach event listener to this combobox to set value
@@ -1194,7 +1194,7 @@ function getMaxIndexByArrayName(holder,target,nameArr) {
     var resArr = [];
 
     var nameArrLength = getKeyValueArrayLength(nameArr);
-    console.log(target+": nameArrLength="+nameArrLength);
+    //console.log(target+": nameArrLength="+nameArrLength);
     var count = 1;
     for( var classname in nameArr ) {
         if( nameArr.hasOwnProperty(classname) ) {
@@ -1203,7 +1203,7 @@ function getMaxIndexByArrayName(holder,target,nameArr) {
             if( nameArr[classname] ) {
                 fieldIdName = nameArr[classname];
             }
-            console.log("fieldIdName="+fieldIdName);
+            //console.log("fieldIdName="+fieldIdName);
 
             var last = false;
             if (count == nameArrLength) {
@@ -1215,7 +1215,7 @@ function getMaxIndexByArrayName(holder,target,nameArr) {
                 //increament the last index
                 if (count == nameArrLength) {
                     maxIndex = maxIndex + 1;
-                    console.log(fieldIdName + ": increament maxIndex=" + maxIndex);
+                    //console.log(fieldIdName + ": increament maxIndex=" + maxIndex);
                 }
                 resArr[classname] = maxIndex;
             }
@@ -1257,13 +1257,13 @@ function getMaxIndexByName(holder,target,name,last) {
     }
     targetElements.each( function(){
         var fieldId = $(this).attr('id');
-        console.log(name+": fieldId="+fieldId);
+        //console.log(name+": fieldId="+fieldId);
         if( !fieldId ) {
             alert('ERROR getMaxIndexByName: fieldId is not defined');
             return maxIndex;
         }
         var splitter = "_"+name+"_"; //_patage_
-        console.log("splitter="+splitter);
+        //console.log("splitter="+splitter);
         var idsArr = fieldId.split(splitter);
         if( idsArr.length == 2 ) { //must be 2
             var secondPart = idsArr[1].split("_");
