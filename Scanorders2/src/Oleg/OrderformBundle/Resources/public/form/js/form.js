@@ -1174,12 +1174,18 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         break;
 
         default:
-            if( action == "jsinit" ) {
-                var statusFieldEl = holder.find('.other-status').last();
-                console.log("statusFieldEl="+statusFieldEl.attr("id"));
-                specificRegularCombobox(statusFieldEl);
-            }
             return null;
+    }
+
+    //for all fields
+    if( action == "jsinit" ) {
+        //init select box
+        var statusFieldEl = holder.find('.other-status').last();
+        console.log("statusFieldEl="+statusFieldEl.attr("id"));
+        specificRegularCombobox(statusFieldEl);
+
+        //attach event listener to this combobox to set value
+        listenerComboboxStatusField(statusFieldEl); //,holder,'.other-status');
     }
 
     return resArr;
@@ -1294,4 +1300,37 @@ function deletePrototypeField( btn, classname ) {
     //var holder = $(btn).closest('.' + classname);
     $(btn).closest('.row').remove();
 
+}
+
+function listenerComboboxStatusField( statusFieldEl, holder, target ) {
+
+    if( holder && target ) {
+        statusFieldEl = holder.find(target);
+    }
+
+    statusFieldEl.on("change", function(e) {
+        var statusValue = $(this).select2('val');
+        var statusId = $(this).attr('id');
+        console.log("status change to "+statusValue);
+
+        if( statusValue == "valid" ) {
+           var otherValue = "invalid";
+        } else {
+            var otherValue = "valid";
+            return;
+        }
+
+        //1) get holder
+        var holder = $(this).closest('.row').parent();
+        printF(holder, "Holder:");
+
+        //2) change status for all other fields in the holder
+        holder.find('select.other-status').each(function (e) {
+            console.log("status change to " + otherValue + ": "+statusId+"?="+$(this).attr('id'));
+            if( statusId != $(this).attr('id') ) {
+                $(this).select2('val',otherValue);
+            }
+        });
+
+    });
 }

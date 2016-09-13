@@ -37,12 +37,12 @@ class ArrayFieldType extends AbstractType
 
             $builder->add('status', 'choice', array(
                 'choices'   => array(
-                    'valid',
-                    'invalid'
+                    'valid' => 'valid',
+                    'invalid' => 'invalid'
                 ),
                 'label' => "Status:",
                 'required' => true,
-                'attr' => array('class' => 'combobox combobox-width other-status'),
+                'attr' => array('class' => 'combobox combobox-no-width other-status'),
             ));
         }
 

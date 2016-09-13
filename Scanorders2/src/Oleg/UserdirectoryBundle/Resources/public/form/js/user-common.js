@@ -121,8 +121,13 @@ function specificRegularCombobox( comboboxEl ) {
     //console.log('comboboxEl:');
     //console.log(comboboxEl);
 
+    var comboboxWidth = combobox_width;
+    if( comboboxEl.hasClass('combobox-no-width') ) {
+        comboboxWidth = null;
+    }
+
     comboboxEl.select2({
-        width: combobox_width,
+        width: comboboxWidth,
         dropdownAutoWidth: true,
         placeholder: "Select an option",
         allowClear: true,
@@ -135,6 +140,10 @@ function specificRegularCombobox( comboboxEl ) {
         comboboxEl.select2("readonly", true);
     }
 
+    if( comboboxEl.hasClass('other-status') ) {
+        listenerComboboxStatusField(comboboxEl);
+    }
+
 //        if( comboboxEl.hasClass('element-with-select2-tooltip') ) {
 //            console.log('regularCombobox: add tooltip to id='+comboboxEl.attr('id'));
 //            console.log('title tooltip='+comboboxEl.attr('title'));
@@ -144,6 +153,11 @@ function specificRegularCombobox( comboboxEl ) {
 //            //comboboxEl.tooltip();
 //        }
 
+}
+
+
+function listenerComboboxStatusField() {
+    return;
 }
 
 function getElementTargetByHolder(holder,target) {
@@ -261,10 +275,15 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     //filter disbaled options from data
     data = filterDisabledOptions(data,target);
 
+    var comboboxWidth = combobox_width;
+    if( $(target).hasClass('combobox-no-width') ) {
+        comboboxWidth = null;
+    }
+
     $(target).select2({
         placeholder: placeholder,
         allowClear: allowClear,
-        width: combobox_width,
+        width: comboboxWidth,
         dropdownAutoWidth: true,
         selectOnBlur: false,
         dataType: 'json',
@@ -279,6 +298,9 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         $(this).select2("readonly", true);
     }
 
+    if( $(target).hasClass('other-status') ) {
+        listenerComboboxStatusField($(target));
+    }
 }
 
 var select2Matcher = function(term, text, opt) {

@@ -1297,14 +1297,14 @@
                     {#no label#}
                 {% else %}
                     {% if fieldtype == "blockspecialStains" %}
-                        {{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider) }}
+                        {{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider,showPlus) }}
                         {#<br>#}
-                        {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}
+                        {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider,showPlus) }}
                     {% elseif fieldtype == "paper" %}
-                        {{ formmacros.labelWithInfo(field,fieldThis.documents,cycle,prototype,showInfoDate,showInfoProvider) }}
+                        {{ formmacros.labelWithInfo(field,fieldThis.documents,cycle,prototype,showInfoDate,showInfoProvider,showPlus) }}
                     {% else %}
                         {% if fieldThis.field is defined %}
-                            {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}
+                            {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider,showPlus) }}
                         {% endif %}
                     {% endif %}
                 {% endif %}
@@ -1365,17 +1365,6 @@
                     {% endif %}
                 {% endif %}
 
-                {#TESTING + style="color:#fff;"#}
-                {#{% if cycle != "show" %}#}
-                    {#{% if showPlus is defined and showPlus == 'showPlus' %}#}
-                        {#<button onClick="addPrototypeField(this,'{{ classname }}')" type="button" class="btn btn-sm delbtnCollField">#}
-                            {#<span class="glyphicon glyphicon-plus-sign"></span>#}
-                        {#</button>#}
-                        {#<a href="javascript:;" onClick="deletePrototypeField(this,'{{ classname }}')">-</a>#}
-                    {#{% endif %}#}
-                {#{% endif %}#}
-                {#TESTING +#}
-
             </div>
 
         </div>
@@ -1384,9 +1373,9 @@
         {% if cycle != 'show' %}
             {% if norest is not defined or norest == "" %}
                 {% if fieldThis.others is defined %}
-                    {% if fieldThis.others.status is defined %}
-                        {{ formmacros.field(fieldThis.others.status) }}
-                    {% endif %}
+                    {#{% if fieldThis.others.status is defined %}#}
+                        {#{{ formmacros.field(fieldThis.others.status) }}#}
+                    {#{% endif %}#}
                     {{ form_widget(fieldThis.others) }}
                 {% endif %}
                 {{ form_rest(fieldThis) }}
@@ -1397,7 +1386,7 @@
 
 {% endmacro %}
 
-{% macro labelWithInfo(fullfield,field,cycle,prototype,showInfoDate,showInfoProvider) %}
+{% macro labelWithInfo(fullfield,field,cycle,prototype,showInfoDate,showInfoProvider,showPlus) %}
 
     {% if prototype == "prototype" %}
         {% set fieldThis = null %}
@@ -1438,7 +1427,30 @@
         {% endif %}
         {#{{ form_label(field, label|raw) }}#}
 
+        {#{% if showPlus is defined and showPlus == 'showPlus' or prototype == "prototype" %}#}
+            {#{% set additionalClass = "well" %}#}
+        {#{% else %}#}
+            {#{% set additionalClass = "" %}#}
+        {#{% endif %}#}
+
     {% endif %}
+
+    {#show status#}
+    {% if showPlus is defined and showPlus == 'showPlus' or prototype == "prototype" %}
+        {% set label = label|replace({":":""}) %}
+        {% if prototype == "prototype" %}
+            {% set fullfieldThis = fullfield.vars.prototype %}
+        {% else %}
+            {% set fullfieldThis = fullfield %}
+        {% endif %}
+        {% set fieldStatus = "" %}
+        {% if fullfieldThis.others.status is defined %}
+            {% set fieldStatus = " " ~ form_widget(fullfieldThis.others.status) %}
+        {% endif %}
+        {% set label = label ~ fieldStatus %}
+        {% set label = label ~ ":" %}
+    {% endif %}
+    {#EOF show status#}
 
     {#render label#}
     <p>
@@ -1678,12 +1690,9 @@
 {% endmacro %}
 
 {% macro encounterNameWithAlias(field) %}
+    {% import _self as formmacros %}
     {% if field.alias is defined %}
         {{ form_errors(field) }}
-
-        {% if field.others.status is defined %}
-            {{ formmacros.field(field.others.status) }}
-        {% endif %}
         {{ form_widget(field.others) }}
 
         <div class="form-group oleg-form-nomargin-bottom">
@@ -1699,14 +1708,8 @@
             </div>
         </div>
     {% else %}
-        {#{% import _self as formmacros %}#}
         {{ form_errors(field) }}
-
-        {% if field.others.status is defined %}
-            {{ formmacros.field(field.others.status) }}
-        {% endif %}
         {{ form_widget(field.others) }}
-
         {{ form_widget(field.field) }}
         {#{{ formmacros.field(field) }}#}
     {% endif %}
