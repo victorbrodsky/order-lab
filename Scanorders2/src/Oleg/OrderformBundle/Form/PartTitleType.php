@@ -29,7 +29,7 @@ class PartTitleType extends AbstractType
         ));
 
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartParttitle',
             'label' => false,
             'attr' => array('style'=>'display:none;')

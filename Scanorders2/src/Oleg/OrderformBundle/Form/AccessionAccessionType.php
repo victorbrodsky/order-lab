@@ -59,7 +59,7 @@ class AccessionAccessionType extends AbstractType
         $builder->add('keytype', 'custom_selector', $options);
 
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccession',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

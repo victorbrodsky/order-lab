@@ -43,7 +43,7 @@ class PatientTypeType extends AbstractType
 //        ));
 
         //other fields from abstract
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientType',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

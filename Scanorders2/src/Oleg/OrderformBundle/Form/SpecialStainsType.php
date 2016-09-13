@@ -47,7 +47,7 @@ class SpecialStainsType extends AbstractType
         $builder->add('staintype', 'custom_selector', $options );
 
         //stainothers
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\BlockSpecialStains',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

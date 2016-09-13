@@ -65,7 +65,7 @@ class PatientMrnType extends AbstractType
         $builder->add('keytype', 'custom_selector', $options);
 
         //other fields from abstract
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

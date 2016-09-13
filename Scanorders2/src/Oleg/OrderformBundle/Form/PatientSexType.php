@@ -35,7 +35,7 @@ class PatientSexType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width patientsex-field')
         ));
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientSex',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

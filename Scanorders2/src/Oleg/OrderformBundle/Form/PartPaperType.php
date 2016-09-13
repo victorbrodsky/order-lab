@@ -38,7 +38,7 @@ class PartPaperType extends AbstractType
             'prototype_name' => '__documents__',
         ));
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
             'label' => false,
 			'attr' => array('class'=>'field-partpaperothers','style'=>'display:none;')

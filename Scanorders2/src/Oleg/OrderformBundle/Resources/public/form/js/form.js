@@ -1009,28 +1009,9 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
 
             var target = '.patient-dob-date';
             if( action == "index" ) {
-                //var nameArr = ['patient', 'patientdob'];
                 var nameArr = {patient:'', patientdob:'dob'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //if(0) {
-            //    var fieldEl = holder.find('.patient-dob-date').first();
-            //    if (action == "index") {
-            //        var id = fieldEl.attr('id');
-            //        //console.log("fieldId=" + id);
-            //        var classnameArr = id.split("_");
-            //        //     0          1             2         3    4  5  6   7
-            //        // id=oleg_orderformbundle_messagetype_patient_0_dob_0_field
-            //        //     0          1             2       3  4  5
-            //        // id=oleg_orderformbundle_patienttype_dob_0_field
-            //        if (classnameArr[2] == "messagetype") {
-            //            resArr['patient'] = classnameArr[4];
-            //            resArr['patientdob'] = parseInt(classnameArr[6]) + 1;
-            //        } else {
-            //            resArr['patientdob'] = parseInt(classnameArr[4]) + 1;
-            //        }
-            //    }
-            //}
             if( action == "jsinit" ) {
                 //do nothing for this field
                 var fieldEl = holder.find(target).last();
@@ -1043,29 +1024,9 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
 
             var target = '.user-location-name-field';
             if( action == "index" ) {
-                //var nameArr = ['patient', 'spots'];
                 var nameArr = {patient:'', spots:''};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.user-location-name-field').last();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1             2         3    4     5      6  7      8
-            //    // id=oleg_orderformbundle_messagetype_patient_0_tracker_spots_0_currentLocation_name
-            //    //     0          1             2         3      4   5
-            //    // id=oleg_orderformbundle_patienttype_tracker_spots_0_currentLocation_name
-            //    // id=oleg_orderformbundle_patienttype_tracker_spots_1_currentLocation_name
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['spots'] = parseInt(classnameArr[7]) + 1;
-            //    } else {
-            //        var spotIndex = parseInt(classnameArr[5]) + 1;
-            //        console.log("spotIndex="+spotIndex);
-            //        resArr['spots'] = spotIndex;
-            //    }
-            //}
             if( action == "jsinit" ) {
                 //do nothing for this field
                 //fieldEl = holder.find('.patient-dob-date').last();
@@ -1089,55 +1050,17 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         case 'encounterpatlastname':
             var target = '.encounter-lastName';
             if( action == "index" ) {
-                //var nameArr = ['patient', 'encounter', 'encounterpatlastname'];
                 var nameArr = {patient:'', encounter:'', encounterpatlastname:'patlastname'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.encounter-lastName').first();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    //console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1           2         3     4     5     6     7       8   9
-            //    //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patlastname_0_field
-            //    //     0          1            2        3       4     5       6   7
-            //    //id=oleg_orderformbundle_patienttype_encounter_0_patlastname_0_field
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['encounter'] = classnameArr[6];
-            //        resArr['encounterpatlastname'] = parseInt(classnameArr[8]) + 1;
-            //    } else {
-            //        resArr['encounter'] = classnameArr[4];
-            //        resArr['encounterpatlastname'] = parseInt(classnameArr[6]) + 1;
-            //    }
-            //}
         break;
 
         case 'encounterpatfirstname':
             var target = '.encounter-firstName';
             if( action == "index" ) {
-                //var nameArr = ['patient', 'encounter', 'encounterpatfirstname'];
                 var nameArr = {patient:'', encounter:'', encounterpatfirstname:'patfirstname'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.encounter-firstName').first();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    //console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1           2         3     4     5     6     7       8   9
-            //    //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patfirstname_0_field
-            //    //     0          1            2        3       4     5       6   7
-            //    //id=oleg_orderformbundle_patienttype_encounter_0_patfirstname_0_field
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['encounter'] = classnameArr[6];
-            //        resArr['encounterpatfirstname'] = parseInt(classnameArr[8]) + 1;
-            //    } else {
-            //        resArr['encounter'] = classnameArr[4];
-            //        resArr['encounterpatfirstname'] = parseInt(classnameArr[6]) + 1;
-            //    }
-            //}
         break;
 
         case 'encounterpatmiddlename':
@@ -1146,80 +1069,22 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
                 var nameArr = {patient:'', encounter:'', encounterpatmiddlename:'patmiddlename'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.encounter-middleName').first();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    //console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1           2         3     4     5     6     7       8   9
-            //    //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patmiddlename_0_field
-            //    //     0          1            2        3       4     5       6   7
-            //    //id=oleg_orderformbundle_patienttype_encounter_0_patmiddlename_0_field
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['encounter'] = classnameArr[6];
-            //        resArr['encounterpatmiddlename'] = parseInt(classnameArr[8]) + 1;
-            //    } else {
-            //        resArr['encounter'] = classnameArr[4];
-            //        resArr['encounterpatmiddlename'] = parseInt(classnameArr[6]) + 1;
-            //    }
-            //}
         break;
 
         case 'encounterpatsuffix':
             var target = '.encounter-suffix';
             if( action == "index" ) {
-                //oleg_orderformbundle_patienttype_encounter_0_patsuffix_0_field
-                //var nameArr = ['patient', 'encounter', 'encounterpatsuffix'];
                 var nameArr = {patient:'', encounter:'', encounterpatsuffix:'patsuffix'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.encounter-suffix').first();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    //console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1           2         3     4     5     6     7       8   9
-            //    //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patmiddlename_0_field
-            //    //     0          1            2        3       4     5       6   7
-            //    //id=oleg_orderformbundle_patienttype_encounter_0_patmiddlename_0_field
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['encounter'] = classnameArr[6];
-            //        resArr['encounterpatsuffix'] = parseInt(classnameArr[8]) + 1;
-            //    } else {
-            //        resArr['encounter'] = classnameArr[4];
-            //        resArr['encounterpatsuffix'] = parseInt(classnameArr[6]) + 1;
-            //    }
-            //}
         break;
 
         case 'encounterpatsex':
             var target = '.encountersex-field';
             if( action == "index" ) {
-                //oleg_orderformbundle_patienttype_encounter_0_patsex_0_others_id
-                //var nameArr = ['patient', 'encounter', 'encounterpatsex'];
                 var nameArr = {patient:'', encounter:'', encounterpatsex:'patsex'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.encountersex-field').first();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    //console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1           2         3     4     5     6     7       8   9
-            //    //id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patmiddlename_0_field
-            //    //     0          1            2        3       4     5       6   7
-            //    //id=oleg_orderformbundle_patienttype_encounter_0_patmiddlename_0_field
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['encounter'] = classnameArr[6];
-            //        resArr['encounterpatsex'] = parseInt(classnameArr[8]) + 1;
-            //    } else {
-            //        resArr['encounter'] = classnameArr[4];
-            //        resArr['encounterpatsex'] = parseInt(classnameArr[6]) + 1;
-            //    }
-            //}
             if( action == "jsinit" ) {
                 //getComboboxProcedure(fieldEl.parent());
                 var fieldEl = holder.find(target).last();
@@ -1231,26 +1096,9 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var target = '.encounter-date';
             if( action == "index" ) {
                 //id=oleg_orderformbundle_patienttype_encounter_0_date_0_field
-                //var nameArr = ['patient', 'encounter', 'encounterdate'];
                 var nameArr = {patient:'', encounter:'', encounterdate:'date'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.encounter-date').first();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    //console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1            2         3      4   5  6   7
-            //    //id=oleg_orderformbundle_patienttype_encounter_0_date_0_field
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['encounter'] = classnameArr[6];
-            //        resArr['encounterdate'] = parseInt(classnameArr[8]) + 1;
-            //    } else {
-            //        resArr['encounter'] = classnameArr[4];
-            //        resArr['encounterdate'] = parseInt(classnameArr[6]) + 1;
-            //    }
-            //}
             if( action == "jsinit" ) {
                 var fieldEl = holder.find(target).last();
                 initDatepicker(fieldEl.closest('.row'));
@@ -1261,52 +1109,18 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var target = '.encounterage-field';
             if( action == "index" ) {
                 //oleg_orderformbundle_patienttype_encounter_0_patage_0_field
-                //var nameArr = ['patient', 'encounter', 'encounterpatage'];
                 var nameArr = {patient:'', encounter:'', encounterpatage:'patage'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.encounterage-field').first();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    //console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1            2         3      4   5  6   7
-            //    //id=oleg_orderformbundle_patienttype_encounter_0_date_0_field
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['encounter'] = classnameArr[6];
-            //        resArr['encounterpatage'] = parseInt(classnameArr[8]) + 1;
-            //    } else {
-            //        resArr['encounter'] = classnameArr[4];
-            //        resArr['encounterpatage'] = parseInt(classnameArr[6]) + 1;
-            //    }
-            //}
         break;
 
         case 'encounterpathistory':
             var target = '.encounterhistory-field';
             if( action == "index" ) {
                 //oleg_orderformbundle_patienttype_encounter_0_pathistory_0_field
-                //var nameArr = ['patient', 'encounter', 'encounterpathistory'];
                 var nameArr = {patient:'', encounter:'', encounterpathistory:'pathistory'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
-            //var fieldEl = holder.find('.encounterhistory-field').first();
-            //if( action == "index" ) {
-            //    var id = fieldEl.attr('id');
-            //    //console.log("fieldId=" + id);
-            //    var classnameArr = id.split("_");
-            //    //     0          1            2         3      4   5  6   7
-            //    //id=oleg_orderformbundle_patienttype_encounter_0_date_0_field
-            //    if (classnameArr[2] == "messagetype") {
-            //        resArr['patient'] = classnameArr[4];
-            //        resArr['encounter'] = classnameArr[6];
-            //        resArr['encounterpathistory'] = parseInt(classnameArr[8]) + 1;
-            //    } else {
-            //        resArr['encounter'] = classnameArr[4];
-            //        resArr['encounterpathistory'] = parseInt(classnameArr[6]) + 1;
-            //    }
-            //}
             if( action == "jsinit" ) {
                 var fieldEl = holder.find(target).last();
                 expandTextarea(fieldEl.closest('.row'));
@@ -1318,26 +1132,8 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             var target = '.ajax-combobox-procedure';
             if( action == "index" ) {
                 //id=oleg_orderformbundle_patienttype_encounter_0_procedure_0_name_0_field
-                //var nameArr = ['patient', 'encounter', 'procedure','procedurename'];
                 var nameArr = {patient:'', encounter:'', procedure:'', procedurename:'name'};
                 resArr = getMaxIndexByArrayName(holder,target,nameArr);
-                //var id = fieldEl.attr('id');
-                ////console.log("fieldId=" + id);
-                //var classnameArr = id.split("_");
-                ////     0          1           2         3     4     5     6     7     8   9  10
-                ////id=oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_name_0_field
-                ////     0          1            2        3       4     5     6   7  8
-                ////id=oleg_orderformbundle_patienttype_encounter_0_procedure_0_name_0_field
-                //if (classnameArr[2] == "messagetype") {
-                //    resArr['patient'] = classnameArr[4];
-                //    resArr['encounter'] = classnameArr[6];
-                //    resArr['procedure'] = classnameArr[8];
-                //    resArr['procedurename'] = parseInt(classnameArr[10]) + 1;
-                //} else {
-                //    resArr['encounter'] = classnameArr[4];
-                //    resArr['procedure'] = classnameArr[6];
-                //    resArr['procedurename'] = parseInt(classnameArr[8]) + 1;
-                //}
             }
             if( action == "jsinit" ) {
                 //specificRegularCombobox(fieldEl);
@@ -1367,29 +1163,9 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             //var fieldEl = holder.find('.accessionaccessiondate').first();
             var target = '.accessionaccessiondate';
             if( action == "index" ) {
-                //var nameArr = ['patient', 'encounter', 'procedure','accession','accessionaccessiondate'];
                 //id=oleg_orderformbundle_patienttype_encounter_0_procedure_0_accession_0_accessionDate_0_field
                 var nameArr = {patient:'', encounter:'', procedure:'', 'accession':'', accessionaccessiondate:'accessionDate'};
                 resArr = getMaxIndexByArrayName(holder,target,nameArr);
-                //var id = fieldEl.attr('id');
-                ////console.log("fieldId=" + id);
-                //var classnameArr = id.split("_");
-                ////     0          1           2         3     4     5     6     7       8   9
-                ////id=oleg_orderformbundle_messagetype_patient_0_encounter_0_patlastname_0_field
-                ////     0          1            2        3       4     5     6   7       8       9       10
-                ////id=oleg_orderformbundle_patienttype_encounter_0_procedure_0_accession_0_accessionDate_0_field
-                //if (classnameArr[2] == "messagetype") {
-                //    resArr['patient'] = classnameArr[4];
-                //    resArr['encounter'] = classnameArr[6];
-                //    resArr['procedure'] = classnameArr[8];
-                //    resArr['accession'] = classnameArr[10];
-                //    resArr['accessionaccessiondate'] = parseInt(classnameArr[12]) + 1;
-                //} else {
-                //    resArr['encounter'] = classnameArr[4];
-                //    resArr['procedure'] = classnameArr[6];
-                //    resArr['accession'] = classnameArr[8];
-                //    resArr['accessionaccessiondate'] = parseInt(classnameArr[10]) + 1;
-                //}
             }
             if( action == "jsinit" ) {
                 var fieldEl = holder.find(target).last();
@@ -1398,6 +1174,11 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         break;
 
         default:
+            if( action == "jsinit" ) {
+                var statusFieldEl = holder.find('.other-status').last();
+                console.log("statusFieldEl="+statusFieldEl.attr("id"));
+                specificRegularCombobox(statusFieldEl);
+            }
             return null;
     }
 
@@ -1417,7 +1198,13 @@ function getMaxIndexByArrayName(holder,target,nameArr) {
                 fieldIdName = nameArr[classname];
             }
             console.log("fieldIdName="+fieldIdName);
-            var maxIndex = getMaxIndexByName(holder,target,fieldIdName);
+
+            var last = false;
+            if (count == nameArrLength) {
+                last = true;
+            }
+
+            var maxIndex = getMaxIndexByName(holder,target,fieldIdName,last);
             if( maxIndex != null ) {
                 //increament the last index
                 if (count == nameArrLength) {
@@ -1455,7 +1242,7 @@ function getKeyValueArrayLength(arr) {
 //find max index the name
 //id=oleg_orderformbundle_patienttype_encounter_0_patage_2_field
 //name="patage" => index is the next value => index=2
-function getMaxIndexByName(holder,target,name) {
+function getMaxIndexByName(holder,target,name,last) {
     var maxIndex = 0;
     var targetElements = holder.find(target);
     if( targetElements.length == 0 ) {
@@ -1490,8 +1277,11 @@ function getMaxIndexByName(holder,target,name) {
             }
             //console.log(fieldId+": maxIndex="+maxIndex);
         } else {
-            //alert('ERROR getMaxIndexByName: id array must have exactly 2 parts. length='+idsArr.length);
-            console.log('ERROR getMaxIndexByName: id array must have exactly 2 parts. length='+idsArr.length);
+            var msg = 'getMaxIndexByName: id array should have exactly 2 parts. length='+idsArr.length+", split by "+splitter;
+            if( last ) {
+                alert("ERROR: "+msg);
+            }
+            console.log("WARNING: "+msg);
             return null;
         }
     });

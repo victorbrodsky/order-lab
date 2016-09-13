@@ -38,7 +38,7 @@ class GenericFieldType extends AbstractType
             'attr' =>$attr
         ));
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => $this->genAttr['class'],
             'label' => false,
             'attr' => array('style'=>'display:none;')

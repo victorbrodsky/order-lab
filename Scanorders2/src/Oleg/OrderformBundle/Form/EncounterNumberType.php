@@ -55,7 +55,7 @@ class EncounterNumberType extends AbstractType
         ));
 
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterNumber',
             'label' => false,
             'attr' => array('style'=>'display:none;')

@@ -1384,6 +1384,9 @@
         {% if cycle != 'show' %}
             {% if norest is not defined or norest == "" %}
                 {% if fieldThis.others is defined %}
+                    {% if fieldThis.others.status is defined %}
+                        {{ formmacros.field(fieldThis.others.status) }}
+                    {% endif %}
                     {{ form_widget(fieldThis.others) }}
                 {% endif %}
                 {{ form_rest(fieldThis) }}
@@ -1677,7 +1680,12 @@
 {% macro encounterNameWithAlias(field) %}
     {% if field.alias is defined %}
         {{ form_errors(field) }}
+
+        {% if field.others.status is defined %}
+            {{ formmacros.field(field.others.status) }}
+        {% endif %}
         {{ form_widget(field.others) }}
+
         <div class="form-group oleg-form-nomargin-bottom">
             <div class="input-group">
                 {{ form_widget(field.field) }}
@@ -1693,7 +1701,12 @@
     {% else %}
         {#{% import _self as formmacros %}#}
         {{ form_errors(field) }}
+
+        {% if field.others.status is defined %}
+            {{ formmacros.field(field.others.status) }}
+        {% endif %}
         {{ form_widget(field.others) }}
+
         {{ form_widget(field.field) }}
         {#{{ formmacros.field(field) }}#}
     {% endif %}

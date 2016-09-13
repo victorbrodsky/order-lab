@@ -35,7 +35,7 @@ class EncounterPatlastnameType extends AbstractType
             ));
         }
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterPatlastname',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

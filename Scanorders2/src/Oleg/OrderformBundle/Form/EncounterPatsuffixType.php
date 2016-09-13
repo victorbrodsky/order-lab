@@ -34,7 +34,7 @@ class EncounterPatsuffixType extends AbstractType
             ));
         }
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterPatsuffix',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

@@ -29,7 +29,7 @@ class EncounterDateType extends AbstractType
             'attr' => array('class' => 'datepicker form-control encounter-date', 'style'=>'margin-top: 0;'),
         ));
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterDate',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

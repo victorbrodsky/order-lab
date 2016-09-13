@@ -32,7 +32,7 @@ class PartSourceOrganType extends AbstractType
         ));
 
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartSourceOrgan',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

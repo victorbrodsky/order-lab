@@ -25,7 +25,7 @@ class EncounterNameType extends AbstractType
 
         $builder->add('field', 'hidden', array('label'=>false));
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterName',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

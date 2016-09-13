@@ -22,11 +22,28 @@ class ArrayFieldType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('id','hidden');
+        $builder->add('id', 'hidden');
 
-        if( $this->params['cycle'] == "show" ) {
+        if( $this->params && $this->params['cycle'] == "show") {
             $builder->add('creationdate');
             $builder->add('provider');
+        }
+
+        if( $this->params && array_key_exists('datastructure', $this->params) && $this->params['datastructure'] == 'datastructure-patient') {
+
+            $builder->add('provider','hidden');
+
+            $builder->add('source','hidden');
+
+            $builder->add('status', 'choice', array(
+                'choices'   => array(
+                    'valid',
+                    'invalid'
+                ),
+                'label' => "Status:",
+                'required' => true,
+                'attr' => array('class' => 'combobox combobox-width other-status'),
+            ));
         }
 
     }

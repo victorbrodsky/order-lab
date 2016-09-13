@@ -30,7 +30,7 @@ class AccessionDateType extends AbstractType
             'attr' => array('class' => 'datepicker form-control accessionaccessiondate'),
         ));
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccessionDate',
             'label' => false,
             'attr' => array('style'=>'display:none;')

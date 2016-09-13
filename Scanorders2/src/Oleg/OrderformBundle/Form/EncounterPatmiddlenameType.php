@@ -34,7 +34,7 @@ class EncounterPatmiddlenameType extends AbstractType
             ));
         }
 
-        $builder->add('others', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterPatmiddlename',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
