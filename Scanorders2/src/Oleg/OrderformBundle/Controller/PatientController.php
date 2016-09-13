@@ -343,6 +343,7 @@ class PatientController extends Controller
             //echo "spots=".count($entity->getTracker()->getSpots())."<br>";
         }
 
+
         //////////////// params ////////////////
         $params = array(
             'type' => 'multy',

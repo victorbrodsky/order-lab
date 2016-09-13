@@ -22,6 +22,11 @@ class AccessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $readonly = false;
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
+            $readonly = true;
+        }
+
         $builder->add('accessionDate', 'collection', array(
             'type' => new AccessionDateType($this->params, null),
             'allow_add' => true,
@@ -34,6 +39,7 @@ class AccessionType extends AbstractType
 
         $builder->add('accession', 'collection', array(
             'type' => new AccessionAccessionType($this->params, null),
+            'read_only' => $readonly,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

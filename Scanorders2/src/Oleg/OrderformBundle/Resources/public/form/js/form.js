@@ -969,6 +969,10 @@ function addPrototypeField( btn, classname ) {
         //console.log(collectionHolder);
         var prototype = collectionHolder.data('prototype-' + classname);
         //console.log("prototype="+prototype);
+        if( !prototype ) {
+            alert("Prototype not found. classname="+classname);
+            return;
+        }
 
         for( var k in indexArr ) {
             if( indexArr.hasOwnProperty(k) ) {
@@ -1083,7 +1087,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         break;
 
         case 'encounterpatlastname':
-            var target = '.encountersex-lastName';
+            var target = '.encounter-lastName';
             if( action == "index" ) {
                 //var nameArr = ['patient', 'encounter', 'encounterpatlastname'];
                 var nameArr = {patient:'', encounter:'', encounterpatlastname:'patlastname'};
@@ -1110,7 +1114,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         break;
 
         case 'encounterpatfirstname':
-            var target = '.encountersex-firstName';
+            var target = '.encounter-firstName';
             if( action == "index" ) {
                 //var nameArr = ['patient', 'encounter', 'encounterpatfirstname'];
                 var nameArr = {patient:'', encounter:'', encounterpatfirstname:'patfirstname'};
@@ -1137,7 +1141,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         break;
 
         case 'encounterpatmiddlename':
-            var target = '.encountersex-middleName';
+            var target = '.encounter-middleName';
             if( action == "index" ) {
                 var nameArr = {patient:'', encounter:'', encounterpatmiddlename:'patmiddlename'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
@@ -1346,6 +1350,18 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
             }
         break;
 
+        case 'proceduredate':
+            var target = '.procedure-date';
+            if( action == "index" ) {
+                var nameArr = {patient:'', encounter:'', procedure:'', proceduredate:'date'};
+                resArr = getMaxIndexByArrayName(holder,target,nameArr);
+            }
+            if( action == "jsinit" ) {
+                var fieldEl = holder.find(target).last();
+                initDatepicker(fieldEl.closest('.row'));
+            }
+            break;
+
         case 'accessionaccessiondate':
 
             //var fieldEl = holder.find('.accessionaccessiondate').first();
@@ -1391,7 +1407,7 @@ function getMaxIndexByArrayName(holder,target,nameArr) {
     var resArr = [];
 
     var nameArrLength = getKeyValueArrayLength(nameArr);
-    //console.log(target+": nameArrLength="+nameArrLength);
+    console.log(target+": nameArrLength="+nameArrLength);
     var count = 1;
     for( var classname in nameArr ) {
         if( nameArr.hasOwnProperty(classname) ) {
@@ -1400,13 +1416,13 @@ function getMaxIndexByArrayName(holder,target,nameArr) {
             if( nameArr[classname] ) {
                 fieldIdName = nameArr[classname];
             }
-            //console.log("fieldIdName="+fieldIdName);
+            console.log("fieldIdName="+fieldIdName);
             var maxIndex = getMaxIndexByName(holder,target,fieldIdName);
             if( maxIndex != null ) {
                 //increament the last index
                 if (count == nameArrLength) {
                     maxIndex = maxIndex + 1;
-                    //console.log(fieldIdName + ": increament maxIndex=" + maxIndex);
+                    console.log(fieldIdName + ": increament maxIndex=" + maxIndex);
                 }
                 resArr[classname] = maxIndex;
             }
@@ -1441,16 +1457,20 @@ function getKeyValueArrayLength(arr) {
 //name="patage" => index is the next value => index=2
 function getMaxIndexByName(holder,target,name) {
     var maxIndex = 0;
-    holder.find(target).each( function(){
-        //id: formpanel_block_0_0_0_0_1_0_0_0
+    var targetElements = holder.find(target);
+    if( targetElements.length == 0 ) {
+        //alert('ERROR getMaxIndexByName: target elements are not found. target='+target);
+        return maxIndex;
+    }
+    targetElements.each( function(){
         var fieldId = $(this).attr('id');
-        //console.log(name+": fieldId="+fieldId);
+        console.log(name+": fieldId="+fieldId);
         if( !fieldId ) {
             alert('ERROR getMaxIndexByName: fieldId is not defined');
             return maxIndex;
         }
         var splitter = "_"+name+"_"; //_patage_
-        //console.log("splitter="+splitter);
+        console.log("splitter="+splitter);
         var idsArr = fieldId.split(splitter);
         if( idsArr.length == 2 ) { //must be 2
             var secondPart = idsArr[1].split("_");
@@ -1471,6 +1491,7 @@ function getMaxIndexByName(holder,target,name) {
             //console.log(fieldId+": maxIndex="+maxIndex);
         } else {
             //alert('ERROR getMaxIndexByName: id array must have exactly 2 parts. length='+idsArr.length);
+            console.log('ERROR getMaxIndexByName: id array must have exactly 2 parts. length='+idsArr.length);
             return null;
         }
     });

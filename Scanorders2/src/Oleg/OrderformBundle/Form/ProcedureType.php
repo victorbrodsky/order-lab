@@ -22,8 +22,13 @@ class ProcedureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+//        $readonly = false;
+//        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
+//            $readonly = true;
+//        }
         $builder->add('name', 'collection', array(
             'type' => new ProcedureNameType($this->params, $this->entity),
+            //'read_only' => $readonly,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -49,11 +54,20 @@ class ProcedureType extends AbstractType
 
         //extra data-structure fields
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+//        if( array_key_exists('datastructure',$this->params) &&
+//            ($this->params['datastructure'] == 'datastructure' || $this->params['datastructure'] == 'datastructure-patient' )
+//        ) {
+
+            $readonly = false;
+            if( $this->params['datastructure'] == 'datastructure-patient' ) {
+                $readonly = true;
+            }
 
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
             $builder->add('number', 'collection', array(
                 'type' => new ProcedureNumberType($this->params, $this->entity),
+                'read_only' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -65,6 +79,7 @@ class ProcedureType extends AbstractType
 
             $builder->add('date', 'collection', array(
                 'type' => new ProcedureDateType($this->params, null),
+                //'read_only' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -75,6 +90,7 @@ class ProcedureType extends AbstractType
 
             $builder->add('location', 'collection', array(
                 'type' => new ProcedureLocationType($this->params, null),
+                //'read_only' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -85,6 +101,7 @@ class ProcedureType extends AbstractType
 
             $builder->add('provider', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
+                //'read_only' => $readonly,
                 'label' => 'Provider:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -108,7 +125,20 @@ class ProcedureType extends AbstractType
 //            ));
 
         }
-
+        if( array_key_exists('datastructure',$this->params) &&
+            ($this->params['datastructure'] == 'datastructure' || $this->params['datastructure'] == 'datastructure-patient' )
+        ) {
+            $builder->add('date', 'collection', array(
+                'type' => new ProcedureDateType($this->params, null),
+                //'read_only' => $readonly,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__proceduredate__',
+            ));
+        }
 
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {

@@ -253,11 +253,11 @@
 
         {#{% set encounterHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.name,type,"","prototype") %}#}
         {#{% set encounternumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
-        {% set encounterdateHtml = formmacros.inputField(patientEncounter.vars.prototype.date,type,"date","prototype") %}
+        {% set encounterdateHtml = formmacros.inputField(patientEncounter.vars.prototype.date,type,"date","prototype","","","","encounterdate") %}
 
-        {% set procedurenameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
+        {% set procedurenameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype","","","","procedurename") %}
         {#{% set procedurenumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
-        {#{% set proceduredateHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype") %}#}
+        {% set proceduredateHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype","","","","proceduredate") %}
 
         {% set patsuffixHtml = formmacros.inputField(patientEncounter.vars.prototype.patsuffix,type,"","prototype","","","","encounterpatsuffix") %}
         {% set patlastnameHtml = formmacros.inputField(patientEncounter.vars.prototype.patlastname,type,"","prototype","","","","encounterpatlastname") %}
@@ -353,6 +353,7 @@
                 {#data-prototype-encounternumber= "{{ encounternumberHtml|e }}"#}
                 data-prototype-procedurename= "{{ procedurenameHtml|e }}"
                 {#data-prototype-procedurenumber= "{{ procedurenumberHtml|e }}"#}
+                data-prototype-proceduredate= "{{ proceduredateHtml|e }}"
 
                 data-prototype-encounterdate= "{{ encounterdateHtml|e }}"
                 data-prototype-encounterpatsuffix= "{{ patsuffixHtml|e }}"

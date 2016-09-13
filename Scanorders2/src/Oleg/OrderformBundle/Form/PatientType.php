@@ -31,9 +31,14 @@ class PatientType extends AbstractType
             //$flag = true;
         }
 
+        $readonly = false;
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
+            $readonly = true;
+        }
+
         $builder->add('mrn', 'collection', array(
             'type' => new PatientMrnType($this->params, null),
-            'read_only' => $flag,
+            'read_only' => $readonly,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

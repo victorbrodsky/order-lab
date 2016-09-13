@@ -1254,7 +1254,6 @@
 
     {% elseif classname == "patienttrackerspot" %}
 
-        patienttrackerspot:<br>
         {#{{ formmacros.fieldSpotLocationCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}#}
         {#{{ widget }}#}
         {{ formmacros.fieldPatientSpotWidget(fieldThis,cycle,"employees","noprototype",classname,count) }}
@@ -2676,7 +2675,7 @@
 
         {% if procedure.number is defined %}
             {#{{ formmacros.inputArrayField(procedure.number,cycle,"procedurenumber","","","","",status) }}#}
-            {{ formmacros.inputArrayField(procedure.number,cycle,"procedurenumber",key,"","","",status,showPlus) }}
+            {{ formmacros.inputArrayField(procedure.number,cycle,"procedurenumber",key,"","","",status) }}
         {% endif %}
 
         {% if procedure.date is defined %}
@@ -2685,6 +2684,7 @@
 
         {% if procedure.provider is defined %}
             {{ formmacros.field(procedure.provider) }}
+            {#{{ formmacros.inputArrayField(procedure.provider,cycle,"procedureprovider","","","","",status,showPlus) }}#}
         {% endif %}
 
         {% if procedure.location is defined %}
