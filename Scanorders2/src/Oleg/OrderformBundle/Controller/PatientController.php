@@ -509,6 +509,20 @@ class PatientController extends Controller
 //                echo "Controller: dob id=".$dob->getId()."; dob=".$dob."; status=".$dob->getStatus()."; provider =(ID#".$dob->getProvider()->getId().")".$dob->getProvider()."<br>";
 //            }
 
+            $changeSetStr = $entity->obtainChangeObjectStr();
+//            echo "<pre>";
+//            print_r($changeSetArr);
+//            echo "</pre>";
+
+            if( $changeSetStr ) {
+                $userSecUtil = $this->container->get('user_security_utility');
+                //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+                $event = "Patient with ID " . $entity->getId() . " has been updated by " . $user;
+                $event .= "<br>".$changeSetStr;
+                $userSecUtil->createUserEditEvent($parameters['sitename'], $event, $user, $entity, $request, 'Patient Updated');
+            }
+            //exit('event='.$event);
+
             //exit("Form is valid");
             $em->persist($entity);
             $em->flush();

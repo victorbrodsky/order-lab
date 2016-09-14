@@ -75,6 +75,8 @@ abstract class ObjectAbstract
     protected $tracker;
 
 
+    protected $changeObjectArr = array();
+
 
     public function __construct( $status='invalid', $provider=null, $source = null ) {
         $this->status = $status;
@@ -149,6 +151,7 @@ abstract class ObjectAbstract
     public function getId() {
         return $this->id;
     }
+
 
     /**
      * @ORM\PrePersist
@@ -624,6 +627,33 @@ abstract class ObjectAbstract
 
     public function obtainNoprovidedKeyPrefix() {
         return $name = "NO".strtoupper($this->obtainClassName())."IDPROVIDED";
+    }
+
+
+    /**
+     * @return array
+     */
+    public function obtainChangeObjectArr()
+    {
+        return $this->changeObjectArr;
+    }
+    /**
+     * @param array $changeObjectArr
+     */
+    public function setChangeObjectArr($changeObjectArr)
+    {
+        $this->changeObjectArr = $changeObjectArr;
+    }
+    public function setArrayFieldObjectChange($fieldName,$oldValue,$newValue) {
+
+    }
+    public function obtainChangeObjectStr() {
+        $changeArr = $this->obtainChangeObjectArr();
+
+        echo "<pre>";
+        print_r($changeArr);
+        echo "</pre>";
+
     }
 
 //    //replace contains in AddChild

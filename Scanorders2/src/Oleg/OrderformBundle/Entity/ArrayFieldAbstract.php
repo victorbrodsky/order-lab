@@ -63,12 +63,16 @@ abstract class ArrayFieldAbstract {
      */
     protected $dqeventlog;
 
+    private $className;
 
     public function __construct( $status = 'valid', $provider = null, $source = null )
     {
         $this->status = $status;
         $this->provider = $provider;
         $this->source = $source;
+
+        $class = new \ReflectionClass($this);
+        $this->className = $class->getShortName();
     }
 
     public function __clone() {
@@ -121,6 +125,30 @@ abstract class ArrayFieldAbstract {
      */
     public function setStatus($status)
     {
+//        echo "setStatus old=".$this->status."; new=".$status."<br>";
+//        //if( $this->getParent()->obtainChangeArr() ) {
+//            //echo "1 setStatus old=".$this->status."; new=".$status."<br>";
+//            if ($status != $this->status) {
+//                //echo "2 setStatus old=".$this->status."; new=".$status."<br>";
+//                $class = new \ReflectionClass($this);
+//                $className = $class->getShortName();
+//                echo $className.": parent id=".$this->getParent()->getId()."<br>";
+//
+//                $changeObjectArr = $this->getParent()->obtainChangeObjectArr();
+////                echo "changeObjectArr len=".count($changeObjectArr).": <pre>";
+////                print_r($changeObjectArr);
+////                echo "</pre>";
+//
+//                $changeObjectArr[$className][$this->getId()]['status']['old'] = $this->status;
+//                $changeObjectArr[$className][$this->getId()]['status']['new'] = $status;
+//                $this->getParent()->setChangeObjectArr($changeObjectArr);
+//
+////                echo "changeObjectArr len=".count($changeObjectArr).": <pre>";
+////                print_r($changeObjectArr);
+////                echo "</pre>";
+//            }
+//        //}
+        $this->setFieldChangeArray("status",$this->status,$status);
         $this->status = $status;
     }
 
@@ -181,7 +209,25 @@ abstract class ArrayFieldAbstract {
     }
 
 
+    public function setFieldChangeArray($fieldName,$oldValue,$newValue) {
+        if( $oldValue != $newValue ) {
+            //echo "2 setStatus old=".$this->status."; new=".$status."<br>";
+            if( $this->className ) {
+                $className = $this->className;
+            } else {
+                $class = new \ReflectionClass($this);
+                $className = $class->getShortName();
+            }
+            //echo $className.": parent id=".$this->getParent()->getId()."<br>";
 
+            $changeObjectArr = $this->getParent()->obtainChangeObjectArr();
+
+            $changeObjectArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
+            $changeObjectArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
+
+            $this->getParent()->setChangeObjectArr($changeObjectArr);
+        }
+    }
 
 
     public function __toString() {

@@ -29,6 +29,20 @@ class PatientDob extends PatientArrayFieldAbstract
 
 
 
+//    public function setField($field=null)
+//    {
+//        //echo "setField old=".$this->field."; new=".$field->format('Y-m-d')."<br>";
+//        if( $field != $this->field ) {
+//            $class = new \ReflectionClass($this);
+//            $className = $class->getShortName();
+//            $this->changeArr[$className]['field']['old'] = $this->field;
+//            $this->changeArr[$className]['field']['new'] = $field;
+//        }
+//
+//        $this->field = $field;
+//    }
+
+
     public function __toString() {
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
         $dateStr = $transformer->transform($this->field);

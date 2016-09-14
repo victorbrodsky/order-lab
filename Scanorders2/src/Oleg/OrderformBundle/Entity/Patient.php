@@ -112,7 +112,7 @@ class Patient extends ObjectAbstract
      */
     private $masterMergeRecord;
 
-    
+
     /**
      * Constructor
      */
@@ -672,6 +672,9 @@ class Patient extends ObjectAbstract
         }
 
         if( !$this->dob->contains($dob) ) {
+            $this->changeObjectArr['dob']['add']['field'] = $dob->getField()->format('Y-m-d')."";
+            $this->changeObjectArr['dob']['add']['status'] = $dob->getStatus()."";
+            $this->changeObjectArr['dob']['add']['provider'] = $dob->getProvider()."";
             $dob->setPatient($this);
             $this->dob->add($dob);
         }
@@ -686,6 +689,9 @@ class Patient extends ObjectAbstract
      */
     public function removeDob($dob)
     {
+        $this->changeObjectArr['dob']['remove']['field'] = $dob->getField()->format('Y-m-d')."";
+        $this->changeObjectArr['dob']['remove']['status'] = $dob->getStatus()."";
+        $this->changeObjectArr['dob']['remove']['provider'] = $dob->getProvider()."";
         $this->dob->removeElement($dob);
     }
 
