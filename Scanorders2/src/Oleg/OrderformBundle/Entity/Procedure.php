@@ -118,6 +118,7 @@ class Procedure extends ObjectAbstract
         if( !$this->name->contains($name) ) {
             $name->setProcedure($this);
             $this->name->add($name);
+            $this->setArrayFieldObjectChange('name','add',$name);
         }
 
         return $this;
@@ -126,6 +127,7 @@ class Procedure extends ObjectAbstract
     public function removeName($name)
     {
         $this->name->removeElement($name);
+        $this->setArrayFieldObjectChange('name','remove',$name);
     }
 
     public function clearName()

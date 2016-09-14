@@ -644,16 +644,26 @@ abstract class ObjectAbstract
     {
         $this->changeObjectArr = $changeObjectArr;
     }
-    public function setArrayFieldObjectChange($fieldName,$oldValue,$newValue) {
-
+    public function setArrayFieldObjectChange($fieldName,$action,$addedObject) {
+        $this->changeObjectArr[$fieldName][$action]['field'] = $addedObject->getField()->format("Y-m-d")."";
+        $this->changeObjectArr[$fieldName][$action]['status'] = $addedObject->getStatus()."";
+        $this->changeObjectArr[$fieldName][$action]['provider'] = $addedObject->getProvider()."";
     }
     public function obtainChangeObjectStr() {
         $changeArr = $this->obtainChangeObjectArr();
 
-        echo "<pre>";
-        print_r($changeArr);
-        echo "</pre>";
+        $res = "<pre>";
+        $res .= $this->var_dump_ret($changeArr);
+        $res .= "</pre>";
 
+        return $res;
+    }
+    function var_dump_ret($mixed = null) {
+        ob_start();
+        print_r($mixed);
+        $content = ob_get_contents();
+        ob_end_clean();
+        return $content;
     }
 
 //    //replace contains in AddChild

@@ -220,6 +220,7 @@ class Encounter extends ObjectAbstract
         if( !$this->patage->contains($patage) ) {
             $patage->setEncounter($this);
             $this->patage->add($patage);
+            $this->setArrayFieldObjectChange('patage','add',$patage);
         }
 
         return $this;
@@ -227,6 +228,7 @@ class Encounter extends ObjectAbstract
     public function removePatage($patage)
     {
         $this->patage->removeElement($patage);
+        $this->setArrayFieldObjectChange('patage','remove',$patage);
     }
 
     /**
@@ -252,6 +254,7 @@ class Encounter extends ObjectAbstract
         if( !$this->pathistory->contains($pathistory) ) {
             $pathistory->setEncounter($this);
             $this->pathistory->add($pathistory);
+            $this->setArrayFieldObjectChange('pathistory','add',$pathistory);
         }
 
         return $this;
@@ -259,6 +262,7 @@ class Encounter extends ObjectAbstract
     public function removePathistory($pathistory)
     {
         $this->pathistory->removeElement($pathistory);
+        $this->setArrayFieldObjectChange('pathistory','remove',$pathistory);
     }
 
 
@@ -279,6 +283,7 @@ class Encounter extends ObjectAbstract
         if( !$this->patsuffix->contains($patsuffix) ) {
             $patsuffix->setEncounter($this);
             $this->patsuffix->add($patsuffix);
+            $this->setArrayFieldObjectChange('patsuffix','add',$patsuffix);
         }
 
         return $this;
@@ -286,6 +291,7 @@ class Encounter extends ObjectAbstract
     public function removePatsuffix($patsuffix)
     {
         $this->patsuffix->removeElement($patsuffix);
+        $this->setArrayFieldObjectChange('patsuffix','remove',$patsuffix);
     }
 
 
@@ -313,6 +319,7 @@ class Encounter extends ObjectAbstract
         if( !$this->patlastname->contains($patlastname) ) {
             $patlastname->setEncounter($this);
             $this->patlastname->add($patlastname);
+            $this->setArrayFieldObjectChange('patlastname','add',$patlastname);
         }
 
         return $this;
@@ -320,6 +327,7 @@ class Encounter extends ObjectAbstract
     public function removePatlastname($patlastname)
     {
         $this->patlastname->removeElement($patlastname);
+        $this->setArrayFieldObjectChange('patlastname','remove',$patlastname);
     }
 
 
@@ -346,6 +354,7 @@ class Encounter extends ObjectAbstract
         if( !$this->patfirstname->contains($patfirstname) ) {
             $patfirstname->setEncounter($this);
             $this->patfirstname->add($patfirstname);
+            $this->setArrayFieldObjectChange('patfirstname','add',$patfirstname);
         }
 
         return $this;
@@ -353,6 +362,7 @@ class Encounter extends ObjectAbstract
     public function removePatfirstname($patfirstname)
     {
         $this->patfirstname->removeElement($patfirstname);
+        $this->setArrayFieldObjectChange('patfirstname','remove',$patfirstname);
     }
 
     /**
@@ -378,6 +388,7 @@ class Encounter extends ObjectAbstract
         if( !$this->patmiddlename->contains($patmiddlename) ) {
             $patmiddlename->setEncounter($this);
             $this->patmiddlename->add($patmiddlename);
+            $this->setArrayFieldObjectChange('patmiddlename','add',$patmiddlename);
         }
 
         return $this;
@@ -385,6 +396,7 @@ class Encounter extends ObjectAbstract
     public function removePatmiddlename($patmiddlename)
     {
         $this->patmiddlename->removeElement($patmiddlename);
+        $this->setArrayFieldObjectChange('patmiddlename','remove',$patmiddlename);
     }
 
 
@@ -411,6 +423,7 @@ class Encounter extends ObjectAbstract
         if( !$this->patsex->contains($patsex) ) {
             $patsex->setEncounter($this);
             $this->patsex->add($patsex);
+            $this->setArrayFieldObjectChange('patsex','add',$patsex);
         }
 
         return $this;
@@ -418,6 +431,7 @@ class Encounter extends ObjectAbstract
     public function removePatsex($patsex)
     {
         $this->patsex->removeElement($patsex);
+        $this->setArrayFieldObjectChange('patsex','remove',$patsex);
     }
 
 

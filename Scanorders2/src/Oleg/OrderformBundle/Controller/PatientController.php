@@ -510,9 +510,9 @@ class PatientController extends Controller
 //            }
 
             $changeSetStr = $entity->obtainChangeObjectStr();
-//            echo "<pre>";
-//            print_r($changeSetArr);
-//            echo "</pre>";
+            echo "changeSetStr:<br>";
+            echo $changeSetStr;
+            exit('1');
 
             if( $changeSetStr ) {
                 $userSecUtil = $this->container->get('user_security_utility');

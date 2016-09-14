@@ -45,7 +45,7 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
      */
     public function setField($field=null)
     {
-        $this->setFieldChangeArray("status",$this->field,$field);
+        $this->setFieldChangeArray("field",$this->field,$field);
         $this->field = $field;
     }
 

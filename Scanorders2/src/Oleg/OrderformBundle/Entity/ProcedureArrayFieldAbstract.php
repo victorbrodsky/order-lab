@@ -52,6 +52,7 @@ abstract class ProcedureArrayFieldAbstract extends ArrayFieldAbstract {
     public function setField($field=null)
     {
         $this->field = $field;
+        $this->setFieldChangeArray("field",$this->field,$field);
     }
 
     /**

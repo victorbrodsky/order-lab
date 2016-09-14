@@ -125,29 +125,6 @@ abstract class ArrayFieldAbstract {
      */
     public function setStatus($status)
     {
-//        echo "setStatus old=".$this->status."; new=".$status."<br>";
-//        //if( $this->getParent()->obtainChangeArr() ) {
-//            //echo "1 setStatus old=".$this->status."; new=".$status."<br>";
-//            if ($status != $this->status) {
-//                //echo "2 setStatus old=".$this->status."; new=".$status."<br>";
-//                $class = new \ReflectionClass($this);
-//                $className = $class->getShortName();
-//                echo $className.": parent id=".$this->getParent()->getId()."<br>";
-//
-//                $changeObjectArr = $this->getParent()->obtainChangeObjectArr();
-////                echo "changeObjectArr len=".count($changeObjectArr).": <pre>";
-////                print_r($changeObjectArr);
-////                echo "</pre>";
-//
-//                $changeObjectArr[$className][$this->getId()]['status']['old'] = $this->status;
-//                $changeObjectArr[$className][$this->getId()]['status']['new'] = $status;
-//                $this->getParent()->setChangeObjectArr($changeObjectArr);
-//
-////                echo "changeObjectArr len=".count($changeObjectArr).": <pre>";
-////                print_r($changeObjectArr);
-////                echo "</pre>";
-//            }
-//        //}
         $this->setFieldChangeArray("status",$this->status,$status);
         $this->status = $status;
     }
@@ -220,12 +197,14 @@ abstract class ArrayFieldAbstract {
             }
             //echo $className.": parent id=".$this->getParent()->getId()."<br>";
 
-            $changeObjectArr = $this->getParent()->obtainChangeObjectArr();
+            if( $this->getParent() ) {
+                $changeObjectArr = $this->getParent()->obtainChangeObjectArr();
 
-            $changeObjectArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
-            $changeObjectArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
+                $changeObjectArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
+                $changeObjectArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
 
-            $this->getParent()->setChangeObjectArr($changeObjectArr);
+                $this->getParent()->setChangeObjectArr($changeObjectArr);
+            }
         }
     }
 
