@@ -499,7 +499,7 @@ class PatientController extends Controller
 
             //TODO: calculate changes: get original 'valid' fields. If the updated 'valid' field has different ID => this is a new value.
 
-            //TODO: set provider, source, status='valid'. All other fields - 'invalid'.
+            //set provider, source, status='valid'. All other fields - 'invalid'. This is done by form listener
 
 //            echo "<br><br>";
 //            foreach( $entity->getDob() as $dob ) {
@@ -509,13 +509,18 @@ class PatientController extends Controller
 //                echo "Controller: dob id=".$dob->getId()."; dob=".$dob."; status=".$dob->getStatus()."; provider =(ID#".$dob->getProvider()->getId().")".$dob->getProvider()."<br>";
 //            }
 
-            exit("Form is valid");
+            //exit("Form is valid");
             $em->persist($entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
         }
-        exit("Form is not valid");
+        //exit("Form is not valid");
+
+        $this->get('session')->getFlashBag()->add(
+            'warning',
+            'Form is invalid.'
+        );
 
         return array(
             'entity' => $entity,

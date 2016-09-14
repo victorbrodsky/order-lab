@@ -43,7 +43,7 @@ class Spot {
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $spottedOn;
 
@@ -111,6 +111,8 @@ class Spot {
     {
         $this->setAuthor($author);
         $this->setSource($source);
+
+        $this->setCreation( new \DateTime() );
     }
 
 
