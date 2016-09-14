@@ -136,6 +136,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
+            'sitename' => $this->container->getParameter('scan.sitename'),
             'datastructure' => 'datastructure', //'datastructure-patient'
         );
 
@@ -241,6 +242,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
+            'sitename' => $parameters['sitename'],
             'datastructure' => $parameters['datastructure'],
             'tracker' => $parameters['tracker']
         );
@@ -351,6 +353,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
+            'sitename' => $parameters['sitename'],
             'datastructure' => $parameters['datastructure'],
             'tracker' => $parameters['tracker']
         );
@@ -445,6 +448,7 @@ class PatientController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
+            'sitename' => $parameters['sitename'],
             'datastructure' => $parameters['datastructure'],
             'tracker' => $parameters['tracker']
         );
@@ -497,13 +501,21 @@ class PatientController extends Controller
 
             //TODO: set provider, source, status='valid'. All other fields - 'invalid'.
 
-            //exit("Form is valid");
+//            echo "<br><br>";
+//            foreach( $entity->getDob() as $dob ) {
+//                echo "Controller: provider=".$dob->getProvider()."<br>";
+//                echo "Controller: provider id=".$dob->getProvider()->getId()."<br>";
+//                echo "Controller: source id=".$dob->getSource()->getId().": ".$dob->getSource()."<br>";
+//                echo "Controller: dob id=".$dob->getId()."; dob=".$dob."; status=".$dob->getStatus()."; provider =(ID#".$dob->getProvider()->getId().")".$dob->getProvider()."<br>";
+//            }
+
+            exit("Form is valid");
             $em->persist($entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
         }
-        //exit("Form is not valid");
+        exit("Form is not valid");
 
         return array(
             'entity' => $entity,

@@ -438,7 +438,8 @@ class DefaultController extends Controller
         }
 
         //set source
-        $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Deidentifier");
+        $securityUtil = $this->get('order_security_utility');
+        $source = $securityUtil->getDefaultSourceSystem($this->container->getParameter('deidentifier.sitename'));
         if( !$source ) {
             throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
         }
@@ -653,8 +654,8 @@ class DefaultController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $status = 'deidentified-valid';
-        //$source = null; //SourceSystemList
-        $source = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Deidentifier");
+        $securityUtil = $this->get('order_security_utility');
+        $source = $securityUtil->getDefaultSourceSystem($this->container->getParameter('deidentifier.sitename'));
         if( !$source ) {
             throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
         }

@@ -41,7 +41,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $patient = $encounter->getParent();
 
         $securityUtil = new SecurityUtil($this->_em,null,null);
-        $source = $securityUtil->getDefaultSourceSystem();  //'scanorder';
+        $source = $securityUtil->getDefaultSourceSystem();
         //$status = self::STATUS_VALID;
 
         //suffix

@@ -73,7 +73,8 @@ class CallLogUtil
     public function createPatientMergeMrn( $provider, $patient, $mrnId ) {
 
         //Source System: ORDER Call Log Book
-        $sourcesystem = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Call Log Book");
+        $securityUtil = $this->get('order_security_utility');
+        $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
             //throw new \Exception($msg);
@@ -103,7 +104,8 @@ class CallLogUtil
     public function createWithCheckPatientMergeMrn( $provider, $patient, $mrnId ) {
 
         //Source System: ORDER Call Log Book
-        $sourcesystem = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Call Log Book");
+        $securityUtil = $this->get('order_security_utility');
+        $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
             //throw new \Exception($msg);
@@ -359,7 +361,8 @@ class CallLogUtil
     //set master patient: create a new, valid masterMergeRecord and set all others to invalid
     public function setMasterPatientRecord( $patients, $masterMergeRecordId, $provider ) {
 
-        $sourcesystem = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName("ORDER Call Log Book");
+        $securityUtil = $this->get('order_security_utility');
+        $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
             throw new \Exception($msg);

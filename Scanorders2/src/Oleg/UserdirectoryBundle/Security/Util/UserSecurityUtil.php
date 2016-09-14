@@ -575,15 +575,33 @@ class UserSecurityUtil {
         return $entity;
     }
 
-    public function getDefaultSourceSystem() {
-        $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
+    public function getDefaultSourceSystem($sitename=null)
+    {
+
+        $defaultSourceSystemName = 'ORDER Scan Order';
+
+        if( $this->container ) {
+
+            if( $sitename == $this->container->getParameter('calllog.sitename') ) {
+                $defaultSourceSystemName = 'ORDER Call Log Book';
+            }
+            if ($sitename == $this->container->getParameter('deidentifier.sitename') ) {
+                $defaultSourceSystemName = 'ORDER Deidentifier';
+            }
+            if ($sitename == $this->container->getParameter('scan.sitename') || $sitename == null ) {
+                $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
+            }
+        }
+
         $source = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
+
         if( !$source ) {
             if( $this->container ) {
                 $logger = $this->container->get('logger');
                 $logger->warning('Warning (Not Found): Default Source System with name '.$defaultSourceSystemName);
             }
         }
+
         //echo "source=".$source."<br>";
         return $source;
     }

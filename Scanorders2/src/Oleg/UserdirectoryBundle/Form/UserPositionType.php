@@ -174,22 +174,22 @@ class UserPositionType extends AbstractType
 
 
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-
-            $userPosition = $event->getData();
-            $form = $event->getForm();
-
-            echo "!!!userPosition:<br>";
-            print_r($userPosition);
-            echo "<br>";
-
-            if( !$userPosition ) {
-                return;
-            }
-
-
-
-        });
+//        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+//
+//            $userPosition = $event->getData();
+//            $form = $event->getForm();
+//
+//            echo "!!!userPosition:<br>";
+//            print_r($userPosition);
+//            echo "<br>";
+//
+//            if( !$userPosition ) {
+//                return;
+//            }
+//
+//
+//
+//        });
 
 
 

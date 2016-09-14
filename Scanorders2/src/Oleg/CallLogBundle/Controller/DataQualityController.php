@@ -44,7 +44,7 @@ class DataQualityController extends CallEntryController
 
         $title = "Merge Patient Records";
 
-        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'show';
 
@@ -320,7 +320,7 @@ class DataQualityController extends CallEntryController
         $securityUtil = $this->get('order_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
-        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'show';
 
@@ -513,7 +513,7 @@ class DataQualityController extends CallEntryController
         $securityUtil = $this->get('order_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
-        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'show';
 

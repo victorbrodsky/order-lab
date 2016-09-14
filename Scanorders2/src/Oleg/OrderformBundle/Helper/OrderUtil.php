@@ -377,8 +377,8 @@ class OrderUtil {
         $className = $class->getShortName();
         //echo "class name=".$className."<br>";
 
-        $securityUtil = $this->container->get('order_security_utility');
-        $source = $source = $securityUtil->getDefaultSourceSystem();
+        //$securityUtil = $this->container->get('order_security_utility');
+        //$source = $securityUtil->getDefaultSourceSystem();
 
         $count = 0;
 

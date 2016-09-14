@@ -77,7 +77,7 @@ class CallEntryController extends Controller
 
         $title = "New Entry";
 
-        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'new';
         $formtype = 'call-entry';
@@ -464,6 +464,7 @@ class CallEntryController extends Controller
     public function createPatientAction(Request $request)
     {
 
+        $securityUtil = $this->get('order_security_utility');
         $res = array();
         $output = 'OK';
         $response = new Response();
@@ -496,7 +497,6 @@ class CallEntryController extends Controller
 
 
         //TODO: set institution
-        $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $institution = $userSiteSettings->getDefaultInstitution();
 
@@ -544,8 +544,7 @@ class CallEntryController extends Controller
         }
 
         //Create a new Patient
-        $securityUtil = $this->get('order_security_utility');
-        $sourcesystem = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
 
         //$patient = new Patient(false,$status,$user,$sourcesystem);
