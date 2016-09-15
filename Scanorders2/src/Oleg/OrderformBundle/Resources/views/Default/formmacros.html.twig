@@ -1264,7 +1264,7 @@
         {% set showInfoDate = 0 %}
         {% set showInfoProvider = 0 %}
         {% if field.vars.value.provider is defined %}
-            {% if cycle == "show" or cycle == "amend" %}
+            {% if cycle == "show" or cycle == "amend" or (showPlus is defined and showPlus == 'showPlus') %}
                 {% if field.vars.value.creationdate != "" and field.vars.value.status != 'valid' %}
                     {% set showInfoDate = 1 %}
                 {% endif %}
@@ -1272,7 +1272,7 @@
                     {% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}
                         {% set showInfoProvider = 1 %}
                     {% endif %}
-                    {% if field.vars.value.status != 'valid' %}
+                    {% if field.vars.value.status != 'valid' or (showPlus is defined and showPlus == 'showPlus') %}
                         {% set showInfoDate = 1 %}
                         {% set showInfoProvider = 1 %}
                     {% endif %}
@@ -1396,6 +1396,7 @@
 
     {#{{form_label(field)}}#}
     {% set label = field.vars.label %}
+    {% set label = label|replace({":":""}) %}
 
     {% if fieldThis %}
 
@@ -1404,40 +1405,43 @@
         {% set postfixDate = null %}
         {% set postfixProvider = null %}
         {% set invalidStatus = "" %}
+        {% set sourceStr = "" %}
 
         {% if showInfoDate == 1 %}
             {% set postfixDate = "entered on "~creationDate %}
         {% endif %}
 
         {% if fieldThis.status == 'invalid' %}
-            {% set invalidStatus = ' (invalid)' %}
+            {% set invalidStatus = '(invalid) ' %}
+        {% endif %}
+        {% if fieldThis.status == 'valid' %}
+            {% set invalidStatus = '(valid) ' %}
+        {% endif %}
+
+        {% if fieldThis.source %}
+            {% set sourceStr = " via "~fieldThis.source %}
         {% endif %}
 
         {% if showInfoProvider == 1 and fullfield.vars.value %}
-            {% set postfixProvider = '<a href='~path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id })~'>' %}
+            {% set postfixProvider = '<a target="_blank" href='~path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id })~'>' %}
             {% set postfixProvider = postfixProvider~'<span class="glyphicon glyphicon-question-sign element-with-tooltip-always" aria-hidden="true"' %}
             {% set postfixProvider = postfixProvider~'data-toggle="tooltip"' %}
-            {% set postfixProvider = postfixProvider~'title="by '~fieldThis.provider.getUserNameStr()~' on '~creationDate~'">' %}
+            {% set postfixProvider = postfixProvider~'title="'~invalidStatus~'entered by '~fieldThis.provider.getUserNameStr()~' on '~creationDate~sourceStr~'">' %}
             {% set postfixProvider = postfixProvider~'</span></a>' %}
         {% endif %}
 
         {% if postfixDate or showInfoProvider %}
-            {% set label = label|replace({":":""}) %}
-            {% set label = label ~ invalidStatus ~ " " ~ postfixDate ~ postfixProvider ~ ":" %}
+            {#{% set label = label|replace({":":""}) %}#}
+            {#{% set label = label ~ invalidStatus ~ " " ~ postfixDate ~ postfixProvider ~ ":" %}#}
+            {% set label = label ~ postfixProvider %}
         {% endif %}
         {#{{ form_label(field, label|raw) }}#}
-
-        {#{% if showPlus is defined and showPlus == 'showPlus' or prototype == "prototype" %}#}
-            {#{% set additionalClass = "well" %}#}
-        {#{% else %}#}
-            {#{% set additionalClass = "" %}#}
-        {#{% endif %}#}
 
     {% endif %}
 
     {#show status#}
     {% if showPlus is defined and showPlus == 'showPlus' or prototype == "prototype" %}
-        {% set label = label|replace({":":""}) %}
+        {#{% set label = label|replace({":":""}) %}#}
         {% if prototype == "prototype" %}
             {% set fullfieldThis = fullfield.vars.prototype %}
         {% else %}
@@ -1448,9 +1452,11 @@
             {% set fieldStatus = " " ~ form_widget(fullfieldThis.others.status) %}
         {% endif %}
         {% set label = label ~ fieldStatus %}
-        {% set label = label ~ ":" %}
+        {#{% set label = label ~ ":" %}#}
     {% endif %}
     {#EOF show status#}
+
+    {% set label = label ~ ":" %}
 
     {#render label#}
     <p>

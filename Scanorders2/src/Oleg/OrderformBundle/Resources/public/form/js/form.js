@@ -1314,12 +1314,13 @@ function listenerComboboxStatusField( statusFieldEl, holder, target ) {
     statusFieldEl.on("change", function(e) {
         var statusValue = $(this).select2('val');
         var statusId = $(this).attr('id');
-        console.log("status change to "+statusValue);
+        //console.log("status change to "+statusValue);
 
         if( statusValue == "valid" ) {
            var otherValue = "invalid";
         } else {
             var otherValue = "valid";
+            alert("Please make sure to set at least one valid field.");
             return;
         }
 
@@ -1329,7 +1330,7 @@ function listenerComboboxStatusField( statusFieldEl, holder, target ) {
 
         //2) change status for all other fields in the holder
         holder.find('select.other-status').each(function (e) {
-            console.log("status change to " + otherValue + ": "+statusId+"?="+$(this).attr('id'));
+            //console.log("status change to " + otherValue + ": "+statusId+"?="+$(this).attr('id'));
             if( statusId != $(this).attr('id') ) {
                 $(this).select2('val',otherValue);
             }

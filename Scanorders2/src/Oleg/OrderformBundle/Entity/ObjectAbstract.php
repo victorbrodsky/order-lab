@@ -827,12 +827,16 @@ abstract class ObjectAbstract
 //            echo "Array from field:<br>".$res."<br>";
         }
     }
-    public function obtainChangeObjectStr() {
+    public function obtainChangeObjectStr($asArr=false) {
         $changeArr = $this->obtainChangeObjectArr();
 
-        $res = "<pre>";
-        $res .= $this->var_dump_ret($changeArr);
-        $res .= "</pre>";
+        if( $asArr ) {
+            $res = "<pre>";
+            $res .= $this->var_dump_ret($changeArr);
+            $res .= "</pre>";
+        } else {
+            $res = json_encode($changeArr);
+        }
 
         return $res;
     }

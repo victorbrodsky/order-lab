@@ -497,8 +497,6 @@ class PatientController extends Controller
             //TODO: set patient's name if does not exists
             //copyCommonFieldsToPatient($encounter,$user): add Encounter's name, sex to the corresponding patient fields
 
-            //TODO: calculate changes: get original 'valid' fields. If the updated 'valid' field has different ID => this is a new value.
-
             //set provider, source, status='valid'. All other fields - 'invalid'. This is done by form listener
 
 //            echo "<br><br>";
@@ -524,7 +522,7 @@ class PatientController extends Controller
                 $userSecUtil = $this->container->get('user_security_utility');
                 //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
                 $event = "Patient with ID " . $entity->getId() . " has been updated by " . $user;
-                $event .= "<br>".$changeSetStr;
+                $event .= ". Changes:<br>".$changeSetStr;
                 $userSecUtil->createUserEditEvent($parameters['sitename'], $event, $user, $entity, $request, 'Patient Updated');
             }
             //exit('event='.$event);

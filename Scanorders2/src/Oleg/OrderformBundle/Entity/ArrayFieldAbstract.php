@@ -268,9 +268,9 @@ abstract class ArrayFieldAbstract {
         if( $data && $data instanceof \DateTime ) {
             $transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d');
             $dateStr = $transformer->transform($data);
-            return $dateStr;
+            return $dateStr."";
         } else {
-            return $data;
+            return $data."";
         }
     }
 
