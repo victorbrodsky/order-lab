@@ -188,6 +188,7 @@ class Encounter extends ObjectAbstract
         if( !$this->date->contains($date) ) {
             $this->date->add($date);
             $date->setEncounter($this);
+            $this->setArrayFieldObjectChange('date','add',$date);
         }
 
         return $this;

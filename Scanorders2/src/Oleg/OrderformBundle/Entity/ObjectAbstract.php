@@ -655,24 +655,96 @@ abstract class ObjectAbstract
     }
     public function addChangeObjectArr($arr)
     {
-//        echo "arr:<br><pre>";
-//        echo print_r($arr);
-//        echo "</pre>";
-//        $originalArr = $this->obtainChangeObjectArr();
-//        echo "existing:<br><pre>";
-//        echo print_r($originalArr);
-//        echo "</pre>";
+        $originalArr = $this->obtainChangeObjectArr();
+        //$mergedChangeObjectArr = array_merge($this->obtainChangeObjectArr(),$arr);
+        //$mergedChangeObjectArr = array_merge_recursive($originalArr,$arr);
+        $mergedChangeObjectArr = $this->array_merge_recursive_distinct($originalArr,$arr);
+        //$mergedChangeObjectArr = $this->array_merge_recursive_distinct_changed($originalArr,$arr);
+        //$mergedChangeObjectArr = $this->array_merge_recursive_new($originalArr,$arr);
 
-        //$mergedChangeObjectArr = array_merge($originalArr,$arr);
-        $mergedChangeObjectArr = $this->array_merge_assoc($this->obtainChangeObjectArr(),$arr);
-
+        //$mergedChangeObjectArr = $this->array_merge_assoc($this->obtainChangeObjectArr(),$arr,true);
 //        echo "merged:<br><pre>";
 //        echo print_r($mergedChangeObjectArr);
 //        echo "</pre>";
-
         $this->setChangeObjectArr($mergedChangeObjectArr);
     }
 
+
+    //http://www.php.net/manual/en/function.array-merge-recursive.php
+    function array_merge_recursive_distinct_changed ( array &$array1, array &$array2 )
+    {
+        static $level=0;
+        $merged = [];
+        if (!empty($array2["mergeWithParent"]) || $level == 0) {
+            $merged = $array1;
+        }
+
+        foreach ( $array2 as $key => &$value )
+        {
+            if (is_numeric($key)) {
+                $merged [] = $value;
+            } else {
+                $merged[$key] = $value;
+            }
+
+            if ( is_array ( $value ) && isset ( $array1 [$key] ) && is_array ( $array1 [$key] )
+            ) {
+                $level++;
+                $merged [$key] = $this->array_merge_recursive_distinct_changed($array1 [$key], $value);
+                $level--;
+            }
+        }
+        unset($merged["mergeWithParent"]);
+        return $merged;
+    }
+    /**
+     * array_merge_recursive does indeed merge arrays, but it converts values with duplicate
+     * keys to arrays rather than overwriting the value in the first array with the duplicate
+     * value in the second array, as array_merge does. I.e., with array_merge_recursive,
+     * this happens (documented behavior):
+     *
+     * array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
+     *     => array('key' => array('org value', 'new value'));
+     *
+     * array_merge_recursive_distinct does not change the datatypes of the values in the arrays.
+     * Matching keys' values in the second array overwrite those in the first array, as is the
+     * case with array_merge, i.e.:
+     *
+     * array_merge_recursive_distinct(array('key' => 'org value'), array('key' => 'new value'));
+     *     => array('key' => array('new value'));
+     *
+     * Parameters are passed by reference, though only for performance reasons. They're not
+     * altered by this function.
+     *
+     * @param array $array1
+     * @param array $array2
+     * @return array
+     * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
+     * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
+     */
+    function array_merge_recursive_distinct ( array &$array1, array &$array2, $unique=false )
+    {
+        $merged = $array1;
+
+        foreach ( $array2 as $key => &$value )
+        {
+            if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )
+            {
+                $merged [$key] = $this->array_merge_recursive_distinct ( $merged [$key], $value );
+            }
+            else
+            {
+                $merged [$key] = $value;
+            }
+        }
+
+        if ($unique) {
+            $merged = array_unique($merged);
+        }
+
+        return $merged;
+    }
+    //http://stackoverflow.com/questions/6813884/array-merge-on-an-associative-array-in-php
     function array_merge_assoc($array1, $array2, $unique=false)
     {
 
@@ -693,13 +765,36 @@ abstract class ObjectAbstract
 
         for($i = 0;$i<$size;$i++)
         {
-            $array1[$keys2[$i]] = $array1[$keys2[$i]] + $array2[$keys2[$i]];
+
+            $thisIndex = $keys2[$i];
+            if( !$thisIndex ) {
+                $thisIndex = 0;
+            }
+
+            if( array_key_exists($thisIndex, $array1) ) {
+                $thisArr1 = $array1[$thisIndex];
+                //$array1[$keys2[$i]] = array_merge( $array1[$keys2[$i]], $array2[$keys2[$i]] );
+            } else {
+                $thisArr1 = $array1;
+                //$array1[$keys2[$i]] = array_merge( $array1, $array2[$keys2[$i]] );
+            }
+            if( array_key_exists($thisIndex, $array2) ) {
+                $thisArr2 = $array2[$thisIndex];
+                //$array1[$keys2[$i]] = array_merge( $array1[$keys2[$i]], $array2[$keys2[$i]] );
+            } else {
+                $thisArr2 = $array2;
+                //$array1[$keys2[$i]] = array_merge( $array1, $array2[$keys2[$i]] );
+            }
+            //$array1[$keys2[$i]] = $array1[$keys2[$i]] + $array2[$keys2[$i]];
+            //$array1[$keys2[$i]] = array_merge( $array1[$keys2[$i]], $array2[$keys2[$i]] );
+
+            $array1[$thisIndex] = array_merge( $thisArr1, $thisArr2 );
         }
 
         $array1 = array_filter($array1);
 
         if ($unique) {
-            $array1 = array_unique($array1);
+            //$array1 = array_unique($array1);
         }
 
         return $array1;

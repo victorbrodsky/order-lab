@@ -509,10 +509,12 @@ class PatientController extends Controller
 //                echo "Controller: parentId=".$dob->getParent()->getId()."; dob id=".$dob->getId()."; dob=".$dob."; status=".$dob->getStatus()."; provider =(ID#".$dob->getProvider()->getId().")".$dob->getProvider()."<br>";
 //            }
 
+            //get patient's changes
             $changeSetStr = $entity->obtainChangeObjectStr();
-            //echo "changeSetStr:<br>";
-            //echo $changeSetStr;
-            //exit('1');
+
+//            echo "changeSetStr:<br>";
+//            echo $changeSetStr;
+//            exit('1');
 
             //exit("Form is valid");
             $em->persist($entity);

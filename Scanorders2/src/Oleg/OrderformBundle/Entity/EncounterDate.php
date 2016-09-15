@@ -32,10 +32,17 @@ class EncounterDate extends EncounterArrayFieldAbstract
 
 
     public function __toString() {
-        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
-        return $dateStr = $transformer->transform($this->field);
+        //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        //return $dateStr = $transformer->transform($this->field);
+        return $this->formatDataToString($this->field);
     }
 
+
+    public function setField($field=null)
+    {
+        $this->setFieldChangeArray("field",$this->formatDataToString($this->field),$this->formatDataToString($field));
+        $this->field = $field;
+    }
 
 
     /**

@@ -37,8 +37,7 @@ class AccessionAccessionDate extends AccessionArrayFieldAbstract
 
 
     public function __toString() {
-        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
-        return $dateStr = $transformer->transform($this->field);
+        return $this->formatDataToString($this->field);
     }
 
 
