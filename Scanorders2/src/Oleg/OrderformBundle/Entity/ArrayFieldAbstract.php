@@ -10,6 +10,7 @@
 namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
 /**
@@ -64,6 +65,9 @@ abstract class ArrayFieldAbstract {
     protected $dqeventlog;
 
     private $className;
+
+    protected $changeFieldArr  = array();
+
 
     public function __construct( $status = 'valid', $provider = null, $source = null )
     {
@@ -125,6 +129,7 @@ abstract class ArrayFieldAbstract {
      */
     public function setStatus($status)
     {
+        //echo $this->getId().": change status=".$status."<br>";
         $this->setFieldChangeArray("status",$this->status,$status);
         $this->status = $status;
     }
@@ -187,8 +192,9 @@ abstract class ArrayFieldAbstract {
 
 
     public function setFieldChangeArray($fieldName,$oldValue,$newValue) {
+        //echo $this->getId().": setFieldChangeArray $fieldName: old=".$oldValue."; new=".$newValue."<br>";
         if( $oldValue != $newValue ) {
-            //echo "2 setStatus old=".$this->status."; new=".$status."<br>";
+            //echo "diff !!! ".$this->getId().": setFieldChangeArray $fieldName: old=".$oldValue."; new=".$newValue."<br>";
             if( $this->className ) {
                 $className = $this->className;
             } else {
@@ -198,16 +204,68 @@ abstract class ArrayFieldAbstract {
             //echo $className.": parent id=".$this->getParent()->getId()."<br>";
 
             if( $this->getParent() ) {
-                $changeObjectArr = $this->getParent()->obtainChangeObjectArr();
+                $holder = $this->getParent()->getHolderPatient();
+                //echo "holder=".$holder."<br>";
+                //echo "parent ok: this id=".$this->getId()."<br>";
 
-                $changeObjectArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
-                $changeObjectArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
+                //$changeObjectArr = $holder->obtainChangeObjectArr();
+                //$changeObjectArr = $this->getParent()->obtainChangeObjectArr();
+                $changeFieldArr = array();
+                $changeFieldArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
+                $changeFieldArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
+                $holder->addChangeObjectArr($changeFieldArr);
 
-                $this->getParent()->setChangeObjectArr($changeObjectArr);
+//                echo "changeFieldArr:<br><pre>";
+//                echo print_r($changeFieldArr);
+//                echo "</pre>";
+            } else {
+                //$changeFieldArr = $this->changeFieldArr;
+                //echo $fieldName.": no parent!!! <br>";
+                //echo "this id=".$this->getId()."<br>";
+                //echo "parent=".$this->getPatient()."<br>";
+                //$changeFieldArr
+                $changeFieldArr = array();
+                $changeFieldArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
+                $changeFieldArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
+                $this->setChangeFieldArr($changeFieldArr);
+
+//                echo "changeFieldArr:<br><pre>";
+//                echo print_r($this->changeFieldArr);
+//                echo "</pre>";
             }
+
+//            $changeObjectArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
+//            $changeObjectArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
+//            $holder->setChangeObjectArr($changeObjectArr);
         }
     }
 
+    /**
+     * @return array
+     */
+    public function getChangeFieldArr()
+    {
+        return $this->changeFieldArr;
+    }
+
+    /**
+     * @param array $changeFieldArr
+     */
+    public function setChangeFieldArr($changeFieldArr)
+    {
+        $this->changeFieldArr = $changeFieldArr;
+    }
+
+
+    public function formatDataToString($data) {
+        if( $data && $data instanceof \DateTime ) {
+            $transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d');
+            $dateStr = $transformer->transform($data);
+            return $dateStr;
+        } else {
+            return $data;
+        }
+    }
 
     public function __toString() {
         return $this->field."";

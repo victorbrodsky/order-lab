@@ -11,6 +11,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
 /**
@@ -630,6 +631,14 @@ abstract class ObjectAbstract
     }
 
 
+    public function getHolderPatient() {
+        $parent = $this->getParent();
+        if( $parent ) {
+            return $parent->getHolderPatient();
+        } else {
+            return $this;
+        }
+    }
     /**
      * @return array
      */
@@ -644,10 +653,84 @@ abstract class ObjectAbstract
     {
         $this->changeObjectArr = $changeObjectArr;
     }
+    public function addChangeObjectArr($arr)
+    {
+//        echo "arr:<br><pre>";
+//        echo print_r($arr);
+//        echo "</pre>";
+//        $originalArr = $this->obtainChangeObjectArr();
+//        echo "existing:<br><pre>";
+//        echo print_r($originalArr);
+//        echo "</pre>";
+
+        //$mergedChangeObjectArr = array_merge($originalArr,$arr);
+        $mergedChangeObjectArr = $this->array_merge_assoc($this->obtainChangeObjectArr(),$arr);
+
+//        echo "merged:<br><pre>";
+//        echo print_r($mergedChangeObjectArr);
+//        echo "</pre>";
+
+        $this->setChangeObjectArr($mergedChangeObjectArr);
+    }
+
+    function array_merge_assoc($array1, $array2, $unique=false)
+    {
+
+        if(sizeof($array1)>sizeof($array2))
+        {
+            $size = sizeof($array1);
+        }
+        else
+        {
+            $a = $array1;
+            $array1 = $array2;
+            $array2 = $a;
+
+            $size = sizeof($array1);
+        }
+
+        $keys2 = array_keys($array2);
+
+        for($i = 0;$i<$size;$i++)
+        {
+            $array1[$keys2[$i]] = $array1[$keys2[$i]] + $array2[$keys2[$i]];
+        }
+
+        $array1 = array_filter($array1);
+
+        if ($unique) {
+            $array1 = array_unique($array1);
+        }
+
+        return $array1;
+    }
+
     public function setArrayFieldObjectChange($fieldName,$action,$addedObject) {
-        $this->changeObjectArr[$fieldName][$action]['field'] = $addedObject->getField()->format("Y-m-d")."";
-        $this->changeObjectArr[$fieldName][$action]['status'] = $addedObject->getStatus()."";
-        $this->changeObjectArr[$fieldName][$action]['provider'] = $addedObject->getProvider()."";
+        //echo $this->getId().": setArrayFieldObjectChange $fieldName <br>";
+        $holderPatient = $this->getHolderPatient();
+        //$changeObjectArr = $holderPatient->obtainChangeObjectArr();
+        $field = $addedObject->getField();
+        if( $field instanceof \DateTime ) {
+            $field = $addedObject->formatDataToString($field);
+        }
+        $addedObjectId = $addedObject->getId();
+        if( !$addedObjectId ) {
+            $addedObjectId = "0";
+        }
+        $changeObjectArr[$fieldName][$addedObjectId][$action]['field'] = $field."";
+        $changeObjectArr[$fieldName][$addedObjectId][$action]['status'] = $addedObject->getStatus()."";
+        $changeObjectArr[$fieldName][$addedObjectId][$action]['provider'] = $addedObject->getProvider()."";
+        $holderPatient->addChangeObjectArr($changeObjectArr);
+
+        if( $action == 'add' ) {
+            //echo $fieldName.": Copy array from field; parent id=".$addedObject->getParent()->getId()."<br>";
+            $changeFieldArr = $addedObject->getChangeFieldArr();
+            $holderPatient->addChangeObjectArr($changeFieldArr);
+//            $res = "<pre>";
+//            $res .= $this->var_dump_ret($changeFieldArr);
+//            $res .= "</pre>";
+//            echo "Array from field:<br>".$res."<br>";
+        }
     }
     public function obtainChangeObjectStr() {
         $changeArr = $this->obtainChangeObjectArr();
@@ -665,6 +748,15 @@ abstract class ObjectAbstract
         ob_end_clean();
         return $content;
     }
+//    public function formatDataToString($data) {
+//        if( $data && $data instanceof \DateTime ) {
+//            $transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d');
+//            $dateStr = $transformer->transform($data);
+//            return $dateStr;
+//        } else {
+//            return $data;
+//        }
+//    }
 
 //    //replace contains in AddChild
 //    public function childAlreadyExist( $newChild ) {

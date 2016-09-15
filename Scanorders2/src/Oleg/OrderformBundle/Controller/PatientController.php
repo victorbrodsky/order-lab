@@ -503,16 +503,20 @@ class PatientController extends Controller
 
 //            echo "<br><br>";
 //            foreach( $entity->getDob() as $dob ) {
-//                echo "Controller: provider=".$dob->getProvider()."<br>";
-//                echo "Controller: provider id=".$dob->getProvider()->getId()."<br>";
-//                echo "Controller: source id=".$dob->getSource()->getId().": ".$dob->getSource()."<br>";
-//                echo "Controller: dob id=".$dob->getId()."; dob=".$dob."; status=".$dob->getStatus()."; provider =(ID#".$dob->getProvider()->getId().")".$dob->getProvider()."<br>";
+//                //echo "Controller: provider=".$dob->getProvider()."<br>";
+//                //echo "Controller: provider id=".$dob->getProvider()->getId()."<br>";
+//                //echo "Controller: source id=".$dob->getSource()->getId().": ".$dob->getSource()."<br>";
+//                echo "Controller: parentId=".$dob->getParent()->getId()."; dob id=".$dob->getId()."; dob=".$dob."; status=".$dob->getStatus()."; provider =(ID#".$dob->getProvider()->getId().")".$dob->getProvider()."<br>";
 //            }
 
             $changeSetStr = $entity->obtainChangeObjectStr();
             echo "changeSetStr:<br>";
             echo $changeSetStr;
             exit('1');
+
+            //exit("Form is valid");
+            $em->persist($entity);
+            $em->flush();
 
             if( $changeSetStr ) {
                 $userSecUtil = $this->container->get('user_security_utility');
@@ -522,10 +526,6 @@ class PatientController extends Controller
                 $userSecUtil->createUserEditEvent($parameters['sitename'], $event, $user, $entity, $request, 'Patient Updated');
             }
             //exit('event='.$event);
-
-            //exit("Form is valid");
-            $em->persist($entity);
-            $em->flush();
 
             return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
         }

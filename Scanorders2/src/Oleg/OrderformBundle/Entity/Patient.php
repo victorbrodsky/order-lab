@@ -208,7 +208,7 @@ class Patient extends ObjectAbstract
                 //echo "Adding keytype=".$mrn->getKeytype()."<br>";
                 $mrn->setPatient($this);
                 $this->mrn->add($mrn);
-                $this->setArrayFieldObjectChange('mrn','add',$mrn);
+                $this->setArrayFieldObjectChange('mrn','add',$mrn,$this);
             }
         }
 
@@ -218,7 +218,7 @@ class Patient extends ObjectAbstract
     public function removeMrn($mrn)
     {
         $this->mrn->removeElement($mrn);
-        $this->setArrayFieldObjectChange('mrn','remove',$mrn);
+        $this->setArrayFieldObjectChange('mrn','remove',$mrn,$this);
     }
 
     public function clearMrn()
@@ -674,9 +674,9 @@ class Patient extends ObjectAbstract
         }
 
         if( !$this->dob->contains($dob) ) {
-            $this->setArrayFieldObjectChange('dob','add',$dob);
             $dob->setPatient($this);
             $this->dob->add($dob);
+            $this->setArrayFieldObjectChange('dob','add',$dob,$this);
         }
     
         return $this;
@@ -692,7 +692,7 @@ class Patient extends ObjectAbstract
         //$this->changeObjectArr['dob']['remove']['field'] = $dob->getField()->format('Y-m-d')."";
         //$this->changeObjectArr['dob']['remove']['status'] = $dob->getStatus()."";
         //$this->changeObjectArr['dob']['remove']['provider'] = $dob->getProvider()."";
-        $this->setArrayFieldObjectChange('dob','remove',$dob);
+        $this->setArrayFieldObjectChange('dob','remove',$dob,$this);
         $this->dob->removeElement($dob);
     }
 

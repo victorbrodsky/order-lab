@@ -31,6 +31,9 @@ class PatientDob extends PatientArrayFieldAbstract
 
     public function setField($field=null)
     {
+        //echo "<br>old data=".$this->formatDataToString($this->field)."<br>";
+        //echo $this->getId().": data=".$this->formatDataToString($this->field)." => ".$this->formatDataToString($field)."<br>";
+        //echo "parent=".$this->getPatient()."<br>";
         $this->setFieldChangeArray("field",$this->formatDataToString($this->field),$this->formatDataToString($field));
         $this->field = $field;
     }
@@ -40,10 +43,14 @@ class PatientDob extends PatientArrayFieldAbstract
         return $this->formatDataToString($this->field);
     }
 
-    public function formatDataToString($data) {
-        $transformer = new DateTimeToStringTransformer(null,null,'Y-m-d');
-        $dateStr = $transformer->transform($data);
-        return $dateStr;
-    }
+//    public function formatDataToString($data) {
+//        if( $data ) {
+//            $transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d');
+//            $dateStr = $transformer->transform($data);
+//            return $dateStr;
+//        } else {
+//            return $data;
+//        }
+//    }
 
 }
