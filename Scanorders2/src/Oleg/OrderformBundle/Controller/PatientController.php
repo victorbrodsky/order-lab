@@ -510,9 +510,9 @@ class PatientController extends Controller
 //            }
 
             $changeSetStr = $entity->obtainChangeObjectStr();
-            echo "changeSetStr:<br>";
-            echo $changeSetStr;
-            exit('1');
+            //echo "changeSetStr:<br>";
+            //echo $changeSetStr;
+            //exit('1');
 
             //exit("Form is valid");
             $em->persist($entity);

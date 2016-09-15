@@ -208,11 +208,18 @@ abstract class ArrayFieldAbstract {
                 //echo "holder=".$holder."<br>";
                 //echo "parent ok: this id=".$this->getId()."<br>";
 
-                //$changeObjectArr = $holder->obtainChangeObjectArr();
-                //$changeObjectArr = $this->getParent()->obtainChangeObjectArr();
                 $changeFieldArr = array();
-                $changeFieldArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
-                $changeFieldArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
+
+                if( $fieldName == "status" ) {
+                    $fieldStr = $this->formatDataToString($this->getField());
+                    $changeFieldArr[$className][$this->getId()][$fieldName]['old'] = $oldValue . " (" . $fieldStr . ")";
+                    $changeFieldArr[$className][$this->getId()][$fieldName]['new'] = $newValue . " (" . $fieldStr . ")";
+                    //$holder->addChangeObjectArr($changeFieldArr);
+                } else {
+                    $changeFieldArr[$className][$this->getId()][$fieldName]['old'] = $oldValue;
+                    $changeFieldArr[$className][$this->getId()][$fieldName]['new'] = $newValue;
+                }
+
                 $holder->addChangeObjectArr($changeFieldArr);
 
 //                echo "changeFieldArr:<br><pre>";
