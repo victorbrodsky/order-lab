@@ -496,8 +496,7 @@ class PatientController extends Controller
 
         if( $form->isValid() ) {
 
-            //TODO: set patient's name if does not exists
-            //copyCommonFieldsToPatient($encounter,$user): add Encounter's name, sex to the corresponding patient fields
+            //set patient's name if does not exists
             $em->getRepository('OlegOrderformBundle:Patient')->copyCommonEncountersFieldsToPatient($entity,$user,$parameters['sitename']);
             //echo "<br><br>";
             //foreach( $entity->getLastname() as $lastname ) {
