@@ -447,7 +447,7 @@ class Patient extends ObjectAbstract
 
     public function addSuffix($suffix)
     {
-        if( !$this->suffix->contains($suffix) && !$this->hasSimpleField($suffix,"getSuffix") ) {
+        if( $this->notEmpty($suffix) && !$this->suffix->contains($suffix) && !$this->hasSimpleField($suffix,"getSuffix") ) {
             $suffix->setPatient($this);
             $this->suffix->add($suffix);
         }
@@ -478,9 +478,12 @@ class Patient extends ObjectAbstract
 //            $lastname = new PatientLastname();
 //        }
 
-        if( !$this->lastname->contains($lastname) && !$this->hasSimpleField($lastname,"getLastname") ) {
+        if( $this->notEmpty($lastname) && !$this->lastname->contains($lastname) && !$this->hasSimpleField($lastname,"getLastname") ) {
+            //echo "adding lastname=".$lastname."<br>";
             $lastname->setPatient($this);
             $this->lastname->add($lastname);
+        } else {
+            //echo "NO adding lastname=".$lastname."<br>";
         }
 
         return $this;
@@ -535,7 +538,7 @@ class Patient extends ObjectAbstract
 //            $firstname = new PatientFirstname();
 //        }
 
-        if( !$this->firstname->contains($firstname) && !$this->hasSimpleField($firstname,"getFirstname") ) {
+        if( $this->notEmpty($firstname) && !$this->firstname->contains($firstname) && !$this->hasSimpleField($firstname,"getFirstname") ) {
             $firstname->setPatient($this);
             $this->firstname->add($firstname);
         }
@@ -592,7 +595,7 @@ class Patient extends ObjectAbstract
 //            $middlename = new PatientMiddlename();
 //        }
 
-        if( !$this->middlename->contains($middlename) && !$this->hasSimpleField($middlename,"getMiddlename") ) {
+        if( $this->notEmpty($middlename) && !$this->middlename->contains($middlename) && !$this->hasSimpleField($middlename,"getMiddlename") ) {
             $middlename->setPatient($this);
             $this->middlename->add($middlename);
         }
@@ -642,7 +645,7 @@ class Patient extends ObjectAbstract
      */
     public function addSex($sex)
     {
-        if( !$this->sex->contains($sex) && !$this->hasSimpleField($sex,"getSex") ) {
+        if( $this->notEmpty($sex) && !$this->sex->contains($sex) && !$this->hasSimpleField($sex,"getSex") ) {
             $sex->setPatient($this);
             $this->sex->add($sex);
         }
@@ -1112,7 +1115,7 @@ class Patient extends ObjectAbstract
         $orderArr = $resArr['orderArr'];
         $lastNameArrOrder = $resArr['destArr'];
 
-        $resArr = $this->rearangeNameArrByOrder($orderArr,$suffixArr,$suffixArrOrder);
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$suffixArr,$suffixArrOrder,null);
         $orderArr = $resArr['orderArr'];
         $suffixArrOrder = $resArr['destArr'];
 
@@ -1142,13 +1145,17 @@ class Patient extends ObjectAbstract
         return $patientFullNameArr;
     }
 
-    public function rearangeNameArrByOrder( $orderArr, $sourceArr, $destArr, $htmlTags = null ) {
+    public function rearangeNameArrByOrder( $orderArr, $sourceArr, $destArr, $htmlTags=null ) {
         $resArr = array();
         foreach( $sourceArr as $name ) {
-            if( !$name->getMessage() ) {
-                continue; //is it correct: if there is no message
+            if( $name->getMessage() ) {
+                //echo "no message <br>";
+                //continue; //is it correct: if there is no message
+                $orderId = $name->getMessage()->getId();
+            } else {
+                $orderId = 0;
             }
-            $orderId = $name->getMessage()->getId();
+            //$orderId = $name->getMessage()->getId();
             //echo "orderId=".$orderId."<br>";
             if( !in_array($orderId,$orderArr) ) {
                 //echo "!!!!!!!!!add orderId=".$orderId."<br>";
@@ -1247,6 +1254,14 @@ class Patient extends ObjectAbstract
         }
         //echo $getMethod.":no loop: field does not = ".$field."<br>";
         return false;
+    }
+
+    public function notEmpty( $fieldObject ) {
+        if( $fieldObject && $fieldObject->getField() ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //don't use 'get' because later repo functions relay on "get" keyword

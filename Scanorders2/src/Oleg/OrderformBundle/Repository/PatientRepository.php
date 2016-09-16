@@ -191,5 +191,12 @@ class PatientRepository extends ArrayFieldAbstractRepository
         return $patients;
     }
 
-    
+
+    public function copyCommonEncountersFieldsToPatient($patient,$user,$sitename) {
+        foreach( $patient->getEncounter() as $encounter ) {
+            $this->_em->getRepository('OlegOrderformBundle:Encounter')->copyCommonFieldsToPatient($encounter,$user,$sitename);
+        }
+        return $patient;
+    }
+
 }

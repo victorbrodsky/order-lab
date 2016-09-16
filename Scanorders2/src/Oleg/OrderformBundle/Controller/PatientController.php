@@ -231,6 +231,9 @@ class PatientController extends Controller
             throw $this->createNotFoundException('Unable to find Patient entity.');
         }
 
+        //echo "fullname=".$entity->getFullPatientName(false)."<br>";
+        //exit('1');
+
         $securityUtil = $this->get('order_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -439,7 +442,6 @@ class PatientController extends Controller
 
         //exit("2 Form scan_patient_update");
 
-
         //$deleteForm = $this->createDeleteForm($id);
         //////////////// params ////////////////
         $params = array(
@@ -496,7 +498,11 @@ class PatientController extends Controller
 
             //TODO: set patient's name if does not exists
             //copyCommonFieldsToPatient($encounter,$user): add Encounter's name, sex to the corresponding patient fields
-
+            $em->getRepository('OlegOrderformBundle:Patient')->copyCommonEncountersFieldsToPatient($entity,$user,$parameters['sitename']);
+//            foreach( $entity->getLastname() as $lastname ) {
+//                echo "ID#".$lastname->getId().": lastname=".$lastname."<br>";
+//            }
+            //exit('1');
             //set provider, source, status='valid'. All other fields - 'invalid'. This is done by form listener
 
 //            echo "<br><br>";

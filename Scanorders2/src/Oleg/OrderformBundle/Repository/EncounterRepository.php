@@ -36,12 +36,12 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
 
     //add Encounter's name, sex to the corresponding patient fields
-    public function copyCommonFieldsToPatient( $encounter, $user ) {
+    public function copyCommonFieldsToPatient( $encounter, $user, $sitename=null ) {
 
         $patient = $encounter->getParent();
 
         $securityUtil = new SecurityUtil($this->_em,null,null);
-        $source = $securityUtil->getDefaultSourceSystem();
+        $source = $securityUtil->getDefaultSourceSystem($sitename);
         //$status = self::STATUS_VALID;
 
         //suffix
@@ -63,7 +63,8 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         }
 
         //lastname
-        //echo "proc last name count=".count($encounter->getPatlastname())."<br>";
+        //echo "start: last name count=".count($encounter->getPatlastname())."<br>";
+        //echo "start: last name count=".count($patient->getLastname())."<br>";
         if( count($encounter->getPatlastname()) > 0 ) {
             $status = self::STATUS_VALID;
             $alias = $encounter->getPatlastname()->first()->getAlias();
@@ -75,10 +76,12 @@ class EncounterRepository extends ArrayFieldAbstractRepository
                     $status = self::STATUS_INVALID;
                 }
             }
+            //echo "add lastname!!!!!!! <br>";
             $patientlastname = new PatientLastName($status,$user,$source);
             $patientlastname->setField($encounter->getPatlastname()->first()->getField());
             $patient->addLastname($patientlastname);
         }
+        //echo "end: last name count=".count($patient->getLastname())."<br>";
 
         //firstname
         if( count($encounter->getPatfirstname()) > 0 ) {
