@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
+use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
 /**
  * PatientRepository
@@ -193,8 +194,10 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
 
     public function copyCommonEncountersFieldsToPatient($patient,$user,$sitename) {
+        $securityUtil = new SecurityUtil($this->_em,null,null);
+        $source = $securityUtil->getDefaultSourceSystem($sitename);
         foreach( $patient->getEncounter() as $encounter ) {
-            $this->_em->getRepository('OlegOrderformBundle:Encounter')->copyCommonFieldsToPatient($encounter,$user,$sitename);
+            $this->_em->getRepository('OlegOrderformBundle:Encounter')->copyNewCommonFieldsToPatient($encounter,$user,$source);
         }
         return $patient;
     }

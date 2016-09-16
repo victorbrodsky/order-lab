@@ -580,17 +580,14 @@ class UserSecurityUtil {
 
         $defaultSourceSystemName = 'ORDER Scan Order';
 
-        if( $this->container ) {
-
-            if( $sitename == $this->container->getParameter('calllog.sitename') ) {
-                $defaultSourceSystemName = 'ORDER Call Log Book';
-            }
-            if ($sitename == $this->container->getParameter('deidentifier.sitename') ) {
-                $defaultSourceSystemName = 'ORDER Deidentifier';
-            }
-            if ($sitename == $this->container->getParameter('scan.sitename') || $sitename == null ) {
-                $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
-            }
+        if( $sitename == 'calllog' ) {
+            $defaultSourceSystemName = 'ORDER Call Log Book';
+        }
+        if ($sitename == 'deidentifier' ) {
+            $defaultSourceSystemName = 'ORDER Deidentifier';
+        }
+        if ($sitename == 'scan' || $sitename == null ) {
+            $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
         }
 
         $source = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);

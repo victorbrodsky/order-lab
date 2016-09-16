@@ -479,11 +479,11 @@ class Patient extends ObjectAbstract
 //        }
 
         if( $this->notEmpty($lastname) && !$this->lastname->contains($lastname) && !$this->hasSimpleField($lastname,"getLastname") ) {
-            //echo "adding lastname=".$lastname."<br>";
+            echo "adding lastname=".$lastname."<br>";
             $lastname->setPatient($this);
             $this->lastname->add($lastname);
         } else {
-            //echo "NO adding lastname=".$lastname."<br>";
+            echo "NO adding lastname=".$lastname."<br>";
         }
 
         return $this;
@@ -1244,12 +1244,14 @@ class Patient extends ObjectAbstract
     public function hasSimpleField( $field, $getMethod ) {
 
         foreach( $this->$getMethod() as $obj ) {
+            //echo "this field=".$obj."<br>";
+            //echo "compare ".$getMethod." (".$obj->getField().") ?= (".$field->getField().")<br>";
             if( $obj->getField()."" == $field->getField()."" ) {
                 //echo $getMethod.":field exists = ".$field."<br>";
-                return true;
+                return $obj;
             } else {
                 //echo $getMethod.":does not exists = ".$field."<br>";
-                return false;
+                //return false;
             }
         }
         //echo $getMethod.":no loop: field does not = ".$field."<br>";

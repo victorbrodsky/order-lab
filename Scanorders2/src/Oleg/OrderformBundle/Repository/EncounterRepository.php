@@ -135,6 +135,103 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         //echo "patient after copy encounter fields: ".$patient."<br>";
     }
+    public function copyNewCommonFieldsToPatient( $encounter, $user, $source ) {
+        $patient = $encounter->getParent();
+        $validStatus = self::STATUS_VALID;
+        $invalidStatus = self::STATUS_INVALID;
+
+        //suffix
+//        $validField = $this->validFieldIsSet( $encounter->getPatsuffix() );
+//        if( $validField && !$patient->hasSimpleField($validField,"getSuffix") ) {
+//            $patient->setStatusAllFields($patient->getSuffix(),$invalidStatus);
+//            $patientFieldObject = new PatientSuffix($validStatus,$user,$source);
+//            $patientFieldObject->setField($validField->getField());
+//            $patient->addSuffix($patientFieldObject);
+//        }
+        $this->processEncounterCommonPatientField( $patient, $encounter->getPatsuffix(), $user, $source, "Suffix" );
+
+        //lastname
+//        if(0) {
+//            $validField = $this->validFieldIsSet($encounter->getPatlastname());
+//            //echo "valid encounter lastname=".$validField."<br>";
+//            if ($validField) {
+//                $patientFieldObject = $patient->hasSimpleField($validField, "getLastname");
+//                if ($patientFieldObject) {
+//                    if ($patientFieldObject->getStatus() != $validStatus) {
+//                        $patient->setStatusAllFields($patient->getLastname(), $invalidStatus);
+//                        $patientFieldObject->setStatus($validStatus);
+//                    }
+//                } else {
+//                    $patient->setStatusAllFields($patient->getLastname(), $invalidStatus);
+//                    $patientFieldObject = new PatientLastName($validStatus, $user, $source);
+//                    $patientFieldObject->setField($validField->getField());
+//                    $patient->addLastname($patientFieldObject);
+//                }
+//            } else {
+//                //change status of the patient field to valid for this field value
+//            }
+//        }
+        $this->processEncounterCommonPatientField( $patient, $encounter->getPatlastname(), $user, $source, "Lastname" );
+
+        //firstname
+//        $validField = $this->validFieldIsSet( $encounter->getPatfirstname() );
+//        if( $validField && !$patient->hasSimpleField($validField,"getFirstname") ) {
+//            $patient->setStatusAllFields($patient->getFirstname(),$invalidStatus);
+//            $patientFieldObject = new PatientFirstName($validStatus,$user,$source);
+//            $patientFieldObject->setField($validField->getField());
+//            $patient->addFirstname($patientFieldObject);
+//        }
+        $this->processEncounterCommonPatientField( $patient, $encounter->getPatfirstname(), $user, $source, "Firstname" );
+
+        //middlename
+//        $validField = $this->validFieldIsSet( $encounter->getPatmiddlename() );
+//        if( $validField && !$patient->hasSimpleField($validField,"getMiddlename") ) {
+//            $patient->setStatusAllFields($patient->getMiddlename(),$invalidStatus);
+//            $patientFieldObject = new PatientMiddleName($validStatus,$user,$source);
+//            $patientFieldObject->setField($validField->getField());
+//            $patient->addMiddlename($patientFieldObject);
+//        }
+        $this->processEncounterCommonPatientField( $patient, $encounter->getPatmiddlename(), $user, $source, "Middlename" );
+
+        //sex
+//        $validField = $this->validFieldIsSet( $encounter->getPatsex() );
+//        if( $validField && !$patient->hasSimpleField($validField,"getSex") ) {
+//            $patient->setStatusAllFields($patient->getSex(),$invalidStatus);
+//            $patientFieldObject = new PatientSex($validStatus,$user,$source);
+//            $patientFieldObject->setField($validField->getField());
+//            $patient->addSex($patientFieldObject);
+//        }
+        $this->processEncounterCommonPatientField( $patient, $encounter->getPatsex(), $user, $source, "Sex" );
+
+    }
+    //$fieldStr - i.e. "Lastname"
+    public function processEncounterCommonPatientField( $patient, $encounterFields, $user, $source, $fieldStr ) {
+        $validStatus = self::STATUS_VALID;
+        $invalidStatus = self::STATUS_INVALID;
+        //lastname
+        $validField = $this->validFieldIsSet( $encounterFields ); //$encounter->getPatlastname()
+        //echo "valid encounter lastname=".$validField."<br>";
+        if( $validField ) {
+            $getterMethod = "get".$fieldStr;
+            $adderMethod = "add".$fieldStr;
+            $classname = "Patient".$fieldStr;
+            $patientFieldObject = $patient->hasSimpleField($validField,$getterMethod); //"getLastname"
+            if( $patientFieldObject ) {
+                echo $fieldStr." field exists: ".$patientFieldObject."; status=".$patientFieldObject->getStatus()."<br>";
+                if( $patientFieldObject->getStatus() != $validStatus ) {
+                    $patient->setStatusAllFields($patient->$getterMethod(), $invalidStatus);
+                    $patientFieldObject->setStatus($validStatus);
+                    echo $fieldStr." change status field : ".$patientFieldObject."; status=".$patientFieldObject->getStatus()."<br>";
+                }
+            } else {
+                $patient->setStatusAllFields($patient->$getterMethod(), $invalidStatus);
+                $entityClass = "Oleg\\OrderformBundle\\Entity\\".$classname;
+                $patientFieldObject = new $entityClass($validStatus, $user, $source); //PatientLastName
+                $patientFieldObject->setField($validField->getField());
+                $patient->$adderMethod($patientFieldObject); //addLastname
+            }
+        }
+    }
 
     //age conflict is based on 3 values: dob, encounter date and encounter age
     public function checkAgeConflict( $encounter, $message, $original ) {

@@ -630,6 +630,12 @@ abstract class ObjectAbstract
         return $name = "NO".strtoupper($this->obtainClassName())."IDPROVIDED";
     }
 
+    public function setStatusAllFields($fields,$status,$user=null) {
+        foreach( $fields as $field ) {
+            $field->setStatus($status);
+            //$field->setUpdateAuthor($user);
+        }
+    }
 
     public function getHolderPatient() {
         $parent = $this->getParent();
