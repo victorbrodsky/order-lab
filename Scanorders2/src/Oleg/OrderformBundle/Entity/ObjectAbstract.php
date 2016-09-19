@@ -77,6 +77,8 @@ abstract class ObjectAbstract
 
 
     protected $changeObjectArr = array();
+    protected $tempSource;
+    protected $tempUser;
 
 
     public function __construct( $status='invalid', $provider=null, $source = null ) {
@@ -299,6 +301,42 @@ abstract class ObjectAbstract
     {
         return $this->tracker;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTempSource()
+    {
+        return $this->tempSource;
+    }
+
+    /**
+     * @param mixed $tempSource
+     */
+    public function setTempSource($tempSource)
+    {
+        $this->tempSource = $tempSource;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTempUser()
+    {
+        return $this->tempUser;
+    }
+
+    /**
+     * @param mixed $tempUser
+     */
+    public function setTempUser($tempUser)
+    {
+        $this->tempUser = $tempUser;
+    }
+
+
+
+
 
 //    /**
 //     * @param mixed $documentContainer

@@ -440,6 +440,11 @@ class PatientController extends Controller
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
+        //assign temp source and user
+        $tempSource = $securityUtil->getDefaultSourceSystem($parameters['sitename']);
+        $entity->setTempSource($tempSource);
+        $entity->setTempUser($user);
+
         //exit("2 Form scan_patient_update");
 
         //$deleteForm = $this->createDeleteForm($id);

@@ -273,6 +273,7 @@ class Patient extends ObjectAbstract
     public function calculateAge() {
         $age = null;
         $dob = $this->obtainValidField('dob');
+        //echo "dob=".$dob."<br>";
 
         $years = 0;
         $months = 0;

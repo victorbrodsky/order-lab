@@ -57,6 +57,23 @@ abstract class ArrayFieldAbstract {
      */
     protected $message;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $updateDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\JoinColumn(name="updateSource", referencedColumnName="id", nullable=true)
+     */
+    protected $updateSource;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
+     */
+    protected $updateAuthor;
 
     /**
      * @ORM\OneToOne(targetEntity="DataQualityEventLog")
@@ -190,7 +207,60 @@ abstract class ArrayFieldAbstract {
         return $this->dqeventlog;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
+    }
 
+    /**
+     * @ORM\PreUpdate
+     * @param mixed $updateDate
+     */
+    public function setUpdateDate()
+    {
+        $this->updateDate = new \DateTime();;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateSource()
+    {
+        return $this->updateSource;
+    }
+
+    /**
+     * @param mixed $updateSource
+     */
+    public function setUpdateSource($updateSource)
+    {
+        $this->updateSource = $updateSource;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateAuthor()
+    {
+        return $this->updateAuthor;
+    }
+
+    /**
+     * @param mixed $updateAuthor
+     */
+    public function setUpdateAuthor($updateAuthor)
+    {
+        $this->updateAuthor = $updateAuthor;
+    }
+
+
+
+
+    //set array of change
+    //set update source (setUpdateSource) and author (setUpdateAuthor)
     public function setFieldChangeArray($fieldName,$oldValue,$newValue) {
         //echo $this->getId().": setFieldChangeArray $fieldName: old=".$oldValue."; new=".$newValue."<br>";
         if( $oldValue != $newValue ) {
@@ -221,6 +291,12 @@ abstract class ArrayFieldAbstract {
                 }
 
                 $holder->addChangeObjectArr($changeFieldArr);
+
+                //set update source and user
+                $this->setUpdateSource($holder->getTempSource());
+                $this->setUpdateAuthor($holder->getTempUser());
+                //echo "update source=".$this->getUpdateSource()."<br>";
+                //echo "update author=".$this->getUpdateAuthor()."<br>";
 
 //                echo "changeFieldArr:<br><pre>";
 //                echo print_r($changeFieldArr);

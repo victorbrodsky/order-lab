@@ -1406,9 +1406,10 @@
         {% set postfixProvider = null %}
         {% set invalidStatus = "" %}
         {% set sourceStr = "" %}
+        {% set updateStr = "" %}
 
         {% if showInfoDate == 1 %}
-            {% set postfixDate = "entered on "~creationDate %}
+            {% set postfixDate = "Added on "~creationDate %}
         {% endif %}
 
         {% if fieldThis.status == 'invalid' %}
@@ -1423,10 +1424,17 @@
         {% endif %}
 
         {% if showInfoProvider == 1 and fullfield.vars.value %}
+
+            {% if fieldThis.updateDate %}
+                {% set updateDate = fieldThis.updateDate|date('Y-m-d')~" at "~fieldThis.updateDate|date('h:i a (T)') %}
+                {% set updateSourceStr = " via "~fieldThis.updateSource %}
+                {% set updateStr = '; Updated by '~fieldThis.updateAuthor.getUserNameStr()~' on '~updateDate~updateSourceStr %}
+            {% endif %}
+
             {% set postfixProvider = '<a target="_blank" href='~path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id })~'>' %}
             {% set postfixProvider = postfixProvider~'<span class="glyphicon glyphicon-question-sign element-with-tooltip-always" aria-hidden="true"' %}
             {% set postfixProvider = postfixProvider~'data-toggle="tooltip"' %}
-            {% set postfixProvider = postfixProvider~'title="'~invalidStatus~'entered by '~fieldThis.provider.getUserNameStr()~' on '~creationDate~sourceStr~'">' %}
+            {% set postfixProvider = postfixProvider~'title="'~invalidStatus~'Added by '~fieldThis.provider.getUserNameStr()~' on '~creationDate~sourceStr~updateStr~'">' %}
             {% set postfixProvider = postfixProvider~'</span></a>' %}
         {% endif %}
 
