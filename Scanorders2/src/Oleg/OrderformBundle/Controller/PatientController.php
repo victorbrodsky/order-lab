@@ -440,7 +440,7 @@ class PatientController extends Controller
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
-        //assign temp source and user
+        //assign temp source and user for updated array fields
         $tempSource = $securityUtil->getDefaultSourceSystem($parameters['sitename']);
         $entity->setTempSource($tempSource);
         $entity->setTempUser($user);

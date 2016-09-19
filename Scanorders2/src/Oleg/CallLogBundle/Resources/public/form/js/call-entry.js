@@ -10,6 +10,23 @@ function initCallLogPage() {
     listnereAccordionMasterPatientParent();
     calllogInputListenerErrorWellRemove('patient-holder-1');
     calllogPressEnterOnKeyboardAction('patient-holder-1');
+
+    calllogWindowCloseAlert();
+}
+
+//prevent exit modified form
+function calllogWindowCloseAlert() {
+
+    console.log("calllog Window CloseAlertcycle="+cycle);
+
+    window.onbeforeunload = confirmModifiedFormExit;
+
+    function confirmModifiedFormExit() {
+        //console.log("modified msg");
+        //http://stackoverflow.com/questions/37727870/window-confirm-message-before-reload
+        //'Custom text support removed' in Chrome 51.0 and Firefox 44.0.
+        return "Are you sure you would like to navigate away from this page? Text you may have entered has not been saved yet.";
+    }
 }
 
 function calllogTriggerSearch(holderId,formtype) {
@@ -521,22 +538,8 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 function createPatientsTableCalllog( patients, holderId ) {
 
     var holder = getHolder(holderId);
-
-    //Matching Patients
-    var matchingPatientsHtml = '<div class="table-responsive"><table id="calllog-matching-patients-table-'+holderId+'" class="table table-bordered">' +
-        '<thead><tr>' +
-        '<th>&nbsp;</th>'+
-        '<th>MRN</th>' +
-        '<th>Last Name</th>' +
-        '<th>First Name</th>' +
-        '<th>Middle Name</th>' +
-        '<th>Suffix</th>' +
-        '<th>Gender</th>' +
-        '<th>DOB</th>' +
-        '<th>Contact Info</th>' +
-        '<th>Action</th>' +
-        '</tr></thead>' +
-        '<tbody>';
+    var hasMaster = false;
+    var matchingPatientsHtml = "";
 
     //for( var i = 0; i < patients.length; i++ ) {
     for( var i in patients ) {
@@ -558,13 +561,45 @@ function createPatientsTableCalllog( patients, holderId ) {
             var masterId = patient['masterPatientId'];  //i+'-'+holderId
             //console.log('masterId='+masterId);
 
-            matchingPatientsHtml = matchingPatientsHtml + constractPatientInfoRow(patient, masterId, "master", holderId);
+            var res = constractPatientInfoRow(patient, masterId, "master", holderId);
+            matchingPatientsHtml += res['html'];
+
+            if( res['hasMaster'] ) {
+                console.log("set hasMaster true");
+                hasMaster = true;
+            }
 
             matchingPatientsHtml = matchingPatientsHtml + constractMergedPatientInfoRow(patient, masterId, holderId);
         }
     }
 
-    matchingPatientsHtml = matchingPatientsHtml + "</tbody></table></div>";
+    //Matching Patients
+    var matchingPatientsHeaderHtml =
+        '<div class="table-responsive">'+
+        '<table id="calllog-matching-patients-table-'+holderId+'" class="table table-bordered">' +
+        '<thead><tr>';
+
+    if( hasMaster ) {
+        console.log("hasMaster true");
+        matchingPatientsHeaderHtml += '<th>&nbsp;</th>';
+    } else {
+        console.log("hasMaster false");
+    }
+
+    matchingPatientsHeaderHtml +=
+        '<th>MRN</th>' +
+        '<th>Last Name</th>' +
+        '<th>First Name</th>' +
+        '<th>Middle Name</th>' +
+        '<th>Suffix</th>' +
+        '<th>Gender</th>' +
+        '<th>DOB</th>' +
+        '<th>Contact Info</th>' +
+        '<th>Action</th>' +
+        '</tr></thead>' +
+        '<tbody>';
+
+    matchingPatientsHtml = matchingPatientsHeaderHtml + matchingPatientsHtml + "</tbody></table></div>";
 
     matchingPatientsHtml = matchingPatientsHtml +
         '<p data-toggle="tooltip" title="Please select the patient"><button type="button"'+
@@ -594,15 +629,17 @@ function createPatientsTableCalllog( patients, holderId ) {
 function constractPatientInfoRow( patient, masterId, type, holderId ) {
     //to test use: http://www.bootply.com/4lsCo5q101
     var patientsHtml = "";
+    var hasMaster = false;
 
     if( type == "master" ) {
         patientsHtml += '<tr id="'+patient.id+'" class="clickable-row">';
-        patientsHtml += '<td>';
         if( patient['masterPatientId'] ) {
+            patientsHtml += '<td>';
             patientsHtml += '<button type="button" class="btn btn-default btn-xs" onclick="clickMasterPatientBtn(this);" id="' + masterId + '">';
             patientsHtml += '<span class="glyphicon glyphicon-plus-sign"></span></button>';
+            patientsHtml += '</td>';
+            hasMaster = true;
         }
-        patientsHtml += '</td>';
     } else {
         //masterId
         patientsHtml += '<tr id="'+patient.id+'" class="clickable-row collapseme'+masterId+' collapse out" style="background: #A9A9A9;">';
@@ -660,7 +697,8 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
         '<td>'+action+'</td>'+
         '</tr>';
 
-    return patientsHtml;
+    var res = {'html':patientsHtml,'hasMaster':hasMaster};
+    return res;
 }
 function constractMergedPatientInfoRow( patient, masterId, holderId ) {
     var mergedPatientsHtml = "";
@@ -675,7 +713,8 @@ function constractMergedPatientInfoRow( patient, masterId, holderId ) {
                 //console.log('merged Patient ID=' + patientInfo['id']);
                 //console.log(patientInfo);
                 //masterId = masterId + "-" + patientInfo['id'];
-                mergedPatientsHtml = mergedPatientsHtml + constractPatientInfoRow(patientInfo, masterId, "alert alert-info", holderId);
+                var res = constractPatientInfoRow(patientInfo, masterId, "alert alert-info", holderId);
+                mergedPatientsHtml = mergedPatientsHtml + res['html'];
             }
         }
     }
@@ -687,14 +726,15 @@ function listnereAccordionMasterPatientParent() {
 }
 function clickMasterPatientBtn(btn) {
     var id = $(btn).attr('id');
+    console.log('id='+id);
 
     if( $(".collapseme"+id).hasClass("out") ) {
-        //console.log('show');
+        console.log('show');
         $(".collapseme"+id).show();
         $(".collapseme"+id).removeClass('out').addClass('in');
         $(btn).parent().find("span.glyphicon").removeClass("glyphicon-plus-sign").addClass("glyphicon-minus-sign");
     } else {
-        //console.log('hide');
+        console.log('hide');
         $(".collapseme"+id).hide();
         $(".collapseme"+id).removeClass('in').addClass('out');
         $(btn).parent().find("span.glyphicon").removeClass("glyphicon-minus-sign").addClass("glyphicon-plus-sign");
@@ -779,6 +819,8 @@ var matchingPatientBtnClick = function(holderId) {
         //show
         showCalllogCallentryForm(true);
     }
+
+    calllogScrollToTop();
 }
 //
 var getCalllogPatientToPopulate = function(holderId) {
@@ -1053,6 +1095,14 @@ function editPatientBtn(holderId) {
     //disableAllFields(false,holderId);
     //calllogHideAllAlias(false,false,holderId);
 
+    var r = confirm("Are you sure you would like to navigate away from this page? Text you may have entered has not been saved yet.");
+    if (r == true) {
+        //x = "You pressed OK!";
+    } else {
+        //x = "You pressed Cancel!";
+        return;
+    }
+
     var holder = getHolder(holderId);
     //calllog-patient-id-patient-holder-1
     //calllog-patient-id-patient-holder-1
@@ -1156,4 +1206,9 @@ function calllogPressEnterOnKeyboardAction( holderId ) {
             }
         });
     }
+}
+
+function calllogScrollToTop() {
+    //$(window).scrollTop(0);
+    $("html, body").animate({ scrollTop: 0 }, "slow");
 }

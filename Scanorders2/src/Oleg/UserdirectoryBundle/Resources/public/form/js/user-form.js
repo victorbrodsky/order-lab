@@ -28,7 +28,9 @@ function windowCloseAlert() {
 
         //console.log("modified="+modified);
         if( modified === true ) {
-            return "The changes you have made will not be saved if you navigate away from this page.";
+            //http://stackoverflow.com/questions/37727870/window-confirm-message-before-reload
+            //'Custom text support removed' in Chrome 51.0 and Firefox 44.0.
+            return "Are you sure you would like to navigate away from this page? Text you may have entered has not been saved yet.";
         } else {
             return;
         }
