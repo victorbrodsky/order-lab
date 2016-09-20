@@ -2,7 +2,7 @@
  * Created by ch3 on 7/25/2016.
  */
 
-
+var _transTime = 500;
 var _patients = [];
 var _mrntype_original = null;
 
@@ -17,7 +17,7 @@ function initCallLogPage() {
 //prevent exit modified form
 function calllogWindowCloseAlert() {
 
-    console.log("calllog Window CloseAlertcycle="+cycle);
+    //console.log("calllog Window CloseAlertcycle="+cycle);
 
     window.onbeforeunload = confirmModifiedFormExit;
 
@@ -83,7 +83,7 @@ function addnewCalllogPatient(holderId) {
     } else {
         holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
-        holder.find('#calllog-danger-box').show();
+        holder.find('#calllog-danger-box').show(_transTime);
 
         lbtn.stop();
         return false;
@@ -148,19 +148,19 @@ function addnewCalllogPatient(holderId) {
             //if(0) {
                 //console.log("Patient has been created");
                 //hide find patient and add new patient
-                holder.find('#search_patient_button').hide();
-                holder.find('#addnew_patient_button').hide();
+                holder.find('#search_patient_button').hide(_transTime);
+                holder.find('#addnew_patient_button').hide(_transTime);
                 //show Re-enter Patient
-                holder.find('#reenter_patient_button').show();
+                holder.find('#reenter_patient_button').show(_transTime);
                 //clean error message
                 holder.find('#calllog-danger-box').html('');
-                holder.find('#calllog-danger-box').hide();
+                holder.find('#calllog-danger-box').hide(_transTime);
 
                 //disable all fields
                 disableAllFields(true, holderId);
 
                 //show edit patient info button
-                holder.find('#edit_patient_button').show();
+                holder.find('#edit_patient_button').show(_transTime);
 
                 showCalllogCallentryForm(true);
             //}
@@ -168,7 +168,7 @@ function addnewCalllogPatient(holderId) {
         } else {
             //console.log("Patient has not been created");
             holder.find('#calllog-danger-box').html(data.output);
-            holder.find('#calllog-danger-box').show();
+            holder.find('#calllog-danger-box').show(_transTime);
         }
     }).done(function() {
         //console.log("add new CalllogPatient done");
@@ -226,7 +226,7 @@ function submitPatientBtn(holderId) {
     } else {
         holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
-        holder.find('#calllog-danger-box').show();
+        holder.find('#calllog-danger-box').show(_transTime);
 
         lbtn.stop();
         return false;
@@ -274,24 +274,24 @@ function submitPatientBtn(holderId) {
         if( data == "OK" ) {
             //console.log("Patient has been created");
             //hide find patient and add new patient
-            holder.find('#search_patient_button').hide();
-            holder.find('#addnew_patient_button').hide();
+            holder.find('#search_patient_button').hide(_transTime);
+            holder.find('#addnew_patient_button').hide(_transTime);
             //show Re-enter Patient
-            holder.find('#reenter_patient_button').show();
+            holder.find('#reenter_patient_button').show(_transTime);
             //clean error message
             holder.find('#calllog-danger-box').html('');
-            holder.find('#calllog-danger-box').hide();
+            holder.find('#calllog-danger-box').hide(_transTime);
 
             //disable all fields
             disableAllFields(true,holderId);
 
             //show edit patient info button
-            holder.find('#edit_patient_button').show();
+            holder.find('#edit_patient_button').show(_transTime);
 
         } else {
             //console.log("Patient has not been created");
             holder.find('#calllog-danger-box').html(data);
-            holder.find('#calllog-danger-box').show();
+            holder.find('#calllog-danger-box').show(_transTime);
         }
     }).done(function() {
         lbtn.stop();
@@ -304,27 +304,29 @@ function submitPatientBtn(holderId) {
 function showCalllogCallentryForm(show) {
     if( show == true ) {
         //console.log('show patient info');
-        $('#callentry-nosinglepatient-link').hide();
-        $('#callentry-form').show();
+        $('#callentry-nosinglepatient-link').hide(_transTime);
+        $('#callentry-form').show(_transTime);
     } else {
         //console.log('hide patient info');
-        $('#callentry-nosinglepatient-link').show();
-        $('#callentry-form').hide();
+        $('#callentry-nosinglepatient-link').show(_transTime);
+        $('#callentry-form').hide(_transTime);
     }
 }
 
 function clearCalllogPatient(holderId) {
     var holder = getHolder(holderId);
-    populatePatientInfo(null,null,true,holderId);
+
+    console.log("clear patient for Re-enter Patient");
+    populatePatientInfo(null,false,true,holderId); //clear patient for Re-enter Patient
 
     //change the "Re-enter Patient" to "Find Patient"
-    holder.find('#reenter_patient_button').hide();
-    holder.find('#search_patient_button').show();
+    holder.find('#reenter_patient_button').hide(_transTime);
+    holder.find('#search_patient_button').show(_transTime);
 
     calllogHideAllAlias(true,true,holderId);
 
     //edit_patient_button
-    holder.find('#edit_patient_button').hide();
+    holder.find('#edit_patient_button').hide(_transTime);
 
     //change the accordion title back to "Patient Info"
     calllogSetPatientAccordionTitle(null,holderId);
@@ -342,15 +344,15 @@ function findCalllogPatient(holderId,formtype,mrntype) {
     lbtn.start();
 
     //clear no matching box
-    holder.find('#calllog-danger-box').hide();
+    holder.find('#calllog-danger-box').hide(_transTime);
     holder.find('#calllog-danger-box').html("");
 
     //clear matching patient section
-    holder.find('#calllog-matching-patients').hide();
+    holder.find('#calllog-matching-patients').hide(_transTime);
     holder.find('#calllog-matching-patients').html('');
 
     //addnew_patient_button
-    holder.find('#addnew_patient_button').hide();
+    holder.find('#addnew_patient_button').hide(_transTime);
 
     var searchedStr = "";
 
@@ -402,7 +404,7 @@ function findCalllogPatient(holderId,formtype,mrntype) {
     } else {
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
         holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
-        holder.find('#calllog-danger-box').show();
+        holder.find('#calllog-danger-box').show(_transTime);
         lbtn.stop();
         return false;
     }
@@ -433,21 +435,21 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
     //console.log('patLen='+patLen);
 
     //clear matching patient section
-    holder.find('#calllog-matching-patients').hide();
+    holder.find('#calllog-matching-patients').hide(_transTime);
     holder.find('#calllog-matching-patients').html('');
 
     //clear no matching box
-    holder.find('#calllog-danger-box').hide();
+    holder.find('#calllog-danger-box').hide(_transTime);
     holder.find('#calllog-danger-box').html("");
 
     //hide edit patient info button
-    holder.find('#edit_patient_button').hide();
+    holder.find('#edit_patient_button').hide(_transTime);
     //hide "No single patient is referenced by this entry or I'll add the patient info later" link
     showCalllogCallentryForm(false);
 
     _patients = patients;
-    console.log("_patients:");
-    console.log(_patients);
+    //console.log("_patients:");
+    //console.log(_patients);
 
     var processed = false;
 
@@ -465,17 +467,17 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
         if( patMergedLen == 0 && processed == false ) {
 
-            populatePatientInfo(patient, null, true, holderId);
+            populatePatientInfo(patient, false, true, holderId); //single patient found
             disableAllFields(true, holderId);
 
             //show edit patient info button
-            holder.find('#edit_patient_button').show();
+            holder.find('#edit_patient_button').show(_transTime);
             //hide "No single patient is referenced by this entry or I'll add the patient info later" link
 
             //change the "Find or Add Patient" button title to "Re-enter Patient"
-            holder.find('#reenter_patient_button').show();
-            holder.find('#search_patient_button').hide();
-            holder.find('#addnew_patient_button').hide();
+            holder.find('#reenter_patient_button').show(_transTime);
+            holder.find('#search_patient_button').hide(_transTime);
+            holder.find('#addnew_patient_button').hide(_transTime);
 
             //warning that no merge patients for set master record and un-merge
             var formtype = $('#formtype').val();
@@ -483,7 +485,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
             if( formtype == "unmerge" || formtype == "set-master-record" ) {
                 holder.find('#calllog-danger-box').html("This patient does not have any merged patient records");
-                holder.find('#calllog-danger-box').show();
+                holder.find('#calllog-danger-box').show(_transTime);
             }
 
             if( formtype == "edit-patient" ) {
@@ -508,12 +510,12 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
         //console.log("No matching patient records found.");
         //"No matching patient records found." and unlock fields
         holder.find('#calllog-danger-box').html("No matching patient records found"+searchedStr+".");
-        holder.find('#calllog-danger-box').show();
-        populatePatientInfo(null,true,false,holderId);
+        holder.find('#calllog-danger-box').show(_transTime);
+        populatePatientInfo(null,true,false,holderId); //not found
         disableAllFields(false,holderId);
 
         //un-hide/show a button called "Add New Patient Registration"
-        holder.find('#addnew_patient_button').show();
+        holder.find('#addnew_patient_button').show(_transTime);
         processed = true;
     }
 
@@ -521,8 +523,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
         //console.log("show table with found patients");
         //show table with found patients
-        //populatePatientInfo(patients[0],null);
-        populatePatientInfo(null,null,false,holderId);
+        populatePatientInfo(null,false,false,holderId); //multiple patients found
         disableAllFields(false,holderId);
 
         createPatientsTableCalllog(patients,holderId);
@@ -565,7 +566,7 @@ function createPatientsTableCalllog( patients, holderId ) {
             matchingPatientsHtml += res['html'];
 
             if( res['hasMaster'] ) {
-                console.log("set hasMaster true");
+                //console.log("set hasMaster true");
                 hasMaster = true;
             }
 
@@ -580,10 +581,10 @@ function createPatientsTableCalllog( patients, holderId ) {
         '<thead><tr>';
 
     if( hasMaster ) {
-        console.log("hasMaster true");
+        //console.log("hasMaster true");
         matchingPatientsHeaderHtml += '<th>&nbsp;</th>';
     } else {
-        console.log("hasMaster false");
+        //console.log("hasMaster false");
     }
 
     matchingPatientsHeaderHtml +=
@@ -613,7 +614,7 @@ function createPatientsTableCalllog( patients, holderId ) {
             '<div id="calllog-select-patient-danger-box" class="alert alert-danger" style="display: none; margin: 5px;"></div>';
 
     holder.find('#calllog-matching-patients').html(matchingPatientsHtml);
-    holder.find('#calllog-matching-patients').show();
+    holder.find('#calllog-matching-patients').show(_transTime);
 
 
     holder.find('.matchingPatientBtn').parent().tooltip();
@@ -726,16 +727,16 @@ function listnereAccordionMasterPatientParent() {
 }
 function clickMasterPatientBtn(btn) {
     var id = $(btn).attr('id');
-    console.log('id='+id);
+    //console.log('id='+id);
 
     if( $(".collapseme"+id).hasClass("out") ) {
-        console.log('show');
-        $(".collapseme"+id).show();
+        //console.log('show');
+        $(".collapseme"+id).show(_transTime);
         $(".collapseme"+id).removeClass('out').addClass('in');
         $(btn).parent().find("span.glyphicon").removeClass("glyphicon-plus-sign").addClass("glyphicon-minus-sign");
     } else {
-        console.log('hide');
-        $(".collapseme"+id).hide();
+        //console.log('hide');
+        $(".collapseme"+id).hide(_transTime);
         $(".collapseme"+id).removeClass('in').addClass('out');
         $(btn).parent().find("span.glyphicon").removeClass("glyphicon-minus-sign").addClass("glyphicon-plus-sign");
     }
@@ -797,20 +798,20 @@ var matchingPatientBtnClick = function(holderId) {
     var patientToPopulate = getCalllogPatientToPopulate(holderId);
     //console.log('patientToPopulate='+patientToPopulate.id);
 
-    populatePatientInfo(patientToPopulate,null,true,holderId);
+    populatePatientInfo(patientToPopulate,false,true,holderId); //matching btn click
     disableAllFields(true,holderId);
 
     //show edit patient info button
-    holder.find('#edit_patient_button').show();
+    holder.find('#edit_patient_button').show(_transTime);
 
     //change the "Find or Add Patient" button title to "Re-enter Patient"
-    holder.find('#reenter_patient_button').show();
-    holder.find('#search_patient_button').hide();
+    holder.find('#reenter_patient_button').show(_transTime);
+    holder.find('#search_patient_button').hide(_transTime);
 
     //remove and hide matching patients table
     holder.find('#calllog-matching-patients-table-'+holderId).remove();
     holder.find('#calllog-matching-patients').html('');
-    holder.find('#calllog-matching-patients').hide();
+    holder.find('#calllog-matching-patients').hide(_transTime);
 
     var formtype = $('#formtype').val();
     //console.log('formtype='+formtype);
@@ -957,10 +958,13 @@ function populatePatientInfo( patient, showinfo, modify, holderId ) {
     populateSelectFieldCalllog(holder.find(".encountersex-field"),patient,'sex');
 
     //console.log('middlename='+middlename+'; suffix='+suffix+'; sex='+sex);
+    //console.log('showinfo='+showinfo);
     if( patient && patient.id || showinfo ) {
-        holder.find('#encounter-info').collapse("show");
+        //console.log('populate PatientInfo: show patient id='+patient.id);
+        holder.find('#encounter-info').show(_transTime);  //collapse("show");
     } else {
-        holder.find('#encounter-info').collapse("hide");
+        //console.log('populate PatientInfo: hide');
+        holder.find('#encounter-info').hide(_transTime);  //collapse("hide");
     }
 
 //        //change the "Find or Add Patient" button title to "Re-enter Patient"
@@ -1027,7 +1031,7 @@ function populateInputFieldCalllog( fieldEl, data, index, modify ) {
 
         //show alias with checked checkbox
         var parentEl = fieldEl.parent();
-        parentEl.find('.input-group-addon').show();
+        parentEl.find('.input-group-addon').show(_transTime);
         parentEl.removeClass('input-group-hidden').addClass('input-group');
         parentEl.find('input[type=checkbox]').prop('checked', true);
     }
@@ -1052,8 +1056,8 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
 }
 
 function processMrnFieldsCalllog( patient, modify, holderId ) {
-    console.log("process Mrn FieldsCalllog patient:");
-    console.log(patient);
+    //console.log("process Mrn FieldsCalllog patient:");
+    //console.log(patient);
 
     var holder = getHolder(holderId);
 
@@ -1142,7 +1146,7 @@ function calllogInputListenerErrorWellRemove( holderId ) {
     var holder = getHolder(holderId);
     holder.find('input').on('focus', function(event) {
         //console.log("calllogInputListenerErrorWellRemove click id="+$(this).attr("id"));
-        holder.find('#calllog-danger-box').hide();
+        holder.find('#calllog-danger-box').hide(_transTime);
         holder.find('#calllog-danger-box').html("");
     });
 }
@@ -1179,7 +1183,7 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
     } else {
         holder.find('.calllog-patient-panel-title').html("Patient Info");
         //holder.find('.calllog-patient-panel-title').collapse('show');
-        //panelEl.show();
+        //panelEl.show(_transTime);
         if( formtype == "call-entry" ) {
             panelEl.collapse('show');
         }

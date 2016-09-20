@@ -670,6 +670,41 @@ function initSingleDatepicker( datepickerElement ) {
             //}
 
         });
+
+        //open/close the date picker on click icon (calendar-icon-button) or body
+        calendarIconBtn.on( "click", function(event) {
+            event.stopPropagation();
+            console.log( "click calendar icon" );
+
+            if( $(this).hasClass("datepicker-status-open") ) {
+                console.log( "hide datepicker" );
+                //$('body').off('click');
+                //$('body').click();
+                $(".datepicker-dropdown").remove();
+                $(this).removeClass("datepicker-status-open");
+            } else {
+                $(this).addClass("datepicker-status-open");
+            }
+
+        });
+
+        datepickerElement.find('input.datepicker').on( "click", function(event) {
+            event.stopPropagation();
+            console.log( "click datepicker body" );
+
+            var calendarIcon = $(this).find('.calendar-icon-button');
+            if( calendarIcon.fin.hasClass("datepicker-status-open") ) {
+                console.log( "hide datepicker" );
+                //$(".datepicker-dropdown").remove();
+                //$(document).click();
+                //$('html,body').click();
+                $(".datepicker-dropdown").remove();
+                calendarIcon.removeClass("datepicker-status-open");
+            } else {
+                calendarIcon.addClass("datepicker-status-open");
+            }
+        });
+
     }
 
     return;
