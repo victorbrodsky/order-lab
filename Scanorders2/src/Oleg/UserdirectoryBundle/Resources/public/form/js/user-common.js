@@ -692,8 +692,8 @@ function initSingleDatepicker( datepickerElement ) {
             event.stopPropagation();
             console.log( "click datepicker body" );
 
-            var calendarIcon = $(this).find('.calendar-icon-button');
-            if( calendarIcon.fin.hasClass("datepicker-status-open") ) {
+            var calendarIcon = $(this).parent().find('.calendar-icon-button');
+            if( calendarIcon.hasClass("datepicker-status-open") ) {
                 console.log( "hide datepicker" );
                 //$(".datepicker-dropdown").remove();
                 //$(document).click();
