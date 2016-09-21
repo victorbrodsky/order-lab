@@ -692,6 +692,7 @@ function initSingleDatepicker( datepickerElement ) {
         });
 
         if(0) {
+            //fiddle: http://jsfiddle.net/oab6eyv1/230/
             //datepickerElement.find('input.datepicker').on("click", function (event) {
             datepickerElement.on("click", function (event) {
                 event.stopPropagation();

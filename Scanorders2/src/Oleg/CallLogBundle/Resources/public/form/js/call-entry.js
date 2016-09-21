@@ -337,6 +337,10 @@ function clearCalllogPatient(holderId) {
 
 function findCalllogPatient(holderId,formtype,mrntype) {
 
+    //just in case try to close again after calllog PressEnterOnKeyboardAction: close datepicker box
+    //printF($(".datepicker-dropdown"),"datepicker-dropdown:");
+    //$(".datepicker-dropdown").remove();
+
     var holder = getHolder(holderId);
 
     var searchBtn = holder.find("#search_patient_button").get(0);
@@ -427,6 +431,11 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         populatePatientsInfo(data,searchedStr,holderId,singleMatch);
     }).done(function() {
         lbtn.stop();
+
+        //close datepicker box
+        //var datepickerDropdown = $(".datepicker-dropdown");
+        //printF(datepickerDropdown,"datepicker-dropdown:");
+        //datepickerDropdown.remove();
     });
 
 }
@@ -1205,14 +1214,42 @@ function calllogPressEnterOnKeyboardAction( holderId ) {
         var holder = getHolder(holderId);
         holder.find('.patientmrn-mask, .patient-dob-date, .encounter-lastName, .encounter-firstName').on('keydown', function (event) {
         //holder.find('.patientmrn-mask').on('keydown', function (event) {
-            //console.log("calllog PressEnterOnKeyboardAction val=" + $(this).val()+", event="+event.which);
+            console.log("calllog PressEnterOnKeyboardAction val=" + $(this).val()+", event="+event.which);
+
+            //close datepicker box
+            //printF($(".datepicker-dropdown"),"keydown: datepicker-dropdown:");
+            //$(".datepicker-dropdown").remove();
+
             if( event.which == 13 ) {
                 event.preventDefault();
+
                 //alert('You pressed enter!');
                 if( $(this).val() ) {
                     //close datepicker box
-                    $(".datepicker-dropdown").remove();
+                    //var datepickerDropdown = $(".datepicker-dropdown");
+                    //printF(datepickerDropdown,"datepicker-dropdown:");
+                    //datepickerDropdown.remove();
+
+                    //var e = jQuery.Event( 'keydown', { which: 50 } );
+                    //$(ele).trigger(e);
+
                     holder.find('#search_patient_button').click();
+
+                    setTimeout(function(){
+                        var datepickerDropdown = $(".datepicker-dropdown");
+                        printF(datepickerDropdown,"datepicker-dropdown:");
+                        datepickerDropdown.remove();
+
+                        //var e = jQuery.Event( 'click', { which: 50 } );
+                        //$("html,body").trigger(e);
+                        //$("html,body").trigger( "click" );
+                        $("#patient-holder-1").trigger( "click" );
+                    }, 100);
+
+                    ////close datepicker box
+                    //var datepickerDropdown = $(".datepicker-dropdown");
+                    //printF(datepickerDropdown,"datepicker-dropdown:");
+                    //datepickerDropdown.remove();
                 }
             }
         });
@@ -1223,3 +1260,5 @@ function calllogScrollToTop() {
     //$(window).scrollTop(0);
     $("html, body").animate({ scrollTop: 0 }, "slow");
 }
+
+
