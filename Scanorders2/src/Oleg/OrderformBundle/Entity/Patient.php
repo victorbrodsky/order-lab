@@ -480,11 +480,11 @@ class Patient extends ObjectAbstract
 //        }
 
         if( $this->notEmpty($lastname) && !$this->lastname->contains($lastname) && !$this->hasSimpleField($lastname,"getLastname") ) {
-            echo "adding lastname=".$lastname."<br>";
+            //echo "adding lastname=".$lastname."<br>";
             $lastname->setPatient($this);
             $this->lastname->add($lastname);
         } else {
-            echo "NO adding lastname=".$lastname."<br>";
+            //echo "NO adding lastname=".$lastname."<br>";
         }
 
         return $this;

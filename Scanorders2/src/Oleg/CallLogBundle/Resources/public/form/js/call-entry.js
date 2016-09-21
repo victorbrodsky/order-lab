@@ -97,19 +97,19 @@ function addnewCalllogPatient(holderId) {
 
     var creationStr = "";
     if( mrn )
-        creationStr += " MRN:"+mrn;
+        creationStr += " MRN: "+mrn+" ";
     if( lastname )
-        creationStr += " Last Name:"+lastname;
+        creationStr += " Last Name: "+lastname+" ";
     if( firstname )
-        creationStr += " First Name:"+firstname;
+        creationStr += " First Name: "+firstname+" ";
     if( middlename )
-        creationStr += " Middle Name:"+middlename;
+        creationStr += " Middle Name: "+middlename+" ";
     if( suffix )
-        creationStr += " Suffix:"+suffix;
+        creationStr += " Suffix: "+suffix+" ";
     if( sex )
-        creationStr += " Gender:"+sex;
+        creationStr += " Gender: "+sex+" ";
     if( dob )
-        creationStr += " DOB:"+dob;
+        creationStr += " DOB: "+dob+" ";
 
     confirmMsg = confirmMsg + creationStr;
 
@@ -144,30 +144,29 @@ function addnewCalllogPatient(holderId) {
 
         if( data.output == "OK" ) {
 
-            populatePatientsInfo(data.patients,creationStr,holderId);
+            //console.log("patien has been created: output OK");
+            populatePatientsInfo(data.patients,creationStr,holderId,true);
 
-            //if(0) {
-                //console.log("Patient has been created");
-                //hide find patient and add new patient
-                holder.find('#search_patient_button').hide(_transTime);
-                holder.find('#addnew_patient_button').hide(_transTime);
-                //show Re-enter Patient
-                holder.find('#reenter_patient_button').show(_transTime);
-                //clean error message
-                holder.find('#calllog-danger-box').html('');
-                holder.find('#calllog-danger-box').hide(_transTime);
+            //console.log("Patient has been created");
+            //hide find patient and add new patient
+            holder.find('#search_patient_button').hide(_transTime);
+            holder.find('#addnew_patient_button').hide(_transTime);
+            //show Re-enter Patient
+            holder.find('#reenter_patient_button').show(_transTime);
+            //clean error message
+            holder.find('#calllog-danger-box').html('');
+            holder.find('#calllog-danger-box').hide(_transTime);
 
-                //disable all fields
-                disableAllFields(true, holderId);
+            //disable all fields
+            disableAllFields(true, holderId);
 
-                //show edit patient info button
-                holder.find('#edit_patient_button').show(_transTime);
+            //show edit patient info button
+            holder.find('#edit_patient_button').show(_transTime);
 
-                showCalllogCallentryForm(true);
-            //}
+            showCalllogCallentryForm(true);
 
         } else {
-            //console.log("Patient has not been created");
+            console.log("Patient has not been created");
             holder.find('#calllog-danger-box').html(data.output);
             holder.find('#calllog-danger-box').show(_transTime);
         }
@@ -385,17 +384,17 @@ function findCalllogPatient(holderId,formtype,mrntype) {
 
     if( mrn && mrntype || dob && lastname || dob && lastname && firstname || lastname ) {
         //ok
-        if( mrn && mrntype ) {
+        if( !searchedStr && mrn && mrntype ) {
             searchedStr = " (searched for MRN Type: "+holder.find(".mrntype-combobox").select2('data').text+"; MRN: "+mrn+")";
         }
-        if( dob && lastname ) {
+        if( !searchedStr && dob && lastname ) {
             var firstnameStr = "";
             if( firstname ) {
                 firstnameStr = "; First Name: "+firstname;
             }
             searchedStr = " (searched for DOB: "+dob+"; Last Name: "+lastname+firstnameStr+")";
         }
-        if( lastname ) {
+        if( !searchedStr && lastname ) {
             var firstnameStr = "";
             if( firstname ) {
                 firstnameStr = "; First Name: "+firstname;
@@ -1211,6 +1210,8 @@ function calllogPressEnterOnKeyboardAction( holderId ) {
                 event.preventDefault();
                 //alert('You pressed enter!');
                 if( $(this).val() ) {
+                    //close datepicker box
+                    $(".datepicker-dropdown").remove();
                     holder.find('#search_patient_button').click();
                 }
             }
