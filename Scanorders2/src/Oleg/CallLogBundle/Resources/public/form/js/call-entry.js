@@ -76,8 +76,9 @@ function addnewCalllogPatient(holderId) {
     sex = trimWithCheck(sex);
 
     //check if "Last Name" field + DOB field, or "MRN" fields are not empty
+    //allow the creation of a patient record with the Last Name alone only
     //if( !mrn || !mrntype || !lastname || !dob ) {
-    if( mrntype && mrn || lastname && dob ) {
+    if( mrntype && mrn || lastname && dob || lastname ) {
         //if( mrntype && mrn || lastname ) {
         //ok
     } else {
