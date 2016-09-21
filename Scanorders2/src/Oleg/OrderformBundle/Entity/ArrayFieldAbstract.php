@@ -342,7 +342,7 @@ abstract class ArrayFieldAbstract {
 
     public function formatDataToString($data) {
         if( $data && $data instanceof \DateTime ) {
-            $transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d');
+            $transformer = new DateTimeToStringTransformer(null, null, 'm/d/Y');
             $dateStr = $transformer->transform($data);
             return $dateStr."";
         } else {

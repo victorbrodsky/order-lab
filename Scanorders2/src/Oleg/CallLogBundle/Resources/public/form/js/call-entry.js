@@ -409,6 +409,11 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         return false;
     }
 
+    var singleMatch = false;
+    if( mrn && mrntype || dob && lastname ) {
+        singleMatch = true;
+    }
+
     //var currentUrl = window.location.href;
 
     //ajax
@@ -419,14 +424,14 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         async: true,
         data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, formtype: formtype },
     }).success(function(data) {
-        populatePatientsInfo(data,searchedStr,holderId);
+        populatePatientsInfo(data,searchedStr,holderId,singleMatch);
     }).done(function() {
         lbtn.stop();
     });
 
 }
 
-function populatePatientsInfo(patients,searchedStr,holderId) {
+function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
 
     var holder = getHolder(holderId);
 
@@ -453,7 +458,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
 
     var processed = false;
 
-    if( patLen == 1 ) {
+    if( patLen == 1 && singleMatch ) {
 
         //var patient = patients[0];
         var patient = getFirstPatient(patients);
@@ -519,7 +524,7 @@ function populatePatientsInfo(patients,searchedStr,holderId) {
         processed = true;
     }
 
-    if( patLen >= 1 && processed == false ) {
+    if( processed == false && (patLen >= 1 || (!singleMatch && patLen == 1 )) ) {
 
         //console.log("show table with found patients");
         //show table with found patients
@@ -932,7 +937,7 @@ function disableField(fieldEl,disable) {
 //        }
 //    }
 
-function populatePatientInfo( patient, showinfo, modify, holderId ) {
+function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch ) {
 
     var holder = getHolder(holderId);
 
