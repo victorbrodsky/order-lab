@@ -643,6 +643,9 @@ function initSingleDatepicker( datepickerElement ) {
         datepickerElement.on('hide.bs.collapse', function(event) {
             // prevent datepicker from firing bootstrap modal "show.bs.modal"
             event.stopPropagation();
+            //console.log('hide.bs.collapse element id='+$(this).attr("id"));
+            //printF($(this).find('input.datepicker'),"hide.bs.collapse element:");
+            $(this).find('input.datepicker').removeClass('datepicker-status-open');
         });
         //datepickerElement.datepicker().on('shown.bs.collapse', function(event) {
         datepickerElement.on('shown.bs.collapse', function(event) {
@@ -674,36 +677,46 @@ function initSingleDatepicker( datepickerElement ) {
         //open/close the date picker on click icon (calendar-icon-button) or body
         calendarIconBtn.on( "click", function(event) {
             event.stopPropagation();
-            console.log( "click calendar icon" );
-
-            if( $(this).hasClass("datepicker-status-open") ) {
-                console.log( "hide datepicker" );
+            //console.log( "click calendar icon" );
+            var inputField = $(this).closest('.input-group').find('input.datepicker');
+            if( inputField.hasClass("datepicker-status-open") ) {
+                //console.log( "hide datepicker" );
                 //$('body').off('click');
                 //$('body').click();
                 $(".datepicker-dropdown").remove();
-                $(this).removeClass("datepicker-status-open");
+                inputField.removeClass("datepicker-status-open");
             } else {
-                $(this).addClass("datepicker-status-open");
+                inputField.addClass("datepicker-status-open");
             }
 
         });
 
-        datepickerElement.find('input.datepicker').on( "click", function(event) {
-            event.stopPropagation();
-            console.log( "click datepicker body" );
+        if(0) {
+            //datepickerElement.find('input.datepicker').on("click", function (event) {
+            datepickerElement.on("click", function (event) {
+                event.stopPropagation();
+                console.log("click datepicker body");
 
-            var calendarIcon = $(this).parent().find('.calendar-icon-button');
-            if( calendarIcon.hasClass("datepicker-status-open") ) {
-                console.log( "hide datepicker" );
-                //$(".datepicker-dropdown").remove();
-                //$(document).click();
-                //$('html,body').click();
-                $(".datepicker-dropdown").remove();
-                calendarIcon.removeClass("datepicker-status-open");
-            } else {
-                calendarIcon.addClass("datepicker-status-open");
-            }
-        });
+                var inputField = $(this).find('input.datepicker');
+
+                if (inputField.hasClass("datepicker-status-open")) {
+                //if( inputField.hasClass('focus.inputmask') ) {
+                    console.log("hide datepicker");
+                    //$(".datepicker-dropdown").remove();
+                    //$(document).click();
+                    //$('html,body').click();
+                    $(".datepicker-dropdown").remove();
+                    inputField.removeClass("datepicker-status-open");
+                    inputField.removeClass("focus.inputmask");
+                    //$(this).find('.calendar-icon-button').click();
+                    $(this).find('.calendar-icon-button').focus();
+                    $(document).click();
+                    //printF($(this).parent().find('.calendar-icon-button'), "calendar:");
+                } else {
+                    inputField.addClass("datepicker-status-open");
+                }
+            });
+        }
 
     }
 

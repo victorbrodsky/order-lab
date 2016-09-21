@@ -325,8 +325,19 @@ class CallEntryController extends Controller
             $parameters['keytype'] = $mrntype;
 
             if( $exactMatch ) {
-                $dql->andWhere("mrn.field = :mrn");
-                $parameters['mrn'] = $mrn;
+                $mrnClean = ltrim($mrn, '0');
+                //echo "mrn: ".$mrn."?=".$mrnClean."<br>";
+                if( $mrn === $mrnClean ) {
+                    //echo "equal <br>";
+                    $dql->andWhere("mrn.field = :mrn");
+                    $parameters['mrn'] = $mrn;
+                } else {
+                    //echo "not equal <br>";
+                    $dql->andWhere("mrn.field = :mrn OR mrn.field = :mrnClean");
+                    $parameters['mrn'] = $mrn;
+                    $parameters['mrnClean'] = $mrnClean;
+                }
+
             } else {
                 $dql->andWhere("mrn.field LIKE :mrn");
                 $parameters['mrn'] = '%' . $mrn . '%';
