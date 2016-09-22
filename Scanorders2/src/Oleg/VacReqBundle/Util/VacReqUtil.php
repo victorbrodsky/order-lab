@@ -3665,8 +3665,8 @@ class VacReqUtil
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " for ".$entity->getUser()." has been approved, in the final phase, by.".$entity->getApprover().
-                    "Confirmation email has been sent to the submitter ".$entity->getUser()->getSingleEmail();
+                $event = $requestName . " for ".$entity->getUser()." has been approved, in the final phase, by ".$entity->getApprover().
+                    ". Confirmation email has been sent to the submitter ".$entity->getUser()->getSingleEmail();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
@@ -3697,8 +3697,8 @@ class VacReqUtil
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " for ".$entity->getUser()." has been rejected, in the final phase, by.".$entity->getApprover().
-                    "Confirmation email has been sent to the submitter ".$entity->getUser()->getSingleEmail();
+                $event = $requestName . " for ".$entity->getUser()." has been rejected, in the final phase, by ".$entity->getApprover().
+                    ". Confirmation email has been sent to the submitter ".$entity->getUser()->getSingleEmail();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
