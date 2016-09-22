@@ -386,6 +386,22 @@ function findCalllogPatient(holderId,formtype,mrntype) {
 
     //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
 
+    //Check if the entered MRN string has no digits AND the Last Name field is empty,
+    // then set the MRN field value to empty, and set the Last Name field to the value entered in the MRN field,
+    // then resume normal search algorithm.
+    if( !lastname && mrn ) {
+        //check if mrn has no digits
+        if( !hasNumber(mrn) ) {
+            lastname = mrn;
+            mrn = "";
+            holder.find(".encounter-lastName").val(lastname);
+            holder.find(".patientmrn-mask").val(mrn);
+        }
+        function hasNumber(myString) {
+            return (/\d/.test(myString));
+        }
+    }
+
     if( mrn && mrntype || dob && lastname || dob && lastname && firstname || lastname ) {
         //ok
         if( !searchedStr && mrn && mrntype ) {

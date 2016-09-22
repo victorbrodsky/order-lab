@@ -624,6 +624,20 @@ class CallEntryController extends Controller
         $createdWithArr[] = "MRN Type: ".$mrnRes->getKeytype()->getName();
         $createdWithArr[] = "MRN: ".$mrnRes->getField();
 
+        //mrn with leading zeros
+        if( 0 && $mrn ) {
+            $mrnClean = ltrim($mrn, '0');
+            //echo "mrn: ".$mrn."?=".$mrnClean."<br>";
+            if ($mrn !== $mrnClean) {
+                //create additional valid patient MRN: "00123456" and "123456".
+                $mrnCleanObject = new PatientMrn($status,$user,$sourcesystem);
+                $mrnCleanObject->setKeytype($mrnRes->getKeytype());
+                $mrnCleanObject->setField($mrnClean);
+                $patient->addMrn($mrnCleanObject);
+                $createdWithArr[] = "Clean MRN: ".$mrnClean;
+            }
+        }
+
         //$patient->addDob( new PatientDob($status,$user,$sourcesystem) );
         if( $dob ) {
             $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob);
