@@ -102,7 +102,7 @@ class VacReqRequestBusiness extends VacReqRequestBase
 
         $res = "### Business Travel Request ###".$break;
         $res .= "Business Travel - First Day Away: ".$transformer->transform($this->getStartDate()).$break;
-        $res .= "Business Travel - First Day Away: ".$transformer->transform($this->getEndDate()).$break;
+        $res .= "Business Travel - Last Day Away: ".$transformer->transform($this->getEndDate()).$break;
         $res .= "Number of Work Days Off-site: ".$this->getNumberOfDays().$break;
         //$res .= "First Day Back in Office: ".$transformer->transform($this->getFirstDayBackInOffice()).$break;
 

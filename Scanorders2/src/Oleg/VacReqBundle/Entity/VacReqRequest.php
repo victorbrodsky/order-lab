@@ -12,6 +12,7 @@ namespace Oleg\VacReqBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -1300,6 +1301,8 @@ class VacReqRequest
 
     public function __toString()
     {
+        return $this->printRequest();
+
         $break = "\r\n";
         //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
@@ -1347,5 +1350,88 @@ class VacReqRequest
         }
 
         return $res;
+    }
+
+    public function printRequest( $container=null )
+    {
+        $break = "\r\n";
+        //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+
+        $res = "Request ID: ".$this->getId().$break;
+        $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
+
+//            $res .= "Submitter: " . $this->getSubmitter() . $break;
+//            $res .= "Person Away: " . $this->getUser() . $break;
+//            $res .= "Approver: " . $this->getApprover() . $break;
+        $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
+        $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
+        $res .= $this->createUseStrUrl($this->getApprover(),"Approver:",$container).$break;
+
+        if( $this->getApprovedRejectDate() ) {
+            $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
+        }
+        $res .= "Organizational Group: ".$this->getInstitution().$break;
+
+        $res .= "Phone Number for the person away: ".$this->getPhone().$break;
+        $res .= "Emergency Contact Info:".$break.implode($break,$this->getEmergencyConatcsArr()).$break.$break;
+
+        if( $this->hasBusinessRequest() ) {
+            $subRequest = $this->getRequestBusiness();
+            $res .= $subRequest."".$break;
+        }
+
+        if( $this->hasVacationRequest() ) {
+            $subRequest = $this->getRequestVacation();
+            $res .= $subRequest."".$break;
+        }
+
+        $requestType = $this->getRequestType();
+        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+            $res = "Request ID: ".$this->getId().$break;
+            $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
+
+            //$res .= "Submitter: ".$this->getSubmitter().$break;
+            //$res .= "Person Away: ".$this->getUser().$break;
+            //$res .= "Approver: ".$this->getApprover().$break;
+            $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
+            $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
+            $res .= $this->createUseStrUrl($this->getApprover(),"Approver:",$container).$break;
+
+            if( $this->getApprovedRejectDate() ) {
+                $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
+            }
+            $res .= "Organizational Group: ".$this->getInstitution().$break;
+
+            $res .= $break;
+            $res .= "### Carry Over Request ###".$break;
+            $res .= "Tentative Organizational Group: ".$this->getTentativeInstitution().$break;
+            $res .= "Carry Over Days: ".$this->getCarryOverDays().$break;
+            $res .= "from: ".$this->getSourceYearRange().$break;
+            $res .= "to: " . $this->getDestinationYearRange().$break;
+        }
+
+        return $res;
+    }
+
+    //"Submitter: " . $this->getSubmitter() . (url)
+    public function createUseStrUrl( $user, $label, $container ) {
+        if( !$user ) {
+            return "";
+        }
+        if( !$container ) {
+            return $user."";
+        }
+
+        $userUrl = $container->get('router')->generate(
+            'vacreq_showuser',
+            array(
+                'id' => $user->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $userStrUrl = $label . " " . $user . " (" . $userUrl . ")";
+
+        return $userStrUrl;
     }
 }

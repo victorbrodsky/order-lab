@@ -150,7 +150,7 @@ class VacReqUtil
         $requestName = $entity->getRequestName();
 
         $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." ID #".$entity->getId()." and it is ready for review.";
-        $message .= $break.$break.$entity."";
+        $message .= $break.$break.$entity->printRequest($this->container)."";
 
         $reviewRequestUrl = $this->container->get('router')->generate(
             'vacreq_review',
@@ -162,7 +162,7 @@ class VacReqUtil
         $message .= $break . $break . "Please follow the link below to review ".$requestName." ID #".$entity->getId().":" . $break;
         $message .= $reviewRequestUrl . $break . $break;
 
-        $message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." ID #".$entity->getId().".";
+        //$message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." ID #".$entity->getId().".";
 
         if( $entity->hasBusinessRequest() ) {
             //href="{{ path(vacreq_sitename~'_status_email_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
@@ -370,7 +370,7 @@ class VacReqUtil
             $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . ":" . $break;
             $message .= $entity->getDetailedStatus().".".$break.$break;
 
-            $message .= $entity."".$break.$break;
+            $message .= $entity->printRequest($this->container)."".$break.$break;
 
             $message .= "**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
         }
@@ -2726,7 +2726,7 @@ class VacReqUtil
 
         $message .= $entity->getUser()." canceled/withdrew the ".$requestName." ID #".$entity->getId()." described below:".$break.$break;
 
-        $message .= $entity."";
+        $message .= $entity->printRequest($this->container)."";
 
         $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
 

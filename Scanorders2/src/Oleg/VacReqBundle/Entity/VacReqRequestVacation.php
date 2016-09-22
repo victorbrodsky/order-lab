@@ -29,7 +29,7 @@ class VacReqRequestVacation extends VacReqRequestBase
 
         $res = "### Vacation Request ###".$break;
         $res .= "Vacation - First Day Away: ".$transformer->transform($this->getStartDate()).$break;
-        $res .= "Vacation - First Day Away: ".$transformer->transform($this->getEndDate()).$break;
+        $res .= "Vacation - Last Day Away: ".$transformer->transform($this->getEndDate()).$break;
         $res .= "Vacation Days Requested: ".$this->getNumberOfDays().$break;
         //$res .= "First Day Back in Office: ".$transformer->transform($this->getFirstDayBackInOffice()).$break;
 

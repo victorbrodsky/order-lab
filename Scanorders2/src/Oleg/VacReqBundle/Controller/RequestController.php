@@ -231,7 +231,7 @@ class RequestController extends Controller
             } else {
                 $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().".";
             }
-            $message .= $break.$break.$entity."".$break;
+            $message .= $break.$break.$entity->printRequest($this->container)."".$break;
 
             $message .= $break."You will be notified once your request is reviewed and its status changes.";
             $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
@@ -335,6 +335,9 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
         //exit('show: ok permission');
+
+        //echo "req=".$entity->printRequest($this->container);
+        //exit('1');
 
         $cycle = 'show';
 
@@ -1014,7 +1017,7 @@ class RequestController extends Controller
         $message .= ucwords($requestName)." approved on ".$entity->getApprovedRejectDate()->format('m/d/Y H:i:s').":".$break;
 
         //[all form field titles and their values, 1 per line]
-        $message .= $break.$entity."".$break;
+        $message .= $break.$entity->printRequest($this->container)."".$break;
 
         //To approve cancellation of this request, please follow this link
         // (the days in this request will no longer count towards FirstName LastName's vacation / business travel):
