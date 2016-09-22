@@ -1309,7 +1309,13 @@ class VacReqRequest
         $break = "\r\n";
         //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
-        $res = "Request ID: ".$this->getId().$break;
+        $res = "";
+
+        if( $this->getDetailedStatus() ) {
+            $res .= $this->getDetailedStatus() . $break;
+        }
+
+        $res .= "Request ID: ".$this->getId().$break;
         $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
 
 //            $res .= "Submitter: " . $this->getSubmitter() . $break;
@@ -1346,7 +1352,11 @@ class VacReqRequest
 
         $requestType = $this->getRequestType();
         if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
-            $res = "Request ID: ".$this->getId().$break;
+            $res = "";
+            if( $this->getDetailedStatus() ) {
+                $res .= $this->getDetailedStatus() . $break;
+            }
+            $res .= "Request ID: ".$this->getId().$break;
             $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
 
             //$res .= "Submitter: ".$this->getSubmitter().$break;
