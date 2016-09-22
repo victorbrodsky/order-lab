@@ -1386,7 +1386,7 @@ class VacReqRequest
             return "";
         }
         if( !$container ) {
-            return $user."";
+            return $label . " " . $user . "";
         }
 
         $userUrl = $container->get('router')->generate(

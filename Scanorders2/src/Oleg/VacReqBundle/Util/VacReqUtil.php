@@ -3591,7 +3591,7 @@ class VacReqUtil
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
                 //request info
-                $bodyRejected .= $break.$break.$entity;
+                $bodyRejected .= $break.$break.$entity->printRequest($this->container);
 
                 $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectRejected, $bodyRejected, null, null );
 
@@ -3658,7 +3658,7 @@ class VacReqUtil
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
                 //request info
-                $bodyApproved .= $break.$break.$entity;
+                $bodyApproved .= $break.$break.$entity->printRequest($this->container);
 
                 $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectApproved, $bodyApproved, null, null );
             }
@@ -3677,7 +3677,7 @@ class VacReqUtil
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
                 //request info
-                $bodyRejected .= $break.$break.$entity;
+                $bodyRejected .= $break.$break.$entity->printRequest($this->container);
 
                 $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectRejected, $bodyRejected, null, null );
 
