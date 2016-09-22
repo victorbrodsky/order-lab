@@ -1302,54 +1302,6 @@ class VacReqRequest
     public function __toString()
     {
         return $this->printRequest();
-
-        $break = "\r\n";
-        //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
-
-        $res = "Request ID: ".$this->getId().$break;
-        $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
-        $res .= "Submitter: ".$this->getSubmitter().$break;
-        $res .= "Person Away: ".$this->getUser().$break;
-        $res .= "Approver: ".$this->getApprover().$break;
-        if( $this->getApprovedRejectDate() ) {
-            $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
-        }
-        $res .= "Organizational Group: ".$this->getInstitution().$break;
-
-        $res .= "Phone Number for the person away: ".$this->getPhone().$break;
-        $res .= "Emergency Contact Info:".$break.implode($break,$this->getEmergencyConatcsArr()).$break.$break;
-
-        if( $this->hasBusinessRequest() ) {
-            $subRequest = $this->getRequestBusiness();
-            $res .= $subRequest."".$break;
-        }
-
-        if( $this->hasVacationRequest() ) {
-            $subRequest = $this->getRequestVacation();
-            $res .= $subRequest."".$break;
-        }
-
-        $requestType = $this->getRequestType();
-        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
-            $res = "Request ID: ".$this->getId().$break;
-            $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
-            $res .= "Submitter: ".$this->getSubmitter().$break;
-            $res .= "Person Away: ".$this->getUser().$break;
-            $res .= "Approver: ".$this->getApprover().$break;
-            if( $this->getApprovedRejectDate() ) {
-                $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
-            }
-            $res .= "Organizational Group: ".$this->getInstitution().$break;
-
-            $res .= $break;
-            $res .= "### Carry Over Request ###".$break;
-            $res .= "Tentative Organizational Group: ".$this->getTentativeInstitution().$break;
-            $res .= "Carry Over Days: ".$this->getCarryOverDays().$break;
-            $res .= "from: ".$this->getSourceYearRange().$break;
-            $res .= "to: " . $this->getDestinationYearRange().$break;
-        }
-
-        return $res;
     }
 
     public function printRequest( $container=null )
@@ -1365,6 +1317,10 @@ class VacReqRequest
 //            $res .= "Approver: " . $this->getApprover() . $break;
         $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
         $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
+
+        if( $this->getTentativeApprover() ) {
+            $res .= $this->createUseStrUrl($this->getTentativeApprover(), "Tentative Approver:", $container) . $break;
+        }
 
         if( $this->getApprover() ) {
             $res .= $this->createUseStrUrl($this->getApprover(), "Approver:", $container) . $break;
@@ -1398,6 +1354,11 @@ class VacReqRequest
             //$res .= "Approver: ".$this->getApprover().$break;
             $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
             $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
+
+            //getTentativeApprover
+            if( $this->getTentativeApprover() ) {
+                $res .= $this->createUseStrUrl($this->getTentativeApprover(), "Tentative Approver:", $container) . $break;
+            }
 
             if( $this->getApprover() ) {
                 $res .= $this->createUseStrUrl($this->getApprover(), "Approver:", $container) . $break;
