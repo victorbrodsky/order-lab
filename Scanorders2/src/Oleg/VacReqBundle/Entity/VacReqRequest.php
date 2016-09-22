@@ -1365,7 +1365,10 @@ class VacReqRequest
 //            $res .= "Approver: " . $this->getApprover() . $break;
         $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
         $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
-        $res .= $this->createUseStrUrl($this->getApprover(),"Approver:",$container).$break;
+
+        if( $this->getApprover() ) {
+            $res .= $this->createUseStrUrl($this->getApprover(), "Approver:", $container) . $break;
+        }
 
         if( $this->getApprovedRejectDate() ) {
             $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
@@ -1395,7 +1398,10 @@ class VacReqRequest
             //$res .= "Approver: ".$this->getApprover().$break;
             $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
             $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
-            $res .= $this->createUseStrUrl($this->getApprover(),"Approver:",$container).$break;
+
+            if( $this->getApprover() ) {
+                $res .= $this->createUseStrUrl($this->getApprover(), "Approver:", $container) . $break;
+            }
 
             if( $this->getApprovedRejectDate() ) {
                 $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
