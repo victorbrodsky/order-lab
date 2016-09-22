@@ -1277,4 +1277,37 @@ function calllogScrollToTop() {
     $("html, body").animate({ scrollTop: 0 }, "slow");
 }
 
+function calllogPresetMrnMrntype(holderId) {
+    var holder = getHolder(holderId);
+    var mrn = $('.patientmrn-mask').val();
+    var mrntype = $('.mrntype-combobox').select2('val');
+
+    //var mrn = $('#url-mrn').val();
+    //var mrntype = $('#url-mrntype').val();
+    //
+    //if( mrntype ) {
+    //    var mrntypeField = holder.find('.mrntype-combobox');
+    //    mrntypeField.select2('val',mrntype);
+    //    setMrntypeMask(mrntypeField,false);
+    //    mrntypeField.prop('disabled', false);
+    //}
+    //
+    //if( mrn ) {
+    //    var mrnField = holder.find('.patientmrn-mask');
+    //    mrnField.val(mrn);
+    //    mrnField.prop('disabled', false);
+    //}
+
+    //trigger patient search
+    if( mrntype && mrn ) {
+        //setTimeout(function(){
+        //    holder.find('#search_patient_button').click();
+        //}, 300);
+
+        var formtype = $('#formtype').val();
+        var mrntype = $('#mrntype').val();
+        findCalllogPatient(holderId, formtype, mrntype);
+    }
+
+}
 

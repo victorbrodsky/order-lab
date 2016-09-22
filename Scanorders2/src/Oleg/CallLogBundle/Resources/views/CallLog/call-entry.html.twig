@@ -23,6 +23,8 @@
     <input type="hidden" id="orderformtype" value="calllog" />
     <input type="hidden" id="formtype" value="{{ formtype }}" />
     <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
+    <input type="hidden" id="mrn" value="{{ mrn }}" />
+    <input type="hidden" id="mrntype" value="{{ mrntype }}" />
 
     <div id="calllog-patient-list">
 
@@ -189,6 +191,10 @@
 
         //init
         initCallLogPage();
+
+        //preset mrn and mrn-type
+        calllogPresetMrnMrntype('patient-holder-1');
+
     });
 
 

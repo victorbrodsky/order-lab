@@ -64,6 +64,7 @@ class CallEntryController extends Controller
 
     /**
      * Call Entry
+     * http://localhost/order/call-log-book/entry/new?mrn-type=4&mrn=3
      * @Route("/entry/new", name="calllog_callentry")
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
      */
@@ -74,6 +75,9 @@ class CallEntryController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $em = $this->getDoctrine()->getManager();
+
+        $mrn = trim($request->get('mrn'));
+        $mrntype = trim($request->get('mrn-type'));
 
         $title = "New Entry";
 
@@ -88,7 +92,7 @@ class CallEntryController extends Controller
         $patient->addEncounter($encounter);
 
 
-        $form = $this->createPatientForm($patient);
+        $form = $this->createPatientForm($patient,$mrntype,$mrn);
 
         return array(
             //'entity' => $entity,
@@ -96,11 +100,13 @@ class CallEntryController extends Controller
             'cycle' => $cycle,
             'title' => $title,
             'formtype' => $formtype,
-            'triggerSearch' => 0
+            'triggerSearch' => 0,
+            'mrn' => $mrn,
+            'mrntype' => $mrntype
         );
     }
 
-    public function createPatientForm($patient, $formparams=null) {
+    public function createPatientForm($patient, $mrntype=null, $mrn=null, $formparams=null) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -119,6 +125,10 @@ class CallEntryController extends Controller
 //        }
         ///////////////////////
 
+        if( !$mrntype ) {
+            $mrntype = 1;
+        }
+
         $params = array(
             'cycle' => 'new',
             'user' => $user,
@@ -126,6 +136,8 @@ class CallEntryController extends Controller
             'container' => $this->container,
             //'alias' => true
             'type' => null,
+            'mrntype' => intval($mrntype),
+            'mrn' => $mrn
         );
 
         if( $formparams ) {
