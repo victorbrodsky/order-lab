@@ -88,8 +88,8 @@ class PerSiteSettings extends BaseUserAttributes
 //    private $defaultService;
 
     /**
-     * @ORM\OneToOne(targetEntity="User", mappedBy="perSiteSettings")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="User", inversedBy="perSiteSettings")
+     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $user;
 

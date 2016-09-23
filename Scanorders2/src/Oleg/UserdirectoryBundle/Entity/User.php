@@ -232,8 +232,7 @@ class User extends BaseUser {
     private $permissions;
 
     /**
-     * @ORM\OneToOne(targetEntity="PerSiteSettings", inversedBy="user", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="PerSiteSettings", mappedBy="user", cascade={"persist","remove"})
      */
     private $perSiteSettings;
 
@@ -1216,6 +1215,7 @@ class User extends BaseUser {
     public function setPerSiteSettings($perSiteSettings)
     {
         $this->perSiteSettings = $perSiteSettings;
+        $perSiteSettings->setUser($this);
     }
 
     /**
