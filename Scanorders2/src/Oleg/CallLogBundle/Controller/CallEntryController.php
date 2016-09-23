@@ -540,8 +540,9 @@ class CallEntryController extends Controller
 
 
         //TODO: set institution
-        //$userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-        //$institution = $userSiteSettings->getDefaultInstitution();
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        $institution = $userSiteSettings->getDefaultInstitution();
+        echo "1 inst=".$institution."<br>";
         $institution = null;
         $institutions = $securityUtil->getUserPermittedInstitutions();
         if( count($institutions) > 0 ) {
@@ -550,7 +551,7 @@ class CallEntryController extends Controller
         if( !$institution ) {
             $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
         }
-        echo "inst=".$institution."<br>";
+        echo "2 inst=".$institution."<br>";
         exit('1');
 
         //get correct mrn type
