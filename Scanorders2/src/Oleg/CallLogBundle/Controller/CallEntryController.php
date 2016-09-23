@@ -545,6 +545,7 @@ class CallEntryController extends Controller
         echo "1 inst=".$institution."<br>";
         if( !$institution ) {
             $institutions = $securityUtil->getUserPermittedInstitutions();
+            echo "count inst=".count($institutions)."<br>";
             if (count($institutions) > 0) {
                 $institution = $institutions[0];
             }
