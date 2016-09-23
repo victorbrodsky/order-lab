@@ -719,6 +719,14 @@ function initSingleDatepicker( datepickerElement ) {
             });
         }
 
+        datepickerElement.on('keyup', function(){
+            console.log("datepicker on keyup value="+$(this).val());
+            if( $(this).val() == datepickerFormat ){
+                // this only happens when a key is released and no valid value is in the field. Eg. when tabbing into the field, we'll make sure the datepicker plugin does not get '__/__/____' as a date value
+                $(this).val('');
+            }
+        });
+
     }
 
     return;

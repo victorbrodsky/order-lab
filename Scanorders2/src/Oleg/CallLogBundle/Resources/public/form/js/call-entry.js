@@ -917,8 +917,7 @@ function disableAllFields(disable,holderId) {
 
     var holder = getHolder(holderId);
 
-    disableField(holder.find("input.mrntype-combobox"),disable);
-    //holder.find(".mrntype-combobox").prop('disabled', disable);
+    disableField(holder.find(".mrntype-combobox"),disable);
 
     disableField(holder.find(".patientmrn-mask"),disable);
 
@@ -935,17 +934,22 @@ function disableAllFields(disable,holderId) {
     disableField(holder.find(".encounter-suffix"),disable);
 
     //disableSelectFieldCalllog(holder.find(".encountersex-field"),true);
-    disableField(holder.find("select.encountersex-field"),disable);
-    //holder.find(".encountersex-field").prop('disabled', disable);
+    disableField(holder.find(".encountersex-field"),disable);
 }
 function disableField(fieldEl,disable) {
     if( disable ) {
+        //lock field
         fieldEl.prop('disabled', true);
         fieldEl.closest('.input-group').find('input').prop('disabled', true);
         if( fieldEl.hasClass('datepicker') ) {
             var elementDatepicker = fieldEl.closest('.input-group.date');
             elementDatepicker.datepicker("remove");
         }
+        //if( fieldEl.hasClass("combobox") ) {
+            //console.log('combobox lock');
+            //fieldEl.select2("readonly", true);
+            //fieldEl.select2("enable", false);
+        //}
     } else {
         //unlock field
         fieldEl.prop('disabled', false);
@@ -954,6 +958,11 @@ function disableField(fieldEl,disable) {
             var elementDatepicker = fieldEl.closest('.input-group.date');
             initSingleDatepicker(elementDatepicker);
         }
+        //if( fieldEl.hasClass("combobox") ) {
+            //console.log('combobox unlock');
+            //fieldEl.select2("readonly", false);
+            //fieldEl.select2("enable", true);
+        //}
     }
 }
 //    function disableSelectFieldCalllog(fieldEl,disable) {
@@ -1230,47 +1239,31 @@ function calllogPressEnterOnKeyboardAction( holderId ) {
     //console.log("formtype=" + formtype);
     if( formtype == 'call-entry' ) {
         var holder = getHolder(holderId);
+
         holder.find('.patientmrn-mask, .patient-dob-date, .encounter-lastName, .encounter-firstName').on('keydown', function (event) {
         //holder.find('.patientmrn-mask').on('keydown', function (event) {
             //console.log("calllog PressEnterOnKeyboardAction val=" + $(this).val()+", event="+event.which);
-
-            //close datepicker box
-            //printF($(".datepicker-dropdown"),"keydown: datepicker-dropdown:");
-            //$(".datepicker-dropdown").remove();
 
             if( event.which == 13 ) {
                 event.preventDefault();
 
                 //alert('You pressed enter!');
                 if( $(this).val() ) {
-                    //close datepicker box
-                    //var datepickerDropdown = $(".datepicker-dropdown");
-                    //printF(datepickerDropdown,"datepicker-dropdown:");
-                    //datepickerDropdown.remove();
 
-                    //var e = jQuery.Event( 'keydown', { which: 50 } );
-                    //$(ele).trigger(e);
+                    holder.find('#search_patient_button').click(); //testing
 
-                    holder.find('#search_patient_button').click();
-
-                    setTimeout(function(){
+                    setTimeout(function () {
+                        //close datepicker box
                         var datepickerDropdown = $(".datepicker-dropdown");
-                        printF(datepickerDropdown,"datepicker-dropdown:");
+                        //printF(datepickerDropdown, "datepicker-dropdown:");
                         datepickerDropdown.remove();
-
-                        //var e = jQuery.Event( 'click', { which: 50 } );
-                        //$("html,body").trigger(e);
-                        //$("html,body").trigger( "click" );
-                        $("#patient-holder-1").trigger( "click" );
+                        $("#patient-holder-1").trigger("click");
                     }, 100);
 
-                    ////close datepicker box
-                    //var datepickerDropdown = $(".datepicker-dropdown");
-                    //printF(datepickerDropdown,"datepicker-dropdown:");
-                    //datepickerDropdown.remove();
                 }
             }
         });
+
     }
 }
 
