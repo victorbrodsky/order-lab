@@ -1250,7 +1250,7 @@ function calllogPressEnterOnKeyboardAction( holderId ) {
                 //alert('You pressed enter!');
                 if( $(this).val() ) {
 
-                    holder.find('#search_patient_button').click(); //testing
+                    holder.find('#search_patient_button').click();
 
                     setTimeout(function () {
                         //close datepicker box

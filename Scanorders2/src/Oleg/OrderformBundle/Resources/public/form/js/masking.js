@@ -137,6 +137,7 @@ function fieldInputMask( holder ) {
 
     //masking for datepicker. This will overwrite datepicker format even if format is mm/yyyy
     //$(".datepicker").inputmask( "mm/dd/yyyy" );
+    //fix to not select the first character on tab/enter pressing
     $(".datepicker").on('focus', function (e) {
         //console.log("datepicker on focus mask");
         $(this).inputmask("mm/dd/yyyy");
