@@ -553,7 +553,7 @@ class CallEntryController extends Controller
             $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
         }
         echo "2 inst=".$institution."<br>";
-        //exit('1');
+        exit('1');
 
         //get correct mrn type
         if( $mrntype && $mrn ) {
