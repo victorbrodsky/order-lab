@@ -255,7 +255,7 @@ class SecurityUtil extends UserSecurityUtil {
         $entity = $this->getUserPerSiteSettings($user);
 
         if( !$entity ) {
-            echo "no UserPerSiteSettings found for ".$user."<br>";
+            //echo "no UserPerSiteSettings found for ".$user."<br>";
             return $institutions;
         }
 
