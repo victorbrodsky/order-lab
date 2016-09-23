@@ -548,11 +548,12 @@ class CallEntryController extends Controller
             if (count($institutions) > 0) {
                 $institution = $institutions[0];
             }
+            echo "2 inst=".$institution."<br>";
         }
         if (!$institution) {
             $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
         }
-        echo "2 inst=".$institution."<br>";
+        echo "3 inst=".$institution."<br>";
         exit('1');
 
         //get correct mrn type
