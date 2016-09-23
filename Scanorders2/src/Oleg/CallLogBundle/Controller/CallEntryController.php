@@ -540,8 +540,18 @@ class CallEntryController extends Controller
 
 
         //TODO: set institution
-        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-        $institution = $userSiteSettings->getDefaultInstitution();
+        //$userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        //$institution = $userSiteSettings->getDefaultInstitution();
+        $institution = null;
+        $institutions = $securityUtil->getUserPermittedInstitutions();
+        if( count($institutions) > 0 ) {
+            $institution = $institutions[0];
+        }
+        if( !$institution ) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        }
+        echo "inst=".$institution."<br>";
+        exit('1');
 
         //get correct mrn type
         if( $mrntype && $mrn ) {
