@@ -917,7 +917,8 @@ function disableAllFields(disable,holderId) {
 
     var holder = getHolder(holderId);
 
-    disableField(holder.find(".mrntype-combobox"),disable);
+    disableField(holder.find("input.mrntype-combobox"),disable);
+    //holder.find(".mrntype-combobox").prop('disabled', disable);
 
     disableField(holder.find(".patientmrn-mask"),disable);
 
@@ -934,7 +935,8 @@ function disableAllFields(disable,holderId) {
     disableField(holder.find(".encounter-suffix"),disable);
 
     //disableSelectFieldCalllog(holder.find(".encountersex-field"),true);
-    disableField(holder.find(".encountersex-field"),disable);
+    disableField(holder.find("select.encountersex-field"),disable);
+    //holder.find(".encountersex-field").prop('disabled', disable);
 }
 function disableField(fieldEl,disable) {
     if( disable ) {

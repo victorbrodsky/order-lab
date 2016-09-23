@@ -822,8 +822,9 @@ class CallLogUtil
         $mrntype = $this->em->getRepository('OlegOrderformBundle:MrnType')->find($mrntypeId);
         if( !$mrntype ) {
             $msg = 'MrnType not found by ID ' . $mrntypeId;
-            throw new \Exception($msg);
+            //throw new \Exception($msg);
             //return $msg;
+            return null;
         }
 
         if( $mrntype->getName() == "Auto-generated MRN" ) {

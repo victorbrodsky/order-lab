@@ -476,12 +476,12 @@ function getComboboxMrnType(holder,force) {
             async: asyncflag
         }).success(function(data) {
                 _mrntype = data;
-                console.log('1 populate mrn type');
+                //console.log('1 populate mrn type');
                 populateSelectCombobox( targetid, _mrntype, null ); //'Please select MRN type'
                 setAccessionMask();
             });
     } else {
-        console.log('2 populate mrn type');
+        //console.log('2 populate mrn type');
         populateSelectCombobox( targetid, _mrntype, null );
     }
 

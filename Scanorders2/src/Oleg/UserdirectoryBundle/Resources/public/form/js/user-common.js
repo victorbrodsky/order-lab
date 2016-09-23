@@ -696,13 +696,13 @@ function initSingleDatepicker( datepickerElement ) {
             //datepickerElement.find('input.datepicker').on("click", function (event) {
             datepickerElement.on("click", function (event) {
                 event.stopPropagation();
-                console.log("click datepicker body");
+                //console.log("click datepicker body");
 
                 var inputField = $(this).find('input.datepicker');
 
                 if (inputField.hasClass("datepicker-status-open")) {
                 //if( inputField.hasClass('focus.inputmask') ) {
-                    console.log("hide datepicker");
+                    //console.log("hide datepicker");
                     //$(".datepicker-dropdown").remove();
                     //$(document).click();
                     //$('html,body').click();
