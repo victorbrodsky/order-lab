@@ -316,7 +316,7 @@ function showCalllogCallentryForm(show) {
 function clearCalllogPatient(holderId) {
     var holder = getHolder(holderId);
 
-    console.log("clear patient for Re-enter Patient");
+    //console.log("clear patient for Re-enter Patient");
     populatePatientInfo(null,false,true,holderId); //clear patient for Re-enter Patient
 
     //change the "Re-enter Patient" to "Find Patient"
@@ -1230,7 +1230,7 @@ function calllogPressEnterOnKeyboardAction( holderId ) {
         var holder = getHolder(holderId);
         holder.find('.patientmrn-mask, .patient-dob-date, .encounter-lastName, .encounter-firstName').on('keydown', function (event) {
         //holder.find('.patientmrn-mask').on('keydown', function (event) {
-            console.log("calllog PressEnterOnKeyboardAction val=" + $(this).val()+", event="+event.which);
+            //console.log("calllog PressEnterOnKeyboardAction val=" + $(this).val()+", event="+event.which);
 
             //close datepicker box
             //printF($(".datepicker-dropdown"),"keydown: datepicker-dropdown:");
