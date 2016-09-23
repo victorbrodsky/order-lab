@@ -544,7 +544,7 @@ class CallEntryController extends Controller
         $institution = $userSiteSettings->getDefaultInstitution();
         echo "1 inst=".$institution."<br>";
         if( !$institution ) {
-            $institutions = $securityUtil->getUserPermittedInstitutions();
+            $institutions = $securityUtil->getUserPermittedInstitutions($user);
             echo "count inst=".count($institutions)."<br>";
             if (count($institutions) > 0) {
                 $institution = $institutions[0];
