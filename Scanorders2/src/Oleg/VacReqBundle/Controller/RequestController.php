@@ -1109,7 +1109,7 @@ class RequestController extends Controller
 
         $requestName = $entity->getRequestName();
         $userNameOptimal = $entity->getUser()->getUsernameOptimal();
-        $eventSubject = $entity->getExtraStatus()." of a ".ucwords($requestName)." ID #" . $entity->getId() . " by " . $userNameOptimal;
+        $eventSubject = $entity->getExtraStatus()." of a ".ucwords($requestName)." ID #" . $entity->getId() . " (" . $userNameOptimal . ") by " . $user;
 
         //Flash
         $this->get('session')->getFlashBag()->add(
@@ -1125,7 +1125,8 @@ class RequestController extends Controller
 
         //set confirmation email to submitter and email users
         $vacreqUtil = $this->get('vacreq_util');
-        $message = $eventSubject;
+        $break = "\r\n";
+        $message = $eventSubject . $break . $break . $entity->printRequest($this->container);
         $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, null, $message );
 
         $url = $request->headers->get('referer');

@@ -1513,15 +1513,11 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findAll();
-//        if( $entities ) {
-//            return -1;
-//        }
-
         $elements = array(
             'Medical',
             'Educational',
-            'Collaboration'
+            'Collaboration',
+            'Research Lab'
         );
 
 
@@ -2058,6 +2054,309 @@ class AdminController extends Controller
 
 
         return $count;
+    }
+
+    //TODO:
+    public function generateResearchLabs() {
+
+        return; //testing
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $wcmcDep = array(
+            'Anesthesiology',
+            'Biochemistry',
+            'Cardiothoracic Surgery' => array(
+                'Thoracic Surgery'
+            ),
+            'Cell and Developmental Biology' => null,
+            'Dermatology' => null,
+            'Feil Family Brain and Mind Research Institute',
+            'Genetic Medicine' => null,
+            'Healthcare Policy and Research' => array(
+                'Biostatistics and Epidemiology',
+                'Comparative Effectiveness and Outcomes Research',
+                'Health Informatics',
+                'Health Policy and Economics',
+                'Health Systems Innovation and Implementation Science'
+            ),
+            'Microbiology and Immunology' => null,
+            'Neurological Surgery' => null,
+            'Neurology' => array(
+                "Alzheimer's Disease & Memory Disorders",
+                "Diagnostic Testing - Evoked Potentials, EEG & EMG",
+                "Doppler (Transcranial and Carotid Duplex) Ultrasound Studies"              //continue
+            ),
+            'Obstetrics and Gynecology' => array(
+                'General Ob/Gyn',
+                'Gynecology',
+                'Gynecologic Oncology'                                                     //continue
+            ),
+            'Ophthalmology' => null,
+            'Orthopaedic Surgery' => null,
+            'Otolaryngology - Head and Neck Surgery' => null,
+            'Pathology and Laboratory Medicine' => array(
+                'shortname' => 'Pathology',
+                //divisions
+                'Anatomic Pathology' => array(
+                    //services
+                    'Autopsy Pathology',
+                    'Breast Pathology',
+                    'Cardiopulmonary Pathology',
+                    'Cytopathology',
+                    'Dermatopathology',
+                    'Gastrointestinal and Liver Pathology',
+                    'Genitourinary Pathology',
+                    'Gynecologic Pathology',
+                    'Head and Neck Pathology',
+                    'Hematopathology',
+                    'Neuropathology',
+                    'Pediatric Pathology',
+                    'Perinatal and Obstetric Pathology',
+                    'Renal Pathology',
+                    'Surgical Pathology'
+                ),
+                'Hematopathology' => array(
+                    'Immunopathology',
+                    'Molecular Hematopathology'
+                ),
+                'Weill Cornell Pathology Consultation Services' => array(
+                    'Breast Pathology',
+                    'Dermatopathology',
+                    'Gastrointestinal and Liver Pathology',
+                    'Genitourinary Pathology',
+                    'Gynecologic Pathology',
+                    'Hematopathology',
+                    'Perinatal and Obstetrical Pathology',
+                    'Renal Pathology'
+                ),
+                'Laboratory Medicine' => array(
+                    'Clinical Chemistry',
+                    'Cytogenetics',
+                    'Routine and special coagulation',
+                    'Endocrinology',
+                    'Routine and special hematology',
+                    'Immunochemistry',
+                    'Serology',
+                    'Immunohematology',
+                    'Microbiology',
+                    'Molecular diagnostics',
+                    'Toxicology',
+                    'Mycology',
+                    'Therapeutic drug monitoring',
+                    'Parasitology',
+                    'Virology'
+                ),
+                'Pathology Informatics' => array(
+                    'Scanning Service',
+                ),
+                'Pathology Fellowship Programs'
+            ),
+            'Pediatrics' => array(
+                'Cardiology',
+                'Child Development',
+                'Child Neurology'                                                           //continue
+            ),
+            'Pharmacology' => null,
+            'Physiology and Biophysics' => null,
+            'Primary Care' => null,
+            'Psychiatry' => array(
+                'Sackler Institute for Developmental Psychobiology'
+            ),
+            'Radiation Oncology' => null,
+            'Radiology' => null,
+            'Rehabilitation Medicine' => null,
+            'Reproductive Medicine' => array(
+                'Center for Reproductive Medicine and Infertility (CRMI)',
+                'Center for Male Reproductive Medicine and Microsurgery'
+            ),
+            'Surgery' => array(
+                'Breast Surgery',
+                'Burn, Critical Care and Trauma',
+                'Colon & Rectal Surgery',                                                   //continue
+            ),
+            'Urology' => array(
+                'Brady Urologic Health Center'
+            ),
+            'Weill Department of Medicine' => array(
+                'Cardiology',
+                'Clinical Epidemiology and Evaluative Sciences Research',
+                'Clinical Pharmacology'                                                     //continue  dep
+            ),
+            'Other Centers' => array(
+                'Ansary Stem Cell Institute',
+                'Center for Complementary and Integrative Medicine',
+                'Center for Healthcare Informatics and Policy'                              //continue
+            )
+
+        );
+        $wcmc = array(
+            'abbreviation'=>'WCMC',
+            'departments'=>$wcmcDep
+        );
+
+        //http://nyp.org/services/index.html
+        $nyhDep = array(
+            'Allergy, Immunology and Pulmonology' => null,
+            'Anesthesiology' => null,
+            'Cancer (Oncology)' => null,
+            'Cancer Screening and Awareness' => null,
+            'Cardiology' => null,
+            'Complementary, Alternative, and Integrative Medicine' => null,
+            'Dermatology' => null,
+            'Diabetes and Endocrinology' => null,
+            'Digestive Diseases' => null,
+            'Ear, Nose, and Throat (Otorhinolaryngology)' => null,
+            'Geriatrics' => null,
+            'Hematology (Blood Disorders)' => null,
+            'Infectious Diseases/International Medicine' => null,
+            'Internal Medicine' => null,
+            'Nephrology (Kidney Disease)' => null,
+            'Neurology and Neuroscience' => null,
+            'Obstetrics and Gynecology' => null,
+            'Ophthalmology' => null,
+            'Pain Medicine' => null,
+            'Pathology and Laboratory Medicine' => null,
+            'Pediatrics' => null,
+            'Preventive Medicine and Nutrition' => null,
+            'Psychiatry and Mental Health' => null,
+            'Radiation Oncology' => null,
+            'Radiology' => null,
+            'Rehabilitation Medicine' => null,
+            'Rheumatology' => null,
+            "Women's Health" => null
+        );
+
+        $nyh = array(
+            'abbreviation'=>'NYP',
+            'departments'=>$nyhDep
+        );
+
+
+        $wcmcq = array(
+            'abbreviation'=>'WCMCQ',
+            'departments'
+        );
+
+        $mskDep = array(
+            'Anesthesiology and Critical Care Medicine' => null,
+            'Laboratory Medicine' => null,
+            'Medicine' => null
+            //continue
+        );
+        $msk = array(
+            'abbreviation'=>'MSK',
+            'departments'=>$mskDep
+        );
+
+        $hssDep = array(
+            'Orthopedic Surgery' => null,
+            'Anesthesiology' => null,
+            'Medicine' => null
+            //continue
+        );
+        $hss = array(
+            'abbreviation'=>'HSS',
+            'departments'=>$hssDep
+        );
+
+        $institutions = array(
+            "Weill Cornell Medical College"=>$wcmc,
+            "New York-Presbyterian Hospital"=>$nyh,
+            "Weill Cornell Medical College Qatar"=>$wcmcq,
+            "Memorial Sloan Kettering Cancer Center"=>$msk,
+            "Hospital for Special Surgery"=>$hss
+        );
+
+
+        $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+
+        $levelInstitution = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
+        $levelDepartment = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Department');
+        $levelDivision = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Division');
+        $levelService = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Service');
+
+        $treeCount = 10;
+
+        foreach( $institutions as $institutionname=>$infos ) {
+            $institution = new Institution();
+            $this->setDefaultList($institution,$treeCount,$username,$institutionname);
+            $treeCount = $treeCount + 10;
+            $institution->setAbbreviation( trim($infos['abbreviation']) );
+
+            $institution->addType($medicalType);
+            $institution->setOrganizationalGroupType($levelInstitution);
+
+            if( array_key_exists('departments', $infos) && $infos['departments'] && is_array($infos['departments'])  ) {
+
+                foreach( $infos['departments'] as $departmentname=>$divisions ) {
+
+                    $department = new Institution();
+
+                    if( is_numeric($departmentname) ){
+                        $departmentname = $infos['departments'][$departmentname];
+                    }
+                    //echo "departmentname=".$departmentname."<br>";
+                    $this->setDefaultList($department,$treeCount,$username,$departmentname);
+                    $treeCount = $treeCount + 10;
+                    $department->setOrganizationalGroupType($levelDepartment);
+
+                    if( $divisions && is_array($divisions) ) {
+
+                        foreach( $divisions as $divisionname=>$services ) {
+
+                            //shortname
+                            if( $divisionname === 'shortname' && $services ) {
+                                //echo "<br> services=".$services."<br>";
+                                $department->setShortname($services);
+                                continue;
+                            }
+
+                            $division = new Institution();
+                            if( is_numeric($divisionname) ){
+                                $divisionname = $divisions[$divisionname];
+                            }
+                            $this->setDefaultList($division,$treeCount,$username,$divisionname);
+                            $treeCount = $treeCount + 10;
+                            $division->setOrganizationalGroupType($levelDivision);
+
+                            if( $services && is_array($services) ) {
+
+                                foreach( $services as $servicename ) {
+                                    $service = new Institution();
+                                    if( is_numeric($servicename) ){
+                                        $servicename = $services[$servicename];
+                                    }
+                                    $this->setDefaultList($service,$treeCount,$username,$servicename);
+                                    $treeCount = $treeCount + 10;
+                                    $service->setOrganizationalGroupType($levelService);
+
+                                    $division->addChild($service);
+                                }
+                            }//services
+
+
+                            $department->addChild($division);
+                        }
+                    }//divisions
+
+                    $institution->addChild($department);
+                }
+            }//departmets
+
+            $em->persist($institution);
+            $em->flush();
+        } //foreach
+
+        return round($treeCount/10);
     }
 
     public function generateStates() {
