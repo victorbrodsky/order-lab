@@ -3223,7 +3223,7 @@ class AdminController extends Controller
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
-        $pathology = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
@@ -3232,17 +3232,23 @@ class AdminController extends Controller
         $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
 
         $labs = array(
-            "Prostate Cancer Research Group",
-            "Viral Oncogenesis",
-            "Center for Vascular Biology",
-            "Cell Cycle",
-            "Laboratory of Epigenetics and Genomic Integrity",
-            "Laboratory of Stem Cell Aging and Cancer",
-            "Molecular Pathology",
-            "Oncogenic Transcription Factors in Prostate Cancer",
+            "Prostate Cancer Research Group" => "Laboratory of Prostate Cancer Research Group",
+            "Viral Oncogenesis" => "Viral Oncogenesis",
+            "Vascular Biology" => "Center for Vascular Biology",
+            "Cell Cycle" => "Cell Cycle",
+            "Epigenetics and Genomic Integrity" => "Laboratory of Epigenetics and Genomic Integrity",
+            "Laboratory of Stem Cell Aging and Cancer" => "Laboratory of Stem Cell Aging and Cancer",
+            "Molecular Pathology" => "Molecular Pathology",
+            "Oncogenic Transcription Factors in Prostate Cancer" => "Oncogenic Transcription Factors in Prostate Cancer",
 
-            ""
-
+            "DNA Repair and Molecular Immunology" => "DNA Repair and Molecular Immunology Laboratory",
+            "Proteolytic Oncogenesis" => "Proteolytic Oncogenesis",
+            "Macrophages and Tissue Remodeling" => "Macrophages and Tissue Remodeling",
+            "Antiphospholipid Syndrome" => "Antiphospholipid Syndrome (APS) Research Laboratory",
+            "Molecular Gynecologic Pathology" => "Molecular Gynecologic Pathology",
+            "Regulation of Bone Mass Laboratory" => "Regulation of Bone Mass Laboratory",
+            "Cell Metabolism" => "Laboratory of Cell Metabolism",
+            "Cancer Biology" => "Cancer Biology"
 
 //            "Viral Oncogenesis",
 //            "Center for Vascular Biology",
@@ -3264,34 +3270,70 @@ class AdminController extends Controller
         );
 
         $count = 10;
-        foreach( $labs as $labName ) {
+        foreach( $labs as $labName => $pageName ) {
 
-            $researchLab = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            //1) create a new Research Institution with "Research Lab" OrganizationalGroupType under "WCMC-Pathology"
+            $researchInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 $labName,
                 $pathology,
                 $mapper
             );
-            if( $researchLab ) {
+            if( $researchInstitution ) {
+                continue;
+            }
+            $researchInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                $pageName,
+                $pathology,
+                $mapper
+            );
+            if( $researchInstitution ) {
                 continue;
             }
 
-            //1) create a new Institution with "Research Lab" OrganizationalGroupType under "WCMC-Pathology"
             $researchInstitution = new Institution();
             $this->setDefaultList($researchInstitution,1,$username,$labName);
             $researchInstitution->setOrganizationalGroupType($researchLabOrgGroup);
             $researchInstitution->addType($medicalType);
             $pathology->addChild($researchInstitution);
+
             $em->persist($researchInstitution);
+            $em->flush();
+            echo "added new Research Institution=".$labName."<br>";
+
 
             //2) create Research Lab object
+            $researchLab = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findOneByName($labName);
+            if( $researchLab ) {
+                if( !$researchLab->getInstitution() ) {
+                    $researchLab->setInstitution($researchInstitution);
+                    $em->persist($researchLab);
+                    $em->flush();
+                }
+                continue;
+            }
+            $researchLab = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findOneByName($pageName);
+            if( $researchLab ) {
+                if( !$researchLab->getInstitution() ) {
+                    $researchLab->setInstitution($researchInstitution);
+                    $em->persist($researchLab);
+                    $em->flush();
+                }
+                continue;
+            }
+
             $researchLab = new ResearchLab();
-            $this->setDefaultList($researchLab,$count,$username,$labName);
+            $this->setDefaultList($researchLab, $count, $username, $labName);
+
             $researchLab->setInstitution($researchInstitution);
 
             $em->persist($researchLab);
             $em->flush();
+            echo "added new ResearchLab=".$labName."<br>";
+
 
             $count = $count + 10;
+
+            exit("finished adding ".$labName)."<br>";
         }
 
         return round($count/10);

@@ -970,7 +970,8 @@
 
         {{ formmacros.field(formfield.id) }}
 
-        {{ formmacros.field(formfield.name) }}
+        {#{{ formmacros.field(formfield.name) }}#}
+        {{ formmacros.field(formfield.institution) }}
 
         {#pi#}
         {% if formfield.piDummy is defined %}

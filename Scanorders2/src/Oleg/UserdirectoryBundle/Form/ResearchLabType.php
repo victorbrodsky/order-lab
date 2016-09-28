@@ -93,6 +93,27 @@ class ResearchLabType extends AbstractType
 
         //echo "subjectUser=".$this->params['subjectUser']."<br>";
 
+        $builder->add( 'institution', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'label'=> "Research Lab Title:",
+            'required'=> false,
+            'multiple' => false,
+            'property' => 'getTreeName', //getNodeNameWithRoot
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.organizationalGroupType","organizationalGroupType")
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->andWhere("organizationalGroupType.name = :organizationalGroupTypeName")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'organizationalGroupTypeName' => 'Research Lab'
+                    ));
+            },
+        ));
+
         if( !$standalone ) {
 
             ////////////////////////// comment and pi /////////////////////////
@@ -104,13 +125,13 @@ class ResearchLabType extends AbstractType
                 $lab = $event->getData();
                 $form = $event->getForm();
 
-                $form->add('name', 'employees_custom_selector', array(
-                    'read_only' => ($lab && $lab->getId() ? true : false),
-                    'label' => "Research Lab Title:",
-                    'required' => false,
-                    'attr' => array('class' => 'combobox combobox-width ajax-combobox-researchlab', 'type' => 'hidden'),
-                    'classtype' => 'researchlab'
-                ));
+//                $form->add('name', 'employees_custom_selector', array(
+//                    'read_only' => ($lab && $lab->getId() ? true : false),
+//                    'label' => "Research Lab Title:",
+//                    'required' => false,
+//                    'attr' => array('class' => 'combobox combobox-width ajax-combobox-researchlab', 'type' => 'hidden'),
+//                    'classtype' => 'researchlab'
+//                ));
 
                 if( $lab ) {
 
@@ -151,12 +172,12 @@ class ResearchLabType extends AbstractType
 
         } else {
 
-            //use name as lab unique identifier
-            $builder->add('name',null,array(
-                'label'=>"Research Lab Title:",
-                'required' => true,
-                'attr' => array('class' => 'form-control')
-            ));
+//            //use name as lab unique identifier
+//            $builder->add('name',null,array(
+//                'label'=>"Research Lab Title:",
+//                'required' => true,
+//                'attr' => array('class' => 'form-control')
+//            ));
 
         }
 

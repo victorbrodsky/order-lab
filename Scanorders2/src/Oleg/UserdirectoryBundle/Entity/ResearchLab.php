@@ -111,6 +111,9 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
     public function setInstitution($institution)
     {
         $this->institution = $institution;
+        if( $institution ) {
+            $this->setName($institution->getName() . "");
+        }
     }
 
     public function getComments()
