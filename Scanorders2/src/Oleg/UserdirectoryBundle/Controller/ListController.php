@@ -234,9 +234,10 @@ class ListController extends Controller
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
-            $limit,                          /*limit per page*/
-            //array('wrap-queries'=>true)   //this cause sorting impossible, but without it "site" sorting does not work (mssql: "There is no component aliased by [sites] in the given Query" )
-            array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
+            $limit                          /*limit per page*/
+            //,array('wrap-queries'=>true)   //this cause sorting impossible, but without it "site" sorting does not work (mssql: "There is no component aliased by [sites] in the given Query" )
+            //,array('distinct'=>true)
+            ,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
         );
         //echo "list count=".count($entities)."<br>";
         //exit();

@@ -24,6 +24,12 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
     protected $original;
 
     /**
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
+     */
+    private $institution;
+
+    /**
      * @ORM\ManyToMany(targetEntity="User", mappedBy="researchLabs")
      **/
     private $user;
@@ -89,6 +95,23 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
 //        $this->addPi($pi);
     }
 
+
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
 
     public function getComments()
     {

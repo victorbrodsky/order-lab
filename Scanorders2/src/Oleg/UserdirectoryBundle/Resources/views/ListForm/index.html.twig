@@ -8,7 +8,10 @@
 
 {% block content %}
 
-    <h3 class="text-info">{{ displayName }}</h3>
+    <h3 class="text-info">
+        {{ displayName }}
+        {#(Total {{ entities.getTotalItemCount }})#}
+    </h3>
 
     {% if withCreateNewEntityLink is not defined %}
         {% set withCreateNewEntityLink = true %}
