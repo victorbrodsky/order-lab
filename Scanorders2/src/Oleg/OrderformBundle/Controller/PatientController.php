@@ -243,10 +243,11 @@ class PatientController extends Controller
         //currently= 288620544 bytes = 288,620 Kbytes = 288 Mbytes
         //additional= 16777216 bytes = 16,777 Kbytes = 16 Mbytes
         //459,538,432 bytes = 459,538 Kbytes = 459 Mbytes
-        //if( $parameters['datastructure'] == 'datastructure' ) {
+        if( $parameters['datastructure'] == 'datastructure' ) {
+            //echo "increase memory_limit <br>";
             //ini_set('memory_limit', '-1'); //dangerous!
             ini_set('memory_limit', '2048M');
-        //}
+        }
 
         $params = array(
             'type' => 'multy',
