@@ -239,8 +239,12 @@ class PatientController extends Controller
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        //testing
-        ini_set('memory_limit', '-1');
+        //testing: Error: Out of memory ([currently] allocated 288620544) (tried to allocate [additional] 16777216 bytes)
+        //currently= 288620544 bytes = 288,620 Kbytes = 288 Mbytes
+        //additional= 16777216 bytes = 16,777 Kbytes = 16 Mbytes
+        //459,538,432 bytes = 459,538 Kbytes = 459 Mbytes
+        //ini_set('memory_limit', '-1'); //dangerous!
+        ini_set('memory_limit', '1024M');
 
         $params = array(
             'type' => 'multy',
