@@ -126,6 +126,8 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
                 //$this->setLevel($firstSiblingLevel);
                 $defaultChild = $this->getFirstDefaultChild($parent);
                 if( $defaultChild ) {
+                    //echo "def level=".$defaultChild->getLevel()."<br>";
+                    //exit('exit');
                     $defaultSiblingLevel = $defaultChild->getLevel();
                     $this->setLevel($defaultSiblingLevel);
                 }

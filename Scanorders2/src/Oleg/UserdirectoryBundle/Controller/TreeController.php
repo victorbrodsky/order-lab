@@ -387,7 +387,7 @@ class TreeController extends Controller {
                         $treeRepository->persistAsPrevSiblingOf($node, $currentSibling);
                         //$node->setParent($parent);
                     } else {
-                        echo "logical error! ";
+                        //echo "logical error! ";
                         $treeRepository->persistAsFirstChildOf($node, $parent);
                     }
                 }
