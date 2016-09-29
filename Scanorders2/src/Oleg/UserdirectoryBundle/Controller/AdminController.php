@@ -3201,6 +3201,7 @@ class AdminController extends Controller
 
         return round($count/10);
     }
+    //http://cornellpathology.com/research/laboratories
     //add new reseacrh lab institutions with "Research Lab" OrganizationalGroupType under "WCMC-Pathology"
     //add manually already existing lab's institutions:
     //"Skeletal Biology", "Dr. Inghirami's Lab", "Wayne Tam Lab"
@@ -3214,7 +3215,7 @@ class AdminController extends Controller
         if( !$researchLabOrgGroup ) {
             exit('No OrganizationalGroupType: "Research Lab"');
         }
-        echo "researchLabOrgGroup=".$researchLabOrgGroup."<br>";
+        //echo "researchLabOrgGroup=".$researchLabOrgGroup."<br>";
 
         $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
         if( !$wcmc ) {
@@ -3302,12 +3303,12 @@ class AdminController extends Controller
             $researchInstitution->setOrganizationalGroupType($researchLabOrgGroup);
             $researchInstitution->addType($medicalType);
             $pathology->addChild($researchInstitution);
-            echo "researchInstitution=".$researchInstitution."(".$researchInstitution->getOrganizationalGroupType().")<br>";
+            //echo "researchInstitution=".$researchInstitution."(".$researchInstitution->getOrganizationalGroupType().")<br>";
             //exit('1');
 
             $em->persist($researchInstitution);
             $em->flush();
-            echo "added new Research Institution=".$labName."<br>";
+            //echo "added new Research Institution=".$labName."<br>";
 
 
             //2) create Research Lab object
@@ -3337,7 +3338,7 @@ class AdminController extends Controller
 
             $em->persist($researchLab);
             $em->flush();
-            echo "added new ResearchLab=".$labName."<br>";
+            //echo "added new ResearchLab=".$labName."<br>";
 
 
             $count = $count + 10;

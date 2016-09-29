@@ -99,7 +99,7 @@ class ResearchLabType extends AbstractType
             'required'=> false,
             'multiple' => false,
             //'property' => 'getTreeName', //getNodeNameWithRoot
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width ajax-combobox-researchlab'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.organizationalGroupType","organizationalGroupType")

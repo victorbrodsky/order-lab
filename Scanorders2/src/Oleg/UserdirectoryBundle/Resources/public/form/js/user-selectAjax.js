@@ -48,7 +48,7 @@ function initAllComboboxGeneric(newForm) {
 
     getComboboxGeneric(newForm,'identifierkeytype',_identifiers,false);
     getComboboxGeneric(newForm,'fellowshiptype',_fellowshiptype,false);
-    getComboboxGeneric(newForm,'researchlab',_researchlabs,false);
+    //getComboboxGeneric(newForm,'researchlab',_researchlabs,false);
     getComboboxGeneric(newForm,'location',_locations,false,'');
     getComboboxGeneric(newForm,'building',_buildings,false,'');
 

@@ -519,6 +519,7 @@ class UtilController extends Controller {
 
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:ResearchLab', 'list')
+            ->leftJoin('list.institution','institution')
             ->leftJoin('list.location','location')
             ->leftJoin('list.comments','comments')
             ->leftJoin('comments.author','commentauthor')
@@ -529,19 +530,20 @@ class UtilController extends Controller {
 
         //$user = $this->get('security.context')->getToken()->getUser();
 
-        $query->where("list.id=".$id);
+        $query->where("institution.id=".$id);
 
         $labs = $query->getQuery()->getResult();
+        //echo "labs count=".count($labs)."<br>";
 
         $output = array();
 
         foreach( $labs as $lab ) {
 
-            if( $subjectUser && is_numeric($subjectUser) ) {
-                $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
-            } else {
-                $subjectUserDB = null;
-            }
+//            if( $subjectUser && is_numeric($subjectUser) ) {
+//                $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+//            } else {
+//                $subjectUserDB = null;
+//            }
             
             //$commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUserDB, 'researchLab'=>$researchLabDB ) );
             //$piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUserDB, 'researchLab'=>$researchLabDB ) );
