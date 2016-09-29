@@ -3251,7 +3251,11 @@ class AdminController extends Controller
             "Molecular Gynecologic Pathology" => "Molecular Gynecologic Pathology",
             "Regulation of Bone Mass Laboratory" => "Regulation of Bone Mass Laboratory",
             "Cell Metabolism" => "Laboratory of Cell Metabolism",
-            "Cancer Biology" => "Cancer Biology"
+            "Cancer Biology" => "Cancer Biology",
+
+            "Skeletal Biology" => "Skeletal Biology",
+            "Dr. Inghirami's Lab" => "Dr. Inghirami's Lab",
+            "Wayne Tam Lab" => "Wayne Tam Lab"
 
 //            "Viral Oncogenesis",
 //            "Center for Vascular Biology",
