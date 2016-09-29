@@ -239,6 +239,9 @@ class PatientController extends Controller
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
+        //testing
+        ini_set('memory_limit', '-1');
+
         $params = array(
             'type' => 'multy',
             'cycle' => "show",
