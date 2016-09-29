@@ -98,7 +98,7 @@ class ResearchLabType extends AbstractType
             'label'=> "Research Lab Title:",
             'required'=> false,
             'multiple' => false,
-            'property' => 'getTreeName', //getNodeNameWithRoot
+            //'property' => 'getTreeName', //getNodeNameWithRoot
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -172,12 +172,12 @@ class ResearchLabType extends AbstractType
 
         } else {
 
-//            //use name as lab unique identifier
-//            $builder->add('name',null,array(
-//                'label'=>"Research Lab Title:",
-//                'required' => true,
-//                'attr' => array('class' => 'form-control')
-//            ));
+            //use name as lab unique identifier
+            $builder->add('name',null,array(
+                'label'=>"Research Lab Other Title (Not Institution):",
+                'required' => true,
+                'attr' => array('class' => 'form-control')
+            ));
 
         }
 

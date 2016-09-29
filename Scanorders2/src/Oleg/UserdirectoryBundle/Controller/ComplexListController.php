@@ -70,6 +70,8 @@ class ComplexListController extends Controller
         if( $mapper['pathname'] == 'researchlabs' ) {
             $dql->leftJoin("ent.user", "user");
             $dql->addGroupBy('user');
+            $dql->leftJoin("ent.institution", "institution");
+            $dql->addGroupBy('institution');
         }
 
         if( $mapper['pathname'] == 'grants' ) {
@@ -108,13 +110,14 @@ class ComplexListController extends Controller
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $limit = 30;
+        $limit = 50;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
             $this->get('request')->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
+            $limit /*limit per page*/
+            ,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
         );
 
         return array(

@@ -283,10 +283,12 @@ class Institution extends BaseCompositeNode {
         $this->parent = $parent;
 
         //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
-        if( $parent && count($parent->getChildren()) > 0 ) {
-            $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
-            if( $firstSiblingOrgGroupType ) {
-                $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
+        if( !$this->getOrganizationalGroupType() ) {
+            if ($parent && count($parent->getChildren()) > 0) {
+                $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
+                if ($firstSiblingOrgGroupType) {
+                    $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
+                }
             }
         }
     }

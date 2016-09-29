@@ -29,6 +29,10 @@
             <th>{{ knp_pagination_sortable(entities, 'Address', 'geoLocation.street1') }}</th>
         {% endif %}
 
+        {% if pathname == 'researchlabs' %}
+            <th>{{ knp_pagination_sortable(entities, 'Institution', 'institution.name') }}</th>
+        {% endif %}
+
         {% if entities|first.institution is defined and pathname == 'buildings' %}
             <th>{{ knp_pagination_sortable(entities, 'Institution(s)', 'institutions.abbreviation') }}</th>
         {% endif %}
@@ -80,6 +84,14 @@
 
                 {% if entity.geoLocation is defined %}
                     <td>{{ entity.getShortName() }}</td>
+                {% endif %}
+
+                {% if pathname == 'researchlabs' %}
+                    <td>
+                        {% if entity.institution %}
+                            {{ entity.institution }}
+                        {% endif %}
+                    </td>
                 {% endif %}
 
                 {% if entity.institutions is defined and pathname == 'buildings' %}

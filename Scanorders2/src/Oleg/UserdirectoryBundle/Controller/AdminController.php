@@ -3212,6 +3212,7 @@ class AdminController extends Controller
         if( !$researchLabOrgGroup ) {
             exit('No OrganizationalGroupType: "Research Lab"');
         }
+        echo "researchLabOrgGroup=".$researchLabOrgGroup."<br>";
 
         $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
         if( !$wcmc ) {
@@ -3239,12 +3240,12 @@ class AdminController extends Controller
             "Epigenetics and Genomic Integrity" => "Laboratory of Epigenetics and Genomic Integrity",
             "Laboratory of Stem Cell Aging and Cancer" => "Laboratory of Stem Cell Aging and Cancer",
             "Molecular Pathology" => "Molecular Pathology",
-            "Oncogenic Transcription Factors in Prostate Cancer" => "Oncogenic Transcription Factors in Prostate Cancer",
+            "Oncogenic Transcription Factors in Prostate Cancer" => "Oncogenic Transcription Factors in Prostate Cancer", //Oncogenic Transcription Factors in Prostate Cancer; Prostate Cancer Research Group
 
             "DNA Repair and Molecular Immunology" => "DNA Repair and Molecular Immunology Laboratory",
             "Proteolytic Oncogenesis" => "Proteolytic Oncogenesis",
-            "Macrophages and Tissue Remodeling" => "Macrophages and Tissue Remodeling",
-            "Antiphospholipid Syndrome" => "Antiphospholipid Syndrome (APS) Research Laboratory",
+            "Macrophages and Tissue Remodeling" => "Macrophages and Tissue Remodeling", //Macrophages and Tissue Remodeling; Vascular Biology
+            "Antiphospholipid Syndrome" => "Antiphospholipid Syndrome (APS) Research Laboratory", //Dr. Rand's Lab
             "Molecular Gynecologic Pathology" => "Molecular Gynecologic Pathology",
             "Regulation of Bone Mass Laboratory" => "Regulation of Bone Mass Laboratory",
             "Cell Metabolism" => "Laboratory of Cell Metabolism",
@@ -3295,6 +3296,8 @@ class AdminController extends Controller
             $researchInstitution->setOrganizationalGroupType($researchLabOrgGroup);
             $researchInstitution->addType($medicalType);
             $pathology->addChild($researchInstitution);
+            echo "researchInstitution=".$researchInstitution."(".$researchInstitution->getOrganizationalGroupType().")<br>";
+            //exit('1');
 
             $em->persist($researchInstitution);
             $em->flush();
@@ -3333,7 +3336,7 @@ class AdminController extends Controller
 
             $count = $count + 10;
 
-            exit("finished adding ".$labName)."<br>";
+            //exit("finished adding ".$labName)."<br>";
         }
 
         return round($count/10);
