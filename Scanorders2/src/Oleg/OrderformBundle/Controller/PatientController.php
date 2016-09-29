@@ -246,7 +246,7 @@ class PatientController extends Controller
         if( $parameters['datastructure'] == 'datastructure' ) {
             //echo "increase memory_limit <br>";
             //ini_set('memory_limit', '-1'); //dangerous!
-            ini_set('memory_limit', '2048M');
+            ini_set('memory_limit', '3072M');
         }
 
         $params = array(
