@@ -3202,6 +3202,8 @@ class AdminController extends Controller
         return round($count/10);
     }
     //add new reseacrh lab institutions with "Research Lab" OrganizationalGroupType under "WCMC-Pathology"
+    //add manually already existing lab's institutions:
+    //"Skeletal Biology", "Dr. Inghirami's Lab", "Wayne Tam Lab"
     public function generateResLabs() {
 
         $username = $this->get('security.context')->getToken()->getUser();
