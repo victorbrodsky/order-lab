@@ -10,6 +10,7 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 
 use Oleg\OrderformBundle\Entity\Educational;
+use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Oleg\UserdirectoryBundle\Entity\AdminComment;
@@ -335,9 +336,45 @@ class UserGenerator {
             }
 
             //Research Lab Title : s2id_oleg_userdirectorybundle_user_researchLabs_0_name
+            //TODO: not tested yet
             $researchLabTitleStr = $this->getValueByHeaderName('Research Lab Title', $rowData, $headers);
             if( $researchLabTitleStr ) {               
                 $researchLab = $this->getObjectByNameTransformer('ResearchLab',$researchLabTitleStr,$systemuser);
+
+                //get or generate research lab's institution if does not exists
+                if( !$researchLab->getInstitution() ) {
+                    //$params = array('type'=>'Medical','organizationalGroupType'=>'Research Lab');
+                    //$researchLabInstitutionObj = $this->getObjectByNameTransformer('Institution',$researchLabTitleStr,$systemuser,$params);
+                    $researchWcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+                    $researchMapper = array(
+                        'prefix' => 'Oleg',
+                        'bundleName' => 'UserdirectoryBundle',
+                        'className' => 'Institution'
+                    );
+                    $researchPathology = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                        "Pathology and Laboratory Medicine",
+                        $researchWcmc,
+                        $researchMapper
+                    );
+                    $researchInstitution = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                        $researchLabTitleStr,
+                        $researchPathology,
+                        $researchMapper
+                    );
+                    if (!$researchInstitution) {
+                        $medicalType = $this->em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+                        $researchLabOrgGroup = $this->em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
+                        $researchInstitution = new Institution();
+                        //$this->setDefaultList($researchInstitution, 1, $username, $researchLabTitleStr);
+                        $userUtil->setDefaultList($researchInstitution, 1, $user, $researchLabTitleStr);
+                        $researchInstitution->setOrganizationalGroupType($researchLabOrgGroup);
+                        $researchInstitution->addType($medicalType);
+                        $researchPathology->addChild($researchInstitution);
+                    }
+
+                    $researchLab->setInstitution($researchInstitution);
+                }
+
                 $user->addResearchLab($researchLab);
 
                 //Principle Investigator of this Lab
@@ -346,7 +383,7 @@ class UserGenerator {
                     $researchLab->setPiUser($user);
                 }
 
-            }
+            }//researchLabTitleStr
 
             //credentials
             $boardCertSpec = $this->getValueByHeaderName('Board Certification - Specialty', $rowData, $headers);

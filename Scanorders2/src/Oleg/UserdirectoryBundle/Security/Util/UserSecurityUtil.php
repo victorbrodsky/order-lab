@@ -570,6 +570,10 @@ class UserSecurityUtil {
                 $type = $this->em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName($params['type']);
                 $entity->addType($type);
             }
+            if( array_key_exists('organizationalGroupType',$params) && $params['organizationalGroupType'] ) {
+                $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName($params['organizationalGroupType']);
+                $entity->setOrganizationalGroupType($organizationalGroupType);
+            }
         }
 
         return $entity;
