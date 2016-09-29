@@ -286,6 +286,7 @@ class Institution extends BaseCompositeNode {
         if( !$this->getOrganizationalGroupType() ) {
             if ($parent && count($parent->getChildren()) > 0) {
                 //$firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
+                //$this->setOrganizationalGroupType($firstSiblingOrgGroupType);
                 $defaultChild = $this->getFirstDefaultChild($parent);
                 $defaultSiblingOrgGroupType = $defaultChild->getOrganizationalGroupType();
                 if( $defaultSiblingOrgGroupType ) {

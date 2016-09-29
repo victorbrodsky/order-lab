@@ -120,16 +120,17 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         $this->parent = $parent;
 
         //change level of this entity to the first child level of the parent
-        if( !$this->getLevel() ) {
+        //if( !$this->getLevel() ) {
             if (count($parent->getChildren()) > 0) {
                 //$firstSiblingLevel = $parent->getChildren()->first()->getLevel();
+                //$this->setLevel($firstSiblingLevel);
                 $defaultChild = $this->getFirstDefaultChild($parent);
                 if( $defaultChild ) {
                     $defaultSiblingLevel = $defaultChild->getLevel();
                     $this->setLevel($defaultSiblingLevel);
                 }
             }
-        }
+        //}
     }
     //get the first child with positive level OrganizationalGroupType
     public function getFirstDefaultChild( $parent ) {
