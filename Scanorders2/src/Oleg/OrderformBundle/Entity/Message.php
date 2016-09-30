@@ -351,6 +351,11 @@ class Message {
      **/
     private $attachmentContainer;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ExternalId", mappedBy="message", cascade={"persist","remove"})
+     */
+    private $externalIds;
+
 
     ////////////////////////// Specific Messages //////////////////////////
 
@@ -436,6 +441,7 @@ class Message {
         //TODO: test cloning
         $this->sources = new ArrayCollection();
         $this->destinations = new ArrayCollection();
+        $this->externalIds = new ArrayCollection();
 
         //links
         //TODO: test cloning
@@ -487,6 +493,7 @@ class Message {
 
             $this->sources = new ArrayCollection();
             $this->destinations = new ArrayCollection();
+            $this->externalIds = new ArrayCollection();
 
             //
             $provider = $this->getProvider();
@@ -554,6 +561,7 @@ class Message {
         $addMethod = "add".$className;
         $this->$addMethod($depend);
     }
+
 
     /**
      * @param mixed $idnumber
@@ -1046,6 +1054,27 @@ class Message {
     public function getResearch()
     {
         return $this->research;
+    }
+
+    public function addExternalId($item)
+    {
+        if( $item && !$this->externalIds->contains($item) ) {
+            $this->externalIds->add($item);
+            $item->setMessage($this);
+        }
+        return $this;
+    }
+    public function removeExternalId($item)
+    {
+        $this->externalIds->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExternalIds()
+    {
+        return $this->externalIds;
     }
 
 

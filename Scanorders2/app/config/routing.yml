@@ -8,11 +8,6 @@ main_under_construction:
     defaults:  { _controller: OlegUserdirectoryBundle:Home:underConstruction }
 
 #order is important: base bundle userdirectory must be the last one
-oleg_orderform:
-    resource: "@OlegOrderformBundle/Controller/"
-    type:     annotation
-    prefix:   /scan
-
 oleg_deidentifier:
     resource: "@OlegDeidentifierBundle/Controller/"
     type:     annotation
@@ -32,6 +27,11 @@ oleg_calllog:
     resource: "@OlegCallLogBundle/Controller/"
     type:     annotation
     prefix:   /call-log-book
+
+oleg_orderform:
+    resource: "@OlegOrderformBundle/Controller/"
+    type:     annotation
+    prefix:   /scan
 
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
