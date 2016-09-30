@@ -14,7 +14,7 @@
         {{ form_errors(field) }}
         <div class="col-xs-6" align="right">
             {#{{ form_label(field) }}#}
-            <strong>label</strong>{{ postfixLabel|raw }}<strong>:</strong>
+            <strong>{{ label }}</strong> {{ postfixLabel|raw }}<strong>:</strong>
         </div>
         <div class="col-xs-6" align="left">
             {{ form_widget(field) }}
