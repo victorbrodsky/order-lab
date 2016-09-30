@@ -1068,7 +1068,6 @@ class Message {
     {
         $this->externalIds->removeElement($item);
     }
-
     /**
      * @return mixed
      */

@@ -1,5 +1,29 @@
 {#macro for form label input inline#}
 
+{% macro field_tooltip( field, tooltip ) %}
+
+    {% set postfixLabel = '<span class="glyphicon glyphicon-question-sign element-with-tooltip-always"' %}
+    {% set postfixLabel = postfixLabel~' data-toggle="tooltip"' %}
+    {% set postfixLabel = postfixLabel~' title="'~tooltip~'">' %}
+    {% set postfixLabel = postfixLabel~'</span>' %}
+
+    {% set label = field.vars.label|replace({":":""}) %}
+
+    <p>
+    <div class="row">
+        {{ form_errors(field) }}
+        <div class="col-xs-6" align="right">
+            {#{{ form_label(field) }}#}
+            <strong>label</strong>{{ postfixLabel|raw }}<strong>:</strong>
+        </div>
+        <div class="col-xs-6" align="left">
+            {{ form_widget(field) }}
+        </div>
+        {{ form_rest(field) }}
+    </div>
+    </p>
+{% endmacro %}
+
 {% macro checkbox( value ) %}
     <p>
     <div class="row">
@@ -707,6 +731,24 @@
                             {% set orderIdHref = orderId %}
                         {% endif %}
                         {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
+
+                        {#show ALL External IDs: External ID Source System, External ID#}
+                        {% if message.externalIds is defined %}
+                            {% for externalId in message.externalIds %}
+                                <div class="well well-sm">
+                                    {#{{ formmacros.simplefield( "External ID Source System:", externalId.sourceSystem, "input", disabled ) }}#}
+                                    {#{{ formmacros.simplefield( "External ID:", externalId.externalId, "input", disabled ) }}#}
+                                    {% if externalId.sourceSystem is defined %}
+                                        {#Add Tooltips / show "received" timestamp for the source external id field.#}
+                                        {#{{ formmacros.field( externalId.sourceSystem ) }}#}
+                                        {{ formmacros.field_tooltip( externalId.sourceSystem, externalId.vars.value.receivedOn|date('Y-m-d h:i a') ) }}
+                                    {% endif %}
+                                    {% if externalId.externalId is defined %}
+                                        {{ formmacros.field( externalId.externalId ) }}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
 
                         {#controlled by controller and form#}
                         {% if message.idnumber is defined %}

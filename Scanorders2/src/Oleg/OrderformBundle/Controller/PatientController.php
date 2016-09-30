@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+use Oleg\OrderformBundle\Entity\ExternalId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -145,6 +146,7 @@ class PatientController extends Controller
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
+        $params['message.externalIds'] = true;
         $params['message.idnumber'] = false;
         $params['message.sources'] = false;
         $params['message.destinations'] = false;
@@ -170,6 +172,7 @@ class PatientController extends Controller
             'form' => $form->createView(),
             'formtype' => 'Patient Data Structure',
             'type' => 'show',
+            'cycle' => 'new',
             'datastructure' => 'datastructure',
             'sitename' => $this->container->getParameter('scan.sitename')
         );
@@ -265,6 +268,7 @@ class PatientController extends Controller
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
+        $params['message.externalIds'] = false;
         $params['message.idnumber'] = false;
         $params['message.sources'] = false;
         $params['message.destinations'] = false;
@@ -375,6 +379,7 @@ class PatientController extends Controller
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
+        $params['message.externalIds'] = false;
         $params['message.idnumber'] = false;
         $params['message.sources'] = false;
         $params['message.destinations'] = false;
@@ -474,6 +479,7 @@ class PatientController extends Controller
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
+        $params['message.externalIds'] = false;
         $params['message.idnumber'] = false;
         $params['message.sources'] = false;
         $params['message.destinations'] = false;
@@ -1482,6 +1488,14 @@ class PatientController extends Controller
         //set Destination object
         $destination = new Endpoint();
         $message->addDestination($destination);
+
+        //add one ExternalId object
+        //echo "add external Id object $messageCategoryStr <br>";
+        $externalId = new ExternalId();
+        $externalId->setExternalId('External ID 123');
+        $externalId->setSourceSystem($system);
+        $message->addExternalId($externalId);
+        $message->addExternalId($externalId);
 
         //type
         $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategoryStr);

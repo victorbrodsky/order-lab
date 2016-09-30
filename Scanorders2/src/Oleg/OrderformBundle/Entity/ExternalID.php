@@ -32,6 +32,11 @@ class ExternalId {
 
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $externalId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
      */
     private $sourceSystem;
@@ -100,9 +105,9 @@ class ExternalId {
 
 
 
-//    public function __construct() {
-//        $this->setReceivedOn(new \DateTime());
-//    }
+    public function __construct() {
+        $this->setReceivedOn(new \DateTime());
+    }
 
 
 
@@ -121,6 +126,23 @@ class ExternalId {
     {
         $this->id = $id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getExternalId()
+    {
+        return $this->externalId;
+    }
+
+    /**
+     * @param mixed $externalId
+     */
+    public function setExternalId($externalId)
+    {
+        $this->externalId = $externalId;
+    }
+
 
     /**
      * @return mixed

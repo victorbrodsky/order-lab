@@ -54,6 +54,9 @@ class MessageObjectType extends AbstractType
         if( !array_key_exists('message.destinations', $this->params) ) {
             $this->params['message.destinations'] = true;
         }
+        if( !array_key_exists('message.externalIds', $this->params) ) {
+            $this->params['message.externalIds'] = true;
+        }
 
         if( !array_key_exists('message.associations', $this->params) ) {
             $this->params['message.associations'] = true;
@@ -235,6 +238,12 @@ class MessageObjectType extends AbstractType
             $this->params['endpoint.location.label'] = $this->labels['destinations.location'];
             $this->params['endpoint.system.label'] = $this->labels['destinations.system'];
             $this->addFormEndpoint('destinations',$builder,$this->params);
+        }
+
+        //externalIds
+        if( $this->params['message.externalIds'] == true ) {
+            //echo "message.externalIds <br>";
+            $this->addFormExternalIds('externalIds',$builder,$this->params);
         }
 
         //Institution Tree
@@ -994,6 +1003,19 @@ if( 1 ) {
     public function addFormEndpoint( $field, $form, $params ) {
         $form->add($field, 'collection', array(
             'type' => new EndpointType($params,$this->entity),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__'.$field.'__',
+        ));
+    }
+
+    public function addFormExternalIds( $field, $form, $params ) {
+        $form->add($field, 'collection', array(
+            'type' => new ExternalIdType($params,$this->entity),
             'label' => false,
             'required' => false,
             'allow_add' => true,

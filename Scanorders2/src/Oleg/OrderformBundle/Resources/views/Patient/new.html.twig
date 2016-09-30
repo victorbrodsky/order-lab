@@ -54,9 +54,14 @@
         {%  set updatepath = 'scan_patient_update' %}
     {% endif %}
 
+    {% if entity.id %}
+        {{ form_start(form,{'method': 'POST', 'action': path(updatepath,{'id':entity.id})}) }}
+    {% else %}
+        {{ form_start(form) }}
+    {% endif %}
 
 {#<form id="patient-form" action="{{ path(updatepath,{'id':entity.id}) }}" method="POST">#}
-{{ form_start(form,{'method': 'POST', 'action': path(updatepath,{'id':entity.id})}) }}
+{#{{ form_start(form,{'method': 'POST', 'action': path(updatepath,{'id':entityId})}) }}#}
 
     {#<div id="form-prototype-data"#}
          {#data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"#}
@@ -82,7 +87,7 @@
         </p>
     {% endif %}
 
-    {% if cycle == "show" %}
+    {% if cycle == "show" and editpath is defined %}
         <br>
         <p>
             {#<button id="patient_update_btn" class="btn_margin_top btn btn-primary btn-success" name="btnUpdate" type="submit">#}
