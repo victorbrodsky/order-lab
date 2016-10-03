@@ -1,7 +1,15 @@
 <?php
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\CallLogBundle\Form;
 
+use Oleg\OrderformBundle\Form\EncounterDateType;
+use Oleg\OrderformBundle\Form\EncounterLocationType;
+use Oleg\OrderformBundle\Form\EncounterPatfirstnameType;
+use Oleg\OrderformBundle\Form\EncounterPatlastnameType;
+use Oleg\OrderformBundle\Form\EncounterPatmiddlenameType;
+use Oleg\OrderformBundle\Form\EncounterPatsexType;
+use Oleg\OrderformBundle\Form\EncounterPatsuffixType;
+use Oleg\OrderformBundle\Form\GenericFieldType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -25,30 +33,6 @@ class EncounterType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        //children
-        $builder->add('procedure', 'collection', array(
-            'type' => new ProcedureType($this->params),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedure__',
-        ));
-
-
-//        $builder->add('name', 'collection', array(
-//            'type' => new EncounterNameType($this->params, $this->entity),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'label' => "Encounter Type:",
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__encountername__',
-//        ));
 
         $builder->add('date', 'collection', array(
             'type' => new EncounterDateType($this->params, null),
@@ -136,46 +120,27 @@ class EncounterType extends AbstractType
 
 
 
-        //extra data-structure fields
-        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+        //number and source
+        $builder->add('number', 'collection', array(
+            'type' => new EncounterNumberType($this->params, $this->entity),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__encounternumber__',
+        ));
 
-            //echo "flag datastructure=".$this->params['datastructure']."<br>";
-
-//            $builder->add('keytype', 'entity', array(
-//                'class' => 'OlegOrderformBundle:EncounterType',
-//                'label' => 'Encounter Type:',
-//                'required' => true,
-//                'data' => 1,
-//                'attr' => array('style'=>'display:none;'),
-//                'query_builder' => function(EntityRepository $er) {
-//                        return $er->createQueryBuilder('list')
-//                            ->orderBy("list.orderinlist","ASC")
-//                            ->setMaxResults(1);
-//
-//                    },
-//            ));
-
-            //number and source
-            $builder->add('number', 'collection', array(
-                'type' => new EncounterNumberType($this->params, $this->entity),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'label' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__encounternumber__',
-            ));
-
-            $builder->add('location', 'collection', array(
-                'type' => new EncounterLocationType($this->params, null),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__encounterlocation__',
-            ));
+        $builder->add('location', 'collection', array(
+            'type' => new EncounterLocationType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__encounterlocation__',
+        ));
 
 //            $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
 //            $params = array('name'=>'Encounter','dataClass'=>'Oleg\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
@@ -188,30 +153,29 @@ class EncounterType extends AbstractType
 //                'prototype' => true,
 //                'prototype_name' => '__encounterorder__',
 //            ));
+//
+//        $builder->add('inpatientinfo', 'collection', array(
+//            'type' => new EncounterInpatientinfoType($this->params, null),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__encounterinpatientinfo__',
+//        ));
 
-            $builder->add('inpatientinfo', 'collection', array(
-                'type' => new EncounterInpatientinfoType($this->params, null),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__encounterinpatientinfo__',
-            ));
+        $builder->add('provider', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => 'Provider:',
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.roles LIKE :roles OR u=:user')
+                        ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                },
+        ));
 
-            $builder->add('provider', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:User',
-                'label' => 'Provider:',
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('u')
-                            ->where('u.roles LIKE :roles OR u=:user')
-                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
-                    },
-            ));
-
-        }
 
 
         //messages
@@ -225,6 +189,28 @@ class EncounterType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__encountermessage__',
+            ));
+        }
+
+        //Referring Provider for calllog new entry
+        if( array_key_exists('formtype',$this->params) && $this->params['formtype'] == 'call-entry' ) {
+            $builder->add('referringProvider', 'custom_selector', array(
+                'label' => 'Referring Provider:',
+                'attr' => array('class' => 'combobox combobox-width combobox-encounter-referringProvider', 'type' => 'hidden'),
+                'required'=>false,
+                'classtype' => 'userWrapper' //,  'encounterReferringProvider'   //'optionalUserEducational'
+            ));
+
+            //number and source
+            $builder->add('number', 'collection', array(
+                'type' => new EncounterNumberType($this->params, $this->entity),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounternumber__',
             ));
         }
         

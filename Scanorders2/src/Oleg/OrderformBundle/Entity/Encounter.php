@@ -85,6 +85,17 @@ class Encounter extends ObjectAbstract
      */
     protected $pathistory;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="referringProvider", referencedColumnName="id")
+     */
+    private $referringProvider;
+
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
+//     * @ORM\JoinColumn(name="referringProviderSpecialty", referencedColumnName="id")
+//     */
+//    private $referringProviderSpecialty;
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
@@ -104,6 +115,7 @@ class Encounter extends ObjectAbstract
      */
     private $inpatientinfo;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
+
 
 
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
@@ -557,6 +569,21 @@ class Encounter extends ObjectAbstract
         return $this->patient;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getReferringProvider()
+    {
+        return $this->referringProvider;
+    }
+
+    /**
+     * @param mixed $referringProvider
+     */
+    public function setReferringProvider($referringProvider)
+    {
+        $this->referringProvider = $referringProvider;
+    }
 
 
 

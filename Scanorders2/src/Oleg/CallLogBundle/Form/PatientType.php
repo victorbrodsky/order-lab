@@ -2,7 +2,7 @@
 
 namespace Oleg\CallLogBundle\Form;
 
-use Oleg\OrderformBundle\Form\EncounterType;
+use Oleg\CallLogBundle\Form\EncounterType;
 use Oleg\OrderformBundle\Form\GenericFieldType;
 use Oleg\OrderformBundle\Form\PatientDobType;
 use Oleg\OrderformBundle\Form\PatientSexType;

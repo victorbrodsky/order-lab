@@ -137,7 +137,8 @@ class CallEntryController extends Controller
             //'alias' => true
             'type' => null,
             'mrntype' => intval($mrntype),
-            'mrn' => $mrn
+            'mrn' => $mrn,
+            'formtype' => 'call-entry',
         );
 
         if( $formparams ) {
