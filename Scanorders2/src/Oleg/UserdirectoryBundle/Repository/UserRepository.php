@@ -30,7 +30,9 @@ class UserRepository extends EntityRepository {
         $query->leftJoin("user.administrativeTitles", "administrativeTitles");
         $query->leftJoin("user.appointmentTitles", "appointmentTitles");
         $query->leftJoin("user.medicalTitles", "medicalTitles");
+        $query->leftJoin("user.researchLabs", "researchLabs");
         $query->where("administrativeTitles.institution = :nodeid OR appointmentTitles.institution = :nodeid OR medicalTitles.institution = :nodeid");
+        $query->orWhere("researchLabs.institution = :nodeid");
         $query->setParameters( array("nodeid"=>$nodeid) );
 
         $users = $query->getQuery()->getResult();
