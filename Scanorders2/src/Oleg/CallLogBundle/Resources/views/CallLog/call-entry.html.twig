@@ -29,7 +29,8 @@
     <div id="calllog-patient-list">
 
     {#<form id="CallCaseForm" class="form-vertical" role="form">#}
-    {{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}
+    {#{{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}#}
+    {{ form_start(form,{'method': 'POST', 'action': path('calllog_update_patient')}) }}
 
         {{ form_errors(form) }}
 

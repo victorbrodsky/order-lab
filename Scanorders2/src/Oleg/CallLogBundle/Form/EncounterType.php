@@ -191,18 +191,6 @@ class EncounterType extends AbstractType
         }
 
         //Referring Provider for calllog new entry
-//        $builder->add('referringProvider', 'custom_selector', array(
-//            'label' => 'Referring Provider:',
-//            'attr' => array('class' => 'combobox combobox-width combobox-encounter-referringProvider', 'type' => 'hidden'),
-//            'required'=>false,
-//            'classtype' => 'userWrapper' //,  'encounterReferringProvider'   //'optionalUserEducational'
-//        ));
-//        $builder->add('referringProviders', 'custom_selector', array(
-//            'label' => 'Referring Provider:',
-//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterReferringProvider'),
-//            'required' => false,
-//            'classtype' => 'userWrapper'
-//        ));
         $builder->add('referringProviders', 'collection', array(
             'type' => new EncounterReferringProviderType($this->params, null),
             'allow_add' => true,

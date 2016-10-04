@@ -115,9 +115,14 @@ class CallEntryController extends Controller
      * Update Patient
      * @Route("/patient/update", name="calllog_update_patient", options={"expose"=true})
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
+     * @Method("POST")
      */
     public function updatePatientAction(Request $request)
     {
+        exit('update patient');
+        //case 1: patient exists: create a new encounter to DB and add it to the existing patient
+        //add patient id field to the form (id="oleg_calllogbundle_patienttype_id") or use class="calllog-patient-id" input field.
+        //case 2: patient might not exists: create a new encounter to DB
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');

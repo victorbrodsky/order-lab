@@ -90,12 +90,6 @@ class Encounter extends ObjectAbstract
      */
     protected $referringProviders;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="EncounterReferringProviderSpecialty", mappedBy="encounter", cascade={"persist"})
-//     */
-//    protected $referringProviderSpecialties;
-
-
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
@@ -137,7 +131,6 @@ class Encounter extends ObjectAbstract
 
         $this->pathistory = new ArrayCollection();
         $this->referringProviders = new ArrayCollection();
-        //$this->referringProviderSpecialties = new ArrayCollection();
 
         //extra
         $this->location = new ArrayCollection();
@@ -173,7 +166,6 @@ class Encounter extends ObjectAbstract
         $this->patage = $this->cloneDepend($this->patage,$this);
         $this->pathistory = $this->cloneDepend($this->pathistory,$this);
         $this->referringProviders = $this->cloneDepend($this->referringProviders,$this);
-        //$this->referringProviderSpecialties = $this->cloneDepend($this->referringProviderSpecialties,$this);
 
         //extra fields
         $this->location = $this->cloneDepend($this->location,$this);
@@ -596,25 +588,6 @@ class Encounter extends ObjectAbstract
         $this->referringProviders->removeElement($item);
         //$this->setArrayFieldObjectChange('referringProviders','remove',$item);
     }
-
-//    public function getReferringProviderSpecialties()
-//    {
-//        return $this->referringProviderSpecialties;
-//    }
-//    public function addReferringProviderSpecialty($item)
-//    {
-//
-//        if( !$this->referringProviderSpecialties->contains($item) ) {
-//            $item->setEncounter($this);
-//            $this->referringProviderSpecialties->add($item);
-//        }
-//
-//        return $this;
-//    }
-//    public function removeReferringProviderSpecialty($item)
-//    {
-//        $this->referringProviderSpecialties->removeElement($item);
-//    }
 
 
     ///////////////////////// Extra fields /////////////////////////
