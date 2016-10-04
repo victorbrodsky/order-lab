@@ -10,6 +10,8 @@ use Oleg\OrderformBundle\Entity\EncounterPatlastname;
 use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
 use Oleg\OrderformBundle\Entity\EncounterPatsex;
 use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
+use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
+use Oleg\OrderformBundle\Entity\EncounterReferringProviderSpecialty;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\PatientDob;
 use Oleg\OrderformBundle\Entity\PatientFirstName;
@@ -89,6 +91,54 @@ class CallEntryController extends Controller
         $patient = new Patient(true,$status,$user,$system);
 
         $encounter = new Encounter(true,$status,$user,$system);
+        $encounterReferringProvider = new EncounterReferringProvider($status,$user,$system);
+        $encounter->addReferringProvider($encounterReferringProvider);
+        //$encounter->addReferringProviderSpecialty( new EncounterReferringProviderSpecialty($status,$user,$system) );
+        $patient->addEncounter($encounter);
+
+
+        $form = $this->createPatientForm($patient,$mrntype,$mrn);
+
+        return array(
+            //'entity' => $entity,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => $title,
+            'formtype' => $formtype,
+            'triggerSearch' => 0,
+            'mrn' => $mrn,
+            'mrntype' => $mrntype
+        );
+    }
+
+    /**
+     * Update Patient
+     * @Route("/patient/update", name="calllog_update_patient", options={"expose"=true})
+     * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
+     */
+    public function updatePatientAction(Request $request)
+    {
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $mrn = trim($request->get('mrn'));
+        $mrntype = trim($request->get('mrn-type'));
+
+        $title = "New Entry";
+
+        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $status = 'valid';
+        $cycle = 'new';
+        $formtype = 'call-entry';
+
+        $patient = new Patient(true,$status,$user,$system);
+
+        $encounter = new Encounter(true,$status,$user,$system);
+        $encounterReferringProvider = new EncounterReferringProvider($status,$user,$system);
+        $encounter->addReferringProvider($encounterReferringProvider);
+        //$encounter->addReferringProviderSpecialty( new EncounterReferringProviderSpecialty($status,$user,$system) );
         $patient->addEncounter($encounter);
 
 

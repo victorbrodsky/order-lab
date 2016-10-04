@@ -12,6 +12,7 @@ use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\Collaboration;
 use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
+use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
@@ -257,6 +258,8 @@ class AdminController extends Controller
 
         $adminRes = $this->generateAdministratorAction();
 
+        $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
+
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -322,6 +325,7 @@ class AdminController extends Controller
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
             'Administrator generation='.$adminRes.', '.
+            'HealthcareProviderSpecialtiesList='.$count_HealthcareProviderSpecialtiesList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -4506,6 +4510,63 @@ class AdminController extends Controller
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $listEntity->setAbbreviation($abbreviation);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateHealthcareProviderSpecialtiesList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Blood Bank Personnel",
+            "Microbiology Lab Personnel",
+            "Cellular Therapy Lab Personnel",
+            "Coagulation Lab Personnel",
+            "Toxicology Lab Personnel",
+            "Molecular Lab Personnel",
+            "Cytogenetics Lab Personnel",
+            "Central Lab Personnel",
+            "OR nurse",
+            "OR anesthesiologist",
+            "OR surgeon",
+            "Floor nurse",
+            "Floor physician",
+            "Floor PA",
+            "Hospital administrator",
+            "Infusion center nurse",
+            "Infusion center physician",
+            "Infusion center nurse practitioner",
+            "Medical student",
+            "ER physician",
+            "ER nurse",
+            "ER PA",
+            "Interventional radiology physician",
+            "Interventional radiology nurse",
+            "Interventional radiology PA",
+            "Endoscopy physician",
+            "Endoscopy nurse",
+            "Endoscopy PA"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:HealthcareProviderSpecialtiesList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new HealthcareProviderSpecialtiesList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);
             $em->flush();

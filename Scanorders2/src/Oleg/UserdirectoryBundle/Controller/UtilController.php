@@ -1271,7 +1271,9 @@ class UtilController extends Controller {
                 $className = "PositionTypeList";
                 break;
 
-
+            case "referringProviderSpecialty";
+                $className = "HealthcareProviderSpecialtiesList";
+                break;
 
             default:
                 $className = null;

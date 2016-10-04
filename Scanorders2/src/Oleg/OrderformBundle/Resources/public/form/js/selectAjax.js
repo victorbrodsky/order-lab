@@ -38,6 +38,8 @@ var _courseTitle = [];
 var _account = [];
 var _urgency = [];
 var _proxyuser = [];
+var _encounterReferringProvider = [];
+var _referringProviderSpecialty = [];
 
 //generic select2 fields
 var _labtesttype = [];
@@ -113,6 +115,8 @@ function customCombobox() {
         getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
         getComboboxGeneric(null,'parttitle',_parttitle,false,null,'scan',true);
         getComboboxGeneric(null,'embedderinstruction',_embedderinstruction,false,null,'scan');
+        getComboboxGeneric(null,'encounterReferringProvider',_encounterReferringProvider,false,'','scan');
+        getComboboxGeneric(null,'referringProviderSpecialty',_referringProviderSpecialty,false);
     }
 
     getComboboxGeneric(null,'labtesttype',_labtesttype,false,null,'scan');

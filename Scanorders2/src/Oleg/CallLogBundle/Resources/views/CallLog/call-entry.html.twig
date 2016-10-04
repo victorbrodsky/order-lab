@@ -62,7 +62,18 @@
                         {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
                         {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
                         {{ formmacros.field(encounter.provider) }}
-                        {{ formmacros.field(encounter.referringProvider) }}
+
+                        {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
+                        {% for referringProvider in encounter.referringProviders %}
+                            {#{{ formmacros.field_show_user( encounter, "referringProviders", cycle ) }}#}
+                            {{ formmacros.field(referringProvider.field) }}
+                            {{ formmacros.field(referringProvider.referringProviderSpecialty) }}
+                            {{ formmacros.field(referringProvider.referringProviderPhone) }}
+                        {% endfor %}
+
+                        {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}
+
+
                     {% endfor %}
 
                 </div> <!-- panel-body -->

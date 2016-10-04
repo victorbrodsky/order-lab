@@ -86,16 +86,16 @@ class Encounter extends ObjectAbstract
     protected $pathistory;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="referringProvider", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="EncounterReferringProvider", mappedBy="encounter", cascade={"persist"})
      */
-    private $referringProvider;
+    protected $referringProviders;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
-//     * @ORM\JoinColumn(name="referringProviderSpecialty", referencedColumnName="id")
+//     * @ORM\OneToMany(targetEntity="EncounterReferringProviderSpecialty", mappedBy="encounter", cascade={"persist"})
 //     */
-//    private $referringProviderSpecialty;
+//    protected $referringProviderSpecialties;
+
+
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
@@ -136,6 +136,8 @@ class Encounter extends ObjectAbstract
         $this->patage = new ArrayCollection();
 
         $this->pathistory = new ArrayCollection();
+        $this->referringProviders = new ArrayCollection();
+        //$this->referringProviderSpecialties = new ArrayCollection();
 
         //extra
         $this->location = new ArrayCollection();
@@ -170,6 +172,8 @@ class Encounter extends ObjectAbstract
         $this->patsex = $this->cloneDepend($this->patsex,$this);
         $this->patage = $this->cloneDepend($this->patage,$this);
         $this->pathistory = $this->cloneDepend($this->pathistory,$this);
+        $this->referringProviders = $this->cloneDepend($this->referringProviders,$this);
+        //$this->referringProviderSpecialties = $this->cloneDepend($this->referringProviderSpecialties,$this);
 
         //extra fields
         $this->location = $this->cloneDepend($this->location,$this);
@@ -572,20 +576,45 @@ class Encounter extends ObjectAbstract
     /**
      * @return mixed
      */
-    public function getReferringProvider()
+    public function getReferringProviders()
     {
-        return $this->referringProvider;
+        return $this->referringProviders;
+    }
+    public function addReferringProvider($item)
+    {
+
+        if( !$this->referringProviders->contains($item) ) {
+            $item->setEncounter($this);
+            $this->referringProviders->add($item);
+            //$this->setArrayFieldObjectChange('referringProviders','add',$item);
+        }
+
+        return $this;
+    }
+    public function removeReferringProvider($item)
+    {
+        $this->referringProviders->removeElement($item);
+        //$this->setArrayFieldObjectChange('referringProviders','remove',$item);
     }
 
-    /**
-     * @param mixed $referringProvider
-     */
-    public function setReferringProvider($referringProvider)
-    {
-        $this->referringProvider = $referringProvider;
-    }
-
-
+//    public function getReferringProviderSpecialties()
+//    {
+//        return $this->referringProviderSpecialties;
+//    }
+//    public function addReferringProviderSpecialty($item)
+//    {
+//
+//        if( !$this->referringProviderSpecialties->contains($item) ) {
+//            $item->setEncounter($this);
+//            $this->referringProviderSpecialties->add($item);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeReferringProviderSpecialty($item)
+//    {
+//        $this->referringProviderSpecialties->removeElement($item);
+//    }
 
 
     ///////////////////////// Extra fields /////////////////////////

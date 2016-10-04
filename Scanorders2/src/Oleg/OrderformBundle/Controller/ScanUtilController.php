@@ -843,13 +843,12 @@ class ScanUtilController extends UtilController {
     }
 
 
-
     /**
      * Get all users and user wrappers combined
      * @Route("/common/proxyuser", name="scan_get_proxyuser")
      * @Method("GET")
      */
-    public function getProxyusersAction() {
+    public function getProxyusersAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -890,6 +889,7 @@ class ScanUtilController extends UtilController {
             ->orderBy("infos.displayName","ASC");
 
         $users = $query->getQuery()->getResult();
+        //echo "users count=".count($users)."<br>";
 
         foreach( $users as $user ) {
             $element = array('id'=>$user."", 'text'=>$user."");
@@ -907,6 +907,15 @@ class ScanUtilController extends UtilController {
         return $response;
     }
 
+    /**
+     * Get all users and user wrappers combined
+     * @Route("/common/encounterReferringProvider", name="scan_get_encounterReferringProvider")
+     * @Method("GET")
+     */
+    public function getEncounterReferringProvidersAction(Request $request) {
+        //echo "get encounterReferringProvider<br>";
+        return $this->getProxyusersAction($request);
+    }
 
     //search if $needle exists in array $products
     public function in_complex_array($needle,$products,$indexstr='text') {

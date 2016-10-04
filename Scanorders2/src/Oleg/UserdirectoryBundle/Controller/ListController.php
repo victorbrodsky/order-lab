@@ -97,6 +97,7 @@ class ListController extends Controller
      * @Route("/list/sites/", name="sites-list")
      * @Route("/list/event-object-types/", name="eventobjecttypes-list")
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes-list")
+     * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty-list")
      *
      *
      * @Method("GET")
@@ -338,6 +339,7 @@ class ListController extends Controller
      * @Route("/list/sites/", name="sites_create")
      * @Route("/list/event-object-types/", name="eventobjecttypes_create")
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes_create")
+     * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -493,6 +495,7 @@ class ListController extends Controller
      * @Route("/list/sites/new", name="sites_new")
      * @Route("/list/event-object-types/new", name="eventobjecttypes_new")
      * @Route("/list/vacation-request-types/new", name="vacreqrequesttypes_new")
+     * @Route("/list/healthcare-provider-specialties/new", name="healthcareproviderspecialty_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -619,6 +622,7 @@ class ListController extends Controller
      * @Route("/list/sites/{id}", name="sites_show")
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_show")
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_show")
+     * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -735,6 +739,7 @@ class ListController extends Controller
      * @Route("/list/sites/{id}/edit", name="sites_edit")
      * @Route("/list/event-object-types/{id}/edit", name="eventobjecttypes_edit")
      * @Route("/list/vacation-request-types/{id}/edit", name="vacreqrequesttypes_edit")
+     * @Route("/list/healthcare-provider-specialties/{id}/edit", name="healthcareproviderspecialty_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -897,6 +902,7 @@ class ListController extends Controller
      * @Route("/list/sites/{id}", name="sites_update")
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_update")
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_update")
+     * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1500,6 +1506,10 @@ class ListController extends Controller
                 $displayName = "Business/Vacation Request Types";
                 $bundleName = "VacReqBundle";
                 break;
+            case "healthcareproviderspecialty":
+                $className = "HealthcareProviderSpecialtiesList";
+                $displayName = "Healthcare Provider Specialties";
+                break;
 
             default:
                 $className = null;
@@ -1530,14 +1540,19 @@ class ListController extends Controller
             //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
             //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($routeName);
             $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($className);
-            if( !$rootList ) {
-                throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listName=' . $className);
+//            if( !$rootList ) {
+//                throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listName=' . $className);
+//            }
+            if( $rootList ) {
+                $linkToListId = $rootList->getLinkToListId();
+                //echo "linkToListId=$linkToListId<br>";
+                if ($linkToListId) {
+                    $res['linkToListId'] = $linkToListId;
+                }
+            } else {
+                $res['linkToListId'] = null;
             }
-            $linkToListId = $rootList->getLinkToListId();
-            //echo "linkToListId=$linkToListId<br>";
-            if( $linkToListId ) {
-                $res['linkToListId'] = $linkToListId;
-            }
+
         }
 
         return $res;
@@ -1619,6 +1634,7 @@ class ListController extends Controller
      * @Route("/list/sites/{id}", name="sites_delete")
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_delete")
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_delete")
+     * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_delete")
      *
      *
      * @Method("DELETE")

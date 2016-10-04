@@ -2,7 +2,7 @@
 
 namespace Oleg\CallLogBundle\Form;
 
-use Oleg\OrderformBundle\Form\EncounterDateType;
+use Oleg\CallLogBundle\Form\EncounterDateType;
 use Oleg\OrderformBundle\Form\EncounterLocationType;
 use Oleg\OrderformBundle\Form\EncounterPatfirstnameType;
 use Oleg\OrderformBundle\Form\EncounterPatlastnameType;
@@ -105,20 +105,18 @@ class EncounterType extends AbstractType
         ));
 
         //pathistory'
-        $attr = array('class'=>'textarea form-control encounterhistory-field');
-        $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPathistory','type'=>null);
-        $builder->add('pathistory', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Clinical History (at the time of encounter):",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounterpathistory__',
-        ));
-
-
+//        $attr = array('class'=>'textarea form-control encounterhistory-field');
+//        $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPathistory','type'=>null);
+//        $builder->add('pathistory', 'collection', array(
+//            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => "Clinical History (at the time of encounter):",
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__encounterpathistory__',
+//        ));
 
         //number and source
         $builder->add('number', 'collection', array(
@@ -193,27 +191,29 @@ class EncounterType extends AbstractType
         }
 
         //Referring Provider for calllog new entry
-        if( array_key_exists('formtype',$this->params) && $this->params['formtype'] == 'call-entry' ) {
-            $builder->add('referringProvider', 'custom_selector', array(
-                'label' => 'Referring Provider:',
-                'attr' => array('class' => 'combobox combobox-width combobox-encounter-referringProvider', 'type' => 'hidden'),
-                'required'=>false,
-                'classtype' => 'userWrapper' //,  'encounterReferringProvider'   //'optionalUserEducational'
-            ));
+//        $builder->add('referringProvider', 'custom_selector', array(
+//            'label' => 'Referring Provider:',
+//            'attr' => array('class' => 'combobox combobox-width combobox-encounter-referringProvider', 'type' => 'hidden'),
+//            'required'=>false,
+//            'classtype' => 'userWrapper' //,  'encounterReferringProvider'   //'optionalUserEducational'
+//        ));
+//        $builder->add('referringProviders', 'custom_selector', array(
+//            'label' => 'Referring Provider:',
+//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterReferringProvider'),
+//            'required' => false,
+//            'classtype' => 'userWrapper'
+//        ));
+        $builder->add('referringProviders', 'collection', array(
+            'type' => new EncounterReferringProviderType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__encounterreferringprovider__',
+        ));
 
-            //number and source
-            $builder->add('number', 'collection', array(
-                'type' => new EncounterNumberType($this->params, $this->entity),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'label' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__encounternumber__',
-            ));
-        }
-        
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

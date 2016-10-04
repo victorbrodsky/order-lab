@@ -149,6 +149,9 @@ class CustomSelectorType extends AbstractType {
             case "jobTitle":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'JobTitleList');
                 break;
+            case "referringProviderSpecialty":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'HealthcareProviderSpecialtiesList');
+                break;
 
             //grants
             case "sourceorganization":
