@@ -307,7 +307,9 @@ function showCalllogCallentryForm(show) {
         $('#callentry-nosinglepatient-link').hide(_transTime);
         $('#callentry-form').show(_transTime);
 
-        //generate encounter ID
+        //generate encounter ID. Use : encounterid
+        //var encounterid = $('#encounterid').val();
+        //$('.encounter-id').val(encounterid);
 
     } else {
         //console.log('hide patient info');

@@ -27,7 +27,7 @@ class EncounterNumberType extends AbstractType
                 'label' => 'Encounter Type:',
                 'required' => true,
                 //'data' => 1,
-                'attr' => array('class' => 'combobox combobox-width'),
+                'attr' => array('class' => 'combobox combobox-width encounter-keytype'),
                 'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('list')
                             ->orderBy("list.orderinlist","ASC");
@@ -50,7 +50,7 @@ class EncounterNumberType extends AbstractType
 
         $builder->add('field', null, array(
             'label'=>'Encounter Number',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control encounter-id')
         ));
 
 

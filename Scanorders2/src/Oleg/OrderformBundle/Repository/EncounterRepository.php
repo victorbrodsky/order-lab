@@ -27,7 +27,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $key->setKeytype($newkeytypeEntity);
 
         $nextKey = $this->getNextNonProvided($entity,null,$message);  //"NO".strtoupper($fieldName)."IDPROVIDED", $className, $fieldName);
-        echo "nextKey=".$nextKey."<br>";
+        //echo "nextKey=".$nextKey."<br>";
 
         //we should have only one key field !!!
         $key->setField($nextKey);
@@ -37,6 +37,8 @@ class EncounterRepository extends ArrayFieldAbstractRepository
             $provider = $message->getProvider();
         }
         $key->setProvider($provider);
+
+        return $entity;
     }
 
 

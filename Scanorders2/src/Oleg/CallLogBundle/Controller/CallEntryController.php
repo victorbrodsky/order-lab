@@ -77,6 +77,7 @@ class CallEntryController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
+        $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $mrn = trim($request->get('mrn'));
@@ -89,16 +90,25 @@ class CallEntryController extends Controller
         $cycle = 'new';
         $formtype = 'call-entry';
 
+        $institution = $this->getCurrentUserInstitution($user);
+
         $patient = new Patient(true,$status,$user,$system);
+        $patient->setInstitution($institution);
 
         $encounter = new Encounter(true,$status,$user,$system);
+        $encounter->setInstitution($institution);
         $encounterReferringProvider = new EncounterReferringProvider($status,$user,$system);
         $encounter->addReferringProvider($encounterReferringProvider);
-        //$encounter->addReferringProviderSpecialty( new EncounterReferringProviderSpecialty($status,$user,$system) );
+        //set encounter generated id
+        $key = $encounter->obtainAllKeyfield()->first();
+        $encounter = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter, $user);
+
         $patient->addEncounter($encounter);
 
 
         $form = $this->createPatientForm($patient,$mrntype,$mrn);
+
+        //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
         return array(
             //'entity' => $entity,
@@ -108,7 +118,8 @@ class CallEntryController extends Controller
             'formtype' => $formtype,
             'triggerSearch' => 0,
             'mrn' => $mrn,
-            'mrntype' => $mrntype
+            'mrntype' => $mrntype,
+            //'encounterid' => $encounterid
         );
     }
 

@@ -2,6 +2,7 @@
 
 namespace Oleg\CallLogBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Entity\PatientMasterMergeRecord;
 use Oleg\OrderformBundle\Entity\PatientMrn;
@@ -852,5 +853,11 @@ class CallLogUtil
         } else {
             return $mrntypeId;
         }
+    }
+
+    public function getNextEncounterGeneratedId() {
+        $encounter = new Encounter();
+        $nextKey = $this->em->getRepository('OlegOrderformBundle:Encounter')->getNextNonProvided($encounter);
+        return $nextKey;
     }
 }
