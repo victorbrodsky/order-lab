@@ -21,18 +21,23 @@ use Oleg\OrderformBundle\Entity\PatientSuffix;
 class EncounterRepository extends ArrayFieldAbstractRepository
 {
 
-//    public function setEncounterKey($key, $entity, $message) {
-//        $em = $this->_em;
-//        $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
-//        $key->setKeytype($newkeytypeEntity);
-//
-//        $nextKey = $this->getNextNonProvided($entity,null,$message);  //"NO".strtoupper($fieldName)."IDPROVIDED", $className, $fieldName);
-//
-//        //we should have only one key field !!!
-//        $key->setField($nextKey);
-//        $key->setStatus(self::STATUS_VALID);
-//        $key->setProvider($message->getProvider());
-//    }
+    public function setEncounterKey($key, $entity, $provider=null, $message=null ) {
+        $em = $this->_em;
+        $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+        $key->setKeytype($newkeytypeEntity);
+
+        $nextKey = $this->getNextNonProvided($entity,null,$message);  //"NO".strtoupper($fieldName)."IDPROVIDED", $className, $fieldName);
+        echo "nextKey=".$nextKey."<br>";
+
+        //we should have only one key field !!!
+        $key->setField($nextKey);
+        $key->setStatus(self::STATUS_VALID);
+
+        if( !$provider && $message ) {
+            $provider = $message->getProvider();
+        }
+        $key->setProvider($provider);
+    }
 
 
     //add Encounter's name, sex to the corresponding patient fields

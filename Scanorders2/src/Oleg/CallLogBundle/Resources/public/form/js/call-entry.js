@@ -306,10 +306,15 @@ function showCalllogCallentryForm(show) {
         //console.log('show patient info');
         $('#callentry-nosinglepatient-link').hide(_transTime);
         $('#callentry-form').show(_transTime);
+
+        //generate encounter ID
+
     } else {
         //console.log('hide patient info');
         $('#callentry-nosinglepatient-link').show(_transTime);
         $('#callentry-form').hide(_transTime);
+
+        //delete encounter ID
     }
 }
 

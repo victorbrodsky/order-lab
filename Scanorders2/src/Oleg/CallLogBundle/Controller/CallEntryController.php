@@ -222,30 +222,33 @@ class CallEntryController extends Controller
 
                 if( $newEncounter ) {
 
-                    $lastNameRes = $newEncounter->obtainStatusField('patlastname', $status);
-                    echo "encounter lastNameRes=" . $lastNameRes . "<br>";
+                    $key = $newEncounter->obtainAllKeyfield()->first();
+                    $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
-                    echo "encounter provider=" . $newEncounter->getProvider() . "<br>";
-
-                    $referringProvider = $newEncounter->obtainStatusField('referringProviders', $status);
-                    echo "encounter referringProvider phone=" . $referringProvider->getReferringProviderPhone() . "<br>";
-                    echo "encounter referringProvider Specialty=" . $referringProvider->getReferringProviderSpecialty()->getId() . "<br>";
-                    $referringProviderUserWrapper = $referringProvider->getField();
-                    //echo "encounter referringProvider UserWrapper ID=" . $referringProviderUserWrapper->getId() . "<br>";
-                    //echo "encounter referringProvider UserWrapper field=" . $referringProviderUserWrapper->getName() . "<br>";
-                    //echo "encounter referringProvider UserWrapper user=" . $referringProviderUserWrapper->getUser() . "<br>";
-
-                    $encounterDate = $newEncounter->obtainStatusField('date', $status);
-                    echo "encounter date=" . $encounterDate . "<br>";
-
-                    echo "encounter time=" . $encounterDate->getTimeStr() . "<br>";
+//                    $lastNameRes = $newEncounter->obtainStatusField('patlastname', $status);
+//                    echo "encounter lastNameRes=" . $lastNameRes . "<br>";
+//
+//                    echo "encounter provider=" . $newEncounter->getProvider() . "<br>";
+//
+//                    $referringProvider = $newEncounter->obtainStatusField('referringProviders', $status);
+//                    echo "encounter referringProvider phone=" . $referringProvider->getReferringProviderPhone() . "<br>";
+//                    echo "encounter referringProvider Specialty=" . $referringProvider->getReferringProviderSpecialty()->getId() . "<br>";
+//                    $referringProviderUserWrapper = $referringProvider->getField();
+//                    //echo "encounter referringProvider UserWrapper ID=" . $referringProviderUserWrapper->getId() . "<br>";
+//                    //echo "encounter referringProvider UserWrapper field=" . $referringProviderUserWrapper->getName() . "<br>";
+//                    //echo "encounter referringProvider UserWrapper user=" . $referringProviderUserWrapper->getUser() . "<br>";
+//
+//                    $encounterDate = $newEncounter->obtainStatusField('date', $status);
+//                    echo "encounter date=" . $encounterDate . "<br>";
+//
+//                    echo "encounter time=" . $encounterDate->getTimeStr() . "<br>";
 
                     $patient->addEncounter($newEncounter);
 
-                    echo "encounter count=".count($patient->getEncounter())."<br>";
-                    foreach( $patient->getEncounter() as $encounter ) {
-                        echo "encounter ID=".$encounter->getId()."<br>";
-                    }
+//                    echo "encounter count=".count($patient->getEncounter())."<br>";
+//                    foreach( $patient->getEncounter() as $encounter ) {
+//                        echo "encounter ID=".$encounter->getId()."<br>";
+//                    }
 
                     //exit('1');
                     //$em->persist($patient);
