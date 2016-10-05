@@ -204,8 +204,8 @@ class CallEntryController extends Controller
 
             //set system source and user's default institution
             if( $newEncounter ) {
-                //$newEncounter->setSource($system);
-                //$newEncounter->setInstitution($institution);
+                $newEncounter->setSource($system);
+                $newEncounter->setInstitution($institution);
             }
 
             if( $patient->getId() ) {
@@ -217,7 +217,8 @@ class CallEntryController extends Controller
 
                 $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
 
-                //$newEncounter->setInstitution($patient->getInstitution());
+                //reset institution from the patient
+                $newEncounter->setInstitution($patient->getInstitution());
 
                 if( $newEncounter ) {
 
@@ -228,10 +229,11 @@ class CallEntryController extends Controller
 
                     $referringProvider = $newEncounter->obtainStatusField('referringProviders', $status);
                     echo "encounter referringProvider phone=" . $referringProvider->getReferringProviderPhone() . "<br>";
+                    echo "encounter referringProvider Specialty=" . $referringProvider->getReferringProviderSpecialty()->getId() . "<br>";
                     $referringProviderUserWrapper = $referringProvider->getField();
-                    echo "encounter referringProvider UserWrapper ID=" . $referringProviderUserWrapper->getId() . "<br>";
-                    echo "encounter referringProvider UserWrapper field=" . $referringProviderUserWrapper->getName() . "<br>";
-                    echo "encounter referringProvider UserWrapper user=" . $referringProviderUserWrapper->getUser() . "<br>";
+                    //echo "encounter referringProvider UserWrapper ID=" . $referringProviderUserWrapper->getId() . "<br>";
+                    //echo "encounter referringProvider UserWrapper field=" . $referringProviderUserWrapper->getName() . "<br>";
+                    //echo "encounter referringProvider UserWrapper user=" . $referringProviderUserWrapper->getUser() . "<br>";
 
                     $encounterDate = $newEncounter->obtainStatusField('date', $status);
                     echo "encounter date=" . $encounterDate . "<br>";
