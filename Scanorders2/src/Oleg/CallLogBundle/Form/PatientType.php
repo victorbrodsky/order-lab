@@ -7,10 +7,12 @@ use Oleg\OrderformBundle\Form\GenericFieldType;
 use Oleg\OrderformBundle\Form\PatientDobType;
 use Oleg\OrderformBundle\Form\PatientSexType;
 use Oleg\UserdirectoryBundle\Form\TrackerType;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+//use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
@@ -31,11 +33,11 @@ class PatientType extends AbstractType
 
         //echo "patient: type=".$this->params['type']."<br>";
 
-//        $builder->add('id', null, array(
-//            'label' => false,
-//            'required' => false,
-//            'attr' => array('class' => 'form-control', 'type' => 'hidden'),
-//        ));
+        $builder->add('id', 'hidden', array(
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'form-control patienttype-patient-id', 'type' => 'hidden'),
+        ));
 
         $builder->add('mrn', 'collection', array(
             'type' => new PatientMrnType($this->params, null),
@@ -128,10 +130,18 @@ class PatientType extends AbstractType
 
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+//    public function setDefaultOptions(OptionsResolverInterface $resolver)
+//    {
+//        $resolver->setDefaults(array(
+//            'data_class' => 'Oleg\OrderformBundle\Entity\Patient',
+//            'csrf_protection' => false
+//        ));
+//    }
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Patient'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Patient',
+            //'csrf_protection' => false
         ));
     }
 

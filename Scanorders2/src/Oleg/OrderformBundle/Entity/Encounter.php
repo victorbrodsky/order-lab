@@ -575,7 +575,7 @@ class Encounter extends ObjectAbstract
     public function addReferringProvider($item)
     {
 
-        if( !$this->referringProviders->contains($item) ) {
+        if( $item && !$this->referringProviders->contains($item) ) {
             $item->setEncounter($this);
             $this->referringProviders->add($item);
             //$this->setArrayFieldObjectChange('referringProviders','add',$item);

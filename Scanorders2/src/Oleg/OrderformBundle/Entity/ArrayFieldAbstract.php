@@ -350,6 +350,16 @@ abstract class ArrayFieldAbstract {
         }
     }
 
+    public function formatTimeToString($time) {
+        if( $time && $time instanceof \DateTime ) {
+            $transformer = new DateTimeToStringTransformer(null, null, 'H:i:s');
+            $timeStr = $transformer->transform($time);
+            return $timeStr."";
+        } else {
+            return $time."";
+        }
+    }
+
     public function __toString() {
         return $this->field."";
     }

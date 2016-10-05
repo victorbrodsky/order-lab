@@ -10,6 +10,7 @@
 namespace Oleg\OrderformBundle\Form\CustomType;
 
 
+use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -86,6 +87,9 @@ class CustomSelectorType extends AbstractType {
                 break;
             case "userWrapper":
                 $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
+                break;
+            case "singleUserWrapper":
+                $transformer = new SingleUserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
                 break;
             case "parttitle":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'ParttitleList', 'OrderformBundle');

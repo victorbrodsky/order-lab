@@ -60,7 +60,10 @@ class EncounterDate extends EncounterArrayFieldAbstract
     {
         return $this->time;
     }
-
+    public function getTimeStr()
+    {
+        return $this->formatTimeToString($this->getTime());
+    }
 
 
 

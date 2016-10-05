@@ -20,6 +20,7 @@ use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientSuffix;
+use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -119,35 +120,161 @@ class CallEntryController extends Controller
      */
     public function updatePatientAction(Request $request)
     {
-        exit('update patient');
+        //exit('update patient');
         //case 1: patient exists: create a new encounter to DB and add it to the existing patient
         //add patient id field to the form (id="oleg_calllogbundle_patienttype_id") or use class="calllog-patient-id" input field.
-        //case 2: patient might not exists: create a new encounter to DB
+        //case 2: patient does not exists: create a new encounter to DB
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $mrn = trim($request->get('mrn'));
-        $mrntype = trim($request->get('mrn-type'));
+//        $mrn = trim($request->get('mrn'));
+//        $mrntype = trim($request->get('mrn-type'));
+        $mrn = null;
+        $mrntype = null;
 
-        $title = "New Entry";
+        $title = "Update Entry";
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'new';
         $formtype = 'call-entry';
 
-        $patient = new Patient(true,$status,$user,$system);
-
-        $encounter = new Encounter(true,$status,$user,$system);
-        $encounterReferringProvider = new EncounterReferringProvider($status,$user,$system);
-        $encounter->addReferringProvider($encounterReferringProvider);
-        //$encounter->addReferringProviderSpecialty( new EncounterReferringProviderSpecialty($status,$user,$system) );
-        $patient->addEncounter($encounter);
-
+        $patient = new Patient();
 
         $form = $this->createPatientForm($patient,$mrntype,$mrn);
+
+        $form->handleRequest($request);
+
+//        echo "loc errors:<br>";
+//        print_r($form->getErrors());
+//        echo "<br>loc string errors:<br>";
+//        print_r($form->getErrorsAsString());
+//        echo "<br>";
+
+//        $errorHelper = new ErrorHelper();
+//        $errors = $errorHelper->getErrorMessages($form);
+//        echo "<br>form errors:<br>";
+//        print_r($errors);
+        //exit();
+
+        //oleg_calllogbundle_patienttype[id]
+        //$formPatientId = $form["id"]->getData();
+        //echo "1: formPatientId=".$formPatientId."<br>";
+
+        //oleg_calllogbundle_patienttype[encounter][0][patfirstname][0][field]
+        //$formPatientDob = $form["dob"][0]->getData();
+        //echo "1: formPatientDob=".$formPatientDob."<br>";
+        //print_r($formPatientDob);
+
+        //$referringProviderPhone = $form["encounter"][0]['referringProviders'][0]['referringProviderPhone']->getData();
+        //$formPatientId = $request->request->get('patient');
+        //$formPatientId = $form["id"]->getData();
+        //echo "1: form referringProviderPhone=".$referringProviderPhone."<br>";
+        //$data = $form->getData();
+        //print_r($data);
+
+        if( $form->isSubmitted() ) {
+            echo "form is submitted <br>";
+        }
+        if( $form->isValid() ) {
+            echo "form is valid <br>";
+        }
+
+        //if( $form->isSubmitted() && $form->isValid() ) {
+        if( $form->isSubmitted() ) {
+            //exit('form is valid');
+
+            $institution = $this->getCurrentUserInstitution($user);
+
+            echo "patient id=".$patient->getId()."<br>";
+
+            $newEncounter = null;
+            foreach( $patient->getEncounter() as $encounter ) {
+                echo "encounter ID=".$encounter->getId()."<br>";
+                if( !$encounter->getId() ) {
+                    $newEncounter = $encounter;
+                    break;
+                }
+                foreach( $encounter->getReferringProviders() as $referringProvider ) {
+                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
+                }
+            }
+
+            //set system source and user's default institution
+            if( $newEncounter ) {
+                //$newEncounter->setSource($system);
+                //$newEncounter->setInstitution($institution);
+            }
+
+            if( $patient->getId() ) {
+                echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
+                //get a new encounter without id $newEncounter
+//                foreach( $encounter->getReferringProviders() as $referringProvider ) {
+//                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
+//                }
+
+                $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
+
+                //$newEncounter->setInstitution($patient->getInstitution());
+
+                if( $newEncounter ) {
+
+                    $lastNameRes = $newEncounter->obtainStatusField('patlastname', $status);
+                    echo "encounter lastNameRes=" . $lastNameRes . "<br>";
+
+                    echo "encounter provider=" . $newEncounter->getProvider() . "<br>";
+
+                    $referringProvider = $newEncounter->obtainStatusField('referringProviders', $status);
+                    echo "encounter referringProvider phone=" . $referringProvider->getReferringProviderPhone() . "<br>";
+                    $referringProviderUserWrapper = $referringProvider->getField();
+                    echo "encounter referringProvider UserWrapper ID=" . $referringProviderUserWrapper->getId() . "<br>";
+                    echo "encounter referringProvider UserWrapper field=" . $referringProviderUserWrapper->getName() . "<br>";
+                    echo "encounter referringProvider UserWrapper user=" . $referringProviderUserWrapper->getUser() . "<br>";
+
+                    $encounterDate = $newEncounter->obtainStatusField('date', $status);
+                    echo "encounter date=" . $encounterDate . "<br>";
+
+                    echo "encounter time=" . $encounterDate->getTimeStr() . "<br>";
+
+                    $patient->addEncounter($newEncounter);
+
+                    echo "encounter count=".count($patient->getEncounter())."<br>";
+                    foreach( $patient->getEncounter() as $encounter ) {
+                        echo "encounter ID=".$encounter->getId()."<br>";
+                    }
+
+                    //exit('1');
+                    //$em->persist($patient);
+                    $em->persist($newEncounter);
+                    $em->flush();
+
+                    $msg = "New Encounter is created with ID #".$newEncounter->getId()." for the Patient with ID #".$patient->getId();
+                }
+
+            } else {
+                echo "case 2: patient does not exists: create a new encounter to DB <br>";
+                //oleg_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
+
+                //$em->persist($newEncounter);
+                //$em->flush($newEncounter);
+
+                $msg = "New Encounter is created with ID #".$newEncounter->getId();
+            }
+
+            //exit('form is submitted and finished');
+            //$em->persist($entity);
+            //$em->flush();
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
+
+            return $this->redirect( $this->generateUrl('calllog_callentry') );
+        }
+        exit('form is not submitted');
 
         return array(
             //'entity' => $entity,
@@ -612,20 +739,21 @@ class CallEntryController extends Controller
         }
 
         //TODO: set institution
-        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-        $institution = $userSiteSettings->getDefaultInstitution();
-        //echo "1 inst=".$institution."<br>";
-        if( !$institution ) {
-            $institutions = $securityUtil->getUserPermittedInstitutions($user);
-            //echo "count inst=".count($institutions)."<br>";
-            if (count($institutions) > 0) {
-                $institution = $institutions[0];
-            }
-            //echo "2 inst=".$institution."<br>";
-        }
-        if (!$institution) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-        }
+//        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+//        $institution = $userSiteSettings->getDefaultInstitution();
+//        //echo "1 inst=".$institution."<br>";
+//        if( !$institution ) {
+//            $institutions = $securityUtil->getUserPermittedInstitutions($user);
+//            //echo "count inst=".count($institutions)."<br>";
+//            if (count($institutions) > 0) {
+//                $institution = $institutions[0];
+//            }
+//            //echo "2 inst=".$institution."<br>";
+//        }
+//        if (!$institution) {
+//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//        }
+        $institution = $this->getCurrentUserInstitution($user);
         //echo "3 inst=".$institution."<br>";
         //exit('1');
 
@@ -833,5 +961,29 @@ class CallEntryController extends Controller
 
         $response->setContent(json_encode($res));
         return $response;
+    }
+
+
+    public function getCurrentUserInstitution($user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $securityUtil = $this->get('order_security_utility');
+
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        $institution = $userSiteSettings->getDefaultInstitution();
+        //echo "1 inst=".$institution."<br>";
+        if (!$institution) {
+            $institutions = $securityUtil->getUserPermittedInstitutions($user);
+            //echo "count inst=".count($institutions)."<br>";
+            if (count($institutions) > 0) {
+                $institution = $institutions[0];
+            }
+        //echo "2 inst=".$institution."<br>";
+        }
+        if (!$institution) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        }
+
+        return $institution;
     }
 }

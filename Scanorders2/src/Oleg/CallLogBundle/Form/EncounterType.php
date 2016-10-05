@@ -3,6 +3,7 @@
 namespace Oleg\CallLogBundle\Form;
 
 use Oleg\CallLogBundle\Form\EncounterDateType;
+
 use Oleg\OrderformBundle\Form\EncounterLocationType;
 use Oleg\OrderformBundle\Form\EncounterPatfirstnameType;
 use Oleg\OrderformBundle\Form\EncounterPatlastnameType;
@@ -10,8 +11,10 @@ use Oleg\OrderformBundle\Form\EncounterPatmiddlenameType;
 use Oleg\OrderformBundle\Form\EncounterPatsexType;
 use Oleg\OrderformBundle\Form\EncounterPatsuffixType;
 use Oleg\OrderformBundle\Form\GenericFieldType;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -91,18 +94,18 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterpatsex__',
         ));
 
-        $attr = array('class'=>'form-control encounterage-field patientage-mask');
-        $gen_attr = array('label'=>"Patient's Age (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage','type'=>'text');
-        $builder->add('patage', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Patient's Age (at the time of encounter):",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounterpatage__',
-        ));
+//        $attr = array('class'=>'form-control encounterage-field patientage-mask');
+//        $gen_attr = array('label'=>"Patient's Age (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage','type'=>'text');
+//        $builder->add('patage', 'collection', array(
+//            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => "Patient's Age (at the time of encounter):",
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__encounterpatage__',
+//        ));
 
         //pathistory'
 //        $attr = array('class'=>'textarea form-control encounterhistory-field');
@@ -204,10 +207,12 @@ class EncounterType extends AbstractType
 
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Encounter'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Encounter',
+            //'csrf_protection' => false
         ));
     }
 

@@ -67,7 +67,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         $array = new \Doctrine\Common\Collections\ArrayCollection();
 
         if( !$entities || null === $entities->toArray() ) {
-//            echo "return empty array";
+            //echo "return empty array";
             return $array;
         }
 

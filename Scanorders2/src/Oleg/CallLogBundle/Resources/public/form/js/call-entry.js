@@ -444,7 +444,22 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         async: true,
         data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, formtype: formtype },
     }).success(function(data) {
-        populatePatientsInfo(data,searchedStr,holderId,singleMatch);
+        var dataOk = false;
+        if( data ) {
+            var firstKey = Object.keys(data)[0];
+            if( firstKey ) {
+                var firstElement = data[firstKey];
+                if( firstElement && firstElement.hasOwnProperty("id") ) {
+                    populatePatientsInfo(data, searchedStr, holderId, singleMatch);
+                    dataOk = true;
+                }
+            }
+        }
+        if( !dataOk ) {
+            //console.log("Search is not performed");
+            holder.find('#calllog-danger-box').html("Search is not performed. Please try to reload the page.");
+            holder.find('#calllog-danger-box').show(_transTime);
+        }
     }).done(function() {
         lbtn.stop();
 
@@ -462,7 +477,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
 
     //var patLen = patients.length;
     var patLen = getPatientsLength(patients);
-    //console.log('patLen='+patLen);
+    console.log('patLen='+patLen);
 
     //clear matching patient section
     holder.find('#calllog-matching-patients').hide(_transTime);
@@ -937,10 +952,11 @@ function disableAllFields(disable,holderId) {
     disableField(holder.find(".encountersex-field"),disable);
 }
 function disableField(fieldEl,disable) {
+    var disableStr = "readonly"; //disabled
     if( disable ) {
         //lock field
-        fieldEl.prop('disabled', true);
-        fieldEl.closest('.input-group').find('input').prop('disabled', true);
+        fieldEl.prop(disableStr, true);
+        fieldEl.closest('.input-group').find('input').prop(disableStr, true);
         if( fieldEl.hasClass('datepicker') ) {
             var elementDatepicker = fieldEl.closest('.input-group.date');
             elementDatepicker.datepicker("remove");
@@ -952,8 +968,8 @@ function disableField(fieldEl,disable) {
         //}
     } else {
         //unlock field
-        fieldEl.prop('disabled', false);
-        fieldEl.closest('.input-group').find('input').prop('disabled', false);
+        fieldEl.prop(disableStr, false);
+        fieldEl.closest('.input-group').find('input').prop(disableStr, false);
         if( fieldEl.hasClass('datepicker') ) {
             var elementDatepicker = fieldEl.closest('.input-group.date');
             initSingleDatepicker(elementDatepicker);
@@ -980,9 +996,15 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     populateInputFieldCalllog(holder.find(".calllog-patient-id-radio"),patient,'id',modify);
     disableField(holder.find(".calllog-patient-id-radio"),false);
 
+    //calllog-patient-id
     populateInputFieldCalllog(holder.find(".calllog-patient-id"),patient,'id',modify);
     holder.find(".calllog-patient-id").trigger('change');
     holder.find(".calllog-patient-id").change();
+
+    //patienttype-patient-id
+    populateInputFieldCalllog(holder.find(".patienttype-patient-id"),patient,'id',modify);
+    holder.find(".patienttype-patient-id").trigger('change');
+    holder.find(".patienttype-patient-id").change();
 
     processMrnFieldsCalllog(patient,modify,holderId);
 
@@ -1083,14 +1105,16 @@ function populateInputFieldCalllog( fieldEl, data, index, modify ) {
 }
 
 function populateSelectFieldCalllog( fieldEl, data, index ) {
+    //var disableStr = "readonly"; //disabled
+    var disableStr = "disabled";
     var value = null;
     if( data && data[index] ) {
         value = data[index];
         //lock field
-        fieldEl.prop('disabled', true);
+        fieldEl.prop(disableStr, true);
     } else {
         //unlock field
-        fieldEl.prop('disabled', false);
+        fieldEl.prop(disableStr, false);
     }
     fieldEl.select2('val',value);
     return value;
@@ -1099,6 +1123,9 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
 function processMrnFieldsCalllog( patient, modify, holderId ) {
     //console.log("process Mrn FieldsCalllog patient:");
     //console.log(patient);
+
+    //var disableStr = "readonly"; //disabled
+    var disableStr = "disabled";
 
     var holder = getHolder(holderId);
 
@@ -1116,13 +1143,13 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
 
         mrnid.val(patient.mrn);
 
-        mrntype.prop('disabled', true);
-        mrnid.prop('disabled', true);
+        mrntype.prop(disableStr, true);
+        mrnid.prop(disableStr, true);
 
     } else {
 
-        mrntype.prop('disabled', false);
-        mrnid.prop('disabled', false);
+        mrntype.prop(disableStr, false);
+        mrnid.prop(disableStr, false);
 
         if( modify ) {
             mrntype.select2('val', _mrntype_original);
