@@ -245,11 +245,11 @@ class CheckController extends Controller {
      * @Route("/patient/delete/{key}", name="delete-mrn-keytype")
      * @Method("DELETE")
      */
-    public function deleteMrnAction( Request $request ) {
+    public function deleteMrnAction( Request $request, $key ) {
         //echo "deleteMrnAction<br>";
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $key = trim( $request->get('key') );
+        //$key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
         //echo "keytype=$keytype<br>";
 
