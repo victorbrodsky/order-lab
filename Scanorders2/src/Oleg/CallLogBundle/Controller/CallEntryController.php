@@ -109,6 +109,7 @@ class CallEntryController extends Controller
         $encounter = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter, $user);
 
         //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
+        $calllogUtil->checkNextEncounterGeneratedId();
         //exit('1');
 
         //create a new spot and add it to the encounter's tracker
