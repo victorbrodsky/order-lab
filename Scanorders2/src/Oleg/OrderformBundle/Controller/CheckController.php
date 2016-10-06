@@ -244,7 +244,7 @@ class CheckController extends Controller {
     /**
      * TODO: test on collage. DELETE might not work with a new php version?
      * @Route("/patient/delete/{key}", name="delete-mrn-keytype")
-     * @Method("DELETE")
+     * @Method("POST")
      */
     public function deleteMrnAction( Request $request ) {
         //echo "deleteMrnAction key=".$key."<br>";

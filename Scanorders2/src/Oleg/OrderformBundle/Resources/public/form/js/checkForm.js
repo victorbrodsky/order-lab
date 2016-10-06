@@ -431,7 +431,8 @@ function executeClick( btnObjInit ) {
                     return;
                 }
 
-                ajaxType = 'DELETE';
+                //ajaxType = 'DELETE';
+                ajaxType = 'POST';
 
                 var extraStr = "?inst=" + inst;
 
