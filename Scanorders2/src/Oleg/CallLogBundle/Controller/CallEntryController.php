@@ -220,99 +220,79 @@ class CallEntryController extends Controller
         if( $form->isSubmitted() ) {
             //exit('form is valid');
 
+            $msg = "No Case found";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
 
             echo "patient id=".$patient->getId()."<br>";
 
             $newEncounter = null;
+            //get a new encounter without id
             foreach( $patient->getEncounter() as $encounter ) {
                 echo "encounter ID=".$encounter->getId()."<br>";
                 if( !$encounter->getId() ) {
                     $newEncounter = $encounter;
                     break;
                 }
-                foreach( $encounter->getReferringProviders() as $referringProvider ) {
-                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
-                }
             }
 
             //set system source and user's default institution
-        if( $newEncounter ) {
+            if( $newEncounter ) {
 
-            $newEncounter->setSource($system);
-            $newEncounter->setInstitution($institution);
-            //}
+                $newEncounter->setSource($system);
+                $newEncounter->setInstitution($institution);
 
-            $key = $newEncounter->obtainAllKeyfield()->first();
-            $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+                //assign generated encounter number ID
+                $key = $newEncounter->obtainAllKeyfield()->first();
+                $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
-            if ($patient->getId()) {
-                //CASE 1
-                echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
-                //get a new encounter without id $newEncounter
-//                foreach( $encounter->getReferringProviders() as $referringProvider ) {
-//                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
-//                }
+                //TODO: remove tracker if spot/location is empty?
+                //if user opens "Encounter's Location" accordion => set default encounter name
+                //check if tracker is empty: if encounter name is empty => remove tracker/spots/location
 
-                $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
+                if ($patient->getId()) {
+                    //CASE 1
+                    echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
+                    //get a new encounter without id $newEncounter
+    //                foreach( $encounter->getReferringProviders() as $referringProvider ) {
+    //                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
+    //                }
 
-                //if( $newEncounter ) {
+                    $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
 
-                //reset institution from the patient
-                $newEncounter->setInstitution($patient->getInstitution());
+                    //reset institution from the patient
+                    $newEncounter->setInstitution($patient->getInstitution());
 
-//                $key = $newEncounter->obtainAllKeyfield()->first();
-//                $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+                    $patient->addEncounter($newEncounter);
 
-//                    $lastNameRes = $newEncounter->obtainStatusField('patlastname', $status);
-//                    echo "encounter lastNameRes=" . $lastNameRes . "<br>";
-//
-//                    echo "encounter provider=" . $newEncounter->getProvider() . "<br>";
-//
-//                    $referringProvider = $newEncounter->obtainStatusField('referringProviders', $status);
-//                    echo "encounter referringProvider phone=" . $referringProvider->getReferringProviderPhone() . "<br>";
-//                    echo "encounter referringProvider Specialty=" . $referringProvider->getReferringProviderSpecialty()->getId() . "<br>";
-//                    $referringProviderUserWrapper = $referringProvider->getField();
-//                    //echo "encounter referringProvider UserWrapper ID=" . $referringProviderUserWrapper->getId() . "<br>";
-//                    //echo "encounter referringProvider UserWrapper field=" . $referringProviderUserWrapper->getName() . "<br>";
-//                    //echo "encounter referringProvider UserWrapper user=" . $referringProviderUserWrapper->getUser() . "<br>";
-//
-//                    $encounterDate = $newEncounter->obtainStatusField('date', $status);
-//                    echo "encounter date=" . $encounterDate . "<br>";
-//
-//                    echo "encounter time=" . $encounterDate->getTimeStr() . "<br>";
+    //                echo "encounter count=".count($patient->getEncounter())."<br>";
+    //                foreach( $patient->getEncounter() as $encounter ) {
+    //                    echo "encounter ID=".$encounter->getId()."<br>";
+    //                }
 
-                $patient->addEncounter($newEncounter);
+                    //exit('1');
+                    //$em->persist($patient);
+                    $em->persist($newEncounter);
+                    $em->flush();
 
-//                    echo "encounter count=".count($patient->getEncounter())."<br>";
-//                    foreach( $patient->getEncounter() as $encounter ) {
-//                        echo "encounter ID=".$encounter->getId()."<br>";
-//                    }
+                    $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
+                    //}
 
-                //exit('1');
-                //$em->persist($patient);
-                $em->persist($newEncounter);
-                $em->flush();
+                } else {
+                    //CASE 2
+                    echo "case 2: patient does not exists: create a new encounter to DB <br>";
+                    //oleg_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
 
-                $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
-                //}
+                    $newEncounter->setPatient(null);
 
-            } else {
-                //CASE 2
-                echo "case 2: patient does not exists: create a new encounter to DB <br>";
-                //oleg_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
+                    $em->persist($newEncounter);
+                    $em->flush($newEncounter);
 
-                $newEncounter->setPatient(null);
+                    $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
 
-                $em->persist($newEncounter);
-                $em->flush($newEncounter);
-
-                $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
-
-            }
+                }
 
 
-        }//if $newEncounter
+            }//if $newEncounter
 
             //exit('form is submitted and finished');
             //$em->persist($entity);
