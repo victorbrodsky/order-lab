@@ -244,7 +244,7 @@ class CheckController extends Controller {
     /**
      * TODO: test on collage. DELETE might not work with a new php version?
      * @Route("/patient/delete/{key}", name="delete-mrn-keytype")
-     * @Method("POST")
+     * @Method({"POST", "DELETE"})
      */
     public function deleteMrnAction( Request $request ) {
         //echo "deleteMrnAction key=".$key."<br>";
@@ -499,7 +499,7 @@ class CheckController extends Controller {
 
     /**
      * @Route("/accession/delete/{key}", name="delete-accession")
-     * @Method("DELETE")
+     * @Method({"POST", "DELETE"})
      */
     public function deleteAccessionAction(Request $request) {
 
@@ -639,7 +639,7 @@ class CheckController extends Controller {
 
     /**
      * @Route("/part/delete/{key}", name="delete-part")
-     * @Method("DELETE")
+     * @Method({"POST", "DELETE"})
      */
     public function deletePartAction(Request $request) {
 
@@ -782,7 +782,7 @@ class CheckController extends Controller {
 
     /**
      * @Route("/block/delete/{key}", name="delete-block")
-     * @Method("DELETE")
+     * @Method({"POST", "DELETE"})
      */
     public function deleteBlockAction(Request $request) {
 
