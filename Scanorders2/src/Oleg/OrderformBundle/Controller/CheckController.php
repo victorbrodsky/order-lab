@@ -242,7 +242,7 @@ class CheckController extends Controller {
     }
 
     /**
-     * TODO: test on collage. DELETE might not work with a new php version?
+     * TODO: test on collage. DELETE might not work with a new php version and ajax calls (symfony bug?)?
      * @Route("/patient/delete/{key}", name="delete-mrn-keytype")
      * @Method({"POST", "DELETE"})
      */

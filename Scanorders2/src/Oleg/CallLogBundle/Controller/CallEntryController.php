@@ -124,7 +124,6 @@ class CallEntryController extends Controller
 //            echo "spot count=".count($encounter->getTracker()->getSpots())."<br>";
 //        }
 
-
         //add encounter to patient
         $patient->addEncounter($encounter);
 
@@ -238,12 +237,17 @@ class CallEntryController extends Controller
             }
 
             //set system source and user's default institution
-            if( $newEncounter ) {
-                $newEncounter->setSource($system);
-                $newEncounter->setInstitution($institution);
-            }
+        if( $newEncounter ) {
 
-            if( $patient->getId() ) {
+            $newEncounter->setSource($system);
+            $newEncounter->setInstitution($institution);
+            //}
+
+            $key = $newEncounter->obtainAllKeyfield()->first();
+            $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+
+            if ($patient->getId()) {
+                //CASE 1
                 echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
                 //get a new encounter without id $newEncounter
 //                foreach( $encounter->getReferringProviders() as $referringProvider ) {
@@ -252,13 +256,13 @@ class CallEntryController extends Controller
 
                 $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
 
+                //if( $newEncounter ) {
+
                 //reset institution from the patient
                 $newEncounter->setInstitution($patient->getInstitution());
 
-                if( $newEncounter ) {
-
-                    $key = $newEncounter->obtainAllKeyfield()->first();
-                    $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+//                $key = $newEncounter->obtainAllKeyfield()->first();
+//                $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
 //                    $lastNameRes = $newEncounter->obtainStatusField('patlastname', $status);
 //                    echo "encounter lastNameRes=" . $lastNameRes . "<br>";
@@ -278,31 +282,37 @@ class CallEntryController extends Controller
 //
 //                    echo "encounter time=" . $encounterDate->getTimeStr() . "<br>";
 
-                    $patient->addEncounter($newEncounter);
+                $patient->addEncounter($newEncounter);
 
 //                    echo "encounter count=".count($patient->getEncounter())."<br>";
 //                    foreach( $patient->getEncounter() as $encounter ) {
 //                        echo "encounter ID=".$encounter->getId()."<br>";
 //                    }
 
-                    //exit('1');
-                    //$em->persist($patient);
-                    $em->persist($newEncounter);
-                    $em->flush();
+                //exit('1');
+                //$em->persist($patient);
+                $em->persist($newEncounter);
+                $em->flush();
 
-                    $msg = "New Encounter (ID#".$newEncounter->getId().") is created with number ".$newEncounter->obtainEncounterNumber()." for the Patient with ID #".$patient->getId();
-                }
+                $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
+                //}
 
             } else {
+                //CASE 2
                 echo "case 2: patient does not exists: create a new encounter to DB <br>";
                 //oleg_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
 
-                //$em->persist($newEncounter);
-                //$em->flush($newEncounter);
+                $newEncounter->setPatient(null);
 
-                $msg = "New Encounter (ID#".$newEncounter->getId().") is created with number ".$newEncounter->obtainEncounterNumber();
+                $em->persist($newEncounter);
+                $em->flush($newEncounter);
+
+                $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
 
             }
+
+
+        }//if $newEncounter
 
             //exit('form is submitted and finished');
             //$em->persist($entity);
