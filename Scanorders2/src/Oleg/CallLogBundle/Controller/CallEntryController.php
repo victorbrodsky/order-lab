@@ -21,6 +21,7 @@ use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientSuffix;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
+use Oleg\UserdirectoryBundle\Entity\Spot;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -78,6 +79,7 @@ class CallEntryController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $calllogUtil = $this->get('calllog_util');
+        $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $mrn = trim($request->get('mrn'));
@@ -90,19 +92,48 @@ class CallEntryController extends Controller
         $cycle = 'new';
         $formtype = 'call-entry';
 
-        $institution = $this->getCurrentUserInstitution($user);
+        $institution = $userSecUtil->getCurrentUserInstitution($user);
 
+        //create patient
         $patient = new Patient(true,$status,$user,$system);
         $patient->setInstitution($institution);
 
+        //create encounter
         $encounter = new Encounter(true,$status,$user,$system);
         $encounter->setInstitution($institution);
         $encounterReferringProvider = new EncounterReferringProvider($status,$user,$system);
         $encounter->addReferringProvider($encounterReferringProvider);
+
         //set encounter generated id
         $key = $encounter->obtainAllKeyfield()->first();
         $encounter = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter, $user);
 
+        //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
+        //exit('1');
+
+        //create a new spot and add it to the encounter's tracker
+//        $spotEntity = new Spot($user,$system);
+//        $spotEntity->setCurrentLocation($patientLocation);
+//        $spotEntity->setCreation(new \DateTime());
+//        $spotEntity->setSpottedOn(new \DateTime());
+//        $tracker = $this->getTracker();
+//        if( !$tracker) {
+//            $tracker = new Tracker();
+//            $this->setTracker($tracker);
+//        }
+//        $tracker->addSpot($spotEntity);
+        $withdummyfields = false;
+        $locationTypePrimary = null;
+        $locationName = "Encounter's Location";
+        $spotEntity = null;
+        $removable = 0;
+        $encounter->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,$locationName,$spotEntity,$withdummyfields,$em,$removable);
+//        if( $encounter->getTracker() ) {
+//            echo "spot count=".count($encounter->getTracker()->getSpots())."<br>";
+//        }
+
+
+        //add encounter to patient
         $patient->addEncounter($encounter);
 
 
@@ -138,6 +169,7 @@ class CallEntryController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
+        $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
 //        $mrn = trim($request->get('mrn'));
@@ -197,7 +229,7 @@ class CallEntryController extends Controller
         if( $form->isSubmitted() ) {
             //exit('form is valid');
 
-            $institution = $this->getCurrentUserInstitution($user);
+            $institution = $userSecUtil->getCurrentUserInstitution($user);
 
             echo "patient id=".$patient->getId()."<br>";
 
@@ -266,7 +298,7 @@ class CallEntryController extends Controller
                     $em->persist($newEncounter);
                     $em->flush();
 
-                    $msg = "New Encounter is created with ID #".$newEncounter->getId()." for the Patient with ID #".$patient->getId();
+                    $msg = "New Encounter (ID#".$newEncounter->getId().") is created with number ".$newEncounter->obtainEncounterNumber()." for the Patient with ID #".$patient->getId();
                 }
 
             } else {
@@ -276,7 +308,8 @@ class CallEntryController extends Controller
                 //$em->persist($newEncounter);
                 //$em->flush($newEncounter);
 
-                $msg = "New Encounter is created with ID #".$newEncounter->getId();
+                $msg = "New Encounter (ID#".$newEncounter->getId().") is created with number ".$newEncounter->obtainEncounterNumber();
+
             }
 
             //exit('form is submitted and finished');
@@ -337,6 +370,7 @@ class CallEntryController extends Controller
             'mrntype' => intval($mrntype),
             'mrn' => $mrn,
             'formtype' => 'call-entry',
+            'complexLocation' => false
         );
 
         if( $formparams ) {
@@ -712,6 +746,7 @@ class CallEntryController extends Controller
     {
 
         $securityUtil = $this->get('order_security_utility');
+        $userSecUtil = $this->get('user_security_utility');
         $res = array();
         $output = 'OK';
         $response = new Response();
@@ -769,7 +804,7 @@ class CallEntryController extends Controller
 //        if (!$institution) {
 //            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
 //        }
-        $institution = $this->getCurrentUserInstitution($user);
+        $institution = $userSecUtil->getCurrentUserInstitution($user);
         //echo "3 inst=".$institution."<br>";
         //exit('1');
 
@@ -980,26 +1015,26 @@ class CallEntryController extends Controller
     }
 
 
-    public function getCurrentUserInstitution($user)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('order_security_utility');
-
-        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-        $institution = $userSiteSettings->getDefaultInstitution();
-        //echo "1 inst=".$institution."<br>";
-        if (!$institution) {
-            $institutions = $securityUtil->getUserPermittedInstitutions($user);
-            //echo "count inst=".count($institutions)."<br>";
-            if (count($institutions) > 0) {
-                $institution = $institutions[0];
-            }
-        //echo "2 inst=".$institution."<br>";
-        }
-        if (!$institution) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-        }
-
-        return $institution;
-    }
+//    public function getCurrentUserInstitution($user)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//        $securityUtil = $this->get('order_security_utility');
+//
+//        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+//        $institution = $userSiteSettings->getDefaultInstitution();
+//        //echo "1 inst=".$institution."<br>";
+//        if (!$institution) {
+//            $institutions = $securityUtil->getUserPermittedInstitutions($user);
+//            //echo "count inst=".count($institutions)."<br>";
+//            if (count($institutions) > 0) {
+//                $institution = $institutions[0];
+//            }
+//        //echo "2 inst=".$institution."<br>";
+//        }
+//        if (!$institution) {
+//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//        }
+//
+//        return $institution;
+//    }
 }

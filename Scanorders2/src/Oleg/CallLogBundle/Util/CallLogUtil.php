@@ -855,8 +855,11 @@ class CallLogUtil
         }
     }
 
-    public function getNextEncounterGeneratedId() {
+    public function getNextEncounterGeneratedId($user=null) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $institution = $userSecUtil->getCurrentUserInstitution($user);
         $encounter = new Encounter();
+        $encounter->setInstitution($institution);
         $nextKey = $this->em->getRepository('OlegOrderformBundle:Encounter')->getNextNonProvided($encounter);
         return $nextKey;
     }

@@ -783,6 +783,19 @@ class Encounter extends ObjectAbstract
         return $fullName;
     }
 
+    public function obtainEncounterNumber() {
+        $number = null;
+        $key = $this->obtainValidField('number');
+        if( $key ) {
+            if( $key->getKeytype() ) {
+                $number = $key->getField() . " (". $key->getKeytype()->getOptimalName() . ")";
+            } else {
+                $number = $key->getField();
+            }
+        }
+        return $number;
+    }
+
     public function obtainKeyField() {
         return $this->getNumber();
     }

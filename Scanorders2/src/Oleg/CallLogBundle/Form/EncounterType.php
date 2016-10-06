@@ -12,6 +12,7 @@ use Oleg\OrderformBundle\Form\EncounterPatsexType;
 use Oleg\OrderformBundle\Form\EncounterPatsuffixType;
 use Oleg\OrderformBundle\Form\GenericFieldType;
 
+use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -204,6 +205,10 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterreferringprovider__',
         ));
 
+        $builder->add('tracker', new TrackerType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+            'label' => false,
+        ));
 
     }
 

@@ -11,6 +11,10 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Entity\GeoLocation;
+use Oleg\UserdirectoryBundle\Entity\Location;
+use Oleg\UserdirectoryBundle\Entity\Spot;
+use Oleg\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
@@ -891,15 +895,54 @@ abstract class ObjectAbstract
         ob_end_clean();
         return $content;
     }
-//    public function formatDataToString($data) {
-//        if( $data && $data instanceof \DateTime ) {
-//            $transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d');
-//            $dateStr = $transformer->transform($data);
-//            return $dateStr;
-//        } else {
-//            return $data;
-//        }
-//    }
+
+    public function addContactinfoByTypeAndName($user,$system,$locationType=null,$locationName=null,$spotEntity=null,$withdummyfields=false,$em=null,$removable=1) {
+        $location = new Location($user);
+
+        if( $locationType ) {
+            $location->addLocationType($locationType);
+        }
+
+        $location->setName($locationName);
+        $location->setStatus(1);
+        $location->setRemovable($removable);
+
+        $geoLocation = new GeoLocation();
+        $location->setGeoLocation($geoLocation);
+
+        if( $withdummyfields ) {
+            $location->setEmail("dummyemail@myemail.com");
+            $location->setPhone("(212) 123-4567");
+            //$geoLocation = new GeoLocation();
+            $geoLocation->setStreet1("100");
+            $geoLocation->setStreet2("Broadway");
+            $geoLocation->setZip("10001");
+            //$location->setGeoLocation($geoLocation);
+
+            if( $em ) {
+                $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
+                $geoLocation->setCity($city);
+
+                $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
+                $geoLocation->setCountry($country);
+            }
+        }
+
+        $tracker = $this->getTracker();
+        if( !$tracker) {
+            $tracker = new Tracker();
+            $this->setTracker($tracker);
+        }
+
+        if( !$spotEntity ) {
+            $spotEntity = new Spot($user,$system);
+        }
+        $spotEntity->setCurrentLocation($location);
+        $spotEntity->setCreation(new \DateTime());
+        $spotEntity->setSpottedOn(new \DateTime());
+
+        $tracker->addSpot($spotEntity);
+    }
 
 //    //replace contains in AddChild
 //    public function childAlreadyExist( $newChild ) {

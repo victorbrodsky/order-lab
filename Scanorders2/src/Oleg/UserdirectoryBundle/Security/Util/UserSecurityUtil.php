@@ -1212,6 +1212,31 @@ class UserSecurityUtil {
         return $url;
     }
 
+    public function getCurrentUserInstitution($user=null)
+    {
+        $em = $this->em;
+        $securityUtil = $this->container->get('order_security_utility');
+        $institution = null;
+
+        if( $user ) {
+            $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+            $institution = $userSiteSettings->getDefaultInstitution();
+            //echo "1 inst=".$institution."<br>";
+            if (!$institution) {
+                $institutions = $securityUtil->getUserPermittedInstitutions($user);
+                //echo "count inst=".count($institutions)."<br>";
+                if (count($institutions) > 0) {
+                    $institution = $institutions[0];
+                }
+                //echo "2 inst=".$institution."<br>";
+            }
+        }
+        if (!$institution) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        }
+
+        return $institution;
+    }
 
     /////////////////////// getHeadInfo Return: Chief, Eyebrow Pathology ///////////////////////
     //Group by institutions

@@ -748,53 +748,53 @@ class Patient extends ObjectAbstract
         $this->addType( new PatientType($status,$provider,$source) );
     }
 
-    public function addContactinfoByTypeAndName($user,$system,$locationType=null,$locationName=null,$spotEntity=null,$withdummyfields=false,$em=null) {
-        $patientLocation = new Location($user);
-
-        if( $locationType ) {
-            $patientLocation->addLocationType($locationType);
-        }
-
-        $patientLocation->setName($locationName);
-        $patientLocation->setStatus(1);
-        $patientLocation->setRemovable(1);
-
-        $geoLocation = new GeoLocation();
-        $patientLocation->setGeoLocation($geoLocation);
-
-        if( $withdummyfields ) {
-            $patientLocation->setEmail("dummyemail@myemail.com");
-            $patientLocation->setPhone("(212) 123-4567");
-            //$geoLocation = new GeoLocation();
-            $geoLocation->setStreet1("100");
-            $geoLocation->setStreet2("Broadway");
-            $geoLocation->setZip("10001");
-            //$patientLocation->setGeoLocation($geoLocation);
-
-            if( $em ) {
-                $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
-                $geoLocation->setCity($city);
-
-                $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
-                $geoLocation->setCountry($country);
-            }
-        }
-
-        $tracker = $this->getTracker();
-        if( !$tracker) {
-            $tracker = new Tracker();
-            $this->setTracker($tracker);
-        }
-
-        if( !$spotEntity ) {
-            $spotEntity = new Spot($user,$system);
-        }
-        $spotEntity->setCurrentLocation($patientLocation);
-        $spotEntity->setCreation(new \DateTime());
-        $spotEntity->setSpottedOn(new \DateTime());
-
-        $tracker->addSpot($spotEntity);
-    }
+//    public function addContactinfoByTypeAndName($user,$system,$locationType=null,$locationName=null,$spotEntity=null,$withdummyfields=false,$em=null) {
+//        $patientLocation = new Location($user);
+//
+//        if( $locationType ) {
+//            $patientLocation->addLocationType($locationType);
+//        }
+//
+//        $patientLocation->setName($locationName);
+//        $patientLocation->setStatus(1);
+//        $patientLocation->setRemovable(1);
+//
+//        $geoLocation = new GeoLocation();
+//        $patientLocation->setGeoLocation($geoLocation);
+//
+//        if( $withdummyfields ) {
+//            $patientLocation->setEmail("dummyemail@myemail.com");
+//            $patientLocation->setPhone("(212) 123-4567");
+//            //$geoLocation = new GeoLocation();
+//            $geoLocation->setStreet1("100");
+//            $geoLocation->setStreet2("Broadway");
+//            $geoLocation->setZip("10001");
+//            //$patientLocation->setGeoLocation($geoLocation);
+//
+//            if( $em ) {
+//                $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
+//                $geoLocation->setCity($city);
+//
+//                $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
+//                $geoLocation->setCountry($country);
+//            }
+//        }
+//
+//        $tracker = $this->getTracker();
+//        if( !$tracker) {
+//            $tracker = new Tracker();
+//            $this->setTracker($tracker);
+//        }
+//
+//        if( !$spotEntity ) {
+//            $spotEntity = new Spot($user,$system);
+//        }
+//        $spotEntity->setCurrentLocation($patientLocation);
+//        $spotEntity->setCreation(new \DateTime());
+//        $spotEntity->setSpottedOn(new \DateTime());
+//
+//        $tracker->addSpot($spotEntity);
+//    }
 
     //$locationTypeStr = "Patient's Primary Contact Information"
     public function obtainPatientContactinfo($locationTypeStr) {

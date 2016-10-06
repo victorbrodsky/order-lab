@@ -28,13 +28,26 @@ class SpotType extends AbstractType
 //            'attr' => array('class'=>'form-control')
 //        ));
 
+        if( !array_key_exists('complexLocation', $this->params) ) {
+            $this->params['complexLocation'] = true;
+        }
+
         $currentUser = true;
         $cycle = $this->params['cycle'];
         $em = $this->params['em'];
         $roleAdmin = true;
         $read_only = false;
+        $complexLocation = $this->params['complexLocation'];
 
-        $params = array('read_only'=>$read_only,'admin'=>$roleAdmin,'currentUser'=>$currentUser,'cycle'=>$cycle,'em'=>$em,'institution'=>false);
+        $params = array(
+            'read_only' => $read_only,
+            'admin' => $roleAdmin,
+            'currentUser' => $currentUser,
+            'cycle' => $cycle,
+            'em' => $em,
+            'institution' => false,
+            'complexLocation' => $complexLocation
+        );
 
         $builder->add('currentLocation', new LocationType($params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',

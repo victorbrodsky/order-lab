@@ -408,7 +408,7 @@
 {% endmacro %}
 
 
-{% macro locationObject( field, cycle, classname, prototype, sitename, entity ) %}
+{% macro locationObject( field, cycle, classname, prototype, sitename, entity, editable ) %}
     
 {% if field %}
     
@@ -564,7 +564,10 @@
                     {{ formmacros.field(formfield.removable) }}
                 {% endif %}
 
-                {% if standAloneLocation or prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
+                {% if standAloneLocation or prototype == "prototype" or
+                    (formfield.vars.value and formfield.vars.value.removable == true) or
+                    (editable is defined and editable == 'editable')
+                %}
                     {{ formmacros.field(formfield.name) }}
                 {% else %}
                     {{ formmacros.field(formfield.name,"","readonly") }}
@@ -594,14 +597,20 @@
             {% if showRegularFields2 %}
                 {{ usermacros.emailPhoneField(formfield.phone,cycle,'phone',"") }}
 
-                {{ usermacros.emailPhoneField_notempty(formfield.pager,cycle,'phone',"") }}
-                {{ usermacros.emailPhoneField_notempty(formfield.mobile,cycle,'phone',"") }}
+                {% if formfield.pager is defined %}
+                    {{ usermacros.emailPhoneField_notempty(formfield.pager,cycle,'phone',"") }}
+                {% endif %}
+                {% if formfield.mobile is defined %}
+                    {{ usermacros.emailPhoneField_notempty(formfield.mobile,cycle,'phone',"") }}
+                {% endif %}
 
-                {% if homeLocation == false %}
+                {% if homeLocation == false and formfield.ic is defined %}
                     {{ formmacros.field_notempty(formfield.ic,cycle) }}
                 {% endif %}
 
-                {{ formmacros.field_notempty(formfield.fax,cycle) }}
+                {% if formfield.fax is defined %}
+                    {{ formmacros.field_notempty(formfield.fax,cycle) }}
+                {% endif %}
                 {{ usermacros.emailPhoneField_notempty(formfield.email,cycle,'email',"") }}
 
             {% endif %}{#showRegularFields2#}
@@ -641,11 +650,19 @@
                         {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
                     {% endif %}
 
-                    {{ formmacros.field_notempty(formfield.mailbox,cycle) }}
+                    {% if formfield.mailbox is defined %}
+                        {{ formmacros.field_notempty(formfield.mailbox,cycle) }}
+                    {% endif %}
 
-                    {{ formmacros.field_notempty(formfield.room,cycle) }}
-                    {{ formmacros.field_notempty(formfield.suite,cycle) }}
-                    {{ formmacros.field(formfield.floor) }}
+                    {% if formfield.room is defined %}
+                        {{ formmacros.field_notempty(formfield.room,cycle) }}
+                    {% endif %}
+                    {% if formfield.suite is defined %}
+                        {{ formmacros.field_notempty(formfield.suite,cycle) }}
+                    {% endif %}
+                    {% if formfield.floor is defined %}
+                        {{ formmacros.field(formfield.floor) }}
+                    {% endif %}
 
                     {{ formmacros.field(formfield.building) }}
 
@@ -654,7 +671,7 @@
                 {#Location GeoLocation#}
                 {{ usermacros.geoLocation(field,cycle,prototype) }}
 
-                {% if homeLocation == false %}
+                {% if homeLocation == false and formfield.associatedCode is defined %}
                     {{ formmacros.field_notempty(formfield.associatedCode,cycle) }}
                 {% endif %}
 
