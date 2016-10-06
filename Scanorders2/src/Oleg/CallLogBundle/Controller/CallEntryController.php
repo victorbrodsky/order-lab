@@ -112,19 +112,9 @@ class CallEntryController extends Controller
         //exit('1');
 
         //create a new spot and add it to the encounter's tracker
-//        $spotEntity = new Spot($user,$system);
-//        $spotEntity->setCurrentLocation($patientLocation);
-//        $spotEntity->setCreation(new \DateTime());
-//        $spotEntity->setSpottedOn(new \DateTime());
-//        $tracker = $this->getTracker();
-//        if( !$tracker) {
-//            $tracker = new Tracker();
-//            $this->setTracker($tracker);
-//        }
-//        $tracker->addSpot($spotEntity);
         $withdummyfields = false;
         $locationTypePrimary = null;
-        $locationName = "Encounter's Location";
+        $locationName = null;   //"Encounter's Location";
         $spotEntity = null;
         $removable = 0;
         $encounter->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,$locationName,$spotEntity,$withdummyfields,$em,$removable);

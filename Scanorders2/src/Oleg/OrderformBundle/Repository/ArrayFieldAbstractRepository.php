@@ -1197,7 +1197,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "queryStr=".$queryStr."<br>";
 
         $query = $this->getEntityManager()
-        ->createQuery($queryStr)->setParameter('field', '%'.$prefixname.'%');
+            ->createQuery($queryStr)->setParameter('field', '%'.$prefixname.'%');
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -1224,6 +1224,26 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 }
             }
         }
+
+        /////// check if maxKey does not exists ///////
+        $queryCheckStr =
+            'SELECT cfield.field FROM OlegOrderformBundle:'.$className.
+            ' c'.
+            ' JOIN c.'.$fieldName.' cfield'.
+            ' JOIN c.institution institution'.
+            ' WHERE '.$extraStr.'cfield.field = :field'.$inst;
+        $checkQuery = $this->getEntityManager()
+            ->createQuery($queryCheckStr)->setParameter('field', $maxKey);
+        //echo "query=".$checkQuery->getSql()."<br>";
+        $fields = $checkQuery->getResult();
+        //echo "fields=".count($fields)."<br>";
+        if( count($fields) > 0 ) {
+            $errorMsg = 'Can not find max key. Founded max key '.$maxKey." is already exists ".count($fields)." time(s).";
+            //exit($errorMsg);
+            throw new \Exception($errorMsg);
+        }
+        /////// EOF check if maxKey does not exists ///////
+
         //echo "maxKey=".$maxKey."<br>";
         //exit();
         //if( $className == 'Encounter') {

@@ -107,7 +107,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
 
     //override parent method to get next key string
-    public function getNextNonProvided( $entity, $extra=null, $message=null ) {
+    public function getNextNonProvided( $entity, $extra=null, $message=null, $prefixname=null ) {
         $accession= $entity->getParent();
         //echo $entity;
         //echo $accession;

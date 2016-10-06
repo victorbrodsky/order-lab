@@ -261,7 +261,12 @@
                             onclick="toggleSinglePanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');">
                     </button>
 
-                    <h4 class="panel-title">{{ spot.currentLocation.vars.value.name }}</h4>
+                    {% set panelTitle = spot.currentLocation.vars.value.name %}
+                    {% if not panelTitle %}
+                        {% set panelTitle = "Encounter's Location" %}
+                    {% endif %}
+
+                    <h4 class="panel-title">{{ panelTitle }}</h4>
                 </div>
 
                 <div id="form_body_entitycontactinfo_{{ uniqueId }}" class="panel-body collapse">

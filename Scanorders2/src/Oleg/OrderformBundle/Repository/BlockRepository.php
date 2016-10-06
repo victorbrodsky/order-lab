@@ -56,7 +56,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 //    }
 
     //override parent method to get next key string
-    public function getNextNonProvided($entity, $extra=null, $message=null) {
+    public function getNextNonProvided($entity, $extra=null, $message=null, $prefixname=null) {
         $part= $entity->getParent();
         $partname = $part->obtainValidKeyfield()."";
         $accession= $part->getParent();
