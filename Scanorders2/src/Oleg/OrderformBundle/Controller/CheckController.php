@@ -242,16 +242,17 @@ class CheckController extends Controller {
     }
 
     /**
+     * TODO: test on collage. DELETE might not work with a new php version?
      * @Route("/patient/delete/{key}", name="delete-mrn-keytype")
      * @Method("DELETE")
      */
-    public function deleteMrnAction( Request $request, $key ) {
-        echo "deleteMrnAction key=".$key."<br>";
-        exit('delete finish');
+    public function deleteMrnAction( Request $request ) {
+        //echo "deleteMrnAction key=".$key."<br>";
+        //exit('delete finish');
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        //$key = trim( $request->get('key') );
+        $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
         //echo "keytype=$keytype<br>";
 
