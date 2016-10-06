@@ -1239,7 +1239,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "fields=".count($fields)."<br>";
         if( count($fields) > 0 ) {
             $errorMsg = 'Can not find max key. Founded max key '.$maxKey." is already exists ".count($fields)." time(s).";
-            //exit($errorMsg);
+            exit($errorMsg);
             throw new \Exception($errorMsg);
         }
         /////// EOF check if maxKey does not exists ///////
