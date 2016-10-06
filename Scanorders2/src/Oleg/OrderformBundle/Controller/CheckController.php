@@ -246,7 +246,9 @@ class CheckController extends Controller {
      * @Method("DELETE")
      */
     public function deleteMrnAction( Request $request, $key ) {
-        //echo "deleteMrnAction<br>";
+        echo "deleteMrnAction key=".$key."<br>";
+        exit('delete finish');
+
         $user = $this->get('security.context')->getToken()->getUser();
 
         //$key = trim( $request->get('key') );
