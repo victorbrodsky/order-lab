@@ -245,9 +245,16 @@ class CallEntryController extends Controller
                 $key = $newEncounter->obtainAllKeyfield()->first();
                 $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
-                //TODO: remove tracker if spot/location is empty?
-                //if user opens "Encounter's Location" accordion => set default encounter name
-                //check if tracker is empty: if encounter name is empty => remove tracker/spots/location
+                //Remove tracker if spots/location is empty
+                $tracker = $newEncounter->getTracker();
+                $tracker->removeEmptySpots();
+                if( $tracker->isEmpty() ) {
+                    //echo "Tracker is empty! <br>";
+                    $newEncounter->setTracker(null);
+                } else {
+                    //echo "Tracker is not empty! <br>";
+                }
+                //exit();
 
                 if ($patient->getId()) {
                     //CASE 1

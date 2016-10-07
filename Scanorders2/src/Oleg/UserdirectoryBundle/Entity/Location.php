@@ -852,4 +852,54 @@ class Location extends ListAbstract
         return $this->getNameFull();
     }
 
+    public function isEmpty() {
+        $empty = true;
+
+        if( $this->getName() ) {
+            return false;
+        }
+        if( $this->getPhone() ) {
+            return false;
+        }
+        if( $this->getFax() ) {
+            return false;
+        }
+        if( $this->getPager() ) {
+            return false;
+        }
+        if( $this->getMobile() ) {
+            return false;
+        }
+        if( $this->getEmail() ) {
+            return false;
+        }
+        if( $this->getBuilding() ) {
+            return false;
+        }
+        if( $this->getLocationTypes() ) {
+            return false;
+        }
+        if( $this->getRoom() ) {
+            return false;
+        }
+        if( $this->getSuite() ) {
+            return false;
+        }
+        if( $this->getFloor() ) {
+            return false;
+        }
+        if( $this->getMailbox() ) {
+            return false;
+        }
+        if( $this->getComment() ) {
+            return false;
+        }
+
+        if( $this->getGeoLocation()->getFullGeoLocation() ) {
+            return false;
+        }
+
+        return $empty;
+    }
+
 }

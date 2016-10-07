@@ -72,4 +72,22 @@ class Tracker {
         $this->spots->removeElement($item);
     }
 
+    //empty if all spots are empty
+    public function removeEmptySpots() {
+        foreach( $this->getSpots() as $spot ) {
+            if( $spot->isEmpty() ) {
+                echo "remove spot <br>";
+                $this->removeSpot($spot);
+            }
+        }
+    }
+    public function isEmpty() {
+        if( count($this->getSpots()) > 0 ) {
+            $empty = false;
+        } else {
+            $empty = true;
+        }
+        return $empty;
+    }
+
 }

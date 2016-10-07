@@ -53,7 +53,7 @@ class LocationType extends AbstractType
 
         $builder->add('name', null, array(
             'label' => "* Location's Name:",
-            'attr' => array('class' => 'form-control user-location-name-field', 'required' => 'required')
+            'attr' => array('class' => 'form-control user-location-name-field')
         ));
 
         $builder->add('phone', null, array(
@@ -106,6 +106,11 @@ class LocationType extends AbstractType
         //complexLocation
         if( $this->params['complexLocation'] ) {
             //echo "show complex location<br>";
+
+            $builder->add('name', null, array(
+                'label' => "* Location's Name:",
+                'attr' => array('class' => 'form-control user-location-name-field', 'required' => 'required')
+            ));
 
             if( $this->params['cycle'] != "new_standalone" ) {
                 $baseUserAttr = new Location();

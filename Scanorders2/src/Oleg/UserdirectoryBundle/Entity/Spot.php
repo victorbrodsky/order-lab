@@ -300,7 +300,32 @@ class Spot {
         return $this->source;
     }
 
+    //empty if this spot's currentLocation and intendedLocation are empty
+    public function isEmpty() {
+        $emptyCount = 0;
+        if( $this->getCurrentLocation() ) {
+            if( $this->getCurrentLocation()->isEmpty() ) {
+                $emptyCount++;
+            }
+        } else {
+            $emptyCount++;
+        }
 
+        if( $this->getIntendedLocation() ) {
+            if( $this->getIntendedLocation()->isEmpty() ) {
+                $emptyCount++;
+            }
+        } else {
+            $emptyCount++;
+        }
+
+        if( $emptyCount === 2 ) {
+            $empty = true;
+        } else {
+            $empty = false;
+        }
+        return $empty;
+    }
 
 
 }
