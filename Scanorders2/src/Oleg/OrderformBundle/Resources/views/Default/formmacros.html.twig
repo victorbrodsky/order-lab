@@ -62,7 +62,7 @@
     </p>
 {% endmacro %}
 
-{% macro simplefield( label, value, type, disabled ) %}
+{% macro simplefield( label, value, type, disabled, tooltip ) %}
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
@@ -70,16 +70,32 @@
         </div>
         <div class="col-xs-6" align="left">
             {% if type is defined and type == "input" %}
-                <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value|raw }}" {{ disabled }}>
+                {% if tooltip is defined and tooltip %}
+                    <input class="form-control form-control-modif not-mapped-simplefield element-with-tooltip-always"
+                           type="text" value="{{ value|raw }}" {{ disabled }}
+                           data-toggle="tooltip" title="{{ tooltip }}"
+                    >
+                {% else %}
+                    <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value|raw }}" {{ disabled }}>
+                {% endif %}
             {% elseif type == "simple-field" %}
                 {{ value|raw }}
             {% else %}
                 {#<div class="well well-sm" style="margin-bottom:0; min-height:40px">#}
                     {#{{ value|raw }}#}
                 {#</div>#}
-                <div class="form-control form-control-modif not-mapped-simplefield" style="min-height:34px; height:auto;" {{ disabled }}>
-                    {{ value|raw }}
-                </div>
+                {% if tooltip is defined and tooltip %}
+                    <div class="form-control form-control-modif not-mapped-simplefield element-with-tooltip-always"
+                         style="min-height:34px; height:auto;" {{ disabled }}
+                         data-toggle="tooltip" title="{{ tooltip }}"
+                    >
+                        {{ value|raw }}
+                    </div>
+                {% else %}
+                    <div class="form-control form-control-modif not-mapped-simplefield" style="min-height:34px; height:auto;" {{ disabled }}>
+                        {{ value|raw }}
+                    </div>
+                {% endif %}
             {% endif %}
         </div>
     </div>
@@ -2048,7 +2064,7 @@
             {% else %}
                 {% set patientFullName = "" %}
             {% endif %}
-            {{ formmacros.simplefield( "Name:", patientFullName, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Name:", patientFullName, "", "disabled", "To change the current valid name, please edit the last name, first name, middle name, and/or suffix values for the most recent encounter." ) }}
         </div>
 
         <div class="patientsex">
@@ -2057,7 +2073,7 @@
             {% else %}
                 {% set patientSex = "" %}
             {% endif %}
-            {{ formmacros.simplefield( "Gender:", patientSex, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Gender:", patientSex, "", "disabled", "To change the gender, please edit the gender value for the most recent encounter." ) }}
         </div>
 
         {% if dobHtml is not defined or dobHtml == "" %}
@@ -2073,7 +2089,7 @@
             {% else %}
                 {% set patientAge = "" %}
             {% endif %}
-            {{ formmacros.simplefield( "Age:", patientAge, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Age:", patientAge, "", "disabled", "To change the current calculated age, please edit the Date of Birth (DOB) value." ) }}
         </div>
 
 

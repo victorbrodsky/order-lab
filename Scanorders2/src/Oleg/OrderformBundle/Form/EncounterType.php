@@ -107,8 +107,15 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterpatsex__',
         ));
 
-        $attr = array('class'=>'form-control encounterage-field patientage-mask');
-        $gen_attr = array('label'=>"Patient's Age (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage','type'=>'text');
+        $attr = array(
+            'class'=>'form-control encounterage-field patientage-mask element-with-tooltip-always',
+            'data-toggle'=>"tooltip",
+            'title'=>"To change the calculated age at the time of the encounter, please edit the Date of Birth (DOB) value and/or the Encounter Date value."
+        );
+        $gen_attr = array(
+            'label'=>"Patient's Age (at the time of encounter):",
+            'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage',
+            'type'=>'text');
         $builder->add('patage', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
