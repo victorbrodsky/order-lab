@@ -2064,7 +2064,11 @@
             {% else %}
                 {% set patientFullName = "" %}
             {% endif %}
-            {{ formmacros.simplefield( "Name:", patientFullName, "", "disabled", "To change the current valid name, please edit the last name, first name, middle name, and/or suffix values for the most recent encounter." ) }}
+            {% set patientNameTooltip = "" %}
+            {% if cycle != 'show' %}
+                {% set patientNameTooltip = "To change the current valid name, please edit the last name, first name, middle name, and/or suffix values for the most recent encounter." %}
+            {% endif %}
+            {{ formmacros.simplefield( "Name:", patientFullName, "", "disabled", patientNameTooltip ) }}
         </div>
 
         <div class="patientsex">
@@ -2073,7 +2077,11 @@
             {% else %}
                 {% set patientSex = "" %}
             {% endif %}
-            {{ formmacros.simplefield( "Gender:", patientSex, "", "disabled", "To change the gender, please edit the gender value for the most recent encounter." ) }}
+            {% set patientGenderTooltip = "" %}
+            {% if cycle != 'show' %}
+                {% set patientGenderTooltip = "To change the gender, please edit the gender value for the most recent encounter." %}
+            {% endif %}
+            {{ formmacros.simplefield( "Gender:", patientSex, "", "disabled", patientGenderTooltip ) }}
         </div>
 
         {% if dobHtml is not defined or dobHtml == "" %}
@@ -2089,7 +2097,11 @@
             {% else %}
                 {% set patientAge = "" %}
             {% endif %}
-            {{ formmacros.simplefield( "Age:", patientAge, "", "disabled", "To change the current calculated age, please edit the Date of Birth (DOB) value." ) }}
+            {% set patientAgeTooltip = "" %}
+            {% if cycle != 'show' %}
+                {% set patientAgeTooltip = "To change the current calculated age, please edit the Date of Birth (DOB) value." %}
+            {% endif %}
+            {{ formmacros.simplefield( "Age:", patientAge, "", "disabled", patientAgeTooltip ) }}
         </div>
 
 
