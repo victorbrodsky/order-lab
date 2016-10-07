@@ -52,7 +52,7 @@ class LocationType extends AbstractType
         ));
 
         $builder->add('name', null, array(
-            'label' => "* Location's Name:",
+            'label' => "Location's Name:",
             'attr' => array('class' => 'form-control user-location-name-field')
         ));
 
@@ -71,6 +71,27 @@ class LocationType extends AbstractType
             'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'building'
+        ));
+
+        $builder->add('room', 'employees_custom_selector', array(
+            'label' => 'Room Number:',
+            'attr' => array('class' => 'ajax-combobox-room', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'room'
+        ));
+
+        $builder->add('suite', 'employees_custom_selector', array(
+            'label' => 'Suite:',
+            'attr' => array('class' => 'ajax-combobox-suite', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'suite'
+        ));
+
+        $builder->add('floor', 'employees_custom_selector', array(
+            'label' => 'Floor:',
+            'attr' => array('class' => 'ajax-combobox-floor', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'floor'
         ));
 
         $builder->add('geoLocation', new GeoLocationType($this->params), array(
@@ -146,32 +167,11 @@ class LocationType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
 
-            $builder->add('floor', 'employees_custom_selector', array(
-                'label' => 'Floor:',
-                'attr' => array('class' => 'ajax-combobox-floor', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'floor'
-            ));
-
-            $builder->add('suite', 'employees_custom_selector', array(
-                'label' => 'Suite:',
-                'attr' => array('class' => 'ajax-combobox-suite', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'suite'
-            ));
-
             $builder->add('mailbox', 'employees_custom_selector', array(
                 'label' => 'Mailbox:',
                 'attr' => array('class' => 'ajax-combobox-mailbox', 'type' => 'hidden'),
                 'required' => false,
                 'classtype' => 'mailbox'
-            ));
-
-            $builder->add('room', 'employees_custom_selector', array(
-                'label' => 'Room Number:',
-                'attr' => array('class' => 'ajax-combobox-room', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'room'
             ));
 
             $builder->add('associatedCode',null,array(

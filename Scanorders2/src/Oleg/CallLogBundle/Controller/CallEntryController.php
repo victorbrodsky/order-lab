@@ -108,18 +108,32 @@ class CallEntryController extends Controller
         $key = $encounter->obtainAllKeyfield()->first();
         $encounter = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter, $user);
 
+        //set encounter date and time
+        $date = $encounter->getDate()->first();
+        $userTimeZone = $user->getPreferences()->getTimezone();
+        $nowDate = new \DateTime( "now", new \DateTimeZone($userTimeZone)  );
+        $date->setField( $nowDate );
+        $date->setTime( $nowDate );
+
+        //set Location city, state, zip, county, country
+
+
         //testing
         //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
         //$calllogUtil->checkNextEncounterGeneratedId();
         //exit('1');
 
         //create a new spot and add it to the encounter's tracker
-        $withdummyfields = false;
-        $locationTypePrimary = null;
+        $withdummyfields = true;
+        //$locationTypePrimary = null;
+        $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+        if( !$encounterLocationType ) {
+            throw new \Exception( 'Location type is not found by name Encounter Location' );
+        }
         $locationName = null;   //"Encounter's Location";
         $spotEntity = null;
         $removable = 0;
-        $encounter->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,$locationName,$spotEntity,$withdummyfields,$em,$removable);
+        $encounter->addContactinfoByTypeAndName($user,$system,$encounterLocationType,$locationName,$spotEntity,$withdummyfields,$em,$removable);
 //        if( $encounter->getTracker() ) {
 //            echo "spot count=".count($encounter->getTracker()->getSpots())."<br>";
 //        }

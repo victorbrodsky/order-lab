@@ -911,17 +911,19 @@ abstract class ObjectAbstract
         $location->setGeoLocation($geoLocation);
 
         if( $withdummyfields ) {
-            $location->setEmail("dummyemail@myemail.com");
-            $location->setPhone("(212) 123-4567");
-            //$geoLocation = new GeoLocation();
-            $geoLocation->setStreet1("100");
-            $geoLocation->setStreet2("Broadway");
-            $geoLocation->setZip("10001");
-            //$location->setGeoLocation($geoLocation);
+            //$location->setEmail("dummyemail@myemail.com");
+            //$location->setPhone("(212) 123-4567");
+            //$geoLocation->setStreet1("100");
+            //$geoLocation->setStreet2("Broadway");
+            $geoLocation->setZip("10065");
+            $geoLocation->setCounty('New York County');
 
             if( $em ) {
                 $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
                 $geoLocation->setCity($city);
+
+                $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
+                $geoLocation->setState($state);
 
                 $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
                 $geoLocation->setCountry($country);

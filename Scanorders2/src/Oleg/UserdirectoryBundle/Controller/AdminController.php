@@ -3001,7 +3001,8 @@ class AdminController extends Controller
             'Off Site Slide Storage',
             'Present Address',
             'Permanent Address',
-            'Work Address'
+            'Work Address',
+            'Encounter Location'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

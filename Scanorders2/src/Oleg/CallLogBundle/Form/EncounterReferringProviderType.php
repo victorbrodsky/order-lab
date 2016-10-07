@@ -61,7 +61,7 @@ class EncounterReferringProviderType extends AbstractType
         ));
 
         $builder->add('referringProviderPhone', null, array(
-            'label' => 'Referring Provider Phone:',
+            'label' => 'Referring Provider Phone Number:',
             'attr' => array('class'=>'form-control')
         ));
 
