@@ -164,26 +164,36 @@
 
                     {% set status = 'Submitted' %}
 
+                    {% set encounterPatientInfo = null %}
+                    {#{% set encounterEncounterInfo = null %}#}
                     {% for encounter in form.encounter %}
-                        <div class="alias-group">
-                            {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
-                            {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
-                        </div>
+                        {% if encounter.vars.value.status == 'invalid'  %}
+                            {% set encounterPatientInfo = encounter %}
+                        {% else %}
+                            {#{% set encounterEncounterInfo = encounter %}#}
+                        {% endif %}
                     {% endfor %}
+
+                    {% if encounterPatientInfo is defined and encounterPatientInfo %}
+                        <div class="alias-group">
+                            {{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                            {{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                        </div>
+                    {% endif %}
 
                 </div>
 
                 {#<a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>#}
                 <div id="encounter-info" class="panel-collapse collapse">
-                    {% for encounter in form.encounter %}
+                    {% if encounterPatientInfo is defined and encounterPatientInfo %}
 
                         <div class="alias-group">
-                            {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
-                            {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                            {{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
+                            {{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
                         </div>
-                        {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}
 
-                    {% endfor %}
+                    {% endif %}
                 </div>
 
 

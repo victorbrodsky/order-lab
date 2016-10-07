@@ -98,25 +98,25 @@ class CallEntryController extends Controller
         $patient = new Patient(true,$status,$user,$system);
         $patient->setInstitution($institution);
 
-        //create encounter
-        $encounter = new Encounter(true,$status,$user,$system);
-        $encounter->setInstitution($institution);
+        //create invalid encounter #1 just to display in "Patient Info"
+        $encounter1 = new Encounter(true,'invalid',$user,$system);
+
+        //create encounter #2 to display in "Encounter Info"
+        $encounter2 = new Encounter(true,$status,$user,$system);
+        $encounter2->setInstitution($institution);
         $encounterReferringProvider = new EncounterReferringProvider($status,$user,$system);
-        $encounter->addReferringProvider($encounterReferringProvider);
+        $encounter2->addReferringProvider($encounterReferringProvider);
 
         //set encounter generated id
-        $key = $encounter->obtainAllKeyfield()->first();
-        $encounter = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter, $user);
+        $key = $encounter2->obtainAllKeyfield()->first();
+        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
 
         //set encounter date and time
-        $date = $encounter->getDate()->first();
+        $date = $encounter2->getDate()->first();
         $userTimeZone = $user->getPreferences()->getTimezone();
         $nowDate = new \DateTime( "now", new \DateTimeZone($userTimeZone)  );
         $date->setField( $nowDate );
         $date->setTime( $nowDate );
-
-        //set Location city, state, zip, county, country
-
 
         //testing
         //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
@@ -133,13 +133,14 @@ class CallEntryController extends Controller
         $locationName = null;   //"Encounter's Location";
         $spotEntity = null;
         $removable = 0;
-        $encounter->addContactinfoByTypeAndName($user,$system,$encounterLocationType,$locationName,$spotEntity,$withdummyfields,$em,$removable);
+        $encounter2->addContactinfoByTypeAndName($user,$system,$encounterLocationType,$locationName,$spotEntity,$withdummyfields,$em,$removable);
 //        if( $encounter->getTracker() ) {
 //            echo "spot count=".count($encounter->getTracker()->getSpots())."<br>";
 //        }
 
         //add encounter to patient
-        $patient->addEncounter($encounter);
+        $patient->addEncounter($encounter1);
+        $patient->addEncounter($encounter2);
 
 
         $form = $this->createPatientForm($patient,$mrntype,$mrn);
@@ -239,13 +240,18 @@ class CallEntryController extends Controller
 
             echo "patient id=".$patient->getId()."<br>";
 
+            $patientInfoEncounter = null;
             $newEncounter = null;
             //get a new encounter without id
             foreach( $patient->getEncounter() as $encounter ) {
                 echo "encounter ID=".$encounter->getId()."<br>";
                 if( !$encounter->getId() ) {
-                    $newEncounter = $encounter;
-                    break;
+                    if( $encounter->getStatus() == 'valid' ) {
+                        $newEncounter = $encounter;
+                    }
+                    if( $encounter->getStatus() == 'invalid' ) {
+                        $patientInfoEncounter = $encounter;
+                    }
                 }
             }
 
@@ -269,6 +275,13 @@ class CallEntryController extends Controller
                     //echo "Tracker is not empty! <br>";
                 }
                 //exit();
+
+                //TODO: Update Patient Info from $newEncounter:
+                // The values typed into these fields should be recorded as "valid".
+                // If the user types in the Date of Birth, it should be added to the "Patient" hierarchy level
+                // of the selected patient as a "valid" value and the previous "valid" value should be marked "invalid" on the server side.
+                //Use unmapped encounter's "patientDob" to update patient's DOB
+
 
                 if ($patient->getId()) {
                     //CASE 1
@@ -373,7 +386,8 @@ class CallEntryController extends Controller
             'mrntype' => intval($mrntype),
             'mrn' => $mrn,
             'formtype' => 'call-entry',
-            'complexLocation' => false
+            'complexLocation' => false,
+            'alias' => false
         );
 
         if( $formparams ) {

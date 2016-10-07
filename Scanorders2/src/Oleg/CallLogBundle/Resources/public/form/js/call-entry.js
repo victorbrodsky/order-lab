@@ -330,7 +330,7 @@ function clearCalllogPatient(holderId) {
     holder.find('#reenter_patient_button').hide(_transTime);
     holder.find('#search_patient_button').show(_transTime);
 
-    calllogHideAllAlias(true,true,holderId);
+    //calllogHideAllAlias(true,true,holderId);
 
     //edit_patient_button
     holder.find('#edit_patient_button').hide(_transTime);
@@ -1193,21 +1193,21 @@ function editPatientBtn(holderId) {
     window.location.href = url;
 }
 
-function calllogHideAllAlias(hide,clear,holderId) {
-    var holder = getHolder(holderId);
-    if( hide ) {
-        //hide all alias
-        holder.find('.alias-group').find('.input-group-addon').hide();
-        holder.find('.alias-group').find('.input-group').removeClass('input-group').addClass('input-group-hidden');
-    } else {
-        //show all alias
-        holder.find('.alias-group').find('.input-group-addon').show();
-        holder.find('.alias-group').find('.input-group-hidden').removeClass('input-group-hidden').addClass('input-group');
-    }
-    if( clear ) {
-        holder.find('.alias-group').find('input[type=checkbox]').prop('checked', false);
-    }
-}
+//function calllogHideAllAlias(hide,clear,holderId) {
+//    var holder = getHolder(holderId);
+//    if( hide ) {
+//        //hide all alias
+//        holder.find('.alias-group').find('.input-group-addon').hide();
+//        holder.find('.alias-group').find('.input-group').removeClass('input-group').addClass('input-group-hidden');
+//    } else {
+//        //show all alias
+//        holder.find('.alias-group').find('.input-group-addon').show();
+//        holder.find('.alias-group').find('.input-group-hidden').removeClass('input-group-hidden').addClass('input-group');
+//    }
+//    if( clear ) {
+//        holder.find('.alias-group').find('input[type=checkbox]').prop('checked', false);
+//    }
+//}
 
 function getHolder(holderId) {
     if( holderId ) {
