@@ -461,6 +461,10 @@ function findCalllogPatient(holderId,formtype,mrntype) {
                     dataOk = true;
                 }
             }
+            if( data.length == 0 ) {
+                populatePatientsInfo(data, searchedStr, holderId, singleMatch);
+                dataOk = true;
+            }
         }
         if( !dataOk ) {
             //console.log("Search is not performed");
