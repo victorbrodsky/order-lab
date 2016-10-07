@@ -311,8 +311,10 @@
                     {% if form.locked is defined and userEditor == true %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}
                             {{ formmacros.checkbox(form.locked) }}
+                            {{ formmacros.checkbox(form.testingAccount) }}
                         {% else %}
                             {% do form.locked.setRendered %}
+                            {% do form.locked.testingAccount %}
                         {% endif %}
                     {% endif %}
 

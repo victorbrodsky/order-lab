@@ -321,6 +321,12 @@ class UserType extends AbstractType
                 'label' => 'Prevent user from logging in (lock):',
                 'attr' => array('class'=>'form-control form-control-modif')
             ));
+
+            $builder->add('testingAccount', null, array(
+                'required' => false,
+                'label' => 'This is an account for testing purposes (hide on live site):',
+                'attr' => array('class'=>'form-control form-control-modif')
+            ));
         }
 
         return $builder;

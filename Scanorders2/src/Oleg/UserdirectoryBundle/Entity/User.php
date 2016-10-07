@@ -236,6 +236,10 @@ class User extends BaseUser {
      */
     private $perSiteSettings;
 
+    /**
+     * @ORM\Column(name="testingAccount", type="boolean", nullable=true)
+     */
+    private $testingAccount;
 
 
     function __construct( $addobjects=true )
@@ -383,6 +387,21 @@ class User extends BaseUser {
 
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTestingAccount()
+    {
+        return $this->testingAccount;
+    }
+
+    /**
+     * @param mixed $testingAccount
+     */
+    public function setTestingAccount($testingAccount)
+    {
+        $this->testingAccount = $testingAccount;
+    }
 
     /**
      * @param mixed $createdby
