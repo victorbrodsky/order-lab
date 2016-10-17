@@ -324,9 +324,15 @@ class CallEntryController extends Controller
 
                     $patient->addEncounter($newEncounter);
 
-                    //add new DOB
+                    //add new DOB (if exists) to the Patient
                     //Use unmapped encounter's "patientDob" to update patient's DOB
                     if( $newEncounter->getPatientDob() ) {
+                        //invalidate all other patient's DOB
+                        $validDOBs = $patient->obtainStatusFieldArray("dob","valid");
+                        foreach( $validDOBs as $validDOB) {
+                            $validDOB->setStatus("invalid");
+                        }
+
                         $patientDob = $newEncounter->getPatientDob();
                         //echo "encounter patientDob=" . $patientDob->format('Y-m-d') . "<br>";
                         $newPatientDob = new PatientDob($status,$user,$system);
