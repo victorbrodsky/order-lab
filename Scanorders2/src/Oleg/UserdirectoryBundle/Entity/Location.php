@@ -861,6 +861,12 @@ class Location extends ListAbstract
             //return true;
         }
 
+        //be strict: location name must be set. If not then it's empty
+        if( $this->getName() == null ) {
+            return true;
+        }
+
+
         if( $this->getPhone() ) {
             return false;
         }

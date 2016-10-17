@@ -270,7 +270,7 @@
                     <button
                             id="form_body_toggle_entitycontactinfo_{{ uniqueId }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            onclick="toggleSinglePanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');">
+                            onclick="calllogToggleSinglePanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');">
                     </button>
 
                     {% set panelTitle = spot.currentLocation.vars.value.name %}

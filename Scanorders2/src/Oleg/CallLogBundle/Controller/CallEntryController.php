@@ -130,7 +130,7 @@ class CallEntryController extends Controller
         if( !$encounterLocationType ) {
             throw new \Exception( 'Location type is not found by name Encounter Location' );
         }
-        $locationName = ""; //"Encounter's Location";
+        $locationName = null;   //""; //"Encounter's Location";
         $spotEntity = null;
         $removable = 0;
         $encounter2->addContactinfoByTypeAndName($user,$system,$encounterLocationType,$locationName,$spotEntity,$withdummyfields,$em,$removable);
