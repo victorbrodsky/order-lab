@@ -242,6 +242,7 @@ class CallEntryController extends Controller
 
             $patientInfoEncounter = null;
             $newEncounter = null;
+            $patientDob = null;
             //get a new encounter without id
             foreach( $patient->getEncounter() as $encounter ) {
                 echo "encounter ID=".$encounter->getId()."<br>";
@@ -250,6 +251,9 @@ class CallEntryController extends Controller
                         $newEncounter = $encounter;
                     }
                     if( $encounter->getStatus() == 'invalid' ) {
+                        //this encounter is served only to find the patient:
+                        //copy all non-empty values from the $patientInfoEncounter to the $newEncounter
+                        //it must be removed from the patient
                         $patientInfoEncounter = $encounter;
                     }
                 }
@@ -282,8 +286,21 @@ class CallEntryController extends Controller
                 // of the selected patient as a "valid" value and the previous "valid" value should be marked "invalid" on the server side.
                 //Use unmapped encounter's "patientDob" to update patient's DOB
 
+                if( $patientInfoEncounter ) {
+                    //TODO: copy all non-empty values from the $patientInfoEncounter to the $newEncounter?
 
-                if ($patient->getId()) {
+                    //If the user types in the Date of Birth, it should be added to
+                    // the "Patient" hierarchy level of the selected patient as a "valid" value
+                    // and the previous "valid" value should be marked "invalid" on the server side.
+                    //Use unmapped encounter's "patientDob" to update patient's DOB
+                    $patientDob = $form['patientDob']->getData();
+                    echo "patientDob=$patientDob <br>";
+
+                    //$patientInfoEncounter must be removed from the patient
+                    $patient->removeEncounter($patientInfoEncounter);
+                }
+
+                if( $patient->getId() ) {
                     //CASE 1
                     echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
                     //get a new encounter without id $newEncounter
@@ -298,12 +315,19 @@ class CallEntryController extends Controller
 
                     $patient->addEncounter($newEncounter);
 
-    //                echo "encounter count=".count($patient->getEncounter())."<br>";
-    //                foreach( $patient->getEncounter() as $encounter ) {
-    //                    echo "encounter ID=".$encounter->getId()."<br>";
-    //                }
+                    //add new DOB
+                    if( $patientDob ) {
+                        $newPatientDob = new PatientDob($status,$user,$system);
+                        $patient->addDob($newPatientDob);
+                    }
 
-                    //exit('1');
+                    echo "encounter count=".count($patient->getEncounter())."<br>";
+                    foreach( $patient->getEncounter() as $encounter ) {
+                        echo "encounter ID=".$encounter->getId()."<br>";
+                        echo "encounter Last Name=".$encounter->getPatlastname()->first()."<br>";
+                    }
+
+                    exit('Exit Case 1');
                     //$em->persist($patient);
                     $em->persist($newEncounter);
                     $em->flush();
@@ -318,6 +342,7 @@ class CallEntryController extends Controller
 
                     $newEncounter->setPatient(null);
 
+                    exit('Exit Case 2');
                     $em->persist($newEncounter);
                     $em->flush($newEncounter);
 
@@ -328,7 +353,7 @@ class CallEntryController extends Controller
 
             }//if $newEncounter
 
-            //exit('form is submitted and finished');
+            exit('form is submitted and finished, msg='.$msg);
             //$em->persist($entity);
             //$em->flush();
 
