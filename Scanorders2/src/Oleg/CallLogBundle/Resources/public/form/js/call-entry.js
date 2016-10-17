@@ -1127,6 +1127,8 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
         //unlock field
         fieldEl.prop(disableStr, false);
     }
+    //console.log('value='+value);
+    //console.log(fieldEl);
     fieldEl.select2('val',value);
     return value;
 }
@@ -1161,6 +1163,9 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
 
         mrntype.prop(disableStr, false);
         mrnid.prop(disableStr, false);
+        //"readonly"
+        mrntype.prop("readonly", false);
+        mrnid.prop("readonly", false);
 
         if( modify ) {
             mrntype.select2('val', _mrntype_original);

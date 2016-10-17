@@ -350,7 +350,7 @@ class CallLogUtil
             'suffix' => (($suffixRes) ? $suffixRes->getField() : null),   //$suffixRes->getField(),
             'suffixStatus' => (($suffixRes) ? $suffixRes->getStatus() : null),
 
-            'sex' => (($sexRes) ? $sexRes->getId() : null),    //$sexRes->getId(),
+            'sex' => (($sexRes && $sexRes->getField()) ? $sexRes->getField()->getId() : null),    //$sexRes->getId(),
             'sexstr' => $sexRes."",
 
             'contactinfo' => $contactinfo,
