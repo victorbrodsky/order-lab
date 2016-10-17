@@ -597,7 +597,7 @@ class CallEntryController extends Controller
 
             $patientsArr[$patientId] = $patientInfo;
         }
-        //exit('1');
+        //exit('exit search patient');
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

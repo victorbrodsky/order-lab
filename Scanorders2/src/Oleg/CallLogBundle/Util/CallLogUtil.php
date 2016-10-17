@@ -311,9 +311,9 @@ class CallLogUtil
 
         $fieldnameResArr = $patient->obtainSingleEncounterValues($fieldnameArr,$status);
 
+        $lastNameRes = $fieldnameResArr['patlastname']; //$patient->obtainStatusField('lastname', $status);
         $firstNameRes = $fieldnameResArr['patfirstname']; //$patient->obtainStatusField('firstname', $status);
         $middleNameRes = $fieldnameResArr['patmiddlename'];  //$patient->obtainStatusField('middlename', $status);
-        $lastNameRes = $fieldnameResArr['patlastname']; //$patient->obtainStatusField('lastname', $status);
         $suffixRes = $fieldnameResArr['patsuffix'];   //$patient->obtainStatusField('suffix', $status);
         $sexRes = $fieldnameResArr['patsex'];    //$patient->obtainStatusField('sex', $status);
 

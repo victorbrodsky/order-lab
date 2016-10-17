@@ -1201,21 +1201,31 @@ class Patient extends ObjectAbstract
     //obtain only one encounter's the most recent value (i.e. last name: $fieldname='patlastname') with $status
     public function obtainSingleEncounterValues( $fieldnameArr, $status ) {
 
+        //echo "<br>PATIENTID=".$this->getId()."<br>";
         $resArr = array();
 
-        foreach( $this->getEncounter() as $encounter ) {
+        //foreach( $this->getEncounter() as $encounter ) {
 
-            foreach( $fieldnameArr as $fieldname) {
+            //foreach( $fieldnameArr as $fieldname) {
+        foreach( $fieldnameArr as $fieldname) {
+
+            //echo "fieldname=".$fieldname." => encounterCount=".count($this->getEncounter())."<br>";
+            $mostRecentFieldEntity = null;
+
+            foreach( $this->getEncounter() as $encounter ) {
 
                 $getMethod = "get".$fieldname;
 
-                $mostRecentFieldEntity = null;
+                //$mostRecentFieldEntity = null;
 
                 //for each encounter's fieldname array (i.e. patlastname)
                 foreach( $encounter->$getMethod() as $fieldEntity ) {
+                    //echo "fieldEntity=".$fieldEntity."; status=".$fieldEntity->getStatus()."; date=".$fieldEntity->getCreationdate()->format('Y-m-d H:i')."<br>";
 
                     if( !$mostRecentFieldEntity ) {
-                        $mostRecentFieldEntity = $fieldEntity;
+                        if( $fieldEntity->getStatus() == $status && $fieldEntity->getField() ) {
+                            $mostRecentFieldEntity = $fieldEntity;
+                        }
                         continue;
                     }
 
@@ -1226,15 +1236,18 @@ class Patient extends ObjectAbstract
                         continue;
                     }
 
-                    if( $fieldEntity->getStatus() == $status && $currentFieldnameDate > $mostRecentFieldnameDate ) {
+                    if( $fieldEntity->getStatus() == $status && $currentFieldnameDate > $mostRecentFieldnameDate && $fieldEntity->getField() ) {
                         $mostRecentFieldEntity = $fieldEntity;
                     }
 
                 }//$encounter->$getMethod()
 
-                $resArr[$fieldname] = $mostRecentFieldEntity;
+                //$resArr[$fieldname] = $mostRecentFieldEntity;
 
             }//foreach fieldnameArr
+
+            //echo "mostRecentFieldEntity=".$mostRecentFieldEntity."<br>";
+            $resArr[$fieldname] = $mostRecentFieldEntity;
 
         }//foreach encounter
 

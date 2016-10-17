@@ -1158,6 +1158,9 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
 
         mrntype.prop(disableStr, true);
         mrnid.prop(disableStr, true);
+        //"readonly"
+        mrntype.prop("readonly", true);
+        mrnid.prop("readonly", true);
 
     } else {
 
