@@ -38,6 +38,8 @@ class EncounterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $builder->add('status', 'hidden');
+
         $builder->add('date', 'collection', array(
             'type' => new EncounterDateType($this->params, null),
             'allow_add' => true,
@@ -214,7 +216,7 @@ class EncounterType extends AbstractType
             'label' => "Date of Birth:",
             'widget' => 'single_text',
             'required' => false,
-            'mapped' => false,
+            //'mapped' => false,
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
             'attr' => array('class' => 'datepicker form-control patient-dob-date'), //'style'=>'margin-top: 0;'
         ));

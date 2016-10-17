@@ -63,6 +63,7 @@
                     {#</div>#}
                     {% set status = 'Submitted' %}
                     {% for encounter in form.encounter if encounter.vars.value.status == 'valid' %}
+                        {{ form_row(encounter.status) }}
                         {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
                         {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
                         {{ formmacros.field(encounter.provider) }}

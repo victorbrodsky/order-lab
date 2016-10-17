@@ -90,6 +90,10 @@ class Encounter extends ObjectAbstract
      */
     protected $referringProviders;
 
+    /**
+     * unmapped patientDob
+     */
+    private $patientDob;
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
@@ -171,6 +175,24 @@ class Encounter extends ObjectAbstract
         $this->location = $this->cloneDepend($this->location,$this);
         //$this->order = $this->cloneDepend($this->order,$this);
         $this->inpatientinfo = $this->cloneDepend($this->inpatientinfo,$this);
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getPatientDob()
+    {
+        return $this->patientDob;
+    }
+
+    /**
+     * @param mixed $patientDob
+     */
+    public function setPatientDob($patientDob)
+    {
+        $this->patientDob = $patientDob;
     }
 
     /**

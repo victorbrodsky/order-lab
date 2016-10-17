@@ -130,7 +130,7 @@ class CallEntryController extends Controller
         if( !$encounterLocationType ) {
             throw new \Exception( 'Location type is not found by name Encounter Location' );
         }
-        $locationName = null;   //"Encounter's Location";
+        $locationName = ""; //"Encounter's Location";
         $spotEntity = null;
         $removable = 0;
         $encounter2->addContactinfoByTypeAndName($user,$system,$encounterLocationType,$locationName,$spotEntity,$withdummyfields,$em,$removable);
@@ -242,10 +242,9 @@ class CallEntryController extends Controller
 
             $patientInfoEncounter = null;
             $newEncounter = null;
-            $patientDob = null;
             //get a new encounter without id
             foreach( $patient->getEncounter() as $encounter ) {
-                echo "encounter ID=".$encounter->getId()."<br>";
+                echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
                 if( !$encounter->getId() ) {
                     if( $encounter->getStatus() == 'valid' ) {
                         $newEncounter = $encounter;
@@ -277,6 +276,16 @@ class CallEntryController extends Controller
                     $newEncounter->setTracker(null);
                 } else {
                     //echo "Tracker is not empty! <br>";
+                    //check if location name is not empty
+                    if( $newEncounter->getTracker() ) {
+                        $currentLocation = $newEncounter->getTracker()->getSpots()->first()->getCurrentLocation();
+                        if( !$currentLocation->getName() ) {
+                            $currentLocation->setName('');
+                        }
+                        if( !$currentLocation->getCreator() ) {
+                            $currentLocation->setCreator($user);
+                        }
+                    }
                 }
                 //exit();
 
@@ -293,8 +302,8 @@ class CallEntryController extends Controller
                     // the "Patient" hierarchy level of the selected patient as a "valid" value
                     // and the previous "valid" value should be marked "invalid" on the server side.
                     //Use unmapped encounter's "patientDob" to update patient's DOB
-                    $patientDob = $form['patientDob']->getData();
-                    echo "patientDob=$patientDob <br>";
+                    //$patientDob = $form['patientDob']->getData();
+                    //echo "patientDob=$patientDob <br>";
 
                     //$patientInfoEncounter must be removed from the patient
                     $patient->removeEncounter($patientInfoEncounter);
@@ -316,18 +325,34 @@ class CallEntryController extends Controller
                     $patient->addEncounter($newEncounter);
 
                     //add new DOB
-                    if( $patientDob ) {
+                    //Use unmapped encounter's "patientDob" to update patient's DOB
+                    if( $newEncounter->getPatientDob() ) {
+                        $patientDob = $newEncounter->getPatientDob();
+                        //echo "encounter patientDob=" . $patientDob->format('Y-m-d') . "<br>";
                         $newPatientDob = new PatientDob($status,$user,$system);
+                        $newPatientDob->setField($patientDob);
                         $patient->addDob($newPatientDob);
+                        //echo "patient patientDob=" . $newPatientDob . "<br>";
                     }
 
-                    echo "encounter count=".count($patient->getEncounter())."<br>";
-                    foreach( $patient->getEncounter() as $encounter ) {
-                        echo "encounter ID=".$encounter->getId()."<br>";
-                        echo "encounter Last Name=".$encounter->getPatlastname()->first()."<br>";
+                    if(1) {
+                        echo "encounter count=" . count($patient->getEncounter()) . "<br>";
+                        foreach ($patient->getEncounter() as $encounter) {
+                            echo "<br>encounter ID=" . $encounter->getId() . "<br>";
+                            echo "encounter Date=" . $encounter->getDate()->first() . "<br>";
+                            echo "encounter Last Name=" . $encounter->getPatlastname()->first() . "<br>";
+                            echo "encounter First Name=" . $encounter->getPatfirstname()->first() . "<br>";
+                            echo "encounter Middle Name=" . $encounter->getPatmiddlename()->first() . "<br>";
+                            echo "encounter Suffix=" . $encounter->getPatsuffix()->first() . "<br>";
+                            echo "encounter Gender=" . $encounter->getPatsex()->first() . "<br>";
+
+                            if( $encounter->getTracker() ) {
+                                echo "encounter Location=" . $encounter->getTracker()->getSpots()->first()->getCurrentLocation()->getName() . "<br>";
+                            }
+                        }
                     }
 
-                    exit('Exit Case 1');
+                    //exit('Exit Case 1');
                     //$em->persist($patient);
                     $em->persist($newEncounter);
                     $em->flush();
@@ -342,7 +367,7 @@ class CallEntryController extends Controller
 
                     $newEncounter->setPatient(null);
 
-                    exit('Exit Case 2');
+                    //exit('Exit Case 2');
                     $em->persist($newEncounter);
                     $em->flush($newEncounter);
 
@@ -353,9 +378,7 @@ class CallEntryController extends Controller
 
             }//if $newEncounter
 
-            exit('form is submitted and finished, msg='.$msg);
-            //$em->persist($entity);
-            //$em->flush();
+            //exit('form is submitted and finished, msg='.$msg);
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -364,7 +387,7 @@ class CallEntryController extends Controller
 
             return $this->redirect( $this->generateUrl('calllog_callentry') );
         }
-        exit('form is not submitted');
+        //exit('form is not submitted');
 
         return array(
             //'entity' => $entity,
@@ -524,7 +547,7 @@ class CallEntryController extends Controller
 //                }
 //
 //            }//foreach $mergedPatient
-//            exit('1');
+//            //exit('1');
 
             $masterPatient = $calllogUtil->getMasterRecordPatients($mergedPatients);
 

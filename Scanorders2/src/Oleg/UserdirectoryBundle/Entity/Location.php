@@ -857,7 +857,10 @@ class Location extends ListAbstract
 
         if( $this->getName() ) {
             return false;
+        } else {
+            //return true;
         }
+
         if( $this->getPhone() ) {
             return false;
         }
