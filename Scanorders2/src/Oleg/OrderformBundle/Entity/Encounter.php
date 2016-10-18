@@ -95,6 +95,7 @@ class Encounter extends ObjectAbstract
      */
     private $patientDob;
 
+
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
      * Encounter location
@@ -194,6 +195,8 @@ class Encounter extends ObjectAbstract
     {
         $this->patientDob = $patientDob;
     }
+
+
 
     /**
      * @param mixed $date

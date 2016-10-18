@@ -3,6 +3,7 @@
 namespace Oleg\CallLogBundle\Form;
 
 use Oleg\OrderformBundle\Form\ArrayFieldType;
+use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -39,11 +40,21 @@ class EncounterDateType extends AbstractType
         //extra data-structure fields
         //echo "encounter time <br>";
         $builder->add('time', 'time', array(
-            'input'  => 'datetime',
+            'input' => 'datetime',
             'widget' => 'choice',
-            'label'=>'Encounter Time:'
+            'label' => 'Encounter Time:'
         ));
 
+        //timezone 'choice'
+        $tzUtil = new TimeZoneUtil();
+        $builder->add('timezone', 'choice', array(
+            'label' => false,
+            'choices' => $tzUtil->tz_list(),
+            'required' => true,
+            'data' => $this->params['timezoneDefault'],
+            'preferred_choices' => array('America/New_York'),
+            'attr' => array('class' => 'combobox combobox-width')
+        ));
 
     }
 

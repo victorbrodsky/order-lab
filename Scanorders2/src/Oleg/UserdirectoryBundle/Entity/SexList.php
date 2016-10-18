@@ -25,4 +25,16 @@ class SexList extends ListAbstract
      **/
     protected $original;
 
+
+
+    public function __toString()
+    {
+        $name = $this->name."";
+
+        if( $this->abbreviation && $this->abbreviation != "" ) {
+            $name = $this->abbreviation."";
+        }
+
+        return $name;
+    }
 }

@@ -289,6 +289,18 @@ class CallEntryController extends Controller
                 }
                 //exit();
 
+                //TODO: just keep timezone as DB field and show it in the encounter Date
+                //re-set encounter date according to the unmapped timezone
+//                $encounterDateObject = $newEncounter->getDate()->first();
+//                $encounterDate = $encounterDateObject->getField();
+//                echo "date1=".$encounterDate->format('Y-m-d H:i')."<br>";
+//                $encounterDateTimezone = $encounterDateObject->getTimezone();
+//                echo "encounterDateTimezone=$encounterDateTimezone <br>";
+//                $encounterDate = $encounterDate->setTimezone(new \DateTimeZone($encounterDateTimezone));
+//                echo "date2=".$encounterDate->format('Y-m-d H:i')."<br>";
+//                $encounterDateObject->setField($encounterDate);
+//                exit('1');
+
                 //TODO: Update Patient Info from $newEncounter:
                 // The values typed into these fields should be recorded as "valid".
                 // If the user types in the Date of Birth, it should be added to the "Patient" hierarchy level
@@ -430,6 +442,9 @@ class CallEntryController extends Controller
             $mrntype = 1;
         }
 
+        //$timezones
+        $userTimeZone = $user->getPreferences()->getTimezone();
+
         $params = array(
             'cycle' => 'new',
             'user' => $user,
@@ -441,7 +456,8 @@ class CallEntryController extends Controller
             'mrn' => $mrn,
             'formtype' => 'call-entry',
             'complexLocation' => false,
-            'alias' => false
+            'alias' => false,
+            'timezoneDefault' => $userTimeZone
         );
 
         if( $formparams ) {
@@ -822,6 +838,12 @@ class CallEntryController extends Controller
         $output = 'OK';
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
+
+        //testing
+        //exit("createPatientAction");
+        //$res['output'] = "OK";
+        //$response->setContent(json_encode($res));
+        //return $response;
 
         //TODO: The server should DOUBLECHECK that the user has a role with a permission of "Create Patient Record"
         if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {

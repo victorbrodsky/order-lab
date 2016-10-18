@@ -4083,16 +4083,17 @@ class AdminController extends Controller
 
         //http://nces.ed.gov/ipeds/reic/definitions.asp
         $types = array(
-            'Female',
-            'Male',
-            'Unspecified'
+            'Female' => 'F',
+            'Male' => 'M',
+            'Unspecified' => 'U'
         );
 
         $count = 10;
-        foreach( $types as $type ) {
+        foreach( $types as $type => $abbreviation ) {
 
             $listEntity = new SexList();
             $this->setDefaultList($listEntity,$count,$username,$type);
+            $listEntity->setAbbreviation($abbreviation);
 
             $em->persist($listEntity);
             $em->flush();

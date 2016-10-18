@@ -29,6 +29,10 @@ class EncounterDate extends EncounterArrayFieldAbstract
      */
     private $time;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $timezone;
 
 
     public function __toString() {
@@ -64,6 +68,23 @@ class EncounterDate extends EncounterArrayFieldAbstract
     {
         return $this->formatTimeToString($this->getTime());
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+    }
+
 
 
 

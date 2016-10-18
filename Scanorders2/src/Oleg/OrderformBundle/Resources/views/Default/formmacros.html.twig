@@ -245,6 +245,12 @@
         {% endif %}
     {% endif %}
 
+    {% if datetime.timezone is defined %}
+        {% import _self as formmacros %}
+        {#{{ formmacros.field(datetime.timezone) }}#}
+        {{ form_widget(datetime.timezone) }}
+    {% endif %}
+
 {% endmacro %}
 
 {% macro fieldicon( field, extra, classname ) %}

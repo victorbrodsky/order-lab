@@ -73,6 +73,7 @@ class PatientType extends AbstractType
             'prototype_name' => '__encounter__',
         ));
 
+
 //        $builder->add('lastname', 'collection', array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
 //            'allow_add' => true,

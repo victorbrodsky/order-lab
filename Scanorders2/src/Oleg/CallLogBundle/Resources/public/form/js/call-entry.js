@@ -163,7 +163,10 @@ function addnewCalllogPatient(holderId) {
             //show edit patient info button
             holder.find('#edit_patient_button').show(_transTime);
 
-            showCalllogCallentryForm(true);
+            //showCalllogCallentryForm(true);
+            //hide "No single patient is referenced by this entry or I'll add the patient info later" link and all sections below
+            $('#callentry-nosinglepatient-link').hide(_transTime);
+            $('#callentry-form').hide(_transTime);
 
         } else {
             console.log("Patient has not been created");
@@ -1257,6 +1260,9 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
             patientInfoArr.push(patient.dob); //MM-DD-YYYYY
         if( patient.sexstr )
             patientInfoArr.push(patient.sexstr); //M
+        if( patient.age )
+            patientInfoArr.push(patient.age); //5 y.o.
+
         patientInfoArr.push(patient.mrntypestr + ": "+patient.mrn); //MRN Type: MRN
         var patientInfo = patientInfoArr.join(" | ");
         //console.log("patientInfo="+patientInfo);

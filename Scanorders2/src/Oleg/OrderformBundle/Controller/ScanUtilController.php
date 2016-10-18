@@ -654,6 +654,7 @@ class ScanUtilController extends UtilController {
             //->select("list.id as id, list.username as text")
             ->select("list")
             ->where("list.roles LIKE :role")
+            //->andWhere("list.testingAccount = 0 OR list.testingAccount IS NULL")
             ->orderBy("list.id","ASC")
             ->setParameter('role', '%"' . $role . '"%');
 

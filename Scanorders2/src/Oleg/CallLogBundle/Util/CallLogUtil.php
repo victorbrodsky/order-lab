@@ -336,6 +336,7 @@ class CallLogUtil
             'mrntypestr' => $mrntypeStr,    //$mrnRes->getKeytype()->getName(),
             'mrn' => $mrnRes->getField(),
             'dob' => $dobRes."",
+            'age' => $patient->calculateAge()."",
 
             'lastname' => (($lastNameRes) ? $lastNameRes->getField() : null),  //$lastNameRes->getField(),
             'lastnameStatus' => (($lastNameRes) ? $lastNameRes->getStatus() : null),

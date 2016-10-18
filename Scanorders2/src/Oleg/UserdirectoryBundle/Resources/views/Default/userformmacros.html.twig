@@ -999,9 +999,13 @@
             <div class="panel-body">
 
                 <div class="user-permissions-holder">
-                    {% for permission in permissions %}
-                        {{ userform.permissions( permission, cycle, 'user-permissions', 'noprototype' ) }}
-                    {% endfor %}
+                    {% if permissions|length > 0 %}
+                        {% for permission in permissions %}
+                            {{ userform.permissions( permission, cycle, 'user-permissions', 'noprototype' ) }}
+                        {% endfor %}
+                    {% else %}
+                        No specific user permissions are defined for this user.<br>
+                    {% endif %}
                     {{ usermacros.addNewObjectBtn(cycle,'user-permissions','Add Permission') }}
                 </div>
 
