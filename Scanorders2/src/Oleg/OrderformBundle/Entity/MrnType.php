@@ -55,7 +55,18 @@ class MrnType extends ListAbstract
     public function getPatientmrn()
     {
         return $this->patientmrn;
-    }   
+    }
 
+
+    public function __toString()
+    {
+        $name = $this->name."";
+
+        if( $this->abbreviation && $this->abbreviation != "" ) {
+            $name = $this->abbreviation."";
+        }
+
+        return $name;
+    }
 
 }

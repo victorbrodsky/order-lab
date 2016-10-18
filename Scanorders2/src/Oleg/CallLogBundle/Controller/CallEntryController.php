@@ -1130,4 +1130,43 @@ class CallEntryController extends Controller
 //
 //        return $institution;
 //    }
+
+    /**
+     * Get Patient Titles
+     * @Route("/patient/title/", name="calllog_get_patient_title", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getPatientTitleAction(Request $request) {
+
+        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $patientId = trim($request->get('patientId'));
+        $nowStr = trim($request->get('nowStr'));
+        //echo "patientId=".$patientId."<br>";
+        //echo "nowStr=".$nowStr."<br>";
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $nowDate = new \DateTime($nowStr);
+
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+        if( !$patient ) {
+            $response->setContent(json_encode("ERROR"));
+            return $response;
+        }
+
+        $patientTitle = $patient->obtainPatientInfoTitle('valid',$nowDate);
+        if( !$patientTitle ) {
+            $response->setContent(json_encode("ERROR"));
+            return $response;
+        }
+
+        $response->setContent(json_encode($patientTitle));
+        return $response;
+    }
+
 }

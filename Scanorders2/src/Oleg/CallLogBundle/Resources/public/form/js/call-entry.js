@@ -12,6 +12,7 @@ function initCallLogPage() {
     calllogPressEnterOnKeyboardAction('patient-holder-1');
 
     calllogWindowCloseAlert();
+    calllogUpdatePatientAgeListener('patient-holder-1');
 }
 
 //prevent exit modified form
@@ -1368,3 +1369,34 @@ function calllogToggleSinglePanel(btn,target) {
     toggleSinglePanel(btn,target);
 }
 
+//overwrite calllogSetPatientAccordionTitle
+function calllogUpdatePatientAgeListener(holderId) {
+    $('input.encounter-date').on("input change", function (e) {
+        calllogUpdatePatientAge($(this),holderId);
+    });
+}
+function calllogUpdatePatientAge(fieldEl,holderId) {
+    var holder = getHolder(holderId);
+
+    var dateField = fieldEl.val();
+    //console.log('dateField='+dateField);
+
+    var patientId = holder.find('.patienttype-patient-id').val();
+
+    var url = Routing.generate('calllog_get_patient_title');
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: true,
+        data: {patientId: patientId, nowStr:dateField },
+    }).success(function(data) {
+        //console.log("output="+data);
+        if( data != "ERROR" ) {
+            holder.find('.calllog-patient-panel-title').html(data);
+        } else {
+            holder.find('.calllog-patient-panel-title').html("Patient Info");
+        }
+    }).done(function() {
+        //console.log("update patient title done");
+    });
+}

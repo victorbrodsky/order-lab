@@ -530,6 +530,7 @@ class ScanUtilController extends UtilController {
      */
     public function getMrnTypeAction() {
 
+        $simple = false;
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
@@ -539,10 +540,17 @@ class ScanUtilController extends UtilController {
 
         //echo "opt=".$opt."<br>";
 
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:MrnType', 'list')
-            ->select("list.id as id, list.name as text")
-            ->orderBy("list.orderinlist","ASC");
+        $query = $em->createQueryBuilder()->from('OlegOrderformBundle:MrnType', 'list');
+            //->select("list.id as id, list.name as text")
+            //->select("list")
+
+        if( $simple ) {
+            $query->select("list.id as id, list.name as text");
+        } else {
+            $query->select("list");
+        }
+
+        $query->orderBy("list.orderinlist","ASC");
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -557,7 +565,16 @@ class ScanUtilController extends UtilController {
 
         //echo "query=".$query."<br>";
 
-        $output = $query->getQuery()->getResult();
+        if( $simple ) {
+            $output = $query->getQuery()->getResult();
+        } else {
+            $mrntypes = $query->getQuery()->getResult();
+
+            $output = array();
+            foreach ($mrntypes as $mrntype) {
+                $output[] = array('id' => $mrntype->getId(), 'text' => $mrntype->getOptimalName());
+            }
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
