@@ -137,8 +137,10 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     //get the first child with positive level OrganizationalGroupType
     public function getFirstDefaultChild( $parent ) {
         foreach( $parent->getChildren() as $child ) {
-            if( intval($child->getOrganizationalGroupType()->getLevel()) >= 0 ) {
-                return $child;
+            if( method_exists($child,'getOrganizationalGroupType') ) {
+                if (intval($child->getOrganizationalGroupType()->getLevel()) >= 0) {
+                    return $child;
+                }
             }
         }
         return $parent->getChildren()->first();

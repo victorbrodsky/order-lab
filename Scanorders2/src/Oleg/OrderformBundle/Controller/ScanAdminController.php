@@ -1063,7 +1063,9 @@ class ScanAdminController extends AdminController
 
             ),
             'Note' => array(
-                'Encounter Note',
+                'Encounter Note' => array(
+                    'Pathology Call Log Entry'
+                ),
                 'Procedure Note'
             )
 
