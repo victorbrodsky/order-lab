@@ -119,126 +119,157 @@
             </div> <!-- panel-collapse -->
         </div> <!-- panel panel-info -->
 
+
+
+
+        {# Entry #}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#calllog-CallInformation">
-                        Call Information
+                    <a data-toggle="collapse" href="#calllog-Entry">
+                        Entry
                     </a>
                 </h4>
             </div>
-            <div id="calllog-CallInformation" class="panel-collapse collapse in">
+            <div id="calllog-Entry" class="panel-collapse collapse in">
                 <div class="panel-body">
+        {# Entry #}
 
-                    <div class="row">
+            {#Message Fields        #}
+                {#Message Type: Message->messageCategory#}
+                {#Message Version#}
+                {#Amendment Reason#}
 
-                        <div class="form-group col-xs-5" align="left">
-                            {#{{ formmacros.simplefield('Service:','','input') }}#}
-                            <p>
-                            <div class="row">
-                                <div class="col-xs-6" align="right">
-                                    <label>Service:</label>
+
+            {#Call Information    #}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#calllog-CallInformation">
+                            Call Information
+                        </a>
+                    </h4>
+                </div>
+                <div id="calllog-CallInformation" class="panel-collapse collapse in">
+                    <div class="panel-body">
+
+                        <div class="row">
+
+                            <div class="form-group col-xs-5" align="left">
+                                {#{{ formmacros.simplefield('Service:','','input') }}#}
+                                <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <label>Service:</label>
+                                    </div>
+                                    <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                                        <select id="Service" name="Service" class="combobox" style="float:right;width: 70%">
+                                            <option value="All">Transfusion Medicine</option>
+                                            <option value="Microbiology">Microbiology</option>
+                                            <option value="Chemistry">Chemistry</option>
+                                            <option value="Coagulation">Coagulation</option>
+                                            <option value="Hematology">Hematology</option>
+                                            <option value="Molecular">Molecular</option>
+                                            <option value="Cytogenetics">Cytogenetics</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
-                                    <select id="Service" name="Service" class="combobox" style="float:right;width: 70%">
-                                        <option value="All">Transfusion Medicine</option>
-                                        <option value="Microbiology">Microbiology</option>
-                                        <option value="Chemistry">Chemistry</option>
-                                        <option value="Coagulation">Coagulation</option>
-                                        <option value="Hematology">Hematology</option>
-                                        <option value="Molecular">Molecular</option>
-                                        <option value="Cytogenetics">Cytogenetics</option>
-                                    </select>
+                                </p>
+
+                                {#{{ formmacros.simplefield('Issue:','','input') }}#}
+                                <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <label>Issue:</label>
+                                    </div>
+                                    <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                                        <select id="Service" name="Service" class="combobox" style="float:right;width: 70%">
+                                            <option value="First dose plasma">First dose plasma</option>
+                                            <option value="First dose platelets ">First dose platelets </option>
+                                            <option value="Third+ dose platelets">Third+ dose platelets</option>
+                                            <option value="Cryoprecipitate">Cryoprecipitate</option>
+                                            <option value="MTP">MTP</option>
+                                            <option value="Emergency release">Emergency release</option>
+                                            <option value="Payson transfusion">Payson transfusion</option>
+                                            <option value="Incompatible crossmatch">Incompatible crossmatch</option>
+                                            <option value="Transfusion reaction"> <a data-toggle="collapse" href="#TrfnRxnForm">Transfusion reaction</a></option>
+                                            <option value="Complex platelet summary">Complex platelet summary</option>
+                                            <option value="Complex factor summary">Complex factor summary</option>
+                                            <option value="WinRho">WinRho</option>
+                                            <option value="Special needs">Special needs</option>
+                                            <option value="Antibiotic sensitivity approval">Antibiotic sensitivity approval</option>
+                                            <option value="Viracor testing">Viracor testing</option>
+                                            <option value="Critical Value">Critical Value</option>
+                                            <option value="Aberrant analyte ">Aberrant analyte </option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
                                 </div>
+                                </p>
+
                             </div>
-                            </p>
 
-                            {#{{ formmacros.simplefield('Issue:','','input') }}#}
-                            <p>
-                            <div class="row">
-                                <div class="col-xs-6" align="right">
-                                    <label>Issue:</label>
-                                </div>
-                                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
-                                    <select id="Service" name="Service" class="combobox" style="float:right;width: 70%">
-                                        <option value="First dose plasma">First dose plasma</option>
-                                        <option value="First dose platelets ">First dose platelets </option>
-                                        <option value="Third+ dose platelets">Third+ dose platelets</option>
-                                        <option value="Cryoprecipitate">Cryoprecipitate</option>
-                                        <option value="MTP">MTP</option>
-                                        <option value="Emergency release">Emergency release</option>
-                                        <option value="Payson transfusion">Payson transfusion</option>
-                                        <option value="Incompatible crossmatch">Incompatible crossmatch</option>
-                                        <option value="Transfusion reaction"> <a data-toggle="collapse" href="#TrfnRxnForm">Transfusion reaction</a></option>
-                                        <option value="Complex platelet summary">Complex platelet summary</option>
-                                        <option value="Complex factor summary">Complex factor summary</option>
-                                        <option value="WinRho">WinRho</option>
-                                        <option value="Special needs">Special needs</option>
-                                        <option value="Antibiotic sensitivity approval">Antibiotic sensitivity approval</option>
-                                        <option value="Viracor testing">Viracor testing</option>
-                                        <option value="Critical Value">Critical Value</option>
-                                        <option value="Aberrant analyte ">Aberrant analyte </option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
+                            <div class="form-group col-xs-5" align="left">
+                                {{ calllogmacros.simpleDateField('Date:','') }}
+                                {{ calllogmacros.simpleDateField('Time:','') }}
+                                {{ formmacros.simplefield('Location:','','input') }}
                             </div>
-                            </p>
+
+                            <div class="form-group col-xs-2" align="left">
+                            </div>
 
                         </div>
 
-                        <div class="form-group col-xs-5" align="left">
-                            {{ calllogmacros.simpleDateField('Date:','') }}
-                            {{ calllogmacros.simpleDateField('Time:','') }}
-                            {{ formmacros.simplefield('Location:','','input') }}
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+
+
+            {#History/Findings    #}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#calllog-HistoryFindings">
+                            History/Findings
+                        </a>
+                    </h4>
+                </div>
+                <div id="calllog-HistoryFindings" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12" align="left">
+                                <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry describing the call."></textarea>
+                            </div>
                         </div>
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
 
-                        <div class="form-group col-xs-2" align="left">
+            {#Impression/Outcome    #}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#calllog-ImpressionOutcome">
+                            Impression/Outcome
+                        </a>
+                    </h4>
+                </div>
+                <div id="calllog-ImpressionOutcome" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12" align="left">
+                                <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry."></textarea>
+                            </div>
                         </div>
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
 
-                    </div>
-
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
+        {# EOF Entry #}
+            </div> <!-- panel-body -->
+          </div> <!-- panel-collapse -->
         </div> <!-- panel panel-info -->
-
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#calllog-HistoryFindings">
-                        History/Findings
-                    </a>
-                </h4>
-            </div>
-            <div id="calllog-HistoryFindings" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-12" align="left">
-                            <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry describing the call."></textarea>
-                        </div>
-                    </div>
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#calllog-ImpressionOutcome">
-                        Impression/Outcome
-                    </a>
-                </h4>
-            </div>
-            <div id="calllog-ImpressionOutcome" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-12" align="left">
-                            <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry."></textarea>
-                        </div>
-                    </div>
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
+        {# EOF Entry #}
 
         <p>
             <button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>

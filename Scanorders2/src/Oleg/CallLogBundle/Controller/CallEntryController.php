@@ -12,6 +12,8 @@ use Oleg\OrderformBundle\Entity\EncounterPatsex;
 use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
 use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
 use Oleg\OrderformBundle\Entity\EncounterReferringProviderSpecialty;
+use Oleg\OrderformBundle\Entity\Endpoint;
+use Oleg\OrderformBundle\Entity\Message;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\PatientDob;
 use Oleg\OrderformBundle\Entity\PatientFirstName;
@@ -80,10 +82,25 @@ class CallEntryController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $calllogUtil = $this->get('calllog_util');
         $userSecUtil = $this->get('user_security_utility');
+        $orderUtil = $this->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrn-type'));
+
+
+        //check if user has at least one institution
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('calllog_home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('calllog_home') );
+        }
 
         $title = "New Entry";
 
@@ -143,7 +160,34 @@ class CallEntryController extends Controller
         $patient->addEncounter($encounter2);
 
 
-        $form = $this->createPatientForm($patient,$mrntype,$mrn);
+        ///////////// Message //////////////
+//        $message = new Message();
+//        $message->setPurpose("For Internal Use by WCMC Department of Pathology for Call Log Book");
+//        $message->setProvider($user);
+//
+//        //set Source object
+//        $source = new Endpoint();
+//        $source->setSystem($system);
+//        $message->addSource($source);
+//
+//        //set order category
+//        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+//        if( !$messageCategory ) {
+//            throw new \Exception( "Location type is not found by name 'Pathology Call Log Entry'" );
+//        }
+//        $message->setMessageCategory($messageCategory);
+//
+//        //set Institutional PHI Scope
+//        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$message);
+//        $message->setInstitution($permittedInstitutions->first());
+        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
+
+        //add patient
+        $message->addPatient($patient);
+        ///////////// EOF Message //////////////
+
+
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn);
 
         //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
@@ -176,7 +220,22 @@ class CallEntryController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');
+        $orderUtil = $this->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
+
+
+        //check if user has at least one institution
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('calllog_home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('calllog_home') );
+        }
 
 //        $mrn = trim($request->get('mrn'));
 //        $mrntype = trim($request->get('mrn-type'));
@@ -190,9 +249,13 @@ class CallEntryController extends Controller
         $cycle = 'new';
         $formtype = 'call-entry';
 
-        $patient = new Patient();
+        //$patient = new Patient();
+        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
 
-        $form = $this->createPatientForm($patient,$mrntype,$mrn);
+        //add patient
+        //$message->addPatient($patient);
+
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn);
 
         $form->handleRequest($request);
 
@@ -238,6 +301,7 @@ class CallEntryController extends Controller
             $msg = "No Case found";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
 
+            $patient = $message->getPatient()->first();
             echo "patient id=".$patient->getId()."<br>";
 
             $patientInfoEncounter = null;
@@ -419,9 +483,12 @@ class CallEntryController extends Controller
         );
     }
 
-    public function createPatientForm($patient, $mrntype=null, $mrn=null, $formparams=null) {
+    //$formparams=null
+    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+
+        $patient = $message->getPatient()->first();
 
         ////////////////////////
 //        $query = $em->createQueryBuilder()
@@ -460,13 +527,45 @@ class CallEntryController extends Controller
             'timezoneDefault' => $userTimeZone
         );
 
-        if( $formparams ) {
-            $form = $this->createForm(new PatientType($params, $patient), $patient, $formparams);
-        } else {
-            $form = $this->createForm(new PatientType($params, $patient), $patient);
-        }
+//        if( $formparams ) {
+//            $form = $this->createForm(new PatientType($params, $patient), $patient, $formparams);
+//        } else {
+//            $form = $this->createForm(new PatientType($params, $patient), $patient);
+//        }
+
+        $form = $this->createForm(new PatientType($params, $patient), $patient);
 
         return $form;
+    }
+
+    public function createCalllogEntryMessage($user,$permittedInstitutions,$system) {
+        $em = $this->getDoctrine()->getManager();
+        $orderUtil = $this->get('scanorder_utility');
+
+        $message = new Message();
+        $message->setPurpose("For Internal Use by WCMC Department of Pathology for Call Log Book");
+        $message->setProvider($user);
+
+        //set Source object
+        $source = new Endpoint();
+        $source->setSystem($system);
+        $message->addSource($source);
+
+        //set order category
+        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        if( !$messageCategory ) {
+            throw new \Exception( "Location type is not found by name 'Pathology Call Log Entry'" );
+        }
+        $message->setMessageCategory($messageCategory);
+
+        //set Institutional PHI Scope
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$message);
+        $message->setInstitution($permittedInstitutions->first());
+
+        //add patient
+        //$message->addPatient($patient);
+
+        return $message;
     }
 
     /**

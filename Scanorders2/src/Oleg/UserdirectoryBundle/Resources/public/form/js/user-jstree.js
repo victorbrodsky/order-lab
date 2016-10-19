@@ -68,6 +68,7 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
             cycle = 'new';
         }
         treeUrl = treeUrl + "&cycle="+cycle;
+        //console.log('user-jstree.js: treeUrl='+treeUrl);
 
         //js tree
         $(targetid).jstree({

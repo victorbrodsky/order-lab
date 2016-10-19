@@ -101,6 +101,8 @@ class MessageCategory extends BaseCompositeNode {
                 $defaultSiblingOrgGroupType = $defaultChild->getOrganizationalGroupType();
                 if( $defaultSiblingOrgGroupType ) {
                     $this->setOrganizationalGroupType($defaultSiblingOrgGroupType);
+                } else {
+                    //get default organizational group
                 }
             }
         }

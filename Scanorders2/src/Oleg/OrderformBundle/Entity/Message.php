@@ -410,6 +410,12 @@ class Message {
      */
     private $reportBlock;
 
+//    /**
+//     * Pathology Call Log Entry
+//     * @ORM\OneToOne(targetEntity="CalllogEntry", inversedBy="message", cascade={"persist","remove"})
+//     */
+//    private $calllogEntry;
+
     ////////////////////////// EOF Specific Messages //////////////////////////
 
 

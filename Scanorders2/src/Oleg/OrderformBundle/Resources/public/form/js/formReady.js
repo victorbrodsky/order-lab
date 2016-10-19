@@ -98,6 +98,7 @@ $(document).ready(function() {
     //jstree in admin page for Project Title and Course Title tree
     getJstree('OrderformBundle','ProjectTitleTree');
     getJstree('OrderformBundle','CourseTitleTree');
+    getJstree('OrderformBundle','MessageCategory');
 
     initDatetimepicker();
 

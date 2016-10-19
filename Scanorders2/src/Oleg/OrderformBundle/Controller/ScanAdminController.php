@@ -1166,7 +1166,7 @@ class ScanAdminController extends AdminController
 
         $count = $this->addNestedsetCategory(null,$categories,$level,$username,$count);
 
-        exit('EOF message category');
+        //exit('EOF message category');
 
         return round($count/10);
     }
@@ -1182,7 +1182,17 @@ class ScanAdminController extends AdminController
                 $name = $subcategory;
             }
 
-            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($name);
+            //find by name and by parent ($parentCategory) if exists
+            if( $parentCategory ) {
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'className' => "MessageCategory",
+                    'bundleName' => "OrderformBundle"
+                );
+                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findByChildnameAndParent($name,$parentCategory,$mapper);
+            } else {
+                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($name);
+            }
 
             if( !$messageCategory ) {
                 //make category
@@ -1190,6 +1200,17 @@ class ScanAdminController extends AdminController
 
                 $this->setDefaultList($messageCategory,$count,$username,$name);
                 $messageCategory->setLevel($level);
+
+                //try to get default group by level
+                if( !$messageCategory->getOrganizationalGroupType() ) {
+                    if( $messageCategory->getLevel() ) {
+                        $messageTypeClassifier = $em->getRepository('OlegOrderformBundle:MessageTypeClassifiers')->findOneByLevel($messageCategory->getLevel());
+                        if ($messageTypeClassifier) {
+                            $messageCategory->setOrganizationalGroupType($messageTypeClassifier);
+                        }
+                    }
+                }
+
                 $count = $count + 10;
             }
 
@@ -1213,15 +1234,22 @@ class ScanAdminController extends AdminController
             }
 
             //testing
-            if( $messageCategory->getOrganizationalGroupType() ) {
-                $label = $messageCategory->getOrganizationalGroupType()->getName();
-            } else {
-                $label = null;
+            if( 1 ) {
+                if ($messageCategory->getOrganizationalGroupType()) {
+                    $label = $messageCategory->getOrganizationalGroupType()->getName();
+                } else {
+                    $label = null;
+                }
+                if ($messageCategory->getParent()) {
+                    $parent = $messageCategory->getParent()->getName();
+                } else {
+                    $parent = null;
+                }
+                echo $messageCategory.": label=".$label."; level=".$messageCategory->getLevel()."; parent=".$parent."<br>";
             }
-            echo $messageCategory.": label=".$label."; level=".$messageCategory->getLevel()."<br>";
 
-            //$em->persist($messageCategory);
-            //$em->flush();
+            $em->persist($messageCategory);
+            $em->flush();
         }
 
         return $count;
@@ -1911,6 +1939,7 @@ class ScanAdminController extends AdminController
     /**
      * @Route("/list/research-project-titles-tree/", name="scan_tree_researchprojecttitles_list")
      * @Route("/list/educational-course-titles-tree/", name="scan_tree_educationalcoursetitles_list")
+     * @Route("/list/message-categories-tree/", name="scan_tree_messagecategories_list")
      *
      * @Method("GET")
      */
@@ -1942,7 +1971,14 @@ class ScanAdminController extends AdminController
             $bundleName = "OrderformBundle";
             $className = "CourseTitleTree";
             $title = "Course Titles Tree Management";
-            $nodeshowpath = "commenttypes_show";
+            $nodeshowpath = "educationalcoursetitles_show";
+        }
+
+        if( $routeName == "scan_tree_messagecategories_list" ) {
+            $bundleName = "OrderformBundle";
+            $className = "MessageCategory";
+            $title = "Message Categories Tree Management";
+            $nodeshowpath = "messagecategorys_show";
         }
 
         $mapper = array(
