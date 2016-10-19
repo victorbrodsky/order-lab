@@ -11,6 +11,7 @@ namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
 
 
+use Oleg\OrderformBundle\Entity\MessageCategory;
 use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
 use Oleg\UserdirectoryBundle\Entity\CommentTypeList;
 use Oleg\UserdirectoryBundle\Entity\Institution;
@@ -259,6 +260,14 @@ class GenericTreeTransformer implements DataTransformerInterface
                     'prefix' => "Oleg",
                     'organizationalGroupType' => "CommentGroupType",
                     'bundleName' => "UserdirectoryBundle"
+                );
+            }
+
+            if( $entity instanceof MessageCategory ) {
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'organizationalGroupType' => "MessageTypeClassifiers",
+                    'bundleName' => "OrderformBundle"
                 );
             }
 

@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
 use Oleg\UserdirectoryBundle\Entity\ComponentCategoryInterface;
+use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -54,6 +55,56 @@ class MessageCategory extends BaseCompositeNode {
     protected $original;
 
 
+    /**
+     * Message Type Classifiers - mapper between the level number and level title.
+     * level corresponds to this level integer: 1-Message Class, 2-Message Subclass, 3-Service, 4-Issue
+     * Default types have a positive level numbers, all other types have negative level numbers.
+     *
+     * @ORM\ManyToOne(targetEntity="MessageTypeClassifiers", cascade={"persist"})
+     */
+    private $organizationalGroupType;
+
+
+
+
+    /**
+     * @param mixed $organizationalGroupType
+     */
+    public function setOrganizationalGroupType($organizationalGroupType)
+    {
+        $this->organizationalGroupType = $organizationalGroupType;
+        $this->setLevel($organizationalGroupType->getLevel());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrganizationalGroupType()
+    {
+        return $this->organizationalGroupType;
+    }
+
+    /**
+     * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
+     * @param mixed $parent
+     */
+    public function setParent(CompositeNodeInterface $parent = null)
+    {
+        $this->parent = $parent;
+
+        //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent if does not exist
+        if( !$this->getOrganizationalGroupType() ) {
+            if( $parent && count($parent->getChildren()) > 0 ) {
+                //$firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
+                //$this->setOrganizationalGroupType($firstSiblingOrgGroupType);
+                $defaultChild = $this->getFirstDefaultChild($parent);
+                $defaultSiblingOrgGroupType = $defaultChild->getOrganizationalGroupType();
+                if( $defaultSiblingOrgGroupType ) {
+                    $this->setOrganizationalGroupType($defaultSiblingOrgGroupType);
+                }
+            }
+        }
+    }
 
 
     public function getClassName() {

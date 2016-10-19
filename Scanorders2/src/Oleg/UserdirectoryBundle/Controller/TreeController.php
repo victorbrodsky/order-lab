@@ -506,6 +506,9 @@ class TreeController extends Controller {
                 $className = "Institution";
                 $addNodeClassName = "User";
                 break;
+            case "MessageCategory":
+                $organizationalGroupType = "MessageTypeClassifiers";
+                break;
             default:
                 //$className = null;
         }

@@ -13,6 +13,7 @@ use Oleg\OrderformBundle\Entity\DiseaseTypeList;
 use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
+use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
 use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -131,6 +132,7 @@ class ScanAdminController extends AdminController
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
         $count_proceduretype = $this->generateProcedureType();
+        $count_MessageTypeClassifiers = $this->generateMessageTypeClassifiers();
         $count_orderCategory = $this->generateOrderCategory();
         //$count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
@@ -161,6 +163,7 @@ class ScanAdminController extends AdminController
             'Accession Types='.$count_acctype.', '.
             'Encounter Types='.$count_proceduretype.', '.
             'Procedure Types='.$count_enctype.', '.
+            'MessageTypeClassifiers='.$count_MessageTypeClassifiers.', '.
             'Message Category='.$count_orderCategory.', '.
             //'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
@@ -997,6 +1000,45 @@ class ScanAdminController extends AdminController
         return round($count/10);
     }
 
+    //positive level - default level's title
+    //negative level - all other title
+    public function generateMessageTypeClassifiers() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            'Message Class' => 0, //positive level - default level's title
+            'Message Subclass' => 1,
+            'Message Subclass Group' => 2,
+            'Service' => 3,
+            'Issue' => 4,
+        );
+
+        $count = 10;
+        foreach( $types as $name=>$level ) {
+
+            $messageTypeClassifier = $em->getRepository('OlegOrderformBundle:MessageTypeClassifiers')->findOneByName($name);
+            if( $messageTypeClassifier ) {
+                continue;
+            } else {
+                $messageTypeClassifier = new MessageTypeClassifiers();
+            }
+
+            $this->setDefaultList($messageTypeClassifier,$count,$username,$name);
+
+            $messageTypeClassifier->setLevel($level);
+
+            $em->persist($messageTypeClassifier);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
     public function generateOrderCategory() {
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -1064,7 +1106,55 @@ class ScanAdminController extends AdminController
             ),
             'Note' => array(
                 'Encounter Note' => array(
-                    'Pathology Call Log Entry'
+                    'Pathology Call Log Entry' => array(
+                        //Service level
+                        'Transfusion Medicine' => array(
+                            //Issue level
+                            'First dose plasma',
+                            'First dose platelets',
+                            'Third+ dose platelets',
+                            'Cryoprecipitate',
+                            'MTP',
+                            'Emergency release',
+                            'Payson transfusion',
+                            'Incompatible crossmatch',
+                            'Transfusion reaction',
+                            'Complex platelet summary',
+                            'Complex factor summary',
+                            'WinRho',
+                            'Special needs',
+                            'Other'
+                        ),
+                        'Microbiology' => array(
+                            'Antibiotic sensitivity approval',
+                            'Viracor testing',
+                            'Critical Value',
+                            'Other'
+                        ),
+                        'Coagulation' => array(
+                            'Critical Value',
+                            'Other'
+                        ),
+                        'Hematology' => array(
+                            'Peripheral Blood Smear Review',
+                            'Other'
+                        ),
+                        'Chemistry' => array(
+                            //Issue level
+                            'Critical Value',
+                            'Aberrant analyte',
+                            'Other'
+                        ),
+                        'Cytogenetics' => array(
+                            'Other'
+                        ),
+                        'Molecular' => array(
+                            'Other'
+                        ),
+                        'Other' => array(
+                            'Other'
+                        ),
+                    )
                 ),
                 'Procedure Note'
             )
@@ -1076,7 +1166,7 @@ class ScanAdminController extends AdminController
 
         $count = $this->addNestedsetCategory(null,$categories,$level,$username,$count);
 
-        //exit('EOF category');
+        exit('EOF message category');
 
         return round($count/10);
     }
@@ -1122,13 +1212,20 @@ class ScanAdminController extends AdminController
                 $count = $this->addNestedsetCategory($messageCategory,$subcategory,$level+1,$username,$count);
             }
 
-            $em->persist($messageCategory);
-            $em->flush();
+            //testing
+            if( $messageCategory->getOrganizationalGroupType() ) {
+                $label = $messageCategory->getOrganizationalGroupType()->getName();
+            } else {
+                $label = null;
+            }
+            echo $messageCategory.": label=".$label."; level=".$messageCategory->getLevel()."<br>";
+
+            //$em->persist($messageCategory);
+            //$em->flush();
         }
 
         return $count;
     }
-
 
     public function generatePatientType() {
 

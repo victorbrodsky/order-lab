@@ -138,7 +138,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     public function getFirstDefaultChild( $parent ) {
         foreach( $parent->getChildren() as $child ) {
             if( method_exists($child,'getOrganizationalGroupType') ) {
-                if (intval($child->getOrganizationalGroupType()->getLevel()) >= 0) {
+                if( $child->getOrganizationalGroupType() && intval($child->getOrganizationalGroupType()->getLevel()) >= 0 ) {
                     return $child;
                 }
             }
