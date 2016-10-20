@@ -411,7 +411,7 @@ class Message {
     private $reportBlock;
 
 //    /**
-//     * Pathology Call Log Entry
+//     * Pathology Call Log Entry (similar to the LabOrder)
 //     * @ORM\OneToOne(targetEntity="CalllogEntry", inversedBy="message", cascade={"persist","remove"})
 //     */
 //    private $calllogEntry;

@@ -1550,4 +1550,33 @@ class Patient extends ObjectAbstract
 
         return $patientInfo;
     }
+
+    //last name of LLL, first name of FFFF, and a MM/DD/YYYY date of birth
+    public function obtainPatientInfoShort( $status='valid' ) {
+
+        $patientInfoArr = array();
+
+        $fullName = $this->getFullPatientName();
+        if( $fullName ) {
+            //echo "fullName <br>";
+            $patientInfoArr[] = $fullName;
+        } else {
+            $patientInfoArr[] = "No Name Provided";
+        }
+
+        $dobRes = $this->obtainStatusField('dob', $status);
+        if( $dobRes && $dobRes."" ) {
+            //echo "dobRes=$dobRes <br>";
+            $patientInfoArr[] = $dobRes." date of birth";
+        }
+
+        if( count($patientInfoArr) == 0 ) {
+            $patientInfoArr[] = "ID# ".$this->getId();
+        }
+
+        $patientInfo = implode(", ",$patientInfoArr);
+
+        return $patientInfo;
+    }
+
 }

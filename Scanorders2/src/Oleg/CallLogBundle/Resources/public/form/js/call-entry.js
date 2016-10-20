@@ -454,18 +454,23 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         timeout: _ajaxTimeout,
         async: true,
         data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, formtype: formtype },
-    }).success(function(data) {
+    }).success(function(resData) {
         var dataOk = false;
+        var data = resData.patients;
+        var searchedStr = resData.searchStr;
+
         if( data ) {
             var firstKey = Object.keys(data)[0];
             if( firstKey ) {
                 var firstElement = data[firstKey];
                 if( firstElement && firstElement.hasOwnProperty("id") ) {
+                    console.log("patient found !!!: searchedStr="+searchedStr);
                     populatePatientsInfo(data, searchedStr, holderId, singleMatch);
                     dataOk = true;
                 }
             }
             if( data.length == 0 ) {
+                console.log("no patient found: searchedStr="+searchedStr);
                 populatePatientsInfo(data, searchedStr, holderId, singleMatch);
                 dataOk = true;
             }
@@ -569,7 +574,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
 
         //console.log("No matching patient records found.");
         //"No matching patient records found." and unlock fields
-        holder.find('#calllog-danger-box').html("No matching patient records found"+searchedStr+".");
+        holder.find('#calllog-danger-box').html("No matching patient records found. "+searchedStr+".");
         holder.find('#calllog-danger-box').show(_transTime);
         populatePatientInfo(null,true,false,holderId); //not found
         disableAllFields(false,holderId);
