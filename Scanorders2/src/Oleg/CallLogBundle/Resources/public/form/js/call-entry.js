@@ -166,8 +166,10 @@ function addnewCalllogPatient(holderId) {
 
             //showCalllogCallentryForm(true);
             //hide "No single patient is referenced by this entry or I'll add the patient info later" link and all sections below
-            $('#callentry-nosinglepatient-link').hide(_transTime);
-            $('#callentry-form').hide(_transTime);
+            //$('#callentry-nosinglepatient-link').hide(_transTime);
+            //$('#callentry-form').hide(_transTime);
+            //opens/shows the lower accordion that opens when you click "No single patient is referenced by this entry or I'll add the patient info later"
+            $('#callentry-nosinglepatient-link').trigger();
 
         } else {
             console.log("Patient has not been created");

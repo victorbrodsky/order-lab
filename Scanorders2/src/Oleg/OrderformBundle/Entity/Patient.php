@@ -295,7 +295,7 @@ class Patient extends ObjectAbstract
             $days = $interval->format('%d');
             //$fullMonths = ($years * 12) + $months;
             $daysFull = $interval->days;
-            //echo "years=".$years.", months=".$months.", days=".$days.", fullMonths=".$fullMonths.", daysFull=".$daysFull."<br>";
+            //echo "years=".$years.", months=".$months.", days=".$days.", daysFull=".$daysFull."<br>";
         }
 
         //If the age is less than 1 day, show the age as "less than 1 day".
@@ -305,17 +305,17 @@ class Patient extends ObjectAbstract
 
         //If the age is less than 1 month, show the age in days and show the word "day(s)"; for example: "16 day(s)"
         if( $daysFull > 0 && $years < 1 && $months < 1 ) {
-            return $days . " day(s)";
+            return $days . " d.o.";  //" day(s)";
         }
 
         //If the age is less than 1 year, give the age in months and show the word "month(s)"; for example: "3 month(s)".
         if( $daysFull > 0 && $years < 1 ) {
-            return $months . " month(s)";
+            return $months . " m.o.";    //" month(s)";
         }
 
         //If the age is less than 1 year, give the age in months and show the word "month(s)"; for example: "3 month(s)".
         if( $daysFull > 0 && $years > 0 ) {
-            return $years . " yo";
+            return $years . " y.o.";
         }
 
         return "";
@@ -1136,7 +1136,7 @@ class Patient extends ObjectAbstract
             //order is important: Lastname, Firstname, Middlename
             $patientFullName = $this->patientPartialName($patientFullName,$lastNameArrOrder,$orderId,"No Last Name Provided");
             $patientFullName = $this->patientPartialName($patientFullName,$firstNameArrOrder,$orderId,"No First Name Provided");
-            $patientFullName = $this->patientPartialName($patientFullName,$middleNameArrOrder,$orderId,"No Middle Name Provided");
+            $patientFullName = $this->patientPartialName($patientFullName,$middleNameArrOrder,$orderId,""); //"No Middle Name Provided"
 
             $patientFullName = $this->patientPartialName($patientFullName,$suffixArrOrder,$orderId,"");
 
