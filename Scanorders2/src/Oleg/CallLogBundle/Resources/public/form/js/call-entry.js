@@ -513,8 +513,8 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
     showCalllogCallentryForm(false);
 
     _patients = patients;
-    //console.log("_patients:");
-    //console.log(_patients);
+    console.log("_patients:");
+    console.log(_patients);
 
     var processed = false;
 
