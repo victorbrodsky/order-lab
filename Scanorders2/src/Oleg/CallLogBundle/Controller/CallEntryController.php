@@ -849,58 +849,109 @@ class CallEntryController extends Controller
             $where = true;
         }
 
-        //Last Name
-        if( $lastname && ($where == false || $matchAnd == true) ) {
-            echo "lastname=".$lastname."<br>";
-            $searchArr[] = "Last Name: " . $lastname;
+//        //Last Name Only
+//        if( $lastname && !$firstname && ($where == false || $matchAnd == true) ) {
+//
+//            //$lastname = "Doe";
+//            echo "lastname=".$lastname."<br>";
+//            $searchArr[] = "Last Name: " . $lastname;
+//
+//            $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
+//            $statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
+//
+//            if ($exactMatch) {
+//                ////$dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
+//                $dql->andWhere("(lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr)");
+//                $parameters['lastname'] = $lastname;
+//            } else {
+//                $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
+//            }
+//
+//            //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
+//            //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
+//
+//            $parameters['statusValid'] = 'valid';
+//            $parameters['statusAlias'] = 'alias';
+//
+//            $where = true;
+//        }
 
-            //$statusPatientStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-            //$statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
+//        //First Name Only
+//        if( $firstname && !$lastname && ($where == false || $matchAnd == true) ) {
+//
+//            //$firstname = "Linda";
+//            echo "firstname=".$firstname."<br>";
+//            $searchArr[] = "First Name: " . $firstname;
+//
+//            $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
+//            $statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
+//
+//            if( $exactMatch ) {
+//                ////$dql->andWhere("firstname.field = :firstname OR encounterFirstname.field = :firstname");
+//                $dql->andWhere("(firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr)");
+//                $parameters['firstname'] = $firstname;
+//            } else {
+//                $dql->andWhere("firstname.field LIKE :firstname OR encounterFirstname.field LIKE :firstname");
+//                $parameters['firstname'] = '%' . $firstname . '%';
+//            }
+//
+//            $dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
+//            $dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
+//            $parameters['statusValid'] = 'valid';
+//            $parameters['statusAlias'] = 'alias';
+//
+//            $where = true;
+//        }
 
-            if ($exactMatch) {
-                $dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
-                //$lastnameStr .= "(lastname.field = :lastname AND lastname.status = :statusValid)";
-                //$lastnameStr .= " OR ";
-                //$lastnameStr = "(encounterLastname.field = :lastname AND $statusEncounterStr)";
+        //Last Name AND DOB
+        if( ($lastname || $firstname) && ($where == false || $matchAnd == true) ) {
+
+            //$lastname = "Doe";
+            //echo "1 lastname=".$lastname."<br>";
+            //echo "1 firstname=".$firstname."<br>";
+
+            $searchCriterionArr = array();
+
+            if( $lastname ) {
+                $searchArr[] = "Last Name: " . $lastname;
+
+                $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
+                $statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
+
+                $searchCriterionArr[] = "(lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr)";
+
                 $parameters['lastname'] = $lastname;
-            } else {
-                //exit('1');
-                //$dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
-                $lastnameStr = "(lastname.field LIKE :lastname AND $statusPatientStr) OR ";
-                $lastnameStr .= "(encounterLastname.field LIKE :lastname AND $statusEncounterStr)";
-                $parameters['lastname'] = '%' . $lastname . '%';
+
+                //status
+                $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
+                $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
+                $parameters['statusValid'] = 'valid';
+                $parameters['statusAlias'] = 'alias';
+
+                $where = true;
             }
 
-            //$dql->andWhere($lastnameStr);
+            if( $firstname ) {
+                $searchArr[] = "First Name: " . $firstname;
 
-            $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
-            $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
-            //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias OR encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
+                $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
+                $statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
 
-            $parameters['statusValid'] = 'valid';
-            $parameters['statusAlias'] = 'alias';
+                $searchCriterionArr[] = "(firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr)";
 
-            $where = true;
-        }
-
-        //First Name
-        if( $firstname && ($where == false || $matchAnd == true) ) {
-            echo "firstname=".$firstname."<br>";
-            $searchArr[] = "First Name: " . $firstname;
-            if ($exactMatch) {
-                $dql->andWhere("firstname.field = :firstname OR encounterFirstname.field = :firstname");
                 $parameters['firstname'] = $firstname;
-            } else {
-                $dql->andWhere("firstname.field LIKE :firstname OR encounterFirstname.field LIKE :firstname");
-                $parameters['firstname'] = '%' . $firstname . '%';
+
+                //status
+                $dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
+                $dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
+                $parameters['statusValid'] = 'valid';
+                $parameters['statusAlias'] = 'alias';
+
+                $where = true;
             }
 
-            $dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
-            $dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
-            $parameters['statusValid'] = 'valid';
-            $parameters['statusAlias'] = 'alias';
-
-            $where = true;
+            $searchCriterionStr = implode(" OR ",$searchCriterionArr);
+            $dql->andWhere($searchCriterionStr);
         }
 
 //        //Last Name AND DOB
@@ -993,9 +1044,15 @@ class CallEntryController extends Controller
 
             $query = $em->createQuery($dql);
             $query->setParameters($parameters);
-            echo "sql=".$query->getSql()."<br>";
+            //echo "sql=".$query->getSql()."<br>";
             $patients = $query->getResult();
-            exit('patients count='.count($patients));
+
+            //testing
+//            echo "<br>";
+//            foreach( $patients as $patient ) {
+//                echo "ID=".$patient->getId()."<br>";
+//            }
+//            exit('patients count='.count($patients));
 
             //log search action
             if( $evenlog ) {
