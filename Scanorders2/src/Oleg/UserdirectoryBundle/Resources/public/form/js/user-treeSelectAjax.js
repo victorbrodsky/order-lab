@@ -80,12 +80,6 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
             //console.log( 'treeArr:' );
             //console.log( treeArr );
 
-            //this is child combobox creation (attachflag='bottom'): remove readonly if class exists 'combobox-compositetree-enable-child'
-            if( comboboxEl.hasClass('combobox-compositetree-enable-child') ) {
-                //console.log('rowElHtml='+rowElHtml);
-                rowElHtml = rowElHtml.replace('readonly="readonly"','');
-            }
-
             var newElementsAppended = createNewTreenodeCombobox( bundleName, entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'bottom' );
             //console.log( newElementsAppended );
             if( newElementsAppended ) {
@@ -130,12 +124,28 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
 
         //get combobox label
         label = constructComboboxLabel(comboboxEl,label);
+        //console.log( 'label='+ label );
 
         //readonly combobox
         //var readonly = "";
         //if( cycle.indexOf("show") != -1 ) {
         //    readonly = "readonly";
         //}
+
+        //add readonly if class exists 'combobox-compositetree-readonly-parent'
+        if( comboboxEl.hasClass('combobox-compositetree-readonly-parent') ) {
+            //console.log('rowElHtml='+rowElHtml);
+            var level = treeArr[0].level;
+            var readonlyParentLevel = comboboxEl.data("readonly-parent-level");
+            //console.log( label+': level='+ level + " ?= readonlyParentLevel="+readonlyParentLevel );
+            if( parseInt(level) <= parseInt(readonlyParentLevel) ) {
+                //console.log("add readonly!!!");
+                var origReplaceStr = 'data-readonly-parent-level=';
+                var toReplaceStr = 'readonly="readonly" '+origReplaceStr;
+                rowElHtml = rowElHtml.replace(origReplaceStr, toReplaceStr);
+                //console.log('rowElHtml='+rowElHtml);
+            }
+        }
 
         var comboboxHtml = rowElHtml;
 

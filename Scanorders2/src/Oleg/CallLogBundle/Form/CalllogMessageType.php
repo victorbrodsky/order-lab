@@ -100,13 +100,14 @@ class CalllogMessageType extends AbstractType
             $form->add('messageCategory', 'employees_custom_selector', array(
                 'label' => 'Message Type:',
                 'required' => false,
-                'read_only' => true,
+                //'read_only' => true,
                 'attr' => array(
-                    'class' => 'ajax-combobox-compositetree combobox-compositetree-enable-child',
+                    'class' => 'ajax-combobox-compositetree combobox-compositetree-readonly-parent',
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'MessageCategory',
-                    'data-label-prefix' => ''
+                    'data-label-prefix' => '',
+                    'data-readonly-parent-level' => '2' //readonly all children from level 2 up (including this level)
                 ),
                 'classtype' => 'institution'
             ));

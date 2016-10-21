@@ -16,6 +16,7 @@ use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
+use Oleg\UserdirectoryBundle\Entity\ObjectTypeList;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
@@ -253,6 +254,8 @@ class AdminController extends Controller
         $count_PermissionObjects = $this->generatePermissionObjects();
         $count_PermissionActions = $this->generatePermissionActions();
 
+        $count_ObjectTypeActions = $this->generateObjectTypeActions();
+
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
         $count_VacReqRequestTypeList = $this->generateVacReqRequestTypeList();
 
@@ -321,6 +324,7 @@ class AdminController extends Controller
             'Permissions ='.$count_Permissions.', '.
             'PermissionObjects ='.$count_PermissionObjects.', '.
             'PermissionActions ='.$count_PermissionActions.', '.
+            'ObjectTypeActions='.$count_ObjectTypeActions.', '.
             'Collaboration Types='.$collaborationtypes.', '.
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
@@ -4834,6 +4838,56 @@ class AdminController extends Controller
             }
 
             $listEntity = new PermissionActionList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateObjectTypeActions() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
+
+        $types = array(
+            "Form Group",
+            "Form",
+            "Form Section",
+            "Form Field - Free Text, Single Line",
+            "Form Field - Free Text",
+            "Form Field - Free Text, RTF",
+            "Form Field - Free Text, HTML",
+            "Form Field - Full Date",
+            "Form Field - Time",
+            "Form Field - Full Date and Time",
+            "Form Field - Year",
+            "Form Field - Month",
+            "Form Field - Date",
+            "Form Field - Day of the Week",
+            "Form Field - Dropdown Menu",
+            "Dropdown Menu Value",
+            "Linked Object - Patient",
+        );
+
+        $count = 10;
+        foreach( $types as $type ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeList')->findOneByName($type);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new ObjectTypeList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

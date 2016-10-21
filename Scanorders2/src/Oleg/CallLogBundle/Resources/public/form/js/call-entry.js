@@ -1418,6 +1418,6 @@ function calllogEnableMessageCategoryService(holderId) {
     var lastCategory = holder.find('input.ajax-combobox-compositetree').last();
     printF(lastCategory,"lastCategory:");
     console.log(lastCategory);
-    lastCategory.prop('disable', false);
+    lastCategory.prop('disabled', false);
 }
 

@@ -98,6 +98,7 @@ class ListController extends Controller
      * @Route("/list/event-object-types/", name="eventobjecttypes-list")
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes-list")
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty-list")
+     * @Route("/list/object-types/", name="objecttypes-list")
      *
      *
      * @Method("GET")
@@ -340,6 +341,7 @@ class ListController extends Controller
      * @Route("/list/event-object-types/", name="eventobjecttypes_create")
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes_create")
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty_create")
+     * @Route("/list/object-types/", name="objecttypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -496,6 +498,7 @@ class ListController extends Controller
      * @Route("/list/event-object-types/new", name="eventobjecttypes_new")
      * @Route("/list/vacation-request-types/new", name="vacreqrequesttypes_new")
      * @Route("/list/healthcare-provider-specialties/new", name="healthcareproviderspecialty_new")
+     * @Route("/list/object-types/new", name="objecttypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -623,6 +626,7 @@ class ListController extends Controller
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_show")
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_show")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_show")
+     * @Route("/list/object-types/{id}", name="objecttypes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -740,6 +744,7 @@ class ListController extends Controller
      * @Route("/list/event-object-types/{id}/edit", name="eventobjecttypes_edit")
      * @Route("/list/vacation-request-types/{id}/edit", name="vacreqrequesttypes_edit")
      * @Route("/list/healthcare-provider-specialties/{id}/edit", name="healthcareproviderspecialty_edit")
+     * @Route("/list/object-types/{id}/edit", name="objecttypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -903,6 +908,7 @@ class ListController extends Controller
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_update")
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_update")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_update")
+     * @Route("/list/object-types/{id}", name="objecttypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1510,6 +1516,10 @@ class ListController extends Controller
                 $className = "HealthcareProviderSpecialtiesList";
                 $displayName = "Healthcare Provider Specialties";
                 break;
+            case "objecttypes":
+                $className = "ObjectTypeList";
+                $displayName = "Object Types";
+                break;
 
             default:
                 $className = null;
@@ -1635,6 +1645,7 @@ class ListController extends Controller
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_delete")
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_delete")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_delete")
+     * @Route("/list/object-types/{id}", name="objecttypes_delete")
      *
      *
      * @Method("DELETE")
