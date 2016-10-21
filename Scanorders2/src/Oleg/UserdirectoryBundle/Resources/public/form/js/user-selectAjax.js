@@ -157,7 +157,7 @@ function getComboboxSingleCompositetree(comboboxEl,bundleName,entityName) {
     //console.log(comboboxEl);
 
     var thisid = comboboxEl.val();
-    //console.log('thisid='+thisid);
+    console.log('thisid='+thisid);
 
     if( !thisid ) {
         thisid = 0;
@@ -172,6 +172,17 @@ function getComboboxSingleCompositetree(comboboxEl,bundleName,entityName) {
 
     getChildrenByParent(bundleName,entityName,comboboxEl,thisid,null).
     then(function (optionData) {
+        console.log("populate child combobox");
+        printF(comboboxEl,"child comboboxEl=");
+
+        //if( comboboxEl.hasClass('combobox-compositetree-enable-child') ) {
+        //    console.log("populate child combobox enabled!!!");
+        //    console.log(comboboxEl);
+        //    //remove readonly prop
+        //    comboboxEl.prop('disabled',false);
+        //    comboboxEl.prop('readonly',false);
+        //}
+
         populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,optionData);
     });
 
@@ -184,6 +195,8 @@ function populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,opti
     var rowElHtml = comboboxEl.closest('.row')[0].outerHTML;
 
     //console.log('populate combobox');
+    //printF(comboboxEl,"comboboxEl=");
+
     //target, data, placeholder, multipleFlag, filter
     populateSelectCombobox( comboboxEl, optionData, "Select an option" );
 
@@ -257,7 +270,8 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
                 timeout: _ajaxTimeout,
                 async: asyncflag
             }).success(function(data) {
-                //console.log(data);
+                console.log("employees_get_composition_tree: thisid="+thisid+"; parentid="+parentid);
+                console.log(data);
                 _treenodedata[bundleName+entityName][thisid] = data;
                 resolve(data);
             }).error(function() {

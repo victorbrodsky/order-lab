@@ -13,6 +13,8 @@ function initCallLogPage() {
 
     calllogWindowCloseAlert();
     calllogUpdatePatientAgeListener('patient-holder-1');
+
+    //calllogEnableMessageCategoryService('patient-holder-1');
 }
 
 //prevent exit modified form
@@ -1407,3 +1409,15 @@ function calllogUpdatePatientAge(fieldEl,holderId) {
         //console.log("update patient title done");
     });
 }
+
+function calllogEnableMessageCategoryService(holderId) {
+    var holder = getHolder(holderId);
+
+    //enable the last of '.composite-tree-holder'
+    //var lastCategory = holder.find('.composite-tree-holder').find('.treenode').last();
+    var lastCategory = holder.find('input.ajax-combobox-compositetree').last();
+    printF(lastCategory,"lastCategory:");
+    console.log(lastCategory);
+    lastCategory.prop('disable', false);
+}
+

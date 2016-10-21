@@ -3,6 +3,7 @@
 namespace Oleg\CallLogBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\CallLogBundle\Form\CalllogMessageType;
 use Oleg\CallLogBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
@@ -488,7 +489,7 @@ class CallEntryController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $patient = $message->getPatient()->first();
+        //$patient = $message->getPatient()->first();
 
         ////////////////////////
 //        $query = $em->createQueryBuilder()
@@ -533,7 +534,7 @@ class CallEntryController extends Controller
 //            $form = $this->createForm(new PatientType($params, $patient), $patient);
 //        }
 
-        $form = $this->createForm(new PatientType($params, $patient), $patient);
+        $form = $this->createForm(new CalllogMessageType($params, $message), $message);
 
         return $form;
     }

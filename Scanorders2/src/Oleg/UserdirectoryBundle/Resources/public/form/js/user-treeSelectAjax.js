@@ -79,6 +79,12 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
         then(function (treeArr) {
             //console.log( 'treeArr:' );
             //console.log( treeArr );
+
+            //remove readonly if class exists 'combobox-compositetree-enable-child'
+            if( comboboxEl.hasClass('combobox-compositetree-enable-child') ) {
+
+            }
+
             var newElementsAppended = createNewTreenodeCombobox( bundleName, entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'bottom' );
             //console.log( newElementsAppended );
             if( newElementsAppended ) {

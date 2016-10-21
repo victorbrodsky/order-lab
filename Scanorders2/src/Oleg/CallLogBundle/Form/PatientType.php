@@ -31,7 +31,7 @@ class PatientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        //echo "patient: type=".$this->params['type']."<br>";
+        //echo "calllog patient: type=".$this->params['type']."<br>";
 
         $builder->add('id', 'hidden', array(
             'label' => false,

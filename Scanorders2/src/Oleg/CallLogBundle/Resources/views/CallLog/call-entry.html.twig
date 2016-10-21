@@ -3,6 +3,7 @@
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
 
 {% block title %}
@@ -37,8 +38,15 @@
 
         {{ form_errors(form) }}
 
+        {% for patient in form.patient %}
+            {#patient.id:{{ patient.vars.value.id }}#}
+            {% set patientForm = patient %}
+        {#{% endfor %}#}
+
+{#{% if patientForm is defined %}#}
+
         {#{% set formtype = 'call-entry' %}#}
-        {{ calllogmacros.patientInfoSection(form,cycle,holderId,'Patient Info',formtype) }}
+        {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Patient Info',formtype) }}
 
         {#<a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">#}
         <a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">
@@ -62,7 +70,7 @@
                         {#</div>#}
                     {#</div>#}
                     {% set status = 'Submitted' %}
-                    {% for encounter in form.encounter if encounter.vars.value.status == 'valid' %}
+                    {% for encounter in patientForm.encounter if encounter.vars.value.status == 'valid' %}
                         {{ form_row(encounter.status) }}
                         {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
                         {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
@@ -136,9 +144,14 @@
         {# Entry #}
 
             {#Message Fields        #}
+            <p>
                 {#Message Type: Message->messageCategory#}
+                {% if form.messageCategory is defined %}
+                    {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
+                {% endif %}
                 {#Message Version#}
                 {#Amendment Reason#}
+            </p>
 
 
             {#Call Information    #}
@@ -276,6 +289,9 @@
         </p>
 
         </div> {#callentry-form#}
+
+{#{% endif %}#}
+{% endfor %}
 
         {#{{ form_row(form._token) }}#}
         {#{{ form_rest(form) }}#}
