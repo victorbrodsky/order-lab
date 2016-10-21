@@ -113,6 +113,18 @@ class CalllogMessageType extends AbstractType
         });
 
 
+        $builder->add('version', null, array(
+            'label' => 'Message Version:',
+            'required' => true,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('amendmentReason', 'custom_selector', array(
+            'label' => 'Amendment Reason:',
+            'required' => false,
+            'attr' => array('class' => 'ajax-combobox-amendmentReason', 'type' => 'hidden'),
+            'classtype' => 'amendmentReason'
+        ));
 
 
         //Institutional PHI Scope

@@ -356,6 +356,16 @@ class Message {
      */
     private $externalIds;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $version;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AmendmentReasonList")
+     */
+    private $amendmentReason;
+
 
     ////////////////////////// Specific Messages //////////////////////////
 
@@ -1080,6 +1090,38 @@ class Message {
     public function getExternalIds()
     {
         return $this->externalIds;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAmendmentReason()
+    {
+        return $this->amendmentReason;
+    }
+
+    /**
+     * @param mixed $amendmentReason
+     */
+    public function setAmendmentReason($amendmentReason)
+    {
+        $this->amendmentReason = $amendmentReason;
     }
 
 

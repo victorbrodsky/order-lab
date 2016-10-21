@@ -43,6 +43,7 @@ var _referringProviderSpecialty = [];
 
 //generic select2 fields
 var _labtesttype = [];
+var _amendmentReason = [];
 
 var _embedderinstruction = [];
 
@@ -122,6 +123,7 @@ function customCombobox() {
     }
 
     getComboboxGeneric(null,'labtesttype',_labtesttype,false,null,'scan');
+    getComboboxGeneric(null,'amendmentReason',_amendmentReason,false,null,'scan');
 
     //for test patient's contact information
     getComboboxGeneric(null,'building',_buildings,false,'');

@@ -150,7 +150,9 @@
                     {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
                 {% endif %}
                 {#Message Version#}
+                {{ formmacros.field(form.version) }}
                 {#Amendment Reason#}
+                {{ formmacros.field(form.amendmentReason) }}
             </p>
 
 

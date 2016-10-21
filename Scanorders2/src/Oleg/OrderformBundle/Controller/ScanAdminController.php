@@ -7,6 +7,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\OrderformBundle\Entity\AmendmentReasonList;
 use Oleg\OrderformBundle\Entity\CourseGroupType;
 use Oleg\OrderformBundle\Entity\DiseaseOriginList;
 use Oleg\OrderformBundle\Entity\DiseaseTypeList;
@@ -154,6 +155,7 @@ class ScanAdminController extends AdminController
         $count_ResearchGroupType = $this->generateResearchGroupType();
         $count_CourseGroupType = $this->generateCourseGroupType();
         $count_SystemAccountRequestType = $this->generateSystemAccountRequestType();
+        $count_AmendmentReason = $this->generateAmendmentReason();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -184,7 +186,8 @@ class ScanAdminController extends AdminController
             'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.', '.
             'Research Group Types='.$count_ResearchGroupType.', '.
             'Educational Group Types='.$count_CourseGroupType.', '.
-            'SystemAccountRequestTypes='.$count_SystemAccountRequestType.' '.
+            'SystemAccountRequestTypes='.$count_SystemAccountRequestType.', '.
+            'AmendmentReasons='.$count_AmendmentReason.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1934,6 +1937,39 @@ class ScanAdminController extends AdminController
 
     }
 
+    public function generateAmendmentReason() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:AmendmentReasonList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "Error Corrected",
+            "Typo Corrected",
+            "Information Added"
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new AmendmentReasonList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
     ////////////////// Scan Tree Util //////////////////////
     /**

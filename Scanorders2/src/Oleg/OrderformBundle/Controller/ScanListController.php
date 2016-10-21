@@ -152,6 +152,7 @@ class ScanListController extends ListController
      * @Route("/part-titles/", name="parttitle-list")
      * @Route("/system-account-request-types/", name="systemaccountrequesttypes-list")
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers-list")
+     * @Route("/amendment-reasons/", name="amendmentreasons-list")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
@@ -203,6 +204,7 @@ class ScanListController extends ListController
      * @Route("/part-titles/", name="parttitle_create")
      * @Route("/system-account-request-types/", name="systemaccountrequesttypes_create")
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers_create")
+     * @Route("/amendment-reasons/", name="amendmentreasons_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -254,6 +256,7 @@ class ScanListController extends ListController
      * @Route("/part-titles/new", name="parttitle_new")
      * @Route("/system-account-request-types/new", name="systemaccountrequesttypes_new")
      * @Route("/message-type-classifiers/new", name="messagetypeclassifiers_new")
+     * @Route("/amendment-reasons/new", name="amendmentreasons_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -305,6 +308,7 @@ class ScanListController extends ListController
      * @Route("/part-titles/{id}", name="parttitle_show")
      * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_show")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_show")
+     * @Route("/amendment-reasons/{id}", name="amendmentreasons_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -356,6 +360,7 @@ class ScanListController extends ListController
      * @Route("/part-titles/{id}/edit", name="parttitle_edit")
      * @Route("/system-account-request-types/{id}/edit", name="systemaccountrequesttypes_edit")
      * @Route("/message-type-classifiers/{id}/edit", name="messagetypeclassifiers_edit")
+     * @Route("/amendment-reasons/{id}/edit", name="amendmentreasons_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -407,6 +412,7 @@ class ScanListController extends ListController
      * @Route("/part-titles/{id}", name="parttitle_update")
      * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_update")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_update")
+     * @Route("/amendment-reasons/{id}", name="amendmentreasons_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -566,6 +572,10 @@ class ScanListController extends ListController
             $className = "MessageTypeClassifiers";
             $displayName = "Message Type Classifiers";
             break;
+        case "amendmentreasons":
+            $className = "AmendmentReasonList";
+            $displayName = "Amendment Reasons";
+            break;
 
         default:
             $className = null;
@@ -623,6 +633,7 @@ class ScanListController extends ListController
      * @Route("/part-titles/{id}", name="parttitle_delete")
      * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_delete")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_delete")
+     * @Route("/amendment-reasons/{id}", name="amendmentreasons_delete")
      *
      * @Method("DELETE")
      */

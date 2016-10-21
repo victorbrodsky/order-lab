@@ -80,9 +80,10 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
             //console.log( 'treeArr:' );
             //console.log( treeArr );
 
-            //remove readonly if class exists 'combobox-compositetree-enable-child'
+            //this is child combobox creation (attachflag='bottom'): remove readonly if class exists 'combobox-compositetree-enable-child'
             if( comboboxEl.hasClass('combobox-compositetree-enable-child') ) {
-
+                //console.log('rowElHtml='+rowElHtml);
+                rowElHtml = rowElHtml.replace('readonly="readonly"','');
             }
 
             var newElementsAppended = createNewTreenodeCombobox( bundleName, entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'bottom' );

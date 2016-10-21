@@ -42,6 +42,9 @@ class ScanUtilController extends UtilController {
             case "labtesttype":
                 $className = "LabTestType";
                 break;
+            case "amendmentReason":
+                $className = "AmendmentReasonList";
+                break;
             case "embedderinstruction":
                 $className = "EmbedderInstructionList";
                 break;
