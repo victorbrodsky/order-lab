@@ -154,6 +154,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers-list")
      * @Route("/amendment-reasons/", name="amendmentreasons-list")
      * @Route("/patient-lists/", name="patientlists-list")
+     * @Route("/patient-list-hierarchy/", name="patientlisthierarchy-list")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
@@ -207,6 +208,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers_create")
      * @Route("/amendment-reasons/", name="amendmentreasons_create")
      * @Route("/patient-lists/", name="patientlists_create")
+     * @Route("/patient-list-hierarchy/", name="patientlisthierarchy_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -260,6 +262,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/new", name="messagetypeclassifiers_new")
      * @Route("/amendment-reasons/new", name="amendmentreasons_new")
      * @Route("/patient-lists/new", name="patientlists_new")
+     * @Route("/patient-list-hierarchy/new", name="patientlisthierarchy_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -313,6 +316,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_show")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_show")
      * @Route("/patient-lists/{id}", name="patientlists_show")
+     * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -366,6 +370,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}/edit", name="messagetypeclassifiers_edit")
      * @Route("/amendment-reasons/{id}/edit", name="amendmentreasons_edit")
      * @Route("/patient-lists/{id}/edit", name="patientlists_edit")
+     * @Route("/patient-list-hierarchy/{id}/edit", name="patientlisthierarchy_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -419,6 +424,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_update")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_update")
      * @Route("/patient-lists/{id}", name="patientlists_update")
+     * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -582,8 +588,12 @@ class ScanListController extends ListController
             $className = "AmendmentReasonList";
             $displayName = "Amendment Reasons";
             break;
+        case "patientlisthierarchy":
+            $className = "PatientListHierarchy";
+            $displayName = "Patient List Hierarchy";
+            break;
         case "patientlists":
-            $className = "PatientLists";
+            $className = "PatientList";
             $displayName = "Patient Lists";
             break;
 
@@ -645,6 +655,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_delete")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_delete")
      * @Route("/patient-lists/{id}", name="patientlists_delete")
+     * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_delete")
      *
      * @Method("DELETE")
      */

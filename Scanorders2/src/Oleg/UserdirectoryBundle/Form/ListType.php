@@ -166,6 +166,10 @@ class ListType extends AbstractType
             'label' => 'Object Type:',
             'attr' => array('class' => 'combobox')
         ));
+        $builder->add('linkToObjectId',null,array(
+            'label' => 'Linked Object ID:',
+            'attr' => array('class' => 'form-control')
+        ));
 
         $builder->add('itemType',null,array(
             'label' => 'Item Type:',

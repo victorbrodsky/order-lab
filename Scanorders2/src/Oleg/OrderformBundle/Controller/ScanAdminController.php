@@ -15,6 +15,7 @@ use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
+use Oleg\OrderformBundle\Entity\PatientListHierarchy;
 use Oleg\OrderformBundle\Entity\PatientLists;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
 use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
@@ -1974,36 +1975,113 @@ class ScanAdminController extends AdminController
 
     }
 
+//    public function generatePatientLists() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegOrderformBundle:PatientLists')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
+//
+//        $elements = array(
+//            "Pathology Call Complex Patients",
+//        );
+//
+//        $username = $this->get('security.context')->getToken()->getUser();
+//
+//        $count = 10;
+//        foreach( $elements as $name ) {
+//
+//            $entity = new PatientLists();
+//            $this->setDefaultList($entity,$count,$username,$name);
+//
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            $count = $count + 10;
+//
+//        } //foreach
+//
+//        return round($count/10);
+//
+//    }
     public function generatePatientLists() {
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:PatientLists')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $elements = array(
-            "Pathology Call Complex Patients",
-        );
 
         $username = $this->get('security.context')->getToken()->getUser();
 
+        $items = array(
+            "Pathology Call Complex Patients"
+        );
+
         $count = 10;
-        foreach( $elements as $name ) {
+        $level = 0;
 
-            $entity = new PatientLists();
-            $this->setDefaultList($entity,$count,$username,$name);
+        $count = $this->addNestedsetPatientList(null,$items,$level,$username,$count);
 
-            $em->persist($entity);
-            $em->flush();
-
-            $count = $count + 10;
-
-        } //foreach
+        //exit('EOF message category');
 
         return round($count/10);
+    }
+    public function addNestedsetPatientList($parentItem,$items,$level,$username,$count) {
 
+        $em = $this->getDoctrine()->getManager();
+
+        foreach( $items as $category=>$subcategory ) {
+
+            $name = $category;
+
+            if( $subcategory && !is_array($subcategory) ) {
+                $name = $subcategory;
+            }
+
+            //find by name and by parent ($parentItem) if exists
+            if( $parentItem ) {
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'className' => "PatientListHierarchy",
+                    'bundleName' => "OrderformBundle"
+                );
+                $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+            } else {
+                $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($name);
+            }
+
+            if( !$item ) {
+                //make category
+                $item = new PatientListHierarchy();
+
+                $this->setDefaultList($item,$count,$username,$name);
+                $item->setLevel($level);
+
+                $count = $count + 10;
+            }
+
+//            echo $level.": category=".$name.", count=".$count."<br>";
+//            echo "subcategory:<br>";
+//            print_r($subcategory);
+//            echo "<br><br>";
+//            echo "messageCategory=".$item->getName()."<br>";
+
+            //add to parent
+            if( $parentItem ) {
+                $em->persist($parentItem);
+                $parentItem->addChild($item);
+            }
+
+            //$item->printTree();
+
+            //make children
+            if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
+                $count = $this->addNestedsetCategory($item,$subcategory,$level+1,$username,$count);
+            }
+
+
+            $em->persist($item);
+            $em->flush();
+        }
+
+        return $count;
     }
 
     ////////////////// Scan Tree Util //////////////////////
