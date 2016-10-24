@@ -29,7 +29,7 @@ class PatientList extends ListAbstract
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="PatientListHierarchy", inversedBy="patientLists")
+     * @ORM\ManyToOne(targetEntity="PatientListHierarchy", inversedBy="patientLists")
      **/
     private $patientListHierarchy;
 

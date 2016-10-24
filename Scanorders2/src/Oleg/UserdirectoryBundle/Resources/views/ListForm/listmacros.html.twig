@@ -104,8 +104,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
             {% endif %}
 
-            {#{% if entities|first.patients is defined %}#}
-            {% if attribute(entities, getPatients) is defined %}
+            {% if entities|first.patients is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Patients', 'patients') }}</th>
             {% endif %}
 
