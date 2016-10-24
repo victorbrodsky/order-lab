@@ -107,6 +107,27 @@ abstract class ListAbstract
      */
     protected $linkToListId;
 
+    /**
+     * for all items/rows "Object Type"="Dropdown Menu Value"
+     * Platform List Manager List where all items should have "Object Type"="Form Field - Dropdown Menu"
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ObjectTypeList")
+     * @ORM\JoinColumn(name="objectType_id", referencedColumnName="id",nullable=true)
+     */
+    protected $objectType;
+
+    /**
+     * Linked Object ID
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $linkToObjectId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ItemTypeList")
+     * @ORM\JoinColumn(name="itemType_id", referencedColumnName="id",nullable=true)
+     */
+    protected $itemType;
+
+
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
 //     */
@@ -379,6 +400,58 @@ abstract class ListAbstract
     {
         $this->linkToListId = $linkToListId;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjectType()
+    {
+        return $this->objectType;
+    }
+
+    /**
+     * @param mixed $objectType
+     */
+    public function setObjectType($objectType)
+    {
+        $this->objectType = $objectType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLinkToObjectId()
+    {
+        return $this->linkToObjectId;
+    }
+
+    /**
+     * @param mixed $linkToObjectId
+     */
+    public function setLinkToObjectId($linkToObjectId)
+    {
+        $this->linkToObjectId = $linkToObjectId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemType()
+    {
+        return $this->itemType;
+    }
+
+    /**
+     * @param mixed $itemType
+     */
+    public function setItemType($itemType)
+    {
+        $this->itemType = $itemType;
+    }
+
+
+
+
 
 
 

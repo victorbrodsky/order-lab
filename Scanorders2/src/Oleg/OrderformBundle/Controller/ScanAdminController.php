@@ -15,6 +15,7 @@ use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
+use Oleg\OrderformBundle\Entity\PatientLists;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
 use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -156,6 +157,7 @@ class ScanAdminController extends AdminController
         $count_CourseGroupType = $this->generateCourseGroupType();
         $count_SystemAccountRequestType = $this->generateSystemAccountRequestType();
         $count_AmendmentReason = $this->generateAmendmentReason();
+        $count_PatientLists = $this->generatePatientLists();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -187,7 +189,8 @@ class ScanAdminController extends AdminController
             'Research Group Types='.$count_ResearchGroupType.', '.
             'Educational Group Types='.$count_CourseGroupType.', '.
             'SystemAccountRequestTypes='.$count_SystemAccountRequestType.', '.
-            'AmendmentReasons='.$count_AmendmentReason.' '.
+            'AmendmentReasons='.$count_AmendmentReason.', '.
+            'PatientLists='.$count_PatientLists.', '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1958,6 +1961,38 @@ class ScanAdminController extends AdminController
         foreach( $elements as $name ) {
 
             $entity = new AmendmentReasonList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generatePatientLists() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:PatientLists')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "Pathology Call Complex Patients",
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new PatientLists();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);

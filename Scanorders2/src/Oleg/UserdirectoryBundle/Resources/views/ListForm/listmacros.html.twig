@@ -107,6 +107,9 @@
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
 
+            <th>{{ knp_pagination_sortable(entities, 'Object Type', 'ent.objectType') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Item Type', 'ent.itemType') }}</th>
+
             <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>
 
             {#{% if entities|first.listName is defined and entities|first.listRootName is defined %}#}
@@ -271,6 +274,9 @@
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.orderinlist }}</td>
 
+                <td>{{ entity.objectType }}</td>
+                <td>{{ entity.itemType }}</td>
+
                 {#<td>{{ entity.linkToListId }}</td>#}
                 {#{% if entity.linkToListId is defined and entity.listRootName is defined %}#}
                 {% if entity.linkToListId %}
@@ -421,6 +427,9 @@
 
     {{ formmacros.field(form.list.orderinlist) }}
 
+    {{ formmacros.field(form.list.objectType) }}
+    {{ formmacros.field(form.list.itemType) }}
+
     {{ formmacros.field(form.list.linkToListId) }}
 
     {#{% if form.list.updatedby is defined %}#}
@@ -527,6 +536,9 @@
     {{ formmacros.field(edit_form.list.type) }}
 
     {{ formmacros.field(edit_form.list.orderinlist) }}
+
+    {{ formmacros.field(edit_form.list.objectType) }}
+    {{ formmacros.field(edit_form.list.itemType) }}
 
     {{ formmacros.field(edit_form.list.linkToListId) }}
 
