@@ -55,14 +55,24 @@ class PatientListHierarchy extends BaseCompositeNode {
     protected $original;
 
 
+
+    /**
+     * Organizational Group Types - mapper between the level number and level title.
+     * For example, OrganizationalGroupType with level=1, set this level to 1.
+     * Default types have a positive level numbers, all other types have negative level numbers.
+     *
+     * @ORM\ManyToOne(targetEntity="PatientListHierarchyGroupType", cascade={"persist"})
+     */
+    private $organizationalGroupType;
+
     /**
      * @ORM\OneToMany(targetEntity="PatientList", mappedBy="patientListHierarchy", cascade={"persist","remove"})
      **/
     private $patientLists;
 //    /**
-//     * @ORM\ManyToMany(targetEntity="Patient", mappedBy="patientListHierarchy")
+//     * @ORM\ManyToMany(targetEntity="PatientList", mappedBy="patientListHierarchy")
 //     **/
-//    private $patients;
+//    private $patientLists;
 
 
     public function __construct() {
@@ -89,6 +99,25 @@ class PatientListHierarchy extends BaseCompositeNode {
     {
         $this->patientLists->removeElement($item);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOrganizationalGroupType()
+    {
+        return $this->organizationalGroupType;
+    }
+
+    /**
+     * @param mixed $organizationalGroupType
+     */
+    public function setOrganizationalGroupType($organizationalGroupType)
+    {
+        $this->organizationalGroupType = $organizationalGroupType;
+    }
+
+
+
 
 
     public function getClassName() {

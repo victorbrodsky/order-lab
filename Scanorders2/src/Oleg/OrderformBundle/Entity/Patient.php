@@ -1057,13 +1057,13 @@ class Patient extends ObjectAbstract
         return $keyStr;
     }
 
-    public function getFullPatientName() {
+    public function getFullPatientName($htmlTags=true) {
 
         $patientFullNameValid = "";
         $patientFullNameAlias = "";
 
-        $patientFullNameValidArr = $this->patientName('valid');
-        $patientFullNameAliasArr = $this->patientName('alias');
+        $patientFullNameValidArr = $this->patientName('valid',$htmlTags);
+        $patientFullNameAliasArr = $this->patientName('alias',$htmlTags);
 
         if( $patientFullNameValidArr && count($patientFullNameValidArr) > 0 ) {
             $patientFullNameValid = implode("; ",$patientFullNameValidArr);
@@ -1082,7 +1082,7 @@ class Patient extends ObjectAbstract
     }
 
     //Lastname, Firstname, Middlename
-    public function patientName($status) {
+    public function patientName($status,$htmlTags=true) {
 
         $patientFullNameArr = array();
 
@@ -1113,11 +1113,22 @@ class Patient extends ObjectAbstract
         $orderArr = $resArr['orderArr'];
         $firstNameArrOrder = $resArr['destArr'];
 
-        $resArr = $this->rearangeNameArrByOrder($orderArr,$middleNameArr,$middleNameArrOrder,array('<i>','</i>'));
+        if( $htmlTags ) {
+            $htmlTagsMiddleArr = array('<i>','</i>');
+        } else {
+            $htmlTagsMiddleArr = null;
+        }
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$middleNameArr,$middleNameArrOrder,$htmlTagsMiddleArr);
         $orderArr = $resArr['orderArr'];
         $middleNameArrOrder = $resArr['destArr'];
 
-        $resArr = $this->rearangeNameArrByOrder($orderArr,$lastNameArr,$lastNameArrOrder,array('<b>','</b>'));
+
+        if( $htmlTags ) {
+            $htmlTagsLastArr = array('<b>','</b>');
+        } else {
+            $htmlTagsLastArr = null;
+        }
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$lastNameArr,$lastNameArrOrder,$htmlTagsLastArr);
         $orderArr = $resArr['orderArr'];
         $lastNameArrOrder = $resArr['destArr'];
 
@@ -1575,6 +1586,38 @@ class Patient extends ObjectAbstract
         }
 
         $patientInfo = implode(", ",$patientInfoArr);
+
+        return $patientInfo;
+    }
+
+    public function obtainPatientInfoSimple( $status='valid' ) {
+
+        $patientInfoArr = array();
+
+        $patientInfoArr[] = "ID# ".$this->getId();
+
+        $mrnRes = $this->obtainStatusField('mrn', $status);
+        if( $mrnRes ) {
+            $mrntypeStr = $mrnRes->getKeytype()->getOptimalName();
+            $patientInfoArr[] = $mrntypeStr.": ".$mrnRes->getField();
+        }
+
+        $fullName = $this->getFullPatientName(false);
+        if( $fullName ) {
+            //echo "fullName <br>";
+            $patientInfoArr[] = $fullName;
+        } else {
+            $patientInfoArr[] = "No Name Provided";
+        }
+
+        $dobRes = $this->obtainStatusField('dob', $status);
+        if( $dobRes && $dobRes."" ) {
+            //echo "dobRes=$dobRes <br>";
+            $patientInfoArr[] = $dobRes." date of birth";
+        }
+
+
+        $patientInfo = implode("; ",$patientInfoArr);
 
         return $patientInfo;
     }

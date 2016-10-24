@@ -121,12 +121,6 @@ abstract class ListAbstract
      */
     protected $linkToObjectId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ItemTypeList")
-     * @ORM\JoinColumn(name="itemType_id", referencedColumnName="id",nullable=true)
-     */
-    protected $itemType;
-
 
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
@@ -431,22 +425,6 @@ abstract class ListAbstract
     public function setLinkToObjectId($linkToObjectId)
     {
         $this->linkToObjectId = $linkToObjectId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getItemType()
-    {
-        return $this->itemType;
-    }
-
-    /**
-     * @param mixed $itemType
-     */
-    public function setItemType($itemType)
-    {
-        $this->itemType = $itemType;
     }
 
 

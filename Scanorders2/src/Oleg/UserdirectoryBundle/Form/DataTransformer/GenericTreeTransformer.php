@@ -12,6 +12,7 @@ namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
 
 use Oleg\OrderformBundle\Entity\MessageCategory;
+use Oleg\OrderformBundle\Entity\PatientListHierarchy;
 use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
 use Oleg\UserdirectoryBundle\Entity\CommentTypeList;
 use Oleg\UserdirectoryBundle\Entity\Institution;
@@ -267,6 +268,14 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "Oleg",
                     'organizationalGroupType' => "MessageTypeClassifiers",
+                    'bundleName' => "OrderformBundle"
+                );
+            }
+
+            if( $entity instanceof PatientListHierarchy ) {
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'organizationalGroupType' => "PatientListHierarchyGroupType",
                     'bundleName' => "OrderformBundle"
                 );
             }

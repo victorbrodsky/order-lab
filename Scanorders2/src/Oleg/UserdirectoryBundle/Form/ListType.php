@@ -171,10 +171,6 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('itemType',null,array(
-            'label' => 'Item Type:',
-            'attr' => array('class' => 'combobox')
-        ));
 
     }
 

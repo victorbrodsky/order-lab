@@ -2089,6 +2089,7 @@ class ScanAdminController extends AdminController
      * @Route("/list/research-project-titles-tree/", name="scan_tree_researchprojecttitles_list")
      * @Route("/list/educational-course-titles-tree/", name="scan_tree_educationalcoursetitles_list")
      * @Route("/list/message-categories-tree/", name="scan_tree_messagecategories_list")
+     * @Route("/list/patient-lists-tree/", name="scan_tree_patientlisthierarchy_list")
      *
      * @Method("GET")
      */
@@ -2128,6 +2129,13 @@ class ScanAdminController extends AdminController
             $className = "MessageCategory";
             $title = "Message Categories Tree Management";
             $nodeshowpath = "messagecategorys_show";
+        }
+
+        if( $routeName == "scan_tree_patientlisthierarchy_list" ) {
+            $bundleName = "OrderformBundle";
+            $className = "PatientListHierarchy";
+            $title = "Patient Lists Hierarchy Management";
+            $nodeshowpath = "patientlisthierarchy_show";
         }
 
         $mapper = array(

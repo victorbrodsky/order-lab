@@ -99,7 +99,6 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes-list")
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty-list")
      * @Route("/list/object-types/", name="objecttypes-list")
-     * @Route("/list/item-types/", name="itemtypes-list")
      *
      *
      * @Method("GET")
@@ -143,7 +142,6 @@ class ListController extends Controller
         $dql->addGroupBy('original.name');
 
         $dql->leftJoin("ent.objectType", "objectType");
-        $dql->leftJoin("ent.itemType", "itemType");
 
 //        if( method_exists($entityClass,'getResearchlab') ) {
 //            $dql->leftJoin("ent.researchlab", "researchlab");
@@ -203,6 +201,11 @@ class ListController extends Controller
         if( method_exists($entityClass,'getFellowshipSubspecialty') ) {
             $dql->leftJoin("ent.fellowshipSubspecialty", "fellowshipSubspecialty");
             $dql->addGroupBy('fellowshipSubspecialty.name');
+        }
+
+        if( method_exists($entityClass,'getPatients') ) {
+            $dql->leftJoin("ent.patients", "patients");
+            //$dql->addGroupBy('patients.name');
         }
 
 
@@ -346,7 +349,6 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes_create")
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty_create")
      * @Route("/list/object-types/", name="objecttypes_create")
-     * @Route("/list/item-types/", name="itemtypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -504,7 +506,6 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/new", name="vacreqrequesttypes_new")
      * @Route("/list/healthcare-provider-specialties/new", name="healthcareproviderspecialty_new")
      * @Route("/list/object-types/new", name="objecttypes_new")
-     * @Route("/list/item-types/new", name="itemtypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -633,7 +634,6 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_show")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_show")
      * @Route("/list/object-types/{id}", name="objecttypes_show")
-     * @Route("/list/item-types/{id}", name="itemtypes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -752,7 +752,6 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/{id}/edit", name="vacreqrequesttypes_edit")
      * @Route("/list/healthcare-provider-specialties/{id}/edit", name="healthcareproviderspecialty_edit")
      * @Route("/list/object-types/{id}/edit", name="objecttypes_edit")
-     * @Route("/list/item-types/{id}/edit", name="itemtypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -917,7 +916,6 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_update")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_update")
      * @Route("/list/object-types/{id}", name="objecttypes_update")
-     * @Route("/list/item-types/{id}", name="itemtypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1529,10 +1527,6 @@ class ListController extends Controller
                 $className = "ObjectTypeList";
                 $displayName = "Object Types";
                 break;
-            case "itemtypes":
-                $className = "ItemTypeList";
-                $displayName = "Item Types";
-                break;
 
 
             default:
@@ -1660,7 +1654,6 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_delete")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_delete")
      * @Route("/list/object-types/{id}", name="objecttypes_delete")
-     * @Route("/list/item-types/{id}", name="itemtypes_delete")
      *
      *
      * @Method("DELETE")

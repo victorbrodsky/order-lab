@@ -34,7 +34,12 @@ class PatientList extends ListAbstract
     private $patientListHierarchy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Patient")
+     *
+     * @ORM\ManyToMany(targetEntity="Patient")
+     * @ORM\JoinTable(name="scan_patientList_patient",
+     *      joinColumns={@ORM\JoinColumn(name="patientList_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="patient_id", referencedColumnName="id")}
+     *      )
      */
     private $patients;
 
@@ -47,7 +52,7 @@ class PatientList extends ListAbstract
     }
 
 
-    public function getPatient()
+    public function getPatients()
     {
         return $this->patients;
     }

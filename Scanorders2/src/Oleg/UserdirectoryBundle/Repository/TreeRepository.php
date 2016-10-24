@@ -762,6 +762,8 @@ class TreeRepository extends NestedTreeRepository {
 
         if( $organizationalGroupType ) {
             $levelTitle = $organizationalGroupType->getName()."";
+        } else {
+            $levelTitle = "Level ".$level;
         }
 
         return $levelTitle;
@@ -770,6 +772,10 @@ class TreeRepository extends NestedTreeRepository {
 
 
     public function getDefaultLevelEntity( $mapper, $level ) {
+
+        if( !array_key_exists('organizationalGroupType', $mapper) || !$mapper['organizationalGroupType'] ) {
+            return null;
+        }
 
         $organizationalGroupTypes = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
             array(

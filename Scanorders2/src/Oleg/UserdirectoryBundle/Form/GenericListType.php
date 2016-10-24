@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Entity\PatientList;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
@@ -445,6 +446,18 @@ class GenericListType extends AbstractType
             $builder->add('listRootName',null,array(
                 'label'=>'Root Name:',
                 'attr' => array('class'=>'form-control')
+            ));
+        }
+
+        //PatientList
+        if( $this->params['entity'] instanceof PatientList ) {
+            $builder->add('patients','entity',array(
+                'class' => 'OlegOrderformBundle:Patient',
+                'property' => 'obtainPatientInfoSimple',
+                'label'=>'Patients:',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width')
             ));
         }
 

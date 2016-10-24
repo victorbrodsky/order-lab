@@ -104,12 +104,16 @@
                 <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
             {% endif %}
 
+            {#{% if entities|first.patients is defined %}#}
+            {% if attribute(entities, getPatients) is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Patients', 'patients') }}</th>
+            {% endif %}
+
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
 
             <th>{{ knp_pagination_sortable(entities, 'Object Type', 'objectType.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Linked Object ID', 'ent.linkToObjectId') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Item Type', 'itemType.name') }}</th>
 
             <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>
 
@@ -272,12 +276,19 @@
                     </td>
                 {% endif %}
 
+                {% if entity.patients is defined %}
+                    <td>
+                        {% for patient in entity.patients %}
+                            <p>{{ patient.obtainPatientInfoShort }}</p>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.orderinlist }}</td>
 
                 <td>{{ entity.objectType }}</td>
                 <td>{{ entity.linkToObjectId }}</td>
-                <td>{{ entity.itemType }}</td>
 
                 {#<td>{{ entity.linkToListId }}</td>#}
                 {#{% if entity.linkToListId is defined and entity.listRootName is defined %}#}
@@ -431,7 +442,6 @@
 
     {{ formmacros.field(form.list.objectType) }}
     {{ formmacros.field(form.list.linkToObjectId) }}
-    {{ formmacros.field(form.list.itemType) }}
 
     {{ formmacros.field(form.list.linkToListId) }}
 
@@ -542,7 +552,6 @@
 
     {{ formmacros.field(edit_form.list.objectType) }}
     {{ formmacros.field(edit_form.list.linkToObjectId) }}
-    {{ formmacros.field(edit_form.list.itemType) }}
 
     {{ formmacros.field(edit_form.list.linkToListId) }}
 
@@ -637,6 +646,10 @@
 
     {% if form.sites is defined %}
         {{ formmacros.field(form.sites) }}
+    {% endif %}
+
+    {% if form.patients is defined %}
+        {{ formmacros.field(form.patients) }}
     {% endif %}
 
     {#floors display for: suites, rooms#}

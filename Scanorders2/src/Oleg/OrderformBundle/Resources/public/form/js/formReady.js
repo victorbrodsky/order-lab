@@ -99,6 +99,7 @@ $(document).ready(function() {
     getJstree('OrderformBundle','ProjectTitleTree');
     getJstree('OrderformBundle','CourseTitleTree');
     getJstree('OrderformBundle','MessageCategory');
+    getJstree('OrderformBundle','PatientListHierarchy');
 
     initDatetimepicker();
 

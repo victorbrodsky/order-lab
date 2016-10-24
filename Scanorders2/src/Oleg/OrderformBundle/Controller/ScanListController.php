@@ -155,6 +155,7 @@ class ScanListController extends ListController
      * @Route("/amendment-reasons/", name="amendmentreasons-list")
      * @Route("/patient-lists/", name="patientlists-list")
      * @Route("/patient-list-hierarchy/", name="patientlisthierarchy-list")
+     * @Route("/patient-list-hierarchy-group-types/", name="patientlisthierarchygrouptype-list")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
@@ -209,6 +210,7 @@ class ScanListController extends ListController
      * @Route("/amendment-reasons/", name="amendmentreasons_create")
      * @Route("/patient-lists/", name="patientlists_create")
      * @Route("/patient-list-hierarchy/", name="patientlisthierarchy_create")
+     * @Route("/patient-list-hierarchy-group-types/", name="patientlisthierarchygrouptype_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -263,6 +265,7 @@ class ScanListController extends ListController
      * @Route("/amendment-reasons/new", name="amendmentreasons_new")
      * @Route("/patient-lists/new", name="patientlists_new")
      * @Route("/patient-list-hierarchy/new", name="patientlisthierarchy_new")
+     * @Route("/patient-list-hierarchy-group-types/new", name="patientlisthierarchygrouptype_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -316,7 +319,8 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_show")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_show")
      * @Route("/patient-lists/{id}", name="patientlists_show")
-     * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_show")
+     * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_show", options={"expose"=true})
+     * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -371,6 +375,7 @@ class ScanListController extends ListController
      * @Route("/amendment-reasons/{id}/edit", name="amendmentreasons_edit")
      * @Route("/patient-lists/{id}/edit", name="patientlists_edit")
      * @Route("/patient-list-hierarchy/{id}/edit", name="patientlisthierarchy_edit")
+     * @Route("/patient-list-hierarchy-group-types/{id}/edit", name="patientlisthierarchygrouptype_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -425,6 +430,7 @@ class ScanListController extends ListController
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_update")
      * @Route("/patient-lists/{id}", name="patientlists_update")
      * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_update")
+     * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -596,6 +602,11 @@ class ScanListController extends ListController
             $className = "PatientList";
             $displayName = "Patient Lists";
             break;
+        case "patientlisthierarchygrouptype":
+            $className = "PatientListHierarchyGroupType";
+            $displayName = "Patient List Hierarchy Group Types";
+            break;
+
 
         default:
             $className = null;
@@ -656,6 +667,7 @@ class ScanListController extends ListController
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_delete")
      * @Route("/patient-lists/{id}", name="patientlists_delete")
      * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_delete")
+     * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_delete")
      *
      * @Method("DELETE")
      */

@@ -509,6 +509,9 @@ class TreeController extends Controller {
             case "MessageCategory":
                 $organizationalGroupType = "MessageTypeClassifiers";
                 break;
+            case "PatientListHierarchy":
+                $organizationalGroupType = "PatientListHierarchyGroupType";
+                break;
             default:
                 //$className = null;
         }
