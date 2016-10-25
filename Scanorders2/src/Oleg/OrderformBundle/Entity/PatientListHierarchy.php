@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Gedmo\Tree(type="nested")
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
- *  name="scan_patientLists",
+ *  name="scan_patientListHierarchy",
  *  indexes={
  *      @ORM\Index( name="patientListHierarchy_name_idx", columns={"name"} ),
  *  }
@@ -65,10 +65,10 @@ class PatientListHierarchy extends BaseCompositeNode {
      */
     private $organizationalGroupType;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientList", mappedBy="patientListHierarchy", cascade={"persist","remove"})
-     **/
-    private $patientLists;
+//    /**
+//     * @ORM\OneToMany(targetEntity="PatientList", mappedBy="patientListHierarchy", cascade={"persist","remove"})
+//     **/
+//    private $patientLists;
 //    /**
 //     * @ORM\ManyToMany(targetEntity="PatientList", mappedBy="patientListHierarchy")
 //     **/
@@ -78,27 +78,27 @@ class PatientListHierarchy extends BaseCompositeNode {
     public function __construct() {
         parent::__construct();
 
-        $this->patientLists = new ArrayCollection();
+        //$this->patientLists = new ArrayCollection();
     }
 
 
 
-    public function getPatientLists()
-    {
-        return $this->patientLists;
-    }
-    public function addPatientList($item)
-    {
-        if( !$this->patientLists->contains($item) ) {
-            $this->patientLists->add($item);
-        }
-
-        return $this;
-    }
-    public function removePatientList($item)
-    {
-        $this->patientLists->removeElement($item);
-    }
+//    public function getPatientLists()
+//    {
+//        return $this->patientLists;
+//    }
+//    public function addPatientList($item)
+//    {
+//        if( !$this->patientLists->contains($item) ) {
+//            $this->patientLists->add($item);
+//        }
+//
+//        return $this;
+//    }
+//    public function removePatientList($item)
+//    {
+//        $this->patientLists->removeElement($item);
+//    }
 
     /**
      * @return mixed

@@ -203,10 +203,10 @@ class ListController extends Controller
             $dql->addGroupBy('fellowshipSubspecialty.name');
         }
 
-        if( method_exists($entityClass,'getPatients') ) {
-            $dql->leftJoin("ent.patients", "patients");
-            //$dql->addGroupBy('patients.name');
-        }
+//        if( method_exists($entityClass,'getPatients') ) {
+//            $dql->leftJoin("ent.patients", "patients");
+//            //$dql->addGroupBy('patients.name');
+//        }
 
 
         //$dql->orderBy("ent.createdate","DESC");

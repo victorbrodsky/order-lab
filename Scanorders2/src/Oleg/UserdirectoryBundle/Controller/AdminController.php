@@ -14,6 +14,7 @@ use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
 use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
+use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Oleg\UserdirectoryBundle\Entity\ObjectTypeList;
@@ -166,6 +167,8 @@ class AdminController extends Controller
 
         //$count_EventTypeListSync = $this->syncEventTypeListDb(); //must be the first to update already existing objects. Can run on empty DB
 
+        //testing
+        $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -255,6 +258,7 @@ class AdminController extends Controller
         $count_PermissionActions = $this->generatePermissionActions();
 
         $count_ObjectTypeActions = $this->generateObjectTypeActions();
+        $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
 
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
         $count_VacReqRequestTypeList = $this->generateVacReqRequestTypeList();
@@ -325,6 +329,7 @@ class AdminController extends Controller
             'PermissionObjects ='.$count_PermissionObjects.', '.
             'PermissionActions ='.$count_PermissionActions.', '.
             'ObjectTypeActions='.$count_ObjectTypeActions.', '.
+            'setObjectTypeForAllLists='.$count_setObjectTypeForAllLists.', '.
             'Collaboration Types='.$collaborationtypes.', '.
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
@@ -4876,20 +4881,47 @@ class AdminController extends Controller
             "Form Field - Day of the Week",
             "Form Field - Dropdown Menu",
             "Dropdown Menu Value",
-            "Linked Object - Patient",
+            array(
+                'name' => "Linked Object - Patient",
+                'entityNamespace' => 'Oleg\OrderformBundle\Entity',
+                'entityName' => 'Patient'
+            ),
         );
 
         $count = 10;
         foreach( $types as $type ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeList')->findOneByName($type);
+            if( is_array($type) ) {
+                $name = $type['name'];
+                $entityNamespace = $type['entityNamespace'];
+                $entityName = $type['entityName'];
+            } else {
+                //echo "string ";
+                $name = $type;
+                $entityNamespace = NULL;
+                $entityName = NULL;
+            }
+
+            //echo "name=".$name."<br>";
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
 
             $listEntity = new ObjectTypeList();
-            $this->setDefaultList($listEntity,$count,$username,$type);
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
+            if( $entityNamespace ) {
+                //echo "entityNamespace=".$entityNamespace."<br>";
+                $listEntity->setEntityNamespace($entityNamespace);
+            }
+            if( $entityName ) {
+                //echo "entityName=".$entityName."<br>";
+                $listEntity->setEntityName($entityName);
+            }
+
+            //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
             $em->flush();
 
@@ -4897,6 +4929,30 @@ class AdminController extends Controller
         }
 
         return round($count/10);
+    }
+    //set "Object Type"="Dropdown Menu Value" (referring to this list) for all items/rows on all lists
+    // except the root Platform List Manager List where all items should have "Object Type"="Form Field - Dropdown Menu"
+    public function setObjectTypeForAllLists() {
+
+//        $children  = array();
+//        foreach( get_declared_classes() as $class ){
+//            //echo "0 class=".$class."<br>";
+//            if( $class instanceof ListAbstract ) {
+//            //if( is_subclass_of( $class, 'ListAbstract' ) ) {
+//                $children[] = $class;
+//                echo "ListAbstract class=".$class."<br>";
+//            }
+//        }
+
+        echo $this->get_extends_number('ListAbstract')."<br>";
+
+        exit('exit');
+    }
+    public function get_extends_number($base){
+        $rt=0;
+        foreach( get_declared_classes() as $class )
+            if( is_subclass_of($class,$base) ) $rt++;
+        return $rt;
     }
 
     public function generateEventObjectTypeList() {

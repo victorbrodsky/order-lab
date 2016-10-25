@@ -16,7 +16,6 @@ use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
 use Oleg\OrderformBundle\Entity\PatientListHierarchy;
-use Oleg\OrderformBundle\Entity\PatientLists;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
 use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -158,7 +157,7 @@ class ScanAdminController extends AdminController
         $count_CourseGroupType = $this->generateCourseGroupType();
         $count_SystemAccountRequestType = $this->generateSystemAccountRequestType();
         $count_AmendmentReason = $this->generateAmendmentReason();
-        $count_PatientLists = $this->generatePatientLists();
+        $count_PatientListHierarchy = $this->generatePatientListHierarchy();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -191,7 +190,7 @@ class ScanAdminController extends AdminController
             'Educational Group Types='.$count_CourseGroupType.', '.
             'SystemAccountRequestTypes='.$count_SystemAccountRequestType.', '.
             'AmendmentReasons='.$count_AmendmentReason.', '.
-            'PatientLists='.$count_PatientLists.', '.
+            'PatientListHierarchy='.$count_PatientListHierarchy.', '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1241,7 +1240,7 @@ class ScanAdminController extends AdminController
             }
 
             //testing
-            if( 1 ) {
+            if( 0 ) {
                 if ($messageCategory->getOrganizationalGroupType()) {
                     $label = $messageCategory->getOrganizationalGroupType()->getName();
                 } else {
@@ -1975,38 +1974,8 @@ class ScanAdminController extends AdminController
 
     }
 
-//    public function generatePatientLists() {
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegOrderformBundle:PatientLists')->findAll();
-//
-//        if( $entities ) {
-//            return -1;
-//        }
-//
-//        $elements = array(
-//            "Pathology Call Complex Patients",
-//        );
-//
-//        $username = $this->get('security.context')->getToken()->getUser();
-//
-//        $count = 10;
-//        foreach( $elements as $name ) {
-//
-//            $entity = new PatientLists();
-//            $this->setDefaultList($entity,$count,$username,$name);
-//
-//            $em->persist($entity);
-//            $em->flush();
-//
-//            $count = $count + 10;
-//
-//        } //foreach
-//
-//        return round($count/10);
-//
-//    }
-    public function generatePatientLists() {
+
+    public function generatePatientListHierarchy() {
 
         $username = $this->get('security.context')->getToken()->getUser();
 
@@ -2017,13 +1986,13 @@ class ScanAdminController extends AdminController
         $count = 10;
         $level = 0;
 
-        $count = $this->addNestedsetPatientList(null,$items,$level,$username,$count);
+        $count = $this->addNestedsetPatientListHierarchy(null,$items,$level,$username,$count);
 
         //exit('EOF message category');
 
         return round($count/10);
     }
-    public function addNestedsetPatientList($parentItem,$items,$level,$username,$count) {
+    public function addNestedsetPatientListHierarchy($parentItem,$items,$level,$username,$count) {
 
         $em = $this->getDoctrine()->getManager();
 

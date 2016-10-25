@@ -104,10 +104,6 @@
                 <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
             {% endif %}
 
-            {% if entities|first.patients is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Patients', 'patients') }}</th>
-            {% endif %}
-
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
 
@@ -275,13 +271,6 @@
                     </td>
                 {% endif %}
 
-                {% if entity.patients is defined %}
-                    <td>
-                        {% for patient in entity.patients %}
-                            <p>{{ patient.obtainPatientInfoShort }}</p>
-                        {% endfor %}
-                    </td>
-                {% endif %}
 
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.orderinlist }}</td>
@@ -647,9 +636,6 @@
         {{ formmacros.field(form.sites) }}
     {% endif %}
 
-    {% if form.patients is defined %}
-        {{ formmacros.field(form.patients) }}
-    {% endif %}
 
     {#floors display for: suites, rooms#}
     {% if form.floors is defined %}

@@ -153,7 +153,7 @@ class ScanListController extends ListController
      * @Route("/system-account-request-types/", name="systemaccountrequesttypes-list")
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers-list")
      * @Route("/amendment-reasons/", name="amendmentreasons-list")
-     * @Route("/patient-lists/", name="patientlists-list")
+     * @Route("/pathology-call-complex-patients/", name="pathologycallcomplexpatients-list")
      * @Route("/patient-list-hierarchy/", name="patientlisthierarchy-list")
      * @Route("/patient-list-hierarchy-group-types/", name="patientlisthierarchygrouptype-list")
      *
@@ -208,7 +208,7 @@ class ScanListController extends ListController
      * @Route("/system-account-request-types/", name="systemaccountrequesttypes_create")
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers_create")
      * @Route("/amendment-reasons/", name="amendmentreasons_create")
-     * @Route("/patient-lists/", name="patientlists_create")
+     * @Route("/pathology-call-complex-patients/", name="pathologycallcomplexpatients_create")
      * @Route("/patient-list-hierarchy/", name="patientlisthierarchy_create")
      * @Route("/patient-list-hierarchy-group-types/", name="patientlisthierarchygrouptype_create")
      *
@@ -263,7 +263,7 @@ class ScanListController extends ListController
      * @Route("/system-account-request-types/new", name="systemaccountrequesttypes_new")
      * @Route("/message-type-classifiers/new", name="messagetypeclassifiers_new")
      * @Route("/amendment-reasons/new", name="amendmentreasons_new")
-     * @Route("/patient-lists/new", name="patientlists_new")
+     * @Route("/pathology-call-complex-patients/new", name="pathologycallcomplexpatients_new")
      * @Route("/patient-list-hierarchy/new", name="patientlisthierarchy_new")
      * @Route("/patient-list-hierarchy-group-types/new", name="patientlisthierarchygrouptype_new")
      *
@@ -318,7 +318,7 @@ class ScanListController extends ListController
      * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_show")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_show")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_show")
-     * @Route("/patient-lists/{id}", name="patientlists_show")
+     * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_show")
      * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_show", options={"expose"=true})
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_show")
      *
@@ -373,7 +373,7 @@ class ScanListController extends ListController
      * @Route("/system-account-request-types/{id}/edit", name="systemaccountrequesttypes_edit")
      * @Route("/message-type-classifiers/{id}/edit", name="messagetypeclassifiers_edit")
      * @Route("/amendment-reasons/{id}/edit", name="amendmentreasons_edit")
-     * @Route("/patient-lists/{id}/edit", name="patientlists_edit")
+     * @Route("/pathology-call-complex-patients/{id}/edit", name="pathologycallcomplexpatients_edit")
      * @Route("/patient-list-hierarchy/{id}/edit", name="patientlisthierarchy_edit")
      * @Route("/patient-list-hierarchy-group-types/{id}/edit", name="patientlisthierarchygrouptype_edit")
      *
@@ -428,7 +428,7 @@ class ScanListController extends ListController
      * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_update")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_update")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_update")
-     * @Route("/patient-lists/{id}", name="patientlists_update")
+     * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_update")
      * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_update")
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_update")
      *
@@ -598,9 +598,11 @@ class ScanListController extends ListController
             $className = "PatientListHierarchy";
             $displayName = "Patient List Hierarchy";
             break;
-        case "patientlists":
-            $className = "PatientList";
-            $displayName = "Patient Lists";
+        case "pathologycallcomplexpatients":
+            $className = "PathologyCallComplexPatients";
+            $displayName = "Pathology Call Complex Patients";
+            $classPath = "Oleg\\CallLogBundle\\Entity\\";
+            $bundleName = "OlegCallLogBundle";
             break;
         case "patientlisthierarchygrouptype":
             $className = "PatientListHierarchyGroupType";
@@ -665,7 +667,7 @@ class ScanListController extends ListController
      * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_delete")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_delete")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_delete")
-     * @Route("/patient-lists/{id}", name="patientlists_delete")
+     * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_delete")
      * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_delete")
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_delete")
      *

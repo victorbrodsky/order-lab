@@ -434,6 +434,16 @@ class Logger
      */
     public function setEntityNamespace($entityNamespace)
     {
+        //remove "Proxies\__CG__\" in Proxies\__CG__\Oleg\UserdirectoryBundle\Entity
+        $proxyStr = "Proxies\__CG__\\";
+        //$proxyStr = "Oleg\UserdirectoryBundle\\";
+        //echo "proxyStr=".$proxyStr."<br>";
+        if( strpos($entityNamespace, $proxyStr) !== false ) {
+            //echo "remove=".$proxyStr."<br>";
+            $entityNamespace = str_replace($proxyStr, "", $entityNamespace);
+        }
+        //exit("entityNamespace=".$entityNamespace);
+
         $this->entityNamespace = $entityNamespace;
     }
 
