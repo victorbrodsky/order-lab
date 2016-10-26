@@ -438,6 +438,11 @@ class VacReqUtil
             $carryOverDays = $this->getUserCarryOverDays($user,$yearRange);
         }
 
+//        echo "yearRange=".$yearRange."<br>";
+//        echo "totalAllocatedDays=".$totalAllocatedDays."<br>";
+//        echo "vacationDays=".$vacationDays."<br>";
+//        echo "carryOverDays=".$carryOverDays."<br>";
+
         $res = array(
             'numberOfDays' => ( (int)$totalAllocatedDays - (int)$vacationDays + (int)$carryOverDays ),
             'accurate' => $vacationAccurate

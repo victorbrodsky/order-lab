@@ -55,9 +55,11 @@ class RequestController extends Controller
 //        $currentYear = $currentYear->format('Y');
 //        $previousYear = $currentYear - 1;
 //        $yearRange = $previousYear."-".$currentYear;
-//        $approvedDays = $vacreqUtil->getApprovedTotalDaysAcademicYear($user,"vacation",$yearRange);
+//        $yearRange = "2015-2016";
+//        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername("rhoda_@_wcmc-cwid"); //moa3002_@_wcmc-cwid
+//        $approvedDays = $vacreqUtil->getApprovedTotalDaysAcademicYear($subjectUser,"vacation",$yearRange);
 //        //print_r($approvedDays);
-//        echo "<br>##### approvedDays=".$approvedDays['numberOfDays']."<br>";
+//        echo "<br>##### approvedDays=".$approvedDays['numberOfDays']." (it should be 11?)<br>";
 //        if( $approvedDays['accurate'] ) {
 //            echo "accurate<br>";
 //        } else {

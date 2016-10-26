@@ -558,8 +558,8 @@ class CallEntryController extends Controller
         $message->addSource($source);
 
         //set order category
-        //$categoryStr = "Pathology Call Log Entry";
-        $categoryStr = "First Dose Plasma";
+        $categoryStr = "Pathology Call Log Entry";
+        //$categoryStr = "First Dose Plasma";
         $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         if( !$messageCategory ) {
             throw new \Exception( "Location type is not found by name '".$categoryStr."'" );

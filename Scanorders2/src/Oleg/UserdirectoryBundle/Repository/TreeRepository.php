@@ -763,7 +763,7 @@ class TreeRepository extends NestedTreeRepository {
         if( $organizationalGroupType ) {
             $levelTitle = $organizationalGroupType->getName()."";
         } else {
-            $levelTitle = "Level ".$level;
+            //$levelTitle = "Level ".$level; //if enabled then it adds another child level with label="Level 5"
         }
 
         return $levelTitle;

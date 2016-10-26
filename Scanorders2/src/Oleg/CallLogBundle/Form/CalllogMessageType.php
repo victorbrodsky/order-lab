@@ -85,20 +85,26 @@ class CalllogMessageType extends AbstractType
             $form = $event->getForm();
 
             $label = null;
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "MessageCategory",
+                'bundleName' => "OrderformBundle",
+                'organizationalGroupType' => "MessageTypeClassifiers"
+            );
             if( $message ) {
                 $messageCategory = $message->getMessageCategory();
                 if( $messageCategory ) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory);
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory,$mapper);
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null);
+                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null,$mapper) . ":";
             }
 
             //echo "show defaultInstitution label=".$label."<br>";
 
             $form->add('messageCategory', 'employees_custom_selector', array(
-                'label' => 'Message Type:',
+                'label' => $label,
                 'required' => false,
                 //'read_only' => true,
                 'attr' => array(
@@ -116,6 +122,7 @@ class CalllogMessageType extends AbstractType
 
         $builder->add('version', null, array(
             'label' => 'Message Version:',
+            'read_only' => true,
             'required' => true,
             'attr' => array('class' => 'form-control')
         ));
@@ -125,6 +132,22 @@ class CalllogMessageType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'ajax-combobox-amendmentReason', 'type' => 'hidden'),
             'classtype' => 'amendmentReason'
+        ));
+
+        $builder->add('addPatientToList', 'checkbox', array(
+            'label' => 'Add patient to the list:',
+            'mapped' => false,
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('patientListTitle', 'entity', array(
+            'label' => 'List Title:',
+            'mapped' => false,
+            //'required' => false,
+            'property' => 'name',
+            //'data' => false,
+            'class' => 'OlegOrderformBundle:PatientListHierarchy',
+            'attr' => array('class' => 'combobox combobox-width')
         ));
 
 

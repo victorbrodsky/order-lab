@@ -40,6 +40,11 @@ class TimeZoneUtil {
             $timeOffset = $dateTimeZone->getOffset($dateTime);
 
             $timeOffset = $timeOffset / 3600;
+
+            if( intval($timeOffset) > 0 ) {
+                $timeOffset = "+".$timeOffset;
+            }
+
             //$timeOffset = gmdate("H:i", $timeOffset);
 
             //$this_tz_str = date_default_timezone_get();

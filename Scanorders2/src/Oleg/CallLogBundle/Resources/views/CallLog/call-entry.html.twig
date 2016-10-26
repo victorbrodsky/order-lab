@@ -169,8 +169,10 @@
                     <div class="panel-body">
 
                         {#"Add patient to the list: [v]"#}
+                        {{ formmacros.checkbox(form.addPatientToList) }}
 
                         {#List Title:#}
+                        {{ formmacros.field(form.patientListTitle) }}
 
                     </div> <!-- panel-body -->
                 </div> <!-- panel-collapse -->

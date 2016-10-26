@@ -1071,7 +1071,7 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
 
 function populateInputFieldCalllog( fieldEl, data, index, modify ) {
     var value = null;
-    if( data && data[index] ) {
+    if( data ) { //&& data[index]
         value = data[index];
         //lock field
 //            fieldEl.prop('disabled', true);
@@ -1132,7 +1132,7 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
     //var disableStr = "readonly"; //disabled
     var disableStr = "disabled";
     var value = null;
-    if( data && data[index] ) {
+    if( data ) { //&& data[index]
         value = data[index];
         //lock field
         fieldEl.prop(disableStr, true);

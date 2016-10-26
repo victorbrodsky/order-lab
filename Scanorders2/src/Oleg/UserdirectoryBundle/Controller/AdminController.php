@@ -168,7 +168,7 @@ class AdminController extends Controller
         //$count_EventTypeListSync = $this->syncEventTypeListDb(); //must be the first to update already existing objects. Can run on empty DB
 
         //testing
-        $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
+        //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -258,7 +258,6 @@ class AdminController extends Controller
         $count_PermissionActions = $this->generatePermissionActions();
 
         $count_ObjectTypeActions = $this->generateObjectTypeActions();
-        $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
 
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
         $count_VacReqRequestTypeList = $this->generateVacReqRequestTypeList();
@@ -267,6 +266,7 @@ class AdminController extends Controller
 
         $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
 
+        $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -4934,26 +4934,23 @@ class AdminController extends Controller
     // except the root Platform List Manager List where all items should have "Object Type"="Form Field - Dropdown Menu"
     public function setObjectTypeForAllLists() {
 
-//        $children  = array();
-//        foreach( get_declared_classes() as $class ){
-//            //echo "0 class=".$class."<br>";
-//            if( $class instanceof ListAbstract ) {
-//            //if( is_subclass_of( $class, 'ListAbstract' ) ) {
-//                $children[] = $class;
-//                echo "ListAbstract class=".$class."<br>";
-//            }
-//        }
+        $children  = array();
+        $classes = get_declared_classes();
+        print_r($classes);
+        foreach( $classes as $class ){
+            //echo "0 class=".$class."<br>";
+            if( $class instanceof ListAbstract ) {
+            //if( is_subclass_of( $class, 'ListAbstract' ) ) {
+                $children[] = $class;
+                echo "ListAbstract class=".$class."<br>";
+            }
+        }
 
-        echo $this->get_extends_number('ListAbstract')."<br>";
+        //echo $this->get_extends_number('ListAbstract')."<br>";
 
         exit('exit');
     }
-    public function get_extends_number($base){
-        $rt=0;
-        foreach( get_declared_classes() as $class )
-            if( is_subclass_of($class,$base) ) $rt++;
-        return $rt;
-    }
+
 
     public function generateEventObjectTypeList() {
 
