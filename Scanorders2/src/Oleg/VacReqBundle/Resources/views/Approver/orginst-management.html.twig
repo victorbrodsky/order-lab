@@ -48,6 +48,10 @@
                     {#</p>#}
                 {#</form>#}
                 <div class="well">
+                    <p><a href="{{ path('employees_new_user') }}" target="_blank">
+                        If you do not see the person you are looking for in the drop down menu above,
+                        please follow this link to add the new user to the system, then return to this page and reload it.
+                    </a></p>
                     {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':approverRoleId,'btnName':'Add Approver(s)'})) }}
                 </div>
 
@@ -77,6 +81,10 @@
                 {% endfor %}
 
                 <div class="well">
+                    <p><a href="{{ path('employees_new_user') }}" target="_blank">
+                        If you do not see the person you are looking for in the drop down menu above,
+                        please follow this link to add the new user to the system, then return to this page and reload it.
+                    </a></p>
                     {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':submitterRoleId,'btnName':'Add Submitter(s)'})) }}
                 </div>
 
