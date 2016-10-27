@@ -35,7 +35,7 @@ function windowCloseAlert() {
             modified = checkIfTableWasModified();
         }
 
-        console.log("modified="+modified);
+        //console.log("modified="+modified);
         if( modified === true ) {
 
             //set back institution
@@ -1305,7 +1305,7 @@ function getMaxIndexByName(holder,target,name,last) {
 }
 
 function deletePrototypeField( btn, classname ) {
-    console.log("delete field: classname=" + classname);
+    //console.log("delete field: classname=" + classname);
 
     //var holder = $(btn).closest('.' + classname);
     $(btn).closest('.row').remove();

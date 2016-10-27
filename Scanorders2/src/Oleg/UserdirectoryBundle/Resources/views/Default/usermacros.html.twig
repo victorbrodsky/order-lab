@@ -611,7 +611,10 @@
                 {% if formfield.fax is defined %}
                     {{ formmacros.field_notempty(formfield.fax,cycle) }}
                 {% endif %}
-                {{ usermacros.emailPhoneField_notempty(formfield.email,cycle,'email',"") }}
+
+                {% if formfield.email is defined %}
+                    {{ usermacros.emailPhoneField_notempty(formfield.email,cycle,'email',"") }}
+                {% endif %}
 
             {% endif %}{#showRegularFields2#}
 

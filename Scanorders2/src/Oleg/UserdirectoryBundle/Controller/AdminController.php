@@ -4933,6 +4933,7 @@ class AdminController extends Controller
     //set "Object Type"="Dropdown Menu Value" (referring to this list) for all items/rows on all lists
     // except the root Platform List Manager List where all items should have "Object Type"="Form Field - Dropdown Menu"
     public function setObjectTypeForAllLists() {
+        return -1;
 
         $children  = array();
         $classes = get_declared_classes();

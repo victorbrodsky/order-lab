@@ -37,7 +37,10 @@ class EncounterReferringProvider extends EncounterArrayFieldAbstract
      */
     private $referringProviderPhone;
 
-
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $referringProviderEmail;
 
 
 
@@ -71,6 +74,22 @@ class EncounterReferringProvider extends EncounterArrayFieldAbstract
     public function setReferringProviderPhone($referringProviderPhone)
     {
         $this->referringProviderPhone = $referringProviderPhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferringProviderEmail()
+    {
+        return $this->referringProviderEmail;
+    }
+
+    /**
+     * @param mixed $referringProviderEmail
+     */
+    public function setReferringProviderEmail($referringProviderEmail)
+    {
+        $this->referringProviderEmail = $referringProviderEmail;
     }
 
 

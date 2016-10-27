@@ -106,23 +106,22 @@ class CallEntryController extends Controller
         $title = "New Entry";
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
-        $status = 'valid';
         $cycle = 'new';
         $formtype = 'call-entry';
 
         $institution = $userSecUtil->getCurrentUserInstitution($user);
 
         //create patient
-        $patient = new Patient(true,$status,$user,$system);
+        $patient = new Patient(true,'valid',$user,$system);
         $patient->setInstitution($institution);
 
         //create invalid encounter #1 just to display in "Patient Info"
         $encounter1 = new Encounter(true,'invalid',$user,$system);
 
         //create encounter #2 to display in "Encounter Info"
-        $encounter2 = new Encounter(true,$status,$user,$system);
+        $encounter2 = new Encounter(true,'valid',$user,$system);
         $encounter2->setInstitution($institution);
-        $encounterReferringProvider = new EncounterReferringProvider($status,$user,$system);
+        $encounterReferringProvider = new EncounterReferringProvider('valid',$user,$system);
         $encounter2->addReferringProvider($encounterReferringProvider);
 
         //set encounter generated id
@@ -522,13 +521,12 @@ class CallEntryController extends Controller
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            //'alias' => true
             'type' => null,
             'mrntype' => intval($mrntype),
             'mrn' => $mrn,
             'formtype' => 'call-entry',
             'complexLocation' => false,
-            'alias' => false,
+            'alias' => true,
             'timezoneDefault' => $userTimeZone
         );
 

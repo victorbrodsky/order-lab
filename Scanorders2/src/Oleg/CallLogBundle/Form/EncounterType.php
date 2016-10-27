@@ -15,6 +15,8 @@ use Oleg\OrderformBundle\Form\GenericFieldType;
 use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
@@ -50,52 +52,69 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterdate__',
         ));
 
-        $builder->add('patsuffix', 'collection', array(
-            'type' => new EncounterPatsuffixType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounterpatsuffix__',
-        ));
-        $builder->add('patlastname', 'collection', array(
-            'type' => new EncounterPatlastnameType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounterpatlastname__',
-        ));
-        $builder->add('patfirstname', 'collection', array(
-            'type' => new EncounterPatfirstnameType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounterpatfirstname__',
-        ));
-        $builder->add('patmiddlename', 'collection', array(
-            'type' => new EncounterPatmiddlenameType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounterpatmiddlename__',
-        ));
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $encounter = $event->getData();
+            $form = $event->getForm();
 
-        $builder->add('patsex', 'collection', array(
-            'type' => new EncounterPatsexType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounterpatsex__',
-        ));
+            //hide alias for invalid encounter
+            if( $encounter ) {
+                $status = $encounter->getStatus();
+                //echo "status=".$status."<br>";
+                if( $status == 'invalid' ) {
+                    $this->params['alias'] = false;
+                } else {
+                    $this->params['alias'] = true;
+                }
+            }
+
+            $form->add('patsuffix', 'collection', array(
+                'type' => new EncounterPatsuffixType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounterpatsuffix__',
+            ));
+            $form->add('patlastname', 'collection', array(
+                'type' => new EncounterPatlastnameType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounterpatlastname__',
+            ));
+            $form->add('patfirstname', 'collection', array(
+                'type' => new EncounterPatfirstnameType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounterpatfirstname__',
+            ));
+            $form->add('patmiddlename', 'collection', array(
+                'type' => new EncounterPatmiddlenameType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounterpatmiddlename__',
+            ));
+
+            $form->add('patsex', 'collection', array(
+                'type' => new EncounterPatsexType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounterpatsex__',
+            ));
+
+        });
 
 //        $attr = array('class'=>'form-control encounterage-field patientage-mask');
 //        $gen_attr = array('label'=>"Patient's Age (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage','type'=>'text');

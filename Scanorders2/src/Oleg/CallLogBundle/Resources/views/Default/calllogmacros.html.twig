@@ -267,18 +267,28 @@
 
                     {% set uniqueId = orderUniqueId~"_"~uid~"_"~counter %}
 
-                    <button
-                            id="form_body_toggle_entitycontactinfo_{{ uniqueId }}" type="button"
-                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            onclick="calllogToggleSinglePanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');">
-                    </button>
+                    {#<button#}
+                            {#id="form_body_toggle_entitycontactinfo_{{ uniqueId }}" type="button"#}
+                            {#class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"#}
+                            {#onclick="calllogToggleSingleEncounterPanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');">#}
+                    {#</button>#}
 
                     {% set panelTitle = spot.currentLocation.vars.value.name %}
                     {% if not panelTitle %}
                         {% set panelTitle = "Encounter's Location" %}
                     {% endif %}
 
-                    <h4 class="panel-title">{{ panelTitle }}</h4>
+                    <h4 class="panel-title">
+                        <a
+                            href="javascript:;"
+                            onclick="calllogToggleSingleEncounterPanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');"
+                        >
+                            {{ panelTitle }}
+                        </a>
+                        {#<a class="calllog-patient-panel-title" data-toggle="collapse" href="#calllog-PatientInformation-{{holderId}}">#}
+                            {#{{ title }}#}
+                        {#</a>#}
+                    </h4>
                 </div>
 
                 <div id="form_body_entitycontactinfo_{{ uniqueId }}" class="panel-body collapse">

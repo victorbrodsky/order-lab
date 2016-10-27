@@ -65,6 +65,11 @@ class EncounterReferringProviderType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('referringProviderEmail', null, array(
+            'label' => 'Referring Provider E-Mail:',
+            'attr' => array('class'=>'form-control')
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

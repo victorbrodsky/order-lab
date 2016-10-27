@@ -82,6 +82,7 @@
                             {{ formmacros.field(referringProvider.field) }}
                             {{ formmacros.field(referringProvider.referringProviderSpecialty) }}
                             {{ formmacros.field(referringProvider.referringProviderPhone) }}
+                            {{ formmacros.field(referringProvider.referringProviderEmail) }}
                         {% endfor %}
 
                         {{ calllogmacros.trackerContactinfoForm(encounter,cycle,status) }}
@@ -97,13 +98,23 @@
                                     {#</a>#}
                                 {#</h4>#}
 
-                                <button
-                                        id="form_body_toggle_encounterInfo" type="button"
-                                        class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                                        onclick="toggleSinglePanel(this,'#form_body_encounterInfo');">
-                                </button>
+                                {#<button#}
+                                        {#id="form_body_toggle_encounterInfo" type="button"#}
+                                        {#class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"#}
+                                        {#onclick="toggleSinglePanel(this,'#form_body_encounterInfo');">#}
+                                {#</button>#}
 
-                                <h4 class="panel-title">Update Patient Info</h4>
+                                <h4 class="panel-title">
+                                    {#<a#}
+                                        {#href="javascript:;"#}
+                                        {#onclick="calllogToggleSinglePanel(this,'#form_body_encounterInfo');"#}
+                                    {#>#}
+                                        {#Update Patient Info#}
+                                    {#</a>#}
+                                    <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
+                                        Update Patient Info
+                                    </a>
+                                </h4>
 
                             </div>
                             <div id="form_body_encounterInfo" class="panel-collapse collapse">
@@ -119,13 +130,13 @@
                                     </div>
                                 </div> <!-- panel-body -->
                             </div> <!-- panel-collapse -->
-                        </div> <!-- panel panel-info -->
+                        </div> <!-- panel panel-default -->
 
                     {% endfor %}
 
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
+        </div> <!-- panel panel-primary -->
 
 
 
@@ -157,7 +168,7 @@
 
 
             {#Patient List    #}
-            <div class="panel panel-info">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" href="#calllog-PatientList">
@@ -172,15 +183,17 @@
                         {{ formmacros.checkbox(form.addPatientToList) }}
 
                         {#List Title:#}
-                        {{ formmacros.field(form.patientListTitle) }}
+                        {% if form.patientListTitle is defined %}
+                            {{ treemacros.compositeTreeNode(form.patientListTitle,cycle,"noprototype") }}
+                        {% endif %}
 
                     </div> <!-- panel-body -->
                 </div> <!-- panel-collapse -->
-            </div> <!-- panel panel-info -->
+            </div> <!-- panel panel-default -->
 
 
             {#History/Findings    #}
-            <div class="panel panel-info">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" href="#calllog-HistoryFindings">
@@ -197,10 +210,10 @@
                         </div>
                     </div> <!-- panel-body -->
                 </div> <!-- panel-collapse -->
-            </div> <!-- panel panel-info -->
+            </div> <!-- panel panel-default -->
 
             {#Impression/Outcome    #}
-            <div class="panel panel-info">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" href="#calllog-ImpressionOutcome">
@@ -217,12 +230,12 @@
                         </div>
                     </div> <!-- panel-body -->
                 </div> <!-- panel-collapse -->
-            </div> <!-- panel panel-info -->
+            </div> <!-- panel panel-default -->
 
         {# EOF Entry #}
             </div> <!-- panel-body -->
           </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
+        </div> <!-- panel panel-primary -->
         {# EOF Entry #}
 
         <p>

@@ -1369,14 +1369,22 @@ function calllogPresetMrnMrntype(holderId) {
 }
 
 //prefill location name if it has been opened
-function calllogToggleSinglePanel(btn,target) {
-
+function calllogToggleSingleEncounterPanel(btn,target) {
     //preset .user-location-name-field to the 'Encounter's Location'
     var locationNameField = $(btn).closest('.panel').find('.user-location-name-field');
     locationNameField.val("Encounter's Location");
 
-    toggleSinglePanel(btn,target);
+    $(target).toggle();
+    //toggleSinglePanel(btn,target);
 }
+//function calllogToggleSinglePanel( el, target ) {
+//    $(target).toggle();
+//
+//    //console.log("btnTarget="+btnTarget);
+//    //var btnEl = $(el).closest('.panel-heading').find('button');
+//    //btnEl.trigger("click");
+//    //btnEl.click();
+//}
 
 //overwrite calllogSetPatientAccordionTitle
 function calllogUpdatePatientAgeListener(holderId) {

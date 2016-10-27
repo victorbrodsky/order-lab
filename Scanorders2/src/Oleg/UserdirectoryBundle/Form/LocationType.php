@@ -61,11 +61,6 @@ class LocationType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('email',null,array(
-            'label'=>'E-Mail:',
-            'attr' => array('class'=>'form-control')
-        ));
-
         $builder->add('building', 'employees_custom_selector', array(
             'label' => 'Building:',
             'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
@@ -146,6 +141,11 @@ class LocationType extends AbstractType
                     'attr' => array('class' => 'combobox combobox-width'),
                 ));
             }
+
+            $builder->add('email',null,array(
+                'label'=>'E-Mail:',
+                'attr' => array('class'=>'form-control')
+            ));
 
             $builder->add('pager', null, array(
                 'label' => 'Pager Number:',

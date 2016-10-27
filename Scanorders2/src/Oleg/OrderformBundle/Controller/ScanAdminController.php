@@ -1017,7 +1017,7 @@ class ScanAdminController extends AdminController
         $types = array(
             'Message Class' => 0, //positive level - default level's title
             'Message Subclass' => 1,
-            'Message Subclass Group' => 2,
+            'Message Group' => 2,
             'Service' => 3,
             'Issue' => 4,
         );
