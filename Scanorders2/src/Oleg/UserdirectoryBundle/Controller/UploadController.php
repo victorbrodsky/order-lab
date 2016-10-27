@@ -110,6 +110,8 @@ class UploadController extends Controller {
             $documentType = $document->getType();
             if( $documentType ) {
                 $eventtype = $documentType->getName() . " Deleted";
+            } else {
+                $eventtype = "Document Deleted";
             }
             $this->setDownloadEventLog($request,$document,$user,$sitename,$eventtype,$eventDescription);
 
@@ -272,14 +274,20 @@ class UploadController extends Controller {
             $documentType = $document->getType();
             if( $documentType ) {
                 $eventtype = $documentType->getName() . " Downloaded";
+            } else {
+                $eventtype = "Document Downloaded";
             }
         }
 
+        //$logger = $this->container->get('logger');
         if( $eventtype && $sitename ) {
+            //$logger->notice("document event log created: eventDescription=".$eventDescription);
             $userSecUtil = $this->container->get('user_security_utility');
             //$user = $this->get('security.context')->getToken()->getUser();
             //$eventDescription = "Document has been downloaded by " . $user;
             $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
+        } else {
+            //$logger->notice("document event log not created!!!! : eventDescription=".$eventDescription);
         }
     }
 

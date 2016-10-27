@@ -1980,8 +1980,13 @@ class UserController extends Controller
             $entity->addMedicalTitle(new MedicalTitle($user));
         }
 
-        if( count($entity->getCredentials()->getStateLicense()) == 0 ) {
+        $stateLicenses = $entity->getCredentials()->getStateLicense();
+        if( count($stateLicenses) == 0 ) {
             $entity->getCredentials()->addStateLicense( new StateLicense() );
+        }
+        //make sure stat license has attachmentContainer
+        foreach( $stateLicenses as $stateLicense ) {
+            $stateLicense->createAttachmentDocument();
         }
 
         if( count($entity->getCredentials()->getBoardCertification()) == 0 ) {
@@ -2050,6 +2055,9 @@ class UserController extends Controller
 //        if( count($entity->getCredentials()->getIdentifiers()) == 0 ) {
 //            $entity->getCredentials()->addIdentifier( new Identifier() );
 //        }
+
+        //make sure coqAttachmentContainer exists
+        $entity->getCredentials()->createAttachmentDocument();
 
     }
 
@@ -2380,6 +2388,9 @@ class UserController extends Controller
             //process employmentstatus attachments
             $this->processEmploymentStatus($entity);
 
+            //process credentials attachments
+            $this->processCredentials($entity);
+
             //process publications
             //$this->processPublications($entity);
 
@@ -2697,6 +2708,40 @@ class UserController extends Controller
                     //$userUtil->setUpdateInfo($documentContainer,$em,$sc);
                 }
 
+            }
+        }
+
+    }
+
+    //set documents for Credentials's coqAttachmentContainer and StateLicense's attachmentContainer
+    public function processCredentials($subjectUser) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $credentials = $subjectUser->getCredentials();
+        if( !$credentials ) {
+            return;
+        }
+
+        $coqAttachmentContainer = $credentials->getCoqAttachmentContainer();
+        if( !$coqAttachmentContainer ) {
+            return;
+        }
+
+        //Credentials's coqAttachmentContainer
+        $documentCoqType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName("Certificate of Qualification Document");
+        foreach( $coqAttachmentContainer->getDocumentContainers() as $documentContainer) {
+            $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCoqType );
+        }
+
+        //Credentials's coqAttachmentContainer
+        $documentCredType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName("Medical License Document");
+        foreach( $credentials->getStateLicense() as $stateLicense) {
+            $attachmentContainer = $stateLicense->getAttachmentContainer();
+            if( $attachmentContainer ) {
+                foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
+                    $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentCredType);
+                }
             }
         }
 

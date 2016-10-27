@@ -90,6 +90,17 @@ class StateLicenseType extends AbstractType
             'attr' => array('class'=>'combobox')
         ));
 
+        //Medical License(s) section Relevant Documents
+        $params = array('labelPrefix'=>'Relevant Document');
+        $params['document.showall'] = false;
+        $params['document.imageId'] = false;
+        $params['document.source'] = false;
+        //$params['read_only'] = $readonly;
+        $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+            'required' => false,
+            'label' => false
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

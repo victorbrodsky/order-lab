@@ -2527,13 +2527,15 @@ class AdminController extends Controller
     public function generateDocumentTypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $elements = array(
+
+            //'Generic Document',
             'Avatar Image',
             'Comment Document',
             'Autopsy Image',
@@ -2545,6 +2547,8 @@ class AdminController extends Controller
             'Requisition Form Image',
             'Outside Report Reference Representation',
             'Grant Document',
+            'Medical License Document',
+            'Certificate of Qualification Document',
 
             'Fellowship Application Spreadsheet',
             'Fellowship Application Document',
@@ -2558,7 +2562,7 @@ class AdminController extends Controller
             'Fellowship Interview Itinerary',
             'Fellowship Recommendation',
             'Fellowship Reprimand',
-            'Fellowship Legal Suit'
+            'Fellowship Legal Suit',
 
         );
 
@@ -2567,6 +2571,10 @@ class AdminController extends Controller
 
         $count = 10;
         foreach( $elements as $value ) {
+
+            if( $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName($value) ) {
+                continue;
+            }
 
             $entity = new DocumentTypeList();
             $this->setDefaultList($entity,$count,$username,$value);

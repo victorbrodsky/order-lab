@@ -158,7 +158,7 @@
         {% set formfield = field %}
     {% endif %}
 
-    <div class="well {{ classname }}">
+    <div class="user-collection-holder well {{ classname }}">
 
         {% if cycle != 'show_user' %}
             <div class="text-right">
@@ -172,6 +172,28 @@
         {{ formmacros.fieldDateLabel(formfield.licenseIssuedDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.licenseExpirationDate,'allow-future-date') }}
         {{ formmacros.field(formfield.active) }}
+
+        {% if formfield.attachmentContainer is defined %}
+
+            {% set dropzoneInit = 'default' %}
+            {#{% if formfield.vars.value and formfield.vars.value.id == app.security.getToken().getUser().getId() %}#}
+                {#{% set dropzoneInit = 'inactive' %}#}
+            {#{% endif %}#}
+
+            {% set count = 0 %}
+            {% for documentContainer in formfield.attachmentContainer.documentContainers %}
+                {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
+                {% set count = count + 1 %}
+                {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'statelicense'~uniqueId,"",20,dropzoneInit) }}
+            {% endfor %}
+
+            {% if prototype == "prototype" %}
+                {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'statelicense'~uniqueId,"",20,dropzoneInit) }}
+            {% endif %}
+
+        {% endif %}
 
     </div>
 {% endmacro %}
@@ -273,12 +295,12 @@
                 {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
                 {% set count = count + 1 %}
                 {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20,dropzoneInit) }}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'employment'~uniqueId,"",20,dropzoneInit) }}
             {% endfor %}
 
             {% if prototype == "prototype" %}
                 {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20,dropzoneInit) }}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'employment'~uniqueId,"",20,dropzoneInit) }}
             {% endif %}
 
         {% endif %}
@@ -720,7 +742,7 @@
                         <h4>
                         {% for headInfoArr in headInfos %}
 
-                            {% if headInfoArr.old %}
+                            {% if headInfoArr.old is defined and headInfoArr.old %}
                                 {#Institutions#}
                                 {% for titleInfo in headInfoArr.titleInfo if titleInfo.name is defined %}
                                     <a href="{{
@@ -751,16 +773,20 @@
                             {% else %}
 
                                 {#Institutions#}
-                                {% for titleInfo in headInfoArr.titleInfo %}
-                                    {{ titleInfo|raw }}
-                                    <br>
-                                {% endfor %}
+                                {% if headInfoArr.titleInfo is defined %}
+                                    {% for titleInfo in headInfoArr.titleInfo %}
+                                        {{ titleInfo|raw }}
+                                        <br>
+                                    {% endfor %}
+                                {% endif %}
 
                                 {#Titles#}
-                                {% for instInfo in headInfoArr.instInfo %}
-                                    {{ instInfo|raw }}
-                                    <br>
-                                {% endfor %}
+                                {% if headInfoArr.instInfo is defined %}
+                                    {% for instInfo in headInfoArr.instInfo %}
+                                        {{ instInfo|raw }}
+                                        <br>
+                                    {% endfor %}
+                                {% endif %}
                                 <br>
 
                             {% endif %}

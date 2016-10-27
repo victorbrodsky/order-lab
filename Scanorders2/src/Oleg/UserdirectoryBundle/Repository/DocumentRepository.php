@@ -8,8 +8,8 @@ use Doctrine\ORM\EntityRepository;
 
 class DocumentRepository extends EntityRepository {
 
-
-    public function processDocuments($documentHolder, $docfieldname=null) {
+    //set document type according to the holder entity. For example, for Comment entity, type is "Comment Document"
+    public function processDocuments($documentHolder, $docfieldname=null, $docType=null) {
 
         if( $documentHolder == null ) {
            // echo "not exists: document=".$documentHolder."<br>";
@@ -39,7 +39,9 @@ class DocumentRepository extends EntityRepository {
 //        echo "<br>before processing holder count=".count($documentHolder->$getMethod())."<br>";
 
         //get type by $documentHolder class
-        $docType = $this->getDocumentTypeByHolder($documentHolder);
+        if( !$docType ) {
+            $docType = $this->getDocumentTypeByHolder($documentHolder);
+        }
 
         foreach( $documentHolder->$getMethod() as $doc ) {
 
@@ -107,8 +109,14 @@ class DocumentRepository extends EntityRepository {
             case 'Examination':
                 $doctypeStr = 'Fellowship Application Document';
                 break;
+//            case 'Credentials':
+//                $doctypeStr = 'Medical License Document';
+//                break;
+//            case 'StateLicense':
+//                $doctypeStr = 'Certificate of Qualification Document';
+//                break;
             default:
-                //
+                //$doctypeStr = 'Generic Document';
         }
 
         if( $doctypeStr ) {

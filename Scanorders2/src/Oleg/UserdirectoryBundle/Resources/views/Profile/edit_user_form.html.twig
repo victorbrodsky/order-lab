@@ -314,7 +314,7 @@
                             {{ formmacros.checkbox(form.testingAccount) }}
                         {% else %}
                             {% do form.locked.setRendered %}
-                            {% do form.locked.testingAccount %}
+                            {% do form.testingAccount.setRendered %}
                         {% endif %}
                     {% endif %}
 
@@ -940,11 +940,33 @@
                                     </div>
                                     <div id="coq" class="panel-collapse collapse in">
                                         <div class="panel-body">
-                                            <div class="user-coq-holder">
+                                            <div class="user-coq-holder form-element-holder">
 
 												{{ formmacros.field_notempty(form.credentials.coqCode,cycle) }}
                                                 {{ formmacros.field_notempty(form.credentials.numberCOQ,cycle) }}
                                                 {{ formmacros.fieldDateLabel_notempty(form.credentials.coqExpirationDate,cycle,'allow-future-date') }}
+
+                                                {% if form.credentials.coqAttachmentContainer is defined %}
+
+                                                    {% set dropzoneInit = 'default' %}
+                                                    {#{% if formfield.vars.value and formfield.vars.value.id == app.security.getToken().getUser().getId() %}#}
+                                                        {#{% set dropzoneInit = 'inactive' %}#}
+                                                    {#{% endif %}#}
+
+                                                    {% set count = 0 %}
+                                                    {% for documentContainer in form.credentials.coqAttachmentContainer.documentContainers %}
+                                                        {#documentContainers|length:{{ form.credentials.coqAttachmentContainer.documentContainers|length }}#}
+                                                        {% set count = count + 1 %}
+                                                        {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
+                                                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'coq'~uniqueId,"",20,dropzoneInit) }}
+                                                    {% endfor %}
+
+                                                    {#{% if prototype == "prototype" %}#}
+                                                        {#{% set uniqueId = "1-"~"now"|date("mdYHisu") %}#}
+                                                        {#{{ formmacros.fieldDocumentContainer(form.credentials.coqAttachmentContainer.documentContainers.vars.prototype,cycle,'coq'~uniqueId,"",20,dropzoneInit) }}#}
+                                                    {#{% endif %}#}
+
+                                                {% endif %}
 
                                             </div>
                                         </div>

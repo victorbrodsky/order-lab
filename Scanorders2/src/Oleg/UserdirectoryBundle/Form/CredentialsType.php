@@ -98,6 +98,17 @@ class CredentialsType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
+        //Certificate of Qualification section Relevant Documents
+        $params = array('labelPrefix'=>'Relevant Document');
+        $params['document.showall'] = false;
+        $params['document.imageId'] = false;
+        $params['document.source'] = false;
+        //$params['read_only'] = $readonly;
+        $builder->add('coqAttachmentContainer', new AttachmentContainerType($params), array(
+            'required' => false,
+            'label' => false
+        ));
+
         $builder->add('emergencyContactInfo', null, array(
             'label' => 'Emergency Contact Information:',
             'attr' => array('class'=>'textarea form-control')

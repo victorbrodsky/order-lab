@@ -64,6 +64,13 @@ class Credentials extends BaseUserAttributes
      */
     private $coqExpirationDate;
 
+    //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
+    /**
+     * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
+     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
+     **/
+    private $coqAttachmentContainer;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
@@ -136,6 +143,8 @@ class Credentials extends BaseUserAttributes
             $this->addCodeNYPH( new CodeNYPH() );
         }
 
+        //add one document
+        $this->createAttachmentDocument();
     }
 
     /**
@@ -463,6 +472,36 @@ class Credentials extends BaseUserAttributes
     public function getCitizenships()
     {
         return $this->citizenships;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoqAttachmentContainer()
+    {
+        return $this->coqAttachmentContainer;
+    }
+
+    /**
+     * @param mixed $coqAttachmentContainer
+     */
+    public function setCoqAttachmentContainer($coqAttachmentContainer)
+    {
+        $this->coqAttachmentContainer = $coqAttachmentContainer;
+    }
+
+
+    //create attachmentDocument holder with one DocumentContainer if not exists
+    public function createAttachmentDocument() {
+        //add one document
+        $attachmentContainer = $this->getCoqAttachmentContainer();
+        if( !$attachmentContainer ) {
+            $attachmentContainer = new AttachmentContainer();
+            $this->setCoqAttachmentContainer($attachmentContainer);
+        }
+        if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
+            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
+        }
     }
 
 
