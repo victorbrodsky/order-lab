@@ -131,6 +131,24 @@ class VacReqUtil
         return $approvers;
     }
 
+    //$groupId - group (institution) ID
+    //$rolePartialName - "ROLE_VACREQ_SUBMITTER", "ROLE_VACREQ_APPROVER", "ROLE_VACREQ_SUPERVISOR"
+    public function getUsersByGroupId( $groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER" ) {
+        $users = array();
+
+        $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                            findRolesBySiteAndPartialRoleName( "vacreq", $rolePartialName, $groupId);
+
+        $role = $roles[0];
+
+        //echo "role=".$role."<br>";
+        if( $role ) {
+            $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($role->getName());
+        }
+
+        return $users;
+    }
+
 
     //set confirmation email to approver and email users
     public function sendConfirmationEmailToApprovers( $entity, $sendCopy=true ) {

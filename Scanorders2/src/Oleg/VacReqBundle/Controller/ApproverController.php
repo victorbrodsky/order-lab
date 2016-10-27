@@ -1035,7 +1035,8 @@ class ApproverController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
 
         //find role submitters by institution
-        $submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
+        //$submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
+        $submitters = $vacreqUtil->getUsersByGroupId($groupId,"ROLE_VACREQ_SUBMITTER");
 
         $group = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
 
