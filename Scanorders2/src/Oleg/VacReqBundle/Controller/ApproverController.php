@@ -482,7 +482,8 @@ class ApproverController extends Controller
             $eventType = "Business/Vacation Group Updated";
             $event = $organizationalGroupInstitution.": User ".$subjectUser." has been removed as ".$role->getAlias();
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
+            //$userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,$eventType);
 
             //Flash
             $this->get('session')->getFlashBag()->add(
@@ -592,13 +593,13 @@ class ApproverController extends Controller
         //$users = $form['users']->getData();
         $users = $form->get('users')->getData();
 
-        $usersStr = array();
+        //$usersArr = array();
 
-        foreach( $users as $user ) {
+        foreach( $users as $thisUser ) {
             //echo "user=".$user."<br>";
-            $user->addRole($role);
-            $em->persist($user);
-            $usersStr[] = $user;
+            $thisUser->addRole($role);
+            $em->persist($thisUser);
+            //$usersArr = $thisUser;
         }
 
         //$users = $request->query->get('users');
@@ -606,20 +607,26 @@ class ApproverController extends Controller
 
         $em->flush();
 
-        $event = $institution.": the following users have been added as ".$role->getAlias().": ".implode(",",$usersStr);
-        $eventType = "Business/Vacation Group Updated";
+        $globalEventArr = array();
+        $globalEventArr[] = $institution.": the following users have been added:";
 
-        //Event Log
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$institution,$request,$eventType);
+        foreach( $users as $userObject ) {
 
+            //$subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userObject->getId());
+            $globalEventArr[] = $userObject."";
+            $event = $institution . ": user has been added as " . $role->getAlias() . ": " . $userObject;
+            $eventType = "Business/Vacation Group Updated";
+
+            //Event Log
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $userObject, $request, $eventType);
+        }
         //exit();
-
 
         //Flash
         $this->get('session')->getFlashBag()->add(
             'notice',
-            $event
+            implode(" ",$globalEventArr)
         );
 
         return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
