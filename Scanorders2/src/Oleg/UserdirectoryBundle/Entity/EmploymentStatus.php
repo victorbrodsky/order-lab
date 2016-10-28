@@ -61,6 +61,10 @@ class EmploymentStatus extends BaseUserAttributes
      **/
     private $attachmentContainer;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    private $institution;
 
 
     public function __construct($author=null) {
@@ -214,6 +218,22 @@ class EmploymentStatus extends BaseUserAttributes
     public function getJobDescriptionSummary()
     {
         return $this->jobDescriptionSummary;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
     }
 
 

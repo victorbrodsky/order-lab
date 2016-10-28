@@ -418,7 +418,7 @@ class UserType extends AbstractType
 
     public function employmentStatus($builder) {
         if( $this->roleAdmin || ($this->currentUser == false && $this->cycle == "show") ) {
-            $params = array('read_only'=>$this->readonly,'currentUser'=>$this->currentUser,'admin'=>$this->roleAdmin);
+            $params = array('em'=>$this->params['em'],'read_only'=>$this->readonly,'currentUser'=>$this->currentUser,'admin'=>$this->roleAdmin);
             $builder->add('employmentStatus', 'collection', array(
                 'type' => new EmploymentStatusType($params),
                 'label' => false,

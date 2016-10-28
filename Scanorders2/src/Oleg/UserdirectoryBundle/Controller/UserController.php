@@ -1951,6 +1951,12 @@ class UserController extends Controller
         ));
 //        $form->add('submit', 'submit', array('label' => 'Update','attr' => array('class' => 'btn btn-warning')));
 
+        $pageTitle = 'Edit Employee Profile for ' . $entity->getUsernameOptimal();
+        $termStr = $entity->getEmploymentTerminatedStr();
+        if( $termStr ) {
+            $pageTitle = $pageTitle . " (" . $termStr . ")";
+        }
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -1958,13 +1964,14 @@ class UserController extends Controller
             'user_id' => $id,
             'sitename' => $sitename,
             'postData' => $request->query->all(),
-            'title' => 'Edit Employee Profile for ' . $entity->getUsernameOptimal()
+            'title' => $pageTitle
         );
     }
 
     //create empty collections
     public function addEmptyCollections($entity) {
 
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
         if( count($entity->getAdministrativeTitles()) == 0 ) {
@@ -2006,6 +2013,29 @@ class UserController extends Controller
         //check if has attachemntDocument and at least one DocumentContainers
         foreach( $entity->getEmploymentStatus() as $employmentStatus ) {
             $employmentStatus->createAttachmentDocument();
+            //echo "employ inst=".$employmentStatus->getInstitution()."<br>";
+            if( !$employmentStatus->getInstitution() ) {
+                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+                if( !$wcmc ) {
+                    //exit('No Institution: "WCMC"');
+                    throw $this->createNotFoundException('No Institution: "WCMC"');
+                }
+                $mapper = array(
+                    'prefix' => 'Oleg',
+                    'bundleName' => 'UserdirectoryBundle',
+                    'className' => 'Institution'
+                );
+                $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                    "Pathology and Laboratory Medicine",
+                    $wcmc,
+                    $mapper
+                );
+                if( !$pathology ) {
+                    //exit('No Institution: "Pathology and Laboratory Medicine"');
+                    throw $this->createNotFoundException('No Institution: "Pathology and Laboratory Medicine"');
+                }
+                $employmentStatus->setInstitution($pathology);
+            }
         }
 
         //create new comments
@@ -3480,5 +3510,77 @@ class UserController extends Controller
         return $this->redirect($url);
     }
 
+
+    /**
+     * @Route("/user/employment-terminate/{id}", name="employees_user_employment_terminate")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     */
+    public function employmentTerminateAction(Request $request, $id)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $userAdmin = $this->get('security.context')->getToken()->getUser();
+
+        //get username
+        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+        $todayDate = new \DateTime();
+        //$todayDateStr = $todayDate->format("m/d/Y");
+
+        $yestardayDate = new \DateTime();
+        $yestardayDate = $yestardayDate->add(\DateInterval::createFromDateString('yesterday'));
+        $yestardayDateStr = $yestardayDate->format("m/d/Y");
+
+        $institutionArr = array();
+
+        //A- Add yesterday's date into the "Employment Period(s) [visible only to Editors and Administrators]">"End of Employment Date:"
+        // FOR EVERY EMPTY "End of Employment Date:" in that section if there is more than one since it is an array.
+        foreach( $subjectUser->getEmploymentStatus() as $employmentStatus ) {
+            if( !$employmentStatus->getTerminationDate() ) {
+                $employmentStatus->setTerminationDate($yestardayDate);
+                if( $employmentStatus->getInstitution() ) {
+                    $institutionArr[] = $employmentStatus->getInstitution()."";
+                }
+            }
+        }
+
+        $institutionStr = implode(", ",$institutionArr);
+
+        //B- In Global User Preferences, mark "Prevent user from logging in (lock):" as checked.
+        $subjectUser->setLocked(true);
+
+        $em->flush();
+
+        //C- Add an Event to the Event Log (add an Event Type of "User marked as no longer employed")
+        // with "FirstName LastName (CWID: xxx) marked as no longer employed by [Institution] as of MM/DD/YYYY
+        // by FirstName LastName (CWID: xxx) and account locked" in the Event Description and properly
+        // populate the user performing the change and the Object Type/ID of the user receiving the change.
+        $event = $subjectUser->getUsernameOptimal()." marked as no longer employed by ".$institutionStr." as of ".$yestardayDateStr;
+        $event .= " by ".$userAdmin->getUsernameOptimal()." and account locked";
+        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('employees.sitename'),
+            $event,
+            $userAdmin,
+            $subjectUser,
+            $request,
+            'User Employment Terminated'
+        );
+
+        //D- Once successful, display a blue well at the top of the user's profile page saying
+        // "Successfully marked user as no longer working at the [Institution] as of yesterday, MM/DD/YYYY."
+        $eventSession = "Successfully marked ".$subjectUser->getUsernameOptimal()." as no longer working at the ".$institutionStr." as of yesterday, ".$yestardayDateStr.".";
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $eventSession
+        );
+
+        $sitename = "employees";
+        return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
+    }
 
 }

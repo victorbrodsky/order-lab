@@ -5219,6 +5219,43 @@ class AdminController extends Controller
 
 
     /**
+     * @Route("/set-institution-employment-period/", name="user_institution_employment_period")
+     * @Method("GET")
+     */
+    public function setInstitutionEmploymentPeriodAction()
+    {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        if( !$wcmc ) {
+            exit('No Institution: "WCMC"');
+        }
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+        if( !$pathology ) {
+            exit('No Institution: "Pathology and Laboratory Medicine"');
+        }
+
+        $query = $em->createQuery('UPDATE OlegUserdirectoryBundle:EmploymentStatus p SET p.institution = '.$pathology->getId().' WHERE p.institution IS NULL');
+        $numUpdated = $query->execute();
+
+        exit("set-institution-employment-period; numUpdated=".$numUpdated);
+    }
+
+    /**
      * @Route("/convert-logger-site/", name="user_convert-logger-site")
      * @Method("GET")
      */

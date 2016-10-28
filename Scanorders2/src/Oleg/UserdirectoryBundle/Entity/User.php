@@ -1746,6 +1746,34 @@ class User extends BaseUser {
         return false;
     }
 
+    //return null if user is still employed
+    //return str if user not longer working:
+    //"No longer works at the [Institution] as of MM/DD/YYYY. (show the most recent "End of Employment Date")
+    public function getEmploymentTerminatedStr() {
+        $res = null;
+        $emplCount = 0;
+        $termCount = 0;
+        $resArr = array();
+
+        foreach( $this->getEmploymentStatus() as $employmentStatus ) {
+            if( $employmentStatus->getTerminationDate() ) {
+                $termCount++;
+                $instStr = "";
+                if( $employmentStatus->getInstitution() ) {
+                    $instStr = "at the ".$employmentStatus->getInstitution()."";
+                }
+                $termStr = $employmentStatus->getTerminationDate()->format("m/d/Y");
+                $resArr[] = "No longer works $instStr as of $termStr";
+            }
+            $emplCount++;
+        }
+
+        if( $emplCount != 0 && $emplCount == $termCount ) {
+            $res = implode("; ",$resArr);
+        }
+
+        return $res;
+    }
 
     /////////////////////// NOT USED!!! Return: Chief, Eyebrow Pathology ///////////////////////
     //Group by institutions

@@ -6,6 +6,8 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -112,6 +114,40 @@ class EmploymentStatusType extends AbstractType
             'required' => false,
             'label' => false
         ));
+
+
+        ///////////////////////// tree node /////////////////////////
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $emplStatus = $event->getData();
+            $form = $event->getForm();
+
+            $label = null;
+            if( $emplStatus ) {
+                $institution = $emplStatus->getInstitution();
+                //echo "emplStatus Inst=".$institution."<br>";
+                if( $institution ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                }
+            }
+            if( !$label ) {
+                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+            }
+            //echo "label=".$label."<br>";
+
+            $form->add('institution', 'employees_custom_selector', array(
+                'label' => $label,
+                'required' => false,
+                //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+                'attr' => array(
+                    'class' => 'ajax-combobox-compositetree',
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                    'data-compositetree-classname' => 'Institution'
+                ),
+                'classtype' => 'institution'
+            ));
+        });
+        ///////////////////////// EOF tree node /////////////////////////
 
     }
 

@@ -269,6 +269,7 @@
 
 {% macro employmentStatuses( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -291,6 +292,11 @@
         {{ formmacros.field(formfield.employmentType) }}
         {{ formmacros.field(formfield.jobDescriptionSummary) }}
         {{ formmacros.field(formfield.jobDescription) }}
+
+        {% if formfield.institution is defined %}
+            {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+        {% endif %}
+
         {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,cycle,'allow-future-date') }}
         {{ formmacros.field_notempty(formfield.terminationType,cycle) }}
 
@@ -746,7 +752,15 @@
                 <!--<img src="profile-pic.jpg"> -->
 
                 <div class="left-text">
-                    <h2>
+
+                    {% set termStr = user.getEmploymentTerminatedStr %}
+                    {% if termStr %}
+                        {% set termStyle = "background-color: gray;" %}
+                    {% else %}
+                        {% set termStyle = "" %}
+                    {% endif %}
+
+                    <h2 style="{{ termStyle }}">
                         {#Shivakumar Test Testing Subramaniyam, MD, PhD#}
                         {{ user.getUsernameOptimal }}
                     </h2>
@@ -818,6 +832,10 @@
 
             <div class="right">
                 <div class="right-text">
+
+                    {% if termStr %}
+                        <h4>{{ termStr }}</h4>
+                    {% endif %}
 
                     {#preffered phone and email#}
                     {% if user.getEmail or user.getPreferredPhone %}
@@ -974,6 +992,14 @@
                                 <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                             </a>
                         {% endif %}
+                        <a
+                            general-data-confirm="Are you sure you want to mark user as no longer working here as of yesterday and prevent them from logging in?"
+                            data-toggle="tooltip"
+                            title="Mark user as no longer working here as of yesterday and prevent them from logging in"
+                            style="margin-left: 10px; color:black;"
+                            href="{{ path(employees_sitename~'_user_employment_terminate',{'id':user.id}) }}">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
                         </p>
                     {% endif %}
 
