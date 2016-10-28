@@ -542,11 +542,11 @@ function fileUploadProcessNewDropzoneId( holder, idHtml ) {
         //console.log("0 idHtml="+idHtml);
 
         idHtml = idHtml.replace("__documentContainers__", documentContainerNewId);
-        documentContainerNewId = 0;
+        //documentContainerNewId = 0;
         var find = '__documentContainers__';
         var re = new RegExp(find, 'g');
         idHtml = idHtml.replace(re, documentContainerNewId);
-        console.log("1 idHtml="+idHtml);
+        //console.log("1 idHtml="+idHtml);
     }
     return idHtml;
 }
