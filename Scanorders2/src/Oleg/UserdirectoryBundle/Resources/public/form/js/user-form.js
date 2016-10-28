@@ -830,7 +830,9 @@ function grantListener( holder ) {
     }
     
     //attach tooltip for all locked fields
-    var tooltipStr = 'This field can be edited in the Grants of the List Manager';       
+    var tooltipStr = 'This field can be edited in the Grants of the List Manager. ' +
+        'A new grant can be added by typing a Grant Title if the grant is empty, ' +
+        'or a new grant can be added by clicking Add Grant button below.';
     attachTooltipForAllFields($('.user-grants-holder'),tooltipStr);
 
     grants.on("change", function(e) {
@@ -891,7 +893,9 @@ function populateGrantData( data, elementName ) {
         throw new Error('More than 1 object found. count='+data.length);
     }
     
-    var tooltipStr = 'This field can be edited in the Grants of the List Manager';
+    var tooltipStr = 'This field can be edited in the Grants of the List Manager. ' +
+        'A new grant can be added by typing a Grant Title if the grant is empty, ' +
+        'or a new grant can be added by clicking Add Grant button below.';
 
     if( !data ) {
         //console.log("data is null => empty lab");
@@ -927,7 +931,7 @@ function populateGrantData( data, elementName ) {
         sourceOrganization.select2("readonly", true);
         effort.select2("readonly", true);
         comment.attr("readonly", true);
-        disableEnableDropzone( dropzoneElement, true, null, true );
+        disableEnableDropzone( dropzoneElement, true, tooltipStr, true );
 
         initDatepicker(holder);
 
@@ -1022,7 +1026,7 @@ function populateGrantData( data, elementName ) {
         effort.select2("readonly", false);
 
         //console.log('before disabling dropzone');
-        disableEnableDropzone( dropzoneElement, true, null, true );
+        disableEnableDropzone( dropzoneElement, true, tooltipStr, true );
 
         initDatepicker(holder);
         

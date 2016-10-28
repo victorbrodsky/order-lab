@@ -121,6 +121,8 @@ class UploadListener {
             $documentType = $document->getType();
             if( $documentType ) {
                 $eventtype = $documentType->getName() . " Uploaded";
+            } else {
+                $eventtype = "Document Downloaded";
             }
         }
 

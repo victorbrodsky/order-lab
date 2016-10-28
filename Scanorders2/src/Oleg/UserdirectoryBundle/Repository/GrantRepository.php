@@ -18,9 +18,9 @@ class GrantRepository extends EntityRepository {
 
         foreach( $grants as $grant ) {
 
-
-            if( !($grant && $grant->getName() && $grant->getName()."" != "") ) {
+            if( $grant->isEmpty() ) {
                 $user->removeGrant($grant);
+                //echo "Remove empty Grant: ".$grant."<br>";
                 continue;
             }
 
@@ -124,8 +124,6 @@ class GrantRepository extends EntityRepository {
 
         //echo "grants final count=".count($user->getGrants())."<br>";
         //echo "effort count=".count($user->getGrants()->first()->getEfforts())."<br>";
-
-
         //exit('process grant');
 
         return $user;

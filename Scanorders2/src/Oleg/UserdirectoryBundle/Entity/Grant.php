@@ -459,6 +459,28 @@ class Grant extends ListAbstract
         }
     }
 
+    public function isEmpty() {
+        $empty = true;
+
+        if( $this->getName() ) {
+            $empty = false;
+        }
+
+        foreach( $this->getComments() as $comment ) {
+            if( $comment->getComment() ) {
+                $empty = false;
+            }
+        }
+
+        $attachmentContainer = $this->getAttachmentContainer();
+        if( $attachmentContainer ) {
+            if( count($attachmentContainer->getDocumentContainers()) > 0 ) {
+                $empty = false;
+            }
+        }
+
+        return $empty;
+    }
 
     public function __toString() {
 

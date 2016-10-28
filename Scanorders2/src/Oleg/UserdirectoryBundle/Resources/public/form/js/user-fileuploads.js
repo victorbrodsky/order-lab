@@ -188,7 +188,8 @@ function initFileUpload( holder, data, addRemoveLinks ) {
                 if( $(this.element).hasClass('file-upload-dropzone-inactive') ) {
                     //console.log('init: disable dropzone');
                     //console.log($(this.element));
-                    disableEnableDropzone( $(this.element), true, null, true );
+                    var tooltipStr = 'This field can be edited in the Grants of the List Manager';
+                    disableEnableDropzone( $(this.element), true, tooltipStr, true );
                     withRemoveLinks = false;
                 }
 
@@ -269,7 +270,7 @@ function constractShowLink(id,name) {
 function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
 
     var documentid = $(previewElement).find('.file-upload-id').val();
-    console.log('remove documentid='+documentid+", confirmFlag="+confirmFlag);
+    //console.log('remove documentid='+documentid+", confirmFlag="+confirmFlag);
 
     if( confirmFlag == false ) {
         var _ref;
@@ -336,7 +337,7 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
     //if( commenttype != null ) {
 
         var url = getCommonBaseUrl("file-delete","employees");
-        console.log('url='+url);
+        //console.log('url='+url);
         //use comment id and documentid
         $.ajax({
             type: "POST",   //"DELETE",
@@ -808,7 +809,7 @@ function setDocumentsInDocumentConatiner( parent, documentContainerData, tooltip
             parent.find('.file-upload-dropzone').find('.dz-preview').remove();
             parent.find('.file-upload-dropzone').find('.dz-message').css('opacity','1');
             if( tooltipName ) {
-                attachTooltip(parent.find('.file-upload-dropzone'),true,tooltipName);
+                attachDropzoneTooltip(parent.find('.file-upload-dropzone'),true,tooltipName);
             }
             return;
         }
@@ -1015,7 +1016,7 @@ function createDropzoneHolder_Other(existingDropzoneHolder) {
         throw new Error("Container element is not found");
     }
 
-    printF(paperidElement,"paperidElement:");
+    //printF(paperidElement,"paperidElement:");
     //console.log(paperidElement);
 
     var id = paperidElement.last().attr('id');
@@ -1044,7 +1045,7 @@ function createDropzoneHolder_Other(existingDropzoneHolder) {
 }
 
 
-function disableEnableDropzone_NEW( dropzoneElement, disabled, tooltipName, forcedisable ) {
+function disableEnable_Dropzone_NEW( dropzoneElement, disabled, tooltipName, forcedisable ) {
 
     var dropzoneDom = dropzoneElement.get(0);
     //console.log('disable/enable dropzone className='+dropzoneDom.className);
@@ -1068,7 +1069,7 @@ function disableEnableDropzone_NEW( dropzoneElement, disabled, tooltipName, forc
         //console.log('ignore disable dropzone');
         //add tooltip
         if( tooltipName ) {
-            attachTooltip(dropzoneElement,true,tooltipName);
+            attachDropzoneTooltip(dropzoneElement,true,tooltipName);
         }
     } else {
         //enable
@@ -1077,7 +1078,7 @@ function disableEnableDropzone_NEW( dropzoneElement, disabled, tooltipName, forc
         dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
         //remove tooltip
         if( tooltipName ) {
-            attachTooltip(dropzoneElement,false,tooltipName);
+            attachDropzoneTooltip(dropzoneElement,false,tooltipName);
         }
     }
 }
@@ -1099,20 +1100,34 @@ function disableEnableDropzone( dropzoneElement, disabled, tooltipName, forcedis
 
     if( (disabled && !dropzoneElement.hasClass('dropzone-keep-enabled')) || (disabled && forcedisable) ) {
         //disable
-        dropzoneElement.removeClass('dz-clickable'); // remove cursor
-        dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+        //printF(dropzoneElement,'disable dropzone:');
+        //dropzoneElement.removeClass('dz-clickable'); // remove cursor
+        //dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+        myDropzone.disable();
         //add tooltip
         if( tooltipName ) {
-            attachTooltip(dropzoneElement,true,tooltipName);
+            attachDropzoneTooltip(dropzoneElement,true,tooltipName);
         }
     } else {
         //enable
-        dropzoneElement.addClass('dz-clickable'); // add cursor
-        dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+        //printF(dropzoneElement,'enable dropzone:');
+        //dropzoneElement.addClass('dz-clickable'); // add cursor
+        //dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+        myDropzone.enable();
         //remove tooltip
-        if( tooltipName ) {
-            attachTooltip(dropzoneElement,false,tooltipName);
-        }
+        attachDropzoneTooltip(dropzoneElement,false,tooltipName);
     }
 
+}
+
+function attachDropzoneTooltip( element, attach, tooltipStr ) {
+    if( attach ) {
+        //printF(element,"attach dropzone tooltip");
+        element.tooltip({
+            'title':tooltipStr
+        });
+    } else {
+        //printF(element,"destroy dropzone tooltip");
+        element.tooltip('destroy');
+    }
 }

@@ -2734,7 +2734,7 @@ class UserController extends Controller
             $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCoqType );
         }
 
-        //Credentials's coqAttachmentContainer
+        //StateLicense's attachmentContainer
         $documentCredType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName("Medical License Document");
         foreach( $credentials->getStateLicense() as $stateLicense) {
             $attachmentContainer = $stateLicense->getAttachmentContainer();
