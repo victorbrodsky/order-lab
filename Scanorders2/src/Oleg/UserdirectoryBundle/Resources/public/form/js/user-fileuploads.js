@@ -486,6 +486,13 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
     //replace __documentContainers__ by 0. Since we can't add/delete documentContainer by JS, then it's safe to use incremential id
     idHtml = fileUploadProcessNewDropzoneId(commentHolder,idHtml);
 
+    //enable this field, because dummyprototypefield is disabled by default
+    if( idHtml.indexOf("disabled") != -1 ) {
+        var find = 'disabled="disabled"';
+        var re = new RegExp(find, 'g');
+        idHtml = idHtml.replace(re, "");
+    }
+
     if( idHtml.indexOf("__") != -1 ) {
         throw new Error("Html input can not contain prototype substring '__': idHtml="+idHtml);
     }
@@ -534,12 +541,12 @@ function fileUploadProcessNewDropzoneId( holder, idHtml ) {
         //console.log("documentContainerNewId="+documentContainerNewId);
         //console.log("0 idHtml="+idHtml);
 
-        //idHtml = idHtml.replace("__documentContainers__", documentContainerNewId);
+        idHtml = idHtml.replace("__documentContainers__", documentContainerNewId);
+        documentContainerNewId = 0;
         var find = '__documentContainers__';
         var re = new RegExp(find, 'g');
         idHtml = idHtml.replace(re, documentContainerNewId);
-
-        //console.log("1 idHtml="+idHtml);
+        console.log("1 idHtml="+idHtml);
     }
     return idHtml;
 }
