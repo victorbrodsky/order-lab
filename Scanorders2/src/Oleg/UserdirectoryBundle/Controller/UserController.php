@@ -2010,7 +2010,7 @@ class UserController extends Controller
         if( count($entity->getEmploymentStatus()) == 0 ) {
             $entity->addEmploymentStatus(new EmploymentStatus($user));
         }
-        //check if has attachemntDocument and at least one DocumentContainers
+        //check if Institution is assign
         foreach( $entity->getEmploymentStatus() as $employmentStatus ) {
             $employmentStatus->createAttachmentDocument();
             //echo "employ inst=".$employmentStatus->getInstitution()."<br>";
@@ -3536,6 +3536,38 @@ class UserController extends Controller
         $yestardayDateStr = $yestardayDate->format("m/d/Y");
 
         $institutionArr = array();
+
+        //make sure EmploymentStatus exists
+        if( count($subjectUser->getEmploymentStatus()) == 0 ) {
+            $subjectUser->addEmploymentStatus(new EmploymentStatus($userAdmin));
+        }
+//        //check if Institution is assign
+//        foreach( $subjectUser->getEmploymentStatus() as $employmentStatus ) {
+//            $employmentStatus->createAttachmentDocument();
+//            //echo "employ inst=".$employmentStatus->getInstitution()."<br>";
+//            if( !$employmentStatus->getInstitution() ) {
+//                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//                if( !$wcmc ) {
+//                    //exit('No Institution: "WCMC"');
+//                    throw $this->createNotFoundException('No Institution: "WCMC"');
+//                }
+//                $mapper = array(
+//                    'prefix' => 'Oleg',
+//                    'bundleName' => 'UserdirectoryBundle',
+//                    'className' => 'Institution'
+//                );
+//                $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                    "Pathology and Laboratory Medicine",
+//                    $wcmc,
+//                    $mapper
+//                );
+//                if( !$pathology ) {
+//                    //exit('No Institution: "Pathology and Laboratory Medicine"');
+//                    throw $this->createNotFoundException('No Institution: "Pathology and Laboratory Medicine"');
+//                }
+//                $employmentStatus->setInstitution($pathology);
+//            }
+//        }
 
         //A- Add yesterday's date into the "Employment Period(s) [visible only to Editors and Administrators]">"End of Employment Date:"
         // FOR EVERY EMPTY "End of Employment Date:" in that section if there is more than one since it is an array.

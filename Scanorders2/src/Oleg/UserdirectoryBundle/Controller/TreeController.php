@@ -238,7 +238,7 @@ class TreeController extends Controller {
                 //for jstree
                 $addNodes = array();
                 if( $addNodeRepository ) {
-                    $addNodes = $addNodeRepository->findAllByInstitutionNodeAsUserArray($entity->getId());
+                    $addNodes = $addNodeRepository->findAllByInstitutionNodeAsUserArray($entity->getId(),true);
                 }
 
                 $children = false;
@@ -260,7 +260,7 @@ class TreeController extends Controller {
         //additional nodes ie. users
         if( $addNodeRepository ) {
             if( $pid && $pid != 0 && $pid != '#' && is_numeric($pid) ) {
-                $addNodes = $addNodeRepository->findAllByInstitutionNodeAsUserArray($pid);
+                $addNodes = $addNodeRepository->findAllByInstitutionNodeAsUserArray($pid,true);
                 if( count($addNodes) > 0 ) {
                     $output = array_merge($output, $addNodes);
                 }
