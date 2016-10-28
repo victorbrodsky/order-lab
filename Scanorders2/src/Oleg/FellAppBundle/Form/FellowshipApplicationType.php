@@ -83,7 +83,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
         $builder->add('cvs', 'collection', array(
@@ -94,7 +94,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
 
@@ -118,7 +118,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
     //        $builder->add('lawsuit','choice', array(
@@ -141,7 +141,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
 
@@ -200,7 +200,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
         $builder->add('formReports', 'collection', array(
@@ -211,7 +211,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
 
@@ -223,7 +223,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
 
@@ -236,7 +236,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
         $builder->add('itinerarys', 'collection', array(
@@ -247,7 +247,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
 
@@ -297,7 +297,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
         $builder->add('trainings', 'collection', array(

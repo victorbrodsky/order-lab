@@ -74,6 +74,17 @@ class BoardCertificationType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
+        //Board Certification(s) section Relevant Documents
+        $params = array('labelPrefix'=>'Relevant Document');
+        $params['document.showall'] = false;
+        $params['document.imageId'] = false;
+        $params['document.source'] = false;
+        //$params['read_only'] = $readonly;
+        $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+            'required' => false,
+            'label' => false
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -208,7 +208,7 @@
         {% set formfield = field %}
     {% endif %}
 
-    <div class="well {{ classname }}">
+    <div class="user-collection-holder well {{ classname }}">
 
         {% if cycle != 'show_user' %}
             <div class="text-right">
@@ -221,6 +221,23 @@
         {{ formmacros.fieldDateLabel(formfield.issueDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.expirationDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.recertificationDate,'allow-future-date') }}
+
+        {% if formfield.attachmentContainer is defined %}
+
+            {% set dropzoneInit = 'default' %}
+            {% set count = 0 %}
+            {% for documentContainer in formfield.attachmentContainer.documentContainers %}
+                {% set count = count + 1 %}
+                {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'boardcertification'~uniqueId,"",20,dropzoneInit) }}
+            {% endfor %}
+
+            {% if prototype == "prototype" %}
+                {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'boardcertification'~uniqueId,"",20,dropzoneInit) }}
+            {% endif %}
+
+        {% endif %}
 
     </div>
 {% endmacro %}

@@ -77,7 +77,7 @@ class BaseCommentsType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documents__',
+            'prototype_name' => '__documentsid__',
         ));
 
 

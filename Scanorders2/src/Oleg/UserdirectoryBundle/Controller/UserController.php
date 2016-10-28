@@ -1980,17 +1980,24 @@ class UserController extends Controller
             $entity->addMedicalTitle(new MedicalTitle($user));
         }
 
+        //state license
         $stateLicenses = $entity->getCredentials()->getStateLicense();
         if( count($stateLicenses) == 0 ) {
             $entity->getCredentials()->addStateLicense( new StateLicense() );
         }
-        //make sure stat license has attachmentContainer
+        //make sure state license has attachmentContainer
         foreach( $stateLicenses as $stateLicense ) {
             $stateLicense->createAttachmentDocument();
         }
 
-        if( count($entity->getCredentials()->getBoardCertification()) == 0 ) {
+        //board certification
+        $boardCertifications = $entity->getCredentials()->getBoardCertification();
+        if( count($boardCertifications) == 0 ) {
             $entity->getCredentials()->addBoardCertification( new BoardCertification() );
+        }
+        //make sure board certification has attachmentContainer
+        foreach( $boardCertifications as $boardCertification ) {
+            $boardCertification->createAttachmentDocument();
         }
 
         if( count($entity->getEmploymentStatus()) == 0 ) {
@@ -2056,7 +2063,7 @@ class UserController extends Controller
 //            $entity->getCredentials()->addIdentifier( new Identifier() );
 //        }
 
-        //make sure coqAttachmentContainer exists
+        //make sure coqAttachmentContainer, cliaAttachmentContainer exists
         $entity->getCredentials()->createAttachmentDocument();
 
     }
@@ -2716,31 +2723,53 @@ class UserController extends Controller
     //set documents for Credentials's coqAttachmentContainer and StateLicense's attachmentContainer
     public function processCredentials($subjectUser) {
 
+        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->get('user_security_utility');
 
         $credentials = $subjectUser->getCredentials();
         if( !$credentials ) {
             return;
         }
 
+        //Credentials's coqAttachmentContainer
         $coqAttachmentContainer = $credentials->getCoqAttachmentContainer();
         if( !$coqAttachmentContainer ) {
             return;
         }
-
-        //Credentials's coqAttachmentContainer
-        $documentCoqType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName("Certificate of Qualification Document");
+        $documentCoqType = $userSecUtil->getObjectByNameTransformer($user,"Certificate of Qualification Document",'UserdirectoryBundle','DocumentTypeList');
         foreach( $coqAttachmentContainer->getDocumentContainers() as $documentContainer) {
             $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCoqType );
         }
 
+        //Credentials's cliaAttachmentContainer
+        $cliaAttachmentContainer = $credentials->getCliaAttachmentContainer();
+        if( !$cliaAttachmentContainer ) {
+            return;
+        }
+        $documentCliaType = $userSecUtil->getObjectByNameTransformer($user,"CLIA Document",'UserdirectoryBundle','DocumentTypeList');
+        foreach( $cliaAttachmentContainer->getDocumentContainers() as $documentContainer) {
+            $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCliaType );
+        }
+
         //StateLicense's attachmentContainer
-        $documentCredType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName("Medical License Document");
+        $documentCredType = $userSecUtil->getObjectByNameTransformer($user,"Medical License Document",'UserdirectoryBundle','DocumentTypeList');
         foreach( $credentials->getStateLicense() as $stateLicense) {
             $attachmentContainer = $stateLicense->getAttachmentContainer();
             if( $attachmentContainer ) {
                 foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
                     $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentCredType);
+                }
+            }
+        }
+
+        //BoardCertification's attachmentContainer
+        $documentBoardcertType = $userSecUtil->getObjectByNameTransformer($user,"Board Certification Document",'UserdirectoryBundle','DocumentTypeList');
+        foreach( $credentials->getBoardCertification() as $boardCertification ) {
+            $attachmentContainer = $boardCertification->getAttachmentContainer();
+            if( $attachmentContainer ) {
+                foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
+                    $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentBoardcertType);
                 }
             }
         }

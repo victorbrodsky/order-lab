@@ -59,6 +59,20 @@ class BoardCertification
      **/
     private $certifyingBoardOrganization;
 
+    //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
+    /**
+     * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
+     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
+     **/
+    private $attachmentContainer;
+
+
+    public function __construct() {
+        //add one document
+        $this->createAttachmentDocument();
+    }
+
+
 
     /**
      * @param mixed $credentials
@@ -172,6 +186,37 @@ class BoardCertification
         return $this->recertificationDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAttachmentContainer()
+    {
+        return $this->attachmentContainer;
+    }
+
+    /**
+     * @param mixed $attachmentContainer
+     */
+    public function setAttachmentContainer($attachmentContainer)
+    {
+        $this->attachmentContainer = $attachmentContainer;
+    }
+
+
+
+
+    //create attachmentDocument holder with one DocumentContainer if not exists
+    public function createAttachmentDocument() {
+        //add one document
+        $attachmentContainer = $this->getAttachmentContainer();
+        if( !$attachmentContainer ) {
+            $attachmentContainer = new AttachmentContainer();
+            $this->setAttachmentContainer($attachmentContainer);
+        }
+        if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
+            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
+        }
+    }
 
 
     public function __toString() {

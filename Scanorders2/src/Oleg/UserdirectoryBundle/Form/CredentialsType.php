@@ -75,6 +75,17 @@ class CredentialsType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
+        //Clinical Laboratory Improvement Amendments (CLIA) section Relevant Documents
+        $params = array('labelPrefix'=>'Relevant Document');
+        $params['document.showall'] = false;
+        $params['document.imageId'] = false;
+        $params['document.source'] = false;
+        //$params['read_only'] = $readonly;
+        $builder->add('cliaAttachmentContainer', new AttachmentContainerType($params), array(
+            'required' => false,
+            'label' => false
+        ));
+
         $builder->add('numberPFI', null, array(
             'label' => 'NY Permanent Facility Identifier (PFI) Number:',
             'attr' => array('class'=>'form-control form-control-modif')

@@ -949,22 +949,12 @@
                                                 {% if form.credentials.coqAttachmentContainer is defined %}
 
                                                     {% set dropzoneInit = 'default' %}
-                                                    {#{% if formfield.vars.value and formfield.vars.value.id == app.security.getToken().getUser().getId() %}#}
-                                                        {#{% set dropzoneInit = 'inactive' %}#}
-                                                    {#{% endif %}#}
-
                                                     {% set count = 0 %}
                                                     {% for documentContainer in form.credentials.coqAttachmentContainer.documentContainers %}
-                                                        {#documentContainers|length:{{ form.credentials.coqAttachmentContainer.documentContainers|length }}#}
                                                         {% set count = count + 1 %}
                                                         {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
                                                         {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'coq'~uniqueId,"",20,dropzoneInit) }}
                                                     {% endfor %}
-
-                                                    {#{% if prototype == "prototype" %}#}
-                                                        {#{% set uniqueId = "1-"~"now"|date("mdYHisu") %}#}
-                                                        {#{{ formmacros.fieldDocumentContainer(form.credentials.coqAttachmentContainer.documentContainers.vars.prototype,cycle,'coq'~uniqueId,"",20,dropzoneInit) }}#}
-                                                    {#{% endif %}#}
 
                                                 {% endif %}
 
@@ -976,6 +966,7 @@
 								{% do form.credentials.coqCode.setRendered %}
                                 {% do form.credentials.numberCOQ.setRendered %}
                                 {% do form.credentials.coqExpirationDate.setRendered %}
+                                {% do form.credentials.coqAttachmentContainer.setRendered %}
                             {% endif %}
 
 
@@ -998,10 +989,22 @@
                                     </div>
                                     <div id="clia" class="panel-collapse collapse in">
                                         <div class="panel-body">
-                                            <div class="user-clia-holder">
+                                            <div class="user-clia-holder form-element-holder">
 
                                                 {{ formmacros.field_notempty(form.credentials.numberCLIA,cycle) }}
                                                 {{ formmacros.fieldDateLabel_notempty(form.credentials.cliaExpirationDate,cycle,'allow-future-date') }}
+
+                                                {% if form.credentials.cliaAttachmentContainer is defined %}
+
+                                                    {% set dropzoneInit = 'default' %}
+                                                    {% set count = 0 %}
+                                                    {% for documentContainer in form.credentials.cliaAttachmentContainer.documentContainers %}
+                                                        {% set count = count + 1 %}
+                                                        {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
+                                                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'clia'~uniqueId,"",20,dropzoneInit) }}
+                                                    {% endfor %}
+
+                                                {% endif %}
 
                                             </div>
                                         </div>
@@ -1010,6 +1013,7 @@
                             {% else %}
                                 {% do form.credentials.numberCLIA.setRendered %}
                                 {% do form.credentials.cliaExpirationDate.setRendered %}
+                                {% do form.credentials.cliaAttachmentContainer.setRendered %}
                             {% endif %}
 
 

@@ -456,6 +456,10 @@ function mapperHolderDocument(holderTop) {
 // name= oleg_userdirectorybundle_user[privateComments][0][documents][0][id]
 function constractDocumentIdFieldHtml(commentHolder,documentid) {
 
+    function isInt(n){
+        return Number(n) === n && n % 1 === 0;
+    }
+
     var res = getNewDocumentInfoByHolder(commentHolder);
 
     //insert document id input field
@@ -466,6 +470,11 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
     var beginIdStr = res['beginIdStr'];
     var beginNameStr = res['beginNameStr'];
 
+    //console.log("documentid="+documentid);
+    //console.log("documentCount="+documentCount);
+    //console.log("beginIdStr="+beginIdStr);
+    //console.log("beginNameStr="+beginNameStr);
+
     //var documentCount = maxFiles + comments.length;    //'1'; //maximum number of comments is limited, so use this number
 
     //var idHtml =    '<input type="hidden" id="'+beginIdStr+'_documents_'+documentCount+'_id" '+
@@ -473,6 +482,9 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
 
     var idHtml =    '<input type="hidden" id="'+beginIdStr+documentCount+'_id" '+
         'name="'+beginNameStr+'['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
+
+    //replace __documentContainers__ by 0. Since we can't add/delete documentContainer by JS, then it's safe to use incremential id
+    idHtml = fileUploadProcessNewDropzoneId(commentHolder,idHtml);
 
     if( idHtml.indexOf("__") != -1 ) {
         throw new Error("Html input can not contain prototype substring '__': idHtml="+idHtml);
@@ -483,6 +495,54 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
     return idHtml;
 }
 
+//replace __documentContainers__ by 0. Since we can't add/delete documentContainer by JS, then it's safe to use the same documentContainer id.
+function fileUploadProcessNewDropzoneId( holder, idHtml ) {
+    if( idHtml.indexOf("__documentContainers__") != -1 ) {
+        //console.log("idHtml="+idHtml);
+        var documentContainerNewId = 0;
+        //paperidElement = oleg_userdirectorybundle_user_credentials_boardCertification_1_attachmentContainer_documentContainers_0_id
+        var paperidElement = holder.find('.documentcontainer-field-id');
+
+        if( !paperidElement || paperidElement.length == 0 ) {
+            printF(holder,"Container holder:");
+            throw new Error("Container element is not found by class 'documentcontainer-field-id'");
+        }
+
+        //printF(paperidElement,"paperidElement:");
+        //console.log(paperidElement);
+
+        var documentContainerId = paperidElement.last().attr('id');
+        //console.log("documentContainerId="+documentContainerId);
+
+        if( documentContainerId.indexOf("_documentContainers_") != -1 ) {
+            var nameArr = documentContainerId.split("_documentContainers_");
+            if( nameArr.length > 1 ) {
+                var endNameStr = nameArr[1]; //0_id
+                if( endNameStr ) {
+                    var endNameArr = endNameStr.split("_");
+                    if( endNameArr.length > 0 ) {
+                        var documentContainerCurrentId = endNameArr[0];
+                        if( isInt(documentContainerCurrentId) ) {
+                            documentContainerCurrentId = parseInt(documentContainerCurrentId);
+                            documentContainerNewId = documentContainerCurrentId;    // + 1; //use the same container
+                            //console.log("got documentContainerNewId="+documentContainerNewId);
+                        }
+                    }
+                }
+            }
+        }
+        //console.log("documentContainerNewId="+documentContainerNewId);
+        //console.log("0 idHtml="+idHtml);
+
+        //idHtml = idHtml.replace("__documentContainers__", documentContainerNewId);
+        var find = '__documentContainers__';
+        var re = new RegExp(find, 'g');
+        idHtml = idHtml.replace(re, documentContainerNewId);
+
+        //console.log("1 idHtml="+idHtml);
+    }
+    return idHtml;
+}
 
 //get document container id and name up to _documents_:
 //example: oleg_userdirectorybundle_user_publicComments_0
@@ -497,7 +557,7 @@ function getNewDocumentInfoByHolder( commentHolder ) {
     }
 
     //use dummyprototypefield to get id and name prototype for adding new document
-    var uploadid = commentHolder.find('input.dummyprototypefield[id*="__documents__"]');
+    var uploadid = commentHolder.find('input.dummyprototypefield[id*="__documentsid__"]');
 
     if( uploadid.length == 0 ) {
         uploadid = commentHolder.find('input.dummyprototypefield');
@@ -531,7 +591,7 @@ function getElementInfoById( id, name ) {
     //console.log('name='+name);
 
     if( !id || id == ""  ) {
-        throw new Error("id is empty, id="+id+", name="+name);
+        throw new Error("id is empty, id="+id);
     }
 
     if( !name || name == ""  ) {
@@ -545,13 +605,14 @@ function getElementInfoById( id, name ) {
 //        var res = getElementInfoById_User( id, name );
 //    }
 
+    //console.log("getElementInfoById id="+id);
 
-    //id: oleg_userdirectorybundle_user[publicComments][0][documents][__documents__][id]
-    var idArr = id.split("__documents__");
+    //id: oleg_userdirectorybundle_user[publicComments][0][documents][__documentsid__][id]
+    var idArr = id.split("__documentsid__");
     var beginIdStr = idArr[0];
     //console.log('beginIdStr='+beginIdStr);
 
-    var nameArr = name.split("[__documents__]");
+    var nameArr = name.split("[__documentsid__]");
     var beginNameStr = nameArr[0];
     //console.log('beginNameStr='+beginNameStr);
 
@@ -1037,7 +1098,7 @@ function createDropzoneHolder_Other(existingDropzoneHolder) {
 
     var newForm = prototype.replace(/__grants__/g, grantid);
     newForm = newForm.replace(/__documentContainers__/g, documentContainerid);
-    newForm = newForm.replace(/__documents__/g, documentid);
+    newForm = newForm.replace(/__documentsid__/g, documentid);
 
     //console.log("newForm="+newForm);
 

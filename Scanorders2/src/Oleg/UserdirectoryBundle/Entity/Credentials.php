@@ -42,6 +42,12 @@ class Credentials extends BaseUserAttributes
     private $cliaExpirationDate;
 
     /**
+     * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
+     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
+     **/
+    private $cliaAttachmentContainer;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $numberPFI;
@@ -162,6 +168,24 @@ class Credentials extends BaseUserAttributes
     {
         return $this->cliaExpirationDate;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCliaAttachmentContainer()
+    {
+        return $this->cliaAttachmentContainer;
+    }
+
+    /**
+     * @param mixed $cliaAttachmentContainer
+     */
+    public function setCliaAttachmentContainer($cliaAttachmentContainer)
+    {
+        $this->cliaAttachmentContainer = $cliaAttachmentContainer;
+    }
+
+
 
     /**
      * @param mixed $coqExpirationDate
@@ -493,14 +517,24 @@ class Credentials extends BaseUserAttributes
 
     //create attachmentDocument holder with one DocumentContainer if not exists
     public function createAttachmentDocument() {
-        //add one document
-        $attachmentContainer = $this->getCoqAttachmentContainer();
-        if( !$attachmentContainer ) {
-            $attachmentContainer = new AttachmentContainer();
-            $this->setCoqAttachmentContainer($attachmentContainer);
+        //add one document CoqAttachmentContainer
+        $coqAttachmentContainer = $this->getCoqAttachmentContainer();
+        if( !$coqAttachmentContainer ) {
+            $coqAttachmentContainer = new AttachmentContainer();
+            $this->setCoqAttachmentContainer($coqAttachmentContainer);
         }
-        if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
-            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
+        if( count($coqAttachmentContainer->getDocumentContainers()) == 0 ) {
+            $coqAttachmentContainer->addDocumentContainer( new DocumentContainer() );
+        }
+
+        //add one document CliaAttachmentContainer
+        $cliaAttachmentContainer = $this->getCliaAttachmentContainer();
+        if( !$cliaAttachmentContainer ) {
+            $cliaAttachmentContainer = new AttachmentContainer();
+            $this->setCliaAttachmentContainer($cliaAttachmentContainer);
+        }
+        if( count($cliaAttachmentContainer->getDocumentContainers()) == 0 ) {
+            $cliaAttachmentContainer->addDocumentContainer( new DocumentContainer() );
         }
     }
 
