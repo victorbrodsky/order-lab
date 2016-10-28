@@ -10,15 +10,15 @@ use Doctrine\ORM\EntityRepository;
 class UserRepository extends EntityRepository {
 
 
-    public function findAllByInstitutionNodeAsUserArray( $nodeid ) {
+    public function findAllByInstitutionNodeAsUserArray( $nodeid, $onlyWorking=false ) {
 
-        $users = $this->findAllByInstitutionNode($nodeid);
+        $users = $this->findAllByInstitutionNode($nodeid,$onlyWorking);
         $output = $this->convertUsersToArray($users,$nodeid);
 
         return $output;
     }
 
-    public function findAllByInstitutionNode( $nodeid ) {
+    public function findAllByInstitutionNode( $nodeid, $onlyWorking=false ) {
 
         $query = $this->_em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:User', 'user')
@@ -34,6 +34,13 @@ class UserRepository extends EntityRepository {
         $query->where("administrativeTitles.institution = :nodeid OR appointmentTitles.institution = :nodeid OR medicalTitles.institution = :nodeid");
         $query->orWhere("researchLabs.institution = :nodeid");
         $query->setParameters( array("nodeid"=>$nodeid) );
+
+        if( $onlyWorking ) {
+            $curdate = date("Y-m-d", time());
+            $query->leftJoin("user.employmentStatus", "employmentStatus");
+            $currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+            $query->andWhere($currentusers);
+        }
 
         $users = $query->getQuery()->getResult();
 
@@ -122,7 +129,7 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
-    public function findUserByRole( $role, $orderBy="user.id" ) {
+    public function findUserByRole( $role, $orderBy="user.id", $onlyWorking=false ) {
 
         //$user = null;
 
@@ -133,6 +140,13 @@ class UserRepository extends EntityRepository {
             ->where("user.roles LIKE :role")
             ->orderBy($orderBy,"ASC")
             ->setParameter('role', '%"' . $role . '"%');
+
+        if( $onlyWorking ) {
+            $curdate = date("Y-m-d", time());
+            $query->leftJoin("user.employmentStatus", "employmentStatus");
+            $currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+            $query->andWhere($currentusers);
+        }
 
         return $query->getQuery()->getResult();
     }
@@ -448,7 +462,7 @@ class UserRepository extends EntityRepository {
     }
 
     //find users by roles specified by sitename, objectStr, actionStr and with institution equal to institutuionId or with instition children roles
-    public function findUsersBySitePermissionObjectActionInstitution( $sitename, $objectStr, $actionStr, $institutionId ) {
+    public function findUsersBySitePermissionObjectActionInstitution( $sitename, $objectStr, $actionStr, $institutionId, $onlyWorking=false ) {
 
         $roles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename);
 
@@ -467,6 +481,13 @@ class UserRepository extends EntityRepository {
         //$query->leftJoin("OlegUserdirectoryBundle:Roles", "roles", "WITH", $withLikesStr);
 
         $query->where($withLikesStr);
+
+        if( $onlyWorking ) {
+            $curdate = date("Y-m-d", time());
+            $query->leftJoin("user.employmentStatus", "employmentStatus");
+            $currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+            $query->andWhere($currentusers);
+        }
 
         $query->orderBy("user.primaryPublicUserId","ASC");
 

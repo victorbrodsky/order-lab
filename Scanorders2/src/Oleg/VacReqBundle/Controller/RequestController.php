@@ -1241,7 +1241,7 @@ class RequestController extends Controller
         //echo "organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
 
         if( count($organizationalInstitutions) == 0 ) {
-            $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN");
+            $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN","infos.lastName",true);
             $emails = array();
             foreach( $adminUsers as $adminUser ) {
                 $singleEmail = $adminUser->getSingleEmail();

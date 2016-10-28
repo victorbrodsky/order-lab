@@ -102,7 +102,7 @@ class ApproverController extends Controller
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName");
+            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -112,9 +112,9 @@ class ApproverController extends Controller
 //        $roleSubmitter = $roleSubmitters[0];
 //        //echo "roleSubmitter=".$roleSubmitter."<br>";
 //        if( $roleSubmitter ) {
-//            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName");
-//        }
-        $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId);
+//            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
+//        }s
+        $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId,true);
 
         $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
 
@@ -160,7 +160,7 @@ class ApproverController extends Controller
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName");
+            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -170,7 +170,7 @@ class ApproverController extends Controller
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName");
+            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
         }
 
         $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
@@ -220,7 +220,7 @@ class ApproverController extends Controller
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName");
+            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -236,7 +236,7 @@ class ApproverController extends Controller
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName");
+            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
         }
 
         $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
@@ -814,7 +814,7 @@ class ApproverController extends Controller
 
         //2) remove approver role from all users
         if( $role ) {
-            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleName);
+            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleName,"infos.lastName",true);
             foreach( $users as $user ) {
                 $user->removeRole($roleName);
             }

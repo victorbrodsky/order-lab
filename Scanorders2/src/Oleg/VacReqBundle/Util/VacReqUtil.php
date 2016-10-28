@@ -125,7 +125,7 @@ class VacReqUtil
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName());
+            $approvers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
 
         return $approvers;
@@ -143,7 +143,7 @@ class VacReqUtil
 
         //echo "role=".$role."<br>";
         if( $role ) {
-            $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($role->getName());
+            $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($role->getName(),"infos.lastName",true);
         }
 
         return $users;
@@ -2227,7 +2227,7 @@ class VacReqUtil
         foreach( $supervisorRoles as $supervisorRole ) {
             //echo "supervisorRole=".$supervisorRole."<br>";
 //            //find users with this role
-            $supervisors = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($supervisorRole->getName());
+            $supervisors = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($supervisorRole->getName(),"infos.lastName",true);
             foreach( $supervisors as $supervisor ) {
                 $supervisorsArr[] = $supervisor;
             }
@@ -2483,7 +2483,7 @@ class VacReqUtil
     //$role - string; for example "ROLE_VACREQ_APPROVER_CYTOPATHOLOGY"
     public function getApproversBySubmitterRole( $role ) {
         $roleApprover = str_replace("SUBMITTER","APPROVER",$role);
-        $approvers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover);
+        $approvers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover,"infos.lastName",true);
 
         $approversArr = array();
         foreach( $approvers as $approver ) {
