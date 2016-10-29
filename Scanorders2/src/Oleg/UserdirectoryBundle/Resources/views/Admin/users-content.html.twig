@@ -42,31 +42,46 @@
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" href="" aria-expanded="false" onclick="collapseThis(this)">
-                        Outlook
+                        Email List
                     </a>
                 </h4>
             </div>
             <div class="panel-collapse collapse" role="tabpanel">
                 <div class="panel-body">
-                    {{ emailsArr|join('; ') }}
+                    {#{{ emailsArr|join('; ') }}#}
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#apple-mail" aria-controls="apple-mail" role="tab" data-toggle="tab">Apple Mail</a></li>
+                        <li role="presentation"><a href="#outlook-mail" aria-controls="outlook-mail" role="tab" data-toggle="tab">Outlook</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="apple-mail">
+                            {{ emailsAppleArr|join(', ') }}
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="outlook-mail">
+                            {{ emailsArr|join('; ') }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="" aria-expanded="false" onclick="collapseThis(this)">
-                        Apple Mail
-                    </a>
-                </h4>
-            </div>
-            <div class="panel-collapse collapse" role="tabpanel">
-                <div class="panel-body">
-                    {{ emailsAppleArr|join(', ') }}
-                </div>
-            </div>
-        </div>
+        {#<div class="panel panel-default">#}
+            {#<div class="panel-heading" role="tab">#}
+                {#<h4 class="panel-title">#}
+                    {#<a data-toggle="collapse" href="" aria-expanded="false" onclick="collapseThis(this)">#}
+                        {#Apple Mail#}
+                    {#</a>#}
+                {#</h4>#}
+            {#</div>#}
+            {#<div class="panel-collapse collapse" role="tabpanel">#}
+                {#<div class="panel-body">#}
+                    {#{{ emailsAppleArr|join(', ') }}#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
 
     {% endif %}
     {# EOF show all emails #}
