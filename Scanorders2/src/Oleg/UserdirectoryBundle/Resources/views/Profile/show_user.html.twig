@@ -68,7 +68,12 @@
     <br>
 
     {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}
-    {{ render_hinclude( url('employees_showuser_only',{'id':user_id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
+    {#{{ render_hinclude( url('employees_showuser_only',{'id':user_id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}#}
+
+    <button id="btnShowUserOnly" class="btn btn-primary" name="btnShowUserOnly" type="button" onclick="showUserDetailsAjax({{ user_id }})">View Details</button>
+    {#<a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>#}
+
+    <div id="user-details"></div>
 
     {% endif %}
     
@@ -112,7 +117,42 @@
             }, 1000); 
 
         });
-        
+
+
+        function showUserDetailsAjax( userid ) {
+            //console.log('userid=' + userid);
+            //var btn = $('#btnShowUserOnly');
+            var btn = document.getElementById("btnShowUserOnly");
+
+            var lbtn = Ladda.create(btn);
+            lbtn.start();
+
+            var url = Routing.generate('employees_showuser_only_ajax');
+            url = url + "?userid="+userid;
+            //console.log("url="+url);
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                type: "GET",
+                //type: "POST",
+                //data: {id: userid },
+                dataType: 'json',
+                async: asyncflag
+            }).success(function(response) {
+                //console.log(response);
+                var template = response;
+                $('#user-details').html(template); //Change the html of the div with the id = "your_div"
+                $('#btnShowUserOnly').hide();
+                //initUserForm();
+            }).done(function() {
+                lbtn.stop();
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+            });
+
+        }
+
         
         //init only js related to the attached user form
         function initUserForm() {

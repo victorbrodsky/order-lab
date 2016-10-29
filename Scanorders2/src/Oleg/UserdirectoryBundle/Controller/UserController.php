@@ -1788,6 +1788,7 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        //echo "id=".$id."<br>";
         $showUser = $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
 
         if( $showUser === false ) {
@@ -1795,6 +1796,31 @@ class UserController extends Controller
         }
 
         return $showUser;
+    }
+
+    /**
+     * Second part of the user view profile
+     *
+     * @Route("/user/only-ajax/", name="employees_showuser_only_ajax", options={"expose"=true})
+     * @Method({"GET", "POST"})
+     */
+    public function showOnlyAjaxUserAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userid = $request->query->get('userid');
+        //echo "userid=".$userid."<br>";
+
+        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+
+        $template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+
+        $json = json_encode($template);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     /**
