@@ -430,7 +430,7 @@ class UserRepository extends EntityRepository {
         return $userParentRoles;
     }
 
-    public function findRolesBySiteAndPartialRoleName( $sitename, $rolePartialName, $institutionId=null ) {
+    public function findRolesBySiteAndPartialRoleName( $sitename, $rolePartialName, $institutionId=null, $statusArr=array() ) {
 
         $parameters = array(
             'sitename' => $sitename,
@@ -448,6 +448,15 @@ class UserRepository extends EntityRepository {
         if( $institutionId ) {
             $query->andWhere("list.institution = :institutionId");
             $parameters['institutionId'] = $institutionId;
+        }
+
+        if( $statusArr && count($statusArr)>0 ) {
+            $statusCriterionArr = array();
+            foreach( $statusArr as $status ) {
+                $statusCriterionArr[] = "list.status = '".$status."'";
+            }
+            $statusCriterion = "(".implode(" OR ",$statusCriterionArr).")";
+            $query->andWhere($statusCriterion);
         }
 
         $query->orderBy("list.id","ASC");

@@ -2252,6 +2252,7 @@ class VacReqUtil
         $exceptPermissions = ( array_key_exists('exceptPermissions', $params) ? $params['exceptPermissions'] : null);
         $asSupervisor = ( array_key_exists('asSupervisor', $params) ? $params['asSupervisor'] : false);
         $asUser = ( array_key_exists('asUser', $params) ? $params['asUser'] : false);
+        $statusArr = ( array_key_exists('statusArr', $params) ? $params['statusArr'] : array());
 
         $institutions = array();
         $addedArr = array();
@@ -2309,7 +2310,7 @@ class VacReqUtil
 //                $adminRole = true;
 //            }
 
-            foreach($roles as $role ) {
+            foreach( $roles as $role ) {
 
                 //echo "###role=".$role."<br>";
                 $include = true;
@@ -2322,6 +2323,22 @@ class VacReqUtil
                         $addedArr[] = $institution->getId();
                     } else {
                         continue;
+                    }
+
+                    //$statusArr: include only statuses provided by $statusArr
+                    if( $statusArr && count($statusArr)>0 ) {
+                        $statusOk = false;
+                        foreach( $statusArr as $thisStatus ) {
+                            $roleStatus = $role->getType();
+                            if( $roleStatus == $thisStatus ) {
+                                $statusOk = true;
+                                continue;
+                            }
+                        }
+
+                        if( !$statusOk ) {
+                            continue;
+                        }
                     }
 
                     if( $exceptPermissions ) {

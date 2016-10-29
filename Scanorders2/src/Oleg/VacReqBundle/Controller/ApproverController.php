@@ -56,6 +56,7 @@ class ApproverController extends Controller
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $groupParams['statusArr'] = array('default','user-added');
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "organizationalInstitutions=".count($organizationalInstitutions)."<br>";
 
@@ -752,6 +753,7 @@ class ApproverController extends Controller
     /**
      * It should ONLY remove/strip all of THIS GROUP's roles from all users.
      * Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
+     * //TODO: Why is this "Group" still shown? How do I delete it in order for it not to show on this page? https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/32/fixes-for-gina
      *
      * @Route("/organizational-institution-remove/{instid}", name="vacreq_group_remove")
      * @Method({"GET", "POST"})
@@ -778,8 +780,8 @@ class ApproverController extends Controller
 
         $removedRoles = array();
 
-        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_APPROVER_",$request);
-        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_SUBMITTER_",$request);
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_APPROVER_");
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_SUBMITTER_");
 
         if( count($removedRoles) > 0 ) {
             //Event Log
@@ -810,6 +812,13 @@ class ApproverController extends Controller
         if( count($roles)>0 ) {
             $role = $roles[0];
             $roleName = $role->getName();
+        }
+
+        //1a) set ROLE_VACREQ_SUBMITTER_ role status disabled
+        if( $rolePartialName == "ROLE_VACREQ_SUBMITTER_" ) {
+            foreach ($roles as $thisRole) {
+                $thisRole->setType('disabled');
+            }
         }
 
         //2) remove approver role from all users
@@ -998,6 +1007,7 @@ class ApproverController extends Controller
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $groupParams['statusArr'] = array('default','user-added');
         $groups = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "groups=".count($groups)."<br>";
 
