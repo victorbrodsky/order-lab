@@ -404,13 +404,15 @@ class RequestController extends Controller
 
         //check permission
         $routName = $request->get('_route');
-        if( $routName == 'vacreq_review' ) {
-            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
-                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-            }
-        } else {
-            if( false == $this->get('security.context')->isGranted("update", $entity) ) {
-                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if ($routName == 'vacreq_review') {
+                if (false == $this->get('security.context')->isGranted("changestatus", $entity)) {
+                    return $this->redirect($this->generateUrl('vacreq-nopermission'));
+                }
+            } else {
+                if (false == $this->get('security.context')->isGranted("update", $entity)) {
+                    return $this->redirect($this->generateUrl('vacreq-nopermission'));
+                }
             }
         }
 
