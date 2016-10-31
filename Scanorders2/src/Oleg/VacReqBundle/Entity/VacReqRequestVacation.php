@@ -28,6 +28,7 @@ class VacReqRequestVacation extends VacReqRequestBase
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
         $res = "### Vacation Request ###".$break;
+        $res .= "Status: ".$this->getStatus().$break;
         $res .= "Vacation - First Day Away: ".$transformer->transform($this->getStartDate()).$break;
         $res .= "Vacation - Last Day Away: ".$transformer->transform($this->getEndDate()).$break;
         $res .= "Vacation Days Requested: ".$this->getNumberOfDays().$break;
