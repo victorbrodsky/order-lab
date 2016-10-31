@@ -1422,10 +1422,16 @@ class VacReqRequest
             if( $this->hasBusinessRequest() ) {
                 $statusB = $this->getRequestBusiness()->getStatus();
             }
+            if( $statusB == 'pending' ) {
+                $statusB = 'set to Pending';
+            }
 
             $statusV = null;
             if( $this->hasVacationRequest() ) {
                 $statusV = $this->getRequestVacation()->getStatus();
+            }
+            if( $statusV == 'pending' ) {
+                $statusV = 'set to Pending';
             }
 
             if( $statusB && $statusV ) {
