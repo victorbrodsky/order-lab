@@ -8,7 +8,7 @@
 
 
     <p>
-    <form action="{{ path(routename) }}" method="get" {{ form_enctype(loggerfilter) }} class="well form-search">
+    <form action="{{ path(routename,{'id':userid}) }}" method="get" {{ form_enctype(loggerfilter) }} class="well form-search">
 
         <div class="row">
 

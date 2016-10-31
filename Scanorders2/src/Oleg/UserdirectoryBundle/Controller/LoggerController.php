@@ -23,6 +23,21 @@ class LoggerController extends Controller
 {
 
     /**
+     * Lists all Logger entities.
+     *
+     * @Route("/", name="employees_logger")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
+     */
+    public function indexAction(Request $request)
+    {
+        $params = array(
+            'sitename'=>$this->container->getParameter('employees.sitename')
+        );
+        return $this->listLogger($params,$request);
+    }
+
+    /**
      * Lists audit log for a specific user
      *
      * @Route("/user/{id}", name="employees_logger_user_with_id")
@@ -31,8 +46,8 @@ class LoggerController extends Controller
      * @Template("OlegUserdirectoryBundle:Logger:logger_object.html.twig")
      */
     public function getAuditLogAction(Request $request)
-    {       
-        
+    {
+
         $postData = $request->get('postData');
         $userid = $request->get('id');
         $onlyheader = $request->get('onlyheader');
@@ -86,23 +101,6 @@ class LoggerController extends Controller
 
         return $logger;
     }
-
-
-    /**
-     * Lists all Logger entities.
-     *
-     * @Route("/", name="employees_logger")
-     * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
-     */
-    public function indexAction(Request $request)
-    {
-        $params = array(
-            'sitename'=>$this->container->getParameter('employees.sitename')
-        );
-        return $this->listLogger($params,$request);
-    }
-
 
     protected function listLogger( $params, $request ) {
 
@@ -215,7 +213,9 @@ class LoggerController extends Controller
         } //if entityNamespace entityName entityId
 
         if( $postData == null ) {
-		    $request = $this->get('request');
+//            if( $request == null ) {
+//                $request = $this->get('request');
+//            }
 		    $postData = $request->query->all();
         }
 
@@ -270,6 +270,9 @@ class LoggerController extends Controller
             $eventlogTitle = $eventlogTitle . " showing " . count($pagination) . " matching event(s)";
         }
 
+        $route = $request->get('_route');
+        //echo "route=".$route."<br>";
+
         return array(
             'filterform' => $filterform,
             'loggerfilter' => $filterform->createView(),
@@ -280,7 +283,8 @@ class LoggerController extends Controller
             'createLogger' => $createLogger,
             'updateLogger' => $updateLogger,
             'filtered' => $filtered,
-            'routename' => $request->get('_route'),
+            'routename' => $route,
+            'userid' => $entityId,
             //'titlePostfix' => " event(s)",
             'eventLogTitle' => $eventlogTitle
         );
