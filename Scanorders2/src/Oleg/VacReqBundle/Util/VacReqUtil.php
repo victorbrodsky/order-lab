@@ -373,7 +373,7 @@ class VacReqUtil
         $requestName = $entity->getRequestName();
 
         //$subject = "Respond Confirmation for ".$requestName." ID #".$entity->getId();
-        $subject = $entity->getSubject();
+        $subject = $entity->getRequestSubject();
 
         $submitter = $entity->getUser();
 
