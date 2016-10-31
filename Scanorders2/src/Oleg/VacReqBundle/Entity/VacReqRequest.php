@@ -1393,7 +1393,7 @@ class VacReqRequest
     //Vacation request #3024 approved
     public function getRequestSubject() {
         if( $this->getDetailedStatus() ) {
-            $subject = $this->getDetailedStatus() . " (ID #" . $this->getId() .")";
+            $subject = $this->getDetailedStatus() . " [Request ID #" . $this->getId() ."]";
         } else {
             $subject = "Request ID #" . $this->getId();
         }
