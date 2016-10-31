@@ -538,7 +538,7 @@ class RequestController extends Controller
                     $eventType = 'Business/Vacation Request '.ucwords($overallStatus);
                     $action = $overallStatus;
 
-                    //send respond email
+                    //send respond email for the request changed by the form
                     $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $overallStatus );
                 }
 
@@ -884,6 +884,7 @@ class RequestController extends Controller
                     $approversNameStr = $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
                 } else {
                     $approversNameStr = null;
+                    //send confirmation email by express link to change status (email or link in the list)
                     $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
                 }
 

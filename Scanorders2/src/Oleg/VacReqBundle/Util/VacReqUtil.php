@@ -372,21 +372,22 @@ class VacReqUtil
 
         $requestName = $entity->getRequestName();
 
-        $subject = "Respond Confirmation for ".$requestName." ID #".$entity->getId();
+        //$subject = "Respond Confirmation for ".$requestName." ID #".$entity->getId();
+        $subject = $entity->getSubject();
 
         $submitter = $entity->getUser();
 
         if( !$message ) {
             $message = "Dear " . $submitter->getUsernameOptimal() . "," . $break . $break;
 
-            $message .= "Your " . $requestName . " ID #" . $entity->getId();
+//            $message .= "Your " . $requestName . " ID #" . $entity->getId();
+//            if ($status == 'pending') {
+//                $status = 'set to Pending';
+//            }
+//            $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . ":" . $break;
+//            $message .= $entity->getDetailedStatus().".".$break.$break;
 
-            if ($status == 'pending') {
-                $status = 'set to Pending';
-            }
-
-            $message .= " has been " . $status . " by " . $approver->getUsernameOptimal() . ":" . $break;
-            $message .= $entity->getDetailedStatus().".".$break.$break;
+            $message .= "Your " . $entity->getRequestMessageHeader() . " by " . $approver->getUsernameOptimal() . ":" . $break.$break;
 
             $message .= $entity->printRequest($this->container)."".$break.$break;
 

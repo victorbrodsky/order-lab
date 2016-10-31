@@ -960,12 +960,12 @@ class VacReqRequest
 
         if( $this->hasBusinessRequest() ) {
             $statusB = $this->getRequestBusiness()->getStatus();
-            $statusArr[] = "Business Travel Request ".strtoupper($statusB);
+            $statusArr[] = "Business Travel Request ".$statusB;
         }
 
         if( $this->hasVacationRequest() ) {
             $statusV = $this->getRequestVacation()->getStatus();
-            $statusArr[] =  "Vacation Request ".strtoupper($statusV);
+            $statusArr[] =  "Vacation Request ".$statusV;
         }
 
         $requestType = $this->getRequestType();
@@ -973,9 +973,9 @@ class VacReqRequest
             $res =  "Carry Vacation Request: ";
             $tentativeStatus = $this->getTentativeStatus();
             if( $tentativeStatus ) {
-                $res .= "Tentative Status: ".strtoupper($tentativeStatus)."; ";
+                $res .= "Tentative Status: ".$tentativeStatus."; ";
             }
-            $res .= "Final Status: ".strtoupper($this->getStatus());
+            $res .= "Final Status: ".$this->getStatus();
             $statusArr[] = $res;
         }
 
@@ -1311,9 +1311,9 @@ class VacReqRequest
 
         $res = "";
 
-        if( $this->getDetailedStatus() ) {
-            $res .= $this->getDetailedStatus() . $break;
-        }
+//        if( $this->getDetailedStatus() ) {
+//            $res .= $this->getDetailedStatus() . $break;
+//        }
 
         $res .= "Request ID: ".$this->getId().$break;
         $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
@@ -1388,6 +1388,46 @@ class VacReqRequest
         }
 
         return $res;
+    }
+
+    //Vacation request #3024 approved
+    public function getRequestSubject() {
+        if( $this->getDetailedStatus() ) {
+            $subject = $this->getDetailedStatus() . " (ID #" . $this->getId() .")";
+        } else {
+            $subject = "Request ID #" . $this->getId();
+        }
+
+        return $subject;
+    }
+
+    //"Vacation request #3024 has been approved" or "Vacation request #3024 has been denied"
+    public function getRequestMessageHeader() {
+
+        $headerArr = array();
+
+        if( $this->hasBusinessRequest() ) {
+            $statusB = $this->getRequestBusiness()->getStatus();
+            $headerArr[] = "Business Travel Request has been ".$statusB;
+        }
+
+        if( $this->hasVacationRequest() ) {
+            $statusV = $this->getRequestVacation()->getStatus();
+            $headerArr[] =  "Vacation Request has been ".$statusV;
+        }
+
+        $requestType = $this->getRequestType();
+        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+            $res =  "Carry Vacation Request: ";
+            $tentativeStatus = $this->getTentativeStatus();
+            if( $tentativeStatus ) {
+                $res .= "Tentative Status: ".$tentativeStatus."; ";
+            }
+            $res .= "Final Status: ".$this->getStatus();
+            $headerArr[] = $res;
+        }
+
+        return implode("; ",$headerArr);
     }
 
     //"Submitter: " . $this->getSubmitter() . (url)
