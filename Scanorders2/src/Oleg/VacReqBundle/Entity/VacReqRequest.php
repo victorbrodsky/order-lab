@@ -1404,20 +1404,11 @@ class VacReqRequest
     //"Vacation request #3024 has been approved" or "Vacation request #3024 has been denied"
     public function getRequestMessageHeader() {
 
-        $headerArr = array();
-
-        if( $this->hasBusinessRequest() ) {
-            $statusB = $this->getRequestBusiness()->getStatus();
-            $headerArr[] = "Business Travel Request has been ".$statusB;
-        }
-
-        if( $this->hasVacationRequest() ) {
-            $statusV = $this->getRequestVacation()->getStatus();
-            $headerArr[] =  "Vacation Request has been ".$statusV;
-        }
+        $header = "ID #".$this->getId();
 
         $requestType = $this->getRequestType();
         if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+
             $res =  "Carry Vacation Request: ";
             $tentativeStatus = $this->getTentativeStatus();
             if( $tentativeStatus ) {
@@ -1425,9 +1416,38 @@ class VacReqRequest
             }
             $res .= "Final Status: ".$this->getStatus();
             $headerArr[] = $res;
+
+        } else {
+
+            $statusB = null;
+            if( $this->hasBusinessRequest() ) {
+                $statusB = $this->getRequestBusiness()->getStatus();
+                $headerArr[] = "Business Travel Request has been ".$statusB;
+            }
+
+            $statusV = null;
+            if( $this->hasVacationRequest() ) {
+                $statusV = $this->getRequestVacation()->getStatus();
+                $headerArr[] =  "Vacation Request has been ".$statusV;
+            }
+
+            if( $statusB && $statusV ) {
+                if( $statusB == $statusV ) {
+                    $header = "Business Travel Request and Vacation Request have been ".$statusB;
+                } else {
+                    $header = "Business Travel Request has been ".$statusB . " and " . "Vacation Request has been ".$statusV;
+                }
+            }
+            elseif( $statusB && !$statusV ) {
+                $header = "Business Travel Request has been ".$statusB;
+            }
+            elseif( !$statusB && $statusV ) {
+                $header = "Vacation Request has been ".$statusV;
+            }
+
         }
 
-        return implode(", ",$headerArr);
+        return $header;
     }
 
     //"Submitter: " . $this->getSubmitter() . (url)
