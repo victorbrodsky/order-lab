@@ -3543,24 +3543,26 @@ class VacReqUtil
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
         /////////////// check permission: if user is in approvers => ok ///////////////
-        $permitted = false;
-        $approvers = $this->getRequestApprovers($entity);
-        $approversName = array();
-        foreach( $approvers as $approver ) {
-            if( $user->getId() == $approver->getId() ) {
-                //ok
-                $permitted = true;
+        if( false == $this->container->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            $permitted = false;
+            $approvers = $this->getRequestApprovers($entity);
+            $approversName = array();
+            foreach ($approvers as $approver) {
+                if ($user->getId() == $approver->getId()) {
+                    //ok
+                    $permitted = true;
+                }
+                $approversName[] = $approver . "";
             }
-            $approversName[] = $approver."";
-        }
-        if( $permitted == false ) {
-            //Flash
-            $session->getFlashBag()->add(
-                'notice',
-                "You can not review this request. This request can be approved or rejected by ".implode("; ",$approversName)
-            );
-            //return $this->redirect($this->generateUrl('vacreq-nopermission'));
-            return 'vacreq-nopermission';
+            if ($permitted == false) {
+                //Flash
+                $session->getFlashBag()->add(
+                    'notice',
+                    "You can not review this request. This request can be approved or rejected by " . implode("; ", $approversName)
+                );
+                //return $this->redirect($this->generateUrl('vacreq-nopermission'));
+                return 'vacreq-nopermission';
+            }
         }
         /////////////// EOF check permission: if user is in approvers => ok ///////////////
 

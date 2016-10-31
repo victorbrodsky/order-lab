@@ -411,6 +411,7 @@ class RequestController extends Controller
                 }
             } else {
                 if (false == $this->get('security.context')->isGranted("update", $entity)) {
+                    exit('no permission');
                     return $this->redirect($this->generateUrl('vacreq-nopermission'));
                 }
             }

@@ -268,23 +268,25 @@ class CarryOverController extends Controller
         }
 
         /////////////// check permission: if user is in approvers => ok ///////////////
-        $permitted = false;
-        $approvers = $vacreqUtil->getRequestApprovers($entity);
-        $approversName = array();
-        foreach( $approvers as $approver ) {
-            if( $user->getId() == $approver->getId() ) {
-                //ok
-                $permitted = true;
+        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            $permitted = false;
+            $approvers = $vacreqUtil->getRequestApprovers($entity);
+            $approversName = array();
+            foreach ($approvers as $approver) {
+                if ($user->getId() == $approver->getId()) {
+                    //ok
+                    $permitted = true;
+                }
+                $approversName[] = $approver . "";
             }
-            $approversName[] = $approver."";
-        }
-        if( $permitted == false ) {
-            //Flash
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                "You can not review this request. This request can be approved or rejected by ".implode("; ",$approversName)
-            );
-            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            if ($permitted == false) {
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "You can not review this request. This request can be approved or rejected by " . implode("; ", $approversName)
+                );
+                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            }
         }
         /////////////// EOF check permission: if user is in approvers => ok ///////////////
 
