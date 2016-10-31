@@ -1427,7 +1427,7 @@ class VacReqRequest
             $headerArr[] = $res;
         }
 
-        return implode("; ",$headerArr);
+        return implode(", ",$headerArr);
     }
 
     //"Submitter: " . $this->getSubmitter() . (url)
