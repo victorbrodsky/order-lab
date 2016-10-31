@@ -1409,26 +1409,23 @@ class VacReqRequest
         $requestType = $this->getRequestType();
         if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
 
-            $res =  "Carry Vacation Request: ";
+            $header =  "Carry Vacation Request: ";
             $tentativeStatus = $this->getTentativeStatus();
             if( $tentativeStatus ) {
-                $res .= "Tentative Status: ".$tentativeStatus."; ";
+                $header .= "Tentative Status: ".$tentativeStatus."; ";
             }
-            $res .= "Final Status: ".$this->getStatus();
-            $headerArr[] = $res;
+            $header .= "Final Status: ".$this->getStatus();
 
         } else {
 
             $statusB = null;
             if( $this->hasBusinessRequest() ) {
                 $statusB = $this->getRequestBusiness()->getStatus();
-                $headerArr[] = "Business Travel Request has been ".$statusB;
             }
 
             $statusV = null;
             if( $this->hasVacationRequest() ) {
                 $statusV = $this->getRequestVacation()->getStatus();
-                $headerArr[] =  "Vacation Request has been ".$statusV;
             }
 
             if( $statusB && $statusV ) {
