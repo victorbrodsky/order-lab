@@ -33,6 +33,7 @@ class SectionUserController extends UserController
         $em = $this->getDoctrine()->getManager();
 
         $userid = $request->query->get('userid');
+        $teamType = $request->query->get('teamType');
         //echo "userid=".$userid."<br>";
 
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
@@ -40,6 +41,7 @@ class SectionUserController extends UserController
         return array(
             'user' => $user,
             'cycle' => 'show_user',
+            'teamType' => $teamType,
             'postData' => '',
             'sitename' => $this->container->getParameter('employees.sitename'),
         );

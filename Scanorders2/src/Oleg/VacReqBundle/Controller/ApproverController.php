@@ -705,6 +705,14 @@ class ApproverController extends Controller
                 $em->flush($approverRole);
 
                 $count++;
+            } else {
+                $approverType = $approverRole->getType();
+                if( $approverType != 'default' && $approverType != 'user-added' ) {
+                    $approverRole->setType('default');
+                    $em->persist($approverRole);
+                    $em->flush($approverRole);
+                    $count++;
+                }
             }
 
             //create submitter role
@@ -724,6 +732,14 @@ class ApproverController extends Controller
                 $em->flush($submitterRole);
 
                 $count++;
+            } else {
+                $submitterType = $submitterRole->getType();
+                if( $submitterType != 'default' && $submitterType != 'user-added' ) {
+                    $submitterRole->setType('default');
+                    $em->persist($submitterRole);
+                    $em->flush($submitterRole);
+                    $count++;
+                }
             }
 
             if( $count > 0 ) {

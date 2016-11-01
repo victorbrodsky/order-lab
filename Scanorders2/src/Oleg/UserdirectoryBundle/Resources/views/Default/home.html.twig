@@ -128,11 +128,13 @@
 
         {# My Team #}
         {#{{ usermacros.userTeam( app.security.getToken().getUser, 'home', employees_sitename, postData, 'in' ) }}#}
-        {% set myteamurl = path(employees_sitename~'_my_team',{'userid': app.security.getToken().getUser.getId}) %}
-        <button id="userMyTeamDetailsBtn" type="button" class="btn btn-primary" onclick="userTeamTwigMacro('{{ myteamurl }}');">
-            My Team
-        </button>
-        <div id="userMyTeamDetails"></div>
+        {#{% set myteamurl = path(employees_sitename~'_my_team',{'userid': app.security.getToken().getUser.getId}) %}#}
+        {#<button id="userMyTeamDetailsBtn" type="button" class="btn btn-primary" onclick="userTeamTwigMacro('{{ myteamurl }}');">#}
+            {#My Team#}
+        {#</button>#}
+        {#<div id="userMyTeamDetails"></div>#}
+
+        {{ usermacros.userTeamAjax( app.security.getToken().getUser.getId, 'home', 'My Team', employees_sitename ) }}
 
     {% endif %}
 

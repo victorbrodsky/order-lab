@@ -1343,7 +1343,8 @@
         {#Team#}
         {#userEditor == true and #}
         {% if cycle == "show_user" %}
-            {{ usermacros.userTeam(entity,'profile',sitename,postData,"") }}
+            {#{{ usermacros.userTeam(entity,'profile',sitename,postData,"") }}#}
+            {{ usermacros.userTeamAjax( entity.getId, 'profile', 'Team', employees_sitename ) }}
         {% endif %}
 
 

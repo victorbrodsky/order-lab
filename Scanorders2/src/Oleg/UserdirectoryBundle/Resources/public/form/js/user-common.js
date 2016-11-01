@@ -1093,10 +1093,10 @@ function getSelect2Text(element) {
 }
 
 
-function userTeamTwigMacro(myteamurl) {
+function userTeamTwigMacro(myteamurl,btnTargetId,replaceTargetId) {
     //console.log("myteamurl="+myteamurl);
 
-    var btn = document.getElementById("userMyTeamDetailsBtn");
+    var btn = document.getElementById(btnTargetId);
     var lbtn = Ladda.create(btn);
     lbtn.start();
 
@@ -1111,8 +1111,8 @@ function userTeamTwigMacro(myteamurl) {
     }).success(function(response) {
         //console.log(response);
         var template = response;
-        $('#userMyTeamDetails').html(template); //Change the html of the div with the id = "your_div"
-        $('#userMyTeamDetailsBtn').hide();
+        $('#'+replaceTargetId).html(template); //Change the html of the div with the id = "your_div"
+        //$('#userMyTeamDetailsBtn').hide();
         //initUserForm();
     }).done(function() {
         lbtn.stop();

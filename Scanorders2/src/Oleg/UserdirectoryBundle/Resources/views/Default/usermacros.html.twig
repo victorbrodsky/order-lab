@@ -1351,6 +1351,32 @@
 
 
 {########################### Team #############################}
+{% macro userTeamAjax( userid, teamType, title, sitename ) %}
+    {% set teamurl = path(sitename~'_my_team',{'userid':userid, 'teamType':teamType}) %}
+    {#<button id="userTeamAjaxDetailsBtn" type="button" class="btn btn-primary" onclick="userTeamTwigMacro('{{ teamurl }}');">#}
+    {#Team#}
+    {#</button><br>#}
+    <div id="userTeamAjaxDetails">
+
+        <div id="userTeamAjaxDetailsPanel-{{ userid }}" class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title text-left">
+                    <a
+                            id="userTeamAjaxDetailsLink-{{ userid }}"
+                            data-toggle="collapse"
+                            href="#userTeamAjax"
+                            onclick="userTeamTwigMacro('{{ teamurl }}','userTeamAjaxDetailsLink-{{ userid }}','userTeamAjaxDetails');"
+                    >
+                        {{ title }}
+                    </a>
+                </h4>
+            </div>
+            <div id="userTeamAjax" class="panel-collapse collapse in">
+            </div>
+        </div>
+
+    </div>
+{% endmacro %}
 {% macro userTeam( user, type, sitename, postData, collapsein ) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
