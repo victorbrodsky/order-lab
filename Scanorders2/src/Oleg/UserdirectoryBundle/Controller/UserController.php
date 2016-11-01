@@ -1708,7 +1708,7 @@ class UserController extends Controller
         }
         
         $em = $this->getDoctrine()->getManager();
-        
+
         //testing
 //        return array(
 //            'title' => 'empty',
