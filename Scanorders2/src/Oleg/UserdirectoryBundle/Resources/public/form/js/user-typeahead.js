@@ -12,51 +12,77 @@ function initTypeaheadUserSiteSearch() {
     //console.log('typeahead search');
 
     var suggestions_limit = 5;
+    var rateLimitBy = 'debounce'; //Can be either debounce or throttle. Defaults to debounce
+    var rateLimitWait = 0; //The time interval in milliseconds that will be used by rateLimitBy. Defaults to 300
 
     //Bloodhound: Prefetched data is fetched and processed on initialization.
     //If the browser supports local storage, the processed data will be cached there to prevent additional network requests on subsequent page loads.
     //Don't use prefetch because the results will be stored in the browser cache and will not be updated on the user search
 
-    var userDB = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //prefetch: getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/%QUERY","employees"),
-        dupDetector: duplicationDetector,
-        limit: suggestions_limit
-    });
+    var userDBprefetch = null;
+    var institutionDBprefetch = null;
+    var cwidDBprefetch = null;
+    var admintitleDBprefetch = null;
+    var singleDbprefetch = null;
+    if( $("#navbar-multiple-datasets-typeahead-search") ) {
+        userDBprefetch = getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees");
+        institutionDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+suggestions_limit+"/prefetchmin","employees");
+        cwidDBprefetch = getCommonBaseUrl("util/common/user-data-search/cwid/"+suggestions_limit+"/prefetchmin","employees");
+        admintitleDBprefetch = getCommonBaseUrl("util/common/user-data-search/admintitle/"+suggestions_limit+"/prefetchmin","employees");
+        singleDbprefetch = getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees");
+    }
 
-    var institutionDB = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //prefetch: getCommonBaseUrl("util/common/user-data-search/service/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/institution/"+suggestions_limit+"/%QUERY","employees"),
-        dupDetector: duplicationDetector,
-        limit: suggestions_limit
-    });
+    var complex = true; //false;
 
-    var cwidDB = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //prefetch: getCommonBaseUrl("util/common/user-data-search/cwid/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/cwid/"+suggestions_limit+"/%QUERY","employees"),
-        dupDetector: duplicationDetector,
-        limit: suggestions_limit
-    });
+    if( complex ) {
+        var userDB = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: userDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees"),
+            remote: getCommonBaseUrl("util/common/user-data-search/user/" + suggestions_limit + "/%QUERY", "employees"),
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
 
-    var admintitleDB = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //prefetch: getCommonBaseUrl("util/common/user-data-search/admintitle/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/admintitle/"+suggestions_limit+"/%QUERY","employees"),
-        dupDetector: duplicationDetector,
-        limit: suggestions_limit
-    });
+        var institutionDB = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: institutionDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
+            remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
+
+        var cwidDB = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: cwidDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/cwid/prefetchmin","employees"),
+            remote: getCommonBaseUrl("util/common/user-data-search/cwid/" + suggestions_limit + "/%QUERY", "employees"),
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
+
+        var admintitleDB = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: admintitleDBprefetch, //getCommonBaseUrl("util/common/user-data-search/admintitle/prefetchmin","employees"),
+            remote: getCommonBaseUrl("util/common/user-data-search/admintitle/" + suggestions_limit + "/%QUERY", "employees"),
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
 
 //    var academictitleDB = new Bloodhound({
 //        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
 //        queryTokenizer: Bloodhound.tokenizers.whitespace,
-//        //prefetch: getCommonBaseUrl("util/common/user-data-search/academictitle/min","employees"),
+//        //prefetch: getCommonBaseUrl("util/common/user-data-search/academictitle/prefetchmin","employees"),
 //        remote: getCommonBaseUrl("util/common/user-data-search/academictitle/"+suggestions_limit+"/%QUERY","employees"),
 //        dupDetector: duplicationDetector,
 //        limit: suggestions_limit
@@ -65,38 +91,57 @@ function initTypeaheadUserSiteSearch() {
 //    var medicaltitleDB = new Bloodhound({
 //        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
 //        queryTokenizer: Bloodhound.tokenizers.whitespace,
-//        //prefetch: getCommonBaseUrl("util/common/user-data-search/medicaltitle/min","employees"),
+//        //prefetch: getCommonBaseUrl("util/common/user-data-search/medicaltitle/prefetchmin","employees"),
 //        remote: getCommonBaseUrl("util/common/user-data-search/medicaltitle/"+suggestions_limit+"/%QUERY","employees"),
 //        dupDetector: duplicationDetector,
 //        limit: suggestions_limit
 //    });
 
-    userDB.initialize();
-    institutionDB.initialize();
-    cwidDB.initialize();
-    admintitleDB.initialize();
-    //academictitleDB.initialize();
-    //medicaltitleDB.initialize();
- 
-    var myTypeahead = $('.multiple-datasets-typeahead-search .typeahead').typeahead({
-            highlight: true
-        },
-        {
-            name: 'user',
-            displayKey: 'text',
-            source: userDB.ttAdapter(),
-            templates: {
-                header: '<h3 class="search-name">Preferred Display Name</h3>'
-            }
-        },
-        {
-            name: 'admintitle',
-            displayKey: 'text',
-            source: admintitleDB.ttAdapter(),
-            templates: {
-                header: '<h3 class="search-name">Administrative Title</h3>'
-            }
-        },
+        userDB.initialize();
+        institutionDB.initialize();
+        cwidDB.initialize();
+        admintitleDB.initialize();
+
+        //academictitleDB.initialize();
+        //medicaltitleDB.initialize();
+
+    } else {
+
+        var singleDb = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: singleDbprefetch, //getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees"),
+            remote: getCommonBaseUrl("util/common/user-data-search/single/" + suggestions_limit + "/%QUERY", "employees"),
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
+
+        singleDb.initialize();
+    }
+
+
+    if( complex ) {
+        var myTypeahead = $('.multiple-datasets-typeahead-search .typeahead').typeahead({
+                highlight: true
+            },
+            {
+                name: 'user',
+                displayKey: 'text',
+                source: userDB.ttAdapter(),
+                templates: {
+                    header: '<h3 class="search-name">Preferred Display Name</h3>'
+                }
+            },
+            {
+                name: 'admintitle',
+                displayKey: 'text',
+                source: admintitleDB.ttAdapter(),
+                templates: {
+                    header: '<h3 class="search-name">Administrative Title</h3>'
+                }
+            },
 //        {
 //            name: 'academictitle',
 //            displayKey: 'text',
@@ -113,24 +158,37 @@ function initTypeaheadUserSiteSearch() {
 //                header: '<h3 class="search-name">Medical Title</h3>'
 //            }
 //        },
-        {
-            name: 'institution',
-            displayKey: 'text',
-            source: institutionDB.ttAdapter(),
-            templates: {
-                header: '<h3 class="search-name">Organization</h3>'
+            {
+                name: 'institution',
+                displayKey: 'text',
+                source: institutionDB.ttAdapter(),
+                templates: {
+                    header: '<h3 class="search-name">Organization</h3>'
+                }
+            },
+            {
+                name: 'cwid',
+                displayKey: 'text',
+                source: cwidDB.ttAdapter(),
+                templates: {
+                    header: '<h3 class="search-name">CWID</h3>'
+                }
             }
-        },
-        {
-            name: 'cwid',
-            displayKey: 'text',
-            source: cwidDB.ttAdapter(),
-            templates: {
-                header: '<h3 class="search-name">CWID</h3>'
+        );
+    } else {
+        var myTypeahead = $('.multiple-datasets-typeahead-search .typeahead').typeahead({
+                highlight: true
+            },
+            {
+                name: 'single',
+                displayKey: 'text',
+                source: singleDb.ttAdapter(),
+                templates: {
+                    header: '<h3 class="search-name">User</h3>'
+                }
             }
-        }
-    );
-             
+        );
+    }
         
     //var _typeaheadSearchInput = $('#user-typeahead-search-form input');
 

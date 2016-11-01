@@ -910,7 +910,7 @@ class UtilController extends Controller {
     
     /**
      * Check if this cwid exists in LDAP active directory
-     * @Route("/cwid-usertype-userid", name="employees_check_cwid-usertype-userid")
+     * @Route("/cwid-usertype-userid", name="employees_check_cwid-usertype-userid", options={"expose"=true})
      * @Method("GET")
      */
     public function checkCWIDUsertypeUseridAction(Request $request) {
@@ -943,7 +943,7 @@ class UtilController extends Controller {
 
     /**
      * Used by typeahead js
-     * @Route("/common/user-data-search/{type}/{limit}/{search}", name="employees_user-data-search")
+     * @Route("/common/user-data-search/{type}/{limit}/{search}", name="employees_user-data-search", options={"expose"=true})
      * @Method("GET")
      */
     public function getUserDataSearchAction(Request $request) {
@@ -980,7 +980,7 @@ class UtilController extends Controller {
         $object = null;
 
         if( $type == "user" ) {
-            if( $search == "min" ) {
+            if( $search == "prefetchmin" ) {
                 $criteriastr = "infos.displayName IS NOT NULL";
             } else {
                 $criteriastr = "infos.displayName LIKE '%".$search."%'";
@@ -995,7 +995,7 @@ class UtilController extends Controller {
             $dql->leftJoin("user.medicalTitles", "medicalTitles");
             $dql->leftJoin("medicalTitles.institution", "medicalInstitution");
 
-            if( $search == "min" ) {
+            if( $search == "prefetchmin" ) {
                 $criteriastr = "administrativeInstitution.name IS NOT NULL OR ";
                 $criteriastr .= "appointmentInstitution.name IS NOT NULL OR ";
                 $criteriastr .= "medicalInstitution.name IS NOT NULL";
@@ -1012,8 +1012,8 @@ class UtilController extends Controller {
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
-        if( $type == "cwid" ) {
-            if( $search == "min" ) {
+        if( $type == "cwid" || $type == "single" ) {
+            if( $search == "prefetchmin" ) {
                 $criteriastr = "user.primaryPublicUserId IS NOT NULL";
             } else {
                 $criteriastr = "user.primaryPublicUserId LIKE '%".$search."%'";
@@ -1021,10 +1021,10 @@ class UtilController extends Controller {
         }
 
         //administrative appointment title
-        if( $type == "admintitle" ) {
+        if( $type == "admintitle" ) { //|| $type == "single"
             $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
             $dql->leftJoin("administrativeTitles.name", "adminTitleName");
-            if( $search == "min" ) {
+            if( $search == "prefetchmin" ) {
                 $criteriastr = "adminTitleName.name IS NOT NULL";
             } else {
                 $criteriastr = "adminTitleName.name LIKE '%".$search."%'";
@@ -1040,7 +1040,7 @@ class UtilController extends Controller {
         if( $type == "academictitle" ) {
             $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
             $dql->leftJoin("appointmentTitles.name", "appointmentTitleName");
-            if( $search == "min" ) {
+            if( $search == "prefetchmin" ) {
                 $criteriastr = "appointmentTitleName.name IS NOT NULL";
             } else {
                 $criteriastr = "appointmentTitleName.name LIKE '%".$search."%'";
@@ -1056,7 +1056,7 @@ class UtilController extends Controller {
         if( $type == "medicaltitle" ) {
             $dql->leftJoin("user.medicalTitles", "medicalTitles");
             $dql->leftJoin("medicalTitles.name", "medicalTitleName");
-            if( $search == "min" ) {
+            if( $search == "prefetchmin" ) {
                 $criteriastr = "medicalTitleName.name IS NOT NULL";
             } else {
                 $criteriastr = "medicalTitleName.name LIKE '%".$search."%'";
@@ -1065,6 +1065,38 @@ class UtilController extends Controller {
             //time
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
+
+
+        if( $type == "single" ) {
+
+//            $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+//            $dql->leftJoin("administrativeTitles.name", "adminTitleName");
+//
+//            if( $search == "prefetchmin" ) {
+//                $criteriastr = "adminTitleName.name IS NOT NULL";
+//            } else {
+//                $criteriastr = "adminTitleName.name LIKE '%".$search."%'";
+//            }
+//
+//            //time
+//            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+
+            //echo "0 criteriastr=".$criteriastr."<br>";
+
+            if( $criteriastr ) {
+                $criteriastr = $criteriastr . " OR ";
+            }
+
+            if( $search == "prefetchmin" ) {
+                $criteriastr .= "infos.displayName IS NOT NULL";
+            } else {
+                $criteriastr .= "infos.displayName LIKE '%".$search."%'";
+            }
+
+            //echo "1 criteriastr=".$criteriastr."<br>";
+
+        }
+
 
         //filter out Pathology Fellowship Applicants
         $criteriastr = "(".$criteriastr . ") AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
