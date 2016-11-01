@@ -25,11 +25,12 @@ function initTypeaheadUserSiteSearch() {
     var admintitleDBprefetch = null;
     var singleDbprefetch = null;
     if( $("#navbar-multiple-datasets-typeahead-search") ) {
-        userDBprefetch = getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees");
-        institutionDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+suggestions_limit+"/prefetchmin","employees");
-        cwidDBprefetch = getCommonBaseUrl("util/common/user-data-search/cwid/"+suggestions_limit+"/prefetchmin","employees");
-        admintitleDBprefetch = getCommonBaseUrl("util/common/user-data-search/admintitle/"+suggestions_limit+"/prefetchmin","employees");
-        singleDbprefetch = getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees");
+        var searchLimit = 50;
+        userDBprefetch = getCommonBaseUrl("util/common/user-data-search/user/"+searchLimit+"/prefetchmin","employees");
+        institutionDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+searchLimit+"/prefetchmin","employees");
+        cwidDBprefetch = getCommonBaseUrl("util/common/user-data-search/cwid/"+searchLimit+"/prefetchmin","employees");
+        admintitleDBprefetch = getCommonBaseUrl("util/common/user-data-search/admintitle/"+searchLimit+"/prefetchmin","employees");
+        singleDbprefetch = getCommonBaseUrl("util/common/user-data-search/single/"+searchLimit+"/prefetchmin","employees");
     }
 
     var complex = true; //false;
