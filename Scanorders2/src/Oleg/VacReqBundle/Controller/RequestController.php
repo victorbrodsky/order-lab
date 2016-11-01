@@ -1244,6 +1244,16 @@ class RequestController extends Controller
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
 
+        //include this request institution to the $organizationalInstitutions array
+        $organizationalInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions );
+
+        //include this request institution to the $tentativeInstitutions array
+        $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions );
+
+//        foreach( $organizationalInstitutions as $inst ) {
+//            echo "organizationalInstitution=".$inst."<br>";
+//        }
+
         if( count($organizationalInstitutions) == 0 ) {
             $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN","infos.lastName",true);
             $emails = array();

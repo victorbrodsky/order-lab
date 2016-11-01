@@ -3756,4 +3756,26 @@ class VacReqUtil
         return $action;
     }
 
+
+    public function addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions ) {
+
+        if( $organizationalInstitutions && $entity->getInstitution() ) {
+            //add to $organizationalInstitutions
+            if( !array_key_exists($entity->getInstitution()->getId(), $organizationalInstitutions) ) {
+                $thisApprovers = $this->getRequestApprovers( $entity );
+                $approversArr = array();
+                foreach( $thisApprovers as $thisApprover ) {
+                    $approversArr[] = $thisApprover->getUsernameShortest();
+                }
+                if( count($approversArr) > 0 ) {
+                    $orgName = $entity->getInstitution() . " (for review by " . implode(", ",$approversArr) . ")";
+                } else {
+                    $orgName = $entity->getInstitution()."";
+                }
+                $organizationalInstitutions[$entity->getInstitution()->getId()] = $orgName;
+            }
+        }
+
+        return $organizationalInstitutions;
+    }
 }

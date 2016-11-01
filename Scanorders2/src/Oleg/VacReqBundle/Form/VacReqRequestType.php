@@ -295,6 +295,7 @@ class VacReqRequestType extends AbstractType
             //echo "set org inst <br>";
             $requiredInst = true;
         }
+
         //$requiredInst = true;
         $builder->add('institution', 'choice', array(
             'label' => "Organizational Group:",
