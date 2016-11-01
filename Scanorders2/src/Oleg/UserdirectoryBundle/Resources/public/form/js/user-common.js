@@ -1112,8 +1112,7 @@ function userTeamTwigMacro(myteamurl,btnTargetId,replaceTargetId) {
         //console.log(response);
         var template = response;
         $('#'+replaceTargetId).html(template); //Change the html of the div with the id = "your_div"
-        //$('#userMyTeamDetailsBtn').hide();
-        //initUserForm();
+        $.bootstrapSortable(true);
     }).done(function() {
         lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {

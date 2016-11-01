@@ -17,6 +17,21 @@
 
 
     
- 
+ {% block additionaljs %}
+     {% javascripts
+     '@OlegUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'
+     '@OlegUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'
+     %}
+     <script type="text/javascript" src="{{ asset_url }}"></script>
+     {% endjavascripts %}
+ {% endblock %}
+
+{% block additionalcss %}
+    {% stylesheets
+    'bundles/oleguserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
     
    

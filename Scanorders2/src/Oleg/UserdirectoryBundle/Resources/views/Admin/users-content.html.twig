@@ -88,9 +88,12 @@
 
     <br>
 
-    <table class="records_list table table-hover table-condensed text-left">
+    {#<table class="records_list table table-hover table-condensed text-left">#}
+    <table class="records_list table table-hover table-condensed text-left sortable">
         <thead>
         <tr>
+
+            {% if knppagination is defined %}
             <th style="display:none">{{ knp_pagination_sortable(entities, 'ID', 'user.id') }}</th>
             <th>
                 {{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeInstitution.name') }}
@@ -116,6 +119,35 @@
                 <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Locked', 'user.locked') }}</th>
+            {% endif %}
+
+            {% else %}
+
+                <th style="display:none">ID</th>
+                <th>Service(s)</th>
+                {#<th>#}
+                {#{{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}#}
+                {#</th>#}
+                <th>Name</th>
+                <th>Administrative Title(s)</th>
+                <th>Academic Title(s)</th>
+                <th>Training Year</th>
+                {#<th>{{ knp_pagination_sortable(entities, 'User ID (CWID)', 'user.username') }}</th>#}
+                <th>Email</th>
+                {#style="min-width: 120px"#}
+                <th>Phone Number</th>
+                <th>IC(s)</th>
+                <th>Pager(s)</th>
+                <th>Room Number(s)</th>
+                <th>Assistant(s)</th>
+
+
+                {% if sitename != employees_sitename %}
+                    <th>Role(s)</th>
+                    <th>Last Login</th>
+                    <th>Locked</th>
+                {% endif %}
+
             {% endif %}
 
             {#<th>Actions</th>#}
@@ -280,9 +312,11 @@
     </table>
 
 
-    <div class="navigation">
-        {{ knp_pagination_render(entities) }}
-    </div>
+    {% if knppagination is defined %}
+        <div class="navigation">
+            {{ knp_pagination_render(entities) }}
+        </div>
+    {% endif %}
 
 
     {#<a href="{{ path('fos_user_registration_register') }}">#}
@@ -296,3 +330,6 @@
     <br>
 
 {% endif %}
+
+
+

@@ -1352,6 +1352,8 @@
 
 {########################### Team #############################}
 {% macro userTeamAjax( userid, teamType, title, sitename ) %}
+    {#{% set currentPath = path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')) %}#}
+    {#'currentPath':currentPath, 'postData':postData#}
     {% set teamurl = path(sitename~'_my_team',{'userid':userid, 'teamType':teamType}) %}
     {#<button id="userTeamAjaxDetailsBtn" type="button" class="btn btn-primary" onclick="userTeamTwigMacro('{{ teamurl }}');">#}
     {#Team#}

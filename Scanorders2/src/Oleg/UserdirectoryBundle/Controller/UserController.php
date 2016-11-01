@@ -336,7 +336,7 @@ class UserController extends Controller
             $prefix =  "Previous ";
         }
 
-        $params = array('filter'=>$filter,'time'=>$time);
+        $params = array('filter'=>$filter,'time'=>$time,'limitFlag'=>100);
         $res = $this->indexUser($params);
 
         if( $filter == "" ) {
@@ -350,6 +350,7 @@ class UserController extends Controller
         }
 
         $res['filter'] = $filter;
+        $res['filter'] = $filter;
 
         return $res;
     }
@@ -360,7 +361,7 @@ class UserController extends Controller
 
         $filter = ( array_key_exists('filter', $params) ? $params['filter'] : null);
         $time = ( array_key_exists('time', $params) ? $params['time'] : 'all');
-        $limitFlag = ( array_key_exists('limitFlag', $params) ? $params['limitFlag'] : true);
+        $limitFlag = ( array_key_exists('limitFlag', $params) ? $params['limitFlag'] : null);
         $search = ( array_key_exists('search', $params) ? $params['search'] : null);
         $userid = ( array_key_exists('userid', $params) ? $params['userid'] : null);
 //        $myteam = ( array_key_exists('myteam', $params) ? $params['myteam'] : null);
@@ -515,7 +516,8 @@ class UserController extends Controller
         $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
         if( $limitFlag ) {
-            $limit = 1000;
+            //echo "use paginator limitFlag=$limitFlag<br>";
+            $limit = $limitFlag; //1000;
             $paginator  = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,
@@ -524,6 +526,7 @@ class UserController extends Controller
                 //array('wrap-queries'=>true) //don't need it with "doctrine/orm": "v2.4.8"
             );
         } else {
+            //echo "dont use paginator <br>";
             $pagination = $query->getResult();
         }
 

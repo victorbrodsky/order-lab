@@ -34,6 +34,13 @@ class SectionUserController extends UserController
 
         $userid = $request->query->get('userid');
         $teamType = $request->query->get('teamType');
+        //$currentPath = $request->query->get('currentPath');
+        //echo "currentPath=".$currentPath."<br>";
+        //$postData = $request->get('postData');
+
+        //$request->setTargetUrl("/order/directory/");
+        //$postData = $request->query->all();
+
         //echo "userid=".$userid."<br>";
 
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
@@ -42,7 +49,7 @@ class SectionUserController extends UserController
             'user' => $user,
             'cycle' => 'show_user',
             'teamType' => $teamType,
-            'postData' => '',
+            //'postData' => $postData,
             'sitename' => $this->container->getParameter('employees.sitename'),
         );
 
