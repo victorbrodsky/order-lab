@@ -3,7 +3,7 @@
  */
 
 //dropzone globals
-var _dz_maxFiles = 6;
+var _dz_maxFiles = 20;
 var _dz_maxFilesize = 10; //MB
 
 

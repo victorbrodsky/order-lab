@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -589,8 +590,37 @@ class SiteParameters {
      */
     private $liveSiteRootUrl;
 
+    /**
+     * Defaults for an Organizational Group
+     * @ORM\OneToMany(targetEntity="OrganizationalGroupDefault", mappedBy="siteParameter", cascade={"persist","remove"})
+     */
+    private $organizationalGroupDefaults;
 
 
+
+    function __construct( $addobjects=true )
+    {
+        $this->organizationalGroupDefaults = new ArrayCollection();
+    }
+
+
+
+    public function addOrganizationalGroupDefault($item)
+    {
+        if( $item && !$this->organizationalGroupDefaults->contains($item) ) {
+            $this->organizationalGroupDefaults->add($item);
+        }
+
+        return $this;
+    }
+    public function removeOrganizationalGroupDefault($item)
+    {
+        $this->organizationalGroupDefaults->removeElement($item);
+    }
+    public function getOrganizationalGroupDefaults()
+    {
+        return $this->organizationalGroupDefaults;
+    }
 
     /**
      * @param mixed $maxIdleTime
