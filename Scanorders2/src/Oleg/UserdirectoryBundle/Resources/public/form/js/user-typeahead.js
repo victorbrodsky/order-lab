@@ -13,7 +13,7 @@ function initTypeaheadUserSiteSearch() {
 
     var suggestions_limit = 5;
     var rateLimitBy = 'debounce'; //Can be either debounce or throttle. Defaults to debounce
-    var rateLimitWait = 0; //The time interval in milliseconds that will be used by rateLimitBy. Defaults to 300
+    var rateLimitWait = 30; //The time interval in milliseconds that will be used by rateLimitBy. Defaults to 300
 
     //Bloodhound: Prefetched data is fetched and processed on initialization.
     //If the browser supports local storage, the processed data will be cached there to prevent additional network requests on subsequent page loads.
@@ -24,14 +24,16 @@ function initTypeaheadUserSiteSearch() {
     var cwidDBprefetch = null;
     var admintitleDBprefetch = null;
     var singleDbprefetch = null;
-    if( $("#navbar-multiple-datasets-typeahead-search") ) {
-        var searchLimit = 50;
+    //if( document.getElementById("multiple-datasets-typeahead-search") ) { //navbar-multiple-datasets-typeahead-search present only on the other pages in he navbar
+        //console.log('Home page');
+        //it's cached, so it's safe to use it on all pages
+        var searchLimit = 100;
         userDBprefetch = getCommonBaseUrl("util/common/user-data-search/user/"+searchLimit+"/prefetchmin","employees");
         institutionDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+searchLimit+"/prefetchmin","employees");
         cwidDBprefetch = getCommonBaseUrl("util/common/user-data-search/cwid/"+searchLimit+"/prefetchmin","employees");
         admintitleDBprefetch = getCommonBaseUrl("util/common/user-data-search/admintitle/"+searchLimit+"/prefetchmin","employees");
         singleDbprefetch = getCommonBaseUrl("util/common/user-data-search/single/"+searchLimit+"/prefetchmin","employees");
-    }
+    //}
 
     var complex = true; //false;
 

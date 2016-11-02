@@ -27,12 +27,16 @@ class MaintenanceListener {
     private $sc;
     private $logger;
 
+    private $userUtil;
+
     public function __construct(ContainerInterface $container, $em, SecurityContext $sc)
     {
         $this->container = $container;
         $this->em = $em;
         $this->sc = $sc;
         $this->logger = $this->container->get('logger');
+
+        $this->userUtil = new UserUtil();
     }
 
 
@@ -67,13 +71,11 @@ class MaintenanceListener {
         $maintenanceRoute = 'main_maintenance';
         $scanRoute = 'main_common_home';
 
-        $debug = in_array($this->container->get('kernel')->getEnvironment(), array('test', 'dev'));
-
         //echo "route=".$event->getRequest()->get('_route')."<b>";
 
         /////////////// maintanance from DB. Container parameter will be updated only after cleaning the cache //////////////
-        $userUtil = new UserUtil();
-        $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
+        //$userUtil = new UserUtil();
+        $maintenance = $this->userUtil->getSiteSetting($this->em,'maintenance');
 
         //echo "maint list =".$maintenance."<br>";
 
@@ -93,6 +95,8 @@ class MaintenanceListener {
 //                $event->setResponse($response);
 //            }
 //        }
+
+        $debug = in_array($this->container->get('kernel')->getEnvironment(), array('test', 'dev'));
 
         //if( 0 ) {
         //if( $maintenance && !$debug && $maintenanceDb ) {

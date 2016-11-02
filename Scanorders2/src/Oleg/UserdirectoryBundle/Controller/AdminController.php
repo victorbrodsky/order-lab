@@ -812,6 +812,15 @@ class AdminController extends Controller
                 40
             ),
 
+            "ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY" => array(
+                "Vacation Request Observer for WCMC Department of Pathology and Laboratory Medicine",
+                "This role should allow the user to log into the Vacation Request site and,
+                if this is the only role the user has on the Vacation Request Site,
+                be instantly redirected to the Away Calendar page.
+                No access should be provided to the Homepage, Incoming Requests, Group Management, My Group, etc.",
+                40
+            ),
+
 //            "ROLE_VACREQ_SUBMITTER" => array(
 //                "Vacation Request Submitter",
 //                "Can submit a vacation request",

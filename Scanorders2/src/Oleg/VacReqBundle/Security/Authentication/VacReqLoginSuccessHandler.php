@@ -40,7 +40,45 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
-        return parent::onAuthenticationSuccess($request,$token);
+        //return parent::onAuthenticationSuccess($request,$token);
+
+        $redirectResponse = parent::onAuthenticationSuccess($request,$token);
+
+        if( $this->security->isGranted("ROLE_VACREQ_ADMIN") ) {
+            return $redirectResponse;
+        }
+
+        $url = $redirectResponse->getTargetUrl();
+        //echo "url=".$url."<br>";
+
+        $em = $this->em;
+        $user = $token->getUser();
+
+        //check other user's vacreq roles
+        //$user, $sitename, $rolePartialName, $institutionId=null
+        $institutionId = null;
+        $roles = $em->getRepository('OlegUserdirectoryBundle:User')->
+            findUserRolesBySiteAndPartialRoleName($user,'vacreq',"ROLE_VACREQ",$institutionId);
+        //echo "roles count=".count($roles)."<br>";
+
+        foreach( $roles as $role ) {
+            $roleStr = $role."";
+            $findStr = "_OBSERVER_";
+            //echo "roleStr = ".$roleStr."; findStr=".$findStr."<br>";
+            if( strpos($roleStr,$findStr) === false ) {
+                //echo "The string $findStr was not found in the string $roleStr <br>";
+                return $redirectResponse;
+            } else {
+                //echo "this is observer role!<br>";
+            }
+        }
+
+        //if this is the only role the user has on the Vacation Request Site, be instantly redirected to the Away Calendar page
+        if( $url != "/order/vacation-request/away-calendar/" ) {
+            $redirectResponse->setTargetUrl("/order/vacation-request/away-calendar/");
+        }
+
+        return $redirectResponse;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
