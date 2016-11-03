@@ -609,6 +609,7 @@ class SiteParameters {
     {
         if( $item && !$this->organizationalGroupDefaults->contains($item) ) {
             $this->organizationalGroupDefaults->add($item);
+            $item->setSiteParameter($this);
         }
 
         return $this;

@@ -509,6 +509,18 @@ class SiteParametersType extends AbstractType
 
         $this->addCoPath($builder);
 
+
+        $builder->add('organizationalGroupDefaults', 'collection', array(
+            'type' => new OrganizationalGroupDefaultType($this->params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__organizationalgroupdefaults__',
+        ));
+
     }
     
     /**
@@ -670,7 +682,6 @@ class SiteParametersType extends AbstractType
                 'label'=>'Live Site Root URL (http://c.med.cornell.edu/order/):',
                 'attr' => array('class'=>'form-control')
             ));
-
 
     }
 

@@ -1,0 +1,58 @@
+
+{% macro organizationalGroupDefault( field, cycle, classname, prototype ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cycle != 'show' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ form_errors(formfield) }}
+
+        {{ formmacros.field(formfield.id) }}
+
+        {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+
+        {{ formmacros.field(formfield.primaryPublicUserIdType) }}
+        {{ formmacros.field(formfield.email) }}
+        {{ formmacros.field(formfield.roles) }}
+        {{ formmacros.field(formfield.timezone) }}
+        {{ formmacros.field(formfield.languages) }}
+        {{ formmacros.field(formfield.locale) }}
+        {{ formmacros.field(formfield.showToInstitutions) }}
+        {{ treemacros.compositeTreeNode(formfield.defaultInstitution,cycle,prototype) }}
+        {{ formmacros.checkbox(formfield.tooltip) }}
+        {{ formmacros.field(formfield.permittedInstitutionalPHIScope) }}
+        {{ formmacros.field(formfield.employmentType) }}
+
+        <hr>
+        {{ treemacros.compositeTreeNode(formfield.administrativeTitleInstitution,cycle,prototype) }}
+        {{ treemacros.compositeTreeNode(formfield.academicTitleInstitution,cycle,prototype) }}
+        {{ treemacros.compositeTreeNode(formfield.medicalTitleInstitution,cycle,prototype) }}
+
+        <hr>
+        {{ formmacros.field(formfield.locationTypes) }}
+        {{ treemacros.compositeTreeNode(formfield.locationInstitution,cycle,prototype) }}
+        {{ formmacros.field(formfield.city) }}
+        {{ formmacros.field(formfield.state) }}
+        {{ formmacros.field(formfield.zip) }}
+        {{ formmacros.field(formfield.country) }}
+
+        <hr>
+        {{ formmacros.field(formfield.medicalLicenseCountry) }}
+        {{ formmacros.field(formfield.medicalLicenseState) }}
+
+    </div>
+{% endmacro %}
+

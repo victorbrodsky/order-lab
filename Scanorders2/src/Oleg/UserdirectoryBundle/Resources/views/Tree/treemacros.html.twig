@@ -30,6 +30,7 @@
     {% import _self as treemacros %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     <p>
+    {{ form_errors(node) }}
     <div class="composite-tree-holder">
         <div class="row treenode">
             <div class="col-xs-6" align="right">

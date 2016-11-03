@@ -32,6 +32,8 @@
 
 {% block content %}
 
+
+
     {#<h3 class="text-info">{{ sitesettings_title }}</h3>#}
     {#<br>#}
 <div class="panel panel-primary">
@@ -518,6 +520,7 @@
 </div>
 
     {#Defaults for an Organizational Group#}
+    {% include 'OlegUserdirectoryBundle:SiteParameters:organizational-group-defaults.html.twig' %}
 
     {% include 'OlegUserdirectoryBundle:SiteParameters:third-party-software-content.html.twig' %}
 

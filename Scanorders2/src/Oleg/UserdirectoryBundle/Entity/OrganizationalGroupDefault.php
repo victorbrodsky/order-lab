@@ -8,6 +8,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,9 +36,12 @@ class OrganizationalGroupDefault
     private $institution;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * Primary Public User ID Type
+     *
+     * @ORM\ManyToOne(targetEntity="UsernameType")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
-    private $primaryPublicUserId;
+    private $primaryPublicUserIdType;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -242,17 +246,17 @@ class OrganizationalGroupDefault
     /**
      * @return mixed
      */
-    public function getPrimaryPublicUserId()
+    public function getPrimaryPublicUserIdType()
     {
-        return $this->primaryPublicUserId;
+        return $this->primaryPublicUserIdType;
     }
 
     /**
-     * @param mixed $primaryPublicUserId
+     * @param mixed $primaryPublicUserIdType
      */
-    public function setPrimaryPublicUserId($primaryPublicUserId)
+    public function setPrimaryPublicUserIdType($primaryPublicUserIdType)
     {
-        $this->primaryPublicUserId = $primaryPublicUserId;
+        $this->primaryPublicUserIdType = $primaryPublicUserIdType;
     }
 
     /**

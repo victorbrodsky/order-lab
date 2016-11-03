@@ -2,6 +2,9 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -72,7 +75,12 @@ class SiteParametersController extends Controller
         if( $entity->getDbServerAccountPassword() != '' )
             $entity->setDbServerAccountPassword($passw);
 
-        $editForm = $this->createEditForm($sitename,$entity,$disabled);
+        //testing
+        //$organizationalGroupDefault = new OrganizationalGroupDefault();
+        //$entity->addOrganizationalGroupDefault($organizationalGroupDefault);
+
+        //$sitename,SiteParameters $entity, $param=null, $disabled=false
+        $editForm = $this->createEditForm($sitename,$entity,null,$disabled);
 
         $link = realpath($_SERVER['DOCUMENT_ROOT']).'\order\scanorder\Scanorders2\app\config\parameters.yml';
         //echo "link=".$link."<br>";
@@ -191,6 +199,113 @@ class SiteParametersController extends Controller
         );
     }
 
+
+    /**
+     * Edits an existing SiteParameters entity.
+     *
+     * @Route("/organizational-group-default-management/{id}", name="employees_management_organizationalgroupdefault")
+     * @Method({"GET","POST"})
+     * @Template("OlegUserdirectoryBundle:SiteParameters:group-management-form.html.twig")
+     */
+    public function manageOrgGroupDefaultAction(Request $request, $id)
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $routeName = $request->get('_route');
+        $routeArr = explode("_", $routeName);
+        $sitename = $routeArr[0];
+
+        $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find SiteParameters entity.');
+        }
+
+        //testing
+        if( count($entity->getOrganizationalGroupDefaults()) == 0 ) {
+            $organizationalGroupDefault = new OrganizationalGroupDefault();
+            $entity->addOrganizationalGroupDefault($organizationalGroupDefault);
+        }
+
+        $params = array(
+            'sitename'=>$sitename,
+            'cycle'=>"edit",
+            'em'=>$em,
+        );
+
+        $form = $this->createForm(new SiteParametersType($params), $entity, array(
+            'action' => $this->generateUrl('employees_management_organizationalgroupdefault', array('id' => $entity->getId() )),
+            'method' => 'POST',
+            'disabled' => false,
+        ));
+
+        $form->add('save', 'submit', array(
+            'label' => 'Update',
+            'attr' => array('class'=>'btn btn-primary')
+        ));
+
+        $form->handleRequest($request);
+
+        //check for empty target institution
+        if( $form->isSubmitted() ) {
+            $instArr = new ArrayCollection();
+            foreach ($entity->getOrganizationalGroupDefaults() as $organizationalGroupDefault) {
+                if (!$organizationalGroupDefault->getInstitution()) {
+                    $form->addError(new FormError('Please select the Target Institution for all Organizational Group Management Sections'));
+                    //$form['organizationalGroupDefaults']->addError(new FormError('Please select the Target Institution'));
+                    //$entity->removeOrganizationalGroupDefault($organizationalGroupDefault);
+                } else {
+                    if( $instArr->contains($organizationalGroupDefault->getInstitution()) ) {
+                        $form->addError(new FormError('Please make sure that the Target Institution are unique in all Organizational Group Management Sections'));
+                    } else {
+                        $instArr->add($organizationalGroupDefault->getInstitution());
+                    }
+                }
+            }
+        }
+
+//        if( $form->isSubmitted() ) {
+//            echo "form is submitted<br>";
+//
+//            if( $form->isValid() ) {
+//                echo "form is valid<br>";
+//            } else {
+//                print_r((string) $form->getErrors());     // Main errors
+//                print_r((string) $form->getErrors(true)); // Main and child errors
+//                //exit('1');
+//            }
+//        }
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            //exit("form is valid");
+
+            $em->persist($entity);
+            $em->flush($entity);
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Defaults for an Organizational Group have been updated."
+            );
+
+            return $this->redirect($this->generateUrl($sitename.'_siteparameters'));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'form'   => $form->createView(),
+            'cycle' => 'edit',
+            'sitename' => $sitename
+        );
+    }
+
+
+
     /**
      * Creates a form to edit a SiteParameters entity.
      *
@@ -198,15 +313,21 @@ class SiteParametersController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm($sitename,SiteParameters $entity, $param=null,$disabled=false)
+    private function createEditForm( $sitename,SiteParameters $entity, $param=null, $disabled=false )
     {
+        $em = $this->getDoctrine()->getManager();
 
         $cycle = 'show';
 
         if( !$disabled ) {
             $cycle = 'edit';
         }
-        $params = array('sitename'=>$sitename,'cycle'=>$cycle,'param'=>$param);
+        $params = array(
+            'sitename'=>$sitename,
+            'cycle'=>$cycle,
+            'em'=>$em,
+            'param'=>$param
+        );
 
         $form = $this->createForm(new SiteParametersType($params), $entity, array(
             'action' => $this->generateUrl($sitename.'_siteparameters_update', array('id' => $entity->getId(), 'param' => $param )),

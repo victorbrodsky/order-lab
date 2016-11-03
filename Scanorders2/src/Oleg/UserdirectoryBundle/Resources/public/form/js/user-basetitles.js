@@ -101,6 +101,7 @@ function getBaseTitleForm( elclass ) {
     //var newForm = prototype.replace(/__administrativetitles__/g, elements.length);
 
     var classArr = identLowerCase.split("-"); //user-fieldname
+    //console.log("classArr[1]="+classArr[1]);
 
     var regex = new RegExp( '__' + classArr[1] + '__', 'g' );
 
