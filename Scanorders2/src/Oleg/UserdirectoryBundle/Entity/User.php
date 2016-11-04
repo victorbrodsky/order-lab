@@ -242,6 +242,7 @@ class User extends BaseUser {
     private $testingAccount;
 
 
+
     function __construct( $addobjects=true )
     {
         $this->infos = new ArrayCollection();

@@ -100,6 +100,14 @@ class PerSiteSettings extends BaseUserAttributes
     protected $tooltip;
 
 
+    /**
+     * Organizational Group for new user's default values in Employee Directory
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    private $organizationalGroupDefault;
+
+
+
     public function __construct() {
 
         parent::__construct();
@@ -293,6 +301,22 @@ class PerSiteSettings extends BaseUserAttributes
     public function getDefaultInstitution()
     {
         return $this->defaultInstitution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrganizationalGroupDefault()
+    {
+        return $this->organizationalGroupDefault;
+    }
+
+    /**
+     * @param mixed $organizationalGroupDefault
+     */
+    public function setOrganizationalGroupDefault($organizationalGroupDefault)
+    {
+        $this->organizationalGroupDefault = $organizationalGroupDefault;
     }
 
 

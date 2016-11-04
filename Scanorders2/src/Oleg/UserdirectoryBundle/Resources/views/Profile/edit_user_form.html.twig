@@ -384,6 +384,10 @@
                             {{ formmacros.field(form.perSiteSettings.chiefServices) }}
                         {% endif %}
 
+                        {% if form.perSiteSettings.organizationalGroupDefault is defined %}
+                            {{ treemacros.compositeTreeNode(form.perSiteSettings.organizationalGroupDefault,cycle,'') }}
+                        {% endif %}
+
                     </div>
                 </div>
             </div>

@@ -35,7 +35,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'label' => "Primary Public User ID Type:",
             'required' => false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width user-keytype-field'),
+            'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
@@ -53,10 +53,10 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add('roles', 'choice', array(
-            'choices' => $this->roles,
+            'choices' => $this->params['roles'],
             'label' => 'Role(s):',
-            'attr' => array('class' => 'combobox combobox-width'),
             'multiple' => true,
+            'attr' => array('class' => 'combobox combobox-width'),
         ));
 
         //timezone
@@ -303,8 +303,9 @@ class OrganizationalGroupDefaultType extends AbstractType
                 $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
 
+            $targetPrefix = "Organizational Group for new user's default values in Employee Directory - ";
             $form->add('institution', 'employees_custom_selector', array(
-                'label' => "Target ".$label,
+                'label' => $targetPrefix." ".$label,
                 //'error_bubbling' => true,
                 'required' => false,
                 'attr' => array(
@@ -312,7 +313,7 @@ class OrganizationalGroupDefaultType extends AbstractType
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'UserdirectoryBundle',
                     'data-compositetree-classname' => 'Institution',
-                    'data-label-prefix' => 'Target'
+                    'data-label-prefix' => $targetPrefix
                 ),
                 'classtype' => 'institution'
             ));

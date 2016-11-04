@@ -144,6 +144,22 @@ class PerSiteSettingsType extends AbstractType
                         ),
                         'classtype' => 'institution'
                     ));
+
+                    $prefix = "Organizational Group for new user's default values in Employee Directory - ";
+                    $form->add('organizationalGroupDefault', 'employees_custom_selector', array(
+                        'label' => $prefix." ".$label.':',
+                        //'error_bubbling' => true,
+                        'required' => false,
+                        'attr' => array(
+                            'class' => 'ajax-combobox-compositetree',
+                            'type' => 'hidden',
+                            'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                            'data-compositetree-classname' => 'Institution',
+                            'data-label-prefix' => $prefix
+                        ),
+                        'classtype' => 'institution'
+                    ));
+
                 });
             }
 

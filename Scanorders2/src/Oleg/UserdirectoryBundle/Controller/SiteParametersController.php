@@ -78,6 +78,10 @@ class SiteParametersController extends Controller
         //testing
         //$organizationalGroupDefault = new OrganizationalGroupDefault();
         //$entity->addOrganizationalGroupDefault($organizationalGroupDefault);
+//        foreach( $entity->getOrganizationalGroupDefaults() as $groupDefault ) {
+//            echo "roles=".$groupDefault->getRoles()."<br>";
+//            print_r($groupDefault->getRoles());
+//        }
 
         //$sitename,SiteParameters $entity, $param=null, $disabled=false
         $editForm = $this->createEditForm($sitename,$entity,null,$disabled);
@@ -232,10 +236,20 @@ class SiteParametersController extends Controller
             $entity->addOrganizationalGroupDefault($organizationalGroupDefault);
         }
 
+        $originalGroups = new ArrayCollection();
+        // Create an ArrayCollection of the current Tag objects in the database
+        foreach( $entity->getOrganizationalGroupDefaults() as $groupDefault ) {
+            $originalGroups->add($groupDefault);
+        }
+
+        //Roles
+        $rolesArr = $this->getUserRoles();
+
         $params = array(
             'sitename'=>$sitename,
             'cycle'=>"edit",
             'em'=>$em,
+            'roles' => $rolesArr
         );
 
         $form = $this->createForm(new SiteParametersType($params), $entity, array(
@@ -253,6 +267,7 @@ class SiteParametersController extends Controller
 
         //check for empty target institution
         if( $form->isSubmitted() ) {
+
             $instArr = new ArrayCollection();
             foreach ($entity->getOrganizationalGroupDefaults() as $organizationalGroupDefault) {
                 if (!$organizationalGroupDefault->getInstitution()) {
@@ -261,12 +276,13 @@ class SiteParametersController extends Controller
                     //$entity->removeOrganizationalGroupDefault($organizationalGroupDefault);
                 } else {
                     if( $instArr->contains($organizationalGroupDefault->getInstitution()) ) {
-                        $form->addError(new FormError('Please make sure that the Target Institution are unique in all Organizational Group Management Sections'));
+                        $form->addError(new FormError('Please make sure that the Target Institutions are Unique in all Organizational Group Management Sections'));
                     } else {
                         $instArr->add($organizationalGroupDefault->getInstitution());
                     }
                 }
             }
+
         }
 
 //        if( $form->isSubmitted() ) {
@@ -285,8 +301,30 @@ class SiteParametersController extends Controller
 
             //exit("form is valid");
 
-            $em->persist($entity);
-            $em->flush($entity);
+            // remove the relationship between the tag and the Task
+            foreach( $originalGroups as $originalGroup ) {
+                $currentGroups = $entity->getOrganizationalGroupDefaults();
+                if( false === $currentGroups->contains($originalGroup) ) {
+                    // remove the Task from the Tag
+                    $entity->removeOrganizationalGroupDefault($originalGroup);
+
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $originalGroup->setSiteParameter(null);
+
+                    $em->persist($originalGroup);
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($originalGroup);
+                }
+            }
+
+            //testing
+//            foreach( $entity->getOrganizationalGroupDefaults() as $group ) {
+//                echo "primary Type=".$group->getPrimaryPublicUserIdType()."<br>";
+//            }
+            //exit('1');
+
+            //$em->persist($entity);
+            $em->flush();
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -322,11 +360,16 @@ class SiteParametersController extends Controller
         if( !$disabled ) {
             $cycle = 'edit';
         }
+
+        //Roles
+        $rolesArr = $this->getUserRoles();
+
         $params = array(
             'sitename'=>$sitename,
             'cycle'=>$cycle,
             'em'=>$em,
-            'param'=>$param
+            'param'=>$param,
+            'roles'=>$rolesArr
         );
 
         $form = $this->createForm(new SiteParametersType($params), $entity, array(
@@ -342,7 +385,18 @@ class SiteParametersController extends Controller
         return $form;
     }
 
-
+    public function getUserRoles() {
+        $rolesArr = array();
+        $em = $this->getDoctrine()->getManager();
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(
+            array('type' => array('default','user-added')),
+            array('orderinlist' => 'ASC')
+        );  //findAll();
+        foreach( $roles as $role ) {
+            $rolesArr[$role->getName()] = $role->getAlias();
+        }
+        return $rolesArr;
+    }
 
 
 

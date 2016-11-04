@@ -128,6 +128,7 @@ class UserType extends AbstractType
             $this->addFellowshipApplication($builder);
         }
 
+
     }
 
     /**

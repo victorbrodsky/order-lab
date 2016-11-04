@@ -11,6 +11,8 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Oleg\UserdirectoryBundle\Entity\Credentials;
+use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Oleg\UserdirectoryBundle\Entity\Location;
@@ -1110,6 +1112,193 @@ class UserUtil {
         $sMedicalLicense = $suser->getCredentials()->getStateLicense()->first();
         $duser->getCredentials()->getStateLicense()->first()->setCountry($sMedicalLicense->getCountry());
         $duser->getCredentials()->getStateLicense()->first()->setState($sMedicalLicense->getState());
+
+        return $duser;
+    }
+
+
+    //populate user according to issue https://bitbucket.org/weillcornellpathology/scanorder/issues/503/default-values-for-new-users
+    public function populateDefaultUserFields( $suser, $duser, $em ) {
+
+        //check match for "Organizational Group for new user's default values in Employee Directory"
+        //organizationalGroupDefault (PerSiteSettings) vs institution (OrganizationalGroupDefault)
+        $perSiteSettings = $suser->getPerSiteSettings();
+        if( !$perSiteSettings ) {
+            //exit('no perSiteSettings');
+            return $duser;
+        }
+
+        $userOrganizationalGroupDefaultInst = $perSiteSettings->getOrganizationalGroupDefault();
+        if( !$userOrganizationalGroupDefaultInst ) {
+            //exit('no userOrganizationalGroupDefaultInst');
+            return $duser;
+        }
+
+        $siteParameters = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+
+        if( count($siteParameters) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($siteParameters).'object(s)' );
+        }
+
+        $siteParameter = $siteParameters[0];
+
+        $organizationalGroupDefaults = $siteParameter->getOrganizationalGroupDefaults();
+
+        $sourceDefault = null;
+        foreach( $organizationalGroupDefaults as $organizationalGroupDefault) {
+            if( $organizationalGroupDefault->getInstitution()->getId() == $userOrganizationalGroupDefaultInst->getId() ) {
+                $sourceDefault = $organizationalGroupDefault;
+                break;
+            }
+        }
+
+        if( !$sourceDefault ) {
+            echo 'no match <br>';
+            return $duser;
+        }
+
+        //echo "match inst=".$sourceDefault->getInstitution()."<br>";
+        //exit('1');
+
+        if( $sourceDefault->getPrimaryPublicUserIdType() ) {
+            $duser->setKeyType($sourceDefault->getPrimaryPublicUserIdType());
+        }
+
+        if( $sourceDefault->getEmail() ) {
+            $duser->setEmail($sourceDefault->getEmail());
+        }
+
+        if( $sourceDefault->getRoles() ) {
+            $duser->setRoles($sourceDefault->getRoles());
+        }
+
+        if( $sourceDefault->getTimezone() ) {
+            $duser->getPreferences()->setTimezone($sourceDefault->getTimezone());
+        }
+
+        //check PerSiteSettings
+        if( !$duser->getPerSiteSettings() ) {
+            $duser->setPerSiteSettings( new PerSiteSettings() );
+        }
+
+        if( $sourceDefault->getTooltip() ) {
+            $duser->getPerSiteSettings()->setTooltip($sourceDefault->getTooltip());
+        }
+
+        foreach( $duser->getPreferences()->getShowToInstitutions() as $showToInstitution ) {
+            $duser->getPreferences()->removeShowToInstitution($showToInstitution);
+        }
+        foreach( $sourceDefault->getShowToInstitutions() as $showToInstitution ) {
+            $duser->getPreferences()->addShowToInstitution($showToInstitution);
+        }
+
+        if( $sourceDefault->getDefaultInstitution() ) {
+            $duser->getPerSiteSettings()->setDefaultInstitution($sourceDefault->getDefaultInstitution());
+        }
+
+        //permittedInstitutionalPHIScope
+        foreach( $duser->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $inst ) {
+            $duser->getPerSiteSettings()->removePermittedInstitutionalPHIScope($inst);
+        }
+        foreach( $sourceDefault->getPermittedInstitutionalPHIScope() as $inst ) {
+            $duser->getPerSiteSettings()->addPermittedInstitutionalPHIScope($inst);
+        }
+
+        //employmentType
+        if( $sourceDefault->getEmploymentType() ) {
+            $employmentStatus = $duser->getEmploymentStatus()->first();
+            $employmentStatus->setEmploymentType($sourceDefault->getEmploymentType());
+        }
+
+        //locale
+        if( $sourceDefault->getLocale() ) {
+            $duser->getPreferences()->setLocale($sourceDefault->getLocale());
+        }
+
+        //languages
+        foreach( $duser->getPreferences()->getLanguages() as $language ) {
+            $duser->getPreferences()->removeLanguage($language);
+        }
+        foreach( $sourceDefault->getLanguages() as $language ) {
+            $duser->getPreferences()->addLanguage($language);
+        }
+
+        //administrativeTitleInstitution
+        if( $sourceDefault->getAdministrativeTitleInstitution() ) {
+            $title = $duser->getAdministrativeTitles()->first();
+            $title->setInstitution($sourceDefault->getAdministrativeTitleInstitution());
+        }
+
+        //academicTitleInstitution
+        if( $sourceDefault->getAcademicTitleInstitution() ) {
+            $title = $duser->getAppointmentTitles()->first();
+            $title->setInstitution($sourceDefault->getAcademicTitleInstitution());
+        }
+
+        //medicalTitleInstitution
+        if( $sourceDefault->getMedicalTitleInstitution() ) {
+            $title = $duser->getMedicalTitles()->first();
+            $title->setInstitution($sourceDefault->getMedicalTitleInstitution());
+        }
+
+        //locationTypes
+        $mainLocation = $duser->getMainLocation();
+        if( $mainLocation ) {
+            foreach ($mainLocation->getLocationTypes() as $locationType) {
+                $mainLocation->removeLocationType($locationType);
+            }
+            foreach ($sourceDefault->getLocationTypes() as $locationType) {
+                $mainLocation->addLocationType($locationType);
+            }
+
+            //locationInstitution
+            if( $sourceDefault->getLocationInstitution() ) {
+                $mainLocation->setInstitution($sourceDefault->getLocationInstitution());
+            }
+
+            $geoLocation = $mainLocation->getGeoLocation();
+            if( !$geoLocation ) {
+                $geoLocation = new GeoLocation();
+                $mainLocation->setGeoLocation( $geoLocation );
+            }
+
+            //city
+            if( $sourceDefault->getCity() ) {
+                $geoLocation->setCity($sourceDefault->getCity());
+            }
+
+            //state
+            if( $sourceDefault->getState() ) {
+                $geoLocation->setState($sourceDefault->getState());
+            }
+
+            //zip
+            if( $sourceDefault->getZip() ) {
+                $geoLocation->setZip($sourceDefault->getZip());
+            }
+
+            //country
+            if( $sourceDefault->getCountry() ) {
+                $geoLocation->setCountry($sourceDefault->getCountry());
+            }
+        }
+
+        //medicalLicenseCountry and medicalLicenseState
+        $credentials = $duser->getCredentials();
+        if( ! $credentials ) {
+            $credentials = new Credentials();
+            $duser->setCredentials($credentials);
+        }
+        //medicalLicenseCountry
+        if( $sourceDefault->getMedicalLicenseCountry() ) {
+            $stateLicense = $credentials->getStateLicense()->first();
+            $stateLicense->setCountry($sourceDefault->getCountry());
+        }
+        //medicalLicenseState
+        if( $sourceDefault->getMedicalLicenseState() ) {
+            $stateLicense = $credentials->getStateLicense()->first();
+            $stateLicense->setState($sourceDefault->getMedicalLicenseState());
+        }
 
         return $duser;
     }

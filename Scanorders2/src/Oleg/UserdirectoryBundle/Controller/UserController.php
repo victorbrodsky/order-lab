@@ -1419,15 +1419,21 @@ class UserController extends Controller
         $user->getPreferences()->addShowToInstitution($wcmc);
         $user->getPreferences()->addShowToInstitution($nyp);
 
+        //set empty collections
+        $this->addEmptyCollections($user);
+
         //clone user
         $subjectUser = null;
         if( $id && $id != "" ) {
             $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
             $userUtil = new UserUtil();
             $user = $userUtil->makeUserClone($subjectUser,$user);
+        } else {
+            //organizationalGroupDefault - match it to the organizational group selected in the "Defaults for an Organizational Group" in Site Settings,
+            // then load the corresponding default values into the page on initial load
+            $userUtil = new UserUtil();
+            $user = $userUtil->populateDefaultUserFields($creator,$user,$em);
         }
-
-        $this->addEmptyCollections($user);
 
         //add EIN identifier to credentials
         $identEin = new Identifier();
