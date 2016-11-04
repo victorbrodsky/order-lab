@@ -5478,25 +5478,37 @@ class AdminController extends Controller
         }
 
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
-        $dql =  $repository->createQueryBuilder("user");
-        $dql->select('user');
-        $dql->leftJoin("user.perSiteSettings", "perSiteSettings");
-        $dql->leftJoin("user.employmentStatus", "employmentStatus");
-        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-        $dql->where("perSiteSettings.organizationalGroupDefault IS NULL");
-        $dql->andWhere("employmentType.name != :employmentType");
+//        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+//        $dql =  $repository->createQueryBuilder("user");
+//        $dql->select('user');
+//        $dql->leftJoin("user.perSiteSettings", "perSiteSettings");
+//        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+//        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+//        $dql->where("perSiteSettings.organizationalGroupDefault IS NULL OR perSiteSettings IS NULL");
+//        $dql->andWhere("employmentType.name != :employmentType OR employmentStatus IS NULL");
+//
+//        $query = $em->createQuery($dql);
+//        $query->setParameter('employmentType', "Pathology Fellowship Applicant");
+//
+//        $users = $query->getResult();
 
-        $query = $em->createQuery($dql);
-        $query->setParameter('employmentType', "Pathology Fellowship Applicant");
-
-        $users = $query->getResult();
+        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
         echo "user count=".count($users)."<br>";
 
         $totalCount = 0;
         $count = 0;
         foreach( $users as $user ) {
             echo "<br>".$totalCount.": user=".$user."<br>";
+
+            $employmentStatuses = $user->getEmploymentStatus();
+            if( count($employmentStatuses) > 0 ) {
+                $employmentStatus = $employmentStatuses->first();
+                if( $employmentStatus->getEmploymentType()."" == "Pathology Fellowship Applicant" ) {
+                    echo "skip fellowship applicant <br>";
+                    continue;
+                }
+            }
+
             $userSettings = $user->getPerSiteSettings();
             if( $userSettings ) {
                 echo "userSetting=".$userSettings->getId()."; orgGroupDefault=".$userSettings->getOrganizationalGroupDefault()."<br>";
@@ -5506,10 +5518,15 @@ class AdminController extends Controller
                     $em->flush($userSettings);
                     $count++;
                 } else {
-                    exit('OrganizationalGroupDefault='.$userSettings->getOrganizationalGroupDefault());
+                    //exit('OrganizationalGroupDefault='.$userSettings->getOrganizationalGroupDefault());
                 }
             } else {
-                exit('no persitesettings!!!');
+                $userSettings = new PerSiteSettings();
+                $userSettings->setOrganizationalGroupDefault($pathology);
+                $user->setPerSiteSettings($userSettings);
+                $em->persist($userSettings);
+                $em->flush($userSettings);
+                $count++;
             }
             $totalCount++;
         }
