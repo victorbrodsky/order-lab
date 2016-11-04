@@ -604,7 +604,7 @@ class OrganizationalGroupDefault
         return $this->roles;
     }
     public function addRole($role) {
-        $this->roles[] = $role;
+        $this->roles[] = $role."";
         return $this;
     }
     public function removeRole($role)

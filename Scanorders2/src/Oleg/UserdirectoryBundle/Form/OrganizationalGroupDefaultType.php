@@ -47,9 +47,9 @@ class OrganizationalGroupDefaultType extends AbstractType
             },
         ));
 
-        $builder->add('email', 'email', array(
+        $builder->add('email', null, array(
             'label' => 'Preferred Email:',
-            'attr' => array('class'=>'form-control user-email')
+            'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('roles', 'choice', array(

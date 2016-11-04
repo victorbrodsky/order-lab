@@ -18,6 +18,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Oleg\UserdirectoryBundle\Entity\ObjectTypeList;
+use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
@@ -182,6 +183,7 @@ class AdminController extends Controller
 
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
 
+        $count_generateDefaultOrgGroupSiteParameters = $this->generateDefaultOrgGroupSiteParameters();
         $count_roles = $this->generateRoles();
         $count_employmentTypes = $this->generateEmploymentTypes();
         $count_terminationTypes = $this->generateTerminationTypes();
@@ -275,6 +277,7 @@ class AdminController extends Controller
             'Source Systems='.$count_sourcesystems.', '.
             'Roles='.$count_roles.', '.
             'Site Settings='.$count_siteParameters.', '.
+            'generateDefaultOrgGroupSiteParameters='.$count_generateDefaultOrgGroupSiteParameters.', '.
             'Institution Types='.$count_institutiontypes.', '.
             'Organizational Group Types='.$count_OrganizationalGroupType.', '.
             'Institutions='.$count_institution.', '.
@@ -1488,7 +1491,185 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+    public function generateDefaultOrgGroupSiteParameters() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+
+        $entity = $entities[0];
+
+        $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        if( !$nyp ) {
+            exit('No Institution: "NYP"');
+        }
+
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        if( !$wcmc ) {
+            exit('No Institution: "WCMC"');
+        }
+
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+        if( !$pathology ) {
+            exit('No Institution: "Pathology and Laboratory Medicine"');
+        }
+
+        $pathDefaultGroup = null;
+
+        foreach( $entity->getOrganizationalGroupDefaults() as $groupDefault ) {
+            if( $groupDefault->getInstitution() ) {
+              if( $groupDefault->getInstitution()->getId() == $pathology->getId() ) {
+                  $pathDefaultGroup = $groupDefault;
+                  break;
+              }
+            }
+        }
+
+        if( $pathDefaultGroup ) {
+            return 0;
+        }
+
+        $pathDefaultGroup = new OrganizationalGroupDefault();
+
+        //target Institution
+        $pathDefaultGroup->setInstitution($pathology);
+
+        //primaryPublicUserIdType
+        $primaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName("WCMC CWID");
+        if( !$primaryPublicUserIdType ) {
+            exit('No UsernameType: "WCMC CWID"');
+        }
+        $pathDefaultGroup->setPrimaryPublicUserIdType($primaryPublicUserIdType);
+
+        //email
+        $pathDefaultGroup->setEmail("@med.cornell.edu");
+
+        //roles
+        //ROLE_SCANORDER_SUBMITTER
+        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName("ROLE_SCANORDER_SUBMITTER");
+        if( !$role ) {
+            exit('No Role: "ROLE_SCANORDER_SUBMITTER"');
+        }
+        $pathDefaultGroup->addRole($role);
+        //ROLE_USERDIRECTORY_OBSERVER
+        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName("ROLE_USERDIRECTORY_OBSERVER");
+        if( !$role ) {
+            exit('No Role: "ROLE_USERDIRECTORY_OBSERVER"');
+        }
+        $pathDefaultGroup->addRole($role);
+        //ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY
+        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName("ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY");
+        if( !$role ) {
+            exit('No Role: "ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY"');
+        }
+        $pathDefaultGroup->addRole($role);
+
+        //timezone
+        //$timezone = new \DateTimeZone('America/New_York');
+        $pathDefaultGroup->setTimezone('America/New_York');
+
+        //tooltipe
+        $pathDefaultGroup->setTooltip(true);
+
+        //showToInstitutions: WCMC, NYP
+        $pathDefaultGroup->addShowToInstitution($wcmc);
+        $pathDefaultGroup->addShowToInstitution($nyp);
+
+        //defaultInstitution
+        $pathDefaultGroup->setDefaultInstitution($wcmc);
+
+        //permittedInstitutionalPHIScope: WCMC
+        $pathDefaultGroup->addPermittedInstitutionalPHIScope($wcmc);
+
+        //employmentType
+        $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
+        if( !$employmentType ) {
+            exit('No object: "Full Time"');
+        }
+        $pathDefaultGroup->setEmploymentType($employmentType);
+
+        //locale: en_US - English (United States)
+        $locale = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findOneByName("en_US");
+        if( !$locale ) {
+            exit('No object: "en_US"');
+        }
+        $pathDefaultGroup->setLocale($locale);
+
+        //languages
+        $language = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findOneByName("American English");
+        if( !$language ) {
+            exit('No object: "American English"');
+        }
+        $pathDefaultGroup->addLanguage($language);
+
+        //administrativeTitleInstitution
+        $pathDefaultGroup->setAdministrativeTitleInstitution($pathology);
+
+        //academicTitleInstitution
+        $pathDefaultGroup->setAcademicTitleInstitution($pathology);
+
+        //medicalTitleInstitution
+        $pathDefaultGroup->setMedicalTitleInstitution($pathology);
+
+        //locationTypes
+        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+        if( !$locationType ) {
+            exit('No object: "Employee Office"');
+        }
+        $pathDefaultGroup->addLocationType($locationType);
+
+        //locationInstitution
+        $pathDefaultGroup->setLocationInstitution($wcmc);
+
+        //city
+        $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName("New York");
+        if( !$city ) {
+            exit('No object: "New York"');
+        }
+        $pathDefaultGroup->setCity($city);
+
+        //state
+        $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
+        if( !$state ) {
+            exit('No object: "New York"');
+        }
+        $pathDefaultGroup->setState($state);
+
+        //zip
+        $pathDefaultGroup->setZip("10065");
+
+        //country
+        $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
+        if( !$country ) {
+            exit('No object: "United States"');
+        }
+        $pathDefaultGroup->setCountry($country);
+
+        //medicalLicenseCountry
+        $pathDefaultGroup->setMedicalLicenseCountry($country);
+
+        //medicalLicenseState
+        $pathDefaultGroup->setMedicalLicenseState($state);
+
+
+        $entity->addOrganizationalGroupDefault($pathDefaultGroup);
+
+        $em->persist($pathDefaultGroup);
+        $em->flush();
+
+        return 1;
+    }
 
 
     public function generateSitenameList() {
