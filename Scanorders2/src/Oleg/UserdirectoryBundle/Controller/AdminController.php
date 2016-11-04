@@ -5446,6 +5446,78 @@ class AdminController extends Controller
     }
 
     /**
+     * For all users in the live C.MED system EXCEPT FELLOWSHIP APPLICANTS, set "Pathology and Laboratory Medicine"
+     * @Route("/set-default-org-group/", name="user_set-default-org-group")
+     * @Method("GET")
+     */
+    public function setDefaultOrgGroupAction()
+    {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        if( !$wcmc ) {
+            exit('No Institution: "WCMC"');
+        }
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+        if( !$pathology ) {
+            exit('No Institution: "Pathology and Laboratory Medicine"');
+        }
+
+
+        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.perSiteSettings", "perSiteSettings");
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+        $dql->where("perSiteSettings.organizationalGroupDefault IS NULL");
+        $dql->andWhere("employmentType.name != :employmentType");
+
+        $query = $em->createQuery($dql);
+        $query->setParameter('employmentType', "Pathology Fellowship Applicant");
+
+        $users = $query->getResult();
+        echo "user count=".count($users)."<br>";
+
+        $totalCount = 0;
+        $count = 0;
+        foreach( $users as $user ) {
+            echo "<br>".$totalCount.": user=".$user."<br>";
+            $userSettings = $user->getPerSiteSettings();
+            if( $userSettings ) {
+                echo "userSetting=".$userSettings->getId()."; orgGroupDefault=".$userSettings->getOrganizationalGroupDefault()."<br>";
+                if( !$userSettings->getOrganizationalGroupDefault() ) {
+                    $userSettings->setOrganizationalGroupDefault($pathology);
+                    $em->persist($userSettings);
+                    $em->flush($userSettings);
+                    $count++;
+                } else {
+                    exit('OrganizationalGroupDefault='.$userSettings->getOrganizationalGroupDefault());
+                }
+            } else {
+                exit('no persitesettings!!!');
+            }
+            $totalCount++;
+        }
+
+        exit("<br><br>set-default-org-group; count=".$count);
+    }
+
+    /**
      * @Route("/convert-logger-site/", name="user_convert-logger-site")
      * @Method("GET")
      */
