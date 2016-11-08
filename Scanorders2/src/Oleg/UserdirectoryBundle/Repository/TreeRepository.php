@@ -532,12 +532,27 @@ class TreeRepository extends NestedTreeRepository {
 
     //$mapper: if $mapper is null => institution
     public function getLevelLabels( $node=null, $mapper=null ) {
-        return $this->getLevelLabelsInstitution($node,$mapper);
+//        return $this->getLevelLabelsInstitution($node,$mapper);
 //        if( $node instanceof Institution ) {
 //            return $this->getLevelLabelsInstitution($node,$mapper);
 //        } else {
 //            return $this->getLevelLabelsRegular($node,$mapper);
 //        }
+
+        if( $mapper && array_key_exists('organizationalGroupType', $mapper) && $mapper['organizationalGroupType'] ) {
+            return $this->getLevelLabelsInstitution($node,$mapper);
+        } else {
+            //$labelsStr = $this->getDefaultLevelLabel($mapper,0);
+
+            //show objectType as label if exists
+            if( $node->getObjectType() ) {
+                $labelsStr = $node->getObjectType()."";
+            } else {
+                $labelsStr = $this->getDefaultLevelLabel($mapper,$node->getLevel());
+            }
+            return $labelsStr;
+        }
+
     }
 
     public function getLevelLabelsInstitution( $node=null, $mapper=null ) {
@@ -764,6 +779,9 @@ class TreeRepository extends NestedTreeRepository {
             $levelTitle = $organizationalGroupType->getName()."";
         } else {
             //$levelTitle = "Level ".$level; //if enabled then it adds another child level with label="Level 5"
+            if( !array_key_exists('organizationalGroupType', $mapper) || !$mapper['organizationalGroupType'] ) {
+                $levelTitle = "Level ".$level; //if enabled then it adds another child level with label="Level 5"
+            }
         }
 
         return $levelTitle;

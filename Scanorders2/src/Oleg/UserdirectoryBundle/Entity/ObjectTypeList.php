@@ -24,6 +24,9 @@ class ObjectTypeList extends ListAbstract
     protected $original;
 
 
+    //use entityNamespace, entityName and entityId to link this object type to
+    // a specific object type implementation (i.e. ObjectTypeFormText), where the values will be stored.
+
 
 
 //    //Fields specifying a subject entity

@@ -306,7 +306,8 @@ function jstree_action_node(bundleName, entityName, operation, nodeid, nodetext,
             }
         }
     }).fail(function(data) {
-        console.log('failed: '+data);
+        console.log(operation+' failed. Data:');
+        console.log(data);
     });
 
     return res;

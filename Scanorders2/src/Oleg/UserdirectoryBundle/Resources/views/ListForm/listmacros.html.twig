@@ -110,7 +110,7 @@
             <th>{{ knp_pagination_sortable(entities, 'Object Type', 'objectType.name') }}</th>
             {#<th>{{ knp_pagination_sortable(entities, 'Object Namespace', 'ent.entityNamespace') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Object Name', 'ent.entityName') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Linked Object ID', 'ent.linkToObjectId') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Linked Object ID', 'ent.entityId') }}</th>
 
             <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>
 
@@ -280,7 +280,7 @@
                 <td>{{ entity.objectType }}</td>
                 {#<td>{{ entity.entityNamespace }}</td>#}
                 <td>{{ entity.entityName }}</td>
-                <td>{{ entity.linkToObjectId }}</td>
+                <td>{{ entity.entityId }}</td>
 
                 {#<td>{{ entity.linkToListId }}</td>#}
                 {#{% if entity.linkToListId is defined and entity.listRootName is defined %}#}
@@ -435,7 +435,7 @@
     {{ formmacros.field(form.list.objectType) }}
     {{ formmacros.field(form.list.entityNamespace) }}
     {{ formmacros.field(form.list.entityName) }}
-    {{ formmacros.field(form.list.linkToObjectId) }}
+    {{ formmacros.field(form.list.entityId) }}
 
     {{ formmacros.field(form.list.linkToListId) }}
 
@@ -547,7 +547,7 @@
     {{ formmacros.field(edit_form.list.objectType) }}
     {{ formmacros.field(edit_form.list.entityNamespace) }}
     {{ formmacros.field(edit_form.list.entityName) }}
-    {{ formmacros.field(edit_form.list.linkToObjectId) }}
+    {{ formmacros.field(edit_form.list.entityId) }}
 
     {{ formmacros.field(edit_form.list.linkToListId) }}
 
@@ -700,6 +700,10 @@
 
     {% if form.fellowshipSubspecialty is defined %}
         {{ formmacros.field(form.fellowshipSubspecialty) }}
+    {% endif %}
+
+    {% if form.formNode is defined %}
+        {{ formmacros.field(form.formNode) }}
     {% endif %}
 
 {% endmacro %}

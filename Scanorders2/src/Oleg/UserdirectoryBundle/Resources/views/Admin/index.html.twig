@@ -85,10 +85,19 @@
     </p>
 
     <hr>
-
+    <h4 class="text-info">Form Hierarchy</h4>
+    <p>
+        <a href="{{ path('formnodes-list') }}">Flat Form Tree</a>
+    </p>
     <p>
         <a href="{{ path('objecttypes-list') }}">Object Types</a>
     </p>
+    <p>
+        <a href="{{ path('objecttypetexts-list') }}">Object Type Texts</a>
+    </p>
+
+    <hr>
+
 
     <p>
         <a href="{{ path('sexes-list') }}">Genders</a>
@@ -333,6 +342,7 @@
     </p>
 
 
+
     <br>
     <hr>
     <h4 class="text-info">Populate Lists</h4>
@@ -359,10 +369,9 @@
 
         <p>
             <a general-data-confirm="Are you sure? This action will populate new users from excel sheet."
-                href="{{ path('generate_users') }}">3) Populate Users From Excel
+                href="{{ path('generate_users') }}">3) Populate Users From Excel <strong>Danger! This should be run once on the system initialization</strong>
             </a>
         </p>
-
 
         <p>
             <a general-data-confirm="Are you sure? This action will try to synchronise DB with the source code changes."

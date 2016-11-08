@@ -42,6 +42,7 @@ $(document).ready(function() {
     //jstree in admin page for Institution tree
     getJstree('UserdirectoryBundle','Institution');
     getJstree('UserdirectoryBundle','CommentTypeList');
+    getJstree('UserdirectoryBundle','FormNode');
 
     //home page institution with user leafs
     //displayInstitutionUserTree();

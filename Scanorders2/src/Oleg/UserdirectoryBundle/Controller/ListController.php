@@ -99,6 +99,8 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes-list")
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty-list")
      * @Route("/list/object-types/", name="objecttypes-list")
+     * @Route("/list/form-nodes/", name="formnodes-list", options={"expose"=true})
+     * @Route("/list/object-type-texts/", name="objecttypetexts-list", options={"expose"=true})
      *
      *
      * @Method("GET")
@@ -349,6 +351,8 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes_create")
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty_create")
      * @Route("/list/object-types/", name="objecttypes_create")
+     * @Route("/list/form-nodes/", name="formnodes_create", options={"expose"=true})
+     * @Route("/list/object-type-texts/", name="objecttypetexts_create", options={"expose"=true})
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -506,6 +510,8 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/new", name="vacreqrequesttypes_new")
      * @Route("/list/healthcare-provider-specialties/new", name="healthcareproviderspecialty_new")
      * @Route("/list/object-types/new", name="objecttypes_new")
+     * @Route("/list/form-nodes/new", name="formnodes_new", options={"expose"=true})
+     * @Route("/list/object-type-texts/new", name="objecttypetexts_new", options={"expose"=true})
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -634,6 +640,8 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_show")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_show")
      * @Route("/list/object-types/{id}", name="objecttypes_show")
+     * @Route("/list/form-nodes/{id}", name="formnodes_show", options={"expose"=true})
+     * @Route("/list/object-type-texts/{id}", name="objecttypetexts_show", options={"expose"=true})
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -752,6 +760,8 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/{id}/edit", name="vacreqrequesttypes_edit")
      * @Route("/list/healthcare-provider-specialties/{id}/edit", name="healthcareproviderspecialty_edit")
      * @Route("/list/object-types/{id}/edit", name="objecttypes_edit")
+     * @Route("/list/form-nodes/{id}/edit", name="formnodes_edit", options={"expose"=true})
+     * @Route("/list/object-type-texts/{id}/edit", name="objecttypetexts_edit", options={"expose"=true})
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -916,6 +926,8 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_update")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_update")
      * @Route("/list/object-types/{id}", name="objecttypes_update")
+     * @Route("/list/form-nodes/{id}", name="formnodes_update", options={"expose"=true})
+     * @Route("/list/object-type-texts/{id}", name="objecttypetexts_update", options={"expose"=true})
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1527,7 +1539,14 @@ class ListController extends Controller
                 $className = "ObjectTypeList";
                 $displayName = "Object Types";
                 break;
-
+            case "formnodes":
+                $className = "FormNode";
+                $displayName = "Form Nodes";
+                break;
+            case "objecttypetexts":
+                $className = "ObjectTypeText";
+                $displayName = "Object Type Texts";
+                break;
 
             default:
                 $className = null;
@@ -1654,6 +1673,8 @@ class ListController extends Controller
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_delete")
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_delete")
      * @Route("/list/object-types/{id}", name="objecttypes_delete")
+     * @Route("/list/form-nodes/{id}", name="formnodes_delete", options={"expose"=true})
+     * @Route("/list/object-type-texts/{id}", name="objecttypetexts_delete", options={"expose"=true})
      *
      *
      * @Method("DELETE")

@@ -65,6 +65,13 @@ class MessageCategory extends BaseCompositeNode {
     private $organizationalGroupType;
 
 
+    /**
+     * a single form node can be used only by one message category
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FormNode", cascade={"persist"})
+     */
+    private $formNode;
+
+
 
 
     /**
@@ -83,6 +90,25 @@ class MessageCategory extends BaseCompositeNode {
     {
         return $this->organizationalGroupType;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFormNode()
+    {
+        return $this->formNode;
+    }
+
+    /**
+     * @param mixed $formNode
+     */
+    public function setFormNode($formNode)
+    {
+        $this->formNode = $formNode;
+    }
+
+
+
 
     /**
      * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
@@ -107,6 +133,7 @@ class MessageCategory extends BaseCompositeNode {
             }
         }
     }
+
 
 
     public function getClassName() {

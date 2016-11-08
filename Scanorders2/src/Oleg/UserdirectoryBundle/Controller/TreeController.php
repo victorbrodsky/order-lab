@@ -193,12 +193,11 @@ class TreeController extends Controller {
                 $levelTitle = "Collaboration";  // . " (Level " . $entity->getLevel() . ")";
             } else {
 
-                if( $entity->getOrganizationalGroupType() ) {
+                if( $mapper && array_key_exists('organizationalGroupType', $mapper) && $mapper['organizationalGroupType'] && $entity->getOrganizationalGroupType() ) {
                     $levelTitle = $entity->getOrganizationalGroupType()->getName() . "";
-                    $levelTitle = $levelTitle;
                 } else {
-                    $levelTitle = $treeRepository->getDefaultLevelLabel($mapper, $entity->getLevel());
-                    $levelTitle = $levelTitle;
+                    //$levelTitle = $treeRepository->getDefaultLevelLabel($mapper, $entity->getLevel());
+                    $levelTitle = $treeRepository->getLevelLabels($entity,$mapper);
                 }
             }
 
@@ -424,7 +423,12 @@ class TreeController extends Controller {
                 } else {
                     $childLevel = 0;
                 }
-                $organizationalGroupType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findOneByLevel($childLevel);
+
+                if( $mapper['organizationalGroupType'] ) {
+                    $organizationalGroupType = $em->getRepository($mapper['prefix'] . $mapper['bundleName'] . ':' . $mapper['organizationalGroupType'])->findOneByLevel($childLevel);
+                } else {
+                    $organizationalGroupType = NULL;
+                }
 
                 //////////// get max ordeinlist ////////////////////
                 $query = $treeRepository->createQueryBuilder('s');
@@ -445,7 +449,11 @@ class TreeController extends Controller {
                 $node = new $fullClassName();
                 $userutil = new UserUtil();
                 $userutil->setDefaultList($node,$orderinlist,$username,$nodetext);
-                $node->setOrganizationalGroupType($organizationalGroupType);
+
+                if( $organizationalGroupType ) {
+                    $node->setOrganizationalGroupType($organizationalGroupType);
+                }
+
                 if( $combobox ) {
                     $node->setType('user-added');
                 }
@@ -512,6 +520,10 @@ class TreeController extends Controller {
             case "PatientListHierarchy":
                 $organizationalGroupType = "PatientListHierarchyGroupType";
                 break;
+            case "FormNode":
+                $organizationalGroupType = NULL;
+                break;
+
             default:
                 //$className = null;
         }

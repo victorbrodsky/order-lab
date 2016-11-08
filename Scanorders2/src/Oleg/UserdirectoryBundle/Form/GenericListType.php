@@ -448,6 +448,18 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //FormNode
+        if( method_exists($this->params['entity'],'getFormNode') ) {
+            echo "add formNode <br>";
+            $builder->add('formNode','entity',array(
+                'class' => 'OlegUserdirectoryBundle:FormNode',
+                'label' => "Form Node:",
+                'property' => 'getTreeName',
+                'multiple' => false,
+                'required' => false,
+                'attr' => array('class'=>'combobox'),
+            ));
+        }
 
         ///////////////// Many To Many relationship /////////////////
 

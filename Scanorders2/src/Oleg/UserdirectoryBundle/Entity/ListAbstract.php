@@ -119,7 +119,7 @@ abstract class ListAbstract
      * Linked Object ID
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $linkToObjectId;
+    protected $entityId;
 
     //Fields specifying a subject entity
     /**
@@ -423,21 +423,6 @@ abstract class ListAbstract
         $this->objectType = $objectType;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLinkToObjectId()
-    {
-        return $this->linkToObjectId;
-    }
-
-    /**
-     * @param mixed $linkToObjectId
-     */
-    public function setLinkToObjectId($linkToObjectId)
-    {
-        $this->linkToObjectId = $linkToObjectId;
-    }
 
     /////////////// Fields specifying a subject entity ///////////////
     /**
@@ -464,6 +449,7 @@ abstract class ListAbstract
 
         $this->entityNamespace = $entityNamespace;
     }
+
     /**
      * @return mixed
      */
@@ -477,6 +463,22 @@ abstract class ListAbstract
     public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * @param mixed $entityId
+     */
+    public function setEntityId($entityId)
+    {
+        $this->entityId = $entityId;
     }
     ///////////////  EOF Fields specifying a subject entity ///////////////
 

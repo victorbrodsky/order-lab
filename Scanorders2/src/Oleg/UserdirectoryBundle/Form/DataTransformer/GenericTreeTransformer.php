@@ -15,6 +15,7 @@ use Oleg\OrderformBundle\Entity\MessageCategory;
 use Oleg\OrderformBundle\Entity\PatientListHierarchy;
 use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
 use Oleg\UserdirectoryBundle\Entity\CommentTypeList;
+use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -276,6 +277,14 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "Oleg",
                     'organizationalGroupType' => "PatientListHierarchyGroupType",
+                    'bundleName' => "OrderformBundle"
+                );
+            }
+
+            if( $entity instanceof FormNode ) {
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'organizationalGroupType' => NULL,
                     'bundleName' => "OrderformBundle"
                 );
             }

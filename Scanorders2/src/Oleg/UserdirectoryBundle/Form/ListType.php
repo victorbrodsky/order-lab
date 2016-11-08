@@ -175,7 +175,7 @@ class ListType extends AbstractType
             'label' => 'Object Name:',
             'attr' => array('class' => 'form-control')
         ));
-        $builder->add('linkToObjectId',null,array(
+        $builder->add('entityId',null,array(
             'label' => 'Linked Object ID:',
             'attr' => array('class' => 'form-control')
         ));
