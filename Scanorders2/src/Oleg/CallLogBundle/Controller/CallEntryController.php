@@ -296,7 +296,16 @@ class CallEntryController extends Controller
 
         //if( $form->isSubmitted() && $form->isValid() ) {
         if( $form->isSubmitted() ) {
-            //exit('form is valid');
+
+            //$data = $form->getData();
+//            $data = $request->request->all();
+//            print "<pre>";
+//            print_r($data);
+//            print "</pre>";
+//            $unmappedField = $data["formnode-4"];
+//            echo "<br>unmappedField=".$unmappedField."<br>";
+//            //print_r($request->get("form"));
+//            exit('form is valid');
 
             $msg = "No Case found";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
@@ -464,6 +473,12 @@ class CallEntryController extends Controller
 
             }//if $newEncounter
 
+
+            //process form nodes
+            $formNodeUtil = $this->get('user_formnode_utility');
+            $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
+            //exit('after formnode');
+
             //exit('form is submitted and finished, msg='.$msg);
 
             $this->get('session')->getFlashBag()->add(
@@ -487,7 +502,6 @@ class CallEntryController extends Controller
         );
     }
 
-    //$formparams=null
     public function createCalllogEntryForm($message, $mrntype=null, $mrn=null) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -529,12 +543,6 @@ class CallEntryController extends Controller
             'alias' => true,
             'timezoneDefault' => $userTimeZone
         );
-
-//        if( $formparams ) {
-//            $form = $this->createForm(new PatientType($params, $patient), $patient, $formparams);
-//        } else {
-//            $form = $this->createForm(new PatientType($params, $patient), $patient);
-//        }
 
         $form = $this->createForm(new CalllogMessageType($params, $message), $message);
 

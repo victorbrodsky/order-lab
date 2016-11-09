@@ -1,0 +1,162 @@
+
+{% macro addFormNode( formNodeFieldHolder, cycle, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formNodeHolder = formNodeFieldHolder.vars.prototype %}
+    {% else %}
+        {% set formNodeHolder = formNodeFieldHolder %}
+    {% endif %}
+
+    {#before formNodeHolder.id={{ formNodeHolder.id }}<br>#}
+    {% if formNodeHolder.formNode is defined and formNodeHolder.formNode %}
+
+        {% set rootFormNode = formNodeHolder.formNode %}
+        {#rootFormNode={{ rootFormNode.name }}<br>#}
+
+        <div class="formnode-holder formnode-holder-{{ formNodeHolder.id }}">
+
+            {{ formnodemacros.addFormNodeRecursively(rootFormNode,cycle,prototype) }}
+
+        </div>
+
+    {% endif %}
+{% endmacro %}
+
+{% macro addFormNodeRecursively( formNode, cycle, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {% set children = formNode.children %}
+
+    {% if children %}
+        {% for childFormNode in children %}
+
+            {{ formnodemacros.addFormNodeByType(childFormNode,cycle,prototype) }}
+
+            {% set addRecursion = true %}
+            {% set formType = childFormNode.getObjectType() ~ "" %}
+            {% if formType == "Form Group" %}
+                {% set addRecursion = false %}
+            {% endif %}
+            {% if formType == "Form" %}
+                {% set addRecursion = false %}
+            {% endif %}
+            {% if formType == "Form Section" %}
+                {% set addRecursion = false %}
+            {% endif %}
+            {% if addRecursion %}
+                {{ formnodemacros.addFormNodeRecursively(childFormNode,cycle,prototype) }}
+            {% endif %}
+
+        {% endfor %}
+    {% else %}
+        {#$this->addFormNodeByType($form,$formNode,$params);#}
+        {{ formnodemacros.addFormNodeByType(formNode,cycle,prototype) }}
+    {% endif %}
+
+{% endmacro %}
+
+{% macro addFormNodeByType( formNode, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {#formNode.id={{ formNode.id }}<br>#}
+
+    {% set formType = null %}
+    {% if formNode.objectType %}
+        {% set formType = formNode.getObjectType().getName() %}
+    {% endif %}
+    {#formType={{ formType }}<br>#}
+
+    {#{% if formType %}#}
+        {#<p>{{ formNodeHolder.name }}</p>#}
+    {#{% endif %}#}
+
+    {% if formType == "Form" %}
+        {{ formnodemacros.addFormNodeRecursively(formNode,cycle,prototype) }}
+    {% endif %}
+
+    {% if formType == "Form Section" %}
+        {{ formnodemacros.sectionForm(formNode,cycle,prototype) }}
+    {% endif %}
+
+    {% if formType == "Form Field - Free Text" %}
+        {{ formnodemacros.textareaForm(formNode,cycle,prototype) }}
+    {% endif %}
+
+{% endmacro %}
+
+{% macro sectionForm( formNode, cycle, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {#History/Findings    #}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#formnode-section-{{ formNode.id }}">
+                    {{ formNode.name }}
+                </a>
+            </h4>
+        </div>
+        <div id="formnode-section-{{ formNode.id }}" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+
+                        {#render children of this section#}
+                        {{ formnodemacros.addFormNodeRecursively(formNode,cycle,prototype) }}
+
+                    </div>
+                </div>
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+
+{% endmacro %}
+
+{% macro textareaForm( formNode, cycle, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+
+
+        {% if formNode.showLabel %}
+            <div class="row">
+                <div class="col-xs-6" align="right">
+                    <label>{{ formNode.name }}:</label>
+                </div>
+                <div class="col-xs-6" align="left">
+                    {#<textarea#}
+                            {#id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"#}
+                            {#name="oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
+                            {#class="textarea form-control"#}
+                    {#>#}
+                    {#</textarea>#}
+                    {{ formnodemacros.textareaField(formNode, cycle, prototype) }}
+                </div>
+            </div>
+        {% else %}
+            {#<div class="col-xs-12" align="left">#}
+            {#<textarea#}
+                    {#id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"#}
+                    {#name="oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
+                    {#class="textarea form-control"#}
+            {#>#}
+            {#</textarea>#}
+            {#</div>#}
+            {{ formnodemacros.textareaField(formNode, cycle, prototype) }}
+        {% endif %}
+
+{% endmacro %}
+{% macro textareaField( formNode, cycle, prototype ) %}
+    {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
+    {% set fieldname = "formnode-"~formNode.id %}
+    <textarea
+            id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
+            name="{{ fieldname }}"
+            class="textarea form-control"
+    >
+    </textarea>
+{% endmacro %}
+

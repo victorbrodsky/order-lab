@@ -706,6 +706,10 @@
         {{ formmacros.field(form.formNode) }}
     {% endif %}
 
+    {% if form.showLabel is defined %}
+        {{ formmacros.checkbox(form.showLabel) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}

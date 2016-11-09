@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
 use Symfony\Component\Form\AbstractType;
@@ -448,9 +449,9 @@ class GenericListType extends AbstractType
             ));
         }
 
-        //FormNode
+        //FormNode Holder
         if( method_exists($this->params['entity'],'getFormNode') ) {
-            echo "add formNode <br>";
+            //echo "add formNode <br>";
             $builder->add('formNode','entity',array(
                 'class' => 'OlegUserdirectoryBundle:FormNode',
                 'label' => "Form Node:",
@@ -458,6 +459,15 @@ class GenericListType extends AbstractType
                 'multiple' => false,
                 'required' => false,
                 'attr' => array('class'=>'combobox'),
+            ));
+        }
+
+        //FormNode
+        if( $this->params['entity'] instanceof FormNode ) {
+            $builder->add('showLabel', 'checkbox', array(
+                'label' => 'Show Field Label:',
+                'required' => false,
+                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
             ));
         }
 

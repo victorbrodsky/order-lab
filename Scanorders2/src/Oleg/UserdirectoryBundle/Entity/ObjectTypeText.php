@@ -29,11 +29,14 @@ class ObjectTypeText extends ListAbstract
      */
     private $formNodes;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $value;
 
 
-
-    public function __construct() {
-        parent::__construct();
+    public function __construct( $creator = null ) {
+        parent::__construct($creator);
 
         $this->formNodes = new ArrayCollection();
     }
@@ -46,6 +49,7 @@ class ObjectTypeText extends ListAbstract
     {
         if( $item && !$this->formNodes->contains($item) ) {
             $this->formNodes->add($item);
+            //$item->setObjectType($this);
         }
         return $this;
     }
@@ -56,6 +60,43 @@ class ObjectTypeText extends ListAbstract
     public function getFormNodes()
     {
         return $this->formNodes;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+
+    public function setObject($object) {
+        $class = new \ReflectionClass($object);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        if( $className && !$this->getEntityName() ) {
+            $this->setEntityName($className);
+        }
+
+        if( $classNamespace && !$this->getEntityNamespace() ) {
+            $this->setEntityNamespace($classNamespace);
+        }
+
+        if( !$this->getEntityId() && $object->getId() ) {
+            //echo "setEntityId=".$object->getId()."<br>";
+            $this->setEntityId($object->getId());
+        }
     }
 
 }

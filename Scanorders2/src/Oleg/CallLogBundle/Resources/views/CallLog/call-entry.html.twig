@@ -4,6 +4,7 @@
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+{% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
 
 {% block title %}
@@ -52,7 +53,8 @@
         <a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">
             No single patient is referenced by this entry or I'll add the patient info later
         </a>
-        <div id="callentry-form" class="panel-collapse collapse">
+            {#testing collapse in#}
+        <div id="callentry-form" class="panel-collapse collapse in">
 
         {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
         <div class="panel panel-primary">
@@ -191,46 +193,50 @@
                 </div> <!-- panel-collapse -->
             </div> <!-- panel panel-default -->
 
+            {% if form.messageCategory is defined %}
+                {{ formnodemacros.addFormNode(form.vars.value.messageCategory, cycle, "noprototype") }}
+            {% endif %}
 
             {#History/Findings    #}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#calllog-HistoryFindings">
-                            History/Findings
-                        </a>
-                    </h4>
-                </div>
-                <div id="calllog-HistoryFindings" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-12" align="left">
-                                <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry describing the call."></textarea>
-                            </div>
-                        </div>
-                    </div> <!-- panel-body -->
-                </div> <!-- panel-collapse -->
-            </div> <!-- panel panel-default -->
+            {#<div class="panel panel-default">#}
+                {#<div class="panel-heading">#}
+                    {#<h4 class="panel-title">#}
+                        {#<a data-toggle="collapse" href="#calllog-HistoryFindings">#}
+                            {#History/Findings#}
+                        {#</a>#}
+                    {#</h4>#}
+                {#</div>#}
+                {#<div id="calllog-HistoryFindings" class="panel-collapse collapse in">#}
+                    {#<div class="panel-body">#}
+                        {#<div class="row">#}
+                            {#<div class="col-xs-12" align="left">#}
+                                {#<textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry describing the call."></textarea>#}
+                            {#</div>#}
+                        {#</div>#}
+                    {#</div> <!-- panel-body -->#}
+                {#</div> <!-- panel-collapse -->#}
+            {#</div> <!-- panel panel-default -->#}
 
             {#Impression/Outcome    #}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#calllog-ImpressionOutcome">
-                            Impression/Outcome
-                        </a>
-                    </h4>
-                </div>
-                <div id="calllog-ImpressionOutcome" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-12" align="left">
-                                <textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry."></textarea>
-                            </div>
-                        </div>
-                    </div> <!-- panel-body -->
-                </div> <!-- panel-collapse -->
-            </div> <!-- panel panel-default -->
+            {#<div class="panel panel-default">#}
+                {#<div class="panel-heading">#}
+                    {#<h4 class="panel-title">#}
+                        {#<a data-toggle="collapse" href="#calllog-ImpressionOutcome">#}
+                            {#Impression/Outcome#}
+                        {#</a>#}
+                    {#</h4>#}
+                {#</div>#}
+                {#<div id="calllog-ImpressionOutcome" class="panel-collapse collapse in">#}
+                    {#<div class="panel-body">#}
+                        {#<div class="row">#}
+                            {#<div class="col-xs-12" align="left">#}
+                                {#<textarea rows="4" class="textarea form-control input-lg" placeholder="Free text entry."></textarea>#}
+                            {#</div>#}
+                        {#</div>#}
+                    {#</div> <!-- panel-body -->#}
+                {#</div> <!-- panel-collapse -->#}
+            {#</div> <!-- panel panel-default -->#}
+
 
         {# EOF Entry #}
             </div> <!-- panel-body -->

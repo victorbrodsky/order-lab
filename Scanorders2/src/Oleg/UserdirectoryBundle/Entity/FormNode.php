@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Use Doctrine Extension Tree for tree manipulation.
  *
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\FormNodeRepository")
  * @ORM\Table(name="user_formNode")
  */
 class FormNode extends BaseCompositeNode {
@@ -82,10 +82,14 @@ class FormNode extends BaseCompositeNode {
     private $objectTypeText;
 
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $showLabel;
 
 
-    public function __construct() {
-        parent::__construct();
+    public function __construct($creator=null) {
+        parent::__construct($creator);
 
     }
 
@@ -124,7 +128,21 @@ class FormNode extends BaseCompositeNode {
         $this->objectTypeText = $objectTypeText;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getShowLabel()
+    {
+        return $this->showLabel;
+    }
 
+    /**
+     * @param mixed $showLabel
+     */
+    public function setShowLabel($showLabel)
+    {
+        $this->showLabel = $showLabel;
+    }
 
 
 

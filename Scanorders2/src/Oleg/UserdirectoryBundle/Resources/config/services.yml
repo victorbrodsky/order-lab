@@ -185,3 +185,7 @@ services:
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
+
+    user_formnode_utility:
+        class: Oleg\UserdirectoryBundle\Util\FormNodeUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]

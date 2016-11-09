@@ -3,7 +3,9 @@
 namespace Oleg\CallLogBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
+use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -80,9 +82,11 @@ class CalllogMessageType extends AbstractType
 //            'class' => 'OlegOrderformBundle:MessageCategory',
 //            'attr' => array('class' => 'combobox combobox-width combobox-messageCategory')
 //        ));
+        /////////////////////////////////////// messageCategory ///////////////////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $message = $event->getData();
             $form = $event->getForm();
+            $messageCategory = null;
 
             $label = null;
             $mapper = array(
@@ -91,14 +95,14 @@ class CalllogMessageType extends AbstractType
                 'bundleName' => "OrderformBundle",
                 'organizationalGroupType' => "MessageTypeClassifiers"
             );
-            if( $message ) {
+            if ($message) {
                 $messageCategory = $message->getMessageCategory();
-                if( $messageCategory ) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory,$mapper);
+                if ($messageCategory) {
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
                 }
             }
-            if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null,$mapper) . ":";
+            if (!$label) {
+                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper) . ":";
             }
 
             //echo "show defaultInstitution label=".$label."<br>";
@@ -116,9 +120,20 @@ class CalllogMessageType extends AbstractType
                     //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
                     'data-read-only-exclusion-level' => '2', //readonly will be disable for all levels after indicated level
                 ),
-                'classtype' => 'institution'
+                'classtype' => 'messageCategory'
             ));
+
+
+            //add form node fields
+            //$form = $this->addFormNodes($form,$messageCategory,$this->params);
+
         });
+
+//        $builder->add('messageCategory', new MessageCategoryFormNodeType($this->params), array(
+//            'data_class' => 'Oleg\OrderformBundle\Entity\MessageCategory',
+//            'label' => false
+//        ));
+        /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
 
 
         $builder->add('version', null, array(
@@ -236,6 +251,74 @@ class CalllogMessageType extends AbstractType
     public function getName()
     {
         return 'oleg_calllogformbundle_messagetype';
+    }
+
+
+
+    public function addFormNodes( $form, $formHolder, $params ) {
+
+        if( !$formHolder ) {
+            return $form;
+        }
+
+        $rootFormNode = $formHolder->getFormNode();
+        if( !$rootFormNode ) {
+            return $form;
+        }
+
+        $form = $this->addFormNodeRecursively($form,$rootFormNode,$params);
+
+        return $form;
+    }
+
+
+    public function addFormNodeRecursively( $form, $formNode, $params ) {
+
+        //echo "formNode=".$formNode."<br>";
+        $children = $formNode->getChildren();
+        if( $children ) {
+
+            foreach( $children as $childFormNode ) {
+                $this->addFormNodeByType($form,$childFormNode,$params);
+                $this->addFormNodeRecursively($form,$childFormNode,$params);
+            }
+
+        } else {
+            $this->addFormNodeByType($form,$formNode,$params);
+        }
+
+    }
+
+    public function addFormNodeByType( $form, $formNode, $params ) {
+
+        $formNodeType = $formNode->getObjectType()."";
+        //echo "formNodeType=".$formNodeType."<br>";
+
+        if( $formNodeType == "Form" ) {
+            echo "added Form <br>";
+            $form->add('formFormNode',null,array(
+                'label' => $formNode->getName()."",
+                'mapped' => false
+            ));
+        }
+
+        if( $formNodeType == "Form Section" ) {
+            echo "added Section <br>";
+            $form->add('sectionFormNode',null,array(
+                'label' => $formNode->getName()."",
+                'mapped' => false
+            ));
+        }
+
+        if( $formNodeType == "Form Field - Free Text" ) {
+            echo "added text <br>";
+            $form->add('formNode','text',array(
+                'label' => $formNode->getName()."",
+                'mapped' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
+        }
+
     }
 
 }
