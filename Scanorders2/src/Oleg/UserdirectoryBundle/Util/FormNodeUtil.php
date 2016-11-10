@@ -41,25 +41,7 @@ class FormNodeUtil
         //echo "<br>unmappedField=" . $unmappedField . "<br>";
         echo "<br><br>";
 
-        //get formnode hierarchy
-        //$children = $rootFormNode->getChildren();
-        //echo "children count=" . count($children) . "<br>";
-
-//        foreach( $children as $formNode ) {
-//            //$formNodeType = $formNode->getObjectType()."";
-//
-//            if( !$this->hasValue($formNode) ) {
-//                continue;
-//            }
-//
-//            $key = "formnode-".$formNode->getId();
-//            $formValue = $data[$key];
-//            echo $key.": formValue=" . $formValue . "<br>";
-//
-//        }
-
-         $this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
-
+        $this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
     }
     public function processFormNodeRecursively( $data, $formNode, $holderEntity ) {
 

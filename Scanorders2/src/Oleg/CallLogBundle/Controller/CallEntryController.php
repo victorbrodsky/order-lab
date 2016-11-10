@@ -115,10 +115,10 @@ class CallEntryController extends Controller
         $patient = new Patient(true,'valid',$user,$system);
         $patient->setInstitution($institution);
 
-        //create invalid encounter #1 just to display in "Patient Info"
+        //create invalid encounter #1 just to display fields in "Patient Info"
         $encounter1 = new Encounter(true,'invalid',$user,$system);
 
-        //create encounter #2 to display in "Encounter Info"
+        //create encounter #2 to display in "Encounter Info" -> "Update Patient Info"
         $encounter2 = new Encounter(true,'valid',$user,$system);
         $encounter2->setInstitution($institution);
         $encounterReferringProvider = new EncounterReferringProvider('valid',$user,$system);
@@ -310,7 +310,11 @@ class CallEntryController extends Controller
             $msg = "No Case found";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
 
-            $patient = $message->getPatient()->first();
+            $patients = $message->getPatient();
+            if( count($patients) != 1 ) {
+                throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
+            }
+            $patient = $patients->first();
             echo "patient id=".$patient->getId()."<br>";
 
             $patientInfoEncounter = null;
@@ -459,6 +463,9 @@ class CallEntryController extends Controller
 
                     $newEncounter->setPatient(null);
 
+                    //remove empty patient from message
+                    $message->removePatient($patient);
+
                     //exit('Exit Case 2');
                     $em->persist($newEncounter);
                     $em->flush($newEncounter);
@@ -470,14 +477,21 @@ class CallEntryController extends Controller
 
                 }
 
+                //process form nodes
+                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
+                //exit('after formnode');
+
+
+                //log search action
+                if( $msg ) {
+                    $eventType = "Call Log Created";
+                    $event = "New Call Log created: message ID=".$message->getId();
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$message,$request,$eventType);
+                }
 
             }//if $newEncounter
 
-
-            //process form nodes
-            $formNodeUtil = $this->get('user_formnode_utility');
-            $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
-            //exit('after formnode');
 
             //exit('form is submitted and finished, msg='.$msg);
 

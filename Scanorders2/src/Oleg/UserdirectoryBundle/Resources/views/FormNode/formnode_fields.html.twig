@@ -1,0 +1,8 @@
+
+{% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+
+{% if formNodeHolderEntity is defined %}
+    {{ formnodemacros.addFormNode(formNodeHolderEntity, cycle, "noprototype") }}
+{% endif %}
+

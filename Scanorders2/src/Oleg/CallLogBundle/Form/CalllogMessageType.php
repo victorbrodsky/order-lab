@@ -112,7 +112,7 @@ class CalllogMessageType extends AbstractType
                 'required' => false,
                 'read_only' => true,
                 'attr' => array(
-                    'class' => 'ajax-combobox-compositetree combobox-compositetree-read-only-exclusion', //combobox-compositetree-readonly-parent
+                    'class' => 'ajax-combobox-compositetree combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'MessageCategory',

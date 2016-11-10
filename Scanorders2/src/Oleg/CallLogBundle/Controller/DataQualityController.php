@@ -63,13 +63,13 @@ class DataQualityController extends CallEntryController
 
         $encounter1 = new Encounter(true,$status,$user,$system);
         $patient1->addEncounter($encounter1);
-        $form1 = $this->createPatientForm($patient1);
+        $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid);
 
 
         $patient2 = new Patient(true,$status,$user,$system);
         $encounter2 = new Encounter(true,$status,$user,$system);
         $patient2->addEncounter($encounter2);
-        $form2 = $this->createPatientForm($patient2);
+        $form2 = $this->createPatientForm($patient2,$mrntype,$mrnid);
 
 
         return array(
@@ -348,7 +348,7 @@ class DataQualityController extends CallEntryController
 
         $encounter1 = new Encounter(true,$status,$user,$system);
         $patient1->addEncounter($encounter1);
-        $form1 = $this->createPatientForm($patient1);
+        $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid);
 
 //        $patient2 = new Patient(true,$status,$user,$system);
 //        $encounter2 = new Encounter(true,$status,$user,$system);
@@ -534,7 +534,7 @@ class DataQualityController extends CallEntryController
 
         $encounter1 = new Encounter(true,$status,$user,$system);
         $patient1->addEncounter($encounter1);
-        $form1 = $this->createPatientForm($patient1);
+        $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid);
 
         return array(
             'form1' => $form1->createView(),
@@ -586,6 +586,47 @@ class DataQualityController extends CallEntryController
     }
 
 
+    public function createPatientForm($patient, $mrntype=null, $mrn=null) {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        ////////////////////////
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:MrnType', 'list')
+//            ->select("list.id as id, list.name as text")
+//            ->orderBy("list.orderinlist","ASC");
+//        $query->where("list.type = :type OR ( list.type = 'user-added' AND list.name != :autogen)");
+//        $query->setParameters( array('type' => 'default','autogen' => 'Auto-generated MRN') );
+//        //echo "query=".$query."<br>";
+//
+//        $mrntypes = $query->getQuery()->getResult();
+//        foreach( $mrntypes as $mrntype ) {
+//            echo "mrntype=".$mrntype['id'].":".$mrntype['text']."<br>";
+//        }
+        ///////////////////////
+
+        if( !$mrntype ) {
+            $mrntype = 1;
+        }
+
+        $params = array(
+            'cycle' => 'new',
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+            //'alias' => true
+            'type' => null,
+            'mrntype' => intval($mrntype),
+            'mrn' => $mrn,
+            'formtype' => 'call-entry',
+            'complexLocation' => false,
+            'alias' => false
+        );
+
+        $form = $this->createForm(new PatientType($params, $patient), $patient);
+
+        return $form;
+    }
 
 
 }

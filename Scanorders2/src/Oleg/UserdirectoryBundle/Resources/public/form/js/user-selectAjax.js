@@ -265,6 +265,7 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
                 //console.log("employees_get_composition_tree: thisid="+thisid+"; parentid="+parentid);
                 //console.log(data);
                 _treenodedata[bundleName+entityName][thisid] = data;
+                treeSelectAdditionalJsAction(thiselement);
                 resolve(data);
             }).error(function() {
                 //console.log('error getting nodes');
@@ -278,7 +279,9 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
 
     });
 }
-
+function treeSelectAdditionalJsAction(element) {
+    return;
+}
 
 //function getComboboxCommentType(holder) {
 //

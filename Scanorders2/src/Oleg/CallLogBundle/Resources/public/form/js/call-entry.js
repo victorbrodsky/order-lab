@@ -15,6 +15,7 @@ function initCallLogPage() {
     calllogUpdatePatientAgeListener('patient-holder-1');
 
     //calllogEnableMessageCategoryService('patient-holder-1');
+    calllogMessageCategoryListener('patient-holder-1');
 }
 
 //prevent exit modified form
@@ -171,10 +172,14 @@ function addnewCalllogPatient(holderId) {
             //$('#callentry-nosinglepatient-link').hide(_transTime);
             //$('#callentry-form').hide(_transTime);
             //opens/shows the lower accordion that opens when you click "No single patient is referenced by this entry or I'll add the patient info later"
-            $('#callentry-nosinglepatient-link').trigger();
+            //var nosinglepatientlink = $('#callentry-nosinglepatient-link');
+            //if( nosinglepatientlink ) {
+                //nosinglepatientlink.trigger("click");
+                //nosinglepatientlink.hide();
+            //}
 
         } else {
-            console.log("Patient has not been created");
+            //console.log("Patient has not been created not OK: data.output="+data.output);
             holder.find('#calllog-danger-box').html(data.output);
             holder.find('#calllog-danger-box').show(_transTime);
         }
@@ -468,13 +473,13 @@ function findCalllogPatient(holderId,formtype,mrntype) {
             if( firstKey ) {
                 var firstElement = data[firstKey];
                 if( firstElement && firstElement.hasOwnProperty("id") ) {
-                    console.log("patient found !!!: searchedStr="+searchedStr);
+                    //console.log("patient found !!!: searchedStr="+searchedStr);
                     populatePatientsInfo(data, searchedStr, holderId, singleMatch);
                     dataOk = true;
                 }
             }
             if( data.length == 0 ) {
-                console.log("no patient found: searchedStr="+searchedStr);
+                //console.log("no patient found: searchedStr="+searchedStr);
                 populatePatientsInfo(data, searchedStr, holderId, singleMatch);
                 dataOk = true;
             }
@@ -485,8 +490,8 @@ function findCalllogPatient(holderId,formtype,mrntype) {
             holder.find('#calllog-danger-box').show(_transTime);
         }
     }).done(function() {
+        //console.log("search done");
         lbtn.stop();
-
         //close datepicker box
         //var datepickerDropdown = $(".datepicker-dropdown");
         //printF(datepickerDropdown,"datepicker-dropdown:");
@@ -501,7 +506,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
 
     //var patLen = patients.length;
     var patLen = getPatientsLength(patients);
-    console.log('patLen='+patLen);
+    //console.log('patLen='+patLen);
 
     //clear matching patient section
     holder.find('#calllog-matching-patients').hide(_transTime);
@@ -517,8 +522,8 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
     showCalllogCallentryForm(false);
 
     _patients = patients;
-    console.log("_patients:");
-    console.log(_patients);
+    //console.log("_patients:");
+    //console.log(_patients);
 
     var processed = false;
 
@@ -535,7 +540,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
         //console.log('patMergedLen='+patMergedLen);
 
         if( patMergedLen == 0 && processed == false ) {
-
+            //console.log('single patient populate');
             populatePatientInfo(patient, false, true, holderId); //single patient found
             disableAllFields(true, holderId);
 
@@ -550,15 +555,16 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
 
             //warning that no merge patients for set master record and un-merge
             var formtype = $('#formtype').val();
-            //console.log('formtype='+formtype);
+            //console.log('single patient populate: formtype='+formtype);
 
             if( formtype == "unmerge" || formtype == "set-master-record" ) {
                 holder.find('#calllog-danger-box').html("This patient does not have any merged patient records");
                 holder.find('#calllog-danger-box').show(_transTime);
             }
+            //console.log("single patient populate: 1");
 
             if( formtype == "edit-patient" ) {
-                //console.log("patientId="+patientId);
+                //console.log("patient.id="+patient.id);
                 var url = Routing.generate('calllog_patient_edit',{'id':patient.id});
                 //alert("url="+url);
                 window.location.href = url;
@@ -571,6 +577,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
             }
 
             processed = true;
+            //console.log("single patient populate: finished");
         }
     }
 
@@ -602,7 +609,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
     if( processed == false ){
         console.log("Logical error. Search patients not processed. patLen="+patLen);
     }
-
+    //console.log("populate Patients Info: finished");
 }
 
 function createPatientsTableCalllog( patients, holderId ) {
@@ -953,7 +960,7 @@ function getPatientByIdFromPatients(index,patients) {
 }
 
 function disableAllFields(disable,holderId) {
-
+    //console.log("disableAllFields: disable="+disable);
     var holder = getHolder(holderId);
 
     disableField(holder.find(".mrntype-combobox"),disable);
@@ -972,8 +979,9 @@ function disableAllFields(disable,holderId) {
 
     disableField(holder.find(".encounter-suffix"),disable);
 
-    //disableSelectFieldCalllog(holder.find(".encountersex-field"),true);
-    disableField(holder.find(".encountersex-field"),disable);
+    disableSelectFieldCalllog(holder.find(".encountersex-field"),disable);
+    //disableField(holder.find(".encountersex-field"),disable);
+    //console.log("disableAllFields: finished");
 }
 function disableField(fieldEl,disable) {
     var disableStr = "readonly"; //disabled
@@ -1005,13 +1013,13 @@ function disableField(fieldEl,disable) {
         //}
     }
 }
-//    function disableSelectFieldCalllog(fieldEl,disable) {
-//        if( disable ) {
-//            fieldEl.prop('disabled', true);
-//        } else {
-//            fieldEl.prop('disabled', false);
-//        }
-//    }
+function disableSelectFieldCalllog(fieldEl,disable) {
+    if( disable ) {
+        fieldEl.prop('disabled', true);
+    } else {
+        fieldEl.prop('disabled', false);
+    }
+}
 
 function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch ) {
 
@@ -1047,10 +1055,10 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     //console.log('middlename='+middlename+'; suffix='+suffix+'; sex='+sex);
     //console.log('showinfo='+showinfo);
     if( patient && patient.id || showinfo ) {
-        //console.log('populate PatientInfo: show patient id='+patient.id);
+        //console.log('show encounter info');
         holder.find('#encounter-info').show(_transTime);  //collapse("show");
     } else {
-        //console.log('populate PatientInfo: hide');
+        //console.log('hide  encounter info');
         holder.find('#encounter-info').hide(_transTime);  //collapse("hide");
     }
 
@@ -1066,7 +1074,7 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     if( patient ) {
         calllogSetPatientAccordionTitle(patient, holderId);
     }
-
+    //console.log('populate PatientInfo: finished');
 }
 
 function populateInputFieldCalllog( fieldEl, data, index, modify ) {
@@ -1140,9 +1148,19 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
         //unlock field
         fieldEl.prop(disableStr, false);
     }
-    //console.log('value='+value);
+    //console.log('populate Select Field Calllog: value='+value);
     //console.log(fieldEl);
-    fieldEl.select2('val',value);
+    fieldEl.select2('val', value);
+    //if( value ) {
+    //    //console.log("set value");
+    //    fieldEl.select2('val', value);
+    //    //console.log("after set value");
+    //} else {
+    //    //console.log("set data");
+    //    fieldEl.select2('data', null);
+    //    //console.log("after set data");
+    //}
+    //console.log('after populate Select Field Calllog !!!: value='+value);
     return value;
 }
 
@@ -1273,6 +1291,8 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
         if( patient.age )
             patientInfoArr.push(patient.age); //5 y.o.
 
+        //console.log("push mrn="+patient.mrntypestr + ": "+patient.mrn);
+
         patientInfoArr.push(patient.mrntypestr + ": "+patient.mrn); //MRN Type: MRN
         var patientInfo = patientInfoArr.join(" | ");
         //console.log("patientInfo="+patientInfo);
@@ -1291,6 +1311,7 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
             panelEl.collapse('show');
         }
     }
+    //console.log("calllog SetPatientAccordionTitle: finished");
 }
 
 
@@ -1427,5 +1448,102 @@ function calllogEnableMessageCategoryService(holderId) {
     printF(lastCategory,"lastCategory:");
     console.log(lastCategory);
     lastCategory.prop('disabled', false);
+}
+
+function calllogMessageCategoryListener(holderId) {
+    //var holder = getHolder(holderId);
+
+    //$eventSelect.on("select2:select", function (e) { log("select2:select", e); });
+    //$eventSelect.on("select2:unselect", function (e) { log("select2:unselect", e); });
+
+    //$(".ajax-combobox-messageCategory").on('change', function(e){
+    $(".ajax-combobox-messageCategory").on("select2:select", function (e) {
+
+        printF( $(this), "combobox on change:" );
+
+        var comboboxEl = $(this);
+        var thisData = comboboxEl.select2('data');
+        var messageCategoryId = thisData.id;
+        console.log("messageCategoryId="+messageCategoryId);
+
+        var entityNamespace = "Oleg\\OrderformBundle\\Entity";
+        var entityName = "MessageCategory";
+
+        var url = Routing.generate('employees_formnode_fields');
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            async: asyncflag,
+            data: {entityNamespace: entityNamespace, entityName: entityName, entityId: messageCategoryId },
+        }).success(function(data) {
+            //console.log("data="+data);
+
+            var template = response;
+            $('#form-node-next').html(template); //Change the html of the div with the id = "your_div"
+            $.bootstrapSortable(true);
+
+            //if( data != "ERROR" ) {
+            //    //holder.find('.calllog-patient-panel-title').html(data);
+            //} else {
+            //    //holder.find('.calllog-patient-panel-title').html("Patient Info");
+            //}
+        }).done(function() {
+            //console.log("update patient title done");
+        });
+
+
+        //$.ajax({
+        //    url: myteamurl,
+        //    timeout: _ajaxTimeout,
+        //    type: "GET",
+        //    //type: "POST",
+        //    //data: {id: userid },
+        //    //dataType: 'json',
+        //    async: asyncflag
+        //}).success(function(response) {
+        //    //console.log(response);
+        //    var template = response;
+        //    $('#'+replaceTargetId).html(template); //Change the html of the div with the id = "your_div"
+        //    $.bootstrapSortable(true);
+        //}).done(function() {
+        //    lbtn.stop();
+        //}).error(function(jqXHR, textStatus, errorThrown) {
+        //    console.log('Error : ' + errorThrown);
+        //});
+
+    });
+}
+function treeSelectAdditionalJsAction(comboboxEl) {
+    printF( comboboxEl, "combobox on change:" );
+
+    var thisData = comboboxEl.select2('data');
+    var messageCategoryId = thisData.id;
+    console.log("messageCategoryId="+messageCategoryId);
+
+    var entityNamespace = "Oleg\\OrderformBundle\\Entity";
+    var entityName = "MessageCategory";
+
+    var url = Routing.generate('employees_formnode_fields');
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        //type: "GET",
+        async: asyncflag,
+        data: {entityNamespace: entityNamespace, entityName: entityName, entityId: messageCategoryId },
+    }).success(function(data) {
+        //console.log("data="+data);
+
+        $('#form-node-next').html(data); //Change the html of the div with the id = "your_div"
+        //$.bootstrapSortable(true);
+
+        //if( data != "ERROR" ) {
+        //    //holder.find('.calllog-patient-panel-title').html(data);
+        //} else {
+        //    //holder.find('.calllog-patient-panel-title').html("Patient Info");
+        //}
+    }).done(function() {
+        //console.log("update patient title done");
+    });
 }
 
