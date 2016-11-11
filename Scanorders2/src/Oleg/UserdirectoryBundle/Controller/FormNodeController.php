@@ -38,12 +38,12 @@ class FormNodeController extends Controller {
         $entityName = $request->query->get('entityName');
         $entityId = $request->query->get('entityId');
 
-        echo "entityNamespace=".$entityNamespace."<br>";
-        echo "entityName=".$entityName."<br>";
-        echo "entityId=".$entityId."<br>";
+        //echo "entityNamespace=".$entityNamespace."<br>";
+        //echo "entityName=".$entityName."<br>";
+        //echo "entityId=".$entityId."<br>";
 
-        if( !$entityNamespace || !$entityName ) {
-            echo "no entity namespace and name";
+        if( !$entityNamespace || !$entityName || !$entityId ) {
+            //echo "no entity namespace and name";
             return null;
         }
 
@@ -63,10 +63,27 @@ class FormNodeController extends Controller {
         }
 
 
-        return array(
+        $formNodeArr = array(
             'formNodeHolderEntity' => $formNodeHolderEntity,
             'cycle' => 'edit',
         );
+
+        $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig',$formNodeArr)->getContent();
+
+        $formNodeId = null;
+        if( $formNodeHolderEntity->getFormNode() ) {
+            $formNodeId = $formNodeHolderEntity->getFormNode()->getId();
+        }
+
+        $res = array(
+            'formNodeHtml' => $template,
+            'formNodeId' => $formNodeId
+        );
+
+        $json = json_encode($res);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
 
 
 //        $template = "OK";

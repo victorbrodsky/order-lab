@@ -81,11 +81,23 @@ class FormNode extends BaseCompositeNode {
      */
     private $objectTypeText;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="ObjectTypeString", inversedBy="formNodes", cascade={"persist"})
+     */
+    private $objectTypeString;
+
+
+
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    protected $showLabel;
+    private $showLabel;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $placeholder;
 
 
     public function __construct($creator=null) {
@@ -131,6 +143,24 @@ class FormNode extends BaseCompositeNode {
     /**
      * @return mixed
      */
+    public function getObjectTypeString()
+    {
+        return $this->objectTypeString;
+    }
+
+    /**
+     * @param mixed $objectTypeString
+     */
+    public function setObjectTypeString($objectTypeString)
+    {
+        $this->objectTypeString = $objectTypeString;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
     public function getShowLabel()
     {
         return $this->showLabel;
@@ -143,6 +173,23 @@ class FormNode extends BaseCompositeNode {
     {
         $this->showLabel = $showLabel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPlaceholder()
+    {
+        return $this->placeholder;
+    }
+
+    /**
+     * @param mixed $placeholder
+     */
+    public function setPlaceholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+    }
+
 
 
 

@@ -271,7 +271,6 @@ class AdminController extends Controller
 
         $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
 
-        $count_generateFormNode = $this->generateFormNode();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -341,7 +340,6 @@ class AdminController extends Controller
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
             'Administrator generation='.$adminRes.', '.
             'HealthcareProviderSpecialtiesList='.$count_HealthcareProviderSpecialtiesList.', '.
-            'generateFormNode='.$count_generateFormNode.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -6021,122 +6019,19 @@ class AdminController extends Controller
         return $res;
     }
 
-
-    public function generateFormNode() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        //root
-        $categories = array(
-            'Root Form' => array(),
-        );
-        $count = 10;
-        $level = 0;
-        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-
-//        //Pathology Call Log Entry
-//        $categories = array(
-//            'Root Form' => array(
-//                'Pathology Call Log Entry' => array(
-//                    'History/Findings' => 'History Text' //set objectType
-//                ),
-//            ),
-//        );
-//        $count = 10;
-//        $level = 0;
-//        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-
-
-
-        //exit('EOF message category');
-
-        return round($count/10);
-    }
-    public function addNestedsetNodeRecursevely($parentCategory,$categories,$level,$username,$count) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        foreach( $categories as $category=>$subcategory ) {
-
-            $name = $category;
-
-            if( $subcategory && !is_array($subcategory) ) {
-                $name = $subcategory;
-            }
-
-            //find by name and by parent ($parentCategory) if exists
-            if( $parentCategory ) {
-                $mapper = array(
-                    'prefix' => "Oleg",
-                    'className' => "FormNode",
-                    'bundleName' => "UserdirectoryBundle"
-                );
-                $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parentCategory,$mapper);
-            } else {
-                $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($name);
-            }
-
-            if( !$node ) {
-                //make category
-                $node = new FormNode();
-
-                $this->setDefaultList($node,$count,$username,$name);
-                $node->setLevel($level);
-
-//                //try to get default group by level
-//                if( !$node->getOrganizationalGroupType() ) {
-//                    if( $node->getLevel() ) {
-//                        $messageTypeClassifier = $em->getRepository('OlegOrderformBundle:MessageTypeClassifiers')->findOneByLevel($node->getLevel());
-//                        if ($messageTypeClassifier) {
-//                            $node->setOrganizationalGroupType($messageTypeClassifier);
-//                        }
-//                    }
-//                }
-
-                $count = $count + 10;
-            }
-
-//            echo $level.": category=".$name.", count=".$count."<br>";
-//            echo "subcategory:<br>";
-//            print_r($subcategory);
-//            echo "<br><br>";
-//            echo "messageCategory=".$node->getName()."<br>";
-
-            //add to parent
-            if( $parentCategory ) {
-                $em->persist($parentCategory);
-                $parentCategory->addChild($node);
-            }
-
-            //$node->printTree();
-
-            //make children
-            if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
-                $count = $this->addNestedsetNodeRecursevely($node,$subcategory,$level+1,$username,$count);
-            }
-
-            //testing
-            if( 1 ) {
-                $label = null;
-                if ($node->getObjectType()) {
-                    $label = $node->getObjectType()->getName();
-                } else {
-                    $label = null;
-                }
-                if ($node->getParent()) {
-                    $parent = $node->getParent()->getName();
-                } else {
-                    $parent = null;
-                }
-                echo $node.": label=".$label."; level=".$node->getLevel()."; parent=".$parent."<br>";
-            }
-
-            $em->persist($node);
-            $em->flush();
+    /**
+     * @Route("/list/generate-form-node-tree/", name="employees_generate_form_node_tree")
+     * @Method("GET")
+     */
+    public function generateFormNodeAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        return $count;
+        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil->generateFormNode();
+
+        exit("Form Node Tree generated");
     }
-
-
 }

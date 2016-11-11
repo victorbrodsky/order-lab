@@ -7,30 +7,30 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_objectTypeText")
+ * @ORM\Table(name="user_objectTypeString")
  */
-class ObjectTypeText extends ListAbstract
+class ObjectTypeString extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeText", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="ObjectTypeString", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="ObjectTypeString", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
 
 
     /**
-     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeText")
+     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeString")
      */
     private $formNodes;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $value;
 
@@ -78,6 +78,7 @@ class ObjectTypeText extends ListAbstract
     {
         $this->value = $value;
     }
+
 
 
 }

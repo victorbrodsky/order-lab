@@ -15,7 +15,7 @@
         {% set rootFormNode = formNodeHolder.formNode %}
         {#rootFormNode={{ rootFormNode.name }}<br>#}
 
-        <div class="formnode-holder formnode-holder-{{ formNodeHolder.id }}">
+        <div id="formnode-holder-{{ rootFormNode.id }}" class="formnode-holder formnode-holder-{{ rootFormNode.id }}">
 
             {{ formnodemacros.addFormNodeRecursively(rootFormNode,cycle,prototype) }}
 
@@ -29,9 +29,11 @@
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
     {% set children = formNode.children %}
+    {#children:{{ children|length }}<br>#}
 
     {% if children %}
         {% for childFormNode in children %}
+            {#childFormNode={{ childFormNode.name }}<br>#}
 
             {{ formnodemacros.addFormNodeByType(childFormNode,cycle,prototype) }}
 
@@ -84,6 +86,10 @@
         {{ formnodemacros.textareaForm(formNode,cycle,prototype) }}
     {% endif %}
 
+    {% if formType == "Form Field - Free Text, Single Line" %}
+        {{ formnodemacros.stringForm(formNode,cycle,prototype) }}
+    {% endif %}
+
 {% endmacro %}
 
 {% macro sectionForm( formNode, cycle, prototype ) %}
@@ -118,36 +124,34 @@
 {% macro textareaForm( formNode, cycle, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-
-
-
-        {% if formNode.showLabel %}
-            <div class="row">
-                <div class="col-xs-6" align="right">
-                    <label>{{ formNode.name }}:</label>
-                </div>
-                <div class="col-xs-6" align="left">
-                    {#<textarea#}
-                            {#id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"#}
-                            {#name="oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
-                            {#class="textarea form-control"#}
-                    {#>#}
-                    {#</textarea>#}
-                    {{ formnodemacros.textareaField(formNode, cycle, prototype) }}
-                </div>
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
             </div>
-        {% else %}
-            {#<div class="col-xs-12" align="left">#}
-            {#<textarea#}
-                    {#id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"#}
-                    {#name="oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
-                    {#class="textarea form-control"#}
-            {#>#}
-            {#</textarea>#}
-            {#</div>#}
-            {{ formnodemacros.textareaField(formNode, cycle, prototype) }}
-        {% endif %}
-
+            <div class="col-xs-6" align="left">
+                {#<textarea#}
+                        {#id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"#}
+                        {#name="oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
+                        {#class="textarea form-control"#}
+                {#>#}
+                {#</textarea>#}
+                {{ formnodemacros.textareaField(formNode, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {#<div class="col-xs-12" align="left">#}
+        {#<textarea#}
+                {#id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"#}
+                {#name="oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
+                {#class="textarea form-control"#}
+        {#>#}
+        {#</textarea>#}
+        {#</div>#}
+        {{ formnodemacros.textareaField(formNode, cycle, prototype) }}
+    {% endif %}
+    </p>
 {% endmacro %}
 {% macro textareaField( formNode, cycle, prototype ) %}
     {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
@@ -157,6 +161,35 @@
             name="{{ fieldname }}"
             class="textarea form-control"
     >
+        {#{{ formNode.value }}#}
     </textarea>
 {% endmacro %}
 
+{% macro stringForm( formNode, cycle, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.stringField(formNode, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.stringField(formNode, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro stringField( formNode, cycle, prototype ) %}
+    {% set fieldname = "formnode-"~formNode.id %}
+    <input
+        id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
+        name="{{ fieldname }}"
+        class="form-control"
+        {#value="{{ formNode.value }}"#}
+    >
+    </input>
+{% endmacro %}

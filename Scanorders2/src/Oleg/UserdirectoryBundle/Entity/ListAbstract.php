@@ -674,6 +674,25 @@ abstract class ListAbstract
         return $fullTitle;
     }
 
+    public function setObject($object) {
+        $class = new \ReflectionClass($object);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        if( $className && !$this->getEntityName() ) {
+            $this->setEntityName($className);
+        }
+
+        if( $classNamespace && !$this->getEntityNamespace() ) {
+            $this->setEntityNamespace($classNamespace);
+        }
+
+        if( !$this->getEntityId() && $object->getId() ) {
+            //echo "setEntityId=".$object->getId()."<br>";
+            $this->setEntityId($object->getId());
+        }
+    }
+
     //for entity with synonyms
 //    public function setSynonyms($synonyms = null) {
 //        echo "set synonym=".$synonyms."<br>";

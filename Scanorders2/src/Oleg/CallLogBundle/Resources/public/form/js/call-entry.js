@@ -1514,6 +1514,8 @@ function calllogMessageCategoryListener(holderId) {
 
     });
 }
+
+var _formnode = [];
 function treeSelectAdditionalJsAction(comboboxEl) {
     printF( comboboxEl, "combobox on change:" );
 
@@ -1521,20 +1523,55 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     var messageCategoryId = thisData.id;
     console.log("messageCategoryId="+messageCategoryId);
 
+    if( typeof messageCategoryId === 'undefined' || !messageCategoryId ) {
+        console.log("return: messageCategoryId doesnot exists: "+messageCategoryId);
+        return;
+    }
+
     var entityNamespace = "Oleg\\OrderformBundle\\Entity";
     var entityName = "MessageCategory";
+
+    var identifier = entityName+"-"+messageCategoryId;
+    if( !_formnode[identifier] ) {
+        _formnode[identifier] = identifier;
+    }
+
+    console.log("identifier="+identifier);
+    console.log("_formnode[identifier]="+_formnode[identifier]);
+
+    if( _formnode[identifier]['action'] == 1 ) {
+        console.log("return: identifier already exists: " + identifier);
+        //$('#formnode-holder-'+_formnode[identifier]['formNodeId']).show();
+        return;
+    } else {
+        _formnode[identifier]['action'] = 1;
+    }
 
     var url = Routing.generate('employees_formnode_fields');
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
         //type: "GET",
-        async: asyncflag,
+        async: false,   //asyncflag,
         data: {entityNamespace: entityNamespace, entityName: entityName, entityId: messageCategoryId },
     }).success(function(data) {
         //console.log("data="+data);
+        console.log("formNodeId="+data['formNodeId']);
 
-        $('#form-node-next').html(data); //Change the html of the div with the id = "your_div"
+        if( data['formNodeId'] ) {
+
+            //var dataEl = $(data);
+            //$('#form-node-next').html(data); //Change the html of the div with the id = "your_div"
+            $("#form-node-holder").append($(data['formNodeHtml']));
+
+            console.log("ajax identifier="+identifier);
+            _formnode[identifier]['formNodeId'] = data['formNodeId'];
+            _formnode[identifier]['action'] = 1;
+
+        } else {
+            console.log("No formNodeId="+data['formNodeId']);
+        }
+
         //$.bootstrapSortable(true);
 
         //if( data != "ERROR" ) {
