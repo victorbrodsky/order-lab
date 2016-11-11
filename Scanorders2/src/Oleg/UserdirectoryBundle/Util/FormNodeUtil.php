@@ -39,7 +39,7 @@ class FormNodeUtil
         //print "</pre>";
         //$unmappedField = $data["formnode-4"];
         //echo "<br>unmappedField=" . $unmappedField . "<br>";
-        echo "<br><br>";
+        //echo "<br><br>";
 
         $this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
     }
@@ -66,7 +66,7 @@ class FormNodeUtil
 
         $key = "formnode-".$formNode->getId();
         $formValue = $data[$key];
-        echo $key.": formValue=" . $formValue . "<br>";
+        //echo $key.": formValue=" . $formValue . "<br>";
 
         //1) create a new list
         $newList = $this->createNewList($formNode,$formValue);
@@ -113,6 +113,7 @@ class FormNodeUtil
     }
 
     public function createNewList( $formNode, $formValue=null ) {
+        $userSecUtil = $this->container->get('user_security_utility');
         $formNodeType = $formNode->getObjectType();
         $entityNamespace = $formNodeType->getEntityNamespace();
         $entityName = $formNodeType->getEntityName();
@@ -123,13 +124,13 @@ class FormNodeUtil
 
         //Oleg\UserdirectoryBundle\Entity:ObjectTypeText
         //"OlegUserdirectoryBundle:ObjectTypeText"
-        $entityNamespaceArr = explode("\\",$entityNamespace);
-        if( count($entityNamespaceArr) > 2 ) {
-            $entityNamespaceShort = $entityNamespaceArr[0] . $entityNamespaceArr[1];
-            $entityFullName = $entityNamespaceShort . ":" . $entityName;
-        } else {
-            throw new \Exception( 'Corresponding value list namespace is invalid: '.$entityNamespace );
-        }
+//        $entityNamespaceArr = explode("\\",$entityNamespace);
+//        if( count($entityNamespaceArr) > 2 ) {
+//            $entityNamespaceShort = $entityNamespaceArr[0] . $entityNamespaceArr[1];
+//            $entityFullName = $entityNamespaceShort . ":" . $entityName;
+//        } else {
+//            throw new \Exception( 'Corresponding value list namespace is invalid: '.$entityNamespace );
+//        }
 
         $listClassName = $entityNamespace."\\".$entityName;
         $newList = new $listClassName();
@@ -137,7 +138,7 @@ class FormNodeUtil
         $creator = $this->sc->getToken()->getUser();
         $name = "";
         $count = null;
-        $this->setDefaultList($newList,$count,$creator,$name,$entityFullName);
+        $userSecUtil->setDefaultList($newList,$count,$creator,$name);
 
         return $newList;
     }
@@ -169,36 +170,36 @@ class FormNodeUtil
 //        return $res;
 //    }
 
-    public function setDefaultList( $entity, $count, $user, $name=null, $entityFullName ) {
-
-        if( !$count ) {
-            $count = $this->getMaxId($entityFullName);
-            //echo "count=".$count."<br>";
-        }
-
-        $entity->setOrderinlist( $count );
-        $entity->setCreator( $user );
-        $entity->setCreatedate( new \DateTime() );
-        $entity->setType('user-added');
-        if( $name ) {
-            $entity->setName( trim($name) );
-        }
-        return $entity;
-    }
-
-    public function getMaxId( $entityFullName ) {
-        //echo "entityFullName=" . $entityFullName . "<br>";
-        $repository = $this->em->getRepository($entityFullName);
-        $dql =  $repository->createQueryBuilder("u");
-        $dql->select('MAX(u.id) as idMax');
-        //$dql->setMaxResults(1);
-        $res = $dql->getQuery()->getSingleResult();
-        $maxId = $res['idMax'];
-        if( !$maxId ) {
-            $maxId = 0;
-        }
-
-        return $maxId;
-    }
+//    public function setDefaultList( $entity, $count, $user, $name=null, $entityFullName ) {
+//
+//        if( !$count ) {
+//            $count = $this->getMaxId($entityFullName);
+//            //echo "count=".$count."<br>";
+//        }
+//
+//        $entity->setOrderinlist( $count );
+//        $entity->setCreator( $user );
+//        $entity->setCreatedate( new \DateTime() );
+//        $entity->setType('user-added');
+//        if( $name ) {
+//            $entity->setName( trim($name) );
+//        }
+//        return $entity;
+//    }
+//
+//    public function getMaxId( $entityFullName ) {
+//        //echo "entityFullName=" . $entityFullName . "<br>";
+//        $repository = $this->em->getRepository($entityFullName);
+//        $dql =  $repository->createQueryBuilder("u");
+//        $dql->select('MAX(u.id) as idMax');
+//        //$dql->setMaxResults(1);
+//        $res = $dql->getQuery()->getSingleResult();
+//        $maxId = $res['idMax'];
+//        if( !$maxId ) {
+//            $maxId = 0;
+//        }
+//
+//        return $maxId;
+//    }
 }
 

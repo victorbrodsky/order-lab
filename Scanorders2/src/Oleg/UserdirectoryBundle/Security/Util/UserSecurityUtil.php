@@ -1561,4 +1561,82 @@ class UserSecurityUtil {
     /////////////////////// EOF getHeadInfo ///////////////////////
 
 
+
+    public function setDefaultList( $entity, $count, $user, $name=null ) {
+
+        if( $count == null ) {
+            $class = new \ReflectionClass($entity);
+            $className = $class->getShortName();          //ObjectTypeText
+            $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+
+            //format to: "OlegUserdirectoryBundle:ObjectTypeText"
+            $classNamespaceArr = explode("\\",$classNamespace);
+            if( count($classNamespaceArr) > 2 ) {
+                $classNamespaceShort = $classNamespaceArr[0] . $classNamespaceArr[1];
+                $classFullName = $classNamespaceShort . ":" . $className;
+            } else {
+                throw new \Exception( 'Corresponding value list namespace is invalid: '.$classNamespace );
+            }
+
+            $count = $this->getMaxField($classFullName);
+            //echo "count=".$count."<br>";
+        }
+
+        $entity->setOrderinlist( $count );
+        $entity->setCreator( $user );
+        $entity->setCreatedate( new \DateTime() );
+        $entity->setType('user-added');
+        if( $name ) {
+            $entity->setName( trim($name) );
+        }
+        return $entity;
+    }
+    //get count by max id
+    public function getMaxField( $classFullName, $field="orderinlist" ) {
+        //echo "classFullName=" . $classFullName . "<br>";
+        //$field = "id";
+        //$field = "orderinlist";
+        $repository = $this->em->getRepository($classFullName);
+        $dql =  $repository->createQueryBuilder("u");
+        $dql->select('MAX(u.'.$field.') as fieldMax');
+        //$dql->setMaxResults(1);
+        $res = $dql->getQuery()->getSingleResult();
+        $fieldMax = $res['fieldMax'];
+        if( $fieldMax ) {
+            //echo "0 fieldMax=" . $fieldMax . "<br>";
+            $fieldMax = intval($fieldMax);
+            //round to the next 10th: 22 => 30
+            $fieldMax = $this->roundUpToNextTen($fieldMax);
+            //$fieldMax = $fieldMax + 10;
+        } else {
+            $fieldMax = 10;
+        }
+        //echo "1 fieldMax=" . $fieldMax . "<br>";
+        return $fieldMax;
+    }
+    function roundUpToNextTen($roundee) {
+        $r = $roundee % 10;
+        if( $r == 0 ) {
+            return $roundee + 10;
+        }
+        return $roundee + 10 - $r;
+    }
+//    //get count by max orderinlist
+//    public function getMaxIdByOrderinlist($classFullName) {
+//        $repository = $this->em->getRepository($classFullName);
+//        $query = $repository->createQueryBuilder('s');
+//        $query->select('s, MAX(s.orderinlist) AS maxOrderinlist');
+//        $query->groupBy('s');
+//        $query->setMaxResults(1);
+//        $query->orderBy('maxOrderinlist', 'DESC');
+//        $results = $query->getQuery()->getResult();
+//        if( $results && count($results) > 0 ) {
+//            $orderinlist = $results[0]['maxOrderinlist'];
+//            $orderinlist = intval($orderinlist) + 10;
+//        } else {
+//            $orderinlist = 10;
+//        }
+//        return $orderinlist;
+//    }
+
 }

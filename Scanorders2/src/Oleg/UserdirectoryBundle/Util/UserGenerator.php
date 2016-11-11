@@ -365,8 +365,7 @@ class UserGenerator {
                         $medicalType = $this->em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
                         $researchLabOrgGroup = $this->em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
                         $researchInstitution = new Institution();
-                        //$this->setDefaultList($researchInstitution, 1, $username, $researchLabTitleStr);
-                        $userUtil->setDefaultList($researchInstitution, 1, $user, $researchLabTitleStr);
+                        $userSecUtil->setDefaultList($researchInstitution, null, $user, $researchLabTitleStr);
                         $researchInstitution->setOrganizationalGroupType($researchLabOrgGroup);
                         $researchInstitution->addType($medicalType);
                         $researchPathology->addChild($researchInstitution);

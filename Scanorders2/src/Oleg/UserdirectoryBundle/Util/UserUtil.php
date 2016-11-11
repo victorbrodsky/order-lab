@@ -466,7 +466,6 @@ class UserUtil {
 
         return round($count/10);
     }
-
     public function setDefaultList( $entity, $count, $user, $name=null ) {
         $entity->setOrderinlist( $count );
         $entity->setCreator( $user );

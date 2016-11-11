@@ -672,7 +672,6 @@ class ApproverController extends Controller
         if( $form->isSubmitted() && $form->isValid() ) {
 
             $userSecUtil = $this->container->get('user_security_utility');
-            $userutil = new UserUtil();
             $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
 
             //add group
@@ -693,7 +692,7 @@ class ApproverController extends Controller
             $approverRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
             if( !$approverRole ) {
                 $approverRole = new Roles();
-                $approverRole = $userutil->setDefaultList($approverRole, 1000, $user, $roleName);
+                $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
                 $approverRole->setLevel(50);
                 $approverRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
                 $approverRole->setDescription('Can search and approve vacation requests for specified service');
@@ -720,7 +719,7 @@ class ApproverController extends Controller
             $submitterRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
             if( !$submitterRole ) {
                 $submitterRole = new Roles();
-                $submitterRole = $userutil->setDefaultList($submitterRole, 1000, $user, $roleName);
+                $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
                 $submitterRole->setLevel(30);
                 $submitterRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
                 $submitterRole->setDescription('Can search and approve vacation requests for specified service');

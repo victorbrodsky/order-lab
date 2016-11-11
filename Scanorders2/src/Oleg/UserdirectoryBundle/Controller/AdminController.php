@@ -414,8 +414,10 @@ class AdminController extends Controller
 //////////////////////////////////////////////////////////////////////////////
 
     public function setDefaultList( $entity, $count, $user, $name=null ) {
-        $userutil = new UserUtil();
-        return $userutil->setDefaultList( $entity, $count, $user, $name );
+        //$userutil = new UserUtil();
+        //return $userutil->setDefaultList( $entity, $count, $user, $name );
+        $userSecUtil = $this->get('user_security_utility');
+        return $userSecUtil->setDefaultList( $entity, $count, $user, $name );
     }
 
    
@@ -6024,20 +6026,33 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
+        //root
         $categories = array(
-            'Root Form' => array()
+            'Root Form' => array(),
         );
-
         $count = 10;
         $level = 0;
+        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
 
-        $count = $this->addNestedsetNode(null,$categories,$level,$username,$count);
+//        //Pathology Call Log Entry
+//        $categories = array(
+//            'Root Form' => array(
+//                'Pathology Call Log Entry' => array(
+//                    'History/Findings' => 'History Text' //set objectType
+//                ),
+//            ),
+//        );
+//        $count = 10;
+//        $level = 0;
+//        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
+
+
 
         //exit('EOF message category');
 
         return round($count/10);
     }
-    public function addNestedsetNode($parentCategory,$categories,$level,$username,$count) {
+    public function addNestedsetNodeRecursevely($parentCategory,$categories,$level,$username,$count) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -6097,15 +6112,17 @@ class AdminController extends Controller
 
             //make children
             if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
-                $count = $this->addNestedsetCategory($node,$subcategory,$level+1,$username,$count);
+                $count = $this->addNestedsetNodeRecursevely($node,$subcategory,$level+1,$username,$count);
             }
 
             //testing
-            if( 0 ) {
+            if( 1 ) {
                 $label = null;
-//                if ($node->getOrganizationalGroupType()) {
-//                    $label = $node->getOrganizationalGroupType()->getName();
-//                }
+                if ($node->getObjectType()) {
+                    $label = $node->getObjectType()->getName();
+                } else {
+                    $label = null;
+                }
                 if ($node->getParent()) {
                     $parent = $node->getParent()->getName();
                 } else {
@@ -6120,5 +6137,6 @@ class AdminController extends Controller
 
         return $count;
     }
+
 
 }

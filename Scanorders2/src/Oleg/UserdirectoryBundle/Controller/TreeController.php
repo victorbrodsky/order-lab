@@ -447,8 +447,8 @@ class TreeController extends Controller {
 
                 $fullClassName = "Oleg\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
                 $node = new $fullClassName();
-                $userutil = new UserUtil();
-                $userutil->setDefaultList($node,$orderinlist,$username,$nodetext);
+                $userSecUtil = $this->get('user_security_utility');
+                $userSecUtil->setDefaultList($node,$orderinlist,$username,$nodetext);
 
                 if( $organizationalGroupType ) {
                     $node->setOrganizationalGroupType($organizationalGroupType);

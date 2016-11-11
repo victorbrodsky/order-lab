@@ -135,7 +135,7 @@ class ScanAdminController extends AdminController
         $count_enctype = $this->generateEncounterType();
         $count_proceduretype = $this->generateProcedureType();
         $count_MessageTypeClassifiers = $this->generateMessageTypeClassifiers();
-        $count_orderCategory = $this->generateOrderCategory();
+        $count_generateMessageCategory = $this->generateMessageCategory();
         //$count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
         $count_procedure = $this->generateProcedures();
@@ -168,7 +168,7 @@ class ScanAdminController extends AdminController
             'Encounter Types='.$count_proceduretype.', '.
             'Procedure Types='.$count_enctype.', '.
             'MessageTypeClassifiers='.$count_MessageTypeClassifiers.', '.
-            'Message Category='.$count_orderCategory.', '.
+            'Message Category='.$count_generateMessageCategory.', '.
             //'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
@@ -1045,33 +1045,9 @@ class ScanAdminController extends AdminController
         return round($count/10);
     }
 
-    public function generateOrderCategory() {
+    public function generateMessageCategory() {
 
         $username = $this->get('security.context')->getToken()->getUser();
-
-//        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegOrderformBundle:MessageCategory')->findAll();
-//
-//        if( $entities ) {
-//            return -1;
-//        }
-
-//        $types = array(
-//            'One-Slide Scan Order',
-//            'Multi-Slide Scan Order',
-//            'Table-View Scan Order',
-//            'Slide Return Request',
-//            'Encounter Order',
-//            'Procedure Order',
-//            'Referral',
-//            'Tissue Examination',
-//            'Block Order',
-//            'Slide Order',
-//            'Scan Order',
-//            'Outside Lab Order - Comprehensive',
-//            'Outside Lab Order on Part'
-//        );
-
 
         $categories = array(
 
