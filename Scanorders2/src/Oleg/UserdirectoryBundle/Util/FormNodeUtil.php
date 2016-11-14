@@ -100,7 +100,7 @@ class FormNodeUtil
 
         $key = "formnode-".$formNode->getId();
         $formValue = $data[$key];
-        echo $key.": formValue=" . $formValue . "<br>";
+        //echo $key.": formValue=" . $formValue . "<br>";
 
         //1) create a new list
         $newList = $this->createNewList($formNode,$formValue);
@@ -116,7 +116,7 @@ class FormNodeUtil
         //exit("processFormNodeByType; formValue=".$formValue);
 
         $this->em->persist($newList);
-        //$this->em->flush($newList); //testing
+        $this->em->flush($newList); //testing
     }
 
 
