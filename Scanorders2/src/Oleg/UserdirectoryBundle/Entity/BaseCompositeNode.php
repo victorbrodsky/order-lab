@@ -303,7 +303,6 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         return $treeNameStr;
     }
     public function getRootName($node) {
-
         $parent = $node->getParent();
 
         if( $parent && $parent->getParent() ) {

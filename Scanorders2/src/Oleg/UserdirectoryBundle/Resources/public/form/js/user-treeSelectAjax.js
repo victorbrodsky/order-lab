@@ -64,6 +64,9 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
         }
         /////////////////// EOF create and set id if node is new ///////////////////
 
+        //additional actions of combobox chaged before remove (change form fields for calllog)
+        treeSelectAdditionalJsActionRemove(comboboxEl);
+
         //first remove all siblings after this combobox
         var allNextSiblings = comboboxEl.closest('.row').nextAll().remove();
         clearElementsIdName(treeHolder);
@@ -74,9 +77,6 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
             var initNodeFunction = window[initNodeFunctionStr];
             initNodeFunction(treeHolder,thisData);
         }
-
-        //additional actions of combobox chaged (change form fields for calllog)
-        treeSelectAdditionalJsActionRemove(comboboxEl);
 
         //check if combobox cleared; if none => do nothing
         //console.log( thisData );

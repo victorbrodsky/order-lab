@@ -35,7 +35,7 @@
 
     {#<form id="CallCaseForm" class="form-vertical" role="form">#}
     {#{{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}#}
-    {{ form_start(form,{'method': 'POST', 'action': path('calllog_update_patient')}) }}
+    {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_update_patient')}) }}
 
         {{ form_errors(form) }}
 
@@ -246,7 +246,7 @@
         {# EOF Entry #}
 
         <p>
-            <button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>
+            <button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm();">Submit</button>
         </p>
 
         </div> {#callentry-form#}

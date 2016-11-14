@@ -1572,16 +1572,6 @@ function calllogTreeSelectRemove(comboboxEl) {
 
             //hide all '#formnode-holder-'+messageCategoryId with the messageCategoryId > this messageCategoryId
             calllogHideAllSiblings(messageCategoryId);
-            //$(".formnode-holder").each( function() {
-            //
-            //    var thisMessageCategoryId = $(this).data("formnodeid")
-            //
-            //    if( parseInt(thisMessageCategoryId) > parseInt(messageCategoryId) ) {
-            //        $('#formnode-holder-' + thisMessageCategoryId).hide();
-            //    }
-            //
-            //});
-
         //}
 
     });
@@ -1590,8 +1580,9 @@ function calllogHideAllSiblings( messageCategoryId ) {
     //hide all '#formnode-holder-'+messageCategoryId with the messageCategoryId > this messageCategoryId
     $(".formnode-holder").each( function() {
 
-        var thisMessageCategoryId = $(this).data("formnodeid")
+        var thisMessageCategoryId = $(this).data("formnodeholderid");
 
+        console.log("compare: " + thisMessageCategoryId + " ?= " + messageCategoryId);
         if( parseInt(thisMessageCategoryId) > parseInt(messageCategoryId) ) {
             console.log("hide sibling thisMessageCategoryId=" + thisMessageCategoryId);
             $('#formnode-holder-' + thisMessageCategoryId).hide();
@@ -1599,3 +1590,20 @@ function calllogHideAllSiblings( messageCategoryId ) {
 
     });
 }
+
+function calllogSubmitForm() {
+
+    //remove hidden formnode-holders
+    //$('.formnode-holder').each( function() {
+    //    if( $(this).is(":visible") ) {
+    //        //do nothing
+    //    } else {
+    //        $(this).remove();
+    //    }
+    //});
+
+    $('.formnode-holder:hidden').remove();
+
+    $('#calllog-new-entry-form').submit();
+}
+

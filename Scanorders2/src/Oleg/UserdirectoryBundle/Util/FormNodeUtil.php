@@ -29,21 +29,53 @@ class FormNodeUtil
             return;
         }
 
-        $rootFormNode = $formNodeHolder->getFormNode();
+        $formNode = $formNodeHolder->getFormNode();
+        if( !$formNode ) {
+            return;
+        }
+
+        $rootFormNode = $formNode->getRootName($formNode);
         if( !$rootFormNode ) {
+            exit("No Root of the node ".$formNode."<br>");
             return;
         }
 
         $data = $request->request->all();
+
         //print "<pre>";
         //print_r($data);
         //print "</pre>";
         //$unmappedField = $data["formnode-4"];
         //echo "<br>unmappedField=" . $unmappedField . "<br>";
+        //$unmappedField = $data["formnode-6"];
+        //echo "<br>unmappedField=" . $unmappedField . "<br>";
         //echo "<br><br>";
 
-        $this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
+        //process by form root's children nodes
+        //$this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
+
+        //process by data partial key name" "formnode-4" => "formnode-"
+        $this->processFormNodesFromDataKeys($data,$rootFormNode,$holderEntity);
     }
+
+    //process by data partial key name" "formnode-4" => "formnode-"
+    public function processFormNodesFromDataKeys($data,$formNode,$holderEntity) {
+        foreach( $data as $key=>$value ){
+            //if( "show_me_" == substr($key,0,8) ) {
+            if( strpos($key, 'formnode-') !== false ) {
+                $formNodeId = str_replace('formnode-','',$key);
+                // do whatever you need to with $formNodeId...
+                $thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
+                if( !$thisFormNode ) {
+                    //exit("No Root of the node id=".$formNodeId."<br>");
+                    continue;
+                }
+                $this->processFormNodeByType($data,$thisFormNode,$holderEntity);
+            }
+        }
+    }
+
+    //NOT USED
     public function processFormNodeRecursively( $data, $formNode, $holderEntity ) {
 
         //echo "formNode=".$formNode."<br>";
@@ -60,6 +92,7 @@ class FormNodeUtil
         }
 
     }
+
     public function processFormNodeByType( $data, $formNode, $holderEntity ) {
         if( !$this->hasValue($formNode) ) {
             return;
@@ -67,7 +100,7 @@ class FormNodeUtil
 
         $key = "formnode-".$formNode->getId();
         $formValue = $data[$key];
-        //echo $key.": formValue=" . $formValue . "<br>";
+        echo $key.": formValue=" . $formValue . "<br>";
 
         //1) create a new list
         $newList = $this->createNewList($formNode,$formValue);
@@ -83,7 +116,7 @@ class FormNodeUtil
         //exit("processFormNodeByType; formValue=".$formValue);
 
         $this->em->persist($newList);
-        $this->em->flush($newList);
+        //$this->em->flush($newList); //testing
     }
 
 
@@ -221,7 +254,7 @@ class FormNodeUtil
         $level = 0;
         $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
         $rootNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Root Form');
-        echo "rootNode=".$rootNode."<br>";
+        //echo "rootNode=".$rootNode."<br>";
 
 //        $objectTypeForm = $this->getObjectTypeByName('Form');
 //        $objectTypeSection = $this->getObjectTypeByName('Form Section');

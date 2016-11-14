@@ -398,6 +398,11 @@ class CallEntryController extends Controller
                     $patient->removeEncounter($patientInfoEncounter);
                 }
 
+                //testing: process form nodes
+                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
+                exit('after formnode');
+
                 if( $patient->getId() ) {
                     //CASE 1
                     echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
