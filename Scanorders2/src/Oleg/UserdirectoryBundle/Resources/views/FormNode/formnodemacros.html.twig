@@ -15,7 +15,7 @@
         {% set rootFormNode = formNodeHolder.formNode %}
         {#rootFormNode={{ rootFormNode.name }}<br>#}
 
-        <div id="formnode-holder-{{ rootFormNode.id }}" class="formnode-holder formnode-holder-{{ rootFormNode.id }}">
+        <div id="formnode-holder-{{ rootFormNode.id }}" class="formnode-holder formnode-holder-{{ rootFormNode.id }}" data-formnodeid="{{ rootFormNode.id }}">
 
             {{ formnodemacros.addFormNodeRecursively(rootFormNode,cycle,prototype) }}
 

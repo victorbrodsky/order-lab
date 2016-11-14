@@ -44,10 +44,13 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
 
     $(target).on('change', function(e){
 
-        //printF( $(this), "combobox on change:" );
+        printF( $(this), "comboboxTreeListener: combobox on change:" );
 
         var comboboxEl = $(this);
         var thisData = comboboxEl.select2('data');
+        if( thisData ) {
+            console.log("0 combobox on change, id=" + thisData.id);
+        }
 
         var treeHolder = comboboxEl.closest('.composite-tree-holder');
 
@@ -56,6 +59,9 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
         /////////////////// create and set id if node is new ///////////////////
         setTreeNode( bundleName, entityName, treeHolder, comboboxEl, thisData );
         var thisData = comboboxEl.select2('data');
+        if( thisData ) {
+            console.log("1 combobox on change, id=" + thisData.id);
+        }
         /////////////////// EOF create and set id if node is new ///////////////////
 
         //first remove all siblings after this combobox
@@ -68,6 +74,9 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
             var initNodeFunction = window[initNodeFunctionStr];
             initNodeFunction(treeHolder,thisData);
         }
+
+        //additional actions of combobox chaged (change form fields for calllog)
+        treeSelectAdditionalJsActionRemove(comboboxEl);
 
         //check if combobox cleared; if none => do nothing
         //console.log( thisData );
@@ -343,6 +352,10 @@ function setTreeNode( bundleName, entityName, treeHolder, node, data ) {
         }
         //console.log(node.select2('data'));
     }
+}
+
+function treeSelectAdditionalJsActionRemove(comboboxEl) {
+    return;
 }
 ////////////////////////////// EOF TREE //////////////////////////////////
 

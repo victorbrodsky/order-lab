@@ -15,7 +15,7 @@ function initCallLogPage() {
     calllogUpdatePatientAgeListener('patient-holder-1');
 
     //calllogEnableMessageCategoryService('patient-holder-1');
-    calllogMessageCategoryListener('patient-holder-1');
+    //calllogMessageCategoryListener('patient-holder-1');
 }
 
 //prevent exit modified form
@@ -1456,63 +1456,16 @@ function calllogMessageCategoryListener(holderId) {
     //$eventSelect.on("select2:select", function (e) { log("select2:select", e); });
     //$eventSelect.on("select2:unselect", function (e) { log("select2:unselect", e); });
 
-    //$(".ajax-combobox-messageCategory").on('change', function(e){
-    $(".ajax-combobox-messageCategory").on("select2:select", function (e) {
+    $(".ajax-combobox-messageCategory").on("select2:unselecting", function (e) {
+        var messageCategoryId = $(this).select2('val');
+        console.log("select2:unselect="+messageCategoryId);
+        ////log("select2:unselect", e);
+        //$('#formnode-holder-'+messageCategoryId).hide();
 
-        printF( $(this), "combobox on change:" );
-
-        var comboboxEl = $(this);
-        var thisData = comboboxEl.select2('data');
-        var messageCategoryId = thisData.id;
-        console.log("messageCategoryId="+messageCategoryId);
-
-        var entityNamespace = "Oleg\\OrderformBundle\\Entity";
-        var entityName = "MessageCategory";
-
-        var url = Routing.generate('employees_formnode_fields');
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            //type: "GET",
-            async: asyncflag,
-            data: {entityNamespace: entityNamespace, entityName: entityName, entityId: messageCategoryId },
-        }).success(function(data) {
-            //console.log("data="+data);
-
-            var template = response;
-            $('#form-node-next').html(template); //Change the html of the div with the id = "your_div"
-            $.bootstrapSortable(true);
-
-            //if( data != "ERROR" ) {
-            //    //holder.find('.calllog-patient-panel-title').html(data);
-            //} else {
-            //    //holder.find('.calllog-patient-panel-title').html("Patient Info");
-            //}
-        }).done(function() {
-            //console.log("update patient title done");
-        });
-
-
-        //$.ajax({
-        //    url: myteamurl,
-        //    timeout: _ajaxTimeout,
-        //    type: "GET",
-        //    //type: "POST",
-        //    //data: {id: userid },
-        //    //dataType: 'json',
-        //    async: asyncflag
-        //}).success(function(response) {
-        //    //console.log(response);
-        //    var template = response;
-        //    $('#'+replaceTargetId).html(template); //Change the html of the div with the id = "your_div"
-        //    $.bootstrapSortable(true);
-        //}).done(function() {
-        //    lbtn.stop();
-        //}).error(function(jqXHR, textStatus, errorThrown) {
-        //    console.log('Error : ' + errorThrown);
-        //});
-
+        calllogTreeSelectRemove($(this));
     });
+
+    return;
 }
 
 var _formnode = [];
@@ -1532,19 +1485,18 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     var entityName = "MessageCategory";
 
     var identifier = entityName+"-"+messageCategoryId;
-    if( !_formnode[identifier] ) {
-        _formnode[identifier] = identifier;
-    }
 
-    console.log("identifier="+identifier);
+    console.log("########## identifier="+identifier);
     console.log("_formnode[identifier]="+_formnode[identifier]);
 
-    if( _formnode[identifier]['action'] == 1 ) {
+    if( identifier in _formnode ) {
         console.log("return: identifier already exists: " + identifier);
         //$('#formnode-holder-'+_formnode[identifier]['formNodeId']).show();
+        $('#formnode-holder-'+messageCategoryId).show();
         return;
     } else {
-        _formnode[identifier]['action'] = 1;
+        console.log("GET url: identifier does not exists: " + identifier);
+        _formnode[identifier] = 1;
     }
 
     var url = Routing.generate('employees_formnode_fields');
@@ -1565,8 +1517,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
             $("#form-node-holder").append($(data['formNodeHtml']));
 
             console.log("ajax identifier="+identifier);
-            _formnode[identifier]['formNodeId'] = data['formNodeId'];
-            _formnode[identifier]['action'] = 1;
+            _formnode[identifier] = data['formNodeId'];
 
         } else {
             console.log("No formNodeId="+data['formNodeId']);
@@ -1583,4 +1534,68 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         //console.log("update patient title done");
     });
 }
+function treeSelectAdditionalJsActionRemove(comboboxEl) {
+    calllogTreeSelectRemove(comboboxEl)
+    return;
 
+    //printF( comboboxEl, "0 combobox on remove:" );
+    //var messageCategoryId = comboboxEl.select2('val');
+    //console.log("0 remove messageCategoryId="+messageCategoryId);
+    //$('#formnode-holder-'+messageCategoryId).hide();
+    //
+    ////hide all siblings after this combobox
+    //var allNextSiblings = comboboxEl.closest('.row').nextAll();
+    //allNextSiblings.each( function(){
+    //    var rowEl = $(this);
+    //    printF( rowEl, "sibling combobox on remove:" );
+    //    var messageCategoryId = rowEl.find(".ajax-combobox-messageCategory").select2('val');
+    //    console.log("sibling remove messageCategoryId="+messageCategoryId);
+    //
+    //    $('#formnode-holder-'+messageCategoryId).hide();
+    //
+    //});
+}
+function calllogTreeSelectRemove(comboboxEl) {
+    printF( comboboxEl, "0 combobox on remove:" );
+    var messageCategoryId = comboboxEl.select2('val');
+    console.log("0 remove messageCategoryId="+messageCategoryId);
+    $('#formnode-holder-'+messageCategoryId).hide();
+
+    //hide all siblings after this combobox
+    var allNextSiblings = comboboxEl.closest('.row').nextAll();
+    allNextSiblings.each( function(){
+
+        //if( $(this).hasClass('active-tree-node') ) {
+            printF($(this), "sibling combobox on remove:");
+            var messageCategoryId = $(this).find(".ajax-combobox-messageCategory").select2('val');
+            console.log("sibling remove messageCategoryId=" + messageCategoryId);
+
+            //hide all '#formnode-holder-'+messageCategoryId with the messageCategoryId > this messageCategoryId
+            calllogHideAllSiblings(messageCategoryId);
+            //$(".formnode-holder").each( function() {
+            //
+            //    var thisMessageCategoryId = $(this).data("formnodeid")
+            //
+            //    if( parseInt(thisMessageCategoryId) > parseInt(messageCategoryId) ) {
+            //        $('#formnode-holder-' + thisMessageCategoryId).hide();
+            //    }
+            //
+            //});
+
+        //}
+
+    });
+}
+function calllogHideAllSiblings( messageCategoryId ) {
+    //hide all '#formnode-holder-'+messageCategoryId with the messageCategoryId > this messageCategoryId
+    $(".formnode-holder").each( function() {
+
+        var thisMessageCategoryId = $(this).data("formnodeid")
+
+        if( parseInt(thisMessageCategoryId) > parseInt(messageCategoryId) ) {
+            console.log("hide sibling thisMessageCategoryId=" + thisMessageCategoryId);
+            $('#formnode-holder-' + thisMessageCategoryId).hide();
+        }
+
+    });
+}
