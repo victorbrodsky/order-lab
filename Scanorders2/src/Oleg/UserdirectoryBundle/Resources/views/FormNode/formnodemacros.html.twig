@@ -1,33 +1,34 @@
 
-{% macro addFormNodes( formNodeFieldHolder, cycle, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% macro addFormNodes( formNodeHolder, formNode, cycle, prototype ) %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
-    {% if prototype == "prototype" %}
-        {% set formNodeHolder = formNodeFieldHolder.vars.prototype %}
-    {% else %}
-        {% set formNodeHolder = formNodeFieldHolder %}
-    {% endif %}
+    {#{% if prototype == "prototype" %}#}
+        {#{% set formNodeHolder = formNodeFieldHolder.vars.prototype %}#}
+    {#{% else %}#}
+        {#{% set formNodeHolder = formNodeFieldHolder %}#}
+    {#{% endif %}#}
 
-    {% for formNode in formNodeHolder.formNodes %}
+    {#{% for formNode in formNodeHolder.formNodes %}#}
     {#{% if formNodeHolder.formNode is defined and formNodeHolder.formNode %}#}
 
         {#{% set rootFormNode = formNodeHolder.formNode %}#}
         {#rootFormNode={{ rootFormNode.name }}<br>#}
 
-        <div id="formnode-holder-{{ formNodeHolder.id }}"
-             class="formnode-holder formnode-holder-{{ formNodeHolder.id }}"
+        <div id="formnode-holder-{{ formNodeHolder.id }}-{{ formNode.id }}"
+             class="formnode-holder formnode-holder-{{ formNodeHolder.id }}-{{ formNode.id }}"
              data-formnodeholderid="{{ formNodeHolder.id }}"
+             data-formnodeid="{{ formNode.id }}"
         >
-            {{ formnodemacros.addFormNodeRecursively(formNode,cycle,prototype) }}
+            {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}
         </div>
 
     {#{% endif %}#}
-    {% endfor %}
+    {#{% endfor %}#}
 {% endmacro %}
 
-{% macro addFormNodeRecursively( formNode, cycle, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% macro addFormNodeRecursively( formNodeHolder, formNode, cycle, prototype ) %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
     {% set children = formNode.children %}
@@ -37,7 +38,7 @@
         {% for childFormNode in children %}
             {#childFormNode={{ childFormNode.name }}<br>#}
 
-            {{ formnodemacros.addFormNodeByType(childFormNode,cycle,prototype) }}
+            {{ formnodemacros.addFormNodeByType(formNodeHolder,childFormNode,cycle,prototype) }}
 
             {% set addRecursion = true %}
             {% set formType = childFormNode.getObjectType() ~ "" %}
@@ -51,18 +52,18 @@
                 {% set addRecursion = false %}
             {% endif %}
             {% if addRecursion %}
-                {{ formnodemacros.addFormNodeRecursively(childFormNode,cycle,prototype) }}
+                {{ formnodemacros.addFormNodeRecursively(formNodeHolder,childFormNode,cycle,prototype) }}
             {% endif %}
 
         {% endfor %}
     {% else %}
         {#$this->addFormNodeByType($form,$formNode,$params);#}
-        {{ formnodemacros.addFormNodeByType(formNode,cycle,prototype) }}
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype) }}
     {% endif %}
 
 {% endmacro %}
 
-{% macro addFormNodeByType( formNode, cycle, prototype ) %}
+{% macro addFormNodeByType( formNodeHolder, formNode, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {#formNode.id={{ formNode.id }}<br>#}
 
@@ -79,19 +80,19 @@
         {#{% endif %}#}
 
         {% if formType == "Form" %}
-            {{ formnodemacros.addFormNodeRecursively(formNode,cycle,prototype) }}
+            {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}
         {% endif %}
 
         {% if formType == "Form Section" %}
-            {{ formnodemacros.sectionForm(formNode,cycle,prototype) }}
+            {{ formnodemacros.sectionForm(formNodeHolder,formNode,cycle,prototype) }}
         {% endif %}
 
         {% if formType == "Form Field - Free Text" %}
-            {{ formnodemacros.textareaForm(formNode,cycle,prototype) }}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,cycle,prototype) }}
         {% endif %}
 
         {% if formType == "Form Field - Free Text, Single Line" %}
-            {{ formnodemacros.stringForm(formNode,cycle,prototype) }}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,cycle,prototype) }}
         {% endif %}
 
     {% else %}
@@ -100,8 +101,8 @@
 
 {% endmacro %}
 
-{% macro sectionForm( formNode, cycle, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% macro sectionForm( formNodeHolder, formNode, cycle, prototype ) %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
     {#History/Findings    #}
@@ -119,7 +120,7 @@
                     <div class="col-xs-12" align="left">
 
                         {#render children of this section#}
-                        {{ formnodemacros.addFormNodeRecursively(formNode,cycle,prototype) }}
+                        {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}
 
                     </div>
                 </div>
@@ -129,8 +130,8 @@
 
 {% endmacro %}
 
-{% macro textareaForm( formNode, cycle, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% macro textareaForm( formNodeHolder, formNode, cycle, prototype ) %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
     {% if formNode.showLabel %}
@@ -145,7 +146,7 @@
                         {#class="textarea form-control"#}
                 {#>#}
                 {#</textarea>#}
-                {{ formnodemacros.textareaField(formNode, cycle, prototype) }}
+                {{ formnodemacros.textareaField(formNodeHolder, formNode, cycle, prototype) }}
             </div>
         </div>
     {% else %}
@@ -157,11 +158,11 @@
         {#>#}
         {#</textarea>#}
         {#</div>#}
-        {{ formnodemacros.textareaField(formNode, cycle, prototype) }}
+        {{ formnodemacros.textareaField(formNodeHolder, formNode, cycle, prototype) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro textareaField( formNode, cycle, prototype ) %}
+{% macro textareaField( formNodeHolder, formNode, cycle, prototype ) %}
     {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
     {% set fieldname = "formnode-"~formNode.id %}
     <textarea
@@ -173,8 +174,8 @@
     </textarea>
 {% endmacro %}
 
-{% macro stringForm( formNode, cycle, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% macro stringForm( formNodeHolder, formNode, cycle, prototype ) %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
     {% if formNode.showLabel %}
@@ -183,15 +184,15 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.stringField(formNode, cycle, prototype) }}
+                {{ formnodemacros.stringField(formNodeHolder, formNode, cycle, prototype) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.stringField(formNode, cycle, prototype) }}
+        {{ formnodemacros.stringField(formNodeHolder, formNode, cycle, prototype) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro stringField( formNode, cycle, prototype ) %}
+{% macro stringField( formNodeHolder, formNode, cycle, prototype ) %}
     {% set fieldname = "formnode-"~formNode.id %}
     <input
         id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"

@@ -1450,48 +1450,48 @@ function calllogEnableMessageCategoryService(holderId) {
     lastCategory.prop('disabled', false);
 }
 
-function calllogMessageCategoryListener(holderId) {
-    //var holder = getHolder(holderId);
-
-    //$eventSelect.on("select2:select", function (e) { log("select2:select", e); });
-    //$eventSelect.on("select2:unselect", function (e) { log("select2:unselect", e); });
-
-    $(".ajax-combobox-messageCategory").on("select2:selecting", function (e) {
-        var messageCategoryId = $(this).select2('val');
-        console.log("@@@calllogMessageCategoryListener: select2:unselect="+messageCategoryId);
-        ////log("select2:unselect", e);
-        //$('#formnode-holder-'+messageCategoryId).hide();
-
-        calllogTreeSelectRemove($(this));
-    });
-
-    $(".ajax-combobox-messageCategory").on("select2:select", function (e) {
-        console.log("@@@calllogMessageCategoryListener: select2:select", e);
-    });
-
-    $(".ajax-combobox-messageCategory").on("select2:unselect", function (e) {
-        console.log("@@@calllogMessageCategoryListener: select2:unselect", e);
-    });
-
-    $(".ajax-combobox-messageCategory").on("change", function (e) {
-        console.log("@@@calllogMessageCategoryListener: change", e);
-    });
-
-    $(".ajax-combobox-messageCategory").select2().on("select2-selecting", function(e) {
-        console.log("@@@calllogMessageCategoryListener: select2-selecting val=" + e.val + " choice=" + e.choice.text);
-    });
-    $(".ajax-combobox-messageCategory").select2().on("select2-removed", function(e) {
-        console.log("@@@calllogMessageCategoryListener: select2() select2-removed val=" + e.val + " choice=" + e.choice.text);
-    });
-    $(".ajax-combobox-messageCategory").on("select2-removed", function(e) {
-        console.log("@@@calllogMessageCategoryListener: select2-removed val=" + e.val + " choice=" + e.choice.text);
-    });
-    $(".ajax-combobox-messageCategory").select2().on("select2-removing", function(e) {
-        console.log("@@@calllogMessageCategoryListener: select2-removing val=" + e.val + " choice=" + e.choice.text);
-    });
-
-    return;
-}
+//function calllogMessageCategoryListener(holderId) {
+//    //var holder = getHolder(holderId);
+//
+//    //$eventSelect.on("select2:select", function (e) { log("select2:select", e); });
+//    //$eventSelect.on("select2:unselect", function (e) { log("select2:unselect", e); });
+//
+//    $(".ajax-combobox-messageCategory").on("select2:selecting", function (e) {
+//        var messageCategoryId = $(this).select2('val');
+//        console.log("@@@calllogMessageCategoryListener: select2:unselect="+messageCategoryId);
+//        ////log("select2:unselect", e);
+//        //$('#formnode-holder-'+messageCategoryId).hide();
+//
+//        calllogTreeSelectRemove($(this));
+//    });
+//
+//    $(".ajax-combobox-messageCategory").on("select2:select", function (e) {
+//        console.log("@@@calllogMessageCategoryListener: select2:select", e);
+//    });
+//
+//    $(".ajax-combobox-messageCategory").on("select2:unselect", function (e) {
+//        console.log("@@@calllogMessageCategoryListener: select2:unselect", e);
+//    });
+//
+//    $(".ajax-combobox-messageCategory").on("change", function (e) {
+//        console.log("@@@calllogMessageCategoryListener: change", e);
+//    });
+//
+//    $(".ajax-combobox-messageCategory").select2().on("select2-selecting", function(e) {
+//        console.log("@@@calllogMessageCategoryListener: select2-selecting val=" + e.val + " choice=" + e.choice.text);
+//    });
+//    $(".ajax-combobox-messageCategory").select2().on("select2-removed", function(e) {
+//        console.log("@@@calllogMessageCategoryListener: select2() select2-removed val=" + e.val + " choice=" + e.choice.text);
+//    });
+//    $(".ajax-combobox-messageCategory").on("select2-removed", function(e) {
+//        console.log("@@@calllogMessageCategoryListener: select2-removed val=" + e.val + " choice=" + e.choice.text);
+//    });
+//    $(".ajax-combobox-messageCategory").select2().on("select2-removing", function(e) {
+//        console.log("@@@calllogMessageCategoryListener: select2-removing val=" + e.val + " choice=" + e.choice.text);
+//    });
+//
+//    return;
+//}
 
 var _formnode = [];
 function treeSelectAdditionalJsAction(comboboxEl) {
@@ -1539,10 +1539,12 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         async: false,   //asyncflag,
         data: {entityNamespace: entityNamespace, entityName: entityName, entityId: messageCategoryId },
     }).success(function(data) {
-        //console.log("data="+data);
-        console.log("formNodeId="+data['formNodeId']);
+        console.log("data length="+data.length);
+        console.log(data);
 
-        if( data['formNodeId'] ) {
+        if( data.length > 0 && data[0]['formNodeId'] ) { //make sure we have at least one formNode for formNode Holder
+
+            console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
 
             //var dataEl = $(data);
             //$('#form-node-next').html(data); //Change the html of the div with the id = "your_div"
@@ -1557,7 +1559,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
             //    }
             //}
             //var appendEl = calllogFindClosestAppendElement(data['idBreadcrumbsArr'],$(data['formNodeHtml']));
-            calllogFindClosestAppendElement(data['idBreadcrumbsArr'],$(data['formNodeHtml']));
+            //calllogAppendElement(data['idBreadcrumbsArr'],$(data['formNodeHtml']));
             //printF(appendEl,"appendEl=");
             //console.log(appendEl);
             //appendEl.append($(data['formNodeHtml']));
@@ -1568,11 +1570,13 @@ function treeSelectAdditionalJsAction(comboboxEl) {
             //    $("#form-node-holder").append($(data['formNodeHtml']));
             //}
 
+            calllogAppendFormNodes(data);
+
             console.log("ajax identifier="+identifier);
-            _formnode[identifier] = data['formNodeId'];
+            _formnode[identifier] = data[0]['formNodeHolderId'];
 
         } else {
-            console.log("No formNodeId="+data['formNodeId']);
+            console.log("No data: data.length="+data.length);
         }
 
         //$.bootstrapSortable(true);
@@ -1587,13 +1591,22 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     });
 }
 
+function calllogAppendFormNodes( data ) {
+    for( var index = 0; index < data.length; ++index ) {
+        var idBreadcrumbsArr = data[index]['idBreadcrumbsArr'];
+        var formNodeHtml = data[index]['formNodeHtml'];
+        var formNodeId = data[index]['formNodeId'];
+        calllogAppendElement(idBreadcrumbsArr,formNodeHtml,formNodeId);
+    }
+}
+
 //find the latest parent formnode holder element by breadcrumb ids
-function calllogFindClosestAppendElement(idBreadcrumbsArr,formNodeHtml) {
+function calllogAppendElement( idBreadcrumbsArr, formNodeHtml, formNodeId ) {
     var appendEl = $("#form-node-holder");
 
     for( var index = 0; index < idBreadcrumbsArr.length; ++index ) {
         console.log(index+": idBreadcrumb="+idBreadcrumbsArr[index]);
-        var holderId = "formnode-holder-"+idBreadcrumbsArr[index];
+        var holderId = "formnode-holder-"+idBreadcrumbsArr[index]+"-"+formNodeId;
         var parentEl = document.getElementById(holderId);
         if( parentEl ) {
             console.log("parent holderId found="+holderId);
@@ -1688,17 +1701,20 @@ function calllogHideAllSiblings( messageCategoryId ) {
 }
 
 function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
-    var nodeHolder = $('#formnode-holder-' + messageCategoryId);
+    //var nodeHolder = $('#formnode-holder-' + messageCategoryId);
+    var nodeHolders = $('*[data-formnodeholderid="'+messageCategoryId+'"]');
     if( disableEnable == 'disable' ) {
-        nodeHolder.addClass("formnode-holder-disabled");
-        nodeHolder.hide();
+        nodeHolders.addClass("formnode-holder-disabled");
+        nodeHolders.hide();
         //siblings
-        var siblings = nodeHolder.find('.formnode-holder');
-        siblings.addClass("formnode-holder-disabled");
-        siblings.hide();
+        nodeHolders.each(function(){
+            var siblings = $(this).find('.formnode-holder');
+            siblings.addClass("formnode-holder-disabled");
+            siblings.hide();
+        });
     } else {
-        nodeHolder.show();
-        nodeHolder.removeClass("formnode-holder-disabled");
+        nodeHolders.show();
+        nodeHolders.removeClass("formnode-holder-disabled");
     }
 }
 

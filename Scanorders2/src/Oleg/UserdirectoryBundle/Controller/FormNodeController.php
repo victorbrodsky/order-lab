@@ -62,35 +62,40 @@ class FormNodeController extends Controller {
             throw new \Exception( 'Entity not found: entityFullName='.$entityFullName.'; entityId='.$entityId );
         }
 
+        $formNodeHolderId = $formNodeHolderEntity->getId();
+        $resArr = array();
 
-        $formNodeArr = array(
-            'formNodeHolderEntity' => $formNodeHolderEntity,
-            'cycle' => 'edit',
-        );
+        foreach( $formNodeHolderEntity->getFormNodes() as $formNode ) {
 
-        $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig',$formNodeArr)->getContent();
+            $formNodeArr = array(
+                'formNode' => $formNode,
+                'formNodeHolderEntity' => $formNodeHolderEntity,
+                'cycle' => 'edit',
+            );
 
-        $formNodeId = null;
-        $idBreadcrumbsArr = array();
-        //TODO: rewrite according to multiple formNodes in one formNodeHolder
-        if( $formNodeHolderEntity->getFormNode() ) {
-            $formNodeId = $formNodeHolderEntity->getFormNode()->getId();
+            $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
-            //check if form node should be attached to the parent form node (if this formnode un-visible and objecttype "Form Section")
-            $parentFormNode = $formNodeHolderEntity->getFormNode()->getParent();
-            //echo "parentFormNode=".$parentFormNode->getName()."<br>";
-            if( !$formNodeHolderEntity->getFormNode()->getVisible() && $parentFormNode ) {
-                $parentFormNodeObjectType = $parentFormNode->getObjectType();
-                if( $parentFormNodeObjectType ) {
-                    //echo "parentObjectTypeName=".$parentFormNodeObjectType->getName()."<br>";
-                    if( $parentFormNodeObjectType->getName() == "Form Section" ) {
-                        $idBreadcrumbsArr = $formNodeHolderEntity->getIdBreadcrumbs();
-                        $idBreadcrumbsArr = array_reverse($idBreadcrumbsArr);
-                        //print_r($idBreadcrumbsArr);
+            $formNodeId = null;
+            $idBreadcrumbsArr = array();
+            //TODO: rewrite according to multiple formNodes in one formNodeHolder
+            if ($formNode) {
+                $formNodeId = $formNode->getId();
+
+                //check if form node should be attached to the parent form node (if this formnode un-visible and objecttype "Form Section")
+                $parentFormNode = $formNode->getParent();
+                //echo "parentFormNode=".$parentFormNode->getName()."<br>";
+                if (!$formNode->getVisible() && $parentFormNode) {
+                    $parentFormNodeObjectType = $parentFormNode->getObjectType();
+                    if ($parentFormNodeObjectType) {
+                        //echo "parentObjectTypeName=".$parentFormNodeObjectType->getName()."<br>";
+                        if ($parentFormNodeObjectType->getName() == "Form Section") {
+                            $idBreadcrumbsArr = $formNodeHolderEntity->getIdBreadcrumbs();
+                            $idBreadcrumbsArr = array_reverse($idBreadcrumbsArr);
+                            //print_r($idBreadcrumbsArr);
+                        }
                     }
                 }
             }
-        }
 
 //        $parentFormnodeHolderId = null;
 //        $parent = $formNodeHolderEntity->getParent();
@@ -104,14 +109,18 @@ class FormNodeController extends Controller {
 //                }
 //            }
 //        }
-        //echo "parentFormnodeHolderId=".$parentFormnodeHolderId."<br>";
+            //echo "parentFormnodeHolderId=".$parentFormnodeHolderId."<br>";
 
-        $res = array(
-            'formNodeHtml' => $template,
-            'formNodeId' => $formNodeId,
-            //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
-            'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
-        );
+            $res = array(
+                'formNodeHtml' => $template,
+                'formNodeHolderId' => $formNodeHolderId,
+                'formNodeId' => $formNodeId,
+                //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
+                'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
+            );
+
+            $resArr[] = $res;
+        }
 
         $json = json_encode($resArr);
         $response = new Response($json);
