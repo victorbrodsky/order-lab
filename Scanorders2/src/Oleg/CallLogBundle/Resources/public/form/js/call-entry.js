@@ -1583,8 +1583,8 @@ function calllogFindClosestAppendElement(idBreadcrumbsArr,formNodeHtml) {
             //console.log("0 formNodeHtml="+formNodeHtml);
             //formNodeHtml = "<br>"+formNodeHtml;
             //console.log("1 formNodeHtml="+formNodeHtml);
-            appendEl.append("<br>");
-            appendEl.append(formNodeHtml);
+            //appendEl.append(formNodeHtml);
+            appendEl.after(formNodeHtml);
             return appendEl;
         }
     }
