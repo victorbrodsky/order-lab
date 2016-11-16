@@ -710,6 +710,14 @@
         {{ formmacros.checkbox(form.showLabel) }}
     {% endif %}
 
+    {% if form.placeholder is defined %}
+        {{ formmacros.field(form.placeholder) }}
+    {% endif %}
+
+    {% if form.visible is defined %}
+        {{ formmacros.checkbox(form.visible) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}

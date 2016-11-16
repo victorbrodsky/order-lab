@@ -469,6 +469,16 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control', 'style'=>'margin:0')
             ));
+            $builder->add('placeholder', 'text', array(
+                'label' => 'Placeholder:',
+                'required' => false,
+                'attr' => array('class'=>'form-control')
+            ));
+            $builder->add('visible', 'checkbox', array(
+                'label' => 'Visible:',
+                'required' => false,
+                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+            ));
         }
 
         ///////////////// Many To Many relationship /////////////////

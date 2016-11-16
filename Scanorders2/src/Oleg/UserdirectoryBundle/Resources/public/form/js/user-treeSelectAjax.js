@@ -40,6 +40,7 @@ function setParentComboboxree(targetid, bundleName, entityName, rowElHtml) {
 
 }
 
+//TODO: separate change to select and unselect select2 event
 function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
 
     $(target).on('change', function(e){

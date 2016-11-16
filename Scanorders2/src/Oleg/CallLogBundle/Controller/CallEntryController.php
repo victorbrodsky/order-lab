@@ -399,9 +399,9 @@ class CallEntryController extends Controller
                 }
 
                 //testing: process form nodes
-                //$formNodeUtil = $this->get('user_formnode_utility');
-                //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
-                //exit('after formnode');
+                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
+                exit('after formnode');
 
                 if( $patient->getId() ) {
                     //CASE 1

@@ -71,13 +71,45 @@ class FormNodeController extends Controller {
         $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig',$formNodeArr)->getContent();
 
         $formNodeId = null;
+        $idBreadcrumbsArr = array();
         if( $formNodeHolderEntity->getFormNode() ) {
             $formNodeId = $formNodeHolderEntity->getFormNode()->getId();
+
+            //check if form node should be attached to the parent form node
+            $parentFormNode = $formNodeHolderEntity->getFormNode()->getParent();
+            //echo "parentFormNode=".$parentFormNode->getName()."<br>";
+            if( $parentFormNode ) {
+                $parentFormNodeObjectType = $parentFormNode->getObjectType();
+                if( $parentFormNodeObjectType ) {
+                    //echo "parentObjectTypeName=".$parentFormNodeObjectType->getName()."<br>";
+                    if( $parentFormNodeObjectType->getName() == "Form Section" ) {
+                        $idBreadcrumbsArr = $formNodeHolderEntity->getIdBreadcrumbs();
+                        $idBreadcrumbsArr = array_reverse($idBreadcrumbsArr);
+                        //print_r($idBreadcrumbsArr);
+                    }
+                }
+            }
         }
+
+//        $parentFormnodeHolderId = null;
+//        $parent = $formNodeHolderEntity->getParent();
+//        if( $parent ) {
+//            $parentFormNode = $parent->getFormNode();
+//            if( $parentFormNode ) {
+//                $objectTypeName = $parentFormNode->getObjectType()->getName();
+//                //echo "getObjectType=".$objectTypeName."<br>";
+//                if( $objectTypeName == "Form Section" || $objectTypeName == "Form" ) {
+//                    $parentFormnodeHolderId = $formNodeHolderEntity->getParent()->getFormNode()->getId();
+//                }
+//            }
+//        }
+        //echo "parentFormnodeHolderId=".$parentFormnodeHolderId."<br>";
 
         $res = array(
             'formNodeHtml' => $template,
-            'formNodeId' => $formNodeId
+            'formNodeId' => $formNodeId,
+            //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
+            'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
         );
 
         $json = json_encode($res);

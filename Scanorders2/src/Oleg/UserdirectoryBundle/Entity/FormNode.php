@@ -99,6 +99,13 @@ class FormNode extends BaseCompositeNode {
      */
     private $placeholder;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $visible;
+
+
+
 
     public function __construct($creator=null) {
         parent::__construct($creator);
@@ -188,6 +195,22 @@ class FormNode extends BaseCompositeNode {
     public function setPlaceholder($placeholder)
     {
         $this->placeholder = $placeholder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    /**
+     * @param mixed $visible
+     */
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
     }
 
 

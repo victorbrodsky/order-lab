@@ -9,7 +9,7 @@
         {% set formNodeHolder = formNodeFieldHolder %}
     {% endif %}
 
-    {#before formNodeHolder.id={{ formNodeHolder.id }}<br>#}
+    {#before formNodeHolder.id={{ formNodeHolder.id }}form-nodes-holder<br>#}
     {% if formNodeHolder.formNode is defined and formNodeHolder.formNode %}
 
         {% set rootFormNode = formNodeHolder.formNode %}
@@ -65,30 +65,34 @@
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {#formNode.id={{ formNode.id }}<br>#}
 
-    {% set formType = null %}
-    {% if formNode.objectType %}
-        {% set formType = formNode.getObjectType().getName() %}
-    {% endif %}
-    {#formType={{ formType }}<br>#}
+    {% if formNode.visible %}
 
-    {#{% if formType %}#}
-        {#<p>{{ formNodeHolder.name }}</p>#}
-    {#{% endif %}#}
+        {% set formType = null %}
+        {% if formNode.objectType %}
+            {% set formType = formNode.getObjectType().getName() %}
+        {% endif %}
+        {#formType={{ formType }}<br>#}
 
-    {% if formType == "Form" %}
-        {{ formnodemacros.addFormNodeRecursively(formNode,cycle,prototype) }}
-    {% endif %}
+        {#{% if formType %}#}
+            {#<p>{{ formNodeHolder.name }}</p>#}
+        {#{% endif %}#}
 
-    {% if formType == "Form Section" %}
-        {{ formnodemacros.sectionForm(formNode,cycle,prototype) }}
-    {% endif %}
+        {% if formType == "Form" %}
+            {{ formnodemacros.addFormNodeRecursively(formNode,cycle,prototype) }}
+        {% endif %}
 
-    {% if formType == "Form Field - Free Text" %}
-        {{ formnodemacros.textareaForm(formNode,cycle,prototype) }}
-    {% endif %}
+        {% if formType == "Form Section" %}
+            {{ formnodemacros.sectionForm(formNode,cycle,prototype) }}
+        {% endif %}
 
-    {% if formType == "Form Field - Free Text, Single Line" %}
-        {{ formnodemacros.stringForm(formNode,cycle,prototype) }}
+        {% if formType == "Form Field - Free Text" %}
+            {{ formnodemacros.textareaForm(formNode,cycle,prototype) }}
+        {% endif %}
+
+        {% if formType == "Form Field - Free Text, Single Line" %}
+            {{ formnodemacros.stringForm(formNode,cycle,prototype) }}
+        {% endif %}
+
     {% endif %}
 
 {% endmacro %}
@@ -107,7 +111,7 @@
             </h4>
         </div>
         <div id="formnode-section-{{ formNode.id }}" class="panel-collapse collapse in">
-            <div class="panel-body">
+            <div class="panel-body form-nodes-holder">
                 <div class="row">
                     <div class="col-xs-12" align="left">
 
