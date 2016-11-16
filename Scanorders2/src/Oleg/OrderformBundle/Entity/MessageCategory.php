@@ -65,13 +65,25 @@ class MessageCategory extends BaseCompositeNode {
     private $organizationalGroupType;
 
 
+//    /**
+//     * a single form node can be used only by one message category
+//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FormNode", cascade={"persist"})
+//     */
     /**
-     * a single form node can be used only by one message category
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FormNode", cascade={"persist"})
-     */
-    private $formNode;
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\FormNode")
+     * @ORM\JoinTable(name="scan_messageCategory_formNode",
+     *      joinColumns={@ORM\JoinColumn(name="messageCategory_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="formNode_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $formNodes;
 
 
+    public function __construct($author=null) {
+        parent::__construct($author);
+
+        $this->formNodes = new ArrayCollection();
+    }
 
 
     /**
@@ -94,19 +106,21 @@ class MessageCategory extends BaseCompositeNode {
     /**
      * @return mixed
      */
-    public function getFormNode()
+    public function getFormNodes()
     {
-        return $this->formNode;
+        return $this->formNodes;
     }
-
-    /**
-     * @param mixed $formNode
-     */
-    public function setFormNode($formNode)
+    public function addFormNode($item)
     {
-        $this->formNode = $formNode;
+        if( !$this->formNodes->contains($item) ) {
+            $this->formNodes->add($item);
+        }
+        return $this;
     }
-
+    public function removeFormNode($item)
+    {
+        $this->formNodes->removeElement($item);
+    }
 
 
 

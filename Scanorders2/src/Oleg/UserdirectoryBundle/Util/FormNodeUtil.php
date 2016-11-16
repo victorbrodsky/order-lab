@@ -29,16 +29,16 @@ class FormNodeUtil
             return;
         }
 
-        $formNode = $formNodeHolder->getFormNode();
-        if( !$formNode ) {
+        $formNodes = $formNodeHolder->getFormNodes();
+        if( !$formNodes ) {
             return;
         }
 
-        $rootFormNode = $formNode->getRootName($formNode);
-        if( !$rootFormNode ) {
-            exit("No Root of the node ".$formNode."<br>");
-            return;
-        }
+//        $rootFormNode = $formNode->getRootName($formNode);
+//        if( !$rootFormNode ) {
+//            exit("No Root of the node ".$formNode."<br>");
+//            return;
+//        }
 
         $data = $request->request->all();
 
@@ -55,11 +55,11 @@ class FormNodeUtil
         //$this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
 
         //process by data partial key name" "formnode-4" => "formnode-"
-        $this->processFormNodesFromDataKeys($data,$rootFormNode,$holderEntity);
+        $this->processFormNodesFromDataKeys($data,$holderEntity);
     }
 
     //process by data partial key name" "formnode-4" => "formnode-"
-    public function processFormNodesFromDataKeys($data,$formNode,$holderEntity) {
+    public function processFormNodesFromDataKeys($data,$holderEntity) {
         foreach( $data as $key=>$value ){
             //if( "show_me_" == substr($key,0,8) ) {
             if( strpos($key, 'formnode-') !== false ) {
@@ -504,19 +504,22 @@ class FormNodeUtil
         return $objectType;
     }
 
-    public function setFormNodeToMessageCategory($messageCategoryName,$formNode) {
+    public function setFormNodeToMessageCategory($messageCategoryName,$formNodes) {
         //attach this formnode to the MessageCategory "Transfusion Medicine"
         $em = $this->em;
         $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategoryName);
         if( !$messageCategory ) {
             exit("Message category not found by name=".$messageCategoryName);
         }
-        if( !$messageCategory->getFormNode() ) {
-            $messageCategory->setFormNode($formNode);
-            $em->persist($messageCategory);
-            $em->persist($formNode);
-            $em->flush();
-            echo "Set ".$formNode." to ".$messageCategory."<br>";
+        foreach( $formNodes as $formNode ) {
+            //if( !$messageCategory->getFormNode() ) {
+            if( $formNode && !$messageCategory->getFormNodes()->contains($formNode) ) {
+                $messageCategory->addFormNode($formNode);
+                $em->persist($messageCategory);
+                //$em->persist($formNode);
+                $em->flush();
+                echo "Add " . $formNode . " to " . $messageCategory . "<br>";
+            }
         }
     }
 
@@ -583,7 +586,7 @@ class FormNodeUtil
         $impressionText = $this->createFormNode($formParams);
 
         //attach this formnode to the MessageCategory "Transfusion Medicine"
-        $this->setFormNodeToMessageCategory($messageCategoryName,$PathologyCallLogEntry);
+        $this->setFormNodeToMessageCategory($messageCategoryName,array($PathologyCallLogEntry));
 
         return $PathologyCallLogEntry;
     }
@@ -640,7 +643,7 @@ class FormNodeUtil
         ////////////// EOF Laboratory Values [Form Section] //////////////////
 
         //attach this formnode to the MessageCategory "Transfusion Medicine"
-        $this->setFormNodeToMessageCategory($messageCategoryName,$transfusionMedicine);
+        $this->setFormNodeToMessageCategory($messageCategoryName,array($transfusionMedicine));
 
 
         //////////////////////////////////////////////////////
@@ -696,10 +699,9 @@ class FormNodeUtil
         $this->createFormNode($formParams);
 
         //attach this formnode to the MessageCategory "Transfusion Medicine"
-        $this->setFormNodeToMessageCategory($messageCategoryName,$firstDosePlasma);
+        $this->setFormNodeToMessageCategory($messageCategoryName,array($firstDosePlasma));
         //$this->createFormNodeAndLinkToMessageCategory($formSectionArr, $messageCategoryName);
 
-return;
         //////////////////////////////////////////////////////
         //Transfusion Medicine -> First dose platelets [Message Category]
         $messageCategoryName = "First dose platelets";
@@ -708,14 +710,24 @@ return;
             'parent' => $transfusionMedicine,
             'name' => $messageCategoryName,
             'objectType' => $objectTypeSection,
-            'showLabel' => true,
-            'visible' => true
+            'showLabel' => false,
+            'visible' => false
         );
         $firstDosePlatelets = $this->createFormNode($formParams);
 
-        //Medication: [Form Field - Free Text, Single Line]
+        //Miscellaneous [Form Section]
         $formParams = array(
             'parent' => $firstDosePlatelets,
+            'name' => "Miscellaneous",
+            'objectType' => $objectTypeSection,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $miscellaneous = $this->createFormNode($formParams);
+
+        //Medication: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
             'name' => "Medication",
             'placeholder' => "Medication",
             'objectType' => $objectTypeString,
@@ -725,9 +737,28 @@ return;
         $this->createFormNode($formParams);
 
         //attach this formnode to the MessageCategory
-        $this->setFormNodeToMessageCategory($messageCategoryName,$firstDosePlatelets);
+        $this->setFormNodeToMessageCategory($messageCategoryName,array($firstDosePlatelets));
 
+return;
         //////////////////////////////////////////////////////
+        //Transfusion Medicine -> Third+ dose platelets [Message Category]
+        $messageCategoryName = "Third+ dose platelets";
+        $formParams = array(
+            'parent' => $transfusionMedicine,
+            'name' => $messageCategoryName,
+            'objectType' => $objectTypeSection,
+            'showLabel' => false,
+            'visible' => false
+        );
+        $firstDosePlatelets = $this->createFormNode($formParams);
+
+        //Laboratory Values [Form Section]
+
+        //CCI: [Form Field - Free Text, Single Line]
+
+        //Miscellaneous [Form Section]
+
+        //Platelet Goal: [Form Field - Free Text, Single Line]
 
 
 

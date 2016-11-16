@@ -1456,13 +1456,38 @@ function calllogMessageCategoryListener(holderId) {
     //$eventSelect.on("select2:select", function (e) { log("select2:select", e); });
     //$eventSelect.on("select2:unselect", function (e) { log("select2:unselect", e); });
 
-    $(".ajax-combobox-messageCategory").on("select2:unselecting", function (e) {
+    $(".ajax-combobox-messageCategory").on("select2:selecting", function (e) {
         var messageCategoryId = $(this).select2('val');
-        console.log("select2:unselect="+messageCategoryId);
+        console.log("@@@calllogMessageCategoryListener: select2:unselect="+messageCategoryId);
         ////log("select2:unselect", e);
         //$('#formnode-holder-'+messageCategoryId).hide();
 
         calllogTreeSelectRemove($(this));
+    });
+
+    $(".ajax-combobox-messageCategory").on("select2:select", function (e) {
+        console.log("@@@calllogMessageCategoryListener: select2:select", e);
+    });
+
+    $(".ajax-combobox-messageCategory").on("select2:unselect", function (e) {
+        console.log("@@@calllogMessageCategoryListener: select2:unselect", e);
+    });
+
+    $(".ajax-combobox-messageCategory").on("change", function (e) {
+        console.log("@@@calllogMessageCategoryListener: change", e);
+    });
+
+    $(".ajax-combobox-messageCategory").select2().on("select2-selecting", function(e) {
+        console.log("@@@calllogMessageCategoryListener: select2-selecting val=" + e.val + " choice=" + e.choice.text);
+    });
+    $(".ajax-combobox-messageCategory").select2().on("select2-removed", function(e) {
+        console.log("@@@calllogMessageCategoryListener: select2() select2-removed val=" + e.val + " choice=" + e.choice.text);
+    });
+    $(".ajax-combobox-messageCategory").on("select2-removed", function(e) {
+        console.log("@@@calllogMessageCategoryListener: select2-removed val=" + e.val + " choice=" + e.choice.text);
+    });
+    $(".ajax-combobox-messageCategory").select2().on("select2-removing", function(e) {
+        console.log("@@@calllogMessageCategoryListener: select2-removing val=" + e.val + " choice=" + e.choice.text);
     });
 
     return;
@@ -1470,7 +1495,7 @@ function calllogMessageCategoryListener(holderId) {
 
 var _formnode = [];
 function treeSelectAdditionalJsAction(comboboxEl) {
-    printF( comboboxEl, "combobox on change:" );
+    printF( comboboxEl, "treeSelectAdditionalJsAction: combobox on change:" );
 
     var thisData = comboboxEl.select2('data');
     var messageCategoryId = thisData.id;
@@ -1480,6 +1505,13 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         console.log("return: messageCategoryId doesnot exists: "+messageCategoryId);
         return;
     }
+
+    //testing: do nothing if the fields were populated by controller
+    //var holderId = "formnode-holder-"+messageCategoryId;
+    //var holderEl = document.getElementById(holderId);
+    //if( holderEl && !(identifier in _formnode) ) {
+    //    return;
+    //}
 
     var entityNamespace = "Oleg\\OrderformBundle\\Entity";
     var entityName = "MessageCategory";
@@ -1595,8 +1627,8 @@ function calllogFindClosestAppendElement(idBreadcrumbsArr,formNodeHtml) {
     return appendEl;
 }
 
-function treeSelectAdditionalJsActionRemove(comboboxEl) {
-    calllogTreeSelectRemove(comboboxEl)
+function treeSelectAdditionalJsActionRemove(comboboxEl,comboboxId) {
+    calllogTreeSelectRemove(comboboxEl,comboboxId)
     return;
 
     //printF( comboboxEl, "0 combobox on remove:" );
@@ -1612,14 +1644,17 @@ function treeSelectAdditionalJsActionRemove(comboboxEl) {
     //    var messageCategoryId = rowEl.find(".ajax-combobox-messageCategory").select2('val');
     //    console.log("sibling remove messageCategoryId="+messageCategoryId);
     //
-    //    $('#formnode-holder-'+messageCategoryId).hide();
+    //    $('#formnode-holder-'+messageCategoryId).hide();select2:unselect
     //
     //});
 }
-function calllogTreeSelectRemove(comboboxEl) {
-    printF( comboboxEl, "0 combobox on remove:" );
-    var messageCategoryId = comboboxEl.select2('val');
-    console.log("0 remove messageCategoryId="+messageCategoryId);
+function calllogTreeSelectRemove(comboboxEl,comboboxId) {
+    //printF( comboboxEl, "0 combobox on remove:" );
+    var messageCategoryId = comboboxId;
+    //var messageCategoryId = comboboxEl.select2('val');
+    console.log("remove messageCategoryId="+messageCategoryId);
+    //var messageCategoryId = comboboxEl.val();
+    //console.log("01 remove messageCategoryId="+messageCategoryId);
     calllogDisabledEnabledFormNode('disable',messageCategoryId);
 
     //hide all siblings after this combobox
@@ -1627,7 +1662,7 @@ function calllogTreeSelectRemove(comboboxEl) {
     allNextSiblings.each( function(){
 
         //if( $(this).hasClass('active-tree-node') ) {
-            printF($(this), "sibling combobox on remove:");
+            //printF($(this), "sibling combobox on remove:");
             var messageCategoryId = $(this).find(".ajax-combobox-messageCategory").select2('val');
             console.log("sibling remove messageCategoryId=" + messageCategoryId);
 
@@ -1657,6 +1692,10 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
     if( disableEnable == 'disable' ) {
         nodeHolder.addClass("formnode-holder-disabled");
         nodeHolder.hide();
+        //siblings
+        var siblings = nodeHolder.find('.formnode-holder');
+        siblings.addClass("formnode-holder-disabled");
+        siblings.hide();
     } else {
         nodeHolder.show();
         nodeHolder.removeClass("formnode-holder-disabled");

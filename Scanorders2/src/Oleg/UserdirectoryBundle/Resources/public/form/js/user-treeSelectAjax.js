@@ -44,14 +44,16 @@ function setParentComboboxree(targetid, bundleName, entityName, rowElHtml) {
 function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
 
     $(target).on('change', function(e){
+    //$(target).on("select2-selecting", function (e) {
 
-        printF( $(this), "comboboxTreeListener: combobox on change:" );
+        console.log("comboboxTreeListener: change", e);
+        //printF( $(this), "comboboxTreeListener: combobox on select:" );
 
         var comboboxEl = $(this);
         var thisData = comboboxEl.select2('data');
-        if( thisData ) {
-            console.log("0 combobox on change, id=" + thisData.id);
-        }
+        //if( thisData ) {
+            //console.log("0 combobox on change, id=" + thisData.id);
+        //}
 
         var treeHolder = comboboxEl.closest('.composite-tree-holder');
 
@@ -60,13 +62,16 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
         /////////////////// create and set id if node is new ///////////////////
         setTreeNode( bundleName, entityName, treeHolder, comboboxEl, thisData );
         var thisData = comboboxEl.select2('data');
-        if( thisData ) {
-            console.log("1 combobox on change, id=" + thisData.id);
-        }
+        //if( thisData ) {
+            //console.log("1 combobox on change, id=" + thisData.id);
+        //}
         /////////////////// EOF create and set id if node is new ///////////////////
 
         //additional actions of combobox chaged before remove (change form fields for calllog)
-        treeSelectAdditionalJsActionRemove(comboboxEl);
+        //removedEl = e.removed.id
+        if( 'removed' in e && e.removed ) {
+            treeSelectAdditionalJsActionRemove(comboboxEl,e.removed.id);
+        }
 
         //first remove all siblings after this combobox
         var allNextSiblings = comboboxEl.closest('.row').nextAll().remove();
@@ -105,9 +110,37 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
 //            }
 //        });
 
-    });
+    }); //select
+
+    //$(target).on("select2-selecting", function (e) {
+    //    console.log("select2-selecting", e);
+    //    printF( $(this), "comboboxTreeListener: select2-selecting:" );
+    //});
+
+    //$(target).on("select2-removed", function (e) {
+    //    console.log("select2:unselect", e);
+    //    printF( $(this), "comboboxTreeListener: combobox on removed:" );
+    //
+    //    var comboboxEl = $(this);
+    //    var thisData = comboboxEl.select2('data');
+    //    if( thisData ) {
+    //        console.log("0 combobox on unselect, id=" + thisData.id);
+    //    }
+    //
+    //    var treeHolder = comboboxEl.closest('.composite-tree-holder');
+    //
+    //    var comboboxId = e.choice.id;
+    //
+    //    //additional actions of combobox chaged before remove (change form fields for calllog)
+    //    treeSelectAdditionalJsActionRemove(comboboxEl,comboboxId);
+    //
+    //    //remove all siblings after this combobox
+    //    var allNextSiblings = comboboxEl.closest('.row').nextAll().remove();
+    //    clearElementsIdName(treeHolder);
+    //});
 
 }
+
 
 function getComboboxNodeLabel(comboboxEl) {
     var label = comboboxEl.closest('.treenode').find('label').text();
@@ -355,7 +388,7 @@ function setTreeNode( bundleName, entityName, treeHolder, node, data ) {
     }
 }
 
-function treeSelectAdditionalJsActionRemove(comboboxEl) {
+function treeSelectAdditionalJsActionRemove(comboboxEl,comboboxId) {
     return;
 }
 ////////////////////////////// EOF TREE //////////////////////////////////

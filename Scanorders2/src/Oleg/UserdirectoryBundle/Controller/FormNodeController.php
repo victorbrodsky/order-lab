@@ -72,13 +72,14 @@ class FormNodeController extends Controller {
 
         $formNodeId = null;
         $idBreadcrumbsArr = array();
+        //TODO: rewrite according to multiple formNodes in one formNodeHolder
         if( $formNodeHolderEntity->getFormNode() ) {
             $formNodeId = $formNodeHolderEntity->getFormNode()->getId();
 
-            //check if form node should be attached to the parent form node
+            //check if form node should be attached to the parent form node (if this formnode un-visible and objecttype "Form Section")
             $parentFormNode = $formNodeHolderEntity->getFormNode()->getParent();
             //echo "parentFormNode=".$parentFormNode->getName()."<br>";
-            if( $parentFormNode ) {
+            if( !$formNodeHolderEntity->getFormNode()->getVisible() && $parentFormNode ) {
                 $parentFormNodeObjectType = $parentFormNode->getObjectType();
                 if( $parentFormNodeObjectType ) {
                     //echo "parentObjectTypeName=".$parentFormNodeObjectType->getName()."<br>";
@@ -112,7 +113,7 @@ class FormNodeController extends Controller {
             'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
         );
 
-        $json = json_encode($res);
+        $json = json_encode($resArr);
         $response = new Response($json);
         $response->headers->set('Content-Type', 'application/json');
         return $response;

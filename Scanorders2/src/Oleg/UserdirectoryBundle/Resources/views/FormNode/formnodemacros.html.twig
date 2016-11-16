@@ -1,5 +1,5 @@
 
-{% macro addFormNode( formNodeFieldHolder, cycle, prototype ) %}
+{% macro addFormNodes( formNodeFieldHolder, cycle, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
@@ -9,20 +9,21 @@
         {% set formNodeHolder = formNodeFieldHolder %}
     {% endif %}
 
-    {#before formNodeHolder.id={{ formNodeHolder.id }}form-nodes-holder<br>#}
-    {% if formNodeHolder.formNode is defined and formNodeHolder.formNode %}
+    {% for formNode in formNodeHolder.formNodes %}
+    {#{% if formNodeHolder.formNode is defined and formNodeHolder.formNode %}#}
 
-        {% set rootFormNode = formNodeHolder.formNode %}
+        {#{% set rootFormNode = formNodeHolder.formNode %}#}
         {#rootFormNode={{ rootFormNode.name }}<br>#}
 
         <div id="formnode-holder-{{ formNodeHolder.id }}"
              class="formnode-holder formnode-holder-{{ formNodeHolder.id }}"
              data-formnodeholderid="{{ formNodeHolder.id }}"
         >
-            {{ formnodemacros.addFormNodeRecursively(rootFormNode,cycle,prototype) }}
+            {{ formnodemacros.addFormNodeRecursively(formNode,cycle,prototype) }}
         </div>
 
-    {% endif %}
+    {#{% endif %}#}
+    {% endfor %}
 {% endmacro %}
 
 {% macro addFormNodeRecursively( formNode, cycle, prototype ) %}
