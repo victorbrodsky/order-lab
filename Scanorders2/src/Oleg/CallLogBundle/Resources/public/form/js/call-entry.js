@@ -1521,14 +1521,14 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     console.log("########## identifier="+identifier);
     console.log("_formnode[identifier]="+_formnode[identifier]);
 
-    if( identifier in _formnode ) {
+    if( identifier in _formnode && _formnode[identifier] ) {
         console.log("return: identifier already exists: " + identifier);
         //$('#formnode-holder-'+_formnode[identifier]['formNodeId']).show();
         calllogDisabledEnabledFormNode('enable',messageCategoryId);
         return;
     } else {
         console.log("GET url: identifier does not exists: " + identifier);
-        _formnode[identifier] = 1;
+        _formnode[identifier] = 1;  //set flag meaning that this identifier will be set after ajax is completed
     }
 
     var url = Routing.generate('employees_formnode_fields');
@@ -1546,36 +1546,13 @@ function treeSelectAdditionalJsAction(comboboxEl) {
 
             console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
 
-            //var dataEl = $(data);
-            //$('#form-node-next').html(data); //Change the html of the div with the id = "your_div"
-
-            //var appendEl = $("#form-node-holder");
-            //var idBreadcrumbsArr = data['idBreadcrumbsArr'];
-            //if( parentFormnodeHolderId ) {
-            //    console.log("parentFormnodeHolderId="+parentFormnodeHolderId);
-            //    var parentEl = $('#formnode-holder-' + data['parentFormnodeHolderId']);
-            //    if( parentEl ) {
-            //        appendEl = parentEl;
-            //    }
-            //}
-            //var appendEl = calllogFindClosestAppendElement(data['idBreadcrumbsArr'],$(data['formNodeHtml']));
-            //calllogAppendElement(data['idBreadcrumbsArr'],$(data['formNodeHtml']));
-            //printF(appendEl,"appendEl=");
-            //console.log(appendEl);
-            //appendEl.append($(data['formNodeHtml']));
-
-            //if( data['parentFormnodeHolderId'] && $('#formnode-holder-'+data['parentFormnodeHolderId']) ) {
-            //    $("#formnode-holder-"+data['parentFormnodeHolderId']).append($(data['formNodeHtml']));
-            //} else {
-            //    $("#form-node-holder").append($(data['formNodeHtml']));
-            //}
-
             calllogAppendFormNodes(data);
 
             console.log("ajax identifier="+identifier);
             _formnode[identifier] = data[0]['formNodeHolderId'];
 
         } else {
+            _formnode[identifier] = null;
             console.log("No data: data.length="+data.length);
         }
 
@@ -1605,10 +1582,17 @@ function calllogAppendFormNodes( data ) {
 //find the latest parent formnode holder element by parentFormNodeId id
 function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, formNodeHtml ) {
 
-    console.log("calllogAppendElement:"+formNodeHolderId+" "+parentFormNodeId+""+formNodeId);
-    var appendEl = $("#form-node-holder");
+    console.log("calllogAppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId"+formNodeId);
 
-    var parentId = "formnode-holder-"+formNodeHolderId+"-"+parentFormNodeId;
+    //check if this element does not exist
+    var formNodeElId = "formnode-holder-"+formNodeId;
+    var formNodeEl = document.getElementById(formNodeElId);
+    if( formNodeEl ) {
+        return null;
+    }
+
+    //check if parent formnode exists and append this formnode to the parent formnode
+    var parentId = "formnode-holder-"+parentFormNodeId;
     var parentEl = document.getElementById(parentId);
     if( parentEl ) {
         console.log("parentId found="+parentId);
@@ -1620,7 +1604,7 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
         //    console.log("form-nodes-holder not found!!! in ="+holderId);
         //    appendEl = $(parentEl).find('.row').parent();
         //}
-        printF(appendEl,"appendEl found:");
+        printF(appendEl,"!!! appendEl found:");
         console.log(appendEl);
         //return $(parentEl).find('.row').last();
 
@@ -1635,7 +1619,8 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
     }
 
     //regular append to the end of the global form
-    printF(appendEl,"appendEl global:");
+    var appendEl = $("#form-node-holder");
+    printF(appendEl,"!!! appendEl global:");
     console.log(appendEl);
     appendEl.append(formNodeHtml);
     return appendEl;
@@ -1650,7 +1635,6 @@ function calllogAppendFormNodes_Old( data ) {
         calllogAppendElement(idBreadcrumbsArr,formNodeHtml,formNodeId);
     }
 }
-
 //NOT USED
 //find the latest parent formnode holder element by breadcrumb ids
 function calllogAppendElement_Old( idBreadcrumbsArr, formNodeHtml, formNodeId ) {
@@ -1695,23 +1679,6 @@ function calllogAppendElement_Old( idBreadcrumbsArr, formNodeHtml, formNodeId ) 
 function treeSelectAdditionalJsActionRemove(comboboxEl,comboboxId) {
     calllogTreeSelectRemove(comboboxEl,comboboxId)
     return;
-
-    //printF( comboboxEl, "0 combobox on remove:" );
-    //var messageCategoryId = comboboxEl.select2('val');
-    //console.log("0 remove messageCategoryId="+messageCategoryId);
-    //$('#formnode-holder-'+messageCategoryId).hide();
-    //
-    ////hide all siblings after this combobox
-    //var allNextSiblings = comboboxEl.closest('.row').nextAll();
-    //allNextSiblings.each( function(){
-    //    var rowEl = $(this);
-    //    printF( rowEl, "sibling combobox on remove:" );
-    //    var messageCategoryId = rowEl.find(".ajax-combobox-messageCategory").select2('val');
-    //    console.log("sibling remove messageCategoryId="+messageCategoryId);
-    //
-    //    $('#formnode-holder-'+messageCategoryId).hide();select2:unselect
-    //
-    //});
 }
 function calllogTreeSelectRemove(comboboxEl,comboboxId) {
     //printF( comboboxEl, "0 combobox on remove:" );
@@ -1753,8 +1720,8 @@ function calllogHideAllSiblings( messageCategoryId ) {
 }
 
 function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
-    //var nodeHolder = $('#formnode-holder-' + messageCategoryId);
-    var nodeHolders = $('*[data-formnodeholderid="'+messageCategoryId+'"]');
+    var nodeHolders = $('.formnode-holder-' + messageCategoryId);
+    //var nodeHolders = $('*[data-formnodeholderid="'+messageCategoryId+'"]');
     if( disableEnable == 'disable' ) {
         nodeHolders.addClass("formnode-holder-disabled");
         nodeHolders.hide();

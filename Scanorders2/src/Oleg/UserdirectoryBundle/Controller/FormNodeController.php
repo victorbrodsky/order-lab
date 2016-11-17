@@ -102,12 +102,16 @@ class FormNodeController extends Controller {
 //                    }
 //                }
 //            } //parent
-            $resArr = $this->createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $formNode, $resArr );
 
-            if( count($resArr) > 0 ) {
-                $parentFormNodeId = $resArr[0]['parentFormNodeId'];
+            $parentFormNode = $this->getParentFormNodeSection($formNode);
+            if( $parentFormNode ) {
+                $parentFormNodeId = $parentFormNode->getId();
             } else {
                 $parentFormNodeId = null;
+            }
+
+            if( $parentFormNodeId ) {
+                $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr);
             }
 
             $formNodeArr = array(
@@ -165,6 +169,8 @@ class FormNodeController extends Controller {
 
             $resArr[] = $res;
         }
+
+        //print_r($resArr);
 
         $json = json_encode($resArr);
         $response = new Response($json);
