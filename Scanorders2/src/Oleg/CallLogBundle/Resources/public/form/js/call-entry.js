@@ -1683,36 +1683,33 @@ function treeSelectAdditionalJsActionRemove(comboboxEl,comboboxId) {
     console.log("treeSelectAdditionalJsActionRemove: comboboxId="+comboboxId);
     //calllogTreeSelectRemove(comboboxEl,comboboxId);
 
-    calllogDisabledEnabledFormNode('disable',comboboxId);
-
-    //check all comboboxId sinblings: find if any '.formnode-holder' visible data-formnodeholderid > comboboxId
+    //1) check all comboboxId sinblings: find if any '.formnode-holder' visible data-formnodeholderid > comboboxId
     calllogHideAllSiblings(comboboxId);
-    //var formNodeEl = calllogGetFormNodeElement(comboboxId);
-    //if( !formNodeEl ) {
-    //    console.log("formNodeEl not found =" + formNodeEl);
-    //    return null;
-    //}
-    //var visibleFormNodeElements = formNodeEl.parent().find('.formnode-holder:visible');
-    //visibleFormNodeElements.each( function() {
-    //    var thisFormNodeId = $(this).data("formnodeholderid");
-    //    if( parseInt(thisFormNodeId) > parseInt(comboboxId) ) {
-    //        console.log("hide sibling thisFormNodeId=" + thisFormNodeId);
-    //        calllogDisabledEnabledFormNode('disable',thisFormNodeId);
-    //    }
-    //});
+
+    //2) disable this form node holder
+    calllogDisabledEnabledFormNode('disable',comboboxId);
 
     return;
 }
 
 function calllogHideAllSiblings( comboboxId ) {
-    var formNodeEl = calllogGetFormNodeElement(comboboxId);
-    if( !formNodeEl ) {
-        console.log("formNodeEl not found =" + formNodeEl);
-        return null;
-    }
-    var visibleFormNodeElements = formNodeEl.parent().find('.formnode-holder:visible');
+
+    //var formNodeEl = calllogGetFormNodeElement(comboboxId);
+    //if( !formNodeEl ) {
+    //    console.log("formNodeEl not found =" + formNodeEl);
+    //    return null;
+    //}
+    //console.log("formNodeEl.parent():");
+    //console.log(formNodeEl.parent());
+    //var visibleFormNodeElements = formNodeEl.parent().find('.formnode-holder:visible');
+    //console.log("0 visibleFormNodeElements.length=" + visibleFormNodeElements.length);
+
+    var visibleFormNodeElements = $('.formnode-holder:visible');
+    console.log("visibleFormNodeElements.length=" + visibleFormNodeElements.length);
+
     visibleFormNodeElements.each( function() {
         var thisFormNodeId = $(this).data("formnodeholderid");
+        console.log("sibling thisFormNodeId=" + thisFormNodeId + " ?= " + comboboxId);
         if( parseInt(thisFormNodeId) > parseInt(comboboxId) ) {
             console.log("hide sibling thisFormNodeId=" + thisFormNodeId);
             calllogDisabledEnabledFormNode('disable',thisFormNodeId);
