@@ -73,35 +73,10 @@ class FormNodeController extends Controller {
                 continue;
             }
 
+            if( $this->isFormNodeInArray($formNode,$resArr) ) {
+                continue;
+            }
 
-            //check if the node has a parent form node type of Section and visible. The node will be placed by JS inside this section
-//            $parentFormNode = $formNode->getParent();
-//            if( $parentFormNode && $parentFormNode->getVisible() && $parentFormNode->getId() ) {
-//                $parentFormNodeObjectType = $parentFormNode->getObjectType();
-//                if( $parentFormNodeObjectType ) {
-//                    //echo "parentObjectTypeName=".$parentFormNodeObjectType->getName()."<br>";
-//                    if( $parentFormNodeObjectType->getName() == "Form Group" ||
-//                        $parentFormNodeObjectType->getName() == "Form" ||
-//                        $parentFormNodeObjectType->getName() == "Form Section"
-//                    ) {
-//                        $formNodeArr = array(
-//                            'formNode' => $parentFormNode,
-//                            'formNodeHolderEntity' => $formNodeHolderEntity,
-//                            'cycle' => 'edit',
-//                        );
-//
-//                        $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
-//
-//                        $res = array(
-//                            'formNodeHtml' => $template,
-//                            'formNodeHolderId' => $formNodeHolderId,
-//                            'formNodeId' => $parentFormNode->getId(),
-//                        );
-//
-//                        $resArr[] = $res;
-//                    }
-//                }
-//            } //parent
 
             $parentFormNode = $this->getParentFormNodeSection($formNode);
             if( $parentFormNode ) {
@@ -122,47 +97,12 @@ class FormNodeController extends Controller {
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
-//            $formNodeId = null;
-//            $idBreadcrumbsArr = array();
-//            //TODO: rewrite according to multiple formNodes in one formNodeHolder
-//            if ($formNode) {
-//                $formNodeId = $formNode->getId();
-//
-//                //check if form node should be attached to the parent form node (if this formnode un-visible and objecttype "Form Section")
-//                $parentFormNode = $formNode->getParent();
-//                //echo "parentFormNode=".$parentFormNode->getName()."<br>";
-//                if (!$formNode->getVisible() && $parentFormNode) {
-//                    $parentFormNodeObjectType = $parentFormNode->getObjectType();
-//                    if ($parentFormNodeObjectType) {
-//                        //echo "parentObjectTypeName=".$parentFormNodeObjectType->getName()."<br>";
-//                        if ($parentFormNodeObjectType->getName() == "Form Section") {
-//                            $idBreadcrumbsArr = $formNodeHolderEntity->getIdBreadcrumbs();
-//                            $idBreadcrumbsArr = array_reverse($idBreadcrumbsArr);
-//                            //print_r($idBreadcrumbsArr);
-//                        }
-//                    }
-//                }
-//            }
-
-//        $parentFormnodeHolderId = null;
-//        $parent = $formNodeHolderEntity->getParent();
-//        if( $parent ) {
-//            $parentFormNode = $parent->getFormNode();
-//            if( $parentFormNode ) {
-//                $objectTypeName = $parentFormNode->getObjectType()->getName();
-//                //echo "getObjectType=".$objectTypeName."<br>";
-//                if( $objectTypeName == "Form Section" || $objectTypeName == "Form" ) {
-//                    $parentFormnodeHolderId = $formNodeHolderEntity->getParent()->getFormNode()->getId();
-//                }
-//            }
-//        }
-            //echo "parentFormnodeHolderId=".$parentFormnodeHolderId."<br>";
-
             $res = array(
                 'formNodeHolderId' => $formNodeHolderId,
                 'parentFormNodeId' => $parentFormNodeId,
                 'formNodeId' => $formNodeId,
                 'formNodeHtml' => $template,
+                'simpleFormNode' => true
                 //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
                 //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
             );
@@ -203,6 +143,10 @@ class FormNodeController extends Controller {
 
         if( $parentFormNode ) {
 
+            if( $this->isFormNodeInArray($parentFormNode,$resArr) ) {
+                return $resArr;
+            }
+
             $formNodeArr = array(
                 'formNode' => $parentFormNode,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
@@ -223,6 +167,7 @@ class FormNodeController extends Controller {
                 'parentFormNodeId' => $grandParentFormNodeId,
                 'formNodeId' => $parentFormNode->getId(),
                 'formNodeHtml' => $template,
+                'simpleFormNode' => false
             );
 
             $resArr[] = $res;
@@ -256,4 +201,12 @@ class FormNodeController extends Controller {
         return null;
     }
 
+    public function isFormNodeInArray( $formNode, $resArr ) {
+        foreach( $resArr as $res ) {
+            if( $res['formNodeId'] == $formNode->getId() ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1629,98 +1629,135 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
     return appendEl;
 }
 
-//NOT USED
-function calllogAppendFormNodes_Old( data ) {
-    for( var index = 0; index < data.length; ++index ) {
-        var idBreadcrumbsArr = data[index]['idBreadcrumbsArr'];
-        var formNodeHtml = data[index]['formNodeHtml'];
-        var formNodeId = data[index]['formNodeId'];
-        calllogAppendElement(idBreadcrumbsArr,formNodeHtml,formNodeId);
-    }
-}
-//NOT USED
-//find the latest parent formnode holder element by breadcrumb ids
-function calllogAppendElement_Old( idBreadcrumbsArr, formNodeHtml, formNodeId ) {
-    var appendEl = $("#form-node-holder");
-
-    for( var index = 0; index < idBreadcrumbsArr.length; ++index ) {
-        console.log(index+": idBreadcrumb="+idBreadcrumbsArr[index]);
-        var holderId = "formnode-holder-"+idBreadcrumbsArr[index]+"-"+formNodeId;
-        var parentEl = document.getElementById(holderId);
-        if( parentEl ) {
-            console.log("parent holderId found="+holderId);
-            //printF(parentEl,"parent found");
-            //appendEl = $(parentEl).find('.form-nodes-holder');
-            appendEl = $(parentEl).find('.row').last();
-            //if( appendEl.length > 0 ) {
-            //    console.log("form-nodes-holder found in ="+holderId);
-            //    //appendEl = $(parentEl).find('.form-nodes-holder');
-            //} else {
-            //    console.log("form-nodes-holder not found!!! in ="+holderId);
-            //    appendEl = $(parentEl).find('.row').parent();
-            //}
-            printF(appendEl,"idBreadcrumbsArr: appendEl found:");
-            console.log(appendEl);
-            //return $(parentEl).find('.row').last();
-
-            //appendEl.after(formNodeHtml);
-            //console.log("0 formNodeHtml="+formNodeHtml);
-            //formNodeHtml = "<br>"+formNodeHtml;
-            //console.log("1 formNodeHtml="+formNodeHtml);
-            //appendEl.append(formNodeHtml);
-            appendEl.after(formNodeHtml);
-            return appendEl;
-        }
-    }
-
-    printF(appendEl,"appendEl found:");
-    console.log(appendEl);
-    appendEl.append(formNodeHtml);
-    return appendEl;
-}
+////NOT USED
+//function calllogAppendFormNodes_Old( data ) {
+//    for( var index = 0; index < data.length; ++index ) {
+//        var idBreadcrumbsArr = data[index]['idBreadcrumbsArr'];
+//        var formNodeHtml = data[index]['formNodeHtml'];
+//        var formNodeId = data[index]['formNodeId'];
+//        calllogAppendElement(idBreadcrumbsArr,formNodeHtml,formNodeId);
+//    }
+//}
+////NOT USED
+////find the latest parent formnode holder element by breadcrumb ids
+//function calllogAppendElement_Old( idBreadcrumbsArr, formNodeHtml, formNodeId ) {
+//    var appendEl = $("#form-node-holder");
+//
+//    for( var index = 0; index < idBreadcrumbsArr.length; ++index ) {
+//        console.log(index+": idBreadcrumb="+idBreadcrumbsArr[index]);
+//        var holderId = "formnode-holder-"+idBreadcrumbsArr[index]+"-"+formNodeId;
+//        var parentEl = document.getElementById(holderId);
+//        if( parentEl ) {
+//            console.log("parent holderId found="+holderId);
+//            //printF(parentEl,"parent found");
+//            //appendEl = $(parentEl).find('.form-nodes-holder');
+//            appendEl = $(parentEl).find('.row').last();
+//            //if( appendEl.length > 0 ) {
+//            //    console.log("form-nodes-holder found in ="+holderId);
+//            //    //appendEl = $(parentEl).find('.form-nodes-holder');
+//            //} else {
+//            //    console.log("form-nodes-holder not found!!! in ="+holderId);
+//            //    appendEl = $(parentEl).find('.row').parent();
+//            //}
+//            printF(appendEl,"idBreadcrumbsArr: appendEl found:");
+//            console.log(appendEl);
+//            //return $(parentEl).find('.row').last();
+//
+//            //appendEl.after(formNodeHtml);
+//            //console.log("0 formNodeHtml="+formNodeHtml);
+//            //formNodeHtml = "<br>"+formNodeHtml;
+//            //console.log("1 formNodeHtml="+formNodeHtml);
+//            //appendEl.append(formNodeHtml);
+//            appendEl.after(formNodeHtml);
+//            return appendEl;
+//        }
+//    }
+//
+//    printF(appendEl,"appendEl found:");
+//    console.log(appendEl);
+//    appendEl.append(formNodeHtml);
+//    return appendEl;
+//}
 
 function treeSelectAdditionalJsActionRemove(comboboxEl,comboboxId) {
-    calllogTreeSelectRemove(comboboxEl,comboboxId)
+    console.log("treeSelectAdditionalJsActionRemove: comboboxId="+comboboxId);
+    //calllogTreeSelectRemove(comboboxEl,comboboxId);
+
+    calllogDisabledEnabledFormNode('disable',comboboxId);
+
+    //check all comboboxId sinblings: find if any '.formnode-holder' visible data-formnodeholderid > comboboxId
+    calllogHideAllSiblings(comboboxId);
+    //var formNodeEl = calllogGetFormNodeElement(comboboxId);
+    //if( !formNodeEl ) {
+    //    console.log("formNodeEl not found =" + formNodeEl);
+    //    return null;
+    //}
+    //var visibleFormNodeElements = formNodeEl.parent().find('.formnode-holder:visible');
+    //visibleFormNodeElements.each( function() {
+    //    var thisFormNodeId = $(this).data("formnodeholderid");
+    //    if( parseInt(thisFormNodeId) > parseInt(comboboxId) ) {
+    //        console.log("hide sibling thisFormNodeId=" + thisFormNodeId);
+    //        calllogDisabledEnabledFormNode('disable',thisFormNodeId);
+    //    }
+    //});
+
     return;
 }
-function calllogTreeSelectRemove(comboboxEl,comboboxId) {
-    //printF( comboboxEl, "0 combobox on remove:" );
-    var messageCategoryId = comboboxId;
-    //var messageCategoryId = comboboxEl.select2('val');
-    console.log("remove messageCategoryId="+messageCategoryId);
-    //var messageCategoryId = comboboxEl.val();
-    //console.log("01 remove messageCategoryId="+messageCategoryId);
-    calllogDisabledEnabledFormNode('disable',messageCategoryId);
 
-    //hide all siblings after this combobox
-    var allNextSiblings = comboboxEl.closest('.row').nextAll();
-    allNextSiblings.each( function(){
-
-        //if( $(this).hasClass('active-tree-node') ) {
-            //printF($(this), "sibling combobox on remove:");
-            var messageCategoryId = $(this).find(".ajax-combobox-messageCategory").select2('val');
-            console.log("sibling remove messageCategoryId=" + messageCategoryId);
-
-            //hide all '#formnode-holder-'+messageCategoryId with the messageCategoryId > this messageCategoryId
-            calllogHideAllSiblings(messageCategoryId);
-        //}
-
-    });
-}
-function calllogHideAllSiblings( messageCategoryId ) {
-    //hide all '#formnode-holder-'+messageCategoryId with the messageCategoryId > this messageCategoryId
-    $(".formnode-holder").each( function() {
-
-        var thisMessageCategoryId = $(this).data("formnodeholderid");
-
-        console.log("compare: " + thisMessageCategoryId + " ?= " + messageCategoryId);
-        if( parseInt(thisMessageCategoryId) > parseInt(messageCategoryId) ) {
-            console.log("hide sibling thisMessageCategoryId=" + thisMessageCategoryId);
-            calllogDisabledEnabledFormNode('disable',thisMessageCategoryId);
+function calllogHideAllSiblings( comboboxId ) {
+    var formNodeEl = calllogGetFormNodeElement(comboboxId);
+    if( !formNodeEl ) {
+        console.log("formNodeEl not found =" + formNodeEl);
+        return null;
+    }
+    var visibleFormNodeElements = formNodeEl.parent().find('.formnode-holder:visible');
+    visibleFormNodeElements.each( function() {
+        var thisFormNodeId = $(this).data("formnodeholderid");
+        if( parseInt(thisFormNodeId) > parseInt(comboboxId) ) {
+            console.log("hide sibling thisFormNodeId=" + thisFormNodeId);
+            calllogDisabledEnabledFormNode('disable',thisFormNodeId);
         }
-
     });
 }
+
+//function calllogTreeSelectRemove(comboboxEl,comboboxId) {
+//    //printF( comboboxEl, "0 combobox on remove:" );
+//    var messageCategoryId = comboboxId;
+//    //var messageCategoryId = comboboxEl.select2('val');
+//    console.log("remove messageCategoryId="+messageCategoryId);
+//    //var messageCategoryId = comboboxEl.val();
+//    //console.log("01 remove messageCategoryId="+messageCategoryId);
+//    calllogDisabledEnabledFormNode('disable',messageCategoryId);
+//
+//    //hide all siblings after this combobox
+//    var allNextSiblings = comboboxEl.closest('.row').nextAll();
+//    allNextSiblings.each( function(){
+//
+//        //if( $(this).hasClass('active-tree-node') ) {
+//            //printF($(this), "sibling combobox on remove:");
+//            var messageCategoryId = $(this).find(".ajax-combobox-messageCategory").select2('val');
+//            console.log("sibling remove messageCategoryId=" + messageCategoryId);
+//
+//            //hide all '#formnode-holder-'+messageCategoryId with the messageCategoryId > this messageCategoryId
+//            calllogHideAllSiblings(messageCategoryId);
+//        //}
+//
+//    });
+//}
+//function calllogHideAllSiblings( messageCategoryId ) {
+//    //hide all '#formnode-holder-'+messageCategoryId with the messageCategoryId > this messageCategoryId
+//    $(".formnode-holder").each( function() {
+//
+//        var thisMessageCategoryId = $(this).data("formnodeholderid");
+//
+//        console.log("compare: " + thisMessageCategoryId + " ?= " + messageCategoryId);
+//        if( parseInt(thisMessageCategoryId) > parseInt(messageCategoryId) ) {
+//            console.log("hide sibling thisMessageCategoryId=" + thisMessageCategoryId);
+//            calllogDisabledEnabledFormNode('disable',thisMessageCategoryId);
+//        }
+//
+//    });
+//}
 
 function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
 
@@ -1729,8 +1766,10 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
 
     if( !data ) {
         console.log("calllogDisabledEnabledFormNode: data is null");
-        return;
+        return null;
     }
+
+    var sectionFormNodeId = null;
 
     for( var index = 0; index < data.length; ++index ) {
 
@@ -1738,51 +1777,68 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
         //var parentFormNodeId = data[index]['parentFormNodeId'];
         var formNodeId = data[index]['formNodeId'];
         //var formNodeHtml = data[index]['formNodeHtml'];
+        var simpleFormNode = data[index]['simpleFormNode'];
 
-        calllogDisabledEnabledSingleFormNode(disableEnable,formNodeId);
-
-        //var nodeHolders = $('.formnode-holder-' + messageCategoryId);
-        ////var nodeHolders = $('*[data-formnodeholderid="'+messageCategoryId+'"]');
-        //if( disableEnable == 'disable' ) {
-        //    nodeHolders.addClass("formnode-holder-disabled");
-        //    nodeHolders.hide();
-        //    //siblings
-        //    nodeHolders.each(function(){
-        //        var siblings = $(this).find('.formnode-holder');
-        //        siblings.addClass("formnode-holder-disabled");
-        //        siblings.hide();
-        //    });
-        //} else {
-        //    nodeHolders.show();
-        //    nodeHolders.removeClass("formnode-holder-disabled");
-        //}
-
+        if( simpleFormNode ) {
+            calllogDisabledEnabledSingleFormNode(disableEnable, formNodeId);
+        } else {
+            sectionFormNodeId = formNodeId;
+        }
     }
+
+    //disable fieldNode Section if no simple fields are visible under this section
+    if( sectionFormNodeId ) {
+        var sectionFormNodeEl = calllogGetFormNodeElement(sectionFormNodeId);
+        if( !sectionFormNodeEl ) {
+            console.log("sectionFormNodeEl not found =" + sectionFormNodeEl);
+            return null;
+        }
+        var visibleSiblings = sectionFormNodeEl.find('.formnode-holder:visible');
+        console.log("visibleSiblings.length=" + visibleSiblings.length);
+        if( visibleSiblings.length == 0 ) {
+            console.log("remove section sectionFormNodeId=" + sectionFormNodeId);
+            calllogDisabledEnabledSingleFormNode(disableEnable, sectionFormNodeId);
+        }
+    }
+
 }
+
 function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
 
-    var formNodeElId = "formnode-holder-"+formNodeId;
-    var formNodetEl = document.getElementById(formNodeElId);
-
-    if( !formNodetEl ) {
-        return;
+    var formNodeEl = calllogGetFormNodeElement(formNodeId);
+    if( !formNodeEl ) {
+        return null;
     }
-
-    formNodetEl = $(formNodetEl);
 
     if( disableEnable == 'disable' ) {
-        formNodetEl.addClass("formnode-holder-disabled");
-        formNodetEl.hide();
+        printF(formNodeEl,"disable:");
+        formNodeEl.addClass("formnode-holder-disabled");
+        formNodeEl.hide();
         //siblings
-        formNodetEl.each(function(){
-            var siblings = $(this).find('.formnode-holder');
-            siblings.addClass("formnode-holder-disabled");
-            siblings.hide();
-        });
+        //formNodeEl.each(function(){
+        //    var siblings = $(this).find('.formnode-holder');
+        //    siblings.addClass("formnode-holder-disabled");
+        //    siblings.hide();
+        //});
     } else {
-        formNodetEl.show();
-        formNodetEl.removeClass("formnode-holder-disabled");
+        printF(formNodeEl,"enable:");
+        formNodeEl.show();
+        formNodeEl.removeClass("formnode-holder-disabled");
     }
+
+    return formNodeEl;
+}
+
+function calllogGetFormNodeElement( formNodeId ) {
+    var formNodeElId = "formnode-holder-"+formNodeId;
+    var formNodeEl = document.getElementById(formNodeElId);
+
+    if( !formNodeEl ) {
+        console.log("calllogGetFormNodeElement: formNodeEl not found ="+formNodeEl);
+        return null;
+    }
+
+    return $(formNodeEl);
 }
 
 //remove disabled formnode-holders
