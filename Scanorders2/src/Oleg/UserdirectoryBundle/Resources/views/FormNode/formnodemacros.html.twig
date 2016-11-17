@@ -1,4 +1,19 @@
 
+{#add a single form node#}
+{% macro addSingleFormNode( formNodeHolder, formNode, cycle, prototype ) %}
+
+    <div id="formnode-holder-{{ formNodeHolder.id }}-{{ formNode.id }}"
+         class="formnode-holder formnode-holder-{{ formNodeHolder.id }}-{{ formNode.id }}"
+         data-formnodeholderid="{{ formNodeHolder.id }}"
+         data-formnodeid="{{ formNode.id }}"
+    >
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype) }}
+    </div>
+
+{% endmacro %}
+
+
+{#this macro will render formnodes from top to bottom#}
 {% macro addFormNodes( formNodeHolder, formNode, cycle, prototype ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}

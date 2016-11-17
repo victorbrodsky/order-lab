@@ -1593,6 +1593,57 @@ function treeSelectAdditionalJsAction(comboboxEl) {
 
 function calllogAppendFormNodes( data ) {
     for( var index = 0; index < data.length; ++index ) {
+
+        var formNodeHolderId = data[index]['formNodeHolderId'];
+        var parentFormNodeId = data[index]['parentFormNodeId'];
+        var formNodeId = data[index]['formNodeId'];
+        var formNodeHtml = data[index]['formNodeHtml'];
+
+        calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml);
+    }
+}
+//find the latest parent formnode holder element by parentFormNodeId id
+function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, formNodeHtml ) {
+
+    console.log("calllogAppendElement:"+formNodeHolderId+" "+parentFormNodeId+""+formNodeId);
+    var appendEl = $("#form-node-holder");
+
+    var parentId = "formnode-holder-"+formNodeHolderId+"-"+parentFormNodeId;
+    var parentEl = document.getElementById(parentId);
+    if( parentEl ) {
+        console.log("parentId found="+parentId);
+        appendEl = $(parentEl).find('.form-nodes-holder').last();
+        //if( appendEl.length > 0 ) {
+        //    console.log("form-nodes-holder found in ="+holderId);
+        //    //appendEl = $(parentEl).find('.form-nodes-holder');
+        //} else {
+        //    console.log("form-nodes-holder not found!!! in ="+holderId);
+        //    appendEl = $(parentEl).find('.row').parent();
+        //}
+        printF(appendEl,"appendEl found:");
+        console.log(appendEl);
+        //return $(parentEl).find('.row').last();
+
+        //appendEl.after(formNodeHtml);
+        //console.log("0 formNodeHtml="+formNodeHtml);
+        //formNodeHtml = "<br>"+formNodeHtml;
+        //console.log("1 formNodeHtml="+formNodeHtml);
+
+        appendEl.append(formNodeHtml);
+        //appendEl.after(formNodeHtml);
+        return appendEl;
+    }
+
+    //regular append to the end of the global form
+    printF(appendEl,"appendEl global:");
+    console.log(appendEl);
+    appendEl.append(formNodeHtml);
+    return appendEl;
+}
+
+//NOT USED
+function calllogAppendFormNodes_Old( data ) {
+    for( var index = 0; index < data.length; ++index ) {
         var idBreadcrumbsArr = data[index]['idBreadcrumbsArr'];
         var formNodeHtml = data[index]['formNodeHtml'];
         var formNodeId = data[index]['formNodeId'];
@@ -1600,8 +1651,9 @@ function calllogAppendFormNodes( data ) {
     }
 }
 
+//NOT USED
 //find the latest parent formnode holder element by breadcrumb ids
-function calllogAppendElement( idBreadcrumbsArr, formNodeHtml, formNodeId ) {
+function calllogAppendElement_Old( idBreadcrumbsArr, formNodeHtml, formNodeId ) {
     var appendEl = $("#form-node-holder");
 
     for( var index = 0; index < idBreadcrumbsArr.length; ++index ) {
