@@ -73,7 +73,7 @@ class MessageCategory extends BaseCompositeNode {
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\FormNode")
      * @ORM\JoinTable(name="scan_messageCategory_formNode",
      *      joinColumns={@ORM\JoinColumn(name="messageCategory_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="formNode_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="formNode_id", referencedColumnName="id")}
      *      )
      **/
     private $formNodes;

@@ -1493,7 +1493,10 @@ function calllogEnableMessageCategoryService(holderId) {
 //    return;
 //}
 
+var _entityNamespace = "Oleg\\OrderformBundle\\Entity";
+var _entityName = "MessageCategory";
 var _formnode = [];
+
 function treeSelectAdditionalJsAction(comboboxEl) {
     printF( comboboxEl, "treeSelectAdditionalJsAction: combobox on change:" );
 
@@ -1513,10 +1516,10 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     //    return;
     //}
 
-    var entityNamespace = "Oleg\\OrderformBundle\\Entity";
-    var entityName = "MessageCategory";
+    //var entityNamespace = "Oleg\\OrderformBundle\\Entity";
+    //var entityName = "MessageCategory";
 
-    var identifier = entityName+"-"+messageCategoryId;
+    var identifier = _entityName+"-"+messageCategoryId;
 
     console.log("########## identifier="+identifier);
     console.log("_formnode[identifier]="+_formnode[identifier]);
@@ -1537,7 +1540,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         timeout: _ajaxTimeout,
         //type: "GET",
         async: false,   //asyncflag,
-        data: {entityNamespace: entityNamespace, entityName: entityName, entityId: messageCategoryId },
+        data: {entityNamespace: _entityNamespace, entityName: _entityName, entityId: messageCategoryId },
     }).success(function(data) {
         console.log("data length="+data.length);
         console.log(data);
@@ -1549,7 +1552,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
             calllogAppendFormNodes(data);
 
             console.log("ajax identifier="+identifier);
-            _formnode[identifier] = data[0]['formNodeHolderId'];
+            _formnode[identifier] = data;   //data[0]['formNodeHolderId'];
 
         } else {
             _formnode[identifier] = null;
@@ -1720,20 +1723,65 @@ function calllogHideAllSiblings( messageCategoryId ) {
 }
 
 function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
-    var nodeHolders = $('.formnode-holder-' + messageCategoryId);
-    //var nodeHolders = $('*[data-formnodeholderid="'+messageCategoryId+'"]');
+
+    var identifier = _entityName+"-"+messageCategoryId;
+    var data = _formnode[identifier];
+
+    if( !data ) {
+        console.log("calllogDisabledEnabledFormNode: data is null");
+        return;
+    }
+
+    for( var index = 0; index < data.length; ++index ) {
+
+        //var formNodeHolderId = data[index]['formNodeHolderId'];
+        //var parentFormNodeId = data[index]['parentFormNodeId'];
+        var formNodeId = data[index]['formNodeId'];
+        //var formNodeHtml = data[index]['formNodeHtml'];
+
+        calllogDisabledEnabledSingleFormNode(disableEnable,formNodeId);
+
+        //var nodeHolders = $('.formnode-holder-' + messageCategoryId);
+        ////var nodeHolders = $('*[data-formnodeholderid="'+messageCategoryId+'"]');
+        //if( disableEnable == 'disable' ) {
+        //    nodeHolders.addClass("formnode-holder-disabled");
+        //    nodeHolders.hide();
+        //    //siblings
+        //    nodeHolders.each(function(){
+        //        var siblings = $(this).find('.formnode-holder');
+        //        siblings.addClass("formnode-holder-disabled");
+        //        siblings.hide();
+        //    });
+        //} else {
+        //    nodeHolders.show();
+        //    nodeHolders.removeClass("formnode-holder-disabled");
+        //}
+
+    }
+}
+function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
+
+    var formNodeElId = "formnode-holder-"+formNodeId;
+    var formNodetEl = document.getElementById(formNodeElId);
+
+    if( !formNodetEl ) {
+        return;
+    }
+
+    formNodetEl = $(formNodetEl);
+
     if( disableEnable == 'disable' ) {
-        nodeHolders.addClass("formnode-holder-disabled");
-        nodeHolders.hide();
+        formNodetEl.addClass("formnode-holder-disabled");
+        formNodetEl.hide();
         //siblings
-        nodeHolders.each(function(){
+        formNodetEl.each(function(){
             var siblings = $(this).find('.formnode-holder');
             siblings.addClass("formnode-holder-disabled");
             siblings.hide();
         });
     } else {
-        nodeHolders.show();
-        nodeHolders.removeClass("formnode-holder-disabled");
+        formNodetEl.show();
+        formNodetEl.removeClass("formnode-holder-disabled");
     }
 }
 
