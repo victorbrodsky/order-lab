@@ -804,6 +804,87 @@ class FormNodeUtil
 
 
         //////////////////////////////////////////////////////
+        //Transfusion Medicine -> MTP [Message Category]
+        $messageCategoryName = "MTP";
+        //Laboratory Values [Form Section]
+        //INR: [Form Field - Free Text, Single Line]
+        //PT: [Form Field - Free Text, Single Line]
+        //PTT: [Form Field - Free Text, Single Line]
+        //Fibrinogen: [Form Field - Free Text, Single Line]
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory($messageCategoryName,array($INRString,$PTString,$PTTString,$FibrinogenString));
+
+        //////////////////////////////////////////////////////
+        //Transfusion Medicine -> Emergency release [Message Category]
+        $messageCategoryName = "Emergency release";
+        //Miscellaneous [Form Section]
+        //Blood Type of Unit: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Blood Type of Unit",
+            'placeholder' => "Blood Type of Unit",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $BloodTypeofUnitString = $this->createFormNode($formParams);
+        //Blood Type of Patient: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Blood Type of Patient",
+            'placeholder' => "Blood Type of Patient",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $BloodTypeofPatientString = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory($messageCategoryName,array($BloodTypeofUnitString,$BloodTypeofPatientString));
+
+        //////////////////////////////////////////////////////
+        //Transfusion Medicine -> Payson transfusion [Message Category]
+        //Transfusion Medicine -> Incompatible crossmatch [Message Category]
+        //Miscellaneous [Form Section]
+        //Blood Type of Unit: [Form Field - Free Text, Single Line]
+        //Blood Type of Patient: [Form Field - Free Text, Single Line]
+        //Antibodies: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Antibodies",
+            'placeholder' => "Antibodies",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $AntibodiesString = $this->createFormNode($formParams);
+        //Phenotype: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Phenotype",
+            'placeholder' => "Phenotype",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PhenotypeString = $this->createFormNode($formParams);
+        //Incompatibility: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Incompatibility",
+            'placeholder' => "Incompatibility",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $IncompatibilityString = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Payson transfusion",array($BloodTypeofUnitString,$BloodTypeofPatientString,$AntibodiesString,$PhenotypeString,$IncompatibilityString));
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Incompatible crossmatch",array($BloodTypeofUnitString,$BloodTypeofPatientString,$AntibodiesString,$PhenotypeString,$IncompatibilityString));
+
+
+        //////////////////////////////////////////////////////
+
 
     }
 

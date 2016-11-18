@@ -1498,11 +1498,11 @@ var _entityName = "MessageCategory";
 var _formnode = [];
 
 function treeSelectAdditionalJsAction(comboboxEl) {
-    printF( comboboxEl, "treeSelectAdditionalJsAction: combobox on change:" );
+    //printF( comboboxEl, "treeSelectAdditionalJsAction: combobox on change:" );
 
     var thisData = comboboxEl.select2('data');
     var messageCategoryId = thisData.id;
-    console.log("messageCategoryId="+messageCategoryId);
+    //console.log("treeSelectAdditionalJsAction: messageCategoryId="+messageCategoryId);
 
     if( typeof messageCategoryId === 'undefined' || !messageCategoryId ) {
         console.log("return: messageCategoryId doesnot exists: "+messageCategoryId);
@@ -1522,7 +1522,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     var identifier = _entityName+"-"+messageCategoryId;
 
     console.log("########## identifier="+identifier);
-    console.log("_formnode[identifier]="+_formnode[identifier]);
+    //console.log("_formnode[identifier]="+_formnode[identifier]);
 
     if( identifier in _formnode && _formnode[identifier] ) {
         console.log("return: identifier already exists: " + identifier);
@@ -1543,11 +1543,11 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         data: {entityNamespace: _entityNamespace, entityName: _entityName, entityId: messageCategoryId },
     }).success(function(data) {
         console.log("data length="+data.length);
-        console.log(data);
+        //console.log(data);
 
         if( data.length > 0 && data[0]['formNodeId'] ) { //make sure we have at least one formNode for formNode Holder
 
-            console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
+            //console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
 
             calllogAppendFormNodes(data);
 
@@ -1585,7 +1585,7 @@ function calllogAppendFormNodes( data ) {
 //find the latest parent formnode holder element by parentFormNodeId id
 function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, formNodeHtml ) {
 
-    console.log("calllogAppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId"+formNodeId);
+    console.log("calllogAppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId);
 
     //check if this element does not exist
     var formNodeElId = "formnode-holder-"+formNodeId;
@@ -1608,8 +1608,11 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
         //    appendEl = $(parentEl).find('.row').parent();
         //}
         printF(appendEl,"!!! appendEl found:");
-        console.log(appendEl);
+        //console.log(appendEl);
         //return $(parentEl).find('.row').last();
+
+        //if already exists, make sure that it is visible
+        calllogDisabledEnabledSingleFormNode('enable', parentFormNodeId);
 
         //appendEl.after(formNodeHtml);
         //console.log("0 formNodeHtml="+formNodeHtml);
@@ -1624,7 +1627,7 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
     //regular append to the end of the global form
     var appendEl = $("#form-node-holder");
     printF(appendEl,"!!! appendEl global:");
-    console.log(appendEl);
+    //console.log(appendEl);
     appendEl.append(formNodeHtml);
     return appendEl;
 }
@@ -1771,12 +1774,15 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
     for( var index = 0; index < data.length; ++index ) {
 
         //var formNodeHolderId = data[index]['formNodeHolderId'];
-        //var parentFormNodeId = data[index]['parentFormNodeId'];
+        var parentFormNodeId = data[index]['parentFormNodeId'];
         var formNodeId = data[index]['formNodeId'];
         //var formNodeHtml = data[index]['formNodeHtml'];
         var simpleFormNode = data[index]['simpleFormNode'];
 
         if( simpleFormNode ) {
+            if( parentFormNodeId && disableEnable == 'enable' ) {
+                calllogDisabledEnabledSingleFormNode(disableEnable, parentFormNodeId);
+            }
             calllogDisabledEnabledSingleFormNode(disableEnable, formNodeId);
         } else {
             sectionFormNodeId = formNodeId;
@@ -1784,7 +1790,7 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
     }
 
     //disable fieldNode Section if no simple fields are visible under this section
-    if( sectionFormNodeId ) {
+    if( sectionFormNodeId && disableEnable == 'disable' ) {
         var sectionFormNodeEl = calllogGetFormNodeElement(sectionFormNodeId);
         if( !sectionFormNodeEl ) {
             console.log("sectionFormNodeEl not found =" + sectionFormNodeEl);
@@ -1793,10 +1799,12 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
         var visibleSiblings = sectionFormNodeEl.find('.formnode-holder:visible');
         console.log("visibleSiblings.length=" + visibleSiblings.length);
         if( visibleSiblings.length == 0 ) {
-            console.log("remove section sectionFormNodeId=" + sectionFormNodeId);
+            console.log("disable section sectionFormNodeId=" + sectionFormNodeId);
             calllogDisabledEnabledSingleFormNode(disableEnable, sectionFormNodeId);
         }
     }
+
+    //enable parent
 
 }
 
@@ -1811,12 +1819,14 @@ function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
         printF(formNodeEl,"disable:");
         formNodeEl.addClass("formnode-holder-disabled");
         formNodeEl.hide();
+
         //siblings
         //formNodeEl.each(function(){
         //    var siblings = $(this).find('.formnode-holder');
         //    siblings.addClass("formnode-holder-disabled");
         //    siblings.hide();
         //});
+
     } else {
         printF(formNodeEl,"enable:");
         formNodeEl.show();
@@ -1828,14 +1838,19 @@ function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
 
 function calllogGetFormNodeElement( formNodeId ) {
     var formNodeElId = "formnode-holder-"+formNodeId;
-    var formNodeEl = document.getElementById(formNodeElId);
+    //var formNodeEl = document.getElementById(formNodeElId);
+    formNodeElId = "#"+formNodeElId;
+    //console.log("calllogGetFormNodeElement: find by formNodeId="+formNodeElId);
+    var formNodeEl = $(formNodeElId);
 
-    if( !formNodeEl ) {
-        console.log("calllogGetFormNodeElement: formNodeEl not found ="+formNodeEl);
+    if( formNodeEl.length ) {
+        return $(formNodeEl);
+    } else {
+        console.log("calllogGetFormNodeElement: formNodeEl not found by formNodeElId="+formNodeElId);
         return null;
     }
 
-    return $(formNodeEl);
+    return null;
 }
 
 //remove disabled formnode-holders
