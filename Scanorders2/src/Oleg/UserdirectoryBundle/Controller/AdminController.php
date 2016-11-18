@@ -7,6 +7,7 @@ use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
+use Oleg\UserdirectoryBundle\Entity\BloodProductTransfusedList;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\Collaboration;
@@ -35,6 +36,7 @@ use Oleg\UserdirectoryBundle\Entity\SiteList;
 use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Oleg\UserdirectoryBundle\Entity\TrainingTypeList;
+use Oleg\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
 use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -89,6 +91,9 @@ use Oleg\UserdirectoryBundle\Entity\RoleAttributeList;
 use Oleg\UserdirectoryBundle\Entity\LanguageList;
 use Symfony\Component\Intl\Locale\Locale;
 
+
+//Notes:
+//To turn off foreign key constraint globally: "SET GLOBAL FOREIGN_KEY_CHECKS=0;"
 
 /**
  * @Route("/admin")
@@ -271,6 +276,8 @@ class AdminController extends Controller
 
         $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
 
+        $count_BloodProductTransfused = $this->generateBloodProductTransfused();
+        $count_TransfusionReactionType = $this->generateTransfusionReactionType();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -340,6 +347,8 @@ class AdminController extends Controller
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
             'Administrator generation='.$adminRes.', '.
             'HealthcareProviderSpecialtiesList='.$count_HealthcareProviderSpecialtiesList.', '.
+            'BloodProductTransfused='.$count_BloodProductTransfused.', '.
+            'TransfusionReactionType='.$count_TransfusionReactionType.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -6033,5 +6042,83 @@ class AdminController extends Controller
         $formNodeUtil->generateFormNode();
 
         exit("Form Node Tree generated");
+    }
+
+    //Blood Product Transfused
+    public function generateBloodProductTransfused() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Red blood cells",
+            "Platelets",
+            "Plasma",
+            "Cryoprecipitate",
+            "Stem cells",
+            "Other"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:BloodProductTransfusedList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new BloodProductTransfusedList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    //Transfusion Reaction Type
+    public function generateTransfusionReactionType() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "FNHTR",
+            "Allergic",
+            "Underlying condition",
+            "No transfusion reaction",
+            "Anaphylactic",
+            "TACO",
+            "TRALI",
+            "Hemolytic",
+            "Delayed serologic",
+            "Hypotensive",
+            "Bacterial",
+            "Other",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionReactionTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TransfusionReactionTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
     }
 }

@@ -101,7 +101,8 @@ class ListController extends Controller
      * @Route("/list/object-types/", name="objecttypes-list")
      * @Route("/list/form-nodes/", name="formnodes-list", options={"expose"=true})
      * @Route("/list/object-type-texts/", name="objecttypetexts-list", options={"expose"=true})
-     *
+     * @Route("/list/blood-product-transfusions/", name="bloodproducttransfusions-list")
+     * @Route("/list/transfusion-reaction-types/", name="transfusionreactiontypes-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -353,6 +354,8 @@ class ListController extends Controller
      * @Route("/list/object-types/", name="objecttypes_create")
      * @Route("/list/form-nodes/", name="formnodes_create", options={"expose"=true})
      * @Route("/list/object-type-texts/", name="objecttypetexts_create", options={"expose"=true})
+     * @Route("/list/blood-product-transfusions/", name="bloodproducttransfusions_create")
+     * @Route("/list/transfusion-reaction-types/", name="transfusionreactiontypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -512,6 +515,8 @@ class ListController extends Controller
      * @Route("/list/object-types/new", name="objecttypes_new")
      * @Route("/list/form-nodes/new", name="formnodes_new", options={"expose"=true})
      * @Route("/list/object-type-texts/new", name="objecttypetexts_new", options={"expose"=true})
+     * @Route("/list/blood-product-transfusions/new", name="bloodproducttransfusions_new")
+     * @Route("/list/transfusion-reaction-types/new", name="transfusionreactiontypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -642,6 +647,8 @@ class ListController extends Controller
      * @Route("/list/object-types/{id}", name="objecttypes_show")
      * @Route("/list/form-nodes/{id}", name="formnodes_show", options={"expose"=true})
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_show", options={"expose"=true})
+     * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_show")
+     * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -762,6 +769,8 @@ class ListController extends Controller
      * @Route("/list/object-types/{id}/edit", name="objecttypes_edit")
      * @Route("/list/form-nodes/{id}/edit", name="formnodes_edit", options={"expose"=true})
      * @Route("/list/object-type-texts/{id}/edit", name="objecttypetexts_edit", options={"expose"=true})
+     * @Route("/list/blood-product-transfusions/{id}/edit", name="bloodproducttransfusions_edit")
+     * @Route("/list/transfusion-reaction-types/{id}/edit", name="transfusionreactiontypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -928,6 +937,8 @@ class ListController extends Controller
      * @Route("/list/object-types/{id}", name="objecttypes_update")
      * @Route("/list/form-nodes/{id}", name="formnodes_update", options={"expose"=true})
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_update", options={"expose"=true})
+     * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_update")
+     * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1547,6 +1558,14 @@ class ListController extends Controller
                 $className = "ObjectTypeText";
                 $displayName = "Object Type Texts";
                 break;
+            case "bloodproducttransfusions":
+                $className = "BloodProductTransfusedList";
+                $displayName = "Blood Product Transfused List";
+                break;
+            case "transfusionreactiontypes":
+                $className = "TransfusionReactionTypeList";
+                $displayName = "Transfusion Reaction Type";
+                break;
 
             default:
                 $className = null;
@@ -1675,7 +1694,8 @@ class ListController extends Controller
      * @Route("/list/object-types/{id}", name="objecttypes_delete")
      * @Route("/list/form-nodes/{id}", name="formnodes_delete", options={"expose"=true})
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_delete", options={"expose"=true})
-     *
+     * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_delete")
+     * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_delete")
      *
      * @Method("DELETE")
      */

@@ -598,6 +598,7 @@ class FormNodeUtil
         //$objectTypeFieldGroup = $this->getObjectTypeByName('Field Group');
         //$objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
         $objectTypeString = $this->getObjectTypeByName('Form Field - Free Text, Single Line');
+        $objectTypeDropdown = $this->getObjectTypeByName('Form Field - Dropdown Menu');
 
         $messageCategoryName = "Transfusion Medicine";
 
@@ -884,7 +885,34 @@ class FormNodeUtil
 
 
         //////////////////////////////////////////////////////
+        //Transfusion Medicine -> Transfusion reaction [Message Category]
+        //Miscellaneous [Form Section]
+        //Blood Product Transfused [Dropdown Menu Value List]
+        $objectTypeDropdown = $this->getObjectTypeByName('Form Field - Dropdown Menu'); //,'ObjectTypeBloodProductTransfused');
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Blood Product Transfused",
+            'placeholder' => "Blood Product Transfused",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $BloodProductTransfused = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($BloodProductTransfused));
 
+        //Transfusion Reaction Type [Dropdown Menu Value List]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Transfusion Reaction Type",
+            'placeholder' => "Transfusion Reaction Type",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $TransfusionReactionType = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($TransfusionReactionType));
 
     }
 

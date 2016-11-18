@@ -71,6 +71,22 @@ class FormNode extends BaseCompositeNode {
 //     */
 //    private $objectType;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showLabel;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $placeholder;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $visible;
+
+
     //textValue
     //TODO: choose the best way to link to the list holder:
     //1) "hard" link using FK to ObjectTypeText
@@ -86,23 +102,10 @@ class FormNode extends BaseCompositeNode {
      */
     private $objectTypeString;
 
-
-
-
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\ManyToOne(targetEntity="ObjectTypeDropdown", inversedBy="formNodes", cascade={"persist"})
      */
-    private $showLabel;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $placeholder;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $visible;
+    private $objectTypeDropdown;
 
 
 
@@ -162,6 +165,23 @@ class FormNode extends BaseCompositeNode {
     {
         $this->objectTypeString = $objectTypeString;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjectTypeDropdown()
+    {
+        return $this->objectTypeDropdown;
+    }
+
+    /**
+     * @param mixed $objectTypeDropdown
+     */
+    public function setObjectTypeDropdown($objectTypeDropdown)
+    {
+        $this->objectTypeDropdown = $objectTypeDropdown;
+    }
+
 
 
 
