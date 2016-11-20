@@ -233,6 +233,10 @@ security:
     #Note: first match is used, the later would be ignored
     access_control:
 
+       ############################## local system user init ##############################
+       - { path: ^/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
        - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
 
        ############################## common idle time out logic ##############################

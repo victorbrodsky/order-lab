@@ -238,11 +238,11 @@ class LocationType extends AbstractType
                 if( $title ) {
                     $institution = $title->getInstitution();
                     if( $institution ) {
-                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution,$mapper) . ":";
                     }
                 }
 				if( !$label ) {
-					$label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+					$label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null,$mapper) . ":";
 				}
 
                 $form->add('institution', 'employees_custom_selector', array(

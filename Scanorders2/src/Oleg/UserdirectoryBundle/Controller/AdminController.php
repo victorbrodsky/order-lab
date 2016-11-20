@@ -189,9 +189,16 @@ class AdminController extends Controller
 
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
 
-        $count_generateDefaultOrgGroupSiteParameters = $this->generateDefaultOrgGroupSiteParameters();
         $count_roles = $this->generateRoles();
         $count_employmentTypes = $this->generateEmploymentTypes();
+        $count_states = $this->generateStates();
+        //$count_countryList = $this->generateCountryList();
+        $count_languages = $this->generateLanguages();
+        $count_locales = $this->generateLocales();
+        $count_locationTypeList = $this->generateLocationTypeList();
+        $count_locprivacy = $this->generateLocationPrivacy();
+        $count_generateDefaultOrgGroupSiteParameters = $this->generateDefaultOrgGroupSiteParameters();
+
         $count_terminationTypes = $this->generateTerminationTypes();
         $count_eventTypeList = $this->generateEventTypeList();
         $count_usernameTypeList = $userutil->generateUsernameTypes($this->getDoctrine()->getManager(),$user);
@@ -204,14 +211,6 @@ class AdminController extends Controller
 
         $count_equipmentType = $this->generateEquipmentType();
         $count_equipment = $this->generateEquipment();
-
-        $count_states = $this->generateStates();
-        //$count_countryList = $this->generateCountryList();
-        $count_languages = $this->generateLanguages();
-        $count_locales = $this->generateLocales();
-
-        $count_locationTypeList = $this->generateLocationTypeList();
-        $count_locprivacy = $this->generateLocationPrivacy();
 
         $count_buildings = $this->generateBuildings();
         $count_locations = $this->generateLocations();
@@ -424,7 +423,9 @@ class AdminController extends Controller
         //$userutil = new UserUtil();
         //return $userutil->setDefaultList( $entity, $count, $user, $name );
         $userSecUtil = $this->get('user_security_utility');
-        return $userSecUtil->setDefaultList( $entity, $count, $user, $name );
+        $entity = $userSecUtil->setDefaultList( $entity, $count, $user, $name );
+        $entity->setType('default');
+        return $entity;
     }
 
    
@@ -1203,7 +1204,7 @@ class AdminController extends Controller
             "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
             "templateIdFellApp" => "1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48",
             "backupFileIdFellApp" => "19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo",
-            "folderIdFellAp" => "0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E",
+            "folderIdFellApp" => "0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E",
             "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",
             "deleteImportedAplicationsFellApp" => false,
             "deleteOldAplicationsFellApp" => false,
@@ -1215,7 +1216,7 @@ class AdminController extends Controller
             "libreOfficeConvertToPDFPathFellApp" => 'C:\Program Files (x86)\LibreOffice 5\program',
             "libreOfficeConvertToPDFFilenameFellApp" => "soffice",
             "libreOfficeConvertToPDFArgumentsdFellApp" => "--headless -convert-to pdf -outdir",
-            "pdftkLocationFellApp" => 'C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
+            "pdftkPathFellApp" => 'C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
             "pdftkFilenameFellApp" => "pdftk",
             "pdftkArgumentsFellApp" => "###inputFiles### cat output ###outputFile### dont_ask",
             "gsPathFellApp" => "C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin",

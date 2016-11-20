@@ -50,10 +50,12 @@ class AuthUtil {
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
         //echo "Local DB user =".$user."<br>";
+        //exit();
 
         if( $user ) {
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
+            //return $user;
 
             //check password
             $encoder = $this->sc->get('security.password_encoder');

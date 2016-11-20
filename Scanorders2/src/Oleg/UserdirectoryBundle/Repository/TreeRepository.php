@@ -539,16 +539,30 @@ class TreeRepository extends NestedTreeRepository {
 //            return $this->getLevelLabelsRegular($node,$mapper);
 //        }
 
+        if( !$mapper ) {
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "Institution",
+                'bundleName' => "UserdirectoryBundle",
+                'organizationalGroupType' => "OrganizationalGroupType"
+            );
+        }
+
         if( $mapper && array_key_exists('organizationalGroupType', $mapper) && $mapper['organizationalGroupType'] ) {
             return $this->getLevelLabelsInstitution($node,$mapper);
         } else {
             //$labelsStr = $this->getDefaultLevelLabel($mapper,0);
 
             //show objectType as label if exists
-            if( $node->getObjectType() ) {
+            if( $node && $node->getObjectType() ) {
                 $labelsStr = $node->getObjectType()."";
             } else {
-                $labelsStr = $this->getDefaultLevelLabel($mapper,$node->getLevel());
+                if( $node && $node->getLevel() ) {
+                    $nodeLevel = $node->getLevel();
+                } else {
+                    $nodeLevel = null;
+                }
+                $labelsStr = $this->getDefaultLevelLabel($mapper,$nodeLevel);
             }
             return $labelsStr;
         }

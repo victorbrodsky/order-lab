@@ -24,10 +24,10 @@ class ObjectTypeDropdown extends ListAbstract
     protected $original;
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="ObjectTypeDropdown")
-     */
-    private $formNodes;
+//    /**
+//     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="ObjectTypeDropdown")
+//     */
+//    private $formNodes;
 
 
     /**
