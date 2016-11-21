@@ -343,19 +343,19 @@ class FormNodeUtil
             $visible = true;
         }
 
-//        //classNamespace
-//        if( array_key_exists('classNamespace', $params) ) {
-//            $classNamespace = $params['classNamespace'];
-//        } else {
-//            $classNamespace = null;
-//        }
-//
-//        //className
-//        if( array_key_exists('className', $params) ) {
-//            $className = $params['className'];
-//        } else {
-//            $className = null;
-//        }
+        //classNamespace
+        if( array_key_exists('classNamespace', $params) ) {
+            $classNamespace = $params['classNamespace'];
+        } else {
+            $classNamespace = null;
+        }
+
+        //className
+        if( array_key_exists('className', $params) ) {
+            $className = $params['className'];
+        } else {
+            $className = null;
+        }
 
         //objectTypeList
 //        if( array_key_exists('objectTypeList', $params) ) {
@@ -416,10 +416,10 @@ class FormNodeUtil
                 $parent->addChild($node);
             }
 
-//            if( $classNamespace && $className ) {
-//                $node->setEntityNamespace($classNamespace);
-//                $node->setEntityName($className);
-//            }
+            if( $classNamespace && $className ) {
+                $node->setEntityNamespace($classNamespace);
+                $node->setEntityName($className);
+            }
 
             echo "Created: ".$node->getName()."<br>";
             $em->persist($parent);
@@ -451,21 +451,21 @@ class FormNodeUtil
                 }
             }
 
-//            if( $classNamespace && $className ) {
-//                if( !$node->getEntityNamespace() ) {
-//                    $node->setEntityNamespace($classNamespace);
-//                    $updated = true;
-//                }
-//                if( !$node->getEntityName() ) {
-//                    $node->setEntityName($className);
-//                    $updated = true;
-//                }
-//                if( $updated ) {
-//                    echo "update $classNamespace and $className <br>";
-//                    $em->persist($node);
-//                    $em->flush($node);
-//                }
-//            }
+            if( $classNamespace && $className ) {
+                //if( !$node->getEntityNamespace() ) {
+                    $node->setEntityNamespace($classNamespace);
+                    $updated = true;
+                //}
+                //if( !$node->getEntityName() ) {
+                    $node->setEntityName($className);
+                    $updated = true;
+                //}
+                if( $updated ) {
+                    echo "update $classNamespace and $className <br>";
+                    $em->persist($node);
+                    $em->flush($node);
+                }
+            }
 
             if( $updated ) {
                 echo "update node=".$node." <br>";
@@ -979,11 +979,13 @@ class FormNodeUtil
             'placeholder' => "Transfusion Reaction Type",
             'objectType' => $objectTypeDropdown,
             'showLabel' => true,
-            'visible' => true
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionReactionTypeList"
         );
-        //$TransfusionReactionType = $this->createFormNode($formParams);
+        $TransfusionReactionType = $this->createFormNode($formParams);
         //attach this formnodes to the MessageCategory
-        //$this->setFormNodeToMessageCategory("Transfusion reaction",array($TransfusionReactionType));
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($TransfusionReactionType));
 
     }
 
@@ -1013,7 +1015,6 @@ class FormNodeUtil
 
     public function getDropdownValue( $formNode ) {
         $em = $this->em;
-        //$resArr = array("2"=>"test1","3"=>"test2");
         $output = array();
 
         $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
