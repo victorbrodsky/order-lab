@@ -107,6 +107,11 @@ class FormNode extends BaseCompositeNode {
      */
     private $objectTypeDropdown;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="ObjectTypeDateTime", inversedBy="formNodes", cascade={"persist"})
+     */
+    private $objectTypeDateTime;
+
 
 
 
@@ -180,6 +185,22 @@ class FormNode extends BaseCompositeNode {
     public function setObjectTypeDropdown($objectTypeDropdown)
     {
         $this->objectTypeDropdown = $objectTypeDropdown;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjectTypeDateTime()
+    {
+        return $this->objectTypeDateTime;
+    }
+
+    /**
+     * @param mixed $objectTypeDateTime
+     */
+    public function setObjectTypeDateTime($objectTypeDateTime)
+    {
+        $this->objectTypeDateTime = $objectTypeDateTime;
     }
 
 

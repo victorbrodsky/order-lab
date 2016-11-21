@@ -669,6 +669,8 @@ class FormNodeUtil
         $objectTypeString = $this->getObjectTypeByName('Form Field - Free Text, Single Line');
         $objectTypeDropdown = $this->getObjectTypeByName('Form Field - Dropdown Menu');
         $objectTypeDropdownValue = $this->getObjectTypeByName('Dropdown Menu Value');
+        $objectTypeDate = $this->getObjectTypeByName('Form Field - Date');
+        $objectTypeFullDate = $this->getObjectTypeByName('Form Field - Full Date');
 
         $messageCategoryName = "Transfusion Medicine";
 
@@ -1226,48 +1228,229 @@ class FormNodeUtil
         //attach this formnodes to the MessageCategory
         $this->setFormNodeToMessageCategory("Transfusion reaction",array($BloodtypeofunitPostTransfusionSpecimenDropdowm));
 
-        //
         //    Pre-transfusion antibody screen: [Form Field - Dropdown Menu]
         //        Transfusion antibody screen results [Dropdown Menu Value List]
         //            Positive [Dropdown Menu Value]
         //            Negative [Dropdown Menu Value]
-        //
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Pre-transfusion antibody screen",
+            'placeholder' => "Pre-transfusion antibody screen",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionAntibodyScreenResultsList"
+        );
+        $PretransfusionAntibodyScreenDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($PretransfusionAntibodyScreenDropdowm));
+
         //    Post-transfusion antibody screen: [Form Field - Dropdown Menu]
-        //        Transfusion antibody screen results [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
-        //            Positive [Dropdown Menu Value]
-        //            Negative [Dropdown Menu Value]
-        //
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Post-transfusion antibody screen",
+            'placeholder' => "Post-transfusion antibody screen",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionAntibodyScreenResultsList"
+        );
+        $PosttransfusionAntibodyScreenDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($PosttransfusionAntibodyScreenDropdowm));
+
         //    Pre-transfusion DAT: [Form Field - Dropdown Menu]
         //        Transfusion DAT results [Dropdown Menu Value List]
         //            Positive [Dropdown Menu Value]
         //            Negative [Dropdown Menu Value]
-        //
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Pre-transfusion DAT",
+            'placeholder' => "Pre-transfusion DAT",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionDATResultsList"
+        );
+        $TransfusionDATDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($TransfusionDATDropdowm));
+
         //    Post-transfusion DAT: [Form Field - Dropdown Menu]
-        //        Transfusion DAT results [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
-        //            Positive [Dropdown Menu Value]
-        //            Negative [Dropdown Menu Value]
-        //
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Post-transfusion DAT",
+            'placeholder' => "Post-transfusion DAT",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionDATResultsList"
+        );
+        $PostTransfusionDATDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($PostTransfusionDATDropdowm));
+
         //    Pre-transfusion crossmatch: [Form Field - Dropdown Menu]
-        //        Transfusion crossmatch results [Dropdown Menu Value List]
-        //            Compatible [Dropdown Menu Value]
-        //            Incompatible [Dropdown Menu Value]
-        //
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Pre-transfusion crossmatch",
+            'placeholder' => "Pre-transfusion crossmatch",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionCrossmatchResultsList"
+        );
+        $PreTransfusionCrossmatchDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($PreTransfusionCrossmatchDropdowm));
+
         //    Post-transfusion crossmatch: [Form Field - Dropdown Menu]
-        //        Transfusion crossmatch results [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
-        //            Compatible [Dropdown Menu Value]
-        //            Incompatible [Dropdown Menu Value]
-        //
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Post-transfusion crossmatch",
+            'placeholder' => "Post-transfusion crossmatch",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionCrossmatchResultsList"
+        );
+        $PostTransfusionCrossmatchDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($PostTransfusionCrossmatchDropdowm));
+
         //    Pre-transfusion hemolysis check: [Form Field - Dropdown Menu]
         //        Transfusion hemolysis check results [Dropdown Menu Value List]
         //            Hemolysis [Dropdown Menu Value]
         //            No hemolysis [Dropdown Menu Value]
-        //
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Pre-transfusion hemolysis check",
+            'placeholder' => "Pre-transfusion hemolysis check",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionHemolysisCheckResultsList"
+        );
+        $PreTransfusionHemolysisCheckDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($PreTransfusionHemolysisCheckDropdowm));
+
         //    Post-transfusion hemolysis check: [Form Field - Dropdown Menu]
         //        Transfusion hemolysis check results [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
         //            Hemolysis [Dropdown Menu Value]
         //            No hemolysis [Dropdown Menu Value]
-        //
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Post-transfusion hemolysis check",
+            'placeholder' => "Post-transfusion hemolysis check",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionHemolysisCheckResultsList"
+        );
+        $PostTransfusionHemolysisCheckDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($PostTransfusionHemolysisCheckDropdowm));
+
         //    Microbiology: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Microbiology",
+            'placeholder' => "Microbiology",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $Microbiology = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($Microbiology));
+
+
+        //Transfusion Medicine -> Complex platelet summary [Message Category]
+        //Laboratory Values [Form Section]
+        //    HLA A: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "HLA A",
+            'placeholder' => "HLA A",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+        //    HLA B: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "HLA B",
+            'placeholder' => "HLA B",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+        //    Rogosin PRA: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Rogosin PRA",
+            'placeholder' => "Rogosin PRA",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+        //    Rogosin date: [Form Field - Full Date]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Rogosin date",
+            'placeholder' => "Rogosin date",
+            'objectType' => $objectTypeFullDate,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+        //    Antibodies [Form Field - Dropdown Menu]
+        //        Complex platelet summary antibodies [Dropdown Menu Value List]
+        //            HLA [Dropdown Menu Value]
+        //            HPA [Dropdown Menu Value]
+        //            None [Dropdown Menu Value]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Antibodies",
+            'placeholder' => "Antibodies",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "ComplexPlateletSummaryAntibodiesList"
+        );
+        $PostTransfusionHemolysisCheckDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($PostTransfusionHemolysisCheckDropdowm));
+
+        //    NYBC date: [Form Field - Full Date]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "NYBC date",
+            'placeholder' => "NYBC date",
+            'objectType' => $objectTypeFullDate,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
 
 
     }

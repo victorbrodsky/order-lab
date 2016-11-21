@@ -1581,8 +1581,12 @@ function calllogAppendFormNodes( data ) {
 
         calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml);
 
-        if( data[index]['formNodeObjectType'] ) {
+        if( data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu" ) {
             regularCombobox($('#formnode-holder-'+formNodeId));
+        }
+
+        if( data[index]['formNodeObjectType'] == "Form Field - Date" ) {
+            initDatepicker($('#formnode-holder-'+formNodeId));
         }
     }
 }

@@ -119,6 +119,10 @@
             {{ formnodemacros.dropdownForm(formNodeHolder,formNode,cycle,prototype) }}
         {% endif %}
 
+        {% if formType == "Form Field - Date" %}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,cycle,prototype) }}
+        {% endif %}
+
     {% else %}
         {#<br>#}
     {% endif %}
@@ -302,3 +306,34 @@
 
 {% endmacro %}
 
+
+{% macro dateForm( formNodeHolder, formNode, cycle, prototype ) %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.dateField(formNodeHolder, formNode, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro dateField( formNodeHolder, formNode, cycle, prototype ) %}
+    {% set fieldname = "formnode-"~formNode.id %}
+    <div class="input-group input-group-reg date regular-datepicker">
+        <input
+                type="text"
+                id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
+                name="{{ fieldname }}"
+                class="datepicker form-control"
+        >
+        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+    </div>
+{% endmacro %}

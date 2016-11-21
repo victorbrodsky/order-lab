@@ -14,6 +14,7 @@ use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\Collaboration;
 use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
+use Oleg\UserdirectoryBundle\Entity\ComplexPlateletSummaryAntibodiesList;
 use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
@@ -37,6 +38,10 @@ use Oleg\UserdirectoryBundle\Entity\SiteList;
 use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Oleg\UserdirectoryBundle\Entity\TrainingTypeList;
+use Oleg\UserdirectoryBundle\Entity\TransfusionAntibodyScreenResultsList;
+use Oleg\UserdirectoryBundle\Entity\TransfusionCrossmatchResultsList;
+use Oleg\UserdirectoryBundle\Entity\TransfusionDATResultsList;
+use Oleg\UserdirectoryBundle\Entity\TransfusionHemolysisCheckResultsList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
 use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -279,6 +284,11 @@ class AdminController extends Controller
         $count_BloodProductTransfused = $this->generateBloodProductTransfused();
         $count_TransfusionReactionType = $this->generateTransfusionReactionType();
         $count_BloodTypeList = $this->generateBloodTypeList();
+        $count_TransfusionAntibodyScreenResultsList = $this->generateTransfusionAntibodyScreenResultsList();
+        $count_TransfusionDATResultsList = $this->generateTransfusionDATResultsList();
+        $count_TransfusionCrossmatchResultsList = $this->generateTransfusionCrossmatchResultsList();
+        $count_TransfusionHemolysisCheckResultsList = $this->generateTransfusionHemolysisCheckResultsList();
+        $count_ComplexPlateletSummaryAntibodiesList = $this->generateComplexPlateletSummaryAntibodiesList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -351,6 +361,11 @@ class AdminController extends Controller
             'BloodProductTransfused='.$count_BloodProductTransfused.', '.
             'TransfusionReactionType='.$count_TransfusionReactionType.', '.
             'BloodTypeList='.$count_BloodTypeList.', '.
+            'TransfusionAntibodyScreenResultsList='.$count_TransfusionAntibodyScreenResultsList.', '.
+            'TransfusionDATResultsList='.$count_TransfusionDATResultsList.', '.
+            'TransfusionCrossmatchResultsList='.$count_TransfusionCrossmatchResultsList.', '.
+            'TransfusionHemolysisCheckResultsList='.$count_TransfusionHemolysisCheckResultsList.', '.
+            'ComplexPlateletSummaryAntibodiesList='.$count_ComplexPlateletSummaryAntibodiesList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -5102,7 +5117,12 @@ class AdminController extends Controller
             "Form Field - Full Date and Time",
             "Form Field - Year",
             "Form Field - Month",
-            "Form Field - Date",
+            //"Form Field - Date",
+            array(
+                'name' => "Form Field - Date",
+                'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'entityName' => 'ObjectTypeDateTime'
+            ),
             "Form Field - Day of the Week",
             //"Form Field - Dropdown Menu",
             array(
@@ -6178,6 +6198,162 @@ class AdminController extends Controller
             }
 
             $listEntity = new BloodTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransfusionAntibodyScreenResultsList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Positive",
+            "Negative",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionAntibodyScreenResultsList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TransfusionAntibodyScreenResultsList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransfusionDATResultsList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Positive",
+            "Negative",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionDATResultsList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TransfusionDATResultsList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransfusionCrossmatchResultsList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Compatible",
+            "Incompatible",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionCrossmatchResultsList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TransfusionCrossmatchResultsList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransfusionHemolysisCheckResultsList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Hemolysis",
+            "No hemolysis",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionHemolysisCheckResultsList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TransfusionHemolysisCheckResultsList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateComplexPlateletSummaryAntibodiesList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "HLA",
+            "HPA",
+            "None"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:ComplexPlateletSummaryAntibodiesList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new ComplexPlateletSummaryAntibodiesList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
