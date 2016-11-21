@@ -428,9 +428,9 @@ class FormNodeUtil
                 $node->setEntityName($className);
             }
 
-            if( $classObject ) {
-                $node->setObject($classObject);
-            }
+            //if( $classObject ) {
+                //$node->setObject($classObject);
+            //}
 
             echo "Created: ".$node->getName()."<br>";
             $em->persist($parent);
