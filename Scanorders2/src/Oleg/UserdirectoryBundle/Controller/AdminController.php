@@ -9,6 +9,8 @@ use Oleg\FellAppBundle\Entity\LanguageProficiency;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\BloodProductTransfusedList;
 use Oleg\UserdirectoryBundle\Entity\BloodTypeList;
+use Oleg\UserdirectoryBundle\Entity\CCIPlateletTypeTransfusedList;
+use Oleg\UserdirectoryBundle\Entity\CCIUnitPlateletCountDefaultValueList;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\Collaboration;
@@ -289,6 +291,8 @@ class AdminController extends Controller
         $count_TransfusionCrossmatchResultsList = $this->generateTransfusionCrossmatchResultsList();
         $count_TransfusionHemolysisCheckResultsList = $this->generateTransfusionHemolysisCheckResultsList();
         $count_ComplexPlateletSummaryAntibodiesList = $this->generateComplexPlateletSummaryAntibodiesList();
+        $count_CCIUnitPlateletCountDefaultValueList = $this->generateCCIUnitPlateletCountDefaultValueList();
+        $count_CCIPlateletTypeTransfusedList = $this->generateCCIPlateletTypeTransfusedList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -366,6 +370,8 @@ class AdminController extends Controller
             'TransfusionCrossmatchResultsList='.$count_TransfusionCrossmatchResultsList.', '.
             'TransfusionHemolysisCheckResultsList='.$count_TransfusionHemolysisCheckResultsList.', '.
             'ComplexPlateletSummaryAntibodiesList='.$count_ComplexPlateletSummaryAntibodiesList.', '.
+            'CCIUnitPlateletCountDefaultValueList='.$count_CCIUnitPlateletCountDefaultValueList.', '.
+            'CCIPlateletTypeTransfusedList='.$count_CCIPlateletTypeTransfusedList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -6365,5 +6371,70 @@ class AdminController extends Controller
 
         return round($count/10);
     }
+
+
+    public function generateCCIUnitPlateletCountDefaultValueList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "3",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new CCIUnitPlateletCountDefaultValueList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateCCIPlateletTypeTransfusedList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Regular Platelets",
+            "Crossmatched",
+            "HLA matched",
+            "ABO matched",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:CCIPlateletTypeTransfusedList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new CCIPlateletTypeTransfusedList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
 
 }

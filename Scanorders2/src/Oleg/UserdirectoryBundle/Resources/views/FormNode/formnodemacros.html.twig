@@ -255,11 +255,17 @@
 {% endmacro %}
 {% macro stringField( formNodeHolder, formNode, cycle, prototype ) %}
     {% set fieldname = "formnode-"~formNode.id %}
+    {% if formNode.value %}
+        {% set fieldValue = formNode.value %}
+    {% else %}
+        {% set fieldValue = user_formnode_utility.getDefaultValue(formNode) %}
+    {% endif %}
     <input
         id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
         name="{{ fieldname }}"
         class="form-control"
-        {#value="{{ formNode.value }}"#}
+        value="{{ fieldValue }}"
+        placeholder="{{ formNode.placeholder }}"
     >
     </input>
 {% endmacro %}

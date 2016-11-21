@@ -357,6 +357,13 @@ class FormNodeUtil
             $className = null;
         }
 
+        //classObject
+        if( array_key_exists('classObject', $params) ) {
+            $classObject = $params['classObject'];
+        } else {
+            $classObject = null;
+        }
+
         //objectTypeList
 //        if( array_key_exists('objectTypeList', $params) ) {
 //            $objectTypeList = $params['objectTypeList'];
@@ -419,6 +426,10 @@ class FormNodeUtil
             if( $classNamespace && $className ) {
                 $node->setEntityNamespace($classNamespace);
                 $node->setEntityName($className);
+            }
+
+            if( $classObject ) {
+                $node->setObject($classObject);
             }
 
             echo "Created: ".$node->getName()."<br>";
@@ -671,6 +682,7 @@ class FormNodeUtil
         $objectTypeDropdownValue = $this->getObjectTypeByName('Dropdown Menu Value');
         $objectTypeDate = $this->getObjectTypeByName('Form Field - Date');
         $objectTypeFullDate = $this->getObjectTypeByName('Form Field - Full Date');
+        $objectTypeFullDateTime = $this->getObjectTypeByName('Form Field - Full Date and Time');
 
         $messageCategoryName = "Transfusion Medicine";
 
@@ -1453,6 +1465,123 @@ class FormNodeUtil
         $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
 
 
+        //        CCI (Corrected Count Increment) Calculations: [Form Section]
+        $formParams = array(
+            'parent' => $transfusionMedicine,
+            'name' => "CCI (Corrected Count Increment) Calculations",
+            'placeholder' => "",
+            'objectType' => $objectTypeSection,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $CCISection = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($CCISection));
+
+        //    BSA: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $CCISection,
+            'name' => "BSA",
+            'placeholder' => "BSA",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+        //    Unit Platelet Count [Form Field - Free Text, Single Line] : USE "Link To List ID" to link to a new list titled "CCI Unit Platelet Count Default Value" with one list item with "3" in the name column, load "3" via this link into this field on load. This mechanism will allow multiple possible default values for a given field depending on rules (once rules are implemented, until then your logic should grab the first value on the list).
+        //        CCI Unit Platelet Count Default Value [Free Text Field Default Value List]
+        //            3 [Free Text Field Default Value]
+        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("OlegUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->
+                                                findOneByName("3");
+        $formParams = array(
+            'parent' => $CCISection,
+            'name' => "Unit Platelet Count",
+            'placeholder' => "Unit Platelet Count",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true,
+            'classObject' => $CCIUnitPlateletCountDefaultValueList
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+        //CCI (Corrected Count Increment) Instance: [Form Section] NESTED IN "CCI (Corrected Count Increment) Calculations: [Form Section]"
+        $formParams = array(
+            'parent' => $CCISection,
+            'name' => "CCI (Corrected Count Increment) Instance",
+            'placeholder' => "",
+            'objectType' => $objectTypeSection,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $CCIInstanceSection = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($CCIInstanceSection));
+        //    CCI date: [Form Field - Full Date and Time]
+        $formParams = array(
+            'parent' => $CCIInstanceSection,
+            'name' => "CCI date",
+            'placeholder' => "CCI date",
+            'objectType' => $objectTypeFullDateTime,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+        //    CCI Platelet Type Transfused [Form Field - Dropdown Menu]
+        //        CCI Platelet Type Transfused [Dropdown Menu Value List]
+        //            Regular Platelets [Dropdown Menu Value]
+        //            Crossmatched [Dropdown Menu Value]
+        //            HLA matched [Dropdown Menu Value]
+        //            ABO matched [Dropdown Menu Value]
+        $formParams = array(
+            'parent' => $CCIInstanceSection,
+            'name' => "CCI Platelet Type Transfused",
+            'placeholder' => "CCI Platelet Type Transfused",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "CCIPlateletTypeTransfusedList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+        //    Pre Platelet Count 1: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $CCIInstanceSection,
+            'name' => "Pre Platelet Count 1",
+            'placeholder' => "Pre Platelet Count 1",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+        //    Post Platelet Count 2: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $CCIInstanceSection,
+            'name' => "Post Platelet Count 2",
+            'placeholder' => "Post Platelet Count 2",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+        //    CCI: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $CCIInstanceSection,
+            'name' => "CCI",
+            'placeholder' => "CCI",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
     }
 
 
@@ -1520,6 +1649,25 @@ class FormNodeUtil
         }
 
         return $resArr;
+    }
+
+    public function getDefaultValue( $formNode ) {
+        $em = $this->em;
+        $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
+        $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
+        $entityId = $formNode->getEntityId();
+
+        if( $entityId ) {
+            $entityNamespaceArr = explode("\\", $entityNamespace);
+            $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
+            $defaultValueEntity = $em->getRepository($bundleName.':'.$entityName)->find($entityId);
+
+            if( $defaultValueEntity ) {
+                return $defaultValueEntity->getName() . "";
+            }
+        }
+
+        return null;
     }
 
 }
