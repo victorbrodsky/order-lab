@@ -115,6 +115,10 @@
             {{ formnodemacros.stringForm(formNodeHolder,formNode,cycle,prototype) }}
         {% endif %}
 
+        {% if formType == "Form Field - Dropdown Menu" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,cycle,prototype) }}
+        {% endif %}
+
     {% else %}
         {#<br>#}
     {% endif %}
@@ -255,3 +259,45 @@
     >
     </input>
 {% endmacro %}
+
+
+{% macro dropdownForm( formNodeHolder, formNode, cycle, prototype ) %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.dropdownField(formNodeHolder, formNode, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.dropdownField(formNodeHolder, formNode, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro dropdownField( formNodeHolder, formNode, cycle, prototype ) %}
+    {% set fieldname = "formnode-"~formNode.id %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    {#dropdownValues={{ dropdownValues|length }}#}
+
+    <select
+            id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
+            name="{{ fieldname }}"
+            class="combobox"
+    >
+        {#<option value="AL">Alabama</option>#}
+        {% for dropdownValue in dropdownValues %}
+            {###########dropdownValue.text:{{ dropdownValue.text }}#}
+            <option value="{{ dropdownValue.id }}">{{ dropdownValue.text }}</option>
+        {% endfor %}
+    </select>
+
+{% endmacro %}
+

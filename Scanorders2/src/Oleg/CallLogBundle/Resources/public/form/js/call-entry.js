@@ -1580,6 +1580,10 @@ function calllogAppendFormNodes( data ) {
         var formNodeHtml = data[index]['formNodeHtml'];
 
         calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml);
+
+        if( data[index]['formNodeObjectType'] ) {
+            regularCombobox($('#formnode-holder-'+formNodeId));
+        }
     }
 }
 //find the latest parent formnode holder element by parentFormNodeId id

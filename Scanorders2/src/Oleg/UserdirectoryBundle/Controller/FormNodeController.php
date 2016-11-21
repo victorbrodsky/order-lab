@@ -102,13 +102,14 @@ class FormNodeController extends Controller {
                 'parentFormNodeId' => $parentFormNodeId,
                 'formNodeId' => $formNodeId,
                 'formNodeHtml' => $template,
-                'simpleFormNode' => true
+                'simpleFormNode' => true,
+                'formNodeObjectType' => $formNode->getObjectType().""
                 //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
                 //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
             );
 
             $resArr[] = $res;
-        }
+        }//foreach
 
         //print_r($resArr);
 

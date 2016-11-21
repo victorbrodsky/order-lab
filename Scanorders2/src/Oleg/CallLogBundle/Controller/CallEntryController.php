@@ -138,6 +138,11 @@ class CallEntryController extends Controller
         //testing
         //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
         //$calllogUtil->checkNextEncounterGeneratedId();
+        //testing
+        //$userFormNodeUtil = $this->get('user_formnode_utility');
+        //$formNodeTest = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("Blood Product Transfused");
+        //$values = $userFormNodeUtil->getDropdownValue($formNodeTest);
+        //print_r($values);
         //exit('1');
 
         //create a new spot and add it to the encounter's tracker

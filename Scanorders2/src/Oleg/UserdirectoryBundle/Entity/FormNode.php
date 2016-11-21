@@ -102,10 +102,10 @@ class FormNode extends BaseCompositeNode {
      */
     private $objectTypeString;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="ObjectTypeDropdown", inversedBy="formNodes", cascade={"persist"})
-//     */
-//    private $objectTypeDropdown;
+    /**
+     * @ORM\ManyToOne(targetEntity="ObjectTypeDropdown", inversedBy="formNodes", cascade={"persist"})
+     */
+    private $objectTypeDropdown;
 
 
 

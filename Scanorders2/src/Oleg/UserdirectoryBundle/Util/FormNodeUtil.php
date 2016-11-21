@@ -1,5 +1,7 @@
 <?php
 namespace Oleg\UserdirectoryBundle\Util;
+
+use Symfony\Component\HttpFoundation\Response;
 use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\ObjectTypeText;
 
@@ -328,6 +330,20 @@ class FormNodeUtil
             $visible = true;
         }
 
+        //classNamespace
+        if( array_key_exists('classNamespace', $params) ) {
+            $classNamespace = $params['classNamespace'];
+        } else {
+            $classNamespace = null;
+        }
+
+        //className
+        if( array_key_exists('className', $params) ) {
+            $className = $params['className'];
+        } else {
+            $className = null;
+        }
+
         //objectTypeList
 //        if( array_key_exists('objectTypeList', $params) ) {
 //            $objectTypeList = $params['objectTypeList'];
@@ -386,6 +402,11 @@ class FormNodeUtil
                 $parent->addChild($node);
             }
 
+            if( $classNamespace && $className ) {
+                $node->setEntityNamespace($classNamespace);
+                $node->setEntityName($className);
+            }
+
             echo "Created: ".$node->getName()."<br>";
             $em->persist($parent);
             $em->persist($node);
@@ -401,6 +422,23 @@ class FormNodeUtil
                     $em->persist($node);
                     $em->flush();
                     echo "objectType=".$node->getObjectType()."<br>";
+                }
+            }
+
+            if( $classNamespace && $className ) {
+                echo "update classNamespace and className <br>";
+                $updated = false;
+                if( !$node->getEntityNamespace() ) {
+                    $node->setEntityNamespace($classNamespace);
+                    $updated = true;
+                }
+                if( !$node->getEntityName() ) {
+                    $node->setEntityName($className);
+                    $updated = true;
+                }
+                if( $updated ) {
+                    $em->persist($node);
+                    $em->flush();
                 }
             }
 
@@ -895,7 +933,9 @@ class FormNodeUtil
             'placeholder' => "Blood Product Transfused",
             'objectType' => $objectTypeDropdown,
             'showLabel' => true,
-            'visible' => true
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodProductTransfusedList"
         );
         $BloodProductTransfused = $this->createFormNode($formParams);
         //attach this formnodes to the MessageCategory
@@ -910,9 +950,9 @@ class FormNodeUtil
             'showLabel' => true,
             'visible' => true
         );
-        $TransfusionReactionType = $this->createFormNode($formParams);
+        //$TransfusionReactionType = $this->createFormNode($formParams);
         //attach this formnodes to the MessageCategory
-        $this->setFormNodeToMessageCategory("Transfusion reaction",array($TransfusionReactionType));
+        //$this->setFormNodeToMessageCategory("Transfusion reaction",array($TransfusionReactionType));
 
     }
 
@@ -940,7 +980,45 @@ class FormNodeUtil
 //        $this->setFormNodeToMessageCategory($messageCategoryName,$fieldParentNode);
 //    }
 
+    public function getDropdownValue( $formNode ) {
+        $em = $this->em;
+        //$resArr = array("2"=>"test1","3"=>"test2");
+        $output = array();
 
+        $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
+        $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
+
+        if( $entityNamespace && $entityName ) {
+
+            $entityNamespaceArr = explode("\\",$entityNamespace);
+            $bundleName = $entityNamespaceArr[0].$entityNamespaceArr[1];
+
+            $query = $em->createQueryBuilder()->from($bundleName.':'.$entityName, 'list')
+                ->select("list.id as id, list.name as text")
+                ->orderBy("list.orderinlist","ASC");
+
+            //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+            $query->where("list.type = :typedef OR list.type = :typeadd")->
+                    setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+            $output = $query->getQuery()->getResult();
+
+        }
+
+        $resArr = array();
+        foreach( $output as $list ) {
+            $resArr[] = array(
+                'id' => $list['id'],
+                'text' => $list['text']
+            );
+        }
+        return $resArr;
+
+        $json = json_encode($resArr);
+        $response = new Response($json);
+        //$response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 
 }
 
