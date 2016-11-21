@@ -5080,8 +5080,18 @@ class AdminController extends Controller
             "Form Group",
             "Form",
             "Form Section",
-            "Form Field - Free Text, Single Line",
-            "Form Field - Free Text",
+            //"Form Field - Free Text, Single Line",
+            array(
+                'name' => "Form Field - Free Text, Single Line",
+                'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'entityName' => 'ObjectTypeString'
+            ),
+            //"Form Field - Free Text",
+            array(
+                'name' => "Form Field - Free Text",
+                'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'entityName' => 'ObjectTypeText'
+            ),
             "Form Field - Free Text, RTF",
             "Form Field - Free Text, HTML",
             "Form Field - Full Date",
@@ -5091,7 +5101,12 @@ class AdminController extends Controller
             "Form Field - Month",
             "Form Field - Date",
             "Form Field - Day of the Week",
-            "Form Field - Dropdown Menu",
+            //"Form Field - Dropdown Menu",
+            array(
+                'name' => "Form Field - Dropdown Menu",
+                'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'entityName' => 'ObjectTypeDropdown'
+            ),
             "Dropdown Menu Value",
             array(
                 'name' => "Linked Object - Patient",
@@ -5118,6 +5133,19 @@ class AdminController extends Controller
 
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeList')->findOneByName($name);
             if( $listEntity ) {
+                $updated = false;
+                if( !$listEntity->getEntityNamespace() && $entityNamespace ) {
+                    $listEntity->setEntityNamespace($entityNamespace);
+                    $updated = true;
+                }
+                if( !$listEntity->getEntityName() && $entityName ) {
+                    $listEntity->setEntityName($entityName);
+                    $updated = true;
+                }
+                if( $updated ) {
+                    $em->persist($listEntity);
+                    $em->flush();
+                }
                 continue;
             }
 

@@ -80,7 +80,7 @@ class FormNodeUtil
     //NOT USED
     public function processFormNodeRecursively( $data, $formNode, $holderEntity ) {
 
-        //echo "formNode=".$formNode."<br>";
+        echo "formNode=".$formNode."<br>";
         $children = $formNode->getChildren();
         if( $children ) {
 
@@ -97,6 +97,7 @@ class FormNodeUtil
 
     public function processFormNodeByType( $data, $formNode, $holderEntity ) {
         if( !$this->hasValue($formNode) ) {
+            //exit("No Value of the node=".$formNode."<br>");
             return;
         }
 
@@ -104,43 +105,55 @@ class FormNodeUtil
         $formValue = $data[$key];
         echo $key.": formValue=" . $formValue . "<br>";
 
-        //1) create a new list
-        $newList = $this->createNewList($formNode,$formValue);
+        //1) create a new list element
+        $newListElement = $this->createNewList($formNode,$formValue);
+        //echo "newListElement=".$newListElement."<br>";
+        if( !$newListElement ) {
+            //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
+            return;
+        }
 
         //2) add value to the created list
         if( $formValue ) {
-            $newList->setValue($formValue);
+            $newListElement->setValue($formValue);
         }
 
         //3) set message by entityName to the created list
-        $newList->setObject($holderEntity);
+        $newListElement->setObject($holderEntity);
 
+        //testing
+        if( 0 ) {
+            $class = new \ReflectionClass($newListElement);
+            $className = $class->getShortName();
+            $classNamespace = $class->getNamespaceName();
+            echo "newListElement list: classNamespace=" . $classNamespace . ", className=" . $className . ", Value=" . $newListElement->getValue() . "<br>";
+            //echo "newListElement list: Namespace=" . $newListElement->getEntityNamespace() . ", Name=" . $newListElement->getEntityName() . ", Value=" . $newListElement->getValue() . "<br>";
+        }
         //exit("processFormNodeByType; formValue=".$formValue);
 
-        $this->em->persist($newList);
-        $this->em->flush($newList); //testing
+        $this->em->persist($newListElement);
+        //$this->em->flush($newListElement); //testing
     }
 
 
     public function hasValue( $formNode ) {
 
-//        $formNodeType = $formNode->getObjectType()->getName()."";
-//        //echo "formNodeType=" . $formNodeType . "<br>";
-//
-//        if( $formNodeType == "Form Group" ) {
-//            return false;
-//        }
-//        if( $formNodeType == "Form" ) {
-//            return false;
-//        }
-//        if( $formNodeType == "Form Section" ) {
-//            return false;
-//        }
+        $formNodeTypeName = $formNode->getObjectType()->getName()."";
+        //echo "formNodeType=" . $formNodeType . "<br>";
+
+        if( $formNodeTypeName == "Form Group" ) {
+            return false;
+        }
+        if( $formNodeTypeName == "Form" ) {
+            return false;
+        }
+        if( $formNodeTypeName == "Form Section" ) {
+            return false;
+        }
 
         $formNodeType = $formNode->getObjectType();
         $entityNamespace = $formNodeType->getEntityNamespace();
         $entityName = $formNodeType->getEntityName();
-
         if( !$entityNamespace || !$entityName ) {
             return false;
         }
@@ -169,38 +182,38 @@ class FormNodeUtil
 //        }
 
         $listClassName = $entityNamespace."\\".$entityName;
-        $newList = new $listClassName();
-        //$newList = new ObjectTypeText();
+        $newListElement = new $listClassName();
+        //$newListElement = new ObjectTypeText();
         $creator = $this->sc->getToken()->getUser();
         $name = "";
         $count = null;
-        $userSecUtil->setDefaultList($newList,$count,$creator,$name);
+        $userSecUtil->setDefaultList($newListElement,$count,$creator,$name);
 
-        return $newList;
+        return $newListElement;
     }
 
 //    public function getListByType( $formNode ) {
 //
 //        $list = null;
-//        $newList = null;
+//        $newListElement = null;
 //
 //        $formNodeType = $formNode->getObjectType();
 //        //echo "formNodeType=" . $formNodeType . "<br>";
 //
 //        if( $formNodeType->getName()."" == "Form Field - Free Text" ) {
 //            $list = $formNode->getObjectTypeText();
-//            $newList = new ObjectTypeText();
+//            $newListElement = new ObjectTypeText();
 //            $creator = $this->sc->getToken()->getUser();
 //            $name = "";
 //            $count = null;
 //            $entityFullName = "OlegUserdirectoryBundle:ObjectTypeText";
-//            $this->setDefaultList($newList,$count,$creator,$name,$entityFullName);
-//            $this->em->persist($newList);
+//            $this->setDefaultList($newListElement,$count,$creator,$name,$entityFullName);
+//            $this->em->persist($newListElement);
 //        }
 //
 //        $res = array(
 //            'list' => $list,
-//            'newList' => $newList
+//            'newList' => $newListElement
 //        );
 //
 //        return $res;
@@ -330,19 +343,19 @@ class FormNodeUtil
             $visible = true;
         }
 
-        //classNamespace
-        if( array_key_exists('classNamespace', $params) ) {
-            $classNamespace = $params['classNamespace'];
-        } else {
-            $classNamespace = null;
-        }
-
-        //className
-        if( array_key_exists('className', $params) ) {
-            $className = $params['className'];
-        } else {
-            $className = null;
-        }
+//        //classNamespace
+//        if( array_key_exists('classNamespace', $params) ) {
+//            $classNamespace = $params['classNamespace'];
+//        } else {
+//            $classNamespace = null;
+//        }
+//
+//        //className
+//        if( array_key_exists('className', $params) ) {
+//            $className = $params['className'];
+//        } else {
+//            $className = null;
+//        }
 
         //objectTypeList
 //        if( array_key_exists('objectTypeList', $params) ) {
@@ -378,12 +391,13 @@ class FormNodeUtil
                 if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
                 }
+                if( !$node->getEntityNamespace() && $objectType->getEntityNamespace() ) {
+                    $node->setEntityNamespace($objectType->getEntityNamespace());
+                }
+                if( !$node->getEntityName() && $objectType->getEntityName() ) {
+                    $node->setEntityName($objectType->getEntityName());
+                }
             }
-
-//            //set setObjectTypeText
-//            if( $objectTypeList ) {
-//                $node->setObjectTypeText($objectTypeList);
-//            }
 
             //set showLabel
             $node->setShowLabel($showLabel);
@@ -402,47 +416,64 @@ class FormNodeUtil
                 $parent->addChild($node);
             }
 
-            if( $classNamespace && $className ) {
-                $node->setEntityNamespace($classNamespace);
-                $node->setEntityName($className);
-            }
+//            if( $classNamespace && $className ) {
+//                $node->setEntityNamespace($classNamespace);
+//                $node->setEntityName($className);
+//            }
 
             echo "Created: ".$node->getName()."<br>";
             $em->persist($parent);
             $em->persist($node);
             $em->flush();
+
         } else {
+
+            $updated = false;
             echo "Existed: ".$node->getName()."<br>";
             echo "objectType=".$objectType->getName()."<br>";
+
             //set objectType
             if( $objectType ) {
                 echo "update object type <br>";
                 if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
-                    $em->persist($node);
-                    $em->flush();
                     echo "objectType=".$node->getObjectType()."<br>";
+                    $updated = true;
+                }
+                if( !$node->getEntityNamespace() && $objectType->getEntityNamespace() ) {
+                    $node->setEntityNamespace($objectType->getEntityNamespace());
+                    echo "entityNamespace=".$node->getEntityNamespace()."<br>";
+                    $updated = true;
+                }
+                if( !$node->getEntityName() && $objectType->getEntityName() ) {
+                    $node->setEntityName($objectType->getEntityName());
+                    $updated = true;
                 }
             }
 
-            if( $classNamespace && $className ) {
-                echo "update classNamespace and className <br>";
-                $updated = false;
-                if( !$node->getEntityNamespace() ) {
-                    $node->setEntityNamespace($classNamespace);
-                    $updated = true;
-                }
-                if( !$node->getEntityName() ) {
-                    $node->setEntityName($className);
-                    $updated = true;
-                }
-                if( $updated ) {
-                    $em->persist($node);
-                    $em->flush();
-                }
+//            if( $classNamespace && $className ) {
+//                if( !$node->getEntityNamespace() ) {
+//                    $node->setEntityNamespace($classNamespace);
+//                    $updated = true;
+//                }
+//                if( !$node->getEntityName() ) {
+//                    $node->setEntityName($className);
+//                    $updated = true;
+//                }
+//                if( $updated ) {
+//                    echo "update $classNamespace and $className <br>";
+//                    $em->persist($node);
+//                    $em->flush($node);
+//                }
+//            }
+
+            if( $updated ) {
+                echo "update node=".$node." <br>";
+                $em->persist($node);
+                $em->flush($node);
             }
 
-        }
+        }//if !$node
 
         return $node;
     }
