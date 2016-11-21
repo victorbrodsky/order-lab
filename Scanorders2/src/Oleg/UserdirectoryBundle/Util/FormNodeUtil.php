@@ -665,9 +665,10 @@ class FormNodeUtil
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeSection = $this->getObjectTypeByName('Form Section');
         //$objectTypeFieldGroup = $this->getObjectTypeByName('Field Group');
-        //$objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
+        $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
         $objectTypeString = $this->getObjectTypeByName('Form Field - Free Text, Single Line');
         $objectTypeDropdown = $this->getObjectTypeByName('Form Field - Dropdown Menu');
+        $objectTypeDropdownValue = $this->getObjectTypeByName('Dropdown Menu Value');
 
         $messageCategoryName = "Transfusion Medicine";
 
@@ -957,7 +958,7 @@ class FormNodeUtil
         //Transfusion Medicine -> Transfusion reaction [Message Category]
         //Miscellaneous [Form Section]
         //Blood Product Transfused [Dropdown Menu Value List]
-        $objectTypeDropdown = $this->getObjectTypeByName('Form Field - Dropdown Menu'); //,'ObjectTypeBloodProductTransfused');
+        //$objectTypeDropdown = $this->getObjectTypeByName('Form Field - Dropdown Menu'); //,'ObjectTypeBloodProductTransfused');
         $formParams = array(
             'parent' => $miscellaneous,
             'name' => "Blood Product Transfused",
@@ -986,6 +987,288 @@ class FormNodeUtil
         $TransfusionReactionType = $this->createFormNode($formParams);
         //attach this formnodes to the MessageCategory
         $this->setFormNodeToMessageCategory("Transfusion reaction",array($TransfusionReactionType));
+
+        //        Vitals [Form Section]
+        $formParams = array(
+            'parent' => $transfusionMedicine,
+            'name' => "Vitals",
+            'placeholder' => "",
+            'objectType' => $objectTypeSection,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $VitalsSection = $this->createFormNode($formParams);
+        $VitalsArr = array();
+        //    Pre-Temp: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Pre-Temp",
+            'placeholder' => "Pre-Temp",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PreTemp = $this->createFormNode($formParams);
+        $VitalsArr[] = $PreTemp;
+        //    Pre-HR: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Pre-HR",
+            'placeholder' => "Pre-HR",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PreHR = $this->createFormNode($formParams);
+        $VitalsArr[] = $PreHR;
+        //    Pre-RR: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Pre-RR",
+            'placeholder' => "Pre-RR",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PreRR = $this->createFormNode($formParams);
+        $VitalsArr[] = $PreRR;
+        //    Pre-O2 sat: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Pre-O2",
+            'placeholder' => "Pre-O2",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PreO2 = $this->createFormNode($formParams);
+        $VitalsArr[] = $PreO2;
+        //    Pre-BP: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Pre-BP",
+            'placeholder' => "Pre-BP",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PreBP = $this->createFormNode($formParams);
+        $VitalsArr[] = $PreBP;
+
+        //    Post-Temp: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Post-Temp",
+            'placeholder' => "Post-Temp",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PostTemp = $this->createFormNode($formParams);
+        $VitalsArr[] = $PostTemp;
+        //    Post-HR: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Post-HR",
+            'placeholder' => "Post-HR",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PostHR = $this->createFormNode($formParams);
+        $VitalsArr[] = $PostHR;
+        //    Post-RR: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Post-RR",
+            'placeholder' => "Post-RR",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PostRR = $this->createFormNode($formParams);
+        $VitalsArr[] = $PostRR;
+        //    Post-O2 sat: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Post-O2",
+            'placeholder' => "Post-O2",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PostO2 = $this->createFormNode($formParams);
+        $VitalsArr[] = $PostO2;
+        //    Post-BP: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $VitalsSection,
+            'name' => "Post-BP",
+            'placeholder' => "Post-BP",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PostBP = $this->createFormNode($formParams);
+        $VitalsArr[] = $PostBP;
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",$VitalsArr);
+
+        //Transfusion Reaction Workup [Form Section]
+        $formParams = array(
+            'parent' => $transfusionMedicine,
+            'name' => "Transfusion Reaction Workup",
+            'placeholder' => "",
+            'objectType' => $objectTypeSection,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $TransfusionReactionWorkupSection = $this->createFormNode($formParams);
+        $TransfusionReactionWorkupSectionArr = array();
+        //    Transfusion Reaction Workup Description [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Transfusion Reaction Workup Description",
+            'placeholder' => "Transfusion Reaction Workup Description",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $TransfusionReactionWorkupDescription = $this->createFormNode($formParams);
+        $TransfusionReactionWorkupSectionArr[] = $TransfusionReactionWorkupDescription;
+
+        //    Clerical error: [Form Field - Dropdown Menu]
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Clerical error",
+            'placeholder' => "Clerical error",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            //'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            //'className' => "TransfusionReactionTypeList"
+        );
+        $ClericalerrorDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($ClericalerrorDropdowm));
+        //        Transfusion Reaction Clerical Error Type [Dropdown Menu Value List]
+        //            Yes [Dropdown Menu Value]
+        $formParams = array(
+            'parent' => $ClericalerrorDropdowm,
+            'name' => "Yes",
+            'placeholder' => "Yes",
+            'objectType' => $objectTypeDropdownValue,
+            'showLabel' => true,
+            'visible' => true,
+        );
+        $ClericalerrorDropdowmYes = $this->createFormNode($formParams);
+        //            None [Dropdown Menu Value]
+        $formParams = array(
+            'parent' => $ClericalerrorDropdowm,
+            'name' => "None",
+            'placeholder' => "None",
+            'objectType' => $objectTypeDropdownValue,
+            'showLabel' => true,
+            'visible' => true,
+        );
+        $ClericalerrorDropdowmNone = $this->createFormNode($formParams);
+
+        //    Blood type of unit: [Form Field - Dropdown Menu]
+        //        Blood Types [Dropdown Menu Value List]
+        //            A+ [Dropdown Menu Value]
+        //            A- [Dropdown Menu Value]
+        //            B+ [Dropdown Menu Value]
+        //            B- [Dropdown Menu Value]
+        //            O+ [Dropdown Menu Value]
+        //            O- [Dropdown Menu Value]
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Blood type of unit",
+            'placeholder' => "Blood type of unit",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
+        );
+        $BloodtypeofunitDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($BloodtypeofunitDropdowm));
+
+        //    Blood type of pre-transfusion specimen: [Form Field - Dropdown Menu]
+        //        Blood Types [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Blood type of pre-transfusion specimen",
+            'placeholder' => "Blood type of pre-transfusion specimen",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
+        );
+        $BloodtypeofunitSpecimenDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($BloodtypeofunitSpecimenDropdowm));
+
+        //    Blood type of post-transfusion specimen: [Form Field - Dropdown Menu]
+        //        Blood Types [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
+        $formParams = array(
+            'parent' => $TransfusionReactionWorkupSection,
+            'name' => "Blood type of post-transfusion specimen",
+            'placeholder' => "Blood type of post-transfusion specimen",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
+        );
+        $BloodtypeofunitPostTransfusionSpecimenDropdowm = $this->createFormNode($formParams);
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Transfusion reaction",array($BloodtypeofunitPostTransfusionSpecimenDropdowm));
+
+        //
+        //    Pre-transfusion antibody screen: [Form Field - Dropdown Menu]
+        //        Transfusion antibody screen results [Dropdown Menu Value List]
+        //            Positive [Dropdown Menu Value]
+        //            Negative [Dropdown Menu Value]
+        //
+        //    Post-transfusion antibody screen: [Form Field - Dropdown Menu]
+        //        Transfusion antibody screen results [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
+        //            Positive [Dropdown Menu Value]
+        //            Negative [Dropdown Menu Value]
+        //
+        //    Pre-transfusion DAT: [Form Field - Dropdown Menu]
+        //        Transfusion DAT results [Dropdown Menu Value List]
+        //            Positive [Dropdown Menu Value]
+        //            Negative [Dropdown Menu Value]
+        //
+        //    Post-transfusion DAT: [Form Field - Dropdown Menu]
+        //        Transfusion DAT results [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
+        //            Positive [Dropdown Menu Value]
+        //            Negative [Dropdown Menu Value]
+        //
+        //    Pre-transfusion crossmatch: [Form Field - Dropdown Menu]
+        //        Transfusion crossmatch results [Dropdown Menu Value List]
+        //            Compatible [Dropdown Menu Value]
+        //            Incompatible [Dropdown Menu Value]
+        //
+        //    Post-transfusion crossmatch: [Form Field - Dropdown Menu]
+        //        Transfusion crossmatch results [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
+        //            Compatible [Dropdown Menu Value]
+        //            Incompatible [Dropdown Menu Value]
+        //
+        //    Pre-transfusion hemolysis check: [Form Field - Dropdown Menu]
+        //        Transfusion hemolysis check results [Dropdown Menu Value List]
+        //            Hemolysis [Dropdown Menu Value]
+        //            No hemolysis [Dropdown Menu Value]
+        //
+        //    Post-transfusion hemolysis check: [Form Field - Dropdown Menu]
+        //        Transfusion hemolysis check results [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
+        //            Hemolysis [Dropdown Menu Value]
+        //            No hemolysis [Dropdown Menu Value]
+        //
+        //    Microbiology: [Form Field - Free Text, Single Line]
+
 
     }
 
@@ -1040,16 +1323,20 @@ class FormNodeUtil
         $resArr = array();
         foreach( $output as $list ) {
             $resArr[] = array(
-                'id' => $list['id'],
+                'id' => $list['text'],
                 'text' => $list['text']
             );
         }
-        return $resArr;
 
-        $json = json_encode($resArr);
-        $response = new Response($json);
-        //$response->headers->set('Content-Type', 'application/json');
-        return $response;
+        //get additional menu children "Dropdown Menu Value"
+        foreach( $formNode->getChildren() as $dropdownValue ) {
+            $resArr[] = array(
+                'id' => $dropdownValue->getName()."",
+                'text' => $dropdownValue->getName().""
+            );
+        }
+
+        return $resArr;
     }
 
 }

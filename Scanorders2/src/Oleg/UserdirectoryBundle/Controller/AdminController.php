@@ -8,6 +8,7 @@ use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\BloodProductTransfusedList;
+use Oleg\UserdirectoryBundle\Entity\BloodTypeList;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\Collaboration;
@@ -277,6 +278,7 @@ class AdminController extends Controller
 
         $count_BloodProductTransfused = $this->generateBloodProductTransfused();
         $count_TransfusionReactionType = $this->generateTransfusionReactionType();
+        $count_BloodTypeList = $this->generateBloodTypeList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -348,6 +350,7 @@ class AdminController extends Controller
             'HealthcareProviderSpecialtiesList='.$count_HealthcareProviderSpecialtiesList.', '.
             'BloodProductTransfused='.$count_BloodProductTransfused.', '.
             'TransfusionReactionType='.$count_TransfusionReactionType.', '.
+            'BloodTypeList='.$count_BloodTypeList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -6150,4 +6153,41 @@ class AdminController extends Controller
 
         return round($count/10);
     }
+
+    //BloodTypeList
+    public function generateBloodTypeList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "A+",
+            "A-",
+            "B+",
+            "B-",
+            "O+",
+            "O-",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:BloodTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new BloodTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
 }

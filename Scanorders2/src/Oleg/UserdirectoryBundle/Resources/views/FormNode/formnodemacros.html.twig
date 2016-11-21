@@ -291,8 +291,9 @@
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
             name="{{ fieldname }}"
             class="combobox"
+            data-placeholder="{{ formNode.placeholder }}"
     >
-        {#<option value="AL">Alabama</option>#}
+        <option value=""></option>
         {% for dropdownValue in dropdownValues %}
             {###########dropdownValue.text:{{ dropdownValue.text }}#}
             <option value="{{ dropdownValue.id }}">{{ dropdownValue.text }}</option>
