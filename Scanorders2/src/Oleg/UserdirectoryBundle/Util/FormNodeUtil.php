@@ -609,26 +609,10 @@ class FormNodeUtil
                 $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
             }
         }
-//
-//        if( !$messageCategory ) {
-//            exit("Message category not found by name=".$messageCategoryName);
-//        }
 
         foreach( $messageCategories as $thisMessageCategory ) {
             $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
         }
-
-//        foreach ($formNodes as $formNode) {
-//            if ($formNode && !$messageCategory->getFormNodes()->contains($formNode)) {
-//                $messageCategory->addFormNode($formNode);
-//                $em->persist($messageCategory);
-//                //$em->persist($formNode);
-//                $em->flush();
-//                echo "Add " . $formNode . " to " . $messageCategory . "<br>";
-//            } else {
-//                echo "Node already exists " . $formNode . " in " . $messageCategory . "<br>";
-//            }
-//        }
 
     }
     public function setFormNodeToSingleMessageCategory($messageCategory,$formNodes) {
@@ -646,6 +630,17 @@ class FormNodeUtil
                 echo "Add " . $formNode . " to " . $messageCategory . "<br>";
             } else {
                 echo "Node already exists " . $formNode . " in " . $messageCategory . "<br>";
+            }
+        }
+
+        //clean MessageCategory: remove all formnodes from message category.
+        if( count($formNodes) == 0 ) {
+            echo "Remove formnodes from " . $messageCategory . "<br>";
+            foreach( $messageCategory->getFormNodes() as $thisFormNode ) {
+                echo "Removing " . $formNode . " from " . $messageCategory . "<br>";
+                $messageCategory->removeFormNode($thisFormNode);
+                $em->persist($messageCategory);
+                $em->flush();
             }
         }
     }
@@ -975,6 +970,10 @@ class FormNodeUtil
 
         //////////////////////////////////////////////////////
         //Transfusion Medicine -> Payson transfusion [Message Category]
+        //Empty
+        //attach this formnodes to the MessageCategory
+        $this->setFormNodeToMessageCategory("Payson transfusion",array());
+
         //Transfusion Medicine -> Incompatible crossmatch [Message Category]
         //Miscellaneous [Form Section]
         //Blood Type of Unit: [Form Field - Free Text, Single Line]
@@ -1009,8 +1008,6 @@ class FormNodeUtil
             'visible' => true
         );
         $IncompatibilityString = $this->createFormNode($formParams);
-        //attach this formnodes to the MessageCategory
-        $this->setFormNodeToMessageCategory("Payson transfusion",array($BloodTypeofUnitString,$BloodTypeofPatientString,$AntibodiesString,$PhenotypeString,$IncompatibilityString));
         //attach this formnodes to the MessageCategory
         $this->setFormNodeToMessageCategory("Incompatible crossmatch",array($BloodTypeofUnitString,$BloodTypeofPatientString,$AntibodiesString,$PhenotypeString,$IncompatibilityString));
 
@@ -1890,6 +1887,17 @@ class FormNodeUtil
         $em = $this->em;
         $output = array();
 
+        //IF: the ObjectType is "Form Field - Dropdown Menu" => the linked list is dropdown values
+        $objectType = $formNode->getObjectType();
+        if( !$objectType ) {
+            //it must be dropdown object type.
+            return $output;
+        }
+        if( $objectType->getName()."" != "Form Field - Dropdown Menu" ) {
+            //it must be only dropdown object type.
+            return $output;
+        }
+
         $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
         $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
 
@@ -1935,7 +1943,7 @@ class FormNodeUtil
         $entityName = $formNode->getEntityName();           //"CCIUnitPlateletCountDefaultValueList"
         $entityId = $formNode->getEntityId();
 
-        if( $entityId ) {
+        if( $entityNamespace && $entityName && $entityId ) {
             $entityNamespaceArr = explode("\\", $entityNamespace);
             $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
             $defaultValueEntity = $em->getRepository($bundleName.':'.$entityName)->find($entityId);
