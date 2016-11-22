@@ -455,7 +455,7 @@ class GenericListType extends AbstractType
             $builder->add('formNodes','entity',array(
                 'class' => 'OlegUserdirectoryBundle:FormNode',
                 'label' => "Form Node(s):",
-                'property' => 'getTreeName',
+                'property' => 'getTreeNameObjectType',
                 'multiple' => true,
                 'required' => false,
                 'attr' => array('class'=>'combobox'),

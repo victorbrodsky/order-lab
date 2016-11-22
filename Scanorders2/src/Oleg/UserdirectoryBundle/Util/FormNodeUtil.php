@@ -943,30 +943,35 @@ class FormNodeUtil
 
         //////////////////////////////////////////////////////
         //Transfusion Medicine -> Emergency release [Message Category]
-        $messageCategoryName = "Emergency release";
         //Miscellaneous [Form Section]
         //Blood Type of Unit: [Form Field - Free Text, Single Line]
+        //change to [Form Field - Dropdown Menu]
         $formParams = array(
             'parent' => $miscellaneous,
-            'name' => "Blood Type of Unit",
-            'placeholder' => "Blood Type of Unit",
-            'objectType' => $objectTypeString,
+            'name' => "Blood type of Unit",
+            'placeholder' => "Blood type of Unit",
+            'objectType' => $objectTypeDropdown,
             'showLabel' => true,
-            'visible' => true
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
         );
-        $BloodTypeofUnitString = $this->createFormNode($formParams);
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Emergency release",array($formNode));
         //Blood Type of Patient: [Form Field - Free Text, Single Line]
+        //change to [Form Field - Dropdown Menu]
         $formParams = array(
             'parent' => $miscellaneous,
             'name' => "Blood Type of Patient",
             'placeholder' => "Blood Type of Patient",
-            'objectType' => $objectTypeString,
+            'objectType' => $objectTypeDropdown,
             'showLabel' => true,
-            'visible' => true
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
         );
-        $BloodTypeofPatientString = $this->createFormNode($formParams);
-        //attach this formnodes to the MessageCategory
-        $this->setFormNodeToMessageCategory($messageCategoryName,array($BloodTypeofUnitString,$BloodTypeofPatientString));
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Emergency release",array($formNode));
 
         //////////////////////////////////////////////////////
         //Transfusion Medicine -> Payson transfusion [Message Category]
@@ -977,7 +982,33 @@ class FormNodeUtil
         //Transfusion Medicine -> Incompatible crossmatch [Message Category]
         //Miscellaneous [Form Section]
         //Blood Type of Unit: [Form Field - Free Text, Single Line]
+        //change to [Form Field - Dropdown Menu]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Blood type of Unit",
+            'placeholder' => "Blood type of Unit",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
+        );
+        $BloodtypeofunitDropdowm = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Incompatible crossmatch",array($BloodtypeofunitDropdowm));
         //Blood Type of Patient: [Form Field - Free Text, Single Line]
+        //change to [Form Field - Dropdown Menu]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Blood Type of Patient",
+            'placeholder' => "Blood Type of Patient",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
+        );
+        $BloodtypeofunitDropdowm = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Incompatible crossmatch",array($BloodtypeofunitDropdowm));
         //Antibodies: [Form Field - Free Text, Single Line]
         $formParams = array(
             'parent' => $miscellaneous,
@@ -1009,7 +1040,7 @@ class FormNodeUtil
         );
         $IncompatibilityString = $this->createFormNode($formParams);
         //attach this formnodes to the MessageCategory
-        $this->setFormNodeToMessageCategory("Incompatible crossmatch",array($BloodTypeofUnitString,$BloodTypeofPatientString,$AntibodiesString,$PhenotypeString,$IncompatibilityString));
+        $this->setFormNodeToMessageCategory("Incompatible crossmatch",array($AntibodiesString,$PhenotypeString,$IncompatibilityString));
 
 
         //////////////////////////////////////////////////////
@@ -1240,8 +1271,8 @@ class FormNodeUtil
         //            O- [Dropdown Menu Value]
         $formParams = array(
             'parent' => $TransfusionReactionWorkupSection,
-            'name' => "Blood type of unit",
-            'placeholder' => "Blood type of unit",
+            'name' => "Blood type of Unit",
+            'placeholder' => "Blood type of Unit",
             'objectType' => $objectTypeDropdown,
             'showLabel' => true,
             'visible' => true,

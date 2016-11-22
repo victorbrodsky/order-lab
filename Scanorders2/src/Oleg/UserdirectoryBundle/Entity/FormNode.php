@@ -377,6 +377,13 @@ class FormNode extends BaseCompositeNode {
 //        }
 //    }
 
+    public function getTreeNameObjectType() {
+        $treeName = $this->getTreeName();
+        if( $this->getObjectType() ) {
+            $treeName = $treeName . " [". $this->getObjectType()->getName(). "]";
+        }
+        return $treeName;
+    }
 
     public function __toString()
     {
