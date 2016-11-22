@@ -5183,14 +5183,14 @@ class AdminController extends Controller
                     $updated = true;
                 }
 
-//                if( $listEntity->getEntityNamespace() ) {
-//                    $listEntity->setEntityNamespace(NULL);
-//                    $updated = true;
-//                }
-//                if( $listEntity->getEntityName() ) {
-//                    $listEntity->setEntityName(NULL);
-//                    $updated = true;
-//                }
+                if( $listEntity->getEntityNamespace() ) {
+                    $listEntity->setEntityNamespace(NULL);
+                    $updated = true;
+                }
+                if( $listEntity->getEntityName() ) {
+                    $listEntity->setEntityName(NULL);
+                    $updated = true;
+                }
 
                 if( $updated ) {
                     $em->persist($listEntity);

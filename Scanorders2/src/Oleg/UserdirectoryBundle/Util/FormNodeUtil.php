@@ -592,6 +592,7 @@ class FormNodeUtil
         if( !$messageCategory ) {
             exit("Message category not found by name=".$messageCategoryName);
         }
+        echo "Message category found by name=".$messageCategoryName."<br>";
         foreach( $formNodes as $formNode ) {
             //if( !$messageCategory->getFormNode() ) {
             if( $formNode && !$messageCategory->getFormNodes()->contains($formNode) ) {
@@ -600,6 +601,8 @@ class FormNodeUtil
                 //$em->persist($formNode);
                 $em->flush();
                 echo "Add " . $formNode . " to " . $messageCategory . "<br>";
+            } else {
+                echo "Node already exists " . $formNode . " in " . $messageCategory . "<br>";
             }
         }
     }

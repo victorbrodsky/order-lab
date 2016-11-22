@@ -162,7 +162,7 @@ class MessageCategory extends BaseCompositeNode {
         if( $this->getParent() ) {
             $parentName = ", parent=".$this->getParent()->getName();
         }
-        return "Category: ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName;
+        return "Message Category (ID# ".$this->getId()."): ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName;
     }
 
 }
