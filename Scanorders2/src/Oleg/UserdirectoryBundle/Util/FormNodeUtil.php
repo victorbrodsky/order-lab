@@ -588,14 +588,57 @@ class FormNodeUtil
     public function setFormNodeToMessageCategory($messageCategoryName,$formNodes,$parentMessageCategoryName=null) {
         //attach this formnode to the MessageCategory "Transfusion Medicine"
         $em = $this->em;
-        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategoryName);
-        if( !$messageCategory ) {
-            exit("Message category not found by name=".$messageCategoryName);
+        $messageCategory = null;
+
+        $messageCategories = $em->getRepository('OlegOrderformBundle:MessageCategory')->findByName($messageCategoryName);
+        if( count($messageCategories) == 0 ) {
+            exit("Message categories not found by name=".$messageCategoryName);
         }
-        echo "Message category found by name=".$messageCategoryName."<br>";
-        foreach( $formNodes as $formNode ) {
+        echo "Message categories found by name=".$messageCategoryName.": count=".count($messageCategories)."<br>";
+
+        if( count($messageCategories) > 0 ) {
+            echo "Multiple Message Categories found: count=".count($messageCategories)."<br>";
+            if( $parentMessageCategoryName ) {
+                foreach( $messageCategories as $thisMessageCategory ) {
+                    if( $thisMessageCategory->getParent() && $thisMessageCategory->getParent()->getName()."" == $parentMessageCategoryName ) {
+                        $messageCategory = $thisMessageCategory;
+                        break;
+                    }
+                }
+                echo "Parent found: ".$messageCategory."<br>"; //"Other"
+                $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
+            }
+        }
+//
+//        if( !$messageCategory ) {
+//            exit("Message category not found by name=".$messageCategoryName);
+//        }
+
+        foreach( $messageCategories as $thisMessageCategory ) {
+            $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
+        }
+
+//        foreach ($formNodes as $formNode) {
+//            if ($formNode && !$messageCategory->getFormNodes()->contains($formNode)) {
+//                $messageCategory->addFormNode($formNode);
+//                $em->persist($messageCategory);
+//                //$em->persist($formNode);
+//                $em->flush();
+//                echo "Add " . $formNode . " to " . $messageCategory . "<br>";
+//            } else {
+//                echo "Node already exists " . $formNode . " in " . $messageCategory . "<br>";
+//            }
+//        }
+
+    }
+    public function setFormNodeToSingleMessageCategory($messageCategory,$formNodes) {
+        $em = $this->em;
+        if( !$messageCategory ) {
+            exit("Message category object is not provided !!!<br>");
+        }
+        foreach ($formNodes as $formNode) {
             //if( !$messageCategory->getFormNode() ) {
-            if( $formNode && !$messageCategory->getFormNodes()->contains($formNode) ) {
+            if ($formNode && !$messageCategory->getFormNodes()->contains($formNode)) {
                 $messageCategory->addFormNode($formNode);
                 $em->persist($messageCategory);
                 //$em->persist($formNode);
@@ -1814,8 +1857,8 @@ class FormNodeUtil
             'showLabel' => true,
             'visible' => true
         );
-        //$formNode = $this->createFormNode($formParams);
-        //$this->setFormNodeToMessageCategory("Other",array($formNode));
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Other",array($formNode));
 
     }
 
