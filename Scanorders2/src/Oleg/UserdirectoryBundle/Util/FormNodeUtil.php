@@ -378,9 +378,19 @@ class FormNodeUtil
                 'className' => "FormNode",
                 'bundleName' => "UserdirectoryBundle"
             );
+            //$types = array('default','user-added');
             $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parent,$mapper);
         } else {
             $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($name);
+            //$nodes = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findBy(array("name"=>$name,"type"=>"default"));
+            //$types = array('default','user-added');
+            //$node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findNodeByName($name,$types);
+        }
+
+        if( $node ) {
+            if( $node->getType() == 'disabled' || $node->getType() == 'draft' ) {
+                exit("The node $name already exists, but it has ".$node->getType()." type.");
+            }
         }
 
         if( !$node ) {

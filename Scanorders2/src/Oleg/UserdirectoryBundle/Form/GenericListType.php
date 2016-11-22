@@ -426,7 +426,7 @@ class GenericListType extends AbstractType
             //always read only - do not allow to change level
             $builder->add('level',null,array(
                 'label'=>'Level:',
-                'read_only' => true,
+                //'read_only' => true,
                 'attr' => array('class' => 'form-control')
             ));
             //always read only - do not allow to change parent
@@ -452,13 +452,30 @@ class GenericListType extends AbstractType
         //FormNode Holder
         if( method_exists($this->params['entity'],'getFormNodes') ) {
             //echo "add formNode <br>";
-            $builder->add('formNodes','entity',array(
+//            $builder->add('formNodes','entity',array(
+//                'class' => 'OlegUserdirectoryBundle:FormNode',
+//                'label' => "Form Node(s):",
+//                'property' => 'getTreeNameObjectType',
+//                'multiple' => true,
+//                'required' => false,
+//                'attr' => array('class'=>'combobox'),
+//            ));
+            $builder->add( 'formNodes', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:FormNode',
-                'label' => "Form Node(s):",
                 'property' => 'getTreeNameObjectType',
+                'label'=>'Form Node(s):',
+                'required'=> false,
                 'multiple' => true,
-                'required' => false,
-                'attr' => array('class'=>'combobox'),
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
         }
 

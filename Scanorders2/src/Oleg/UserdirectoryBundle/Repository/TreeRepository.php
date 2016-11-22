@@ -261,7 +261,42 @@ class TreeRepository extends NestedTreeRepository {
         return $criteriastr;
     }
 
+    public function findNodeByName($nameStr,$mapper=null) { //,$types=array()
 
+        if( !$nameStr ) {
+            throw new \Exception('Logical Error: nameStr is null');
+        }
+
+        $foundChildEntity = null;
+
+        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.parent","parent");
+        $dql->where('list.name = :name');
+
+        $params = array('name' => $nameStr);
+
+//        foreach( $types as $type ) {
+//            $dql->orWhere("list.type='".$type."'");
+//        }
+
+        $query = $this->_em->createQuery($dql);
+
+        $query->setParameters($params);
+
+        $results = $query->getResult();
+
+        if( count($results) > 0 ) {
+            $foundChildEntity = $results[0];
+        }
+
+
+        //echo "foundChildEntity=".$foundChildEntity."<br>";
+        //exit('tree rep');
+
+        return $foundChildEntity;
+    }
 
     public function findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null) {
 
@@ -305,7 +340,7 @@ class TreeRepository extends NestedTreeRepository {
         return $child;
     }
 
-    public function findByChildnameAndParent($childName,$parent,$mapper) {
+    public function findByChildnameAndParent($childName,$parent,$mapper) { //,$types=array()
 
         if( !$childName || !$parent ) {
             //exit('Logical Error: category and/or parent is null');
@@ -328,9 +363,18 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where('parent.id = :parentid AND list.name = :childname');
         //$dql->where("parent.id = ".$parent->getId()." AND list.name = '".$childName."'");
 
-        $query = $this->_em->createQuery($dql);
-
         $params = array('parentid' => $parent->getId(), 'childname' => $childName);
+
+//        if( $types ) {
+//            $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+//            $params['typedef'] = 'default';
+//            $params['typeadd'] = 'user-added';
+//        }
+//        foreach( $types as $type ) {
+//            $dql->orWhere("list.type='".$type."'");
+//        }
+
+        $query = $this->_em->createQuery($dql);
 
         $query->setParameters($params);
 
@@ -827,6 +871,35 @@ class TreeRepository extends NestedTreeRepository {
         return $organizationalGroupType;
     }
 
+
+    public function removeTreeNodeAndAllChildrenById( $id, $mapper, $count=0 ) {
+        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeNode = $treeRepository->find($id);
+
+        if( !$treeNode ) {
+            return $count;
+        }
+
+        $children = $treeNode->getChildren();
+
+        foreach( $children as $child ) {
+
+            $count = $this->removeTreeNodeAndAllChildrenById( $child->getId(), $mapper, $count );
+
+            $treeRepository->removeFromTree($child);
+            $this->_em->clear(); // clear cached nodes
+
+            $count++;
+        }
+
+        if( count($children) == 0 ) {
+            $treeRepository->removeFromTree($treeNode);
+            $this->_em->clear(); // clear cached nodes
+            $count++;
+        }
+
+        return $count;
+    }
 
 }
 

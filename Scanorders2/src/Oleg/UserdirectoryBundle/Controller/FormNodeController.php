@@ -210,4 +210,72 @@ class FormNodeController extends Controller {
         }
         return false;
     }
+
+
+
+    /**
+     * @Route("/form-node-tree-test/", name="employees_form-node-tree-test")
+     * @Method("GET")
+     */
+    public function formNodeTestAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repo = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+
+        //verify
+        $verify = $repo->verify(); // can return TRUE if tree is valid, or array of errors found on tree
+        if( $verify === TRUE ) {
+            echo "FormNode tree is ok<br>";
+        } else {
+            echo "verify errors:<br>";
+            print_r($verify);
+
+            // if tree has errors it will try to fix all tree nodes
+            $repo->recover();
+            $em->flush(); // important: flush recovered nodes
+        }
+
+        // it will remove this node from tree and reparent all children
+//        $disabledFormNode = null;
+//        $disabledFormNodes = $repo->findBy(array('name'=>'Pathology Call Log Entry','type'=>'disabled'));
+//        if( count($disabledFormNodes) == 1 ) {
+//            $disabledFormNode = $disabledFormNodes[0];
+//        }
+//
+//        if( !$disabledFormNode ) {
+//            exit("disabledFormNode not found");
+//        }
+//
+//        $repo->removeFromTree($disabledFormNode);
+//        $em->clear(); // clear cached nodes
+
+        if(0) {
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "FormNode",
+                'bundleName' => "UserdirectoryBundle"
+            );
+
+            $id = "84";
+            $removedCount = $repo->removeTreeNodeAndAllChildrenById($id, $mapper);
+            echo "removedCount = $removedCount<br>";
+        }
+
+        if(0) {
+            // if tree has errors it will try to fix all tree nodes
+            $repo->recover();
+            $em->flush(); // important: flush recovered nodes
+            //fixed level
+        }
+
+        exit("<br><br>Form Node Tree testing");
+    }
+
+
+
 }
