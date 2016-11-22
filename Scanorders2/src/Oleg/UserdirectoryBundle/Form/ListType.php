@@ -168,15 +168,15 @@ class ListType extends AbstractType
         ));
 
         $builder->add('entityNamespace',null,array(
-            'label' => 'Object Namespace:',
+            'label' => 'List Object Namespace:',
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('entityName',null,array(
-            'label' => 'Object Name:',
+            'label' => 'List Object Name:',
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('entityId',null,array(
-            'label' => 'Linked Object ID:',
+            'label' => 'List Object ID:',
             'attr' => array('class' => 'form-control')
         ));
 

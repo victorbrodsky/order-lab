@@ -102,7 +102,7 @@ abstract class ListAbstract
     protected $fulltitle;
 
     /**
-     * Link to List ID
+     * Link to List ID. Specifically only used to link the record with the table "PlatformListManagerRootList"
      * @ORM\Column(type="string", nullable=true)
      */
     protected $linkToListId;
@@ -115,23 +115,24 @@ abstract class ListAbstract
      */
     protected $objectType;
 
+    //Used to make a link to other lists in the list manager.
     /**
-     * Linked Object ID
+     * Linked Object ID. Used to make a link to other lists in the list manager.
      * @ORM\Column(type="string", nullable=true)
      */
     protected $entityId;
-
-    //Fields specifying a subject entity
     /**
+     * Used to make a link to other lists in the list manager.
      * i.e. "Oleg\OrderformBundle\Entity"
      * @ORM\Column(type="string", nullable=true)
      */
-    private $entityNamespace;
+    protected $entityNamespace;
     /**
+     * Used to make a link to other lists in the list manager.
      * i.e. "Patient"
      * @ORM\Column(type="string", nullable=true)
      */
-    private $entityName;
+    protected $entityName;
 
 
 //    /**
@@ -439,13 +440,11 @@ abstract class ListAbstract
     {
         //remove "Proxies\__CG__\" if $entityNamespace="Proxies\__CG__\Oleg\UserdirectoryBundle\Entity"
         $proxyStr = "Proxies\__CG__\\";
-        //$proxyStr = "Oleg\UserdirectoryBundle\\";
-        //echo "proxyStr=".$proxyStr."<br>";
         if( strpos($entityNamespace, $proxyStr) !== false ) {
             //echo "remove=".$proxyStr."<br>";
             $entityNamespace = str_replace($proxyStr, "", $entityNamespace);
         }
-        //exit("entityNamespace=".$entityNamespace);
+        //echo "entityNamespace=".$entityNamespace."<br>";
 
         $this->entityNamespace = $entityNamespace;
     }
@@ -695,7 +694,7 @@ abstract class ListAbstract
 
     //for entity with synonyms
 //    public function setSynonyms($synonyms = null) {
-//        echo "set synonym=".$synonyms."<br>";
+//        //echo "set synonym=".$synonyms."<br>";
 //        exit();
 //        $newsynonyms = new ArrayCollection();
 //        if( $synonyms ) {

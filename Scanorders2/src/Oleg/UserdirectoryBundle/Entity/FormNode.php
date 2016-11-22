@@ -112,6 +112,21 @@ class FormNode extends BaseCompositeNode {
      */
     private $objectTypeDateTime;
 
+    //Received Form Field Value Entity. Used to overwrite the same values in the formnode's ObjectType
+    /**
+     * i.e. "Oleg\OlegUserdirectoryBundle\Entity"
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $receivedValueEntityNamespace;
+    /**
+     * i.e. "Patient"
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $receivedValueEntityName;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $receivedValueEntityId;
 
 
 
@@ -254,8 +269,73 @@ class FormNode extends BaseCompositeNode {
         $this->visible = $visible;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getReceivedValueEntityNamespace()
+    {
+        return $this->receivedValueEntityNamespace;
+    }
+
+    /**
+     * @param mixed $receivedValueEntityNamespace
+     */
+    public function setReceivedValueEntityNamespace($receivedValueEntityNamespace)
+    {
+        $this->receivedValueEntityNamespace = $receivedValueEntityNamespace;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceivedValueEntityName()
+    {
+        return $this->receivedValueEntityName;
+    }
+
+    /**
+     * @param mixed $receivedValueEntityName
+     */
+    public function setReceivedValueEntityName($receivedValueEntityName)
+    {
+        $this->receivedValueEntityName = $receivedValueEntityName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceivedValueEntityId()
+    {
+        return $this->receivedValueEntityId;
+    }
+
+    /**
+     * @param mixed $receivedValueEntityId
+     */
+    public function setReceivedValueEntityId($receivedValueEntityId)
+    {
+        $this->receivedValueEntityId = $receivedValueEntityId;
+    }
 
 
+
+    public function setReceivedValueEntity($object) {
+        $class = new \ReflectionClass($object);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        if( $className && !$this->getReceivedValueEntityName() ) {
+            $this->setReceivedValueEntityName($className);
+        }
+
+        if( $classNamespace && !$this->getReceivedValueEntityNamespace() ) {
+            $this->setReceivedValueEntityNamespace($classNamespace);
+        }
+
+        if( !$this->getReceivedValueEntityId() && $object->getId() ) {
+            $this->setReceivedValueEntityId($object->getId());
+        }
+    }
 
 //    /**
 //     * @param mixed $organizationalGroupType

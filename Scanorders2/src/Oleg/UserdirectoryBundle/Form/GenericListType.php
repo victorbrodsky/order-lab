@@ -481,6 +481,25 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //ReceivedValueEntity
+        if( method_exists($this->params['entity'],'getReceivedValueEntityName') ) {
+            $builder->add('receivedValueEntityNamespace',null,array(
+                'label' => "Received Value Entity Namespace:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add('receivedValueEntityName',null,array(
+                'label' => "Received Value Entity Name:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add('receivedValueEntityId',null,array(
+                'label' => "Received Value Entity Id:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+        }
+
         ///////////////// Many To Many relationship /////////////////
 
         //not editable: suites, rooms

@@ -163,9 +163,9 @@ class FormNodeUtil
 
     public function createNewList( $formNode, $formValue=null ) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $formNodeType = $formNode->getObjectType();
-        $entityNamespace = $formNodeType->getEntityNamespace();
-        $entityName = $formNodeType->getEntityName();
+        $formNodeObjectType = $formNode->getObjectType();
+        $entityNamespace = $formNodeObjectType->getEntityNamespace();
+        $entityName = $formNodeObjectType->getEntityName();
 
         if( !$entityNamespace || !$entityName ) {
             return null;
@@ -398,12 +398,6 @@ class FormNodeUtil
                 if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
                 }
-                if( !$node->getEntityNamespace() && $objectType->getEntityNamespace() ) {
-                    $node->setEntityNamespace($objectType->getEntityNamespace());
-                }
-                if( !$node->getEntityName() && $objectType->getEntityName() ) {
-                    $node->setEntityName($objectType->getEntityName());
-                }
             }
 
             //set showLabel
@@ -428,9 +422,9 @@ class FormNodeUtil
                 $node->setEntityName($className);
             }
 
-            //if( $classObject ) {
-                //$node->setObject($classObject);
-            //}
+            if( $classObject ) {
+                $node->setObject($classObject);
+            }
 
             echo "Created: ".$node->getName()."<br>";
             $em->persist($parent);
@@ -439,43 +433,50 @@ class FormNodeUtil
 
         } else {
 
+            //disable all below updates when finished
+            //return $node;
+
             $updated = false;
             echo "Existed: ".$node->getName()."<br>";
             echo "objectType=".$objectType->getName()."<br>";
 
             //set objectType
             if( $objectType ) {
-                echo "update object type <br>";
                 if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
-                    echo "objectType=".$node->getObjectType()."<br>";
-                    $updated = true;
-                }
-                if( !$node->getEntityNamespace() && $objectType->getEntityNamespace() ) {
-                    $node->setEntityNamespace($objectType->getEntityNamespace());
-                    echo "entityNamespace=".$node->getEntityNamespace()."<br>";
-                    $updated = true;
-                }
-                if( !$node->getEntityName() && $objectType->getEntityName() ) {
-                    $node->setEntityName($objectType->getEntityName());
+                    echo "update objectType=".$node->getObjectType()."<br>";
                     $updated = true;
                 }
             }
 
             if( $classNamespace && $className ) {
-                //if( !$node->getEntityNamespace() ) {
-                    $node->setEntityNamespace($classNamespace);
-                    $updated = true;
-                //}
-                //if( !$node->getEntityName() ) {
-                    $node->setEntityName($className);
-                    $updated = true;
-                //}
-                if( $updated ) {
-                    echo "update $classNamespace and $className <br>";
-                    $em->persist($node);
-                    $em->flush($node);
-                }
+                $node->setEntityNamespace($classNamespace);
+                $node->setEntityName($className);
+                echo "set className $classNamespace $className <br>";
+                $updated = true;
+            } else {
+                $node->setEntityNamespace(null);
+                $node->setEntityName(null);
+                echo "set NULL EntityName <br>";
+                $updated = true;
+            }
+
+            if( $classObject ) {
+                echo "set  classObject=".$classObject." <br>";
+                $node->setObject($classObject);
+                $updated = true;
+            }
+
+            //pre-set
+            if(0) {
+                $node->setEntityNamespace(null);
+                $node->setEntityName(null);
+                $node->setEntityId(null);
+
+                $node->setReceivedValueEntityNamespace(null);
+                $node->setReceivedValueEntityName(null);
+                $node->setReceivedValueEntityId(null);
+                $updated = true;
             }
 
             if( $updated ) {
@@ -584,7 +585,7 @@ class FormNodeUtil
         return $objectType;
     }
 
-    public function setFormNodeToMessageCategory($messageCategoryName,$formNodes) {
+    public function setFormNodeToMessageCategory($messageCategoryName,$formNodes,$parentMessageCategoryName=null) {
         //attach this formnode to the MessageCategory "Transfusion Medicine"
         $em = $this->em;
         $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategoryName);
@@ -1159,7 +1160,7 @@ class FormNodeUtil
             'showLabel' => true,
             'visible' => true,
             //'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
-            //'className' => "TransfusionReactionTypeList"
+            //'className' => "ClericalErrorList"
         );
         $ClericalerrorDropdowm = $this->createFormNode($formParams);
         //attach this formnodes to the MessageCategory
@@ -1492,8 +1493,7 @@ class FormNodeUtil
         //    Unit Platelet Count [Form Field - Free Text, Single Line] : USE "Link To List ID" to link to a new list titled "CCI Unit Platelet Count Default Value" with one list item with "3" in the name column, load "3" via this link into this field on load. This mechanism will allow multiple possible default values for a given field depending on rules (once rules are implemented, until then your logic should grab the first value on the list).
         //        CCI Unit Platelet Count Default Value [Free Text Field Default Value List]
         //            3 [Free Text Field Default Value]
-        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("OlegUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->
-                                                findOneByName("3");
+        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("OlegUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->findOneByName("3");
         $formParams = array(
             'parent' => $CCISection,
             'name' => "Unit Platelet Count",
@@ -1582,6 +1582,238 @@ class FormNodeUtil
         $formNode = $this->createFormNode($formParams);
         $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
 
+
+        //        Miscellaneous [Form Section]
+        //    Product Currently Receiving: [Form Field - Dropdown Menu]
+        //        Platelet Transfusion Product Receiving [Dropdown Menu Value List]
+        //            HLA Platelets [Dropdown Menu Value]
+        //            XM Platelets [Dropdown Menu Value]
+        //            Regular Platelets [Dropdown Menu Value]
+        //            Platelet Drip [Dropdown Menu Value]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Product Currently Receiving",
+            'placeholder' => "Product Currently Receiving",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "PlateletTransfusionProductReceivingList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+        //    Product should be receiving: [Form Field - Dropdown Menu]
+        //        Platelet Transfusion Product Receiving [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Product should be receiving",
+            'placeholder' => "Product should be receiving",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "PlateletTransfusionProductReceivingList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+        //    Product Status: [Form Field - Dropdown Menu]
+        //        Transfusion Product Status [Dropdown Menu Value List]
+        //            Ordered [Dropdown Menu Value]
+        //            Not Ordered [Dropdown Menu Value]
+        //            Pending [Dropdown Menu Value]
+        //            In-house [Dropdown Menu Value]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Product Status",
+            'placeholder' => "Product Status",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "TransfusionProductStatusList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+        //    Expiration Date: [Form Field - Full Date]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Expiration Date",
+            'placeholder' => "Expiration Date",
+            'objectType' => $objectTypeFullDateTime,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
+
+
+        ////////////////////////////////////////////////////////
+        //        Transfusion Medicine -> WinRho [Message Category]
+        //Miscellaneous [Form Section]
+        //    Weight: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Weight",
+            'placeholder' => "Weight",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("WinRho",array($formNode));
+        //    Dosing: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Dosing",
+            'placeholder' => "Dosing",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("WinRho",array($formNode));
+        //    IU: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "IU",
+            'placeholder' => "IU",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("WinRho",array($formNode));
+
+
+        //        Transfusion Medicine -> Special needs [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Special needs",array($formNode));
+
+        //Transfusion Medicine -> Other [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Other",array($formNode),"Transfusion Medicine");
+
+        //Microbiology [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Microbiology",array($formNode));
+
+        //Coagulation [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Coagulation",array($formNode));
+
+        //Hematology [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Hematology",array($formNode));
+
+        //Chemistry [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Chemistry",array($formNode));
+
+        //Cytogenetics [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Cytogenetics",array($formNode));
+
+        //Molecular [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Molecular",array($formNode));
+
+        //Other [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        //$formNode = $this->createFormNode($formParams);
+        //$this->setFormNodeToMessageCategory("Other",array($formNode));
+
     }
 
 
@@ -1654,7 +1886,7 @@ class FormNodeUtil
     public function getDefaultValue( $formNode ) {
         $em = $this->em;
         $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
-        $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
+        $entityName = $formNode->getEntityName();           //"CCIUnitPlateletCountDefaultValueList"
         $entityId = $formNode->getEntityId();
 
         if( $entityId ) {

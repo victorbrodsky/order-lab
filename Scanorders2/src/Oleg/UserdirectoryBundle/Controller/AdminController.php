@@ -32,6 +32,7 @@ use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Entity\PermissionActionList;
 use Oleg\UserdirectoryBundle\Entity\PermissionList;
 use Oleg\UserdirectoryBundle\Entity\PermissionObjectList;
+use Oleg\UserdirectoryBundle\Entity\PlateletTransfusionProductReceivingList;
 use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
 use Oleg\UserdirectoryBundle\Entity\PositionTrackTypeList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
@@ -44,6 +45,7 @@ use Oleg\UserdirectoryBundle\Entity\TransfusionAntibodyScreenResultsList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionCrossmatchResultsList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionDATResultsList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionHemolysisCheckResultsList;
+use Oleg\UserdirectoryBundle\Entity\TransfusionProductStatusList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
 use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -293,6 +295,8 @@ class AdminController extends Controller
         $count_ComplexPlateletSummaryAntibodiesList = $this->generateComplexPlateletSummaryAntibodiesList();
         $count_CCIUnitPlateletCountDefaultValueList = $this->generateCCIUnitPlateletCountDefaultValueList();
         $count_CCIPlateletTypeTransfusedList = $this->generateCCIPlateletTypeTransfusedList();
+        $count_PlateletTransfusionProductReceivingList = $this->generatePlateletTransfusionProductReceivingList();
+        $count_TransfusionProductStatusList = $this->generateTransfusionProductStatusList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -372,6 +376,8 @@ class AdminController extends Controller
             'ComplexPlateletSummaryAntibodiesList='.$count_ComplexPlateletSummaryAntibodiesList.', '.
             'CCIUnitPlateletCountDefaultValueList='.$count_CCIUnitPlateletCountDefaultValueList.', '.
             'CCIPlateletTypeTransfusedList='.$count_CCIPlateletTypeTransfusedList.', '.
+            'PlateletTransfusionProductReceivingList='.$count_PlateletTransfusionProductReceivingList.', '.
+            'TransfusionProductStatusList='.$count_TransfusionProductStatusList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -5107,40 +5113,45 @@ class AdminController extends Controller
             //"Form Field - Free Text, Single Line",
             array(
                 'name' => "Form Field - Free Text, Single Line",
-                'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'entityName' => 'ObjectTypeString'
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeString'
             ),
             //"Form Field - Free Text",
             array(
                 'name' => "Form Field - Free Text",
-                'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'entityName' => 'ObjectTypeText'
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeText'
             ),
             "Form Field - Free Text, RTF",
             "Form Field - Free Text, HTML",
             "Form Field - Full Date",
             "Form Field - Time",
-            "Form Field - Full Date and Time",
+            //"Form Field - Full Date and Time",
+            array(
+                'name' => "Form Field - Full Date and Time",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
             "Form Field - Year",
             "Form Field - Month",
             //"Form Field - Date",
             array(
                 'name' => "Form Field - Date",
-                'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'entityName' => 'ObjectTypeDateTime'
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
             "Form Field - Day of the Week",
             //"Form Field - Dropdown Menu",
             array(
                 'name' => "Form Field - Dropdown Menu",
-                'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'entityName' => 'ObjectTypeDropdown'
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDropdown'
             ),
             "Dropdown Menu Value",
             array(
                 'name' => "Linked Object - Patient",
-                'entityNamespace' => 'Oleg\OrderformBundle\Entity',
-                'entityName' => 'Patient'
+                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
+                'receivedValueEntityName' => 'Patient'
             ),
         );
 
@@ -5149,13 +5160,13 @@ class AdminController extends Controller
 
             if( is_array($type) ) {
                 $name = $type['name'];
-                $entityNamespace = $type['entityNamespace'];
-                $entityName = $type['entityName'];
+                $receivedValueEntityNamespace = $type['receivedValueEntityNamespace'];
+                $receivedValueEntityName = $type['receivedValueEntityName'];
             } else {
                 //echo "string ";
                 $name = $type;
-                $entityNamespace = NULL;
-                $entityName = NULL;
+                $receivedValueEntityNamespace = NULL;
+                $receivedValueEntityName = NULL;
             }
 
             //echo "name=".$name."<br>";
@@ -5163,14 +5174,24 @@ class AdminController extends Controller
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeList')->findOneByName($name);
             if( $listEntity ) {
                 $updated = false;
-                if( !$listEntity->getEntityNamespace() && $entityNamespace ) {
-                    $listEntity->setEntityNamespace($entityNamespace);
+                if( !$listEntity->getReceivedValueEntityNamespace() && $receivedValueEntityNamespace ) {
+                    $listEntity->setReceivedValueEntityNamespace($receivedValueEntityNamespace);
                     $updated = true;
                 }
-                if( !$listEntity->getEntityName() && $entityName ) {
-                    $listEntity->setEntityName($entityName);
+                if( !$listEntity->getReceivedValueEntityName() && $receivedValueEntityName ) {
+                    $listEntity->setReceivedValueEntityName($receivedValueEntityName);
                     $updated = true;
                 }
+
+//                if( $listEntity->getEntityNamespace() ) {
+//                    $listEntity->setEntityNamespace(NULL);
+//                    $updated = true;
+//                }
+//                if( $listEntity->getEntityName() ) {
+//                    $listEntity->setEntityName(NULL);
+//                    $updated = true;
+//                }
+
                 if( $updated ) {
                     $em->persist($listEntity);
                     $em->flush();
@@ -5181,13 +5202,13 @@ class AdminController extends Controller
             $listEntity = new ObjectTypeList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
-            if( $entityNamespace ) {
-                //echo "entityNamespace=".$entityNamespace."<br>";
-                $listEntity->setEntityNamespace($entityNamespace);
+            if( $receivedValueEntityNamespace ) {
+                //echo "receivedValueEntityNamespace=".$receivedValueEntityNamespace."<br>";
+                $listEntity->setReceivedValueEntityNamespace($receivedValueEntityNamespace);
             }
-            if( $entityName ) {
-                //echo "entityName=".$entityName."<br>";
-                $listEntity->setEntityName($entityName);
+            if( $receivedValueEntityName ) {
+                //echo "entityName=".$receivedValueEntityName."<br>";
+                $listEntity->setReceivedValueEntityName($receivedValueEntityName);
             }
 
             //exit('exit generateObjectTypeActions');
@@ -6436,5 +6457,70 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+    public function generatePlateletTransfusionProductReceivingList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "HLA Platelets",
+            "XM Platelets",
+            "Regular Platelets",
+            "Platelet Drip"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlateletTransfusionProductReceivingList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new PlateletTransfusionProductReceivingList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransfusionProductStatusList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Ordered",
+            "Not Ordered",
+            "Pending",
+            "In-house"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionProductStatusList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TransfusionProductStatusList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
 }

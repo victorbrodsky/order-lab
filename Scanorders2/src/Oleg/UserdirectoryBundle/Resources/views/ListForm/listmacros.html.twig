@@ -718,6 +718,16 @@
         {{ formmacros.checkbox(form.visible) }}
     {% endif %}
 
+    {% if form.receivedValueEntityNamespace is defined %}
+        {{ formmacros.field(form.receivedValueEntityNamespace) }}
+    {% endif %}
+    {% if form.receivedValueEntityName is defined %}
+        {{ formmacros.field(form.receivedValueEntityName) }}
+    {% endif %}
+    {% if form.receivedValueEntityId is defined %}
+        {{ formmacros.field(form.receivedValueEntityId) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}

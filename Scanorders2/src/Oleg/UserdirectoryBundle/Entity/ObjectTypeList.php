@@ -24,34 +24,98 @@ class ObjectTypeList extends ListAbstract
     protected $original;
 
 
-    //use entityNamespace, entityName and entityId to link this object type to
+    //use receivedValueEntityNamespace, receivedValueEntityName and receivedValueEntityId to link this object type to
     // a specific object type implementation (i.e. ObjectTypeFormText), where the values will be stored.
+    //Received Form Field Value Entity.
+    /**
+     * i.e. "Oleg\OlegUserdirectoryBundle\Entity"
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $receivedValueEntityNamespace;
+    /**
+     * i.e. "Patient"
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $receivedValueEntityName;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $receivedValueEntityId;
 
 
 
-//    //Fields specifying a subject entity
-//    /**
-//     * i.e. "Oleg\OrderformBundle\Entity"
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $entityNamespace;
-//    /**
-//     * i.e. "Patient"
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $entityName;
 
 
 
+    /**
+     * @return mixed
+     */
+    public function getReceivedValueEntityNamespace()
+    {
+        return $this->receivedValueEntityNamespace;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getEntityNamespace()
-//    {
-//        return $this->entityNamespace;
-//    }
-//
+    /**
+     * @param mixed $receivedValueEntityNamespace
+     */
+    public function setReceivedValueEntityNamespace($receivedValueEntityNamespace)
+    {
+        $this->receivedValueEntityNamespace = $receivedValueEntityNamespace;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceivedValueEntityName()
+    {
+        return $this->receivedValueEntityName;
+    }
+
+    /**
+     * @param mixed $receivedValueEntityName
+     */
+    public function setReceivedValueEntityName($receivedValueEntityName)
+    {
+        $this->receivedValueEntityName = $receivedValueEntityName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceivedValueEntityId()
+    {
+        return $this->receivedValueEntityId;
+    }
+
+    /**
+     * @param mixed $receivedValueEntityId
+     */
+    public function setReceivedValueEntityId($receivedValueEntityId)
+    {
+        $this->receivedValueEntityId = $receivedValueEntityId;
+    }
+
+
+
+    public function setReceivedValueEntity($object) {
+        $class = new \ReflectionClass($object);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        if( $className && !$this->getReceivedValueEntityName() ) {
+            $this->setReceivedValueEntityName($className);
+        }
+
+        if( $classNamespace && !$this->getReceivedValueEntityNamespace() ) {
+            $this->setReceivedValueEntityNamespace($classNamespace);
+        }
+
+        if( !$this->getReceivedValueEntityId() && $object->getId() ) {
+            $this->setReceivedValueEntityId($object->getId());
+        }
+    }
+
+
 //    /**
 //     * @param mixed $entityNamespace
 //     */
@@ -69,22 +133,9 @@ class ObjectTypeList extends ListAbstract
 //
 //        $this->entityNamespace = $entityNamespace;
 //    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getEntityName()
-//    {
-//        return $this->entityName;
-//    }
-//
-//    /**
-//     * @param mixed $entityName
-//     */
-//    public function setEntityName($entityName)
-//    {
-//        $this->entityName = $entityName;
-//    }
+
+
+
 
 
 }
