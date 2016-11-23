@@ -122,6 +122,12 @@
         {% if formType == "Form Field - Date" %}
             {{ formnodemacros.dateForm(formNodeHolder,formNode,cycle,prototype) }}
         {% endif %}
+        {% if formType == "Form Field - Full Date" %}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Full Date and Time" %}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,cycle,prototype) }}
+        {% endif %}
 
     {% else %}
         {#<br>#}

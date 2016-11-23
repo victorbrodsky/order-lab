@@ -1633,10 +1633,11 @@ class FormNodeUtil
         $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
 
         //    Pre Platelet Count 1: [Form Field - Free Text, Single Line]
+        //rename to Pre-transfusion Platelet Count:
         $formParams = array(
             'parent' => $CCIInstanceSection,
-            'name' => "Pre Platelet Count 1",
-            'placeholder' => "Pre Platelet Count 1",
+            'name' => "Pre-transfusion Platelet Count",
+            'placeholder' => "Pre-transfusion Platelet Count",
             'objectType' => $objectTypeString,
             'showLabel' => true,
             'visible' => true
@@ -1644,10 +1645,11 @@ class FormNodeUtil
         $formNode = $this->createFormNode($formParams);
         $this->setFormNodeToMessageCategory("Complex platelet summary",array($formNode));
         //    Post Platelet Count 2: [Form Field - Free Text, Single Line]
+        //rename to Post-transfusion Platelet Count
         $formParams = array(
             'parent' => $CCIInstanceSection,
-            'name' => "Post Platelet Count 2",
-            'placeholder' => "Post Platelet Count 2",
+            'name' => "Post-transfusion Platelet Count",
+            'placeholder' => "Post-transfusion Platelet Count",
             'objectType' => $objectTypeString,
             'showLabel' => true,
             'visible' => true
