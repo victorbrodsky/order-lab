@@ -1595,16 +1595,32 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
 
     console.log("calllogAppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId);
 
+    //check if parent formnode exists and append this formnode to the parent formnode
+    var parentId = "formnode-holder-"+parentFormNodeId;
+    var parentEl = document.getElementById(parentId);
+    //calllogGetFormNodeElement
+
     //check if this element does not exist
     var formNodeElId = "formnode-holder-"+formNodeId;
     var formNodeEl = document.getElementById(formNodeElId);
     if( formNodeEl ) {
+        console.log("EXIT: formnode-holder-"+formNodeId+" already exists!");
+        //calllogDisabledEnabledFormNode('enable',formNodeHolderId);
+
+        if( parentEl ) {
+            //if already exists, make sure that it is visible
+            calllogDisabledEnabledSingleFormNode('enable', parentFormNodeId);
+        }
+
+        //enable formnode
+        calllogDisabledEnabledSingleFormNode('enable', formNodeId);
+
         return null;
     }
 
     //check if parent formnode exists and append this formnode to the parent formnode
-    var parentId = "formnode-holder-"+parentFormNodeId;
-    var parentEl = document.getElementById(parentId);
+    //var parentId = "formnode-holder-"+parentFormNodeId;
+    //var parentEl = document.getElementById(parentId);
     if( parentEl ) {
         console.log("parentId found="+parentId);
         appendEl = $(parentEl).find('.form-nodes-holder').last();

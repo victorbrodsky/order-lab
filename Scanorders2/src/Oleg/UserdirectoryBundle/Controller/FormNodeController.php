@@ -214,6 +214,7 @@ class FormNodeController extends Controller {
 
 
     /**
+     * Use: https://github.com/Atlantic18/DoctrineExtensions/blob/v2.4.x/doc/tree.md
      * @Route("/form-node-tree-test/", name="employees_form-node-tree-test")
      * @Method("GET")
      */
@@ -224,6 +225,12 @@ class FormNodeController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        $mapper = array(
+            'prefix' => "Oleg",
+            'className' => "FormNode",
+            'bundleName' => "UserdirectoryBundle"
+        );
 
         $repo = $em->getRepository('OlegUserdirectoryBundle:FormNode');
 
@@ -236,8 +243,10 @@ class FormNodeController extends Controller {
             print_r($verify);
 
             // if tree has errors it will try to fix all tree nodes
-            $repo->recover();
-            $em->flush(); // important: flush recovered nodes
+            if(0) {
+                $repo->recover();
+                $em->flush(); // important: flush recovered nodes
+            }
         }
 
         // it will remove this node from tree and reparent all children
@@ -255,27 +264,19 @@ class FormNodeController extends Controller {
 //        $em->clear(); // clear cached nodes
 
         if(0) {
-            $mapper = array(
-                'prefix' => "Oleg",
-                'className' => "FormNode",
-                'bundleName' => "UserdirectoryBundle"
-            );
-
             $id = "84";
             $removedCount = $repo->removeTreeNodeAndAllChildrenById($id, $mapper);
             echo "removedCount = $removedCount<br>";
         }
 
         if(0) {
-            // if tree has errors it will try to fix all tree nodes
-            $repo->recover();
-            $em->flush(); // important: flush recovered nodes
-            //fixed level
+            //fixed level: find all levels with -1
+            $fixedCount = $repo->setLevelFromParentRecursively($mapper);
+            echo "fixed levels count=".$fixedCount."<br>";
         }
 
         exit("<br><br>Form Node Tree testing");
     }
-
 
 
 }

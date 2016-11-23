@@ -901,5 +901,38 @@ class TreeRepository extends NestedTreeRepository {
         return $count;
     }
 
+    public function setLevelFromParentRecursively($mapper,$count=0) {
+        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+
+        //$nodes = $treeRepository->findByLevel(-1);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.parent","parent");
+
+        $dql->where("list.level < 0 AND parent IS NOT NULL AND parent.level > 0");
+        //echo "dql=".$dql."<br>";
+
+        $query = $this->_em->createQuery($dql);
+        $nodes = $query->getResult();
+
+        echo "nodes count=".count($nodes)."<br>";
+
+        if( count($nodes) > 0 ) {
+            foreach ($nodes as $node) {
+                $parentLevel = $node->getParent()->getLevel();
+                if( $parentLevel ) {
+                    $parentLevel = intval($parentLevel);
+                    if( $parentLevel > 0 ) {
+                        $node->setLevel(intval($parentLevel) + 1);
+                        $count++;
+                        $this->_em->flush();
+                    }
+                }
+            }
+            $count = $this->setLevelFromParentRecursively($mapper,$count);
+        }
+        return $count;
+    }
+
 }
 
