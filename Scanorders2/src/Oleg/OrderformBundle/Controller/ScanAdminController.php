@@ -1956,7 +1956,11 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.context')->getToken()->getUser();
 
         $items = array(
-            "Pathology Call Complex Patients"
+            array(
+                'name' => "Pathology Call Complex Patients",
+                'entityNamespace' => 'Oleg\CallLogBundle\Entity',
+                'entityName' => 'PathologyCallComplexPatients'
+            ),
         );
 
         $count = 10;
@@ -1974,7 +1978,7 @@ class ScanAdminController extends AdminController
 
         foreach( $items as $category=>$subcategory ) {
 
-            $name = $category;
+            $name = $category['name'];
 
             if( $subcategory && !is_array($subcategory) ) {
                 $name = $subcategory;
@@ -2002,6 +2006,15 @@ class ScanAdminController extends AdminController
                 $count = $count + 10;
             }
 
+            if( !$item->getEntityNamespace() && !$item->getEntityName() ) {
+                if( $category['entityNamespace'] ) {
+                    $item->setEntityNamespace($category['entityNamespace']);
+                }
+                if( $category['entityName'] ) {
+                    $item->setEntityName($category['entityName']);
+                }
+            }
+
 //            echo $level.": category=".$name.", count=".$count."<br>";
 //            echo "subcategory:<br>";
 //            print_r($subcategory);
@@ -2018,9 +2031,8 @@ class ScanAdminController extends AdminController
 
             //make children
             if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
-                $count = $this->addNestedsetCategory($item,$subcategory,$level+1,$username,$count);
+                $count = $this->addNestedsetPatientListHierarchy($item,$subcategory,$level+1,$username,$count);
             }
-
 
             $em->persist($item);
             $em->flush();
@@ -2080,7 +2092,7 @@ class ScanAdminController extends AdminController
             $bundleName = "OrderformBundle";
             $className = "PatientListHierarchy";
             $title = "Patient Lists Hierarchy Management";
-            $nodeshowpath = "patientlisthierarchy_show";
+            $nodeshowpath = "patientlisthierarchys_show";
         }
 
         $mapper = array(

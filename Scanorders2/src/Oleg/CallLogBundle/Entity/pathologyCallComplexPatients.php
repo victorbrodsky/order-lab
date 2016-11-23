@@ -27,6 +27,32 @@ class PathologyCallComplexPatients extends ListAbstract
     protected $original;
 
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\Patient", cascade={"persist"})
+     */
+    private $patient;
+
+
+
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getPatient()
+    {
+        return $this->patient;
+    }
+
+    /**
+     * @param mixed $patient
+     */
+    public function setPatient($patient)
+    {
+        $this->patient = $patient;
+    }
+
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="PatientListHierarchy", inversedBy="patientLists")
@@ -85,6 +111,8 @@ class PathologyCallComplexPatients extends ListAbstract
 //    {
 //        $this->patientListHierarchy = $patientListHierarchy;
 //    }
+
+
 
 
 }

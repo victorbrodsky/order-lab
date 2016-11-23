@@ -201,7 +201,7 @@ class CalllogMessageType extends AbstractType
                     'data-compositetree-classname' => 'PatientListHierarchy',
                     'data-label-prefix' => '',
                 ),
-                'classtype' => 'institution'
+                'classtype' => 'patientListTitle'
             ));
         });
 

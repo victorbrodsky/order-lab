@@ -565,7 +565,7 @@ class FormNodeUtil
             }
 
             //testing
-            if( 1 ) {
+            if( 0 ) {
                 $label = null;
                 if ($node->getObjectType()) {
                     $label = $node->getObjectType()->getName();

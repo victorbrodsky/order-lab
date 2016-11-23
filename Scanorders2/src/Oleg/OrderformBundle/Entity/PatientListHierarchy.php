@@ -11,6 +11,8 @@ use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
+//This list has a link to the patient list (i.e. PathologyCallComplexPatients) via entityNamespace, entityName, entityId
+
 /**
  * Use Composite pattern:
  * The composite pattern describes that a group of objects is to be treated in the same
@@ -100,6 +102,7 @@ class PatientListHierarchy extends BaseCompositeNode {
 //        $this->patientLists->removeElement($item);
 //    }
 
+
     /**
      * @return mixed
      */
@@ -115,8 +118,6 @@ class PatientListHierarchy extends BaseCompositeNode {
     {
         $this->organizationalGroupType = $organizationalGroupType;
     }
-
-
 
 
 

@@ -154,7 +154,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers-list")
      * @Route("/amendment-reasons/", name="amendmentreasons-list")
      * @Route("/pathology-call-complex-patients/", name="pathologycallcomplexpatients-list")
-     * @Route("/patient-list-hierarchy/", name="patientlisthierarchy-list")
+     * @Route("/patient-list-hierarchys/", name="patientlisthierarchys-list")
      * @Route("/patient-list-hierarchy-group-types/", name="patientlisthierarchygrouptype-list")
      *
      * @Method("GET")
@@ -209,7 +209,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers_create")
      * @Route("/amendment-reasons/", name="amendmentreasons_create")
      * @Route("/pathology-call-complex-patients/", name="pathologycallcomplexpatients_create")
-     * @Route("/patient-list-hierarchy/", name="patientlisthierarchy_create")
+     * @Route("/patient-list-hierarchys/", name="patientlisthierarchys_create")
      * @Route("/patient-list-hierarchy-group-types/", name="patientlisthierarchygrouptype_create")
      *
      * @Method("POST")
@@ -264,7 +264,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/new", name="messagetypeclassifiers_new")
      * @Route("/amendment-reasons/new", name="amendmentreasons_new")
      * @Route("/pathology-call-complex-patients/new", name="pathologycallcomplexpatients_new")
-     * @Route("/patient-list-hierarchy/new", name="patientlisthierarchy_new")
+     * @Route("/patient-list-hierarchys/new", name="patientlisthierarchy_new")
      * @Route("/patient-list-hierarchy-group-types/new", name="patientlisthierarchygrouptype_new")
      *
      * @Method("GET")
@@ -319,7 +319,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_show")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_show")
      * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_show")
-     * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_show", options={"expose"=true})
+     * @Route("/patient-list-hierarchys/{id}", name="patientlisthierarchys_show", options={"expose"=true})
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_show")
      *
      * @Method("GET")
@@ -374,7 +374,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}/edit", name="messagetypeclassifiers_edit")
      * @Route("/amendment-reasons/{id}/edit", name="amendmentreasons_edit")
      * @Route("/pathology-call-complex-patients/{id}/edit", name="pathologycallcomplexpatients_edit")
-     * @Route("/patient-list-hierarchy/{id}/edit", name="patientlisthierarchy_edit")
+     * @Route("/patient-list-hierarchys/{id}/edit", name="patientlisthierarchys_edit")
      * @Route("/patient-list-hierarchy-group-types/{id}/edit", name="patientlisthierarchygrouptype_edit")
      *
      * @Method("GET")
@@ -429,7 +429,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_update")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_update")
      * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_update")
-     * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_update")
+     * @Route("/patient-list-hierarchys/{id}", name="patientlisthierarchys_update")
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_update")
      *
      * @Method("PUT")
@@ -594,7 +594,7 @@ class ScanListController extends ListController
             $className = "AmendmentReasonList";
             $displayName = "Amendment Reasons";
             break;
-        case "patientlisthierarchy":
+        case "patientlisthierarchys":
             $className = "PatientListHierarchy";
             $displayName = "Patient List Hierarchy";
             break;
@@ -668,7 +668,7 @@ class ScanListController extends ListController
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_delete")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_delete")
      * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_delete")
-     * @Route("/patient-list-hierarchy/{id}", name="patientlisthierarchy_delete")
+     * @Route("/patient-list-hierarchys/{id}", name="patientlisthierarchys_delete")
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_delete")
      *
      * @Method("DELETE")

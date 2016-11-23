@@ -421,8 +421,6 @@ class Message {
     private $reportBlock;
 
 //    /**
-//      Dynamic form builder forms and database design:
-//          http://softwareengineering.stackexchange.com/questions/204097/dynamic-form-builder-forms-and-database-design
 //     * Pathology Call Log Entry (similar to the LabOrder)
 //     * @ORM\OneToOne(targetEntity="CalllogEntry", inversedBy="message", cascade={"persist","remove"})
 //     */

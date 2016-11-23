@@ -406,7 +406,7 @@ class CallEntryController extends Controller
                 //testing: process form nodes
                 $formNodeUtil = $this->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
-                exit('after formnode');
+                //exit('after formnode');
 
                 if( $patient->getId() ) {
                     //CASE 1
@@ -439,6 +439,28 @@ class CallEntryController extends Controller
                         $patient->addDob($newPatientDob);
                         //echo "patient patientDob=" . $newPatientDob . "<br>";
                     }
+
+                    //add patient to the complex patient list specified by patientListTitle if the option addPatientToList is checked.
+                    $addPatientToList = $form["addPatientToList"]->getData();
+                    if( $addPatientToList ) {
+                        $patientList = $form["patientListTitle"]->getData();
+                        echo "add patient to the patient list: ".$patientList->getName().": id=".$patientList->getId()."<br>";
+                        if( $patientList ) {
+                            $entityNamespace = $patientList->getEntityNamespace();
+                            $entityName = $patientList->getEntityName();
+                            if( $entityNamespace && $entityName ) {
+                                //create a new record in the list (i.e. PathologyCallComplexPatients)
+                                $listClassName = $entityNamespace."\\".$entityName;
+                                $newListElement = new $listClassName();
+                                $name = "Patient: ".$patient->obtainPatientInfoTitle();
+                                $count = null;
+                                $userSecUtil->setDefaultList($newListElement,$count,$user,$name);
+                                $newListElement->setPatient($patient);
+                                $em->persist($newListElement);
+                            }
+                        }
+                    }
+                    exit('1');
 
                     if(1) {
                         echo "encounter count=" . count($patient->getEncounter()) . "<br>";
@@ -476,7 +498,7 @@ class CallEntryController extends Controller
                     //remove empty patient from message
                     $message->removePatient($patient);
 
-                    //exit('Exit Case 2');
+                    exit('Exit Case 2');
                     $em->persist($newEncounter);
                     $em->flush($newEncounter);
 
@@ -503,7 +525,7 @@ class CallEntryController extends Controller
             }//if $newEncounter
 
 
-            //exit('form is submitted and finished, msg='.$msg);
+            exit('form is submitted and finished, msg='.$msg);
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
