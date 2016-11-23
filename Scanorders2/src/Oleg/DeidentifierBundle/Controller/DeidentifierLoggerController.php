@@ -171,6 +171,16 @@ class DeidentifierLoggerController extends LoggerController
         //echo 'users count='.count($users).'<br>';
         //exit('1');
 
+        //a user without Admin level role (ROLE_DEIDENTIFICATOR_ADMIN) can NOT change the filter in the URL to a user not equal to the currently logged in user.
+        if( false == $this->get('security.context')->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
+            foreach( $users as $thisUserId ) {
+                //echo "thisUserId=".$thisUserId."<br>";
+                if( $thisUserId != $user->getId() ) {
+                    return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+                }
+            }
+        }
+
         if( count($eventTypes) == 0 || count($users) == 0 ) {
             //echo 'assign and redirect back <br>';
             //add eventTypes and users

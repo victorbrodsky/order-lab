@@ -43,7 +43,7 @@ class DeidentifierSecurityController extends SecurityController
     /**
      * @Route("/no-permission", name="deidentifier-nopermission")
      * @Method("GET")
-     * @Template("DeidentifierBundle:Security:nopermission.html.twig")
+     * @Template("OlegDeidentifierBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {

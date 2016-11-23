@@ -1585,7 +1585,14 @@ function calllogAppendFormNodes( data ) {
             regularCombobox($('#formnode-holder-'+formNodeId));
         }
 
-        if( data[index]['formNodeObjectType'] == "Form Field - Date" ) {
+        if(
+            data[index]['formNodeObjectType'] == "Form Field - Date" ||
+            data[index]['formNodeObjectType'] == "Form Field - Full Date" ||
+            data[index]['formNodeObjectType'] == "Form Field - Full Date and Time" ||
+            data[index]['formNodeObjectType'] == "Form Field - Year" ||
+            data[index]['formNodeObjectType'] == "Form Field - Month" ||
+            data[index]['formNodeObjectType'] == "Form Field - Day of the Week"
+        ) {
             initDatepicker($('#formnode-holder-'+formNodeId));
         }
     }
