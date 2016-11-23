@@ -1691,10 +1691,11 @@ class FormNodeUtil
 
         //    Product should be receiving: [Form Field - Dropdown Menu]
         //        Platelet Transfusion Product Receiving [Dropdown Menu Value List] SAME LIST AS ABOVE, DO NOT DUPLICATE, just link to it via Link to List ID
+        //rename to Product Should Be Receiving
         $formParams = array(
             'parent' => $miscellaneous,
-            'name' => "Product should be receiving",
-            'placeholder' => "Product should be receiving",
+            'name' => "Product Should Be Receiving",
+            'placeholder' => "Product Should Be Receiving",
             'objectType' => $objectTypeDropdown,
             'showLabel' => true,
             'visible' => true,
@@ -1899,6 +1900,46 @@ class FormNodeUtil
         );
         $formNode = $this->createFormNode($formParams);
         $this->setFormNodeToMessageCategory("Other",array($formNode));
+
+
+        //Transfusion Medicine -> Complex factor summary [Message Category]
+        //Laboratory Values [Form Section]
+        //    Relevant Laboratory Values: [Form Field - Free Text]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Relevant Laboratory Values",
+            'placeholder' => "Relevant Laboratory Values",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex factor summary",array($formNode));
+        //Miscellaneous [Form Section]
+        //    Product receiving: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Product Should Be Receiving",
+            'placeholder' => "Product Should Be Receiving",
+            'objectType' => $objectTypeDropdown,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "PlateletTransfusionProductReceivingList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex factor summary",array($formNode));
+        //    Date: [Form Field - Full Date]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Date",
+            'placeholder' => "Date",
+            'objectType' => $objectTypeFullDateTime,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory("Complex factor summary",array($formNode));
 
     }
 
