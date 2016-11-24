@@ -189,11 +189,18 @@ class CalllogMessageType extends AbstractType
             $label = 'List Title:';
             //echo "show defaultInstitution label=".$label."<br>";
 
+            $patientLists = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findAll();
+            if( count($patientLists) > 0 ) {
+                $patientListId = $patientLists[0]->getId();
+            } else {
+                $patientListId = null;
+            }
+
             $form->add('patientListTitle', 'employees_custom_selector', array(
                 'label' => $label,
                 'mapped' => false,
                 'required' => true,
-                'data' => 1,
+                'data' => $patientListId,
                 'attr' => array(
                     'class' => 'ajax-combobox-compositetree',
                     'type' => 'hidden',

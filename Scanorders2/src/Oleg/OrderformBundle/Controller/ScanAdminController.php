@@ -128,7 +128,8 @@ class ScanAdminController extends AdminController
         $max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
-        $default_time_zone = $this->container->getParameter('default_time_zone');
+        //$default_time_zone = $this->container->getParameter('default_time_zone');
+
 
         $count_pattype = $this->generatePatientType();
         $count_acctype = $this->generateAccessionType();
@@ -1976,13 +1977,13 @@ class ScanAdminController extends AdminController
 
         $em = $this->getDoctrine()->getManager();
 
-        foreach( $items as $category=>$subcategory ) {
+        foreach( $items as $category ) { //=>$subcategory
 
             $name = $category['name'];
 
-            if( $subcategory && !is_array($subcategory) ) {
-                $name = $subcategory;
-            }
+//            if( $subcategory && !is_array($subcategory) ) {
+//                $name = $subcategory;
+//            }
 
             //find by name and by parent ($parentItem) if exists
             if( $parentItem ) {
@@ -2030,9 +2031,9 @@ class ScanAdminController extends AdminController
             //$item->printTree();
 
             //make children
-            if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
-                $count = $this->addNestedsetPatientListHierarchy($item,$subcategory,$level+1,$username,$count);
-            }
+            //if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
+            //    $count = $this->addNestedsetPatientListHierarchy($item,$subcategory,$level+1,$username,$count);
+            //}
 
             $em->persist($item);
             $em->flush();

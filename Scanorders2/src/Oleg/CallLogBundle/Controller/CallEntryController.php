@@ -417,6 +417,8 @@ class CallEntryController extends Controller
     //                }
 
                     $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
+                    $message->clearPatient();
+                    $message->addPatient($patient);
 
                     //reset institution from the patient
                     $newEncounter->setInstitution($patient->getInstitution());
@@ -449,10 +451,11 @@ class CallEntryController extends Controller
                             $entityNamespace = $patientList->getEntityNamespace();
                             $entityName = $patientList->getEntityName();
                             if( $entityNamespace && $entityName ) {
+                                //TODO: check if the patient does not exists in this list
                                 //create a new record in the list (i.e. PathologyCallComplexPatients)
                                 $listClassName = $entityNamespace."\\".$entityName;
                                 $newListElement = new $listClassName();
-                                $name = "Patient: ".$patient->obtainPatientInfoTitle();
+                                $name = "Patient ID# ".$patient->getId().": ".$patient->obtainPatientInfoTitle();
                                 $count = null;
                                 $userSecUtil->setDefaultList($newListElement,$count,$user,$name);
                                 $newListElement->setPatient($patient);
@@ -460,9 +463,8 @@ class CallEntryController extends Controller
                             }
                         }
                     }
-                    exit('1');
 
-                    if(1) {
+                    if(0) { //testing
                         echo "encounter count=" . count($patient->getEncounter()) . "<br>";
                         foreach ($patient->getEncounter() as $encounter) {
                             echo "<br>encounter ID=" . $encounter->getId() . "<br>";
@@ -478,6 +480,11 @@ class CallEntryController extends Controller
                             }
                         }
                     }
+
+                    //echo "patient count=".count($message->getPatient())."<br>";
+                    //echo "patient=".$message->getPatient()->first()->obtainPatientInfoTitle()."<br>";
+                    //echo $name."<br>";
+                    //exit('1');
 
                     //exit('Exit Case 1');
                     //$em->persist($patient);
@@ -498,7 +505,7 @@ class CallEntryController extends Controller
                     //remove empty patient from message
                     $message->removePatient($patient);
 
-                    exit('Exit Case 2');
+                    //exit('Exit Case 2');
                     $em->persist($newEncounter);
                     $em->flush($newEncounter);
 
@@ -525,7 +532,7 @@ class CallEntryController extends Controller
             }//if $newEncounter
 
 
-            exit('form is submitted and finished, msg='.$msg);
+            //exit('form is submitted and finished, msg='.$msg);
 
             $this->get('session')->getFlashBag()->add(
                 'notice',

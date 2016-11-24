@@ -132,7 +132,7 @@ class FormNodeUtil
         //exit("processFormNodeByType; formValue=".$formValue);
 
         $this->em->persist($newListElement);
-        //$this->em->flush($newListElement); //testing
+        $this->em->flush($newListElement); //testing
     }
 
 

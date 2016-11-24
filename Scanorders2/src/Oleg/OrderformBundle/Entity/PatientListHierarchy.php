@@ -35,7 +35,7 @@ class PatientListHierarchy extends BaseCompositeNode {
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="PatientListHierarchy", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      **/
     protected $parent;
 

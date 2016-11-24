@@ -1162,10 +1162,10 @@ class Message {
 
     public function clearPatient()
     {
-//        foreach( $this->patient as $thispatient ) {
-//            $this->removePatient($thispatient);
-//        }
-        $this->patient->clear();
+        foreach( $this->patient as $thispatient ) {
+            $this->removePatient($thispatient);
+        }
+        //$this->patient->clear();
     }
     
     /**
