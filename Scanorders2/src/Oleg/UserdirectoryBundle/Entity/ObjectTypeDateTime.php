@@ -24,10 +24,15 @@ class ObjectTypeDateTime extends ListAbstract
     protected $original;
 
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeDateTime")
+//     */
+//    private $formNodes;
     /**
-     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeDateTime")
+     * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeDateTimes", cascade={"persist"})
+     * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
      */
-    private $formNodes;
+    private $formNode;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -35,33 +40,29 @@ class ObjectTypeDateTime extends ListAbstract
     private $value;
 
 
+
+
     public function __construct( $creator = null ) {
         parent::__construct($creator);
-
-        $this->formNodes = new ArrayCollection();
     }
 
 
 
-
-
-    public function addFormNode($item)
+    /**
+     * @return mixed
+     */
+    public function getFormNode()
     {
-        if( $item && !$this->formNodes->contains($item) ) {
-            $this->formNodes->add($item);
-            //$item->setObjectType($this);
-        }
-        return $this;
-    }
-    public function removeFormNode($item)
-    {
-        $this->formNodes->removeElement($item);
-    }
-    public function getFormNodes()
-    {
-        return $this->formNodes;
+        return $this->formNode;
     }
 
+    /**
+     * @param mixed $formNode
+     */
+    public function setFormNode($formNode)
+    {
+        $this->formNode = $formNode;
+    }
 
     /**
      * @return mixed

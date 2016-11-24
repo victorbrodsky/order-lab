@@ -87,31 +87,6 @@ class FormNode extends BaseCompositeNode {
     private $visible;
 
 
-    //textValue
-    //TODO: choose the best way to link to the list holder:
-    //1) "hard" link using FK to ObjectTypeText
-    //2) "soft" link using entityNamespace="Oleg\UserdirectoryBundle\Entity" and entityName="ObjectTypeText"
-    /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="formNodes", cascade={"persist"})
-     * @ORM\JoinColumn(name="objectTypeText_id", referencedColumnName="id")
-     */
-    private $objectTypeText;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeString", inversedBy="formNodes", cascade={"persist"})
-     */
-    private $objectTypeString;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeDropdown", inversedBy="formNodes", cascade={"persist"})
-     */
-    private $objectTypeDropdown;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeDateTime", inversedBy="formNodes", cascade={"persist"})
-     */
-    private $objectTypeDateTime;
-
     //Received Form Field Value Entity. Used to overwrite the same values in the formnode's ObjectType
     /**
      * i.e. "Oleg\OlegUserdirectoryBundle\Entity"
@@ -130,8 +105,53 @@ class FormNode extends BaseCompositeNode {
 
 
 
+
+    //textValue
+    //TODO: choose the best way to link to the list holder:
+    //1) "hard" link using FK to ObjectTypeText
+    //2) "soft" link using entityNamespace="Oleg\UserdirectoryBundle\Entity" and entityName="ObjectTypeText"
+//    /**
+//     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="formNodes", cascade={"persist"})
+//     * @ORM\JoinColumn(name="objectTypeText_id", referencedColumnName="id")
+//     */
+    /**
+     * @ORM\OneToMany(targetEntity="ObjectTypeText", mappedBy="formNode")
+     */
+    private $objectTypeTexts;
+
+//    /**
+//     * @ORM\ManyToOne(targetEntity="ObjectTypeString", inversedBy="formNodes", cascade={"persist"})
+//     */
+    /**
+     * @ORM\OneToMany(targetEntity="ObjectTypeString", mappedBy="formNode")
+     */
+    private $objectTypeStrings;
+
+//    /**
+//     * @ORM\ManyToOne(targetEntity="ObjectTypeDropdown", inversedBy="formNodes", cascade={"persist"})
+//     */
+    /**
+     * @ORM\OneToMany(targetEntity="ObjectTypeDropdown", mappedBy="formNode")
+     */
+    private $objectTypeDropdowns;
+
+//    /**
+//     * @ORM\ManyToOne(targetEntity="ObjectTypeDateTime", inversedBy="formNodes", cascade={"persist"})
+//     */
+    /**
+     * @ORM\OneToMany(targetEntity="ObjectTypeDateTime", mappedBy="formNode")
+     */
+    private $objectTypeDateTimes;
+
+
+
     public function __construct($creator=null) {
         parent::__construct($creator);
+
+        $this->objectTypeTexts = new ArrayCollection();
+        $this->objectTypeStrings = new ArrayCollection();
+        $this->objectTypeDropdowns = new ArrayCollection();
+        $this->objectTypeDateTimes = new ArrayCollection();
 
     }
 
@@ -154,71 +174,73 @@ class FormNode extends BaseCompositeNode {
         $this->objectType = $objectType;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getObjectTypeText()
+    public function addObjectTypeText($item)
     {
-        return $this->objectTypeText;
+        if( $item && !$this->objectTypeTexts->contains($item) ) {
+            $this->objectTypeTexts->add($item);
+            $item->setFormNode($this);
+        }
+        return $this;
+    }
+    public function removeObjectTypeText($item)
+    {
+        $this->objectTypeTexts->removeElement($item);
+    }
+    public function getObjectTypeTexts()
+    {
+        return $this->objectTypeTexts;
     }
 
-    /**
-     * @param mixed $objectTypeText
-     */
-    public function setObjectTypeText($objectTypeText)
+    public function addObjectTypeString($item)
     {
-        $this->objectTypeText = $objectTypeText;
+        if( $item && !$this->objectTypeStrings->contains($item) ) {
+            $this->objectTypeStrings->add($item);
+            $item->setFormNode($this);
+        }
+        return $this;
+    }
+    public function removeObjectTypeString($item)
+    {
+        $this->objectTypeStrings->removeElement($item);
+    }
+    public function getObjectTypeStrings()
+    {
+        return $this->objectTypeStrings;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getObjectTypeString()
+    public function addObjectTypeDropdown($item)
     {
-        return $this->objectTypeString;
+        if( $item && !$this->objectTypeDropdowns->contains($item) ) {
+            $this->objectTypeDropdowns->add($item);
+            $item->setFormNode($this);
+        }
+        return $this;
+    }
+    public function removeObjectTypeDropdown($item)
+    {
+        $this->objectTypeDropdowns->removeElement($item);
+    }
+    public function getObjectTypeDropdowns()
+    {
+        return $this->objectTypeDropdowns;
     }
 
-    /**
-     * @param mixed $objectTypeString
-     */
-    public function setObjectTypeString($objectTypeString)
+    public function addObjectTypeDateTime($item)
     {
-        $this->objectTypeString = $objectTypeString;
+        if( $item && !$this->objectTypeDateTimes->contains($item) ) {
+            $this->objectTypeDateTimes->add($item);
+            $item->setFormNode($this);
+        }
+        return $this;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getObjectTypeDropdown()
+    public function removeObjectTypeDateTime($item)
     {
-        return $this->objectTypeDropdown;
+        $this->objectTypeDateTimes->removeElement($item);
     }
-
-    /**
-     * @param mixed $objectTypeDropdown
-     */
-    public function setObjectTypeDropdown($objectTypeDropdown)
+    public function getObjectTypeDateTimes()
     {
-        $this->objectTypeDropdown = $objectTypeDropdown;
+        return $this->objectTypeDateTimes;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getObjectTypeDateTime()
-    {
-        return $this->objectTypeDateTime;
-    }
-
-    /**
-     * @param mixed $objectTypeDateTime
-     */
-    public function setObjectTypeDateTime($objectTypeDateTime)
-    {
-        $this->objectTypeDateTime = $objectTypeDateTime;
-    }
-
-
 
 
     /**

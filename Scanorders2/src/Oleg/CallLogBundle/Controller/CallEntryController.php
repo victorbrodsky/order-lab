@@ -310,7 +310,7 @@ class CallEntryController extends Controller
 //            $unmappedField = $data["formnode-4"];
 //            echo "<br>unmappedField=".$unmappedField."<br>";
 //            //print_r($request->get("form"));
-//            exit('form is valid');
+//            //exit('form is valid');
 
             $msg = "No Case found";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
@@ -381,7 +381,7 @@ class CallEntryController extends Controller
 //                $encounterDate = $encounterDate->setTimezone(new \DateTimeZone($encounterDateTimezone));
 //                echo "date2=".$encounterDate->format('Y-m-d H:i')."<br>";
 //                $encounterDateObject->setField($encounterDate);
-//                exit('1');
+//                //exit('1');
 
                 //TODO: Update Patient Info from $newEncounter:
                 // The values typed into these fields should be recorded as "valid".
@@ -404,8 +404,8 @@ class CallEntryController extends Controller
                 }
 
                 //testing: process form nodes
-                $formNodeUtil = $this->get('user_formnode_utility');
-                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
+                //$formNodeUtil = $this->get('user_formnode_utility');
+                //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
                 //exit('after formnode');
 
                 if( $patient->getId() ) {
@@ -451,15 +451,22 @@ class CallEntryController extends Controller
                             $entityNamespace = $patientList->getEntityNamespace();
                             $entityName = $patientList->getEntityName();
                             if( $entityNamespace && $entityName ) {
-                                //TODO: check if the patient does not exists in this list
-                                //create a new record in the list (i.e. PathologyCallComplexPatients)
-                                $listClassName = $entityNamespace."\\".$entityName;
-                                $newListElement = new $listClassName();
-                                $name = "Patient ID# ".$patient->getId().": ".$patient->obtainPatientInfoTitle();
-                                $count = null;
-                                $userSecUtil->setDefaultList($newListElement,$count,$user,$name);
-                                $newListElement->setPatient($patient);
-                                $em->persist($newListElement);
+                                //check if the patient does not exists in this list
+                                $entityNamespaceArr = explode("\\", $entityNamespace);
+                                $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
+                                $patientListDb = $em->getRepository($bundleName.':'.$entityName)->findOneByPatient($patient);
+                                if( !$patientListDb ) {
+                                    //create a new record in the list (i.e. PathologyCallComplexPatients)
+                                    $listClassName = $entityNamespace . "\\" . $entityName;
+                                    $newListElement = new $listClassName();
+                                    $patientDescription = "Patient ID# " . $patient->getId() . ": " . $patient->obtainPatientInfoTitle();
+                                    $patientName = "Patient ID# ".$patient->getId();
+                                    $count = null;
+                                    $userSecUtil->setDefaultList($newListElement,$count,$user,$patientName);
+                                    $newListElement->setPatient($patient);
+                                    $newListElement->setDescription($patientDescription);
+                                    $em->persist($newListElement);
+                                }
                             }
                         }
                     }
@@ -1119,7 +1126,7 @@ class CallEntryController extends Controller
 //            foreach( $patients as $patient ) {
 //                echo "ID=".$patient->getId()."<br>";
 //            }
-//            exit('patients count='.count($patients));
+//            //exit('patients count='.count($patients));
 
             //log search action
             if( $evenlog ) {
@@ -1328,6 +1335,9 @@ class CallEntryController extends Controller
         $createdWithArr = array();
         $createdWithArr[] = "MRN Type: ".$mrnRes->getKeytype()->getName();
         $createdWithArr[] = "MRN: ".$mrnRes->getField();
+
+        //set source
+        $patient->setSource($sourcesystem);
 
         //mrn with leading zeros
         if( 0 && $mrn ) {

@@ -24,10 +24,20 @@ class ObjectTypeText extends ListAbstract
     protected $original;
 
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeText")
+//     */
+//    private $formNodes;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="formNodes", cascade={"persist"})
+//     * @ORM\JoinColumn(name="objectTypeText_id", referencedColumnName="id")
+//     */
+//    private $objectTypeText;
     /**
-     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeText")
+     * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeTexts", cascade={"persist"})
+     * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
      */
-    private $formNodes;
+    private $formNode;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -35,32 +45,48 @@ class ObjectTypeText extends ListAbstract
     private $value;
 
 
+
+
     public function __construct( $creator = null ) {
         parent::__construct($creator);
 
-        $this->formNodes = new ArrayCollection();
+        //$this->formNodes = new ArrayCollection();
     }
 
 
 
-
-
-    public function addFormNode($item)
+    /**
+     * @return mixed
+     */
+    public function getFormNode()
     {
-        if( $item && !$this->formNodes->contains($item) ) {
-            $this->formNodes->add($item);
-            //$item->setObjectType($this);
-        }
-        return $this;
+        return $this->formNode;
     }
-    public function removeFormNode($item)
+
+    /**
+     * @param mixed $formNode
+     */
+    public function setFormNode($formNode)
     {
-        $this->formNodes->removeElement($item);
+        $this->formNode = $formNode;
     }
-    public function getFormNodes()
-    {
-        return $this->formNodes;
-    }
+
+//    public function addFormNode($item)
+//    {
+//        if( $item && !$this->formNodes->contains($item) ) {
+//            $this->formNodes->add($item);
+//            //$item->setObjectType($this);
+//        }
+//        return $this;
+//    }
+//    public function removeFormNode($item)
+//    {
+//        $this->formNodes->removeElement($item);
+//    }
+//    public function getFormNodes()
+//    {
+//        return $this->formNodes;
+//    }
 
 
     /**

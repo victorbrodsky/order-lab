@@ -107,7 +107,7 @@ class FormNodeUtil
 
         //1) create a new list element
         $newListElement = $this->createNewList($formNode,$formValue);
-        //echo "newListElement=".$newListElement."<br>";
+        echo "newListElement=".$newListElement."<br>";
         if( !$newListElement ) {
             //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
             return;
@@ -120,6 +120,9 @@ class FormNodeUtil
 
         //3) set message by entityName to the created list
         $newListElement->setObject($holderEntity);
+
+        //4) set formnode to the list
+        $newListElement->setFormNode($formNode);
 
         //testing
         if( 0 ) {
@@ -139,7 +142,7 @@ class FormNodeUtil
     public function hasValue( $formNode ) {
 
         $formNodeTypeName = $formNode->getObjectType()->getName()."";
-        //echo "formNodeType=" . $formNodeType . "<br>";
+        //echo "formNodeTypeName=" . $formNodeTypeName . "<br>";
 
         if( $formNodeTypeName == "Form Group" ) {
             return false;
@@ -152,9 +155,11 @@ class FormNodeUtil
         }
 
         $formNodeType = $formNode->getObjectType();
-        $entityNamespace = $formNodeType->getEntityNamespace();
-        $entityName = $formNodeType->getEntityName();
-        if( !$entityNamespace || !$entityName ) {
+        //echo "formNodeType: ".$formNodeType." <br>";
+        $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace();
+        $receivedValueEntityName = $formNodeType->getReceivedValueEntityName();
+        //echo "entity: $receivedValueEntityNamespace:$receivedValueEntityName <br>";
+        if( !$receivedValueEntityNamespace || !$receivedValueEntityName ) {
             return false;
         }
 
@@ -164,10 +169,13 @@ class FormNodeUtil
     public function createNewList( $formNode, $formValue=null ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $formNodeObjectType = $formNode->getObjectType();
-        $entityNamespace = $formNodeObjectType->getEntityNamespace();
-        $entityName = $formNodeObjectType->getEntityName();
+        //$entityNamespace = $formNodeObjectType->getEntityNamespace();
+        //$entityName = $formNodeObjectType->getEntityName();
+        $receivedValueEntityNamespace = $formNodeObjectType->getReceivedValueEntityNamespace();
+        $receivedValueEntityName = $formNodeObjectType->getReceivedValueEntityName();
 
-        if( !$entityNamespace || !$entityName ) {
+        if( !$receivedValueEntityNamespace || !$receivedValueEntityName ) {
+            //exit("exit: entity name is null");
             return null;
         }
 
@@ -181,7 +189,7 @@ class FormNodeUtil
 //            throw new \Exception( 'Corresponding value list namespace is invalid: '.$entityNamespace );
 //        }
 
-        $listClassName = $entityNamespace."\\".$entityName;
+        $listClassName = $receivedValueEntityNamespace."\\".$receivedValueEntityName;
         $newListElement = new $listClassName();
         //$newListElement = new ObjectTypeText();
         $creator = $this->sc->getToken()->getUser();
