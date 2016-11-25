@@ -821,6 +821,41 @@ class Encounter extends ObjectAbstract
         return $number;
     }
 
+    //[EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
+    public function obtainLocationInfo() {
+        $infoArr = array();
+        //[tracker][spots][0][currentLocation][name]
+        if( !$this->getTracker() ) {
+            return "";
+        }
+        foreach( $this->getTracker()->getSpots() as $spot ) {
+            if( $spot->getCurrentLocation() ) {
+                $info = $spot->getCurrentLocation()->getName();
+                if( $spot->getCurrentLocation()->getPhone() ) {
+                    $info = $info . " / " . $spot->getCurrentLocation()->getPhone();
+                }
+                $infoArr[] = $info;
+            }
+        }
+
+        return implode("; ",$infoArr);
+    }
+
+    //[ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
+    public function obtainReferringProviderInfo() {
+        $infoArr = array();
+        //referringProviders_0_referringProviderSpecialty
+        foreach( $this->getReferringProviders() as $refProvider ) {
+            $info = $refProvider->getField()->getFullName();
+            if( $refProvider->getReferringProviderSpecialty() ) {
+                $info = $info . " / " . $refProvider->getReferringProviderSpecialty();
+            }
+            $infoArr[] = $info;
+        }
+
+        return implode("; ",$infoArr);
+    }
+
     public function obtainKeyField() {
         return $this->getNumber();
     }

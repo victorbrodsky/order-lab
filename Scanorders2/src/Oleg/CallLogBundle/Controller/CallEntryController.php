@@ -532,7 +532,30 @@ class CallEntryController extends Controller
                 //log search action
                 if( $msg ) {
                     $eventType = "Call Log Created";
-                    $event = "New Call Log created: message ID=".$message->getId();
+                    $event = "New Call Log with ID# ".$message->getId()." has been created by ".$user." ";
+                    //$event = "";
+                    //PatientLastName, Patient FirstName (DOB: MM/DD/YY, [Gender], [MRN Type(short name)]: [MRN])
+                    if( $patient->getId() ) {
+                        $event = $event . $patient->obtainPatientInfoSimple();
+                    }
+                    // at [EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
+                    $encounterLocation = $newEncounter->obtainLocationInfo();
+                    if( $encounterLocation ) {
+                        $event = $event . " at " . $encounterLocation;
+                    }
+                    // referred by [ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
+                    $referringProviderInfo = $newEncounter->obtainReferringProviderInfo();
+                    if( $referringProviderInfo ) {
+                        $event = $event . " referred by " . $referringProviderInfo;
+                    }
+                    // for [MessageType:Service] / [MessageType:Issue]
+                    $messageCategoryInfo = $message->getMessageCategoryString();
+                    if( $messageCategoryInfo ) {
+                        $event = $event . " for " . $messageCategoryInfo;
+                    }
+
+                    //$event = $event . " submitted by " . $user;
+
                     $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$message,$request,$eventType);
                 }
 
@@ -1512,6 +1535,59 @@ class CallEntryController extends Controller
 
         $response->setContent(json_encode($patientTitle));
         return $response;
+    }
+
+
+    /**
+     * Get Call Log Entry Message
+     * @Route("/entry/{messageId}/view", name="calllog_callentry_view")
+     * @Method("GET")
+     * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
+     */
+    public function getCallLogEntryAction(Request $request, $messageId)
+    {
+
+        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $cycle = "view";
+        $title = "Call Log Entry";
+        $formtype = "call-entry";
+
+        //$patientId = trim($request->get('patientId'));
+        //$nowStr = trim($request->get('nowStr'));
+        //echo "patientId=".$patientId."<br>";
+        //echo "nowStr=".$nowStr."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
+        if (!$message) {
+            throw new \Exception('Message has not found by ID ' . $messageId);
+        }
+
+        if (count($message->getPatient()) > 0 ) {
+            $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
+            $mrntype = $mrnRes->getKeytype();
+            $mrn = $mrnRes->getField();
+        } else {
+            $mrntype = null;
+            $mrn = null;
+        }
+
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn);
+
+        return array(
+            //'entity' => $entity,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => $title,
+            'formtype' => $formtype,
+            'triggerSearch' => 0,
+            'mrn' => $mrn,
+            'mrntype' => $mrntype,
+            //'encounterid' => $encounterid
+        );
     }
 
 }

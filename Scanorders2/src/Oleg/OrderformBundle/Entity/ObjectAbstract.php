@@ -946,6 +946,7 @@ abstract class ObjectAbstract
         $tracker->addSpot($spotEntity);
     }
 
+
 //    //replace contains in AddChild
 //    public function childAlreadyExist( $newChild ) {
 //

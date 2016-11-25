@@ -231,6 +231,10 @@ function setCallLogNavBar() {
         id = 'resources';
     }
 
+    if( full.indexOf("/call-log-book/event-log/event-log-per-user-per-event-type/") !== -1 ) {
+        id = 'myentrees';
+    }
+
     if( full.indexOf("/call-log-book/merge-patient-records") !== -1 ||
         full.indexOf("/call-log-book/un-merge-patient-records") !== -1
     ) {

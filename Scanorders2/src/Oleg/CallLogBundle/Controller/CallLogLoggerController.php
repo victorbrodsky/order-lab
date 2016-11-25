@@ -82,16 +82,116 @@ class CallLogLoggerController extends LoggerController
 //    }
 
 
-//    /**
-//     * Generation Log with eventTypes = "Generate Vacation Request" and users = current user id
-//     *
-//     * @Route("/event-log-per-user-per-event-type/", name="calllog_my_generation_log")
-//     * @Method("GET")
-//     * @Template("OlegCallLogBundle:Logger:index.html.twig")
-//     */
-//    public function myGenerationLogAction(Request $request)
-//    {
-//
-//    }
+    /**
+     * Generation Log with eventTypes = "Call Log Created" and users = current user id
+     *
+     * @Route("/event-log-per-user-per-event-type/", name="calllog_my_generation_log")
+     * @Method("GET")
+     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+     */
+    public function myGenerationLogAction(Request $request) {
+        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Call Log Created");
+        if( !$eventType ) {
+            throw $this->createNotFoundException('EventTypeList is not found by name ' . "Call Log Created");
+        }
+
+        $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        if( !$objectType ) {
+            throw $this->createNotFoundException('EventObjectTypeList is not found by name ' . "Message");
+        }
+
+        ///////////// make sure eventTypes and users are set /////////////
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $objectTypes = array();
+        $eventTypes = array();
+        $users = array();
+
+        $filter = $request->query->get('filter');
+
+        if( count($filter) > 0 ) {
+            $eventTypes = $filter['eventType'];
+            $users = $filter['user'];
+            $objectTypes = $filter['objectType'];
+        }
+        //echo 'eventType count='.count($eventTypes).'<br>';
+        //echo 'users count='.count($users).'<br>';
+        //exit('1');
+
+        //a user without Admin level role (ROLE_CALLLOG_ADMIN) can NOT change the filter in the URL to a user not equal to the currently logged in user.
+        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_ADMIN") ){
+            foreach( $users as $thisUserId ) {
+                //echo "thisUserId=".$thisUserId."<br>";
+                if( $thisUserId != $user->getId() ) {
+                    return $this->redirect( $this->generateUrl('calllog-nopermission') );
+                }
+            }
+        }
+
+        if( count($eventTypes) == 0 || count($users) == 0 || count($objectTypes) == 0 ) {
+            //echo 'assign and redirect back <br>';
+            //add eventTypes and users
+            return $this->redirect($this->generateUrl('calllog_my_generation_log',
+                array(
+                    'filter[eventType][]' => $eventType->getId(),
+                    'filter[objectType][]' => $objectType->getId(),
+                    'filter[user][]' => $user->getId(),
+                )
+            ));
+        }
+        ///////////// EOF make sure eventTypes and users are set /////////////
+
+        $params = array(
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            //'hideObjectType' => true,
+            //'hideObjectId' => true,
+            //'hideUser' => true,
+            //'hideEventType' => true
+        );
+        $loggerFormParams = $this->listLogger($params,$request);
+
+        $loggerFormParams['hideUserAgent'] = true;
+        $loggerFormParams['hideWidth'] = true;
+        $loggerFormParams['hideHeight'] = true;
+        $loggerFormParams['hideADServerResponse'] = true;
+
+        $loggerFormParams['hideIp'] = true;
+        $loggerFormParams['hideRoles'] = true;
+        $loggerFormParams['hideId'] = true;         //Event ID
+        //$loggerFormParams['hideObjectType'] = true;
+        //$loggerFormParams['hideObjectId'] = true;
+
+        $loggerFormParams['hideUser'] = true;
+        $loggerFormParams['hideEventType'] = true;
+
+        //get title postfix: Event Log showing 9 matching “EVENT TYPE” events for user: First Name LastName (CWID)
+        $filterform = $loggerFormParams['filterform'];
+        $eventTypes = $filterform['eventType']->getData();
+        $objectTypes = $filterform['objectType']->getData();
+        $users = $filterform['user']->getData();
+
+        $em = $this->getDoctrine()->getManager();
+        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
+        $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($users[0]);
+
+        //Event Log showing 1 matching "Call Log Created" event(s) for user: Victor Brodsky - vib9020 (WCMC CWID)
+        //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;
+        $eventlogTitle = $this->container->getParameter('eventlog_title');
+        if( $loggerFormParams['filtered'] ) {
+            $loggerFormParams['eventLogTitle'] = $eventlogTitle . " showing " . count($loggerFormParams['pagination']) . " matching ".
+                "\"".$eventType."\" event(s) and \"" .$objectType.  "\" object(s) for user: ".$user;
+        }
+
+        //exit('before return');
+        return $loggerFormParams;
+
+    }
 
 }
