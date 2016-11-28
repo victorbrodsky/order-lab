@@ -633,6 +633,9 @@
     {% if form.url is defined %}
         {{ formmacros.field(form.url) }}
     {% endif %}
+    {% if form.exclusivelySites is defined %}
+        {{ formmacros.field(form.exclusivelySites) }}
+    {% endif %}
 
     {% if form.listName is defined and form.listRootName is defined %}
         {#{{ formmacros.field(form.linkToListId) }}#}

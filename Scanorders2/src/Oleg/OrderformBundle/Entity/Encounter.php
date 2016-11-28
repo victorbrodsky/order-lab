@@ -841,6 +841,53 @@ class Encounter extends ObjectAbstract
         return implode("; ",$infoArr);
     }
 
+    //[ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
+    public function obtainReferringProviderInfo() {
+        $infoArr = array();
+        //referringProviders_0_referringProviderSpecialty
+        foreach( $this->getReferringProviders() as $refProvider ) {
+            $info = $refProvider->getField()->getFullName();
+
+            //([Specialty], [Phone Number]/[ReferringProviderEmail])
+            $addInfoArr = array();
+            if( $refProvider->getReferringProviderSpecialty() ) {
+                $addInfoArr[] = $refProvider->getReferringProviderSpecialty();
+            }
+
+            //[Phone Number]
+            $contactInfo = "";
+            //[Phone Number]
+            if( $refProvider->getReferringProviderPhone() ) {
+                $contactInfo .= $refProvider->getReferringProviderPhone();
+            }
+            //[ReferringProviderEmail]
+            if( $refProvider->getReferringProviderEmail() ) {
+                if( $contactInfo ) {
+                    $contactInfo = $contactInfo . "/";
+                }
+                $contactInfo .= $refProvider->getReferringProviderEmail();
+            }
+            if( $contactInfo ) {
+                $addInfoArr[] = $contactInfo;
+            }
+
+            //([Specialty], [Phone Number]/[ReferringProviderEmail])
+            $addInfo = "";
+            if( count($addInfoArr) > 0 ) {
+                $addInfo = "(" . implode(", ",$addInfoArr) . ")";
+            }
+
+            //Abha Goyal - abg9017 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+            if( $addInfo ) {
+                $info = $info . " " . $addInfo;
+            }
+
+            $infoArr[] = $info;
+        }
+
+        return implode("; ",$infoArr);
+    }
+
     public function obtainKeyField() {
         return $this->getNumber();
     }

@@ -1165,6 +1165,23 @@ class UserSecurityUtil {
         //{% set baseUrl = app.request.scheme ~'://'~app.request.host~app.request.getBaseURL() %}
         //baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId
 
+        if( !$logger->getObjectType() ) {
+            return $url;
+        }
+
+        $siteName = $logger->getSite()->getName();
+
+        //if exclusivelySites and $siteName in the exclusivelySites => OK, if not replace siteName by the first exclusivelySite
+        $exclusivelySiteOk = false;
+        foreach( $logger->getObjectType()->getExclusivelySites() as $site ) {
+            if( $site == $siteName ) {
+                $exclusivelySiteOk = true;
+            }
+        }
+        if( count($logger->getObjectType()->getExclusivelySites()) > 0 && $exclusivelySiteOk === false ) {
+            $siteName = $logger->getObjectType()->getExclusivelySites()[0]->getName()."";
+        }
+
         //exception for "Accession"
         if( $logger->getObjectType() == 'Accession' ) {
             ///re-identify/?accessionType=WHATEVER-YOU-NEED-TO-SET-THIS-TO&accessionNumber=
@@ -1199,7 +1216,6 @@ class UserSecurityUtil {
 
         }
 
-        $siteName = $logger->getSite()->getName();
         if( $logger->getObjectType() == "SiteList" ) {
             $siteName = "directory";
         }

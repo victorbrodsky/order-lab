@@ -83,8 +83,10 @@ class SiteParametersController extends Controller
 //            print_r($groupDefault->getRoles());
 //        }
 
+        $singleField = false;
+
         //$sitename,SiteParameters $entity, $param=null, $disabled=false
-        $editForm = $this->createEditForm($sitename,$entity,null,$disabled);
+        $editForm = $this->createEditForm($sitename,$entity,null,$disabled,$singleField);
 
         $link = realpath($_SERVER['DOCUMENT_ROOT']).'\order\scanorder\Scanorders2\app\config\parameters.yml';
         //echo "link=".$link."<br>";
@@ -117,7 +119,7 @@ class SiteParametersController extends Controller
         return $this->editParameters($request,$id);
     }
 
-    public function editParameters(Request $request,$id)
+    public function editParameters( Request $request, $id )
     {
         if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -249,7 +251,8 @@ class SiteParametersController extends Controller
             'sitename'=>$sitename,
             'cycle'=>"edit",
             'em'=>$em,
-            'roles' => $rolesArr
+            'roles' => $rolesArr,
+            'singleField' => false
         );
 
         $form = $this->createForm(new SiteParametersType($params), $entity, array(
@@ -351,7 +354,7 @@ class SiteParametersController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm( $sitename,SiteParameters $entity, $param=null, $disabled=false )
+    private function createEditForm( $sitename, SiteParameters $entity, $param=null, $disabled=false, $singleField=true )
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -369,7 +372,8 @@ class SiteParametersController extends Controller
             'cycle'=>$cycle,
             'em'=>$em,
             'param'=>$param,
-            'roles'=>$rolesArr
+            'roles'=>$rolesArr,
+            'singleField'=>$singleField
         );
 
         $form = $this->createForm(new SiteParametersType($params), $entity, array(

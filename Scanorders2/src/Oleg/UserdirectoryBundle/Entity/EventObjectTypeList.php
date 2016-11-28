@@ -28,9 +28,24 @@ class EventObjectTypeList extends ListAbstract
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $url;
+    private $url;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="SiteList")
+     * @ORM\JoinTable(name="user_eventObjectType_site",
+     *      joinColumns={@ORM\JoinColumn(name="eventObjectType_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")}
+     *      )
+     */
+    private $exclusivelySites;
 
 
+
+    public function __construct() {
+        parent::__construct();
+
+        $this->exclusivelySites = new ArrayCollection();
+    }
 
 
 
@@ -50,5 +65,21 @@ class EventObjectTypeList extends ListAbstract
         $this->url = $url;
     }
 
+
+
+    public function getExclusivelySites()
+    {
+        return $this->exclusivelySites;
+    }
+    public function addExclusivelySite($item)
+    {
+        if( $item && !$this->exclusivelySites->contains($item) ) {
+            $this->exclusivelySites->add($item);
+        }
+    }
+    public function removeExclusivelySite($item)
+    {
+        $this->exclusivelySites->removeElement($item);
+    }
 
 }

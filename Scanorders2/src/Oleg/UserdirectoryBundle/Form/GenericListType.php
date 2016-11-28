@@ -312,6 +312,15 @@ class GenericListType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
         }
+        if( method_exists($this->params['entity'],'getExclusivelySites') ) {
+            $builder->add('exclusivelySites','entity',array(
+                'class' => 'OlegUserdirectoryBundle:SiteList',
+                'label' => 'Apply Url exclusively to Site(s):',
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false,
+            ));
+        }
 
         //PermissionList
         if( strtolower($this->mapper['className']) == strtolower("PermissionList") ) {

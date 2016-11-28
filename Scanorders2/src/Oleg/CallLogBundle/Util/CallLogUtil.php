@@ -936,7 +936,7 @@ class CallLogUtil
             if ($patient && $patient->getId()) {
                 $event .= $patient->obtainPatientInfoSimple();
             }
-            echo 'patient event=' . $event . "<br>";
+            //echo 'patient event=' . $event . "<br>";
 
             $addInfo = "";
             // at [EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
@@ -946,7 +946,7 @@ class CallLogUtil
             }
 
             // referred by [ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
-            $referringProviderInfo = $this->obtainReferringProviderInfo($encounter);
+            $referringProviderInfo = $encounter->obtainReferringProviderInfo();
             if ($referringProviderInfo) {
                 $addInfo = $addInfo . " referred by " . $referringProviderInfo;
             }
@@ -957,15 +957,17 @@ class CallLogUtil
                 $addInfo = $addInfo . " for " . $messageCategoryInfo;
             }
 
-            if( !$addInfo ) {
-                $event = "Pathology Department was contacted regarding " . $event;
+            if( $addInfo ) {
+                $event = $event . $addInfo . ".";
+            } else {
+                $event = "Pathology Department was contacted regarding " . $event . ".";
             }
 
         } else {
 
             $event = "";
 
-            $referringProviderInfo = $this->obtainReferringProviderInfo($encounter);
+            $referringProviderInfo = $encounter->obtainReferringProviderInfo();
 
             // for [MessageType:Service] / [MessageType:Issue]
             $messageCategoryInfo = $this->getMessageCategoryString($message);
@@ -1005,7 +1007,7 @@ class CallLogUtil
 
         }
 
-        exit('event='.$event);
+        //exit('event='.$event);
         return $event;
     }
 
@@ -1037,26 +1039,5 @@ class CallLogUtil
         return $info;
     }
 
-    //[ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
-    public function obtainReferringProviderInfo( $encounter ) {
-        $infoArr = array();
-        //referringProviders_0_referringProviderSpecialty
-        foreach( $encounter->getReferringProviders() as $refProvider ) {
-            $info = $refProvider->getField()->getFullName();
 
-            $addInfo = "";
-            if( $refProvider->getReferringProviderSpecialty() ) {
-                $addInfo = $refProvider->getReferringProviderSpecialty();
-            }
-            //[Phone Number]/[ReferringProviderEmail]
-            if( $refProvider->getReferringProviderSpecialty() ) {
-                $addInfo = $refProvider->getReferringProviderSpecialty();
-            }
-            //Abha Goyal - abg9017 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
-
-            $infoArr[] = $info;
-        }
-
-        return implode("; ",$infoArr);
-    }
 }

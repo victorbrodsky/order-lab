@@ -1542,7 +1542,7 @@ class CallEntryController extends Controller
 
     /**
      * Get Call Log Entry Message
-     * @Route("/entry/{messageId}/view", name="calllog_callentry_view")
+     * @Route("/entry/view/{messageId}", name="calllog_callentry_view")
      * @Method("GET")
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
      */
@@ -1583,11 +1583,12 @@ class CallEntryController extends Controller
             //'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => $title,
+            'title' => $title . " ID# " . $message->getId(),
             'formtype' => $formtype,
             'triggerSearch' => 0,
             'mrn' => $mrn,
             'mrntype' => $mrntype,
+            'message' => $message
             //'encounterid' => $encounterid
         );
     }

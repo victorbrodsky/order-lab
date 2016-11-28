@@ -509,17 +509,22 @@ class SiteParametersType extends AbstractType
 
         $this->addCoPath($builder);
 
-
-        $builder->add('organizationalGroupDefaults', 'collection', array(
-            'type' => new OrganizationalGroupDefaultType($this->params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__organizationalgroupdefaults__',
-        ));
+        if( !array_key_exists('singleField', $this->params) ) {
+            $this->params['singleField'] = true;
+        }
+        if( $this->params['singleField'] == false ) {
+        //if(1) {
+            $builder->add('organizationalGroupDefaults', 'collection', array(
+                'type' => new OrganizationalGroupDefaultType($this->params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__organizationalgroupdefaults__',
+            ));
+        }
 
     }
     
