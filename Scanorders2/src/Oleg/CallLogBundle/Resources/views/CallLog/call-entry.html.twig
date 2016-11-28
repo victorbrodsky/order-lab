@@ -40,106 +40,87 @@
         {{ form_errors(form) }}
 
         {% for patient in form.patient %}
+
             {#patient.id:{{ patient.vars.value.id }}#}
             {% set patientForm = patient %}
-        {#{% endfor %}#}
 
-{#{% if patientForm is defined %}#}
+            {#{% set formtype = 'call-entry' %}#}
+            {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Patient Info',formtype) }}
 
-        {#{% set formtype = 'call-entry' %}#}
-        {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Patient Info',formtype) }}
+            {#<a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">#}
+            <a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">
+                No single patient is referenced by this entry or I'll add the patient info later
+            </a>
+            <div id="callentry-form" class="panel-collapse collapse">{#testing in#}
 
-        {#<a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">#}
-        <a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">
-            No single patient is referenced by this entry or I'll add the patient info later
-        </a>
-        <div id="callentry-form" class="panel-collapse collapse">{#testing in#}
-
-        {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#calllog-EncounterInfo">
-                        Encounter Info
-                    </a>
-                </h4>
-            </div>
-            <div id="calllog-EncounterInfo" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    {#<div class="row">#}
-                        {#<div class="col-xs-12" align="left">#}
+            {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#calllog-EncounterInfo">
+                            Encounter Info
+                        </a>
+                    </h4>
+                </div>
+                <div id="calllog-EncounterInfo" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        {#<div class="row">#}
+                            {#<div class="col-xs-12" align="left">#}
+                            {#</div>#}
                         {#</div>#}
-                    {#</div>#}
-                    {% set status = 'Submitted' %}
-                    {% for encounter in patientForm.encounter if encounter.vars.value.status == 'valid' %}
-                        {{ form_row(encounter.status) }}
-                        {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
-                        {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
-                        {{ formmacros.field(encounter.provider) }}
+                        {% set status = 'Submitted' %}
+                        {% for encounter in patientForm.encounter if encounter.vars.value.status == 'valid' %}
+                            {{ form_row(encounter.status) }}
+                            {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
+                            {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
+                            {{ formmacros.field(encounter.provider) }}
 
-                        {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
-                        {% for referringProvider in encounter.referringProviders %}
-                            {#{{ formmacros.field_show_user( encounter, "referringProviders", cycle ) }}#}
-                            {{ formmacros.field(referringProvider.field) }}
-                            {{ formmacros.field(referringProvider.referringProviderSpecialty) }}
-                            {{ formmacros.field(referringProvider.referringProviderPhone) }}
-                            {{ formmacros.field(referringProvider.referringProviderEmail) }}
-                        {% endfor %}
+                            {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
+                            {% for referringProvider in encounter.referringProviders %}
+                                {#{{ formmacros.field_show_user( encounter, "referringProviders", cycle ) }}#}
+                                {{ formmacros.field(referringProvider.field) }}
+                                {{ formmacros.field(referringProvider.referringProviderSpecialty) }}
+                                {{ formmacros.field(referringProvider.referringProviderPhone) }}
+                                {{ formmacros.field(referringProvider.referringProviderEmail) }}
+                            {% endfor %}
 
-                        {{ calllogmacros.trackerContactinfoForm(encounter,cycle,status) }}
+                            {{ calllogmacros.trackerContactinfoForm(encounter,cycle,status) }}
 
-                        {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}
+                            {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}
 
-                        {#Update Patient Info: encounter with status='valid'#}
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                {#<h4 class="panel-title">#}
-                                    {#<a data-toggle="collapse" href="#calllog-encounterEncounterInfo">#}
-                                        {#Update Patient Info#}
-                                    {#</a>#}
-                                {#</h4>#}
-
-                                {#<button#}
-                                        {#id="form_body_toggle_encounterInfo" type="button"#}
-                                        {#class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"#}
-                                        {#onclick="toggleSinglePanel(this,'#form_body_encounterInfo');">#}
-                                {#</button>#}
-
-                                <h4 class="panel-title">
-                                    {#<a#}
-                                        {#href="javascript:;"#}
-                                        {#onclick="calllogToggleSinglePanel(this,'#form_body_encounterInfo');"#}
-                                    {#>#}
-                                        {#Update Patient Info#}
-                                    {#</a>#}
-                                    <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
-                                        Update Patient Info
-                                    </a>
-                                </h4>
-
-                            </div>
-                            <div id="form_body_encounterInfo" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <div id="calllog-encounterInfo-holder">
-                                    {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
-                                    {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
-                                    {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
-                                    {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
-                                    {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
-                                    {#{{ formmacros.field(encounter.patientDob) }}#}
-                                    {{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}
+                            {#Update Patient Info: encounter with status='valid'#}
+                            {% if cycle != "show" %}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
+                                                Update Patient Info
+                                            </a>
+                                        </h4>
                                     </div>
-                                </div> <!-- panel-body -->
-                            </div> <!-- panel-collapse -->
-                        </div> <!-- panel panel-default -->
+                                    <div id="form_body_encounterInfo" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div id="calllog-encounterInfo-holder">
+                                            {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                                            {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                                            {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
+                                            {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                                            {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
+                                            {#{{ formmacros.field(encounter.patientDob) }}#}
+                                            {{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}
+                                            </div>
+                                        </div> <!-- panel-body -->
+                                    </div> <!-- panel-collapse -->
+                                </div> <!-- panel panel-default -->
+                            {% endif %}
 
-                    {% endfor %}
+                        {% endfor %} {#encounter#}
 
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-primary -->
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-primary -->
 
-
+        {% endfor %} {#end of patient#}
 
 
         {# Entry #}
@@ -205,9 +186,6 @@
         </p>
 
         </div> {#callentry-form#}
-
-{#{% endif %}#}
-{% endfor %}
 
         {#{{ form_row(form._token) }}#}
         {#{{ form_rest(form) }}#}

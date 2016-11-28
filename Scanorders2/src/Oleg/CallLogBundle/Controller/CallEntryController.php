@@ -293,12 +293,12 @@ class CallEntryController extends Controller
         //$data = $form->getData();
         //print_r($data);
 
-        if( $form->isSubmitted() ) {
-            echo "form is submitted <br>";
-        }
-        if( $form->isValid() ) {
-            echo "form is valid <br>";
-        }
+//        if( $form->isSubmitted() ) {
+//            echo "form is submitted <br>";
+//        }
+//        if( $form->isValid() ) {
+//            echo "form is valid <br>";
+//        }
 
         //if( $form->isSubmitted() && $form->isValid() ) {
         if( $form->isSubmitted() ) {
@@ -498,7 +498,7 @@ class CallEntryController extends Controller
                     //$em->persist($patient);
                     $em->persist($newEncounter);
                     $em->persist($message);
-                    //$em->flush(); //testing
+                    $em->flush(); //testing
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
 
@@ -514,10 +514,10 @@ class CallEntryController extends Controller
 
                     //exit('Exit Case 2');
                     $em->persist($newEncounter);
-                    //$em->flush($newEncounter); //testing
+                    $em->flush($newEncounter); //testing
 
                     $em->persist($message);
-                    //$em->flush($message); //testing
+                    $em->flush($message); //testing
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
                 }
@@ -554,7 +554,7 @@ class CallEntryController extends Controller
 //                    }
 
                     $event = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
-                    exit('event='.$event);
+                    //exit('event='.$event);
 
                     //$event = $event . " submitted by " . $user;
 
@@ -1553,7 +1553,7 @@ class CallEntryController extends Controller
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        $cycle = "view";
+        $cycle = "show";
         $title = "Call Log Entry";
         $formtype = "call-entry";
 
@@ -1570,12 +1570,14 @@ class CallEntryController extends Controller
 
         if (count($message->getPatient()) > 0 ) {
             $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
-            $mrntype = $mrnRes->getKeytype();
+            $mrntype = $mrnRes->getKeytype()->getId();
             $mrn = $mrnRes->getField();
         } else {
             $mrntype = null;
             $mrn = null;
         }
+
+        //echo "patients=".count($message->getPatient())."<br>";
 
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn);
 

@@ -1391,6 +1391,10 @@ function calllogPresetMrnMrntype(holderId) {
 
 //prefill location name if it has been opened
 function calllogToggleSingleEncounterPanel(btn,target) {
+    var formcycle = $('#formcycle').val();
+    if( formcycle == 'show' ) {
+        return;
+    }
     //preset .user-location-name-field to the 'Encounter's Location'
     var locationNameField = $(btn).closest('.panel').find('.user-location-name-field');
     locationNameField.val("Encounter's Location");
