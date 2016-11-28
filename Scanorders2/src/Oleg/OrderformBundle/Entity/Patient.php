@@ -1590,34 +1590,53 @@ class Patient extends ObjectAbstract
         return $patientInfo;
     }
 
+    //CallLog: PatientLastName, Patient FirstName (DOB: MM/DD/YY, [Gender], [MRN Type(short name)]: [MRN])
     public function obtainPatientInfoSimple( $status='valid' ) {
 
-        $patientInfoArr = array();
+        $fieldnameArr = array('patlastname','patfirstname','patmiddlename','patsex');
+        $fieldnameResArr = $this->obtainSingleEncounterValues($fieldnameArr,$status);
 
-        $patientInfoArr[] = "ID# ".$this->getId();
+        $patientInfo = "";
 
+        //PatientLastName, Patient FirstName
+        $fullPatientName = $this->getFullPatientName();
+        if( $fullPatientName && $fullPatientName != "" ) {
+            $patientInfo = $fullPatientName;
+        } else {
+            $patientInfo = "No Name Provided";
+        }
+
+        //(DOB: MM/DD/YY, [Gender], [MRN Type(short name)]: [MRN])
+        $patientAddInfoArr = array();
+
+        //DOB: MM/DD/YY
+        $dob = $this->obtainValidField('dob');
+        if( $dob ) {
+            $patientAddInfoArr[] = $dob."";
+        }
+
+        //[Gender]
+        $sex = $this->obtainValidField('sex');
+        if( $sex && $sex != "" ) {
+            $patientAddInfoArr[] = $sex."";
+        } else {
+            $sexRes = $fieldnameResArr['patsex'];
+            if( $sexRes ) {
+                //echo "sexRes=$sexRes <br>";
+                $patientAddInfoArr[] = $sexRes."";
+            }
+        }
+
+        //[MRN Type(short name)]: [MRN]
         $mrnRes = $this->obtainStatusField('mrn', $status);
         if( $mrnRes ) {
             $mrntypeStr = $mrnRes->getKeytype()->getOptimalName();
-            $patientInfoArr[] = $mrntypeStr.": ".$mrnRes->getField();
+            $patientAddInfoArr[] = $mrntypeStr.": ".$mrnRes->getField();
         }
 
-        $fullName = $this->getFullPatientName(false);
-        if( $fullName ) {
-            //echo "fullName <br>";
-            $patientInfoArr[] = $fullName;
-        } else {
-            $patientInfoArr[] = "No Name Provided";
-        }
+        $patientAddInfo = implode(", ",$patientAddInfoArr);
 
-        $dobRes = $this->obtainStatusField('dob', $status);
-        if( $dobRes && $dobRes."" ) {
-            //echo "dobRes=$dobRes <br>";
-            $patientInfoArr[] = $dobRes." date of birth";
-        }
-
-
-        $patientInfo = implode("; ",$patientInfoArr);
+        $patientInfo = $patientInfo . " (". $patientAddInfo . ")";
 
         return $patientInfo;
     }

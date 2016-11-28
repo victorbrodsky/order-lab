@@ -83,7 +83,7 @@ class CallLogLoggerController extends LoggerController
 
 
     /**
-     * Generation Log with eventTypes = "Call Log Created" and users = current user id
+     * Generation Log with eventTypes = "New Call Log Book Entry Submitted" and users = current user id
      *
      * @Route("/event-log-per-user-per-event-type/", name="calllog_my_generation_log")
      * @Method("GET")
@@ -96,9 +96,9 @@ class CallLogLoggerController extends LoggerController
 
         $em = $this->getDoctrine()->getManager();
 
-        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Call Log Created");
+        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("New Call Log Book Entry Submitted");
         if( !$eventType ) {
-            throw $this->createNotFoundException('EventTypeList is not found by name ' . "Call Log Created");
+            throw $this->createNotFoundException('EventTypeList is not found by name ' . "New Call Log Book Entry Submitted");
         }
 
         $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
@@ -181,7 +181,7 @@ class CallLogLoggerController extends LoggerController
         $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($users[0]);
 
-        //Event Log showing 1 matching "Call Log Created" event(s) for user: Victor Brodsky - vib9020 (WCMC CWID)
+        //Event Log showing 1 matching "New Call Log Book Entry Submitted" event(s) for user: Victor Brodsky - vib9020 (WCMC CWID)
         //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;
         $eventlogTitle = $this->container->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {

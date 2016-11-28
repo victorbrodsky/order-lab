@@ -921,4 +921,142 @@ class CallLogUtil
 
         return $nextKey;
     }
+
+
+    public function getEventLogDescription( $message, $patient, $encounter )
+    {
+
+        //PatientLastName, Patient FirstName (DOB: MM/DD/YY, [Gender], [MRN Type(short name)]: [MRN])
+        // at [EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
+        // referred by [ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
+        // for [MessageType:Service] / [MessageType:Issue]
+        if( $patient && $patient->getId() ) {
+            $event = "";
+            //PatientLastName, Patient FirstName (DOB: MM/DD/YY, [Gender], [MRN Type(short name)]: [MRN])
+            if ($patient && $patient->getId()) {
+                $event .= $patient->obtainPatientInfoSimple();
+            }
+            echo 'patient event=' . $event . "<br>";
+
+            $addInfo = "";
+            // at [EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
+            $encounterLocation = $encounter->obtainLocationInfo();
+            if ($encounterLocation) {
+                $addInfo .= " at " . $encounterLocation;
+            }
+
+            // referred by [ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
+            $referringProviderInfo = $this->obtainReferringProviderInfo($encounter);
+            if ($referringProviderInfo) {
+                $addInfo = $addInfo . " referred by " . $referringProviderInfo;
+            }
+
+            // for [MessageType:Service] / [MessageType:Issue]
+            $messageCategoryInfo = $this->getMessageCategoryString($message);
+            if ($messageCategoryInfo) {
+                $addInfo = $addInfo . " for " . $messageCategoryInfo;
+            }
+
+            if( !$addInfo ) {
+                $event = "Pathology Department was contacted regarding " . $event;
+            }
+
+        } else {
+
+            $event = "";
+
+            $referringProviderInfo = $this->obtainReferringProviderInfo($encounter);
+
+            // for [MessageType:Service] / [MessageType:Issue]
+            $messageCategoryInfo = $this->getMessageCategoryString($message);
+
+            //if the Patient is not present / patient is not identified, but the Encounter Location is provided:
+            $encounterLocation = $encounter->obtainLocationInfo();
+            if( $encounterLocation ) {
+                if( !$referringProviderInfo ) {
+                    $referringProviderInfo = "Pathology Department was contacted";
+                }
+                //Abha Goyal - abg9017 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+                // from 5th floor / 12345 reached out regarding Transfusion Medicine / First dose plasma.
+                if( $messageCategoryInfo ) {
+                    $event .= $referringProviderInfo . " from " . $encounterLocation . " reached out regarding " . $messageCategoryInfo . ".";
+                } else {
+                    $event .= $referringProviderInfo . " from " . $encounterLocation . ".";
+                }
+
+            } else {
+                //Abha Goyal - abg9017 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+                // reached out regarding Transfusion Medicine / First dose plasma.
+                if( $messageCategoryInfo ) {
+                    if( !$referringProviderInfo ) {
+                        $referringProviderInfo = "Pathology Department was contacted";
+                    }
+                    $event .= $referringProviderInfo . " regarding " . $messageCategoryInfo . ".";
+                } else {
+                    //...the Patient is not present / patient is not identified, AND the Encounter Location is not provided AND Referring Provider Info is not present:
+                    if( $referringProviderInfo ) {
+                        $event .= $referringProviderInfo . " reached out Pathology Department.";
+                    } else {
+                        //Pathology Department was contacted.
+                        $event .= "Pathology Department was contacted.";
+                    }
+                }
+            }
+
+        }
+
+        exit('event='.$event);
+        return $event;
+    }
+
+    //[MessageType:Service] / [MessageType:Issue]
+    public function getMessageCategoryString($message) {
+        $info = "";
+        if( $message->getMessageCategory() ) {
+            //echo "case 1 cat=".$message->getMessageCategory()."<br>";
+            $nodes = $message->getMessageCategory()->getEntityBreadcrumbs();
+            $infoArr = array();
+            foreach( $nodes as $node ) {
+                //echo "node=".$node."<br>";
+                if( $node->getOrganizationalGroupType() ) {
+                    $orgGroupName = $node->getOrganizationalGroupType()->getName() . "";
+                    if ($orgGroupName == "Issue" || $orgGroupName == "Service") {
+                        $infoArr[] = $node->getName() . "";
+                    }
+                }
+            }
+            $info = implode(" / ",$infoArr);
+        }
+
+        if( !$info ){
+            //echo "case 2<br>";
+            //$info = "Message ID# ".$message->getId();
+            //$info = "Pathology Department";
+        }
+
+        return $info;
+    }
+
+    //[ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
+    public function obtainReferringProviderInfo( $encounter ) {
+        $infoArr = array();
+        //referringProviders_0_referringProviderSpecialty
+        foreach( $encounter->getReferringProviders() as $refProvider ) {
+            $info = $refProvider->getField()->getFullName();
+
+            $addInfo = "";
+            if( $refProvider->getReferringProviderSpecialty() ) {
+                $addInfo = $refProvider->getReferringProviderSpecialty();
+            }
+            //[Phone Number]/[ReferringProviderEmail]
+            if( $refProvider->getReferringProviderSpecialty() ) {
+                $addInfo = $refProvider->getReferringProviderSpecialty();
+            }
+            //Abha Goyal - abg9017 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+
+            $infoArr[] = $info;
+        }
+
+        return implode("; ",$infoArr);
+    }
 }

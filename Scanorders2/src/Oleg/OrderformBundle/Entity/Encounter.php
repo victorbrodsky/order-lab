@@ -841,21 +841,6 @@ class Encounter extends ObjectAbstract
         return implode("; ",$infoArr);
     }
 
-    //[ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
-    public function obtainReferringProviderInfo() {
-        $infoArr = array();
-        //referringProviders_0_referringProviderSpecialty
-        foreach( $this->getReferringProviders() as $refProvider ) {
-            $info = $refProvider->getField()->getFullName();
-            if( $refProvider->getReferringProviderSpecialty() ) {
-                $info = $info . " / " . $refProvider->getReferringProviderSpecialty();
-            }
-            $infoArr[] = $info;
-        }
-
-        return implode("; ",$infoArr);
-    }
-
     public function obtainKeyField() {
         return $this->getNumber();
     }

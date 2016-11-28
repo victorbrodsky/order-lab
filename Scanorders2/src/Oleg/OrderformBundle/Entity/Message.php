@@ -1472,30 +1472,6 @@ class Message {
         return $fullName;
     }
 
-    //[MessageType:Service] / [MessageType:Issue]
-    public function getMessageCategoryString() {
-        $info = "";
-        if( $this->getMessageCategory() ) {
-            //echo "case 1 cat=".$this->getMessageCategory()."<br>";
-            $nodes = $this->getMessageCategory()->getEntityBreadcrumbs();
-            $infoArr = array();
-            foreach( $nodes as $node ) {
-                //echo "node=".$node."<br>";
-                if( $node->getOrganizationalGroupType() ) {
-                    $orgGroupName = $node->getOrganizationalGroupType()->getName() . "";
-                    if ($orgGroupName == "Issue" || $orgGroupName == "Service") {
-                        $infoArr[] = $node->getName() . "";
-                    }
-                }
-            }
-            $info = implode(" / ",$infoArr);
-        } else {
-            //echo "case 2<br>";
-            $info = "Message ID# ".$this->getId();
-        }
-        return $info;
-    }
-
     public function getUrl($generator,$urlname,$oid) {
         $url = null;
         if( $generator && $oid && $urlname ) {

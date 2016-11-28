@@ -226,6 +226,7 @@ class CallEntryController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
+        $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
 
@@ -497,10 +498,9 @@ class CallEntryController extends Controller
                     //$em->persist($patient);
                     $em->persist($newEncounter);
                     $em->persist($message);
-                    $em->flush();
+                    //$em->flush(); //testing
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
-                    //}
 
                 } else {
                     //CASE 2
@@ -514,45 +514,47 @@ class CallEntryController extends Controller
 
                     //exit('Exit Case 2');
                     $em->persist($newEncounter);
-                    $em->flush($newEncounter);
+                    //$em->flush($newEncounter); //testing
 
                     $em->persist($message);
-                    $em->flush($message);
+                    //$em->flush($message); //testing
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
-
                 }
 
                 //process form nodes
                 $formNodeUtil = $this->get('user_formnode_utility');
-                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
+                //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message); //testing
                 //exit('after formnode');
 
 
                 //log search action
                 if( $msg ) {
-                    $eventType = "Call Log Created";
-                    $event = "New Call Log with ID# ".$message->getId()." has been created by ".$user." ";
-                    //$event = "";
-                    //PatientLastName, Patient FirstName (DOB: MM/DD/YY, [Gender], [MRN Type(short name)]: [MRN])
-                    if( $patient->getId() ) {
-                        $event = $event . $patient->obtainPatientInfoSimple();
-                    }
-                    // at [EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
-                    $encounterLocation = $newEncounter->obtainLocationInfo();
-                    if( $encounterLocation ) {
-                        $event = $event . " at " . $encounterLocation;
-                    }
-                    // referred by [ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
-                    $referringProviderInfo = $newEncounter->obtainReferringProviderInfo();
-                    if( $referringProviderInfo ) {
-                        $event = $event . " referred by " . $referringProviderInfo;
-                    }
-                    // for [MessageType:Service] / [MessageType:Issue]
-                    $messageCategoryInfo = $message->getMessageCategoryString();
-                    if( $messageCategoryInfo ) {
-                        $event = $event . " for " . $messageCategoryInfo;
-                    }
+                    $eventType = "New Call Log Book Entry Submitted";
+//                    $event = "New Call Log with ID# ".$message->getId()." has been created by ".$user." ";
+//                    //$event = "";
+//                    //PatientLastName, Patient FirstName (DOB: MM/DD/YY, [Gender], [MRN Type(short name)]: [MRN])
+//                    if( $patient->getId() ) {
+//                        $event = $event . $patient->obtainPatientInfoSimple();
+//                    }
+//                    // at [EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
+//                    $encounterLocation = $newEncounter->obtainLocationInfo();
+//                    if( $encounterLocation ) {
+//                        $event = $event . " at " . $encounterLocation;
+//                    }
+//                    // referred by [ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
+//                    $referringProviderInfo = $newEncounter->obtainReferringProviderInfo();
+//                    if( $referringProviderInfo ) {
+//                        $event = $event . " referred by " . $referringProviderInfo;
+//                    }
+//                    // for [MessageType:Service] / [MessageType:Issue]
+//                    $messageCategoryInfo = $message->getMessageCategoryString();
+//                    if( $messageCategoryInfo ) {
+//                        $event = $event . " for " . $messageCategoryInfo;
+//                    }
+
+                    $event = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
+                    exit('event='.$event);
 
                     //$event = $event . " submitted by " . $user;
 
