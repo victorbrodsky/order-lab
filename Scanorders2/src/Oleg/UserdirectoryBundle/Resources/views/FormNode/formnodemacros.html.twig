@@ -1,6 +1,6 @@
 
 {#add a single form node#}
-{% macro addSingleFormNode( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro addSingleFormNode( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
     <div id="formnode-holder-{{ formNode.id }}"
@@ -8,7 +8,7 @@
          data-formnodeholderid="{{ formNodeHolder.id }}"
          data-formnodeid="{{ formNode.id }}"
     >
-        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,"single") }}
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,"single",formNodeValue) }}
     </div>
 
 {% endmacro %}
@@ -79,7 +79,7 @@
 
 {% endmacro %}
 
-{% macro addFormNodeByType( formNodeHolder, formNode, cycle, prototype, single ) %}
+{% macro addFormNodeByType( formNodeHolder, formNode, cycle, prototype, single, formNodeValue ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {#formNode.id={{ formNode.id }}<br>#}
 
@@ -108,25 +108,25 @@
         {% endif %}
 
         {% if formType == "Form Field - Free Text" %}
-            {{ formnodemacros.textareaForm(formNodeHolder,formNode,cycle,prototype) }}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
         {% if formType == "Form Field - Free Text, Single Line" %}
-            {{ formnodemacros.stringForm(formNodeHolder,formNode,cycle,prototype) }}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
         {% if formType == "Form Field - Dropdown Menu" %}
-            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,cycle,prototype) }}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
         {% if formType == "Form Field - Date" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,cycle,prototype) }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Full Date" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,cycle,prototype) }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Full Date and Time" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,cycle,prototype) }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
     {% else %}
@@ -197,7 +197,7 @@
 
 {% endmacro %}
 
-{% macro textareaForm( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro textareaForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -213,7 +213,7 @@
                         {#class="textarea form-control"#}
                 {#>#}
                 {#</textarea>#}
-                {{ formnodemacros.textareaField(formNodeHolder, formNode, cycle, prototype) }}
+                {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
             </div>
         </div>
     {% else %}
@@ -225,23 +225,29 @@
         {#>#}
         {#</textarea>#}
         {#</div>#}
-        {{ formnodemacros.textareaField(formNodeHolder, formNode, cycle, prototype) }}
+        {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro textareaField( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro textareaField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
+    formNodeValue={{ formNodeValue }}
+    {% if formNodeValue %}
+        {% set fieldValue = formNodeValue %}
+    {% else %}
+        {% set fieldValue = null %}
+    {% endif %}
     {% set fieldname = "formnode-"~formNode.id %}
     <textarea
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
             name="{{ fieldname }}"
             class="textarea form-control"
     >
-        {#{{ formNode.value }}#}
+        {{ fieldValue }}
     </textarea>
 {% endmacro %}
 
-{% macro stringForm( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro stringForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -251,18 +257,19 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.stringField(formNodeHolder, formNode, cycle, prototype) }}
+                {{ formnodemacros.stringField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.stringField(formNodeHolder, formNode, cycle, prototype) }}
+        {{ formnodemacros.stringField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro stringField( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro stringField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {% set fieldname = "formnode-"~formNode.id %}
-    {% if formNode.value %}
-        {% set fieldValue = formNode.value %}
+    formNodeValue={{ formNodeValue }}
+    {% if formNodeValue %}
+        {% set fieldValue = formNodeValue %}
     {% else %}
         {% set fieldValue = user_formnode_utility.getDefaultValue(formNode) %}
     {% endif %}
@@ -277,7 +284,7 @@
 {% endmacro %}
 
 
-{% macro dropdownForm( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro dropdownForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -287,15 +294,15 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dropdownField(formNodeHolder, formNode, cycle, prototype) }}
+                {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.dropdownField(formNodeHolder, formNode, cycle, prototype) }}
+        {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro dropdownField( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro dropdownField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {% set fieldname = "formnode-"~formNode.id %}
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
@@ -319,7 +326,7 @@
 {% endmacro %}
 
 
-{% macro dateForm( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro dateForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -329,15 +336,15 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dateField(formNodeHolder, formNode, cycle, prototype) }}
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.dateField(formNodeHolder, formNode, cycle, prototype) }}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro dateField( formNodeHolder, formNode, cycle, prototype ) %}
+{% macro dateField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {% set fieldname = "formnode-"~formNode.id %}
     <div class="input-group input-group-reg date regular-datepicker">
         <input

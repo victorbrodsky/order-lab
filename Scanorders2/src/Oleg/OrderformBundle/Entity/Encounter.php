@@ -91,6 +91,7 @@ class Encounter extends ObjectAbstract
     protected $referringProviders;
 
     /**
+     * TODO: make it the same as patlastname?
      * unmapped patientDob
      */
     private $patientDob;

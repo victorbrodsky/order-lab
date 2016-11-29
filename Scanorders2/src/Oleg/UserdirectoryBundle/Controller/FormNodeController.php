@@ -32,34 +32,41 @@ class FormNodeController extends Controller {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $formNodeUtil = $this->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $entityNamespace = $request->query->get('entityNamespace');
-        $entityName = $request->query->get('entityName');
-        $entityId = $request->query->get('entityId');
+        //formnode's holder (MessageCategory)
+        $holderNamespace = $request->query->get('holderNamespace');
+        $holderName = $request->query->get('holderName'); //MessageCategory
+        $holderId = $request->query->get('holderId');
+
+        //receiving list's entityName (Message)
+        $entityNamespace = $request->query->get('entityNamespace'); //"Oleg\\OrderformBundle\\Entity"
+        $entityName = $request->query->get('entityName'); //"Message";
+        $entityId = $request->query->get('entityId'); //"Message ID";
 
         //echo "entityNamespace=".$entityNamespace."<br>";
         //echo "entityName=".$entityName."<br>";
         //echo "entityId=".$entityId."<br>";
 
-        if( !$entityNamespace || !$entityName || !$entityId ) {
-            //echo "no entity namespace and name";
+        if( !$holderNamespace || !$holderName || !$holderId ) {
+            //echo "no holder namespace and name";
             return null;
         }
 
         //Oleg\UserdirectoryBundle\Entity:ObjectTypeText
         //"OlegUserdirectoryBundle:ObjectTypeText"
-        $entityNamespaceArr = explode("\\",$entityNamespace);
-        if( count($entityNamespaceArr) > 2 ) {
-            $entityNamespaceShort = $entityNamespaceArr[0] . $entityNamespaceArr[1];
-            $entityFullName = $entityNamespaceShort . ":" . $entityName;
+        $holderNamespaceArr = explode("\\",$holderNamespace);
+        if( count($holderNamespaceArr) > 2 ) {
+            $holderNamespaceShort = $holderNamespaceArr[0] . $holderNamespaceArr[1];
+            $holderFullName = $holderNamespaceShort . ":" . $holderName;
         } else {
-            throw new \Exception( 'Corresponding value list namespace is invalid: '.$entityNamespace );
+            throw new \Exception( 'Corresponding value list namespace is invalid: '.$holderNamespace );
         }
 
-        $formNodeHolderEntity = $em->getRepository($entityFullName)->find($entityId);
+        $formNodeHolderEntity = $em->getRepository($holderFullName)->find($holderId);
         if( !$formNodeHolderEntity ) {
-            throw new \Exception( 'Entity not found: entityFullName='.$entityFullName.'; entityId='.$entityId );
+            throw new \Exception( 'Entity not found: holderFullName='.$holderFullName.'; holderId='.$holderId );
         }
 
         $formNodeHolderId = $formNodeHolderEntity->getId();
@@ -77,7 +84,6 @@ class FormNodeController extends Controller {
                 continue;
             }
 
-
             $parentFormNode = $this->getParentFormNodeSection($formNode);
             if( $parentFormNode ) {
                 $parentFormNodeId = $parentFormNode->getId();
@@ -89,10 +95,24 @@ class FormNodeController extends Controller {
                 $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr);
             }
 
+            //find FormNode value by entityNamespace, entityName, entityId
+            $formNodeValue = null;
+            if( $entityId ) {
+                $mapper = array(
+                    'entityNamespace' => $entityNamespace,
+                    'entityName' => $entityName, //"Message"
+                    'entityId' => $entityId,
+                );
+                $formNodeValue = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
+            }
+            //echo "formNode=".$formNode->getId()."<br>";
+            //echo "formNodeValue=".$formNodeValue."<br>";
+
             $formNodeArr = array(
                 'formNode' => $formNode,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
                 'cycle' => 'edit',
+                'formNodeValue' => $formNodeValue
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -101,9 +121,10 @@ class FormNodeController extends Controller {
                 'formNodeHolderId' => $formNodeHolderId,
                 'parentFormNodeId' => $parentFormNodeId,
                 'formNodeId' => $formNodeId,
-                'formNodeHtml' => $template,
                 'simpleFormNode' => true,
-                'formNodeObjectType' => $formNode->getObjectType().""
+                'formNodeObjectType' => $formNode->getObjectType()."",
+                'formNodeValue' => $formNodeValue,
+                'formNodeHtml' => $template,
                 //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
                 //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
             );
@@ -152,6 +173,7 @@ class FormNodeController extends Controller {
                 'formNode' => $parentFormNode,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
                 'cycle' => 'edit',
+                'formNodeValue' => null
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -167,6 +189,7 @@ class FormNodeController extends Controller {
                 'formNodeHolderId' => $formNodeHolderId,
                 'parentFormNodeId' => $grandParentFormNodeId,
                 'formNodeId' => $parentFormNode->getId(),
+                'formNodeValue' => null,
                 'formNodeHtml' => $template,
                 'simpleFormNode' => false
             );

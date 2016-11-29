@@ -2048,6 +2048,76 @@ class FormNodeUtil
         return null;
     }
 
+    public function getFormNodeReceivedListRepository( $formNode ) {
+        $formNodeType = $formNode->getObjectType();
+        //echo "formNodeType: ".$formNodeType." <br>";
+        if( !$formNodeType ) {
+            return null;
+        }
+        $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace(); //Oleg\UserdirectoryBundle\Entity
+        $receivedValueEntityName = $formNodeType->getReceivedValueEntityName(); //ObjectTypeText
+        //echo "entity: $receivedValueEntityNamespace:$receivedValueEntityName <br>";
+        if( !$receivedValueEntityNamespace || !$receivedValueEntityName ) {
+            return null;
+        }
+
+        $receivedValueEntityNamespaceArr = explode("\\", $receivedValueEntityNamespace);
+        $bundleName = $receivedValueEntityNamespaceArr[0] . $receivedValueEntityNamespaceArr[1];
+        $repo = $this->em->getRepository($bundleName.':'.$receivedValueEntityName);
+
+        return $repo;
+    }
+
+    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper ) {
+
+        if( !$formNode ) {
+            return null;
+        }
+
+        if( !$mapper || count($mapper) == 0 ) {
+            return null;
+        }
+
+//        $class = new \ReflectionClass($object);
+//        $className = $class->getShortName();          //ObjectTypeText
+//        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+
+        //echo "classNamespace=".$classNamespace."<br>";
+        //echo "className=".$className."<br>";
+        //echo "entityId=".$object->getId()."<br>";
+        //print_r($mapper);
+
+        $treeRepository = $this->getFormNodeReceivedListRepository($formNode);
+        //$treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
+        $dql->andWhere('list.formNode = :formNodeId');
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $query->setParameters(
+            array(
+                'entityName' => $mapper['entityName'],
+                'entityNamespace' => $mapper['entityNamespace'],
+                'entityId' => $mapper['entityId'],
+                'formNodeId' => $formNode->getId()
+            )
+        );
+
+        $results = $query->getResult();
+        //echo "count=".count($results)."<br>";
+
+        if( count($results) > 0 ) {
+            return $results[0]->getValue();
+        }
+
+        return null;
+    }
+
 }
 
 

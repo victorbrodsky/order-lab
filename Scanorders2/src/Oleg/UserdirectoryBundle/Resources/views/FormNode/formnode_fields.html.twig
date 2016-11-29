@@ -4,6 +4,6 @@
 
 {% if formNodeHolderEntity is defined %}
     {#{{ formnodemacros.addFormNodes(formNodeHolderEntity, formNode, cycle, "noprototype") }}#}
-    {{ formnodemacros.addSingleFormNode(formNodeHolderEntity, formNode, cycle, "noprototype") }}
+    {{ formnodemacros.addSingleFormNode(formNodeHolderEntity, formNode, formNodeValue, cycle, "noprototype") }}
 {% endif %}
 

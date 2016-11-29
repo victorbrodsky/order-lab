@@ -1497,8 +1497,8 @@ function calllogEnableMessageCategoryService(holderId) {
 //    return;
 //}
 
-var _entityNamespace = "Oleg\\OrderformBundle\\Entity";
-var _entityName = "MessageCategory";
+var _holderNamespace = "Oleg\\OrderformBundle\\Entity";
+var _holderName = "MessageCategory";
 var _formnode = [];
 
 function treeSelectAdditionalJsAction(comboboxEl) {
@@ -1520,10 +1520,10 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     //    return;
     //}
 
-    //var entityNamespace = "Oleg\\OrderformBundle\\Entity";
-    //var entityName = "MessageCategory";
+    //var holderNamespace = "Oleg\\OrderformBundle\\Entity";
+    //var holderName = "MessageCategory";
 
-    var identifier = _entityName+"-"+messageCategoryId;
+    var identifier = _holderName+"-"+messageCategoryId;
 
     //console.log("########## identifier="+identifier);
     //console.log("_formnode[identifier]="+_formnode[identifier]);
@@ -1538,13 +1538,30 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         _formnode[identifier] = 1;  //set flag meaning that this identifier will be set after ajax is completed
     }
 
+    var _entityNamespace = $('#entityNamespace').val();   //"Oleg\\OrderformBundle\\Entity";
+    var _entityName = $('#entityName').val();             //"Message";
+    var _entityId = $('#entityId').val();                 //"Message ID";
+    //console.log("_entityNamespace="+_entityNamespace);
+    //console.log("_entityName="+_entityName);
+    //console.log("_entityId="+_entityId);
+
+    var dataParam =
+    {
+        holderNamespace: _holderNamespace,
+        holderName: _holderName,
+        holderId: messageCategoryId,
+        entityNamespace: _entityNamespace,
+        entityName: _entityName,
+        entityId: _entityId,
+    };
+
     var url = Routing.generate('employees_formnode_fields');
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
         //type: "GET",
         async: asyncflag,
-        data: {entityNamespace: _entityNamespace, entityName: _entityName, entityId: messageCategoryId },
+        data: dataParam,
     }).success(function(data) {
         //console.log("data length="+data.length);
         //console.log(data);
@@ -1796,7 +1813,7 @@ function calllogHideAllSiblings( comboboxId ) {
 
 function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
 
-    var identifier = _entityName+"-"+messageCategoryId;
+    var identifier = _holderName+"-"+messageCategoryId;
     var data = _formnode[identifier];
 
     if( !data ) {

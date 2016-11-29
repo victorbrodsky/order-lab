@@ -189,6 +189,8 @@ class CallEntryController extends Controller
 
         //add patient
         $message->addPatient($patient);
+        //add encounter
+        $message->addEncounter($encounter2);
         ///////////// EOF Message //////////////
 
 
@@ -409,6 +411,13 @@ class CallEntryController extends Controller
                 //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
                 //exit('after formnode');
 
+
+                //clear encounter
+                $message->clearEncounter();
+                //add encounter to the message
+                $message->addEncounter($newEncounter);
+
+
                 if( $patient->getId() ) {
                     //CASE 1
                     echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
@@ -466,6 +475,7 @@ class CallEntryController extends Controller
                                     $userSecUtil->setDefaultList($newListElement,$count,$user,$patientName);
                                     $newListElement->setPatient($patient);
                                     $newListElement->setDescription($patientDescription);
+                                    $newListElement->setObject($message);
                                     $em->persist($newListElement);
                                 }
                             }
@@ -524,7 +534,7 @@ class CallEntryController extends Controller
 
                 //process form nodes
                 $formNodeUtil = $this->get('user_formnode_utility');
-                //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message); //testing
+                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message); //testing
                 //exit('after formnode');
 
 
@@ -587,7 +597,7 @@ class CallEntryController extends Controller
         );
     }
 
-    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null) {
+    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $disabled=false) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -629,7 +639,13 @@ class CallEntryController extends Controller
             'timezoneDefault' => $userTimeZone
         );
 
-        $form = $this->createForm(new CalllogMessageType($params, $message), $message);
+        $form = $this->createForm(
+            new CalllogMessageType($params, $message),
+            $message,
+            array(
+                'disabled' => $disabled
+            )
+        );
 
         return $form;
     }
@@ -1544,7 +1560,7 @@ class CallEntryController extends Controller
      * Get Call Log Entry Message
      * @Route("/entry/view/{messageId}", name="calllog_callentry_view")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
+     * @Template("OlegCallLogBundle:CallLog:call-entry-view.html.twig")
      */
     public function getCallLogEntryAction(Request $request, $messageId)
     {
@@ -1552,6 +1568,8 @@ class CallEntryController extends Controller
         if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
+
+        $userSecUtil = $this->get('user_security_utility');
 
         $cycle = "show";
         $title = "Call Log Entry";
@@ -1578,8 +1596,26 @@ class CallEntryController extends Controller
         }
 
         //echo "patients=".count($message->getPatient())."<br>";
+        $disabled = true;
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$disabled);
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn);
+        $complexPatientStr = null;
+        //find record in the "Pathology Call Complex Patients" list by message object entityName, entityId
+        $mapper = array(
+            'prefix' => "Oleg",
+            'bundleName' => "CallLogBundle",
+            'className' => "PathologyCallComplexPatients",
+        );
+        $listRecord = $userSecUtil->getListByNameAndObject( $message, $mapper );
+        if( $listRecord ) {
+            //Patient was added to the "xxxxxxxx" list via this entry.
+            $complexPatientStr = "Patient was added to the Pathology Call Complex Patients list ID# ".$listRecord->getId()." via this entry:<br>".$listRecord->getName()."";
+        }
+        //echo "complexStr=".$complexPatientStr."<br>";
+
+        $class = new \ReflectionClass($message);
+        $className = $class->getShortName();          //ObjectTypeText
+        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
 
         return array(
             //'entity' => $entity,
@@ -1590,8 +1626,12 @@ class CallEntryController extends Controller
             'triggerSearch' => 0,
             'mrn' => $mrn,
             'mrntype' => $mrntype,
-            'message' => $message
+            'message' => $message,
+            'complexPatientStr' => $complexPatientStr,
             //'encounterid' => $encounterid
+            'entityNamespace' => $classNamespace,
+            'entityName' => $className,
+            'entityId' => $message->getId(),
         );
     }
 

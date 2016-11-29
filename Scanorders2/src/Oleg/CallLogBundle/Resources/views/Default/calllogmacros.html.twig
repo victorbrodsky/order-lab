@@ -107,7 +107,107 @@
 {% endmacro %}
 
 
+{% macro patientInfoSectionView(form,encounterPatientInfo,cycle,holderId,title,formtype) %}
 
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <div id="{{holderId}}" class="calllog-patient-holder">
+
+        {#form.vars.value.id={{ form.vars.value.id }}#}
+        <input type="hidden" id="calllog-patient-id-{{holderId}}" class="calllog-patient-id" value="{{ form.vars.value.id }}" />
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="calllog-patient-panel-title" data-toggle="collapse" href="#calllog-PatientInformation-{{holderId}}">
+                        {{ title }}
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-PatientInformation-{{holderId}}" class="calllog-patient-information-panel panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {#{{ form_errors(form) }}#}
+
+                    {#{{ form_widget(form.id) }}#}
+                    {#{{ form_row(form.id) }}#}
+
+                    {{ form.vars.value.obtainPatientInfoSimple|raw }}
+
+                    {#<div class="calllog-search-fields">#}
+
+                        {#{% for mrn in form.mrn %}#}
+                            {#{% if mrn.status == 'valid' or not mrn.vars.value.field %}#}
+                            {#{{ formmacros.field(mrn.keytype) }}#}
+                            {#{{ formmacros.field(mrn.field) }}#}
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+
+                        {#{% for dob in form.dob %}#}
+                            {#{{ formmacros.fieldDateLabel(dob.field,'regular-datepicker') }}#}
+                        {#{% endfor %}#}
+
+                        {#{% set status = 'Submitted' %}#}
+
+                        {#{% set encounterPatientInfo = null %}#}
+                        {#{% set encounterEncounterInfo = null %}#}
+                        {#{% for encounter in form.encounter %}#}
+                            {#encounter.vars.value.status={{ encounter.vars.value.status }}#}
+                            {#message.vars.value.id={{ message.vars.value.id }}<br>#}
+                            {#{% if encounter.vars.value.message %}#}
+                                {#{% set encounterHasMessage = false %}#}
+                                {#{% for encounterMessage in encounter.vars.value.message %}#}
+                                    {#encounterMessage.id={{ encounterMessage.id }}<br>#}
+                                    {#{% if encounterMessage.id == message.vars.value.id %}#}
+                                        {#{% set encounterHasMessage = true %}#}
+                                    {#{% endif %}#}
+                                {#{% endfor %}#}
+                                {#{% if encounter.vars.value.status == 'valid' and encounterHasMessage  %}#}
+                                    {#{% set encounterPatientInfo = encounter %}#}
+                                {#{% endif %}#}
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+
+                        {#{% if encounterPatientInfo is defined and encounterPatientInfo %}#}
+                            {#<div class="alias-group">#}
+                                {#{{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}#}
+                                {#{{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}#}
+                                {#{{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}#}
+                                {#{{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}#}
+                                {#{{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}#}
+                            {#</div>#}
+                        {#{% endif %}#}
+
+                    {#</div>#}
+
+                    {#<a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>#}
+                    {#<div id="encounter-info" class="panel-collapse collapse">#}
+                        {#{% if encounterPatientInfo is defined and encounterPatientInfo %}#}
+
+                            {#{{ form_row(encounterPatientInfo.status) }}#}
+
+                            {#<div class="alias-group">#}
+                                {#{{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}#}
+                                {#{{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}#}
+                            {#</div>#}
+                            {#{{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}#}
+
+                        {#{% endif %}#}
+                    {#</div>#}
+
+                    <br>
+
+                    <div id="calllog-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px;"></div>
+
+                    <div id="calllog-matching-patients" style="display: none; margin-top: 5px;"></div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+    </div>
+
+{% endmacro %}
 
 {% macro patientInfoSection(form,cycle,holderId,title,formtype) %}
 
@@ -246,7 +346,7 @@
 {% endmacro %}
 
 
-{% macro trackerContactinfoForm( entity, datastructure, uid, cycle, status, showPlus ) %}
+{% macro trackerContactinfoForm( entity, cycle, status ) %}
     {% if entity.tracker.spots is defined and entity.tracker.spots|length > 0 %}
         {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -265,7 +365,7 @@
                         {% set orderUniqueId = 0 %}
                     {% endif %}
 
-                    {% set uniqueId = orderUniqueId~"_"~uid~"_"~counter %}
+                    {% set uniqueId = orderUniqueId~"_"~counter %}
 
                     {#<button#}
                             {#id="form_body_toggle_entitycontactinfo_{{ uniqueId }}" type="button"#}
@@ -279,15 +379,18 @@
                     {% endif %}
 
                     <h4 class="panel-title">
-                        <a
-                            href="javascript:;"
-                            onclick="calllogToggleSingleEncounterPanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');"
-                        >
-                            {{ panelTitle }}
-                        </a>
-                        {#<a class="calllog-patient-panel-title" data-toggle="collapse" href="#calllog-PatientInformation-{{holderId}}">#}
-                            {#{{ title }}#}
-                        {#</a>#}
+                        {% if cycle != 'show' %}
+                            <a
+                                href="javascript:;"
+                                onclick="calllogToggleSingleEncounterPanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');"
+                            >
+                                {{ panelTitle }}
+                            </a>
+                        {% else %}
+                            <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_entitycontactinfo_{{uniqueId}}">
+                                {{ panelTitle }}
+                            </a>
+                        {% endif %}
                     </h4>
                 </div>
 

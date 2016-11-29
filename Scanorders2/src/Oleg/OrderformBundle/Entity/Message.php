@@ -1167,6 +1167,13 @@ class Message {
         }
         //$this->patient->clear();
     }
+    public function clearEncounter()
+    {
+        foreach( $this->encounter as $thisencounter ) {
+            $this->removeEncounter($thisencounter);
+        }
+        //$this->patient->clear();
+    }
     
     /**
      * Add slide

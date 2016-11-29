@@ -1655,4 +1655,49 @@ class UserSecurityUtil {
 //        return $orderinlist;
 //    }
 
+    public function getListByNameAndObject( $object, $mapper ) {
+
+        if( !$object ) {
+            return null;
+        }
+
+        if( !$mapper || count($mapper) == 0 ) {
+            return null;
+        }
+
+        $class = new \ReflectionClass($object);
+        $className = $class->getShortName();          //ObjectTypeText
+        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+
+        //echo "classNamespace=".$classNamespace."<br>";
+        //echo "className=".$className."<br>";
+        //echo "entityId=".$object->getId()."<br>";
+        //print_r($mapper);
+
+        $treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $query->setParameters(
+            array(
+                'entityName' => $className,
+                'entityNamespace' => $classNamespace,
+                'entityId' => $object->getId()
+            )
+        );
+
+        $results = $query->getResult();
+        echo "count=".count($results)."<br>";
+
+        if( count($results) > 0 ) {
+            return $results[0];
+        }
+
+        return null;
+    }
 }
