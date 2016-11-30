@@ -105,6 +105,11 @@ class FormNodeUtil
         $formValue = $data[$key];
         //echo $key.": formValue=" . $formValue . "<br>";
 
+        if( !$formValue ) {
+            //exit("No Value=".$formValue."<br>");
+            return;
+        }
+
         //1) create a new list element
         $newListElement = $this->createNewList($formNode,$formValue);
         //echo "newListElement=".$newListElement."<br>";

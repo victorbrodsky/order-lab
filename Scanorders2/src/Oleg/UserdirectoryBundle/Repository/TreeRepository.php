@@ -915,7 +915,7 @@ class TreeRepository extends NestedTreeRepository {
         $query = $this->_em->createQuery($dql);
         $nodes = $query->getResult();
 
-        echo "nodes count=".count($nodes)."<br>";
+        //echo "nodes count=".count($nodes)."<br>";
 
         if( count($nodes) > 0 ) {
             foreach ($nodes as $node) {

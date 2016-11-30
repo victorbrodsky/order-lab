@@ -40,7 +40,7 @@ class ObjectTypeDateTime extends ListAbstract
     private $value;
 
 //    /**
-//     * @ORM\Column(type="string", nullable=true)
+//     * @ORM\Column(type="dattime", nullable=true)
 //     */
 //    private $originalValue;
 

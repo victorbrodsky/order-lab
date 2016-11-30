@@ -72,6 +72,18 @@ class CalllogMessageType extends AbstractType
             'prototype_name' => '__patient__',
         ));
 
+        if( count($this->entity->getPatient()) == 0 ) {
+            $builder->add('encounter', 'collection', array(
+                'type' => new EncounterType($this->params,$this->entity),
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'label' => false,//" ",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounter__',
+            ));
+        }
 
 //        $builder->add('messageCategory', 'entity', array(
 //            'label' => 'Message Type:',

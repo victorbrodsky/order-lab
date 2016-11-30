@@ -1692,7 +1692,7 @@ class UserSecurityUtil {
         );
 
         $results = $query->getResult();
-        echo "count=".count($results)."<br>";
+        //echo "count=".count($results)."<br>";
 
         if( count($results) > 0 ) {
             return $results[0];
