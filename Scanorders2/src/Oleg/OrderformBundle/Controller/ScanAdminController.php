@@ -12,6 +12,8 @@ use Oleg\OrderformBundle\Entity\CourseGroupType;
 use Oleg\OrderformBundle\Entity\DiseaseOriginList;
 use Oleg\OrderformBundle\Entity\DiseaseTypeList;
 use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
+use Oleg\OrderformBundle\Entity\EncounterInfoType;
+use Oleg\OrderformBundle\Entity\EncounterInfoTypeList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
@@ -134,6 +136,7 @@ class ScanAdminController extends AdminController
         $count_pattype = $this->generatePatientType();
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
+        $count_EncounterInfoType = $this->generateEncounterInfoType();
         $count_proceduretype = $this->generateProcedureType();
         $count_MessageTypeClassifiers = $this->generateMessageTypeClassifiers();
         $count_generateMessageCategory = $this->generateMessageCategory();
@@ -192,6 +195,7 @@ class ScanAdminController extends AdminController
             'SystemAccountRequestTypes='.$count_SystemAccountRequestType.', '.
             'AmendmentReasons='.$count_AmendmentReason.', '.
             'PatientListHierarchy='.$count_PatientListHierarchy.', '.
+            'EncounterInfoType='.$count_EncounterInfoType.', '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1360,6 +1364,37 @@ class ScanAdminController extends AdminController
         foreach( $types as $type ) {
 
             $encType = new EncounterType();
+            $this->setDefaultList($encType,$count,$username,$type);
+
+            $em->persist($encType);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
+    public function generateEncounterInfoType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:EncounterInfoTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Call to Pathology',
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $types as $type ) {
+
+            $encType = new EncounterInfoTypeList();
             $this->setDefaultList($encType,$count,$username,$type);
 
             $em->persist($encType);

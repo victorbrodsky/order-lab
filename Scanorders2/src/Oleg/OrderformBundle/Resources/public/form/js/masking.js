@@ -311,7 +311,7 @@ function setAccessiontypeMask(elem,clean) {
 
     //var value = elem.select2("val");
     //console.log("value=" + value);
-    if( elem.hasClass("combobox") ) {
+    if( elem.hasClass("combobox") ) { //&& elem.select2("data")
         var text = elem.select2("data").text;
     } else {
         var text = elem.val();

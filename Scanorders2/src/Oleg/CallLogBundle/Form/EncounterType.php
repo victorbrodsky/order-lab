@@ -4,6 +4,7 @@ namespace Oleg\CallLogBundle\Form;
 
 use Oleg\CallLogBundle\Form\EncounterDateType;
 
+use Oleg\OrderformBundle\Form\EncounterInfoTypeType;
 use Oleg\OrderformBundle\Form\EncounterLocationType;
 use Oleg\OrderformBundle\Form\EncounterPatfirstnameType;
 use Oleg\OrderformBundle\Form\EncounterPatlastnameType;
@@ -234,6 +235,16 @@ class EncounterType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__encounterattendingphysician__',
+        ));
+
+        $builder->add('encounterInfoTypes', 'collection', array(
+            'type' => new EncounterInfoTypeType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__encounterinfotypes__',
         ));
 
         $builder->add('tracker', new TrackerType($this->params), array(

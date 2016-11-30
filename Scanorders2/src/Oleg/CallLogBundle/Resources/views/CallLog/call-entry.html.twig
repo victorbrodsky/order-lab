@@ -73,6 +73,7 @@
                             {{ form_row(encounter.status) }}
                             {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
                             {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
+                            {{ formmacros.inputArrayField(encounter.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
                             {{ formmacros.field(encounter.provider) }}
 
                             {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}

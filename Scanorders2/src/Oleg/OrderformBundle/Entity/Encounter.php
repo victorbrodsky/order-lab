@@ -96,11 +96,15 @@ class Encounter extends ObjectAbstract
     protected $attendingPhysicians;
 
     /**
+     * @ORM\OneToMany(targetEntity="EncounterInfoType", mappedBy="encounter", cascade={"persist"})
+     */
+    protected $encounterInfoTypes;
+
+    /**
      * TODO: make it the same as patlastname?
      * unmapped patientDob
      */
     private $patientDob;
-
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
@@ -139,6 +143,7 @@ class Encounter extends ObjectAbstract
 
         $this->patsex = new ArrayCollection();
         $this->patage = new ArrayCollection();
+        $this->encounterInfoTypes = new ArrayCollection();
 
         $this->pathistory = new ArrayCollection();
         $this->referringProviders = new ArrayCollection();
@@ -160,6 +165,7 @@ class Encounter extends ObjectAbstract
             $this->addPatsex( new EncounterPatsex($status,$provider,$source) );
             $this->addPatage( new EncounterPatage($status,$provider,$source) );
             $this->addPathistory( new EncounterPathistory($status,$provider,$source) );
+            $this->addEncounterInfoType( new EncounterInfoType($status,$provider,$source) );
 
             //testing data structure
             //$this->addExtraFields($status,$provider,$source);
@@ -179,6 +185,7 @@ class Encounter extends ObjectAbstract
         $this->pathistory = $this->cloneDepend($this->pathistory,$this);
         $this->referringProviders = $this->cloneDepend($this->referringProviders,$this);
         $this->attendingPhysicians = $this->cloneDepend($this->attendingPhysicians,$this);
+        $this->encounterInfoTypes = $this->cloneDepend($this->encounterInfoTypes,$this);
 
         //extra fields
         $this->location = $this->cloneDepend($this->location,$this);
@@ -476,6 +483,32 @@ class Encounter extends ObjectAbstract
         $this->setArrayFieldObjectChange('patsex','remove',$patsex);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEncounterInfoTypes()
+    {
+        return $this->encounterInfoTypes;
+    }
+    public function addEncounterInfoType($item)
+    {
+        if( $item == null ) {
+            $item = new EncounterInfoType();
+        }
+
+        if( !$this->encounterInfoTypes->contains($item) ) {
+            $item->setEncounter($this);
+            $this->encounterInfoTypes->add($item);
+            $this->setArrayFieldObjectChange('encounterInfoTypes','add',$item);
+        }
+
+        return $this;
+    }
+    public function removeEncounterInfoType($item)
+    {
+        $this->encounterInfoTypes->removeElement($item);
+        $this->setArrayFieldObjectChange('encounterInfoTypes','remove',$item);
+    }
 
     //Name
     public function getName() {
@@ -934,7 +967,7 @@ class Encounter extends ObjectAbstract
 
     public function getArrayFields() {
         $fieldsArr = array(
-            'Name','Number','Date','Patsuffix','Patlastname','Patfirstname','Patmiddlename','Patage','Patsex','Pathistory',
+            'Name','Number','Date','Patsuffix','Patlastname','Patfirstname','Patmiddlename','Patage','Patsex','Pathistory','encounterInfoTypes',
             //extra fields
             'Location', 'Inpatientinfo' //'Order'
         );
