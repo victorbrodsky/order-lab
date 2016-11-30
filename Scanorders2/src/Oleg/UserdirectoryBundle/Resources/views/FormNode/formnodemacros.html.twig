@@ -120,13 +120,13 @@
         {% endif %}
 
         {% if formType == "Form Field - Date" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype,'m/d/Y') }}
         {% endif %}
         {% if formType == "Form Field - Full Date" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype,'m/d/Y') }}
         {% endif %}
         {% if formType == "Form Field - Full Date and Time" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype,'m/d/Y') }}
         {% endif %}
 
     {% else %}
@@ -231,7 +231,6 @@
 {% endmacro %}
 {% macro textareaField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
-    formNodeValue={{ formNodeValue }}
     {% if formNodeValue %}
         {% set fieldValue = formNodeValue %}
     {% else %}
@@ -267,7 +266,6 @@
 {% endmacro %}
 {% macro stringField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {% set fieldname = "formnode-"~formNode.id %}
-    formNodeValue={{ formNodeValue }}
     {% if formNodeValue %}
         {% set fieldValue = formNodeValue %}
     {% else %}
@@ -319,14 +317,19 @@
         <option value=""></option>
         {% for dropdownValue in dropdownValues %}
             {###########dropdownValue.text:{{ dropdownValue.text }}#}
-            <option value="{{ dropdownValue.id }}">{{ dropdownValue.text }}</option>
+            {#{% if dropdownValue.id == formNodeValue %} #}
+            {% if formNodeValue and dropdownValue.text == formNodeValue %}
+                <option value="{{ dropdownValue.id }}" selected>{{ dropdownValue.text }}</option>
+            {% else %}
+                <option value="{{ dropdownValue.id }}">{{ dropdownValue.text }}</option>
+            {% endif %}
         {% endfor %}
     </select>
 
 {% endmacro %}
 
 
-{% macro dateForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+{% macro dateForm( formNodeHolder, formNode, formNodeValue, cycle, prototype, dateFormat ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -336,22 +339,30 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeValue, cycle, prototype, dateFormat) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeValue, cycle, prototype, dateFormat) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro dateField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+{% macro dateField( formNodeHolder, formNode, formNodeValue, cycle, prototype, dateFormat ) %}
     {% set fieldname = "formnode-"~formNode.id %}
+    {% if formNodeValue %}
+        {% set fieldValue = formNodeValue %}
+    {% else %}
+        {% set fieldValue = null %}
+    {% endif %}
     <div class="input-group input-group-reg date regular-datepicker">
         <input
                 type="text"
                 id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
                 name="{{ fieldname }}"
                 class="datepicker form-control"
+                {#value="{{ fieldValue|date(dateFormat) }}"#}
+                value="{{ fieldValue }}"
+                placeholder="{{ formNode.placeholder }}"
         >
         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>

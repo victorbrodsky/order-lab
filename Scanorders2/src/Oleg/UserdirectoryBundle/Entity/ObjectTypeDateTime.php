@@ -35,10 +35,14 @@ class ObjectTypeDateTime extends ListAbstract
     private $formNode;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $value;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $originalValue;
 
 
 
@@ -77,8 +81,37 @@ class ObjectTypeDateTime extends ListAbstract
      */
     public function setValue($value)
     {
+//        if( is_object($value) ) {
+//            //
+//        } else {
+//            if( $timezoneStr ) {
+//                $value = new \DateTime($value, new \DateTimeZone($timezoneStr)); //'Pacific/Nauru'
+//            } else {
+//                $value = new \DateTime($value);
+//            }
+//        }
         $this->value = $value;
     }
+
+
+
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getOriginalValue()
+//    {
+//        return $this->originalValue;
+//    }
+//
+//    /**
+//     * @param mixed $originalValue
+//     */
+//    public function setOriginalValue($originalValue)
+//    {
+//        $this->originalValue = $originalValue;
+//    }
+
 
 
 

@@ -62,7 +62,7 @@ class FormNodeUtil
 
     //process by data partial key name" "formnode-4" => "formnode-"
     public function processFormNodesFromDataKeys($data,$holderEntity) {
-        foreach( $data as $key=>$value ){
+        foreach( $data as $key=>$value ) {
             //if( "show_me_" == substr($key,0,8) ) {
             if( strpos($key, 'formnode-') !== false ) {
                 $formNodeId = str_replace('formnode-','',$key);
@@ -103,11 +103,11 @@ class FormNodeUtil
 
         $key = "formnode-".$formNode->getId();
         $formValue = $data[$key];
-        echo $key.": formValue=" . $formValue . "<br>";
+        //echo $key.": formValue=" . $formValue . "<br>";
 
         //1) create a new list element
         $newListElement = $this->createNewList($formNode,$formValue);
-        echo "newListElement=".$newListElement."<br>";
+        //echo "newListElement=".$newListElement."<br>";
         if( !$newListElement ) {
             //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
             return;
