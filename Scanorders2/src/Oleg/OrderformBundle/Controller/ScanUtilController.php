@@ -940,6 +940,16 @@ class ScanUtilController extends UtilController {
         return $this->getProxyusersAction($request);
     }
 
+    /**
+     * Get all users and user wrappers combined
+     * @Route("/common/encounterAttendingPhysician", name="scan_get_encounterAttendingPhysician")
+     * @Method("GET")
+     */
+    public function getEncounterAttendingPhysiciansAction(Request $request) {
+        //echo "get encounterReferringProvider<br>";
+        return $this->getProxyusersAction($request);
+    }
+
     //search if $needle exists in array $products
     public function in_complex_array($needle,$products,$indexstr='text') {
         foreach( $products as $product ) {

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\CallLogBundle\Form\CalllogMessageType;
 use Oleg\CallLogBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
 use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
 use Oleg\OrderformBundle\Entity\EncounterPatlastname;
 use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
@@ -121,8 +122,12 @@ class CallEntryController extends Controller
         //create encounter #2 to display in "Encounter Info" -> "Update Patient Info"
         $encounter2 = new Encounter(true,'valid',$user,$system);
         $encounter2->setInstitution($institution);
+        //ReferringProvider
         $encounterReferringProvider = new EncounterReferringProvider('valid',$user,$system);
         $encounter2->addReferringProvider($encounterReferringProvider);
+        //AttendingPhysician
+        $encounterAttendingPhysician = new EncounterAttendingPhysician('valid',$user,$system);
+        $encounter2->addAttendingPhysician($encounterAttendingPhysician);
 
         //set encounter generated id
         $key = $encounter2->obtainAllKeyfield()->first();

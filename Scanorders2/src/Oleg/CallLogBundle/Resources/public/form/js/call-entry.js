@@ -1538,6 +1538,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         _formnode[identifier] = 1;  //set flag meaning that this identifier will be set after ajax is completed
     }
 
+    var _formcycle = $('#formcycle').val();
     var _entityNamespace = $('#entityNamespace').val();   //"Oleg\\OrderformBundle\\Entity";
     var _entityName = $('#entityName').val();             //"Message";
     var _entityId = $('#entityId').val();                 //"Message ID";
@@ -1553,6 +1554,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         entityNamespace: _entityNamespace,
         entityName: _entityName,
         entityId: _entityId,
+        cycle: _formcycle
     };
 
     var url = Routing.generate('employees_formnode_fields');
@@ -1566,7 +1568,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         //console.log("data length="+data.length);
         //console.log(data);
 
-        if( data.length > 0 && data[0]['formNodeId'] ) { //make sure we have at least one formNode for formNode Holder
+        if (data.length > 0 && data[0]['formNodeId']) { //make sure we have at least one formNode for formNode Holder
 
             //console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
 
@@ -1587,6 +1589,8 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         //} else {
         //    //holder.find('.calllog-patient-panel-title').html("Patient Info");
         //}
+    }).fail(function() {
+        alert("Error getting field(s) for "+_holderName+" "+messageCategoryId);
     }).done(function() {
         //console.log("update patient title done");
     });

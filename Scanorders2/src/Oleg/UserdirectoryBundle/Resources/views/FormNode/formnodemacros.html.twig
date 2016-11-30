@@ -197,6 +197,9 @@
 
 {% endmacro %}
 
+
+
+
 {% macro textareaForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
@@ -236,11 +239,19 @@
     {% else %}
         {% set fieldValue = null %}
     {% endif %}
+    {#cycle={{ cycle }}<br>#}
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+    {#disabled={{ disabled }}<br>#}
     {% set fieldname = "formnode-"~formNode.id %}
     <textarea
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
             name="{{ fieldname }}"
             class="textarea form-control"
+            {{ disabled }}
     >
         {{ fieldValue }}
     </textarea>
@@ -271,12 +282,19 @@
     {% else %}
         {% set fieldValue = user_formnode_utility.getDefaultValue(formNode) %}
     {% endif %}
+    {#cycle={{ cycle }}<br>#}
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
     <input
         id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
         name="{{ fieldname }}"
         class="form-control"
         value="{{ fieldValue }}"
         placeholder="{{ formNode.placeholder }}"
+        {{ disabled }}
     >
     </input>
 {% endmacro %}
@@ -308,11 +326,18 @@
 
     {#dropdownValues={{ dropdownValues|length }}#}
 
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
     <select
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
             name="{{ fieldname }}"
             class="combobox"
             data-placeholder="{{ formNode.placeholder }}"
+            {{ disabled }}
     >
         <option value=""></option>
         {% for dropdownValue in dropdownValues %}
@@ -354,6 +379,11 @@
     {% else %}
         {% set fieldValue = null %}
     {% endif %}
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
     <div class="input-group input-group-reg date regular-datepicker">
         <input
                 type="text"
@@ -363,6 +393,7 @@
                 {#value="{{ fieldValue|date(dateFormat) }}"#}
                 value="{{ fieldValue }}"
                 placeholder="{{ formNode.placeholder }}"
+                {{ disabled }}
         >
         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>

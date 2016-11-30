@@ -226,6 +226,16 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterreferringprovider__',
         ));
 
+        $builder->add('attendingPhysicians', 'collection', array(
+            'type' => new EncounterAttendingPhysicianType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__encounterattendingphysician__',
+        ));
+
         $builder->add('tracker', new TrackerType($this->params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
             'label' => false,

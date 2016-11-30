@@ -310,7 +310,12 @@
         {% endif %}
     {% endif %}
 
-    {% if fieldname == "proxyuser" or fieldname == "orderRecipients" or fieldname == "reportRecipients" or fieldname == "referringProviders" %}
+    {% if   fieldname == "proxyuser" or
+            fieldname == "orderRecipients" or
+            fieldname == "reportRecipients" or
+            fieldname == "referringProviders" or
+            fieldname == "attendingPhysicians"
+    %}
         {% if fieldname == "proxyuser" %}
             {% set userValues = container.vars.value.proxyuser %}
             {% set userLabel = container.proxyuser.vars.label %}
@@ -344,6 +349,15 @@
             {% set userForm = null %}
             {% if container.referringProviders is defined %}
                 {% set userForm = container.referringProviders %}
+            {% endif %}
+        {% endif %}
+
+        {% if fieldname == "attendingPhysicians" %}
+            {% set userValues = container.vars.value.attendingPhysicians %}
+            {% set userLabel = container.attendingPhysicians.vars.label %}
+            {% set userForm = null %}
+            {% if container.attendingPhysicians is defined %}
+                {% set userForm = container.attendingPhysicians %}
             {% endif %}
         {% endif %}
 

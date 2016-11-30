@@ -35,6 +35,8 @@ class FormNodeController extends Controller {
         $formNodeUtil = $this->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
 
+        $cycle = $request->query->get('cycle');
+
         //formnode's holder (MessageCategory)
         $holderNamespace = $request->query->get('holderNamespace');
         $holderName = $request->query->get('holderName'); //MessageCategory
@@ -111,7 +113,7 @@ class FormNodeController extends Controller {
             $formNodeArr = array(
                 'formNode' => $formNode,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
-                'cycle' => 'edit',
+                'cycle' => $cycle,
                 'formNodeValue' => $formNodeValue
             );
 

@@ -135,6 +135,10 @@
                                     {{ formmacros.field(referringProvider.referringProviderEmail) }}
                                 {% endfor %}
 
+                                {% for attendingPhysician in encounterPatientInfo.attendingPhysicians %}
+                                    {{ formmacros.field(attendingPhysician.field) }}
+                                {% endfor %}
+
                                 {{ calllogmacros.trackerContactinfoForm(encounterPatientInfo,cycle,status) }}
 
                                 {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}

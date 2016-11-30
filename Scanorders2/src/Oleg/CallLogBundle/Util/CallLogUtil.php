@@ -1040,4 +1040,38 @@ class CallLogUtil
     }
 
 
+    public function getPatientList() {
+
+        //list.name = "Pathology Call Complex Patients"
+        //list.url = "http://collage.med.cornell.edu/order/call-log-book/patient-list/pathology-call-complex-patients"
+        $resList = array();
+
+        //PatientListHierarchy
+        //OlegOrderformBundle
+        $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(
+            array( 'type' => array('default','user-added') )
+        );
+
+        $request = $this->container->get('request');
+        $siteName = 'call-log-book';
+
+        foreach( $patientLists as $list ) {
+
+            //$listUrl = "patient-list/pathology-call-complex-patients";
+            //$listUrl = "complex-patient-list";
+            //$baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
+            //$url = $baseUrl . '/' . $siteName . '/' . $listUrl;
+
+            //path(calllog_sitename~'_complex_patient_list')
+            $url = $this->container->get('router')->generate('calllog_complex_patient_list');
+
+            $resList[] = array(
+                'name' => $list->getName()."",
+                'url' => $url   //"order/call-log-book/patient-list/pathology-call-complex-patients"
+            );
+        }
+
+        return $resList;
+    }
+
 }

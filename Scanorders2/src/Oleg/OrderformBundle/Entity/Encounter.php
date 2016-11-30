@@ -91,6 +91,11 @@ class Encounter extends ObjectAbstract
     protected $referringProviders;
 
     /**
+     * @ORM\OneToMany(targetEntity="EncounterAttendingPhysician", mappedBy="encounter", cascade={"persist"})
+     */
+    protected $attendingPhysicians;
+
+    /**
      * TODO: make it the same as patlastname?
      * unmapped patientDob
      */
@@ -137,6 +142,7 @@ class Encounter extends ObjectAbstract
 
         $this->pathistory = new ArrayCollection();
         $this->referringProviders = new ArrayCollection();
+        $this->attendingPhysicians = new ArrayCollection();
 
         //extra
         $this->location = new ArrayCollection();
@@ -172,6 +178,7 @@ class Encounter extends ObjectAbstract
         $this->patage = $this->cloneDepend($this->patage,$this);
         $this->pathistory = $this->cloneDepend($this->pathistory,$this);
         $this->referringProviders = $this->cloneDepend($this->referringProviders,$this);
+        $this->attendingPhysicians = $this->cloneDepend($this->attendingPhysicians,$this);
 
         //extra fields
         $this->location = $this->cloneDepend($this->location,$this);
@@ -600,13 +607,11 @@ class Encounter extends ObjectAbstract
     }
     public function addReferringProvider($item)
     {
-
         if( $item && !$this->referringProviders->contains($item) ) {
             $item->setEncounter($this);
             $this->referringProviders->add($item);
             //$this->setArrayFieldObjectChange('referringProviders','add',$item);
         }
-
         return $this;
     }
     public function removeReferringProvider($item)
@@ -615,6 +620,27 @@ class Encounter extends ObjectAbstract
         //$this->setArrayFieldObjectChange('referringProviders','remove',$item);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAttendingPhysicians()
+    {
+        return $this->attendingPhysicians;
+    }
+    public function addAttendingPhysician($item)
+    {
+        if( $item && !$this->attendingPhysicians->contains($item) ) {
+            $item->setEncounter($this);
+            $this->attendingPhysicians->add($item);
+            //$this->setArrayFieldObjectChange('attendingPhysicians','add',$item);
+        }
+        return $this;
+    }
+    public function removeAttendingPhysician($item)
+    {
+        $this->attendingPhysicians->removeElement($item);
+        //$this->setArrayFieldObjectChange('attendingPhysicians','remove',$item);
+    }
 
     ///////////////////////// Extra fields /////////////////////////
     public function addExtraFields($status,$provider,$source) {
