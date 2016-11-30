@@ -20,11 +20,11 @@
     {% endif %}
 
     {% if sitename == 'vacreq' %}
-        {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+        {% include 'OlegVacReqBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'calllog' %}
-        {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
+        {% include 'OlegCallLogBundle:Default:navbar.html.twig' %}
     {% endif %}
 
 {% endblock %}

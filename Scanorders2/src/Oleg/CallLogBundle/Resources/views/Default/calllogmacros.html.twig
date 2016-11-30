@@ -346,6 +346,8 @@
 {% endmacro %}
 
 
+{#TODO: change "Location Name" to be a Select2 dropdown list of all locations filtered by Location type = "Encounter Location"#}
+{#Selecting the Encounter Location from the dropdown should load all of its corresponding values into the other fields of this accordion (phone number, etc) via AJAX.#}
 {% macro trackerContactinfoForm( entity, cycle, status ) %}
     {% if entity.tracker.spots is defined and entity.tracker.spots|length > 0 %}
         {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}

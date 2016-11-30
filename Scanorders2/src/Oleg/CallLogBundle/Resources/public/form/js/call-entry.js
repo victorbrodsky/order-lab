@@ -79,6 +79,9 @@ function addnewCalllogPatient(holderId) {
     var sex = holder.find(".encountersex-field").select2('val');
     sex = trimWithCheck(sex);
 
+    var sexStr = holder.find(".encountersex-field").select2('text');
+    //sexStr = trimWithCheck(sexStr);
+
     //check if "Last Name" field + DOB field, or "MRN" fields are not empty
     //allow the creation of a patient record with the Last Name alone only
     //if( !mrn || !mrntype || !lastname || !dob ) {
@@ -97,7 +100,7 @@ function addnewCalllogPatient(holderId) {
 
     //"Are You sure you would like to create a new patient registration record for
     //MRN: Last Name: First Name: Middle Name: Suffix: Sex: DOB: Alias(es):
-    var confirmMsg = "Are You sure you would like to create a new patient registration record for";
+    var confirmMsg = "Are you sure you would like to create a new patient registration record for";
 
     var creationStr = "";
     if( mrn )
@@ -111,7 +114,7 @@ function addnewCalllogPatient(holderId) {
     if( suffix )
         creationStr += " Suffix: "+suffix+" ";
     if( sex )
-        creationStr += " Gender: "+sex+" ";
+        creationStr += " Gender: "+sexStr+" ";
     if( dob )
         creationStr += " DOB: "+dob+" ";
 
