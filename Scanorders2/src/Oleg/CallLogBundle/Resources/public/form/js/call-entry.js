@@ -1937,12 +1937,21 @@ function calllogLocationNameListener(holderId) {
 
         var selectData = locationNameEl.select2('data');
 
+        //clean id
+        var holder = locationNameEl.closest('.panel-body');
+        var idEl = holder.find('.user-object-id-field');
+        idEl.val(null);
+
         if( !selectData ) {
+            console.log('no selectData');
+            //TODO: clean all fields?
+            locationNamePopulateLocationFields( holder, null);
             return;
         }
 
         var locationId = selectData.id;
         if( !locationId ) {
+            console.log('no locationId');
             return;
         }
 
@@ -1959,10 +1968,10 @@ function calllogLocationNameListener(holderId) {
 
             if( data ) {
                 //populate location fields
-                var holder = locationNameEl.closest('.panel-body');
+                //var holder = locationNameEl.closest('.panel-body');
                 console.log("holder:");
                 console.log(holder);
-                locationNamePopulateLocationFields( holder, data, 'currentLocation' );
+                locationNamePopulateLocationFields( holder, data);
             }
 
         }).fail(function() {
@@ -1983,33 +1992,54 @@ function locationNamePopulateLocationFields( holder, data, partialId ) {
         //text += fieldNames[i] + "<br>";
         var fieldName = fieldNames[i]; //phone
         console.log("fieldName="+fieldName);
-        if( data[fieldName] ) {
-            //var partialIdStr = partialId+"_"+fieldName;
-            //[currentLocation][room]
-            //var partialIdStr = "["+partialId+"]["+fieldName+"]";
-            var partialIdStr = "["+fieldName+"]";
-            console.log("partialIdStr="+partialIdStr);
-            var fieldEl = holder.find('[name*="'+partialIdStr+'"]');
-            if( fieldEl ) {
-                console.log("found="+fieldEl.attr('id'));
-                printF(fieldEl,"found=");
-                if( fieldEl.hasClass('combobox') ) {
-                    fieldEl.select2('val',data[fieldName]);
-                } else {
-                    fieldEl.val(data[fieldName]);
-                }
+
+        var partialIdStr = "["+fieldName+"]";
+        console.log("partialIdStr="+partialIdStr);
+        var fieldEl = holder.find('[name*="'+partialIdStr+'"]');
+        console.log("found=" + fieldEl.attr('id'));
+        printF(fieldEl, "found=");
+
+        if( fieldEl ) {
+
+            var fieldVal = null;
+
+            //if( (fieldName in data) && data[fieldName] ) {
+            if( data && (fieldName in data) ) {
+                //var partialIdStr = partialId+"_"+fieldName;
+                //[currentLocation][room]
+                //var partialIdStr = "["+partialId+"]["+fieldName+"]";
+                //var partialIdStr = "["+fieldName+"]";
+                //console.log("partialIdStr="+partialIdStr);
+                //var fieldEl = holder.find('[name*="'+partialIdStr+'"]');
+                //if( fieldEl ) {
+                //console.log("found=" + fieldEl.attr('id'));
+                //printF(fieldEl, "found=");
+                //if (fieldEl.hasClass('combobox')) {
+                //    fieldEl.select2('val', data[fieldName]);
+                //} else {
+                //    fieldEl.val(data[fieldName]);
+                //}
+                //}
+                fieldVal = data[fieldName];
+            }
+
+            if( fieldEl.hasClass('combobox') ) {
+                fieldEl.select2('val', fieldVal);
+            } else {
+                fieldEl.val(fieldVal);
             }
         }
-
     }
 
-    if( 'id' in data ) {
-        var idEl = holder.find('.user-object-id-field');
+    var idEl = holder.find('.user-object-id-field');
+    if( data && ('id' in data) ) {
         if( data['id'] ) {
             idEl.val(data['id']);
         } else {
             idEl.val('');
         }
+    } else {
+        idEl.val('');
     }
-    
+
 }
