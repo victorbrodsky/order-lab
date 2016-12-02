@@ -46,7 +46,7 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
     $(target).on('change', function(e){
     //$(target).on("select2-selecting", function (e) {
 
-        console.log("comboboxTreeListener: change", e);
+        //console.log("comboboxTreeListener: change", e);
         //printF( $(this), "comboboxTreeListener: combobox on select:" );
 
         var comboboxEl = $(this);

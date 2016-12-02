@@ -187,6 +187,7 @@ class ResearchLabType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResearchLab',
+            //'csrf_protection' => false,
         ));
     }
 

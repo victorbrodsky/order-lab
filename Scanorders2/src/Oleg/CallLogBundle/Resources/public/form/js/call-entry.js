@@ -16,6 +16,7 @@ function initCallLogPage() {
 
     //calllogEnableMessageCategoryService('patient-holder-1');
     //calllogMessageCategoryListener('patient-holder-1');
+    calllogLocationNameListener('patient-holder-1');
 }
 
 //prevent exit modified form
@@ -79,7 +80,7 @@ function addnewCalllogPatient(holderId) {
     var sex = holder.find(".encountersex-field").select2('val');
     sex = trimWithCheck(sex);
 
-    var sexStr = holder.find(".encountersex-field").select2('text');
+    var sexStr = holder.find(".encountersex-field").select2('data').text;
     //sexStr = trimWithCheck(sexStr);
 
     //check if "Last Name" field + DOB field, or "MRN" fields are not empty
@@ -1920,3 +1921,95 @@ function calllogSubmitForm() {
     $('#calllog-new-entry-form').submit();
 }
 
+
+function calllogLocationNameListener(holderId) {
+    //var holder = getHolder(holderId);
+
+    var target = ".ajax-combobox-locationName";
+
+    $(target).on("change", function (e) {
+        console.log("calllogLocationNameListener: change", e);
+
+        //populate location fields by name
+        //var value = $("[name='nameofobject']");
+
+        var locationNameEl = $(this);
+
+        var selectData = locationNameEl.select2('data');
+
+        if( !selectData ) {
+            return;
+        }
+
+        var locationId = selectData.id;
+        if( !locationId ) {
+            return;
+        }
+
+        var url = Routing.generate('employees_get_location_by_name');
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            async: asyncflag,
+            data: {locationId: locationId},
+        }).success(function(data) {
+            console.log("data length="+data.length);
+            console.log(data);
+
+            if( data ) {
+                //populate location fields
+                var holder = locationNameEl.closest('.panel-body');
+                console.log("holder:");
+                console.log(holder);
+                locationNamePopulateLocationFields( holder, data, 'currentLocation' );
+            }
+
+        }).fail(function() {
+            alert("Error getting location by location ID "+locationId);
+        }).done(function() {
+            //console.log("update patient title done");
+        });
+
+    });
+
+    return;
+}
+function locationNamePopulateLocationFields( holder, data, partialId ) {
+
+    var fieldNames = ['phone','room','suite','floor','building','comment','street1','street2','city','state','zip','country','county'];
+
+    for( var i = 0; i < fieldNames.length; i++ ) {
+        //text += fieldNames[i] + "<br>";
+        var fieldName = fieldNames[i]; //phone
+        console.log("fieldName="+fieldName);
+        if( data[fieldName] ) {
+            //var partialIdStr = partialId+"_"+fieldName;
+            //[currentLocation][room]
+            //var partialIdStr = "["+partialId+"]["+fieldName+"]";
+            var partialIdStr = "["+fieldName+"]";
+            console.log("partialIdStr="+partialIdStr);
+            var fieldEl = holder.find('[name*="'+partialIdStr+'"]');
+            if( fieldEl ) {
+                console.log("found="+fieldEl.attr('id'));
+                printF(fieldEl,"found=");
+                if( fieldEl.hasClass('combobox') ) {
+                    fieldEl.select2('val',data[fieldName]);
+                } else {
+                    fieldEl.val(data[fieldName]);
+                }
+            }
+        }
+
+    }
+
+    if( 'id' in data ) {
+        var idEl = holder.find('.user-object-id-field');
+        if( data['id'] ) {
+            idEl.val(data['id']);
+        } else {
+            idEl.val('');
+        }
+    }
+    
+}

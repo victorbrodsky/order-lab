@@ -456,6 +456,100 @@ class UtilController extends Controller {
         return $response;
     }
 
+    /**
+     * @Route("/common/locationName", name="employees_get_locationname")
+     * @Method("GET")
+     */
+    public function getLocationNameAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Location', 'list')
+            ->select("list")
+            ->orderBy("list.id","ASC");
+
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+        $query->leftJoin("list.locationTypes", "locationTypes");
+        //$query->leftJoin("list.user", "user");
+        $query->andWhere("locationTypes.name = 'Encounter Location'");
+
+        //exclude system user:  "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'"; //"user.email != '-1'"
+        //$query->andWhere("user.id IS NULL OR (user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system')");
+
+        //do not show (exclude) all locations that are tied to a user who has no current employment periods (all of whose employment periods have an end date)
+        //$curdate = date("Y-m-d", time());
+        //$query->leftJoin("user.employmentStatus", "employmentStatus");
+        //$currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        //$query->andWhere($currentusers);
+
+        //echo "query=".$query." | ";
+
+        $locations = $query->getQuery()->getResult();
+        //echo "loc count=".count($locations)."<br>";
+
+        $output = array();
+
+        foreach( $locations as $location ) {
+            $element = array('id'=>$location->getId(), 'text'=>$location->getNameFull());
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/common/get-location-by-name/", name="employees_get_location_by_name", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getLocationByNameAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $locationId = trim($request->get('locationId'));
+
+        $location = $em->getRepository('OlegUserdirectoryBundle:Location')->find($locationId);
+
+        $output = array();
+
+        if( $location ) {
+            $output['id'] = $location->getId();
+            $output['phone'] = $location->getPhone();
+            $output['room'] = ($location->getRoom()) ? $location->getRoom()->getId() : null;
+            $output['suite'] = ($location->getSuite()) ? $location->getSuite()->getId() : null;
+            $output['floor'] = ($location->getFloor()) ? $location->getFloor()->getId() : null;
+            $output['building'] = ($location->getBuilding()) ? $location->getBuilding()->getId() : null;
+            $output['comment'] = $location->getComment();
+
+            $geoLocation = $location->getGeoLocation();
+            if( $geoLocation ) {
+                $output['street1'] = $geoLocation->getStreet1();
+                $output['street2'] = $geoLocation->getStreet2();
+                $output['city'] = ($geoLocation->getCity()) ? $geoLocation->getCity()->getId() : null;
+                $output['country'] = ($geoLocation->getCountry()) ? $geoLocation->getCountry()->getId() : null;
+                $output['county'] = $geoLocation->getCounty();
+                $output['zip'] = $geoLocation->getZip();
+            } else {
+                $output['street1'] = null;
+                $output['street2'] = null;
+                $output['city'] = null;
+                $output['country'] = null;
+                $output['county'] = null;
+                $output['zip'] = null;
+            }
+
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
     /**
      * check if location can be deleted

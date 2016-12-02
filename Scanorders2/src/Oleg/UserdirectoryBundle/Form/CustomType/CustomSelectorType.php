@@ -10,6 +10,7 @@
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManytomanyTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
@@ -157,6 +158,9 @@ class CustomSelectorType extends AbstractType {
                 break;
             case "referringProviderSpecialty":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'HealthcareProviderSpecialtiesList');
+                break;
+            case "locationName":
+                $transformer = new GenericSelectTransformer($this->om, $username, 'Location');
                 break;
 
             //grants

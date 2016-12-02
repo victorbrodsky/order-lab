@@ -65,7 +65,7 @@ abstract class ListAbstract
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="createdate", type="datetime")
+     * @ORM\Column(name="createdate", type="datetime", nullable=true)
      * @Assert\NotBlank
      */
     protected $createdate;
@@ -154,7 +154,6 @@ abstract class ListAbstract
 
 
     public function __construct( $creator = null ) {
-
         $this->synonyms = new ArrayCollection();
 
         //set mandatory list attributes
@@ -338,7 +337,9 @@ abstract class ListAbstract
      */
     public function setCreatedate($createdate)
     {
-        $this->createdate = $createdate;
+        if( $createdate ) {
+            $this->createdate = $createdate;
+        }
 
         return $this;
     }

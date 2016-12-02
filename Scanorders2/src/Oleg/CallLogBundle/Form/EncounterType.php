@@ -156,15 +156,15 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounternumber__',
         ));
 
-        $builder->add('location', 'collection', array(
-            'type' => new EncounterLocationType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounterlocation__',
-        ));
+//        $builder->add('location', 'collection', array(
+//            'type' => new EncounterLocationType($this->params, null),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__encounterlocation__',
+//        ));
 
 //            $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
 //            $params = array('name'=>'Encounter','dataClass'=>'Oleg\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
@@ -247,11 +247,6 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterinfotypes__',
         ));
 
-        $builder->add('tracker', new TrackerType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
-            'label' => false,
-        ));
-
         $builder->add('patientDob', 'date', array(
             'label' => "Date of Birth:",
             'widget' => 'single_text',
@@ -260,6 +255,29 @@ class EncounterType extends AbstractType
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
             'attr' => array('class' => 'datepicker form-control patient-dob-date'), //'style'=>'margin-top: 0;'
         ));
+
+        if( $this->params['cycle'] != 'show' ) {
+            //echo "show locationName <br>";
+            $builder->add('locationName', 'employees_custom_selector', array(
+                'label' => "Location Name:",
+                'mapped' => false,
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-locationName', 'type' => 'hidden'),
+                'classtype' => 'locationName'
+            ));
+//            $builder->add('locationName', 'text', array(
+//                'label' => "Location Name:",
+//                'mapped' => false,
+//                //'required' => false,
+//                //'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
+//                //'classtype' => 'location'
+//            ));
+        }
+        $builder->add('tracker', new TrackerType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+            'label' => false,
+        ));
+
 
     }
 

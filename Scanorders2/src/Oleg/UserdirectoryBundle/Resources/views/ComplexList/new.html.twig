@@ -42,6 +42,19 @@
 
     {{ form_start(form) }}
 
+        {{ form_errors(form) }}
+
+        {% if form.list.createdate is defined %}
+            {{ formmacros.field(form.list.createdate) }}
+        {% endif %}
+        {% if form.list.type is defined %}
+            {{ formmacros.field(form.list.type) }}
+        {% endif %}
+        {% if form.list.orderinlist is defined %}
+            {{ formmacros.field(form.list.orderinlist) }}
+        {% endif %}
+        <hr>
+
         {% if pathname == 'locations' %}
             <div id="form-prototype-data" data-userid = "{{ entity.id }}"></div>
             {{ usermacros.locationObject(form,cycle,'user-locations','noprototype',sitename,entity) }}
@@ -85,6 +98,7 @@
 
         {# Token CSRF #}
         {{ form_widget(form._token) }}
+        {#{{ form_rest(form) }}#}
 
 
         {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_PLATFORM_DEPUTY_ADMIN#}

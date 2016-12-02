@@ -165,24 +165,13 @@ class Location extends ListAbstract
 
     public function __construct($creator=null) {
 
-        $this->synonyms = new ArrayCollection();
-        $this->assistant = new ArrayCollection();
+        parent::__construct($creator);
 
+        $this->assistant = new ArrayCollection();
         $this->locationTypes = new ArrayCollection();
 
         $this->setRemovable(true);
-
         $this->setStatus(self::STATUS_UNVERIFIED);
-
-        //set mandatory list attributes
-        $this->setType('user-added');
-        $this->setCreatedate(new \DateTime());
-        $this->setOrderinlist(-1);
-        //$this->setName("");
-
-        if( $creator ) {
-            $this->setCreator($creator);
-        }
     }
 
 

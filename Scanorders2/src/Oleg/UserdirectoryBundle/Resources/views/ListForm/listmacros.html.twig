@@ -428,7 +428,9 @@
 
     {{ formmacros.field(form.list.creator) }}
 
-    {{ formmacros.field(form.list.createdate) }}
+    {% if form.list.createdate is defined %}
+        {{ formmacros.field(form.list.createdate) }}
+    {% endif %}
 
     {{ formmacros.field(form.list.orderinlist) }}
 
@@ -553,7 +555,9 @@
 
     {{ formmacros.field(edit_form.list.creator) }}
 
-    {{ formmacros.field(edit_form.list.createdate) }}
+    {% if edit_form.list.createdate is defined %}
+        {{ formmacros.field(edit_form.list.createdate) }}
+    {% endif %}
 
     {% if entity.updatedby %}
         {#{{ formmacros.field(edit_form.list.updatedby) }}#}

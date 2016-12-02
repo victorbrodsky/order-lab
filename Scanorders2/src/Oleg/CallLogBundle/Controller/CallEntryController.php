@@ -199,7 +199,7 @@ class CallEntryController extends Controller
         ///////////// EOF Message //////////////
 
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn);
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
 
         //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
@@ -268,7 +268,7 @@ class CallEntryController extends Controller
         //add patient
         //$message->addPatient($patient);
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn);
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
 
         $form->handleRequest($request);
 
@@ -410,6 +410,8 @@ class CallEntryController extends Controller
                     //$patientInfoEncounter must be removed from the patient
                     $patient->removeEncounter($patientInfoEncounter);
                 }
+
+                //TODO: prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
 
                 //testing: process form nodes
                 //$formNodeUtil = $this->get('user_formnode_utility');
@@ -602,7 +604,7 @@ class CallEntryController extends Controller
         );
     }
 
-    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $disabled=false) {
+    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -627,11 +629,17 @@ class CallEntryController extends Controller
             $mrntype = 1;
         }
 
+        if( $cycle == 'show' ) {
+            $disabled = true;
+        } else {
+            $disabled = false;
+        }
+
         //$timezones
         $userTimeZone = $user->getPreferences()->getTimezone();
 
         $params = array(
-            'cycle' => 'new',
+            'cycle' => $cycle,  //'new',
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
@@ -1601,8 +1609,7 @@ class CallEntryController extends Controller
         }
 
         //echo "patients=".count($message->getPatient())."<br>";
-        $disabled = true;
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$disabled);
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
 
         $complexPatientStr = null;
         //find record in the "Pathology Call Complex Patients" list by message object entityName, entityId

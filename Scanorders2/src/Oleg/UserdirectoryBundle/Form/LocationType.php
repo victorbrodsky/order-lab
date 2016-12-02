@@ -63,36 +63,30 @@ class LocationType extends AbstractType
 
         $builder->add('building', 'employees_custom_selector', array(
             'label' => 'Building:',
-            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
+            'attr' => array('class' => 'combobox ajax-combobox-building', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'building'
         ));
 
         $builder->add('room', 'employees_custom_selector', array(
             'label' => 'Room Number:',
-            'attr' => array('class' => 'ajax-combobox-room', 'type' => 'hidden'),
+            'attr' => array('class' => 'combobox ajax-combobox-room', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'room'
         ));
 
         $builder->add('suite', 'employees_custom_selector', array(
             'label' => 'Suite:',
-            'attr' => array('class' => 'ajax-combobox-suite', 'type' => 'hidden'),
+            'attr' => array('class' => 'combobox ajax-combobox-suite', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'suite'
         ));
 
         $builder->add('floor', 'employees_custom_selector', array(
             'label' => 'Floor:',
-            'attr' => array('class' => 'ajax-combobox-floor', 'type' => 'hidden'),
+            'attr' => array('class' => 'combobox ajax-combobox-floor', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'floor'
-        ));
-
-        $builder->add('geoLocation', new GeoLocationType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
-            'label' => false,
-            'required' => false
         ));
 
         $builder->add('comment', 'textarea', array(
@@ -118,6 +112,11 @@ class LocationType extends AbstractType
             }
         ));
 
+        $builder->add('geoLocation', new GeoLocationType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'label' => false,
+            'required' => false
+        ));
 
         //complexLocation
         if( $this->params['complexLocation'] ) {
@@ -327,13 +326,13 @@ class LocationType extends AbstractType
         }
 
 
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            //'csrf_protection' => false,
         ));
     }
 

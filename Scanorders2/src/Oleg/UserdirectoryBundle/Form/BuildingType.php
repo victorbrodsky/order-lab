@@ -91,6 +91,7 @@ class BuildingType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
+            //'csrf_protection' => false,
         ));
     }
 

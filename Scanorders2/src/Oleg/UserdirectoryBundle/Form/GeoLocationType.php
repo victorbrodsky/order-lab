@@ -42,7 +42,7 @@ class GeoLocationType extends AbstractType
         $builder->add('city', 'employees_custom_selector', array(
             'label' => 'City:',
             'required' => false,
-            'attr' => array('class' => 'ajax-combobox-city', 'type' => 'hidden'),
+            'attr' => array('class' => 'combobox ajax-combobox-city', 'type' => 'hidden'),
             'classtype' => 'city'
         ));
 
@@ -110,6 +110,7 @@ class GeoLocationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            //'csrf_protection' => false,
         ));
     }
 

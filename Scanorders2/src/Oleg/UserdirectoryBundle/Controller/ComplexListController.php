@@ -404,15 +404,16 @@ class ComplexListController extends Controller
 
         $form->handleRequest($request);
 
-
-//        echo "loc errors:<br>";
-//        print_r($form->getErrors());
-//        echo "<br>loc string errors:<br>";
-//        print_r($form->getErrorsAsString());
-//        echo "<br>";
+        //echo "loc errors:<br>";
+        //$errors = $form->getErrors();
+        //$errors = $form->getErrors(true, false);
+        //print_r($errors);
+        //echo "<br>";
         //exit();
 
-        if( $form->isValid() ) {
+        if( 1 || $form->isValid() ) {
+
+            //echo "pathname=".$mapper['pathname']."<br>";
 
             if( $mapper['pathname'] == 'locations' ) {
                 //set parents for institution tree for Administrative and Academical Titles
@@ -459,14 +460,13 @@ class ComplexListController extends Controller
                 $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl($sitename.'_'.$mapper['pathname'].'_pathaction_show_standalone', array('id' => $entity->getId())));
         }
-
+        //exit('error');
         //echo "error loc <br>";
 
         return array(
@@ -492,6 +492,10 @@ class ComplexListController extends Controller
 
         //echo "cycle=".$cycle."<br>";
         //echo "formType=".$mapper['fullFormType']."<br>";
+        //echo "entity ID=".$entity->getId()."<br>";
+        //if( $entity->getCreatedate() ) {
+        //    echo "entity creationdate=" . $entity->getCreatedate()->format('d-m-Y') . "<br>";
+        //}
 
         $path = $sitename.'_'.$mapper['pathname'].'_pathaction_'.$cycle;
 
@@ -542,7 +546,7 @@ class ComplexListController extends Controller
             'method' => $method,
         ));
 
-
+        //echo "after entity ID=".$entity->getId()."<br>";
         return $form;
     }
 
