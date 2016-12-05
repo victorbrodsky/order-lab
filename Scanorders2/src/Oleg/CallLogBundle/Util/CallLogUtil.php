@@ -1074,4 +1074,28 @@ class CallLogUtil
         return $resList;
     }
 
+    //if the location id is provided, then find this location in DB by id and replace it.
+    public function processTrackerLocation($encounter) {
+        //[tracker][spots][0][currentLocation][name]
+        if( !$encounter->getTracker() ) {
+            //echo "return: no tracker found in the encounter=".$encounter."<br>";
+            return "";
+        }
+        foreach( $encounter->getTracker()->getSpots() as $spot ) {
+            $location = $spot->getCurrentLocation();
+            //echo "location=".$location."<br>";
+            if( $location && $location->getId() ) {
+                echo "find location by ID=".$location->getId()."<br>";
+                $locationDb = $this->em->getRepository('OlegUserdirectoryBundle:Location')->find($location->getId());
+                if( $locationDb ) {
+                    echo "set found location by ID=".$location->getId()."<br>";
+                    $spot->setCurrentLocation($locationDb);
+                } else {
+                    echo "use and create a current location =".$location->getName()."<br>";
+                    //$location->setName();
+                }
+            }
+        }
+    }
+
 }

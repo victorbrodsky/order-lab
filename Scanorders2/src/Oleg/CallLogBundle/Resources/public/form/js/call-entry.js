@@ -1016,6 +1016,10 @@ function disableField(fieldEl,disable) {
             //fieldEl.select2("enable", true);
         //}
     }
+
+    if( fieldEl.hasClass('combobox') ) {
+        disableSelectFieldCalllog(fieldEl,disable);
+    }
 }
 function disableSelectFieldCalllog(fieldEl,disable) {
     if( disable ) {
@@ -1984,9 +1988,17 @@ function calllogLocationNameListener(holderId) {
 
     return;
 }
-function locationNamePopulateLocationFields( holder, data, partialId ) {
 
-    var fieldNames = ['phone','room','suite','floor','building','comment','street1','street2','city','state','zip','country','county'];
+var _encounterLocationTypeIds = null;
+function locationNamePopulateLocationFields( holder, data ) {
+
+    //set the default location type
+    if( !_encounterLocationTypeIds ) {
+        //holder.find('.user-location-locationTypes').select2('val',_encounterLocationTypeId);
+        _encounterLocationTypeIds = holder.find('.user-location-locationTypes').select2('val');
+    }
+
+    var fieldNames = ['locationTypes','phone','room','suite','floor','building','comment','street1','street2','city','state','zip','country','county'];
 
     for( var i = 0; i < fieldNames.length; i++ ) {
         //text += fieldNames[i] + "<br>";
@@ -1999,12 +2011,19 @@ function locationNamePopulateLocationFields( holder, data, partialId ) {
         console.log("found=" + fieldEl.attr('id'));
         printF(fieldEl, "found=");
 
+        var locationId = null;
+        if( data && ('id' in data) ) {
+            if( data['id'] ) {
+                locationId = data['id'];
+            }
+        }
+
         if( fieldEl ) {
 
             var fieldVal = null;
 
             //if( (fieldName in data) && data[fieldName] ) {
-            if( data && (fieldName in data) ) {
+            if( locationId && data && (fieldName in data) ) {
                 //var partialIdStr = partialId+"_"+fieldName;
                 //[currentLocation][room]
                 //var partialIdStr = "["+partialId+"]["+fieldName+"]";
@@ -2028,18 +2047,44 @@ function locationNamePopulateLocationFields( holder, data, partialId ) {
             } else {
                 fieldEl.val(fieldVal);
             }
+
+            //lock/unlock the field
+            if( data && locationId ) {
+                //lock
+                disableField(fieldEl,true)
+            } else {
+                //unlock
+                disableField(fieldEl,false)
+            }
+
         }
+    }//for
+
+    //set id
+    var idEl = holder.find('.user-object-id-field');
+    idEl.val(locationId);
+    //if( data && ('id' in data) ) {
+    //    if( data['id'] ) {
+    //        idEl.val(data['id']);
+    //    } else {
+    //        idEl.val('');
+    //    }
+    //} else {
+    //    idEl.val('');
+    //}
+
+    //set location name
+    var locationNameData = holder.find('.ajax-combobox-locationName').select2('data');
+    if( locationNameData ) {
+        //var locationNameDataText = locationNameData.text;
+        holder.find('.user-object-id-field').val(locationNameData.text);
+    } else {
+        holder.find('.user-object-id-field').val(null);
     }
 
-    var idEl = holder.find('.user-object-id-field');
-    if( data && ('id' in data) ) {
-        if( data['id'] ) {
-            idEl.val(data['id']);
-        } else {
-            idEl.val('');
-        }
-    } else {
-        idEl.val('');
+    //set location type to default
+    if( !locationId ) {
+        holder.find('.user-location-name-field').val();
     }
 
 }

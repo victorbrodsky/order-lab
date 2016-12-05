@@ -25,7 +25,7 @@ class FormNodeUtil
         $this->container = $container;
     }
 
-    public function processFormNodes($request, $formNodeHolder, $holderEntity)
+    public function processFormNodes($request, $formNodeHolder, $holderEntity, $testing=false)
     {
         if( !$formNodeHolder ) {
             return;
@@ -61,7 +61,7 @@ class FormNodeUtil
     }
 
     //process by data partial key name" "formnode-4" => "formnode-"
-    public function processFormNodesFromDataKeys($data,$holderEntity) {
+    public function processFormNodesFromDataKeys($data,$holderEntity,$testing=false) {
         foreach( $data as $key=>$value ) {
             //if( "show_me_" == substr($key,0,8) ) {
             if( strpos($key, 'formnode-') !== false ) {
@@ -72,7 +72,7 @@ class FormNodeUtil
                     //exit("No Root of the node id=".$formNodeId."<br>");
                     continue;
                 }
-                $this->processFormNodeByType($data,$thisFormNode,$holderEntity);
+                $this->processFormNodeByType($data,$thisFormNode,$holderEntity,$testing);
             }
         }
     }
@@ -95,7 +95,7 @@ class FormNodeUtil
 
     }
 
-    public function processFormNodeByType( $data, $formNode, $holderEntity ) {
+    public function processFormNodeByType( $data, $formNode, $holderEntity, $testing=false ) {
         if( !$this->hasValue($formNode) ) {
             //exit("No Value of the node=".$formNode."<br>");
             return;
@@ -139,8 +139,10 @@ class FormNodeUtil
         }
         //exit("processFormNodeByType; formValue=".$formValue);
 
-        $this->em->persist($newListElement);
-        $this->em->flush($newListElement); //testing
+        if( !$testing ) {
+            $this->em->persist($newListElement);
+            $this->em->flush($newListElement); //testing
+        }
     }
 
 

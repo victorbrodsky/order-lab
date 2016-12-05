@@ -101,7 +101,7 @@ class LocationType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width user-location-locationTypes'),
             'required' => false,
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')

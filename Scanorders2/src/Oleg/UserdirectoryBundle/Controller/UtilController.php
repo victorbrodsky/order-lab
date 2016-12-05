@@ -517,7 +517,14 @@ class UtilController extends Controller {
         $output = array();
 
         if( $location ) {
+
+            $locationTypes = array();
+            foreach( $location->getLocationTypes() as $locationType ) {
+                $locationTypes[] = $locationType->getId();
+            }
+
             $output['id'] = $location->getId();
+            $output['locationTypes'] = $locationTypes;
             $output['phone'] = $location->getPhone();
             $output['room'] = ($location->getRoom()) ? $location->getRoom()->getId() : null;
             $output['suite'] = ($location->getSuite()) ? $location->getSuite()->getId() : null;

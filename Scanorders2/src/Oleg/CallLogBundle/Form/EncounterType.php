@@ -278,6 +278,20 @@ class EncounterType extends AbstractType
             'label' => false,
         ));
 
+//        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+//            $encounter = $event->getData();
+//            $form = $event->getForm();
+//
+//            //echo "set encounter name=".$encounter['locationName']."<br>";
+//            //print_r($encounter);
+//
+//            //exit('PRE_SUBMIT');
+//            if( isset($encounter['locationName']) ) {
+//                echo "set encounter name=".$encounter['locationName']."<br>";
+//                $encounter->setName($encounter['locationName']);
+//                //exit('PRE_SUBMIT');
+//            }
+//        });
 
     }
 

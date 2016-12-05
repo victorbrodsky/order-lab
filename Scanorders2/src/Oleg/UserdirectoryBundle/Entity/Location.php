@@ -843,6 +843,15 @@ class Location extends ListAbstract
 
     public function isEmpty() {
         $empty = true;
+        echo "isEmpty Location: ".$this."<br>";
+        echo "isEmpty Location ID=".$this->getId()."<br>";
+        echo "isEmpty Location Name=".$this->getName()."<br>";
+
+        if( $this->getId() ) {
+            return false;
+        } else {
+            //return true;
+        }
 
         if( $this->getName() ) {
             return false;

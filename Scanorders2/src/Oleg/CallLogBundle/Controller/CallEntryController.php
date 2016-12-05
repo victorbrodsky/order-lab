@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CallEntryController extends Controller
 {
 
+
     /**
      * Case List Page
      * @Route("/", name="calllog_home")
@@ -217,7 +218,7 @@ class CallEntryController extends Controller
     }
 
     /**
-     * Update Patient
+     * Save/Update Call Log Entry
      * @Route("/patient/update", name="calllog_update_patient", options={"expose"=true})
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
      * @Method("POST")
@@ -236,6 +237,8 @@ class CallEntryController extends Controller
         $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
+        $testing = false;
+        $testing = true;
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -391,14 +394,14 @@ class CallEntryController extends Controller
 //                $encounterDateObject->setField($encounterDate);
 //                //exit('1');
 
-                //TODO: Update Patient Info from $newEncounter:
+                //TODO: Update Patient Info from $newEncounter (?):
                 // The values typed into these fields should be recorded as "valid".
                 // If the user types in the Date of Birth, it should be added to the "Patient" hierarchy level
                 // of the selected patient as a "valid" value and the previous "valid" value should be marked "invalid" on the server side.
                 //Use unmapped encounter's "patientDob" to update patient's DOB
 
                 if( $patientInfoEncounter ) {
-                    //TODO: copy all non-empty values from the $patientInfoEncounter to the $newEncounter?
+                    //TODO: copy all non-empty values from the $patientInfoEncounter to the $newEncounter ?
 
                     //If the user types in the Date of Birth, it should be added to
                     // the "Patient" hierarchy level of the selected patient as a "valid" value
@@ -411,7 +414,9 @@ class CallEntryController extends Controller
                     $patient->removeEncounter($patientInfoEncounter);
                 }
 
-                //TODO: prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
+                //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
+                $calllogUtil->processTrackerLocation($newEncounter);
+                exit('after location');
 
                 //testing: process form nodes
                 //$formNodeUtil = $this->get('user_formnode_utility');
@@ -513,9 +518,11 @@ class CallEntryController extends Controller
 
                     //exit('Exit Case 1');
                     //$em->persist($patient);
-                    $em->persist($newEncounter);
-                    $em->persist($message);
-                    $em->flush(); //testing
+                    if( !$testing ) {
+                        $em->persist($newEncounter);
+                        $em->persist($message);
+                        $em->flush(); //testing
+                    }
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
 
@@ -530,18 +537,20 @@ class CallEntryController extends Controller
                     $message->removePatient($patient);
 
                     //exit('Exit Case 2');
-                    $em->persist($newEncounter);
-                    $em->flush($newEncounter); //testing
+                    if( !$testing ) {
+                        $em->persist($newEncounter);
+                        $em->flush($newEncounter); //testing
 
-                    $em->persist($message);
-                    $em->flush($message); //testing
+                        $em->persist($message);
+                        $em->flush($message); //testing
+                    }
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
                 }
 
                 //process form nodes
                 $formNodeUtil = $this->get('user_formnode_utility');
-                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message); //testing
+                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 
 
@@ -575,13 +584,17 @@ class CallEntryController extends Controller
 
                     //$event = $event . " submitted by " . $user;
 
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$message,$request,$eventType);
+                    if( !$testing ) {
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $message, $request, $eventType);
+                    }
                 }
 
             }//if $newEncounter
 
 
-            //exit('form is submitted and finished, msg='.$msg);
+            if( $testing ) {
+                exit('form is submitted and finished, msg='.$msg);
+            }
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
