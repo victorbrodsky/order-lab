@@ -237,7 +237,7 @@
     {% if formNodeValue %}
         {% set fieldValue = formNodeValue %}
     {% else %}
-        {% set fieldValue = null %}
+        {% set fieldValue = '' %}
     {% endif %}
     {#cycle={{ cycle }}<br>#}
     {% if cycle != 'show' %}
@@ -251,10 +251,9 @@
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
             name="{{ fieldname }}"
             class="textarea form-control"
+            rows="10"
             {{ disabled }}
-    >
-        {{ fieldValue }}
-    </textarea>
+    >{{fieldValue}}</textarea>
 {% endmacro %}
 
 {% macro stringForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
