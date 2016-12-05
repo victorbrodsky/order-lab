@@ -2063,28 +2063,18 @@ function locationNamePopulateLocationFields( holder, data ) {
     //set id
     var idEl = holder.find('.user-object-id-field');
     idEl.val(locationId);
-    //if( data && ('id' in data) ) {
-    //    if( data['id'] ) {
-    //        idEl.val(data['id']);
-    //    } else {
-    //        idEl.val('');
-    //    }
-    //} else {
-    //    idEl.val('');
-    //}
 
     //set location name
     var locationNameData = holder.find('.ajax-combobox-locationName').select2('data');
     if( locationNameData ) {
-        //var locationNameDataText = locationNameData.text;
-        holder.find('.user-object-id-field').val(locationNameData.text);
+        holder.find('.user-location-name-field').val(locationNameData.text);
     } else {
-        holder.find('.user-object-id-field').val(null);
+        holder.find('.user-location-name-field').val(null);
     }
 
     //set location type to default
     if( !locationId ) {
-        holder.find('.user-location-name-field').val();
+        holder.find('.user-location-locationTypes').select2('val',_encounterLocationTypeIds);
     }
 
 }

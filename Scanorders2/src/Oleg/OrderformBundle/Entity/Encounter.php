@@ -906,7 +906,12 @@ class Encounter extends ObjectAbstract
         $infoArr = array();
         //referringProviders_0_referringProviderSpecialty
         foreach( $this->getReferringProviders() as $refProvider ) {
-            $info = $refProvider->getField()->getFullName();
+
+            $info = "";
+
+            if( $refProvider->getField() ) {
+                $info = $info . $refProvider->getField()->getFullName();
+            }
 
             //([Specialty], [Phone Number]/[ReferringProviderEmail])
             $addInfoArr = array();

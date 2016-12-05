@@ -1085,14 +1085,13 @@ class CallLogUtil
             $location = $spot->getCurrentLocation();
             //echo "location=".$location."<br>";
             if( $location && $location->getId() ) {
-                echo "find location by ID=".$location->getId()."<br>";
+                //echo "find location by ID=".$location->getId()."<br>";
                 $locationDb = $this->em->getRepository('OlegUserdirectoryBundle:Location')->find($location->getId());
                 if( $locationDb ) {
-                    echo "set found location by ID=".$location->getId()."<br>";
+                    //echo "set found location by ID=".$location->getId()."<br>";
                     $spot->setCurrentLocation($locationDb);
                 } else {
-                    echo "use and create a current location =".$location->getName()."<br>";
-                    //$location->setName();
+                    //echo "use and create a current location =".$location->getName()."<br>";
                 }
             }
         }

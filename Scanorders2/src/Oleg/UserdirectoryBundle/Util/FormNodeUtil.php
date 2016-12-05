@@ -78,22 +78,22 @@ class FormNodeUtil
     }
 
     //NOT USED
-    public function processFormNodeRecursively( $data, $formNode, $holderEntity ) {
-
-        echo "formNode=".$formNode."<br>";
-        $children = $formNode->getChildren();
-        if( $children ) {
-
-            foreach( $children as $childFormNode ) {
-                $this->processFormNodeByType($data,$childFormNode,$holderEntity);
-                $this->processFormNodeRecursively($data,$childFormNode,$holderEntity);
-            }
-
-        } else {
-            $this->processFormNodeByType($data,$formNode,$holderEntity);
-        }
-
-    }
+//    public function processFormNodeRecursively( $data, $formNode, $holderEntity ) {
+//
+//        echo "formNode=".$formNode."<br>";
+//        $children = $formNode->getChildren();
+//        if( $children ) {
+//
+//            foreach( $children as $childFormNode ) {
+//                $this->processFormNodeByType($data,$childFormNode,$holderEntity);
+//                $this->processFormNodeRecursively($data,$childFormNode,$holderEntity);
+//            }
+//
+//        } else {
+//            $this->processFormNodeByType($data,$formNode,$holderEntity);
+//        }
+//
+//    }
 
     public function processFormNodeByType( $data, $formNode, $holderEntity, $testing=false ) {
         if( !$this->hasValue($formNode) ) {
@@ -109,6 +109,7 @@ class FormNodeUtil
             //exit("No Value=".$formValue."<br>");
             return;
         }
+        //exit("Value=[".$formValue."]<br>");
 
         //1) create a new list element
         $newListElement = $this->createNewList($formNode,$formValue);
@@ -451,7 +452,7 @@ class FormNodeUtil
                 $node->setObject($classObject);
             }
 
-            echo "Created: ".$node->getName()."<br>";
+            //echo "Created: ".$node->getName()."<br>";
             $em->persist($parent);
             $em->persist($node);
             $em->flush();
@@ -462,14 +463,14 @@ class FormNodeUtil
             //return $node;
 
             $updated = false;
-            echo "Existed: ".$node->getName()."<br>";
-            echo "objectType=".$objectType->getName()."<br>";
+            //echo "Existed: ".$node->getName()."<br>";
+            //echo "objectType=".$objectType->getName()."<br>";
 
             //set objectType
             if( $objectType ) {
                 if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
-                    echo "update objectType=".$node->getObjectType()."<br>";
+                    //echo "update objectType=".$node->getObjectType()."<br>";
                     $updated = true;
                 }
             }
@@ -477,17 +478,17 @@ class FormNodeUtil
             if( $classNamespace && $className ) {
                 $node->setEntityNamespace($classNamespace);
                 $node->setEntityName($className);
-                echo "set className $classNamespace $className <br>";
+                //echo "set className $classNamespace $className <br>";
                 $updated = true;
             } else {
                 $node->setEntityNamespace(null);
                 $node->setEntityName(null);
-                echo "set NULL EntityName <br>";
+                //echo "set NULL EntityName <br>";
                 $updated = true;
             }
 
             if( $classObject ) {
-                echo "set  classObject=".$classObject." <br>";
+                //echo "set  classObject=".$classObject." <br>";
                 $node->setObject($classObject);
                 $updated = true;
             }
@@ -505,7 +506,7 @@ class FormNodeUtil
             }
 
             if( $updated ) {
-                echo "update node=".$node." <br>";
+                //echo "update node=".$node." <br>";
                 $em->persist($node);
                 $em->flush($node);
             }
@@ -619,10 +620,10 @@ class FormNodeUtil
         if( count($messageCategories) == 0 ) {
             exit("Message categories not found by name=".$messageCategoryName);
         }
-        echo "Message categories found by name=".$messageCategoryName.": count=".count($messageCategories)."<br>";
+        //echo "Message categories found by name=".$messageCategoryName.": count=".count($messageCategories)."<br>";
 
         if( count($messageCategories) > 0 ) {
-            echo "Multiple Message Categories found: count=".count($messageCategories)."<br>";
+            //echo "Multiple Message Categories found: count=".count($messageCategories)."<br>";
             if( $parentMessageCategoryName ) {
                 foreach( $messageCategories as $thisMessageCategory ) {
                     if( $thisMessageCategory->getParent() && $thisMessageCategory->getParent()->getName()."" == $parentMessageCategoryName ) {
@@ -630,7 +631,7 @@ class FormNodeUtil
                         break;
                     }
                 }
-                echo "Parent found: ".$messageCategory."<br>"; //"Other"
+                //echo "Parent found: ".$messageCategory."<br>"; //"Other"
                 $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
             }
         }
@@ -652,17 +653,17 @@ class FormNodeUtil
                 $em->persist($messageCategory);
                 //$em->persist($formNode);
                 $em->flush();
-                echo "Add " . $formNode . " to " . $messageCategory . "<br>";
+                //echo "Add " . $formNode . " to " . $messageCategory . "<br>";
             } else {
-                echo "Node already exists " . $formNode . " in " . $messageCategory . "<br>";
+                //echo "Node already exists " . $formNode . " in " . $messageCategory . "<br>";
             }
         }
 
         //clean MessageCategory: remove all formnodes from message category.
         if( count($formNodes) == 0 ) {
-            echo "Remove formnodes from " . $messageCategory . "<br>";
+            //echo "Remove formnodes from " . $messageCategory . "<br>";
             foreach( $messageCategory->getFormNodes() as $thisFormNode ) {
-                echo "Removing " . $formNode . " from " . $messageCategory . "<br>";
+                //echo "Removing " . $formNode . " from " . $messageCategory . "<br>";
                 $messageCategory->removeFormNode($thisFormNode);
                 $em->persist($messageCategory);
                 $em->flush();
@@ -677,7 +678,7 @@ class FormNodeUtil
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeSection = $this->getObjectTypeByName('Form Section');
         $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
-        echo "objectTypeForm=".$objectTypeForm."<br>";
+        //echo "objectTypeForm=".$objectTypeForm."<br>";
 
         $messageCategoryName = "Pathology Call Log Entry";
 

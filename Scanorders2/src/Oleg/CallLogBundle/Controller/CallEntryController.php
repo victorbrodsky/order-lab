@@ -238,7 +238,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -416,7 +416,7 @@ class CallEntryController extends Controller
 
                 //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
                 $calllogUtil->processTrackerLocation($newEncounter);
-                exit('after location');
+                //exit('after location');
 
                 //testing: process form nodes
                 //$formNodeUtil = $this->get('user_formnode_utility');
