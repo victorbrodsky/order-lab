@@ -112,6 +112,11 @@ class Patient extends ObjectAbstract
      */
     private $masterMergeRecord;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="PatientRecordStatusList")
+     */
+    private $patientRecordStatus;
+
 
     /**
      * Constructor
@@ -741,6 +746,22 @@ class Patient extends ObjectAbstract
             $masterMergeRecord->setStatus($status);
             $masterMergeRecord->setField(false);
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientRecordStatus()
+    {
+        return $this->patientRecordStatus;
+    }
+
+    /**
+     * @param mixed $patientRecordStatus
+     */
+    public function setPatientRecordStatus($patientRecordStatus)
+    {
+        $this->patientRecordStatus = $patientRecordStatus;
     }
 
 

@@ -1628,6 +1628,10 @@ function calllogAppendFormNodes( data ) {
         ) {
             initDatepicker($('#formnode-holder-'+formNodeId));
         }
+
+        if( data[index]['formNodeObjectType'] == "Form Field - Free Text" ) {
+            expandTextarea($('#formnode-holder-'+formNodeId));
+        }
     }
 }
 //find the latest parent formnode holder element by parentFormNodeId id

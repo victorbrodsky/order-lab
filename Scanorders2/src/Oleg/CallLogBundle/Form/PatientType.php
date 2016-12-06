@@ -2,6 +2,7 @@
 
 namespace Oleg\CallLogBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Oleg\CallLogBundle\Form\EncounterType;
 use Oleg\OrderformBundle\Form\GenericFieldType;
 use Oleg\OrderformBundle\Form\PatientDobType;
@@ -61,6 +62,24 @@ class PatientType extends AbstractType
             //'prototype' => true,
             //'prototype_name' => '__patientdob__',
         ));
+
+//        $builder->add( 'patientRecordStatus', 'entity', array(
+//            'class' => 'OlegOrderformBundle:PatientRecordStatusList',
+//            //'property' => 'name',
+//            'label'=>'Patient Record Status:',
+//            'required'=> false,
+//            'multiple' => false,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
 
         $builder->add('encounter', 'collection', array(
             'type' => new EncounterType($this->params,$this->entity),

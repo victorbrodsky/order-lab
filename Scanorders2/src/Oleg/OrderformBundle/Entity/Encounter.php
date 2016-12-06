@@ -125,6 +125,11 @@ class Encounter extends ObjectAbstract
     private $inpatientinfo;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
+    /**
+     * @ORM\ManyToOne(targetEntity="EncounterStatusList")
+     */
+    private $encounterStatus;
+
 
 
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
@@ -700,6 +705,24 @@ class Encounter extends ObjectAbstract
     {
         $this->location->removeElement($location);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEncounterStatus()
+    {
+        return $this->encounterStatus;
+    }
+
+    /**
+     * @param mixed $encounterStatus
+     */
+    public function setEncounterStatus($encounterStatus)
+    {
+        $this->encounterStatus = $encounterStatus;
+    }
+
+
 
 //    public function getOrder()
 //    {

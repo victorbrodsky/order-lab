@@ -157,6 +157,8 @@ class ScanListController extends ListController
      * @Route("/patient-list-hierarchys/", name="patientlisthierarchys-list")
      * @Route("/patient-list-hierarchy-group-types/", name="patientlisthierarchygrouptype-list")
      * @Route("/encounter-info-types/", name="encounterinfotype-list")
+     * @Route("/encounter-statuses/", name="encounterstatuses-list")
+     * @Route("/patient-record-statuses/", name="patientrecordstatuses-list")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
@@ -213,6 +215,8 @@ class ScanListController extends ListController
      * @Route("/patient-list-hierarchys/", name="patientlisthierarchys_create")
      * @Route("/patient-list-hierarchy-group-types/", name="patientlisthierarchygrouptype_create")
      * @Route("/encounter-info-types/", name="encounterinfotype_create")
+     * @Route("/encounter-statuses/", name="encounterstatuses_create")
+     * @Route("/patient-record-statuses/", name="patientrecordstatuses_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -269,6 +273,8 @@ class ScanListController extends ListController
      * @Route("/patient-list-hierarchys/new", name="patientlisthierarchy_new")
      * @Route("/patient-list-hierarchy-group-types/new", name="patientlisthierarchygrouptype_new")
      * @Route("/encounter-info-types/new", name="encounterinfotype_new")
+     * @Route("/encounter-statuses/new", name="encounterstatuses_new")
+     * @Route("/patient-record-statuses/new", name="patientrecordstatuses_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -325,6 +331,8 @@ class ScanListController extends ListController
      * @Route("/patient-list-hierarchys/{id}", name="patientlisthierarchys_show", options={"expose"=true})
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_show")
      * @Route("/encounter-info-types/{id}", name="encounterinfotype_show")
+     * @Route("/encounter-statuses/{id}", name="encounterstatuses_show")
+     * @Route("/patient-record-statuses/{id}", name="patientrecordstatuses_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -381,6 +389,8 @@ class ScanListController extends ListController
      * @Route("/patient-list-hierarchys/{id}/edit", name="patientlisthierarchys_edit")
      * @Route("/patient-list-hierarchy-group-types/{id}/edit", name="patientlisthierarchygrouptype_edit")
      * @Route("/encounter-info-types/{id}/edit", name="encounterinfotype_edit")
+     * @Route("/encounter-statuses/{id}/edit", name="encounterstatuses_edit")
+     * @Route("/patient-record-statuses/{id}/edit", name="patientrecordstatuses_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -437,6 +447,8 @@ class ScanListController extends ListController
      * @Route("/patient-list-hierarchys/{id}", name="patientlisthierarchys_update")
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_update")
      * @Route("/encounter-info-types/{id}", name="encounterinfotype_update")
+     * @Route("/encounter-statuses/{id}", name="encounterstatuses_update")
+     * @Route("/patient-record-statuses/{id}", name="patientrecordstatuses_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -618,7 +630,14 @@ class ScanListController extends ListController
             $className = "PatientListHierarchyGroupType";
             $displayName = "Patient List Hierarchy Group Types";
             break;
-
+        case "encounterstatuses":
+            $className = "EncounterStatusList";
+            $displayName = "Encounter Statuses";
+            break;
+        case "patientrecordstatuses":
+            $className = "PatientRecordStatusList";
+            $displayName = "Patient Record Statuses";
+            break;
 
         default:
             $className = null;
@@ -681,6 +700,8 @@ class ScanListController extends ListController
      * @Route("/patient-list-hierarchys/{id}", name="patientlisthierarchys_delete")
      * @Route("/patient-list-hierarchy-group-types/{id}", name="patientlisthierarchygrouptype_delete")
      * @Route("/encounter-info-types/{id}", name="encounterinfotype_delete")
+     * @Route("/encounter-statuses/{id}", name="encounterstatuses_delete")
+     * @Route("/patient-record-statuses/{id}", name="patientrecordstatuses_delete")
      *
      *
      * @Method("DELETE")

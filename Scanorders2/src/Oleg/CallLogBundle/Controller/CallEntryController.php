@@ -117,6 +117,12 @@ class CallEntryController extends Controller
         $patient = new Patient(true,'valid',$user,$system);
         $patient->setInstitution($institution);
 
+        //set patient record status "Active"
+        $patientActiveStatus = $em->getRepository('OlegOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
+        if( $patientActiveStatus ) {
+            $patient->setPatientRecordStatus($patientActiveStatus);
+        }
+
         //create invalid encounter #1 just to display fields in "Patient Info"
         $encounter1 = new Encounter(true,'invalid',$user,$system);
 
@@ -140,6 +146,12 @@ class CallEntryController extends Controller
         $nowDate = new \DateTime( "now", new \DateTimeZone($userTimeZone)  );
         $date->setField( $nowDate );
         $date->setTime( $nowDate );
+
+        //set encounter status "Open"
+        $encounterOpenStatus = $em->getRepository('OlegOrderformBundle:EncounterStatusList')->findOneByName("Open");
+        if( $encounterOpenStatus ) {
+            $encounter2->setEncounterStatus($encounterOpenStatus);
+        }
 
         //testing
         //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
@@ -1405,6 +1417,12 @@ class CallEntryController extends Controller
 
         //set source
         $patient->setSource($sourcesystem);
+
+        //set patient record status "Active"
+        $patientActiveStatus = $em->getRepository('OlegOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
+        if( $patientActiveStatus ) {
+            $patient->setPatientRecordStatus($patientActiveStatus);
+        }
 
         //mrn with leading zeros
         if( 0 && $mrn ) {

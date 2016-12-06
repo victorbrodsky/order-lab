@@ -293,6 +293,24 @@ class EncounterType extends AbstractType
 //            }
 //        });
 
+        $builder->add( 'encounterStatus', 'entity', array(
+            'class' => 'OlegOrderformBundle:EncounterStatusList',
+            //'property' => 'name',
+            'label'=>'Encounter Status:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
     }
 
 

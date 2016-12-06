@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -192,6 +193,66 @@ class PatientType extends AbstractType
             ));
         }
 
+
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
+//            $builder->add('patientRecordStatus', 'entity', array(
+//                'class' => 'OlegOrderformBundle:PatientRecordStatusList',
+//                //'property' => 'name',
+//                'label' => 'Patient Record Status:',
+//                'required' => false,
+//                'multiple' => false,
+//                'attr' => array('class' => 'combobox combobox-width'),
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist", "ASC")
+//                        ->setParameters(array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ));
+            /////////////////////////////////////// patientRecordStatus ///////////////////////////////////////
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $patient = $event->getData();
+                $form = $event->getForm();
+
+                $statusParams = array(
+                    'class' => 'OlegOrderformBundle:PatientRecordStatusList',
+                    //'property' => 'name',
+                    'label' => 'Patient Record Status:',
+                    'required' => false,
+                    'multiple' => false,
+                    //'empty_data' => $defaultStatus,
+                    'attr' => array('class' => 'combobox combobox-width'),
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->orderBy("list.orderinlist", "ASC")
+                            ->setParameters(array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
+                );
+
+                //$defaultStatus = null;
+                if( $patient ) {
+                    $patientRecordStatus = $patient->getPatientRecordStatus();
+                    if( !$patientRecordStatus ) {
+                        $defaultStatus = $this->params['em']->getRepository('OlegOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
+                        if( $defaultStatus ) {
+                            //echo "show default status=".$defaultStatus."<br>";
+                            $statusParams['data'] = $defaultStatus;
+                        }
+                    }
+                }
+
+                $form->add('patientRecordStatus', 'entity', $statusParams);
+
+            });
+            /////////////////////////////////////// EOF patientRecordStatus ///////////////////////////////////////
+        }
 
     }
 

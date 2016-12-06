@@ -2124,6 +2124,11 @@
             {{ formmacros.simplefield( "Age:", patientAge, "", "disabled", patientAgeTooltip ) }}
         </div>
 
+        {% if flag and (flag == "datastructure" or flag == "datastructure-patient") %}
+            {% if patient.patientRecordStatus is defined %}
+                {{ formmacros.field(patient.patientRecordStatus) }}
+            {% endif %}
+        {% endif %}
 
         {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}
             {{ formmacros.inputArrayField(patient.clinicalHistory,cycle,"patientclinicalhistory","","","","",status) }}

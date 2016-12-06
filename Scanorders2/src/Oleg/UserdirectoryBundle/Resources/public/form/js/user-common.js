@@ -733,7 +733,7 @@ function initSingleDatepicker( datepickerElement ) {
 }
 
 
-function expandTextarea() {
+function expandTextarea(holder) {
     //var elements = document.getElementsByClassName('textarea');
 
     //http://www.jacklmoore.com/autosize/ v.2
@@ -747,9 +747,33 @@ function expandTextarea() {
 ////        $('textarea').autosize();
 //    }
 
-    var elements = $('.textarea');
-    for (var i = 0; i < elements.length; ++i) {
-        var element = elements[i];
+    //var elements = getElementTargetByHolder(holder,'.textarea');
+    //console.log('textarea count='+$(elements).length);
+    //if( $(elements).length == 0 ) {
+    //    return;
+    //} else {
+    //    elements = $(elements);
+    //}
+
+    //if( holder ) {
+    //    var elements = holder.find('.textarea');
+    //} else {
+    //    var elements = $('.textarea');
+    //}
+
+
+    var targetid = ".textarea";
+
+    targetid = getElementTargetByHolder(holder,targetid);
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    //for (var i = 0; i < elements.length; ++i) {
+    //  var element = elements[i];
+    $(targetid).each( function() {
+        var element = $(this);
 
         //resize text area to fit the current text. It cause freeze html to pdf converter when downloading report.
         //exception to resize textarea
@@ -771,7 +795,7 @@ function expandTextarea() {
             this.style.height = newH + 'px';
         }, false);
 
-    }
+    });
 
 }
 

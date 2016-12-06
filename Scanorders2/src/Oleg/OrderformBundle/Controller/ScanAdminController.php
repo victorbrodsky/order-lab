@@ -14,10 +14,12 @@ use Oleg\OrderformBundle\Entity\DiseaseTypeList;
 use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
 use Oleg\OrderformBundle\Entity\EncounterInfoType;
 use Oleg\OrderformBundle\Entity\EncounterInfoTypeList;
+use Oleg\OrderformBundle\Entity\EncounterStatusList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
 use Oleg\OrderformBundle\Entity\PatientListHierarchy;
+use Oleg\OrderformBundle\Entity\PatientRecordStatusList;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
 use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -162,6 +164,8 @@ class ScanAdminController extends AdminController
         $count_SystemAccountRequestType = $this->generateSystemAccountRequestType();
         $count_AmendmentReason = $this->generateAmendmentReason();
         $count_PatientListHierarchy = $this->generatePatientListHierarchy();
+        $count_generateEncounterStatus = $this->generateEncounterStatus();
+        $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -196,6 +200,8 @@ class ScanAdminController extends AdminController
             'AmendmentReasons='.$count_AmendmentReason.', '.
             'PatientListHierarchy='.$count_PatientListHierarchy.', '.
             'EncounterInfoType='.$count_EncounterInfoType.', '.
+            'EncounterStatus='.$count_generateEncounterStatus.', '.
+            'PatientRecordStatus='.$count_generatePatientRecordStatus.', '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1974,6 +1980,78 @@ class ScanAdminController extends AdminController
 
             $entity = new AmendmentReasonList();
             $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateEncounterStatus() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:EncounterStatusList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "Open",
+            "Closed",
+            "Deleted"
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new EncounterStatusList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generatePatientRecordStatus() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:PatientRecordStatusList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "Active" => "A",
+            "Inactive" => "I",
+            "Deleted" => "D"
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name => $abbreviation ) {
+
+            $entity = new PatientRecordStatusList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            if( $abbreviation ) {
+                $entity->setAbbreviation($abbreviation);
+            }
 
             $em->persist($entity);
             $em->flush();
