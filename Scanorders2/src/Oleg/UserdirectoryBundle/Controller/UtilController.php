@@ -1405,6 +1405,7 @@ class UtilController extends Controller {
                 break;
 
             case "referringProviderSpecialty";
+                //TODO: don't use type filtering
                 $className = "HealthcareProviderSpecialtiesList";
                 break;
 

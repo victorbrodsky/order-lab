@@ -673,21 +673,24 @@
     {% import _self as formmacros %}
     {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
-    {% if datastructure and datastructure == "datastructure" and object.message is defined %}
+    {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") and object.message is defined %}
 
         {%  set disabled = "disabled" %}
         {#{%  set disabled = "" %}#}
-
+        {#object.message|length={{ object.message|length }}<br>#}
         {% for message in object.message %}
 
-            {#message:{{ message.vars.value.getMessageCategory() }}#}
+            {#message: ID={{ message.vars.value.id }}, category={{ message.vars.value.getMessageCategory() }}<br>#}
+
+            {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
+            {% set messageClassName = null %}
 
             {#decide if this object is the same as input object #}
             {%  set showInputMessage = false %}
             {% for input in message.vars.value.inputs %}
                 {% set messageInputClassName = input.entityNamespace~"\\"~input.entityName %}
-                {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
-
+                {#{% set currentObjectClassName = object.vars.value.obtainFullClassName %}#}
+                {% set messageClassName = messageInputClassName %}
                 {#<br>compare :{{ messageInputClassName }} ?= {{currentObjectClassName }}#}
                 {#<br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}#}
 
@@ -708,7 +711,8 @@
             {% if showInputMessage == false %}
                 {% for output in message.vars.value.outputs %}
                     {% set messageOutputClassName = output.entityNamespace~"\\"~output.entityName %}
-                    {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
+                    {#{% set currentObjectClassName = object.vars.value.obtainFullClassName %}#}
+                    {% set messageClassName = messageOutputClassName %}
 
                     {#<br>compare :{{ messageOutputClassName }} ?= {{currentObjectClassName }}#}
                     {#<br>compare (messageoutputid, objectid):{{ output.entityId }} ?= {{object.vars.value.id }}#}
@@ -724,34 +728,374 @@
 
             {#<br>showOutputMessage:({{ showOutputMessage }})<br>#}
 
-            {% if showInputMessage or showOutputMessage %}
 
-                {% if message.vars.value.oid %}
-                    {% set orderId = message.vars.value.oid %}
-                    {% set orderViewable = true %}
+            {% if message.vars.value.oid %}
+                {% set orderId = message.vars.value.oid %}
+                {% set orderViewable = true %}
+            {% else %}
+                {% set orderId = message.vars.value.id %}
+                {% set orderViewable = false %}
+            {% endif %}
+
+            {% if orderId %}
+                {% set orderUniqueId = orderId %}
+            {% else %}
+                {% set orderUniqueId = message.vars.value.messageCategory.name|replace({" ":"_"}) %}
+            {% endif %}
+
+            {% if message.vars.value.messageCategory.name %}
+                {% set orderName = message.vars.value.messageCategory.name %}
+                {% set orderTitleName = message.vars.value.messageCategory.getTreeName(": ") %}
+            {% else %}
+                {% set orderName = "Order" %}
+                {% set orderTitleName = "Order" %}
+            {% endif %}
+
+            {% if orderViewable %}
+                currentObjectClassName=[{{currentObjectClassName}}]; messageClassName=[{{messageClassName}}]<br>
+                {#{% if currentObjectClassName == messageClassName and currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}#}
+                {% if currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}
+                    {% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'id':orderId})~'">'~orderId~'</a>' %}
                 {% else %}
-                    {% set orderId = message.vars.value.id %}
-                    {% set orderViewable = false %}
+                    {% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}
                 {% endif %}
-
-                {% if orderId %}
-                    {% set orderUniqueId = orderId %}
-                {% else %}
-                    {% set orderUniqueId = message.vars.value.messageCategory.name|replace({" ":"_"}) %}
-                {% endif %}
-
-                {% if message.vars.value.messageCategory.name %}
-                    {% set orderName = message.vars.value.messageCategory.name %}
-                {% else %}
-                    {% set orderName = "Order" %}
-                {% endif %}
-
+            {% else %}
+                {% set orderIdHref = orderId %}
             {% endif %}
 
 
-            {% if showInputMessage %}
-                <p>
-                <div class="panel panel-message">
+            {% if showInputMessage or showOutputMessage %}
+
+                {#{% if message.vars.value.oid %}#}
+                    {#{% set orderId = message.vars.value.oid %}#}
+                    {#{% set orderViewable = true %}#}
+                {#{% else %}#}
+                    {#{% set orderId = message.vars.value.id %}#}
+                    {#{% set orderViewable = false %}#}
+                {#{% endif %}#}
+
+                {#{% if orderId %}#}
+                    {#{% set orderUniqueId = orderId %}#}
+                {#{% else %}#}
+                    {#{% set orderUniqueId = message.vars.value.messageCategory.name|replace({" ":"_"}) %}#}
+                {#{% endif %}#}
+
+                {#{% if message.vars.value.messageCategory.name %}#}
+                    {#{% set orderName = message.vars.value.messageCategory.name %}#}
+                    {#{% set orderTitleName = message.vars.value.messageCategory.getTreeName(": ") %}#}
+                {#{% else %}#}
+                    {#{% set orderName = "Order" %}#}
+                    {#{% set orderTitleName = "Order" %}#}
+                {#{% endif %}#}
+
+                {#{% if orderViewable %}#}
+                    {#{% if currentObjectClassName == messageClassName and currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}#}
+                        {#{% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'id':orderId})~'">'~orderId~'</a>' %}#}
+                    {#{% else %}#}
+                        {#{% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}#}
+                    {#{% endif %}#}
+                {#{% else %}#}
+                    {#{% set orderIdHref = orderId %}#}
+                {#{% endif %}#}
+
+
+                {% if showInputMessage %}
+                    <p>
+                    <div class="panel panel-message">
+
+                        <div class="panel-heading panel-heading-message">
+
+                            <button
+                                    id="form_body_toggle_message_{{ orderUniqueId }}_{{ uid }}" type="button"
+                                    class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
+                                    data-toggle="collapse" data-target="#form_body_message_{{ orderUniqueId }}_{{ uid }}">
+                            </button>
+
+                            <div class="panel-title">{{ orderTitleName }}</div>
+
+                        </div> {#heading#}
+
+
+                        <div id="form_body_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
+
+                            {#make the value of "ID:" into a clickable link to the order.#}
+                            {#{% if orderViewable %}#}
+                                {#{% if currentObjectClassName == messageClassName and currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}#}
+                                    {#{% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'id':orderId})~'">'~orderId~'</a>' %}#}
+                                {#{% else %}#}
+                                    {#{% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}#}
+                                {#{% endif %}#}
+                            {#{% else %}#}
+                                {#{% set orderIdHref = orderId %}#}
+                            {#{% endif %}#}
+                            {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
+
+                            {#show ALL External IDs: External ID Source System, External ID#}
+                            {% if message.externalIds is defined %}
+                                {% for externalId in message.externalIds %}
+                                    <div class="well well-sm">
+                                        {#{{ formmacros.simplefield( "External ID Source System:", externalId.sourceSystem, "input", disabled ) }}#}
+                                        {#{{ formmacros.simplefield( "External ID:", externalId.externalId, "input", disabled ) }}#}
+                                        {% if externalId.sourceSystem is defined %}
+                                            {#Add Tooltips / show "received" timestamp for the source external id field.#}
+                                            {#{{ formmacros.field( externalId.sourceSystem ) }}#}
+                                            {{ formmacros.field_tooltip( externalId.sourceSystem, externalId.vars.value.receivedOn|date('Y-m-d h:i a') ) }}
+                                        {% endif %}
+                                        {% if externalId.externalId is defined %}
+                                            {{ formmacros.field( externalId.externalId ) }}
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            {#controlled by controller and form#}
+                            {% if message.idnumber is defined %}
+                                {{ formmacros.field( message.idnumber ) }}
+                                {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
+                            {% endif %}
+
+                            {% if message.messageStatus is defined %}
+                                {{ formmacros.field( message.messageStatus ) }}
+                            {% endif %}
+
+                            {#controlled by controller and form#}
+                            {% if message.orderdate is defined %}
+                                {{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}
+                            {% endif %}
+
+                            {#controlled by controller and form#}
+                            {% if message.provider is defined %}
+                                {{ formmacros.field_show_user( message, "provider", cycle ) }}
+                            {% endif %}
+
+                            {#controlled by controller and form#}
+                            {% if message.proxyuser is defined %}
+                                {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
+                            {% endif %}
+
+                            {% if message.orderRecipients is defined %}
+                                {{ formmacros.field_show_user( message, "orderRecipients", cycle ) }}
+                            {% endif %}
+
+                            {% if message.reportRecipients is defined %}
+                                {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
+                            {% endif %}
+
+                            {% if message.organizationRecipients is defined %}
+                                {% for organizationRecipient in message.organizationRecipients %}
+                                    <div class="well well-sm">
+                                        <h5>{{ form_label(message.organizationRecipients) }}</h5>
+                                        {{ treemacros.compositeTreeNode(organizationRecipient.institution,'','') }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            {#associations and backAssociations: controlled by controller and form#}
+                            {% if message.associations is defined %}
+                                {{ formmacros.showMessageUrls( message.vars.value.associations, "Association(s):", cycle ) }}
+                            {% endif %}
+                            {% if message.backAssociations is defined %}
+                                {{ formmacros.showMessageUrls( message.vars.value.backAssociations, "Back Association(s):", cycle ) }}
+                            {% endif %}
+
+                            {#controlled by controller and form#}
+                            {% if message.inputs is defined %}
+                                <p>
+                                    {% for input in message.vars.value.inputs %}
+                                        {#{{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "input", disabled ) }}#}
+                                        {{ formmacros.simplefield( "Input:", input.getFullName, "input", disabled ) }}
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+
+                            {#controlled by controller and form#}
+                            {% if message.outputs is defined %}
+                                <p>
+                                    {% for output in message.vars.value.outputs %}
+                                        {#{{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "input", disabled ) }}#}
+                                        {{ formmacros.simplefield( "Output:", output.getFullName, "input", disabled ) }}
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+
+                            {#controlled by controller and form#}
+                            {% if message.sources is defined %}
+                                <p>
+                                    {% for source in message.sources %}
+                                        {#{{ formmacros.simplefield( "Source System:", source.system, "input", disabled ) }}#}
+                                        {#{{ formmacros.simplefield( "Source Location:", source.location, "input", disabled ) }}#}
+                                        {% if source.system is defined %}
+                                            {{ formmacros.field( source.system ) }}
+                                        {% endif %}
+                                        {% if source.location is defined %}
+                                            {{ formmacros.field( source.location ) }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+
+                            {#controlled by controller and form#}
+                            {% if message.destinations is defined %}
+                                <p>
+                                    {% for destination in message.destinations %}
+                                        {#{{ formmacros.simplefield( "Destination System:", destination.system, "input", disabled ) }}#}
+                                        {#{{ formmacros.simplefield( "Destination Location:", destination.location, "input", disabled ) }}#}
+                                        {% if destination.system is defined %}
+                                            {{ formmacros.field( destination.system ) }}
+                                        {% endif %}
+                                        {% if destination.location is defined %}
+                                            {{ formmacros.field( destination.location ) }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+
+
+                            {#controlled by controller and form#}
+                            {% if message.comment is defined %}
+                                <p>
+                                    {{ formmacros.field( message.comment ) }}
+                                </p>
+                            {% endif %}
+
+
+                            {################## specific fields ####################}
+                            {% if message.procedureorder is defined and message.procedureorder.vars.value %}
+                                <p>
+                                    {% if message.procedureorder.type is defined %}
+                                        {{ formmacros.field( message.procedureorder.type ) }}
+                                    {% endif %}
+                                </p>
+                            {% endif %}
+
+                            {% if message.laborder is defined and message.laborder.vars.value %}
+                                {{ formmacros.labtestObject(message.laborder.labTest,cycle,'user-labtests','noprototype') }}
+                            {% endif %}
+
+                            {% if message.report is defined and message.report.vars.value %}
+                                <p>
+
+                                    {% if message.report.reportType is defined %}
+                                        {{ formmacros.field( message.report.reportType ) }}
+                                    {% endif %}
+
+                                    <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.report.signatureDate,'allow-future-date') }}
+                                    {{ formmacros.fieldDateLabel(message.report.issuedDate,'allow-future-date') }}
+                                    {{ formmacros.fieldDateLabel(message.report.receivedDate,'allow-future-date') }}
+                                    </div>
+
+                                    {% if message.report.processedDate is defined or message.report.processedByUser is defined %}
+                                        <div class="well well-sm">
+                                            {% if message.report.processedDate is defined %}
+                                                {{ formmacros.fieldDateLabel(message.report.processedDate,'allow-future-date') }}
+                                            {% endif %}
+                                            {% if message.report.processedByUser is defined %}
+                                                {{ formmacros.field( message.report.processedByUser ) }}
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+
+                                </p>
+                            {% endif %}
+
+                            {% if message.reportBlock is defined and message.reportBlock.vars.value %}
+                                <p>
+
+                                    {% if message.reportBlock.reportType is defined %}
+                                        {{ formmacros.field( message.report.reportType ) }}
+                                    {% endif %}
+
+                                    <div class="well well-sm">
+                                        {{ formmacros.fieldDateLabel(message.reportBlock.signatureDate,'allow-future-date') }}
+                                        {{ formmacros.fieldDateLabel(message.reportBlock.issuedDate,'allow-future-date') }}
+                                        {{ formmacros.fieldDateLabel(message.reportBlock.receivedDate,'allow-future-date') }}
+                                    </div>
+
+                                    <div class="well well-sm">
+                                        {{ formmacros.fieldDateLabel(message.reportBlock.processedDate,'allow-future-date') }}
+                                        {{ formmacros.field( message.reportBlock.processedByUser ) }}
+                                    </div>
+
+                                    <div class="well well-sm">
+                                        {{ formmacros.fieldDateLabel(message.reportBlock.embeddedDate,'allow-future-date') }}
+                                        {{ formmacros.field( message.reportBlock.embeddedByUser ) }}
+                                    </div>
+
+                                </p>
+                            {% endif %}
+
+                            {% if message.blockorder is defined and message.blockorder.vars.value %}
+                                <p>
+                                    <div class="well well-sm">
+                                    {{ formmacros.field( message.blockorder.embedderInstruction ) }}
+                                    {% if message.blockorder.instruction is defined %}
+                                        {{ formmacros.fieldDateLabel(message.blockorder.instruction.createdate,'allow-future-date') }}
+                                        {{ formmacros.field( message.blockorder.instruction.creator ) }}
+                                        {{ formmacros.field( message.blockorder.instruction.instruction ) }}
+                                    {% endif %}
+                                    </div>
+                                </p>
+                            {% endif %}
+
+                            {% if message.slideorder is defined and message.slideorder.vars.value %}
+                                <p>
+                                    {{ formmacros.field( message.equipment ) }}
+
+                                    <div class="well well-sm">
+                                        {{ formmacros.fieldDateLabel(message.slideorder.instruction.createdate,'allow-future-date') }}
+                                        {{ formmacros.field( message.slideorder.instruction.creator ) }}
+                                        {{ formmacros.field( message.slideorder.instruction.instruction ) }}
+                                    </div>
+
+                                </p>
+                            {% endif %}
+
+                            {% if message.stainorder is defined and message.stainorder.vars.value %}
+                                <p>
+                                    {{ formmacros.field( message.equipment ) }}
+                                    {#{{ formmacros.field( message.stainorder.imageMagnification ) }}#}
+
+                                    <div class="well well-sm">
+                                        {{ formmacros.fieldDateLabel(message.stainorder.instruction.createdate,'allow-future-date') }}
+                                        {{ formmacros.field( message.stainorder.instruction.creator ) }}
+                                        {{ formmacros.field( message.stainorder.instruction.instruction ) }}
+                                    </div>
+
+                                </p>
+                            {% endif %}
+
+                            {% if message.imageAnalysisOrder is defined and message.imageAnalysisOrder.vars.value %}
+                                {{ formmacros.field( message.imageAnalysisOrder.imageAnalysisAlgorithm ) }}
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.imageAnalysisOrder.instruction.createdate,'allow-future-date') }}
+                                    {{ formmacros.field( message.imageAnalysisOrder.instruction.creator ) }}
+                                    {{ formmacros.field( message.imageAnalysisOrder.instruction.instruction ) }}
+                                </div>
+
+                            {% endif %}
+
+
+                            {#message's attachmentContainer#}
+                            {% if message.attachmentContainer is defined %}
+                                {% for documentContainer in message.attachmentContainer.documentContainers %}
+                                    {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId~'_'~uid) }}
+                                {% endfor %}
+                            {% endif %}
+
+
+                        </div> {#body#}
+                    </div> {#panel#}
+
+                    </p>
+
+                {% endif %} {#input message#}
+
+                {#output message#}
+                {% if showOutputMessage %}
+                    <p>
+                    <div class="panel panel-message">
 
                     <div class="panel-heading panel-heading-message">
 
@@ -761,38 +1105,25 @@
                                 data-toggle="collapse" data-target="#form_body_message_{{ orderUniqueId }}_{{ uid }}">
                         </button>
 
-                        <div class="panel-title">{{ message.vars.value.messageCategory.name }}</div>
+                        <div class="panel-title">{{ orderTitleName }}</div>
 
                     </div> {#heading#}
 
 
-                    <div id="form_body_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
+                    <div id="form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
 
                         {#make the value of "ID:" into a clickable link to the order.#}
-                        {% if orderViewable %}
-                            {% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}
-                        {% else %}
-                            {% set orderIdHref = orderId %}
-                        {% endif %}
+                        {#{% if orderViewable %}#}
+                            {#{% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}#}
+                            {#{% if currentObjectClassName == messageClassName and currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}#}
+                                {#{% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'id':orderId})~'">'~orderId~'</a>' %}#}
+                            {#{% else %}#}
+                                {#{% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}#}
+                            {#{% endif %}#}
+                        {#{% else %}#}
+                            {#{% set orderIdHref = orderId %}#}
+                        {#{% endif %}#}
                         {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
-
-                        {#show ALL External IDs: External ID Source System, External ID#}
-                        {% if message.externalIds is defined %}
-                            {% for externalId in message.externalIds %}
-                                <div class="well well-sm">
-                                    {#{{ formmacros.simplefield( "External ID Source System:", externalId.sourceSystem, "input", disabled ) }}#}
-                                    {#{{ formmacros.simplefield( "External ID:", externalId.externalId, "input", disabled ) }}#}
-                                    {% if externalId.sourceSystem is defined %}
-                                        {#Add Tooltips / show "received" timestamp for the source external id field.#}
-                                        {#{{ formmacros.field( externalId.sourceSystem ) }}#}
-                                        {{ formmacros.field_tooltip( externalId.sourceSystem, externalId.vars.value.receivedOn|date('Y-m-d h:i a') ) }}
-                                    {% endif %}
-                                    {% if externalId.externalId is defined %}
-                                        {{ formmacros.field( externalId.externalId ) }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
 
                         {#controlled by controller and form#}
                         {% if message.idnumber is defined %}
@@ -800,9 +1131,14 @@
                             {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
                         {% endif %}
 
+                        {% if message.messageStatus is defined %}
+                            {{ formmacros.field( message.messageStatus ) }}
+                        {% endif %}
+
                         {#controlled by controller and form#}
                         {% if message.orderdate is defined %}
-                            {{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}
+                            {#{{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}#}
+                            {{ formmacros.simplefield( message.orderdate.vars.label, message.orderdate.vars.value|date('m/d/Y'), "", disabled ) }}
                         {% endif %}
 
                         {#controlled by controller and form#}
@@ -825,12 +1161,11 @@
 
                         {% if message.organizationRecipients is defined %}
                             {% for organizationRecipient in message.organizationRecipients %}
-                                <div class="well well-sm">
-                                    <h5>{{ form_label(message.organizationRecipients) }}</h5>
-                                    {{ treemacros.compositeTreeNode(organizationRecipient.institution,'','') }}
-                                </div>
+                                <h5>{{ form_label(message.organizationRecipients) }}</h5>
+                                {{ treemacros.compositeTreeNode(organizationRecipient.institution,'','') }}
                             {% endfor %}
                         {% endif %}
+
 
                         {#associations and backAssociations: controlled by controller and form#}
                         {% if message.associations is defined %}
@@ -840,280 +1175,53 @@
                             {{ formmacros.showMessageUrls( message.vars.value.backAssociations, "Back Association(s):", cycle ) }}
                         {% endif %}
 
-                        {#controlled by controller and form#}
-                        {% if message.inputs is defined %}
-                            <p>
-                                {% for input in message.vars.value.inputs %}
-                                    {#{{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "input", disabled ) }}#}
-                                    {{ formmacros.simplefield( "Input:", input.getFullName, "input", disabled ) }}
-                                {% endfor %}
-                            </p>
-                        {% endif %}
-
-                        {#controlled by controller and form#}
-                        {% if message.outputs is defined %}
-                            <p>
-                                {% for output in message.vars.value.outputs %}
-                                    {#{{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "input", disabled ) }}#}
-                                    {{ formmacros.simplefield( "Output:", output.getFullName, "input", disabled ) }}
-                                {% endfor %}
-                            </p>
-                        {% endif %}
-
-                        {#controlled by controller and form#}
-                        {% if message.sources is defined %}
-                            <p>
-                                {% for source in message.sources %}
-                                    {#{{ formmacros.simplefield( "Source System:", source.system, "input", disabled ) }}#}
-                                    {#{{ formmacros.simplefield( "Source Location:", source.location, "input", disabled ) }}#}
-                                    {% if source.system is defined %}
-                                        {{ formmacros.field( source.system ) }}
-                                    {% endif %}
-                                    {% if source.location is defined %}
-                                        {{ formmacros.field( source.location ) }}
-                                    {% endif %}
-                                {% endfor %}
-                            </p>
-                        {% endif %}
-
-                        {#controlled by controller and form#}
-                        {% if message.destinations is defined %}
-                            <p>
-                                {% for destination in message.destinations %}
-                                    {#{{ formmacros.simplefield( "Destination System:", destination.system, "input", disabled ) }}#}
-                                    {#{{ formmacros.simplefield( "Destination Location:", destination.location, "input", disabled ) }}#}
-                                    {% if destination.system is defined %}
-                                        {{ formmacros.field( destination.system ) }}
-                                    {% endif %}
-                                    {% if destination.location is defined %}
-                                        {{ formmacros.field( destination.location ) }}
-                                    {% endif %}
-                                {% endfor %}
-                            </p>
-                        {% endif %}
-
-
-                        {#controlled by controller and form#}
-                        {% if message.comment is defined %}
-                            <p>
-                                {{ formmacros.field( message.comment ) }}
-                            </p>
-                        {% endif %}
-
-
-                        {################## specific fields ####################}
-                        {% if message.procedureorder is defined and message.procedureorder.vars.value %}
-                            <p>
-                                {% if message.procedureorder.type is defined %}
-                                    {{ formmacros.field( message.procedureorder.type ) }}
-                                {% endif %}
-                            </p>
-                        {% endif %}
-
-                        {% if message.laborder is defined and message.laborder.vars.value %}
-                            {{ formmacros.labtestObject(message.laborder.labTest,cycle,'user-labtests','noprototype') }}
-                        {% endif %}
-
-                        {% if message.report is defined and message.report.vars.value %}
-                            <p>
-
-                                {% if message.report.reportType is defined %}
-                                    {{ formmacros.field( message.report.reportType ) }}
-                                {% endif %}
-
-                                <div class="well well-sm">
-                                {{ formmacros.fieldDateLabel(message.report.signatureDate,'allow-future-date') }}
-                                {{ formmacros.fieldDateLabel(message.report.issuedDate,'allow-future-date') }}
-                                {{ formmacros.fieldDateLabel(message.report.receivedDate,'allow-future-date') }}
-                                </div>
-
-                                {% if message.report.processedDate is defined or message.report.processedByUser is defined %}
-                                    <div class="well well-sm">
-                                        {% if message.report.processedDate is defined %}
-                                            {{ formmacros.fieldDateLabel(message.report.processedDate,'allow-future-date') }}
-                                        {% endif %}
-                                        {% if message.report.processedByUser is defined %}
-                                            {{ formmacros.field( message.report.processedByUser ) }}
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-
-                            </p>
-                        {% endif %}
-
-                        {% if message.reportBlock is defined and message.reportBlock.vars.value %}
-                            <p>
-
-                                {% if message.reportBlock.reportType is defined %}
-                                    {{ formmacros.field( message.report.reportType ) }}
-                                {% endif %}
-
-                                <div class="well well-sm">
-                                    {{ formmacros.fieldDateLabel(message.reportBlock.signatureDate,'allow-future-date') }}
-                                    {{ formmacros.fieldDateLabel(message.reportBlock.issuedDate,'allow-future-date') }}
-                                    {{ formmacros.fieldDateLabel(message.reportBlock.receivedDate,'allow-future-date') }}
-                                </div>
-
-                                <div class="well well-sm">
-                                    {{ formmacros.fieldDateLabel(message.reportBlock.processedDate,'allow-future-date') }}
-                                    {{ formmacros.field( message.reportBlock.processedByUser ) }}
-                                </div>
-
-                                <div class="well well-sm">
-                                    {{ formmacros.fieldDateLabel(message.reportBlock.embeddedDate,'allow-future-date') }}
-                                    {{ formmacros.field( message.reportBlock.embeddedByUser ) }}
-                                </div>
-
-                            </p>
-                        {% endif %}
-
-                        {% if message.blockorder is defined and message.blockorder.vars.value %}
-                            <p>
-                                <div class="well well-sm">
-                                {{ formmacros.field( message.blockorder.embedderInstruction ) }}
-                                {% if message.blockorder.instruction is defined %}
-                                    {{ formmacros.fieldDateLabel(message.blockorder.instruction.createdate,'allow-future-date') }}
-                                    {{ formmacros.field( message.blockorder.instruction.creator ) }}
-                                    {{ formmacros.field( message.blockorder.instruction.instruction ) }}
-                                {% endif %}
-                                </div>
-                            </p>
-                        {% endif %}
-
-                        {% if message.slideorder is defined and message.slideorder.vars.value %}
-                            <p>
-                                {{ formmacros.field( message.equipment ) }}
-
-                                <div class="well well-sm">
-                                    {{ formmacros.fieldDateLabel(message.slideorder.instruction.createdate,'allow-future-date') }}
-                                    {{ formmacros.field( message.slideorder.instruction.creator ) }}
-                                    {{ formmacros.field( message.slideorder.instruction.instruction ) }}
-                                </div>
-
-                            </p>
-                        {% endif %}
-
-                        {% if message.stainorder is defined and message.stainorder.vars.value %}
-                            <p>
-                                {{ formmacros.field( message.equipment ) }}
-                                {#{{ formmacros.field( message.stainorder.imageMagnification ) }}#}
-
-                                <div class="well well-sm">
-                                    {{ formmacros.fieldDateLabel(message.stainorder.instruction.createdate,'allow-future-date') }}
-                                    {{ formmacros.field( message.stainorder.instruction.creator ) }}
-                                    {{ formmacros.field( message.stainorder.instruction.instruction ) }}
-                                </div>
-
-                            </p>
-                        {% endif %}
-
-                        {% if message.imageAnalysisOrder is defined and message.imageAnalysisOrder.vars.value %}
-                            {{ formmacros.field( message.imageAnalysisOrder.imageAnalysisAlgorithm ) }}
-
-                            <div class="well well-sm">
-                                {{ formmacros.fieldDateLabel(message.imageAnalysisOrder.instruction.createdate,'allow-future-date') }}
-                                {{ formmacros.field( message.imageAnalysisOrder.instruction.creator ) }}
-                                {{ formmacros.field( message.imageAnalysisOrder.instruction.instruction ) }}
-                            </div>
-
-                        {% endif %}
-
-
-                        {#message's attachmentContainer#}
-                        {% if message.attachmentContainer is defined %}
-                            {% for documentContainer in message.attachmentContainer.documentContainers %}
-                                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId~'_'~uid) }}
-                            {% endfor %}
-                        {% endif %}
-
-
                     </div> {#body#}
-                </div> {#panel#}
+                    </div> {#panel#}
 
-                </p>
+                    </p>
 
-            {% endif %} {#input message#}
+                {% endif %} {#output message#}
 
-            {#output message#}
-            {% if showOutputMessage %}
+            {% else %}
+
+                {#mainly used for datastructure-patient#}
                 <p>
-                <div class="panel panel-shadow-message">
+                    <div class="panel panel-shadow-message">
 
-                <div class="panel-heading panel-heading-message">
+                        <div class="panel-heading panel-heading-message">
 
-                    <button
-                            id="form_body_toggle_shadow_message_{{ orderUniqueId }}_{{ uid }}" type="button"
-                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            data-toggle="collapse" data-target="#form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}">
-                    </button>
+                            <button
+                                    id="form_body_toggle_shadow_message_{{ orderUniqueId }}_{{ uid }}" type="button"
+                                    class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
+                                    data-toggle="collapse" data-target="#form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}">
+                            </button>
 
-                    <div class="panel-title">{{ message.vars.value.messageCategory.name }}</div>
+                            <div class="panel-title">{{ orderTitleName }}</div>
 
-                </div> {#heading#}
-
-
-                <div id="form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
-
-                    {#make the value of "ID:" into a clickable link to the order.#}
-                    {% if orderViewable %}
-                        {% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}
-                    {% else %}
-                        {% set orderIdHref = orderId %}
-                    {% endif %}
-                    {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
-
-                    {#controlled by controller and form#}
-                    {% if message.idnumber is defined %}
-                        {{ formmacros.field( message.idnumber ) }}
-                        {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
-                    {% endif %}
-
-                    {#controlled by controller and form#}
-                    {% if message.orderdate is defined %}
-                        {#{{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}#}
-                        {{ formmacros.simplefield( message.orderdate.vars.label, message.orderdate.vars.value|date('m/d/Y'), "", disabled ) }}
-                    {% endif %}
-
-                    {#controlled by controller and form#}
-                    {% if message.provider is defined %}
-                        {{ formmacros.field_show_user( message, "provider", cycle ) }}
-                    {% endif %}
-
-                    {#controlled by controller and form#}
-                    {% if message.proxyuser is defined %}
-                        {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
-                    {% endif %}
-
-                    {% if message.orderRecipients is defined %}
-                        {{ formmacros.field_show_user( message, "orderRecipients", cycle ) }}
-                    {% endif %}
-
-                    {% if message.reportRecipients is defined %}
-                        {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
-                    {% endif %}
-
-                    {% if message.organizationRecipients is defined %}
-                        {% for organizationRecipient in message.organizationRecipients %}
-                            <h5>{{ form_label(message.organizationRecipients) }}</h5>
-                            {{ treemacros.compositeTreeNode(organizationRecipient.institution,'','') }}
-                        {% endfor %}
-                    {% endif %}
+                        </div> {#heading#}
 
 
-                    {#associations and backAssociations: controlled by controller and form#}
-                    {% if message.associations is defined %}
-                        {{ formmacros.showMessageUrls( message.vars.value.associations, "Association(s):", cycle ) }}
-                    {% endif %}
-                    {% if message.backAssociations is defined %}
-                        {{ formmacros.showMessageUrls( message.vars.value.backAssociations, "Back Association(s):", cycle ) }}
-                    {% endif %}
+                        <div id="form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
 
-                </div> {#body#}
-                </div> {#panel#}
+                            {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
 
+                            {% if message.messageStatus is defined %}
+                                {{ formmacros.field( message.messageStatus ) }}
+                            {% endif %}
+
+                            {% if message.orderdate is defined %}
+                                {{ formmacros.simplefield( message.orderdate.vars.label, message.orderdate.vars.value|date('m/d/Y'), "", disabled ) }}
+                            {% endif %}
+
+                            {% if message.provider is defined %}
+                                {{ formmacros.field_show_user( message, "provider", cycle ) }}
+                            {% endif %}
+
+                        </div> {#body#}
+                    </div> {#panel#}
                 </p>
 
-            {% endif %} {#output message#}
+            {% endif %}
 
         {% endfor %}
 

@@ -226,6 +226,31 @@ class MessageObjectType extends AbstractType
             'required'  => false,
         ));
 
+        //datastructure-patient
+        //if( array_key_exists('datastructure',$this->params) && ($this->params['datastructure'] == 'datastructure-patient') ) {
+
+            //Message Status
+            $builder->add('messageStatus', 'entity', array(
+                'class' => 'OlegOrderformBundle:MessageStatusList',
+                //'property' => 'name',
+                'label'=>'Message Status:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+        //}
+
+
         //sources
         if( $this->params['message.sources'] == true ) {
             $this->params['endpoint.location.label'] = $this->labels['sources.location'];

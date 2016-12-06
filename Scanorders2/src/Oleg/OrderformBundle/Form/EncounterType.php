@@ -293,7 +293,7 @@ class EncounterType extends AbstractType
 
 
         //messages
-        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+        if( array_key_exists('datastructure',$this->params) && ($this->params['datastructure'] == 'datastructure' || $this->params['datastructure'] == 'datastructure-patient') ) {
             $builder->add('message', 'collection', array(
                 'type' => new MessageObjectType($this->params),
                 'allow_add' => true,

@@ -441,7 +441,6 @@ class CallEntryController extends Controller
                 //add encounter to the message
                 $message->addEncounter($newEncounter);
 
-
                 if( $patient->getId() ) {
                     //CASE 1
                     echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
@@ -559,6 +558,11 @@ class CallEntryController extends Controller
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
                 }
+
+                //set encounter as message's input
+                //$message->addInputObject($newEncounter);
+                //$em->persist($message);
+                //$em->flush($message);
 
                 //process form nodes
                 $formNodeUtil = $this->get('user_formnode_utility');

@@ -220,6 +220,14 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         return $breadcrumbsArr;
     }
 
+    public function getTreeName($separator=" => ") {
+        $breadCrumbs = $this->getEntityBreadcrumbs();
+        $strArr = array();
+        foreach( $breadCrumbs as $breadCrumb ) {
+            $strArr[] = $breadCrumb->getName()."";
+        }
+        return implode($separator,$strArr);
+    }
 
 
     public function printTree() {
@@ -239,7 +247,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
     //TODO: rewrite it using recursive
-    public function getTreeName() {
+    public function getTreeName_OLD($separator=" => ") {
 
         $treeName = array();
 
@@ -273,7 +281,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         if( count($treeName) == 1 ) {
             $treeNameStr = $treeName[0];
         } else {
-            $treeNameStr = implode(" => ",$treeName);
+            $treeNameStr = implode($separator,$treeName);
         }
 
         return $treeNameStr;

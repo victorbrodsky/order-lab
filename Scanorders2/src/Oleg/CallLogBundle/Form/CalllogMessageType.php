@@ -54,8 +54,16 @@ class CalllogMessageType extends AbstractType
         //echo "cycle=".$this->params['cycle']."<br>";
 //        echo "<br>";
 
-        $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'message-id')) );
+        //$builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'message-id')) );
 
+        if( $this->params['cycle'] == 'show' ) {
+            $builder->add('id', null, array(
+                'label' => 'Message ID:',
+                'read_only' => true,
+                'required' => true,
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
         $patient = $this->entity->getPatient()->first();
         //echo "calllog patient id=".$patient->getId()."<br>";
