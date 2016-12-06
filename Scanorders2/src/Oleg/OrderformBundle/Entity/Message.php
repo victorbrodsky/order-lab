@@ -161,6 +161,11 @@ class Message {
     private $status;
 
     /**
+     * @ORM\ManyToOne(targetEntity="MessageStatusList")
+     */
+    private $messageStatus;
+
+    /**
      * Equipment associated with this order (object)
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
@@ -857,6 +862,22 @@ class Message {
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessageStatus()
+    {
+        return $this->messageStatus;
+    }
+
+    /**
+     * @param mixed $messageStatus
+     */
+    public function setMessageStatus($messageStatus)
+    {
+        $this->messageStatus = $messageStatus;
     }
 
     /**

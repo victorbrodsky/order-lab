@@ -715,6 +715,12 @@ class CallEntryController extends Controller
         $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$message);
         $message->setInstitution($permittedInstitutions->first());
 
+        //set message status "Draft"
+        $messageStatus = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Draft");
+        if( $messageStatus ) {
+            $message->setMessageStatus($messageStatus);
+        }
+
         //add patient
         //$message->addPatient($patient);
 

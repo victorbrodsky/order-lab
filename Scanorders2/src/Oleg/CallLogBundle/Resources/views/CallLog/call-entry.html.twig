@@ -148,6 +148,7 @@
                 {% if form.messageCategory is defined %}
                     {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
                 {% endif %}
+                {{ formmacros.field(form.messageStatus) }}
                 {#Message Version#}
                 {{ formmacros.field(form.version) }}
                 {#Amendment Reason#}

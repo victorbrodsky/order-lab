@@ -168,6 +168,25 @@ class CalllogMessageType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
+
+        $builder->add('messageStatus', 'entity', array(
+            'class' => 'OlegOrderformBundle:MessageStatusList',
+            //'property' => 'name',
+            'label'=>'Message Status:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
 //        $builder->add('patientListTitle', 'entity', array(
 //            'label' => 'List Title:',
 //            'mapped' => false,

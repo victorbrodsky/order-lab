@@ -159,6 +159,7 @@ class ScanListController extends ListController
      * @Route("/encounter-info-types/", name="encounterinfotype-list")
      * @Route("/encounter-statuses/", name="encounterstatuses-list")
      * @Route("/patient-record-statuses/", name="patientrecordstatuses-list")
+     * @Route("/message-statuses/", name="messagestatuses-list")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
@@ -217,6 +218,7 @@ class ScanListController extends ListController
      * @Route("/encounter-info-types/", name="encounterinfotype_create")
      * @Route("/encounter-statuses/", name="encounterstatuses_create")
      * @Route("/patient-record-statuses/", name="patientrecordstatuses_create")
+     * @Route("/message-statuses/", name="messagestatuses_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -275,6 +277,7 @@ class ScanListController extends ListController
      * @Route("/encounter-info-types/new", name="encounterinfotype_new")
      * @Route("/encounter-statuses/new", name="encounterstatuses_new")
      * @Route("/patient-record-statuses/new", name="patientrecordstatuses_new")
+     * @Route("/message-statuses/new", name="messagestatuses_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -333,6 +336,7 @@ class ScanListController extends ListController
      * @Route("/encounter-info-types/{id}", name="encounterinfotype_show")
      * @Route("/encounter-statuses/{id}", name="encounterstatuses_show")
      * @Route("/patient-record-statuses/{id}", name="patientrecordstatuses_show")
+     * @Route("/message-statuses/{id}", name="messagestatuses_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -391,6 +395,7 @@ class ScanListController extends ListController
      * @Route("/encounter-info-types/{id}/edit", name="encounterinfotype_edit")
      * @Route("/encounter-statuses/{id}/edit", name="encounterstatuses_edit")
      * @Route("/patient-record-statuses/{id}/edit", name="patientrecordstatuses_edit")
+     * @Route("/message-statuses/{id}/edit", name="messagestatuses_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -449,6 +454,7 @@ class ScanListController extends ListController
      * @Route("/encounter-info-types/{id}", name="encounterinfotype_update")
      * @Route("/encounter-statuses/{id}", name="encounterstatuses_update")
      * @Route("/patient-record-statuses/{id}", name="patientrecordstatuses_update")
+     * @Route("/message-statuses/{id}", name="messagestatuses_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -638,6 +644,10 @@ class ScanListController extends ListController
             $className = "PatientRecordStatusList";
             $displayName = "Patient Record Statuses";
             break;
+        case "messagestatuses":
+            $className = "MessageStatusList";
+            $displayName = "Message Statuses";
+            break;
 
         default:
             $className = null;
@@ -702,6 +712,7 @@ class ScanListController extends ListController
      * @Route("/encounter-info-types/{id}", name="encounterinfotype_delete")
      * @Route("/encounter-statuses/{id}", name="encounterstatuses_delete")
      * @Route("/patient-record-statuses/{id}", name="patientrecordstatuses_delete")
+     * @Route("/message-statuses/{id}", name="messagestatuses_delete")
      *
      *
      * @Method("DELETE")

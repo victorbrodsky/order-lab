@@ -17,6 +17,7 @@ use Oleg\OrderformBundle\Entity\EncounterInfoTypeList;
 use Oleg\OrderformBundle\Entity\EncounterStatusList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
+use Oleg\OrderformBundle\Entity\MessageStatusList;
 use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
 use Oleg\OrderformBundle\Entity\PatientListHierarchy;
 use Oleg\OrderformBundle\Entity\PatientRecordStatusList;
@@ -166,6 +167,7 @@ class ScanAdminController extends AdminController
         $count_PatientListHierarchy = $this->generatePatientListHierarchy();
         $count_generateEncounterStatus = $this->generateEncounterStatus();
         $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
+        $count_generateMessageStatus = $this->generateMessageStatus();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -202,6 +204,8 @@ class ScanAdminController extends AdminController
             'EncounterInfoType='.$count_EncounterInfoType.', '.
             'EncounterStatus='.$count_generateEncounterStatus.', '.
             'PatientRecordStatus='.$count_generatePatientRecordStatus.', '.
+            'MessageStatus='.$count_generateMessageStatus.', '.
+
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -2052,6 +2056,39 @@ class ScanAdminController extends AdminController
             if( $abbreviation ) {
                 $entity->setAbbreviation($abbreviation);
             }
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
+    public function generateMessageStatus() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "Draft",
+            "Signed",
+            "Deleted"
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new MessageStatusList();
+            $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);
             $em->flush();
