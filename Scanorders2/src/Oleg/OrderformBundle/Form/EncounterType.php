@@ -2,6 +2,8 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\CallLogBundle\Form\EncounterAttendingPhysicianType;
+use Oleg\CallLogBundle\Form\EncounterReferringProviderType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -216,6 +218,75 @@ class EncounterType extends AbstractType
                             ->where('u.roles LIKE :roles OR u=:user')
                             ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
                     },
+            ));
+
+        }
+
+
+        //extra data-structure fields for datastructure-patient
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
+
+            //echo "flag datastructure=".$this->params['datastructure']."<br>";
+
+            $builder->add('provider', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => 'Provider:',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.roles LIKE :roles OR u=:user')
+                        ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                },
+            ));
+
+            $builder->add( 'encounterStatus', 'entity', array(
+                'class' => 'OlegOrderformBundle:EncounterStatusList',
+                //'property' => 'name',
+                'label'=>'Encounter Status:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add('encounterInfoTypes', 'collection', array(
+                'type' => new EncounterInfoTypeType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounterinfotypes__',
+            ));
+
+            //Referring Provider for calllog new entry
+            $builder->add('referringProviders', 'collection', array(
+                'type' => new EncounterReferringProviderType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounterreferringprovider__',
+            ));
+
+            $builder->add('attendingPhysicians', 'collection', array(
+                'type' => new EncounterAttendingPhysicianType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounterattendingphysician__',
             ));
 
         }

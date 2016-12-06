@@ -1249,8 +1249,9 @@
     <p>
     <div class="{{ classname }}">
 
-    {% for field in fields|reverse %}
+    {% set fieldsCount = 0 %}
 
+    {% for field in fields|reverse %}
         {% if field.vars.value.status is defined %}
             {%  set fieldstatus = field.vars.value.status %}
         {% else %}
@@ -1297,12 +1298,13 @@
 
             {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype,"",showPlus,count) }}
 
+            {% set fieldsCount = fieldsCount + 1 %}
         {% endif %}
         {% set count = count + 1 %}
     {% endfor %}
 
     {#TESTING + style="color:#fff;"#}
-    {% if showPlus is defined and showPlus == 'showPlus' %}
+    {% if showPlus is defined and showPlus == 'showPlus' and fieldsCount > 0 %}
         <div class="row field-button">
             <div class="col-xs-6" align="right">
             </div>
@@ -1332,8 +1334,6 @@
         {% set fieldThis = field %}
     {% endif %}
 
-    {#classname:{{ classname }}#}
-
     {% if fieldtype == "diseaseType" %}
 
         {{ formmacros.diseaseTypeForm(fieldThis) }}
@@ -1343,6 +1343,10 @@
         {#{{ formmacros.fieldSpotLocationCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}#}
         {#{{ widget }}#}
         {{ formmacros.fieldPatientSpotWidget(fieldThis,cycle,"employees","noprototype",classname,count) }}
+
+    {% elseif classname == "encounterreferringproviders" %}
+
+        {{ formmacros.fieldReferringProvider(fieldThis,cycle,"employees","noprototype",classname,count) }}
 
     {%  else %}
 
@@ -1513,9 +1517,16 @@
 
             {% if fieldThis.updateDate %}
                 {% set updateDate = fieldThis.updateDate|date('Y-m-d')~" at "~fieldThis.updateDate|date('h:i a (T)') %}
+                {#{% set updateSourceStr = " via "~fieldThis.updateSource %}#}
+            {% endif %}
+            {% if fieldThis.updateSource %}
+                {#{% set updateDate = fieldThis.updateDate|date('Y-m-d')~" at "~fieldThis.updateDate|date('h:i a (T)') %}#}
                 {% set updateSourceStr = " via "~fieldThis.updateSource %}
+            {% endif %}
+            {% if fieldThis.updateAuthor %}
                 {% set updateStr = '; Updated by '~fieldThis.updateAuthor.getUserNameStr()~' on '~updateDate~updateSourceStr %}
             {% endif %}
+
 
             {% set postfixProvider = '<a target="_blank" href='~path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id })~'>' %}
             {% set postfixProvider = postfixProvider~'<span class="glyphicon glyphicon-question-sign element-with-tooltip-always" aria-hidden="true"' %}
@@ -1658,8 +1669,23 @@
 
 {% endmacro %}
 
+{% macro fieldReferringProvider(field,cycle,sitename,prototype,classname,count) %}
+    {% import _self as formmacros %}
+    {% if prototype == "prototype" %}
+        {% set referringProvider = field.vars.prototype %}
+    {% else %}
+        {% set referringProvider = field %}
+    {% endif %}
+    <div class="{{ classname }} {{ classname ~ count }}">
+        {{ formmacros.field(referringProvider.field) }}
+        {{ formmacros.field(referringProvider.referringProviderSpecialty) }}
+        {{ formmacros.field(referringProvider.referringProviderPhone) }}
+        {{ formmacros.field(referringProvider.referringProviderEmail) }}
+    </div>
+{% endmacro %}
 
-{#{% macro fieldProcedurePatnameWidget(field) %}#}
+
+                {#{% macro fieldProcedurePatnameWidget(field) %}#}
     {#{% import _self as formmacros %}#}
                           {#&#123;&#35; field, cycle, fieldtype,   prototype,   widget, nobtn, nolabel, classname, withspace, btntype, norest       &#35;&#125;#}
     {#{{ formmacros.inputField(field, "new", "",          "prototype", "",     "",    "",      "",        "",        "",      "norest") }}#}
@@ -2745,9 +2771,31 @@
             {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status,showPlus) }}
         {% endif %}
 
+
+
+        {% if encounter.encounterStatus is defined %}
+            {{ formmacros.field(encounter.encounterStatus) }}
+        {% endif %}
+
+        {% if encounter.encounterInfoTypes is defined %}
+            {{ formmacros.inputArrayField(encounter.encounterInfoTypes,"new","encounterinfotypes","","","","",status) }}
+        {% endif %}
+
+
         {% if encounter.provider is defined %}
             {{ formmacros.field(encounter.provider) }}
         {% endif %}
+
+        {#collection#}
+        {% if encounter.referringProviders is defined %}
+            {{ formmacros.inputArrayField(encounter.referringProviders,"new","encounterreferringproviders","","","","",status) }}
+        {% endif %}
+
+        {#collection#}
+        {% if encounter.attendingPhysicians is defined %}
+            {{ formmacros.inputArrayField(encounter.attendingPhysicians,"new","encounterattendingphysicians","","","","",status) }}
+        {% endif %}
+
 
         {% if encounter.location is defined %}
             {{ formmacros.inputArrayField(encounter.location,cycle,"encounterlocation","","","","",status,showPlus) }}
