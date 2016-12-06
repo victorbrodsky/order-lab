@@ -1922,11 +1922,42 @@ function calllogGetFormNodeElement( formNodeId ) {
 }
 
 //remove disabled formnode-holders
-function calllogSubmitForm() {
-    //$('.formnode-holder:hidden').remove();
-    $('.formnode-holder-disabled').remove();
+function calllogSubmitForm(messageStatus) {
 
-    $('#calllog-new-entry-form').submit();
+    if( messageStatus == "Draft" ) {
+        $('.formnode-holder-disabled').remove();
+        $('#messageStatus').val(messageStatus);
+        $('#calllog-new-entry-form').submit();
+    }
+
+    if( messageStatus == "Signed" ) {
+        //check password by ajax. error="User name / password combination not accepted. Please try again."
+        var token = $('#calllog-user-password').val();
+        var error = "User name / password combination not accepted. Please try again.";
+
+        var url = Routing.generate('employees_authenticate_user');
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            type: "POST",
+            async: asyncflag,
+            data: {token: token},
+        }).success(function(data) {
+            console.log("data="+data);
+            if( data == "OK" ) {
+                $('.formnode-holder-disabled').remove();
+                $('#messageStatus').val(messageStatus);
+                $('#calllog-new-entry-form').submit();
+            } else {
+                $('#calllog-msg-danger-box').val(error);
+            }
+        }).fail(function() {
+            //alert(error);
+            $('#calllog-msg-danger-box').val(error);
+        }).done(function() {
+            console.log("token ok");
+        });
+    }
 }
 
 

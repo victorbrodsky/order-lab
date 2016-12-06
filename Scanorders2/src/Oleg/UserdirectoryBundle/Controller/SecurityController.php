@@ -489,6 +489,28 @@ class SecurityController extends Controller
 //        return $this->redirect($this->generateUrl($sitename.'_login'));
 //    }
 
+
+    /**
+     * @Route("/authenticate-user/", name="employees_authenticate_user", options={"expose"=true})
+     * @Method({"GET","POST"})
+     */
+    public function authenticateUserAction( Request $request )
+    {
+
+        if( false === $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $res = "NOTOK";
+
+        $password = $request->get('token');
+        echo "password=".$password."<br>";
+
+        $response = new Response();
+        $response->setContent($res);
+        return $response;
+    }
+
 }
 
 ?>

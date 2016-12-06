@@ -752,11 +752,13 @@
             {% endif %}
 
             {% if orderViewable %}
-                currentObjectClassName=[{{currentObjectClassName}}]; messageClassName=[{{messageClassName}}]<br>
+                currentObjectClassName=[{{currentObjectClassName}}]<br>
                 {#{% if currentObjectClassName == messageClassName and currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}#}
-                {% if currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}
-                    {% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'id':orderId})~'">'~orderId~'</a>' %}
+                {% if currentObjectClassName == "Oleg\\OrderformBundle\\Entity\\Encounter" %}
+                    calllog_callentry_view!!!
+                    {% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'messageId':orderId})~'">'~orderId~'</a>' %}
                 {% else %}
+                    scan_message_show!!!
                     {% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}
                 {% endif %}
             {% else %}
@@ -819,15 +821,6 @@
                         <div id="form_body_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
 
                             {#make the value of "ID:" into a clickable link to the order.#}
-                            {#{% if orderViewable %}#}
-                                {#{% if currentObjectClassName == messageClassName and currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}#}
-                                    {#{% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'id':orderId})~'">'~orderId~'</a>' %}#}
-                                {#{% else %}#}
-                                    {#{% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}#}
-                                {#{% endif %}#}
-                            {#{% else %}#}
-                                {#{% set orderIdHref = orderId %}#}
-                            {#{% endif %}#}
                             {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
 
                             {#show ALL External IDs: External ID Source System, External ID#}
@@ -1095,7 +1088,7 @@
                 {#output message#}
                 {% if showOutputMessage %}
                     <p>
-                    <div class="panel panel-message">
+                    <div class="panel panel-shadow-message">
 
                     <div class="panel-heading panel-heading-message">
 
@@ -1113,16 +1106,6 @@
                     <div id="form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
 
                         {#make the value of "ID:" into a clickable link to the order.#}
-                        {#{% if orderViewable %}#}
-                            {#{% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}#}
-                            {#{% if currentObjectClassName == messageClassName and currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}#}
-                                {#{% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'id':orderId})~'">'~orderId~'</a>' %}#}
-                            {#{% else %}#}
-                                {#{% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}#}
-                            {#{% endif %}#}
-                        {#{% else %}#}
-                            {#{% set orderIdHref = orderId %}#}
-                        {#{% endif %}#}
                         {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
 
                         {#controlled by controller and form#}
@@ -1186,7 +1169,7 @@
 
                 {#mainly used for datastructure-patient#}
                 <p>
-                    <div class="panel panel-shadow-message">
+                    <div class="panel panel-message">
 
                         <div class="panel-heading panel-heading-message">
 
