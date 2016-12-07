@@ -250,7 +250,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -448,7 +448,7 @@ class CallEntryController extends Controller
                 if( $messageStatusForm ) {
                     $messageStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
                     if( $messageStatusObj ) {
-                        echo "set message status to ".$messageStatusObj."<br>";
+                        //echo "set message status to ".$messageStatusObj."<br>";
                         $message->setMessageStatus($messageStatusObj);
                     }
                 }

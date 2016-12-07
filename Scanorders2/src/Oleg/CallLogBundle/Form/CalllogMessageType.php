@@ -177,7 +177,7 @@ class CalllogMessageType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        //if( $this->params['cycle'] != "new" ) {
+        if( $this->params['cycle'] != "new" ) {
             $builder->add('messageStatus', 'entity', array(
                 'class' => 'OlegOrderformBundle:MessageStatusList',
                 //'property' => 'name',
@@ -195,7 +195,7 @@ class CalllogMessageType extends AbstractType
                         ));
                 },
             ));
-        //}
+        }
 
 //        $builder->add('patientListTitle', 'entity', array(
 //            'label' => 'List Title:',
