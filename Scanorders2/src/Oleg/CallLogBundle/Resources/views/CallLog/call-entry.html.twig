@@ -27,7 +27,6 @@
     <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
     <input type="hidden" id="mrn" value="{{ mrn }}" />
     <input type="hidden" id="mrntype" value="{{ mrntype }}" />
-    <input type="hidden" id="messageStatus" value="" />
     {#<input type="hidden" id="encounterid" value="{{ encounterid }}" />#}
 
     <div id="calllog-patient-list">
@@ -37,6 +36,8 @@
     {#<form id="CallCaseForm" class="form-vertical" role="form">#}
     {#{{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}#}
     {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_update_patient')}) }}
+
+        <input type="hidden" id="messageStatusJs" name="messageStatusJs" value="" />
 
         {{ form_errors(form) }}
 
@@ -194,13 +195,13 @@
             {#<button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm('submit');">Submit</button>#}
             <div class="row">
                 <div class="col-lg-6" align="right">
-                    <button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm('Draft');">Save Draft</button>
+                    <button id="save-draft-btn" class="btn btn-primary" name="btnSubmit" type="button" onclick="calllogSubmitForm(this,'Draft');">Save Draft</button>
                 </div><!-- /.col-lg-6 -->
                 <div class="col-lg-6" align="left">
                     <div class="input-group">
-                        <input type="text" id="calllog-user-password" class="form-control" placeholder="Enter your password">
+                        <input type="password" id="calllog-user-password" class="form-control" placeholder="Enter your password">
                         <span class="input-group-btn">
-                            <button class="btn btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm('Signed');">Finalize and Sign</button>
+                            <button id="signed-btn" class="btn btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm(this,'Signed');">Finalize and Sign</button>
                         </span>
                     </div><!-- /input-group -->
                 </div><!-- /.col-lg-6 -->

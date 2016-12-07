@@ -250,7 +250,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -440,6 +440,19 @@ class CallEntryController extends Controller
                 $message->clearEncounter();
                 //add encounter to the message
                 $message->addEncounter($newEncounter);
+
+                //set message status from the form's name="messageStatus" field
+                $data = $request->request->all();
+                $messageStatusForm = $data['messageStatusJs'];
+                //echo "messageStatusForm=".$messageStatusForm."<br>";
+                if( $messageStatusForm ) {
+                    $messageStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
+                    if( $messageStatusObj ) {
+                        //echo "set message status to ".$messageStatusObj."<br>";
+                        $message->setMessageStatus($messageStatusObj);
+                    }
+                }
+                exit('1');
 
                 if( $patient->getId() ) {
                     //CASE 1

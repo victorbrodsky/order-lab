@@ -1922,11 +1922,14 @@ function calllogGetFormNodeElement( formNodeId ) {
 }
 
 //remove disabled formnode-holders
-function calllogSubmitForm(messageStatus) {
+function calllogSubmitForm(btn,messageStatus) {
+
+    var lbtn = Ladda.create( btn );
+    lbtn.start();
 
     if( messageStatus == "Draft" ) {
         $('.formnode-holder-disabled').remove();
-        $('#messageStatus').val(messageStatus);
+        $('#messageStatusJs').val(messageStatus);
         $('#calllog-new-entry-form').submit();
     }
 
@@ -1946,16 +1949,19 @@ function calllogSubmitForm(messageStatus) {
             console.log("data="+data);
             if( data == "OK" ) {
                 $('.formnode-holder-disabled').remove();
-                $('#messageStatus').val(messageStatus);
+                $('#messageStatusJs').val(messageStatus);
                 $('#calllog-new-entry-form').submit();
             } else {
-                $('#calllog-msg-danger-box').val(error);
+                $('#calllog-msg-danger-box').html(error);
+                $('#calllog-msg-danger-box').show();
             }
         }).fail(function() {
             //alert(error);
-            $('#calllog-msg-danger-box').val(error);
+            $('#calllog-msg-danger-box').html(error);
+            $('#calllog-msg-danger-box').show();
         }).done(function() {
-            console.log("token ok");
+            lbtn.stop();
+            //console.log("token ok");
         });
     }
 }

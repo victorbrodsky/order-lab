@@ -233,6 +233,45 @@ class AuthUtil {
         return $user;
     }
 
+    public function authenticateUserToken( $subjectUser, $token, $userProvider ) {
+
+        if( !$subjectUser ) {
+            return NULL;
+        }
+
+        $username = $token->getUsername();
+
+        //oli2002c_@_local-user, oli2002c_@_wcmc-cwid
+        $usernameArr = explode("_@_", $username);
+        if( count($usernameArr) != 2 ) {
+            $this->logger->warning("Invalid username ".$username);
+            return NULL;
+        }
+
+        $identifierUsername = $usernameArr[0];
+        $identifierKeytype = $usernameArr[1];
+
+        //Case 1: "Local User"
+        if( $identifierKeytype == 'local-user' ) {
+            $token->setUser($subjectUser);
+            $this->logger->warning('Trying authenticating the local user with username=' . $identifierUsername);
+            $user = $this->LocalAuthentication($token, $userProvider);
+
+            return $user;
+        }
+
+        //Case 2: LDAP User
+        if( $identifierKeytype == 'wcmc-cwid' ) {
+            //Case 2: "NYP CWID"
+            $token->setUser($subjectUser);
+            $this->logger->warning('Trying authenticating the LDAP user with username=' . $identifierUsername);
+            $user = $this->LdapAuthentication($token, $userProvider);
+
+            return $user;
+        }
+
+        return NULL;
+    }
 
     //check identifier by keytype "ORDER Local User", "NYP CWID", "WCMC CWID" and field username
     public function ExternalIdAuthentication($token, $userProvider) {

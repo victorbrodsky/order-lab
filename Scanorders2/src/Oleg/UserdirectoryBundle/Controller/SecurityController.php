@@ -2,7 +2,9 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -501,11 +503,30 @@ class SecurityController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser(); //oli2002_@_local-user
+
         $res = "NOTOK";
 
         $password = $request->get('token');
-        echo "password=".$password."<br>";
+        //echo "password=".$password."<br>";
 
+        //create token
+        $providerKey = 'ldap_fellapp_firewall'; //firewall name, or here, anything
+        $username = $user->getUsername();
+        $userProvider = null;
+
+        $token = new UsernamePasswordToken($username, $password, $providerKey);
+
+        $authUtil = new AuthUtil($this->container,$em);
+
+        $authUSer = $authUtil->authenticateUserToken($user,$token,$userProvider);
+
+        if( $authUSer ) {
+            $res = "OK";
+        }
+
+        //echo "res=".$res."<br>";
         $response = new Response();
         $response->setContent($res);
         return $response;
