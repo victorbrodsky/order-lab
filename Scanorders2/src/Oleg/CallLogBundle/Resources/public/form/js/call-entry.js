@@ -1960,7 +1960,7 @@ function calllogSubmitForm(btn,messageStatus) {
             async: asyncflag,
             data: {token: token},
         }).success(function(data) {
-            console.log("data="+data);
+            //console.log("data="+data);
             if( data == "OK" ) {
                 $('.formnode-holder-disabled').remove();
                 $('#messageStatusJs').val(messageStatus);
@@ -1987,7 +1987,7 @@ function calllogLocationNameListener(holderId) {
     var target = ".ajax-combobox-locationName";
 
     $(target).on("change", function (e) {
-        console.log("calllogLocationNameListener: change", e);
+        //console.log("calllogLocationNameListener: change", e);
 
         //populate location fields by name
         //var value = $("[name='nameofobject']");
@@ -2002,7 +2002,7 @@ function calllogLocationNameListener(holderId) {
         idEl.val(null);
 
         if( !selectData ) {
-            console.log('no selectData');
+            //console.log('no selectData');
             //TODO: clean all fields?
             locationNamePopulateLocationFields( holder, null);
             return;
@@ -2010,7 +2010,7 @@ function calllogLocationNameListener(holderId) {
 
         var locationId = selectData.id;
         if( !locationId ) {
-            console.log('no locationId');
+            //console.log('no locationId');
             return;
         }
 
@@ -2022,14 +2022,14 @@ function calllogLocationNameListener(holderId) {
             async: asyncflag,
             data: {locationId: locationId},
         }).success(function(data) {
-            console.log("data length="+data.length);
-            console.log(data);
+            //console.log("data length="+data.length);
+            //console.log(data);
 
             if( data ) {
                 //populate location fields
                 //var holder = locationNameEl.closest('.panel-body');
-                console.log("holder:");
-                console.log(holder);
+                //console.log("holder:");
+                //console.log(holder);
                 locationNamePopulateLocationFields( holder, data);
             }
 
@@ -2058,12 +2058,12 @@ function locationNamePopulateLocationFields( holder, data ) {
     for( var i = 0; i < fieldNames.length; i++ ) {
         //text += fieldNames[i] + "<br>";
         var fieldName = fieldNames[i]; //phone
-        console.log("fieldName="+fieldName);
+        //console.log("fieldName="+fieldName);
 
         var partialIdStr = "["+fieldName+"]";
-        console.log("partialIdStr="+partialIdStr);
+        //console.log("partialIdStr="+partialIdStr);
         var fieldEl = holder.find('[name*="'+partialIdStr+'"]');
-        console.log("found=" + fieldEl.attr('id'));
+        //console.log("found=" + fieldEl.attr('id'));
         printF(fieldEl, "found=");
 
         var locationId = null;

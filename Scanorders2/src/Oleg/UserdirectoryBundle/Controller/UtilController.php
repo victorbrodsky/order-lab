@@ -1322,7 +1322,7 @@ class UtilController extends Controller {
 
     public function getClassBundleByName($name) {
         $bundleName = "UserdirectoryBundle";
-        $filterType = array('default','user-added');
+        $filterType = array('default');
         switch( $name ) {
             case "identifierkeytype":
                 $className = "IdentifierTypeList";
@@ -1407,7 +1407,6 @@ class UtilController extends Controller {
                 break;
 
             case "referringProviderSpecialty";
-                //TODO: don't use type filtering
                 $className = "HealthcareProviderSpecialtiesList";
                 $filterType = null;
                 break;
