@@ -5384,6 +5384,35 @@ class AdminController extends Controller
             "660" => array('PermissionActionList','permissionaction-list'),
             "670" => array('EventObjectTypeList','eventobjecttypes-list'),
             "680" => array('VacReqRequestTypeList','vacreqrequesttypes-list','Vacation Request Type'),
+
+            //added on December 7 2016, after July 19th, 2016
+            "690" => array('HealthcareProviderSpecialtiesList','healthcareproviderspecialty-list','Healthcare Provider Specialty'),
+            "700" => array('MessageTypeClassifiers','messagetypeclassifiers-list'),
+            "710" => array('AmendmentReasonList','amendmentreasons-list'),
+            "720" => array('ObjectTypeList','objecttypes-list'),
+            "730" => array('PathologyCallComplexPatients','pathologycallcomplexpatients-list'),
+            "740" => array('PatientListHierarchyGroupType','patientlisthierarchygrouptype-list'),
+            "750" => array('ObjectTypeText','objecttypetexts-list'),
+            "760" => array('ObjectTypeString','objecttypestrings-list'),
+            "770" => array('ObjectTypeDropdown','objecttypedropdowns-list'),
+            "780" => array('BloodProductTransfusedList','bloodproducttransfusions-list'),
+            "790" => array('TransfusionReactionTypeList','transfusionreactiontypes-list'),
+            "800" => array('BloodTypeList','bloodtypes-list'),
+            "810" => array('TransfusionAntibodyScreenResultsList','transfusionantibodyscreenresults-list'),
+            "820" => array('TransfusionCrossmatchResultsList','transfusioncrossmatchresults-list'),
+            "830" => array('TransfusionDATResultsList','transfusiondatresults-list','Transfusion DAT Results List'),
+            "840" => array('TransfusionHemolysisCheckResultsList','transfusionhemolysischeckresults-list'),
+            "850" => array('ObjectTypeDateTime','objecttypedatetimes-list'),
+            "860" => array('ComplexPlateletSummaryAntibodiesList','complexplateletsummaryantibodies-list'),
+            "870" => array('CCIUnitPlateletCountDefaultValueList','cciunitplateletcountdefaultvalues-list','CCI Unit Platelet Count Default Value List'),
+            "880" => array('CCIPlateletTypeTransfusedList','cciplatelettypetransfuseds-list','CCI Platelet Type Transfused List'),
+            "890" => array('PlateletTransfusionProductReceivingList','platelettransfusionproductreceivings-list'),
+            "900" => array('TransfusionProductStatusList','transfusionproductstatus-list'),
+            "910" => array('EncounterInfoTypeList','encounterinfotypes-list'),
+            "920" => array('EncounterStatusList','encounterstatuses-list'),
+            "930" => array('PatientRecordStatusList','patientrecordstatuses-list'),
+            "940" => array('MessageStatusList','messagestatuses-list'),
+
         );
 
         $count = 10;
@@ -5406,15 +5435,17 @@ class AdminController extends Controller
 
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($listRootName);
             if( $listEntity ) {
-                exit('exists listRootName='.$listRootName);
+                //exit('exists listRootName='.$listRootName);
                 continue;
             }
 
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($listName);
             if( $listEntity ) {
-                exit('exists listName='.$listName);
+                //exit('exists listName='.$listName);
                 continue;
             }
+
+            echo "nameClean=$nameClean || listName=$listName, listRootName=$listRootName <br>";
 
             //construct the "Name" from the entity name:
             // "SourceSystemList" => "Source System", "BoardCertifiedSpecialties" => "Board Certified Specialty"
@@ -5455,7 +5486,7 @@ class AdminController extends Controller
             //echo "nameClean=$nameClean <br>";
 
             $listEntity = new PlatformListManagerRootList();
-            $this->setDefaultList($listEntity,$count,$username,$nameClean);
+            $this->setDefaultList($listEntity,null,$username,$nameClean);
 
             //$listEntity->setLinkToListId($listId);
             $listEntity->setListName($listName);
@@ -5481,7 +5512,7 @@ class AdminController extends Controller
             $res
         );
 
-        //exit('1');
+        exit($res);
         return $this->redirect($this->generateUrl('user_admin_index'));
     }
     function splitAtUpperCase($s) {

@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\OrderformBundle\Controller\ScanListController;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Form\ListFilterType;
@@ -103,6 +104,19 @@ class ListController extends Controller
      * @Route("/list/object-type-texts/", name="objecttypetexts-list", options={"expose"=true})
      * @Route("/list/blood-product-transfusions/", name="bloodproducttransfusions-list")
      * @Route("/list/transfusion-reaction-types/", name="transfusionreactiontypes-list")
+     * @Route("/list/object-type-strings/", name="objecttypestrings-list")
+     * @Route("/list/object-type-dropdowns/", name="objecttypedropdowns-list")
+     * @Route("/list/blood-types/", name="bloodtypes-list")
+     * @Route("/list/transfusion-antibody-screen-results/", name="transfusionantibodyscreenresults-list")
+     * @Route("/list/transfusion-crossmatch-results/", name="transfusioncrossmatchresults-list")
+     * @Route("/list/transfusion-dat-results/", name="transfusiondatresults-list")
+     * @Route("/list/transfusion-hemolysis-check-results/", name="transfusionhemolysischeckresults-list")
+     * @Route("/list/object-type-datetimes/", name="objecttypedatetimes-list")
+     * @Route("/list/complex-platelet-summary-antibodies/", name="complexplateletsummaryantibodies-list")
+     * @Route("/list/cci-unit-platelet-count-default-values/", name="cciunitplateletcountdefaultvalues-list")
+     * @Route("/list/cci-platelet-type-transfused/", name="cciplatelettypetransfuseds-list")
+     * @Route("/list/platelet-transfusion-product-receiving/", name="platelettransfusionproductreceivings-list")
+     * @Route("/list/transfusion-product-status/", name="transfusionproductstatus-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -356,6 +370,19 @@ class ListController extends Controller
      * @Route("/list/object-type-texts/", name="objecttypetexts_create", options={"expose"=true})
      * @Route("/list/blood-product-transfusions/", name="bloodproducttransfusions_create")
      * @Route("/list/transfusion-reaction-types/", name="transfusionreactiontypes_create")
+     * @Route("/list/object-type-strings/", name="objecttypestrings_create")
+     * @Route("/list/object-type-dropdowns/", name="objecttypedropdowns_create")
+     * @Route("/list/blood-types/", name="bloodtypes_creste")
+     * @Route("/list/transfusion-antibody-screen-results/", name="transfusionantibodyscreenresults_create")
+     * @Route("/list/transfusion-crossmatch-results/", name="transfusioncrossmatchresults_create")
+     * @Route("/list/transfusion-dat-results/", name="transfusiondatresults_create")
+     * @Route("/list/transfusion-hemolysis-check-results/", name="transfusionhemolysischeckresults_create")
+     * @Route("/list/object-type-datetimes/", name="objecttypedatetimes_create")
+     * @Route("/list/complex-platelet-summary-antibodies/", name="complexplateletsummaryantibodies_create")
+     * @Route("/list/cci-unit-platelet-count-default-values/", name="cciunitplateletcountdefaultvalues_create")
+     * @Route("/list/cci-platelet-type-transfused/", name="cciplatelettypetransfuseds_create")
+     * @Route("/list/platelet-transfusion-product-receiving/", name="platelettransfusionproductreceivings_create")
+     * @Route("/list/transfusion-product-status/", name="transfusionproductstatus_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -517,6 +544,19 @@ class ListController extends Controller
      * @Route("/list/object-type-texts/new", name="objecttypetexts_new", options={"expose"=true})
      * @Route("/list/blood-product-transfusions/new", name="bloodproducttransfusions_new")
      * @Route("/list/transfusion-reaction-types/new", name="transfusionreactiontypes_new")
+     * @Route("/list/object-type-strings/new", name="objecttypestrings_new")
+     * @Route("/list/object-type-dropdowns/new", name="objecttypedropdowns_new")
+     * @Route("/list/blood-types/new", name="bloodtypes_new")
+     * @Route("/list/transfusion-antibody-screen-results/new", name="transfusionantibodyscreenresults_new")
+     * @Route("/list/transfusion-crossmatch-results/new", name="transfusioncrossmatchresults_new")
+     * @Route("/list/transfusion-dat-results/new", name="transfusiondatresults_new")
+     * @Route("/list/transfusion-hemolysis-check-results/new", name="transfusionhemolysischeckresults_new")
+     * @Route("/list/object-type-datetimes/new", name="objecttypedatetimes_new")
+     * @Route("/list/complex-platelet-summary-antibodies/new", name="complexplateletsummaryantibodies_new")
+     * @Route("/list/cci-unit-platelet-count-default-values/new", name="cciunitplateletcountdefaultvalues_new")
+     * @Route("/list/cci-platelet-type-transfused/new", name="cciplatelettypetransfuseds_new")
+     * @Route("/list/platelet-transfusion-product-receiving/new", name="platelettransfusionproductreceivings_new")
+     * @Route("/list/transfusion-product-status/new", name="transfusionproductstatus_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -649,6 +689,20 @@ class ListController extends Controller
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_show", options={"expose"=true})
      * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_show")
      * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_show")
+     * @Route("/list/object-type-strings/{id}", name="objecttypestrings_show")
+     * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_show")
+     * @Route("/list/blood-types/{id}", name="bloodtypes_show")
+     * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_show")
+     * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_show")
+     * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_show")
+     * @Route("/list/transfusion-hemolysis-check-results/{id}", name="transfusionhemolysischeckresults_show")
+     * @Route("/list/object-type-datetimes/{id}", name="objecttypedatetimes_show")
+     * @Route("/list/complex-platelet-summary-antibodies/{id}", name="complexplateletsummaryantibodies_show")
+     * @Route("/list/cci-unit-platelet-count-default-values/{id}", name="cciunitplateletcountdefaultvalues_show")
+     * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_show")
+     * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_show")
+     * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_show")
+     *
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -771,6 +825,19 @@ class ListController extends Controller
      * @Route("/list/object-type-texts/{id}/edit", name="objecttypetexts_edit", options={"expose"=true})
      * @Route("/list/blood-product-transfusions/{id}/edit", name="bloodproducttransfusions_edit")
      * @Route("/list/transfusion-reaction-types/{id}/edit", name="transfusionreactiontypes_edit")
+     * @Route("/list/object-type-strings/{id}/edit", name="objecttypestrings_edit")
+     * @Route("/list/object-type-dropdowns/{id}/edit", name="objecttypedropdowns_edit")
+     * @Route("/list/blood-types/{id}/edit", name="bloodtypes_edit")
+     * @Route("/list/transfusion-antibody-screen-results/{id}/edit", name="transfusionantibodyscreenresults_edit")
+     * @Route("/list/transfusion-crossmatch-results/{id}/edit", name="transfusioncrossmatchresults_edit")
+     * @Route("/list/transfusion-dat-results/{id}/edit", name="transfusiondatresults_edit")
+     * @Route("/list/transfusion-hemolysis-check-results/{id}/edit", name="transfusionhemolysischeckresults_edit")
+     * @Route("/list/object-type-datetimes/{id}/edit", name="objecttypedatetimes_edit")
+     * @Route("/list/complex-platelet-summary-antibodies/{id}/edit", name="complexplateletsummaryantibodies_edit")
+     * @Route("/list/cci-unit-platelet-count-default-values/{id}/edit", name="cciunitplateletcountdefaultvalues_edit")
+     * @Route("/list/cci-platelet-type-transfused/{id}/edit", name="cciplatelettypetransfuseds_edit")
+     * @Route("/list/platelet-transfusion-product-receiving/{id}/edit", name="platelettransfusionproductreceivings_edit")
+     * @Route("/list/transfusion-product-status/{id}/edit", name="transfusionproductstatus_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -939,6 +1006,19 @@ class ListController extends Controller
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_update", options={"expose"=true})
      * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_update")
      * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_update")
+     * @Route("/list/object-type-strings/{id}", name="objecttypestrings_update")
+     * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_update")
+     * @Route("/list/blood-types/{id}", name="bloodtypes_update")
+     * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_update")
+     * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_update")
+     * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_update")
+     * @Route("/list/transfusion-hemolysis-check-results/{id}", name="transfusionhemolysischeckresults_update")
+     * @Route("/list/object-type-datetimes/{id}", name="objecttypedatetimes_update")
+     * @Route("/list/complex-platelet-summary-antibodies/{id}", name="complexplateletsummaryantibodies_update")
+     * @Route("/list/cci-unit-platelet-count-default-values/{id}", name="cciunitplateletcountdefaultvalues_update")
+     * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_update")
+     * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_update")
+     * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1556,7 +1636,7 @@ class ListController extends Controller
                 break;
             case "objecttypetexts":
                 $className = "ObjectTypeText";
-                $displayName = "Object Type Texts";
+                $displayName = "Object Type Text";
                 break;
             case "bloodproducttransfusions":
                 $className = "BloodProductTransfusedList";
@@ -1566,11 +1646,80 @@ class ListController extends Controller
                 $className = "TransfusionReactionTypeList";
                 $displayName = "Transfusion Reaction Type";
                 break;
+            case "objecttypestrings":
+                $className = "ObjectTypeString";
+                $displayName = "Object Type String";
+                break;
+            case "objecttypedropdowns":
+                $className = "ObjectTypeDropdown";
+                $displayName = "Object Type Dropdown";
+                break;
+            case "bloodtypes":
+                $className = "BloodTypeList";
+                $displayName = "Blood Type List";
+                break;
+            case "transfusionantibodyscreenresults":
+                $className = "TransfusionAntibodyScreenResultsList";
+                $displayName = "Transfusion Antibody Screen Results List";
+                break;
+            case "transfusioncrossmatchresults":
+                $className = "TransfusionCrossmatchResultsList";
+                $displayName = "Transfusion Crossmatch Results List";
+                break;
+            case "transfusiondatresults":
+                $className = "TransfusionDATResultsList";
+                $displayName = "Transfusion DAT Results List";
+                break;
+            case "transfusionhemolysischeckresults":
+                $className = "TransfusionHemolysisCheckResultsList";
+                $displayName = "Transfusion Hemolysis Check Results List";
+                break;
+            case "objecttypedatetimes":
+                $className = "ObjectTypeDateTime";
+                $displayName = "Object Type DateTime";
+                break;
+            case "complexplateletsummaryantibodies":
+                $className = "ComplexPlateletSummaryAntibodiesList";
+                $displayName = "Complex Platelet Summary Antibodies List";
+                break;
+            case "cciunitplateletcountdefaultvalues":
+                $className = "CCIUnitPlateletCountDefaultValueList";
+                $displayName = "CCI Unit Platelet Count Default Value List";
+                break;
+            case "cciplatelettypetransfuseds":
+                $className = "CCIPlateletTypeTransfusedList";
+                $displayName = "CCI Platelet Type Transfused List";
+                break;
+            case "platelettransfusionproductreceivings":
+                $className = "PlateletTransfusionProductReceivingList";
+                $displayName = "Platelet Transfusion Product Receiving List";
+                break;
+            case "transfusionproductstatus":
+                $className = "TransfusionProductStatusList";
+                $displayName = "Transfusion Product Status List";
+                break;
+
+
+//            case "messagetypeclassifiers":
+//                $className = "MessageTypeClassifiers";
+//                $displayName = "Message Type Classifiers";
+//                $bundleName = "OrderformBundle";
+//                break;
 
             default:
                 $className = null;
                 $displayName = null;
                 $labels = null;
+        }
+
+        if( !$className ) {
+            //try ScanListController->classListMapper
+            $scanListController = new ScanListController();
+            $mapper = $scanListController->classListMapper($route,$request);
+            $className = $mapper['className'];
+            $bundleName = $mapper['bundleName'];
+            $displayName = $mapper['displayName'];
+            $bundleName = str_replace("Oleg","",$bundleName);
         }
 
         //echo $route.": className=".$className.", displayName=".$displayName."<br>";
@@ -1696,6 +1845,20 @@ class ListController extends Controller
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_delete", options={"expose"=true})
      * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_delete")
      * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_delete")
+     * @Route("/list/object-type-strings/{id}", name="objecttypestrings_delete")
+     * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_delete")
+     * @Route("/list/blood-types/{id}", name="bloodtypes_delete")
+     * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_delete")
+     * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_delete")
+     * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_delete")
+     * @Route("/list/transfusion-hemolysis-check-results/{id}", name="transfusionhemolysischeckresults_delete")
+     * @Route("/list/object-type-datetimes/{id}", name="objecttypedatetimes_delete")
+     * @Route("/list/complex-platelet-summary-antibodies/{id}", name="complexplateletsummaryantibodies_delete")
+     * @Route("/list/cci-unit-platelet-count-default-values/{id}", name="cciunitplateletcountdefaultvalues_delete")
+     * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_delete")
+     * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_delete")
+     * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_delete")
+     *
      *
      * @Method("DELETE")
      */
@@ -1774,6 +1937,7 @@ class ListController extends Controller
 
         if( $listRootName ) {
             //return $this->redirect( $this->generateUrl($listRootName) );
+            //echo "listRootName=".$listRootName."<br>";
 
             $request->attributes->set('_route',$listRootName);
 
