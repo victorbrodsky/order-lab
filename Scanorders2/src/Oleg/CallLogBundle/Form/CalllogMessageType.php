@@ -56,7 +56,7 @@ class CalllogMessageType extends AbstractType
 
         //$builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'message-id')) );
 
-        if( $this->params['cycle'] == 'show' ) {
+        if ($this->params['cycle'] == 'show') {
             $builder->add('id', null, array(
                 'label' => 'Message ID:',
                 'read_only' => true,
@@ -70,7 +70,7 @@ class CalllogMessageType extends AbstractType
 
         //echo "message type: show patient <br>";
         $builder->add('patient', 'collection', array(
-            'type' => new PatientType($this->params,$patient),    //$this->type),
+            'type' => new PatientType($this->params, $patient),    //$this->type),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -80,9 +80,9 @@ class CalllogMessageType extends AbstractType
             'prototype_name' => '__patient__',
         ));
 
-        if( count($this->entity->getPatient()) == 0 ) {
+        if (count($this->entity->getPatient()) == 0) {
             $builder->add('encounter', 'collection', array(
-                'type' => new EncounterType($this->params,$this->entity),
+                'type' => new EncounterType($this->params, $this->entity),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -177,23 +177,25 @@ class CalllogMessageType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('messageStatus', 'entity', array(
-            'class' => 'OlegOrderformBundle:MessageStatusList',
-            //'property' => 'name',
-            'label'=>'Message Status:',
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        //if( $this->params['cycle'] != "new" ) {
+            $builder->add('messageStatus', 'entity', array(
+                'class' => 'OlegOrderformBundle:MessageStatusList',
+                //'property' => 'name',
+                'label' => 'Message Status:',
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        //}
 
 //        $builder->add('patientListTitle', 'entity', array(
 //            'label' => 'List Title:',

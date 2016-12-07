@@ -1062,8 +1062,12 @@ class CallLogUtil
             //$baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
             //$url = $baseUrl . '/' . $siteName . '/' . $listUrl;
 
+            $listName = $list->getName()."";
+            $listNameUrl = str_replace(" ","-",$listName);
+            $listNameUrl = strtolower($listNameUrl);
+
             //path(calllog_sitename~'_complex_patient_list')
-            $url = $this->container->get('router')->generate('calllog_complex_patient_list');
+            $url = $this->container->get('router')->generate('calllog_complex_patient_list',array('listname'=>$listNameUrl));
 
             $resList[] = array(
                 'name' => $list->getName()."",

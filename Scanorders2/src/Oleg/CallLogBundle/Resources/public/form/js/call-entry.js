@@ -1692,12 +1692,26 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
         return appendEl;
     }
 
-    //regular append to the end of the global form
+    //regular append to the end (for new,edit) or beginning (for show) of the global form
     var appendEl = $("#form-node-holder");
     //printF(appendEl,"!!! appendEl global:");
     //console.log(appendEl);
-    appendEl.append(formNodeHtml);
+    //appendEl.append(formNodeHtml);
+    var attachType = 'append';
+    var formcycle = $('#formcycle').val();
+    if( formcycle == 'show' ) {
+        var attachType = 'prepend';
+    }
+    calllogAttachHtml(appendEl,formNodeHtml,attachType);
     return appendEl;
+}
+function calllogAttachHtml(element,html,type) {
+    if( type == 'append' ) {
+        element.append(html);
+    }
+    if( type == 'prepend' ) {
+        element.prepend(html);
+    }
 }
 
 ////NOT USED

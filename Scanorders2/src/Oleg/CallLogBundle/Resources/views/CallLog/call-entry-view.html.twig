@@ -128,6 +128,10 @@
                                 {{ formmacros.inputArrayField(encounterPatientInfo.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
                                 {{ formmacros.field(encounterPatientInfo.provider) }}
 
+                                {% for attendingPhysician in encounterPatientInfo.attendingPhysicians %}
+                                    {{ formmacros.field(attendingPhysician.field) }}
+                                {% endfor %}
+
                                 {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
                                 {% for referringProvider in encounterPatientInfo.referringProviders %}
                                     {#{{ formmacros.field_show_user( encounterPatientInfo, "referringProviders", cycle ) }}#}
@@ -135,10 +139,6 @@
                                     {{ formmacros.field(referringProvider.referringProviderSpecialty) }}
                                     {{ formmacros.field(referringProvider.referringProviderPhone) }}
                                     {{ formmacros.field(referringProvider.referringProviderEmail) }}
-                                {% endfor %}
-
-                                {% for attendingPhysician in encounterPatientInfo.attendingPhysicians %}
-                                    {{ formmacros.field(attendingPhysician.field) }}
                                 {% endfor %}
 
                                 {{ calllogmacros.trackerContactinfoForm(encounterPatientInfo,cycle,status) }}

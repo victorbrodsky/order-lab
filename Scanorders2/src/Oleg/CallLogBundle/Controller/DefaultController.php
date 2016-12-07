@@ -38,11 +38,15 @@ class DefaultController extends Controller
 
     /**
      * Complex Patient List
-     * @Route("/complex-patient-list/", name="calllog_complex_patient_list")
+     * @Route("/patient-list/{listname}", name="calllog_complex_patient_list")
      * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
      */
-    public function complexPatientListAction(Request $request)
+    public function complexPatientListAction(Request $request, $listname)
     {
+
+        //get list name by $listname, convert it to the first char as Upper case and use it to find the list in DB
+        //for now use the mock page complex-patient-list.html.twig
+
         //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
         return array(
             //'entity' => $entity,

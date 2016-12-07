@@ -343,7 +343,7 @@ class CallEntryController extends Controller
                 throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
             }
             $patient = $patients->first();
-            echo "patient id=".$patient->getId()."<br>";
+            //echo "patient id=".$patient->getId()."<br>";
 
             $patientInfoEncounter = null;
             $newEncounter = null;
@@ -448,11 +448,10 @@ class CallEntryController extends Controller
                 if( $messageStatusForm ) {
                     $messageStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
                     if( $messageStatusObj ) {
-                        //echo "set message status to ".$messageStatusObj."<br>";
+                        echo "set message status to ".$messageStatusObj."<br>";
                         $message->setMessageStatus($messageStatusObj);
                     }
                 }
-                exit('1');
 
                 if( $patient->getId() ) {
                     //CASE 1

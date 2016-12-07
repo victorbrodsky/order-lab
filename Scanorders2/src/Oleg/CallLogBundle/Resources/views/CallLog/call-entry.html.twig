@@ -79,6 +79,10 @@
                             {{ formmacros.inputArrayField(encounter.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
                             {{ formmacros.field(encounter.provider) }}
 
+                            {% for attendingPhysician in encounter.attendingPhysicians %}
+                                {{ formmacros.field(attendingPhysician.field) }}
+                            {% endfor %}
+
                             {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
                             {% for referringProvider in encounter.referringProviders %}
                                 {#{{ formmacros.field_show_user( encounter, "referringProviders", cycle ) }}#}
@@ -86,10 +90,6 @@
                                 {{ formmacros.field(referringProvider.referringProviderSpecialty) }}
                                 {{ formmacros.field(referringProvider.referringProviderPhone) }}
                                 {{ formmacros.field(referringProvider.referringProviderEmail) }}
-                            {% endfor %}
-
-                            {% for attendingPhysician in encounter.attendingPhysicians %}
-                                {{ formmacros.field(attendingPhysician.field) }}
                             {% endfor %}
 
                             {{ calllogmacros.trackerContactinfoForm(encounter,cycle,status) }}
@@ -150,7 +150,9 @@
                 {% if form.messageCategory is defined %}
                     {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
                 {% endif %}
-                {{ formmacros.field(form.messageStatus) }}
+                {% if form.messageStatus is defined %}
+                    {{ formmacros.field(form.messageStatus) }}
+                {% endif %}
                 {#Message Version#}
                 {{ formmacros.field(form.version) }}
                 {#Amendment Reason#}
@@ -194,17 +196,26 @@
             {#<button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm('save-draft');">Save Draft</button>#}
             {#<button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm('submit');">Submit</button>#}
             <div class="row">
-                <div class="col-lg-6" align="right">
-                    <button id="save-draft-btn" class="btn btn-primary" name="btnSubmit" type="button" onclick="calllogSubmitForm(this,'Draft');">Save Draft</button>
-                </div><!-- /.col-lg-6 -->
-                <div class="col-lg-6" align="left">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-3" align="right">
+                    <button
+                            id="save-draft-btn"
+                            class="btn btn-success"
+                            name="btnSubmit"
+                            type="button"
+                            onclick="calllogSubmitForm(this,'Draft');"
+                            style="min-width: 100%"
+                    >Save Draft</button>
+                </div>
+                <div class="col-lg-3" align="left">
                     <div class="input-group">
-                        <input type="password" id="calllog-user-password" class="form-control" placeholder="Enter your password">
+                        <input type="password" id="calllog-user-password" class="form-control" placeholder="Enter password" style="min-width: 100%">
                         <span class="input-group-btn">
                             <button id="signed-btn" class="btn btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm(this,'Signed');">Finalize and Sign</button>
                         </span>
                     </div><!-- /input-group -->
-                </div><!-- /.col-lg-6 -->
+                </div>
+                <div class="col-lg-3"></div>
             </div><!-- /.row -->
         </p>
 
