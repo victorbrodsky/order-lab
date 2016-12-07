@@ -47,6 +47,7 @@ class UtilController extends Controller {
         $res = $this->getClassBundleByName($name);
         $className = $res['className'];
         $bundleName = $res['bundleName'];
+        $filterType = $res['filterType'];
 
         //echo "className=".$className."<br>";
 
@@ -60,7 +61,7 @@ class UtilController extends Controller {
 
 
                 case "FellowshipTitleList": //show this object as "abbreviation - name"
-                    if( $newCycle ) {
+                    if( $newCycle && $filterType ) {
                         $optionArr = array('default');
                     } else {
                         $optionArr = array('default','user-added');
@@ -82,7 +83,7 @@ class UtilController extends Controller {
                         ->orderBy("list.orderinlist","ASC");
 
                     //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-                    if( $newCycle ) {
+                    if( $newCycle && $filterType ) {
                         $query->where("list.type = :typedef")->setParameters(array('typedef' => 'default'));
                     } else {
                         $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
@@ -1321,6 +1322,7 @@ class UtilController extends Controller {
 
     public function getClassBundleByName($name) {
         $bundleName = "UserdirectoryBundle";
+        $filterType = array('default','user-added');
         switch( $name ) {
             case "identifierkeytype":
                 $className = "IdentifierTypeList";
@@ -1407,6 +1409,7 @@ class UtilController extends Controller {
             case "referringProviderSpecialty";
                 //TODO: don't use type filtering
                 $className = "HealthcareProviderSpecialtiesList";
+                $filterType = null;
                 break;
 
             default:
@@ -1415,7 +1418,8 @@ class UtilController extends Controller {
 
         $res = array(
             'className' => $className,
-            'bundleName' => $bundleName
+            'bundleName' => $bundleName,
+            'filterType' => $filterType
         );
 
         return $res;
