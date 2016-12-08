@@ -149,22 +149,16 @@
             {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
-
-
         {% if formType == "Form Field - Checkbox" %}
-
+            {{ formnodemacros.checkboxForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
-
-
 
         {% if formType == "Form Field - Radio Button" %}
-
+            {{ formnodemacros.radioForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
-
-
         {% if formType == "Form Field - Time" %}
-
+            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
     {% else %}
@@ -429,3 +423,152 @@
         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>
 {% endmacro %}
+
+
+{% macro checkboxForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6 text-center" align="left" style="width: 50px;">
+                {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro checkboxField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+    {% set fieldname = "formnode-"~formNode.id %}
+    {% if formNodeValue %}
+        {% set fieldValue = formNodeValue %}
+    {% else %}
+        {% set fieldValue = null %}
+    {% endif %}
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
+    <input
+            type="checkbox"
+            id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
+            name="{{ fieldname }}"
+            class="form-control"
+            {{ disabled }}
+            value="{{ formNodeValue }}"
+    >
+{% endmacro %}
+
+
+{% macro radioForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6 text-center" align="left" style="width: 50px;">
+                {{ formnodemacros.radioField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.radioField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro radioField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+    {% set fieldname = "formnode-"~formNode.id %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
+    <div id="oleg_orderformbundle_messagetype_purpose" class="horizontal_type">
+        {% for dropdownValue in dropdownValues %}
+            {% if formNodeValue and dropdownValue.text == formNodeValue %}
+                {% set checked = 'checked="checked"' %}
+            {% else %}
+                {% set checked = '' %}
+            {% endif %}
+            <div class="radio_inline">
+                <input
+                    type="radio"
+                    id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
+                    name="{{ fieldname }}"
+                    value="{{ dropdownValue.text }}"
+                    {{ checked }}
+                    {{ disabled }}
+                >
+                <label class="required">
+                    {{ dropdownValue.text }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endmacro %}
+
+{% macro timeForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro timeField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+    {% set fieldname = "formnode-"~formNode.id %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
+    <div>
+        <select
+            id="oleg_userdirectorybundle_formnode_{{ formNode.id }}_time_hour"
+            name="{{ fieldname }}-[time][hour]"
+        >
+            {#<option value="0">00</option>#}
+            {#<option value="1">23</option>#}
+            {% for i in 0..23 %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>:<select
+                id="oleg_userdirectorybundle_formnode_{{ formNode.id }}_time_minute"
+                name="{{ fieldname }}-[time][minute]">
+            {#<option value="0">00</option>#}
+            {#<option value="1">59</option>#}
+            {% for i in 0..59 %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+{% endmacro %}
+
