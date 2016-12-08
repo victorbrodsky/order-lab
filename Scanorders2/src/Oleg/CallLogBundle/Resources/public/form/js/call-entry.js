@@ -1616,7 +1616,9 @@ function calllogAppendFormNodes( data ) {
 
         if(
             data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu" ||
-            data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow Multiple Selections"
+            data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow Multiple Selections" ||
+            data[index]['formNodeObjectType'] == "Form Field - Month" ||
+            data[index]['formNodeObjectType'] == "Form Field - Day of the Week"
         ) {
             regularCombobox($('#formnode-holder-'+formNodeId));
         }

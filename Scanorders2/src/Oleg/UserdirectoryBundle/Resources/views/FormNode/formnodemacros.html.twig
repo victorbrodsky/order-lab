@@ -125,7 +125,7 @@
             {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Dropdown Menu - Allow Multiple Selections" %}
-            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype,"multiple") }}
         {% endif %}
 
         {% if formType == "Form Field - Date" %}
@@ -323,7 +323,7 @@
 {% endmacro %}
 
 
-{% macro dropdownForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+{% macro dropdownForm( formNodeHolder, formNode, formNodeValue, cycle, prototype, multiple ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -333,15 +333,15 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+                {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeValue, cycle, prototype, multiple) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+        {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeValue, cycle, prototype, multiple) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro dropdownField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+{% macro dropdownField( formNodeHolder, formNode, formNodeValue, cycle, prototype, multiple ) %}
     {% set fieldname = "formnode-"~formNode.id %}
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
@@ -355,12 +355,20 @@
         {% set disabled = "disabled" %}
     {% endif %}
 
+    {% if multiple == 'multiple' %}
+        {#multiple="multiple"#}
+        {% set multipleOption = 'multiple="multiple"' %}
+    {% else %}
+        {% set multipleOption = '' %}
+    {% endif %}
+
     <select
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
             name="{{ fieldname }}"
             class="combobox"
             data-placeholder="{{ formNode.placeholder }}"
             {{ disabled }}
+            {{ multipleOption }}
     >
         <option value=""></option>
         {% for dropdownValue in dropdownValues %}

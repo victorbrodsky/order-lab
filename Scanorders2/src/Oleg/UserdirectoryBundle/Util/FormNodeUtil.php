@@ -1959,7 +1959,14 @@ class FormNodeUtil
             //it must be dropdown object type.
             return $output;
         }
-        if( $objectType->getName()."" != "Form Field - Dropdown Menu" ) {
+
+        $objectTypeName = $objectType->getName()."";
+        if(
+            $objectTypeName != "Form Field - Dropdown Menu" &&
+            $objectTypeName != "Form Field - Dropdown Menu - Allow Multiple Selections" &&
+            $objectTypeName != "Form Field - Month" &&
+            $objectTypeName != "Form Field - Day of the Week"
+        ) {
             //it must be only dropdown object type.
             return $output;
         }
@@ -2271,7 +2278,9 @@ class FormNodeUtil
             'placeholder' => "Test Field 09: Form Field - Month",
             'objectType' => $objectType,
             'showLabel' => true,
-            'visible' => true
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "MonthsList"
         );
         $formNode = $this->createFormNode($formParams);
         $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
@@ -2297,7 +2306,9 @@ class FormNodeUtil
             'placeholder' => "Test Field 11: Form Field - Day of the Week",
             'objectType' => $objectType,
             'showLabel' => true,
-            'visible' => true
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "WeekDaysList"
         );
         $formNode = $this->createFormNode($formParams);
         $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
