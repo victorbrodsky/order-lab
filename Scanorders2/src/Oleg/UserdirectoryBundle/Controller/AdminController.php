@@ -17,12 +17,14 @@ use Oleg\UserdirectoryBundle\Entity\Collaboration;
 use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
 use Oleg\UserdirectoryBundle\Entity\ComplexPlateletSummaryAntibodiesList;
+use Oleg\UserdirectoryBundle\Entity\DaysList;
 use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
+use Oleg\UserdirectoryBundle\Entity\MonthsList;
 use Oleg\UserdirectoryBundle\Entity\ObjectTypeList;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
@@ -47,6 +49,7 @@ use Oleg\UserdirectoryBundle\Entity\TransfusionDATResultsList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionHemolysisCheckResultsList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionProductStatusList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
+use Oleg\UserdirectoryBundle\Entity\WeekDaysList;
 use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -297,6 +300,8 @@ class AdminController extends Controller
         $count_CCIPlateletTypeTransfusedList = $this->generateCCIPlateletTypeTransfusedList();
         $count_PlateletTransfusionProductReceivingList = $this->generatePlateletTransfusionProductReceivingList();
         $count_TransfusionProductStatusList = $this->generateTransfusionProductStatusList();
+        $count_generateWeekDaysList = $this->generateWeekDaysList();
+        $count_generateMonthsList = $this->generateMonthsList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -378,6 +383,8 @@ class AdminController extends Controller
             'CCIPlateletTypeTransfusedList='.$count_CCIPlateletTypeTransfusedList.', '.
             'PlateletTransfusionProductReceivingList='.$count_PlateletTransfusionProductReceivingList.', '.
             'TransfusionProductStatusList='.$count_TransfusionProductStatusList.', '.
+            'WeekDaysList='.$count_generateWeekDaysList.', '.
+            'MonthsList='.$count_generateMonthsList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -5133,14 +5140,28 @@ class AdminController extends Controller
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
             "Form Field - Year",
-            "Form Field - Month",
+            //"Form Field - Month",
+            array(
+                'name' => "Form Field - Month",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime',
+                //'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                //'entityName' => 'MonthsList'
+            ),
             //"Form Field - Date",
             array(
                 'name' => "Form Field - Date",
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
-            "Form Field - Day of the Week",
+            //"Form Field - Day of the Week",
+            array(
+                'name' => "Form Field - Day of the Week",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime',
+                //'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                //'entityName' => 'WeekDaysList'
+            ),
             //"Form Field - Dropdown Menu",
             array(
                 'name' => "Form Field - Dropdown Menu",
@@ -5299,7 +5320,7 @@ class AdminController extends Controller
     }
 
     /**
-     * populate Platform List Manager Root List
+     * populate Platform List Manager Root List: url="order/directory/admin/list-manager-populate/"
      * @Route("/list-manager-populate/", name="user_populate_platform_list_manager")
      * @Method("GET")
      */
@@ -5412,6 +5433,8 @@ class AdminController extends Controller
             "920" => array('EncounterStatusList','encounterstatuses-list'),
             "930" => array('PatientRecordStatusList','patientrecordstatuses-list'),
             "940" => array('MessageStatusList','messagestatuses-list'),
+            "950" => array('WeekDaysList','weekdays-list'),
+            "960" => array('MonthsList','months-list'),
 
         );
 
@@ -6542,6 +6565,84 @@ class AdminController extends Controller
             }
 
             $listEntity = new TransfusionProductStatusList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateWeekDaysList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:WeekDaysList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new WeekDaysList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateMonthsList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:MonthsList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new MonthsList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

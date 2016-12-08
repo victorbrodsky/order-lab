@@ -117,6 +117,8 @@ class ListController extends Controller
      * @Route("/list/cci-platelet-type-transfused/", name="cciplatelettypetransfuseds-list")
      * @Route("/list/platelet-transfusion-product-receiving/", name="platelettransfusionproductreceivings-list")
      * @Route("/list/transfusion-product-status/", name="transfusionproductstatus-list")
+     * @Route("/list/week-days/", name="weekdays-list")
+     * @Route("/list/months/", name="months-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -383,6 +385,8 @@ class ListController extends Controller
      * @Route("/list/cci-platelet-type-transfused/", name="cciplatelettypetransfuseds_create")
      * @Route("/list/platelet-transfusion-product-receiving/", name="platelettransfusionproductreceivings_create")
      * @Route("/list/transfusion-product-status/", name="transfusionproductstatus_create")
+     * @Route("/list/week-days/", name="weekdays_create")
+     * @Route("/list/months/", name="months_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -557,6 +561,8 @@ class ListController extends Controller
      * @Route("/list/cci-platelet-type-transfused/new", name="cciplatelettypetransfuseds_new")
      * @Route("/list/platelet-transfusion-product-receiving/new", name="platelettransfusionproductreceivings_new")
      * @Route("/list/transfusion-product-status/new", name="transfusionproductstatus_new")
+     * @Route("/list/week-days/new", name="weekdays_new")
+     * @Route("/list/months/new", name="months_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -702,6 +708,8 @@ class ListController extends Controller
      * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_show")
      * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_show")
      * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_show")
+     * @Route("/list/week-days/{id}", name="weekdays_show")
+     * @Route("/list/months/{id}", name="months_show")
      *
      *
      * @Method("GET")
@@ -838,6 +846,8 @@ class ListController extends Controller
      * @Route("/list/cci-platelet-type-transfused/{id}/edit", name="cciplatelettypetransfuseds_edit")
      * @Route("/list/platelet-transfusion-product-receiving/{id}/edit", name="platelettransfusionproductreceivings_edit")
      * @Route("/list/transfusion-product-status/{id}/edit", name="transfusionproductstatus_edit")
+     * @Route("/list/week-days/{id}/edit", name="weekdays_edit")
+     * @Route("/list/months/{id}/edit", name="months_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1019,6 +1029,8 @@ class ListController extends Controller
      * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_update")
      * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_update")
      * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_update")
+     * @Route("/list/week-days/{id}", name="weekdays_update")
+     * @Route("/list/months/{id}", name="months_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1698,6 +1710,14 @@ class ListController extends Controller
                 $className = "TransfusionProductStatusList";
                 $displayName = "Transfusion Product Status List";
                 break;
+            case "weekdays":
+                $className = "WeekDaysList";
+                $displayName = "Days of the Week List";
+                break;
+            case "months":
+                $className = "MonthsList";
+                $displayName = "Months List";
+                break;
 
 
 //            case "messagetypeclassifiers":
@@ -1858,6 +1878,8 @@ class ListController extends Controller
      * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_delete")
      * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_delete")
      * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_delete")
+     * @Route("/list/week-days/{id}", name="weekdays_delete")
+     * @Route("/list/months/{id}", name="months_delete")
      *
      *
      * @Method("DELETE")
