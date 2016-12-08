@@ -1614,7 +1614,10 @@ function calllogAppendFormNodes( data ) {
 
         calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml);
 
-        if( data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu" ) {
+        if(
+            data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu" ||
+            data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow Multiple Selections"
+        ) {
             regularCombobox($('#formnode-holder-'+formNodeId));
         }
 
@@ -1629,7 +1632,11 @@ function calllogAppendFormNodes( data ) {
             initDatepicker($('#formnode-holder-'+formNodeId));
         }
 
-        if( data[index]['formNodeObjectType'] == "Form Field - Free Text" ) {
+        if(
+            data[index]['formNodeObjectType'] == "Form Field - Free Text" ||
+            data[index]['formNodeObjectType'] == "Form Field - Free Text, RTF" ||
+            data[index]['formNodeObjectType'] == "Form Field - Free Text, HTML"
+        ) {
             expandTextarea($('#formnode-holder-'+formNodeId));
         }
     }

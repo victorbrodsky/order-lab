@@ -1151,6 +1151,8 @@ class ScanAdminController extends AdminController
                         'Other' => array(
                             'Other'
                         ),
+                        'Test' => array(
+                        ),
                     )
                 ),
                 'Procedure Note'
@@ -1195,7 +1197,7 @@ class ScanAdminController extends AdminController
                 //make category
                 $messageCategory = new MessageCategory();
 
-                $this->setDefaultList($messageCategory,$count,$username,$name);
+                $this->setDefaultList($messageCategory,null,$username,$name);
                 $messageCategory->setLevel($level);
 
                 //try to get default group by level

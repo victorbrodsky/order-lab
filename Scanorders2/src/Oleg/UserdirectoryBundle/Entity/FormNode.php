@@ -143,6 +143,11 @@ class FormNode extends BaseCompositeNode {
      */
     private $objectTypeDateTimes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ObjectTypeCheckbox", mappedBy="formNode")
+     */
+    private $objectTypeCheckboxs;
+
 
 
     public function __construct($creator=null) {
@@ -152,6 +157,7 @@ class FormNode extends BaseCompositeNode {
         $this->objectTypeStrings = new ArrayCollection();
         $this->objectTypeDropdowns = new ArrayCollection();
         $this->objectTypeDateTimes = new ArrayCollection();
+        $this->objectTypeCheckboxs = new ArrayCollection();
 
     }
 
@@ -242,6 +248,22 @@ class FormNode extends BaseCompositeNode {
         return $this->objectTypeDateTimes;
     }
 
+    public function addObjectTypeCheckbox($item)
+    {
+        if( $item && !$this->objectTypeCheckboxs->contains($item) ) {
+            $this->objectTypeCheckboxs->add($item);
+            $item->setFormNode($this);
+        }
+        return $this;
+    }
+    public function removeObjectTypeCheckbox($item)
+    {
+        $this->objectTypeCheckboxs->removeElement($item);
+    }
+    public function getObjectTypeCheckboxs()
+    {
+        return $this->objectTypeCheckboxs;
+    }
 
     /**
      * @return mixed

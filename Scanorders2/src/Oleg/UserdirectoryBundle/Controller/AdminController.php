@@ -5129,17 +5129,42 @@ class AdminController extends Controller
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeText'
             ),
-            "Form Field - Free Text, RTF",
-            "Form Field - Free Text, HTML",
-            "Form Field - Full Date",
-            "Form Field - Time",
+            //"Form Field - Free Text, RTF",
+            array(
+                'name' => "Form Field - Free Text, RTF",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeText'
+            ),
+            //"Form Field - Free Text, HTML",
+            array(
+                'name' => "Form Field - Free Text, HTML",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeText'
+            ),
+            //"Form Field - Full Date",
+            array(
+                'name' => "Form Field - Full Date",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
+            //"Form Field - Time",
+            array(
+                'name' => "Form Field - Time",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
             //"Form Field - Full Date and Time",
             array(
                 'name' => "Form Field - Full Date and Time",
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
-            "Form Field - Year",
+            //"Form Field - Year",
+            array(
+                'name' => "Form Field - Year",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
             //"Form Field - Month",
             array(
                 'name' => "Form Field - Month",
@@ -5173,6 +5198,24 @@ class AdminController extends Controller
                 'name' => "Linked Object - Patient",
                 'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
                 'receivedValueEntityName' => 'Patient'
+            ),
+            //"Form Field - Checkbox",
+            array(
+                'name' => "Form Field - Checkbox",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeCheckbox'
+            ),
+            //"Form Field - Radio Button",
+            array(
+                'name' => "Form Field - Radio Button",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeString'
+            ),
+            //"Form Field - Dropdown Menu - Allow Multiple Selections"
+            array(
+                'name' => "Form Field - Dropdown Menu - Allow Multiple Selections",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDropdown'
             ),
         );
 
@@ -5221,7 +5264,7 @@ class AdminController extends Controller
             }
 
             $listEntity = new ObjectTypeList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
+            $this->setDefaultList($listEntity,null,$username,$name);
 
             if( $receivedValueEntityNamespace ) {
                 //echo "receivedValueEntityNamespace=".$receivedValueEntityNamespace."<br>";
@@ -6175,6 +6218,22 @@ class AdminController extends Controller
         $formNodeUtil->generateFormNode();
 
         exit("Form Node Tree generated");
+    }
+
+    /**
+     * @Route("/list/generate-test-form-node-tree/", name="employees_generate_test_form_node_tree")
+     * @Method("GET")
+     */
+    public function generateTestFormNodeAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil->generateTestFormNode();
+
+        exit("Test Form Node Tree generated");
     }
 
     //Blood Product Transfused

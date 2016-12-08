@@ -110,12 +110,21 @@
         {% if formType == "Form Field - Free Text" %}
             {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
+        {% if formType == "Form Field - Free Text, RTF" %}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, HTML" %}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+        {% endif %}
 
         {% if formType == "Form Field - Free Text, Single Line" %}
             {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
         {% if formType == "Form Field - Dropdown Menu" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Dropdown Menu - Allow Multiple Selections" %}
             {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
 
@@ -127,6 +136,35 @@
         {% endif %}
         {% if formType == "Form Field - Full Date and Time" %}
             {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype,'m/d/Y') }}
+        {% endif %}
+        {% if formType == "Form Field - Year" %}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeValue,cycle,prototype,'m/d/Y') }}
+        {% endif %}
+
+        {#the same as dropdown menu#}
+        {% if formType == "Form Field - Month" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Day of the Week" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+        {% endif %}
+
+
+
+        {% if formType == "Form Field - Checkbox" %}
+
+        {% endif %}
+
+
+
+        {% if formType == "Form Field - Radio Button" %}
+
+        {% endif %}
+
+
+
+        {% if formType == "Form Field - Time" %}
+
         {% endif %}
 
     {% else %}
@@ -210,24 +248,10 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {#<textarea#}
-                        {#id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"#}
-                        {#name="oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
-                        {#class="textarea form-control"#}
-                {#>#}
-                {#</textarea>#}
                 {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
             </div>
         </div>
     {% else %}
-        {#<div class="col-xs-12" align="left">#}
-        {#<textarea#}
-                {#id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"#}
-                {#name="oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
-                {#class="textarea form-control"#}
-        {#>#}
-        {#</textarea>#}
-        {#</div>#}
         {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
     {% endif %}
     </p>
