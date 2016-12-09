@@ -352,13 +352,15 @@
     {% if multiple == 'multiple' %}
         {#multiple="multiple"#}
         {% set multipleOption = 'multiple="multiple"' %}
+        {% set selectName = fieldname~'[]' %}
     {% else %}
         {% set multipleOption = '' %}
+        {% set selectName = fieldname %}
     {% endif %}
 
     <select
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
-            name="{{ fieldname }}"
+            name="{{ selectName }}"
             class="combobox"
             data-placeholder="{{ formNode.placeholder }}"
             {{ disabled }}
@@ -488,6 +490,7 @@
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
     {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+    dropdownValues|length={{ dropdownValues|length }}
 
     {% if cycle != 'show' %}
         {% set disabled = "" %}
@@ -497,6 +500,7 @@
 
     <div id="oleg_orderformbundle_messagetype_purpose" class="horizontal_type">
         {% for dropdownValue in dropdownValues %}
+            dropdownValue.text={{ dropdownValue.text }}
             {% if formNodeValue and dropdownValue.text == formNodeValue %}
                 {% set checked = 'checked="checked"' %}
             {% else %}

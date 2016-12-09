@@ -25,7 +25,7 @@ class EncounterNumberType extends AbstractType
             $builder->add('keytype', 'entity', array(
                 'class' => 'OlegOrderformBundle:EncounterType',
                 'label' => 'Encounter Type:',
-                'required' => true,
+                'required' => false,
                 //'data' => 1,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {

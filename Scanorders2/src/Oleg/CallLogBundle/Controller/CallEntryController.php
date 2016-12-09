@@ -153,6 +153,14 @@ class CallEntryController extends Controller
             $encounter2->setEncounterStatus($encounterOpenStatus);
         }
 
+        //set encounter info type to "Call to Pathology"
+        $encounterInfoType = $em->getRepository('OlegOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
+        if( $encounterInfoType ) {
+            if( count($encounter2->getEncounterInfoTypes()) > 0 ) {
+                $encounter2->getEncounterInfoTypes()->first()->setField($encounterInfoType);
+            }
+        }
+
         //testing
         //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
         //$calllogUtil->checkNextEncounterGeneratedId();
@@ -174,9 +182,6 @@ class CallEntryController extends Controller
         $spotEntity = null;
         $removable = 0;
         $encounter2->addContactinfoByTypeAndName($user,$system,$encounterLocationType,$locationName,$spotEntity,$withdummyfields,$em,$removable);
-//        if( $encounter->getTracker() ) {
-//            echo "spot count=".count($encounter->getTracker()->getSpots())."<br>";
-//        }
 
         //add encounter to patient
         $patient->addEncounter($encounter1);
@@ -250,7 +255,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');

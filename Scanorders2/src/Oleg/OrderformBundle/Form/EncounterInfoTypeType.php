@@ -26,7 +26,7 @@ class EncounterInfoTypeType extends AbstractType
             'class' => 'OlegOrderformBundle:EncounterInfoTypeList',
             'property' => 'name',
             'label' => "Encounter Type:",
-            'required'=> true,
+            'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width encounterinfotype-field'),
             'query_builder' => function(EntityRepository $er) {

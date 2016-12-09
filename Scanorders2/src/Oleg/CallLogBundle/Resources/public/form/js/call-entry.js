@@ -1512,6 +1512,11 @@ var _formnode = [];
 function treeSelectAdditionalJsAction(comboboxEl) {
     //printF( comboboxEl, "treeSelectAdditionalJsAction: combobox on change:" );
 
+    if( !comboboxEl.hasClass("ajax-combobox-messageCategory") ) {
+        //console.log('this combobox is not message category');
+        return;
+    }
+
     var thisData = comboboxEl.select2('data');
     var messageCategoryId = thisData.id;
     //console.log("treeSelectAdditionalJsAction: messageCategoryId="+messageCategoryId);

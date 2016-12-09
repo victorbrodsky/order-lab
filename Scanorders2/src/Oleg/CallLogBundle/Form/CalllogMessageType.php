@@ -210,25 +210,7 @@ class CalllogMessageType extends AbstractType
             $message = $event->getData();
             $form = $event->getForm();
 
-//            $label = null;
-//            $mapper = array(
-//                'prefix' => "Oleg",
-//                'className' => "MessageCategory",
-//                'bundleName' => "OrderformBundle",
-//                'organizationalGroupType' => "MessageTypeClassifiers"
-//            );
-//            if( $message ) {
-//                $messageCategory = $message->getMessageCategory();
-//                if( $messageCategory ) {
-//                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory,$mapper);
-//                }
-//            }
-//            if( !$label ) {
-//                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null,$mapper) . ":";
-//            }
-
             $label = 'List Title:';
-            //echo "show defaultInstitution label=".$label."<br>";
 
             $patientLists = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findAll();
             if( count($patientLists) > 0 ) {
@@ -243,7 +225,7 @@ class CalllogMessageType extends AbstractType
                 'required' => true,
                 'data' => $patientListId,
                 'attr' => array(
-                    'class' => 'ajax-combobox-compositetree',
+                    'class' => 'ajax-combobox-compositetree ajax-combobox-patientListTitle',
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'PatientListHierarchy',

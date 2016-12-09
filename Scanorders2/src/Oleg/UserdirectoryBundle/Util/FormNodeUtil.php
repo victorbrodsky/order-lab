@@ -47,6 +47,7 @@ class FormNodeUtil
         //print "<pre>";
         //print_r($data);
         //print "</pre>";
+
         //$unmappedField = $data["formnode-4"];
         //echo "<br>unmappedField=" . $unmappedField . "<br>";
         //$unmappedField = $data["formnode-6"];
@@ -103,13 +104,28 @@ class FormNodeUtil
 
         $key = "formnode-".$formNode->getId();
         $formValue = $data[$key];
-        //echo $key.": formValue=" . $formValue . "<br>";
+        echo $key.": formValue=" . $formValue . "<br>";
 
         if( !$formValue ) {
             //exit("No Value=".$formValue."<br>");
             return;
         }
         //exit("Value=[".$formValue."]<br>");
+
+//        $formNodeObjectName = null;
+//        if( $formNode->getObjectType() ) {
+//            $formNodeObjectName = $formNode->getObjectType()->getName()."";
+//        }
+//        if( $formNodeObjectName == "Form Field - Dropdown Menu - Allow Multiple Selections" ) {
+//
+//        }
+
+        if( is_array($formValue) ) {
+            //$formValue is array
+            foreach( $formValue as $thisFormValue ) {
+                $this->createSingleFormNodeListRecord($thisFormValue);
+            }
+        }
 
         //1) create a new list element
         $newListElement = $this->createNewList($formNode,$formValue);
@@ -144,6 +160,9 @@ class FormNodeUtil
             $this->em->persist($newListElement);
             $this->em->flush($newListElement); //testing
         }
+    }
+    public function createSingleFormNodeListRecord( $formValue ) {
+
     }
 
 
