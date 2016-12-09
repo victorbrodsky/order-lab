@@ -104,7 +104,7 @@ class FormNodeUtil
 
         $key = "formnode-".$formNode->getId();
         $formValue = $data[$key];
-        echo $key.": formValue=" . $formValue . "<br>";
+        //echo $key.": formValue=" . $formValue . "<br>";
 
         if( !$formValue ) {
             //exit("No Value=".$formValue."<br>");
@@ -123,9 +123,51 @@ class FormNodeUtil
         if( is_array($formValue) ) {
             //$formValue is array
             foreach( $formValue as $thisFormValue ) {
-                $this->createSingleFormNodeListRecord($thisFormValue);
+                //echo $key.": formValue=" . $thisFormValue . "<br>";
+                $this->createSingleFormNodeListRecord($formNode,$thisFormValue,$holderEntity,$testing);
             }
+        } else {
+            //echo $key.": formValue=" . $formValue . "<br>";
+            $this->createSingleFormNodeListRecord($formNode,$formValue,$holderEntity,$testing);
         }
+
+//        //1) create a new list element
+//        $newListElement = $this->createNewList($formNode,$formValue);
+//        //echo "newListElement=".$newListElement."<br>";
+//        if( !$newListElement ) {
+//            //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
+//            return;
+//        }
+//
+//        //2) add value to the created list
+//        if( $formValue ) {
+//            $newListElement->setValue($formValue);
+//        }
+//
+//        //3) set message by entityName to the created list
+//        $newListElement->setObject($holderEntity);
+//
+//        //4) set formnode to the list
+//        $newListElement->setFormNode($formNode);
+//
+//        //testing
+//        if( 0 ) {
+//            $class = new \ReflectionClass($newListElement);
+//            $className = $class->getShortName();
+//            $classNamespace = $class->getNamespaceName();
+//            echo "newListElement list: classNamespace=" . $classNamespace . ", className=" . $className . ", Value=" . $newListElement->getValue() . "<br>";
+//            //echo "newListElement list: Namespace=" . $newListElement->getEntityNamespace() . ", Name=" . $newListElement->getEntityName() . ", Value=" . $newListElement->getValue() . "<br>";
+//        }
+//        //exit("processFormNodeByType; formValue=".$formValue);
+//
+//        if( !$testing ) {
+//            $this->em->persist($newListElement);
+//            $this->em->flush($newListElement); //testing
+//        }
+    }
+    public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false ) {
+
+        echo "formnode-".$formNode->getId().": formValue=" . $formValue . "<br>";
 
         //1) create a new list element
         $newListElement = $this->createNewList($formNode,$formValue);
@@ -160,9 +202,6 @@ class FormNodeUtil
             $this->em->persist($newListElement);
             $this->em->flush($newListElement); //testing
         }
-    }
-    public function createSingleFormNodeListRecord( $formValue ) {
-
     }
 
 
