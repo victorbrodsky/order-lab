@@ -111,10 +111,10 @@
             {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Free Text, RTF" %}
-            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype,"RTF") }}
         {% endif %}
         {% if formType == "Form Field - Free Text, HTML" %}
-            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype) }}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeValue,cycle,prototype,"HTML") }}
         {% endif %}
 
         {% if formType == "Form Field - Free Text, Single Line" %}
@@ -232,7 +232,7 @@
 
 
 
-{% macro textareaForm( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+{% macro textareaForm( formNodeHolder, formNode, formNodeValue, cycle, prototype, type ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -242,15 +242,15 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+                {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeValue, cycle, prototype, type) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
+        {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeValue, cycle, prototype, type) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro textareaField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+{% macro textareaField( formNodeHolder, formNode, formNodeValue, cycle, prototype, type ) %}
     {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
     {% if formNodeValue %}
         {% set fieldValue = formNodeValue %}
@@ -265,6 +265,14 @@
     {% endif %}
     {#disabled={{ disabled }}<br>#}
     {% set fieldname = "formnode-"~formNode.id %}
+
+    {% if type == "HTML" %}
+        {% set fieldValue = fieldValue|raw %}
+    {% endif %}
+    {% if type == "RTF" %}
+        {#{% set fieldValue = fieldValue|raw %}#}
+    {% endif %}
+
     <textarea
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
             name="{{ fieldname }}"
@@ -302,15 +310,17 @@
     {#cycle={{ cycle }}<br>#}
     {% if cycle != 'show' %}
         {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
     {% else %}
         {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
     {% endif %}
     <input
         id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
         name="{{ fieldname }}"
         class="form-control"
         value="{{ fieldValue }}"
-        placeholder="{{ formNode.placeholder }}"
+        placeholder="{{ placeholder }}"
         {{ disabled }}
     >
     </input>
@@ -345,8 +355,10 @@
 
     {% if cycle != 'show' %}
         {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
     {% else %}
         {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
     {% endif %}
 
     {% if multiple == 'multiple' %}
@@ -362,18 +374,26 @@
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
             name="{{ selectName }}"
             class="combobox"
-            data-placeholder="{{ formNode.placeholder }}"
+            data-placeholder="{{ placeholder }}"
             {{ disabled }}
             {{ multipleOption }}
     >
         <option value=""></option>
         {% for dropdownValue in dropdownValues %}
-            {###########dropdownValue.text:{{ dropdownValue.text }}#}
-            {#{% if dropdownValue.id == formNodeValue %} #}
-            {% if formNodeValue and dropdownValue.text == formNodeValue %}
-                <option value="{{ dropdownValue.id }}" selected>{{ dropdownValue.text }}</option>
+            {% set selected = false %}
+            {% if multiple == 'multiple' %}
+                {% if formNodeValue and dropdownValue.id in formNodeValue %}
+                    {% set selected = true %}
+                {% endif %}
             {% else %}
-                <option value="{{ dropdownValue.id }}">{{ dropdownValue.text }}</option>
+                {% if formNodeValue and dropdownValue.id == formNodeValue %}
+                    {% set selected = true %}
+                {% endif %}
+            {% endif %}
+            {% if selected %}
+                <option value="{{ dropdownValue.id }}" selected>{{ dropdownValue.text|raw }}</option>
+            {% else %}
+                <option value="{{ dropdownValue.id }}">{{ dropdownValue.text|raw }}</option>
             {% endif %}
         {% endfor %}
     </select>
@@ -408,8 +428,10 @@
     {% endif %}
     {% if cycle != 'show' %}
         {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
     {% else %}
         {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
     {% endif %}
     <div class="input-group input-group-reg date regular-datepicker">
         <input
@@ -419,7 +441,7 @@
                 class="datepicker form-control"
                 {#value="{{ fieldValue|date(dateFormat) }}"#}
                 value="{{ fieldValue }}"
-                placeholder="{{ formNode.placeholder }}"
+                placeholder="{{ placeholder }}"
                 {{ disabled }}
         >
         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
@@ -447,7 +469,7 @@
 {% macro checkboxField( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {% set fieldname = "formnode-"~formNode.id %}
     {% if formNodeValue %}
-        {% set fieldValue = formNodeValue %}
+        {% set fieldValue = "checked" %}
     {% else %}
         {% set fieldValue = null %}
     {% endif %}
@@ -463,7 +485,8 @@
             name="{{ fieldname }}"
             class="form-control"
             {{ disabled }}
-            value="{{ formNodeValue }}"
+            {{ fieldValue }}
+            value="1"
     >
 {% endmacro %}
 
@@ -476,7 +499,7 @@
             <div class="col-xs-6" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
-            <div class="col-xs-6 text-center" align="left" style="width: 50px;">
+            <div class="col-xs-6" align="left">
                 {{ formnodemacros.radioField(formNodeHolder, formNode, formNodeValue, cycle, prototype) }}
             </div>
         </div>
@@ -490,7 +513,6 @@
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
     {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
-    dropdownValues|length={{ dropdownValues|length }}
 
     {% if cycle != 'show' %}
         {% set disabled = "" %}
@@ -500,8 +522,7 @@
 
     <div id="oleg_orderformbundle_messagetype_purpose" class="horizontal_type">
         {% for dropdownValue in dropdownValues %}
-            dropdownValue.text={{ dropdownValue.text }}
-            {% if formNodeValue and dropdownValue.text == formNodeValue %}
+            {% if formNodeValue and dropdownValue.id == formNodeValue %}
                 {% set checked = 'checked="checked"' %}
             {% else %}
                 {% set checked = '' %}
@@ -511,7 +532,7 @@
                     type="radio"
                     id="oleg_userdirectorybundle_formnode_{{ formNode.id }}"
                     name="{{ fieldname }}"
-                    value="{{ dropdownValue.text }}"
+                    value="{{ dropdownValue.id }}"
                     {{ checked }}
                     {{ disabled }}
                 >
@@ -553,23 +574,37 @@
         {% set disabled = "disabled" %}
     {% endif %}
 
+    {% set hour = formNodeValue|date('H') %}
+    {% set minute = formNodeValue|date('i') %}
+
     <div>
         <select
             id="oleg_userdirectorybundle_formnode_{{ formNode.id }}_time_hour"
-            name="{{ fieldname }}-[time][hour]"
+            name="{{ fieldname }}[time][hour]"
+            {{ disabled }}
         >
             {#<option value="0">00</option>#}
             {#<option value="1">23</option>#}
             {% for i in 0..23 %}
-                <option value="{{ i }}">{{ i }}</option>
+                {% set selected = "" %}
+                {% if hour == i %}
+                    {% set selected = "selected" %}
+                {% endif %}
+                <option value="{{ i }}" {{ selected }}>{{ i }}</option>
             {% endfor %}
         </select>:<select
-                id="oleg_userdirectorybundle_formnode_{{ formNode.id }}_time_minute"
-                name="{{ fieldname }}-[time][minute]">
+            id="oleg_userdirectorybundle_formnode_{{ formNode.id }}_time_minute"
+            name="{{ fieldname }}[time][minute]"
+            {{ disabled }}
+        >
             {#<option value="0">00</option>#}
             {#<option value="1">59</option>#}
             {% for i in 0..59 %}
-                <option value="{{ i }}">{{ i }}</option>
+                {% set selected = "" %}
+                {% if minute == i %}
+                    {% set selected = "selected" %}
+                {% endif %}
+                <option value="{{ i }}" {{ selected }}>{{ i }}</option>
             {% endfor %}
         </select>
     </div>

@@ -44,9 +44,9 @@ class FormNodeUtil
 
         $data = $request->request->all();
 
-        //print "<pre>";
-        //print_r($data);
-        //print "</pre>";
+//        print "<pre>";
+//        print_r($data);
+//        print "</pre>";
 
         //$unmappedField = $data["formnode-4"];
         //echo "<br>unmappedField=" . $unmappedField . "<br>";
@@ -64,9 +64,12 @@ class FormNodeUtil
     //process by data partial key name" "formnode-4" => "formnode-"
     public function processFormNodesFromDataKeys($data,$holderEntity,$testing=false) {
         foreach( $data as $key=>$value ) {
-            //if( "show_me_" == substr($key,0,8) ) {
             if( strpos($key, 'formnode-') !== false ) {
-                $formNodeId = str_replace('formnode-','',$key);
+                //$formNodeId = str_replace('formnode-','',$key);
+                $keyArr = explode("-",$key);
+                //id is second element
+                $formNodeId = $keyArr[1];
+                //echo "formNodeId=".$formNodeId."<br>";
                 // do whatever you need to with $formNodeId...
                 $thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
                 if( !$thisFormNode ) {
@@ -112,69 +115,57 @@ class FormNodeUtil
         }
         //exit("Value=[".$formValue."]<br>");
 
-//        $formNodeObjectName = null;
-//        if( $formNode->getObjectType() ) {
-//            $formNodeObjectName = $formNode->getObjectType()->getName()."";
-//        }
-//        if( $formNodeObjectName == "Form Field - Dropdown Menu - Allow Multiple Selections" ) {
-//
-//        }
+        $formNodeObjectName = null;
+        if( $formNode->getObjectType() ) {
+            $formNodeObjectName = $formNode->getObjectType()->getName()."";
+        }
 
+        //exception: time [hour] [minute]
+        if( $formNodeObjectName == "Form Field - Time" ) {
+            //$formValue is an array: Array ( [time] => Array ( [hour] => 11 [minute] => 51 ) )
+            //use ObjectTypeDateTime's timeValue
+
+            $formValueHour = $formValue['time']['hour'];
+            $formValueMinute = $formValue['time']['minute'];
+            $formValueStr = $formValueHour.":".$formValueMinute;
+
+            $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,true);
+
+            $newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
+
+            if( !$testing ) {
+                $this->em->persist($newListElement);
+                $this->em->flush($newListElement);
+            }
+
+            return;
+        }
+
+        //All others
         if( is_array($formValue) ) {
             //$formValue is array
+            //echo $key.": formValue is array:";
+            //print_r($formValue);
+            //echo "<br>";
             foreach( $formValue as $thisFormValue ) {
-                //echo $key.": formValue=" . $thisFormValue . "<br>";
                 $this->createSingleFormNodeListRecord($formNode,$thisFormValue,$holderEntity,$testing);
             }
         } else {
-            //echo $key.": formValue=" . $formValue . "<br>";
+            //echo $key.": formValue is single formValue=" . $formValue . "<br>";
             $this->createSingleFormNodeListRecord($formNode,$formValue,$holderEntity,$testing);
         }
 
-//        //1) create a new list element
-//        $newListElement = $this->createNewList($formNode,$formValue);
-//        //echo "newListElement=".$newListElement."<br>";
-//        if( !$newListElement ) {
-//            //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
-//            return;
-//        }
-//
-//        //2) add value to the created list
-//        if( $formValue ) {
-//            $newListElement->setValue($formValue);
-//        }
-//
-//        //3) set message by entityName to the created list
-//        $newListElement->setObject($holderEntity);
-//
-//        //4) set formnode to the list
-//        $newListElement->setFormNode($formNode);
-//
-//        //testing
-//        if( 0 ) {
-//            $class = new \ReflectionClass($newListElement);
-//            $className = $class->getShortName();
-//            $classNamespace = $class->getNamespaceName();
-//            echo "newListElement list: classNamespace=" . $classNamespace . ", className=" . $className . ", Value=" . $newListElement->getValue() . "<br>";
-//            //echo "newListElement list: Namespace=" . $newListElement->getEntityNamespace() . ", Name=" . $newListElement->getEntityName() . ", Value=" . $newListElement->getValue() . "<br>";
-//        }
-//        //exit("processFormNodeByType; formValue=".$formValue);
-//
-//        if( !$testing ) {
-//            $this->em->persist($newListElement);
-//            $this->em->flush($newListElement); //testing
-//        }
     }
     public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false ) {
 
         echo "formnode-".$formNode->getId().": formValue=" . $formValue . "<br>";
 
         //1) create a new list element
-        $newListElement = $this->createNewList($formNode,$formValue);
+        $newListElement = $this->createNewList($formNode);
         //echo "newListElement=".$newListElement."<br>";
         if( !$newListElement ) {
             //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
-            return;
+            return null;
         }
 
         //2) add value to the created list
@@ -202,6 +193,8 @@ class FormNodeUtil
             $this->em->persist($newListElement);
             $this->em->flush($newListElement); //testing
         }
+
+        return $newListElement;
     }
 
 
@@ -232,7 +225,7 @@ class FormNodeUtil
         return true;
     }
 
-    public function createNewList( $formNode, $formValue=null ) {
+    public function createNewList( $formNode ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $formNodeObjectType = $formNode->getObjectType();
         //$entityNamespace = $formNodeObjectType->getEntityNamespace();
@@ -2018,16 +2011,18 @@ class FormNodeUtil
             return $output;
         }
 
-        $objectTypeName = $objectType->getName()."";
-        if(
-            $objectTypeName != "Form Field - Dropdown Menu" &&
-            $objectTypeName != "Form Field - Dropdown Menu - Allow Multiple Selections" &&
-            $objectTypeName != "Form Field - Month" &&
-            $objectTypeName != "Form Field - Day of the Week"
-        ) {
-            //it must be only dropdown object type.
-            return $output;
-        }
+//        $objectTypeName = $objectType->getName()."";
+//        if(
+//            $objectTypeName != "Form Field - Dropdown Menu" &&
+//            $objectTypeName != "Form Field - Dropdown Menu - Allow Multiple Selections" &&
+//            $objectTypeName != "Form Field - Radio Button" &&
+//            $objectTypeName != "Form Field - Month" &&
+//            $objectTypeName != "Form Field - Day of the Week"
+//        ) {
+//            //it must be only dropdown object type.
+//            //echo '#########not valid object type: '.$objectTypeName."#########<br>";
+//            return $output;
+//        }
 
         $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
         $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
@@ -2047,12 +2042,14 @@ class FormNodeUtil
 
             $output = $query->getQuery()->getResult();
 
+        } else {
+            return $output;
         }
 
         $resArr = array();
         foreach( $output as $list ) {
             $resArr[] = array(
-                'id' => $list['text'],
+                'id' => $list['id'],
                 'text' => $list['text']
             );
         }
@@ -2060,7 +2057,7 @@ class FormNodeUtil
         //get additional menu children "Dropdown Menu Value"
         foreach( $formNode->getChildren() as $dropdownValue ) {
             $resArr[] = array(
-                'id' => $dropdownValue->getName()."",
+                'id' => $dropdownValue->getId(),
                 'text' => $dropdownValue->getName().""
             );
         }
@@ -2150,11 +2147,32 @@ class FormNodeUtil
         $results = $query->getResult();
         //echo "count=".count($results)."<br>";
 
-        if( count($results) > 0 ) {
-            return $results[0]->getValue();
+        if( count($results) == 1 ) {
+            //return $results[0]->getValue();
+            return $this->getFormNodeValueByType($formNode,$results[0]);
+        }
+
+        if( count($results) > 1 ) {
+            $resArr = array();
+            foreach( $results as $result ) {
+                //$resArr[] = $result->getValue();
+                $resArr[] = $this->getFormNodeValueByType($formNode,$result);
+            }
+            return $resArr;
         }
 
         return null;
+    }
+    public function getFormNodeValueByType( $formNode, $list ) {
+        $formNodeType = $formNode->getObjectType();
+        if( $formNodeType ) {
+            $formNodeTypeName = $formNodeType->getName()."";
+            //echo "############type=[".$formNodeTypeName."]###############<br>";
+            if( $formNodeTypeName == "Form Field - Time" ) {
+                return $list->getTimeValue();
+            }
+        }
+        return $list->getValue();
     }
 
 

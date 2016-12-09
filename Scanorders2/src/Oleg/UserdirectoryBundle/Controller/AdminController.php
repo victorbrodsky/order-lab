@@ -5170,8 +5170,6 @@ class AdminController extends Controller
                 'name' => "Form Field - Month",
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime',
-                //'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                //'entityName' => 'MonthsList'
             ),
             //"Form Field - Date",
             array(
@@ -5184,8 +5182,6 @@ class AdminController extends Controller
                 'name' => "Form Field - Day of the Week",
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime',
-                //'entityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                //'entityName' => 'WeekDaysList'
             ),
             //"Form Field - Dropdown Menu",
             array(
@@ -5209,7 +5205,7 @@ class AdminController extends Controller
             array(
                 'name' => "Form Field - Radio Button",
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeString'
+                'receivedValueEntityName' => 'ObjectTypeDropdown' //radio button is very similar to the dropdown menu
             ),
             //"Form Field - Dropdown Menu - Allow Multiple Selections"
             array(

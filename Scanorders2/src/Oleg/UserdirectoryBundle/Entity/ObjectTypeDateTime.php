@@ -23,26 +23,28 @@ class ObjectTypeDateTime extends ListAbstract
      **/
     protected $original;
 
-
-//    /**
-//     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeDateTime")
-//     */
-//    private $formNodes;
     /**
      * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeDateTimes", cascade={"persist"})
      * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
      */
     private $formNode;
 
+
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $value;
 
-//    /**
-//     * @ORM\Column(type="dattime", nullable=true)
-//     */
-//    private $originalValue;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $datetimeValue;
+
+    /**
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $timeValue;
 
 
 
@@ -93,26 +95,46 @@ class ObjectTypeDateTime extends ListAbstract
         $this->value = $value;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDatetimeValue()
+    {
+        return $this->datetimeValue;
+    }
+
+    /**
+     * @param mixed $datetimeValue
+     */
+    public function setDatetimeValue($datetimeValue)
+    {
+        $this->datetimeValue = $datetimeValue;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeValue()
+    {
+        return $this->timeValue;
+    }
+
+    /**
+     * @param mixed $timeValue
+     */
+    public function setTimeValue($timeValue)
+    {
+        $this->timeValue = $timeValue;
+    }
 
 
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getOriginalValue()
-//    {
-//        return $this->originalValue;
-//    }
-//
-//    /**
-//     * @param mixed $originalValue
-//     */
-//    public function setOriginalValue($originalValue)
-//    {
-//        $this->originalValue = $originalValue;
-//    }
-
-
-
+    public function setTimeValueHourMinute($hour,$minute,$second=null)
+    {
+        //echo "hour=".$hour."; minute=".$minute."<br>";
+        $datetimeValue = new \DateTime();
+        $datetimeValue->setTime($hour, $minute, $second);
+        $this->setTimeValue($datetimeValue);
+        //echo "time=".$this->getTimeValue()->format('h:i:s')."<br>";
+    }
 
 }
