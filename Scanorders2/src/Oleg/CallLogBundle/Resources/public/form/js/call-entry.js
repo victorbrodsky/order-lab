@@ -2148,7 +2148,7 @@ function locationNamePopulateLocationFields( holder, data ) {
 
 }
 
-
+//formnode[arraysection][90][node][91]
 function formNodeAddSameSection( btn, formNodeId ) {
     console.log('add form node section: formNodeId='+formNodeId);
 
@@ -2162,22 +2162,22 @@ function formNodeAddSameSection( btn, formNodeId ) {
             maxCounter = sectionid;
         }
     });
-    maxCounter = maxCounter + 1;
-
-    var sectionHtml = $("#formnode-arraysection-holder-"+formNodeId).html();
-    console.log("sectionHtml="+sectionHtml);
+    var nextCounter = maxCounter + 1;
 
     //append to formnode-arraysection-holder-
-    var arraySectionHolder = $("#formnode-arraysection-holder-"+formNodeId);
+    var lastArraySectionHolder = $(".formnode-arraysection-holder-"+formNodeId).last();
 
-    if( arraySectionHolder ) {
+    var sectionHtml = lastArraySectionHolder.html();
+    console.log("sectionHtml="+sectionHtml);
 
-        sectionHtml = sectionHtml.replace("formnode-arraysection-holder-", "formnode-arraysection-holder-"+maxCounter);
+    if( lastArraySectionHolder ) {
+
+        sectionHtml = sectionHtml.replace("formnode-arraysection-holder-"+maxCounter, "formnode-arraysection-holder-"+nextCounter);
 
         //replace "formnode[90][0][91]" by next counter "formnode[90][1][91]"
         //var res = str.split(" ");
 
-        arraySectionHolder.append(sectionHtml);
+        lastArraySectionHolder.append(sectionHtml);
     }
 
 }
