@@ -2150,6 +2150,35 @@ function locationNamePopulateLocationFields( holder, data ) {
 
 
 function formNodeAddSameSection( btn, formNodeId ) {
-    console.log('add form node section');
+    console.log('add form node section: formNodeId='+formNodeId);
+
+    var maxCounter = 0;
+    //get next counter by class="formnode-arraysection-holder-{{ formNode.id }}"
+    $('.formnode-arraysection-holder-'+formNodeId).each(function(){
+        var sectionid = $(this).data("sectionid");
+        sectionid = parseInt(sectionid);
+        console.log('sectionid='+sectionid);
+        if( sectionid > maxCounter ) {
+            maxCounter = sectionid;
+        }
+    });
+    maxCounter = maxCounter + 1;
+
+    var sectionHtml = $("#formnode-arraysection-holder-"+formNodeId).html();
+    console.log("sectionHtml="+sectionHtml);
+
+    //append to formnode-arraysection-holder-
+    var arraySectionHolder = $("#formnode-arraysection-holder-"+formNodeId);
+
+    if( arraySectionHolder ) {
+
+        sectionHtml = sectionHtml.replace("formnode-arraysection-holder-", "formnode-arraysection-holder-"+maxCounter);
+
+        //replace "formnode[90][0][91]" by next counter "formnode[90][1][91]"
+        //var res = str.split(" ");
+
+        arraySectionHolder.append(sectionHtml);
+    }
+
 }
 
