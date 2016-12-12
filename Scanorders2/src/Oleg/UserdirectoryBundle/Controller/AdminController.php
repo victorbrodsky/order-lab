@@ -5117,6 +5117,7 @@ class AdminController extends Controller
             "Form Group",
             "Form",
             "Form Section",
+            "Form Section Array",
             //"Form Field - Free Text, Single Line",
             array(
                 'name' => "Form Field - Free Text, Single Line",
@@ -5213,6 +5214,7 @@ class AdminController extends Controller
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDropdown'
             ),
+
         );
 
         $count = 10;

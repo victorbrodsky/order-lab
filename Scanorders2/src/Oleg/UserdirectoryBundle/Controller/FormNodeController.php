@@ -217,7 +217,8 @@ class FormNodeController extends Controller {
                 //echo "parentObjectTypeName=".$parentFormNodeObjectType->getName()."<br>";
                 if ($parentFormNodeObjectType->getName() == "Form Group" ||
                     $parentFormNodeObjectType->getName() == "Form" ||
-                    $parentFormNodeObjectType->getName() == "Form Section"
+                    $parentFormNodeObjectType->getName() == "Form Section" ||
+                    $parentFormNodeObjectType->getName() == "Form Section Array"
                 ) {
                     return $parentFormNode;
                 }

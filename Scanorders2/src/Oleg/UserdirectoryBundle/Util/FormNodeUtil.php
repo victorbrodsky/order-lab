@@ -212,6 +212,9 @@ class FormNodeUtil
         if( $formNodeTypeName == "Form Section" ) {
             return false;
         }
+        if( $formNodeTypeName == "Form Section Array" ) {
+            return false;
+        }
 
         $formNodeType = $formNode->getObjectType();
         //echo "formNodeType: ".$formNodeType." <br>";
@@ -2335,12 +2338,13 @@ class FormNodeUtil
         $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
 
         ///////////////////////////// Section 2 /////////////////////////////////
-        //Test Section 2 (Form Section)
+        //Test Section 2 (Form Section) //change from "Form Section" to "Form Section Array"
+        $objectSectionArrayType = $this->getObjectTypeByName('orm Section Array');
         $formParams = array(
             'parent' => $TestForm,
             'name' => "Test Section 2",
             'placeholder' => "",
-            'objectType' => $objectTypeSection,
+            'objectType' => $objectSectionArrayType,
             'showLabel' => false,
             'visible' => true
         );

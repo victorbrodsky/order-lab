@@ -2147,3 +2147,9 @@ function locationNamePopulateLocationFields( holder, data ) {
     }
 
 }
+
+
+function formNodeAddSameSection( btn, formNodeId ) {
+    console.log('add form node section');
+}
+
