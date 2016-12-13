@@ -2166,15 +2166,24 @@ function formNodeAddSameSection( btn, formNodeId ) {
 
     var lastArraySectionHolder = $(".formnode-arraysection-holder-"+formNodeId).last();
 
+    //destroy select2
+    var selectEls = lastArraySectionHolder.find(".combobox");
+    //console.log('selectEls.length='+selectEls.length);
+    lastArraySectionHolder.find(".combobox").select2("destroy");
+
+    //return;
+
+    //var clonedSection = lastArraySectionHolder.clone();
+    //clonedSection.find(".combobox").select2("destroy");
+    //clonedSection.children("select").select2("destroy");
     var sectionHtml = lastArraySectionHolder.html();
-    console.log("sectionHtml="+sectionHtml);
+    //console.log("sectionHtml="+sectionHtml);
 
     if( lastArraySectionHolder ) {
 
         //sectionHtml = sectionHtml.replace("formnode-arraysection-holder-" + maxCounter, "formnode-arraysection-holder-" + nextCounter);
 
         //replace "formnode[90][0][91]" by next counter "formnode[90][1][91]"
-        //var res = str.split(" ");
         sectionHtml = formnodeReplaceIndexByName(sectionHtml, 'arraysectioncount', nextCounter);
 
         //var sectionUniqueClass = "formnode-arraysection-holder-" + formNodeId + "-" + nextCounter;
@@ -2191,11 +2200,13 @@ function formNodeAddSameSection( btn, formNodeId ) {
 
         //init appended element
         var appendedEl = attachEl.find("[data-sectionid='" + nextCounter + "']");
-        console.log(appendedEl);
-        //regularCombobox(appendedEl);
-        regularCombobox();
+        //console.log(appendedEl);
+        regularCombobox(appendedEl);
         initDatepicker(appendedEl);
-        //expandTextarea(appendedEl);
+        expandTextarea(appendedEl);
+
+        //init again select2 in lastArraySectionHolder
+        regularCombobox(lastArraySectionHolder);
 
         //show remove button
         if( attachEl.find('.formnode-remove-section').length > 1  ) {
