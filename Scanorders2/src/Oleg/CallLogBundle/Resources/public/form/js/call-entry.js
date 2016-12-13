@@ -1625,7 +1625,7 @@ function calllogAppendFormNodes( data ) {
             data[index]['formNodeObjectType'] == "Form Field - Month" ||
             data[index]['formNodeObjectType'] == "Form Field - Day of the Week"
         ) {
-            regularCombobox($('#formnode-holder-'+formNodeId));
+            regularCombobox($('#formnode-'+formNodeId));
         }
 
         if(
@@ -1636,7 +1636,7 @@ function calllogAppendFormNodes( data ) {
             data[index]['formNodeObjectType'] == "Form Field - Month" ||
             data[index]['formNodeObjectType'] == "Form Field - Day of the Week"
         ) {
-            initDatepicker($('#formnode-holder-'+formNodeId));
+            initDatepicker($('#formnode-'+formNodeId));
         }
 
         if(
@@ -1644,7 +1644,7 @@ function calllogAppendFormNodes( data ) {
             data[index]['formNodeObjectType'] == "Form Field - Free Text, RTF" ||
             data[index]['formNodeObjectType'] == "Form Field - Free Text, HTML"
         ) {
-            expandTextarea($('#formnode-holder-'+formNodeId));
+            expandTextarea($('#formnode-'+formNodeId));
         }
     }
 }
@@ -1654,12 +1654,12 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
     //console.log("calllogAppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId);
 
     //check if parent formnode exists and append this formnode to the parent formnode
-    var parentId = "formnode-holder-"+parentFormNodeId;
+    var parentId = "formnode-"+parentFormNodeId;
     var parentEl = document.getElementById(parentId);
     //calllogGetFormNodeElement
 
     //check if this element does not exist
-    var formNodeElId = "formnode-holder-"+formNodeId;
+    var formNodeElId = "formnode-"+formNodeId;
     var formNodeEl = document.getElementById(formNodeElId);
     if( formNodeEl ) {
         //console.log("EXIT: formnode-holder-"+formNodeId+" already exists!");
@@ -1933,9 +1933,9 @@ function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
 }
 
 function calllogGetFormNodeElement( formNodeId ) {
-    var formNodeElId = "formnode-holder-"+formNodeId;
+    var formNodeElId = "formnode-"+formNodeId;
     //var formNodeEl = document.getElementById(formNodeElId);
-    formNodeElId = "#"+formNodeElId;
+    formNodeElId = "."+formNodeElId;
     //console.log("calllogGetFormNodeElement: find by formNodeId="+formNodeElId);
     var formNodeEl = $(formNodeElId);
 
@@ -2157,14 +2157,13 @@ function formNodeAddSameSection( btn, formNodeId ) {
     $('.formnode-arraysection-holder-'+formNodeId).each(function(){
         var sectionid = $(this).data("sectionid");
         sectionid = parseInt(sectionid);
-        console.log('sectionid='+sectionid);
+        //console.log('sectionid='+sectionid);
         if( sectionid > maxCounter ) {
             maxCounter = sectionid;
         }
     });
     var nextCounter = maxCounter + 1;
 
-    //append to formnode-arraysection-holder-
     var lastArraySectionHolder = $(".formnode-arraysection-holder-"+formNodeId).last();
 
     var sectionHtml = lastArraySectionHolder.html();
@@ -2172,13 +2171,77 @@ function formNodeAddSameSection( btn, formNodeId ) {
 
     if( lastArraySectionHolder ) {
 
-        sectionHtml = sectionHtml.replace("formnode-arraysection-holder-"+maxCounter, "formnode-arraysection-holder-"+nextCounter);
+        //sectionHtml = sectionHtml.replace("formnode-arraysection-holder-" + maxCounter, "formnode-arraysection-holder-" + nextCounter);
 
         //replace "formnode[90][0][91]" by next counter "formnode[90][1][91]"
         //var res = str.split(" ");
+        sectionHtml = formnodeReplaceIndexByName(sectionHtml, 'arraysectioncount', nextCounter);
 
-        lastArraySectionHolder.append(sectionHtml);
+        //var sectionUniqueClass = "formnode-arraysection-holder-" + formNodeId + "-" + nextCounter;
+
+        sectionHtml = '<div id="formnode-arraysection-holder-' + formNodeId + '" class="formnode-arraysection-holder formnode-arraysection-holder-' + formNodeId + ' '
+            + '" data-sectionid="'
+            + nextCounter + '">'
+            + sectionHtml + '</div>';
+
+        //prepend as the last element formnode-holder-90
+        var attachEl = $(btn).closest('#formnode-' + formNodeId);
+
+        attachEl.append(sectionHtml);
+
+        //init appended element
+        var appendedEl = attachEl.find("[data-sectionid='" + nextCounter + "']");
+        console.log(appendedEl);
+        //regularCombobox(appendedEl);
+        regularCombobox();
+        initDatepicker(appendedEl);
+        //expandTextarea(appendedEl);
+
+        //show remove button
+        if( attachEl.find('.formnode-remove-section').length > 1  ) {
+            $('.formnode-remove-section').show();
+        } else {
+            $('.formnode-remove-section').hide();
+        }
     }
 
 }
 
+//"arraysectioncount",3: formnode[90][arraysectioncount][2][node][91] => formnode[90][arraysectioncount][3][node][91]
+function formnodeReplaceIndexByName( input, fieldname, index ) {
+    //replace all occurrence [arraysectioncount][2] by [arraysectioncount][3]
+
+    //http://jsfiddle.net/gz2tX/44/
+    //var fieldname = 'arraysectioncount';
+    //var index = '333';
+    ////var seacrh = new RegExp(/\[arraysectioncount\]\[[0-9]\]/, 'g');
+    //
+    //var str = /\[arraysectioncount\]\[[0-9]\]/;
+    ////var str = "["+fieldname+"]\[[0-9]]";
+    //console.log("str="+str);
+    //var seacrh = new RegExp(str, 'g');
+    ////var seacrh = new RegExp(/\[arraysectioncount\]\[[0-9]\]/, 'g');
+    //return input.replace(seacrh, '['+fieldname+']['+index+']');
+
+    //var seacrh = new RegExp(/\[arraysectioncount\]\[[0-9]\]/, 'g'); //works
+
+    var searchStr = /\[arraysectioncount\]\[[0-9]\]/;
+    var seacrh = new RegExp(searchStr, 'g');
+
+    return input.replace(seacrh, '[arraysectioncount]['+index+']');
+
+    return input;
+}
+
+function formNodeRemoveSection( btn, formNodeId ) {
+    console.log("remove "+formNodeId);
+
+    var attachEl = $(btn).closest('#formnode-' + formNodeId);
+
+    //formnode-arraysection-holder-90
+    $(btn).closest('.formnode-arraysection-holder').remove();
+
+    if( attachEl.find('.formnode-remove-section').length == 1  ) {
+        $('.formnode-remove-section').hide();
+    }
+}

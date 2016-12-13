@@ -3,8 +3,8 @@
 {% macro addSingleFormNode( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
-    <div id="formnode-holder-{{ formNode.id }}"
-         class="formnode-holder formnode-holder-{{ formNodeHolder.id }}"
+    <div id="formnode-{{ formNode.id }}"
+         class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"
          data-formnodeholderid="{{ formNodeHolder.id }}"
          data-formnodeid="{{ formNode.id }}"
     >
@@ -31,8 +31,8 @@
         {#{% set rootFormNode = formNodeHolder.formNode %}#}
         {#rootFormNode={{ rootFormNode.name }}<br>#}
 
-        <div id="formnode-holder-{{ formNode.id }}"
-             class="formnode-holder formnode-holder-{{ formNodeHolder.id }}"
+        <div id="formnode-{{ formNode.id }}"
+             class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"
              data-formnodeholderid="{{ formNodeHolder.id }}"
              data-formnodeid="{{ formNode.id }}"
         >
@@ -244,20 +244,31 @@
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
-    <div id="formnode-arraysection-holder-{{ formNode.id }}" class="formnode-arraysection-holder-{{ formNode.id }}" data-sectionid="{{ count }}">
+    {#id="formnode-section-{{ formNode.id }}-{{ count }}"#}
+    {#[arraysectioncount][counter] will be replaced by a new section counter#}
+    {% set panelId = "formnode-"~formNode.id~"-section-[arraysectioncount]["~count~"][node]["~formNode.id~"]" %}
+
+    <div id="formnode-arraysection-holder-{{ formNode.id }}" class="formnode-arraysection-holder formnode-arraysection-holder-{{ formNode.id }}" data-sectionid="{{ count }}">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" href="#formnode-section-{{ formNode.id }}">
+                <a data-toggle="collapse" href="#{{ panelId }}">
                     {{ formNode.name }}
                 </a>
 
+                <div class="pull-right">
                 <button id="formnode-add-section-{{ formNode.id }}" type="button"
-                        class="btn btn-default btn-xs add_form_btn pull-right"
+                        class="btn btn-default btn-xs formnode-add-section"
                         onclick="formNodeAddSameSection(this,{{ formNode.id }})">+</button>
+
+                <button id="formnode-remove-section-{{ formNode.id }}" type="button"
+                        class="btn btn-default btn-xs formnode-remove-section"
+                        style="display: none;"
+                        onclick="formNodeRemoveSection(this,{{ formNode.id }})">-</button>
+                </div>
             </h4>
         </div>
-        <div id="formnode-section-{{ formNode.id }}" class="panel-collapse collapse in">
+        <div id="{{ panelId }}" class="panel-collapse collapse in">
             <div class="panel-body form-nodes-holder">
                 <div class="row">
                     <div class="col-xs-12" align="left">
@@ -285,11 +296,11 @@
     {% if formNode.parent and formNode.parent.objectType %}
         {% set parentFormType = formNode.parent.getObjectType().getName() %}
         {% if parentFormType == "Form Section Array" %}
-            {% set fieldname = "formnode[arraysection]["~formNode.parent.id~"][arraysectioncount]["~count~"][node]["~formNode.id~"]" %}
+            {% set fieldname = "formnode["~formNode.parent.id~"][arraysectioncount]["~count~"][node]["~formNode.id~"]" %}
         {% endif %}{% endif %}{{fieldname}}{% endmacro %}
 {# EOF getFieldName array section #}
 
-{% macro textareaForm( formNodeHolder, formNode, formNodeValue, cycle, prototype, type ) %}
+{% macro textareaForm( formNodeHolder, formNode, formNodeValue, count, cycle, prototype, type ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -414,7 +425,7 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeValue, cycle, prototype, multiple) }}
+                {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeValue, count, cycle, prototype, multiple) }}
             </div>
         </div>
     {% else %}
