@@ -2164,22 +2164,25 @@ function formNodeAddSameSection( btn, formNodeId ) {
     });
     var nextCounter = maxCounter + 1;
 
-    var lastArraySectionHolder = $(".formnode-arraysection-holder-"+formNodeId).last();
+    //var targetSection = $(".formnode-arraysection-holder-"+formNodeId).last();
+
+    var targetSection = $(btn).closest('.formnode-arraysection-holder');
+    console.log(thisSection);
 
     //destroy select2
-    var selectEls = lastArraySectionHolder.find(".combobox");
+    //var selectEls = targetSection.find(".combobox");
     //console.log('selectEls.length='+selectEls.length);
-    lastArraySectionHolder.find(".combobox").select2("destroy");
+    targetSection.find(".combobox").select2("destroy");
 
     //return;
 
-    //var clonedSection = lastArraySectionHolder.clone();
+    //var clonedSection = targetSection.clone();
     //clonedSection.find(".combobox").select2("destroy");
     //clonedSection.children("select").select2("destroy");
-    var sectionHtml = lastArraySectionHolder.html();
+    var sectionHtml = targetSection.html();
     //console.log("sectionHtml="+sectionHtml);
 
-    if( lastArraySectionHolder ) {
+    if( targetSection ) {
 
         //sectionHtml = sectionHtml.replace("formnode-arraysection-holder-" + maxCounter, "formnode-arraysection-holder-" + nextCounter);
 
@@ -2196,7 +2199,12 @@ function formNodeAddSameSection( btn, formNodeId ) {
         //prepend as the last element formnode-holder-90
         var attachEl = $(btn).closest('#formnode-' + formNodeId);
 
-        attachEl.append(sectionHtml);
+        //attachEl.append(sectionHtml);
+
+        //pressing [+] should insert the empty section immediately below the section whose [+] was pressed (not "always as the last new section")
+        //var thisSection = $(btn).closest('.formnode-arraysection-holder');
+        //console.log(thisSection);
+        targetSection.after(sectionHtml);
 
         //init appended element
         var appendedEl = attachEl.find("[data-sectionid='" + nextCounter + "']");
@@ -2205,8 +2213,8 @@ function formNodeAddSameSection( btn, formNodeId ) {
         initDatepicker(appendedEl);
         expandTextarea(appendedEl);
 
-        //init again select2 in lastArraySectionHolder
-        regularCombobox(lastArraySectionHolder);
+        //init again select2 in targetSection
+        regularCombobox(targetSection);
 
         //show remove button
         if( attachEl.find('.formnode-remove-section').length > 1  ) {

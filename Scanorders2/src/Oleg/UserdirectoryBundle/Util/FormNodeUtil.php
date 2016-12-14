@@ -63,21 +63,27 @@ class FormNodeUtil
 
     //process by data partial key name" "formnode-4" => "formnode-"
     public function processFormNodesFromDataKeys($data,$holderEntity,$testing=false) {
-        foreach( $data as $key=>$value ) {
-            if( strpos($key, 'formnode-') !== false ) {
+        if( !array_key_exists('formnode', $data) ) {
+            exit('no formnode data exists');
+            return;
+        }
+        $formnodeData = $data['formnode'];
+
+        foreach( $formnodeData as $formNodeId => $formValue ) {
+            //if( strpos($key, 'formnode-') !== false ) {
                 //$formNodeId = str_replace('formnode-','',$key);
-                $keyArr = explode("-",$key);
+                //$keyArr = explode("-",$key);
                 //id is second element
-                $formNodeId = $keyArr[1];
-                //echo "formNodeId=".$formNodeId."<br>";
+                //$formNodeId = $keyArr[1];
+                echo "formNodeId=".$formNodeId.": ".$formValue."<br>";
                 // do whatever you need to with $formNodeId...
                 $thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
                 if( !$thisFormNode ) {
                     //exit("No Root of the node id=".$formNodeId."<br>");
                     continue;
                 }
-                $this->processFormNodeByType($data,$thisFormNode,$holderEntity,$testing);
-            }
+                $this->processFormNodeByType($thisFormNode,$formValue,$holderEntity,$testing);
+            //}
         }
     }
 
@@ -99,15 +105,21 @@ class FormNodeUtil
 //
 //    }
 
-    public function processFormNodeByType( $data, $formNode, $holderEntity, $testing=false ) {
-        if( !$this->hasValue($formNode) ) {
+    public function processFormNodeByType( $formNode, $formValue, $holderEntity, $testing=false ) {
+
+        $formNodeObjectName = null;
+        if( $formNode->getObjectType() ) {
+            $formNodeObjectName = $formNode->getObjectType()->getName()."";
+        }
+
+        if( !$this->hasValue($formNode) && $formNodeObjectName != "Form Section Array" ) {
             //exit("No Value of the node=".$formNode."<br>");
             return;
         }
 
-        $key = "formnode-".$formNode->getId();
-        $formValue = $data[$key];
-        //echo $key.": formValue=" . $formValue . "<br>";
+        //$key = $formNode->getId();
+        //$formValue = $data['formnode'][$key];
+        //echo $formNode->getId().": formValue=" . $formValue . "<br>";
 
         if( !$formValue ) {
             //exit("No Value=".$formValue."<br>");
@@ -115,10 +127,7 @@ class FormNodeUtil
         }
         //exit("Value=[".$formValue."]<br>");
 
-        $formNodeObjectName = null;
-        if( $formNode->getObjectType() ) {
-            $formNodeObjectName = $formNode->getObjectType()->getName()."";
-        }
+
 
         //exception: time [hour] [minute]
         if( $formNodeObjectName == "Form Field - Time" ) {
@@ -144,14 +153,23 @@ class FormNodeUtil
         //All others
         if( is_array($formValue) ) {
             //$formValue is array
-            //echo $key.": formValue is array:";
-            //print_r($formValue);
-            //echo "<br>";
-            foreach( $formValue as $thisFormValue ) {
-                $this->createSingleFormNodeListRecord($formNode,$thisFormValue,$holderEntity,$testing);
+            echo $formNodeObjectName.": formValue is array:";
+            print "<pre>";
+            print_r($formValue);
+            print "</pre>";
+            echo "<br>";
+
+            if( array_key_exists('arraysectioncount', $formValue) ) {
+                echo $formNodeObjectName.": formValue is arraysectioncount <br>";
+
+            } else {
+                echo $formNodeObjectName.": formValue is regular array <br>";
+                foreach ($formValue as $thisFormValue) {
+                    $this->createSingleFormNodeListRecord($formNode, $thisFormValue, $holderEntity, $testing);
+                }
             }
         } else {
-            //echo $key.": formValue is single formValue=" . $formValue . "<br>";
+            //echo $formNodeObjectName.": formValue is single formValue=" . $formValue . "<br>";
             $this->createSingleFormNodeListRecord($formNode,$formValue,$holderEntity,$testing);
         }
 
