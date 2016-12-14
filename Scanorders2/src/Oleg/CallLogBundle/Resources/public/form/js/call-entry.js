@@ -2167,7 +2167,7 @@ function formNodeAddSameSection( btn, formNodeId ) {
     //var targetSection = $(".formnode-arraysection-holder-"+formNodeId).last();
 
     var targetSection = $(btn).closest('.formnode-arraysection-holder');
-    console.log(thisSection);
+    //console.log(targetSection);
 
     //destroy select2
     //var selectEls = targetSection.find(".combobox");
