@@ -5476,6 +5476,7 @@ class AdminController extends Controller
             "940" => array('MessageStatusList','messagestatuses-list'),
             "950" => array('WeekDaysList','weekdays-list'),
             "960" => array('MonthsList','months-list'),
+            "970" => array('FormNode','formnodes-list','Flat Form Tree'),
 
         );
 
