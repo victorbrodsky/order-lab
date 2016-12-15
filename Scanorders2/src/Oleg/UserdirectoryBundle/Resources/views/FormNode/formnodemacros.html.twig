@@ -1,23 +1,23 @@
 
 {#add a single form node#}
-{% macro addSingleFormNode( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
-    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+{#{% macro addSingleFormNode( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}#}
+    {#{% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}#}
 
-    <div id="formnode-{{ formNode.id }}"
-         class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"
-         data-formnodeholderid="{{ formNodeHolder.id }}"
-         data-formnodeid="{{ formNode.id }}"
-    >
-        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,"single",formNodeValue,0) }}
-    </div>
+    {#<div id="formnode-{{ formNode.id }}"#}
+         {#class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"#}
+         {#data-formnodeholderid="{{ formNodeHolder.id }}"#}
+         {#data-formnodeid="{{ formNode.id }}"#}
+    {#>#}
+        {#{{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,"single",0,formNodeValue) }}#}
+    {#</div>#}
 
-{% endmacro %}
+{#{% endmacro %}#}
 
 
 {#NOT USED: this macro will render formnodes from top to bottom#}
-{% macro addFormNodes( formNodeHolder, formNode, cycle, prototype ) %}
+{#{% macro addFormNodes( formNodeHolder, formNode, cycle, prototype ) %}#}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {#{% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}#}
 
     {#{% if prototype == "prototype" %}#}
         {#{% set formNodeHolder = formNodeFieldHolder.vars.prototype %}#}
@@ -31,19 +31,74 @@
         {#{% set rootFormNode = formNodeHolder.formNode %}#}
         {#rootFormNode={{ rootFormNode.name }}<br>#}
 
-        <div id="formnode-{{ formNode.id }}"
-             class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"
-             data-formnodeholderid="{{ formNodeHolder.id }}"
-             data-formnodeid="{{ formNode.id }}"
-        >
-            {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}
-        </div>
+        {#<div id="formnode-{{ formNode.id }}"#}
+             {#class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"#}
+             {#data-formnodeholderid="{{ formNodeHolder.id }}"#}
+             {#data-formnodeid="{{ formNode.id }}"#}
+        {#>#}
+            {#{{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}#}
+        {#</div>#}
 
     {#{% endif %}#}
     {#{% endfor %}#}
-{% endmacro %}
+{#{% endmacro %}#}
 
-{% macro addFormNodeRecursively( formNodeHolder, formNode, cycle, prototype ) %}
+{#{% macro addFormNodeRecursively( formNodeHolder, formNode, cycle, prototype ) %}#}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}#}
+
+    {#{% set children = formNode.children %}#}
+    {#children:{{ children|length }}<br>#}
+
+    {#{% if children %}#}
+        {#{% for childFormNode in children %}#}
+            {#childFormNode={{ childFormNode.name }}<br>#}
+
+            {#{{ formnodemacros.addFormNodeByType(formNodeHolder,childFormNode,cycle,prototype) }}#}
+
+            {#{% set addRecursion = true %}#}
+            {#{% set formType = childFormNode.getObjectType() ~ "" %}#}
+            {#{% if formType == "Form Group" %}#}
+                {#{% set addRecursion = false %}#}
+            {#{% endif %}#}
+            {#{% if formType == "Form" %}#}
+                {#{% set addRecursion = false %}#}
+            {#{% endif %}#}
+            {#{% if formType == "Form Section" %}#}
+                {#{% set addRecursion = false %}#}
+            {#{% endif %}#}
+            {#{% if formType == "Form Section Array" %}#}
+                {#{% set addRecursion = false %}#}
+            {#{% endif %}#}
+            {#{% if addRecursion %}#}
+                {#{{ formnodemacros.addFormNodeRecursively(formNodeHolder,childFormNode,cycle,prototype) }}#}
+            {#{% endif %}#}
+
+        {#{% endfor %}#}
+    {#{% else %}#}
+        {#$this->addFormNodeByType($form,$formNode,$params);#}
+        {#{{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype) }}#}
+    {#{% endif %}#}
+
+{#{% endmacro %}#}
+
+
+
+{% macro addFormNodeWithChildren( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {#render form group, form, section ect as single form element (single='single') or as section with all children fields inside (single=null) #}
+    {% set single = null %}
+
+    <div id="formnode-{{ formNode.id }}"
+         class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"
+         data-formnodeholderid="{{ formNodeHolder.id }}"
+         data-formnodeid="{{ formNode.id }}"
+    >
+        {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype,0,single) }}
+    </div>
+{% endmacro %}
+{% macro addFormNodeRecursively( formNodeHolder, formNode, cycle, prototype, count, single ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
@@ -54,10 +109,11 @@
         {% for childFormNode in children %}
             {#childFormNode={{ childFormNode.name }}<br>#}
 
-            {{ formnodemacros.addFormNodeByType(formNodeHolder,childFormNode,cycle,prototype) }}
+            {{ formnodemacros.addFormNodeByType(formNodeHolder,childFormNode,cycle,prototype,count,single) }}
 
             {% set addRecursion = true %}
             {% set formType = childFormNode.getObjectType() ~ "" %}
+
             {% if formType == "Form Group" %}
                 {% set addRecursion = false %}
             {% endif %}
@@ -71,25 +127,23 @@
                 {% set addRecursion = false %}
             {% endif %}
             {% if addRecursion %}
-                {{ formnodemacros.addFormNodeRecursively(formNodeHolder,childFormNode,cycle,prototype) }}
+                {{ formnodemacros.addFormNodeRecursively(formNodeHolder,childFormNode,cycle,prototype,count,single) }}
             {% endif %}
 
         {% endfor %}
     {% else %}
         {#$this->addFormNodeByType($form,$formNode,$params);#}
-        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype) }}
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,count,single) }}
     {% endif %}
 
 {% endmacro %}
 
 
-
-
-{% macro addFormNodeByType( formNodeHolder, formNode, cycle, prototype, single, formNodeValue, count ) %}
+{% macro addFormNodeByType( formNodeHolder, formNode, cycle, prototype, count, single, formNodeValue ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {#formNode.id={{ formNode.id }}<br>#}
 
-    {% if formNode.visible %}
+    {% if formNode.type == "default" or formNode.type == "user-added" %}
 
         {% set formType = null %}
         {% if formNode.objectType %}

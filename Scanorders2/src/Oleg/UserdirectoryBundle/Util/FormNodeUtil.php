@@ -343,59 +343,14 @@ class FormNodeUtil
 
 
 
-
-    public function generateFormNode() {
-
-        $em = $this->em;
-        $username = $this->container->get('security.context')->getToken()->getUser();
-
-        //root
-        $categories = array(
-            'Root Form' => array(),
-        );
-        $count = 10;
-        $level = 0;
-        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-        $rootNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Root Form');
-        //echo "rootNode=".$rootNode."<br>";
-
-        // Pathology Call Log Entry
-        $PathologyCallLogEntry = $this->createPathologyCallLogEntryFormNode($rootNode);
-        //echo "PathologyCallLogEntry=".$PathologyCallLogEntry."<br>";
-
-        // Transfusion Medicine
-        $TransfusionMedicine = $this->createTransfusionMedicine($rootNode);
-        //echo "TransfusionMedicine=".$TransfusionMedicine."<br>";
-
-        //exit('EOF message category');
-
-        return round($count/10);
-    }
-
-
-    public function createFormNode( $params ) {
+    public function createV2FormNode( $params ) {
         $em = $this->em;
         $userSecUtil = $this->container->get('user_security_utility');
         $username = $this->container->get('security.context')->getToken()->getUser();
 
         $objectType = $params['objectType'];
-        $showLabel = $params['showLabel'];
         $name = $params['name'];
         $parent = $params['parent'];
-
-        //placeholder
-        if( array_key_exists('placeholder', $params) ) {
-            $placeholder = $params['placeholder'];
-        } else {
-            $placeholder = null;
-        }
-
-        //visible
-        if( array_key_exists('visible', $params) ) {
-            $visible = $params['visible'];
-        } else {
-            $visible = true;
-        }
 
         //classNamespace
         if( array_key_exists('classNamespace', $params) ) {
@@ -418,12 +373,19 @@ class FormNodeUtil
             $classObject = null;
         }
 
-        //objectTypeList
-//        if( array_key_exists('objectTypeList', $params) ) {
-//            $objectTypeList = $params['objectTypeList'];
+        //visible
+//        if( array_key_exists('visible', $params) ) {
+//            $visible = $params['visible'];
 //        } else {
-//            $objectTypeList = null;
+//            $visible = true;
 //        }
+
+        //showLabel - default true
+        if( array_key_exists('showLabel', $params) ) {
+            $showLabel = $params['showLabel'];
+        } else {
+            $showLabel = true;
+        }
 
         //find by name and by parent ($parent) if exists
         if( $parent ) {
@@ -432,13 +394,10 @@ class FormNodeUtil
                 'className' => "FormNode",
                 'bundleName' => "UserdirectoryBundle"
             );
-            //$types = array('default','user-added');
             $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parent,$mapper);
         } else {
+            exit("Parent must exist!");
             $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($name);
-            //$nodes = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findBy(array("name"=>$name,"type"=>"default"));
-            //$types = array('default','user-added');
-            //$node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findNodeByName($name,$types);
         }
 
         if( $node ) {
@@ -459,27 +418,20 @@ class FormNodeUtil
 
             //set objectType
             if( $objectType ) {
-                if( !$node->getObjectType() ) {
-                    $node->setObjectType($objectType);
-                }
+                $node->setObjectType($objectType);
             }
-
-            //set showLabel
-            $node->setShowLabel($showLabel);
-
-            //set placeholder
-            if( $placeholder) {
-                $node->setPlaceholder($placeholder);
-            }
-
-            //set visible
-            $node->setVisible($visible);
 
             //set parent
             if( $parent ) {
                 $em->persist($parent);
                 $parent->addChild($node);
             }
+
+            //set visible
+            //$node->setVisible($visible);
+
+            //set showLabel
+            $node->setShowLabel($showLabel);
 
             if( $classNamespace && $className ) {
                 $node->setEntityNamespace($classNamespace);
@@ -497,8 +449,7 @@ class FormNodeUtil
 
         } else {
 
-            //disable all below updates when finished
-            //return $node;
+            //update node
 
             $updated = false;
             //echo "Existed: ".$node->getName()."<br>";
@@ -508,10 +459,15 @@ class FormNodeUtil
             if( $objectType ) {
                 if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
-                    //echo "update objectType=".$node->getObjectType()."<br>";
                     $updated = true;
                 }
             }
+
+            //set visible
+            //$node->setVisible($visible);
+
+            //set showLabel
+            $node->setShowLabel($showLabel);
 
             if( $classNamespace && $className ) {
                 $node->setEntityNamespace($classNamespace);
@@ -553,6 +509,10 @@ class FormNodeUtil
 
         return $node;
     }
+
+
+
+
 
     public function addNestedsetNodeRecursevely($parentCategory,$categories,$level,$username,$count) {
 
@@ -649,8 +609,8 @@ class FormNodeUtil
         return $objectType;
     }
 
-    public function setFormNodeToMessageCategory($messageCategoryName,$formNodes,$parentMessageCategoryName=null) {
-        //attach this formnode to the MessageCategory "Transfusion Medicine"
+    public function setMessageCategoryListLink( $messageCategoryName, $formNode ) {
+        //set this formnode to the MessageCategory Entity Name
         $em = $this->em;
         $messageCategory = null;
 
@@ -658,58 +618,694 @@ class FormNodeUtil
         if( count($messageCategories) == 0 ) {
             exit("Message categories not found by name=".$messageCategoryName);
         }
-        //echo "Message categories found by name=".$messageCategoryName.": count=".count($messageCategories)."<br>";
 
-        if( count($messageCategories) > 0 ) {
-            //echo "Multiple Message Categories found: count=".count($messageCategories)."<br>";
-            if( $parentMessageCategoryName ) {
-                foreach( $messageCategories as $thisMessageCategory ) {
-                    if( $thisMessageCategory->getParent() && $thisMessageCategory->getParent()->getName()."" == $parentMessageCategoryName ) {
-                        $messageCategory = $thisMessageCategory;
-                        break;
-                    }
-                }
-                //echo "Parent found: ".$messageCategory."<br>"; //"Other"
-                $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
-            }
+        if( count($messageCategories) > 1 ) {
+            exit("Multiple Message categories found (".count($messageCategories).") by name=".$messageCategoryName);
         }
 
-        foreach( $messageCategories as $thisMessageCategory ) {
-            $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
+        if( count($messageCategories) == 1 ) {
+            $messageCategory = $messageCategories[0];
         }
 
+        //clear all old form nodes
+        $messageCategory->clearFormNodes();
+
+        //clear old List Object values
+        $messageCategory->clearObject();
+
+        $messageCategory->addFormNode($formNode);
+
+        $em->persist($messageCategory);
+        $em->flush();
     }
-    public function setFormNodeToSingleMessageCategory($messageCategory,$formNodes) {
+
+
+
+
+
+
+
+
+    public function getDropdownValue( $formNode ) {
         $em = $this->em;
-        if( !$messageCategory ) {
-            exit("Message category object is not provided !!!<br>");
+        $output = array();
+
+        //IF: the ObjectType is "Form Field - Dropdown Menu" => the linked list is dropdown values
+        $objectType = $formNode->getObjectType();
+        if( !$objectType ) {
+            //it must be dropdown object type.
+            return $output;
         }
-        foreach ($formNodes as $formNode) {
-            //if( !$messageCategory->getFormNode() ) {
-            if ($formNode && !$messageCategory->getFormNodes()->contains($formNode)) {
-                $messageCategory->addFormNode($formNode);
-                $em->persist($messageCategory);
-                //$em->persist($formNode);
-                $em->flush();
-                //echo "Add " . $formNode . " to " . $messageCategory . "<br>";
-            } else {
-                //echo "Node already exists " . $formNode . " in " . $messageCategory . "<br>";
+
+//        $objectTypeName = $objectType->getName()."";
+//        if(
+//            $objectTypeName != "Form Field - Dropdown Menu" &&
+//            $objectTypeName != "Form Field - Dropdown Menu - Allow Multiple Selections" &&
+//            $objectTypeName != "Form Field - Radio Button" &&
+//            $objectTypeName != "Form Field - Month" &&
+//            $objectTypeName != "Form Field - Day of the Week"
+//        ) {
+//            //it must be only dropdown object type.
+//            //echo '#########not valid object type: '.$objectTypeName."#########<br>";
+//            return $output;
+//        }
+
+        $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
+        $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
+
+        if( $entityNamespace && $entityName ) {
+
+            $entityNamespaceArr = explode("\\",$entityNamespace);
+            $bundleName = $entityNamespaceArr[0].$entityNamespaceArr[1];
+
+            $query = $em->createQueryBuilder()->from($bundleName.':'.$entityName, 'list')
+                ->select("list.id as id, list.name as text")
+                ->orderBy("list.orderinlist","ASC");
+
+            //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+            $query->where("list.type = :typedef OR list.type = :typeadd")->
+                    setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+            $output = $query->getQuery()->getResult();
+
+        } else {
+            return $output;
+        }
+
+        $resArr = array();
+        foreach( $output as $list ) {
+            $resArr[] = array(
+                'id' => $list['id'],
+                'text' => $list['text']
+            );
+        }
+
+        //get additional menu children "Dropdown Menu Value"
+        foreach( $formNode->getChildren() as $dropdownValue ) {
+            $resArr[] = array(
+                'id' => $dropdownValue->getId(),
+                'text' => $dropdownValue->getName().""
+            );
+        }
+
+        return $resArr;
+    }
+
+    public function getDefaultValue( $formNode ) {
+        $em = $this->em;
+        $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
+        $entityName = $formNode->getEntityName();           //"CCIUnitPlateletCountDefaultValueList"
+        $entityId = $formNode->getEntityId();
+
+        if( $entityNamespace && $entityName && $entityId ) {
+            $entityNamespaceArr = explode("\\", $entityNamespace);
+            $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
+            $defaultValueEntity = $em->getRepository($bundleName.':'.$entityName)->find($entityId);
+
+            if( $defaultValueEntity ) {
+                return $defaultValueEntity->getName() . "";
             }
         }
 
-        //clean MessageCategory: remove all formnodes from message category.
-        if( count($formNodes) == 0 ) {
-            //echo "Remove formnodes from " . $messageCategory . "<br>";
-            foreach( $messageCategory->getFormNodes() as $thisFormNode ) {
-                //echo "Removing " . $formNode . " from " . $messageCategory . "<br>";
-                $messageCategory->removeFormNode($thisFormNode);
-                $em->persist($messageCategory);
-                $em->flush();
+        return null;
+    }
+
+    public function getFormNodeReceivedListRepository( $formNode ) {
+        $formNodeType = $formNode->getObjectType();
+        //echo "formNodeType: ".$formNodeType." <br>";
+        if( !$formNodeType ) {
+            return null;
+        }
+        $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace(); //Oleg\UserdirectoryBundle\Entity
+        $receivedValueEntityName = $formNodeType->getReceivedValueEntityName(); //ObjectTypeText
+        //echo "entity: $receivedValueEntityNamespace:$receivedValueEntityName <br>";
+        if( !$receivedValueEntityNamespace || !$receivedValueEntityName ) {
+            return null;
+        }
+
+        $receivedValueEntityNamespaceArr = explode("\\", $receivedValueEntityNamespace);
+        $bundleName = $receivedValueEntityNamespaceArr[0] . $receivedValueEntityNamespaceArr[1];
+        $repo = $this->em->getRepository($bundleName.':'.$receivedValueEntityName);
+
+        return $repo;
+    }
+
+    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper ) {
+
+        if( !$formNode ) {
+            return null;
+        }
+
+        if( !$mapper || count($mapper) == 0 ) {
+            return null;
+        }
+
+//        $class = new \ReflectionClass($object);
+//        $className = $class->getShortName();          //ObjectTypeText
+//        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+
+        //echo "classNamespace=".$classNamespace."<br>";
+        //echo "className=".$className."<br>";
+        //echo "entityId=".$object->getId()."<br>";
+        //print_r($mapper);
+
+        $treeRepository = $this->getFormNodeReceivedListRepository($formNode);
+        //$treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
+        $dql->andWhere('list.formNode = :formNodeId');
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $query->setParameters(
+            array(
+                'entityName' => $mapper['entityName'],
+                'entityNamespace' => $mapper['entityNamespace'],
+                'entityId' => $mapper['entityId'],
+                'formNodeId' => $formNode->getId()
+            )
+        );
+
+        $results = $query->getResult();
+        //echo "count=".count($results)."<br>";
+
+        if( count($results) == 1 ) {
+            //return $results[0]->getValue();
+            return $this->getFormNodeValueByType($formNode,$results[0]);
+        }
+
+        if( count($results) > 1 ) {
+            $resArr = array();
+            foreach( $results as $result ) {
+                //$resArr[] = $result->getValue();
+                $resArr[] = $this->getFormNodeValueByType($formNode,$result);
+            }
+            return $resArr;
+        }
+
+        return null;
+    }
+    public function getFormNodeValueByType( $formNode, $list ) {
+        $formNodeType = $formNode->getObjectType();
+        if( $formNodeType ) {
+            $formNodeTypeName = $formNodeType->getName()."";
+            //echo "############type=[".$formNodeTypeName."]###############<br>";
+            if( $formNodeTypeName == "Form Field - Time" ) {
+                return $list->getTimeValue();
             }
         }
+        return $list->getValue();
     }
 
 
+
+
+
+
+//run: order/directory/admin/list/generate-form-node-tree/
+    public function generateFormNode() {
+
+        $em = $this->em;
+        $username = $this->container->get('security.context')->getToken()->getUser();
+
+        //root
+        $categories = array(
+            'All Forms' => array(),
+        );
+        $count = 10;
+        $level = 0;
+        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
+        $rootNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('All Forms');
+        //echo "rootNode=".$rootNode."<br>";
+
+        //Create separate "Form" node for each Message Category.
+        // "Form Group" and "Form" nodes are always hidden.
+        // "Form Section" is always visible.
+
+        //use https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/30/new-entry-message
+
+        // Pathology Call Log Entry
+        //$PathologyCallLogEntry = $this->createPathologyCallLogEntryFormNode($rootNode);
+        //echo "PathologyCallLogEntry=".$PathologyCallLogEntry."<br>";
+        $this->createV2PathologyCallLogEntryFormNode($rootNode);
+        $count++;
+
+        // Transfusion Medicine
+        //$TransfusionMedicine = $this->createTransfusionMedicine($rootNode);
+        //echo "TransfusionMedicine=".$TransfusionMedicine."<br>";
+        $this->createV2TransfusionMedicine($rootNode);
+        $count++;
+
+        //exit('EOF message category');
+
+        return round($count/10);
+    }
+
+    public function createV2TransfusionMedicine($parent) {
+
+        $objectTypeForm = $this->getObjectTypeByName('Form');
+        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+        $objectTypeString = $this->getObjectTypeByName('Form Field - Free Text, Single Line');
+
+        //        Transfusion Medicine [Message Category]
+        //
+        //    Laboratory Values [Form Section]
+        //
+        //    Hemoglobin: [Form Field - Free Text, Single Line]
+        //
+        //    Platelets: [Form Field - Free Text, Single Line]
+
+        //Transfusion Medicine (Form)
+        $formParams = array(
+            'parent' => $parent,
+            'name' => "Transfusion Medicine",
+            'objectType' => $objectTypeForm,
+            //'showLabel' => false,
+        );
+        $transfusionMedicine = $this->createV2FormNode($formParams);
+        $this->setMessageCategoryListLink("Transfusion Medicine",$transfusionMedicine);
+
+        ////////////// Laboratory Values [Form Section] //////////////////
+        $formParams = array(
+            'parent' => $transfusionMedicine,
+            'name' => "Laboratory Values",
+            'objectType' => $objectTypeSection,
+            //'showLabel' => true,
+        );
+        $laboratoryValues = $this->createV2FormNode($formParams);
+
+        //Hemoglobin: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Hemoglobin",
+            'objectType' => $objectTypeString,
+            //'showLabel' => true,
+        );
+        $HemoglobinString = $this->createV2FormNode($formParams);
+
+        //Platelets: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Platelets",
+            'objectType' => $objectTypeString,
+            //'showLabel' => true,
+        );
+        $PlateletsString = $this->createV2FormNode($formParams);
+        ////////////// EOF Laboratory Values [Form Section] //////////////////
+
+        return $transfusionMedicine;
+    }
+
+    public function createV2PathologyCallLogEntryFormNode($parent) {
+
+        $objectTypeForm = $this->getObjectTypeByName('Form');
+        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+        $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
+        //echo "objectTypeForm=".$objectTypeForm."<br>";
+
+        //$messageCategoryName = "Pathology Call Log Entry";
+
+        //"Pathology Call Log Entry" [Form]
+        $formParams = array(
+            'parent' => $parent,
+            'name' => "Pathology Call Log Entry",
+            'objectType' => $objectTypeForm,
+        );
+        $PathologyCallLogEntryFom = $this->createV2FormNode($formParams); //$formNode
+        $this->setMessageCategoryListLink("Pathology Call Log Entry",$PathologyCallLogEntryFom);
+
+        //History/Findings (Section)
+        $formParams = array(
+            'parent' => $PathologyCallLogEntryFom,
+            'name' => "History/Findings",
+            'objectType' => $objectTypeSection,
+        );
+        $historySection = $this->createV2FormNode($formParams);
+
+        //History/Findings Text
+        $formParams = array(
+            'parent' => $historySection,
+            'name' => "History/Findings Text",
+            'objectType' => $objectTypeText,
+            'showLabel' => false,
+        );
+        $historyText = $this->createV2FormNode($formParams);
+
+        //Impression/Outcome (Section)
+        $formParams = array(
+            'parent' => $PathologyCallLogEntryFom,
+            'name' => "Impression/Outcome",
+            'objectType' => $objectTypeSection,
+        );
+        $impressionSection = $this->createV2FormNode($formParams);
+
+        //Impression/Outcome Text
+        $formParams = array(
+            'parent' => $impressionSection,
+            'name' => "Impression/Outcome Text",
+            'objectType' => $objectTypeText,
+            'showLabel' => false,
+        );
+        $impressionText = $this->createV2FormNode($formParams);
+
+
+        return $PathologyCallLogEntryFom;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ///////////////////// OLD ///////////////////////////////
+    //Create a "Test" form containing every element of object type that begins with "Form Field - ...", then create a new "Test" Message type ("Service" level)
+    //run by link: order/directory/list/generate-test-form-node-tree/
+    public function generateTestFormNode() {
+
+        return;
+
+        $em = $this->em;
+        $username = $this->container->get('security.context')->getToken()->getUser();
+
+        //root
+        $categories = array(
+            'Root Form' => array(),
+        );
+        $count = 10;
+        $level = 0;
+        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
+        $rootNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Root Form');
+        //echo "rootNode=".$rootNode."<br>";
+
+
+        $objectTypeForm = $this->getObjectTypeByName('Form');
+        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+        $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
+        $objectTypeString = $this->getObjectTypeByName('Form Field - Free Text, Single Line');
+        //$objectTypeDropdown = $this->getObjectTypeByName('Form Field - Dropdown Menu');
+        //$objectTypeDropdownValue = $this->getObjectTypeByName('Dropdown Menu Value');
+        //$objectTypeDate = $this->getObjectTypeByName('Form Field - Date');
+        //$objectTypeFullDate = $this->getObjectTypeByName('Form Field - Full Date');
+        //$objectTypeFullDateTime = $this->getObjectTypeByName('Form Field - Full Date and Time');
+
+
+
+        //////////////////// Test //////////////////////
+        $messageTestService = "Test";
+
+        $formParams = array(
+            'parent' => $rootNode,
+            'name' => $messageTestService,
+            'objectType' => $objectTypeForm,
+            'showLabel' => false,
+            'visible' => false
+        );
+        $TestForm = $this->createFormNode($formParams);
+        //$this->setFormNodeToMessageCategory($messageTestService,array($TestForm));
+
+        ///////////////////////////// Section 1 /////////////////////////////////
+        //Test Section 1 (Form Section)
+        //Transfusion Reaction Workup [Form Section]
+        $formParams = array(
+            'parent' => $TestForm,
+            'name' => "Test Section 1",
+            'placeholder' => "",
+            'objectType' => $objectTypeSection,
+            'showLabel' => false,
+            'visible' => true
+        );
+        $formTestSection1 = $this->createFormNode($formParams);
+
+        //Test Field 01: Form Field - Free Text, Single Line
+        $formParams = array(
+            'parent' => $formTestSection1,
+            'name' => "Test Field 01 (Form Field - Free Text, Single Line)",
+            'placeholder' => "Test Field 01 (Form Field - Free Text, Single Line)",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 02: Form Field - Free Text
+        $formParams = array(
+            'parent' => $formTestSection1,
+            'name' => "Test Field 02 (Form Field - Free Text)",
+            'placeholder' => "Test Field 02 (Form Field - Free Text)",
+            'objectType' => $objectTypeText,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 03: Form Field - Free Text, RTF
+        $objectTypeTextRTF = $this->getObjectTypeByName('Form Field - Free Text, RTF');
+        $formParams = array(
+            'parent' => $formTestSection1,
+            'name' => "Test Field 03 (Form Field - Free Text, RTF)",
+            'placeholder' => "Test Field 03 (Form Field - Free Text, RTF)",
+            'objectType' => $objectTypeTextRTF,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 04: Form Field - Free Text, HTML
+        $objectTypeTextHTML = $this->getObjectTypeByName('Form Field - Free Text, HTML');
+        $formParams = array(
+            'parent' => $formTestSection1,
+            'name' => "Test Field 04 (Form Field - Free Text, HTML)",
+            'placeholder' => "Test Field 04 (Form Field - Free Text, HTML)",
+            'objectType' => $objectTypeTextHTML,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 05: Form Field - Full Date
+        $objectType = $this->getObjectTypeByName('Form Field - Full Date');
+        $formParams = array(
+            'parent' => $formTestSection1,
+            'name' => "Test Field 05 (Form Field - Full Date)",
+            'placeholder' => "Test Field 05 (Form Field - Full Date)",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 06: Form Field - Time
+        $objectType = $this->getObjectTypeByName('Form Field - Time');
+        $formParams = array(
+            'parent' => $formTestSection1,
+            'name' => "Test Field 06: Form Field - Time",
+            'placeholder' => "Test Field 06: Form Field - Time",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 07: Form Field - Full Date and Time
+        $objectType = $this->getObjectTypeByName('Form Field - Full Date and Time');
+        $formParams = array(
+            'parent' => $formTestSection1,
+            'name' => "Test Field 07: Form Field - Full Date and Time",
+            'placeholder' => "Test Field 07: Form Field - Full Date and Time",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 08: Form Field - Year
+        $objectType = $this->getObjectTypeByName('Form Field - Year');
+        $formParams = array(
+            'parent' => $formTestSection1,
+            'name' => "Test Field 08: Form Field - Year",
+            'placeholder' => "Test Field 08: Form Field - Year",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        ///////////////////////////// Section 2 /////////////////////////////////
+        //Test Section 2 (Form Section) //change from "Form Section" to "Form Section Array"
+        $objectSectionArrayType = $this->getObjectTypeByName('orm Section Array');
+        $formParams = array(
+            'parent' => $TestForm,
+            'name' => "Test Section 2",
+            'placeholder' => "",
+            'objectType' => $objectSectionArrayType,
+            'showLabel' => false,
+            'visible' => true
+        );
+        $formTestSection2 = $this->createFormNode($formParams);
+
+        //Test Field 09: Form Field - Month
+        $objectType = $this->getObjectTypeByName('Form Field - Month');
+        $formParams = array(
+            'parent' => $formTestSection2,
+            'name' => "Test Field 09: Form Field - Month",
+            'placeholder' => "Test Field 09: Form Field - Month",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "MonthsList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 10: Form Field - Date
+        $objectType = $this->getObjectTypeByName('Form Field - Date');
+        $formParams = array(
+            'parent' => $formTestSection2,
+            'name' => "Test Field 10: Form Field - Date",
+            'placeholder' => "Test Field 10: Form Field - Date",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 11: Form Field - Day of the Week
+        $objectType = $this->getObjectTypeByName('Form Field - Day of the Week');
+        $formParams = array(
+            'parent' => $formTestSection2,
+            'name' => "Test Field 11: Form Field - Day of the Week",
+            'placeholder' => "Test Field 11: Form Field - Day of the Week",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "WeekDaysList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 12: Form Field - Dropdown Menu (you can link this to show any real lists you have)
+        $objectType = $this->getObjectTypeByName('Form Field - Dropdown Menu');
+        $formParams = array(
+            'parent' => $formTestSection2,
+            'name' => "Test Field 12: Form Field - Dropdown Menu",
+            'placeholder' => "Test Field 12: Form Field - Dropdown Menu",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 13: Form Field - Checkbox
+        $objectType = $this->getObjectTypeByName('Form Field - Checkbox');
+        $formParams = array(
+            'parent' => $formTestSection2,
+            'name' => "Test Field 13: Form Field - Checkbox",
+            'placeholder' => "Test Field 13: Form Field - Checkbox",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true,
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 14: Form Field - Radio Button
+        $objectType = $this->getObjectTypeByName('Form Field - Radio Button');
+        $formParams = array(
+            'parent' => $formTestSection2,
+            'name' => "Test Field 14: Form Field - Radio Button",
+            'placeholder' => "Test Field 14: Form Field - Radio Button",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 15: Form Field - Dropdown Menu - Allow Multiple Selections (you can link this to show any real lists you have)
+        $objectType = $this->getObjectTypeByName('Form Field - Dropdown Menu - Allow Multiple Selections');
+        $formParams = array(
+            'parent' => $formTestSection2,
+            'name' => "Test Field 15: Form Field - Dropdown Menu - Allow Multiple Selections",
+            'placeholder' => "Test Field 15: Form Field - Dropdown Menu - Allow Multiple Selections",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+            'className' => "BloodTypeList"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        //Test Field 16: Form Field - Dropdown Menu
+        // (linking to the "Complex patient list" which in turn has items on it marked as "Linked Object - Patient")
+        // thus this dropdown menu should show patients currently on the "Complex Patient List".)
+        // If we add a second patient list, changing this dropdown menu to list patients from the second list should be
+        // as easy as changing the ID in the "Link to List ID" column.
+        $objectType = $this->getObjectTypeByName('Form Field - Dropdown Menu');
+        $formParams = array(
+            'parent' => $formTestSection2,
+            'name' => "Test Field 16: Form Field - Dropdown Menu (Pathology Call Complex Patients)",
+            'placeholder' => "Test Field 16: Form Field - Dropdown Menu (Pathology Call Complex Patients)",
+            'objectType' => $objectType,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "Oleg\\CallLogBundle\\Entity",
+            'className' => "PathologyCallComplexPatients"
+        );
+        $formNode = $this->createFormNode($formParams);
+        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+
+        return round($count/10);
+    }
 
     public function createPathologyCallLogEntryFormNode($parent) {
 
@@ -812,25 +1408,25 @@ class FormNodeUtil
         );
         $laboratoryValues = $this->createFormNode($formParams);
 
-            //Hemoglobin: [Form Field - Free Text, Single Line]
-            $formParams = array(
-                'parent' => $laboratoryValues,
-                'name' => "Hemoglobin",
-                'objectType' => $objectTypeString,
-                'showLabel' => true,
-                'visible' => true
-            );
-            $HemoglobinString = $this->createFormNode($formParams);
+        //Hemoglobin: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Hemoglobin",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $HemoglobinString = $this->createFormNode($formParams);
 
-            //Platelets: [Form Field - Free Text, Single Line]
-            $formParams = array(
-                'parent' => $laboratoryValues,
-                'name' => "Platelets",
-                'objectType' => $objectTypeString,
-                'showLabel' => true,
-                'visible' => true
-            );
-            $PlateletsString = $this->createFormNode($formParams);
+        //Platelets: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "Platelets",
+            'objectType' => $objectTypeString,
+            'showLabel' => true,
+            'visible' => true
+        );
+        $PlateletsString = $this->createFormNode($formParams);
         ////////////// EOF Laboratory Values [Form Section] //////////////////
 
         //attach this formnode to the MessageCategory "Transfusion Medicine"
@@ -1997,499 +2593,249 @@ class FormNodeUtil
 
     }
 
-
-//    public function createFormNodeAndLinkToMessageCategory( $formSectionArr, $messageCategoryName ) {
-//
-//        foreach( $formSectionArr as $formParams ) {
-//
-//            //placeholder
-//            if( array_key_exists('fieldParent', $formParams) ) {
-//                $fieldParent = $formParams['fieldParent'];
-//            } else {
-//                $fieldParent = false;
-//            }
-//
-//            if( $fieldParent ) {
-//                $fieldParentNode = $this->createFormNode($formParams);
-//            } else {
-//                $this->createFormNode($formParams);
-//            }
-//
-//        }
-//
-//        //attach this formnode to the MessageCategory $messageCategoryName (i.e. "Transfusion Medicine")
-//        $this->setFormNodeToMessageCategory($messageCategoryName,$fieldParentNode);
-//    }
-
-    public function getDropdownValue( $formNode ) {
+    /////////// NOT USED ///////////////
+    public function setFormNodeToMessageCategory($messageCategoryName,$formNodes,$parentMessageCategoryName=null) {
+        //attach this formnode to the MessageCategory "Transfusion Medicine"
         $em = $this->em;
-        $output = array();
+        $messageCategory = null;
 
-        //IF: the ObjectType is "Form Field - Dropdown Menu" => the linked list is dropdown values
-        $objectType = $formNode->getObjectType();
-        if( !$objectType ) {
-            //it must be dropdown object type.
-            return $output;
+        $messageCategories = $em->getRepository('OlegOrderformBundle:MessageCategory')->findByName($messageCategoryName);
+        if( count($messageCategories) == 0 ) {
+            exit("Message categories not found by name=".$messageCategoryName);
         }
+        //echo "Message categories found by name=".$messageCategoryName.": count=".count($messageCategories)."<br>";
 
-//        $objectTypeName = $objectType->getName()."";
-//        if(
-//            $objectTypeName != "Form Field - Dropdown Menu" &&
-//            $objectTypeName != "Form Field - Dropdown Menu - Allow Multiple Selections" &&
-//            $objectTypeName != "Form Field - Radio Button" &&
-//            $objectTypeName != "Form Field - Month" &&
-//            $objectTypeName != "Form Field - Day of the Week"
-//        ) {
-//            //it must be only dropdown object type.
-//            //echo '#########not valid object type: '.$objectTypeName."#########<br>";
-//            return $output;
-//        }
-
-        $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
-        $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
-
-        if( $entityNamespace && $entityName ) {
-
-            $entityNamespaceArr = explode("\\",$entityNamespace);
-            $bundleName = $entityNamespaceArr[0].$entityNamespaceArr[1];
-
-            $query = $em->createQueryBuilder()->from($bundleName.':'.$entityName, 'list')
-                ->select("list.id as id, list.name as text")
-                ->orderBy("list.orderinlist","ASC");
-
-            //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-            $query->where("list.type = :typedef OR list.type = :typeadd")->
-                    setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-
-            $output = $query->getQuery()->getResult();
-
-        } else {
-            return $output;
-        }
-
-        $resArr = array();
-        foreach( $output as $list ) {
-            $resArr[] = array(
-                'id' => $list['id'],
-                'text' => $list['text']
-            );
-        }
-
-        //get additional menu children "Dropdown Menu Value"
-        foreach( $formNode->getChildren() as $dropdownValue ) {
-            $resArr[] = array(
-                'id' => $dropdownValue->getId(),
-                'text' => $dropdownValue->getName().""
-            );
-        }
-
-        return $resArr;
-    }
-
-    public function getDefaultValue( $formNode ) {
-        $em = $this->em;
-        $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
-        $entityName = $formNode->getEntityName();           //"CCIUnitPlateletCountDefaultValueList"
-        $entityId = $formNode->getEntityId();
-
-        if( $entityNamespace && $entityName && $entityId ) {
-            $entityNamespaceArr = explode("\\", $entityNamespace);
-            $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
-            $defaultValueEntity = $em->getRepository($bundleName.':'.$entityName)->find($entityId);
-
-            if( $defaultValueEntity ) {
-                return $defaultValueEntity->getName() . "";
+        if( count($messageCategories) > 0 ) {
+            //echo "Multiple Message Categories found: count=".count($messageCategories)."<br>";
+            if( $parentMessageCategoryName ) {
+                foreach( $messageCategories as $thisMessageCategory ) {
+                    if( $thisMessageCategory->getParent() && $thisMessageCategory->getParent()->getName()."" == $parentMessageCategoryName ) {
+                        $messageCategory = $thisMessageCategory;
+                        break;
+                    }
+                }
+                //echo "Parent found: ".$messageCategory."<br>"; //"Other"
+                $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
             }
         }
 
-        return null;
+        foreach( $messageCategories as $thisMessageCategory ) {
+            $this->setFormNodeToSingleMessageCategory($thisMessageCategory,$formNodes);
+        }
+
     }
-
-    public function getFormNodeReceivedListRepository( $formNode ) {
-        $formNodeType = $formNode->getObjectType();
-        //echo "formNodeType: ".$formNodeType." <br>";
-        if( !$formNodeType ) {
-            return null;
-        }
-        $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace(); //Oleg\UserdirectoryBundle\Entity
-        $receivedValueEntityName = $formNodeType->getReceivedValueEntityName(); //ObjectTypeText
-        //echo "entity: $receivedValueEntityNamespace:$receivedValueEntityName <br>";
-        if( !$receivedValueEntityNamespace || !$receivedValueEntityName ) {
-            return null;
-        }
-
-        $receivedValueEntityNamespaceArr = explode("\\", $receivedValueEntityNamespace);
-        $bundleName = $receivedValueEntityNamespaceArr[0] . $receivedValueEntityNamespaceArr[1];
-        $repo = $this->em->getRepository($bundleName.':'.$receivedValueEntityName);
-
-        return $repo;
-    }
-
-    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper ) {
-
-        if( !$formNode ) {
-            return null;
-        }
-
-        if( !$mapper || count($mapper) == 0 ) {
-            return null;
-        }
-
-//        $class = new \ReflectionClass($object);
-//        $className = $class->getShortName();          //ObjectTypeText
-//        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
-
-        //echo "classNamespace=".$classNamespace."<br>";
-        //echo "className=".$className."<br>";
-        //echo "entityId=".$object->getId()."<br>";
-        //print_r($mapper);
-
-        $treeRepository = $this->getFormNodeReceivedListRepository($formNode);
-        //$treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-
-        $dql =  $treeRepository->createQueryBuilder("list");
-        $dql->select('list');
-        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
-        $dql->andWhere('list.formNode = :formNodeId');
-
-        $query = $this->em->createQuery($dql);
-
-        //echo "query=".$query->getSql()."<br>";
-
-        $query->setParameters(
-            array(
-                'entityName' => $mapper['entityName'],
-                'entityNamespace' => $mapper['entityNamespace'],
-                'entityId' => $mapper['entityId'],
-                'formNodeId' => $formNode->getId()
-            )
-        );
-
-        $results = $query->getResult();
-        //echo "count=".count($results)."<br>";
-
-        if( count($results) == 1 ) {
-            //return $results[0]->getValue();
-            return $this->getFormNodeValueByType($formNode,$results[0]);
-        }
-
-        if( count($results) > 1 ) {
-            $resArr = array();
-            foreach( $results as $result ) {
-                //$resArr[] = $result->getValue();
-                $resArr[] = $this->getFormNodeValueByType($formNode,$result);
-            }
-            return $resArr;
-        }
-
-        return null;
-    }
-    public function getFormNodeValueByType( $formNode, $list ) {
-        $formNodeType = $formNode->getObjectType();
-        if( $formNodeType ) {
-            $formNodeTypeName = $formNodeType->getName()."";
-            //echo "############type=[".$formNodeTypeName."]###############<br>";
-            if( $formNodeTypeName == "Form Field - Time" ) {
-                return $list->getTimeValue();
-            }
-        }
-        return $list->getValue();
-    }
-
-
-    //Create a "Test" form containing every element of object type that begins with "Form Field - ...", then create a new "Test" Message type ("Service" level)
-    //run by link: order/directory/list/generate-test-form-node-tree/
-    public function generateTestFormNode() {
-
+    public function setFormNodeToSingleMessageCategory($messageCategory,$formNodes) {
         $em = $this->em;
+        if( !$messageCategory ) {
+            exit("Message category object is not provided !!!<br>");
+        }
+        foreach ($formNodes as $formNode) {
+            //if( !$messageCategory->getFormNode() ) {
+            if ($formNode && !$messageCategory->getFormNodes()->contains($formNode)) {
+                $messageCategory->addFormNode($formNode);
+                $em->persist($messageCategory);
+                //$em->persist($formNode);
+                $em->flush();
+                //echo "Add " . $formNode . " to " . $messageCategory . "<br>";
+            } else {
+                //echo "Node already exists " . $formNode . " in " . $messageCategory . "<br>";
+            }
+        }
+
+        //clean MessageCategory: remove all formnodes from message category.
+        if( count($formNodes) == 0 ) {
+            //echo "Remove formnodes from " . $messageCategory . "<br>";
+            foreach( $messageCategory->getFormNodes() as $thisFormNode ) {
+                //echo "Removing " . $formNode . " from " . $messageCategory . "<br>";
+                $messageCategory->removeFormNode($thisFormNode);
+                $em->persist($messageCategory);
+                $em->flush();
+            }
+        }
+    }
+
+    public function createFormNode( $params ) {
+        exit("Depreciated. Not Used!!!");
+        $em = $this->em;
+        $userSecUtil = $this->container->get('user_security_utility');
         $username = $this->container->get('security.context')->getToken()->getUser();
 
-        //root
-        $categories = array(
-            'Root Form' => array(),
-        );
-        $count = 10;
-        $level = 0;
-        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-        $rootNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Root Form');
-        //echo "rootNode=".$rootNode."<br>";
+        $objectType = $params['objectType'];
+        $showLabel = $params['showLabel'];
+        $name = $params['name'];
+        $parent = $params['parent'];
 
+        //placeholder
+        if( array_key_exists('placeholder', $params) ) {
+            $placeholder = $params['placeholder'];
+        } else {
+            $placeholder = null;
+        }
 
-        $objectTypeForm = $this->getObjectTypeByName('Form');
-        $objectTypeSection = $this->getObjectTypeByName('Form Section');
-        $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
-        $objectTypeString = $this->getObjectTypeByName('Form Field - Free Text, Single Line');
-        //$objectTypeDropdown = $this->getObjectTypeByName('Form Field - Dropdown Menu');
-        //$objectTypeDropdownValue = $this->getObjectTypeByName('Dropdown Menu Value');
-        //$objectTypeDate = $this->getObjectTypeByName('Form Field - Date');
-        //$objectTypeFullDate = $this->getObjectTypeByName('Form Field - Full Date');
-        //$objectTypeFullDateTime = $this->getObjectTypeByName('Form Field - Full Date and Time');
+        //visible
+        if( array_key_exists('visible', $params) ) {
+            $visible = $params['visible'];
+        } else {
+            $visible = true;
+        }
 
+        //classNamespace
+        if( array_key_exists('classNamespace', $params) ) {
+            $classNamespace = $params['classNamespace'];
+        } else {
+            $classNamespace = null;
+        }
 
+        //className
+        if( array_key_exists('className', $params) ) {
+            $className = $params['className'];
+        } else {
+            $className = null;
+        }
 
-        //////////////////// Test //////////////////////
-        $messageTestService = "Test";
+        //classObject
+        if( array_key_exists('classObject', $params) ) {
+            $classObject = $params['classObject'];
+        } else {
+            $classObject = null;
+        }
 
-        $formParams = array(
-            'parent' => $rootNode,
-            'name' => $messageTestService,
-            'objectType' => $objectTypeForm,
-            'showLabel' => false,
-            'visible' => false
-        );
-        $TestForm = $this->createFormNode($formParams);
-        //$this->setFormNodeToMessageCategory($messageTestService,array($TestForm));
+        //objectTypeList
+//        if( array_key_exists('objectTypeList', $params) ) {
+//            $objectTypeList = $params['objectTypeList'];
+//        } else {
+//            $objectTypeList = null;
+//        }
 
-        ///////////////////////////// Section 1 /////////////////////////////////
-        //Test Section 1 (Form Section)
-        //Transfusion Reaction Workup [Form Section]
-        $formParams = array(
-            'parent' => $TestForm,
-            'name' => "Test Section 1",
-            'placeholder' => "",
-            'objectType' => $objectTypeSection,
-            'showLabel' => false,
-            'visible' => true
-        );
-        $formTestSection1 = $this->createFormNode($formParams);
+        //find by name and by parent ($parent) if exists
+        if( $parent ) {
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "FormNode",
+                'bundleName' => "UserdirectoryBundle"
+            );
+            //$types = array('default','user-added');
+            $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parent,$mapper);
+        } else {
+            $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($name);
+            //$nodes = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findBy(array("name"=>$name,"type"=>"default"));
+            //$types = array('default','user-added');
+            //$node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findNodeByName($name,$types);
+        }
 
-        //Test Field 01: Form Field - Free Text, Single Line
-        $formParams = array(
-            'parent' => $formTestSection1,
-            'name' => "Test Field 01 (Form Field - Free Text, Single Line)",
-            'placeholder' => "Test Field 01 (Form Field - Free Text, Single Line)",
-            'objectType' => $objectTypeString,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+        if( $node ) {
+            if( $node->getType() == 'disabled' || $node->getType() == 'draft' ) {
+                exit("The node $name already exists, but it has ".$node->getType()." type.");
+            }
+        }
 
-        //Test Field 02: Form Field - Free Text
-        $formParams = array(
-            'parent' => $formTestSection1,
-            'name' => "Test Field 02 (Form Field - Free Text)",
-            'placeholder' => "Test Field 02 (Form Field - Free Text)",
-            'objectType' => $objectTypeText,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+        if( !$node ) {
+            $node = new FormNode();
 
-        //Test Field 03: Form Field - Free Text, RTF
-        $objectTypeTextRTF = $this->getObjectTypeByName('Form Field - Free Text, RTF');
-        $formParams = array(
-            'parent' => $formTestSection1,
-            'name' => "Test Field 03 (Form Field - Free Text, RTF)",
-            'placeholder' => "Test Field 03 (Form Field - Free Text, RTF)",
-            'objectType' => $objectTypeTextRTF,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            $userSecUtil->setDefaultList($node,null,$username,$name);
 
-        //Test Field 04: Form Field - Free Text, HTML
-        $objectTypeTextHTML = $this->getObjectTypeByName('Form Field - Free Text, HTML');
-        $formParams = array(
-            'parent' => $formTestSection1,
-            'name' => "Test Field 04 (Form Field - Free Text, HTML)",
-            'placeholder' => "Test Field 04 (Form Field - Free Text, HTML)",
-            'objectType' => $objectTypeTextHTML,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            //set level
+            $parentLevel = intval($parent->getLevel());
+            $level = $parentLevel + 1;
+            $node->setLevel($level);
 
-        //Test Field 05: Form Field - Full Date
-        $objectType = $this->getObjectTypeByName('Form Field - Full Date');
-        $formParams = array(
-            'parent' => $formTestSection1,
-            'name' => "Test Field 05 (Form Field - Full Date)",
-            'placeholder' => "Test Field 05 (Form Field - Full Date)",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            //set objectType
+            if( $objectType ) {
+                if( !$node->getObjectType() ) {
+                    $node->setObjectType($objectType);
+                }
+            }
 
-        //Test Field 06: Form Field - Time
-        $objectType = $this->getObjectTypeByName('Form Field - Time');
-        $formParams = array(
-            'parent' => $formTestSection1,
-            'name' => "Test Field 06: Form Field - Time",
-            'placeholder' => "Test Field 06: Form Field - Time",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            //set showLabel
+            $node->setShowLabel($showLabel);
 
-        //Test Field 07: Form Field - Full Date and Time
-        $objectType = $this->getObjectTypeByName('Form Field - Full Date and Time');
-        $formParams = array(
-            'parent' => $formTestSection1,
-            'name' => "Test Field 07: Form Field - Full Date and Time",
-            'placeholder' => "Test Field 07: Form Field - Full Date and Time",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            //set placeholder
+            if( $placeholder) {
+                $node->setPlaceholder($placeholder);
+            }
 
-        //Test Field 08: Form Field - Year
-        $objectType = $this->getObjectTypeByName('Form Field - Year');
-        $formParams = array(
-            'parent' => $formTestSection1,
-            'name' => "Test Field 08: Form Field - Year",
-            'placeholder' => "Test Field 08: Form Field - Year",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            //set visible
+            $node->setVisible($visible);
 
-        ///////////////////////////// Section 2 /////////////////////////////////
-        //Test Section 2 (Form Section) //change from "Form Section" to "Form Section Array"
-        $objectSectionArrayType = $this->getObjectTypeByName('orm Section Array');
-        $formParams = array(
-            'parent' => $TestForm,
-            'name' => "Test Section 2",
-            'placeholder' => "",
-            'objectType' => $objectSectionArrayType,
-            'showLabel' => false,
-            'visible' => true
-        );
-        $formTestSection2 = $this->createFormNode($formParams);
+            //set parent
+            if( $parent ) {
+                $em->persist($parent);
+                $parent->addChild($node);
+            }
 
-        //Test Field 09: Form Field - Month
-        $objectType = $this->getObjectTypeByName('Form Field - Month');
-        $formParams = array(
-            'parent' => $formTestSection2,
-            'name' => "Test Field 09: Form Field - Month",
-            'placeholder' => "Test Field 09: Form Field - Month",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true,
-            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
-            'className' => "MonthsList"
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            if( $classNamespace && $className ) {
+                $node->setEntityNamespace($classNamespace);
+                $node->setEntityName($className);
+            }
 
-        //Test Field 10: Form Field - Date
-        $objectType = $this->getObjectTypeByName('Form Field - Date');
-        $formParams = array(
-            'parent' => $formTestSection2,
-            'name' => "Test Field 10: Form Field - Date",
-            'placeholder' => "Test Field 10: Form Field - Date",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            if( $classObject ) {
+                $node->setObject($classObject);
+            }
 
-        //Test Field 11: Form Field - Day of the Week
-        $objectType = $this->getObjectTypeByName('Form Field - Day of the Week');
-        $formParams = array(
-            'parent' => $formTestSection2,
-            'name' => "Test Field 11: Form Field - Day of the Week",
-            'placeholder' => "Test Field 11: Form Field - Day of the Week",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true,
-            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
-            'className' => "WeekDaysList"
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            //echo "Created: ".$node->getName()."<br>";
+            $em->persist($parent);
+            $em->persist($node);
+            $em->flush();
 
-        //Test Field 12: Form Field - Dropdown Menu (you can link this to show any real lists you have)
-        $objectType = $this->getObjectTypeByName('Form Field - Dropdown Menu');
-        $formParams = array(
-            'parent' => $formTestSection2,
-            'name' => "Test Field 12: Form Field - Dropdown Menu",
-            'placeholder' => "Test Field 12: Form Field - Dropdown Menu",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true,
-            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
-            'className' => "BloodTypeList"
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+        } else {
 
-        //Test Field 13: Form Field - Checkbox
-        $objectType = $this->getObjectTypeByName('Form Field - Checkbox');
-        $formParams = array(
-            'parent' => $formTestSection2,
-            'name' => "Test Field 13: Form Field - Checkbox",
-            'placeholder' => "Test Field 13: Form Field - Checkbox",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true,
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            //disable all below updates when finished
+            //return $node;
 
-        //Test Field 14: Form Field - Radio Button
-        $objectType = $this->getObjectTypeByName('Form Field - Radio Button');
-        $formParams = array(
-            'parent' => $formTestSection2,
-            'name' => "Test Field 14: Form Field - Radio Button",
-            'placeholder' => "Test Field 14: Form Field - Radio Button",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true,
-            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
-            'className' => "BloodTypeList"
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            $updated = false;
+            //echo "Existed: ".$node->getName()."<br>";
+            //echo "objectType=".$objectType->getName()."<br>";
 
-        //Test Field 15: Form Field - Dropdown Menu - Allow Multiple Selections (you can link this to show any real lists you have)
-        $objectType = $this->getObjectTypeByName('Form Field - Dropdown Menu - Allow Multiple Selections');
-        $formParams = array(
-            'parent' => $formTestSection2,
-            'name' => "Test Field 15: Form Field - Dropdown Menu - Allow Multiple Selections",
-            'placeholder' => "Test Field 15: Form Field - Dropdown Menu - Allow Multiple Selections",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true,
-            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
-            'className' => "BloodTypeList"
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            //set objectType
+            if( $objectType ) {
+                if( !$node->getObjectType() ) {
+                    $node->setObjectType($objectType);
+                    //echo "update objectType=".$node->getObjectType()."<br>";
+                    $updated = true;
+                }
+            }
 
-        //Test Field 16: Form Field - Dropdown Menu
-        // (linking to the "Complex patient list" which in turn has items on it marked as "Linked Object - Patient")
-        // thus this dropdown menu should show patients currently on the "Complex Patient List".)
-        // If we add a second patient list, changing this dropdown menu to list patients from the second list should be
-        // as easy as changing the ID in the "Link to List ID" column.
-        $objectType = $this->getObjectTypeByName('Form Field - Dropdown Menu');
-        $formParams = array(
-            'parent' => $formTestSection2,
-            'name' => "Test Field 16: Form Field - Dropdown Menu (Pathology Call Complex Patients)",
-            'placeholder' => "Test Field 16: Form Field - Dropdown Menu (Pathology Call Complex Patients)",
-            'objectType' => $objectType,
-            'showLabel' => true,
-            'visible' => true,
-            'classNamespace' => "Oleg\\CallLogBundle\\Entity",
-            'className' => "PathologyCallComplexPatients"
-        );
-        $formNode = $this->createFormNode($formParams);
-        $this->setFormNodeToMessageCategory($messageTestService,array($formNode));
+            if( $classNamespace && $className ) {
+                $node->setEntityNamespace($classNamespace);
+                $node->setEntityName($className);
+                //echo "set className $classNamespace $className <br>";
+                $updated = true;
+            } else {
+                $node->setEntityNamespace(null);
+                $node->setEntityName(null);
+                //echo "set NULL EntityName <br>";
+                $updated = true;
+            }
 
-        return round($count/10);
+            if( $classObject ) {
+                //echo "set  classObject=".$classObject." <br>";
+                $node->setObject($classObject);
+                $updated = true;
+            }
+
+            //pre-set
+            if(0) {
+                $node->setEntityNamespace(null);
+                $node->setEntityName(null);
+                $node->setEntityId(null);
+
+                $node->setReceivedValueEntityNamespace(null);
+                $node->setReceivedValueEntityName(null);
+                $node->setReceivedValueEntityId(null);
+                $updated = true;
+            }
+
+            if( $updated ) {
+                //echo "update node=".$node." <br>";
+                $em->persist($node);
+                $em->flush($node);
+            }
+
+        }//if !$node
+
+        return $node;
     }
+    /////////// EOF NOT USED ///////////////
 
 }
 

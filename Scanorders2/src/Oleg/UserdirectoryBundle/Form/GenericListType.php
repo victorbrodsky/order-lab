@@ -460,15 +460,6 @@ class GenericListType extends AbstractType
 
         //FormNode Holder
         if( method_exists($this->params['entity'],'getFormNodes') ) {
-            //echo "add formNode <br>";
-//            $builder->add('formNodes','entity',array(
-//                'class' => 'OlegUserdirectoryBundle:FormNode',
-//                'label' => "Form Node(s):",
-//                'property' => 'getTreeNameObjectType',
-//                'multiple' => true,
-//                'required' => false,
-//                'attr' => array('class'=>'combobox'),
-//            ));
             $builder->add( 'formNodes', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:FormNode',
                 'property' => 'getTreeNameObjectType',

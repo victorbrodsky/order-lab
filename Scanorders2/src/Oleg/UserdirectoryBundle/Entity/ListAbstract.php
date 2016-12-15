@@ -675,6 +675,7 @@ abstract class ListAbstract
     }
 
     public function setObject($object) {
+
         $class = new \ReflectionClass($object);
         $className = $class->getShortName();
         $classNamespace = $class->getNamespaceName();
@@ -691,6 +692,12 @@ abstract class ListAbstract
             //echo "setEntityId=".$object->getId()."<br>";
             $this->setEntityId($object->getId());
         }
+    }
+
+    public function clearObject() {
+        $this->setEntityNamespace(null);
+        $this->setEntityName(null);
+        $this->setEntityId(null);
     }
 
     //for entity with synonyms

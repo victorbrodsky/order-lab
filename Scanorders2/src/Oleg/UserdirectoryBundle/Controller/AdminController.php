@@ -5379,7 +5379,7 @@ class AdminController extends Controller
             "40" => array('Institution','institutions-list'),
             "50" => array('States','states-list'),
             "60" => array('Countries','countries-list'),
-            "70" => array('BoardCertifiedSpecialties','boardcertifications-list'),
+            "70" => array('BoardCertifiedSpecialtFormies','boardcertifications-list'),
             "80" => array('EmploymentType','employmenttypes-list'),
             "90" => array('EmploymentTerminationType','employmentterminations-list'),
 
@@ -6214,9 +6214,9 @@ class AdminController extends Controller
         }
 
         $formNodeUtil = $this->get('user_formnode_utility');
-        $formNodeUtil->generateFormNode();
+        $count = $formNodeUtil->generateFormNode();
 
-        exit("Form Node Tree generated");
+        exit("Form Node Tree generated: ".$count);
     }
 
     /**

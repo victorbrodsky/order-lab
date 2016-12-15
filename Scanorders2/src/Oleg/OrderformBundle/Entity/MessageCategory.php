@@ -121,6 +121,10 @@ class MessageCategory extends BaseCompositeNode {
     {
         $this->formNodes->removeElement($item);
     }
+    public function clearFormNodes()
+    {
+        $this->formNodes->clear();
+    }
 
 
 
