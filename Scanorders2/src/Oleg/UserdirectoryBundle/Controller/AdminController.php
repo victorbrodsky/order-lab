@@ -5379,7 +5379,7 @@ class AdminController extends Controller
             "40" => array('Institution','institutions-list'),
             "50" => array('States','states-list'),
             "60" => array('Countries','countries-list'),
-            "70" => array('BoardCertifiedSpecialtFormies','boardcertifications-list'),
+            "70" => array('BoardCertifiedSpecialties','boardcertifications-list'),
             "80" => array('EmploymentType','employmenttypes-list'),
             "90" => array('EmploymentTerminationType','employmentterminations-list'),
 

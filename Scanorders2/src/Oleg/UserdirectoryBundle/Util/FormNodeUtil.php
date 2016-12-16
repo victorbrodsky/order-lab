@@ -845,6 +845,7 @@ class FormNodeUtil
         //Create separate "Form" node for each Message Category.
         // "Form Group" and "Form" nodes are always hidden.
         // "Form Section" is always visible.
+        $count = 0;
 
         //use https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/30/new-entry-message
 
@@ -860,9 +861,61 @@ class FormNodeUtil
         $this->createV2TransfusionMedicine($rootNode);
         $count++;
 
+        $this->createFirstdoseplasma($rootNode);
+        $count++;
+
         //exit('EOF message category');
 
         return round($count/10);
+    }
+
+    public function createFirstdoseplasma($parent) {
+
+        $objectTypeForm = $this->getObjectTypeByName('Form');
+        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+        $objectTypeString = $this->getObjectTypeByName('Form Field - Free Text, Single Line');
+
+        //First dose plasma [Form Section]
+        $formParams = array(
+            'parent' => $parent,
+            'name' => "First dose plasma",
+            'objectType' => $objectTypeForm,
+        );
+        $parentForm = $this->createV2FormNode($formParams);
+        $this->setMessageCategoryListLink("First dose plasma",$parentForm);
+
+        $formParams = array(
+            'parent' => $parentForm,
+            'name' => "Laboratory Values",
+            'objectType' => $objectTypeSection,
+        );
+        $laboratoryValues = $this->createV2FormNode($formParams);
+
+        //     INR: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "INR",
+            'objectType' => $objectTypeString,
+        );
+        $formField = $this->createV2FormNode($formParams);
+
+        //    PT: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "PT",
+            'objectType' => $objectTypeString,
+        );
+        $formField = $this->createV2FormNode($formParams);
+
+        //    PTT: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $laboratoryValues,
+            'name' => "PTT",
+            'objectType' => $objectTypeString,
+        );
+        $formField = $this->createV2FormNode($formParams);
+
+        return $parentForm;
     }
 
     public function createV2TransfusionMedicine($parent) {
