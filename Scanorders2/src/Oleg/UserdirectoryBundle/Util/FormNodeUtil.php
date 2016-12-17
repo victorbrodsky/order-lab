@@ -308,8 +308,14 @@ class FormNodeUtil
         return $formNodes;
     }
 
+    //testing case:
+    // http://localhost/order/directory/formnode-fields/?holderNamespace=Oleg\OrderformBundle\Entity&holderName=MessageCategory&holderId=32&cycle=new&testing=true
+    // http://localhost/order/directory/formnode-fields/?holderNamespace=Oleg\OrderformBundle\Entity&holderName=MessageCategory&holderId=34&cycle=new&testing=true
     //get the same top form section by name and objectTypeId
     public function getTopFormSectionByHolderTreeRecursion( $formNodeHolder, $formNodeName, $objectTypeId, $testing=false ) {
+        if( $testing ) {
+            echo "topParentFormSection: holder=" . $formNodeHolder->getName() . " ($formNodeName, $objectTypeId)" . "<br>";
+        }
         if( $formNodeHolder->getParent() ) {
             //echo "parent holder=".$formNodeHolder."<br><br>";
             $topFormSection = $this->getTopFormSectionByHolderTreeRecursion($formNodeHolder->getParent(),$formNodeName,$objectTypeId);
@@ -333,9 +339,12 @@ class FormNodeUtil
         //echo "### formsections=".count($formSections)."<br>";
         foreach( $formSections as $formSection ) {
             if( $this->isValidFormSection($formSection) ) {
-                //echo "form section=".$formSection."<br>";
+                if( $testing ) {
+                    echo "form section=" . $formSection . ": " . $formSection->getName() . "?=" . $formNodeName . "; ";
+                    echo $formSection->getObjectTypeId() . "?=" . $objectTypeId . "<br>";
+                }
                 //check if name and object type are the same
-                if( $formSection->getObjectTypeName() == $formNodeName  ) {
+                if( $formSection->getName() == $formNodeName  ) {
                     if( $formSection->getObjectTypeId() == $objectTypeId ) {
                         return $formSection;
                     }
