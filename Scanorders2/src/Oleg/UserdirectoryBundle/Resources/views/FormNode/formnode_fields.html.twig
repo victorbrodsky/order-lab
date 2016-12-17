@@ -4,7 +4,10 @@
 
 {% if formNodeHolderEntity is defined %}
     {#{{ formnodemacros.addFormNodes(formNodeHolderEntity, formNode, cycle, "noprototype") }}#}
-    {#{{ formnodemacros.addSingleFormNode(formNodeHolderEntity, formNode, formNodeValue, cycle, "noprototype") }}#}
-    {{ formnodemacros.addFormNodeWithChildren(formNodeHolderEntity, formNode, formNodeValue, cycle, "noprototype") }}
+    {% if single is defined and single == 'single' %}
+        {{ formnodemacros.addSingleFormNode(formNodeHolderEntity, formNode, formNodeValue, cycle, "noprototype") }}
+    {% else %}
+        {{ formnodemacros.addFormNodeWithChildren(formNodeHolderEntity, formNode, formNodeValue, cycle, "noprototype") }}
+    {% endif %}
 {% endif %}
 

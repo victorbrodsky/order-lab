@@ -700,6 +700,29 @@ abstract class ListAbstract
         $this->setEntityId(null);
     }
 
+    public function isVisible() {
+        if( $this->getType() == 'disabled' || $this->getType() == 'draft' ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function getObjectTypeName() {
+        $objectType = $this->getObjectType();
+        if( $objectType ) {
+            return $objectType->getName()."";
+        }
+        return null;
+    }
+    public function getObjectTypeId() {
+        $objectType = $this->getObjectType();
+        if( $objectType ) {
+            return $objectType->getId();
+        }
+        return null;
+    }
+
     //for entity with synonyms
 //    public function setSynonyms($synonyms = null) {
 //        //echo "set synonym=".$synonyms."<br>";

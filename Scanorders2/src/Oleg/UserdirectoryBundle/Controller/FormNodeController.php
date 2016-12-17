@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class FormNodeController extends Controller {
 
+    private $single = 'single';
 
     /**
      * Second part of the user view profile
@@ -74,7 +75,11 @@ class FormNodeController extends Controller {
         $formNodeHolderId = $formNodeHolderEntity->getId();
         $resArr = array();
 
-        foreach( $formNodeHolderEntity->getFormNodes() as $formNode ) {
+        //$formNodes = $formNodeHolderEntity->getFormNodes();
+        //get only 'real' fields as $formNodes
+        $formNodes = $formNodeUtil->getAllRealFormNodes($formNodeHolderEntity);
+
+        foreach( $formNodes as $formNode ) {
 
             if( $formNode && $formNodeId = $formNode->getId() ) {
                 $formNodeId = $formNode->getId();
@@ -86,7 +91,7 @@ class FormNodeController extends Controller {
                 continue;
             }
 
-            $parentFormNode = $this->getParentFormNodeSection($formNode);
+            $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
             if( $parentFormNode ) {
                 $parentFormNodeId = $parentFormNode->getId();
             } else {
@@ -114,7 +119,8 @@ class FormNodeController extends Controller {
                 'formNode' => $formNode,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
                 'cycle' => $cycle,
-                'formNodeValue' => $formNodeValue
+                'formNodeValue' => $formNodeValue,
+                'single' => $this->single
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -134,7 +140,11 @@ class FormNodeController extends Controller {
             $resArr[] = $res;
         }//foreach
 
-        //print_r($resArr);
+
+        print "<pre>";
+        print_r($resArr);
+        print "</pre>";
+        exit('testing');
 
         $json = json_encode($resArr);
         $response = new Response($json);
@@ -163,7 +173,7 @@ class FormNodeController extends Controller {
         }
 
         //check if the node has a parent form node type of Section and visible. The node will be placed by JS inside this section
-        $parentFormNode = $this->getParentFormNodeSection($formNode);
+        $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
 
         if( $parentFormNode ) {
 
@@ -175,12 +185,13 @@ class FormNodeController extends Controller {
                 'formNode' => $parentFormNode,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
                 'cycle' => 'edit',
-                'formNodeValue' => null
+                'formNodeValue' => null,
+                'single' => $this->single
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
-            $grandParentFormNode = $this->getParentFormNodeSection($parentFormNode);
+            $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
             if( $grandParentFormNode ) {
                 $grandParentFormNodeId = $grandParentFormNode->getId();
             } else {
@@ -207,16 +218,15 @@ class FormNodeController extends Controller {
         return $resArr;
     }
 
-    public function getParentFormNodeSection( $formNode ) {
-
+    //only "Form Section" and "Form Section Array" are visible by convention.
+    public function getParentFormNodeSectionOLD( $formNodeHolderEntity, $formNode ) {
         $parentFormNode = $formNode->getParent();
-        if( $parentFormNode && $parentFormNode->getVisible() && $parentFormNode->getId() ) {
+        if( $parentFormNode && $parentFormNode->isVisible() && $parentFormNode->getId() ) {
 
             $parentFormNodeObjectType = $parentFormNode->getObjectType();
             if ($parentFormNodeObjectType) {
                 //echo "parentObjectTypeName=".$parentFormNodeObjectType->getName()."<br>";
-                if ($parentFormNodeObjectType->getName() == "Form Group" ||
-                    $parentFormNodeObjectType->getName() == "Form" ||
+                if(
                     $parentFormNodeObjectType->getName() == "Form Section" ||
                     $parentFormNodeObjectType->getName() == "Form Section Array"
                 ) {
@@ -227,6 +237,37 @@ class FormNodeController extends Controller {
 
         return null;
     }
+    //only "Form Section" and "Form Section Array" are visible by convention.
+    //check all parents if they have a similar Form Section (the same name) and return the one on the top
+    public function getParentFormNodeSection( $formNodeHolderEntity, $formNode ) {
+        $formNodeUtil = $this->get('user_formnode_utility');
+        $parentFormNode = $formNode->getParent();
+
+        $formNodeName = $parentFormNode->getObjectTypeName();
+        $objectTypeId = $parentFormNode->getObjectTypeId();
+        $topParentFormSection = $formNodeUtil->getTopFormSectionByHolderTreeRecursion($formNodeHolderEntity,$formNodeName,$objectTypeId);
+        if( $topParentFormSection ) {
+            exit('1');
+            return $topParentFormSection;
+        }
+
+//        if( $parentFormNode && $parentFormNode->getId() && $formNodeUtil->isValidFormSection($parentFormNode) ) {
+//            //echo $formNodeHolderEntity->getId().":parentFormNode=".$parentFormNode."<br><br>";
+//            $formNodeName = $parentFormNode->getObjectTypeName();
+//            $objectTypeId = $parentFormNode->getObjectTypeId();
+//            $topParentFormSection = $formNodeUtil->getTopFormSectionByHolderTreeRecursion($formNodeHolderEntity->getParent(),$formNodeName,$objectTypeId);
+//            if( $topParentFormSection ) {
+//                echo $formNodeHolderEntity->getId().":topParentFormSection=".$topParentFormSection."<br><br>";
+//                return $topParentFormSection;
+//            } else {
+//                echo $formNodeHolderEntity->getId().":parentFormNode=".$parentFormNode."<br><br>";
+//                return $parentFormNode;
+//            }
+//        }
+
+        return null;
+    }
+
 
     public function isFormNodeInArray( $formNode, $resArr ) {
         foreach( $resArr as $res ) {

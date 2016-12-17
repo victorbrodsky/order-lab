@@ -280,6 +280,123 @@ class FormNodeUtil
         return $newListElement;
     }
 
+    //assume only nodes of type "Form" can be attached to the $formNodeHolderEntity (MessageCategory)
+    public function getAllRealFormNodes( $formNodeHolderEntity ) {
+        $formNodes = array();
+        //assume only one form attached to the message category holder
+        $holderForms = $formNodeHolderEntity->getFormNodes();
+        if( count($holderForms) > 0 ) {
+            $formNodes = $this->getRecursionAllFormNodes($holderForms->first(),$formNodes,'real');
+        }
+        return $formNodes;
+    }
+    public function getRecursionAllFormNodes( $formNode, $formNodes, $type ) {
+        $children = $formNode->getChildren();
+        if( $type == 'real' ) {
+            if( $this->hasValue($formNode) ) {
+                $formNodes[] = $formNode;
+            }
+        }
+        if( $type == 'section' ) {
+            if( $this->isValidFormSection($formNode) ) {
+                $formNodes[] = $formNode;
+            }
+        }
+        foreach( $children as $formNodeChild ) {
+            $formNodes = $this->getRecursionAllFormNodes( $formNodeChild, $formNodes, $type );
+        }
+        return $formNodes;
+    }
+
+    //get the same top form section by name and objectTypeId
+    public function getTopFormSectionByHolderTreeRecursion( $formNodeHolder, $formNodeName, $objectTypeId ) {
+        if( $formNodeHolder->getParent() ) {
+
+            echo "parent holder=".$formNodeHolder."<br><br>";
+
+            $topFormSection = $this->getTopFormSectionByHolderTreeRecursion($formNodeHolder->getParent(),$formNodeName,$objectTypeId);
+            if( $topFormSection ) {
+                exit('topFormSection='.$topFormSection);
+                return $topFormSection;
+            }
+
+            //exit('111');
+
+//            $formSections = $this->getValidFormSections($formNodeHolder);
+//            echo "form sections=".count($formSections)."<br>";
+//            foreach( $formSections as $formSection ) {
+//                if( $this->isValidFormSection($formSection) ) {
+//                    echo "form section=".$formSection."<br>";
+//                    //check if name and object type are the same
+//                    if( $formSection->getObjectTypeName() == $formNodeName  ) {
+//                        if( $formSection->getObjectTypeId() == $objectTypeId ) {
+//                            return $formSection;
+//                        }
+//                    }
+//                }
+//            }
+
+        } else {
+
+            if( $formNodeHolder ) {
+
+                echo "### Holder=".$formNodeHolder."<br>";
+                $formSections = $this->getValidFormSections($formNodeHolder);
+                echo "### formsections=".count($formSections)."<br>";
+                foreach( $formSections as $formSection ) {
+                    if( $this->isValidFormSection($formSection) ) {
+                        echo "form section=".$formSection."<br>";
+                        //check if name and object type are the same
+                        if( $formSection->getObjectTypeName() == $formNodeName  ) {
+                            if( $formSection->getObjectTypeId() == $objectTypeId ) {
+                                return $formSection;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        //exit('no parent!');
+        return null;
+    }
+
+    //check if node is visible and "Form Section" or "Form Section Array"
+    public function isValidFormSection( $formNode ) {
+        $formNodeObjectTypeName = $formNode->getObjectTypeName();
+        if( $formNodeObjectTypeName && $formNode->isVisible() ) {
+            //echo "formNodeObjectTypeName=".$formNodeObjectTypeName."<br>";
+            if(
+                $formNodeObjectTypeName == "Form Section" ||
+                $formNodeObjectTypeName == "Form Section Array"
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getValidFormSections( $formNodeHolder ) {
+        echo "getValidFormSections formNodeHolder=".$formNodeHolder."<br>";
+        $formNodes = array();
+        //assume only one form attached to the message category holder
+        $holderForms = $formNodeHolder->getFormNodes();
+        if( count($holderForms) > 0 ) {
+            $formNodes = $this->getRecursionAllFormNodes($holderForms->first(),$formNodes,'section');
+        }
+        return $formNodes;
+
+//        $formSections = array();
+//        foreach( $formNodeHolder->getFormNodes() as $formNode ) {
+//            echo "form node=".$formNode."<br>";
+//            if( $this->isValidFormSection($formNode) ) {
+//                $formSections[] = $formNode;
+//            }
+//        }
+//        return $formSections;
+    }
+
 //    public function getListByType( $formNode ) {
 //
 //        $list = null;
@@ -834,13 +951,15 @@ class FormNodeUtil
 
         //root
         $categories = array(
-            'All Forms' => array(),
+            'All Forms' => array('Pathology Call Log Book'),
         );
         $count = 10;
         $level = 0;
         $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-        $rootNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('All Forms');
-        //echo "rootNode=".$rootNode."<br>";
+        $parentNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Pathology Call Log Book');
+        //echo "rootNode=".$parentNode."<br>";
+
+        //create Pathology Call Log Book
 
         //Create separate "Form" node for each Message Category.
         // "Form Group" and "Form" nodes are always hidden.
@@ -850,18 +969,18 @@ class FormNodeUtil
         //use https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/30/new-entry-message
 
         // Pathology Call Log Entry
-        //$PathologyCallLogEntry = $this->createPathologyCallLogEntryFormNode($rootNode);
+        //$PathologyCallLogEntry = $this->createPathologyCallLogEntryFormNode($parentNode);
         //echo "PathologyCallLogEntry=".$PathologyCallLogEntry."<br>";
-        $this->createV2PathologyCallLogEntryFormNode($rootNode);
+        $this->createV2PathologyCallLogEntryFormNode($parentNode);
         $count++;
 
         // Transfusion Medicine
-        //$TransfusionMedicine = $this->createTransfusionMedicine($rootNode);
+        //$TransfusionMedicine = $this->createTransfusionMedicine($parentNode);
         //echo "TransfusionMedicine=".$TransfusionMedicine."<br>";
-        $this->createV2TransfusionMedicine($rootNode);
+        $this->createV2TransfusionMedicine($parentNode);
         $count++;
 
-        $this->createFirstdoseplasma($rootNode);
+        $this->createFirstdoseplasma($parentNode);
         $count++;
 
         //exit('EOF message category');
@@ -914,6 +1033,33 @@ class FormNodeUtil
             'objectType' => $objectTypeString,
         );
         $formField = $this->createV2FormNode($formParams);
+
+
+        /////////////////////// Transfusion Medicine -> First dose platelets [Message Category]
+        $formParams = array(
+            'parent' => $parent,
+            'name' => "First dose platelets",
+            'objectType' => $objectTypeForm,
+        );
+        $parentForm = $this->createV2FormNode($formParams);
+        $this->setMessageCategoryListLink("First dose platelets",$parentForm);
+
+        //Miscellaneous [Form Section]
+        $formParams = array(
+            'parent' => $parentForm,
+            'name' => "Miscellaneous",
+            'objectType' => $objectTypeSection,
+        );
+        $miscellaneous = $this->createV2FormNode($formParams);
+
+        //Medication: [Form Field - Free Text, Single Line]
+        $formParams = array(
+            'parent' => $miscellaneous,
+            'name' => "Medication",
+            'objectType' => $objectTypeString,
+        );
+        $MedicationString = $this->createV2FormNode($formParams);
+
 
         return $parentForm;
     }

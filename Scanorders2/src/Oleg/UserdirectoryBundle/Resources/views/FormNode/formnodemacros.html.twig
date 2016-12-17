@@ -1,17 +1,17 @@
 
 {#add a single form node#}
-{#{% macro addSingleFormNode( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}#}
-    {#{% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}#}
+{% macro addSingleFormNode( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
-    {#<div id="formnode-{{ formNode.id }}"#}
-         {#class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"#}
-         {#data-formnodeholderid="{{ formNodeHolder.id }}"#}
-         {#data-formnodeid="{{ formNode.id }}"#}
-    {#>#}
-        {#{{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,"single",0,formNodeValue) }}#}
-    {#</div>#}
+    <div id="formnode-{{ formNode.id }}"
+         class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"
+         data-formnodeholderid="{{ formNodeHolder.id }}"
+         data-formnodeid="{{ formNode.id }}"
+    >
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,0,"single",formNodeValue) }}
+    </div>
 
-{#{% endmacro %}#}
+{% endmacro %}
 
 
 {#NOT USED: this macro will render formnodes from top to bottom#}
@@ -138,7 +138,7 @@
 
 {% endmacro %}
 
-
+                            {#formNodeHolder, formNode, cycle, prototype,"single",0,formNodeValue#}
 {% macro addFormNodeByType( formNodeHolder, formNode, cycle, prototype, count, single, formNodeValue ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {#formNode.id={{ formNode.id }}<br>#}
