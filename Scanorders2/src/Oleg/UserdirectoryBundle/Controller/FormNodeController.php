@@ -20,6 +20,9 @@ class FormNodeController extends Controller {
 
     private $single = 'single';
 
+    //private $testing = true;
+    private $testing = false;
+
     /**
      * Second part of the user view profile
      *
@@ -91,6 +94,9 @@ class FormNodeController extends Controller {
                 continue;
             }
 
+            if( $this->testing ) {
+                echo "<br>Check formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "<br>";
+            }
             $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
             if( $parentFormNode ) {
                 $parentFormNodeId = $parentFormNode->getId();
@@ -99,6 +105,7 @@ class FormNodeController extends Controller {
             }
 
             if( $parentFormNodeId ) {
+                //check parent nested sections
                 $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr);
             }
 
@@ -140,11 +147,12 @@ class FormNodeController extends Controller {
             $resArr[] = $res;
         }//foreach
 
-
-        print "<pre>";
-        print_r($resArr);
-        print "</pre>";
-        exit('testing');
+        if( $this->testing ) {
+            print "<pre>";
+            print_r($resArr);
+            print "</pre>";
+            exit('testing');
+        }
 
         $json = json_encode($resArr);
         $response = new Response($json);
@@ -245,9 +253,11 @@ class FormNodeController extends Controller {
 
         $formNodeName = $parentFormNode->getObjectTypeName();
         $objectTypeId = $parentFormNode->getObjectTypeId();
-        $topParentFormSection = $formNodeUtil->getTopFormSectionByHolderTreeRecursion($formNodeHolderEntity,$formNodeName,$objectTypeId);
+        $topParentFormSection = $formNodeUtil->getTopFormSectionByHolderTreeRecursion($formNodeHolderEntity,$formNodeName,$objectTypeId,$this->testing);
         if( $topParentFormSection ) {
-            exit('1');
+            if( $this->testing ) {
+                echo '### topParentFormSection=' . $topParentFormSection . "; holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "<br>";
+            }
             return $topParentFormSection;
         }
 

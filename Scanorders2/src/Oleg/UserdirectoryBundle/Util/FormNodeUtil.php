@@ -309,57 +309,39 @@ class FormNodeUtil
     }
 
     //get the same top form section by name and objectTypeId
-    public function getTopFormSectionByHolderTreeRecursion( $formNodeHolder, $formNodeName, $objectTypeId ) {
+    public function getTopFormSectionByHolderTreeRecursion( $formNodeHolder, $formNodeName, $objectTypeId, $testing=false ) {
         if( $formNodeHolder->getParent() ) {
-
-            echo "parent holder=".$formNodeHolder."<br><br>";
-
+            //echo "parent holder=".$formNodeHolder."<br><br>";
             $topFormSection = $this->getTopFormSectionByHolderTreeRecursion($formNodeHolder->getParent(),$formNodeName,$objectTypeId);
             if( $topFormSection ) {
-                exit('topFormSection='.$topFormSection);
+                //exit('topFormSection='.$topFormSection);
                 return $topFormSection;
+            } else {
+                return $this->getHolderValidSection($formNodeHolder, $formNodeName, $objectTypeId, $testing);
             }
-
-            //exit('111');
-
-//            $formSections = $this->getValidFormSections($formNodeHolder);
-//            echo "form sections=".count($formSections)."<br>";
-//            foreach( $formSections as $formSection ) {
-//                if( $this->isValidFormSection($formSection) ) {
-//                    echo "form section=".$formSection."<br>";
-//                    //check if name and object type are the same
-//                    if( $formSection->getObjectTypeName() == $formNodeName  ) {
-//                        if( $formSection->getObjectTypeId() == $objectTypeId ) {
-//                            return $formSection;
-//                        }
-//                    }
-//                }
-//            }
-
         } else {
-
             if( $formNodeHolder ) {
-
-                echo "### Holder=".$formNodeHolder."<br>";
-                $formSections = $this->getValidFormSections($formNodeHolder);
-                echo "### formsections=".count($formSections)."<br>";
-                foreach( $formSections as $formSection ) {
-                    if( $this->isValidFormSection($formSection) ) {
-                        echo "form section=".$formSection."<br>";
-                        //check if name and object type are the same
-                        if( $formSection->getObjectTypeName() == $formNodeName  ) {
-                            if( $formSection->getObjectTypeId() == $objectTypeId ) {
-                                return $formSection;
-                            }
-                        }
+                return $this->getHolderValidSection($formNodeHolder, $formNodeName, $objectTypeId, $testing);
+            }
+        }
+        //exit('no parent!');
+        return null;
+    }
+    public function getHolderValidSection( $formNodeHolder, $formNodeName, $objectTypeId, $testing=false ) {
+        //echo "### Holder=".$formNodeHolder->getName()."<br>";
+        $formSections = $this->getValidFormSections($formNodeHolder);
+        //echo "### formsections=".count($formSections)."<br>";
+        foreach( $formSections as $formSection ) {
+            if( $this->isValidFormSection($formSection) ) {
+                //echo "form section=".$formSection."<br>";
+                //check if name and object type are the same
+                if( $formSection->getObjectTypeName() == $formNodeName  ) {
+                    if( $formSection->getObjectTypeId() == $objectTypeId ) {
+                        return $formSection;
                     }
                 }
             }
-
         }
-
-        //exit('no parent!');
-        return null;
     }
 
     //check if node is visible and "Form Section" or "Form Section Array"
@@ -378,7 +360,7 @@ class FormNodeUtil
     }
 
     public function getValidFormSections( $formNodeHolder ) {
-        echo "getValidFormSections formNodeHolder=".$formNodeHolder."<br>";
+        //echo "getValidFormSections formNodeHolder=".$formNodeHolder->getName()."<br>";
         $formNodes = array();
         //assume only one form attached to the message category holder
         $holderForms = $formNodeHolder->getFormNodes();
