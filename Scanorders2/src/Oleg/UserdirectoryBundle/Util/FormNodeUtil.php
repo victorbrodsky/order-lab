@@ -1040,6 +1040,8 @@ class FormNodeUtil
                 $this->createV2FormNode($fieldParams);
             }
         }
+
+        return $parentForm;
     }
 
     public function createAfterFirstdoseplasma($parent) {
@@ -1284,6 +1286,238 @@ class FormNodeUtil
         );
         $this->addFormToHolder($parent,"Transfusion reaction",$sections);
 
+        /////////////////// Transfusion Medicine -> Complex platelet summary [Message Category] ////////////////////
+        $sections = array(
+            //            Laboratory Values [Form Section]
+            //    HLA A: [Form Field - Free Text, Single Line]
+            //    HLA B: [Form Field - Free Text, Single Line]
+            //    Rogosin PRA: [Form Field - Free Text, Single Line]
+            //    Rogosin date: [Form Field - Full Date]
+            //    Antibodies [Form Field - Dropdown Menu] (ComplexPlateletSummaryAntibodiesList)
+            //    NYBC date: [Form Field - Full Date]
+            array(
+                'sectionName' => "Laboratory Values",
+                'fields' => array(
+                    'HLA A'=>'Form Field - Free Text, Single Line',
+                    'HLA B'=>'Form Field - Free Text, Single Line',
+                    'Rogosin PRA'=>'Form Field - Free Text, Single Line',
+                    'Rogosin date'=>'Form Field - Full Date',
+                    'Antibodies'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","ComplexPlateletSummaryAntibodiesList"),
+                    'NYBC date'=>'Form Field - Full Date',
+                )
+            ),
+            //CCI (Corrected Count Increment) Calculations: [Form Section]
+            //    BSA: [Form Field - Free Text, Single Line]
+            //    Unit Platelet Count [Form Field - Free Text, Single Line] : USE "Link To List ID" to link to a new list titled "CCI Unit Platelet Count Default Value" with one list item with "3" in the name column, load "3" via this link into this field on load. This mechanism will allow multiple possible default values for a given field depending on rules (once rules are implemented, until then your logic should grab the first value on the list).
+            //        CCI Unit Platelet Count Default Value [Free Text Field Default Value List]
+            //            3 [Free Text Field Default Value]
+            array(
+                'sectionName' => "CCI (Corrected Count Increment) Calculations",
+                'fields' => array(
+                    'BSA'=>'Form Field - Free Text, Single Line',
+                    'Unit Platelet Count'=>'Form Field - Free Text, Single Line',
+                )
+            ),
+            //CCI (Corrected Count Increment) Instance: [Form Section] NESTED IN "CCI (Corrected Count Increment) Calculations: [Form Section]"
+            //    CCI date: [Form Field - Full Date and Time]
+            //    CCI Platelet Type Transfused [Form Field - Dropdown Menu]
+            //    Pre Platelet Count 1: [Form Field - Free Text, Single Line] (rename to Pre-transfusion Platelet Count)
+            //    Post Platelet Count 2: [Form Field - Free Text, Single Line] (rename to Post-transfusion Platelet Count)
+            //    CCI: [Form Field - Free Text, Single Line]
+            array(
+                'sectionName' => "CCI (Corrected Count Increment) Instance",
+                'fields' => array(
+                    'CCI date'=>'Form Field - Full Date and Time',
+                    'CCI Platelet Type Transfused'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","CCIPlateletTypeTransfusedList"),
+                    'Pre-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
+                    'Post-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
+                    'CCI'=>'Form Field - Free Text, Single Line',
+                )
+            ),
+            //Miscellaneous [Form Section]
+            //    Product Currently Receiving: [Form Field - Dropdown Menu]
+            //    Product should be receiving: [Form Field - Dropdown Menu] (rename to Product Should Be Receiving)
+            //    Product Status: [Form Field - Dropdown Menu]
+            //    Expiration Date: [Form Field - Full Date]
+            array(
+                'sectionName' => "Miscellaneous",
+                'fields' => array(
+                    'Product Currently Receiving'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PlateletTransfusionProductReceivingList"),
+                    'Product Should Be Receiving'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PlateletTransfusionProductReceivingList"),
+                    'Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+                    'Expiration Date'=>'Form Field - Full Date and Time',
+
+                )
+            ),
+
+        );
+        $ComplexplateletsummaryForm = $this->addFormToHolder($parent,"Complex platelet summary",$sections);
+
+        ///////////////// Set CCI Unit Platelet Count Default Value: 3 [Free Text Field Default Value] /////////////////
+        //$UnitPlateletCount = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->findOneByName("Unit Platelet Count");
+        $mapper = array(
+            'prefix' => "Oleg",
+            'className' => "FormNode",
+            'bundleName' => "UserdirectoryBundle"
+        );
+        //CCI (Corrected Count Increment) Calculations
+        $CCISection = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent("CCI (Corrected Count Increment) Calculations",$ComplexplateletsummaryForm,$mapper);
+        if( !$CCISection ) {
+            exit('FormNode not found by name "CCI (Corrected Count Increment) Calculations"');
+        }
+        $UnitPlateletCount = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent("Unit Platelet Count",$CCISection,$mapper);
+        if( !$UnitPlateletCount ) {
+            exit('FormNode not found by name "Unit Platelet Count"');
+        }
+        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("OlegUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->findOneByName("3");
+        if( !$CCIUnitPlateletCountDefaultValueList ) {
+            exit('CCIUnitPlateletCountDefaultValueList not found by name "3"');
+        }
+        if( $UnitPlateletCount ) {
+            //echo "Unit Platelet Count found=".$UnitPlateletCount->getId()."<br>";
+            //echo "0 namespace=".$UnitPlateletCount->getEntityNamespace()." ".$UnitPlateletCount->getEntityName()."<br>";
+            $UnitPlateletCount->setObject($CCIUnitPlateletCountDefaultValueList);
+            //echo "1 namespace=".$UnitPlateletCount->getEntityNamespace()." ".$UnitPlateletCount->getEntityName()."<br>";
+            //$this->em->persist($UnitPlateletCount);
+            $this->em->flush($UnitPlateletCount);
+        } else {
+            exit('Unit Platelet Count setObject not set');
+        }
+        ///////////////// EOF Set CCI Unit Platelet Count Default Value: 3 [Free Text Field Default Value] /////////////////
+
+        ////////////////////// Transfusion Medicine -> Complex factor summary [Message Category] /////////////////
+        // Laboratory Values [Form Section]
+        //  Relevant Laboratory Values: [Form Field - Free Text] //TODO: replace it by a section called "Relevant Lab Values" of type "From Section Array"
+        // Miscellaneous [Form Section]
+        //  Product receiving: [Form Field - Free Text, Single Line]
+        //  Transfusion Product Status: [Form Field - Dropdown Menu]
+        $sections = array(
+            //TODO: replace it by a section called "Relevant Lab Values" of type "From Section Array"
+//            array(
+//                'sectionName' => "Laboratory Values",
+//                'fields' => array(
+//                    'Relevant Laboratory Values'=>'Form Field - Free Text, Single Line',
+//                )
+//            ),
+            array(
+                'sectionName' => "Miscellaneous",
+                'fields' => array(
+                    'Product receiving'=>'Form Field - Free Text, Single Line',
+                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+                )
+            ),
+        );
+        $this->addFormToHolder($parent,"Complex factor summary",$sections);
+
+        ///////////////// Transfusion Medicine -> WinRho [Message Category]
+        //        Miscellaneous [Form Section]
+        //    Weight: [Form Field - Free Text, Single Line]
+        //    Dosing: [Form Field - Free Text, Single Line]
+        //    IU: [Form Field - Free Text, Single Line]
+        $sections = array(
+            array(
+                'sectionName' => "Miscellaneous",
+                'fields' => array(
+                    'Weight'=>'Form Field - Free Text, Single Line',
+                    'Dosing'=>'Form Field - Free Text, Single Line',
+                    'IU'=>'Form Field - Free Text, Single Line',
+                )
+            ),
+        );
+        $this->addFormToHolder($parent,"WinRho",$sections);
+
+        //TODO: replace it by a section called "Relevant Lab Values" of type "From Section Array"
+        if(0) {
+            /////////////////////////////////////        Transfusion Medicine -> Special needs [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+            $sections = array(
+                array(
+                    'sectionName' => "Laboratory Values",
+                    'fields' => array(
+                        'Relevant Laboratory Values' => 'Form Field - Free Text',
+                    )
+                ),
+            );
+            $this->addFormToHolder($parent, "Special needs", $sections);
+
+            //Transfusion Medicine -> Other [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+            $sections = array(
+                array(
+                    'sectionName' => "Laboratory Values",
+                    'fields' => array(
+                        'Relevant Laboratory Values' => 'Form Field - Free Text',
+                    )
+                ),
+            );
+            $this->addFormToHolder($parent, "Other", $sections);
+
+            //Microbiology [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+            $sections = array(
+                array(
+                    'sectionName' => "Laboratory Values",
+                    'fields' => array(
+                        'Relevant Laboratory Values' => 'Form Field - Free Text',
+                    )
+                ),
+            );
+            $this->addFormToHolder($parent, "Microbiology", $sections);
+
+            //Coagulation [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+            $sections = array(
+                array(
+                    'sectionName' => "Laboratory Values",
+                    'fields' => array(
+                        'Relevant Laboratory Values' => 'Form Field - Free Text',
+                    )
+                ),
+            );
+            $this->addFormToHolder($parent, "Coagulation", $sections);
+
+            //Hematology [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+            //
+            //Chemistry [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+            //
+            //Cytogenetics [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+            //
+            //Molecular [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+            //
+            //Other [Message Category]
+            //
+            //Laboratory Values [Form Section]
+            //
+            //    Relevant Laboratory Values: [Form Field - Free Text]
+        }
 
 
 
