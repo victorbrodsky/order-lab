@@ -161,6 +161,7 @@ class FormNodeUtil
 
             if( array_key_exists('arraysectioncount', $formValue) ) {
                 echo $formNodeObjectName.": formValue is arraysectioncount <br>";
+                //TODO: record section array index including parent index: 0-0, 0-1 (array section 1 (index 0) includes two array sections (indexes 0 and 1))
 
             } else {
                 echo $formNodeObjectName.": formValue is regular array <br>";

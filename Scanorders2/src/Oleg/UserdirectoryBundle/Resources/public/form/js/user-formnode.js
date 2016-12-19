@@ -544,10 +544,15 @@ function formnodeReplaceIndexByName( input, fieldname, index ) {
 
     //var seacrh = new RegExp(/\[arraysectioncount\]\[[0-9]\]/, 'g'); //works
 
+    //replace [arraysectioncount][index]
     var searchStr = /\[arraysectioncount\]\[[0-9]\]/;
     var seacrh = new RegExp(searchStr, 'g');
+    input = input.replace(seacrh, '[arraysectioncount]['+index+']');
 
-    return input.replace(seacrh, '[arraysectioncount]['+index+']');
+    //replace arraysectioncount-index
+    var searchStr2 = /arraysectioncount-[0-9]/;
+    var seacrh2 = new RegExp(searchStr2, 'g');
+    input = input.replace(seacrh2, 'arraysectioncount-'+index);
 
     return input;
 }
@@ -561,6 +566,6 @@ function formNodeRemoveSection( btn, formNodeId ) {
     $(btn).closest('.formnode-arraysection-holder').remove();
 
     if( attachEl.find('.formnode-remove-section').length == 1  ) {
-        $('.formnode-remove-section').hide();
+        attachEl.find('.formnode-remove-section').hide();
     }
 }

@@ -300,7 +300,8 @@
 
     {#id="formnode-section-{{ formNode.id }}-{{ count }}"#}
     {#[arraysectioncount][counter] will be replaced by a new section counter#}
-    {% set panelId = "formnode-"~formNode.id~"-section-[arraysectioncount]["~count~"][node]["~formNode.id~"]" %}
+    {#{% set panelId = "formnode-"~formNode.id~"-section-[arraysectioncount]["~count~"][node]["~formNode.id~"]" %}#}
+    {% set panelId = "formnode-"~formNode.id~"-section-arraysectioncount-"~count~"-node-"~formNode.id %}
 
     <div id="formnode-arraysection-holder-{{ formNode.id }}" class="formnode-arraysection-holder formnode-arraysection-holder-{{ formNode.id }}" data-sectionid="{{ count }}">
     <div class="panel panel-default">
