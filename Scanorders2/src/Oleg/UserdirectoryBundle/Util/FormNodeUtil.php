@@ -974,9 +974,55 @@ class FormNodeUtil
         $this->createFirstdoseplasma($parentNode);
         $count++;
 
+
+
         //exit('EOF message category');
 
         return round($count/10);
+    }
+
+    public function addFormToHolder($parent,$holderName,$sections) {
+        $objectTypeForm = $this->getObjectTypeByName('Form');
+        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+
+        //Create form: i.e. Transfusion Medicine -> Third+ dose platelets [Message Category]
+        $formParams = array(
+            'parent' => $parent,
+            'name' => $holderName,
+            'objectType' => $objectTypeForm,
+        );
+        $parentForm = $this->createV2FormNode($formParams);
+        $this->setMessageCategoryListLink($holderName,$parentForm);
+
+        foreach( $sections as $section ) {
+            $sectionName = $section['sectionName'];
+
+            if( $sectionName ) {
+                $formParams = array(
+                    'parent' => $parentForm,
+                    'name' => $sectionName,
+                    'objectType' => $objectTypeSection,
+                );
+                $sectionObject = $this->createV2FormNode($formParams);
+            } else {
+                $sectionObject = $parentForm;
+            }
+
+            $fields = $section['fields'];
+            foreach( $fields as $fieldName=>$objectTypeName ) {
+                $objectType = $this->getObjectTypeByName($objectTypeName);
+                if( !$objectType ) {
+                    exit('object type not found by name='.$objectTypeName);
+                }
+                //    CCI: [Form Field - Free Text, Single Line]
+                $fieldParams = array(
+                    'parent' => $sectionObject,
+                    'name' => $fieldName,
+                    'objectType' => $objectType,
+                );
+                $this->createV2FormNode($fieldParams);
+            }
+        }
     }
 
     public function createFirstdoseplasma($parent) {
@@ -1050,6 +1096,60 @@ class FormNodeUtil
             'objectType' => $objectTypeString,
         );
         $MedicationString = $this->createV2FormNode($formParams);
+
+
+        /////////////// Transfusion Medicine -> Third+ dose platelets [Message Category] ////////////////
+        //Laboratory Values [Form Section]
+        $sections = array(
+            array(
+                //CCI: [Form Field - Free Text, Single Line]
+                'sectionName' => "Laboratory Values",
+                'fields' => array('CCI'=>'Form Field - Free Text, Single Line')
+            ),
+            //Platelet Goal: [Form Field - Free Text, Single Line]
+            array(
+                'sectionName' => "Miscellaneous",
+                'fields' => array('Platelet Goal'=>'Form Field - Free Text, Single Line')
+            )
+        );
+        $this->addFormToHolder($parent,"Third+ dose platelets",$sections);
+
+//        //        Transfusion Medicine -> Third+ dose platelets [Message Category]
+//        $formParams = array(
+//            'parent' => $parent,
+//            'name' => "Third+ dose platelets",
+//            'objectType' => $objectTypeForm,
+//        );
+//        $parentForm = $this->createV2FormNode($formParams);
+//        $this->setMessageCategoryListLink("Third+ dose platelets",$parentForm);
+//        //Laboratory Values [Form Section]
+//        $formParams = array(
+//            'parent' => $parentForm,
+//            'name' => "Laboratory Values",
+//            'objectType' => $objectTypeSection,
+//        );
+//        $laboratoryValues = $this->createV2FormNode($formParams);
+//        //    CCI: [Form Field - Free Text, Single Line]
+//        $formParams = array(
+//            'parent' => $laboratoryValues,
+//            'name' => "CCI",
+//            'objectType' => $objectTypeString,
+//        );
+//        $formField = $this->createV2FormNode($formParams);
+//        //Miscellaneous [Form Section]
+//        $formParams = array(
+//            'parent' => $parentForm,
+//            'name' => "Miscellaneous",
+//            'objectType' => $objectTypeSection,
+//        );
+//        $miscellaneous = $this->createV2FormNode($formParams);
+//        //    Platelet Goal: [Form Field - Free Text, Single Line]
+//        $formParams = array(
+//            'parent' => $miscellaneous,
+//            'name' => "Platelet Goal",
+//            'objectType' => $objectTypeString,
+//        );
+//        $MedicationString = $this->createV2FormNode($formParams);
 
 
         return $parentForm;
