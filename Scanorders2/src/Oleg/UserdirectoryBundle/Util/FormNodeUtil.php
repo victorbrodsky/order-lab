@@ -741,7 +741,9 @@ class FormNodeUtil
         //clear old List Object values
         $messageCategory->clearObject();
 
-        $messageCategory->addFormNode($formNode);
+        if( $formNode ) {
+            $messageCategory->addFormNode($formNode);
+        }
 
         $em->persist($messageCategory);
         $em->flush();
@@ -971,7 +973,7 @@ class FormNodeUtil
         $this->createV2TransfusionMedicine($parentNode);
         $count++;
 
-        $this->createFirstdoseplasma($parentNode);
+        $this->createAfterFirstdoseplasma($parentNode);
         $count++;
 
 
@@ -1009,7 +1011,20 @@ class FormNodeUtil
             }
 
             $fields = $section['fields'];
-            foreach( $fields as $fieldName=>$objectTypeName ) {
+            foreach( $fields as $fieldName=>$objectTypeNameParam ) {
+
+                if( is_array($objectTypeNameParam) ) {
+                    //'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+                    //'className' => "BloodTypeList"
+                    $objectTypeName = $objectTypeNameParam[0];
+                    $classNamespace = $objectTypeNameParam[1];
+                    $className = $objectTypeNameParam[2];
+                } else {
+                    $objectTypeName = $objectTypeNameParam;
+                    $classNamespace = null;
+                    $className = null;
+                }
+
                 $objectType = $this->getObjectTypeByName($objectTypeName);
                 if( !$objectType ) {
                     exit('object type not found by name='.$objectTypeName);
@@ -1019,13 +1034,15 @@ class FormNodeUtil
                     'parent' => $sectionObject,
                     'name' => $fieldName,
                     'objectType' => $objectType,
+                    'classNamespace' => $classNamespace,
+                    'className' => $className
                 );
                 $this->createV2FormNode($fieldParams);
             }
         }
     }
 
-    public function createFirstdoseplasma($parent) {
+    public function createAfterFirstdoseplasma($parent) {
 
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeSection = $this->getObjectTypeByName('Form Section');
@@ -1101,8 +1118,8 @@ class FormNodeUtil
         /////////////// Transfusion Medicine -> Third+ dose platelets [Message Category] ////////////////
         //Laboratory Values [Form Section]
         $sections = array(
+            //CCI: [Form Field - Free Text, Single Line]
             array(
-                //CCI: [Form Field - Free Text, Single Line]
                 'sectionName' => "Laboratory Values",
                 'fields' => array('CCI'=>'Form Field - Free Text, Single Line')
             ),
@@ -1114,42 +1131,160 @@ class FormNodeUtil
         );
         $this->addFormToHolder($parent,"Third+ dose platelets",$sections);
 
-//        //        Transfusion Medicine -> Third+ dose platelets [Message Category]
-//        $formParams = array(
-//            'parent' => $parent,
-//            'name' => "Third+ dose platelets",
-//            'objectType' => $objectTypeForm,
-//        );
-//        $parentForm = $this->createV2FormNode($formParams);
-//        $this->setMessageCategoryListLink("Third+ dose platelets",$parentForm);
-//        //Laboratory Values [Form Section]
-//        $formParams = array(
-//            'parent' => $parentForm,
-//            'name' => "Laboratory Values",
-//            'objectType' => $objectTypeSection,
-//        );
-//        $laboratoryValues = $this->createV2FormNode($formParams);
-//        //    CCI: [Form Field - Free Text, Single Line]
-//        $formParams = array(
-//            'parent' => $laboratoryValues,
-//            'name' => "CCI",
-//            'objectType' => $objectTypeString,
-//        );
-//        $formField = $this->createV2FormNode($formParams);
-//        //Miscellaneous [Form Section]
-//        $formParams = array(
-//            'parent' => $parentForm,
-//            'name' => "Miscellaneous",
-//            'objectType' => $objectTypeSection,
-//        );
-//        $miscellaneous = $this->createV2FormNode($formParams);
-//        //    Platelet Goal: [Form Field - Free Text, Single Line]
-//        $formParams = array(
-//            'parent' => $miscellaneous,
-//            'name' => "Platelet Goal",
-//            'objectType' => $objectTypeString,
-//        );
-//        $MedicationString = $this->createV2FormNode($formParams);
+        /////////////////////////// Transfusion Medicine -> Cryoprecipitate [Message Category] ///////////////////////
+        //    Laboratory Values [Form Section]
+        //    INR: [Form Field - Free Text, Single Line]
+        //    PT: [Form Field - Free Text, Single Line]
+        //    PTT: [Form Field - Free Text, Single Line]
+        //    Fibrinogen: [Form Field - Free Text, Single Line]
+        $sections = array(
+            array(
+                'sectionName' => "Laboratory Values",
+                'fields' => array(
+                    'INR'=>'Form Field - Free Text, Single Line',
+                    'PT'=>'Form Field - Free Text, Single Line',
+                    'PTT'=>'Form Field - Free Text, Single Line',
+                    'Fibrinogen'=>'Form Field - Free Text, Single Line',
+                )
+            ),
+        );
+        $this->addFormToHolder($parent,"Cryoprecipitate",$sections);
+
+        ////////////////////////// Transfusion Medicine -> MTP [Message Category]
+        //        Laboratory Values [Form Section]
+        //    INR: [Form Field - Free Text, Single Line]
+        //    PT: [Form Field - Free Text, Single Line]
+        //    PTT: [Form Field - Free Text, Single Line]
+        //    Fibrinogen: [Form Field - Free Text, Single Line]
+        $sections = array(
+            array(
+                'sectionName' => "Laboratory Values",
+                'fields' => array(
+                    'INR'=>'Form Field - Free Text, Single Line',
+                    'PT'=>'Form Field - Free Text, Single Line',
+                    'PTT'=>'Form Field - Free Text, Single Line',
+                    'Fibrinogen'=>'Form Field - Free Text, Single Line',
+                )
+            ),
+        );
+        $this->addFormToHolder($parent,"MTP",$sections);
+
+        /////////////////////////// Transfusion Medicine -> Emergency release [Message Category]
+        //        Miscellaneous [Form Section]
+        //    Blood Type of Unit: [Form Field - Free Text, Single Line]
+        //    Blood Type of Patient: [Form Field - Free Text, Single Line]
+        $sections = array(
+            array(
+                'sectionName' => "Miscellaneous",
+                'fields' => array(
+                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Blood Type of Patient'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                )
+            ),
+        );
+        $this->addFormToHolder($parent,"Emergency release",$sections);
+
+        ////////////// Transfusion Medicine -> Payson transfusion [Message Category] ///////////////////
+        $this->addFormToHolder($parent,"Payson transfusion",array());
+
+        ////////////////////// Transfusion Medicine -> Incompatible crossmatch [Message Category]
+        //        Miscellaneous [Form Section]
+        //    Blood Type of Unit: [Form Field - Free Text, Single Line]
+        //    Blood Type of Patient: [Form Field - Free Text, Single Line]
+        //    Antibodies: [Form Field - Free Text, Single Line]
+        //    Phenotype: [Form Field - Free Text, Single Line]
+        //    Incompatibility: [Form Field - Free Text, Single Line]
+        $sections = array(
+            array(
+                'sectionName' => "Miscellaneous",
+                'fields' => array(
+                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Blood Type of Patient'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Antibodies'=>'Form Field - Free Text, Single Line',
+                    'Phenotype'=>'Form Field - Free Text, Single Line',
+                    'Incompatibility'=>'Form Field - Free Text, Single Line',
+                )
+            ),
+        );
+        $this->addFormToHolder($parent,"Incompatible crossmatch",$sections);
+
+        /////////////////// Transfusion Medicine -> Transfusion reaction [Message Category]
+        $sections = array(
+            //        Miscellaneous [Form Section]
+            //            Blood Product Transfused: [Form Field - Dropdown Menu]
+            //            Transfusion Reaction Type: [Form Field - Dropdown Menu]
+            array(
+                'sectionName' => "Miscellaneous",
+                'fields' => array(
+                    'Blood Product Transfused'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodProductTransfusedList"),
+                    'Transfusion Reaction Type'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionReactionTypeList"),
+                )
+            ),
+            //        Vitals [Form Section]
+            //    Pre-Temp: [Form Field - Free Text, Single Line]
+            //    Pre-HR: [Form Field - Free Text, Single Line]
+            //    Pre-RR: [Form Field - Free Text, Single Line]
+            //    Pre-O2 sat: [Form Field - Free Text, Single Line]
+            //    Pre-BP: [Form Field - Free Text, Single Line]
+            //    Post-Temp: [Form Field - Free Text, Single Line]
+            //    Post-HR: [Form Field - Free Text, Single Line]
+            //    Post-RR: [Form Field - Free Text, Single Line]
+            //    Post-O2 sat: [Form Field - Free Text, Single Line]
+            //    Post-BP: [Form Field - Free Text, Single Line]
+            array(
+                'sectionName' => "Vitals",
+                'fields' => array(
+                    'Pre-Temp'=>'Form Field - Free Text, Single Line',
+                    'Pre-HR'=>'Form Field - Free Text, Single Line',
+                    'Pre-RR'=>'Form Field - Free Text, Single Line',
+                    'Pre-O2'=>'Form Field - Free Text, Single Line',
+                    'Pre-BP'=>'Form Field - Free Text, Single Line',
+                    'Post-Temp'=>'Form Field - Free Text, Single Line',
+                    'Post-HR'=>'Form Field - Free Text, Single Line',
+                    'Post-RR'=>'Form Field - Free Text, Single Line',
+                    'Post-O2'=>'Form Field - Free Text, Single Line',
+                    'Post-BP'=>'Form Field - Free Text, Single Line',
+                )
+            ),
+            // Transfusion Reaction Workup [Form Section]
+            //  Transfusion Reaction Workup Description [Form Field - Free Text]
+            //  Clerical error: [Form Field - Dropdown Menu]
+            //  Blood Type of Unit: [Form Field - Dropdown Menu]
+            //  Blood type of pre-transfusion specimen: [Form Field - Dropdown Menu] (BloodTypeList)
+            //  Blood type of post-transfusion specimen: [Form Field - Dropdown Menu]
+            //  Pre-transfusion antibody screen: [Form Field - Dropdown Menu]
+            //  Post-transfusion antibody screen: [Form Field - Dropdown Menu]
+            //  Pre-transfusion DAT: [Form Field - Dropdown Menu]
+            //  Post-transfusion DAT: [Form Field - Dropdown Menu]
+            //  Pre-transfusion crossmatch: [Form Field - Dropdown Menu]
+            //  Post-transfusion crossmatch: [Form Field - Dropdown Menu]
+            //  Pre-transfusion hemolysis check: [Form Field - Dropdown Menu]
+            //  Post-transfusion hemolysis check: [Form Field - Dropdown Menu]
+            //  Microbiology: [Form Field - Free Text, Single Line]
+            array(
+                'sectionName' => "Transfusion Reaction Workup",
+                'fields' => array(
+                    'Transfusion Reaction Workup Description'=>'Form Field - Free Text, Single Line',
+                    'Clerical error'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","ClericalErrorList"),
+                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodProductTransfusedList"),
+                    'Blood type of pre-transfusion specimen'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Blood type of post-transfusion specimen'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Pre-transfusion antibody screen'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionAntibodyScreenResultsList"),
+                    'Post-transfusion antibody screen'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionAntibodyScreenResultsList"),
+                    'Pre-transfusion DAT'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionDATResultsList"),
+                    'Post-transfusion DAT'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionDATResultsList"),
+                    'Pre-transfusion crossmatch'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionCrossmatchResultsList"),
+                    'Post-transfusion crossmatch'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionCrossmatchResultsList"),
+                    'Pre-transfusion hemolysis check'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionHemolysisCheckResultsList"),
+                    'Post-transfusion hemolysis check'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionHemolysisCheckResultsList"),
+                    'Microbiology'=>'Form Field - Free Text, Single Line',
+                )
+            ),
+
+        );
+        $this->addFormToHolder($parent,"Transfusion reaction",$sections);
+
+
 
 
         return $parentForm;

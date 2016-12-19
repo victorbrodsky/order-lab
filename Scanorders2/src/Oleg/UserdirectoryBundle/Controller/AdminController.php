@@ -13,6 +13,7 @@ use Oleg\UserdirectoryBundle\Entity\CCIPlateletTypeTransfusedList;
 use Oleg\UserdirectoryBundle\Entity\CCIUnitPlateletCountDefaultValueList;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
+use Oleg\UserdirectoryBundle\Entity\ClericalErrorList;
 use Oleg\UserdirectoryBundle\Entity\Collaboration;
 use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
@@ -302,6 +303,7 @@ class AdminController extends Controller
         $count_TransfusionProductStatusList = $this->generateTransfusionProductStatusList();
         $count_generateWeekDaysList = $this->generateWeekDaysList();
         $count_generateMonthsList = $this->generateMonthsList();
+        $count_generateClericalErrorList = $this->generateClericalErrorList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -385,6 +387,7 @@ class AdminController extends Controller
             'TransfusionProductStatusList='.$count_TransfusionProductStatusList.', '.
             'WeekDaysList='.$count_generateWeekDaysList.', '.
             'MonthsList='.$count_generateMonthsList.', '.
+            'ClericalErrorList='.$count_generateClericalErrorList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -5477,6 +5480,7 @@ class AdminController extends Controller
             "950" => array('WeekDaysList','weekdays-list'),
             "960" => array('MonthsList','months-list'),
             "970" => array('FormNode','formnodes-list','Flat Form Tree'),
+            "980" => array('ClericalErrorList','clericalerrors-list'),
 
         );
 
@@ -6259,6 +6263,38 @@ class AdminController extends Controller
             }
 
             $listEntity = new BloodProductTransfusedList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    //ClericalErrorList
+    public function generateClericalErrorList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Yes",
+            "None",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:ClericalErrorList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new ClericalErrorList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

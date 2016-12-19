@@ -119,6 +119,7 @@ class ListController extends Controller
      * @Route("/list/transfusion-product-status/", name="transfusionproductstatus-list")
      * @Route("/list/week-days/", name="weekdays-list")
      * @Route("/list/months/", name="months-list")
+     * @Route("/list/clerical-errors/", name="clericalerrors-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -387,6 +388,7 @@ class ListController extends Controller
      * @Route("/list/transfusion-product-status/", name="transfusionproductstatus_create")
      * @Route("/list/week-days/", name="weekdays_create")
      * @Route("/list/months/", name="months_create")
+     * @Route("/list/clerical-errors/", name="clericalerrors_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -563,6 +565,7 @@ class ListController extends Controller
      * @Route("/list/transfusion-product-status/new", name="transfusionproductstatus_new")
      * @Route("/list/week-days/new", name="weekdays_new")
      * @Route("/list/months/new", name="months_new")
+     * @Route("/list/clerical-errors/new", name="clericalerrors_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -710,6 +713,7 @@ class ListController extends Controller
      * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_show")
      * @Route("/list/week-days/{id}", name="weekdays_show")
      * @Route("/list/months/{id}", name="months_show")
+     * @Route("/list/clerical-errors/{id}", name="clericalerrors_show")
      *
      *
      * @Method("GET")
@@ -848,6 +852,7 @@ class ListController extends Controller
      * @Route("/list/transfusion-product-status/{id}/edit", name="transfusionproductstatus_edit")
      * @Route("/list/week-days/{id}/edit", name="weekdays_edit")
      * @Route("/list/months/{id}/edit", name="months_edit")
+     * @Route("/list/clerical-errors/{id}/edit", name="clericalerrors_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1031,6 +1036,7 @@ class ListController extends Controller
      * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_update")
      * @Route("/list/week-days/{id}", name="weekdays_update")
      * @Route("/list/months/{id}", name="months_update")
+     * @Route("/list/clerical-errors/{id}", name="clericalerrors_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1718,7 +1724,10 @@ class ListController extends Controller
                 $className = "MonthsList";
                 $displayName = "Months List";
                 break;
-
+            case "clericalerrors":
+                $className = "ClericalErrorList";
+                $displayName = "Clerical Error List";
+                break;
 
 //            case "messagetypeclassifiers":
 //                $className = "MessageTypeClassifiers";
@@ -1880,6 +1889,7 @@ class ListController extends Controller
      * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_delete")
      * @Route("/list/week-days/{id}", name="weekdays_delete")
      * @Route("/list/months/{id}", name="months_delete")
+     * @Route("/list/clerical-errors/{id}", name="clericalerrors_delete")
      *
      *
      * @Method("DELETE")
