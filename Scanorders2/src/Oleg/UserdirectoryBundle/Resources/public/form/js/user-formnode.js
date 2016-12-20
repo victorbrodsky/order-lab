@@ -148,7 +148,7 @@ function calllogAppendFormNodes( data ) {
 //find the latest parent formnode holder element by parentFormNodeId id
 function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, formNodeHtml ) {
 
-    console.log("calllogAppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId);
+    //console.log("calllog AppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId);
 
     //check if parent formnode exists and append this formnode to the parent formnode
     var parentId = "formnode-"+parentFormNodeId;
@@ -178,29 +178,19 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
     //var parentEl = document.getElementById(parentId);
     if( parentEl ) {
         //console.log("parentId found="+parentId);
-        appendEl = $(parentEl).find('.form-nodes-holder').last();
-        //if( appendEl.length > 0 ) {
-        //    console.log("form-nodes-holder found in ="+holderId);
-        //    //appendEl = $(parentEl).find('.form-nodes-holder');
-        //} else {
-        //    console.log("form-nodes-holder not found!!! in ="+holderId);
-        //    appendEl = $(parentEl).find('.row').parent();
-        //}
-        //printF(appendEl,"!!! appendEl found:");
+        //console.log('form-nodes-holder count='+$(parentEl).find('.form-nodes-holder').length);
+        //console.log($(parentEl));
+        appendEl = $(parentEl).find('.form-nodes-holder').first(); //get the panel-body of the parent section
         //console.log(appendEl);
-        //return $(parentEl).find('.row').last();
 
         //if already exists, make sure that it is visible
         calllogDisabledEnabledSingleFormNode('enable', parentFormNodeId);
 
-        //appendEl.after(formNodeHtml);
-        //console.log("0 formNodeHtml="+formNodeHtml);
-        //formNodeHtml = "<br>"+formNodeHtml;
-        //console.log("1 formNodeHtml="+formNodeHtml);
-
-        appendEl.append(formNodeHtml);
+        appendEl.append(formNodeHtml); //Insert content, specified by the parameter, to the end of each element in the set of matched elements.
         //appendEl.after(formNodeHtml);
         return appendEl;
+    } else {
+        //console.log("parentId not found");
     }
 
     //regular append to the end (for new,edit) or beginning (for show) of the global form
