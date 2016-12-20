@@ -30,9 +30,11 @@ class FormNode extends BaseCompositeNode {
      **/
     protected $parent;
 
+    //@ORM\OrderBy({"lft" = "ASC"})
+    //@ORM\OrderBy({"orderinlist" = "ASC"})
     /**
      * @ORM\OneToMany(targetEntity="FormNode", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
+     * @ORM\OrderBy({"orderinlist" = "ASC"})
      **/
     protected $children;
 

@@ -1,6 +1,6 @@
 
 {#add a single form node#}
-{% macro addSingleFormNode( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+{% macro addSingleFormNode( formNodeHolder, formNode, formNodeValue, cycle, prototype, count ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
     <div id="formnode-{{ formNode.id }}"
@@ -8,7 +8,7 @@
          data-formnodeholderid="{{ formNodeHolder.id }}"
          data-formnodeid="{{ formNode.id }}"
     >
-        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,0,"single",formNodeValue) }}
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,count,"single",formNodeValue) }}
     </div>
 
 {% endmacro %}

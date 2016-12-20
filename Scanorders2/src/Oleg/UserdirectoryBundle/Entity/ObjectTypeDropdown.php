@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="user_objectTypeDropdown")
  */
-class ObjectTypeDropdown extends ListAbstract
+class ObjectTypeDropdown extends ObjectTypeReceivingBase
 {
 
     /**
@@ -26,54 +26,14 @@ class ObjectTypeDropdown extends ListAbstract
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $value;
+    protected $value;
 
     /**
      * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeDropdowns", cascade={"persist"})
      * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
      */
-    private $formNode;
+    protected $formNode;
 
-
-
-
-    public function __construct( $creator = null ) {
-        parent::__construct($creator);
-    }
-
-
-
-    /**
-     * @return mixed
-     */
-    public function getFormNode()
-    {
-        return $this->formNode;
-    }
-
-    /**
-     * @param mixed $formNode
-     */
-    public function setFormNode($formNode)
-    {
-        $this->formNode = $formNode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
 
 
 

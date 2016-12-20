@@ -110,9 +110,18 @@ class FormNodeController extends Controller {
                 $parentFormNodeId = null;
             }
 
+            $arraySectionCount = null;
+
             if( $parentFormNodeId ) {
                 //check parent nested sections
                 $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr);
+
+                //$arraySectionCount = $resArr['formNodeArraySectionCount'];
+                $arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($formNode,$arraySectionCount,$this->testing);
+
+                if( $this->testing ) {
+                    echo "final arraySectionCount=" . $arraySectionCount . "<br>";
+                }
             }
 
             //find FormNode value by entityNamespace, entityName, entityId
@@ -133,7 +142,8 @@ class FormNodeController extends Controller {
                 'formNodeHolderEntity' => $formNodeHolderEntity,
                 'cycle' => $cycle,
                 'formNodeValue' => $formNodeValue,
-                'single' => $this->single
+                'single' => $this->single,
+                'arraySectionCount' => $arraySectionCount
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -200,7 +210,8 @@ class FormNodeController extends Controller {
                 'formNodeHolderEntity' => $formNodeHolderEntity,
                 'cycle' => 'edit',
                 'formNodeValue' => null,
-                'single' => $this->single
+                'single' => $this->single,
+                'arraySectionCount' => null
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -218,7 +229,7 @@ class FormNodeController extends Controller {
                 'formNodeId' => $parentFormNode->getId(),
                 'formNodeValue' => null,
                 'formNodeHtml' => $template,
-                'simpleFormNode' => false
+                'simpleFormNode' => false,
             );
 
             $resArr[] = $res;

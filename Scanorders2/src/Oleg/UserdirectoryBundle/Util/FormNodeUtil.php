@@ -389,6 +389,51 @@ class FormNodeUtil
 //        return $formSections;
     }
 
+    //get array section count: 0-1 means that this array section has an index '1' (alos there is a preceding sibling with index '0') and a parent index '0'
+    public function getArraySectionCountRecursive( $formNode, $arraySectionCount, $testing ) {
+
+        if( $testing ) {
+            echo "input=" . $arraySectionCount . "<br>";
+        }
+
+        $count = '0';
+
+        $parentFormNode = $formNode->getParent();
+        if( !$parentFormNode ) {
+            if( $testing ) {
+                echo "no parent => return null <br>";
+            }
+            return null;
+        }
+
+        $formNodeTypeName = $parentFormNode->getObjectTypeName();
+        if( $testing ) {
+            echo "formNodeTypeName=" . $formNodeTypeName . "<br>";
+        }
+
+        //check if parent is array section
+        if( $formNodeTypeName == "Form Section Array" ) {
+            //attach index by preceding siblings
+            if( $arraySectionCount != '' && $arraySectionCount != null ) {
+                $arraySectionCount = $arraySectionCount . "-" . $count;
+            } else {
+                $arraySectionCount = $count;
+            }
+        }
+
+        if( $testing ) {
+            echo "output=" . $arraySectionCount . "<br>";
+        }
+
+        return $arraySectionCount;
+    }
+
+    //get order index of all siblings on the same level
+    public function getSublingIndex() {
+
+    }
+
+
 //    public function getListByType( $formNode ) {
 //
 //        $list = null;
@@ -447,6 +492,11 @@ class FormNodeUtil
 //
 //        return $maxId;
 //    }
+
+
+
+
+
 
 
 
@@ -1833,7 +1883,7 @@ class FormNodeUtil
 
         ///////////////////////////// Section 2 /////////////////////////////////
         //Test Section 2 (Form Section) //change from "Form Section" to "Form Section Array"
-        $objectSectionArrayType = $this->getObjectTypeByName('orm Section Array');
+        $objectSectionArrayType = $this->getObjectTypeByName('Form Section Array');
         $formParams = array(
             'parent' => $TestForm,
             'name' => "Test Section 2",

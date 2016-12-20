@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="user_objectTypeDateTime")
  */
-class ObjectTypeDateTime extends ListAbstract
+class ObjectTypeDateTime extends ObjectTypeReceivingBase
 {
 
     /**
@@ -27,14 +27,12 @@ class ObjectTypeDateTime extends ListAbstract
      * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeDateTimes", cascade={"persist"})
      * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
      */
-    private $formNode;
-
-
+    protected $formNode;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $value;
+    protected $value;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -48,52 +46,8 @@ class ObjectTypeDateTime extends ListAbstract
 
 
 
-    public function __construct( $creator = null ) {
-        parent::__construct($creator);
-    }
 
 
-
-    /**
-     * @return mixed
-     */
-    public function getFormNode()
-    {
-        return $this->formNode;
-    }
-
-    /**
-     * @param mixed $formNode
-     */
-    public function setFormNode($formNode)
-    {
-        $this->formNode = $formNode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value)
-    {
-//        if( is_object($value) ) {
-//            //
-//        } else {
-//            if( $timezoneStr ) {
-//                $value = new \DateTime($value, new \DateTimeZone($timezoneStr)); //'Pacific/Nauru'
-//            } else {
-//                $value = new \DateTime($value);
-//            }
-//        }
-        $this->value = $value;
-    }
 
     /**
      * @return mixed

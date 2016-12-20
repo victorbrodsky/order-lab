@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="user_objectTypeText")
  */
-class ObjectTypeText extends ListAbstract
+class ObjectTypeText extends ObjectTypeReceivingBase
 {
 
     /**
@@ -37,73 +37,16 @@ class ObjectTypeText extends ListAbstract
      * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeTexts", cascade={"persist"})
      * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
      */
-    private $formNode;
+    protected $formNode;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $value;
+    protected $value;
 
 
 
 
-    public function __construct( $creator = null ) {
-        parent::__construct($creator);
-
-        //$this->formNodes = new ArrayCollection();
-    }
-
-
-
-    /**
-     * @return mixed
-     */
-    public function getFormNode()
-    {
-        return $this->formNode;
-    }
-
-    /**
-     * @param mixed $formNode
-     */
-    public function setFormNode($formNode)
-    {
-        $this->formNode = $formNode;
-    }
-
-//    public function addFormNode($item)
-//    {
-//        if( $item && !$this->formNodes->contains($item) ) {
-//            $this->formNodes->add($item);
-//            //$item->setObjectType($this);
-//        }
-//        return $this;
-//    }
-//    public function removeFormNode($item)
-//    {
-//        $this->formNodes->removeElement($item);
-//    }
-//    public function getFormNodes()
-//    {
-//        return $this->formNodes;
-//    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
 
 
 }

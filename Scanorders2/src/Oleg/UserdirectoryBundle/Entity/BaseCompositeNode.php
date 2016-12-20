@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\Criteria;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -67,6 +68,14 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     public function getChildren()
     {
         return $this->children;
+//        $items = $this->children;
+//        $criteria = Criteria::create()
+//            //->where(Criteria::expr()->eq("user", $user))
+//            ->orderBy(array("orderinlist" => Criteria::DESC))
+//        ;
+//        $itemsFiltered = $items->matching($criteria);
+//
+//        return $itemsFiltered[0];
     }
     public function addChild($item)
     {
