@@ -515,12 +515,21 @@ function formNodeAddSameSection( btn, formNodeId ) {
         regularCombobox(targetSection);
 
         //show remove button
-        var formNodeHolder = $(btn).closest('.form-nodes-holder');
-        if( attachEl.find('.formnode-remove-section').length > 1  ) {
-            formNodeHolder.find('.formnode-remove-section').show();
-        } else {
-            formNodeHolder.find('.formnode-remove-section').hide();
-        }
+        //formnode-arraysection-holder-211
+        //formnode-remove-section-211
+        formNodeProcessRemoveSectionBtn(formNodeId);
+        //var sections = $('.formnode-remove-section-'+formNodeId);
+        //console.log('sections='+sections.length);
+        //if( sections.length > 1  ) {
+        //    sections.show();
+        //} else {
+        //    sections.hide();
+        //}
+        //if( attachEl.find('.formnode-remove-section').length > 1  ) {
+        //    attachEl.find('.formnode-remove-section').show();
+        //} else {
+        //    attachEl.find('.formnode-remove-section').hide();
+        //}
     }
 
 }
@@ -636,13 +645,24 @@ function formnodeGetLastSectionArrayIndex(index,separator) {
 function formNodeRemoveSection( btn, formNodeId ) {
     console.log("remove "+formNodeId);
 
-    var attachEl = $(btn).closest('#formnode-' + formNodeId);
+    //var attachEl = $(btn).closest('#formnode-' + formNodeId);
 
     //formnode-arraysection-holder-90
     $(btn).closest('.formnode-arraysection-holder').remove();
 
-    if( attachEl.find('.formnode-remove-section').length == 1  ) {
-        attachEl.find('.formnode-remove-section').hide();
+    //if( attachEl.find('.formnode-remove-section').length == 1  ) {
+    //    attachEl.find('.formnode-remove-section').hide();
+    //}
+    formNodeProcessRemoveSectionBtn(formNodeId);
+}
+
+function formNodeProcessRemoveSectionBtn( formNodeId ) {
+    var sections = $('.formnode-remove-section-'+formNodeId);
+    console.log('sections='+sections.length);
+    if( sections.length > 1  ) {
+        sections.show();
+    } else {
+        sections.hide();
     }
 }
 

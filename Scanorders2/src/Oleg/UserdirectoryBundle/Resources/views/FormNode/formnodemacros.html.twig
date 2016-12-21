@@ -313,11 +313,11 @@
 
                 <div class="pull-right">
                 <button id="formnode-add-section-{{ formNode.id }}" type="button"
-                        class="btn btn-default btn-xs formnode-add-section"
+                        class="btn btn-default btn-xs formnode-add-section formnode-add-section-{{ formNode.id }}"
                         onclick="formNodeAddSameSection(this,{{ formNode.id }})">+</button>
 
                 <button id="formnode-remove-section-{{ formNode.id }}" type="button"
-                        class="btn btn-default btn-xs formnode-remove-section"
+                        class="btn btn-default btn-xs formnode-remove-section formnode-remove-section-{{ formNode.id }}"
                         style="display: none;"
                         onclick="formNodeRemoveSection(this,{{ formNode.id }})">-</button>
                 </div>
