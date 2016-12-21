@@ -14,12 +14,12 @@ class ObjectTypeReceivingBase extends ListAbstract
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $indexSectionArray;
+    protected $arraySectionIndex;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $parentIndexSectionArray;
+    protected $arraySectionId;
 
 
 
@@ -67,34 +67,35 @@ class ObjectTypeReceivingBase extends ListAbstract
     /**
      * @return mixed
      */
-    public function getIndexSectionArray()
+    public function getArraySectionIndex()
     {
-        return $this->indexSectionArray;
+        return $this->arraySectionIndex;
     }
 
     /**
-     * @param mixed $indexSectionArray
+     * @param mixed $arraySectionIndex
      */
-    public function setIndexSectionArray($indexSectionArray)
+    public function setArraySectionIndex($arraySectionIndex)
     {
-        $this->indexSectionArray = $indexSectionArray;
+        $this->arraySectionIndex = $arraySectionIndex;
     }
 
     /**
      * @return mixed
      */
-    public function getParentIndexSectionArray()
+    public function getArraySectionId()
     {
-        return $this->parentIndexSectionArray;
+        return $this->arraySectionId;
     }
 
     /**
-     * @param mixed $parentIndexSectionArray
+     * @param mixed $arraySectionId
      */
-    public function setParentIndexSectionArray($parentIndexSectionArray)
+    public function setArraySectionId($arraySectionId)
     {
-        $this->parentIndexSectionArray = $parentIndexSectionArray;
+        $this->arraySectionId = $arraySectionId;
     }
+
 
 
 

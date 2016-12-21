@@ -446,10 +446,10 @@ function formNodeAddSameSection( btn, formNodeId ) {
     //get next counter by class="formnode-arraysection-holder-{{ formNode.id }}"
     $('.formnode-arraysection-holder-'+formNodeId).each(function(){
         var sectionidFull = $(this).data("sectionid"); //0-1
-        console.log('sectionidFull='+sectionidFull);
+        //console.log('sectionidFull='+sectionidFull);
         var sectionid = formnodeGetLastSectionArrayIndex(sectionidFull,'-');
         sectionid = parseInt(sectionid);
-        console.log('sectionid='+sectionid);
+        //console.log('sectionid='+sectionid);
         if( sectionid > maxCounter ) {
             maxCounter = sectionid;
         }
@@ -573,7 +573,7 @@ function formnodeReplaceIndexByName( input, fieldname, index ) {
     return input;
     function formnodeReplaceIndexSeparator(input, fieldname, index, separator) {
         var arrSecIndex = formnodeGetSectionarrayIndex(input,separator,fieldname);
-        console.log('arrSecIndex='+arrSecIndex);
+        //console.log('arrSecIndex='+arrSecIndex);
 
         if( separator == '][') {
             // \[        // FIND   left bracket (literal) '['
@@ -582,13 +582,13 @@ function formnodeReplaceIndexByName( input, fieldname, index ) {
         } else {
             var searchStr = fieldname + separator + arrSecIndex + separator;
         }
-        console.log('searchStr='+searchStr);
+        //console.log('searchStr='+searchStr);
 
         //replace the last index
         var newArrSecIndex = formnodeReplaceSectionarrayIndex(arrSecIndex,index);
 
         var replaceStr = fieldname + separator + newArrSecIndex + separator;
-        console.log('replaceStr='+replaceStr);
+        //console.log('replaceStr='+replaceStr);
 
         var seacrh = new RegExp(searchStr, 'g');
         //var seacrh = searchStr;
@@ -615,7 +615,7 @@ function formnodeReplaceSectionarrayIndex(index,newIndex) {
     if( index.indexOf('-') !== -1 ) {
         var res = index.split('-');
         var lastIndex = res[res.length-1];
-        console.log('lastIndex='+lastIndex);
+        //console.log('lastIndex='+lastIndex);
         var newIndexArr = [];
         //replace last index by newIndex
         for( var i=0; i < res.length; i++ ) {
@@ -638,12 +638,12 @@ function formnodeGetLastSectionArrayIndex(index,separator) {
         var res = index.split(separator);
         lastIndex = res[res.length - 1];
     }
-    console.log('lastIndex=' + lastIndex);
+    //console.log('lastIndex=' + lastIndex);
     return lastIndex;
 }
 
 function formNodeRemoveSection( btn, formNodeId ) {
-    console.log("remove "+formNodeId);
+    //console.log("remove "+formNodeId);
 
     //var attachEl = $(btn).closest('#formnode-' + formNodeId);
 
@@ -658,7 +658,7 @@ function formNodeRemoveSection( btn, formNodeId ) {
 
 function formNodeProcessRemoveSectionBtn( formNodeId ) {
     var sections = $('.formnode-remove-section-'+formNodeId);
-    console.log('sections='+sections.length);
+    //console.log('sections='+sections.length);
     if( sections.length > 1  ) {
         sections.show();
     } else {

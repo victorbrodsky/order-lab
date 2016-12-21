@@ -136,31 +136,71 @@ class FormNodeController extends Controller {
             }
             //echo "formNode=".$formNode->getId()."<br>";
             //echo "formNodeValue=".$formNodeValue."<br>";
+            if( $this->testing ) {
+                echo "formNodeValue for formNode=".$formNode->getId().":<br>";
+                print "<pre>";
+                print_r($formNodeValue);
+                print "</pre>EOF formNodeValues<br>";
+            }
 
-            $formNodeArr = array(
-                'formNode' => $formNode,
-                'formNodeHolderEntity' => $formNodeHolderEntity,
-                'cycle' => $cycle,
-                'formNodeValue' => $formNodeValue,
-                'single' => $this->single,
-                'arraySectionCount' => $arraySectionCount
-            );
+            //TODO: create additional sections
+            if( is_array($formNodeValue) ) {
+                foreach( $formNodeValue as $formNodeValueArr ) {
+                    $formNodeValue = $formNodeValueArr['formNodeValue'];
+                    $arraySectionCount = $formNodeValueArr['arraySectionIndex'];
 
-            $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
+                    $formNodeArr = array(
+                        'formNode' => $formNode,
+                        'formNodeHolderEntity' => $formNodeHolderEntity,
+                        'cycle' => $cycle,
+                        'formNodeValue' => $formNodeValue,
+                        'single' => $this->single,
+                        'arraySectionCount' => $arraySectionCount
+                    );
 
-            $res = array(
-                'formNodeHolderId' => $formNodeHolderId,
-                'parentFormNodeId' => $parentFormNodeId,
-                'formNodeId' => $formNodeId,
-                'simpleFormNode' => true,
-                'formNodeObjectType' => $formNode->getObjectType()."",
-                'formNodeValue' => $formNodeValue,
-                'formNodeHtml' => $template,
-                //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
-                //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
-            );
+                    $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
-            $resArr[] = $res;
+                    $res = array(
+                        'formNodeHolderId' => $formNodeHolderId,
+                        'parentFormNodeId' => $parentFormNodeId,
+                        'formNodeId' => $formNodeId,
+                        'simpleFormNode' => true,
+                        'formNodeObjectType' => $formNode->getObjectType() . "",
+                        'formNodeValue' => $formNodeValue,
+                        'formNodeHtml' => $template,
+                        //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
+                        //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
+                    );
+
+                    $resArr[] = $res;
+                }
+            } else {
+
+                $formNodeArr = array(
+                    'formNode' => $formNode,
+                    'formNodeHolderEntity' => $formNodeHolderEntity,
+                    'cycle' => $cycle,
+                    'formNodeValue' => $formNodeValue,
+                    'single' => $this->single,
+                    'arraySectionCount' => $arraySectionCount
+                );
+
+                $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
+
+                $res = array(
+                    'formNodeHolderId' => $formNodeHolderId,
+                    'parentFormNodeId' => $parentFormNodeId,
+                    'formNodeId' => $formNodeId,
+                    'simpleFormNode' => true,
+                    'formNodeObjectType' => $formNode->getObjectType() . "",
+                    'formNodeValue' => $formNodeValue,
+                    'formNodeHtml' => $template,
+                    //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
+                    //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
+                );
+
+                $resArr[] = $res;
+            }
         }//foreach
 
         if( $this->testing ) {

@@ -138,7 +138,7 @@ class FormNodeUtil
             $formValueMinute = $formValue['time']['minute'];
             $formValueStr = $formValueHour.":".$formValueMinute;
 
-            $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,true);
+            $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$testing);
 
             $newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
 
@@ -154,15 +154,15 @@ class FormNodeUtil
         if( is_array($formValue) ) {
             //$formValue is array
             echo $formNodeObjectName.": formValue is array:";
-            print "<pre>";
-            print_r($formValue);
-            print "</pre>";
+            //print "<pre>";
+            //print_r($formValue);
+            //print "</pre>";
             echo "<br>";
 
             if( array_key_exists('arraysectioncount', $formValue) ) {
-                echo $formNodeObjectName.": formValue is arraysectioncount <br>";
+                echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
                 //TODO: record section array index including parent index: 0-0, 0-1 (array section 1 (index 0) includes two array sections (indexes 0 and 1))
-
+                $this->createArraysectionListRecord($formNode, $formValue, $holderEntity, $testing);
             } else {
                 echo $formNodeObjectName.": formValue is regular array <br>";
                 foreach ($formValue as $thisFormValue) {
@@ -175,9 +175,32 @@ class FormNodeUtil
         }
 
     }
-    public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false ) {
+    public function createArraysectionListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
+        foreach( $formValue['arraysectioncount'] as $arraysectioncount=>$thisFormValue ) {
+            //echo $formNode->getId().": arraysectioncount=".$arraysectioncount.":<br>";
+            //print "<pre>";
+            //print_r($thisFormValue);
+            //print "</pre><br>";
+            foreach( $thisFormValue['node'] as $sectionFormnodeId => $thisThisFormValue ) {
+                $params = array(
+                    'arraySectionIndex' => $arraysectioncount,
+                    'arraySectionId' => $formNode->getId(),
+                );
+                $sectionFormnode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($sectionFormnodeId);
+                $this->createSingleFormNodeListRecord($sectionFormnode, $thisThisFormValue, $holderEntity, $testing, $params);
+            }
+        }
+    }
+    public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
 
-        echo "formnode-".$formNode->getId().": formValue=" . $formValue . "<br>";
+        echo "formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
+        if( $params ) {
+            echo "params:<br>";
+            echo "arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
+            //print "<pre>";
+            //print_r($params);
+            //print "</pre><br>";
+        }
 
         //1) create a new list element
         $newListElement = $this->createNewList($formNode);
@@ -197,6 +220,18 @@ class FormNodeUtil
 
         //4) set formnode to the list
         $newListElement->setFormNode($formNode);
+
+        //set additional parameters
+        if( $params ) {
+            echo "params: arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
+            if( array_key_exists('arraySectionIndex', $params) ) {
+                $newListElement->setArraySectionIndex($params['arraySectionIndex']);
+            }
+            if( array_key_exists('arraySectionId', $params) ) {
+                $newListElement->setArraySectionId($params['arraySectionId']);
+            }
+            //echo "sectionIndex=".$newListElement->getArraySectionIndex()."<br>";
+        }
 
         //testing
         if( 0 ) {
@@ -989,7 +1024,15 @@ class FormNodeUtil
             $resArr = array();
             foreach( $results as $result ) {
                 //$resArr[] = $result->getValue();
-                $resArr[] = $this->getFormNodeValueByType($formNode,$result);
+                //$resArr[] = $this->getFormNodeValueByType($formNode,$result);
+                //$resArr['formNodeValue'] = $this->getFormNodeValueByType($formNode,$result);
+                $res = array(
+                    'formNodeValue' => $this->getFormNodeValueByType($formNode,$result),
+                    'formNodeId' => $formNode->getId(),
+                    'arraySectionId' => $result->getArraySectionId(),
+                    'arraySectionIndex' => $result->getArraySectionIndex(),
+                );
+                $resArr[] = $res;
             }
             return $resArr;
         }
