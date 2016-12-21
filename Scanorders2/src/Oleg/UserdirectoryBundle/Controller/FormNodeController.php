@@ -205,13 +205,17 @@ class FormNodeController extends Controller {
                 return $resArr;
             }
 
+            $arraySectionCount = null;
+            $formNodeUtil = $this->get('user_formnode_utility');
+            $arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($parentFormNode,$arraySectionCount,$this->testing);
+
             $formNodeArr = array(
                 'formNode' => $parentFormNode,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
                 'cycle' => 'edit',
                 'formNodeValue' => null,
                 'single' => $this->single,
-                'arraySectionCount' => null
+                'arraySectionCount' => $arraySectionCount
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
