@@ -117,7 +117,7 @@ class FormNodeController extends Controller {
                 $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr);
 
                 //$arraySectionCount = $resArr['formNodeArraySectionCount'];
-                $arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($formNode,$arraySectionCount,$this->testing);
+                $arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($parentFormNode,$arraySectionCount,$this->testing);
 
                 if( $this->testing ) {
                     echo "final arraySectionCount=" . $arraySectionCount . "<br>";

@@ -453,6 +453,7 @@ function formNodeAddSameSection( btn, formNodeId ) {
         }
     });
     var nextCounter = maxCounter + 1;
+    console.log('nextCounter='+nextCounter);
 
     //var targetSection = $(".formnode-arraysection-holder-"+formNodeId).last();
 
@@ -517,7 +518,7 @@ function formNodeAddSameSection( btn, formNodeId ) {
 }
 
 //"arraysectioncount",3: formnode[90][arraysectioncount][2][node][91] => formnode[90][arraysectioncount][3][node][91]
-function formnodeReplaceIndexByName( input, fieldname, index ) {
+function formnodeReplaceIndexByName_OLD( input, fieldname, index ) {
     //replace all occurrence [arraysectioncount][2] by [arraysectioncount][3]
 
     //http://jsfiddle.net/gz2tX/44/
@@ -546,6 +547,66 @@ function formnodeReplaceIndexByName( input, fieldname, index ) {
 
     return input;
 }
+function formnodeReplaceIndexByName( input, fieldname, index ) {
+    input = formnodeReplaceIndexSeparator(input, fieldname, index, '][');
+    input = formnodeReplaceIndexSeparator(input, fieldname, index, '_');
+    return input;
+    function formnodeReplaceIndexSeparator(input, fieldname, index, separator) {
+        var arrSecIndex = fromnodeGetSectionarrayIndex(input,separator,fieldname);
+        console.log('arrSecIndex='+arrSecIndex);
+
+        if( separator == '][') {
+            // \[        // FIND   left bracket (literal) '['
+            // \]  // MATCH  right bracket (literal) ']'
+            var searchStr = /arraysectioncount\]\[[^\]]*?\]\[/;
+        } else {
+            var searchStr = fieldname + separator + arrSecIndex + separator;
+        }
+        console.log('searchStr='+searchStr);
+
+        //replace the last index
+        var newArrSecIndex = fromnodeReplaceSectionarrayIndex(arrSecIndex,index);
+
+        var replaceStr = fieldname + separator + newArrSecIndex + separator;
+        console.log('replaceStr='+replaceStr);
+
+        var seacrh = new RegExp(searchStr, 'g');
+        //var seacrh = searchStr;
+
+        input = input.replace(seacrh, replaceStr);
+
+        return input;
+    }
+    function fromnodeGetSectionarrayIndex(input,separator,fieldname) {
+        var res = input.split(separator);
+        for( var i=0; i < res.length; i++ ) {
+            if( res[i] == fieldname ) {
+                return res[i+1];
+            }
+        }
+        return 0;
+    }
+    function fromnodeReplaceSectionarrayIndex(index,newIndex) {
+        if( index.indexOf('-') !== -1 ) {
+            var res = index.split('-');
+            var lastIndex = res[res.length];
+            console.log('lastIndex='+lastIndex);
+            var newIndexArr = [];
+            for( var i=0; i < res.length; i++ ) {
+                if( i == res.length ) {
+                    newIndexArr.push(newIndex);
+                } else {
+                    newIndexArr.push(res[i]);
+                }
+                newIndex = newIndexArr.join('-');
+            }
+        }
+        return newIndex;
+    }
+    //document.write(foo('formnode[90][arraysectioncount][1-2][node][91] <br> formnode[90][arraysectioncount][0-2][node][92]','][') + '<br><br>');
+    //document.write(foo('formnode_90_arraysectioncount_1-2_node_91','_') + '<br>');
+}
+
 
 function formNodeRemoveSection( btn, formNodeId ) {
     console.log("remove "+formNodeId);
@@ -559,3 +620,5 @@ function formNodeRemoveSection( btn, formNodeId ) {
         attachEl.find('.formnode-remove-section').hide();
     }
 }
+
+

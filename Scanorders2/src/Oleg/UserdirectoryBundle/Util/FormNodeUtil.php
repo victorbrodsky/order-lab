@@ -393,44 +393,70 @@ class FormNodeUtil
     public function getArraySectionCountRecursive( $formNode, $arraySectionCount, $testing ) {
 
         if( $testing ) {
-            echo "input=" . $arraySectionCount . "<br>";
+            echo $formNode->getId().": input=" . $arraySectionCount . "<br>";
         }
-
-        $count = '0';
 
         $parentFormNode = $formNode->getParent();
-        if( !$parentFormNode ) {
+        if( $parentFormNode ) {
+            $arraySectionCount = $this->getArraySectionCountRecursive( $parentFormNode, $arraySectionCount, $testing );
+        } else {
             if( $testing ) {
-                echo "no parent => return null <br>";
+                //echo "no parent => calculate index<br>";
             }
-            return null;
         }
 
-        $formNodeTypeName = $parentFormNode->getObjectTypeName();
+        $count = $this->getSiblingIndexByType($formNode);
+
+        $formNodeTypeName = $formNode->getObjectTypeName();
         if( $testing ) {
-            echo "formNodeTypeName=" . $formNodeTypeName . "<br>";
+            //echo "Parent formNodeTypeName=" . $formNodeTypeName . "<br>";
+            //echo "Sibling count=" . $count . "<br>";
         }
 
         //check if parent is array section
         if( $formNodeTypeName == "Form Section Array" ) {
+//            if( $arraySectionCount == null ) {
+//                $arraySectionCount = '0';
+//            }
             //attach index by preceding siblings
-            if( $arraySectionCount != '' && $arraySectionCount != null ) {
-                $arraySectionCount = $arraySectionCount . "-" . $count;
-            } else {
+            if( $arraySectionCount === null || $arraySectionCount === '' ) {
                 $arraySectionCount = $count;
+            } else {
+                $arraySectionCount = $arraySectionCount . "-" . $count;
             }
         }
 
         if( $testing ) {
-            echo "output=" . $arraySectionCount . "<br>";
+            echo $formNode->getId().": output=" . $arraySectionCount . "<br>";
         }
 
         return $arraySectionCount;
     }
 
-    //get order index of all siblings on the same level
-    public function getSublingIndex() {
+    //get order index of all siblings on the same level ordered by orderinlist
+    public function getSiblingIndexByType( $node ) {
 
+        $index = 0;
+        $parent = $node->getParent();
+
+        if( !$parent ) {
+            return $index;
+        }
+
+        foreach( $parent->getChildren() as $sibling ) {
+
+            //check index if object type is the same
+            if( $node->getObjectTypeId() == $sibling->getObjectTypeId() ) {
+
+                if( $sibling->getId() == $node->getId() ) {
+                    return $index;
+                }
+
+                $index++;
+            }
+        }
+
+        return $index;
     }
 
 
