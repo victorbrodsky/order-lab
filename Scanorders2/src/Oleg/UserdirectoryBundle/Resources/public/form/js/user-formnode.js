@@ -162,10 +162,10 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
     if( formNodeEl ) {
 
         //TODO: check if arraySectionCount is equal to data-sectionid
-        //var sectionid = $(formNodeEl).data("sectionid");
-        //console.log("formNodeElId: sectionid=" + sectionid);
+        var sectionid = $(formNodeEl).data("sectionid");
+        console.log("formNodeElId: sectionid=" + sectionid);
 
-        //if( arraySectionCount != null && arraySectionCount != sectionid ) {
+        if( arraySectionCount == null || arraySectionCount == sectionid ) {
             console.log("EXIT: formnode-holder-" + formNodeId + " already exists!");
             //calllogDisabledEnabledFormNode('enable',formNodeHolderId);
 
@@ -178,7 +178,7 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
             calllogDisabledEnabledSingleFormNode('enable', formNodeId);
 
             return null;
-        //}
+        }
     }
 
     //check if parent formnode exists and append this formnode to the parent formnode

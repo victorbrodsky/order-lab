@@ -424,11 +424,12 @@ class FormNodeUtil
 //        return $formSections;
     }
 
+    //get section array index only for section array formnode
     //get array section count: 0-1 means that this array section has an index '1' (alos there is a preceding sibling with index '0') and a parent index '0'
     public function getArraySectionCountRecursive( $formNode, $arraySectionCount, $testing ) {
 
         if( $testing ) {
-            echo $formNode->getId().": input=" . $arraySectionCount . "<br>";
+            //echo $formNode->getId().": input=" . $arraySectionCount . "<br>";
         }
 
         $parentFormNode = $formNode->getParent();
@@ -462,7 +463,7 @@ class FormNodeUtil
         }
 
         if( $testing ) {
-            echo $formNode->getId().": output=" . $arraySectionCount . "<br>";
+            //echo $formNode->getId().": output=" . $arraySectionCount . "<br>";
         }
 
         return $arraySectionCount;
@@ -1054,7 +1055,7 @@ class FormNodeUtil
     public function getFormNodeId($formNodeId,$arraySectionCount) {
         if( $arraySectionCount ) {
             //testing
-            //return $formNodeId . "_" . $arraySectionCount;
+            return $formNodeId . "_" . $arraySectionCount;
         }
         return $formNodeId;
     }
