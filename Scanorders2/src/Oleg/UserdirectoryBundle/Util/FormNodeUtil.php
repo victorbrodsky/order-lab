@@ -1051,8 +1051,13 @@ class FormNodeUtil
         return $list->getValue();
     }
 
-
-
+    public function getFormNodeId($formNodeId,$arraySectionCount) {
+        if( $arraySectionCount ) {
+            //testing
+            //return $formNodeId . "_" . $arraySectionCount;
+        }
+        return $formNodeId;
+    }
 
 
 

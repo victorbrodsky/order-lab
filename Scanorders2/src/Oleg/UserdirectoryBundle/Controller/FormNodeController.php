@@ -143,14 +143,27 @@ class FormNodeController extends Controller {
                 print "</pre>EOF formNodeValues<br>";
             }
 
-            //TODO: create additional sections
             if( is_array($formNodeValue) ) {
+
+                /////////////// TODO: create additional sections ///////////////
                 foreach( $formNodeValue as $formNodeValueArr ) {
                     $formNodeValue = $formNodeValueArr['formNodeValue'];
                     $arraySectionCount = $formNodeValueArr['arraySectionIndex'];
 
+//                    if( $arraySectionCount ) {
+//                        $formNodeId = $formNodeId."_".$arraySectionCount;
+//                        if( $parentFormNodeId ) {
+//                            $parentFormNodeId = $parentFormNodeId."_".$arraySectionCount;
+//                        }
+//                    }
+                    $formNodeId = $formNodeUtil->getFormNodeId($formNodeId,$arraySectionCount);
+                    if( $parentFormNodeId ) {
+                        $parentFormNodeId = $formNodeUtil->getFormNodeId($parentFormNodeId,$arraySectionCount);
+                    }
+
                     $formNodeArr = array(
                         'formNode' => $formNode,
+                        'formNodeId' => $formNodeId,
                         'formNodeHolderEntity' => $formNodeHolderEntity,
                         'cycle' => $cycle,
                         'formNodeValue' => $formNodeValue,
@@ -168,16 +181,22 @@ class FormNodeController extends Controller {
                         'formNodeObjectType' => $formNode->getObjectType() . "",
                         'formNodeValue' => $formNodeValue,
                         'formNodeHtml' => $template,
+                        'arraySectionCount' => $arraySectionCount
                         //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
                         //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
                     );
 
                     $resArr[] = $res;
                 }
+                /////////////// EOF create additional sections ///////////////
+
             } else {
+
+                //$formNodeId = $formNode->getId();
 
                 $formNodeArr = array(
                     'formNode' => $formNode,
+                    'formNodeId' => $formNodeId,
                     'formNodeHolderEntity' => $formNodeHolderEntity,
                     'cycle' => $cycle,
                     'formNodeValue' => $formNodeValue,
@@ -195,6 +214,7 @@ class FormNodeController extends Controller {
                     'formNodeObjectType' => $formNode->getObjectType() . "",
                     'formNodeValue' => $formNodeValue,
                     'formNodeHtml' => $template,
+                    'arraySectionCount' => null
                     //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
                     //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
                 );
@@ -249,8 +269,16 @@ class FormNodeController extends Controller {
             $formNodeUtil = $this->get('user_formnode_utility');
             $arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($parentFormNode,$arraySectionCount,$this->testing);
 
+//            if( $arraySectionCount ) {
+//                $parentFormNodeId = $parentFormNode->getId()."_".$arraySectionCount;
+//            } else {
+//                $parentFormNodeId = $parentFormNode->getId();
+//            }
+            $parentFormNodeId = $formNodeUtil->getFormNodeId($parentFormNode->getId(),$arraySectionCount);
+
             $formNodeArr = array(
                 'formNode' => $parentFormNode,
+                'formNodeId' => $parentFormNodeId,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
                 'cycle' => 'edit',
                 'formNodeValue' => null,
@@ -270,10 +298,11 @@ class FormNodeController extends Controller {
             $res = array(
                 'formNodeHolderId' => $formNodeHolderId,
                 'parentFormNodeId' => $grandParentFormNodeId,
-                'formNodeId' => $parentFormNode->getId(),
+                'formNodeId' => $parentFormNodeId,  //$parentFormNode->getId(),
                 'formNodeValue' => null,
                 'formNodeHtml' => $template,
                 'simpleFormNode' => false,
+                'arraySectionCount' => $arraySectionCount
             );
 
             $resArr[] = $res;

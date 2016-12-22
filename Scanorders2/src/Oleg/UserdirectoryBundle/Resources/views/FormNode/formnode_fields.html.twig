@@ -5,7 +5,7 @@
 {% if formNodeHolderEntity is defined %}
     {#{{ formnodemacros.addFormNodes(formNodeHolderEntity, formNode, cycle, "noprototype") }}#}
     {% if single is defined and single == 'single' %}
-        {{ formnodemacros.addSingleFormNode(formNodeHolderEntity, formNode, formNodeValue, cycle, "noprototype", arraySectionCount) }}
+        {{ formnodemacros.addSingleFormNode(formNodeHolderEntity, formNode, formNodeId, formNodeValue, cycle, "noprototype", arraySectionCount) }}
     {% else %}
         {{ formnodemacros.addFormNodeWithChildren(formNodeHolderEntity, formNode, formNodeValue, cycle, "noprototype") }}
     {% endif %}

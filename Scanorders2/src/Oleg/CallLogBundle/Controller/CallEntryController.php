@@ -255,7 +255,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -725,7 +725,7 @@ class CallEntryController extends Controller
 
         //set order category
         $categoryStr = "Pathology Call Log Entry";
-        $categoryStr = "Nesting Test";
+        //$categoryStr = "Nesting Test";
         $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         if( !$messageCategory ) {
             throw new \Exception( "Location type is not found by name '".$categoryStr."'" );

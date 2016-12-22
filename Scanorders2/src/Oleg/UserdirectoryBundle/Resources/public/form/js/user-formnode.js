@@ -19,7 +19,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     //console.log("treeSelectAdditionalJsAction: messageCategoryId="+messageCategoryId);
 
     if( typeof messageCategoryId === 'undefined' || !messageCategoryId ) {
-        //console.log("return: messageCategoryId doesnot exists: "+messageCategoryId);
+        //console.log("return: messageCategoryId does not exists: "+messageCategoryId);
         return;
     }
 
@@ -113,8 +113,9 @@ function calllogAppendFormNodes( data ) {
         var parentFormNodeId = data[index]['parentFormNodeId'];
         var formNodeId = data[index]['formNodeId'];
         var formNodeHtml = data[index]['formNodeHtml'];
+        var arraySectionCount = data[index]['arraySectionCount'];
 
-        calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml);
+        calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml,arraySectionCount);
 
         if(
             data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu" ||
@@ -146,9 +147,9 @@ function calllogAppendFormNodes( data ) {
     }
 }
 //find the latest parent formnode holder element by parentFormNodeId id
-function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, formNodeHtml ) {
+function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, formNodeHtml, arraySectionCount ) {
 
-    //console.log("calllog AppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId);
+    console.log("calllog AppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId+"; arraySectionCount="+arraySectionCount);
 
     //check if parent formnode exists and append this formnode to the parent formnode
     var parentId = "formnode-"+parentFormNodeId;
@@ -159,18 +160,25 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
     var formNodeElId = "formnode-"+formNodeId;
     var formNodeEl = document.getElementById(formNodeElId);
     if( formNodeEl ) {
-        //console.log("EXIT: formnode-holder-"+formNodeId+" already exists!");
-        //calllogDisabledEnabledFormNode('enable',formNodeHolderId);
 
-        if( parentEl ) {
-            //if already exists, make sure that it is visible
-            calllogDisabledEnabledSingleFormNode('enable', parentFormNodeId);
-        }
+        //TODO: check if arraySectionCount is equal to data-sectionid
+        //var sectionid = $(formNodeEl).data("sectionid");
+        //console.log("formNodeElId: sectionid=" + sectionid);
 
-        //enable formnode
-        calllogDisabledEnabledSingleFormNode('enable', formNodeId);
+        //if( arraySectionCount != null && arraySectionCount != sectionid ) {
+            console.log("EXIT: formnode-holder-" + formNodeId + " already exists!");
+            //calllogDisabledEnabledFormNode('enable',formNodeHolderId);
 
-        return null;
+            if (parentEl) {
+                //if already exists, make sure that it is visible
+                calllogDisabledEnabledSingleFormNode('enable', parentFormNodeId);
+            }
+
+            //enable formnode
+            calllogDisabledEnabledSingleFormNode('enable', formNodeId);
+
+            return null;
+        //}
     }
 
     //check if parent formnode exists and append this formnode to the parent formnode
