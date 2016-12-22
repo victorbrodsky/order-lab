@@ -255,7 +255,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -634,7 +634,8 @@ class CallEntryController extends Controller
                 $msg
             );
 
-            return $this->redirect( $this->generateUrl('calllog_callentry') );
+            //return $this->redirect( $this->generateUrl('calllog_callentry') );
+            return $this->redirect( $this->generateUrl('calllog_callentry_view',array('messageId'=>$message->getId())) );
         }
         //exit('form is not submitted');
 

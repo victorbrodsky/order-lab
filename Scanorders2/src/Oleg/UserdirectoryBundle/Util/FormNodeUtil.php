@@ -473,6 +473,8 @@ class FormNodeUtil
     public function getSiblingIndexByType( $node ) {
 
         $index = 0;
+        return $index; //testing: we can have only unique sections on the form, so use index 0 for all sections
+
         $parent = $node->getParent();
 
         if( !$parent ) {

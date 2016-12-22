@@ -90,6 +90,11 @@ class FormNodeController extends Controller {
 
         foreach( $formNodes as $formNode ) {
 
+            if( $this->testing ) {
+                echo "<br>###################### ".$formNode->getId()." ################<br>";
+                echo "############# formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
+            }
+
             if( $formNode && $formNodeId = $formNode->getId() ) {
                 $formNodeId = $formNode->getId();
             } else {
@@ -333,6 +338,11 @@ class FormNodeController extends Controller {
                 return $resArr;
             }
 
+            if( $this->testing ) {
+                echo "<br>######## Add Parent: ".$parentFormNode->getId()." #######<br>";
+                //echo "Regular arraySectionCount=" . $arraySectionCount . "<br>";
+            }
+
             //$arraySectionCount = null;
             //$formNodeUtil = $this->get('user_formnode_utility');
             //$arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($parentFormNode,$arraySectionCount,$this->testing);
@@ -358,7 +368,15 @@ class FormNodeController extends Controller {
 
             $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
             if( $grandParentFormNode ) {
-                $grandParentFormNodeId = $grandParentFormNode->getId();
+                //$grandParentFormNodeId = $grandParentFormNode->getId();
+                //remove the last element from arraySectionCount: 0_0_0 => 0_0
+                $arraySectionCountArr = explode('-',$arraySectionCount);
+                //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
+                array_pop($arraySectionCountArr);
+                $parentArraySectionCount = implode('-',$arraySectionCountArr);
+                //echo "!!!!!!!!!!!!!!!!!! Old Index=".$arraySectionCount." => New Index=".$newArraySectionCount."<br>";
+
+                $grandParentFormNodeId = $formNodeUtil->getFormNodeId($grandParentFormNode->getId(),$parentArraySectionCount);
             } else {
                 $grandParentFormNodeId = null;
             }
@@ -375,7 +393,7 @@ class FormNodeController extends Controller {
 
             $resArr[] = $res;
 
-            return $this->createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $parentFormNode, $resArr, $arraySectionCount );
+            return $this->createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $parentFormNode, $resArr, $parentArraySectionCount );
 
         } else {
             return $resArr;
@@ -413,7 +431,9 @@ class FormNodeController extends Controller {
             $parentFormNodeName = $parentFormNode->getName();
             $objectTypeName = $parentFormNode->getObjectTypeName();
             $objectTypeId = $parentFormNode->getObjectTypeId();
-            $topParentFormSection = $formNodeUtil->getTopFormSectionByHolderTreeRecursion($formNodeHolderEntity, $parentFormNodeName, $objectTypeId, $this->testing);
+            $thisTesting = $this->testing;
+            $thisTesting = false;
+            $topParentFormSection = $formNodeUtil->getTopFormSectionByHolderTreeRecursion($formNodeHolderEntity, $parentFormNodeName, $objectTypeId, $thisTesting);
             if ($topParentFormSection) {
                 if ($this->testing) {
                     echo '### topParentFormSection=' . $topParentFormSection . "; formnode=" . $formNode->getName() . " ($parentFormNodeName, $objectTypeName:$objectTypeId)" . "<br>";
