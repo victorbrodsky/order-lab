@@ -626,8 +626,43 @@ function formnodeReplaceIndexByName( input, fieldname, index, sectionLevel ) {
 }
 
 //replace all occurence of saprefix_1-2_saprefix by saprefix_1-3_saprefix (index=3, sectionLevel=2)
+//http://jsfiddle.net/gz2tX/55/
 function formnodeReplaceAllIndex( input, index, sectionLevel ) {
+    console.log('index='+index+'; sectionLevel='+sectionLevel );
 
+    //var fieldname = 'arraysectioncount';
+    //var separator = '][';
+    //var arrSecIndex = formnodeGetSectionarrayIndex(input,separator,fieldname);
+    //console.log('arrSecIndex='+arrSecIndex );
+
+    //var matchRes = input.match( _saprefix+"_(.*?)_"+_saprefix );
+
+    //1) find all occurence of saprefix_*_saprefix
+    var searchStr = _saprefix+"_(.*?)_"+_saprefix;
+    var seacrh = new RegExp(searchStr, 'g');
+    var matchRes = input.match( seacrh );
+
+    //2) replace all
+    var matchArr = [];
+    for( var i = 0; i < matchRes.length; i++ ) {
+        var match = matchRes[i];
+        if( matchArr.indexOf(match) == -1 ) {
+            matchArr.push(match);
+            console.log('match='+match);
+
+            //2a) get new Index: saprefix_1-2_saprefix by saprefix_1-3_saprefix
+            var cleanIndex = getCleanSectionArrayIndex(match); //0-1-1
+            var newIndex = formnodeReplaceSectionarrayIndex(cleanIndex,index,sectionLevel);
+
+            //2b) replace all in input
+            var seacrh = new RegExp(match, 'g');
+            input = input.replace(seacrh, newIndex);
+        }
+    }
+
+    //replaceAll(input,);
+
+    return input;
 }
 
 function formnodeGetSectionarrayIndex(input,separator,fieldname) {
@@ -693,9 +728,9 @@ function formNodeRemoveSection( btn, formNodeId ) {
 
 //remove all _saprefix: saprefix_0-1-2_saprefix => 0-1-2
 function getCleanSectionArrayIndex(index) {
-    return replaceAll(index,_saprefix,'');
+    return formNodeReplaceAll(index,_saprefix,'');
 }
-function replaceAll(input,searchStr,replaceStr) {
+function formNodeReplaceAll(input,searchStr,replaceStr) {
     var seacrh = new RegExp(searchStr, 'g');
     input = input.replace(seacrh, replaceStr);
     input = input.replace(/_/g, replaceStr);

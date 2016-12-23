@@ -178,10 +178,12 @@ class FormNodeUtil
     public function createArraysectionListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
         foreach( $formValue['arraysectioncount'] as $arraysectioncount=>$thisFormValue ) {
             //echo $formNode->getId().": arraysectioncount=".$arraysectioncount.":<br>";
-            //print "<pre>";
-            //print_r($thisFormValue);
-            //print "</pre><br>";
+//            print "<pre>";
+//            print_r($thisFormValue);
+//            print "</pre><br>";
             foreach( $thisFormValue['node'] as $sectionFormnodeId => $thisThisFormValue ) {
+                //clean $arraysectioncount: fffsa_0-0_fffsa => 0-0
+                $arraysectioncount = $this->getCleanedArraySection($arraysectioncount);
                 $params = array(
                     'arraySectionIndex' => $arraysectioncount,
                     'arraySectionId' => $formNode->getId(),
@@ -478,6 +480,14 @@ class FormNodeUtil
 
     public function getArraySectionPrefix() {
         return "fffsa";
+    }
+
+    //fffsa_0-0_fffsa => 0-0
+    public function getCleanedArraySection( $arraySectionCount ) {
+        $prefix = $this->getArraySectionPrefix();
+        $arraySectionCount = str_replace($prefix.'_', '', $arraySectionCount);
+        $arraySectionCount = str_replace('_'.$prefix, '', $arraySectionCount);
+        return $arraySectionCount;
     }
 
     //get order index of all siblings on the same level ordered by orderinlist

@@ -386,8 +386,10 @@ class FormNodeController extends Controller {
                 //$grandParentFormNodeId = $grandParentFormNode->getId();
                 //remove the last element from arraySectionCount: prefix_0-0-0_prefix => prefix_0-0_prefix
                 $prefix = $formNodeUtil->getArraySectionPrefix();
-                $cleanArraySectionCount = str_replace($prefix.'_', '', $arraySectionCount);
-                $cleanArraySectionCount = str_replace('_'.$prefix, '', $cleanArraySectionCount);
+                //$cleanArraySectionCount = str_replace($prefix.'_', '', $arraySectionCount);
+                //$cleanArraySectionCount = str_replace('_'.$prefix, '', $cleanArraySectionCount);
+                $cleanArraySectionCount = $formNodeUtil->getCleanedArraySection($arraySectionCount);
+
                 $arraySectionCountArr = explode('-',$cleanArraySectionCount);
                 //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
                 array_pop($arraySectionCountArr);
