@@ -368,14 +368,17 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
         var parentFormNodeId = data[index]['parentFormNodeId'];
         var formNodeId = data[index]['formNodeId'];
         //var formNodeHtml = data[index]['formNodeHtml'];
-        var simpleFormNode = data[index]['simpleFormNode'];
+        var simpleFormNode = data[index]['simpleFormNode']; //real field is a simple (single) field: simpleFormNode=true, section: simpleFormNode=false
 
         if( simpleFormNode ) {
             if( parentFormNodeId && disableEnable == 'enable' ) {
                 calllogDisabledEnabledSingleFormNode(disableEnable, parentFormNodeId);
             }
             calllogDisabledEnabledSingleFormNode(disableEnable, formNodeId);
+
+            formnodeDisableEnableParentSections(formNodeId);
         } else {
+            //section
             sectionFormNodeId = formNodeId;
         }
 
@@ -402,13 +405,28 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
             }
         }
         ///////// EOF disable fieldNode Section if no simple fields are visible under this section ////////
-    } else {
+    }
+    if(0) {
         if( disableEnable == 'disable' ) {
             //check all form-nodes-holder and formnode-arraysection-holder
-            $('.form-nodes-holder, .formnode-arraysection-holder').each(function () {
+            $('.form-nodes-holder').each(function () {
                 var siblings = $(this).find('.formnode-holder');
                 var disabledSiblings = $(this).find('.formnode-holder-disabled');
-                console.log("Siblings length=" + siblings.length + " ?= " + disabledSiblings.length);
+                console.log($(this).parent().attr('id')+": Siblings length=" + siblings.length + " ?= " + disabledSiblings.length);
+                if (siblings.length == disabledSiblings.length) {
+                    console.log("disable section =" + $(this).parent().attr('id'));
+                    //console.log("disable section");
+                    $(this).closest('.formnode-holder').hide();
+                } else {
+                    //console.log("enable section =" + $(this).parent().attr('id'));
+                    //console.log("enable section");
+                    //$(this).closest('.formnode-holder').show();
+                }
+            });
+            $('.formnode-arraysection-holder').each(function () {
+                var siblings = $(this).find('.formnode-holder');
+                var disabledSiblings = $(this).find('.formnode-holder-disabled');
+                console.log($(this).parent().attr('id')+": Siblings length=" + siblings.length + " ?= " + disabledSiblings.length);
                 if (siblings.length == disabledSiblings.length) {
                     console.log("disable section =" + $(this).parent().attr('id'));
                     //console.log("disable section");
@@ -423,6 +441,27 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
     }
 
     //enable parent
+}
+function formnodeDisableEnableParentSections( formNodeId ) {
+    var formNodeEl = calllogGetFormNodeElement(formNodeId);
+    //traverse all parent with class .panel-body until #form-node-holder
+    formNodeEl.parentsUntil("#form-node-holder",".panel-body").each( function(){
+        formnodeDisableEnableSingleSection($(this)); //$(this) - panel-body element
+    });
+}
+function formnodeDisableEnableSingleSection(panelBodyEl) {
+    var siblings = panelBodyEl.find('.formnode-holder:not(.formnode-formtype-section)');
+    var disabledSiblings = panelBodyEl.find('.formnode-holder-disabled');
+    console.log(panelBodyEl.parent().attr('id')+": Siblings length=" + siblings.length + " ?= " + disabledSiblings.length);
+    if( siblings.length == disabledSiblings.length ) {
+        //console.log("disable section =" + panelBodyEl.parent().attr('id'));
+        console.log("disable section");
+        panelBodyEl.closest('.formnode-holder').hide();
+    } else {
+        //console.log("enable section =" + panelBodyEl.parent().attr('id'));
+        console.log("enable section");
+        panelBodyEl.closest('.formnode-holder').show();
+    }
 }
 
 function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {

@@ -3,14 +3,18 @@
 {% macro addSingleFormNode( formNodeHolder, formNode, formNodeId, formNodeValue, cycle, prototype, count ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
-    {#{% if count %}#}
-        {#{% set formNodeId = formNode.id~'_'~count %}#}
-    {#{% else %}#}
-        {#{% set formNodeId = formNode.id %}#}
-    {#{% endif %}#}
+    {% set formType = null %}
+    {% if formNode.objectType %}
+        {% set formType = formNode.getObjectType().getName() %}
+    {% endif %}
+
+    {% set sectionClass = "" %}
+    {% if formType == "Form" or formType == "Form Section" or formType == "Form Section Array" %}
+        {% set sectionClass = "formnode-formtype-section" %}
+    {% endif %}
 
     <div id="formnode-{{ formNodeId }}"
-         class="formnode-holder formnode-{{ formNodeId }} formnode-holder-{{ formNodeHolder.id }}"
+         class="formnode-holder formnode-{{ formNodeId }} formnode-holder-{{ formNodeHolder.id }} {{ sectionClass }}"
          data-formnodeholderid="{{ formNodeHolder.id }}"
          data-formnodeid="{{ formNodeId }}"
          data-sectionid="{{ count }}"
