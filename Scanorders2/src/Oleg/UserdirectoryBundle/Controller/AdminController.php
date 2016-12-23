@@ -5237,6 +5237,8 @@ class AdminController extends Controller
 //                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
 //                'receivedValueEntityName' => 'PathologyResultSignatories'
 //            ),
+            'Form Field - Free Text, Single Line, Locked, Calculated, Stored',
+            'Form Field - Free Text, Single Line, Unlocked, Calculated, Stored',
 
         );
 

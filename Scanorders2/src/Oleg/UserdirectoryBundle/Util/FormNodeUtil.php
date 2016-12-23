@@ -1490,9 +1490,9 @@ class FormNodeUtil
                     'CCI Platelet Type Transfused'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","CCIPlateletTypeTransfusedList"),
                     'Pre-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
                     'Post-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
-                    'CCI'=>'Form Field - Free Text, Single Line',
+                    //'CCI'=>'Form Field - Free Text, Single Line',
                     //TODO: implement and replace for CCI
-                    //'CCI'=>'Form Field - Free Text, Single Line, Unlocked, Calculated, Stored',
+                    'CCI'=>'Form Field - Free Text, Single Line, Unlocked, Calculated, Stored',
                 )
             ),
             //Miscellaneous [Form Section]
