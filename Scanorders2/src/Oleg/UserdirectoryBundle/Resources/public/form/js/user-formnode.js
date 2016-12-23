@@ -356,7 +356,7 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
     var data = _formnode[identifier];
 
     if( !data ) {
-        //console.log("calllogDisabledEnabledFormNode: data is null");
+        console.log("calllogDisabledEnabledFormNode: data is null");
         return null;
     }
 
@@ -403,21 +403,23 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
         }
         ///////// EOF disable fieldNode Section if no simple fields are visible under this section ////////
     } else {
-        //check all form-nodes-holder and formnode-arraysection-holder
-        $('.form-nodes-holder, .formnode-arraysection-holder').each(function () {
-            var siblings = $(this).find('.formnode-holder');
-            var disabledSiblings = $(this).find('.formnode-holder-disabled');
-            console.log("Siblings length=" + siblings.length + " ?= " + disabledSiblings.length);
-            if (siblings.length == disabledSiblings.length) {
-                console.log("disable section =" + $(this).parent().attr('id'));
-                //console.log("disable section");
-                $(this).closest('.formnode-holder').hide();
-            } else {
-                console.log("enable section =" + $(this).parent().attr('id'));
-                //console.log("enable section");
-                $(this).closest('.formnode-holder').show();
-            }
-        });
+        if( disableEnable == 'disable' ) {
+            //check all form-nodes-holder and formnode-arraysection-holder
+            $('.form-nodes-holder, .formnode-arraysection-holder').each(function () {
+                var siblings = $(this).find('.formnode-holder');
+                var disabledSiblings = $(this).find('.formnode-holder-disabled');
+                console.log("Siblings length=" + siblings.length + " ?= " + disabledSiblings.length);
+                if (siblings.length == disabledSiblings.length) {
+                    console.log("disable section =" + $(this).parent().attr('id'));
+                    //console.log("disable section");
+                    $(this).closest('.formnode-holder').hide();
+                } else {
+                    //console.log("enable section =" + $(this).parent().attr('id'));
+                    //console.log("enable section");
+                    //$(this).closest('.formnode-holder').show();
+                }
+            });
+        }
     }
 
     //enable parent
