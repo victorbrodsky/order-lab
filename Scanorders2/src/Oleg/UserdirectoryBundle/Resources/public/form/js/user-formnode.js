@@ -378,25 +378,49 @@ function calllogDisabledEnabledFormNode( disableEnable, messageCategoryId ) {
         } else {
             sectionFormNodeId = formNodeId;
         }
+
     }
 
-    //disable fieldNode Section if no simple fields are visible under this section
-    if( sectionFormNodeId && disableEnable == 'disable' ) {
-        var sectionFormNodeEl = calllogGetFormNodeElement(sectionFormNodeId);
-        if( !sectionFormNodeEl ) {
-            //console.log("sectionFormNodeEl not found =" + sectionFormNodeEl);
-            return null;
+
+    if( 0 ) {
+        ///////// disable fieldNode Section if no simple fields are visible under this section ////////
+        if (sectionFormNodeId && disableEnable == 'disable') {
+            var sectionFormNodeEl = calllogGetFormNodeElement(sectionFormNodeId);
+            if (!sectionFormNodeEl) {
+                console.log("sectionFormNodeEl not found =" + sectionFormNodeEl);
+                return null;
+            }
+            //var visibleSiblings = sectionFormNodeEl.find('.formnode-holder:visible');
+            //console.log("visibleSiblings.length=" + visibleSiblings.length);
+            var siblings = sectionFormNodeEl.find('.formnode-holder');
+            var disabledSiblings = sectionFormNodeEl.find('.formnode-holder-disabled');
+            console.log("visibleSiblings.length=" + siblings.length + " ?= " + disabledSiblings.length);
+            //if (visibleSiblings.length == 0) {
+            if( siblings.length == disabledSiblings.length ) {
+                console.log("disable section sectionFormNodeId=" + sectionFormNodeId);
+                calllogDisabledEnabledSingleFormNode(disableEnable, sectionFormNodeId);
+            }
         }
-        var visibleSiblings = sectionFormNodeEl.find('.formnode-holder:visible');
-        //console.log("visibleSiblings.length=" + visibleSiblings.length);
-        if( visibleSiblings.length == 0 ) {
-            //console.log("disable section sectionFormNodeId=" + sectionFormNodeId);
-            calllogDisabledEnabledSingleFormNode(disableEnable, sectionFormNodeId);
-        }
+        ///////// EOF disable fieldNode Section if no simple fields are visible under this section ////////
+    } else {
+        //check all form-nodes-holder and formnode-arraysection-holder
+        $('.form-nodes-holder, .formnode-arraysection-holder').each(function () {
+            var siblings = $(this).find('.formnode-holder');
+            var disabledSiblings = $(this).find('.formnode-holder-disabled');
+            console.log("Siblings length=" + siblings.length + " ?= " + disabledSiblings.length);
+            if (siblings.length == disabledSiblings.length) {
+                console.log("disable section =" + $(this).parent().attr('id'));
+                //console.log("disable section");
+                $(this).closest('.formnode-holder').hide();
+            } else {
+                console.log("enable section =" + $(this).parent().attr('id'));
+                //console.log("enable section");
+                $(this).closest('.formnode-holder').show();
+            }
+        });
     }
 
     //enable parent
-
 }
 
 function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
@@ -407,7 +431,7 @@ function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
     }
 
     if( disableEnable == 'disable' ) {
-        //printF(formNodeEl,"disable:");
+        printF(formNodeEl,"disable:");
         formNodeEl.addClass("formnode-holder-disabled");
         formNodeEl.hide();
 
@@ -419,7 +443,7 @@ function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
         //});
 
     } else {
-        //printF(formNodeEl,"enable:");
+        printF(formNodeEl,"enable:");
         formNodeEl.show();
         formNodeEl.removeClass("formnode-holder-disabled");
     }
@@ -450,12 +474,16 @@ function calllogGetFormNodeElement( formNodeId ) {
 function formNodeAddSameSection( btn, formNodeId ) {
     console.log('add form node section: formNodeId='+formNodeId);
 
+    //get level of this array section using formNodeId's '-' count: 100=>0, 101_0-0=>1, 214_0-0-0=>2
+    var sectionLevel = (formNodeId.match(/-/g) || []).length;
+    console.log('sectionLevel='+sectionLevel);
+
     var maxCounter = 0;
     //get next counter by class="formnode-arraysection-holder-{{ formNode.id }}"
     $('.formnode-arraysection-holder-'+formNodeId).each(function(){
         var sectionidFull = $(this).data("sectionid"); //0-1
         //console.log('sectionidFull='+sectionidFull);
-        var sectionid = formnodeGetLastSectionArrayIndex(sectionidFull,'-');
+        var sectionid = formnodeGetLastSectionArrayIndex(sectionidFull,'-',sectionLevel);
         sectionid = parseInt(sectionid);
         //console.log('sectionid='+sectionid);
         if( sectionid > maxCounter ) {
@@ -488,13 +516,13 @@ function formNodeAddSameSection( btn, formNodeId ) {
         //sectionHtml = sectionHtml.replace("formnode-arraysection-holder-" + maxCounter, "formnode-arraysection-holder-" + nextCounter);
 
         //replace "formnode[90][0][91]" by next counter "formnode[90][1][91]"
-        sectionHtml = formnodeReplaceIndexByName(sectionHtml, 'arraysectioncount', nextCounter);
+        sectionHtml = formnodeReplaceIndexByName(sectionHtml, 'arraysectioncount', nextCounter, sectionLevel);
 
         //var sectionUniqueClass = "formnode-arraysection-holder-" + formNodeId + "-" + nextCounter;
 
         //replace the last index
         var thisArraySectionIndex = targetSection.data("sectionid");
-        var newArrSecIndex = formnodeReplaceSectionarrayIndex(thisArraySectionIndex,nextCounter);
+        var newArrSecIndex = formnodeReplaceSectionarrayIndex(thisArraySectionIndex,nextCounter,sectionLevel);
         console.log('newArrSecIndex='+newArrSecIndex);
 
         sectionHtml = '<div id="formnode-arraysection-holder-' + formNodeId + '" class="formnode-arraysection-holder formnode-arraysection-holder-' + formNodeId + ' '
@@ -549,6 +577,7 @@ function formNodeAddSameSection( btn, formNodeId ) {
 //    //http://jsfiddle.net/gz2tX/44/
 //    //http://jsfiddle.net/gz2tX/49/
 //    //http://jsfiddle.net/gz2tX/50/
+//      http://jsfiddle.net/gz2tX/52/
 //
 //    //var fieldname = 'arraysectioncount';
 //    //var index = '333';
@@ -575,11 +604,11 @@ function formNodeAddSameSection( btn, formNodeId ) {
 //
 //    return input;
 //}
-function formnodeReplaceIndexByName( input, fieldname, index ) {
-    input = formnodeReplaceIndexSeparator(input, fieldname, index, '][');
-    input = formnodeReplaceIndexSeparator(input, fieldname, index, '_');
+function formnodeReplaceIndexByName( input, fieldname, index, sectionLevel ) {
+    input = formnodeReplaceIndexSeparator(input, fieldname, index, '][', sectionLevel);
+    input = formnodeReplaceIndexSeparator(input, fieldname, index, '_', sectionLevel);
     return input;
-    function formnodeReplaceIndexSeparator(input, fieldname, index, separator) {
+    function formnodeReplaceIndexSeparator(input, fieldname, index, separator, sectionLevel) {
         var arrSecIndex = formnodeGetSectionarrayIndex(input,separator,fieldname);
         //console.log('arrSecIndex='+arrSecIndex);
 
@@ -590,13 +619,13 @@ function formnodeReplaceIndexByName( input, fieldname, index ) {
         } else {
             var searchStr = fieldname + separator + arrSecIndex + separator;
         }
-        //console.log('searchStr='+searchStr);
+        console.log('searchStr='+searchStr);
 
-        //replace the last index
-        var newArrSecIndex = formnodeReplaceSectionarrayIndex(arrSecIndex,index);
+        //replace the index at the sectionLevel
+        var newArrSecIndex = formnodeReplaceSectionarrayIndex(arrSecIndex,index,sectionLevel);
 
         var replaceStr = fieldname + separator + newArrSecIndex + separator;
-        //console.log('replaceStr='+replaceStr);
+        console.log('replaceStr='+replaceStr);
 
         var seacrh = new RegExp(searchStr, 'g');
         //var seacrh = searchStr;
@@ -618,17 +647,19 @@ function formnodeGetSectionarrayIndex(input,separator,fieldname) {
     return 0;
 }
 //index=2-1, newIndex=2, output:2-2
-function formnodeReplaceSectionarrayIndex(index,newIndex) {
+//index=0-0-1, newIndex=1, sectionLevel=0 => 1-0-1
+function formnodeReplaceSectionarrayIndex(index,newIndex,sectionLevel) {
     index = index + '';
     if( index.indexOf('-') !== -1 ) {
         var res = index.split('-');
-        var lastIndex = res[res.length-1];
+        //var lastIndex = res[res.length-1];
         //console.log('lastIndex='+lastIndex);
         var newIndexArr = [];
         //replace last index by newIndex
         for( var i=0; i < res.length; i++ ) {
-            //console.log('i='+i+' ?= '+ (res.length-1) );
-            if( i == res.length-1 ) {
+            //console.log('i='+i+' ?= '+ sectionLevel );
+            //if( i == res.length-1 ) {
+            if( i == sectionLevel ) {
                 newIndexArr.push(newIndex);
             } else {
                 newIndexArr.push(res[i]);
@@ -639,7 +670,7 @@ function formnodeReplaceSectionarrayIndex(index,newIndex) {
     return newIndex;
 }
 //input: 1-2, output: 2
-function formnodeGetLastSectionArrayIndex(index,separator) {
+function formnodeGetLastSectionArrayIndex(index,separator,sectionLevel) {
     index = index + '';
     var lastIndex = index;
     if( index.indexOf(separator) !== -1 ) {

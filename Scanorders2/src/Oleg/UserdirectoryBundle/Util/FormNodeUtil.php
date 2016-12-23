@@ -1127,6 +1127,13 @@ class FormNodeUtil
         foreach( $sections as $section ) {
             $sectionName = $section['sectionName'];
 
+            if( array_key_exists('sectionObjectTypeName', $section) ) {
+                $objectTypeSection = $this->getObjectTypeByName($section['sectionObjectTypeName']);
+                if( !$objectTypeSection ) {
+                    exit('object type not found by name='.$section['sectionObjectTypeName']);
+                }
+            }
+
             if( $sectionName ) {
                 $formParams = array(
                     'parent' => $parentForm,
@@ -1521,12 +1528,21 @@ class FormNodeUtil
         //  Transfusion Product Status: [Form Field - Dropdown Menu]
         $sections = array(
             //TODO: replace it by a section called "Relevant Lab Values" of type "From Section Array"
-//            array(
-//                'sectionName' => "Laboratory Values",
-//                'fields' => array(
-//                    'Relevant Laboratory Values'=>'Form Field - Free Text, Single Line',
-//                )
-//            ),
+            //finish: https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/36/next-steps
+            array(
+                'sectionName' => "Relevant Laboratory Values",
+                'sectionObjectTypeName' => "Form Section Array",
+                'fields' => array(
+                    'Lab Result Name'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultNameList"),
+                    'Lab Result Value'=>'Form Field - Free Text, Single Line',
+                    //'Lab Result Units of Measure'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity",""),
+                    'Lab Result Interpretation'=>'Form Field - Free Text',
+                    'Lab Result Date'=>'Form Field - Full Date and Time',
+                    //'Lab Result Flag'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity",""),
+                    'Lab Result Comment'=>'Form Field - Free Text',
+                    //'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity",""),
+                )
+            ),
             array(
                 'sectionName' => "Miscellaneous",
                 'fields' => array(

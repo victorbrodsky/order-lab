@@ -197,7 +197,8 @@ class FormNodeController extends Controller {
                         'cycle' => $cycle,
                         'formNodeValue' => $formNodeValue,
                         'single' => $this->single,
-                        'arraySectionCount' => $arraySectionCount
+                        'arraySectionCount' => $arraySectionCount,
+                        'arraySectionIndex' => null
                     );
 
                     $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -254,7 +255,8 @@ class FormNodeController extends Controller {
                     'cycle' => $cycle,
                     'formNodeValue' => $formNodeValue,
                     'single' => $this->single,
-                    'arraySectionCount' => $arraySectionCount
+                    'arraySectionCount' => $arraySectionCount,
+                    'arraySectionIndex' => null
                 );
 
                 $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -338,6 +340,18 @@ class FormNodeController extends Controller {
                 return $resArr;
             }
 
+            //only for array sections: get index of this array section from the top "Form". Use $arraySectionCount: count number of indexes (0=>1, 0-1=>2)
+            //$arraySectionIndex = $formNodeUtil->getArraySectionIndexByHolderTreeRecursion($formNodeHolderEntity,$parentFormNode);
+            if( $arraySectionCount !== "" && $arraySectionCount !== null ) {
+                $arraySectionCountArr = explode('-',$arraySectionCount);
+                $arraySectionIndex = count($arraySectionCountArr);
+                if( $arraySectionIndex > 0 ) {
+                    $arraySectionIndex = $arraySectionIndex - 1;
+                } else {
+                    $arraySectionIndex = 0;
+                }
+            }
+
             if( $this->testing ) {
                 echo "<br>######## Add Parent: ".$parentFormNode->getId()." #######<br>";
                 //echo "Regular arraySectionCount=" . $arraySectionCount . "<br>";
@@ -361,7 +375,8 @@ class FormNodeController extends Controller {
                 'cycle' => 'edit',
                 'formNodeValue' => null,
                 'single' => $this->single,
-                'arraySectionCount' => $arraySectionCount
+                'arraySectionCount' => $arraySectionCount,
+                'arraySectionIndex' => $arraySectionIndex
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -388,7 +403,8 @@ class FormNodeController extends Controller {
                 'formNodeValue' => null,
                 'formNodeHtml' => $template,
                 'simpleFormNode' => false,
-                'arraySectionCount' => $arraySectionCount
+                'arraySectionCount' => $arraySectionCount,
+                'arraySectionIndex' => $arraySectionIndex
             );
 
             $resArr[] = $res;

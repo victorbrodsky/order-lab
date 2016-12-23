@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Entity\DaysList;
 use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
+use Oleg\UserdirectoryBundle\Entity\LabResultNameList;
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
@@ -304,6 +305,7 @@ class AdminController extends Controller
         $count_generateWeekDaysList = $this->generateWeekDaysList();
         $count_generateMonthsList = $this->generateMonthsList();
         $count_generateClericalErrorList = $this->generateClericalErrorList();
+        $count_generateLabResultNames = $this->generateLabResultNames();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -388,6 +390,7 @@ class AdminController extends Controller
             'WeekDaysList='.$count_generateWeekDaysList.', '.
             'MonthsList='.$count_generateMonthsList.', '.
             'ClericalErrorList='.$count_generateClericalErrorList.', '.
+            'LabResultNames='.$count_generateLabResultNames.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -5217,6 +5220,11 @@ class AdminController extends Controller
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDropdown'
             ),
+//            array(
+//                'name' => "Linked Object - User",
+//                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
+//                'receivedValueEntityName' => 'PathologyResultSignatories'
+//            ),
 
         );
 
@@ -5481,6 +5489,7 @@ class AdminController extends Controller
             "960" => array('MonthsList','months-list'),
             "970" => array('FormNode','formnodes-list','Flat Form Tree'),
             "980" => array('ClericalErrorList','clericalerrors-list'),
+            "990" => array('LabResultNameList','labresultnames-list','Lab Result Names'),
 
         );
 
@@ -6295,6 +6304,38 @@ class AdminController extends Controller
             }
 
             $listEntity = new ClericalErrorList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    //LabResultNames
+    public function generateLabResultNames() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Sample Lab Result Name 01",
+            "Sample Lab Result Name 02",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new LabResultNameList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
