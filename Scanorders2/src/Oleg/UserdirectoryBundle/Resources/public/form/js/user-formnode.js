@@ -5,6 +5,7 @@
 var _holderNamespace = "Oleg\\OrderformBundle\\Entity";
 var _holderName = "MessageCategory";
 var _formnode = [];
+var _saprefix = "fffsa"; //section array prefix flag. Must be the same as in getArraySectionPrefix()
 
 function treeSelectAdditionalJsAction(comboboxEl) {
     //printF( comboboxEl, "treeSelectAdditionalJsAction: combobox on change:" );
@@ -451,6 +452,10 @@ function calllogGetFormNodeElement( formNodeId ) {
 
 
 
+
+
+///////////////////////////// Array Section Functions. Use _saprefix saprefix_0-0-1_saprefix //////////////////////
+
 //formnode[arraysection][90][node][91]
 function formNodeAddSameSection( btn, formNodeId ) {
     console.log('add form node section: formNodeId='+formNodeId);
@@ -497,7 +502,8 @@ function formNodeAddSameSection( btn, formNodeId ) {
         //sectionHtml = sectionHtml.replace("formnode-arraysection-holder-" + maxCounter, "formnode-arraysection-holder-" + nextCounter);
 
         //replace "formnode[90][0][91]" by next counter "formnode[90][1][91]"
-        sectionHtml = formnodeReplaceIndexByName(sectionHtml, 'arraysectioncount', nextCounter, sectionLevel);
+        //sectionHtml = formnodeReplaceIndexByName(sectionHtml, 'arraysectioncount', nextCounter, sectionLevel);
+        sectionHtml = formnodeReplaceAllIndex(sectionHtml, nextCounter, sectionLevel);
 
         //var sectionUniqueClass = "formnode-arraysection-holder-" + formNodeId + "-" + nextCounter;
 
@@ -618,6 +624,12 @@ function formnodeReplaceIndexByName( input, fieldname, index, sectionLevel ) {
     //document.write(foo('formnode[90][arraysectioncount][1-2][node][91] <br> formnode[90][arraysectioncount][0-2][node][92]','][') + '<br><br>');
     //document.write(foo('formnode_90_arraysectioncount_1-2_node_91','_') + '<br>');
 }
+
+//replace all occurence of saprefix_1-2_saprefix by saprefix_1-3_saprefix (index=3, sectionLevel=2)
+function formnodeReplaceAllIndex( input, index, sectionLevel ) {
+
+}
+
 function formnodeGetSectionarrayIndex(input,separator,fieldname) {
     var res = input.split(separator);
     for( var i=0; i < res.length; i++ ) {
@@ -631,6 +643,7 @@ function formnodeGetSectionarrayIndex(input,separator,fieldname) {
 //index=0-0-1, newIndex=1, sectionLevel=0 => 1-0-1
 function formnodeReplaceSectionarrayIndex(index,newIndex,sectionLevel) {
     index = index + '';
+    index = getCleanSectionArrayIndex(index); //saprefix_1-2_saprefix => 1-2
     if( index.indexOf('-') !== -1 ) {
         var res = index.split('-');
         //var lastIndex = res[res.length-1];
@@ -647,12 +660,14 @@ function formnodeReplaceSectionarrayIndex(index,newIndex,sectionLevel) {
             }
         }
         newIndex = newIndexArr.join('-');
+        newIndex = _saprefix + '_' + newIndex + '_' + _saprefix;
     }
     return newIndex;
 }
-//input: 1-2, output: 2
+//input: saprefix_1-2_saprefix, output: 2
 function formnodeGetLastSectionArrayIndex(index,separator,sectionLevel) {
     index = index + '';
+    index = getCleanSectionArrayIndex(index); //saprefix_1-2_saprefix => 1-2
     var lastIndex = index;
     if( index.indexOf(separator) !== -1 ) {
         var res = index.split(separator);
@@ -674,6 +689,17 @@ function formNodeRemoveSection( btn, formNodeId ) {
     //    attachEl.find('.formnode-remove-section').hide();
     //}
     formNodeProcessRemoveSectionBtn(formNodeId);
+}
+
+//remove all _saprefix: saprefix_0-1-2_saprefix => 0-1-2
+function getCleanSectionArrayIndex(index) {
+    return replaceAll(index,_saprefix,'');
+}
+function replaceAll(input,searchStr,replaceStr) {
+    var seacrh = new RegExp(searchStr, 'g');
+    input = input.replace(seacrh, replaceStr);
+    input = input.replace(/_/g, replaceStr);
+    return input;
 }
 
 function formNodeProcessRemoveSectionBtn( formNodeId ) {

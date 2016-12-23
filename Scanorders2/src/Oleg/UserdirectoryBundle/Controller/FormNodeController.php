@@ -123,7 +123,7 @@ class FormNodeController extends Controller {
 //            if( $parentFormNode ) {
 //
 ////                //get array section count i.e. 0-1
-////                $arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($parentFormNode,$arraySectionCount,$this->testing);
+////                $arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
 //
 ////                //insert parent nested sections to resulting from node array
 ////                $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr);
@@ -163,7 +163,7 @@ class FormNodeController extends Controller {
                 /////////////// TODO: create additional sections when show submitted entry ///////////////
                 foreach( $formNodeValue as $formNodeValueArr ) {
                     $formNodeValue = $formNodeValueArr['formNodeValue'];
-                    $arraySectionCount = $formNodeValueArr['arraySectionIndex'];
+                    $arraySectionCount = $formNodeValueArr['arraySectionIndex']; //in DB arraySectionCount named as arraySectionIndex
 
                     if( $this->testing ) {
                         echo "ArraySection arraySectionCount=" . $arraySectionCount . "<br>";
@@ -175,9 +175,9 @@ class FormNodeController extends Controller {
 //                            $parentFormNodeId = $parentFormNodeId."_".$arraySectionCount;
 //                        }
 //                    }
-                    //$formNodeId = $formNodeUtil->getFormNodeId($formNodeId,$arraySectionCount);
+                    //$formNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($formNodeId,$arraySectionCount);
 //                    if( $parentFormNodeId ) {
-//                        $newParentFormNodeId = $formNodeUtil->getFormNodeId($parentFormNodeId,$arraySectionCount);
+//                        $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
 //                    }
 
                     //insert parent nested sections to resulting from node array
@@ -198,14 +198,14 @@ class FormNodeController extends Controller {
                         'formNodeValue' => $formNodeValue,
                         'single' => $this->single,
                         'arraySectionCount' => $arraySectionCount,
-                        'arraySectionIndex' => null
+                        //'arraySectionIndex' => null
                     );
 
                     $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
                     //form form node array element
                     if( $parentFormNodeId ) {
-                        $newParentFormNodeId = $formNodeUtil->getFormNodeId($parentFormNodeId,$arraySectionCount);
+                        $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
                     }
 
                     $res = array(
@@ -232,7 +232,7 @@ class FormNodeController extends Controller {
                 if( $parentFormNode ) {
 
                     //get array section count i.e. 0-1
-                    $arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($parentFormNode,$arraySectionCount,$this->testing);
+                    $arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
                     if( $this->testing ) {
                         echo "Regular arraySectionCount=" . $arraySectionCount . "<br>";
                     }
@@ -256,14 +256,14 @@ class FormNodeController extends Controller {
                     'formNodeValue' => $formNodeValue,
                     'single' => $this->single,
                     'arraySectionCount' => $arraySectionCount,
-                    'arraySectionIndex' => null
+                    //'arraySectionIndex' => null
                 );
 
                 $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
                 //form form node array element
                 if( $parentFormNodeId ) {
-                    $newParentFormNodeId = $formNodeUtil->getFormNodeId($parentFormNodeId,$arraySectionCount);
+                    $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
                 }
 
                 $res = array(
@@ -334,7 +334,7 @@ class FormNodeController extends Controller {
 
         if( $parentFormNode ) {
 
-            $parentFormNodeId = $formNodeUtil->getFormNodeId($parentFormNode->getId(),$arraySectionCount);
+            $parentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNode->getId(),$arraySectionCount);
 
             if( $this->isFormNodeInArray($parentFormNodeId,$resArr) ) {
                 return $resArr;
@@ -342,15 +342,15 @@ class FormNodeController extends Controller {
 
             //only for array sections: get index of this array section from the top "Form". Use $arraySectionCount: count number of indexes (0=>1, 0-1=>2)
             //$arraySectionIndex = $formNodeUtil->getArraySectionIndexByHolderTreeRecursion($formNodeHolderEntity,$parentFormNode);
-            if( $arraySectionCount !== "" && $arraySectionCount !== null ) {
-                $arraySectionCountArr = explode('-',$arraySectionCount);
-                $arraySectionIndex = count($arraySectionCountArr);
-                if( $arraySectionIndex > 0 ) {
-                    $arraySectionIndex = $arraySectionIndex - 1;
-                } else {
-                    $arraySectionIndex = 0;
-                }
-            }
+//            if( $arraySectionCount !== "" && $arraySectionCount !== null ) {
+//                $arraySectionCountArr = explode('-',$arraySectionCount);
+//                $arraySectionIndex = count($arraySectionCountArr);
+//                if( $arraySectionIndex > 0 ) {
+//                    $arraySectionIndex = $arraySectionIndex - 1;
+//                } else {
+//                    $arraySectionIndex = 0;
+//                }
+//            }
 
             if( $this->testing ) {
                 echo "<br>######## Add Parent: ".$parentFormNode->getId()." #######<br>";
@@ -359,14 +359,14 @@ class FormNodeController extends Controller {
 
             //$arraySectionCount = null;
             //$formNodeUtil = $this->get('user_formnode_utility');
-            //$arraySectionCount = $formNodeUtil->getArraySectionCountRecursive($parentFormNode,$arraySectionCount,$this->testing);
+            //$arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
 
 //            if( $arraySectionCount ) {
 //                $parentFormNodeId = $parentFormNode->getId()."_".$arraySectionCount;
 //            } else {
 //                $parentFormNodeId = $parentFormNode->getId();
 //            }
-            //$parentFormNodeId = $formNodeUtil->getFormNodeId($parentFormNode->getId(),$arraySectionCount);
+            //$parentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNode->getId(),$arraySectionCount);
 
             $formNodeArr = array(
                 'formNode' => $parentFormNode,
@@ -376,7 +376,7 @@ class FormNodeController extends Controller {
                 'formNodeValue' => null,
                 'single' => $this->single,
                 'arraySectionCount' => $arraySectionCount,
-                'arraySectionIndex' => $arraySectionIndex
+                //'arraySectionIndex' => $arraySectionIndex
             );
 
             $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
@@ -384,14 +384,18 @@ class FormNodeController extends Controller {
             $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
             if( $grandParentFormNode ) {
                 //$grandParentFormNodeId = $grandParentFormNode->getId();
-                //remove the last element from arraySectionCount: 0_0_0 => 0_0
-                $arraySectionCountArr = explode('-',$arraySectionCount);
+                //remove the last element from arraySectionCount: prefix_0-0-0_prefix => prefix_0-0_prefix
+                $prefix = $formNodeUtil->getArraySectionPrefix();
+                $cleanArraySectionCount = str_replace($prefix.'_', '', $arraySectionCount);
+                $cleanArraySectionCount = str_replace('_'.$prefix, '', $cleanArraySectionCount);
+                $arraySectionCountArr = explode('-',$cleanArraySectionCount);
                 //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
                 array_pop($arraySectionCountArr);
                 $parentArraySectionCount = implode('-',$arraySectionCountArr);
+                $parentArraySectionCount = $prefix.'_'.$parentArraySectionCount.'_'.$prefix;
                 //echo "!!!!!!!!!!!!!!!!!! Old Index=".$arraySectionCount." => New Index=".$newArraySectionCount."<br>";
 
-                $grandParentFormNodeId = $formNodeUtil->getFormNodeId($grandParentFormNode->getId(),$parentArraySectionCount);
+                $grandParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($grandParentFormNode->getId(),$parentArraySectionCount);
             } else {
                 $grandParentFormNodeId = null;
             }
@@ -404,7 +408,7 @@ class FormNodeController extends Controller {
                 'formNodeHtml' => $template,
                 'simpleFormNode' => false,
                 'arraySectionCount' => $arraySectionCount,
-                'arraySectionIndex' => $arraySectionIndex
+                //'arraySectionIndex' => $arraySectionIndex
             );
 
             $resArr[] = $res;

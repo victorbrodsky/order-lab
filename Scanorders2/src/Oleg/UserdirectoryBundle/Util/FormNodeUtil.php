@@ -424,6 +424,13 @@ class FormNodeUtil
 //        return $formSections;
     }
 
+    public function getArraySectionCount( $formNode, $arraySectionCount, $testing ) {
+        $arraySectionCount = $this->getArraySectionCountRecursive($formNode,$arraySectionCount,$testing);
+        //append flag string to the $arraySectionCount separated by underscore "_"
+        $prefix = $this->getArraySectionPrefix();
+        $arraySectionCount = $prefix . "_" . $arraySectionCount . "_" . $prefix;
+        return $arraySectionCount;
+    }
     //get section array index only for section array formnode
     //get array section count: 0-1 means that this array section has an index '1' (alos there is a preceding sibling with index '0') and a parent index '0'
     public function getArraySectionCountRecursive( $formNode, $arraySectionCount, $testing ) {
@@ -467,6 +474,10 @@ class FormNodeUtil
         }
 
         return $arraySectionCount;
+    }
+
+    public function getArraySectionPrefix() {
+        return "fffsa";
     }
 
     //get order index of all siblings on the same level ordered by orderinlist
@@ -1067,7 +1078,7 @@ class FormNodeUtil
         return $list->getValue();
     }
 
-    public function getFormNodeId($formNodeId,$arraySectionCount) {
+    public function getFormNodeIdWithSectionCount($formNodeId,$arraySectionCount) {
         if( $arraySectionCount ) {
             //testing
             return $formNodeId . "_" . $arraySectionCount;
