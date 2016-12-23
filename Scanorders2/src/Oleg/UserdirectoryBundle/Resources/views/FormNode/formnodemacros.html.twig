@@ -232,6 +232,10 @@
             {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
 
+        {% if formType == "Form Field - Free Text, Single Line, Unlocked, Calculated, Stored" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+
     {% else %}
         {#<br>#}
     {% endif %}
