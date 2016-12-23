@@ -22,7 +22,9 @@ use Oleg\UserdirectoryBundle\Entity\DaysList;
 use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
+use Oleg\UserdirectoryBundle\Entity\LabResultFlagList;
 use Oleg\UserdirectoryBundle\Entity\LabResultNameList;
+use Oleg\UserdirectoryBundle\Entity\LabResultUnitsMeasureList;
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
@@ -306,6 +308,13 @@ class AdminController extends Controller
         $count_generateMonthsList = $this->generateMonthsList();
         $count_generateClericalErrorList = $this->generateClericalErrorList();
         $count_generateLabResultNames = $this->generateLabResultNames();
+        $count_generategenerateLabResultUnitsMeasureList = $this->generateLabResultUnitsMeasureList();
+        $count_generateLabResultFlagList = $this->generateLabResultFlagList();
+        $count_generatePathologyResultSignatoriesList = $this->generatePathologyResultSignatoriesList();
+
+
+
+
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -391,6 +400,9 @@ class AdminController extends Controller
             'MonthsList='.$count_generateMonthsList.', '.
             'ClericalErrorList='.$count_generateClericalErrorList.', '.
             'LabResultNames='.$count_generateLabResultNames.', '.
+            'LabResultUnitsMeasures='.$count_generategenerateLabResultUnitsMeasureList.', '.
+            'LabResultFlagList='.$count_generateLabResultFlagList.', '.
+            'PathologyResultSignatoriesList='.$count_generatePathologyResultSignatoriesList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -5490,6 +5502,9 @@ class AdminController extends Controller
             "970" => array('FormNode','formnodes-list','Flat Form Tree'),
             "980" => array('ClericalErrorList','clericalerrors-list'),
             "990" => array('LabResultNameList','labresultnames-list','Lab Result Names'),
+            "1000" => array('LabResultUnitsMeasureList','labresultunitsmeasures-list','Lab Result Units of Measure List'),
+            "1010" => array('LabResultFlagList','labresultflags-list','Lab Result Flag List'),
+            "1020" => array('PathologyResultSignatoriesList','pathologyresultsignatories-list','Pathology Result Signatories List'),
 
         );
 
@@ -6339,6 +6354,116 @@ class AdminController extends Controller
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    //LabResultUnitsMeasureList
+    public function generateLabResultUnitsMeasureList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Sample Lab Result Unit of Measure 01",
+            "Sample Lab Result Unit of Measure 02",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new LabResultUnitsMeasureList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    //LabResultFlagList
+    public function generateLabResultFlagList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Abnormal (applies to non-numeric results)"=>"A",
+            "Above absolute high-off instrument scale"=>">",
+            "Above high normal"=>"H",
+            "Above upper panic limits"=>"HH",
+            "Below absolute low-off instrument scale"=>"<",
+            "Below low normal"=>"L",
+            "Below lower panic limits"=>"LL",
+            "Better--use when direction not relevant"=>"B",
+            "Intermediate. Indicates for microbiology susceptibilities only"=>"I",
+            "Moderately susceptible. Indicates for microbiology susceptibilities only"=>"MS",
+            "No range defined, or normal ranges don't apply"=>"null",
+            "Normal (applies to non-numeric results)"=>"N",
+            "Resistant. Indicates for microbiology susceptibilities only"=>"R",
+            "Significant change down"=>"D",
+            "Significant change up"=>"U"
+        );
+
+        $count = 10;
+        foreach( $types as $name=>$abbreviation ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultFlagList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new LabResultFlagList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setAbbreviation($abbreviation);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    //PathologyResultSignatoriesList
+    public function generatePathologyResultSignatoriesList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new PathologyResultSignatoriesList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
             $em->persist($listEntity);
             $em->flush();
 

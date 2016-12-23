@@ -121,6 +121,9 @@ class ListController extends Controller
      * @Route("/list/months/", name="months-list")
      * @Route("/list/clerical-errors/", name="clericalerrors-list")
      * @Route("/list/lab-result-names/", name="labresultnames-list")
+     * @Route("/list/lab-result-units-measures/", name="labresultunitsmeasures-list")
+     * @Route("/list/lab-result-flags/", name="labresultflags-list")
+     * @Route("/list/pathology-result-signatories/", name="pathologyresultsignatories-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -391,6 +394,9 @@ class ListController extends Controller
      * @Route("/list/months/", name="months_create")
      * @Route("/list/clerical-errors/", name="clericalerrors_create")
      * @Route("/list/lab-result-names/", name="labresultnames_create")
+     * @Route("/list/lab-result-units-measures/", name="labresultunitsmeasures_create")
+     * @Route("/list/lab-result-flags/", name="labresultflags_create")
+     * @Route("/list/pathology-result-signatories/", name="pathologyresultsignatories_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -569,6 +575,9 @@ class ListController extends Controller
      * @Route("/list/months/new", name="months_new")
      * @Route("/list/clerical-errors/new", name="clericalerrors_new")
      * @Route("/list/lab-result-names/new", name="labresultnames_new")
+     * @Route("/list/lab-result-units-measures/new", name="labresultunitsmeasures_new")
+     * @Route("/list/lab-result-flags/new", name="labresultflags_new")
+     * @Route("/list/pathology-result-signatories/new", name="pathologyresultsignatories_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -718,6 +727,9 @@ class ListController extends Controller
      * @Route("/list/months/{id}", name="months_show")
      * @Route("/list/clerical-errors/{id}", name="clericalerrors_show")
      * @Route("/list/lab-result-names/{id}", name="labresultnames_show")
+     * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_show")
+     * @Route("/list/lab-result-flags/{id}", name="labresultflags_show")
+     * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_show")
      *
      *
      * @Method("GET")
@@ -858,6 +870,9 @@ class ListController extends Controller
      * @Route("/list/months/{id}/edit", name="months_edit")
      * @Route("/list/clerical-errors/{id}/edit", name="clericalerrors_edit")
      * @Route("/list/lab-result-names/{id}/edit", name="labresultnames_edit")
+     * @Route("/list/lab-result-units-measures/{id}/edit", name="labresultunitsmeasures_edit")
+     * @Route("/list/lab-result-flags/{id}/edit", name="labresultflags_edit")
+     * @Route("/list/pathology-result-signatories/{id}/edit", name="pathologyresultsignatories_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1043,6 +1058,9 @@ class ListController extends Controller
      * @Route("/list/months/{id}", name="months_update")
      * @Route("/list/clerical-errors/{id}", name="clericalerrors_update")
      * @Route("/list/lab-result-names/{id}", name="labresultnames_update")
+     * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_update")
+     * @Route("/list/lab-result-flags/{id}", name="labresultflags_update")
+     * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1738,6 +1756,19 @@ class ListController extends Controller
                 $className = "LabResultNameList";
                 $displayName = "Lab Result Names";
                 break;
+            case "labresultunitsmeasures":
+                $className = "LabResultUnitsMeasureList";
+                $displayName = "Lab Result Units of Measure List";
+                break;
+            case "labresultflags":
+                $className = "LabResultFlagList";
+                $displayName = "Lab Result Flag List";
+                break;
+            case "pathologyresultsignatories":
+                $className = "PathologyResultSignatoriesList";
+                $displayName = "Pathology Result Signatories List";
+                break;
+
 
 //            case "messagetypeclassifiers":
 //                $className = "MessageTypeClassifiers";
@@ -1901,7 +1932,9 @@ class ListController extends Controller
      * @Route("/list/months/{id}", name="months_delete")
      * @Route("/list/clerical-errors/{id}", name="clericalerrors_delete")
      * @Route("/list/lab-result-names/{id}", name="labresultnames_delete")
-     *
+     * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_delete")
+     * @Route("/list/lab-result-flags/{id}", name="labresultflags_delete")
+     * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_delete")
      *
      * @Method("DELETE")
      */

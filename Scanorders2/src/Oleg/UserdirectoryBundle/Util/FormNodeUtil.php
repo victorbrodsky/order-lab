@@ -832,7 +832,7 @@ class FormNodeUtil
         return $objectType;
     }
 
-    public function setMessageCategoryListLink( $messageCategoryName, $formNode ) {
+    public function setMessageCategoryListLink( $messageCategoryName, $formNode, $parentMessageCategoryName=null ) {
         //set this formnode to the MessageCategory Entity Name
         $em = $this->em;
         $messageCategory = null;
@@ -843,11 +843,24 @@ class FormNodeUtil
         }
 
         if( count($messageCategories) > 1 ) {
-            exit("Multiple Message categories found (".count($messageCategories).") by name=".$messageCategoryName);
+            if( $parentMessageCategoryName ) {
+                foreach ($messageCategories as $thisMessageCategory) {
+                    if( $thisMessageCategory->getParent() && $thisMessageCategory->getParent()->getName() == $parentMessageCategoryName ) {
+                        $messageCategory = $thisMessageCategory;
+                        break;
+                    }
+                }
+            } else {
+                exit("Multiple Message categories found (".count($messageCategories).") by name=".$messageCategoryName);
+            }
         }
 
         if( count($messageCategories) == 1 ) {
             $messageCategory = $messageCategories[0];
+        }
+
+        if( !$messageCategory ) {
+            exit("Message category is null");
         }
 
         //clear all old form nodes
@@ -1111,7 +1124,7 @@ class FormNodeUtil
         return round($count/10);
     }
 
-    public function addFormToHolder($parent,$holderName,$sections) {
+    public function addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName=null) {
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeSection = $this->getObjectTypeByName('Form Section');
 
@@ -1122,7 +1135,7 @@ class FormNodeUtil
             'objectType' => $objectTypeForm,
         );
         $parentForm = $this->createV2FormNode($formParams);
-        $this->setMessageCategoryListLink($holderName,$parentForm);
+        $this->setMessageCategoryListLink($holderName,$parentForm,$parentMessageCategoryName);
 
         foreach( $sections as $section ) {
             $sectionName = $section['sectionName'];
@@ -1130,24 +1143,32 @@ class FormNodeUtil
             if( array_key_exists('sectionObjectTypeName', $section) ) {
                 $objectTypeSection = $this->getObjectTypeByName($section['sectionObjectTypeName']);
                 if( !$objectTypeSection ) {
-                    exit('object type not found by name='.$section['sectionObjectTypeName']);
+                    exit('Object type not found by name='.$section['sectionObjectTypeName']);
                 }
+            }
+
+            if( array_key_exists('sectionParentName', $section) ) {
+                $thisParentForm = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($section['sectionParentName']);
+                if( !$thisParentForm ) {
+                    exit('Parent form not found by name='.$section['sectionParentName']);
+                }
+            } else {
+                $thisParentForm = $parentForm;
             }
 
             if( $sectionName ) {
                 $formParams = array(
-                    'parent' => $parentForm,
+                    'parent' => $thisParentForm,
                     'name' => $sectionName,
                     'objectType' => $objectTypeSection,
                 );
                 $sectionObject = $this->createV2FormNode($formParams);
             } else {
-                $sectionObject = $parentForm;
+                $sectionObject = $thisParentForm;
             }
 
             $fields = $section['fields'];
             foreach( $fields as $fieldName=>$objectTypeNameParam ) {
-
                 if( is_array($objectTypeNameParam) ) {
                     //'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
                     //'className' => "BloodTypeList"
@@ -1164,7 +1185,7 @@ class FormNodeUtil
                 if( !$objectType ) {
                     exit('object type not found by name='.$objectTypeName);
                 }
-                //    CCI: [Form Field - Free Text, Single Line]
+
                 $fieldParams = array(
                     'parent' => $sectionObject,
                     'name' => $fieldName,
@@ -1173,10 +1194,11 @@ class FormNodeUtil
                     'className' => $className
                 );
                 $this->createV2FormNode($fieldParams);
-            }
-        }
+            }//foreach
 
-        return $parentForm;
+        }//foreach
+
+        return $thisParentForm;
     }
 
     public function createAfterFirstdoseplasma($parent) {
@@ -1461,12 +1483,16 @@ class FormNodeUtil
             //    CCI: [Form Field - Free Text, Single Line]
             array(
                 'sectionName' => "CCI (Corrected Count Increment) Instance",
+                'sectionObjectTypeName' => "Form Section Array",
+                'sectionParentName' => 'CCI (Corrected Count Increment) Calculations',
                 'fields' => array(
                     'CCI date'=>'Form Field - Full Date and Time',
                     'CCI Platelet Type Transfused'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","CCIPlateletTypeTransfusedList"),
                     'Pre-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
                     'Post-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
                     'CCI'=>'Form Field - Free Text, Single Line',
+                    //TODO: implement and replace for CCI
+                    //'CCI'=>'Form Field - Free Text, Single Line, Unlocked, Calculated, Stored',
                 )
             ),
             //Miscellaneous [Form Section]
@@ -1522,36 +1548,37 @@ class FormNodeUtil
 
         ////////////////////// Transfusion Medicine -> Complex factor summary [Message Category] /////////////////
         // Laboratory Values [Form Section]
-        //  Relevant Laboratory Values: [Form Field - Free Text] //TODO: replace it by a section called "Relevant Lab Values" of type "From Section Array"
+        //  Relevant Laboratory Values: [Form Field - Free Text] //replace it by a section called "Relevant Lab Values" of type "From Section Array"
         // Miscellaneous [Form Section]
         //  Product receiving: [Form Field - Free Text, Single Line]
         //  Transfusion Product Status: [Form Field - Dropdown Menu]
-        $sections = array(
-            //TODO: replace it by a section called "Relevant Lab Values" of type "From Section Array"
-            //finish: https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/36/next-steps
-            array(
-                'sectionName' => "Relevant Laboratory Values",
-                'sectionObjectTypeName' => "Form Section Array",
-                'fields' => array(
-                    'Lab Result Name'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultNameList"),
-                    'Lab Result Value'=>'Form Field - Free Text, Single Line',
-                    //'Lab Result Units of Measure'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity",""),
-                    'Lab Result Interpretation'=>'Form Field - Free Text',
-                    'Lab Result Date'=>'Form Field - Full Date and Time',
-                    //'Lab Result Flag'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity",""),
-                    'Lab Result Comment'=>'Form Field - Free Text',
-                    //'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity",""),
-                )
-            ),
-            array(
-                'sectionName' => "Miscellaneous",
-                'fields' => array(
-                    'Product receiving'=>'Form Field - Free Text, Single Line',
-                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
-                )
-            ),
-        );
-        $this->addFormToHolder($parent,"Complex factor summary",$sections);
+//        $sections = array(
+//            //replace it by a section called "Relevant Lab Values" of type "From Section Array"
+//            //finish: https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/36/next-steps
+//            array(
+//                'sectionName' => "Relevant Laboratory Values",
+//                'sectionObjectTypeName' => "Form Section Array",
+//                'fields' => array(
+//                    'Lab Result Name'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultNameList"),
+//                    'Lab Result Value'=>'Form Field - Free Text, Single Line',
+//                    'Lab Result Units of Measure'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultUnitsMeasureList"),
+//                    'Lab Result Interpretation'=>'Form Field - Free Text',
+//                    'Lab Result Date'=>'Form Field - Full Date and Time',
+//                    'Lab Result Flag'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultFlagList"),
+//                    'Lab Result Comment'=>'Form Field - Free Text',
+//                    'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
+//                )
+//            ),
+//            array(
+//                'sectionName' => "Miscellaneous",
+//                'fields' => array(
+//                    'Product receiving'=>'Form Field - Free Text, Single Line',
+//                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+//                )
+//            ),
+//        );
+//        $this->addFormToHolder($parent,"Complex factor summary",$sections);
+        $this->createLabValuesSection($parent,"Complex factor summary");
 
         ///////////////// Transfusion Medicine -> WinRho [Message Category]
         //        Miscellaneous [Form Section]
@@ -1571,96 +1598,51 @@ class FormNodeUtil
         $this->addFormToHolder($parent,"WinRho",$sections);
 
         //TODO: replace it by a section called "Relevant Lab Values" of type "From Section Array"
-        if(0) {
+        if(1) {
             /////////////////////////////////////        Transfusion Medicine -> Special needs [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $sections = array(
-                array(
-                    'sectionName' => "Laboratory Values",
-                    'fields' => array(
-                        'Relevant Laboratory Values' => 'Form Field - Free Text',
-                    )
-                ),
-            );
-            $this->addFormToHolder($parent, "Special needs", $sections);
+            $this->createLabValuesSection($parent,"Special needs");
 
             //Transfusion Medicine -> Other [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $sections = array(
-                array(
-                    'sectionName' => "Laboratory Values",
-                    'fields' => array(
-                        'Relevant Laboratory Values' => 'Form Field - Free Text',
-                    )
-                ),
-            );
-            $this->addFormToHolder($parent, "Other", $sections);
+            $this->createLabValuesSection($parent,"Other","Transfusion Medicine");
 
             //Microbiology [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $sections = array(
-                array(
-                    'sectionName' => "Laboratory Values",
-                    'fields' => array(
-                        'Relevant Laboratory Values' => 'Form Field - Free Text',
-                    )
-                ),
-            );
-            $this->addFormToHolder($parent, "Microbiology", $sections);
+            $this->createLabValuesSection($parent,"Microbiology");
 
             //Coagulation [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $sections = array(
-                array(
-                    'sectionName' => "Laboratory Values",
-                    'fields' => array(
-                        'Relevant Laboratory Values' => 'Form Field - Free Text',
-                    )
-                ),
-            );
-            $this->addFormToHolder($parent, "Coagulation", $sections);
+            $this->createLabValuesSection($parent,"Coagulation");
 
             //Hematology [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            //
+            $this->createLabValuesSection($parent,"Hematology");
+
             //Chemistry [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            //
+            $this->createLabValuesSection($parent,"Chemistry");
+
             //Cytogenetics [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            //
+            $this->createLabValuesSection($parent,"Cytogenetics");
+
             //Molecular [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            //
+            $this->createLabValuesSection($parent,"Molecular");
+
             //Other [Message Category]
-            //
             //Laboratory Values [Form Section]
-            //
             //    Relevant Laboratory Values: [Form Field - Free Text]
+            $this->createLabValuesSection($parent,"Other","Pathology Call Log Entry");
         }
 
 
@@ -1779,7 +1761,35 @@ class FormNodeUtil
         return $PathologyCallLogEntryFom;
     }
 
-
+    //"Relevant Lab Values" of type "From Section Array"
+    //https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/36/next-steps
+    //$holderName: i.e. "Complex factor summary"
+    public function createLabValuesSection($parent,$holderName,$parentMessageCategoryName=null) {
+        $sections = array(
+            array(
+                'sectionName' => "Relevant Laboratory Values",
+                'sectionObjectTypeName' => "Form Section Array",
+                'fields' => array(
+                    'Lab Result Name'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultNameList"),
+                    'Lab Result Value'=>'Form Field - Free Text, Single Line',
+                    'Lab Result Units of Measure'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultUnitsMeasureList"),
+                    'Lab Result Interpretation'=>'Form Field - Free Text',
+                    'Lab Result Date'=>'Form Field - Full Date and Time',
+                    'Lab Result Flag'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultFlagList"),
+                    'Lab Result Comment'=>'Form Field - Free Text',
+                    'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
+                )
+            ),
+            array(
+                'sectionName' => "Miscellaneous",
+                'fields' => array(
+                    'Product receiving'=>'Form Field - Free Text, Single Line',
+                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+                )
+            ),
+        );
+        $this->addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName);
+    }
 
 
 
