@@ -164,7 +164,7 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
 
         //TODO: check if arraySectionCount is equal to data-sectionid
         var sectionid = $(formNodeEl).data("sectionid");
-        console.log("formNodeElId: sectionid=" + sectionid);
+        //console.log("formNodeElId: sectionid=" + sectionid);
 
         if( arraySectionCount == null || arraySectionCount == sectionid ) {
             console.log("EXIT: formnode-holder-" + formNodeId + " already exists!");
@@ -746,7 +746,7 @@ function formNodeProcessRemoveSectionBtn( formNodeId ) {
         var formNodeCleanId = formNodeId;
     }
     var sections = $('.formnode-remove-section-id-'+formNodeCleanId);
-    console.log(formNodeCleanId+': sections='+sections.length);
+    //console.log(formNodeCleanId+': sections='+sections.length);
     if( sections.length > 1  ) {
         sections.show();
     } else {

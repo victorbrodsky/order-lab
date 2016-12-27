@@ -320,18 +320,21 @@
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#{{ panelId }}">
                     {{ formNode.name }}
+                    {#(ID: {{ formNode.id }}, saID: {{ formNodeId }})#}
                 </a>
 
-                <div class="pull-right">
-                <button id="formnode-add-section-{{ formNodeId }}" type="button"
-                        class="btn btn-default btn-xs formnode-add-section formnode-add-section-{{ formNodeId }}"
-                        onclick="formNodeAddSameSection(this,'{{ formNodeId }}')">+</button>
+                {% if cycle != "show" %}
+                    <div class="pull-right">
+                    <button id="formnode-add-section-{{ formNodeId }}" type="button"
+                            class="btn btn-default btn-xs formnode-add-section formnode-add-section-{{ formNodeId }}"
+                            onclick="formNodeAddSameSection(this,'{{ formNodeId }}')">+</button>
 
-                <button id="formnode-remove-section-{{ formNodeId }}" type="button"
-                        class="btn btn-default btn-xs formnode-remove-section formnode-remove-section-{{ formNodeId }} formnode-remove-section-id-{{ formNode.id }}"
-                        style="display: none;"
-                        onclick="formNodeRemoveSection(this,'{{ formNodeId }}')">-</button>
-                </div>
+                    <button id="formnode-remove-section-{{ formNodeId }}" type="button"
+                            class="btn btn-default btn-xs formnode-remove-section formnode-remove-section-{{ formNodeId }} formnode-remove-section-id-{{ formNode.id }}"
+                            style="display: none;"
+                            onclick="formNodeRemoveSection(this,'{{ formNodeId }}')">-</button>
+                    </div>
+                {% endif %}
             </h4>
         </div>
         <div id="{{ panelId }}" class="panel-collapse collapse in">

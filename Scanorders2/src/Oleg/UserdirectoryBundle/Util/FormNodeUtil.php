@@ -433,9 +433,9 @@ class FormNodeUtil
         }
 
         $arraySectionCount = $this->getArraySectionCountRecursive($formNode,$arraySectionCount,$testing);
-        //append flag string to the $arraySectionCount separated by underscore "_"
-        $prefix = $this->getArraySectionPrefix();
-        $arraySectionCount = $prefix . "_" . $arraySectionCount . "_" . $prefix;
+        //append flag string to the $arraySectionCount separated by underscore '_'
+        $arraySectionCount = $this->gePrefixedtArraySectionCount($arraySectionCount);
+
         return $arraySectionCount;
     }
     //get section array index only for section array formnode
@@ -511,6 +511,13 @@ class FormNodeUtil
         $prefix = $this->getArraySectionPrefix();
         $arraySectionCount = str_replace($prefix.'_', '', $arraySectionCount);
         $arraySectionCount = str_replace('_'.$prefix, '', $arraySectionCount);
+        return $arraySectionCount;
+    }
+
+    //0-0 => fffsa_0-0_fffsa
+    public function gePrefixedtArraySectionCount( $cleanArraySectionCount ) {
+        $prefix = $this->getArraySectionPrefix();
+        $arraySectionCount = $prefix . '_' . $cleanArraySectionCount . '_' . $prefix;
         return $arraySectionCount;
     }
 
@@ -1115,7 +1122,7 @@ class FormNodeUtil
     public function getFormNodeIdWithSectionCount($formNodeId,$arraySectionCount) {
         if( $arraySectionCount ) {
             //testing
-            return $formNodeId . "_" . $arraySectionCount;
+            return $formNodeId . '_' . $arraySectionCount;
         }
         return $formNodeId;
     }

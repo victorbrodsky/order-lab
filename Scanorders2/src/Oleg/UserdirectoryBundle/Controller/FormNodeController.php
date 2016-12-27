@@ -170,15 +170,18 @@ class FormNodeController extends Controller {
                     }
 
 //                    if( $arraySectionCount ) {
-//                        $formNodeId = $formNodeId."_".$arraySectionCount;
+//                        $formNodeId = $formNodeId.'_'.$arraySectionCount;
 //                        if( $parentFormNodeId ) {
-//                            $parentFormNodeId = $parentFormNodeId."_".$arraySectionCount;
+//                            $parentFormNodeId = $parentFormNodeId.'_'.$arraySectionCount;
 //                        }
 //                    }
                     //$formNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($formNodeId,$arraySectionCount);
 //                    if( $parentFormNodeId ) {
 //                        $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
 //                    }
+
+                    //append prefix to clean array section count: 0_0 => prefix_0_0_prefix
+                    $arraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($arraySectionCount);
 
                     //insert parent nested sections to resulting from node array
                     $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount);
@@ -362,7 +365,7 @@ class FormNodeController extends Controller {
             //$arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
 
 //            if( $arraySectionCount ) {
-//                $parentFormNodeId = $parentFormNode->getId()."_".$arraySectionCount;
+//                $parentFormNodeId = $parentFormNode->getId().'_'.$arraySectionCount;
 //            } else {
 //                $parentFormNodeId = $parentFormNode->getId();
 //            }
@@ -394,7 +397,8 @@ class FormNodeController extends Controller {
                 //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
                 array_pop($arraySectionCountArr);
                 $parentArraySectionCount = implode('-',$arraySectionCountArr);
-                $parentArraySectionCount = $prefix.'_'.$parentArraySectionCount.'_'.$prefix;
+                //$parentArraySectionCount = $prefix.'_'.$parentArraySectionCount.'_'.$prefix;
+                $parentArraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($parentArraySectionCount);
                 //echo "!!!!!!!!!!!!!!!!!! Old Index=".$arraySectionCount." => New Index=".$newArraySectionCount."<br>";
 
                 $grandParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($grandParentFormNode->getId(),$parentArraySectionCount);
