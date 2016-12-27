@@ -462,7 +462,7 @@ function formNodeAddSameSection( btn, formNodeId ) {
 
     //get level of this array section using formNodeId's '-' count: 100=>0, 101_0-0=>1, 214_0-0-0=>2
     var sectionLevel = (formNodeId.match(/-/g) || []).length;
-    console.log('sectionLevel='+sectionLevel);
+    //console.log('sectionLevel='+sectionLevel);
 
     var maxCounter = 0;
     //get next counter by class="formnode-arraysection-holder-{{ formNode.id }}"
@@ -477,7 +477,7 @@ function formNodeAddSameSection( btn, formNodeId ) {
         }
     });
     var nextCounter = maxCounter + 1;
-    console.log('nextCounter='+nextCounter);
+    //console.log('nextCounter='+nextCounter);
 
     //var targetSection = $(".formnode-arraysection-holder-"+formNodeId).last();
 
@@ -510,7 +510,7 @@ function formNodeAddSameSection( btn, formNodeId ) {
         //replace the last index
         var thisArraySectionIndex = targetSection.data("sectionid");
         var newArrSecIndex = formnodeReplaceSectionarrayIndex(thisArraySectionIndex,nextCounter,sectionLevel);
-        console.log('newArrSecIndex='+newArrSecIndex);
+        //console.log('newArrSecIndex='+newArrSecIndex);
 
         sectionHtml = '<div id="formnode-arraysection-holder-' + formNodeId + '" class="formnode-arraysection-holder formnode-arraysection-holder-' + formNodeId + ' '
             + '" data-sectionid="'
@@ -606,13 +606,13 @@ function formnodeReplaceIndexByName( input, fieldname, index, sectionLevel ) {
         } else {
             var searchStr = fieldname + separator + arrSecIndex + separator;
         }
-        console.log('searchStr='+searchStr);
+        //console.log('searchStr='+searchStr);
 
         //replace the index at the sectionLevel
         var newArrSecIndex = formnodeReplaceSectionarrayIndex(arrSecIndex,index,sectionLevel);
 
         var replaceStr = fieldname + separator + newArrSecIndex + separator;
-        console.log('replaceStr='+replaceStr);
+        //console.log('replaceStr='+replaceStr);
 
         var seacrh = new RegExp(searchStr, 'g');
         //var seacrh = searchStr;
@@ -626,9 +626,9 @@ function formnodeReplaceIndexByName( input, fieldname, index, sectionLevel ) {
 }
 
 //replace all occurence of saprefix_1-2_saprefix by saprefix_1-3_saprefix (index=3, sectionLevel=2)
-//http://jsfiddle.net/gz2tX/55/
+//http://jsfiddle.net/gz2tX/58/
 function formnodeReplaceAllIndex( input, index, sectionLevel ) {
-    console.log('index='+index+'; sectionLevel='+sectionLevel );
+    //console.log('index='+index+'; sectionLevel='+sectionLevel );
 
     //var fieldname = 'arraysectioncount';
     //var separator = '][';
@@ -648,7 +648,7 @@ function formnodeReplaceAllIndex( input, index, sectionLevel ) {
         var match = matchRes[i];
         if( matchArr.indexOf(match) == -1 ) {
             matchArr.push(match);
-            console.log('match='+match);
+            //console.log('match='+match);
 
             //2a) get new Index: saprefix_1-2_saprefix by saprefix_1-3_saprefix
             var cleanIndex = getCleanSectionArrayIndex(match); //0-1-1
@@ -695,8 +695,8 @@ function formnodeReplaceSectionarrayIndex(index,newIndex,sectionLevel) {
             }
         }
         newIndex = newIndexArr.join('-');
-        newIndex = _saprefix + '_' + newIndex + '_' + _saprefix;
     }
+    newIndex = _saprefix + '_' + newIndex + '_' + _saprefix;
     return newIndex;
 }
 //input: saprefix_1-2_saprefix, output: 2
@@ -738,8 +738,15 @@ function formNodeReplaceAll(input,searchStr,replaceStr) {
 }
 
 function formNodeProcessRemoveSectionBtn( formNodeId ) {
-    var sections = $('.formnode-remove-section-'+formNodeId);
-    //console.log('sections='+sections.length);
+    //formNodeId: 100_fffsa_0_fffsa => 100
+    var formNodeCleanIdArr = formNodeId.split("_");
+    if( formNodeCleanIdArr.length > 0 ) {
+        var formNodeCleanId = formNodeCleanIdArr[0];
+    } else {
+        var formNodeCleanId = formNodeId;
+    }
+    var sections = $('.formnode-remove-section-id-'+formNodeCleanId);
+    console.log(formNodeCleanId+': sections='+sections.length);
     if( sections.length > 1  ) {
         sections.show();
     } else {

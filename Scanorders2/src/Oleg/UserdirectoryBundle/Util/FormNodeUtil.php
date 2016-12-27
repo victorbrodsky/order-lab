@@ -427,6 +427,11 @@ class FormNodeUtil
     }
 
     public function getArraySectionCount( $formNode, $arraySectionCount, $testing ) {
+        //only if at least one parent is array section
+        if( !$this->isUnderArraySectionRecursion($formNode,$testing) ) {
+            return null;
+        }
+
         $arraySectionCount = $this->getArraySectionCountRecursive($formNode,$arraySectionCount,$testing);
         //append flag string to the $arraySectionCount separated by underscore "_"
         $prefix = $this->getArraySectionPrefix();
@@ -476,6 +481,25 @@ class FormNodeUtil
         }
 
         return $arraySectionCount;
+    }
+
+    public function isUnderArraySectionRecursion($formNode,$testing=null) {
+        if( $formNode && $formNode->getObjectTypeName() == "Form Section Array" ) {
+            if( $testing ) {
+                echo $formNode->getId().": FormNode is Section Array";
+            }
+            return true;
+        }
+
+        $parent = $formNode->getParent();
+        if( $parent ) {
+            if( $parent == "Form Section Array" ) {
+                return true;
+            } else {
+                return $this->isUnderArraySectionRecursion($parent,$testing);
+            }
+        }
+        return false;
     }
 
     public function getArraySectionPrefix() {
