@@ -184,7 +184,7 @@ class FormNodeController extends Controller {
                     $arraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($arraySectionCount);
 
                     //insert parent nested sections to resulting from node array
-                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount);
+                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
 
                     //get common (merged) parent section
                     $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
@@ -241,7 +241,7 @@ class FormNodeController extends Controller {
                     }
 
                     //insert parent nested sections to resulting from node array
-                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount);
+                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
 
                     //get common (merged) parent section
                     $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
@@ -323,7 +323,7 @@ class FormNodeController extends Controller {
 
 
     //create recursively $formNodeArr containing
-    public function createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $formNode, $resArr, $arraySectionCount ) {
+    public function createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle ) {
 
         $formNodeHolderId = $formNodeHolderEntity->getId();
         if( !$formNodeHolderId ) {
@@ -375,7 +375,7 @@ class FormNodeController extends Controller {
                 'formNode' => $parentFormNode,
                 'formNodeId' => $parentFormNodeId,
                 'formNodeHolderEntity' => $formNodeHolderEntity,
-                'cycle' => 'edit',
+                'cycle' => $cycle,  //'edit',
                 'formNodeValue' => null,
                 'single' => $this->single,
                 'arraySectionCount' => $arraySectionCount,
@@ -419,7 +419,7 @@ class FormNodeController extends Controller {
 
             $resArr[] = $res;
 
-            return $this->createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $parentFormNode, $resArr, $parentArraySectionCount );
+            return $this->createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $parentFormNode, $resArr, $parentArraySectionCount, $cycle );
 
         } else {
             return $resArr;
