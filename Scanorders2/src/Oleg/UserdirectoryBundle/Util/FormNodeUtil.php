@@ -1066,6 +1066,7 @@ class FormNodeUtil
         $dql->select('list');
         $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
         $dql->andWhere('list.formNode = :formNodeId');
+        $dql->orderBy('list.arraySectionIndex','DESC');
 
         $query = $this->em->createQuery($dql);
 
