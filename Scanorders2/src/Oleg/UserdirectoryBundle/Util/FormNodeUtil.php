@@ -732,10 +732,10 @@ class FormNodeUtil
 
             //set objectType
             if( $objectType ) {
-                if( !$node->getObjectType() ) {
+                //if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
                     $updated = true;
-                }
+                //}
             }
 
             //set visible
@@ -1179,7 +1179,7 @@ class FormNodeUtil
 
     public function addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName=null) {
         $objectTypeForm = $this->getObjectTypeByName('Form');
-        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+        $objectTypeFormSection = $this->getObjectTypeByName('Form Section');
 
         //Create form: i.e. Transfusion Medicine -> Third+ dose platelets [Message Category]
         $formParams = array(
@@ -1198,6 +1198,8 @@ class FormNodeUtil
                 if( !$objectTypeSection ) {
                     exit('Object type not found by name='.$section['sectionObjectTypeName']);
                 }
+            } else {
+                $objectTypeSection = $objectTypeFormSection;
             }
 
             if( array_key_exists('sectionParentName', $section) ) {
