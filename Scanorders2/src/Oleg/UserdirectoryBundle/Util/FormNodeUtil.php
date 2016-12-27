@@ -726,6 +726,9 @@ class FormNodeUtil
 
             //update node
 
+            //Do not update the form node if already exist
+            //return;
+
             $updated = false;
             //echo "Existed: ".$node->getName()."<br>";
             //echo "objectType=".$objectType->getName()."<br>";
@@ -1175,7 +1178,7 @@ class FormNodeUtil
 
         //exit('EOF message category');
 
-        return round($count/10);
+        return round($count);
     }
 
     public function addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName=null) {

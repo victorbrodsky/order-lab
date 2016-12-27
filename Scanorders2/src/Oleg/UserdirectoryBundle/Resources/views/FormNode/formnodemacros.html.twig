@@ -314,7 +314,10 @@
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% set panelId = "formnode_"~formNode.id~"_section_arraysectioncount_"~count~"_node_"~formNode.id %}
 
-    <div id="formnode-arraysection-holder-{{ formNodeId }}" class="formnode-arraysection-holder formnode-arraysection-holder-{{ formNodeId }}" data-sectionid="{{ count }}">
+    <div id="formnode-arraysection-holder-{{ formNodeId }}"
+         class="formnode-arraysection-holder formnode-arraysection-holder-{{ formNodeId }} formnode-arraysection-holder-id-{{ formNode.id }}"
+         data-sectionid="{{ count }}"
+    >
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -327,7 +330,7 @@
                     <div class="pull-right">
                     <button id="formnode-add-section-{{ formNodeId }}" type="button"
                             class="btn btn-default btn-xs formnode-add-section formnode-add-section-{{ formNodeId }}"
-                            onclick="formNodeAddSameSection(this,'{{ formNodeId }}')">+</button>
+                            onclick="formNodeAddSameSection(this,'{{ formNode.id }}','{{ formNodeId }}')">+</button>
 
                     <button id="formnode-remove-section-{{ formNodeId }}" type="button"
                             class="btn btn-default btn-xs formnode-remove-section formnode-remove-section-{{ formNodeId }} formnode-remove-section-id-{{ formNode.id }}"

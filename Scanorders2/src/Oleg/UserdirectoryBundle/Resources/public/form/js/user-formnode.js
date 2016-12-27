@@ -457,27 +457,27 @@ function calllogGetFormNodeElement( formNodeId ) {
 ///////////////////////////// Array Section Functions. Use _saprefix saprefix_0-0-1_saprefix //////////////////////
 
 //formnode[arraysection][90][node][91]
-function formNodeAddSameSection( btn, formNodeId ) {
-    console.log('add form node section: formNodeId='+formNodeId);
+function formNodeAddSameSection( btn, formNodeCleanId, formNodeId ) {
+    console.log('########## add form node section: formNodeCleanId='+formNodeCleanId+'; formNodeId='+formNodeId+" ##########");
 
     //get level of this array section using formNodeId's '-' count: 100=>0, 101_0-0=>1, 214_0-0-0=>2
     var sectionLevel = (formNodeId.match(/-/g) || []).length;
-    //console.log('sectionLevel='+sectionLevel);
+    console.log('sectionLevel='+sectionLevel);
 
     var maxCounter = 0;
     //get next counter by class="formnode-arraysection-holder-{{ formNode.id }}"
-    $('.formnode-arraysection-holder-'+formNodeId).each(function(){
-        var sectionidFull = $(this).data("sectionid"); //0-1
-        //console.log('sectionidFull='+sectionidFull);
-        var sectionid = formnodeGetLastSectionArrayIndex(sectionidFull,'-',sectionLevel);
+    $('.formnode-arraysection-holder-id-'+formNodeCleanId).each(function(){
+        var sectionidFull = $(this).data("sectionid"); //fffsa_0_1_fffsa
+        console.log('sectionidFull='+sectionidFull);
+        var sectionid = formnodeGetLastSectionArrayIndex(sectionidFull,'-',sectionLevel); //1 if sectionLevel=1
         sectionid = parseInt(sectionid);
-        //console.log('sectionid='+sectionid);
+        console.log('sectionid='+sectionid);
         if( sectionid > maxCounter ) {
             maxCounter = sectionid;
         }
     });
     var nextCounter = maxCounter + 1;
-    //console.log('nextCounter='+nextCounter);
+    console.log('nextCounter='+nextCounter);
 
     //var targetSection = $(".formnode-arraysection-holder-"+formNodeId).last();
 
@@ -509,11 +509,17 @@ function formNodeAddSameSection( btn, formNodeId ) {
 
         //replace the last index
         var thisArraySectionIndex = targetSection.data("sectionid");
-        var newArrSecIndex = formnodeReplaceSectionarrayIndex(thisArraySectionIndex,nextCounter,sectionLevel);
-        //console.log('newArrSecIndex='+newArrSecIndex);
+        console.log('thisArraySectionIndex='+thisArraySectionIndex);
 
-        sectionHtml = '<div id="formnode-arraysection-holder-' + formNodeId + '" class="formnode-arraysection-holder formnode-arraysection-holder-' + formNodeId + ' '
-            + '" data-sectionid="'
+        var newArrSecIndex = formnodeReplaceSectionarrayIndex(thisArraySectionIndex,nextCounter,sectionLevel);
+        console.log('newArrSecIndex='+newArrSecIndex);
+
+        //fffsa_0_1_fffsa => 317_fffsa_0_1_fffsa
+        var newFormNodeId = formNodeCleanId + '_' + newArrSecIndex;
+
+        sectionHtml = '<div id="formnode-arraysection-holder-' + newFormNodeId + '"'
+            + ' class="formnode-arraysection-holder formnode-arraysection-holder-' + newFormNodeId + ' formnode-arraysection-holder-id-' + formNodeCleanId + '"'
+            + ' data-sectionid="'
             + newArrSecIndex + '">'
             + sectionHtml + '</div>';
 
