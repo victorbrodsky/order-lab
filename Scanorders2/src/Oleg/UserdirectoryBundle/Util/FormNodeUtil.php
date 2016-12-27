@@ -732,10 +732,11 @@ class FormNodeUtil
 
             //set objectType
             if( $objectType ) {
-                //if( !$node->getObjectType() ) {
+                //Do not change object type if already exists
+                if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
                     $updated = true;
-                //}
+                }
             }
 
             //set visible
