@@ -313,7 +313,7 @@ class AdminController extends Controller
         $count_generateLabResultFlagList = $this->generateLabResultFlagList();
         $count_generatePathologyResultSignatoriesList = $this->generatePathologyResultSignatoriesList();
 
-
+        $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
 
 
@@ -404,6 +404,7 @@ class AdminController extends Controller
             'LabResultUnitsMeasures='.$count_generategenerateLabResultUnitsMeasureList.', '.
             'LabResultFlagList='.$count_generateLabResultFlagList.', '.
             'PathologyResultSignatoriesList='.$count_generatePathologyResultSignatoriesList.', '.
+            'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
