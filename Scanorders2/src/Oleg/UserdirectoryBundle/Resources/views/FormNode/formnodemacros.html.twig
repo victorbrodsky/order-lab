@@ -195,11 +195,35 @@
         {% if formType == "Form Field - Free Text, Single Line" %}
             {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Numeric, Signed Integer" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Numeric, Signed Float" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Locked, Calculated, Stored" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Unlocked, Calculated, Stored" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Locked, Calculated, Visual Aid" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
 
         {% if formType == "Form Field - Dropdown Menu" %}
             {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Dropdown Menu - Allow Multiple Selections" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"multiple") }}
+        {% endif %}
+        {% if formType == "Form Field - Dropdown Menu - Allow New Entries" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"multiple") }}
+        {% endif %}
+        {% if formType == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" %}
             {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"multiple") }}
         {% endif %}
 
@@ -215,6 +239,12 @@
         {% if formType == "Form Field - Year" %}
             {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
         {% endif %}
+        {% if formType == "Form Field - Time, with Time Zone" %}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+        {% endif %}
+        {% if formType == "Form Field - Full Date and Time, with Time Zone" %}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+        {% endif %}
 
         {#the same as dropdown menu#}
         {% if formType == "Form Field - Month" %}
@@ -227,6 +257,9 @@
         {% if formType == "Form Field - Checkbox" %}
             {{ formnodemacros.checkboxForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
+        {% if formType == "Form Field - Checkboxes" %}
+            {{ formnodemacros.checkboxForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
 
         {% if formType == "Form Field - Radio Button" %}
             {{ formnodemacros.radioForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
@@ -236,9 +269,7 @@
             {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
 
-        {% if formType == "Form Field - Free Text, Single Line, Unlocked, Calculated, Stored" %}
-            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
-        {% endif %}
+
 
     {% else %}
         {#<br>#}

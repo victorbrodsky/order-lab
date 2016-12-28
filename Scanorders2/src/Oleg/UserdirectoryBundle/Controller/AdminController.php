@@ -34,6 +34,7 @@ use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
+use Oleg\UserdirectoryBundle\Entity\PathologyResultSignatoriesList;
 use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Entity\PermissionActionList;
 use Oleg\UserdirectoryBundle\Entity\PermissionList;
@@ -5136,119 +5137,165 @@ class AdminController extends Controller
             "Form",
             "Form Section",
             "Form Section Array",
-            //"Form Field - Free Text, Single Line",
+
+            //String
             array(
                 'name' => "Form Field - Free Text, Single Line",
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
-            //"Form Field - Free Text",
-            array(
-                'name' => "Form Field - Free Text",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeText'
-            ),
-            //"Form Field - Free Text, RTF",
-            array(
-                'name' => "Form Field - Free Text, RTF",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeText'
-            ),
-            //"Form Field - Free Text, HTML",
-            array(
-                'name' => "Form Field - Free Text, HTML",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeText'
-            ),
-            //"Form Field - Full Date",
-            array(
-                'name' => "Form Field - Full Date",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDateTime'
-            ),
-            //"Form Field - Time",
-            array(
-                'name' => "Form Field - Time",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDateTime'
-            ),
-            //"Form Field - Full Date and Time",
-            array(
-                'name' => "Form Field - Full Date and Time",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDateTime'
-            ),
-            //"Form Field - Year",
-            array(
-                'name' => "Form Field - Year",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDateTime'
-            ),
-            //"Form Field - Month",
-            array(
-                'name' => "Form Field - Month",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDateTime',
-            ),
-            //"Form Field - Date",
-            array(
-                'name' => "Form Field - Date",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDateTime'
-            ),
-            //"Form Field - Day of the Week",
-            array(
-                'name' => "Form Field - Day of the Week",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDateTime',
-            ),
-            //"Form Field - Dropdown Menu",
-            array(
-                'name' => "Form Field - Dropdown Menu",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDropdown'
-            ),
-            "Dropdown Menu Value",
-            array(
-                'name' => "Linked Object - Patient",
-                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
-                'receivedValueEntityName' => 'Patient'
-            ),
-            //"Form Field - Checkbox",
-            array(
-                'name' => "Form Field - Checkbox",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeCheckbox'
-            ),
-            //"Form Field - Radio Button",
-            array(
-                'name' => "Form Field - Radio Button",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDropdown' //radio button is very similar to the dropdown menu
-            ),
-            //"Form Field - Dropdown Menu - Allow Multiple Selections"
-            array(
-                'name' => "Form Field - Dropdown Menu - Allow Multiple Selections",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
-                'receivedValueEntityName' => 'ObjectTypeDropdown'
-            ),
-//            array(
-//                'name' => "Linked Object - User",
-//                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
-//                'receivedValueEntityName' => 'PathologyResultSignatories'
-//            ),
-            //'Form Field - Free Text, Single Line, Locked, Calculated, Stored',
             array(
                 'name' => "Form Field - Free Text, Single Line, Locked, Calculated, Stored",
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
-            //'Form Field - Free Text, Single Line, Unlocked, Calculated, Stored',
             array(
                 'name' => "Form Field - Free Text, Single Line, Unlocked, Calculated, Stored",
                 'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
+            array(
+                'name' => "Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeString'
+            ),
+            array(
+                'name' => "Form Field - Free Text, Single Line, Numeric, Signed Integer",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeString'
+            ),
+            array(
+                'name' => "Form Field - Free Text, Single Line, Numeric, Signed Float",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeString'
+            ),
+            array(
+                'name' => "Form Field - Free Text, Single Line, Locked, Calculated, Visual Aid",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeString'
+            ),
+
+            //Text
+            array(
+                'name' => "Form Field - Free Text",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeText'
+            ),
+            array(
+                'name' => "Form Field - Free Text, RTF",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeText'
+            ),
+            array(
+                'name' => "Form Field - Free Text, HTML",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeText'
+            ),
+
+            //Dates
+            array(
+                'name' => "Form Field - Full Date",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
+            array(
+                'name' => "Form Field - Time",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
+            array(
+                'name' => "Form Field - Full Date and Time",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
+            array(
+                'name' => "Form Field - Year",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
+            array(
+                'name' => "Form Field - Month",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime',
+            ),
+            array(
+                'name' => "Form Field - Date",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
+            array(
+                'name' => "Form Field - Day of the Week",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime',
+            ),
+            array(
+                'name' => "Form Field - Time, with Time Zone",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
+            array(
+                'name' => "Form Field - Full Date and Time, with Time Zone",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDateTime'
+            ),
+
+            //Dropdown
+            array(
+                'name' => "Form Field - Dropdown Menu",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDropdown'
+            ),
+            array(
+                'name' => "Form Field - Dropdown Menu - Allow New Entries",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDropdown'
+            ),
+            array(
+                'name' => "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDropdown'
+            ),
+            array(
+                'name' => "Form Field - Dropdown Menu - Allow Multiple Selections",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeDropdown'
+            ),
+            //"Dropdown Menu Value",
+
+            //Patient
+            array(
+                'name' => "Linked Object - Patient",
+                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
+                'receivedValueEntityName' => 'Patient'
+            ),
+
+            //Checkbox
+            array(
+                'name' => "Form Field - Checkbox",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeCheckbox'
+            ),
+            array(
+                'name' => "Form Field - Checkboxes",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeCheckbox'
+            ),
+
+            //Radio
+            array(
+                'name' => "Form Field - Radio Button",
+                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityName' => 'ObjectTypeRadioButton' //radio button is very similar to the dropdown menu
+            ),
+
+            //User
+//            array(
+//                'name' => "Linked Object - User",
+//                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
+//                'receivedValueEntityName' => 'PathologyResultSignatories'
+//            ),
+
+
 
         );
 
@@ -5517,6 +5564,8 @@ class AdminController extends Controller
             "1000" => array('LabResultUnitsMeasureList','labresultunitsmeasures-list','Lab Result Units of Measure List'),
             "1010" => array('LabResultFlagList','labresultflags-list','Lab Result Flag List'),
             "1020" => array('PathologyResultSignatoriesList','pathologyresultsignatories-list','Pathology Result Signatories List'),
+            "1030" => array('ObjectTypeCheckbox','objecttypecheckboxs-list','Object Type Checkbox'),
+            "1040" => array('ObjectTypeRadioButton','objecttyperadiobuttons-list','Object Type Radio Button'),
 
         );
 
@@ -6270,7 +6319,7 @@ class AdminController extends Controller
         }
 
         $formNodeUtil = $this->get('user_formnode_utility');
-        $formNodeUtil->generateTestFormNode();
+        $formNodeUtil->createTestFormNodes();
 
         exit("Test Form Node Tree generated");
     }
@@ -6925,6 +6974,69 @@ class AdminController extends Controller
         }
 
         return round($count/10);
+    }
+
+
+    //add all MD users to "Pathology Result Signatories" (set the name of each list item to "FirstName LastName, MD" and set the "Object ID" to the corresponding user ID)
+    /**
+     * @Route("/list/add-mdusers-to-pathology-result-signatories/", name="employees_add-mdusers-to-pathology-result-signatories")
+     * @Method("GET")
+     */
+    public function addMDUsersToPathologyResultSignatoriesList(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $creator = $this->get('security.context')->getToken()->getUser();
+
+        //user_trainings_0_degree
+        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.trainings", "trainings");
+        $dql->leftJoin("trainings.degree", "degree");
+
+        $dql->where("degree.name = :degreeMd");
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters(array(
+            'degreeMd' => 'MD',
+        ));
+
+        $users = $query->getResult();
+        //$count = count($users);
+
+        $count = 1;
+
+        //add users to PathologyResultSignatoriesList
+        foreach( $users as $user ) {
+            //"FirstName LastName, MD"
+            $name = $user->getUsernameOptimal();
+            echo "<br> $count User: ".$name."<br>";
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new PathologyResultSignatoriesList();
+            $this->setDefaultList($listEntity,null,$creator,$name);
+
+            $listEntity->setObject($user);
+
+            //exit('exit generateObjectTypeActions');
+            //$em->persist($listEntity);
+            //$em->flush();
+
+            echo "Added user: ".$name."<br>";
+            exit('end');
+            $count++;
+        }
+
+        exit("<br>Added MD users: ".$count);
     }
 
 }

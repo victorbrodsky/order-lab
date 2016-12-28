@@ -150,6 +150,11 @@ class FormNode extends BaseCompositeNode {
      */
     private $objectTypeCheckboxs;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ObjectTypeRadioButton", mappedBy="formNode")
+     */
+    private $objectTypeRadioButtons;
+
 
 
     public function __construct($creator=null) {
@@ -160,6 +165,7 @@ class FormNode extends BaseCompositeNode {
         $this->objectTypeDropdowns = new ArrayCollection();
         $this->objectTypeDateTimes = new ArrayCollection();
         $this->objectTypeCheckboxs = new ArrayCollection();
+        $this->objectTypeRadioButtons = new ArrayCollection();
 
     }
 
@@ -265,6 +271,23 @@ class FormNode extends BaseCompositeNode {
     public function getObjectTypeCheckboxs()
     {
         return $this->objectTypeCheckboxs;
+    }
+
+    public function addObjectTypeRadioButton($item)
+    {
+        if( $item && !$this->objectTypeRadioButtons->contains($item) ) {
+            $this->objectTypeRadioButtons->add($item);
+            $item->setFormNode($this);
+        }
+        return $this;
+    }
+    public function removeObjectTypeRadioButton($item)
+    {
+        $this->objectTypeRadioButtons->removeElement($item);
+    }
+    public function getObjectTypeRadioButtons()
+    {
+        return $this->objectTypeRadioButtons;
     }
 
     /**

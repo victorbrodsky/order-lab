@@ -101,6 +101,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         //    //holder.find('.calllog-patient-panel-title').html("Patient Info");
         //}
     }).fail(function() {
+        _formnode[identifier] = null;
         alert("Error getting field(s) for "+_holderName+" "+messageCategoryId);
     }).done(function() {
         //console.log("update patient title done");
@@ -744,6 +745,15 @@ function formNodeReplaceAll(input,searchStr,replaceStr) {
 }
 
 function formNodeProcessRemoveSectionBtn( formNodeId ) {
+
+    //Are You sure you would like to delete this form section?
+    if( confirm('Are You sure you would like to delete this form section?') ) {
+        // Continue
+    } else {
+        // Do nothing!
+        return;
+    }
+
     //formNodeId: 100_fffsa_0_fffsa => 100
     var formNodeCleanIdArr = formNodeId.split("_");
     if( formNodeCleanIdArr.length > 0 ) {

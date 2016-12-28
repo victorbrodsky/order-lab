@@ -1134,7 +1134,12 @@ class FormNodeUtil
 
 
 
-//run: order/directory/admin/list/generate-form-node-tree/
+
+
+
+
+    ////////////////////////// pre-generate FormNode tree /////////////////////////////////
+    //run: order/directory/admin/list/generate-form-node-tree/
     public function generateFormNode() {
 
         $em = $this->em;
@@ -1174,25 +1179,27 @@ class FormNodeUtil
         $this->createAfterFirstdoseplasma($parentNode);
         $count++;
 
-
-
         //exit('EOF message category');
 
         return round($count);
     }
 
-    public function addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName=null) {
+    public function addFormToHolder( $parent, $holderName, $sections, $parentMessageCategoryName=null ) {
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeFormSection = $this->getObjectTypeByName('Form Section');
 
-        //Create form: i.e. Transfusion Medicine -> Third+ dose platelets [Message Category]
-        $formParams = array(
-            'parent' => $parent,
-            'name' => $holderName,
-            'objectType' => $objectTypeForm,
-        );
-        $parentForm = $this->createV2FormNode($formParams);
-        $this->setMessageCategoryListLink($holderName,$parentForm,$parentMessageCategoryName);
+        if( $holderName ) {
+            //Create form: i.e. Transfusion Medicine -> Third+ dose platelets [Message Category]
+            $formParams = array(
+                'parent' => $parent,
+                'name' => $holderName,
+                'objectType' => $objectTypeForm,
+            );
+            $parentForm = $this->createV2FormNode($formParams);
+            $this->setMessageCategoryListLink($holderName, $parentForm, $parentMessageCategoryName);
+        } else {
+            $parentForm = $parent;
+        }
 
         foreach( $sections as $section ) {
             $sectionName = $section['sectionName'];
@@ -1851,6 +1858,90 @@ class FormNodeUtil
     }
 
 
+    //run by: /list/generate-test-form-node-tree/
+    public function createTestFormNodes()
+    {
+
+        //1) create "Test" form section
+//        $sections = array(
+//            array(
+//                'sectionName' => "Test",
+//            ),
+//        );
+//        $testFormSection = $this->addFormToHolder($parent,"Test",$sections);
+
+        $parentNode = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Pathology Call Log Book');
+
+        //Test Section 1 (Form Section)
+        //Test Field 01: Form Field - Free Text, Single Line
+        //Test Field 02: Form Field - Free Text
+        //Test Field 03: Form Field - Free Text, RTF
+        //Test Field 04: Form Field - Free Text, HTML
+        //Test Field 05: Form Field - Full Date
+        //Test Field 06: Form Field - Time
+        //Test Field 07: Form Field - Full Date and Time
+        //Test Field 08: Form Field - Year
+        //Test Section 2 (Form Section)
+        //Test Field 09: Form Field - Month
+        //Test Field 10: Form Field - Date
+        //Test Field 11: Form Field - Day of the Week
+        //Test Field 12: Form Field - Dropdown Menu (you can link this to show any real lists you have)
+        //Test Field 13: Form Field - Checkbox
+        //Test Field 14: Form Field - Radio Button
+        //Test Field 15: Form Field - Dropdown Menu - Allow Multiple Selections (you can link this to show any real lists you have)
+        //Test Field 16: Form Field - Dropdown Menu (linking to the "Complex patient list" which in turn has items on it marked as "Linked Object - Patient") thus this dropdown menu should show patients currently on the "Complex Patient List".) If we add a second patient list, changing this dropdown menu to list patients from the second list should be as easy as changing the ID in the "Link to List ID" column.
+        $sections = array(
+            array(
+                'sectionName' => "Test Section 1",
+                'fields' => array(
+                    'Test Field 01'=>'Form Field - Free Text, Single Line',
+                    'Test Field 02'=>'Form Field - Free Text',
+                    'Test Field 03'=>'Form Field - Free Text, RTF',
+                    'Test Field 04'=>'Form Field - Free Text, HTML',
+                    'Test Field 05'=>'Form Field - Full Date',
+                    'Test Field 06'=>'Form Field - Time',
+                    'Test Field 07'=>'Form Field - Full Date and Time',
+                    'Test Field 08'=>'Form Field - Year',
+                )
+            ),
+            array(
+                'sectionName' => "Test Section 2",
+                'sectionObjectTypeName' => "Form Section Array",
+                'fields' => array(
+                    'Test Field 09'=>'Form Field - Month',
+                    'Test Field 10'=>'Form Field - Date',
+                    'Test Field 11'=>'Form Field - Day of the Week',
+                    'Test Field 12'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+                    'Test Field 13'=>array('Form Field - Checkbox',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 14'=>array('Form Field - Radio Button',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 15'=>array('Form Field - Dropdown Menu - Allow Multiple Selections',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 16'=>array('Form Field - Dropdown Menu - Allow Multiple Selections',"Oleg\\CallLogBundle\\Entity","PathologyCallComplexPatients"),
+                    'Test Field 17'=>array('Form Field - Checkboxes',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                ),
+            ),
+            array(
+                'sectionName' => "Test Section 3",
+                'fields' => array(
+                    'Test Field 18'=>'Form Field - Time, with Time Zone',
+                    'Test Field 19'=>'Form Field - Full Date and Time, with Time Zone',
+                    'Test Field 20'=>array('Form Field - Dropdown Menu - Allow New Entries',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 21'=>array('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 22'=>'Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer',
+                    'Test Field 23'=>'Form Field - Free Text, Single Line, Numeric, Signed Integer',
+                    'Test Field 24'=>'Form Field - Free Text, Single Line, Numeric, Signed Float',
+                    'Test Field 25'=>'Form Field - Free Text, Single Line, Locked, Calculated, Stored',
+                    'Test Field 26'=>'Form Field - Free Text, Single Line, Unlocked, Calculated, Stored',
+                    'Test Field 27'=>'Form Field - Free Text, Single Line, Locked, Calculated, Visual Aid',
+                    'Test Field 28'=>array('Form Field - Dropdown Menu - Allow New Entries',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
+                    'Test Field 29'=>array('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
+                ),
+            ),
+
+        );
+        $this->addFormToHolder($parentNode,"Test",$sections);
+
+
+    }
 
 
 

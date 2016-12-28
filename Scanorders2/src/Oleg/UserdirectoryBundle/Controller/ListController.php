@@ -124,6 +124,8 @@ class ListController extends Controller
      * @Route("/list/lab-result-units-measures/", name="labresultunitsmeasures-list")
      * @Route("/list/lab-result-flags/", name="labresultflags-list")
      * @Route("/list/pathology-result-signatories/", name="pathologyresultsignatories-list")
+     * @Route("/list/object-type-checkboxes/", name="objecttypecheckboxs-list")
+     * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -397,6 +399,8 @@ class ListController extends Controller
      * @Route("/list/lab-result-units-measures/", name="labresultunitsmeasures_create")
      * @Route("/list/lab-result-flags/", name="labresultflags_create")
      * @Route("/list/pathology-result-signatories/", name="pathologyresultsignatories_create")
+     * @Route("/list/object-type-checkboxes/", name="objecttypecheckboxs_create")
+     * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -578,6 +582,8 @@ class ListController extends Controller
      * @Route("/list/lab-result-units-measures/new", name="labresultunitsmeasures_new")
      * @Route("/list/lab-result-flags/new", name="labresultflags_new")
      * @Route("/list/pathology-result-signatories/new", name="pathologyresultsignatories_new")
+     * @Route("/list/object-type-checkboxes/new", name="objecttypecheckboxs_new")
+     * @Route("/list/object-type-radio-buttons/new", name="objecttyperadiobuttons_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -730,6 +736,8 @@ class ListController extends Controller
      * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_show")
      * @Route("/list/lab-result-flags/{id}", name="labresultflags_show")
      * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_show")
+     * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_show")
+     * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_show")
      *
      *
      * @Method("GET")
@@ -873,6 +881,8 @@ class ListController extends Controller
      * @Route("/list/lab-result-units-measures/{id}/edit", name="labresultunitsmeasures_edit")
      * @Route("/list/lab-result-flags/{id}/edit", name="labresultflags_edit")
      * @Route("/list/pathology-result-signatories/{id}/edit", name="pathologyresultsignatories_edit")
+     * @Route("/list/object-type-checkboxes/{id}/edit", name="objecttypecheckboxs_edit")
+     * @Route("/list/object-type-radio-buttons/{id}/edit", name="objecttyperadiobuttons_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1061,6 +1071,8 @@ class ListController extends Controller
      * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_update")
      * @Route("/list/lab-result-flags/{id}", name="labresultflags_update")
      * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_update")
+     * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_update")
+     * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1768,7 +1780,14 @@ class ListController extends Controller
                 $className = "PathologyResultSignatoriesList";
                 $displayName = "Pathology Result Signatories List";
                 break;
-
+            case "objecttypecheckboxs":
+                $className = "ObjectTypeCheckbox";
+                $displayName = "Object Type Checkbox";
+                break;
+            case "objecttyperadiobuttons":
+                $className = "ObjectTypeRadioButton";
+                $displayName = "Object Type Radio Button";
+                break;
 
 //            case "messagetypeclassifiers":
 //                $className = "MessageTypeClassifiers";
@@ -1935,6 +1954,8 @@ class ListController extends Controller
      * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_delete")
      * @Route("/list/lab-result-flags/{id}", name="labresultflags_delete")
      * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_delete")
+     * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_delete")
+     * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_delete")
      *
      * @Method("DELETE")
      */
