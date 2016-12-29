@@ -126,7 +126,7 @@
             {#<th>Actions</th>#}
         </tr>
         </thead>
-        <tbody data-link="row" class="rowlink">
+        <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
 
         {% for entity in entities %}
             <tr>
@@ -280,7 +280,18 @@
                 <td>{{ entity.objectType }}</td>
                 {#<td>{{ entity.entityNamespace }}</td>#}
                 <td>{{ entity.entityName }}</td>
-                <td>{{ entity.entityId }}</td>
+
+                {#<td>{{ entity.entityId }}</td>#}
+                {% set fullUrl = user_security_utility.getAbsoluetFullListUrl(entity,app.request) %}
+                {% if entity.entityId and fullUrl %}
+                    <td>
+                        <a class="list-row-mainlink" href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
+                    </td>
+                {% else %}
+                    <td>
+                        {{ entity.entityId }}
+                    </td>
+                {% endif %}
 
                 {#<td>{{ entity.linkToListId }}</td>#}
                 {#{% if entity.linkToListId is defined and entity.listRootName is defined %}#}

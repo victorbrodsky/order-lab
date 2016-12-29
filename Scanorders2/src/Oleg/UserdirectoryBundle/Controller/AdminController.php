@@ -55,6 +55,7 @@ use Oleg\UserdirectoryBundle\Entity\TransfusionHemolysisCheckResultsList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionProductStatusList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
 use Oleg\UserdirectoryBundle\Entity\WeekDaysList;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -5667,8 +5668,10 @@ class AdminController extends Controller
             $res
         );
 
-        exit($res);
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        //exit($res);
+        //return $this->redirect($this->generateUrl('user_admin_index'));
+
+        return round($count/10);
     }
     function splitAtUpperCase($s) {
         return preg_split('/(?=[A-Z])/', $s, -1, PREG_SPLIT_NO_EMPTY);
@@ -6991,6 +6994,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $creator = $this->get('security.context')->getToken()->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
 
         //user_trainings_0_degree
         $repository = $em->getRepository('OlegUserdirectoryBundle:User');
@@ -7028,12 +7032,26 @@ class AdminController extends Controller
 
             $listEntity->setObject($user);
 
-            //exit('exit generateObjectTypeActions');
-            //$em->persist($listEntity);
-            //$em->flush();
+            //set object type
+            //$eventObjectType = $userSecUtil->getObjectByNameTransformer($creator,"User",'UserdirectoryBundle','EventObjectTypeList');
+            //if( $eventObjectType ) {
+            //    $listEntity->setObjectType($eventObjectType);
+            //}
+
+            $userWrapper = $listEntity->getUserWrapper();
+            echo "userWrapper=".$userWrapper."<br>";
+            if( !$userWrapper ) {
+                echo "User wrapper is null <br>";
+                $userWrapperTransformer = new SingleUserWrapperTransformer($em, $this->container, $creator, 'UserWrapper');
+                $userWrapper = $userWrapperTransformer->createNewUserWrapperByUserId($user->getId());
+                $listEntity->setUserWrapper($userWrapper);
+            }
+
+            $em->persist($listEntity);
+            $em->flush();
 
             echo "Added user: ".$name."<br>";
-            exit('end');
+            //exit('end');
             $count++;
         }
 

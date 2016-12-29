@@ -110,6 +110,7 @@ abstract class ListAbstract
     /**
      * for all items/rows "Object Type"="Dropdown Menu Value"
      * Platform List Manager List where all items should have "Object Type"="Form Field - Dropdown Menu"
+     * For not form nodes, object type can be "User"
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ObjectTypeList")
      * @ORM\JoinColumn(name="objectType_id", referencedColumnName="id",nullable=true)
      */

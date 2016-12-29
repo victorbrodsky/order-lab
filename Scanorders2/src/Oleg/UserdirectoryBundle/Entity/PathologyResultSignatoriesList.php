@@ -34,6 +34,10 @@ class PathologyResultSignatoriesList extends ListAbstract
 //     *      )
 //     **/
 //    private $userWrappers;
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist","remove"})
+     */
+    private $userWrapper;
 
 
 
@@ -41,6 +45,22 @@ class PathologyResultSignatoriesList extends ListAbstract
         parent::__construct($creator);
 
 //        $this->userWrappers = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserWrapper()
+    {
+        return $this->userWrapper;
+    }
+
+    /**
+     * @param mixed $userWrapper
+     */
+    public function setUserWrapper($userWrapper)
+    {
+        $this->userWrapper = $userWrapper;
     }
 
 

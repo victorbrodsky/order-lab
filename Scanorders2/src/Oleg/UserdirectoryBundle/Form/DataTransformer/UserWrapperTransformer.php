@@ -231,7 +231,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         }
 
         if( $user ) {
-            $userWrapper = new UserWrapper();
+            $userWrapper = new UserWrapper($this->user);
             $userWrapper->setUser($user);
         }
 
@@ -259,13 +259,13 @@ class UserWrapperTransformer implements DataTransformerInterface
 
         if( $user ) {
 
-            $userWrapper = new UserWrapper();
+            $userWrapper = new UserWrapper($this->user);
             $userWrapper->setUser($user);
             $userWrapper->setUserStr($userStr);
 
         } else {
 
-            $userWrapper = new UserWrapper();
+            $userWrapper = new UserWrapper($this->user);
             $userWrapper->setUserStr($userStr);
 
         }

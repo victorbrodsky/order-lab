@@ -1227,6 +1227,35 @@ class UserSecurityUtil {
 
         return $url;
     }
+    public function getAbsoluetFullListUrl( $listEntity, $request ) {
+        $path = null;
+        $url = null;
+
+        if( !$listEntity->getEntityNamespace() || !$listEntity->getEntityName() || !$listEntity->getEntityId() ) {
+            return $url;
+        }
+
+        if( $listEntity->getEntityName() == 'User' ) {
+            $path = 'employees_showuser';
+        }
+
+        if( $path ) {
+            $url = $this->container->get('router')->generate(
+                $path,
+                array(
+                    'id' => $listEntity->getEntityId(),
+                )
+                //UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+
+//        if( !$url ) {
+//            $baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
+//            $url = $baseUrl . '/' . $siteName . '/' . $logger->getObjectType()->getUrl() . '/' . $logger->getEntityId();
+//        }
+
+        return $url;
+    }
 
     public function getCurrentUserInstitution($user=null)
     {
