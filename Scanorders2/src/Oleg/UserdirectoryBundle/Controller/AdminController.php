@@ -194,7 +194,7 @@ class AdminController extends Controller
 
         //testing
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
-        $this->generateLabResultNames();
+        //$this->generateLabResultNames();
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -6404,7 +6404,7 @@ class AdminController extends Controller
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findAll();
         if( count($entities) > 3 ) {
-            //return -1;
+            return -1;
         }
 
         ini_set('max_execution_time', 3600);
