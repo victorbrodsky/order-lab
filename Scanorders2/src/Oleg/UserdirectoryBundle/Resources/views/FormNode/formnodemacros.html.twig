@@ -754,27 +754,28 @@
 
     {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
 
+    <div class="radio_inline">
     {% for dropdownValue in dropdownValues %}
-        {% if formNodeValue and dropdownValue.id == formNodeValue %}
+        {% if formNodeValue and dropdownValue.id in formNodeValue %}
             {% set checked = 'checked="checked"' %}
         {% else %}
             {% set checked = '' %}
         {% endif %}
-        <div class="radio_inline">
             <input
                     type="checkbox"
                     id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
-                    name="{{ fieldname }}"
-                    value="{{ dropdownValue.id }}"
+                    name="{{ fieldname }}[{{ dropdownValue.id }}]"
+                    {#value="{{ dropdownValue.id }}"#}
                     {{ checked }}
                     {{ disabled }}
-                    value="{{ dropdownValue.id }}"
+                    value="1"
             >
-            <label class="required">
+            <label class="required" style="margin-right: 10px;">
                 {{ dropdownValue.text }}
             </label>
-        </div>
+
     {% endfor %}
+    </div>
 
 {% endmacro %}
 

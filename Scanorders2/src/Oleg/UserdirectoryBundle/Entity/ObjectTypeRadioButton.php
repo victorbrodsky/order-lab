@@ -31,7 +31,7 @@ class ObjectTypeRadioButton extends ObjectTypeReceivingBase
     protected $formNode;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $value;
 

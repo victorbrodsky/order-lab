@@ -46,9 +46,9 @@ class FormNodeUtil
 
         $data = $request->request->all();
 
-        print "<pre>";
-        print_r($data);
-        print "</pre>";
+//        print "<pre>";
+//        print_r($data);
+//        print "</pre>";
 
         //$unmappedField = $data["formnode-4"];
         //echo "<br>unmappedField=" . $unmappedField . "<br>";
@@ -230,11 +230,19 @@ class FormNodeUtil
 
             echo "formNodeObjectName:".$formNodeObjectName."; formValue=".$formValue."<br>";
 
+            print "@@@@@@@@@@@@@@@@@ <pre>";
+            print_r($formValue);
+            print "</pre><br>";
+
             $noflush = true; //don't flush because setValues must be set after
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValue,$holderEntity,$noflush,$params);
 
             //$formValue is an array: newvalue1,newvalue2,newvalue3
-            $formValueArr = explode(",",$formValue);
+            if( is_array($formValue) ) {
+                $formValueArr = $formValue;
+            } else {
+                $formValueArr = explode(",",$formValue);
+            }
             if( count($formValueArr) > 0 ) {
                 $newListElement->setIdValues($formValueArr);
             }
@@ -381,6 +389,31 @@ class FormNodeUtil
             return;
         }
 
+        //exception: time [date] [hour] [minute]
+        if(
+            $formNodeObjectName == "Form Field - Checkboxes"
+        ) {
+            $formValueArr = array();
+            foreach( $formValue as $dropdownId => $thisValue ) {
+                echo "checkbox: dropdownId=".$dropdownId."; value=".$thisValue."<br>";
+                $formValueArr[] = $dropdownId;
+            }
+            $formValueStr = implode(", ",$formValueArr);
+            $noflush = true; //don't flush because setValues must be set after
+            $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$noflush);
+
+            if( count($formValueArr) > 0 ) {
+                $newListElement->setIdValues($formValueArr);
+            }
+
+            if( !$testing ) {
+                $this->em->persist($newListElement);
+                $this->em->flush($newListElement);
+            }
+
+            return;
+        }
+
         //all other cases
         $this->createSingleFormNodeListRecord($formNode, $formValue, $holderEntity, $testing, $params);
     }
@@ -473,6 +506,25 @@ class FormNodeUtil
 
             return implode(',',$resArr);
         }
+
+        if( $receivingEntity && $formNode->getObjectTypeName() == "Form Field - Checkboxes" ) {
+            $valueArr = $receivingEntity->getIdValues();
+            //return implode(',',$valueArr);
+            return $valueArr;
+        }
+
+        if( $receivingEntity ) {
+            if (
+                $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow Multiple Selections" ||
+                $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ||
+                $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow New Entries"
+            ) {
+                $valueArr = $receivingEntity->getIdValues();
+                return implode(',',$valueArr);
+                //return $valueArr;
+            }
+        }
+
 
         return $formNodeValue;
     }
