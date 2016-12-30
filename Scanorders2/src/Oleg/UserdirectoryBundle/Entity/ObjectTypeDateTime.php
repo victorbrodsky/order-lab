@@ -40,6 +40,11 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
     private $datetimeValue;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $dateValue;
+
+    /**
      * @ORM\Column(type="time", nullable=true)
      */
     private $timeValue;
@@ -90,5 +95,43 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
         $this->setTimeValue($datetimeValue);
         //echo "time=".$this->getTimeValue()->format('h:i:s')."<br>";
     }
+
+    public function setDateTimeValueDateHourMinute($date,$hour,$minute,$second=null)
+    {
+        //echo "hour=".$hour."; minute=".$minute."<br>";
+        if( $date ) {
+            //$date = 12/21/2016
+            $datetimeValue = \DateTime::createFromFormat('m/d/Y', $date);
+        } else {
+            $datetimeValue = new \DateTime();
+        }
+
+        $datetimeValue->setTime($hour, $minute, $second);
+        $this->setDatetimeValue($datetimeValue);
+        //echo "time=".$this->getTimeValue()->format('h:i:s')."<br>";
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getDateValue()
+    {
+        return $this->dateValue;
+    }
+
+    /**
+     * @param mixed $dateValue
+     */
+    public function setDateValue($dateValue)
+    {
+        $dateObjectValue = new \DateTime($dateValue);
+        //$dateObjectValue->setDate($dateValue);
+        $this->dateValue = $dateObjectValue;
+    }
+
+
+
 
 }

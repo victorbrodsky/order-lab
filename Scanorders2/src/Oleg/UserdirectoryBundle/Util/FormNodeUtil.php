@@ -46,9 +46,9 @@ class FormNodeUtil
 
         $data = $request->request->all();
 
-//        print "<pre>";
-//        print_r($data);
-//        print "</pre>";
+        print "<pre>";
+        print_r($data);
+        print "</pre>";
 
         //$unmappedField = $data["formnode-4"];
         //echo "<br>unmappedField=" . $unmappedField . "<br>";
@@ -170,9 +170,9 @@ class FormNodeUtil
         if( is_array($formValue) ) {
             //$formValue is array
             echo $formNodeObjectName.": formValue is array:";
-            //print "<pre>";
-            //print_r($formValue);
-            //print "</pre>";
+            print "<pre>";
+            print_r($formValue);
+            print "</pre>";
             echo "<br>";
 
             if( array_key_exists('arraysectioncount', $formValue) ) {
@@ -181,7 +181,7 @@ class FormNodeUtil
                 $this->createArraysectionListRecord($formNode, $formValue, $holderEntity, $testing);
             } else {
                 echo $formNodeObjectName.": formValue is regular array <br>";
-                foreach ($formValue as $thisFormValue) {
+                foreach( $formValue as $thisFormValue ) {
                     $this->createFormNodeListRecord($formNode, $thisFormValue, $holderEntity, $testing);
                 }
             }
@@ -327,18 +327,51 @@ class FormNodeUtil
             return;
         }
 
-        //exception: time [hour] [minute]
-        if( $formNodeObjectName == "Form Field - Time" ) {
+        //exception: time [date] [hour] [minute]
+        if(
+            $formNodeObjectName == "Form Field - Time" ||
+            $formNodeObjectName == "Form Field - Time, with Time Zone" ||
+            $formNodeObjectName == "Form Field - Full Date and Time" ||
+            $formNodeObjectName == "Form Field - Full Date and Time, with Time Zone"
+        ) {
             //$formValue is an array: Array ( [time] => Array ( [hour] => 11 [minute] => 51 ) )
             //use ObjectTypeDateTime's timeValue
 
-            $formValueHour = $formValue['time']['hour'];
-            $formValueMinute = $formValue['time']['minute'];
-            $formValueStr = $formValueHour.":".$formValueMinute;
+//            print "@@@@@@@@@@@@@@@@@ <pre>";
+//            print_r($formValue);
+//            print "</pre><br>";
+
+            $formValueStr = "";
+
+            $formValueHour = $formValue['hour'];
+            $formValueMinute = $formValue['minute'];
+
+            if( $formValueHour || $formValueHour ) {
+                $formValueStr = $formValueHour . ":" . $formValueMinute;
+            }
+
+            $formValueDate = null;
+            if( $formValue && array_key_exists('date', $formValue) ) {
+                $formValueDate = $formValue['date'];
+                if( $formValueDate ) {
+                    $formValueStr = $formValueDate . " " . $formValueStr;
+                }
+            }
+
+            //echo "0 datetime: date=$formValueDate hour=$formValueHour minute=$formValueMinute<br>";
+            if( !$formValueDate && !$formValueHour && !$formValueMinute ) {
+                return;
+            }
+            //echo "1 datetime:<br>";
 
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$testing,$params);
 
-            $newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
+            //$newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
+            $newListElement->setDateTimeValueDateHourMinute($formValueDate,$formValueHour,$formValueMinute);
+
+            if( $testing ) {
+                echo "datetime=".$newListElement->getDatetimeValue()->format('m/d/Y H:i:s');
+            }
 
             if( !$testing ) {
                 $this->em->persist($newListElement);

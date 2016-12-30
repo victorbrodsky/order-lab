@@ -640,7 +640,7 @@
     {% endif %}
     </p>
 {% endmacro %}
-{% macro dateField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat ) %}
+{% macro dateField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat, fieldNamePostfix ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
@@ -656,11 +656,16 @@
         {% set disabled = "disabled" %}
         {% set placeholder = " " %}
     {% endif %}
+
+    {% if fieldNamePostfix is not defined %}
+        {% set fieldNamePostfix = '' %}
+    {% endif %}
+
     <div class="input-group input-group-reg date regular-datepicker">
         <input
                 type="text"
                 id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
-                name="{{ fieldname }}"
+                name="{{ fieldname }}{{ fieldNamePostfix }}"
                 class="datepicker form-control"
                 {#value="{{ fieldValue|date(dateFormat) }}"#}
                 value="{{ fieldValue }}"
@@ -801,8 +806,12 @@
         {% set disabled = "disabled" %}
     {% endif %}
 
-    {% set hour = formNodeValue|date('H') %}
-    {% set minute = formNodeValue|date('i') %}
+    {% set hour = null %}
+    {% set minute = null %}
+    {% if formNodeValue %}
+        {% set hour = formNodeValue|date('H') %}
+        {% set minute = formNodeValue|date('i') %}
+    {% endif %}
 
     <div>
         <select
@@ -812,9 +821,10 @@
         >
             {#<option value="0">00</option>#}
             {#<option value="1">23</option>#}
+            <option value=""></option>
             {% for i in 0..23 %}
                 {% set selected = "" %}
-                {% if hour == i %}
+                {% if hour and hour == i %}
                     {% set selected = "selected" %}
                 {% endif %}
                 <option value="{{ i }}" {{ selected }}>{{ i }}</option>
@@ -826,9 +836,10 @@
         >
             {#<option value="0">00</option>#}Integer
             {#<option value="1">59</option>#}
+            <option value=""></option>
             {% for i in 0..59 %}
                 {% set selected = "" %}
-                {% if minute == i %}
+                {% if minute and minute == i %}
                     {% set selected = "selected" %}
                 {% endif %}
                 <option value="{{ i }}" {{ selected }}>{{ i }}</option>
@@ -849,12 +860,12 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat) }}
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat,'[time][date]') }}
                 {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat) }}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat,'[time][date]') }}
         {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
     {% endif %}
     </p>
