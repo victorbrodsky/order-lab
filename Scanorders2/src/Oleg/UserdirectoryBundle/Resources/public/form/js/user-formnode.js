@@ -164,6 +164,22 @@ function calllogAppendFormNodes( data ) {
         ) {
             expandTextarea($('#formnode-'+formNodeId));
         }
+
+        //allow only digits in this field and save the value to the database as a positive integer
+        if( data[index]['formNodeObjectType'] == 'Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer' ) {
+
+        }
+
+        //allow only digits as well as "+" and "-" signs in this field and save the value to the database as a signed integer
+        if( data[index]['formNodeObjectType'] == 'Form Field - Free Text, Single Line, Numeric, Signed Integer' ) {
+
+        }
+
+        //allow only digits in this field as well as ".", "+", and "-" signs and save the value to the database as a floating point number
+        if( data[index]['formNodeObjectType'] == 'Form Field - Free Text, Single Line, Numeric, Signed Float' ) {
+
+        }
+
     }
 }
 //find the latest parent formnode holder element by parentFormNodeId id

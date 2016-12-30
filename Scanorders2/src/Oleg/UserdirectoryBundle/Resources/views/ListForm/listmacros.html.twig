@@ -132,9 +132,9 @@
             <tr>
                 <td>
                     {% if linkToListId %}
-                        <a href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'entityId': entity.id }) }}">{{ entity.id }}</a>
+                        <a class="list-row-mainlink" href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'entityId': entity.id }) }}">{{ entity.id }}</a>
                     {% else %}
-                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                        <a class="list-row-mainlink" href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
                     {% endif %}
                 </td>
                 <td>{{ entity.name }}</td>
@@ -284,8 +284,8 @@
                 {#<td>{{ entity.entityId }}</td>#}
                 {% set fullUrl = user_security_utility.getAbsoluetFullListUrl(entity,app.request) %}
                 {% if entity.entityId and fullUrl %}
-                    <td>
-                        <a class="list-row-mainlink" href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
+                    <td class="rowlink-skip">
+                        <a href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
                     </td>
                 {% else %}
                     <td>

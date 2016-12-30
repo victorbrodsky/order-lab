@@ -196,13 +196,13 @@
             {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer" %}
-            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'Unsigned Positive Integer') }}
         {% endif %}
         {% if formType == "Form Field - Free Text, Single Line, Numeric, Signed Integer" %}
-            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'Signed Integer') }}
         {% endif %}
         {% if formType == "Form Field - Free Text, Single Line, Numeric, Signed Float" %}
-            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype, 'Signed Float') }}
         {% endif %}
         {% if formType == "Form Field - Free Text, Single Line, Locked, Calculated, Stored" %}
             {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
@@ -227,23 +227,31 @@
             {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"multiple","allownew") }}
         {% endif %}
 
+        {#date#}
         {% if formType == "Form Field - Date" %}
             {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
         {% endif %}
         {% if formType == "Form Field - Full Date" %}
             {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
         {% endif %}
-        {% if formType == "Form Field - Full Date and Time" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
-        {% endif %}
         {% if formType == "Form Field - Year" %}
             {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
         {% endif %}
-        {% if formType == "Form Field - Time, with Time Zone" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+
+        {#date and time#}
+        {% if formType == "Form Field - Full Date and Time" %}
+            {{ formnodemacros.datetimeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
         {% endif %}
         {% if formType == "Form Field - Full Date and Time, with Time Zone" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+            {{ formnodemacros.datetimeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+        {% endif %}
+
+        {#time#}
+        {% if formType == "Form Field - Time, with Time Zone" %}
+            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+        {% endif %}
+        {% if formType == "Form Field - Time" %}
+            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
 
         {#the same as dropdown menu#}
@@ -265,9 +273,7 @@
             {{ formnodemacros.radioForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
 
-        {% if formType == "Form Field - Time" %}
-            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
-        {% endif %}
+
 
 
 
@@ -455,7 +461,7 @@
     >{{fieldValue}}</textarea>
 {% endmacro %}
 
-{% macro stringForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+{% macro stringForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -465,15 +471,15 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.stringField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+                {{ formnodemacros.stringField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.stringField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+        {{ formnodemacros.stringField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro stringField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+{% macro stringField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
@@ -490,6 +496,20 @@
         {% set disabled = "disabled" %}
         {% set placeholder = " " %}
     {% endif %}
+
+    {#{% set inputTypeStr = '' %}#}
+    {#{% if inputType is defined %}#}
+        {#{% if inputType == 'Unsigned Positive Integer'  %}#}
+            {#{% set inputTypeStr = 'number' %}#}
+        {#{% endif %}#}
+        {#{% if inputType == 'Signed Integer'  %}#}
+            {#{% set inputTypeStr = 'number' %}#}
+        {#{% endif %}#}
+        {#{% if inputType == 'Signed Float'  %}#}
+            {#{% set inputTypeStr = 'number' %}#}
+        {#{% endif %}#}
+    {#{% endif %}#}
+
     <input
         id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
         name="{{ fieldname }}"
@@ -804,7 +824,7 @@
             name="{{ fieldname }}[time][minute]"
             {{ disabled }}
         >
-            {#<option value="0">00</option>#}
+            {#<option value="0">00</option>#}Integer
             {#<option value="1">59</option>#}
             {% for i in 0..59 %}
                 {% set selected = "" %}
@@ -817,4 +837,27 @@
     </div>
 
 {% endmacro %}
+
+
+
+{% macro datetimeForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat) }}
+                {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat) }}
+        {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+
 
