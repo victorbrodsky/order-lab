@@ -6437,7 +6437,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
-        if( count($entities) < 3 ) {
+        if( count($entities) > 3 ) {
             return -1;
         }
 
