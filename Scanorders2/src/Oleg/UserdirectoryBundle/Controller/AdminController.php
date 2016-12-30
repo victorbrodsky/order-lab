@@ -6404,7 +6404,7 @@ class AdminController extends Controller
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findAll();
         if( count($entities) > 3 ) {
-            return -1;
+            //return -1;
         }
 
         ini_set('max_execution_time', 3600);
@@ -6422,6 +6422,8 @@ class AdminController extends Controller
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
+        $batchSize = 20;
+        $loopCount = 0;
         $count = 10;
         for( $row = 2; $row <= $highestRow; $row++ ) {
 
@@ -6459,11 +6461,19 @@ class AdminController extends Controller
             }
 
             //exit('exit generateObjectTypeActions');
-            $em->persist($listEntity);
-            $em->flush();
+            if( ($loopCount % $batchSize) === 0) {
+                $em->persist($listEntity);
+                $em->flush();
+                $em->clear(); // Detaches all objects from Doctrine!
+            }
 
             $count = $count + 10;
+            $loopCount++;
         }
+
+        $em->flush(); //Persist objects that did not make up an entire batch
+        $em->clear();
+
         //exit('1');
 
         return round($count/10);
