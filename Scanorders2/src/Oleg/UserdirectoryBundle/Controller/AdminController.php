@@ -194,7 +194,7 @@ class AdminController extends Controller
 
         //testing
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
-        //$this->generateLabResultNames();
+        $this->generateLabResultNames();
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -6461,10 +6461,11 @@ class AdminController extends Controller
             }
 
             //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
             if( ($loopCount % $batchSize) === 0) {
-                $em->persist($listEntity);
+                //$em->persist($listEntity);
                 $em->flush();
-                $em->clear(); // Detaches all objects from Doctrine!
+                //$em->clear(); // Detaches all objects from Doctrine!
             }
 
             $count = $count + 10;
