@@ -1193,8 +1193,6 @@ class FormNodeUtil
             );
         }
 
-        //exit('111');
-        $outputType = 'json';
         if( $outputType == 'json' ) {
             return json_encode($resArr);
         }
