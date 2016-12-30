@@ -66,7 +66,7 @@ class FormNodeUtil
     //process by data partial key name" "formnode-4" => "formnode-"
     public function processFormNodesFromDataKeys($data,$holderEntity,$testing=false) {
         if( !array_key_exists('formnode', $data) ) {
-            exit('no formnode data exists');
+            //exit('no formnode data exists');
             return;
         }
         $formnodeData = $data['formnode'];
@@ -77,7 +77,9 @@ class FormNodeUtil
                 //$keyArr = explode("-",$key);
                 //id is second element
                 //$formNodeId = $keyArr[1];
-                echo "<br>############ formNodeId=".$formNodeId.": ".$formValue." ############<br>";
+                if( $testing ) {
+                    echo "<br>############ formNodeId=" . $formNodeId . ": " . $formValue . " ############<br>";
+                }
                 // do whatever you need to with $formNodeId...
                 $thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
                 if( !$thisFormNode ) {
@@ -169,18 +171,18 @@ class FormNodeUtil
         //All others
         if( is_array($formValue) ) {
             //$formValue is array
-            echo $formNodeObjectName.": formValue is array:";
-            print "<pre>";
-            print_r($formValue);
-            print "</pre>";
-            echo "<br>";
+//            echo $formNodeObjectName.": formValue is array:";
+//            print "<pre>";
+//            print_r($formValue);
+//            print "</pre>";
+//            echo "<br>";
 
             if( array_key_exists('arraysectioncount', $formValue) ) {
-                echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
+                //echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
                 //TODO: record section array index including parent index: 0-0, 0-1 (array section 1 (index 0) includes two array sections (indexes 0 and 1))
                 $this->createArraysectionListRecord($formNode, $formValue, $holderEntity, $testing);
             } else {
-                echo $formNodeObjectName.": formValue is regular array <br>";
+                //echo $formNodeObjectName.": formValue is regular array <br>";
                 foreach( $formValue as $thisFormValue ) {
                     $this->createFormNodeListRecord($formNode, $thisFormValue, $holderEntity, $testing);
                 }
@@ -228,11 +230,10 @@ class FormNodeUtil
                 return;
             }
 
-            echo "formNodeObjectName:".$formNodeObjectName."; formValue=".$formValue."<br>";
-
-            print "@@@@@@@@@@@@@@@@@ <pre>";
-            print_r($formValue);
-            print "</pre><br>";
+//            echo "formNodeObjectName:".$formNodeObjectName."; formValue=".$formValue."<br>";
+//            print "@@@@@@@@@@@@@@@@@ <pre>";
+//            print_r($formValue);
+//            print "</pre><br>";
 
             $noflush = true; //don't flush because setValues must be set after
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValue,$holderEntity,$noflush,$params);
@@ -286,13 +287,13 @@ class FormNodeUtil
                     //$formValue is an array: newvalue1,newvalue2,newvalue3
                     $formValueArr = explode(",", $formValue);
                     foreach( $formValueArr as $thisValue ) {
-                        echo "<br>----- ### ".$className.": thisValue=" . $thisValue . " ###<br>";
+                        //echo "<br>----- ### ".$className.": thisValue=" . $thisValue . " ###<br>";
                         $dropdownObject = $transformer->reverseTransform($thisValue);
 
                         if( $dropdownObject ) {
                             $class = new \ReflectionClass($dropdownObject);
                             $thisclassName = $class->getShortName();
-                            echo "=======> ".$thisclassName.": Adding dropdownObject=" . $dropdownObject . "; id=". $dropdownObject->getId() . "<br>";
+                            //echo "=======> ".$thisclassName.": Adding dropdownObject=" . $dropdownObject . "; id=". $dropdownObject->getId() . "<br>";
 
 //                            if( $className == "PathologyResultSignatoriesList" ) {
 //                                $userWrapper = $dropdownObject->getUserWrapper();
@@ -302,13 +303,13 @@ class FormNodeUtil
                             if( $className == "PathologyResultSignatoriesList" && $userWrapperTransformer ) {
                                 //for PathologyResultSignatoriesList user id is $dropdownObject's entityId
                                 $userId = $dropdownObject->getEntityId();
-                                echo "get userWrapper by user id=".$userId."<br>";
+                                //echo "get userWrapper by user id=".$userId."<br>";
                                 if( $userId ) {
                                     $userWrapper = $userWrapperTransformer->reverseTransformByType($userId,'User');
                                 } else {
                                     $userWrapper = $userWrapperTransformer->reverseTransform($thisValue);
                                 }
-                                echo "userWrapper: name=" . $userWrapper->getName() . "; user=" . $userWrapper->getUser() . "<br>";
+                                //echo "userWrapper: name=" . $userWrapper->getName() . "; user=" . $userWrapper->getUser() . "<br>";
                                 $dropdownObject->setUserWrapper($userWrapper);
 
                                 //set object type as User
@@ -395,7 +396,7 @@ class FormNodeUtil
         ) {
             $formValueArr = array();
             foreach( $formValue as $dropdownId => $thisValue ) {
-                echo "checkbox: dropdownId=".$dropdownId."; value=".$thisValue."<br>";
+                //echo "checkbox: dropdownId=".$dropdownId."; value=".$thisValue."<br>";
                 $formValueArr[] = $dropdownId;
             }
             $formValueStr = implode(", ",$formValueArr);
@@ -419,14 +420,14 @@ class FormNodeUtil
     }
     public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $noflush=false, $params=null ) {
 
-        echo "formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
-        if( $params ) {
-            echo "params:<br>";
-            echo "arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
-            //print "<pre>";
-            //print_r($params);
-            //print "</pre><br>";
-        }
+//        echo "formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
+//        if( $params ) {
+//            echo "params:<br>";
+//            echo "arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
+//            //print "<pre>";
+//            //print_r($params);
+//            //print "</pre><br>";
+//        }
 
         //1) create a new list element
         $newListElement = $this->createNewList($formNode);
