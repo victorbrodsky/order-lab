@@ -1265,18 +1265,28 @@ class FormNodeUtil
 
         $resArr = array();
         foreach( $output as $list ) {
+            if( $entityName == "LabResultNameList" ) {
+                $text = $list->getOptimalNameShortnameAbbreviation();
+            } else {
+                $text = $list->getOptimalAbbreviationName();
+            }
             //echo "list id=".$list['id']."; text=".$list['text']."<br>";
             $resArr[] = array(
                 'id' => $list->getId(),
-                'text' => $list->getOptimalAbbreviationName()
+                'text' => $text
             );
         }
 
         //get additional menu children "Dropdown Menu Value"
         foreach( $formNode->getChildren() as $dropdownValue ) {
+            if( $entityName == "LabResultNameList" ) {
+                $text = $dropdownValue->getOptimalNameShortnameAbbreviation();
+            } else {
+                $text = $dropdownValue->getOptimalAbbreviationName();
+            }
             $resArr[] = array(
                 'id' => $dropdownValue->getId(),
-                'text' => $dropdownValue->getOptimalAbbreviationName().""
+                'text' => $text
             );
         }
 

@@ -194,7 +194,7 @@ class AdminController extends Controller
 
         //testing
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
-        //$this->generateLabResultUnitsMeasureList();
+        //$this->generateLabResultNames();
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -310,7 +310,7 @@ class AdminController extends Controller
         $count_generateMonthsList = $this->generateMonthsList();
         $count_generateClericalErrorList = $this->generateClericalErrorList();
         $count_generateLabResultNames = $this->generateLabResultNames();
-        $count_generategenerateLabResultUnitsMeasureList = $this->generateLabResultUnitsMeasureList();
+        $count_generateLabResultUnitsMeasureList = $this->generateLabResultUnitsMeasureList();
         $count_generateLabResultFlagList = $this->generateLabResultFlagList();
         $count_generatePathologyResultSignatoriesList = $this->generatePathologyResultSignatoriesList();
 
@@ -402,7 +402,7 @@ class AdminController extends Controller
             'MonthsList='.$count_generateMonthsList.', '.
             'ClericalErrorList='.$count_generateClericalErrorList.', '.
             'LabResultNames='.$count_generateLabResultNames.', '.
-            'LabResultUnitsMeasures='.$count_generategenerateLabResultUnitsMeasureList.', '.
+            'LabResultUnitsMeasures='.$count_generateLabResultUnitsMeasureList.', '.
             'LabResultFlagList='.$count_generateLabResultFlagList.', '.
             'PathologyResultSignatoriesList='.$count_generatePathologyResultSignatoriesList.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
@@ -6399,17 +6399,48 @@ class AdminController extends Controller
 
     //LabResultNames
     public function generateLabResultNames() {
-
         $username = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $types = array(
-            "Sample Lab Result Name 01",
-            "Sample Lab Result Name 02",
-        );
+        $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findAll();
+        if( count($entities) > 3 ) {
+            return -1;
+        }
+
+        ini_set('max_execution_time', 3600);
+        $inputFileName = __DIR__ . '/../Util/Lab Result Names For Import.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
 
         $count = 10;
-        foreach( $types as $name ) {
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            $name = $rowData[0][0];
+            $shortname = $rowData[0][1];
+            $abbreviation = $rowData[0][2];
+
+//            print "<pre>";
+//            print_r($rowData);
+//            print "</pre>";
+//            print "</pre>";
+            //echo "name=$name, shortname=$shortname, abbreviation=$abbreviation <br>";
+            //exit('1');
 
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findOneByName($name);
             if( $listEntity ) {
@@ -6417,7 +6448,15 @@ class AdminController extends Controller
             }
 
             $listEntity = new LabResultNameList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
+            $this->setDefaultList($listEntity,null,$username,$name);
+
+            if( $shortname ) {
+                $listEntity->setShortname($shortname);
+            }
+
+            if( $abbreviation ) {
+                $listEntity->setAbbreviation($abbreviation);
+            }
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
@@ -6425,6 +6464,7 @@ class AdminController extends Controller
 
             $count = $count + 10;
         }
+        //exit('1');
 
         return round($count/10);
     }

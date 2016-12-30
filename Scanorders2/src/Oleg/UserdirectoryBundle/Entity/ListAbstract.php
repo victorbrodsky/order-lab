@@ -588,6 +588,31 @@ abstract class ListAbstract
         return $name;
     }
 
+    //Name (Short Name, Abbreviation)
+    //Name (Short Name, Abbreviation) IF ALL THREE ARE PRESENT
+    //Name (Abbreviation) IF SHORT NAME IS MISSING
+    //Name (Short Name) IF ABBREVIATION IS MISSING
+    //Name IF BOTH SHORT NAME AND ABBREVIATION ARE MISSING
+    public function getOptimalNameShortnameAbbreviation()
+    {
+        $name = $this->getName();
+
+        $nameArr = array();
+        if( $this->getShortname() && $this->getShortname() != "" ) {
+            $nameArr[] = $this->getShortname();
+        }
+
+        if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
+            $nameArr[] = $this->getAbbreviation();
+        }
+
+        if( count($nameArr) > 0 ) {
+            $name = $name." (" . implode(", ",$nameArr) . ")";
+        }
+
+        return $name;
+    }
+
     /**
      * @param mixed $updatedby
      */
