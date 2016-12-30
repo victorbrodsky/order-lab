@@ -87,6 +87,20 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
     }
 
 
+    public function reverseTransformByType($text,$usernameType='UserWrapper') {
+
+        if( !$text ) {
+            return null;
+        }
+
+        $transformedEntity = null;
+        $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
+
+        $newListArr = $this->addSingleObject( $newListArr, $text, $usernameType );
+        $transformedEntity = $newListArr->first();
+
+        return $transformedEntity; //UserWrapper
+    }
 
 
 }

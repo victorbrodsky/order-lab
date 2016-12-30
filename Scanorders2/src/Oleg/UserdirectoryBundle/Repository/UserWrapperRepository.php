@@ -27,11 +27,18 @@ class UserWrapperRepository extends EntityRepository {
                 'userStr' => $userStr
             ));
         } else {
-            //echo "no userStr=".$userStr."<br>";
-            $query->where("list.user=:user");
-            $query->setParameters( array(
-                'user' => $user
-            ));
+
+            if( $user ) {
+                $userId = $user->getId();
+                //echo "use userId=".$userId."<br>";
+                $query->where("list.user=:user");
+                $query->setParameters( array(
+                    'user' => $userId
+                ));
+            } else {
+                $query->where("1=0");
+            }
+
         }
 
         $userWrappers = $query->getQuery()->getResult();

@@ -5568,6 +5568,7 @@ class AdminController extends Controller
             "1020" => array('PathologyResultSignatoriesList','pathologyresultsignatories-list','Pathology Result Signatories List'),
             "1030" => array('ObjectTypeCheckbox','objecttypecheckboxs-list','Object Type Checkbox'),
             "1040" => array('ObjectTypeRadioButton','objecttyperadiobuttons-list','Object Type Radio Button'),
+            //"1050" => array('ObjectTypeDropdownMultiple','objecttypemultipledropdowns-list'),
 
         );
 

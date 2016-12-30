@@ -78,7 +78,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         if( count($entities) > 0 ) {
 
 //            foreach( $entities as $entity ) {
-//                echo "userWrapper=".$entity->getId()."<br>";
+//                //echo "userWrapper=".$entity->getId()."<br>";
 //            }
 
             $idArr = [];
@@ -159,29 +159,19 @@ class UserWrapperTransformer implements DataTransformerInterface
 
     //$username - user id or user as string
     //return array of UserWrapper
-    public function addSingleObject( $newListArr, $username ) {
+    public function addSingleObject( $newListArr, $username, $usernameType='UserWrapper' ) {
 
-        //echo "username=".$username."<br>";
+        //echo "userwrapper: username=".$username."<br>";
 
         if( is_numeric ( $username ) ) {    //number => most probably it is id
 
             //echo "principal=".$username." => numeric => most probably it is a UserWrapper id<br>";
 
-            //$entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($username);
-            //$entity = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findOneById($username);
-
-//            $query = $this->em->createQueryBuilder()
-//                ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
-//                ->select("list")
-//                //->select("list.id as id, infos.displayName as text")
-//                //->leftJoin("list.user", "user")
-//                ->where("list=:userWrapperId")
-//                ->setParameters( array(
-//                    'userWrapperId' => $username
-//                ));
-//            $userWrappers = $query->getQuery()->getResult();
-
-            $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->find($username);
+            if( $usernameType == 'UserWrapper' ) {
+                $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->find($username);
+            } else {
+                $userWrapper = null;
+            }
             //echo "userWrapper=".$userWrapper."<br>";
 
             //if( $userWrappers && count($userWrappers) > 0 ) {
@@ -222,6 +212,7 @@ class UserWrapperTransformer implements DataTransformerInterface
 
         //find user by id
         $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        //echo "found user by id=".$userid."<br>";
 
         $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,null);
         //echo "found userWrapper by wrapper id=".$userWrapper."<br>";
@@ -230,6 +221,8 @@ class UserWrapperTransformer implements DataTransformerInterface
             return $userWrapper;
         }
 
+        //create new UserWrapper
+        //echo "create new UserWrapper: userid=".$userid."<br>";
         if( $user ) {
             $userWrapper = new UserWrapper($this->user);
             $userWrapper->setUser($user);
@@ -249,7 +242,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         //echo "found user=".$user."<br>";
 
         $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,$userStr);
-        //echo "found userWrapper=".$userWrapper->getId()."<br>";
+        //echo "found userWrapper=".$userWrapper."<br>";
 
         //exit('1');
 
@@ -257,6 +250,7 @@ class UserWrapperTransformer implements DataTransformerInterface
             return $userWrapper;
         }
 
+        //echo "create new UserWrapper: userStr=".$userStr."<br>";
         if( $user ) {
 
             $userWrapper = new UserWrapper($this->user);

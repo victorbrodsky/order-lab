@@ -122,12 +122,28 @@ function calllogAppendFormNodes( data ) {
         if(
             data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu" ||
             data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow Multiple Selections" ||
-            data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow New Entries" ||
-            data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ||
             data[index]['formNodeObjectType'] == "Form Field - Month" ||
             data[index]['formNodeObjectType'] == "Form Field - Day of the Week"
         ) {
             regularCombobox($('#formnode-'+formNodeId));
+        }
+
+        //Allow New Entries: for select2 v 3.* select is represented by hidden input field
+        if(
+            data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow New Entries" ||
+            data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries"
+        ) {
+            var targetCombobox = $('#formnode-'+formNodeId).find('.combobox');
+            var dataOptions = targetCombobox.data("options");
+            var dataPlaceholder = targetCombobox.data("placeholder");
+            if( !dataPlaceholder ) {
+                dataPlaceholder = "Select an option or type in a new value";
+            }
+            var multiple = false;
+            if( data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ) {
+                multiple = true;
+            }
+            populateSelectCombobox(targetCombobox, dataOptions, dataPlaceholder, multiple);
         }
 
         if(

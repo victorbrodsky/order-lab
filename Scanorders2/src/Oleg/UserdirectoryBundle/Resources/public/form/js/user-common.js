@@ -262,6 +262,8 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         //if( term.match(/^[0-9]+$/) != null ) {
         //    //console.log("term is digit");
         //}
+        //for select 3.* multiple values are separated by comma, so do not allow comma
+        term = term.replace(/,/g, '');
         //console.log("term="+term);
         return {id:term, text:term};
     };

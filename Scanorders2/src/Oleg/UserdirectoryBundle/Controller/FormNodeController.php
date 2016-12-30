@@ -141,13 +141,16 @@ class FormNodeController extends Controller {
 
             //find FormNode value by entityNamespace, entityName, entityId
             $formNodeValue = null;
+            $receivingEntity = null;
             if( $entityId ) {
                 $mapper = array(
                     'entityNamespace' => $entityNamespace,
                     'entityName' => $entityName, //"Message"
                     'entityId' => $entityId,
                 );
-                $formNodeValue = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
+                $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
+                $formNodeValue = $complexRes['formNodeValue'];
+                $receivingEntity = $complexRes['receivingEntity'];
             }
             //echo "formNode=".$formNode->getId()."<br>";
             //echo "formNodeValue=".$formNodeValue."<br>";
@@ -192,6 +195,9 @@ class FormNodeController extends Controller {
                     if( $parentFormNode ) {
                         $parentFormNodeId = $parentFormNode->getId();
                     }
+
+                    //process userWrapper case
+                    $formNodeValue = $formNodeUtil->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
 
                     $formNodeArr = array(
                         'formNode' => $formNode,
@@ -250,6 +256,9 @@ class FormNodeController extends Controller {
                         $parentFormNodeId = $parentFormNode->getId();
                     }
                 }
+
+                //process userWrapper case
+                $formNodeValue = $formNodeUtil->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
 
                 $formNodeArr = array(
                     'formNode' => $formNode,

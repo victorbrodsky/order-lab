@@ -1,6 +1,8 @@
 <?php
 namespace Oleg\UserdirectoryBundle\Util;
 
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use Symfony\Component\HttpFoundation\Response;
 use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\ObjectTypeText;
@@ -75,7 +77,7 @@ class FormNodeUtil
                 //$keyArr = explode("-",$key);
                 //id is second element
                 //$formNodeId = $keyArr[1];
-                echo "formNodeId=".$formNodeId.": ".$formValue."<br>";
+                echo "<br>############ formNodeId=".$formNodeId.": ".$formValue." ############<br>";
                 // do whatever you need to with $formNodeId...
                 $thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
                 if( !$thisFormNode ) {
@@ -107,10 +109,10 @@ class FormNodeUtil
 
     public function processFormNodeByType( $formNode, $formValue, $holderEntity, $testing=false ) {
 
-        $formNodeObjectName = null;
-        if( $formNode->getObjectType() ) {
-            $formNodeObjectName = $formNode->getObjectType()->getName()."";
-        }
+        $formNodeObjectName = $formNode->getObjectTypeName();
+//        if( $formNode->getObjectType() ) {
+//            $formNodeObjectName = $formNode->getObjectType()->getName()."";
+//        }
 
         if( !$this->hasValue($formNode) && $formNodeObjectName != "Form Section Array" ) {
             //exit("No Value of the node=".$formNode."<br>");
@@ -127,28 +129,42 @@ class FormNodeUtil
         }
         //exit("Value=[".$formValue."]<br>");
 
-
-
-        //exception: time [hour] [minute]
-        if( $formNodeObjectName == "Form Field - Time" ) {
-            //$formValue is an array: Array ( [time] => Array ( [hour] => 11 [minute] => 51 ) )
-            //use ObjectTypeDateTime's timeValue
-
-            $formValueHour = $formValue['time']['hour'];
-            $formValueMinute = $formValue['time']['minute'];
-            $formValueStr = $formValueHour.":".$formValueMinute;
-
-            $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$testing);
-
-            $newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
-
-            if( !$testing ) {
-                $this->em->persist($newListElement);
-                $this->em->flush($newListElement);
-            }
-
-            return;
-        }
+//        //"Allow Multiple Selections"
+//        if( $formNodeObjectName == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ) {
+//            //$formValue is an array: newvalue1,newvalue2,newvalue3
+//            $formValueArr = explode(",",$formValue);
+//            foreach( $formValueArr as $thisFormValue ) {
+//                $newListElement = $this->createFormNodeListRecord($formNode,$thisFormValue,$holderEntity,$testing);
+//
+//                if( !$testing ) {
+//                    $this->em->persist($newListElement);
+//                    $this->em->flush($newListElement);
+//                }
+//            }
+//
+//            return;
+//        }
+//
+//        //exception: time [hour] [minute]
+//        if( $formNodeObjectName == "Form Field - Time" ) {
+//            //$formValue is an array: Array ( [time] => Array ( [hour] => 11 [minute] => 51 ) )
+//            //use ObjectTypeDateTime's timeValue
+//
+//            $formValueHour = $formValue['time']['hour'];
+//            $formValueMinute = $formValue['time']['minute'];
+//            $formValueStr = $formValueHour.":".$formValueMinute;
+//
+//            $newListElement = $this->createFormNodeListRecord($formNode,$formValueStr,$holderEntity,$testing);
+//
+//            $newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
+//
+//            if( !$testing ) {
+//                $this->em->persist($newListElement);
+//                $this->em->flush($newListElement);
+//            }
+//
+//            return;
+//        }
 
         //All others
         if( is_array($formValue) ) {
@@ -166,12 +182,12 @@ class FormNodeUtil
             } else {
                 echo $formNodeObjectName.": formValue is regular array <br>";
                 foreach ($formValue as $thisFormValue) {
-                    $this->createSingleFormNodeListRecord($formNode, $thisFormValue, $holderEntity, $testing);
+                    $this->createFormNodeListRecord($formNode, $thisFormValue, $holderEntity, $testing);
                 }
             }
         } else {
             //echo $formNodeObjectName.": formValue is single formValue=" . $formValue . "<br>";
-            $this->createSingleFormNodeListRecord($formNode,$formValue,$holderEntity,$testing);
+            $this->createFormNodeListRecord($formNode,$formValue,$holderEntity,$testing);
         }
 
     }
@@ -189,11 +205,153 @@ class FormNodeUtil
                     'arraySectionId' => $formNode->getId(),
                 );
                 $sectionFormnode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($sectionFormnodeId);
-                $this->createSingleFormNodeListRecord($sectionFormnode, $thisThisFormValue, $holderEntity, $testing, $params);
+                $this->createFormNodeListRecord($sectionFormnode, $thisThisFormValue, $holderEntity, $testing, $params);
             }
         }
     }
-    public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
+
+    public function createFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
+
+        $formNodeObjectName = $formNode->getObjectTypeName();
+        //echo "formNodeObjectName:".$formNodeObjectName."<br>";
+
+        $newListElement = null;
+
+        //"Allow Multiple Selections"
+        if(
+            $formNodeObjectName == "Form Field - Dropdown Menu - Allow Multiple Selections" ||
+            $formNodeObjectName == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ||
+            $formNodeObjectName == "Form Field - Dropdown Menu - Allow New Entries"
+        ) {
+
+            if( !$formValue ) {
+                return;
+            }
+
+            echo "formNodeObjectName:".$formNodeObjectName."; formValue=".$formValue."<br>";
+
+            $noflush = true; //don't flush because setValues must be set after
+            $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValue,$holderEntity,$noflush,$params);
+
+            //$formValue is an array: newvalue1,newvalue2,newvalue3
+            $formValueArr = explode(",",$formValue);
+            if( count($formValueArr) > 0 ) {
+                $newListElement->setIdValues($formValueArr);
+            }
+
+            if( !$testing ) {
+                $this->em->persist($newListElement);
+                $this->em->flush($newListElement);
+            }
+
+        }
+
+        if(
+            $formNodeObjectName == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ||
+            $formNodeObjectName == "Form Field - Dropdown Menu - Allow New Entries"
+        ) {
+            //find if list already exists
+
+            $className = $formNode->getEntityName();
+            $classNamespace = $formNode->getEntityNamespace();
+
+            if( $className && $classNamespace ) {
+
+                //$classNamespace: Oleg\UserdirectoryBundle\Entity => UserdirectoryBundle
+                $bundleNameArr = explode("\\",$classNamespace);
+                $bundleName = null;
+                if( count($bundleNameArr) > 2 ) {
+                    $bundleName = $bundleNameArr[1];
+                }
+
+                if( $bundleName ) {
+
+                    $creator = $this->sc->getToken()->getUser();
+
+                    $transformer = new GenericTreeTransformer($this->em, $creator, $className, $bundleName);
+
+                    $userWrapperTransformer = null;
+                    if( $className == "PathologyResultSignatoriesList" ) {
+                        $userWrapperTransformer = new SingleUserWrapperTransformer($this->em, $this->container, $creator, 'UserWrapper');
+                    }
+
+                    //$formValue is an array: newvalue1,newvalue2,newvalue3
+                    $formValueArr = explode(",", $formValue);
+                    foreach( $formValueArr as $thisValue ) {
+                        echo "<br>----- ### ".$className.": thisValue=" . $thisValue . " ###<br>";
+                        $dropdownObject = $transformer->reverseTransform($thisValue);
+
+                        if( $dropdownObject ) {
+                            $class = new \ReflectionClass($dropdownObject);
+                            $thisclassName = $class->getShortName();
+                            echo "=======> ".$thisclassName.": Adding dropdownObject=" . $dropdownObject . "; id=". $dropdownObject->getId() . "<br>";
+
+//                            if( $className == "PathologyResultSignatoriesList" ) {
+//                                $userWrapper = $dropdownObject->getUserWrapper();
+//                                echo "userWrapper: name=" . $userWrapper->getName() . "; user=" . $userWrapper->getUser() . "<br>";
+//                            }
+
+                            if( $className == "PathologyResultSignatoriesList" && $userWrapperTransformer ) {
+                                //for PathologyResultSignatoriesList user id is $dropdownObject's entityId
+                                $userId = $dropdownObject->getEntityId();
+                                echo "get userWrapper by user id=".$userId."<br>";
+                                if( $userId ) {
+                                    $userWrapper = $userWrapperTransformer->reverseTransformByType($userId,'User');
+                                } else {
+                                    $userWrapper = $userWrapperTransformer->reverseTransform($thisValue);
+                                }
+                                echo "userWrapper: name=" . $userWrapper->getName() . "; user=" . $userWrapper->getUser() . "<br>";
+                                $dropdownObject->setUserWrapper($userWrapper);
+
+                                //set object type as User
+                                if( $userWrapper->getUser() ) {
+                                    $dropdownObject->setObject($userWrapper->getUser());
+                                }
+
+                            }
+
+                            if (!$testing) {
+                                //$this->em->persist($dropdownObject);
+                                $this->em->flush();
+                            }
+                        }
+                    }
+
+                }//if bundleName
+
+            }
+
+        }
+
+        if( $newListElement ) {
+            return;
+        }
+
+        //exception: time [hour] [minute]
+        if( $formNodeObjectName == "Form Field - Time" ) {
+            //$formValue is an array: Array ( [time] => Array ( [hour] => 11 [minute] => 51 ) )
+            //use ObjectTypeDateTime's timeValue
+
+            $formValueHour = $formValue['time']['hour'];
+            $formValueMinute = $formValue['time']['minute'];
+            $formValueStr = $formValueHour.":".$formValueMinute;
+
+            $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$testing,$params);
+
+            $newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
+
+            if( !$testing ) {
+                $this->em->persist($newListElement);
+                $this->em->flush($newListElement);
+            }
+
+            return;
+        }
+
+        //all other cases
+        $this->createSingleFormNodeListRecord($formNode, $formValue, $holderEntity, $testing, $params);
+    }
+    public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $noflush=false, $params=null ) {
 
         echo "formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
         if( $params ) {
@@ -225,7 +383,7 @@ class FormNodeUtil
 
         //set additional parameters
         if( $params ) {
-            echo "params: arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
+            //echo "params: arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
             if( array_key_exists('arraySectionIndex', $params) ) {
                 $newListElement->setArraySectionIndex($params['arraySectionIndex']);
             }
@@ -233,6 +391,9 @@ class FormNodeUtil
                 $newListElement->setArraySectionId($params['arraySectionId']);
             }
             //echo "sectionIndex=".$newListElement->getArraySectionIndex()."<br>";
+            //if( array_key_exists('dropdownValues', $params) ) {
+            //    $newListElement->setValues($params['dropdownValues']);
+            //}
         }
 
         //testing
@@ -245,7 +406,7 @@ class FormNodeUtil
         }
         //exit("processFormNodeByType; formValue=".$formValue);
 
-        if( !$testing ) {
+        if( !$noflush ) {
             $this->em->persist($newListElement);
             $this->em->flush($newListElement); //testing
         }
@@ -253,6 +414,35 @@ class FormNodeUtil
         return $newListElement;
     }
 
+    //check if value is userWrapper case (object=PathologyResultSignatoriesList)
+    public function processFormNodeValue( $formNode, $receivingEntity, $formNodeValue ) {
+
+        if( $receivingEntity && $formNode->getObjectType() && $formNode->getEntityName() == "PathologyResultSignatoriesList" ) {
+
+            $creator = $this->sc->getToken()->getUser();
+            $transformer = new GenericTreeTransformer($this->em, $creator, "PathologyResultSignatoriesList", "UserdirectoryBundle");
+            //$userWrapperTransformer = new SingleUserWrapperTransformer($this->em, $this->container, $creator, 'UserWrapper');
+
+            //$value = vib9002,2,oli2002
+            $valueArr = $receivingEntity->getIdValues();
+            //$valueArr = explode(",",$values);
+
+            $resArr = array();
+
+            foreach( $valueArr as $value ) {
+                //convert all to PathologyResultSignatoriesList's id
+                $dropdownObject = $transformer->reverseTransform($value);
+                if( $dropdownObject ) {
+                    //echo "dropdownObject id=".$dropdownObject->getId()."<br>";
+                    $resArr[] = $dropdownObject->getId();
+                }
+            }
+
+            return implode(',',$resArr);
+        }
+
+        return $formNodeValue;
+    }
 
     public function hasValue( $formNode ) {
 
@@ -940,7 +1130,7 @@ class FormNodeUtil
 
 
 
-    public function getDropdownValue( $formNode ) {
+    public function getDropdownValue( $formNode, $outputType=null ) {
         $em = $this->em;
         $output = array();
 
@@ -988,6 +1178,7 @@ class FormNodeUtil
 
         $resArr = array();
         foreach( $output as $list ) {
+            //echo "list id=".$list['id']."; text=".$list['text']."<br>";
             $resArr[] = array(
                 'id' => $list['id'],
                 'text' => $list['text']
@@ -1000,6 +1191,12 @@ class FormNodeUtil
                 'id' => $dropdownValue->getId(),
                 'text' => $dropdownValue->getName().""
             );
+        }
+
+        //exit('111');
+        $outputType = 'json';
+        if( $outputType == 'json' ) {
+            return json_encode($resArr);
         }
 
         return $resArr;
@@ -1044,7 +1241,7 @@ class FormNodeUtil
         return $repo;
     }
 
-    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper ) {
+    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper, $asObject=false ) {
 
         if( !$formNode ) {
             return null;
@@ -1088,9 +1285,18 @@ class FormNodeUtil
         $results = $query->getResult();
         //echo "count=".count($results)."<br>";
 
+        if( $asObject ) {
+            return $results;
+        }
+
         if( count($results) == 1 ) {
             //return $results[0]->getValue();
-            return $this->getFormNodeValueByType($formNode,$results[0]);
+            $formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
+            $complexRes = array(
+                'formNodeValue' => $formNodeValue,
+                'receivingEntity' => $results[0]
+            );
+            return $complexRes;
         }
 
         if( count($results) > 1 ) {
@@ -1107,7 +1313,12 @@ class FormNodeUtil
                 );
                 $resArr[] = $res;
             }
-            return $resArr;
+            //return $resArr;
+            $complexRes = array(
+                'formNodeValue' => $resArr,
+                'receivingEntity' => null
+            );
+            return $complexRes;
         }
 
         return null;
