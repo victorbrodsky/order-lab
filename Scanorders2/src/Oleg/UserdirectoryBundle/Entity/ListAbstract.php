@@ -577,6 +577,17 @@ abstract class ListAbstract
         }
     }
 
+    //Abbreviation (Name)
+    public function getOptimalAbbreviationName()
+    {
+        $name = $this->getName();
+        if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
+            $name = $this->getAbbreviation()." (" . $name . ")";
+        }
+
+        return $name;
+    }
+
     /**
      * @param mixed $updatedby
      */

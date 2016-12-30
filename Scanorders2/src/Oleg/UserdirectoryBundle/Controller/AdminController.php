@@ -194,6 +194,7 @@ class AdminController extends Controller
 
         //testing
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
+        //$this->generateLabResultUnitsMeasureList();
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -6435,13 +6436,47 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
+        if( count($entities) < 3 ) {
+            return -1;
+        }
+
+        $inputFileName = __DIR__ . '/../Util/Laboratory Units of Measure Compilation-1.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
         $types = array(
-            "Sample Lab Result Unit of Measure 01",
-            "Sample Lab Result Unit of Measure 02",
+            //"Sample Lab Result Unit of Measure 01",
+            //"Sample Lab Result Unit of Measure 02",
         );
 
         $count = 10;
-        foreach( $types as $name ) {
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            $name = $rowData[0][0];
+            $abbreviation = $rowData[0][1];
+
+//            print "<pre>";
+//            print_r($rowData);
+//            print "</pre>";
+//            print "</pre>";
+//            echo "name=$name, abbreviation=$abbreviation <br>";
 
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findOneByName($name);
             if( $listEntity ) {
@@ -6449,13 +6484,16 @@ class AdminController extends Controller
             }
 
             $listEntity = new LabResultUnitsMeasureList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
+            $this->setDefaultList($listEntity,null,$username,$name);
+
+            $listEntity->setAbbreviation($abbreviation);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
             $em->flush();
 
             $count = $count + 10;
+            //exit('1');
         }
 
         return round($count/10);

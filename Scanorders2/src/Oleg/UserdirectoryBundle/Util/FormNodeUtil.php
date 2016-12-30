@@ -1249,7 +1249,8 @@ class FormNodeUtil
             $bundleName = $entityNamespaceArr[0].$entityNamespaceArr[1];
 
             $query = $em->createQueryBuilder()->from($bundleName.':'.$entityName, 'list')
-                ->select("list.id as id, list.name as text")
+                //->select("list.id as id, list.name as text")
+                ->select("list")
                 ->orderBy("list.orderinlist","ASC");
 
             //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
@@ -1266,8 +1267,8 @@ class FormNodeUtil
         foreach( $output as $list ) {
             //echo "list id=".$list['id']."; text=".$list['text']."<br>";
             $resArr[] = array(
-                'id' => $list['id'],
-                'text' => $list['text']
+                'id' => $list->getId(),
+                'text' => $list->getOptimalAbbreviationName()
             );
         }
 
@@ -1275,7 +1276,7 @@ class FormNodeUtil
         foreach( $formNode->getChildren() as $dropdownValue ) {
             $resArr[] = array(
                 'id' => $dropdownValue->getId(),
-                'text' => $dropdownValue->getName().""
+                'text' => $dropdownValue->getOptimalAbbreviationName().""
             );
         }
 
@@ -1580,7 +1581,7 @@ class FormNodeUtil
 
         $formParams = array(
             'parent' => $parentForm,
-            'name' => "Laboratory Values",
+            'name' => "Laboratory Values of Interest",
             'objectType' => $objectTypeSection,
         );
         $laboratoryValues = $this->createV2FormNode($formParams);
@@ -1641,7 +1642,7 @@ class FormNodeUtil
         $sections = array(
             //CCI: [Form Field - Free Text, Single Line]
             array(
-                'sectionName' => "Laboratory Values",
+                'sectionName' => "Laboratory Values of Interest",
                 'fields' => array('CCI'=>'Form Field - Free Text, Single Line')
             ),
             //Platelet Goal: [Form Field - Free Text, Single Line]
@@ -1660,7 +1661,7 @@ class FormNodeUtil
         //    Fibrinogen: [Form Field - Free Text, Single Line]
         $sections = array(
             array(
-                'sectionName' => "Laboratory Values",
+                'sectionName' => "Laboratory Values of Interest",
                 'fields' => array(
                     'INR'=>'Form Field - Free Text, Single Line',
                     'PT'=>'Form Field - Free Text, Single Line',
@@ -1679,7 +1680,7 @@ class FormNodeUtil
         //    Fibrinogen: [Form Field - Free Text, Single Line]
         $sections = array(
             array(
-                'sectionName' => "Laboratory Values",
+                'sectionName' => "Laboratory Values of Interest",
                 'fields' => array(
                     'INR'=>'Form Field - Free Text, Single Line',
                     'PT'=>'Form Field - Free Text, Single Line',
@@ -1815,7 +1816,7 @@ class FormNodeUtil
             //    Antibodies [Form Field - Dropdown Menu] (ComplexPlateletSummaryAntibodiesList)
             //    NYBC date: [Form Field - Full Date]
             array(
-                'sectionName' => "Laboratory Values",
+                'sectionName' => "Laboratory Values of Interest",
                 'fields' => array(
                     'HLA A'=>'Form Field - Free Text, Single Line',
                     'HLA B'=>'Form Field - Free Text, Single Line',
@@ -2039,7 +2040,7 @@ class FormNodeUtil
         ////////////// Laboratory Values [Form Section] //////////////////
         $formParams = array(
             'parent' => $transfusionMedicine,
-            'name' => "Laboratory Values",
+            'name' => "Laboratory Values of Interest",
             'objectType' => $objectTypeSection,
             //'showLabel' => true,
         );
@@ -2660,7 +2661,7 @@ class FormNodeUtil
         ////////////// Laboratory Values [Form Section] //////////////////
         $formParams = array(
             'parent' => $transfusionMedicine,
-            'name' => "Laboratory Values",
+            'name' => "Laboratory Values of Interest",
             'objectType' => $objectTypeSection,
             'showLabel' => true,
             'visible' => true
