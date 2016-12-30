@@ -123,7 +123,8 @@ function calllogAppendFormNodes( data ) {
             data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu" ||
             data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu - Allow Multiple Selections" ||
             data[index]['formNodeObjectType'] == "Form Field - Month" ||
-            data[index]['formNodeObjectType'] == "Form Field - Day of the Week"
+            data[index]['formNodeObjectType'] == "Form Field - Day of the Week" ||
+            data[index]['formNodeObjectType'] == "Form Field - Date"
         ) {
             regularCombobox($('#formnode-'+formNodeId));
         }
@@ -147,14 +148,22 @@ function calllogAppendFormNodes( data ) {
         }
 
         if(
-            data[index]['formNodeObjectType'] == "Form Field - Date" ||
             data[index]['formNodeObjectType'] == "Form Field - Full Date" ||
             data[index]['formNodeObjectType'] == "Form Field - Full Date and Time" ||
-            data[index]['formNodeObjectType'] == "Form Field - Year" ||
             data[index]['formNodeObjectType'] == "Form Field - Time, with Time Zone" ||
             data[index]['formNodeObjectType'] == "Form Field - Full Date and Time, with Time Zone"
         ) {
             initDatepicker($('#formnode-'+formNodeId));
+        }
+
+        if( data[index]['formNodeObjectType'] == "Form Field - Year" ) {
+            $('#formnode-'+formNodeId).find('input.datepicker').datepicker( {
+                autoclose: true,
+                format: " yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                orientation: 'auto'
+            });
         }
 
         if(

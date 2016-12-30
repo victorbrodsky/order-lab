@@ -229,13 +229,14 @@
 
         {#date#}
         {% if formType == "Form Field - Date" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+            {#day of the month#}
+            {{ formnodemacros.dayForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Full Date" %}
             {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
         {% endif %}
         {% if formType == "Form Field - Year" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'Y') }}
         {% endif %}
 
         {#date and time#}
@@ -248,7 +249,7 @@
 
         {#time#}
         {% if formType == "Form Field - Time, with Time Zone" %}
-            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Time" %}
             {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
@@ -266,7 +267,7 @@
             {{ formnodemacros.checkboxForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Checkboxes" %}
-            {{ formnodemacros.checkboxForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+            {{ formnodemacros.checkboxesForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
 
         {% if formType == "Form Field - Radio Button" %}
@@ -645,7 +646,11 @@
     {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {% if formNodeValue %}
-        {% set fieldValue = formNodeValue %}
+        {% if dateFormat is defined and dateFormat %}
+            {% set fieldValue = formNodeValue|date(dateFormat) %}
+        {% else %}
+            {% set fieldValue = formNodeValue %}
+        {% endif %}
     {% else %}
         {% set fieldValue = null %}
     {% endif %}
@@ -718,6 +723,59 @@
             {{ fieldValue }}
             value="1"
     >
+{% endmacro %}
+
+{% macro checkboxesForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6 text-center" align="left">
+                {{ formnodemacros.checkboxesField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.checkboxesField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro checkboxesField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    {% for dropdownValue in dropdownValues %}
+        {% if formNodeValue and dropdownValue.id == formNodeValue %}
+            {% set checked = 'checked="checked"' %}
+        {% else %}
+            {% set checked = '' %}
+        {% endif %}
+        <div class="radio_inline">
+            <input
+                    type="checkbox"
+                    id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                    name="{{ fieldname }}"
+                    value="{{ dropdownValue.id }}"
+                    {{ checked }}
+                    {{ disabled }}
+                    value="{{ dropdownValue.id }}"
+            >
+            <label class="required">
+                {{ dropdownValue.text }}
+            </label>
+        </div>
+    {% endfor %}
+
 {% endmacro %}
 
 
@@ -849,6 +907,64 @@
 
 {% endmacro %}
 
+
+{% macro dayForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.dayField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.dayField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro dayField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
+    {% else %}
+        {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
+    {% endif %}
+
+    {% set day = null %}
+    {% if formNodeValue %}
+        {% set day = formNodeValue %}
+    {% endif %}
+
+    <div>
+        <select
+                id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                class="combobox"
+                data-placeholder="{{ placeholder }}"
+                name="{{ fieldname }}"
+                {{ disabled }}
+        >
+            <option value=""></option>
+            {% for i in 1..31 %}
+                {% set selected = "" %}
+                {% if day and day == i %}
+                    {% set selected = "selected" %}
+                {% endif %}
+                <option value="{{ i }}" {{ selected }}>{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+{% endmacro %}
 
 
 {% macro datetimeForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat ) %}

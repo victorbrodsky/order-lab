@@ -35,9 +35,42 @@ class ObjectTypeCheckbox extends ObjectTypeReceivingBase
      */
     protected $value;
 
+    /**
+     * @var array
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $idValues;
 
 
 
+    public function __construct($creator=null)
+    {
+        parent::__construct($creator);
+        $this->idValues = array();
+    }
 
+
+    /**
+     * @return mixed
+     */
+    public function getIdValues()
+    {
+        return $this->idValues;
+    }
+    /**
+     * @param mixed $values
+     */
+    public function setIdValues($values)
+    {
+        if( $values ) {
+            foreach( $values as $value ) {
+                $this->addIdValue($value);
+            }
+        }
+    }
+    public function addIdValue($value) {
+        $this->idValues[] = $value;
+        return $this;
+    }
 
 }

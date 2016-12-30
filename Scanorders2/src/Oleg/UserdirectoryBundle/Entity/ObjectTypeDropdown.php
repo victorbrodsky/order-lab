@@ -61,7 +61,6 @@ class ObjectTypeDropdown extends ObjectTypeReceivingBase
      */
     public function setIdValues($values)
     {
-        //exit("setValues!!!???");
         if( $values ) {
             foreach( $values as $value ) {
                 $this->addIdValue($value);

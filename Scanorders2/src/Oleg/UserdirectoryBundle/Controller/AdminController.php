@@ -18,7 +18,6 @@ use Oleg\UserdirectoryBundle\Entity\Collaboration;
 use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
 use Oleg\UserdirectoryBundle\Entity\ComplexPlateletSummaryAntibodiesList;
-use Oleg\UserdirectoryBundle\Entity\DaysList;
 use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
@@ -5568,7 +5567,7 @@ class AdminController extends Controller
             "1020" => array('PathologyResultSignatoriesList','pathologyresultsignatories-list','Pathology Result Signatories List'),
             "1030" => array('ObjectTypeCheckbox','objecttypecheckboxs-list','Object Type Checkbox'),
             "1040" => array('ObjectTypeRadioButton','objecttyperadiobuttons-list','Object Type Radio Button'),
-            //"1050" => array('ObjectTypeDropdownMultiple','objecttypemultipledropdowns-list'),
+            //"1050" => array('','-list'),
 
         );
 
