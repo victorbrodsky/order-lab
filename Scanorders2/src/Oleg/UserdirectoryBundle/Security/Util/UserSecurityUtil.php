@@ -1627,6 +1627,16 @@ class UserSecurityUtil {
             //echo "count=".$count."<br>";
         }
 
+        //[2016-12-31 16:19:50] request.CRITICAL: Uncaught PHP Exception Doctrine\ORM\ORMInvalidArgumentException:
+        // "A new entity was found through the relationship 'Oleg\UserdirectoryBundle\Entity\LabResultUnitsMeasureList#creator'
+        // that was not configured to cascade persist operations for entity: Oleg Ivanov - oli2002 (WCMC CWID).
+        // To solve this issue: Either explicitly call EntityManager#persist() on this unknown entity or configure cascade persist
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+        if( !$user ) {
+            exit("No user found by id ".$user->getId());
+        }
+
         $entity->setOrderinlist( $count );
         $entity->setCreator( $user );
         $entity->setCreatedate( new \DateTime() );

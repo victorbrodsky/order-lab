@@ -481,6 +481,7 @@ class AdminController extends Controller
     public function setDefaultList( $entity, $count, $user, $name=null ) {
         //$userutil = new UserUtil();
         //return $userutil->setDefaultList( $entity, $count, $user, $name );
+
         $userSecUtil = $this->get('user_security_utility');
         $entity = $userSecUtil->setDefaultList( $entity, $count, $user, $name );
         $entity->setType('default');
@@ -6640,15 +6641,6 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-
-        //[2016-12-31 16:19:50] request.CRITICAL: Uncaught PHP Exception Doctrine\ORM\ORMInvalidArgumentException:
-        // "A new entity was found through the relationship 'Oleg\UserdirectoryBundle\Entity\LabResultUnitsMeasureList#creator'
-        // that was not configured to cascade persist operations for entity: Oleg Ivanov - oli2002 (WCMC CWID).
-        // To solve this issue: Either explicitly call EntityManager#persist() on this unknown entity or configure cascade persist
-        $username = $em->getRepository('OlegUserdirectoryBundle:User')->find($username->getId());
-        if( !$username ) {
-            exit("No user found by id ".$username->getId());
-        }
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
         if( count($entities) > 3 ) {
