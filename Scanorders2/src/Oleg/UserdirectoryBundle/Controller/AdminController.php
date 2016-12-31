@@ -3659,8 +3659,8 @@ class AdminController extends Controller
             array('name'=>"L Corridor",'street1'=>'525 East 68th Street','abbr'=>'L','inst'=>'NYP'),
             array('name'=>"K Wing",'street1'=>'525 East 68th Street','abbr'=>'K','inst'=>'NYP'),
             array('name'=>"F Wing, Floors 2-9",'street1'=>'525 East 68th Street','abbr'=>'F','inst'=>'NYP'),
-            array('name'=>"Baker Pavilion - F Wing",'street1'=>'525 East 68th Street','abbr'=>'P','inst'=>'NYP'),
-            array('name'=>"Payson Pavilion",'street1'=>'425 East 61st Street','abbr'=>null,'inst'=>'NYP'),
+            array('name'=>"Baker Pavilion - F Wing",'street1'=>'525 East 68th Street','abbr'=>'B','inst'=>'NYP'),
+            array('name'=>"Payson Pavilion",'street1'=>'525 East 68th Street','abbr'=>'P','inst'=>'NYP'),
             array('name'=>"Whitney Pavilion",'street1'=>'525 East 68th Street','abbr'=>'W','inst'=>'NYP'),
             array('name'=>"M Wing",'street1'=>'530 East 70th Street','abbr'=>'M','inst'=>'NYP'),
             array('name'=>"N Wing",'street1'=>'530 East 70th Street','abbr'=>'N','inst'=>'NYP'),
@@ -3675,7 +3675,8 @@ class AdminController extends Controller
             array('name'=>"Stich Building",'street1'=>'1315 York Ave','abbr'=>null,'inst'=>'NYP'),
             array('name'=>"Kips Bay Medical Offices",'street1'=>'411 East 69th Street','abbr'=>null,'inst'=>'NYP'),
             array('name'=>"Phipps House Medical Offices",'street1'=>'449 East 68th Street','abbr'=>null,'inst'=>'NYP'),
-            array('name'=>"",'street1'=>'333 East 38th Street','abbr'=>null,'inst'=>'NYP')  //NYP - 333 East 38th Street
+            array('name'=>"",'street1'=>'333 East 38th Street','abbr'=>null,'inst'=>'NYP'),  //NYP - 333 East 38th Street
+            array('name'=>"Greenberg Pavilion",'street1'=>'525 East 68th Street','abbr'=>null,'inst'=>'NYP'),
         );
 
         $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName("New York");
@@ -6404,11 +6405,14 @@ class AdminController extends Controller
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findAll();
         if( count($entities) > 3 ) {
-            return -1;
+            //return -1;
         }
 
         ini_set('max_execution_time', 3600);
-        $inputFileName = __DIR__ . '/../Util/Lab Result Names For Import.xlsx';
+
+        //$inputFileName = __DIR__ . '/../Util/Lab Result Names For Import.xlsx';
+        //Lab Result Names For Import 2.xlsx
+        $inputFileName = __DIR__ . '/../Util/Lab Result Names For Import 2.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);

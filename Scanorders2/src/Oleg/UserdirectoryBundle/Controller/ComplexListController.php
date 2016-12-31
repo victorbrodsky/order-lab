@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Form\ListFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -107,11 +108,30 @@ class ComplexListController extends Controller
 //            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
 //        }
 
+
+        $dqlParameters = array();
+        $filterform = $this->createForm(new ListFilterType(), null);
+        $filterform->bind($request);
+        $search = $filterform['search']->getData();
+        echo "search=".$search."<br>";
+
+        if( $search ) {
+            $dql->andWhere("ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search");
+            $dqlParameters['search'] = '%'.$search.'%';
+        }
+
+
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $limit = 50;
+
         $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
         $paginator  = $this->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
@@ -125,7 +145,9 @@ class ComplexListController extends Controller
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
             'pathname' => $mapper['pathname'],
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'filterform' => $filterform->createView(),
+            'routename' => $routeName
         );
     }
 
