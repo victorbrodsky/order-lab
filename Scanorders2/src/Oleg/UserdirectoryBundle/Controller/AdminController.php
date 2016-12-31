@@ -195,7 +195,7 @@ class AdminController extends Controller
         //testing
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         //$this->generateLabResultNames();
-        $this->generateLocationsFromExcel();
+        //$this->generateLocationsFromExcel();
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -3813,7 +3813,8 @@ class AdminController extends Controller
             $count = $count + 10;
         }
 
-        $this->generateLocationsFromExcel();
+        $countNew = $this->generateLocationsFromExcel();
+        $count = $count + $countNew;
 
         return round($count/10);
     }
