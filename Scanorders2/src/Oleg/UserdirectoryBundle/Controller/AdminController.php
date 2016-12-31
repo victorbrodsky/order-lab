@@ -195,6 +195,7 @@ class AdminController extends Controller
         //testing
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         //$this->generateLabResultNames();
+        $this->generateLocationsFromExcel();
 
         $count_sitenameList = $this->generateSitenameList();
 
@@ -3812,19 +3813,28 @@ class AdminController extends Controller
             $count = $count + 10;
         }
 
+        $this->generateLocationsFromExcel();
+
         return round($count/10);
     }
 
-    public function generateLocationsFromExcel() {
+    public function generateLocationsFromExcel( $count=null ) {
         $username = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
-        if( count($entities) > 3 ) {
-            return -1;
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
+//        if( count($entities) > 3 ) {
+//            return -1;
+//        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $locationPrivacy = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+        if( !$locationPrivacy ) {
+            exit("Location privacy is not found by name "."'Anyone can see this contact information'");
         }
 
-        $inputFileName = __DIR__ . '/../Util/Laboratory Units of Measure Compilation-1.xlsx';
+        $inputFileName = __DIR__ . '/../Util/Encounter Locations (Import Columns A through O)-2 - Fixed-Ready For Import.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -3838,12 +3848,6 @@ class AdminController extends Controller
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
-        $types = array(
-            //"Sample Lab Result Unit of Measure 01",
-            //"Sample Lab Result Unit of Measure 02",
-        );
-
-        $count = 10;
         for( $row = 2; $row <= $highestRow; $row++ ) {
 
             //Read a row of data into an array
@@ -3852,24 +3856,94 @@ class AdminController extends Controller
                 TRUE,
                 FALSE);
 
-            $name = $rowData[0][0];
-            $abbreviation = $rowData[0][1];
+            $name = trim($rowData[0][0]);
+            $locationTypeName = trim($rowData[0][1]);
+            $locationPhone = trim($rowData[0][2]);
+            $locationRoom = trim($rowData[0][3]);
+            $locationSuite = trim($rowData[0][4]);
+            $locationFloor = trim($rowData[0][5]);
+            $locationFloorSide = trim($rowData[0][6]);
+            $locationBuildingName = trim($rowData[0][7]);
 
 //            print "<pre>";
 //            print_r($rowData);
 //            print "</pre>";
 //            print "</pre>";
-//            echo "name=$name, abbreviation=$abbreviation <br>";
+            echo "name=$name, locationTypeName=$locationTypeName, locationPhone=$locationPhone, locationRoom=$locationRoom, locationSuite=$locationSuite, locationFloor=$locationFloor, locationFloorSide=$locationFloorSide, locationBuildingName=$locationBuildingName <br>";
+            //exit();
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findOneByName($name);
+            if( !$name ) {
+                exit("Location name is empty");
+            }
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:Location')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
 
-            $listEntity = new LabResultUnitsMeasureList();
+            $listEntity = new Location();
             $this->setDefaultList($listEntity,null,$username,$name);
 
-            $listEntity->setAbbreviation($abbreviation);
+            $listEntity->setStatus($listEntity::STATUS_VERIFIED);
+            $listEntity->setPrivacy($locationPrivacy);
+
+            if( $locationTypeName ) {
+                $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName($locationTypeName);
+                if (!$locationType) {
+                    exit("No location found by name " . $locationTypeName);
+                }
+                $listEntity->addLocationType($locationType);
+            }
+
+            if( $locationPhone ) {
+                $listEntity->setPhone($locationPhone);
+            }
+
+            if( $locationRoom ) {
+                $room = $em->getRepository('OlegUserdirectoryBundle:RoomList')->findOneByName($locationRoom);
+                if (!$room) {
+                    exit("No room found by name " . $locationRoom);
+                }
+                $listEntity->setRoom($room);
+            }
+
+            if( $locationSuite ) {
+                $suite = $em->getRepository('OlegUserdirectoryBundle:SuiteList')->findOneByName($locationSuite);
+                if (!$suite) {
+                    exit("No suite found by name " . $locationSuite);
+                }
+                $listEntity->setSuite($suite);
+            }
+
+            if( $locationFloor ) {
+                $floor = $em->getRepository('OlegUserdirectoryBundle:FloorList')->findOneByName($locationFloor);
+                if( !$floor ) {
+                    //exit("No floor found by name " . $locationFloor);
+                    $floor = $userSecUtil->getObjectByNameTransformer($username,$locationFloor,"UserdirectoryBundle","FloorList");
+                    $em->persist($floor);
+                    $em->flush($floor);
+                }
+                //$floor = $em->getRepository('OlegUserdirectoryBundle:FloorList')->findOneByName($locationFloor);
+                if( !$floor ) {
+                    exit("No floor found by name " . $locationFloor);
+                }
+                $listEntity->setFloor($floor);
+            }
+
+            if( $locationFloorSide ) {
+                $listEntity->setFloorSide($locationFloorSide);
+            }
+
+            if( $locationBuildingName ) {
+                if( $locationBuildingName == "Greenberg Pavillion" ) {
+                    $locationBuildingName = "Greenberg Pavilion";
+                }
+                $building = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findOneByName($locationBuildingName);
+                if (!$building) {
+                    exit("No building type found by name " . $locationBuildingName);
+                }
+                $listEntity->setBuilding($building);
+            }
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
