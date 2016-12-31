@@ -668,6 +668,10 @@
         {{ formmacros.field(form.floors) }}
     {% endif %}
 
+    {% if form.floorSide is defined %}
+        {{ formmacros.field(form.floorSide) }}
+    {% endif %}
+
     {#suites display for: floor, rooms#}
     {% if form.suites is defined %}
         {{ formmacros.field(form.suites) }}

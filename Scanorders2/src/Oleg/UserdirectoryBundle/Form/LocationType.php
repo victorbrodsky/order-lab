@@ -89,6 +89,11 @@ class LocationType extends AbstractType
             'classtype' => 'floor'
         ));
 
+        $builder->add('floorSide', null, array(
+            'label' => "Floor Side:",
+            'attr' => array('class' => 'form-control user-location-floorside-field')
+        ));
+
         $builder->add('comment', 'textarea', array(
             'max_length'=>5000,
             'required'=>false,

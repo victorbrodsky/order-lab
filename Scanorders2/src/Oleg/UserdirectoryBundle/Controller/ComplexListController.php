@@ -113,7 +113,7 @@ class ComplexListController extends Controller
         $filterform = $this->createForm(new ListFilterType(), null);
         $filterform->bind($request);
         $search = $filterform['search']->getData();
-        echo "search=".$search."<br>";
+        //echo "search=".$search."<br>";
 
         if( $search ) {
             $dql->andWhere("ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search");

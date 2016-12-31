@@ -89,6 +89,11 @@ class Location extends ListAbstract
     protected $floor;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $floorSide;
+
+    /**
      * @ORM\ManyToOne(targetEntity="SuiteList",cascade={"persist"})
      **/
     protected $suite;
@@ -238,6 +243,23 @@ class Location extends ListAbstract
     {
         return $this->floor;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFloorSide()
+    {
+        return $this->floorSide;
+    }
+
+    /**
+     * @param mixed $floorSide
+     */
+    public function setFloorSide($floorSide)
+    {
+        $this->floorSide = $floorSide;
+    }
+
 
     /**
      * @param mixed $geoLocation
