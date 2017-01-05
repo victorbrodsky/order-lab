@@ -1399,7 +1399,8 @@ class UtilController extends Controller {
 
     public function getClassBundleByName($name) {
         $bundleName = "UserdirectoryBundle";
-        $filterType = array('default');
+        //$filterType = array('default');
+        $filterType = null;
         switch( $name ) {
             case "identifierkeytype":
                 $className = "IdentifierTypeList";
