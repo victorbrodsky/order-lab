@@ -543,6 +543,7 @@ class UtilController extends Controller {
             $output['room'] = ($location->getRoom()) ? $location->getRoom()->getId() : null;
             $output['suite'] = ($location->getSuite()) ? $location->getSuite()->getId() : null;
             $output['floor'] = ($location->getFloor()) ? $location->getFloor()->getId() : null;
+            $output['floorSide'] = $location->getFloorSide();
             $output['building'] = $buildingId;
             $output['comment'] = $location->getComment();
 
