@@ -75,8 +75,16 @@
                             {{ form_row(encounter.status) }}
                             {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
                             {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
+
+                            {% if cycle == "new" %}
+                                <div style="display: none;">
+                            {% endif %}
                             {{ formmacros.field(encounter.encounterStatus) }}
                             {{ formmacros.inputArrayField(encounter.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
+                            {% if cycle == "new" %}
+                                </div>
+                            {% endif %}
+
                             {{ formmacros.field(encounter.provider) }}
 
                             {% for attendingPhysician in encounter.attendingPhysicians %}
@@ -153,10 +161,17 @@
                 {% if form.messageStatus is defined %}
                     {{ formmacros.field(form.messageStatus) }}
                 {% endif %}
+
+                {% if cycle == "new" %}
+                    <div style="display: none;">
+                {% endif %}
                 {#Message Version#}
                 {{ formmacros.field(form.version) }}
                 {#Amendment Reason#}
                 {{ formmacros.field(form.amendmentReason) }}
+                {% if cycle == "new" %}
+                    </div>
+                {% endif %}
             </p>
 
 

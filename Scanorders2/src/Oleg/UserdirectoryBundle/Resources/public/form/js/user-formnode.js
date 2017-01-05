@@ -766,14 +766,17 @@ function formnodeGetLastSectionArrayIndex(index,separator,sectionLevel) {
 function formNodeRemoveSection( btn, formNodeId ) {
     //console.log("remove "+formNodeId);
 
-    //var attachEl = $(btn).closest('#formnode-' + formNodeId);
+    //Are You sure you would like to delete this form section?
+    if( confirm('Are you sure you would like to delete this form section?') ) {
+        // Continue
+    } else {
+        // Do nothing!
+        return;
+    }
 
     //formnode-arraysection-holder-90
     $(btn).closest('.formnode-arraysection-holder').remove();
 
-    //if( attachEl.find('.formnode-remove-section').length == 1  ) {
-    //    attachEl.find('.formnode-remove-section').hide();
-    //}
     formNodeProcessRemoveSectionBtn(formNodeId);
 }
 
@@ -789,14 +792,6 @@ function formNodeReplaceAll(input,searchStr,replaceStr) {
 }
 
 function formNodeProcessRemoveSectionBtn( formNodeId ) {
-
-    //Are You sure you would like to delete this form section?
-    if( confirm('Are You sure you would like to delete this form section?') ) {
-        // Continue
-    } else {
-        // Do nothing!
-        return;
-    }
 
     //formNodeId: 100_fffsa_0_fffsa => 100
     var formNodeCleanIdArr = formNodeId.split("_");

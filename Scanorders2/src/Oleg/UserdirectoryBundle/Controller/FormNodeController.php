@@ -395,22 +395,18 @@ class FormNodeController extends Controller {
 
             $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
             if( $grandParentFormNode ) {
-                //$grandParentFormNodeId = $grandParentFormNode->getId();
-                //remove the last element from arraySectionCount: prefix_0-0-0_prefix => prefix_0-0_prefix
-                $prefix = $formNodeUtil->getArraySectionPrefix();
-                //$cleanArraySectionCount = str_replace($prefix.'_', '', $arraySectionCount);
-                //$cleanArraySectionCount = str_replace('_'.$prefix, '', $cleanArraySectionCount);
-                $cleanArraySectionCount = $formNodeUtil->getCleanedArraySection($arraySectionCount);
 
-                $arraySectionCountArr = explode('-',$cleanArraySectionCount);
-                //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
-                array_pop($arraySectionCountArr);
-                $parentArraySectionCount = implode('-',$arraySectionCountArr);
-                //$parentArraySectionCount = $prefix.'_'.$parentArraySectionCount.'_'.$prefix;
-                $parentArraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($parentArraySectionCount);
-                //echo "!!!!!!!!!!!!!!!!!! Old Index=".$arraySectionCount." => New Index=".$newArraySectionCount."<br>";
-
-                $grandParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($grandParentFormNode->getId(),$parentArraySectionCount);
+                if( $formNodeUtil->isUnderArraySectionRecursion($grandParentFormNode,$this->testing) ) {
+                    $cleanArraySectionCount = $formNodeUtil->getCleanedArraySection($arraySectionCount);
+                    $arraySectionCountArr = explode('-', $cleanArraySectionCount);
+                    //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
+                    array_pop($arraySectionCountArr);
+                    $parentArraySectionCount = implode('-', $arraySectionCountArr);
+                    $parentArraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($parentArraySectionCount);
+                    $grandParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($grandParentFormNode->getId(), $parentArraySectionCount);
+                } else {
+                    $grandParentFormNodeId = $grandParentFormNode->getId();
+                }
             } else {
                 $grandParentFormNodeId = null;
             }

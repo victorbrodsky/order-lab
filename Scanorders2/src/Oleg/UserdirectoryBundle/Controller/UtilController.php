@@ -1399,7 +1399,7 @@ class UtilController extends Controller {
 
     public function getClassBundleByName($name) {
         $bundleName = "UserdirectoryBundle";
-        //$filterType = array('default');
+        //$filterType = array('default'); //change to array('default','user-added')
         $filterType = null;
         switch( $name ) {
             case "identifierkeytype":
