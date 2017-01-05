@@ -513,7 +513,13 @@ class UtilController extends Controller {
 
         $locationId = trim($request->get('locationId'));
 
-        $location = $em->getRepository('OlegUserdirectoryBundle:Location')->find($locationId);
+        if( strval($locationId) == strval(intval($locationId)) ) {
+            //echo "locationId is integer<br>";
+            $location = $em->getRepository('OlegUserdirectoryBundle:Location')->find($locationId);
+        } else {
+            //echo "locationId is string<br>";
+            $location = null;
+        }
 
         $output = array();
 
@@ -524,31 +530,101 @@ class UtilController extends Controller {
                 $locationTypes[] = $locationType->getId();
             }
 
+            $geoLocationBuilding = null;
+            $buildingId = null;
+            if( $location->getBuilding() ) {
+                $buildingId = $location->getBuilding()->getId();
+                $geoLocationBuilding = $location->getBuilding()->getGeoLocation();
+            }
+
             $output['id'] = $location->getId();
             $output['locationTypes'] = $locationTypes;
             $output['phone'] = $location->getPhone();
             $output['room'] = ($location->getRoom()) ? $location->getRoom()->getId() : null;
             $output['suite'] = ($location->getSuite()) ? $location->getSuite()->getId() : null;
             $output['floor'] = ($location->getFloor()) ? $location->getFloor()->getId() : null;
-            $output['building'] = ($location->getBuilding()) ? $location->getBuilding()->getId() : null;
+            $output['building'] = $buildingId;
             $output['comment'] = $location->getComment();
 
             $geoLocation = $location->getGeoLocation();
-            if( $geoLocation ) {
-                $output['street1'] = $geoLocation->getStreet1();
-                $output['street2'] = $geoLocation->getStreet2();
-                $output['city'] = ($geoLocation->getCity()) ? $geoLocation->getCity()->getId() : null;
-                $output['country'] = ($geoLocation->getCountry()) ? $geoLocation->getCountry()->getId() : null;
-                $output['county'] = $geoLocation->getCounty();
-                $output['zip'] = $geoLocation->getZip();
+
+            //priority is on location's geo object
+            $street1 = null;
+            if( $geoLocation && $geoLocation->getStreet1() ) {
+                $street1 = $geoLocation->getStreet1();
             } else {
-                $output['street1'] = null;
-                $output['street2'] = null;
-                $output['city'] = null;
-                $output['country'] = null;
-                $output['county'] = null;
-                $output['zip'] = null;
+                if( $geoLocationBuilding && $geoLocationBuilding->getStreet1() ) {
+                    $street1 = $geoLocationBuilding->getStreet1();
+                }
             }
+
+            $street2 = null;
+            if( $geoLocation && $geoLocation->getStreet2() ) {
+                $street2 = $geoLocation->getStreet2();
+            } else {
+                if( $geoLocationBuilding && $geoLocationBuilding->getStreet2() ) {
+                    $street2 = $geoLocationBuilding->getStreet2();
+                }
+            }
+
+            $cityId = null;
+            if( $geoLocation && $geoLocation->getCity() ) {
+                $cityId = $geoLocation->getCity()->getId();
+            } else {
+                if( $geoLocationBuilding && $geoLocationBuilding->getCity() ) {
+                    $cityId = $geoLocationBuilding->getCity()->getId();
+                }
+            }
+
+            $countryId = null;
+            if( $geoLocation && $geoLocation->getCountry() ) {
+                $countryId = $geoLocation->getCountry()->getId();
+            } else {
+                if( $geoLocationBuilding && $geoLocationBuilding->getCountry() ) {
+                    $countryId = $geoLocationBuilding->getCountry()->getId();
+                }
+            }
+
+            $county = null;
+            if( $geoLocation && $geoLocation->getCounty() ) {
+                $county = $geoLocation->getCounty();
+            } else {
+                if( $geoLocationBuilding && $geoLocationBuilding->getCounty() ) {
+                    $county = $geoLocationBuilding->getCounty();
+                }
+            }
+
+            $zip = null;
+            if( $geoLocation && $geoLocation->getZip() ) {
+                $zip = $geoLocation->getZip();
+            } else {
+                if( $geoLocationBuilding && $geoLocationBuilding->getZip() ) {
+                    $zip = $geoLocationBuilding->getZip();
+                }
+            }
+
+            $output['street1'] = $street1;  //$geoLocation->getStreet1();
+            $output['street2'] = $street2;  //$geoLocation->getStreet2();
+            $output['city'] = $cityId;  //($geoLocation->getCity()) ? $geoLocation->getCity()->getId() : null;
+            $output['country'] = $countryId;    //($geoLocation->getCountry()) ? $geoLocation->getCountry()->getId() : null;
+            $output['county'] = $county;    //$geoLocation->getCounty();
+            $output['zip'] = $zip;  //$geoLocation->getZip();
+
+//            if( $geoLocation ) {
+//                $output['street1'] = $geoLocation->getStreet1();
+//                $output['street2'] = $geoLocation->getStreet2();
+//                $output['city'] = ($geoLocation->getCity()) ? $geoLocation->getCity()->getId() : null;
+//                $output['country'] = ($geoLocation->getCountry()) ? $geoLocation->getCountry()->getId() : null;
+//                $output['county'] = $geoLocation->getCounty();
+//                $output['zip'] = $geoLocation->getZip();
+//            } else {
+//                $output['street1'] = null;
+//                $output['street2'] = null;
+//                $output['city'] = null;
+//                $output['country'] = null;
+//                $output['county'] = null;
+//                $output['zip'] = null;
+//            }
 
         }
 

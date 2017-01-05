@@ -1582,7 +1582,7 @@ function locationNamePopulateLocationFields( holder, data ) {
         _encounterLocationTypeIds = holder.find('.user-location-locationTypes').select2('val');
     }
 
-    var fieldNames = ['locationTypes','phone','room','suite','floor','building','comment','street1','street2','city','state','zip','country','county'];
+    var fieldNames = ['locationTypes','phone','room','suite','floor','floorSide','building','comment','street1','street2','city','state','zip','country','county'];
 
     for( var i = 0; i < fieldNames.length; i++ ) {
         //text += fieldNames[i] + "<br>";

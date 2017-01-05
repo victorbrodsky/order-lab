@@ -447,6 +447,10 @@
         {{ formmacros.field(formfield.floor) }}
     {% endif %}
 
+    {% if formfield.floorSide is defined %}
+        {{ formmacros.field(formfield.floorSide) }}
+    {% endif %}
+
     {{ formmacros.field(formfield.building) }}
 
     {{ usermacros.geoLocation(formfield,cycle,prototype) }}

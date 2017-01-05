@@ -3955,6 +3955,8 @@ class AdminController extends Controller
             //exit('1');
         }
 
+        $em->clear();
+
         return round($count/10);
     }
 
@@ -4261,6 +4263,8 @@ class AdminController extends Controller
             }
 
         }
+
+        $em->clear();
 
         return round($count/10);
     }
@@ -6701,6 +6705,8 @@ class AdminController extends Controller
             $count = $count + 10;
             //exit('1');
         }
+
+        $em->clear();
 
         return round($count/10);
     }
