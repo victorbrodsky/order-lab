@@ -1012,10 +1012,10 @@ class FormNodeUtil
             //set objectType
             if( $objectType ) {
                 //Do not change object type if already exists
-                if( !$node->getObjectType() ) {
+                //if( !$node->getObjectType() ) {
                     $node->setObjectType($objectType);
                     $updated = true;
-                }
+                //}
             }
 
             //set visible
@@ -1879,8 +1879,8 @@ class FormNodeUtil
                     'Product Currently Receiving'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PlateletTransfusionProductReceivingList"),
                     'Product Should Be Receiving'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PlateletTransfusionProductReceivingList"),
                     'Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
-                    'Expiration Date'=>'Form Field - Full Date and Time',
-
+                    'Expiration Date'=>'Form Field - Full Date',
+                    'Date'=>'Form Field - Full Date',
                 )
             ),
 
