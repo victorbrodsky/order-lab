@@ -50,7 +50,113 @@ function getAccessionDefaultMask() {
 //holder - element holding all fields to apply masking
 function fieldInputMask( holder ) {
 
-    //console.log("masking.js: field Input Mask");
+    console.log("masking.js: field Input Mask");
+
+    Inputmask.extendDefinitions({
+        'f': {  //masksymbol
+            "validator": "[1-9]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
+    //any alfa-numeric without leading or ending '-'
+    Inputmask.extendDefinitions({
+        "m": {
+            "validator": "[A-Za-z0-9-]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
+    Inputmask.extendDefinitions({
+        "n": {
+            "validator": "[0-9( )+,#ex//t-]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
+    Inputmask.extendDefaults({
+        "onincomplete": function(result){
+            makeErrorField($(this),false);
+        },
+        "oncomplete": function(){ clearErrorField($(this)); },
+        "oncleared": function(){ clearErrorField($(this)); },
+        "onKeyValidation": function(result) {
+            makeErrorField($(this),false);
+        },
+        "onKeyDown": function(result) {
+            makeErrorField($(this),false);
+        },
+        placeholder: " ",
+        clearMaskOnLostFocus: true  //clear mask after hovering over the field
+    });
+
+    if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+        var maskField = $(":input");
+        maskField.inputmask();
+    } else {
+        var maskField = holder.find(":input");
+        maskField.inputmask();
+
+    }
+
+    //console.log("cycle="+cycle);
+    if( cycle == "new" || cycle == "create" ) {
+
+        if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+            //console.log("Set default mask for all");
+            $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+            $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+
+        } else {
+            //console.log("Set default mask for holder");
+            //console.log(holder);
+            holder.find(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+            holder.find(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+
+        }
+
+    } else {
+
+        //set mrn for amend
+        if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+            var mrnkeytypeField = $('.mrntype-combobox').not("*[id^='s2id_']");
+        } else {
+            var mrnkeytypeField = holder.find('.mrntype-combobox').not("*[id^='s2id_']");
+        }
+        mrnkeytypeField.each( function() {
+            setMrntypeMask($(this),false);
+        });
+
+        //set accession for amend: do this in selectAjax.js when accession is loaded by Ajax
+    }
+
+    $(".patientage-mask").inputmask( { "mask": getAgeDefaultMask() });
+
+    //masking for datepicker. This will overwrite datepicker format even if format is mm/yyyy
+    //$(".datepicker").inputmask( "mm/dd/yyyy" );
+    //fix to not select the first character on tab/enter pressing
+    $(".datepicker").on('focus', function (e) {
+        //console.log("datepicker on focus mask");
+        $(this).inputmask("mm/dd/yyyy");
+    });
+
+    //$('.phone-mask').inputmask("mask", {"mask": "+9 (999) 999-9999"});
+    $('.phone-mask').inputmask("mask", {
+        "mask": "[n]", "repeat": 50, "greedy": false
+    });
+
+    //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
+
+    accessionTypeListener();
+    mrnTypeListener();
+
+}
+function fieldInputMask_OLD( holder ) {
+
+    console.log("masking.js: field Input Mask");
 
     $.extend($.inputmask.defaults.definitions, {
         'f': {  //masksymbol
@@ -579,7 +685,7 @@ function changeMaskToNoProvided( combobox, fieldName ) {
 function getCleanMaskStr( str) {
     //console.log("str="+str);
 
-    var defarr = $.inputmask.defaults.definitions;
+    var defarr = Inputmask.extendDefinitions;   //$.inputmask.defaults.definitions;
 
     for( var index in defarr ) {
         index = trimWithCheck(index);

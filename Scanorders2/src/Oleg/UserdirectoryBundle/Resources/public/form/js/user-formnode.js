@@ -184,17 +184,18 @@ function calllogAppendFormNodes( data ) {
         //https://jsfiddle.net/7vddjcwu/29/
         //allow only digits in this field and save the value to the database as a positive integer
         if( data[index]['formNodeObjectType'] == 'Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer' ) {
-            $('#formnode-'+formNodeId).find('input').inputmask("Regex", {regex: "^[0-9]{1,30}?$"});
+            $('#formnode-'+formNodeId).find('input').inputmask("Regex", {regex: "^[0-9]{0,30}?$"});
         }
 
         //allow only digits as well as "+" and "-" signs in this field and save the value to the database as a signed integer
         if( data[index]['formNodeObjectType'] == 'Form Field - Free Text, Single Line, Numeric, Signed Integer' ) {
-            $('#formnode-'+formNodeId).find('input').inputmask("Regex", {regex: "[-+]?[0-9]{1,30}"});
+            $('#formnode-'+formNodeId).find('input').inputmask("Regex", {regex: "[-+]?[0-9]{0,30}"});
         }
 
         //allow only digits in this field as well as ".", "+", and "-" signs and save the value to the database as a floating point number
         if( data[index]['formNodeObjectType'] == 'Form Field - Free Text, Single Line, Numeric, Signed Float' ) {
-            $('#formnode-'+formNodeId).find('input').inputmask("Regex", {regex: "[-+]?[0-9]{1,30}(\\.\\d{1,30})?$"});
+            //$('#formnode-'+formNodeId).find('input').inputmask("Regex", {regex: "[-+.]?[0-9]{1,30}(\\.\\d{1,30})?$"});
+            $('#formnode-'+formNodeId).find('input').inputmask("Regex", {regex: "[+-]?([0-9]*[.])?[0-9]{0,30}"});
         }
 
     }

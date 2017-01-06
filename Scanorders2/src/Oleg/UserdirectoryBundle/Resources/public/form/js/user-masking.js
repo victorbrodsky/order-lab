@@ -14,9 +14,9 @@ function getAgeDefaultMask() {
 
 
 //holder - element holding all fields to apply masking
-function fieldInputMask( holder ) {
+function fieldInputMask_OLD( holder ) {
 
-    //console.log("user-masking.js: field Input Mask");
+    console.log("user-masking.js: field Input Mask");
 
     $.extend($.inputmask.defaults.definitions, {
         'f': {  //masksymbol
@@ -53,6 +53,84 @@ function fieldInputMask( holder ) {
     });
 
     $.extend($.inputmask.defaults, {
+        "onincomplete": function(result){
+            makeErrorField($(this),false);
+        },
+        "oncomplete": function(){ clearErrorField($(this)); },
+        "oncleared": function(){ clearErrorField($(this)); },
+        "onKeyValidation": function(result) {
+            makeErrorField($(this),false);
+        },
+        "onKeyDown": function(result) {
+            makeErrorField($(this),false);
+        },
+        placeholder: " ",
+        clearMaskOnLostFocus: true
+    });
+
+    if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+        $(":input").inputmask();
+    } else {
+        holder.find(":input").inputmask();
+    }
+
+    $(".age-mask").inputmask( { "mask": getAgeDefaultMask() });
+
+    //masking for datepicker. This will overwrite datepicker format even if format is mm/yyyy
+    $(".datepicker").inputmask( "mm/dd/yyyy" );
+
+    $('.phone-mask').inputmask("mask", {
+        "mask": "[n]", "repeat": 50, "greedy": false
+    });
+
+    $('.digit-mask').inputmask("mask", {
+        "mask": "9", "repeat": 50, "greedy": false
+    });
+
+    //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
+
+}
+function fieldInputMask( holder ) {
+
+    //console.log("user-masking.js: field Input Mask");
+    $.inputmask = new Inputmask();
+    var extendDefaults
+
+    Inputmask.extendDefinitions({
+        'f': {  //masksymbol
+            "validator": "[1-9]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
+    //any alfa-numeric without leading or ending '-'
+    Inputmask.extendDefinitions({
+        "m": {
+            "validator": "[A-Za-z0-9-]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
+    Inputmask.extendDefinitions({
+        "n": {
+            "validator": "[0-9( )+,#ex//t-]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
+    //only digits and periods. Use for percent
+    Inputmask.extendDefinitions({
+        "o": {
+            "validator": "[0-9.]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
+    Inputmask.extendDefaults({
         "onincomplete": function(result){
             makeErrorField($(this),false);
         },

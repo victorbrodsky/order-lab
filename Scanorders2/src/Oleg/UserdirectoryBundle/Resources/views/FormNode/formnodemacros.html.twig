@@ -211,7 +211,7 @@
             {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Free Text, Single Line, Locked, Calculated, Visual Aid" %}
-            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'Single Line, Locked, Calculated, Visual Aid') }}
         {% endif %}
 
         {% if formType == "Form Field - Dropdown Menu" %}
@@ -498,18 +498,12 @@
         {% set placeholder = " " %}
     {% endif %}
 
-    {#{% set inputTypeStr = '' %}#}
-    {#{% if inputType is defined %}#}
-        {#{% if inputType == 'Unsigned Positive Integer'  %}#}
-            {#{% set inputTypeStr = 'number' %}#}
-        {#{% endif %}#}
-        {#{% if inputType == 'Signed Integer'  %}#}
-            {#{% set inputTypeStr = 'number' %}#}
-        {#{% endif %}#}
-        {#{% if inputType == 'Signed Float'  %}#}
-            {#{% set inputTypeStr = 'number' %}#}
-        {#{% endif %}#}
-    {#{% endif %}#}
+    {% set inputTypeStr = '' %}
+    {% if inputType is defined %}
+        {% if inputType == 'Single Line, Locked, Calculated, Visual Aid'  %}
+            {% set inputTypeStr = "readonly" %}
+        {% endif %}
+    {% endif %}
 
     <input
         id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
@@ -518,6 +512,7 @@
         value="{{ fieldValue }}"
         placeholder="{{ placeholder }}"
         {{ disabled }}
+        {{ inputTypeStr }}
     >
     </input>
 {% endmacro %}
