@@ -6311,13 +6311,23 @@ class AdminController extends Controller
             echo $htmlTree;
         }
 
+        $filterList = array('default','user-added','disabled','draft');
+        $filters = trim( $request->get('filters') );
+//        $filter = null;
+//        if( $filters ) {
+//            $filter = implode(",", $filters);
+//        }
+
         return $this->render('OlegUserdirectoryBundle:Tree:composition-tree.html.twig',
             array(
                 'title' => $mapper['title'],
                 'bundleName' => $mapper['bundleName'],
                 'entityName' => $mapper['className'],
                 'nodeshowpath' => $mapper['nodeshowpath'],
-                'sitename' => $sitename
+                'sitename' => $sitename,
+                'filters' => $filters,
+                'filterList' => $filterList,
+                'routeName' => $request->get('_route')
             )
         );
     }

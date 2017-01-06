@@ -28,6 +28,13 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
             //console.log('Node show path is undefined, nodeShowPath='+nodeShowPath);
         }
 
+        var filters = $(targetid).attr("data-compositetree-node-filters"); //i.e. 'default,user-added'
+        //console.log('filter='+filter);
+        var filterStr = "";
+        if( filters ) {
+            filterStr = "&filter="+filters;
+        }
+
         var withsearch = "search";
         if( typeof search != 'undefined' && search == "nosearch" ) {
             withsearch = null;
@@ -61,7 +68,7 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
         }
 
         var treeUrl = Routing.generate('employees_get_composition_tree');
-        treeUrl = treeUrl + '?'+withlazy+'opt=none&classname='+entityName+'&bundlename='+bundleName+withtype; //$opt=
+        treeUrl = treeUrl + '?'+withlazy+'opt=none&classname='+entityName+'&bundlename='+bundleName+withtype+filterStr; //$opt=
         //console.log('user-jstree.js: treeUrl='+treeUrl);
 
         if( typeof cycle === 'undefined' ) {

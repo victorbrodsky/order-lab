@@ -43,6 +43,7 @@ class TreeController extends Controller {
         //echo "level=".$level."<br>";
         //echo "userid=".$userid."<br>";
         //echo "opt=".$opt."<br>";
+        $filter = trim( $request->get('filter') );
 
         $combobox = false;
         //$userpositions = false;
@@ -164,6 +165,11 @@ class TreeController extends Controller {
                 $params['type'] = $type;
             }
         }
+
+        if( $filter ) {
+
+        }
+
 
         //$query->where($where)->setParameters($params);
         $dql->where($where);

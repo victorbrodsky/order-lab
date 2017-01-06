@@ -17,7 +17,38 @@
 
     <br>
 
-    {{ treemacros.jstreemacros('composite-tree',bundleName,entityName,nodeshowpath) }}
+    {#<p>#}
+        {#<input type="text" name="filter" value="{{ filter }}">#}
+        {#{% set multipleOption = 'multiple=multiple' %}#}
+        {#<div class="row">#}
+        {#<div class="col-xs-6" align="right">#}
+        {#<select#}
+                {#name="filters[]"#}
+                {#class="combobox"#}
+                {#{{ multipleOption }}#}
+        {#>#}
+            {#<option value=""></option>#}
+            {#{% for thisFilter in filterList %}#}
+                {#{% set selected = false %}#}
+                {#{% if thisFilter and thisFilter in filter %}#}
+                    {#{% set selected = true %}#}
+                {#{% endif %}#}
+                {#{% if selected %}#}
+                    {#<option value="{{ thisFilter }}" selected>{{ thisFilter }}</option>#}
+                {#{% else %}#}
+                    {#<option value="{{ thisFilter }}">{{ thisFilter }}</option>#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
+        {#</select>#}
+        {#</div>#}
+        {#<div class="col-xs-6" align="left">#}
+        {#<a class="btn btn-sm btn-info" href="{{ path(routeName) }}">Filter</a>#}
+        {#</div>#}
+        {#</div>#}
+    {#</p>#}
+    {#<br>#}
+
+    {{ treemacros.jstreemacros('composite-tree',bundleName,entityName,nodeshowpath,'search',filters) }}
 
 {% endblock %}
 

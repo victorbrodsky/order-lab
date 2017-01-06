@@ -125,6 +125,7 @@ class CallEntryController extends Controller
 
         //create invalid encounter #1 just to display fields in "Patient Info"
         $encounter1 = new Encounter(true,'invalid',$user,$system);
+        $encounter1->setProvider($user);
 
         //create encounter #2 to display in "Encounter Info" -> "Update Patient Info"
         $encounter2 = new Encounter(true,'valid',$user,$system);
@@ -135,6 +136,8 @@ class CallEntryController extends Controller
         //AttendingPhysician
         $encounterAttendingPhysician = new EncounterAttendingPhysician('valid',$user,$system);
         $encounter2->addAttendingPhysician($encounterAttendingPhysician);
+
+        $encounter2->setProvider($user);
 
         //set encounter generated id
         $key = $encounter2->obtainAllKeyfield()->first();

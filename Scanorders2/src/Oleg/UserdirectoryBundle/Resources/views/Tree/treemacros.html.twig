@@ -1,6 +1,6 @@
 {#macros for tree#}
 
-{% macro jstreemacros( jstreeid, bundleName, entityName, nodeshowpath, search ) %}
+{% macro jstreemacros( jstreeid, bundleName, entityName, nodeshowpath, search, filters ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
 
     <p>
@@ -15,7 +15,11 @@
                     <input class="form-control form-control-modif not-mapped-simplefield jstree-search" type="search" placeholder="Search"/>
                 </p>
             {% endif %}
-            <div class="{{ jstreeid }} {{ jstreeid ~ '-' ~ bundleName ~ '-' ~ entityName }}" data-compositetree-node-showpath="{{ nodeshowpath }}"></div>
+            <div
+                class="{{ jstreeid }} {{ jstreeid ~ '-' ~ bundleName ~ '-' ~ entityName }}"
+                data-compositetree-node-showpath="{{ nodeshowpath }}"
+                data-compositetree-node-filters="{{ filters|join(',') }}"
+            ></div>
         </div>
 
         <div class="col-xs-3" align="right">
