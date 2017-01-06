@@ -884,7 +884,7 @@ class AdminController extends Controller
             ),
 
             "ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY" => array(
-                "Supervisor - WCMC Pathology Department",
+                "Vacation Request Supervisor - WCMC Pathology Department",
                 "Can search and approve carry over requests for Department of Pathology and Laboratory Medicine(WCMC)",
                 40
             ),
@@ -7250,15 +7250,22 @@ class AdminController extends Controller
         $repository = $em->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
+
         $dql->leftJoin("user.trainings", "trainings");
         $dql->leftJoin("trainings.degree", "degree");
 
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+
+
         $dql->where("degree.name = :degreeMd");
+        $dql->andWhere("employmentType.name != :fellappType");
 
         $query = $em->createQuery($dql);
 
         $query->setParameters(array(
             'degreeMd' => 'MD',
+            'fellappType' => "'Pathology Fellowship Applicant'"
         ));
 
         $users = $query->getResult();
@@ -7270,7 +7277,7 @@ class AdminController extends Controller
         foreach( $users as $user ) {
             //"FirstName LastName, MD"
             $name = $user->getUsernameOptimal();
-            echo "<br> $count User: ".$name."<br>";
+            //echo "<br> $count User: ".$name."<br>";
 
             $listEntity = $em->getRepository('OlegUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
             if( $listEntity ) {
@@ -7288,6 +7295,8 @@ class AdminController extends Controller
             //    $listEntity->setObjectType($eventObjectType);
             //}
 
+            echo "<br> $count: adding user: ".$name."<br>";
+
             $userWrapper = $listEntity->getUserWrapper();
             echo "userWrapper=".$userWrapper."<br>";
             if( !$userWrapper ) {
@@ -7300,12 +7309,64 @@ class AdminController extends Controller
             $em->persist($listEntity);
             $em->flush();
 
+            $count++;
+
             echo "Added user: ".$name."<br>";
             //exit('end');
-            $count++;
         }
 
+        $count = $count - 1;
+
         exit("<br>Added MD users: ".$count);
+    }
+    /**
+     * Remove all "Pathology Fellowship Applicant" users from PathologyResultSignatoriesList
+     *
+     * @Route("/list/remove-fellapp-mdusers-to-pathology-result-signatories/", name="employees_remove-fellapp-mdusers-to-pathology-result-signatories")
+     * @Method("GET")
+     */
+    public function removeFellappMDUsersToPathologyResultSignatoriesList(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $pathologists = $em->getRepository('OlegUserdirectoryBundle:PathologyResultSignatoriesList')->findAll();
+        $count = 0;
+
+        foreach( $pathologists as $pathologist ) {
+
+            $userWrapper = $pathologist->getUserWrapper();
+            if( $userWrapper ) {
+
+                $user = $userWrapper->getUser();
+                if( $this->hasEmploymentType($user,"Pathology Fellowship Applicant") ) {
+
+                    echo "remove user=".$user."<br>";
+                    //$pathologist->set
+                    //$em->remove($userWrapper);
+                    $em->remove($pathologist);
+                    $em->flush();
+                    $count++;
+                    continue;
+
+                } else {
+                    //echo "do not remove user=".$user."<br>";
+                }//else
+
+            }//if
+
+        }//foreach
+
+        exit("<br>Removed MD users: ".$count);
+    }
+    public function hasEmploymentType( $user, $employmentTypeStr ) {
+        if( $user ) {
+            $employmentStatuses = $user->getEmploymentStatus();
+            foreach( $employmentStatuses as $employmentStatus ) {
+                $employmentType = $employmentStatus->getEmploymentType();
+                if( $employmentType && $employmentType->getName() == $employmentTypeStr ) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
