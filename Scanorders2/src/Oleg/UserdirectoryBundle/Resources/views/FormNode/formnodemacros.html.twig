@@ -1,6 +1,6 @@
 
 {#add a single form node#}
-{% macro addSingleFormNode( formNodeHolder, formNode, formNodeId, formNodeValue, cycle, prototype, count ) %}
+{% macro addSingleFormNode( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, cycle, prototype, count ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
     {% set formType = null %}
@@ -19,7 +19,7 @@
          data-formnodeid="{{ formNodeId }}"
          data-sectionid="{{ count }}"
     >
-        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,formNodeId,cycle,prototype,count,"single",formNodeValue) }}
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,formNodeId,cycle,prototype,count,"single",formNodeValue,receivingEntity) }}
     </div>
 
 {% endmacro %}
@@ -95,7 +95,7 @@
 
 
 
-{% macro addFormNodeWithChildren( formNodeHolder, formNode, formNodeValue, cycle, prototype ) %}
+{% macro addFormNodeWithChildren( formNodeHolder, formNode, formNodeValue, receivingEntity, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
     {#render form group, form, section ect as single form element (single='single') or as section with all children fields inside (single=null) #}
@@ -151,7 +151,7 @@
 {% endmacro %}
 
                             {#formNodeHolder, formNode, cycle, prototype,"single",0,formNodeValue#}
-{% macro addFormNodeByType( formNodeHolder, formNode, formNodeId, cycle, prototype, count, single, formNodeValue ) %}
+{% macro addFormNodeByType( formNodeHolder, formNode, formNodeId, cycle, prototype, count, single, formNodeValue, receivingEntity ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
     {% if formNode.type == "default" or formNode.type == "user-added" %}
@@ -233,26 +233,26 @@
             {{ formnodemacros.dayForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
         {% endif %}
         {% if formType == "Form Field - Full Date" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'m/d/Y') }}
         {% endif %}
         {% if formType == "Form Field - Year" %}
-            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'Y') }}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'Y') }}
         {% endif %}
 
         {#date and time#}
         {% if formType == "Form Field - Full Date and Time" %}
-            {{ formnodemacros.datetimeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+            {{ formnodemacros.datetimeForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'m/d/Y') }}
         {% endif %}
         {% if formType == "Form Field - Full Date and Time, with Time Zone" %}
-            {{ formnodemacros.datetimeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'m/d/Y') }}
+            {{ formnodemacros.datetimeForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'m/d/Y','timezone') }}
         {% endif %}
 
         {#time#}
         {% if formType == "Form Field - Time, with Time Zone" %}
-            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'timezone') }}
         {% endif %}
         {% if formType == "Form Field - Time" %}
-            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype) }}
         {% endif %}
 
         {#the same as dropdown menu#}
@@ -623,7 +623,7 @@
 {% endmacro %}
 
 
-{% macro dateForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat ) %}
+{% macro dateForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
@@ -633,15 +633,15 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat) }}
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat) }}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro dateField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat, fieldNamePostfix ) %}
+{% macro dateField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat, fieldNamePostfix ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
@@ -666,7 +666,12 @@
         {% set fieldNamePostfix = '' %}
     {% endif %}
 
-    <div class="input-group input-group-reg date regular-datepicker">
+    {% set addClass = '' %}
+    {% if dateFormat is defined and dateFormat == 'Y' %}
+        {% set addClass = 'datepicker-only-year' %}
+    {% endif %}
+
+    <div class="input-group input-group-reg date allow-future-date {{ addClass }}">
         <input
                 type="text"
                 id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
@@ -835,7 +840,7 @@
 
 {% endmacro %}
 
-{% macro timeForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+{% macro timeForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
     {% if formNode.showLabel %}
@@ -844,15 +849,15 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+                {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+        {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
     {% endif %}
     </p>
 {% endmacro %}
-{% macro timeField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+{% macro timeField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
@@ -902,6 +907,46 @@
                     {% set selected = "selected" %}
                 {% endif %}
                 <option value="{{ i }}" {{ selected }}>{{ i }}</option>
+            {% endfor %}
+        </select>
+        {% if timezone is defined and timezone %}
+            {{ formnodemacros.timezoneField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype) }}
+        {% endif %}
+    </div>
+
+{% endmacro %}
+{% macro timezoneField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype ) %}
+    {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set timezones = user_formnode_utility.getTimezones() %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
+    {% else %}
+        {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
+    {% endif %}
+
+    {% set timezoneValue = receivingEntity.getTimezone() %}
+
+    <div>
+        <select
+                id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                class="combobox"
+                data-placeholder="{{ placeholder }}"
+                name="{{ fieldname }}[time][timezone]"
+                {{ disabled }}
+        >
+            <option value=""></option>
+            {% for key, timezone in timezones %}
+                {% set selected = "" %}
+                {% if timezoneValue and timezoneValue == key %}
+                    {% set selected = "selected" %}
+                {% endif %}
+                <option value="{{ key }}" {{ selected }}>{{ timezone }}</option>
             {% endfor %}
         </select>
     </div>
@@ -968,7 +1013,7 @@
 {% endmacro %}
 
 
-{% macro datetimeForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat ) %}
+{% macro datetimeForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat, timezone ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     <p>
     {% if formNode.showLabel %}
@@ -977,13 +1022,13 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat,'[time][date]') }}
-                {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat,'[time][date]') }}
+                {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, dateFormat,'[time][date]') }}
-        {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat,'[time][date]') }}
+        {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
     {% endif %}
     </p>
 {% endmacro %}

@@ -367,6 +367,14 @@ class FormNodeUtil
                 }
             }
 
+            $formValueTimezone = null;
+            if( $formValue && array_key_exists('timezone', $formValue) ) {
+                $formValueTimezone = $formValue['timezone'];
+                if( $formValueTimezone ) {
+                    $formValueStr = $formValueStr . " " . $formValueTimezone;
+                }
+            }
+
             //echo "0 datetime: date=$formValueDate hour=$formValueHour minute=$formValueMinute<br>";
             if( !$formValueDate && !$formValueHour && !$formValueMinute ) {
                 return;
@@ -376,7 +384,7 @@ class FormNodeUtil
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$testing,$params);
 
             //$newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
-            $newListElement->setDateTimeValueDateHourMinute($formValueDate,$formValueHour,$formValueMinute);
+            $newListElement->setDateTimeValueDateHourMinute($formValueTimezone,$formValueDate,$formValueHour,$formValueMinute);
 
             if( $testing ) {
                 echo "datetime=".$newListElement->getDatetimeValue()->format('m/d/Y H:i:s');
@@ -1214,7 +1222,10 @@ class FormNodeUtil
 
 
 
-
+    public function getTimezones() {
+        $tzUtil = new TimeZoneUtil();
+        return $tzUtil->tz_list();
+    }
 
     public function getDropdownValue( $formNode, $outputType=null ) {
         $em = $this->em;

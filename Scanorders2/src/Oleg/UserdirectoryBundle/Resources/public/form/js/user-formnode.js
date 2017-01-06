@@ -149,21 +149,28 @@ function calllogAppendFormNodes( data ) {
 
         if(
             data[index]['formNodeObjectType'] == "Form Field - Full Date" ||
-            data[index]['formNodeObjectType'] == "Form Field - Full Date and Time" ||
-            data[index]['formNodeObjectType'] == "Form Field - Time, with Time Zone" ||
-            data[index]['formNodeObjectType'] == "Form Field - Full Date and Time, with Time Zone"
+            data[index]['formNodeObjectType'] == "Form Field - Full Date and Time"
         ) {
             initDatepicker($('#formnode-'+formNodeId));
         }
 
+        if(
+            data[index]['formNodeObjectType'] == "Form Field - Time, with Time Zone" ||
+            data[index]['formNodeObjectType'] == "Form Field - Full Date and Time, with Time Zone"
+        ) {
+            initDatepicker($('#formnode-'+formNodeId));
+            regularCombobox($('#formnode-'+formNodeId));
+        }
+
         if( data[index]['formNodeObjectType'] == "Form Field - Year" ) {
-            $('#formnode-'+formNodeId).find('input.datepicker').datepicker( {
-                autoclose: true,
-                format: " yyyy",
-                viewMode: "years",
-                minViewMode: "years",
-                orientation: 'auto'
-            });
+            initDatepicker($('#formnode-'+formNodeId));
+            //$('#formnode-'+formNodeId).find('input.datepicker').datepicker( {
+            //    autoclose: true,
+            //    format: " yyyy",
+            //    viewMode: "years",
+            //    minViewMode: "years",
+            //    orientation: 'auto'
+            //});
         }
 
         if(

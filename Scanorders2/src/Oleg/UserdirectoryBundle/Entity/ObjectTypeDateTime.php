@@ -49,7 +49,10 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
      */
     private $timeValue;
 
-
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $timezone;
 
 
 
@@ -96,7 +99,7 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
         //echo "time=".$this->getTimeValue()->format('h:i:s')."<br>";
     }
 
-    public function setDateTimeValueDateHourMinute($date,$hour,$minute,$second=null)
+    public function setDateTimeValueDateHourMinute($timezone,$date,$hour,$minute,$second=null)
     {
         //echo "hour=".$hour."; minute=".$minute."<br>";
         if( $date ) {
@@ -104,6 +107,10 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
             $datetimeValue = \DateTime::createFromFormat('m/d/Y', $date);
         } else {
             $datetimeValue = new \DateTime();
+        }
+
+        if( $timezone ) {
+            $datetimeValue->setTimezone(new \DateTimeZone($timezone)); //$timezone='Pacific/Chatham'
         }
 
         $datetimeValue->setTime($hour, $minute, $second);
@@ -129,6 +136,22 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
         $dateObjectValue = new \DateTime($dateValue);
         //$dateObjectValue->setDate($dateValue);
         $this->dateValue = $dateObjectValue;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
     }
 
 
