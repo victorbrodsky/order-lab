@@ -755,7 +755,7 @@
                 {#currentObjectClassName=[{{currentObjectClassName}}]<br>#}
                 {#{% if currentObjectClassName == messageClassName and currentObjectClassName == "Oleg\OrderformBundle\Entity\Encounter" %}#}
                 {% if currentObjectClassName == "Oleg\\OrderformBundle\\Entity\\Encounter" %}
-                    {#calllog_callentry_view!!!#}
+                    {#calllog_callentry_view!!!#} 
                     {% set orderIdHref = '<a href="'~path('calllog_callentry_view',{'messageId':orderId})~'">'~orderId~'</a>' %}
                 {% else %}
                     {#scan_message_show!!!#}
