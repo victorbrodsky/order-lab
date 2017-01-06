@@ -6567,7 +6567,7 @@ class AdminController extends Controller
 
         //$inputFileName = __DIR__ . '/../Util/Lab Result Names For Import.xlsx';
         //Lab Result Names For Import 2.xlsx
-        $inputFileName = __DIR__ . '/../Util/Lab Result Names For Import 2.xlsx';
+        $inputFileName = __DIR__ . '/../Util/Lab Result Names For Import.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
