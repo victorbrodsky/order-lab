@@ -17,8 +17,6 @@ function getAgeDefaultMask() {
 function fieldInputMask( holder ) {
 
     //console.log("user-masking.js: field Input Mask");
-    $.inputmask = new Inputmask();
-    var extendDefaults
 
     Inputmask.extendDefinitions({
         'f': {  //masksymbol

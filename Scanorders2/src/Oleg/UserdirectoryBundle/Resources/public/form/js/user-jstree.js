@@ -28,12 +28,7 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
             //console.log('Node show path is undefined, nodeShowPath='+nodeShowPath);
         }
 
-        //var filters = $(targetid).attr("data-compositetree-node-filters"); //i.e. 'default,user-added'
-        ////console.log('filter='+filter);
-        //var filterStr = "";
-        //if( filters ) {
-        //    filterStr = "&filter="+filters;
-        //}
+        //attach to url current filter url parameters
         var filterStr = window.location.search; //filter[types][]=default&filter[types][]=user-added
         if( filterStr ) {
             filterStr = filterStr.replace("?", '');
