@@ -171,7 +171,7 @@ class FormNodeUtil
         //All others
         if( is_array($formValue) ) {
             //$formValue is array
-//            echo $formNodeObjectName.": formValue is array:";
+            //echo $formNodeObjectName.": formValue is array:";
 //            print "<pre>";
 //            print_r($formValue);
 //            print "</pre>";
@@ -179,7 +179,7 @@ class FormNodeUtil
 
             if( array_key_exists('arraysectioncount', $formValue) ) {
                 //echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
-                //TODO: record section array index including parent index: 0-0, 0-1 (array section 1 (index 0) includes two array sections (indexes 0 and 1))
+                //record section array index including parent index: 0-0, 0-1 (array section 1 (index 0) includes two array sections (indexes 0 and 1))
                 $this->createArraysectionListRecord($formNode, $formValue, $holderEntity, $testing);
             } else {
                 //echo $formNodeObjectName.": formValue is regular array <br>";
@@ -195,10 +195,12 @@ class FormNodeUtil
     }
     public function createArraysectionListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
         foreach( $formValue['arraysectioncount'] as $arraysectioncount=>$thisFormValue ) {
-            //echo $formNode->getId().": arraysectioncount=".$arraysectioncount.":<br>";
+
+//            echo $formNode->getId() . ": arraysectioncount=" . $arraysectioncount . ":<br>";
 //            print "<pre>";
 //            print_r($thisFormValue);
 //            print "</pre><br>";
+
             foreach( $thisFormValue['node'] as $sectionFormnodeId => $thisThisFormValue ) {
                 //clean $arraysectioncount: fffsa_0-0_fffsa => 0-0
                 $arraysectioncount = $this->getCleanedArraySection($arraysectioncount);
@@ -215,7 +217,10 @@ class FormNodeUtil
     public function createFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
 
         $formNodeObjectName = $formNode->getObjectTypeName();
-        //echo "formNodeObjectName:".$formNodeObjectName."<br>";
+
+        if( $testing ) {
+            echo $formNode->getId().": formNodeObjectName:".$formNodeObjectName."<br>";
+        }
 
         $newListElement = null;
 
@@ -346,11 +351,15 @@ class FormNodeUtil
             //$formValue is an array: Array ( [time] => Array ( [hour] => 11 [minute] => 51 ) )
             //use ObjectTypeDateTime's timeValue
 
-//            print "@@@@@@@@@@@@@@@@@ <pre>";
+//            print "Date/Time <pre>";
 //            print_r($formValue);
 //            print "</pre><br>";
 
             $formValueStr = "";
+
+            if( $formValue && array_key_exists('time', $formValue) ) {
+                $formValue = $formValue['time'];
+            }
 
             $formValueHour = $formValue['hour'];
             $formValueMinute = $formValue['minute'];
@@ -379,7 +388,7 @@ class FormNodeUtil
             if( !$formValueDate && !$formValueHour && !$formValueMinute ) {
                 return;
             }
-            //echo "1 datetime:<br>";
+            //echo $formNode->getId().": datetime: formValueStr=$formValueStr<br>";
 
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$testing,$params);
 
@@ -387,7 +396,8 @@ class FormNodeUtil
             $newListElement->setDateTimeValueDateHourMinute($formValueTimezone,$formValueDate,$formValueHour,$formValueMinute);
 
             if( $testing ) {
-                echo "datetime=".$newListElement->getDatetimeValue()->format('m/d/Y H:i:s');
+                echo $formNode->getId().": $formNodeObjectName, formValueStr=$formValueStr; ";
+                echo $newListElement->getDatetimeValue()->format('m/d/Y H:i:s');
             }
 
             if( !$testing ) {
