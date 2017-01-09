@@ -1,7 +1,29 @@
 {#macros for tree#}
 
-{% macro jstreemacros( jstreeid, bundleName, entityName, nodeshowpath, search, filters ) %}
+{% macro jstreemacros( jstreeid, bundleName, entityName, nodeshowpath, search, filterform, routename ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+
+    {% if filterform is defined and routename is defined %}
+        <p>
+        <form action="{{ path(routename) }}" method="get" {{ form_enctype(filterform) }} class="well form-search" name="form-search">
+            <div class="row">
+                <div class="col-xs-3"></div>
+
+                <div class="col-xs-3" align="right">
+                    {{ form_widget(filterform.types) }}
+                </div>
+
+                <div class="col-xs-3" align="left">
+                    <button type="submit" class="btn btn-sm btn-default">Filter</button>
+                </div>
+
+                <div class="col-xs-3"></div>
+            </div>
+            {{ form_rest(filterform) }}
+        </form>
+        </p>
+    <br>
+    {% endif %}
 
     <p>
     <div class="row jstree-parent-container">
@@ -18,7 +40,6 @@
             <div
                 class="{{ jstreeid }} {{ jstreeid ~ '-' ~ bundleName ~ '-' ~ entityName }}"
                 data-compositetree-node-showpath="{{ nodeshowpath }}"
-                data-compositetree-node-filters="{{ filters|join(',') }}"
             ></div>
         </div>
 

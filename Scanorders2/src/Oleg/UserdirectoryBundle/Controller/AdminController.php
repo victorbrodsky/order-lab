@@ -55,6 +55,7 @@ use Oleg\UserdirectoryBundle\Entity\TransfusionProductStatusList;
 use Oleg\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
 use Oleg\UserdirectoryBundle\Entity\WeekDaysList;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
+use Oleg\UserdirectoryBundle\Form\HierarchyFilterType;
 use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -169,7 +170,21 @@ class AdminController extends Controller
             $environment = $param->getEnvironment();
         }
 
-        return $this->render('OlegUserdirectoryBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment));
+        $filters = $this->getDefaultHierarchyFilter();
+
+        return $this->render('OlegUserdirectoryBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
+    }
+    public function getDefaultHierarchyFilter() {
+        $filterStr = array();
+        //add a filter that checks if the site is "live" and hides this node in the live environment
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == "live" ) { //live
+            $filterStr['filter[types][0]'] = 'default';
+            $filterStr['filter[types][1]'] = 'user-added';
+        }
+        //print_r($filterStr);
+        return $filterStr;
     }
 
 
@@ -6311,11 +6326,41 @@ class AdminController extends Controller
             echo $htmlTree;
         }
 
-        $filterList = array('default','user-added','disabled','draft');
-        $filters = trim( $request->get('filters') );
+        //$filterList = array('default','user-added','disabled','draft');
+        //$filters = trim( $request->get('filters') );
 //        $filter = null;
 //        if( $filters ) {
 //            $filter = implode(",", $filters);
+//        }
+        //get filter types from request
+        $filterform = $this->createForm(new HierarchyFilterType(), null);
+        $formname = $filterform->getName();
+        $formData = $request->query->get($formname);
+        $types = $formData['types'];
+        //print_r($types);
+//        if( !$types ) {
+//            $types = array(
+//                "default"=>"default",
+//                "user-added"=>"user-added",
+//            );
+//        }
+        $params = array('types'=>$types);
+        //create final filter form with data params
+        $filterform = $this->createForm(new HierarchyFilterType($params), null);
+        //$filterform->bind($request);
+        //$filterform->handleRequest($request);
+        //$types = $filterform['types']->getData();
+        //$types = $filterform->get('types')->getData();
+        //$data = $filterform->getData();
+        //$types = $data['types'];
+        //$types = $filterform->get('types');
+        //var_dump($filterform->getData());die;
+        //echo "types=".$types."<br>";
+        //print_r($types);
+        //die;
+//        if( $types ) {
+//            $dql->andWhere("ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search");
+//            $dqlParameters['search'] = '%'.$search.'%';
 //        }
 
         return $this->render('OlegUserdirectoryBundle:Tree:composition-tree.html.twig',
@@ -6325,9 +6370,10 @@ class AdminController extends Controller
                 'entityName' => $mapper['className'],
                 'nodeshowpath' => $mapper['nodeshowpath'],
                 'sitename' => $sitename,
-                'filters' => $filters,
-                'filterList' => $filterList,
-                'routeName' => $request->get('_route')
+                'filterform' => $filterform->createView(),
+                //'filters' => $filters,
+                //'filterList' => $filterList,
+                'routename' => $request->get('_route')
             )
         );
     }

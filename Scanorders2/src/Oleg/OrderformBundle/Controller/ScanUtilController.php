@@ -885,7 +885,6 @@ class ScanUtilController extends UtilController {
             ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
             ->andWhere("(list.testingAccount = 0 OR list.testingAccount IS NULL)")
             ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
-            //->select("infos.displayName as id, infos.displayName as text")
             ->orderBy("infos.displayName","ASC");
 
         $users = $query->getQuery()->getResult();
@@ -902,13 +901,13 @@ class ScanUtilController extends UtilController {
         ///////////// get all wrapper users /////////////
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+            ->select("list")
             ->leftJoin("list.user", "user")
             ->leftJoin("user.infos", "infos")
-            ->leftJoin("user.employmentStatus", "employmentStatus")
-            ->leftJoin("employmentStatus.employmentType", "employmentType")
-            ->select("list")
-            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-            ->andWhere("user.testingAccount = 0 OR user.testingAccount IS NULL")
+            //->leftJoin("user.employmentStatus", "employmentStatus")
+            //->leftJoin("employmentStatus.employmentType", "employmentType")
+            //->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+            //->andWhere("user.testingAccount = 0 OR user.testingAccount IS NULL")
             //->select("list.id as id, infos.displayName as text")
             ->orderBy("infos.displayName","ASC");
         $userWrappers = $query->getQuery()->getResult();

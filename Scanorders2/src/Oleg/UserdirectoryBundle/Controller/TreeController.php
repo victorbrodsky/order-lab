@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Form\HierarchyFilterType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -43,7 +44,14 @@ class TreeController extends Controller {
         //echo "level=".$level."<br>";
         //echo "userid=".$userid."<br>";
         //echo "opt=".$opt."<br>";
-        $filter = trim( $request->get('filter') );
+
+        //get filter params
+        //$filter = trim( $request->get('types') );
+        $filterform = $this->createForm(new HierarchyFilterType(), null);
+        $formname = $filterform->getName();
+        $formData = $request->query->get($formname);
+        $typesFilter = $formData['types'];
+        //print_r($typesFilter);
 
         $combobox = false;
         //$userpositions = false;
@@ -166,13 +174,15 @@ class TreeController extends Controller {
             }
         }
 
-        if( $filter ) {
-
-        }
-
-
         //$query->where($where)->setParameters($params);
         $dql->where($where);
+
+        if( $typesFilter ) {
+            foreach( $typesFilter as $type ) {
+                $typesFilterArr[] = "'".$type."'";
+            }
+            $dql->andWhere('list.type IN ('.implode(',',$typesFilterArr).')');
+        }
 
         $query = $em->createQuery($dql);
         $query->setParameters($params);
@@ -180,6 +190,7 @@ class TreeController extends Controller {
 
         $entities = $query->getResult();
         //echo "count=".count($entities)."<br>";
+        //exit('1');
 
         $levelTitles = null;
         if( count($entities) > 0 ) {
