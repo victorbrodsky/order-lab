@@ -52,24 +52,33 @@ class UserWrapper extends ListAbstract {
     private $user;
 
 
+    //Phone Number: [free text]
+    /**
+     * @ORM\Column(name="phone", type="string", nullable=true)
+     */
+    private $userWrapperPhone;
+
+    //E-Mail: [free text]
+    /**
+     * @ORM\Column(name="email", type="string", nullable=true)
+     */
+    private $userWrapperEmail;
+
+    //Specialty: [link to the platform list manager's specialty list items here
+    // http://collage.med.cornell.edu/order/directory/admin/list-manager/id/69 - allow more than one]
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
+     */
+    private $userWrapperSpecialty;
+
+    //Source Site: [ID/name of the O R D E R site used to create this particular instance of the user wrapper object;
+    // for user wrappers created on the Call Log Book, this would have the ID of the Call Log Book]
+    /**
+     * @ORM\ManyToOne(targetEntity="SourceSystemList")
+     */
+    private $userWrapperSource;
 
 
-
-//    /**
-//     * @param mixed $id
-//     */
-//    public function setId($id)
-//    {
-//        $this->id = $id;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
 
     /**
      * @param mixed $user
@@ -86,6 +95,73 @@ class UserWrapper extends ListAbstract {
     {
         return $this->user;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUserWrapperPhone()
+    {
+        return $this->userWrapperPhone;
+    }
+
+    /**
+     * @param mixed $userWrapperPhone
+     */
+    public function setUserWrapperPhone($userWrapperPhone)
+    {
+        $this->userWrapperPhone = $userWrapperPhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserWrapperEmail()
+    {
+        return $this->userWrapperEmail;
+    }
+
+    /**
+     * @param mixed $userWrapperEmail
+     */
+    public function setUserWrapperEmail($userWrapperEmail)
+    {
+        $this->userWrapperEmail = $userWrapperEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserWrapperSpecialty()
+    {
+        return $this->userWrapperSpecialty;
+    }
+
+    /**
+     * @param mixed $userWrapperSpecialty
+     */
+    public function setUserWrapperSpecialty($userWrapperSpecialty)
+    {
+        $this->userWrapperSpecialty = $userWrapperSpecialty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserWrapperSource()
+    {
+        return $this->userWrapperSource;
+    }
+
+    /**
+     * @param mixed $userWrapperSource
+     */
+    public function setUserWrapperSource($userWrapperSource)
+    {
+        $this->userWrapperSource = $userWrapperSource;
+    }
+
+
+
 
     /**
      * @param mixed $userStr
@@ -138,15 +214,6 @@ class UserWrapper extends ListAbstract {
         }
 
         return $this->getFullName();
-
-//        if( $this->getUser() && $this->getUser()->getId() ) {
-//            //return $this->getUser()->getId();
-//            return $this->getUser()."";
-//        }
-//        if( $this->getName() ) {
-//            return $this->getName();
-//        }
-//        return null;
     }
 
 

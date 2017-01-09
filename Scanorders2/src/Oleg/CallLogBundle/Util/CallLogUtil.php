@@ -1101,4 +1101,35 @@ class CallLogUtil
         }
     }
 
+    //set Specialty, Phone and Email for a new userWrapper
+    public function processReferringProviders($encounter) {
+        foreach( $encounter->getReferringProviders() as $referringProvider ) {
+            $userWrapper = $referringProvider->getField();
+
+            if( $userWrapper ) {
+
+                $phone = $referringProvider->getReferringProviderPhone();
+                if( $phone ) {
+                    $userWrapper->setUserWrapperPhone($phone);
+                }
+
+                $phone = $referringProvider->getReferringProviderPhone();
+                if( $phone && !$userWrapper->getUserWrapperPhone() ) {
+                    $userWrapper->setUserWrapperPhone($phone);
+                }
+
+                $email = $referringProvider->getReferringProviderEmail();
+                if( $email && !$userWrapper->getUserWrapperEmail() ) {
+                    $userWrapper->setUserWrapperEmail($email);
+                }
+
+                $specialty = $referringProvider->getReferringProviderEmail();
+                if( $specialty && !$userWrapper->getUserWrapperSpecialty() ) {
+                    $userWrapper->setUserWrapperSpecialty($specialty);
+                }
+
+            }
+        }
+    }
+
 }

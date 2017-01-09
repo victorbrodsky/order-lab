@@ -46,7 +46,7 @@ class EncounterReferringProviderType extends AbstractType
 
 
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Referring Provider:',
+            'label' => 'Referring Provider Name:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterReferringProvider'),
             'required' => false,
             'classtype' => 'singleUserWrapper'

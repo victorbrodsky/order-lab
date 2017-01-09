@@ -203,7 +203,7 @@ function calllogAppendFormNodes( data ) {
 //find the latest parent formnode holder element by parentFormNodeId id
 function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, formNodeHtml, arraySectionCount ) {
 
-    console.log("calllog AppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId+"; arraySectionCount="+arraySectionCount);
+    //console.log("calllog AppendElement: formNodeHolderId="+formNodeHolderId+"; parentFormNodeId="+parentFormNodeId+"; formNodeId="+formNodeId+"; arraySectionCount="+arraySectionCount);
 
     //check if parent formnode exists and append this formnode to the parent formnode
     var parentId = "formnode-"+parentFormNodeId;
@@ -220,7 +220,7 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
         //console.log("formNodeElId: sectionid=" + sectionid);
 
         if( arraySectionCount == null || arraySectionCount == sectionid ) {
-            console.log("EXIT: formnode-holder-" + formNodeId + " already exists!");
+            //console.log("EXIT: formnode-holder-" + formNodeId + " already exists!");
             //calllogDisabledEnabledFormNode('enable',formNodeHolderId);
 
             if (parentEl) {
@@ -466,7 +466,7 @@ function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
     }
 
     if( disableEnable == 'disable' ) {
-        printF(formNodeEl,"disable:");
+        //printF(formNodeEl,"disable:");
         formNodeEl.addClass("formnode-holder-disabled");
         formNodeEl.hide();
 
@@ -478,7 +478,7 @@ function calllogDisabledEnabledSingleFormNode( disableEnable, formNodeId ) {
         //});
 
     } else {
-        printF(formNodeEl,"enable:");
+        //printF(formNodeEl,"enable:");
         formNodeEl.show();
         formNodeEl.removeClass("formnode-holder-disabled");
     }
@@ -511,26 +511,26 @@ function calllogGetFormNodeElement( formNodeId ) {
 
 //formnode[arraysection][90][node][91]
 function formNodeAddSameSection( btn, formNodeCleanId, formNodeId ) {
-    console.log('########## add form node section: formNodeCleanId='+formNodeCleanId+'; formNodeId='+formNodeId+" ##########");
+    //console.log('########## add form node section: formNodeCleanId='+formNodeCleanId+'; formNodeId='+formNodeId+" ##########");
 
     //get level of this array section using formNodeId's '-' count: 100=>0, 101_0-0=>1, 214_0-0-0=>2
     var sectionLevel = (formNodeId.match(/-/g) || []).length;
-    console.log('sectionLevel='+sectionLevel);
+    //console.log('sectionLevel='+sectionLevel);
 
     var maxCounter = 0;
     //get next counter by class="formnode-arraysection-holder-{{ formNode.id }}"
     $('.formnode-arraysection-holder-id-'+formNodeCleanId).each(function(){
         var sectionidFull = $(this).data("sectionid"); //fffsa_0_1_fffsa
-        console.log('sectionidFull='+sectionidFull);
+        //console.log('sectionidFull='+sectionidFull);
         var sectionid = formnodeGetLastSectionArrayIndex(sectionidFull,'-',sectionLevel); //1 if sectionLevel=1
         sectionid = parseInt(sectionid);
-        console.log('sectionid='+sectionid);
+        //console.log('sectionid='+sectionid);
         if( sectionid > maxCounter ) {
             maxCounter = sectionid;
         }
     });
     var nextCounter = maxCounter + 1;
-    console.log('nextCounter='+nextCounter);
+    //console.log('nextCounter='+nextCounter);
 
     //var targetSection = $(".formnode-arraysection-holder-"+formNodeId).last();
 
@@ -562,10 +562,10 @@ function formNodeAddSameSection( btn, formNodeCleanId, formNodeId ) {
 
         //replace the last index
         var thisArraySectionIndex = targetSection.data("sectionid");
-        console.log('thisArraySectionIndex='+thisArraySectionIndex);
+        //console.log('thisArraySectionIndex='+thisArraySectionIndex);
 
         var newArrSecIndex = formnodeReplaceSectionarrayIndex(thisArraySectionIndex,nextCounter,sectionLevel);
-        console.log('newArrSecIndex='+newArrSecIndex);
+        //console.log('newArrSecIndex='+newArrSecIndex);
 
         //fffsa_0_1_fffsa => 317_fffsa_0_1_fffsa
         var newFormNodeId = formNodeCleanId + '_' + newArrSecIndex;
