@@ -116,7 +116,7 @@
                             {% set  patientsearch = "" %}
                         {% endif %}
                         {% if  patientsearchtype is not defined %}
-                            {% set  patientsearchtype = 'MRN' %}
+                            {% set  patientsearchtype = 'MRN or Last Name' %}
                         {% endif %}
                         <form class="navbar-form navbar-left" role="search" id="ordersearchform" name="ordersearchform" action="{{ path(scan_sitename~'_search_patients') }}" method="get">
                             <input type="hidden" id="ordersearchform-searchtype" class="form-control" name="searchtype" value="{{ patientsearchtype }}">

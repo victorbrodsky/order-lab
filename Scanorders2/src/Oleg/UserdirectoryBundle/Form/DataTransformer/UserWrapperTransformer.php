@@ -229,6 +229,9 @@ class UserWrapperTransformer implements DataTransformerInterface
         if( $user ) {
             $userWrapper = new UserWrapper($this->user);
             $userWrapper->setUser($user);
+
+            $this->em->persist($userWrapper);
+            $this->em->flush($userWrapper);
         }
 
         return $userWrapper;
@@ -258,17 +261,16 @@ class UserWrapperTransformer implements DataTransformerInterface
 
         //echo "create new UserWrapper: userStr=".$userStr."<br>";
         if( $user ) {
-
             $userWrapper = new UserWrapper($this->user);
             $userWrapper->setUser($user);
             $userWrapper->setUserStr($userStr);
-
         } else {
-
             $userWrapper = new UserWrapper($this->user);
             $userWrapper->setUserStr($userStr);
-
         }
+
+        $this->em->persist($userWrapper);
+        $this->em->flush($userWrapper);
 
         return $userWrapper;
     }
