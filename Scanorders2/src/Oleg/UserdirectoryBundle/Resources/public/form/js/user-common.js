@@ -201,7 +201,12 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
     }
     var cycleStr = "?cycle="+cycle;
 
-    var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr,sitename);
+    var sitenameStr = getSitename();
+    if( sitenameStr ) {
+        sitenameStr = "&sitename="+sitenameStr;
+    }
+
+    var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
     //console.log('get Combobox Generic: url='+url);
 
     if( globalDataArray.length == 0 ) {

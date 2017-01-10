@@ -874,67 +874,123 @@ class ScanUtilController extends UtilController {
     public function getProxyusersAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
+        $loggedUser = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        $cycle = $request->query->get('cycle');
 
         $output = array();
 
         ///////////// 1) get all real users /////////////
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:User', 'list')
-            ->select("list")
-            ->leftJoin("list.infos", "infos")
-            ->leftJoin("list.employmentStatus", "employmentStatus")
-            ->leftJoin("employmentStatus.employmentType", "employmentType")
-            ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-            ->andWhere("(list.testingAccount = 0 OR list.testingAccount IS NULL)")
-            ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
-            ->orderBy("infos.displayName","ASC");
+        if(1) {
+            $query = $em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:User', 'list')
+                ->select("list")
+                //->groupBy('list.id')
+                ->leftJoin("list.infos", "infos")
+                ->leftJoin("list.employmentStatus", "employmentStatus")
+                ->leftJoin("employmentStatus.employmentType", "employmentType")
+                ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                ->andWhere("(list.testingAccount = 0 OR list.testingAccount IS NULL)")
+                ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
+                ->orderBy("infos.displayName", "ASC");
 
-        $users = $query->getQuery()->getResult();
-        //echo "users count=".count($users)."<br>";
+            $users = $query->getQuery()->getResult();
+            //echo "users count=".count($users)."<br>";
 
-        foreach( $users as $user ) {
-            $element = array('id'=>$user->getUsername()."", 'text'=>$user."");
-            //if( !$this->in_complex_array($user."",$output) ) {
-            //    $output[] = $element;
-            //}
-            $output[] = $element;
+            foreach ($users as $user) {
+                $element = array('id' => $user."", 'text' => $user . "");
+                //$element = array('id' => $user->getUsername()."", 'text' => $user . "");
+                //$element = array('id' => $user->getId(), 'text' => $user . "");
+                //if( !$this->in_complex_array($user."",$output,'text') ) {
+                    $output[] = $element;
+                //}
+            }
         }
         ///////////// EOF 1) get all real users /////////////
 
 
+        $sourceSystem = $securityUtil->getDefaultSourceSystemByRequest($request);
 
         ///////////// 2) default user wrappers for this source ///////////////
-
-        ///////////// EOF 2) default user wrappers for this source ///////////////
-
-
         ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
+        if(1) {
+            $query = $em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+                ->select("list")
+                ->leftJoin("list.user", "user")
+                ->leftJoin("user.infos", "infos")
+                ->leftJoin("list.creator", "creator")
+                ->leftJoin("list.userWrapperSource", "userWrapperSource")
+                ->orderBy("infos.displayName", "ASC");
 
-        ///////////// EOF 3) user-added user wrappers created by logged in user for this source ///////////////
+            //default OR user-added user wrappers created by logged in user
+            //$query->andWhere("list.type=:default");
+            $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameters(
+                array(
+                    'typedef' => 'default',
+                    'typeadd' => 'user-added',
+                    'loggedUser' => $loggedUser->getId()
+                )
+            );
+
+            if( $sourceSystem ) {
+                //echo "sourceSystem: id=".$sourceSystem->getId()."; ".$sourceSystem."<br>";
+                $query->andWhere("userWrapperSource.id IS NULL OR userWrapperSource.id=" . $sourceSystem->getId());
+            }
+
+            //echo "query=".$query." <br><br>";
+
+            $userWrappers = $query->getQuery()->getResult();
+            foreach ($userWrappers as $userWrapper) {
+//                if( $userWrapper->getUser() ) {
+//                    $thisId = $userWrapper->getUser()->getUSername();
+//                } else {
+//                    $thisId = $userWrapper->getId();
+//                }
+                $thisId = $userWrapper->getId();
+                $element = array(
+                    'id' => $thisId,    //$userWrapper->getId(),
+                    'text' => $userWrapper . ""
+                );
+
+                if( $cycle == "show" ) {
+                    $output[] = $element;
+                } else {
+                    if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
+                        $output[] = $element;
+                    }
+                }
+
+            }
+
+            //print_r($output);
+            //exit('1');
+        }
+        ///////////// EOF 2) 3) user wrappers for this source ///////////////
 
 
         ///////////// 2) get all wrapper users /////////////
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
-            ->select("list")
-            ->leftJoin("list.user", "user")
-            ->leftJoin("user.infos", "infos")
-            //->leftJoin("user.employmentStatus", "employmentStatus")
-            //->leftJoin("employmentStatus.employmentType", "employmentType")
-            //->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-            //->andWhere("user.testingAccount = 0 OR user.testingAccount IS NULL")
-            //->select("list.id as id, infos.displayName as text")
-            ->orderBy("infos.displayName","ASC");
-        $userWrappers = $query->getQuery()->getResult();
-        foreach( $userWrappers as $userWrapper ) {
-            $element = array(
-                'id'        => $userWrapper->getId(),
-                'text'      => $userWrapper.""
-            );
-            if( !$this->in_complex_array($userWrapper."",$output) ) {
-                $output[] = $element;
-            }
-        }
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+//            ->select("list")
+//            ->leftJoin("list.user", "user")
+//            ->leftJoin("user.infos", "infos")
+//            //->leftJoin("user.employmentStatus", "employmentStatus")
+//            //->leftJoin("employmentStatus.employmentType", "employmentType")
+//            //->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//            //->andWhere("user.testingAccount = 0 OR user.testingAccount IS NULL")
+//            //->select("list.id as id, infos.displayName as text")
+//            ->orderBy("infos.displayName","ASC");
+//        $userWrappers = $query->getQuery()->getResult();
+//        foreach( $userWrappers as $userWrapper ) {
+//            $element = array(
+//                'id'        => $userWrapper->getId(),
+//                'text'      => $userWrapper.""
+//            );
+//            if( !$this->in_complex_array($userWrapper."",$output) ) {
+//                $output[] = $element;
+//            }
+//        }
         ///////////// EOF get all wrapper users /////////////
 
         //$output = array_merge($users,$output);
@@ -1030,6 +1086,8 @@ class ScanUtilController extends UtilController {
             } else {
                 //Adeline Berger - asb2018 (WCMC CWID)
                 //$user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);
+                $userSecUtil = $this->get('user_security_utility');
+                $user = $userSecUtil->getUserByUserstr($providerId);
             }
 
             if( $user ) {

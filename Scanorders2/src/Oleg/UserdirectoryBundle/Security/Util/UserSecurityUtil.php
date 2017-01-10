@@ -608,6 +608,56 @@ class UserSecurityUtil {
     }
 
 
+    public function getDefaultSourceSystemByRequest( $request )
+    {
+        $sitename = $request->query->get('sitename');
+        $sitename = '/order/'.$sitename.'/';
+        //echo "sitenamel=".$sitename."<br>";
+        return $this->getDefaultSourceSystemByRequestUrl($sitename);
+    }
+
+    public function getDefaultSourceSystemByRequestUrl( $url, $request=null )
+    {
+
+        if( !$url ) {
+            $url = $request->getUri();  // .../order/scan/...
+        }
+        //echo "url=".$url."<br>";
+
+        $defaultSourceSystemName = null;    //'ORDER Scan Order';
+
+        if( strpos($url, '/order/call-log-book/') !== false ) {
+            $defaultSourceSystemName = 'ORDER Call Log Book';
+        }
+        if( strpos($url, '/order/deidentifier/') !== false ) {
+            $defaultSourceSystemName = 'ORDER Deidentifier';
+        }
+        if( strpos($url, '/order/scan/') !== false ) {
+            $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
+        }
+
+        if( !$defaultSourceSystemName ) {
+            if( $this->container ) {
+                $logger = $this->container->get('logger');
+                $logger->warning('Warning (Not Found): Default Source System by url '.$url);
+            }
+            return null;
+        }
+
+        $source = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
+
+        if( !$source ) {
+            if( $this->container ) {
+                $logger = $this->container->get('logger');
+                $logger->warning('Warning (Not Found): Default Source System with name '.$defaultSourceSystemName);
+            }
+        }
+
+        //echo "source=".$source."<br>";
+        return $source;
+    }
+
+
     //username - full username including user type ie svc_aperio_spectrum_@_wcmc-cwid
     public function constractNewUser($username) {
 
@@ -700,9 +750,54 @@ class UserSecurityUtil {
             $users = $query->getQuery()->getResult();
 
             if( count($users) > 0 ) {
-                $user = $users->first();
+                $user = $users[0];
             }
 
+        }
+
+        //4) try username aio3001_@_wcmc-cwid
+        if( !$user ) {
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($name);
+        }
+
+        //5) try Alain Borczuk - alb9003 (WCMC CWID)
+        if( !$user ) {
+            $strArr = explode("-",$name);
+
+            if( count($strArr) > 0 ) {
+                $displayName = trim($strArr[0]);
+
+                $query = $this->em->createQueryBuilder()
+                    ->from('OlegUserdirectoryBundle:User', 'user')
+                    ->select("user")
+                    ->leftJoin("user.infos", "infos")
+                    ->where("infos.displayName=:name")
+                    ->setParameters(array(
+                        'name' => $displayName
+                    ));
+
+                $users = $query->getQuery()->getResult();
+
+                if (count($users) > 0) {
+                    $user = $users[0];
+
+                    if( count($strArr) > 1 ) {
+                        //echo "strArr[1]=".$strArr[1]."<br>";
+                        $strArr2 = explode(" ",trim($strArr[1])); //alb9003 (WCMC CWID)
+
+                        if( count($strArr2) > 0 ) {
+                            $cwid = $strArr2[0]; //alb9003
+                        }
+
+                        //try first part cwid
+                        if( $cwid ) {
+                            //echo "cwid=".$cwid."<br>";
+                            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+                        }
+                    }
+
+                }
+            }
         }
 
         return $user;

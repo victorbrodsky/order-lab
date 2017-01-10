@@ -218,6 +218,9 @@ class UserWrapperTransformer implements DataTransformerInterface
         //echo "found userWrapper by wrapper id=".$userWrapper."<br>";
 
         if( $userWrapper ) {
+            if( $user && !$userWrapper->getUser() ) {
+                $userWrapper->setUser($user);
+            }
             return $userWrapper;
         }
 
@@ -247,6 +250,9 @@ class UserWrapperTransformer implements DataTransformerInterface
         //exit('1');
 
         if( $userWrapper ) {
+            if( $user && !$userWrapper->getUser() ) {
+                $userWrapper->setUser($user);
+            }
             return $userWrapper;
         }
 
