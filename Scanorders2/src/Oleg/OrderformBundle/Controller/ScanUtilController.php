@@ -864,6 +864,8 @@ class ScanUtilController extends UtilController {
     }
 
 
+
+
     /**
      * Get all users and user wrappers combined
      * @Route("/common/proxyuser", name="scan_get_proxyuser")
@@ -875,7 +877,7 @@ class ScanUtilController extends UtilController {
 
         $output = array();
 
-        ///////////// get all users /////////////
+        ///////////// 1) get all real users /////////////
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:User', 'list')
             ->select("list")
@@ -891,14 +893,27 @@ class ScanUtilController extends UtilController {
         //echo "users count=".count($users)."<br>";
 
         foreach( $users as $user ) {
-            $element = array('id'=>$user."", 'text'=>$user."");
-            if( !$this->in_complex_array($user."",$output) ) {
-                $output[] = $element;
-            }
+            $element = array('id'=>$user->getUsername()."", 'text'=>$user."");
+            //if( !$this->in_complex_array($user."",$output) ) {
+            //    $output[] = $element;
+            //}
+            $output[] = $element;
         }
-        ///////////// EOF get all users /////////////
+        ///////////// EOF 1) get all real users /////////////
 
-        ///////////// get all wrapper users /////////////
+
+
+        ///////////// 2) default user wrappers for this source ///////////////
+
+        ///////////// EOF 2) default user wrappers for this source ///////////////
+
+
+        ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
+
+        ///////////// EOF 3) user-added user wrappers created by logged in user for this source ///////////////
+
+
+        ///////////// 2) get all wrapper users /////////////
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
             ->select("list")
@@ -948,6 +963,97 @@ class ScanUtilController extends UtilController {
     public function getEncounterAttendingPhysiciansAction(Request $request) {
         //echo "get encounterReferringProvider<br>";
         return $this->getProxyusersAction($request);
+    }
+
+    /**
+     * @Route("/common/get-encounter-referring-provider/", name="scan_get_encounterreferringprovider", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getEncounterReferringProviderByNameAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $providerId = trim($request->get('providerId'));
+        //echo "providerId=".$providerId."<br>";
+
+        $output = array();
+        $objectId = null;
+        $specialty = null;
+        $phone = null;
+        $email = null;
+
+        //echo 'compare: '.strval($providerId).' ?= '.strval(intval($providerId))."<br>";
+        if( strval($providerId) == strval(intval($providerId)) ) {
+            //echo "Case1: providerId is integer=$providerId => providerID is wrapperId => find EncounterReferringProvider by field<br>";
+            $provider = $em->getRepository('OlegOrderformBundle:EncounterReferringProvider')->findOneByField($providerId);
+
+            if( $provider ) {
+                //echo "provider=".$provider."<br>";
+                $userWrapper = $provider->getField();
+
+                if( $userWrapper ) {
+                    $objectId = $userWrapper->getId();
+                }
+
+                //priority is on EncounterReferringProvider's object
+                if( $provider->getReferringProviderSpecialty() ) {
+                    $specialty = $provider->getReferringProviderSpecialty()->getId();
+                } else {
+                    if( $userWrapper ) {
+                        $specialty = $userWrapper->getUserWrapperSpecialty();
+                    }
+                }
+
+                if( $provider->getReferringProviderSpecialty() ) {
+                    $phone = $provider->getReferringProviderPhone();
+                } else {
+                    if( $userWrapper ) {
+                        $phone = $userWrapper->getUserWrapperPhone();
+                    }
+                }
+
+                if( $provider->getReferringProviderSpecialty() ) {
+                    $email = $provider->getReferringProviderEmail();
+                } else {
+                    if( $userWrapper ) {
+                        $email = $userWrapper->getUserWrapperEmail();
+                    }
+                }
+            }
+
+        } else {
+            //echo "Case2: providerId is string=$providerId<br>"; //asb2018_@_wcmc-cwid or Adeline Berger - asb2018 (WCMC CWID)
+
+            if( strpos($providerId, '_@_') !== false ) {
+                //asb2018_@_wcmc-cwid
+                $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);
+            } else {
+                //Adeline Berger - asb2018 (WCMC CWID)
+                //$user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);
+            }
+
+            if( $user ) {
+                $objectId = $user->getUsername();
+                $phone = $user->getPreferredPhone();
+                $email = $user->getEmail();
+            }
+
+        }
+
+        $output['id'] = $objectId;
+        $output['referringProviderSpecialty'] = $specialty;
+        $output['referringProviderPhone'] = $phone;
+        $output['referringProviderEmail'] = $email;
+
+//        print "<pre>";
+//        print_r($output);
+//        print "</pre><br>";
+//        exit('1');
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
     }
 
     //search if $needle exists in array $products

@@ -635,7 +635,6 @@ class UtilController extends Controller {
         return $response;
     }
 
-
     /**
      * check if location can be deleted
      *

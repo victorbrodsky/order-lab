@@ -439,7 +439,7 @@ class CallEntryController extends Controller
                 //exit('after location');
 
                 //TODO: process EncounterReferringProvider: set Specialty, Phone and Email for a new userWrapper (getReferringProviders)
-                $calllogUtil->processReferringProviders($newEncounter);
+                $calllogUtil->processReferringProviders($newEncounter,$system);
 
                 //testing: process form nodes
                 //$formNodeUtil = $this->get('user_formnode_utility');

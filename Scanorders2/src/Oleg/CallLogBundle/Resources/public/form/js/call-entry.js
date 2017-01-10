@@ -17,6 +17,8 @@ function initCallLogPage() {
     //calllogEnableMessageCategoryService('patient-holder-1');
     //calllogMessageCategoryListener('patient-holder-1');
     calllogLocationNameListener('patient-holder-1');
+
+    calllogEncounterReferringProviderListener('patient-holder-1');
 }
 
 //prevent exit modified form
@@ -1663,3 +1665,110 @@ function locationNamePopulateLocationFields( holder, data ) {
 
 }
 
+//ajax-combobox-encounterReferringProvider
+function calllogEncounterReferringProviderListener(holderId) {
+    var target = ".ajax-combobox-encounterReferringProvider";
+
+    $(target).on("change", function (e) {
+        console.log("calllogEncounterReferringProviderListener: change", e);
+
+        //populate location fields by name
+        //var value = $("[name='nameofobject']");
+
+        var providerNameEl = $(this);
+
+        var selectData = providerNameEl.select2('data');
+
+        //clean id
+        var holder = providerNameEl.closest('.panel-body');
+
+        if( !selectData ) {
+            //console.log('no selectData');
+            //TODO: clean all fields?
+            calllogEncounterReferringProviderPopulate(holder,null);
+            return;
+        }
+
+        var providerId = selectData.id;
+        if( !providerId ) {
+            //console.log('no providerId');
+            return;
+        }
+
+        var url = Routing.generate('scan_get_encounterreferringprovider');
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            async: asyncflag,
+            data: {providerId: providerId},
+        }).success(function(data) {
+            //console.log("data length="+data.length);
+            //console.log(data);
+
+            if( data ) {
+                //populate location fields
+                //var holder = locationNameEl.closest('.panel-body');
+                //console.log("holder:");
+                //console.log(holder);
+                calllogEncounterReferringProviderPopulate(holder,data);
+            }
+
+        }).fail(function() {
+            alert("Error getting provider by provider ID "+providerId);
+        }).done(function() {
+            //console.log("update patient title done");
+        });
+
+    });
+
+    return;
+}
+function calllogEncounterReferringProviderPopulate( holder, data ) {
+    var fieldNames = ['referringProviderSpecialty','referringProviderPhone','referringProviderEmail'];
+
+    for( var i = 0; i < fieldNames.length; i++ ) {
+        //text += fieldNames[i] + "<br>";
+        var fieldName = fieldNames[i]; //phone
+        //console.log("fieldName="+fieldName);
+
+        var partialIdStr = "["+fieldName+"]";
+        //console.log("partialIdStr="+partialIdStr);
+        var fieldEl = holder.find('[name*="'+partialIdStr+'"]');
+        //console.log("found=" + fieldEl.attr('id'));
+        printF(fieldEl, "found=");
+
+        var userId = null;
+        if( data && ('id' in data) ) {
+            if( data['id'] ) {
+                userId = data['id'];
+            }
+        }
+
+        if( fieldEl ) {
+
+            var fieldVal = null;
+
+            //if( (fieldName in data) && data[fieldName] ) {
+            if( userId && data && (fieldName in data) ) {
+                fieldVal = data[fieldName];
+            }
+
+            if( fieldEl.hasClass('combobox') ) {
+                fieldEl.select2('val', fieldVal);
+            } else {
+                fieldEl.val(fieldVal);
+            }
+
+            //lock/unlock the field
+            if( data && userId ) {
+                //lock
+                disableField(fieldEl,true)
+            } else {
+                //unlock
+                disableField(fieldEl,false)
+            }
+
+        }
+    }//for
+}

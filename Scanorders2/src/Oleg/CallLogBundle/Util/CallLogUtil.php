@@ -1102,7 +1102,7 @@ class CallLogUtil
     }
 
     //set Specialty, Phone and Email for a new userWrapper
-    public function processReferringProviders($encounter) {
+    public function processReferringProviders($encounter,$source=null) {
         foreach( $encounter->getReferringProviders() as $referringProvider ) {
             $userWrapper = $referringProvider->getField();
 
@@ -1123,9 +1123,14 @@ class CallLogUtil
                     $userWrapper->setUserWrapperEmail($email);
                 }
 
-                $specialty = $referringProvider->getReferringProviderEmail();
+                $specialty = $referringProvider->getReferringProviderSpecialty();
                 if( $specialty && !$userWrapper->getUserWrapperSpecialty() ) {
                     $userWrapper->setUserWrapperSpecialty($specialty);
+                }
+
+                //source
+                if( $source && !$userWrapper->getUserWrapperSource() ) {
+                    $userWrapper->setUserWrapperSource($source);
                 }
 
             }
