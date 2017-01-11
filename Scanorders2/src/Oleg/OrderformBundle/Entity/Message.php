@@ -166,6 +166,21 @@ class Message {
     private $messageStatus;
 
     /**
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ModifierInfo", cascade={"persist","remove"})
+     */
+    private $signeeInfo;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\ModifierInfo", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_message_editors",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="editorInfo_id", referencedColumnName="id", unique=true)}
+     * )
+     * @ORM\OrderBy({"modifiedOn" = "ASC"})
+     **/
+    private $editorInfos;
+
+    /**
      * Equipment associated with this order (object)
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
@@ -471,6 +486,8 @@ class Message {
         $this->associations = new ArrayCollection();
         $this->backAssociations = new ArrayCollection();
 
+        $this->editorInfos = new ArrayCollection();
+
         $this->setOrderdate();
 
         //Initialize specific orders
@@ -515,6 +532,8 @@ class Message {
             $this->sources = new ArrayCollection();
             $this->destinations = new ArrayCollection();
             $this->externalIds = new ArrayCollection();
+
+            //$this->editorInfos = new ArrayCollection();
 
             //
             $provider = $this->getProvider();
@@ -1143,6 +1162,41 @@ class Message {
     public function setAmendmentReason($amendmentReason)
     {
         $this->amendmentReason = $amendmentReason;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSigneeInfo()
+    {
+        return $this->signeeInfo;
+    }
+
+    /**
+     * @param mixed $signeeInfo
+     */
+    public function setSigneeInfo($signeeInfo)
+    {
+        $this->signeeInfo = $signeeInfo;
+    }
+
+    public function addEditorInfo($item)
+    {
+        if( $item && !$this->editorInfos->contains($item) ) {
+            $this->editorInfos->add($item);
+        }
+        return $this;
+    }
+    public function removeEditorInfo($item)
+    {
+        $this->editorInfos->removeElement($item);
+    }
+    /**
+     * @return mixed
+     */
+    public function getEditorInfos()
+    {
+        return $this->editorInfos;
     }
 
 

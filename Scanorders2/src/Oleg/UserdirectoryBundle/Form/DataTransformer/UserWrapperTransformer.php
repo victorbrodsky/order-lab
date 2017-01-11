@@ -14,6 +14,14 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
+//NOTE: userWrapper used:
+//CourseTitleTree, Educational
+//ProjectTitleTree, Research
+//in Message (as proxyuser)
+//PathologyResultSignaturesList
+//EncounterAttendingPhysician (as field)
+//EncounterReferringProvider (as field)
+
 //used by user type
 class UserWrapperTransformer implements DataTransformerInterface
 {

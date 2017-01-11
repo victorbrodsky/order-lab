@@ -120,11 +120,12 @@
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a class="calllog-patient-panel-title" data-toggle="collapse" href="#calllog-PatientInformation-{{holderId}}">
-                        {{ title }}
+                        {#{{ title }}#}
+                        {{ form.vars.value.obtainPatientInfoSimple|raw }}
                     </a>
                 </h4>
             </div>
-            <div id="calllog-PatientInformation-{{holderId}}" class="calllog-patient-information-panel panel-collapse collapse in">
+            <div id="calllog-PatientInformation-{{holderId}}" class="calllog-patient-information-panel panel-collapse collapse">
                 <div class="panel-body">
 
                     {#{{ form_errors(form) }}#}
@@ -132,7 +133,7 @@
                     {#{{ form_widget(form.id) }}#}
                     {#{{ form_row(form.id) }}#}
 
-                    {{ form.vars.value.obtainPatientInfoSimple|raw }}
+                    {#{{ form.vars.value.obtainPatientInfoSimple|raw }}#}
 
                     {#<div class="calllog-search-fields">#}
 
@@ -493,3 +494,78 @@
     {% endif %}
 
 {% endmacro %}
+
+{#message is an entity#}
+{% macro calllogAuthors( message, cycle, sitename ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#calllog-Authors">
+                    Authors
+                </a>
+            </h4>
+        </div>
+        <div id="calllog-Authors" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {#Submitter#}
+                {% set authorHref = path(sitename~'_showuser',{'id':message.provider.getId()}) %}
+                {% set hreflink = '<a target="_blank" href="'~authorHref|raw~'">'~message.provider.getUsernameOptimal()~'</a>' %}
+                {{ formmacros.simplefield( "Submitter:", hreflink, "", "disabled" ) }}
+
+                {#Submitted on#}
+                {% set submittedDate = message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('h:i a (T)') %}
+                {{ formmacros.simplefield("Submitted on:", submittedDate, "", "disabled") }}
+
+                {#Message Status#}
+                {{ formmacros.simplefield("Message Status:", message.messageStatus.name, "", "disabled") }}
+                {% if message.messageStatus.name == "Signed" and message.signeeInfo %}
+                    {% if message.signeeInfo.modifiedBy %}
+                        {% set authorHref = path(sitename~'_showuser',{'id':message.signeeInfo.modifiedBy.getId()}) %}
+                        {% set hreflink = '<a target="_blank" href="'~authorHref|raw~'">'~message.signeeInfo.modifiedBy.getUsernameOptimal()~'</a>' %}
+                        {{ formmacros.simplefield( "Signed by:", hreflink, "", "disabled" ) }}
+                    {% endif %}
+                    {% if message.signeeInfo.modifiedOn %}
+                        {% set signedDate = message.signeeInfo.modifiedOn|date('m/d/Y') ~ " at " ~ message.signeeInfo.modifiedOn|date('h:i a (T)') %}
+                        {{ formmacros.simplefield("Signed on:", signedDate, "", "disabled") }}
+                    {% endif %}
+                    {% if message.signeeInfo.modifierRoles|length > 0 %}
+                        {% set signeeRoles = user_security_utility.getRolesByRoleNames(message.signeeInfo.modifierRoles) %}
+                        {{ formmacros.simplefield("Signee role(s) at signature time:", signeeRoles, "", "disabled") }}
+                    {% else %}
+                        {{ formmacros.simplefield("Signee role(s) at signature time:", "No roles", "", "disabled") }}
+                    {% endif %}
+                {% endif %}
+
+                {#IF "Message Version">1 (2 or more), display the following three fields:#}
+                {% if message.version|number_format > 1 %}
+                    {% set lastEditorInfo = message.getEditorInfos()|last %}
+                    {% if lastEditorInfo %}
+                        {% if lastEditorInfo.modifiedBy %}
+                            {% set authorHref = path(sitename~'_showuser',{'id':lastEditorInfo.modifiedBy.getId()}) %}
+                            {% set hreflink = '<a target="_blank" href="'~authorHref|raw~'">'~lastEditorInfo.modifiedBy.getUsernameOptimal()~'</a>' %}
+                            {{ formmacros.simplefield( "Last edited by:", hreflink, "", "disabled" ) }}
+                        {% endif %}
+                        {% if lastEditorInfo.modifiedOn %}
+                            {% set editedDate = lastEditorInfo.modifiedOn|date('m/d/Y') ~ " at " ~ lastEditorInfo.modifiedOn|date('h:i a (T)') %}
+                            {{ formmacros.simplefield("Last edited on:", editedDate, "", "disabled") }}
+                        {% endif %}
+                        {% if lastEditorInfo.modifierRoles|length > 0 %}
+                            {% set editorRoles = user_security_utility.getRolesByRoleNames(lastEditorInfo.modifierRoles) %}
+                            {{ formmacros.simplefield("Editor role(s) at edit submission time:", editorRoles, "", "disabled") }}
+                        {% else %}
+                            {{ formmacros.simplefield("Editor role(s) at edit submission time:", "No roles", "", "disabled") }}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-primary -->
+
+{% endmacro %}
+
+

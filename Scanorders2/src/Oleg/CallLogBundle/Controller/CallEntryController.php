@@ -25,6 +25,7 @@ use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientSuffix;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
+use Oleg\UserdirectoryBundle\Entity\ModifierInfo;
 use Oleg\UserdirectoryBundle\Entity\Spot;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -455,12 +456,32 @@ class CallEntryController extends Controller
                 //set message status from the form's name="messageStatus" field
                 $data = $request->request->all();
                 $messageStatusForm = $data['messageStatusJs'];
-                //echo "messageStatusForm=".$messageStatusForm."<br>";
+                echo "messageStatusForm=".$messageStatusForm."<br>";
                 if( $messageStatusForm ) {
                     $messageStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
                     if( $messageStatusObj ) {
                         //echo "set message status to ".$messageStatusObj."<br>";
                         $message->setMessageStatus($messageStatusObj);
+
+                        //if "Signed" set signed User, datetime, roles by signeeInfo
+                        if( $messageStatusObj->getName()."" == "Signed" ) {
+                            if ($message->getSigneeInfo()) {
+                                echo "signee exist <br>";
+                                $signeeInfo = $message->getSigneeInfo();
+                                $signeeInfo->setInfo($user);
+                            } else {
+                                echo "signee does exist <br>";
+                                $message->setSigneeInfo(new ModifierInfo($user));
+                            }
+                        }
+
+                        //if "Deleted" set signed User, datetime, roles by signeeInfo
+                        if( $messageStatusObj->getName()."" == "Deleted" ) {
+                            //echo "deleted <br>";
+                            $editorInfo = new ModifierInfo($user);
+                            $message->addEditorInfo($editorInfo);
+                        }
+
                     }
                 }
 
@@ -1698,7 +1719,7 @@ class CallEntryController extends Controller
             //'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => $title . " ID# " . $message->getId(),
+            'title' => $title . " ID " . $message->getId(),
             'formtype' => $formtype,
             'triggerSearch' => 0,
             'mrn' => $mrn,
@@ -1709,6 +1730,7 @@ class CallEntryController extends Controller
             'entityNamespace' => $classNamespace,
             'entityName' => $className,
             'entityId' => $message->getId(),
+            'sitename' => $this->container->getParameter('calllog.sitename')
         );
     }
 

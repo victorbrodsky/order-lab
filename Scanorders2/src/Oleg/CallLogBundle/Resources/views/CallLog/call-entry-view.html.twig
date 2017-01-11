@@ -39,6 +39,7 @@
     <input type="hidden" id="entityId" value="{{ entityId }}" />
     {#<input type="hidden" id="encounterid" value="{{ encounterid }}" />#}
 
+
     <div id="calllog-patient-list">
 
         {% set holderId = "patient-holder-1" %}
@@ -206,7 +207,9 @@
                             {#Message Version#}
                             {{ formmacros.field(form.version) }}
                             {#Amendment Reason#}
-                            {{ formmacros.field(form.amendmentReason) }}
+                            {% if message.version|number_format > 1 %}
+                                {{ formmacros.field(form.amendmentReason) }}
+                            {% endif %}
                         </p>
 
 
@@ -253,6 +256,11 @@
 
         {#</form>#}
         {{ form_end(form,{'render_rest': false}) }}
+
+
+        <p>
+            {{ calllogmacros.calllogAuthors(message,cycle,sitename) }}
+        </p>
 
     </div>
 

@@ -868,6 +868,17 @@ class UserSecurityUtil {
         return $userSiteRoles;
     }
 
+    public function getRolesByRoleNames( $roles, $glueStr=", " ) {
+        $strRoles = array();
+        foreach( $roles as $roleName ) {
+            $role = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+            if($role) {
+                $strRoles[] = $role->getAlias();
+            }
+        }
+        return implode($glueStr,$strRoles);
+    }
+
     public function getQueryUserBySite( $sitename ) {
         $dql = $this->getDqlUserBySite($sitename);
         $query = $this->em->createQuery($dql);
