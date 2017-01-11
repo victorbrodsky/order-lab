@@ -456,7 +456,7 @@ class CallEntryController extends Controller
                 //set message status from the form's name="messageStatus" field
                 $data = $request->request->all();
                 $messageStatusForm = $data['messageStatusJs'];
-                echo "messageStatusForm=".$messageStatusForm."<br>";
+                //echo "messageStatusForm=".$messageStatusForm."<br>";
                 if( $messageStatusForm ) {
                     $messageStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
                     if( $messageStatusObj ) {
@@ -483,6 +483,12 @@ class CallEntryController extends Controller
                         }
 
                     }
+                }
+
+                //message title setMessageTitle
+                if( $message->getMessageCategory() ) {
+                    $messageTitle = $message->getMessageCategory()->getNodeNameWithParent() . " (ID " . $message->getMessageCategory()->getId() . ")";
+                    $message->setMessageTitle($messageTitle);
                 }
 
                 if( $patient->getId() ) {

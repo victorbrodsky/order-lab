@@ -206,6 +206,7 @@
                             {{ formmacros.field(form.messageStatus) }}
                             {#Message Version#}
                             {{ formmacros.field(form.version) }}
+                            {{ formmacros.field(form.messageTitle) }}
                             {#Amendment Reason#}
                             {% if message.version|number_format > 1 %}
                                 {{ formmacros.field(form.amendmentReason) }}

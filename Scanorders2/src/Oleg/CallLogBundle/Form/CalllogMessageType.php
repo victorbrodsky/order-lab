@@ -163,6 +163,13 @@ class CalllogMessageType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('messageTitle', null, array(
+            'label' => 'Form Title:',
+            'read_only' => true,
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('amendmentReason', 'custom_selector', array(
             'label' => 'Amendment Reason:',
             'required' => false,

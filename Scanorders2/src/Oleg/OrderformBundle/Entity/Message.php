@@ -108,6 +108,12 @@ class Message {
     private $messageCategory;
 
     /**
+     * Name of the form: Message Type name at the time of message submission
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $messageTitle;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      */
     private $provider;
@@ -913,6 +919,22 @@ class Message {
     public function getMessageCategory()
     {
         return $this->messageCategory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessageTitle()
+    {
+        return $this->messageTitle;
+    }
+
+    /**
+     * @param mixed $messageTitle
+     */
+    public function setMessageTitle($messageTitle)
+    {
+        $this->messageTitle = $messageTitle;
     }
 
     /**

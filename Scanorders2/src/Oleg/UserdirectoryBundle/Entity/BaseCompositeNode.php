@@ -306,6 +306,19 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 //        }
 //    }
 
+    public function getNodeNameWithParent() {
+
+        $treeNameStr = $this->getName()."";
+
+        $parent = $this->getParent();
+        //echo "parent=".$parent."<br>";
+
+        if( $parent ) {
+            $treeNameStr = $parent->getName() . " => " . $treeNameStr;
+        }
+
+        return $treeNameStr;
+    }
     public function getNodeNameWithRoot() {
 
         $treeNameStr = $this."";
@@ -329,6 +342,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 
         return $parent;
     }
+
 
     public function __toString()
     {
