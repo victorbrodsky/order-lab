@@ -91,7 +91,10 @@
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {{ usermacros.nonLiveSiteRedirect() }}
 
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    {% block favicon %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('glyphicons-81-retweet.png') }}" />
+        {#<link rel="icon" type="image/x-icon" href="{{ asset('retweet.ico') }}" />#}
+    {% endblock %}
 
 </head>
 
