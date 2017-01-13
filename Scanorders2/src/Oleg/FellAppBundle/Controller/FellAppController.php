@@ -91,7 +91,7 @@ class FellAppController extends Controller {
         if( count($fellowshipTypes) == 0 ) {
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department.'
+                'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department. Please assign the WCMC department to the appropriate Fellowship Subspecialties'
             );
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }

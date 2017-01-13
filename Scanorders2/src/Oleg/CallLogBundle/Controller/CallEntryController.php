@@ -53,6 +53,11 @@ class CallEntryController extends Controller
     public function homeAction(Request $request)
     {
 
+        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
         $route = $request->get('_route');
         $title = "Call Case List";
         $alerts = false;
@@ -64,16 +69,58 @@ class CallEntryController extends Controller
 
         $params = array();
         $filterform = $this->createForm(new CalllogFilterType($params), null);
-        //$startDate = $filterform['startDate']->getData();
-        //$endDate = $filterform['endDate']->getData();
-        //if( $startDate ) {
-        //    echo "startDate=" . $startDate->format('Y-m-d') . "<br>";
-        //}
+        $filterform->bind($request);
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        if( $startDate ) {
+            echo "startDate=" . $startDate->format('Y-m-d') . "<br>";
+        }
+
+
+        //perform search
+        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder('message');
+        $dql->leftJoin("message.patient","patient");
+        $dql->leftJoin("patient.mrn","mrn");
+        $dql->leftJoin("patient.lastname","lastname");
+        $dql->leftJoin("message.encounter","encounter");
+
+        $dql->leftJoin("encounter.referringProviders","referringProviders");
+        $dql->leftJoin("referringProviders.field","referringProviderWrapper");
+
+        $dql->leftJoin("encounter.tracker","tracker");
+        $dql->leftJoin("tracker.spots","spots");
+        $dql->leftJoin("spots.currentLocation","currentLocation");
+
+        $dql->leftJoin("message.editorInfos","editorInfos");
+
+        $dql->leftJoin("message.signeeInfo","signeeInfo");
+        $dql->leftJoin("signeeInfo.modifiedBy","author");
+        $dql->leftJoin("author.infos","authorInfos");
+
+
+
+        $dql->leftJoin("message.messageCategory","messageCategory");
+        //$dql->where("institution.id = ".$pathology->getId());
+        $dql->orderBy("message.orderdate","ASC");
+
+        //$query = $em->createQuery($dql);
+        //$messages = $query->getResult();
+
+        $limit = 200;
+        //$limit = 10; //testing
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $messages = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            //$request->query->getInt('page', 1),
+            $limit      /*limit per page*/
+        );
+        echo "messages count=".count($messages)."<br>";
 
         return array(
-            //'entity' => $entity,
-            //'form' => $form->createView(),
-            //'cycle' => $cycle,
+            'messages' => $messages,
             'alerts' => $alerts,
             'title' => $title,
             'filterform' => $filterform->createView(),

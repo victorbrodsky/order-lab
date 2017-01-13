@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="col-xs-2" align="left">
-                    <button id="Search_button" type="button" class="btn btn-default">Filter</button>
+                    <button id="Search_button" type="submit" class="btn btn-default">Filter</button>
                 </div>
 
                 {#<div class="col-xs-2" align="left">#}
@@ -519,6 +519,100 @@
 
 
     <br><br>
+
+
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>
+            <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
+            <th>{{ knp_pagination_sortable(messages, 'Patient Name', 'lastname.field') }}</th>
+            <th>{{ knp_pagination_sortable(messages, 'MRN', 'mrn.field') }}</th>
+            <th>{{ knp_pagination_sortable(messages, 'Location', 'currentLocation.name') }}
+            <th>{{ knp_pagination_sortable(messages, 'Referring Provider', 'referringProviderWrapper.name') }}</th>
+            <th>{{ knp_pagination_sortable(messages, 'Call Issue', 'messageCategory.name') }}</th>
+            <th>{{ knp_pagination_sortable(messages, 'Author', 'authorInfos.displayname') }}</th>
+
+
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+
+        {% for message in messages %}
+            {% set trclassname = "" %}
+            <tr class="{{ trclassname }}">
+
+                <td>
+                    {{  message.id }}
+                </td>
+
+                {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
+                <td data-toggle="tooltip" title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">
+                    {% if message.editorInfos|length > 0 %}
+                        {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
+                    {% endif %}
+                </td>
+
+                {#Patient Name#}
+                <td>
+                    {% for thisPatient in message.patient %}
+                        {{  thisPatient.getFullPatientName|raw }}<br>
+                    {% endfor %}
+                </td>
+
+                {#MRN#}
+                <td>
+                    {% for thisPatient in message.patient %}
+                        {{  thisPatient.obtainFullValidKeyName }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% for encounter in message.encounter %}
+                        {{ encounter.obtainLocationInfo }}<br>
+                    {% endfor %}
+                </td>
+
+                {#referringProviders#}
+                <td>
+                    {% for encounter in message.encounter %}
+                        {% for referringProvider in encounter.referringProviders %}
+                            {{ referringProvider.field.getFullName }}<br>
+                        {% endfor %}
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {{  message.messageCategory.getNodeNameWithParent }}
+                </td>
+
+                <td>
+                    {% if message.messageStatus and message.messageStatus.name == "Draft" %}
+                        {% if message.provider %}
+                            {{ message.provider.getUsernameOptimal }}<br>
+                        {% endif %}
+                    {% else %}
+                        {% if message.signeeInfo and message.signeeInfo.modifiedBy %}
+                            {{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>
+                        {% endif %}
+                    {% endif %}
+                </td>
+
+            </tr>
+            <tr class="{{ trclassname }}">
+                {{ message.messageTitle }}
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(messages) }}
+    </div>
+
 
 {% endblock %}
 
