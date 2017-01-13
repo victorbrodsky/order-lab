@@ -147,12 +147,20 @@ class CallEntryController extends Controller
             if( $messageCategoryEntity ) {
                 $selectOrder = false;
                 $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
-                //echo "nodeChildSelectStr=".$nodeChildSelectStr."<br>";
                 $dql->andWhere($nodeChildSelectStr);
-                //$dql->andWhere('messageCategory.id = :messageCategory OR (messageCategory.lft > :lft AND messageCategory.rgt < :rgt )');
-                //$queryParameters['messageCategory'] = $messageCategory;
-                //$queryParameters['lft'] = $messageCategoryEntity->getLft();
-                //$queryParameters['rgt'] = $messageCategoryEntity->getRgt();
+            }
+        }
+        $searchFilter = $filterform['search']->getData();
+        if( $searchFilter ) {
+            if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
+                //string
+                $dql->andWhere("lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
+                $queryParameters['search'] = "'%".$searchFilter."%'";
+                //$queryParameters['search'] = $searchFilter;
+            } else {
+                //integer
+                $dql->andWhere("mrn.field = :search");
+                $queryParameters['search'] = $searchFilter;
             }
         }
 
@@ -163,7 +171,7 @@ class CallEntryController extends Controller
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
 
         $paginator  = $this->get('knp_paginator');
         $messages = $paginator->paginate(

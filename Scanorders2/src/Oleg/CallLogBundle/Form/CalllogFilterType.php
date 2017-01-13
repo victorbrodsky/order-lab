@@ -25,7 +25,7 @@ class CalllogFilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class'=>'datepicker form-control', 'placeholder'=>'Start Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'Start Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
         ));
 
         $builder->add('endDate', 'datetime', array(
@@ -33,14 +33,14 @@ class CalllogFilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class'=>'datepicker form-control', 'placeholder'=>'End Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'End Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
         $builder->add('messageCategory', 'choice', array(
             'label' => false,
             'required' => false,
             'choices' => $this->params['messageCategories'],
-            'attr' => array('class' => 'combobox '),
+            'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder' => "Message Type"),
         ));
 
 //        $builder->add('filter', 'choice', array(
@@ -51,13 +51,12 @@ class CalllogFilterType extends AbstractType
 //            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty-filter'),
 //        ));
         
-//        $builder->add('search', 'text', array(
-//            //'placeholder' => 'Search',
-//            'max_length'=>200,
-//            'required'=>false,
-//            'label' => false,
-//            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
-//        ));
+        $builder->add('search', 'text', array(
+            'max_length'=>200,
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "MRN or Last Name"),
+        ));
         
     }
 
