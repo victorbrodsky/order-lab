@@ -20,7 +20,9 @@
 
     {#Search Form#}
 
-    <form id="CallCaseSearchForm" class="form-vertical" role="form">
+    {#<form id="CallCaseSearchForm" class="form-vertical" role="form">#}
+    <p>
+    <form action="{{ path(route_path) }}" method="get" {{ form_enctype(filterform) }} class="well form-search">
 
         <div class="well">
 
@@ -28,14 +30,18 @@
             <div class="row">
 
                 <div class="col-xs-3" align="left">
-                    {{ calllogmacros.singleDateField('','Start Date') }}
+                    {#{{ calllogmacros.singleDateField('','Start Date') }}#}
+                    {{ formmacros.fieldDateLabelNoP(filterform.startDate,'regular-datepicker') }}
+                    {#{{ form_row(filterform.startDate, {'attr': {'placeholder': 'Start Date'}}) }}#}
                 </div>
                 <div class="col-xs-3" align="left">
-                    {{ calllogmacros.singleDateField('','End Date') }}
+                    {#{{ calllogmacros.singleDateField('','End Date') }}#}
+                    {{ formmacros.fieldDateLabelNoP(filterform.endDate,'regular-datepicker') }}
+                    {#{{ form_row(filterform.endDate, {'attr': {'placeholder': 'End Date'}}) }}#}
                 </div>
 
                 <div class="col-xs-2" align="left">
-                    <button id="Search_button" type="button" class="btn btn-info">Search</button>
+                    <button id="Search_button" type="button" class="btn btn-default">Filter</button>
                 </div>
 
                 {#<div class="col-xs-2" align="left">#}
@@ -55,6 +61,7 @@
 
 
             {#advanced search#}
+            <br>
             <div class="row">
                 <a data-toggle="collapse" href="#calllog-AdvancedSearch">Advanced Search</a>
             </div>
@@ -139,7 +146,10 @@
             {#</div> <!-- panel-collapse -->#}
         {#</div> <!-- panel panel-info -->#}
 
+    {#</form>#}
+        {{ form_rest(filterform) }}
     </form>
+    </p>
 
 
     {#Call Case List#}

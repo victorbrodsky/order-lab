@@ -3,6 +3,7 @@
 namespace Oleg\CallLogBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\CallLogBundle\Form\CalllogFilterType;
 use Oleg\CallLogBundle\Form\CalllogMessageType;
 use Oleg\CallLogBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\Encounter;
@@ -52,6 +53,7 @@ class CallEntryController extends Controller
     public function homeAction(Request $request)
     {
 
+        $route = $request->get('_route');
         $title = "Call Case List";
         $alerts = false;
 
@@ -60,12 +62,22 @@ class CallEntryController extends Controller
             $title = $title . " (Alerts)";
         }
 
+        $params = array();
+        $filterform = $this->createForm(new CalllogFilterType($params), null);
+        //$startDate = $filterform['startDate']->getData();
+        //$endDate = $filterform['endDate']->getData();
+        //if( $startDate ) {
+        //    echo "startDate=" . $startDate->format('Y-m-d') . "<br>";
+        //}
+
         return array(
             //'entity' => $entity,
             //'form' => $form->createView(),
             //'cycle' => $cycle,
             'alerts' => $alerts,
             'title' => $title,
+            'filterform' => $filterform->createView(),
+            'route_path' => $route
         );
 
     }

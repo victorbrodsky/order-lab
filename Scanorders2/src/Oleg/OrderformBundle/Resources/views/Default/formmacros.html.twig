@@ -188,6 +188,10 @@
 
 {% macro fieldDateLabel( field, classname, attr, noerror ) %}
     <p>
+        {{ formmacros.fieldDateLabelNoP(field, classname, attr, noerror) }}
+    </p>
+{% endmacro %}
+{% macro fieldDateLabelNoP( field, classname, attr, noerror ) %}
     <div class="row">
         {#TODO: quick fix for vacreq form error#}
         {% if noerror is not defined %}
@@ -212,15 +216,14 @@
 
             {#data-date-format="mm/yyyy"#}
             {#<div class="input-group input-group-reg date datepicker-only-month-year">#}
-                {#{{ form_widget(field) }}#}
-                {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+            {#{{ form_widget(field) }}#}
+            {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
             {#</div>#}
 
 
         </div>
         {{ form_rest(field) }}
     </div>
-    </p>
 {% endmacro %}
 {% macro fielddate( datetime, classname, attr ) %}
     <div class="input-group input-group-reg date {{ classname }}">
