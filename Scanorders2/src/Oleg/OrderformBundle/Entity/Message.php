@@ -936,6 +936,15 @@ class Message {
     {
         $this->messageTitle = $messageTitle;
     }
+    public function getMessageTitleStr()
+    {
+        $title = "";
+        if( $this->getMessageCategory() ) {
+            $title = $this->getMessageCategory()->getNodeNameWithParent() . " (ID " . $this->getMessageCategory()->getId() . ")";
+        }
+
+        return $title;
+    }
 
     /**
      * @param mixed $attachmentContainer

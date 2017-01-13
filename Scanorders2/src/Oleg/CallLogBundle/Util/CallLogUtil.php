@@ -1040,6 +1040,7 @@ class CallLogUtil
     }
 
 
+
     public function getPatientList() {
 
         //list.name = "Pathology Call Complex Patients"

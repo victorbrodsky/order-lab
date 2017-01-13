@@ -67,14 +67,20 @@ class CallEntryController extends Controller
             $title = $title . " (Alerts)";
         }
 
-        $params = array();
+        //child nodes of "Pathology Call Log Entry"
+        $messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        $messageCategories = array();
+        if( $messageCategoriePathCall ) {
+            $messageCategories = $messageCategoriePathCall->printTreeSelectList();
+        }
+        //$node1 = array('id'=>1,'text'=>'node1');
+        //$node2 = array('id'=>2,'text'=>'node2');
+        //$messageCategories = array($node1,$node2);
+        $params = array(
+            'messageCategories' => $messageCategories
+        );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
         $filterform->bind($request);
-        $startDate = $filterform['startDate']->getData();
-        $endDate = $filterform['endDate']->getData();
-        if( $startDate ) {
-            echo "startDate=" . $startDate->format('Y-m-d') . "<br>";
-        }
 
 
         //perform search
@@ -102,14 +108,63 @@ class CallEntryController extends Controller
 
         $dql->leftJoin("message.messageCategory","messageCategory");
         //$dql->where("institution.id = ".$pathology->getId());
-        $dql->orderBy("message.orderdate","ASC");
+        $dql->orderBy("message.orderdate","DESC");
+        $dql->addOrderBy("editorInfos.modifiedOn","DESC");
+
+        //filter
+        $queryParameters = array();
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        //use editorInfos or orderdate
+//        if( $startDate || $endDate ) {
+//            echo "startDate=" . $startDate->format('Y-m-d') . "<br>";
+//            $dql->andWhere('message.orderdate BETWEEN :startDate and :endDate');
+//            $startDateStr = "";
+//            if( $startDate ) {
+//                $startDateStr = $startDate->format('Y-m-d H:i:s');
+//            }
+//            $queryParameters['startDate'] = $startDateStr;
+//            $endDateStr = "";
+//            if( $endDate ) {
+//                $endDateStr = $endDate->format('Y-m-d H:i:s');
+//            }
+//            $queryParameters['endDate'] = $endDateStr;
+//        }
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d') . "<br>";
+            $dql->andWhere('message.orderdate >= :startDate');
+            $queryParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+        }
+        if( $endDate ) {
+            //echo "endDate=" . $endDate->format('Y-m-d') . "<br>";
+            $dql->andWhere('message.orderdate <= :endDate');
+            $queryParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+        }
+
+        $messageCategory = $filterform['messageCategory']->getData();
+        if( $messageCategory ) {
+            $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategory);
+            if( $messageCategoryEntity ) {
+                $selectOrder = false;
+                $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
+                //echo "nodeChildSelectStr=".$nodeChildSelectStr."<br>";
+                $dql->andWhere($nodeChildSelectStr);
+                //$dql->andWhere('messageCategory.id = :messageCategory OR (messageCategory.lft > :lft AND messageCategory.rgt < :rgt )');
+                //$queryParameters['messageCategory'] = $messageCategory;
+                //$queryParameters['lft'] = $messageCategoryEntity->getLft();
+                //$queryParameters['rgt'] = $messageCategoryEntity->getRgt();
+            }
+        }
 
         //$query = $em->createQuery($dql);
         //$messages = $query->getResult();
 
-        $limit = 200;
-        //$limit = 10; //testing
+        $limit = 10;
         $query = $em->createQuery($dql);
+        $query->setParameters($queryParameters);
+
+        //echo "query=".$query->getSql()."<br>";
+
         $paginator  = $this->get('knp_paginator');
         $messages = $paginator->paginate(
             $query,
@@ -117,7 +172,7 @@ class CallEntryController extends Controller
             //$request->query->getInt('page', 1),
             $limit      /*limit per page*/
         );
-        echo "messages count=".count($messages)."<br>";
+        //echo "messages count=".count($messages)."<br>";
 
         return array(
             'messages' => $messages,
@@ -546,7 +601,7 @@ class CallEntryController extends Controller
 
                 //message title setMessageTitle
                 if( $message->getMessageCategory() ) {
-                    $messageTitle = $message->getMessageCategory()->getNodeNameWithParent() . " (ID " . $message->getMessageCategory()->getId() . ")";
+                    $messageTitle = $message->getMessageTitleStr();
                     $message->setMessageTitle($messageTitle);
                 }
 

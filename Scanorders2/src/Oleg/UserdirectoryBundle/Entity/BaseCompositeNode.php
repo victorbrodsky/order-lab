@@ -255,6 +255,55 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 
     }
 
+    public function printTreeSelectList($nodes=array()) {
+        //echo $this;
+        //$nodes[] = $this->getListElement();
+        $nodes[$this->getId()] = $this->getNodeNameWithParent();
+
+        foreach( $this->getChildren() as $subCategory ) {
+
+            if( count($subCategory->getChildren()) > 0 ) {
+                $nodes = $subCategory->printTreeSelectList($nodes);
+            } else {
+                //echo $subCategory;
+                //$nodes[] = $subCategory->getListElement();
+                $nodes[$subCategory->getId()] = $subCategory->getNodeNameWithParent();
+            }
+
+        }
+
+        return $nodes;
+    }
+    public function getListElement() {
+        $element['id'] = $this->getId();
+        $element['text'] = $this->getNodeNameWithParent();
+        return $element;
+    }
+
+    public function selectNodesUnderParentNode( $parentNode, $field, $default=true ) {
+
+        if( $default ) {
+            $comparatorLft = "<";
+            $comparatorRgt = ">";
+        } else {
+            $comparatorLft = ">";
+            $comparatorRgt = "<";
+        }
+
+        $criteriastr = "";
+        $criteriastr .= $field.".root = " . $parentNode->getRoot();
+        $criteriastr .= " AND ";
+        $criteriastr .= $field.".lft $comparatorLft " . $parentNode->getLft(); //Default: lft < getLft
+        $criteriastr .= " AND ";
+        $criteriastr .= $field.".rgt $comparatorRgt " . $parentNode->getRgt(); //Default: rgt > getRgt
+        $criteriastr .= " OR ";
+        $criteriastr .= $field.".id = " . $parentNode->getId();
+
+        $criteriastr = "(".$criteriastr.")";
+
+        return $criteriastr;
+    }
+
     //TODO: rewrite it using recursive
     public function getTreeName_OLD($separator=" => ") {
 
@@ -306,7 +355,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 //        }
 //    }
 
-    public function getNodeNameWithParent() {
+    public function getNodeNameWithParent($separator=": ") {
 
         $treeNameStr = $this->getName()."";
 
@@ -314,7 +363,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         //echo "parent=".$parent."<br>";
 
         if( $parent ) {
-            $treeNameStr = $parent->getName() . " => " . $treeNameStr;
+            $treeNameStr = $parent->getName() . $separator . $treeNameStr;
         }
 
         return $treeNameStr;

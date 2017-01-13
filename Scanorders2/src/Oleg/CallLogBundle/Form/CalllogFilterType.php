@@ -36,6 +36,13 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class'=>'datepicker form-control', 'placeholder'=>'End Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
+        $builder->add('messageCategory', 'choice', array(
+            'label' => false,
+            'required' => false,
+            'choices' => $this->params['messageCategories'],
+            'attr' => array('class' => 'combobox '),
+        ));
+
 //        $builder->add('filter', 'choice', array(
 //            'label' => false,
 //            'required'=> false,

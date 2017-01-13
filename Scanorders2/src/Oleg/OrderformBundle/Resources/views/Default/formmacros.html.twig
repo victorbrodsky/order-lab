@@ -226,14 +226,19 @@
     </div>
 {% endmacro %}
 {% macro fielddate( datetime, classname, attr ) %}
+    {% if datetime.field is defined %}
+        {% set datetimeField = datetime.field %}
+    {% else %}
+        {% set datetimeField = datetime %}
+    {% endif %}
     <div class="input-group input-group-reg date {{ classname }}">
         {% if attr == "disabled" %}
             {#value of disabled field will be ignored#}
-            {{ form_widget(datetime.field,{ 'disabled':'disabled' }) }}
+            {{ form_widget(datetimeField,{ 'disabled':'disabled' }) }}
         {% elseif attr == "readonly" %}
-            {{ form_widget(datetime.field, { 'attr': {'readonly': 'readonly'} }) }}
+            {{ form_widget(datetimeField, { 'attr': {'readonly': 'readonly'} }) }}
         {% else %}
-            {{ form_widget(datetime.field) }}
+            {{ form_widget(datetimeField) }}
         {% endif %}
         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>
