@@ -154,10 +154,10 @@ class CallEntryController extends Controller
         if( $searchFilter ) {
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //string
-                $dql->andWhere("lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
-                $queryParameters['search'] = "'%".$searchFilter."%'";
-                //$queryParameters['search'] = $searchFilter;
+                $dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
+                $queryParameters['search'] = "%".$searchFilter."%";
             } else {
+                echo "integer <br>";
                 //integer
                 $dql->andWhere("mrn.field = :search");
                 $queryParameters['search'] = $searchFilter;
@@ -171,7 +171,7 @@ class CallEntryController extends Controller
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginator  = $this->get('knp_paginator');
         $messages = $paginator->paginate(
