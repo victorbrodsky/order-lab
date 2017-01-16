@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\CallLogBundle\Form\CalllogFilterType;
 use Oleg\CallLogBundle\Form\CalllogMessageType;
 use Oleg\CallLogBundle\Form\PatientType;
+use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
 use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
@@ -264,8 +265,21 @@ class CallEntryController extends Controller
         //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
         $patientListTitleFilter = $filterform['patientListTitle']->getData();
         if( $patientListTitleFilter ) {
-            //$dql->andWhere("mrn.field LIKE :patientListTitle");
-            //$queryParameters['patientListTitle'] = "%".$entryBodySearchFilter."%";
+            $patientListHierarchyNode = $em->getRepository('OlegUserdirectoryBundle:PatientListHierarchy')->find($patientListTitleFilter);
+            if( $patientListHierarchyNode ) {
+                $patientListEntityNamespace = $patientListHierarchyNode->getEntityNamespace();
+                $patientListEntityName = $patientListHierarchyNode->getEntityName();
+                $patientListEntityId = $patientListHierarchyNode->getEntityId();
+                //message->calllogEntryMessage-> use entityNamespace,entityName,entityId
+                $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+                $dql->andWhere("calllogEntryMessage.entityNamespace=:entityNamespace");
+                $dql->andWhere("calllogEntryMessage.entityName=:entityName");
+                $dql->andWhere("calllogEntryMessage.entityId=:entityId");
+                $queryParameters['entityNamespace'] = $patientListEntityNamespace;
+                $queryParameters['entityName'] = $patientListEntityName;
+                $queryParameters['entityId'] = $patientListEntityId;
+            }
+            $advancedFilter = true;
         }
 
 
@@ -273,8 +287,12 @@ class CallEntryController extends Controller
         // (with an "OR" - a match in either one should list the entry).
         $entryBodySearchFilter = $filterform['entryBodySearch']->getData();
         if( $entryBodySearchFilter ) {
-            //$dql->andWhere("mrn.field LIKE :entryBodySearch OR lastname.field LIKE :entryBodySearch");
-            //$queryParameters['entryBodySearch'] = "%".$entryBodySearchFilter."%";
+            //find ObjectTypeText with value=$entryBodySearchFilter AND entityName="Message"
+            $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE ".
+              "(message.id = s.entityId AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
+            $dql->andWhere("EXISTS (".$entryBodySearchStr.")");
+            $queryParameters['entryBodySearch'] = "%".$entryBodySearchFilter."%";
+            $advancedFilter = true;
         }
 
         //$query = $em->createQuery($dql);
@@ -786,7 +804,17 @@ class CallEntryController extends Controller
                                     $newListElement->setDescription($patientDescription);
                                     $newListElement->setObject($message);
                                     $em->persist($newListElement);
+                                } else {
+                                    //patient is already exists in the patient list added by another message
                                 }
+                                //record this to the CalllogEntryMessage (getCalllogEntryMessage)
+                                $calllogEntryMessage = $message->getCalllogEntryMessage();
+                                if( !$calllogEntryMessage ) {
+                                    $calllogEntryMessage = new CalllogEntryMessage();
+                                    $message->setCalllogEntryMessage($calllogEntryMessage);
+                                }
+                                $calllogEntryMessage->setObject($patientListDb);
+                                $calllogEntryMessage->setAddPatientToList(true);
                             }
                         }
                     }

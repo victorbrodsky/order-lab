@@ -226,6 +226,20 @@ class CalllogMessageType extends AbstractType
                 $patientListId = null;
             }
 
+            if( $this->params['cycle'] != "new" && $message ) {
+                $calllogEntryMessage = $message->getCalllogEntryMessage();
+                if( $message->getId() && $message->getCalllogEntryMessage() ) {
+                    $patientListHierarchyNode = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array(
+                        'entityNamespace' => $calllogEntryMessage->getEntityNamespace(),
+                        'entityName' => $calllogEntryMessage->getEntityName(),
+                        'entityId' => $calllogEntryMessage->getEntityId(),
+                    ));
+                    if( $patientListHierarchyNode ) {
+                        $patientListId = $patientListHierarchyNode->getId();
+                    }
+                }
+            }
+
             $form->add('patientListTitle', 'employees_custom_selector', array(
                 'label' => $label,
                 'mapped' => false,

@@ -446,11 +446,11 @@ class Message {
      */
     private $reportBlock;
 
-//    /**
-//     * Pathology Call Log Entry (similar to the LabOrder)
-//     * @ORM\OneToOne(targetEntity="CalllogEntry", inversedBy="message", cascade={"persist","remove"})
-//     */
-//    private $calllogEntry;
+    /**
+     * Pathology Call Log Entry (similar to the LabOrder)
+     * @ORM\OneToOne(targetEntity="CalllogEntryMessage", inversedBy="message", cascade={"persist","remove"})
+     */
+    private $calllogEntryMessage;
 
     ////////////////////////// EOF Specific Messages //////////////////////////
 
@@ -1822,6 +1822,22 @@ class Message {
     public function getProcedureorder()
     {
         return $this->procedureorder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCalllogEntryMessage()
+    {
+        return $this->calllogEntryMessage;
+    }
+
+    /**
+     * @param mixed $calllogEntryMessage
+     */
+    public function setCalllogEntryMessage($calllogEntryMessage)
+    {
+        $this->calllogEntryMessage = $calllogEntryMessage;
     }
 
 
