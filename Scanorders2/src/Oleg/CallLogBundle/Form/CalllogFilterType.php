@@ -42,14 +42,6 @@ class CalllogFilterType extends AbstractType
             'choices' => $this->params['messageCategories'],
             'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder' => "Message Type"),
         ));
-
-//        $builder->add('filter', 'choice', array(
-//            'label' => false,
-//            'required'=> false,
-//            //'multiple' => false,
-//            'choices' => $this->params['fellTypes'],
-//            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty-filter'),
-//        ));
         
         $builder->add('search', 'text', array(
             'max_length'=>200,
@@ -57,7 +49,57 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "MRN or Last Name"),
         ));
-        
+
+        $builder->add('author', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => false,
+            'required' => false,
+            'property' => 'getUsernameOptimal',
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Author"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->leftJoin("u.infos", "infos")
+                    ->leftJoin("u.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
+                    ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
+                    ->orderBy("infos.displayName","ASC");
+                //->where('u.roles LIKE :roles OR u=:user')
+                //->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user']));
+            },
+        ));
+
+        $builder->add('referringProvider', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => false,
+            'required' => false,
+            'property' => 'getUsernameOptimal',
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Referring Provider"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->leftJoin("u.infos", "infos")
+                    ->leftJoin("u.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
+                    ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
+                    ->orderBy("infos.displayName","ASC");
+                //->where('u.roles LIKE :roles OR u=:user')
+                //->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user']));
+            },
+        ));
+
+        $builder->add('specialty', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:HealthcareProviderSpecialtiesList',
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Specialty"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->orderBy("u.orderinlist","ASC");
+            },
+        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

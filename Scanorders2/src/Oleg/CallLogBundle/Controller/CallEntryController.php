@@ -163,6 +163,33 @@ class CallEntryController extends Controller
                 $queryParameters['search'] = $searchFilter;
             }
         }
+        //This single filter should work in the "OR" mode for these three fields: Submitter, Signee, Editor
+        //Don't use: Referring Provider - encounter->referringProviders[]->field(userWrapper)->user(User)
+        //encounter-provider (User)
+        //Don't use: message-provider (User)
+        //message-signeeInfo(ModifierInfo)-modifiedBy(User)
+        //message-editorInfos(ModifierInfo)-modifiedBy(User)
+        // (meaning if the selected user shows up in any of these three fields of the message/entry, show this message/entry.)
+        $authorFilter = $filterform['author']->getData();
+        if( $authorFilter ) {
+            $authorStr = "encounter.provider=:author OR signeeInfo.modifiedBy=:author OR editorInfos.modifiedBy=:author";
+            $dql->andWhere($authorStr);
+            $queryParameters['author'] = $authorFilter;
+        }
+        $referringProviderFilter = $filterform['referringProvider']->getData();
+        if( $referringProviderFilter ) {
+            $referringProviderStr = "referringProviderWrapper.user=:referringProvider";
+            $dql->andWhere($referringProviderStr);
+            $queryParameters['referringProvider'] = $referringProviderFilter;
+        }
+        //encounter_1_referringProviders_0_referringProviderSpecialty
+        $specialtyFilter = $filterform['specialty']->getData();
+        if( $specialtyFilter ) {
+            $specialtyStr = "referringProviders.referringProviderSpecialty=:referringProviderSpecialty";
+            $dql->andWhere($specialtyStr);
+            $queryParameters['referringProviderSpecialty'] = $specialtyFilter;
+        }
+
 
         //$query = $em->createQuery($dql);
         //$messages = $query->getResult();
