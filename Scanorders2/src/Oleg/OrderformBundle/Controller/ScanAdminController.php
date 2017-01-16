@@ -2074,22 +2074,26 @@ class ScanAdminController extends AdminController
     public function generateMessageStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
 
         $elements = array(
             "Draft",
             "Signed",
-            "Deleted"
+            "Deleted",
+            "Signed, Amended",
+            "Post-signature Draft",
+            "Post-amendment Draft",
+            "Post-deletion Draft"
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
 
             $entity = new MessageStatusList();
             $this->setDefaultList($entity,$count,$username,$name);

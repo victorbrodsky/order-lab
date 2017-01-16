@@ -44,7 +44,7 @@ class CalllogFilterType extends AbstractType
         ));
         
         $builder->add('search', 'text', array(
-            'max_length'=>200,
+            //'max_length'=>200,
             'required'=>false,
             'label' => false,
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "MRN or Last Name"),
@@ -90,7 +90,7 @@ class CalllogFilterType extends AbstractType
             },
         ));
 
-        $builder->add('specialty', 'entity', array(
+        $builder->add('referringProviderSpecialty', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:HealthcareProviderSpecialtiesList',
             'label' => false,
             'required' => false,
@@ -100,6 +100,45 @@ class CalllogFilterType extends AbstractType
                     ->orderBy("u.orderinlist","ASC");
             },
         ));
+
+        $builder->add('encounterLocation', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Location',
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Location"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->orderBy("u.name","ASC");
+            },
+        ));
+
+        $builder->add('messageStatus', 'choice', array(
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Message Status"),
+            'choices' => $this->params['messageStatuses']
+        ));
+
+        //Patient List
+        $builder->add('patientListTitle', 'entity', array(
+            'class' => 'OlegOrderformBundle:PatientListHierarchy',
+            'label' => false,
+            'required' => false,
+            'property' => 'getNodeNameWithParent',
+            'attr' => array('class' => 'combobox', 'placeholder' => "Patient List"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->orderBy("u.orderinlist","ASC");
+            },
+        ));
+
+        //Entry Body
+        $builder->add('entryBodySearch', 'text', array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Entry Body"),
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

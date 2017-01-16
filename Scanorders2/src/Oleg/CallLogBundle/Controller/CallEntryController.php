@@ -67,6 +67,21 @@ class CallEntryController extends Controller
             $title = $title . " (Alerts)";
         }
 
+        //$messageStatuses
+        $messageStatuses = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findBy(array('type'=>array('default','user-added')));
+        $messageStatusesChoice = array();
+        foreach( $messageStatuses as $messageStatuse ) {
+            $messageStatusesChoice[$messageStatuse->getId()] = $messageStatuse."";
+        }
+        //add: "All except deleted" [this should show all except "Deleted"], "All", "All Signed Non-Drafts" [this should show both "Signed" and "Signed, Amended"]
+        //"All Drafts" [this should show these four "Draft", "Post-signature Draft", "Post-amendment Draft", "Post-deletion draft"].
+        //"All post-signature drafts" [this should show these two "Post-signature Draft", "Post-amendment Draft"].
+        $messageStatusesChoice["All except deleted"] = "All except deleted";
+        $messageStatusesChoice["All"] = "All";
+        $messageStatusesChoice["All Signed Non-Drafts"] = "All Signed Non-Drafts";
+        $messageStatusesChoice["All Drafts"] = "All Drafts";
+        $messageStatusesChoice["All post-signature drafts"] = "All post-signature drafts";
+
         //child nodes of "Pathology Call Log Entry"
         $messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         $messageCategories = array();
@@ -77,6 +92,7 @@ class CallEntryController extends Controller
         //$node2 = array('id'=>2,'text'=>'node2');
         //$messageCategories = array($node1,$node2);
         $params = array(
+            'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
@@ -112,6 +128,7 @@ class CallEntryController extends Controller
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
 
         //filter
+        $advancedFilter = false;
         $queryParameters = array();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
@@ -175,21 +192,90 @@ class CallEntryController extends Controller
             $authorStr = "encounter.provider=:author OR signeeInfo.modifiedBy=:author OR editorInfos.modifiedBy=:author";
             $dql->andWhere($authorStr);
             $queryParameters['author'] = $authorFilter;
+            $advancedFilter = true;
         }
         $referringProviderFilter = $filterform['referringProvider']->getData();
         if( $referringProviderFilter ) {
             $referringProviderStr = "referringProviderWrapper.user=:referringProvider";
             $dql->andWhere($referringProviderStr);
             $queryParameters['referringProvider'] = $referringProviderFilter;
+            $advancedFilter = true;
         }
         //encounter_1_referringProviders_0_referringProviderSpecialty
-        $specialtyFilter = $filterform['specialty']->getData();
+        $specialtyFilter = $filterform['referringProviderSpecialty']->getData();
         if( $specialtyFilter ) {
             $specialtyStr = "referringProviders.referringProviderSpecialty=:referringProviderSpecialty";
             $dql->andWhere($specialtyStr);
             $queryParameters['referringProviderSpecialty'] = $specialtyFilter;
+            $advancedFilter = true;
+        }
+        //encounter_1_tracker_spots_0_currentLocation
+        $encounterLocationFilter = $filterform['encounterLocation']->getData();
+        if( $encounterLocationFilter ) {
+            $encounterLocationStr = "currentLocation=:encounterLocation";
+            $dql->andWhere($encounterLocationStr);
+            $queryParameters['encounterLocation'] = $encounterLocationFilter;
+            $advancedFilter = true;
+        }
+        //messageStatus
+        $messageStatusFilter = $filterform['messageStatus']->getData();
+        if( $messageStatusFilter ) {
+            if ( strval($messageStatusFilter) != strval(intval($messageStatusFilter)) ) {
+                echo "string=[$messageStatusFilter]<br>";
+                $messageStatusStr = null;
+                $dql->leftJoin("message.messageStatus","messageStatus");
+                // "All except deleted" [this should show all except "Deleted"],
+                if( $messageStatusFilter == "All except deleted" ) {
+                    $messageStatusStr = "messageStatus.name != :deletedMessageStatus";
+                    $queryParameters['deletedMessageStatus'] = "Deleted";
+                }
+                // "All"
+                if( $messageStatusFilter == "All" ) {
+                }
+                // "All Signed Non-Drafts" [this should show both "Signed" and "Signed, Amended"]
+                if( $messageStatusFilter == "All Signed Non-Drafts" ) {
+                    $messageStatusStr = "messageStatus.name = :signedMessageStatus OR messageStatus.name = :signedAmendedMessageStatus";
+                    $queryParameters['signedMessageStatus'] = "Signed";
+                    $queryParameters['signedAmendedMessageStatus'] = "Signed, Amended";
+                }
+                // "All Drafts" [this should show these four "Draft", "Post-signature Draft", "Post-amendment Draft", "Post-deletion draft"].
+                if( $messageStatusFilter == "All Drafts" ) {
+                    $messageStatusStr = "messageStatus.name = :DraftMessageStatus OR messageStatus.name = :PostSignatureDraftMessageStatus";
+                    $queryParameters['DraftMessageStatus'] = "Draft";
+                    $queryParameters['PostSignatureDraftMessageStatus'] = "Post-signature Draft";
+                    $messageStatusStr = $messageStatusStr . " OR messageStatus.name = :PostAmendmentDraftMessageStatus OR messageStatus.name = :PostDeletionDraftMessageStatus";
+                    $queryParameters['PostAmendmentDraftMessageStatus'] = "Post-amendment Draft";
+                    $queryParameters['PostDeletionDraftMessageStatus'] = "Post-deletion Draft";
+                }
+                // "All post-signature drafts" [this should show these two "Post-signature Draft", "Post-amendment Draft"].
+                if( $messageStatusStr ) {
+                    echo "string: $messageStatusStr<br>";
+                    $dql->andWhere($messageStatusStr);
+                }
+            } else {
+                echo "integer=$messageStatusFilter<br>";
+                $messageStatusStr = "message.messageStatus=:messageStatus";
+                $dql->andWhere($messageStatusStr);
+                $queryParameters['messageStatus'] = $messageStatusFilter;
+            }
+            $advancedFilter = true;
         }
 
+        //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
+        $patientListTitleFilter = $filterform['patientListTitle']->getData();
+        if( $patientListTitleFilter ) {
+            //$dql->andWhere("mrn.field LIKE :patientListTitle");
+            //$queryParameters['patientListTitle'] = "%".$entryBodySearchFilter."%";
+        }
+
+
+        //"Entry Body": The value entered in this field should be searched for in the "History/Findings" and "Impression/Outcome" fields
+        // (with an "OR" - a match in either one should list the entry).
+        $entryBodySearchFilter = $filterform['entryBodySearch']->getData();
+        if( $entryBodySearchFilter ) {
+            //$dql->andWhere("mrn.field LIKE :entryBodySearch OR lastname.field LIKE :entryBodySearch");
+            //$queryParameters['entryBodySearch'] = "%".$entryBodySearchFilter."%";
+        }
 
         //$query = $em->createQuery($dql);
         //$messages = $query->getResult();
@@ -214,7 +300,8 @@ class CallEntryController extends Controller
             'alerts' => $alerts,
             'title' => $title,
             'filterform' => $filterform->createView(),
-            'route_path' => $route
+            'route_path' => $route,
+            'advancedFilter' => $advancedFilter
         );
 
     }

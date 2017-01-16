@@ -67,11 +67,16 @@
 
 
             {#advanced search#}
+            {% if advancedFilter %}
+                {% set advacedCollapse = 'in' %}
+            {% else %}
+                {% set advacedCollapse = '' %}
+            {% endif %}
             <br>
             <div class="row">
                 <a data-toggle="collapse" href="#calllog-AdvancedSearch">Advanced Search</a>
             </div>
-            <div id="calllog-AdvancedSearch" class="panel-collapse collapse">
+            <div id="calllog-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
                 <div class="panel-body">
 
                     <div class="row">
@@ -85,7 +90,11 @@
                         </div>
 
                         <div class="col-xs-2" align="left">
-                            {{ form_widget(filterform.specialty) }}
+                            {{ form_widget(filterform.referringProviderSpecialty) }}
+                        </div>
+
+                        <div class="col-xs-4" align="left">
+                            {{ form_widget(filterform.encounterLocation) }}
                         </div>
 
                         {#<div class="col-xs-5" align="left">#}
@@ -125,44 +134,23 @@
 
                     </div>
 
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-2" align="left">
+                            {{ form_widget(filterform.messageStatus) }}
+                        </div>
+                        <div class="col-xs-2" align="left">
+                            {{ form_widget(filterform.patientListTitle) }}
+                        </div>
+                        <div class="col-xs-2" align="left">
+                            {{ form_widget(filterform.entryBodySearch) }}
+                        </div>
+                    </div>
+
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
 
         </div>
-
-        {#advanced search#}
-        {#<div class="panel panel-primary">#}
-            {#<div class="panel-heading">#}
-                {#<h4 class="panel-title">#}
-                    {#<a data-toggle="collapse" href="#calllog-PatientInformation">#}
-                        {#Advanced Search#}
-                    {#</a>#}
-                {#</h4>#}
-            {#</div>#}
-            {#<div id="calllog-PatientInformation" class="panel-collapse collapse in">#}
-                {#<div class="panel-body">#}
-
-                    {#<div class="row">#}
-
-                        {#<div class="form-group col-xs-5" align="left">#}
-                            {#{{ calllogmacros.simpleDateField('Start Date:','') }}#}
-                        {#</div>#}
-                        {#<div class="form-group col-xs-5" align="left">#}
-                            {#{{ calllogmacros.simpleDateField('End Date:','') }}#}
-                        {#</div>#}
-
-                        {#<div class="form-group col-xs-1" align="left">#}
-                            {#<button id="Search_button" type="button" class="btn btn-lg btn-success" align="center" style="float:left; width:100%">Search</button>#}
-                        {#</div>#}
-
-                        {#<div class="form-group col-xs-1" align="left">#}
-                        {#</div>#}
-
-                    {#</div>#}
-
-                {#</div> <!-- panel-body -->#}
-            {#</div> <!-- panel-collapse -->#}
-        {#</div> <!-- panel panel-info -->#}
 
     {#</form>#}
         {{ form_rest(filterform) }}
@@ -568,7 +556,8 @@
                 </td>
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
-                <td data-toggle="tooltip" title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">
+                <td data-toggle="tooltip"
+                    title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">
                     {% if message.editorInfos|length > 0 %}
                         {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
                     {% else %}
@@ -646,5 +635,15 @@
     </div>
 
 
+{% endblock %}
+
+{% block additionaljs %}
+    <script language="Javascript">
+
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
 {% endblock %}
 
