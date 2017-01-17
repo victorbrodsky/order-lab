@@ -209,7 +209,7 @@ class CallLogLoggerController extends LoggerController
 
         //filter[objectType][]=4
         //filter[objectId]=178
-        
+
 //        $filter = $request->query->get('filter');
 //
 //        if( count($filter) > 0 ) {

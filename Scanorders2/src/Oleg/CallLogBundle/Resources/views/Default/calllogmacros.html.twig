@@ -637,6 +637,15 @@
 
             <li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>
 
+            {% if message.patient|length > 0 %}
+                {% set mrn = message.patient|first.obtainValidField('mrn') %}
+                {% if mrn %}
+                    {% set mrnNumber = mrn.field %}
+                    {% set mrnTypeId = mrn.keytype.id %}
+                    <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
+                {% endif %}
+            {% endif %}
+
             {#<li><a href="#">View Entry History & Comments</a></li>#}
             {#<li>#}
                 {#<a href="#" data-toggle="modal" data-target="#addComment_{{ message.id }}">Add Comment</a>#}
