@@ -265,19 +265,20 @@ class CallEntryController extends Controller
         //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
         $patientListTitleFilter = $filterform['patientListTitle']->getData();
         if( $patientListTitleFilter ) {
-            $patientListHierarchyNode = $em->getRepository('OlegUserdirectoryBundle:PatientListHierarchy')->find($patientListTitleFilter);
+            $patientListHierarchyNode = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListTitleFilter);
             if( $patientListHierarchyNode ) {
                 $patientListEntityNamespace = $patientListHierarchyNode->getEntityNamespace();
                 $patientListEntityName = $patientListHierarchyNode->getEntityName();
-                $patientListEntityId = $patientListHierarchyNode->getEntityId();
+                //$patientListEntityId = $patientListHierarchyNode->getEntityId();
+                //echo "$patientListEntityNamespace $patientListEntityName<br>";
                 //message->calllogEntryMessage-> use entityNamespace,entityName,entityId
                 $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
-                $dql->andWhere("calllogEntryMessage.entityNamespace=:entityNamespace");
-                $dql->andWhere("calllogEntryMessage.entityName=:entityName");
-                $dql->andWhere("calllogEntryMessage.entityId=:entityId");
+                $patientListEntityStr = "calllogEntryMessage.entityNamespace=:entityNamespace AND calllogEntryMessage.entityName=:entityName";
+                //echo "str=$patientListEntityStr<br>";
+                $dql->andWhere($patientListEntityStr);
                 $queryParameters['entityNamespace'] = $patientListEntityNamespace;
                 $queryParameters['entityName'] = $patientListEntityName;
-                $queryParameters['entityId'] = $patientListEntityId;
+                //$queryParameters['entityId'] = $patientListEntityId;
             }
             $advancedFilter = true;
         }
