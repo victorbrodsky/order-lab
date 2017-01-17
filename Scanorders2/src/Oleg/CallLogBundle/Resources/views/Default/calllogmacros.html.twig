@@ -568,7 +568,7 @@
 
 {% endmacro %}
 
-{% macro indexAction( message, cycle ) %}
+{% macro indexAction( message, eventObjectTypeId, cycle ) %}
 
     <!-- Modal -->
     <div class="modal fade" id="addComment_{{ message.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -618,6 +618,7 @@
             </div>
         </div>
     </div>
+    <!-- EOF Modal -->
 
 
     <div class="btn-group">
@@ -628,13 +629,20 @@
 
         <ul class="dropdown-menu dropdown-menu-right">
 
-            <li><a href="#">Edit Entry</a></li>
-            <li><a href="#">View Entry History & Comments</a></li>
-            <li>
-                <a href="#" data-toggle="modal" data-target="#addComment_{{ message.id }}">Add Comment</a>
-            </li>
-            <li><a data-confirm="Are you sure you want to duplicate data?" data-ok="Duplicate" data-cancel="Do not duplicate" class="action-cancel-status" href="#">Generate new entry for same patient issue</a>
-            </li>
+            {% if message.messageStatus and message.messageStatus.name == "Draft" %}
+                <li><a href="#">Edit Entry</a></li>
+            {% else %}
+                <li><a href="#">Amend</a></li>
+            {% endif %}
+
+            <li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>
+
+            {#<li><a href="#">View Entry History & Comments</a></li>#}
+            {#<li>#}
+                {#<a href="#" data-toggle="modal" data-target="#addComment_{{ message.id }}">Add Comment</a>#}
+            {#</li>#}
+            {#<li><a data-confirm="Are you sure you want to duplicate data?" data-ok="Duplicate" data-cancel="Do not duplicate" class="action-cancel-status" href="#">Generate new entry for same patient issue</a>#}
+            {#</li>#}
 
         </ul>
 

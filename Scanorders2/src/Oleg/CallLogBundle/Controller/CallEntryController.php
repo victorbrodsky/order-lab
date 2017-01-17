@@ -321,6 +321,8 @@ class CallEntryController extends Controller
             throw new \Exception( "Location type is not found by name '".$categoryStr."'" );
         }
 
+        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+
         return array(
             'messages' => $messages,
             'alerts' => $alerts,
@@ -329,6 +331,7 @@ class CallEntryController extends Controller
             'route_path' => $route,
             'advancedFilter' => $advancedFilter,
             'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
+            'eventObjectTypeId' => $eventObjectType->getId()
             //'sitename' => $this->container->getParameter('calllog.sitename')
         );
 

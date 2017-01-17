@@ -12,28 +12,36 @@
             <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
 
+        {% set favicon = 'favicon.ico' %}
+
         {% if sitename == employees_sitename %}
             {% set title = "Employee Directory" %}
+            {% set favicon = 'bundles/oleguserdirectory/form/img/users-1-64x64.png' %}
         {% endif %}
 
         {% if sitename == scan_sitename %}
             {% set title = "Scan Orders" %}
+            {% set favicon = 'favicon.ico' %}
         {% endif %}
 
         {% if sitename == fellapp_sitename %}
             {% set title = "Fellowship Applications" %}
+            {% set favicon = 'glyphicons-37-file.png' %}
         {% endif %}
 
         {% if sitename == deidentifier_sitename %}
             {% set title = "Deidentifier" %}
+            {% set favicon = 'glyphicons-81-retweet.png' %}
         {% endif %}
 
         {% if sitename == vacreq_sitename %}
             {% set title = "Vacation Request" %}
+            {% set favicon = 'glyphicons-39-plane.png' %}
         {% endif %}
 
         {% if sitename == calllog_sitename %}
             {% set title = "Call Log Book" %}
+            {% set favicon = 'glyphicons-442-phone-alt.png' %}
         {% endif %}
 
         <title>{{ title }}</title>
@@ -49,7 +57,7 @@
         {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
         {{ usermacros.nonLiveSiteRedirect() }}
 
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="icon" type="image/x-icon" href="{{ asset(favicon) }}" />
 
     </head>
 
@@ -83,23 +91,6 @@
 
             $(document).ready(function() {
 
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    async: false,
-                    timeout: _ajaxTimeout,
-                    data: { display_height: screen.height, display_width: screen.width },
-                    success: function (data) {
-                       //console.debug('send browser data ok');
-                    },
-                    error: function (x , t, m) {
-                        if( t === "timeout" ) {
-                            getAjaxTimeoutMsg();
-                        }
-                       //console.debug('send browser data error');
-                    }
-                });
-
                 regularCombobox();
 
                 $("#login-form").on("submit", function () {
@@ -116,6 +107,23 @@
                     //console.log('focus username field');
                     $('#display-username').focus();
                 }
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    async: true,
+                    timeout: _ajaxTimeout,
+                    data: { display_height: screen.height, display_width: screen.width },
+                    success: function (data) {
+                        //console.debug('send browser data ok');
+                    },
+                    error: function (x , t, m) {
+                        if( t === "timeout" ) {
+                            getAjaxTimeoutMsg();
+                        }
+                        //console.debug('send browser data error');
+                    }
+                });
 
             });
 

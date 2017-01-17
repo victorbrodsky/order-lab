@@ -194,4 +194,35 @@ class CallLogLoggerController extends LoggerController
 
     }
 
+    /**
+     * Generation Log with eventTypes = "New Call Log Book Entry Submitted" and users = current user id
+     *
+     * @Route("/event-log-per-object/", name="calllog_event-log-per-object_log")
+     * @Method("GET")
+     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+     */
+    public function calllogEventLogPerObjectAction(Request $request)
+    {
+        if (false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER")) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        //filter[objectType][]=4
+        //filter[objectId]=178
+        
+//        $filter = $request->query->get('filter');
+//
+//        if( count($filter) > 0 ) {
+//            $objectTypes = $filter['objectType'];
+//            $objectId = $filter['objectId'];
+//        }
+        //echo "$objectTypes, $objectId <br>";
+        //exit();
+
+        $params = array('sitename'=>$this->container->getParameter('calllog.sitename'));
+        $loggerFormParams = $this->listLogger($params,$request);
+
+        return $loggerFormParams;
+    }
+
 }
