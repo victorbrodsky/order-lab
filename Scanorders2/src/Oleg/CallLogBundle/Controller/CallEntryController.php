@@ -314,13 +314,22 @@ class CallEntryController extends Controller
         );
         //echo "messages count=".count($messages)."<br>";
 
+        //all messages will show only form fields for this message category node
+        $categoryStr = "Pathology Call Log Entry";
+        $messageCategoryInfoNode = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        if( !$messageCategoryInfoNode ) {
+            throw new \Exception( "Location type is not found by name '".$categoryStr."'" );
+        }
+
         return array(
             'messages' => $messages,
             'alerts' => $alerts,
             'title' => $title,
             'filterform' => $filterform->createView(),
             'route_path' => $route,
-            'advancedFilter' => $advancedFilter
+            'advancedFilter' => $advancedFilter,
+            'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
+            //'sitename' => $this->container->getParameter('calllog.sitename')
         );
 
     }

@@ -843,6 +843,73 @@ class FormNodeUtil
         return $index;
     }
 
+    //Simplifying version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
+    //$holderEntity is the holder of the $formNodeHolderEntity, for example, Message entity
+    //$formNodeHolderEntity is a form node holder, for example, MessageCategory entity
+    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $separator="<br>" ) {
+
+        if( !$holderEntity ) {
+            return null;
+        }
+
+        if( !$formNodeHolderEntity ) {
+            return null;
+        }
+
+        $class = new \ReflectionClass($holderEntity);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+        $mapper = array(
+            'entityNamespace' => $classNamespace,   //"Oleg\\OrderformBundle\\Entity",
+            'entityName' => $className, //"Message",
+            'entityId' => $holderEntity->getId(),
+        );
+        $entityId = $holderEntity->getId(); //"Message ID";
+
+        //$formNodeUtil = $this->container->get('user_formnode_utility');
+        //$formNodeHolderId = $formNodeHolderEntity->getId();
+        $resArr = array();
+
+        //$formNodes = $formNodeHolderEntity->getFormNodes();
+        //get only 'real' fields as $formNodes
+        $formNodes = $this->getAllRealFormNodes($formNodeHolderEntity);
+
+        foreach( $formNodes as $formNode ) {
+
+            if( $formNode && $formNode->getId() ) {
+                $formNodeId = $formNode->getId();
+            } else {
+                continue;
+            }
+
+//            if( $this->isFormNodeInArray($formNodeId,$resArr) ) {
+//                continue;
+//            }
+
+            $formNodeValue = null;
+            $receivingEntity = null;
+            if( $entityId ) {
+                $complexRes = $this->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
+                $formNodeValue = $complexRes['formNodeValue'];
+                $receivingEntity = $complexRes['receivingEntity'];
+            }
+
+            //echo "formNodeValue for formNode=".$formNode->getId().":<br>";
+
+            if( is_array($formNodeValue) ) {
+                //not implemented
+            } else {
+                //////////////// Regular form node /////////////////////
+                //process userWrapper case
+                $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+            }
+
+            $resArr[] = $formNode->getName() . ": " . $formNodeValue;
+        }
+
+        return implode($separator,$resArr);
+    }
+
 
 //    public function getListByType( $formNode ) {
 //

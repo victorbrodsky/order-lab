@@ -552,11 +552,13 @@
             <tr class="{{ trclassname }}">
 
                 <td>
-                    {{  message.id }}
+                    {#{{  message.id }}#}
+                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
                 </td>
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
                 <td data-toggle="tooltip"
+                    data-container="body"
                     title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">
                     {% if message.editorInfos|length > 0 %}
                         {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
@@ -610,17 +612,24 @@
                     {% endif %}
                 </td>
 
-                <td>
+                <td class="rowlink-skip">
                     {{ calllogmacros.indexAction(message) }}
                 </td>
 
             </tr>
             <tr class="{{ trclassname }}">
+                <td style="display: none">
+                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
+                </td>
                 <td colspan="9">
-                    {{ message.getMessageTitleStr }}
-                    <p>History/Findings: This is an example of a previously entered call.</p>
-                    <p>Impression/Outcome: This is an example of an impression and outcome.</p>
+                    {{ message.getMessageTitleStr }}<br>
+                    {#<p>History/Findings: This is an example of a previously entered call.</p>#}
+                    {#<p>Impression/Outcome: This is an example of an impression and outcome.</p>#}
                     {#<p>Laboratory Results: This is an example of an impression and outcome</p>#}
+                    {% if messageCategoryInfoNode is not defined %}
+                        {% set messageCategoryInfoNode = message.messageCategory %}
+                    {% endif %}
+                    {{ user_formnode_utility.getFormNodeHolderShortInfo(message,messageCategoryInfoNode)|raw }}
                 </td>
             </tr>
 

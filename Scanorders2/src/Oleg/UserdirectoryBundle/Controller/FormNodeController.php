@@ -95,7 +95,7 @@ class FormNodeController extends Controller {
                 echo "############# formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
             }
 
-            if( $formNode && $formNodeId = $formNode->getId() ) {
+            if( $formNode && $formNode->getId() ) {
                 $formNodeId = $formNode->getId();
             } else {
                 continue;
