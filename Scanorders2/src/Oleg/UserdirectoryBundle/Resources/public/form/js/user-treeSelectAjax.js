@@ -190,14 +190,14 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
             }
         }
 
-        //remove readonly classes for excluded levels indicated by data-read-only-exclusion-level
+        //remove readonly classes for excluded levels indicated by data-read-only-exclusion-after-level
         if( comboboxEl.hasClass('combobox-compositetree-read-only-exclusion') ) {
             //console.log('rowElHtml='+rowElHtml);
             var level = treeArr[0].level;
-            var readonlyParentLevel = comboboxEl.data("read-only-exclusion-level");
-            //console.log( label+': level='+ level + " ?= readonlyParentLevel="+readonlyParentLevel );
-            if( parseInt(level) >= parseInt(readonlyParentLevel) ) {
-                //console.log("add readonly!!!");
+            var readonlyExclusionAfterLevel = comboboxEl.data("read-only-exclusion-after-level");
+            //console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
+            if( parseInt(level) >= parseInt(readonlyExclusionAfterLevel) ) {
+                //console.log("remove readonly!!!");
                 var origReplaceStr = 'readonly="readonly"';
                 var toReplaceStr = '';
                 rowElHtml = rowElHtml.replace(origReplaceStr, toReplaceStr);

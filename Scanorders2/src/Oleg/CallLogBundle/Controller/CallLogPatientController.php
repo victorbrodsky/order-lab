@@ -76,6 +76,32 @@ class CallLogPatientController extends PatientController {
     }
 
     /**
+     * Displays a form to edit an existing Patient entity.
+     *
+     * @Route("/edit-by-mrn/{mrn}/{mrntype}", name="calllog_patient_edit_by_mrn", options={"expose"=true})
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     */
+    public function editPatientByMrnAction( Request $request, $mrn, $mrntype )
+    {
+        if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        exit('edit patient by mrn');
+
+        $params = array(
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'datastructure' => 'datastructure-patient',
+            'tracker' => 'tracker',
+            'updatepath' => 'calllog_patient_update',
+            'showPlus' => 'showPlus'
+        );
+
+        return $this->editPatient($request,$id,$params);
+    }
+
+    /**
      * Edits an existing Patient entity.
      *
      * @Route("/{id}/edit", name="calllog_patient_update", options={"expose"=true})

@@ -172,6 +172,12 @@ class Message {
     private $messageStatus;
 
     /**
+     * Message Status Prior to Deletion
+     * @ORM\ManyToOne(targetEntity="MessageStatusList")
+     */
+    private $messageStatusPrior;
+
+    /**
      * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ModifierInfo", cascade={"persist","remove"})
      */
     private $signeeInfo;
@@ -903,6 +909,22 @@ class Message {
     public function setMessageStatus($messageStatus)
     {
         $this->messageStatus = $messageStatus;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessageStatusPrior()
+    {
+        return $this->messageStatusPrior;
+    }
+
+    /**
+     * @param mixed $messageStatusPrior
+     */
+    public function setMessageStatusPrior($messageStatusPrior)
+    {
+        $this->messageStatusPrior = $messageStatusPrior;
     }
 
     /**
@@ -1664,8 +1686,28 @@ class Message {
         $this->removePatient($child);
     }
 
+    //FirstName LastName (MRN Type: MRN)
+    public function getPatientNameMrnInfo() {
+        $infoArr = array();
+        foreach( $this->getPatient() as $patient ) {
+            //echo "patient=".$patient->getId()."<br>";
+            //$infoArr[] = $patient->obtainPatientInfoTitle();
+            $infoArr[] = $patient->obtainPatientInfoSimple();
+        }
+        return implode("; ",$infoArr);
+    }
 
-
+    //[submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD
+    public function getSubmitterInfo() {
+        $info = "";
+        if( $this->getOrderdate() ) {
+            $info = $this->getOrderdate()->format('m/d/Y h:i a');
+        }
+        if( $this->getProvider() ) {
+            $info = " by ".$this->getProvider()->getUsernameOptimal();
+        }
+        return $info;
+    }
 
 
 

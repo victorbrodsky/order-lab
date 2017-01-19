@@ -1546,6 +1546,10 @@ class AdminController extends Controller
                         <a href="https://github.com/adesigns/calendar-bundle">jQuery FullCalendar bundle</a>
                     </li>
 
+                    <li>
+                        <a href="https://sciactive.com/pnotify/">PNotify JavaScript notifications</a>
+                    </li>
+
                 </ul>
                 </p>
             '

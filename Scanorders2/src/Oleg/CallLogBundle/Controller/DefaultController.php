@@ -66,6 +66,16 @@ class DefaultController extends Controller
     {
         //return $this->redirectToRoute('user_admin_index');
 
+//        $msg = "Notify Test!!!";
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $msg
+//        );
+//            $this->get('session')->getFlashBag()->add(
+//                'pnotify',
+//                $msg
+//            );
+
         return array(
             //'entity' => $entity,
             //'form' => $form->createView(),

@@ -138,7 +138,7 @@ class CalllogMessageType extends AbstractType
                     'data-compositetree-classname' => 'MessageCategory',
                     'data-label-prefix' => '',
                     //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
-                    'data-read-only-exclusion-level' => '2', //readonly will be disable for all levels after indicated level
+                    'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
                 ),
                 'classtype' => 'messageCategory'
             ));

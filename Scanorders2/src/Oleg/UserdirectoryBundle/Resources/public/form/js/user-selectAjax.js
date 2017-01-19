@@ -192,6 +192,12 @@ function populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,opti
     //target, data, placeholder, multipleFlag, filter
     populateSelectCombobox( comboboxEl, optionData, "Select an option" );
 
+    //enable this element for readonly exceptions
+    if( comboboxEl.hasClass('combobox-compositetree-read-only-exclusion') || comboboxEl.hasClass('combobox-compositetree-readonly-parent') ) {
+        comboboxEl.select2("readonly", false);
+        //comboboxEl.prop('disabled', false);
+    }
+
     if( !comboboxEl.hasClass('show-as-single-node') ) {
         comboboxTreeListener( comboboxEl, bundleName, entityName, rowElHtml );
         comboboxEl.trigger('change');

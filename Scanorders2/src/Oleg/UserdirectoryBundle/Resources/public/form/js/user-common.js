@@ -1160,3 +1160,25 @@ function userTeamTwigMacro(myteamurl,btnTargetId,replaceTargetId) {
     });
 }
 
+function userPnotifyDisplay() {
+    if( !$('#pnotify-notice') ) {
+        return;
+    }
+    var text = $('#pnotify-notice').val();
+    //console.log("text="+text);
+    if( text ) {
+        var type = 'info';
+        if( $('#pnotify-notice').hasClass('pnotify-notice-success') ) {
+            type = 'success';
+        }
+        if( $('#pnotify-notice').hasClass('pnotify-notice-error') ) {
+            type = 'error';
+        }
+        new PNotify({
+            icon: false,
+            //title: 'Regular Notice',
+            text: text,
+            type: 'info'
+        });
+    }
+}

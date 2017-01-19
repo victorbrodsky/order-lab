@@ -1327,6 +1327,7 @@ class User extends BaseUser {
     //If the user has no preferred name, but does have a first and last name, concatenate them
     //and start with the first and last name combo; if the user has no first name, use just the last name;
     //if the user has no last name, use the first name; if the user has none of the three names, start with the User ID:
+    //FirstName LastName, MD
     public function getUsernameOptimal() {
 
         $degrees = array();

@@ -32,6 +32,7 @@
         'bundles/oleguserdirectory/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
         'bundles/oleguserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'
         'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/pnotify/pnotify.custom.min.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
@@ -157,6 +158,16 @@
                 <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
             {% endfor %}
 
+            {% for flashMessage in app.session.flashbag.get('pnotify') %}
+                <input type="hidden" id="pnotify-notice" value="{{ flashMessage }}" />
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('pnotify-error') %}
+                <input type="hidden" id="pnotify-notice" class="pnotify-notice-error" value="{{ flashMessage }}" />
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('pnotify-success') %}
+                <input type="hidden" id="pnotify-notice" class="pnotify-notice-success" value="{{ flashMessage }}" />
+            {% endfor %}
+
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
             <input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
@@ -194,6 +205,7 @@
                 '@OlegUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
                 '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
                 '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+                '@OlegUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
 
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-form.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'

@@ -548,7 +548,12 @@
         <tbody data-link="row" class="rowlink">
 
         {% for message in messages %}
+
             {% set trclassname = "" %}
+            {% if message.messageStatus.name == 'Deleted' %}
+                {% set trclassname = "order-reject-status" %}
+            {% endif %}
+
             <tr class="{{ trclassname }}">
 
                 <td>
@@ -617,7 +622,7 @@
                 </td>
 
             </tr>
-            <tr class="{{ trclassname }}">
+            <tr class="table-no-border {{ trclassname }}">
                 <td style="display: none">
                     <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
                 </td>

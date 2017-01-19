@@ -53,9 +53,8 @@ class CallEntryController extends Controller
      */
     public function homeAction(Request $request)
     {
-
         if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -98,6 +97,11 @@ class CallEntryController extends Controller
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
         $filterform->bind($request);
+
+        $messageStatusFilter = $filterform['messageStatus']->getData();
+        if( !$messageStatusFilter ) {
+            return $this->redirect( $this->generateUrl('calllog_home',array('filter[messageStatus]'=>"All except deleted")) );
+        }
 
 
         //perform search
@@ -175,7 +179,7 @@ class CallEntryController extends Controller
                 $dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
                 $queryParameters['search'] = "%".$searchFilter."%";
             } else {
-                echo "integer <br>";
+                //echo "integer <br>";
                 //integer
                 $dql->andWhere("mrn.field = :search");
                 $queryParameters['search'] = $searchFilter;
@@ -219,16 +223,21 @@ class CallEntryController extends Controller
             $advancedFilter = true;
         }
         //messageStatus
-        $messageStatusFilter = $filterform['messageStatus']->getData();
+        //$messageStatusFilter = $filterform['messageStatus']->getData();
+//        if( !$messageStatusFilter ) {
+//            $messageStatusFilter = "All except deleted";
+//        }
         if( $messageStatusFilter ) {
+            $advancedFilter = true;
             if ( strval($messageStatusFilter) != strval(intval($messageStatusFilter)) ) {
-                echo "string=[$messageStatusFilter]<br>";
+                //echo "string=[$messageStatusFilter]<br>";
                 $messageStatusStr = null;
                 $dql->leftJoin("message.messageStatus","messageStatus");
                 // "All except deleted" [this should show all except "Deleted"],
                 if( $messageStatusFilter == "All except deleted" ) {
                     $messageStatusStr = "messageStatus.name != :deletedMessageStatus";
                     $queryParameters['deletedMessageStatus'] = "Deleted";
+                    $advancedFilter = false;
                 }
                 // "All"
                 if( $messageStatusFilter == "All" ) {
@@ -249,17 +258,23 @@ class CallEntryController extends Controller
                     $queryParameters['PostDeletionDraftMessageStatus'] = "Post-deletion Draft";
                 }
                 // "All post-signature drafts" [this should show these two "Post-signature Draft", "Post-amendment Draft"].
+                if( $messageStatusStr == "All post-signature drafts" ) {
+                    $messageStatusStr = "messageStatus.name = :PostSignatureDraftMessageStatus OR messageStatus.name = :PostAmendmentDraftMessageStatus";
+                    $queryParameters['PostSignatureDraftMessageStatus'] = "Post-signature Draft";
+                    $queryParameters['PostAmendmentDraftMessageStatus'] = "Post-amendment Draft";
+                }
                 if( $messageStatusStr ) {
-                    echo "string: $messageStatusStr<br>";
+                    //echo "string: $messageStatusStr<br>";
                     $dql->andWhere($messageStatusStr);
                 }
             } else {
-                echo "integer=$messageStatusFilter<br>";
+                //echo "integer=$messageStatusFilter<br>";
                 $messageStatusStr = "message.messageStatus=:messageStatus";
                 $dql->andWhere($messageStatusStr);
                 $queryParameters['messageStatus'] = $messageStatusFilter;
             }
-            $advancedFilter = true;
+        } else {
+            //
         }
 
         //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
@@ -347,6 +362,10 @@ class CallEntryController extends Controller
      */
     public function callEntryAction(Request $request)
     {
+        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
         //1) search box: MRN,Name...
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -360,6 +379,7 @@ class CallEntryController extends Controller
         $mrntype = trim($request->get('mrn-type'));
         $encounterNumber = trim($request->get('encounter'));
         $encounterTypeId = trim($request->get('encounter-type'));
+        $messageTypeId = trim($request->get('message-type'));
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -489,7 +509,7 @@ class CallEntryController extends Controller
         //add new encounter to patient
         $patient->addEncounter($encounter2);
 
-        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
+        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageTypeId);
 
         //add patient
         $message->addPatient($patient);
@@ -523,6 +543,10 @@ class CallEntryController extends Controller
      */
     public function updatePatientAction(Request $request)
     {
+        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
         //exit('update patient');
         //case 1: patient exists: create a new encounter to DB and add it to the existing patient
         //add patient id field to the form (id="oleg_calllogbundle_patienttype_id") or use class="calllog-patient-id" input field.
@@ -621,7 +645,7 @@ class CallEntryController extends Controller
 //            //print_r($request->get("form"));
 //            //exit('form is valid');
 
-            $msg = "No Case found";
+            $msg = "No Case found. No action has been performed.";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
 
             $patients = $message->getPatient();
@@ -629,7 +653,7 @@ class CallEntryController extends Controller
                 throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
             }
             $patient = $patients->first();
-            //echo "patient id=".$patient->getId()."<br>";
+            echo "patient id=".$patient->getId()."<br>";
 
             $patientInfoEncounter = null;
             $newEncounter = null;
@@ -662,18 +686,18 @@ class CallEntryController extends Controller
                 //Remove tracker if spots/location is empty
                 $tracker = $newEncounter->getTracker();
                 $tracker->removeEmptySpots();
-                if( $tracker->isEmpty() ) {
+                if ($tracker->isEmpty()) {
                     //echo "Tracker is empty! <br>";
                     $newEncounter->setTracker(null);
                 } else {
                     //echo "Tracker is not empty! <br>";
                     //check if location name is not empty
-                    if( $newEncounter->getTracker() ) {
+                    if ($newEncounter->getTracker()) {
                         $currentLocation = $newEncounter->getTracker()->getSpots()->first()->getCurrentLocation();
-                        if( !$currentLocation->getName() ) {
+                        if (!$currentLocation->getName()) {
                             $currentLocation->setName('');
                         }
-                        if( !$currentLocation->getCreator() ) {
+                        if (!$currentLocation->getCreator()) {
                             $currentLocation->setCreator($user);
                         }
                     }
@@ -954,8 +978,15 @@ class CallEntryController extends Controller
                 $msg
             );
 
+            //echo "return messageId=".$message->getId()."<br>";
+            //exit('1');
+
             //return $this->redirect( $this->generateUrl('calllog_callentry') );
-            return $this->redirect( $this->generateUrl('calllog_callentry_view',array('messageId'=>$message->getId())) );
+            if( $message->getId() ) {
+                return $this->redirect($this->generateUrl('calllog_callentry_view', array('messageId' => $message->getId())));
+            } else {
+                return $this->redirect($this->generateUrl('calllog_home'));
+            }
         }
         //exit('form is not submitted');
 
@@ -1031,7 +1062,7 @@ class CallEntryController extends Controller
         return $form;
     }
 
-    public function createCalllogEntryMessage($user,$permittedInstitutions,$system) {
+    public function createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageCategoryId=null) {
         $em = $this->getDoctrine()->getManager();
         $orderUtil = $this->get('scanorder_utility');
 
@@ -1046,9 +1077,13 @@ class CallEntryController extends Controller
         $message->addSource($source);
 
         //set order category
-        $categoryStr = "Pathology Call Log Entry";
-        //$categoryStr = "Nesting Test"; //testing
-        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        if( $messageCategoryId ) {
+            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+        } else {
+            $categoryStr = "Pathology Call Log Entry";
+            //$categoryStr = "Nesting Test"; //testing
+            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        }
         if( !$messageCategory ) {
             throw new \Exception( "Location type is not found by name '".$categoryStr."'" );
         }
@@ -1595,6 +1630,10 @@ class CallEntryController extends Controller
      */
     public function createPatientAction(Request $request)
     {
+
+        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
 
         $securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');

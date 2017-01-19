@@ -38,6 +38,7 @@ class CalllogEncounterType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('id', 'hidden');
 
         $builder->add('status', 'hidden');
 

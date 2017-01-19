@@ -1533,6 +1533,7 @@ class Patient extends ObjectAbstract
         return parent::obtainStatusField( $fieldname, $status, $orderid );
     }
 
+    //11/29/1980 | F | 36 y.o. | New York Hospital MRN: 1?
     public function obtainPatientInfoTitle( $status='valid', $now=null ) {
 
         if( !$now ) {
