@@ -70,7 +70,7 @@ class CalllogMessageType extends AbstractType
 
         //echo "message type: show patient <br>";
         $builder->add('patient', 'collection', array(
-            'type' => new PatientType($this->params, $patient),    //$this->type),
+            'type' => new CalllogPatientType($this->params, $patient),    //$this->type),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -82,7 +82,7 @@ class CalllogMessageType extends AbstractType
 
         if (count($this->entity->getPatient()) == 0) {
             $builder->add('encounter', 'collection', array(
-                'type' => new EncounterType($this->params, $this->entity),
+                'type' => new CalllogEncounterType($this->params, $this->entity),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

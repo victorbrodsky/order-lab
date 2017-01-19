@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class EncounterNumberType extends AbstractType
+class CalllogEncounterNumberType extends AbstractType
 {
 
     protected $params;

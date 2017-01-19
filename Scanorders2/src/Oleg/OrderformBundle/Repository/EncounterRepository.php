@@ -426,4 +426,40 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         return $encounter;
     }
 
+    //used for call log entry
+    public function findOneEncounterByNumberAndType( $encounterTypeId, $encounterNumber ) {
+
+        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
+        $dql = $repository->createQueryBuilder("encounter");
+        $dql->leftJoin("encounter.number", "number");
+
+        $dql->andWhere("number.field = :number AND number.keytype = :keytype AND encounter.status = 'valid'");
+
+        $parameters['number'] = $encounterNumber;
+        $parameters['keytype'] = $encounterTypeId;
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($parameters);
+        $encounters = $query->getResult();
+
+        if( count($encounters) > 0 ) {
+            return $encounters[0];
+        }
+
+        return null;
+    }
+
+    //used for call log entry
+    public function isPatientEncounterMatch( $mrnNumber, $mrnTypeId, $encounterEntity ) {
+
+        $patient = $encounterEntity->getPatient();
+        if( $patient ) {
+            $mrn = $patient->obtainValidField('mrn');
+            if( $mrn && $mrn->getField() == $mrnNumber && $mrn->getKeytype() && $mrn->getKeytype()->getId() == $mrnTypeId ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

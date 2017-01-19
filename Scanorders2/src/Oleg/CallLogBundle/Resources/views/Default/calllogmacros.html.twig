@@ -266,12 +266,16 @@
                     {% set status = 'Submitted' %}
 
                     {% set encounterPatientInfo = null %}
+                    {% set readonlyEncounter = false %}
                     {#{% set encounterEncounterInfo = null %}#}
                     {% for encounter in form.encounter %}
                         {% if encounter.vars.value.status == 'invalid'  %}
                             {% set encounterPatientInfo = encounter %}
                         {% else %}
                             {#{% set encounterEncounterInfo = encounter %}#}
+                        {% endif %}
+                        {% if encounter.vars.value.id %}
+                            {% set readonlyEncounter = true %}
                         {% endif %}
                     {% endfor %}
 
@@ -299,6 +303,11 @@
                     {% endif %}
                 </div>
 
+                {% if readonlyEncounter %}
+                    {% set reenterPatientIdPrefix = "_always_hidden" %}
+                {% else %}
+                    {% set reenterPatientIdPrefix = "" %}
+                {% endif %}
 
                 <div class="row">
                     <div class="col-xs-5"></div>
@@ -308,26 +317,26 @@
                                 onclick="findCalllogPatient('{{ holderId }}','{{ formtype }}')" style="float:left; min-width:100%"
                         >Find Patient</button>
                         <button
-                                id="reenter_patient_button" type="button"
+                                id="reenter_patient_button{{ reenterPatientIdPrefix }}" type="button"
                                 class="btn btn-lg btn-success span4" align="center"
                                 onclick="clearCalllogPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                         >Re-enter Patient</button>
                     </div>
                     {% if formtype == 'call-entry' %}
-                    <div class="col-xs-3">
-                        <button
-                                id="addnew_patient_button" type="button"
-                                class="btn btn-lg btn-success span4" align="center"
-                                onclick="addnewCalllogPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
-                        >Add New Patient Registration</button>
-                    </div>
-                    <div class="col-xs-3">
-                        <button
-                                id="edit_patient_button" type="button"
-                                class="btn btn-lg btn-success span4" align="center"
-                                onclick="editPatientBtn('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
-                        >Edit Patient Info</button>
-                    </div>
+                        <div class="col-xs-3">
+                            <button
+                                    id="addnew_patient_button" type="button"
+                                    class="btn btn-lg btn-success span4" align="center"
+                                    onclick="addnewCalllogPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                            >Add New Patient Registration</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button
+                                    id="edit_patient_button" type="button"
+                                    class="btn btn-lg btn-success span4" align="center"
+                                    onclick="editPatientBtn('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                            >Edit Patient Info</button>
+                        </div>
                     {% endif %}
                     <div class="col-xs-5"></div>
                 </div>
@@ -406,6 +415,41 @@
 
             {% set counter = counter + 1 %}
         {% endfor %}
+    {% else %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Encounter's Location Not Provided</h4>
+            </div>
+            <div id="form_body_entitycontactinfo_{{ uniqueId }}" class="panel-body collapse">
+            </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro updatePatientInfoSection( encounter, cycle, status ) %}
+    {% if cycle != "show" and not encounter.vars.value.id %}
+        {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
+                        Update Patient Info
+                    </a>
+                </h4>
+            </div>
+            <div id="form_body_encounterInfo" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div id="calllog-encounterInfo-holder">
+                        {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
+                        {#{{ formmacros.field(encounter.patientDob) }}#}
+                        {{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}
+                    </div>
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-default -->
     {% endif %}
 {% endmacro %}
 
@@ -643,6 +687,22 @@
                     {% set mrnNumber = mrn.field %}
                     {% set mrnTypeId = mrn.keytype.id %}
                     <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
+                {% endif %}
+            {% endif %}
+
+            {% if message.patient|length > 0 %}
+                {% set mrn = message.patient|first.obtainValidField('mrn') %}
+                {% if mrn %}
+                    {% set mrnNumber = mrn.field %}
+                    {% set mrnTypeId = mrn.keytype.id %}
+
+
+                    {% set validEncounter = message.getValidEncounter() %}
+                    {% set validEncounterNumber = validEncounter.obtainValidField('number') %}
+                    {% set encounterNumber = validEncounterNumber.field %}
+                    {% set encounterTypeId = validEncounterNumber.keytype.id %}
+
+                    <li><a href="{{ path('calllog_callentry', { 'mrn':mrnNumber, 'mrn-type':mrnTypeId, 'encounter':encounterNumber, 'encounter-type':encounterTypeId}) }}" target="_blank">Add Entry (Same Encounter)</a></li>
                 {% endif %}
             {% endif %}
 

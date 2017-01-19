@@ -358,7 +358,8 @@ class CallEntryController extends Controller
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrn-type'));
-
+        $encounterNumber = trim($request->get('encounter'));
+        $encounterTypeId = trim($request->get('encounter-type'));
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -394,91 +395,100 @@ class CallEntryController extends Controller
         //create invalid encounter #1 just to display fields in "Patient Info"
         $encounter1 = new Encounter(true,'invalid',$user,$system);
         $encounter1->setProvider($user);
+        $patient->addEncounter($encounter1); //add new encounter to patient
 
-        //create encounter #2 to display in "Encounter Info" -> "Update Patient Info"
-        $encounter2 = new Encounter(true,'valid',$user,$system);
-        $encounter2->setInstitution($institution);
-        //ReferringProvider
-        $encounterReferringProvider = new EncounterReferringProvider('valid',$user,$system);
-        $encounter2->addReferringProvider($encounterReferringProvider);
-        //AttendingPhysician
-        $encounterAttendingPhysician = new EncounterAttendingPhysician('valid',$user,$system);
-        $encounter2->addAttendingPhysician($encounterAttendingPhysician);
+        $readonlyEncounter = true;
+        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
+        //echo "Found encounter=".$encounter2."<br>";
 
-        $encounter2->setProvider($user);
+        //check whether patient MRN supplied in the URL corresponds to the supplied encounter number.
+        // If it does not, show the normal /entry/new page but with the notification "
+        // Encounter "1111" of type "blah" is not with patient whose MRN of type "whatever" is "1111"
+        if( $mrn && $mrntype && $encounter2 ) {
+            if( !$em->getRepository('OlegOrderformBundle:Encounter')->isPatientEncounterMatch($mrn,$mrntype,$encounter2) ) {
 
-        //set encounter generated id
-        $key = $encounter2->obtainAllKeyfield()->first();
-        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
+                $mrntypeStr = "";
+                $mrntypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
+                if( $mrntypeEntity ) {
+                    $mrntypeStr = $mrntypeEntity->getName()."";
+                }
 
-        //set encounter date and time
-        $date = $encounter2->getDate()->first();
-        $userTimeZone = $user->getPreferences()->getTimezone();
-        $nowDate = new \DateTime( "now", new \DateTimeZone($userTimeZone)  );
-        $date->setField( $nowDate );
-        $date->setTime( $nowDate );
+                $encounterMsg = "Encounter $encounterNumber of type ".$encounter2->obtainEncounterNumber()." is not with patient whose MRN of type $mrntypeStr is $mrn";
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $encounterMsg
+                );
 
-        //set encounter status "Open"
-        $encounterOpenStatus = $em->getRepository('OlegOrderformBundle:EncounterStatusList')->findOneByName("Open");
-        if( $encounterOpenStatus ) {
-            $encounter2->setEncounterStatus($encounterOpenStatus);
-        }
-
-        //set encounter info type to "Call to Pathology"
-        $encounterInfoType = $em->getRepository('OlegOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
-        if( $encounterInfoType ) {
-            if( count($encounter2->getEncounterInfoTypes()) > 0 ) {
-                $encounter2->getEncounterInfoTypes()->first()->setField($encounterInfoType);
+                $encounter2 = null;
             }
         }
 
-        //testing
-        //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
-        //$calllogUtil->checkNextEncounterGeneratedId();
-        //testing
-        //$userFormNodeUtil = $this->get('user_formnode_utility');
-        //$formNodeTest = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("Blood Product Transfused");
-        //$values = $userFormNodeUtil->getDropdownValue($formNodeTest);
-        //print_r($values);
-        //exit('1');
+        if( !$encounter2 ) {
+            //echo "Create new encounter <br>";
+            //create encounter #2 to display in "Encounter Info" -> "Update Patient Info"
+            $encounter2 = new Encounter(true, 'valid', $user, $system);
+            $encounter2->setInstitution($institution);
+            //ReferringProvider
+            $encounterReferringProvider = new EncounterReferringProvider('valid', $user, $system);
+            $encounter2->addReferringProvider($encounterReferringProvider);
+            //AttendingPhysician
+            $encounterAttendingPhysician = new EncounterAttendingPhysician('valid', $user, $system);
+            $encounter2->addAttendingPhysician($encounterAttendingPhysician);
 
-        //create a new spot and add it to the encounter's tracker
-        $withdummyfields = true;
-        //$locationTypePrimary = null;
-        $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
-        if( !$encounterLocationType ) {
-            throw new \Exception( 'Location type is not found by name Encounter Location' );
+            $encounter2->setProvider($user);
+
+            //set encounter generated id
+            $key = $encounter2->obtainAllKeyfield()->first();
+            $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
+
+            //set encounter date and time
+            $date = $encounter2->getDate()->first();
+            $userTimeZone = $user->getPreferences()->getTimezone();
+            $nowDate = new \DateTime("now", new \DateTimeZone($userTimeZone));
+            $date->setField($nowDate);
+            $date->setTime($nowDate);
+
+            //set encounter status "Open"
+            $encounterOpenStatus = $em->getRepository('OlegOrderformBundle:EncounterStatusList')->findOneByName("Open");
+            if ($encounterOpenStatus) {
+                $encounter2->setEncounterStatus($encounterOpenStatus);
+            }
+
+            //set encounter info type to "Call to Pathology"
+            $encounterInfoType = $em->getRepository('OlegOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
+            if ($encounterInfoType) {
+                if (count($encounter2->getEncounterInfoTypes()) > 0) {
+                    $encounter2->getEncounterInfoTypes()->first()->setField($encounterInfoType);
+                }
+            }
+
+            //testing
+            //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
+            //$calllogUtil->checkNextEncounterGeneratedId();
+            //testing
+            //$userFormNodeUtil = $this->get('user_formnode_utility');
+            //$formNodeTest = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("Blood Product Transfused");
+            //$values = $userFormNodeUtil->getDropdownValue($formNodeTest);
+            //print_r($values);
+            //exit('1');
+
+            //create a new spot and add it to the encounter's tracker
+            $withdummyfields = true;
+            //$locationTypePrimary = null;
+            $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+            if (!$encounterLocationType) {
+                throw new \Exception('Location type is not found by name Encounter Location');
+            }
+            $locationName = null;   //""; //"Encounter's Location";
+            $spotEntity = null;
+            $removable = 0;
+            $encounter2->addContactinfoByTypeAndName($user, $system, $encounterLocationType, $locationName, $spotEntity, $withdummyfields, $em, $removable);
+            $readonlyEncounter = false;
         }
-        $locationName = null;   //""; //"Encounter's Location";
-        $spotEntity = null;
-        $removable = 0;
-        $encounter2->addContactinfoByTypeAndName($user,$system,$encounterLocationType,$locationName,$spotEntity,$withdummyfields,$em,$removable);
 
-        //add encounter to patient
-        $patient->addEncounter($encounter1);
+        //add new encounter to patient
         $patient->addEncounter($encounter2);
 
-
-        ///////////// Message //////////////
-//        $message = new Message();
-//        $message->setPurpose("For Internal Use by WCMC Department of Pathology for Call Log Book");
-//        $message->setProvider($user);
-//
-//        //set Source object
-//        $source = new Endpoint();
-//        $source->setSystem($system);
-//        $message->addSource($source);
-//
-//        //set order category
-//        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
-//        if( !$messageCategory ) {
-//            throw new \Exception( "Location type is not found by name 'Pathology Call Log Entry'" );
-//        }
-//        $message->setMessageCategory($messageCategory);
-//
-//        //set Institutional PHI Scope
-//        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$message);
-//        $message->setInstitution($permittedInstitutions->first());
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
 
         //add patient
@@ -487,8 +497,7 @@ class CallEntryController extends Controller
         $message->addEncounter($encounter2);
         ///////////// EOF Message //////////////
 
-
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter);
 
         //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
@@ -501,6 +510,7 @@ class CallEntryController extends Controller
             'triggerSearch' => 0,
             'mrn' => $mrn,
             'mrntype' => $mrntype,
+            //'readonlyEncounter' => $readonlyEncounters
             //'encounterid' => $encounterid
         );
     }
@@ -961,7 +971,7 @@ class CallEntryController extends Controller
         );
     }
 
-    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle) {
+    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -1006,7 +1016,8 @@ class CallEntryController extends Controller
             'formtype' => 'call-entry',
             'complexLocation' => false,
             'alias' => true,
-            'timezoneDefault' => $userTimeZone
+            'timezoneDefault' => $userTimeZone,
+            'readonlyEncounter' => $readonlyEncounter
         );
 
         $form = $this->createForm(

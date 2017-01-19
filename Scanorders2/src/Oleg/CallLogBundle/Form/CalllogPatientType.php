@@ -3,7 +3,7 @@
 namespace Oleg\CallLogBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\CallLogBundle\Form\EncounterType;
+//use Oleg\CallLogBundle\Form\EncounterType;
 use Oleg\OrderformBundle\Form\GenericFieldType;
 use Oleg\OrderformBundle\Form\PatientDobType;
 use Oleg\OrderformBundle\Form\PatientSexType;
@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-class PatientType extends AbstractType
+class CalllogPatientType extends AbstractType
 {
 
     protected $params;
@@ -41,7 +41,7 @@ class PatientType extends AbstractType
         ));
 
         $builder->add('mrn', 'collection', array(
-            'type' => new PatientMrnType($this->params, null),
+            'type' => new CalllogPatientMrnType($this->params, null),
             //'allow_add' => true,
             //'allow_delete' => true,
             'required' => false,
@@ -82,7 +82,7 @@ class PatientType extends AbstractType
 //        ));
 
         $builder->add('encounter', 'collection', array(
-            'type' => new EncounterType($this->params,$this->entity),
+            'type' => new CalllogEncounterType($this->params,$this->entity),
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,

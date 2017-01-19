@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class PatientMrnType extends AbstractType
+class CalllogPatientMrnType extends AbstractType
 {
 
     protected $params;

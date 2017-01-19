@@ -1280,6 +1280,15 @@ class Message {
         }
         //$this->patient->clear();
     }
+
+    public function getValidEncounter() {
+        foreach( $this->getEncounter() as $encounter  ) {
+            if( $encounter->getStatus() == 'valid' ) {
+                return $encounter;
+            }
+        }
+        return null;
+    }
     
     /**
      * Add slide

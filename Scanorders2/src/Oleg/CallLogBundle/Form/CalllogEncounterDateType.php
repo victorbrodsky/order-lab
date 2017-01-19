@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class EncounterDateType extends AbstractType
+class CalllogEncounterDateType extends AbstractType
 {
 
     protected $params;
@@ -42,7 +42,8 @@ class EncounterDateType extends AbstractType
         $builder->add('time', 'time', array(
             'input' => 'datetime',
             'widget' => 'choice',
-            'label' => 'Encounter Time:'
+            'label' => 'Encounter Time:',
+            'disabled' => $this->params['readonlyEncounter']
         ));
 
         //timezone 'choice'

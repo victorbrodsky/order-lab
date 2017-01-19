@@ -2,8 +2,6 @@
 
 namespace Oleg\CallLogBundle\Form;
 
-use Oleg\CallLogBundle\Form\EncounterDateType;
-
 use Oleg\OrderformBundle\Form\EncounterInfoTypeType;
 use Oleg\OrderformBundle\Form\EncounterLocationType;
 use Oleg\OrderformBundle\Form\EncounterPatfirstnameType;
@@ -22,7 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class EncounterType extends AbstractType
+class CalllogEncounterType extends AbstractType
 {
 
     protected $params;
@@ -44,7 +42,8 @@ class EncounterType extends AbstractType
         $builder->add('status', 'hidden');
 
         $builder->add('date', 'collection', array(
-            'type' => new EncounterDateType($this->params, null),
+            'type' => new CalllogEncounterDateType($this->params, null),
+            'read_only' => $this->params['readonlyEncounter'],
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -146,7 +145,7 @@ class EncounterType extends AbstractType
 
         //number and source
         $builder->add('number', 'collection', array(
-            'type' => new EncounterNumberType($this->params, $this->entity),
+            'type' => new CalllogEncounterNumberType($this->params, $this->entity),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -193,6 +192,7 @@ class EncounterType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => 'Provider:',
             'required' => false,
+            'read_only' => $this->params['readonlyEncounter'],
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
