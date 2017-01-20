@@ -21,6 +21,10 @@ $(document).ready(function() {
 
     setNavBar("scan");
 
+    if( $('#nav-bar-calllogsearch') ) {
+        setNavBar("call-log-book");
+    }
+
     initAdd();
 
     expandTextarea();
