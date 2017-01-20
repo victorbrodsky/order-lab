@@ -517,6 +517,46 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( strtolower($this->mapper['className']) == strtolower("UserWrapper") ) {
+            $builder->add( 'user', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label'=>'Linked User:',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->leftJoin("list.infos", "infos")
+                        ->leftJoin("list.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        ->orderBy("infos.displayName","ASC");
+                },
+            ));
+
+//            $builder->add('referringProviderSpecialty', 'custom_selector', array(
+//                'label' => 'Referring Provider Specialty:',
+//                'attr' => array('class' => 'combobox combobox-width ajax-combobox-referringProviderSpecialty'),
+//                'required' => false,
+//                'classtype' => 'referringProviderSpecialty'
+//            ));
+            $builder->add('userWrapperSpecialty', null, array(
+                'label' => 'User Specialty:',
+                'attr' => array('class'=>'combobox')
+            ));
+
+            $builder->add('userWrapperPhone', null, array(
+                'label' => 'User Phone Number:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+            $builder->add('userWrapperEmail', null, array(
+                'label' => 'User E-Mail:',
+                'attr' => array('class'=>'form-control')
+            ));
+        }
+
         ///////////////// Many To Many relationship /////////////////
 
         //not editable: suites, rooms

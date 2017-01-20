@@ -750,6 +750,20 @@
         {{ formmacros.field(form.receivedValueEntityId) }}
     {% endif %}
 
+    {#UserWrapper#}
+    {% if form.user is defined %}
+        {{ formmacros.field(form.user) }}
+    {% endif %}
+    {% if form.userWrapperSpecialty is defined %}
+        {{ formmacros.field(form.userWrapperSpecialty) }}
+    {% endif %}
+    {% if form.userWrapperPhone is defined %}
+        {{ formmacros.field(form.userWrapperPhone) }}
+    {% endif %}
+    {% if form.userWrapperEmail is defined %}
+        {{ formmacros.field(form.userWrapperEmail) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}

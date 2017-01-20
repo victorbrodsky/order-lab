@@ -679,6 +679,20 @@
                 <li><a href="#">Amend</a></li>
             {% endif %}
 
+            {% if message.messageStatus and message.messageStatus.name != "Deleted" %}
+                {#Are you sure you would like to delete entry 123 for patient FirstName LastName (MRN Type: MRN)?#}
+                <li><a
+                    data-confirm="Are you sure you would like to delete entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('calllog_delete', {'messageId': message.id}) }}"
+                    >Delete Entry</a></li>
+            {% endif %}
+            {% if message.messageStatus and message.messageStatus.name == "Deleted" %}
+                {#Are you sure you would like to undelete entry 123 for patient FirstName LastName (MRN Type: MRN)?#}
+                <li><a
+                    data-confirm="Are you sure you would like to undelete entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('calllog_undelete', {'messageId': message.id}) }}">Undelete Entry</a></li>
+            {% endif %}
+
             <li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>
 
             {% if message.patient|length > 0 %}
@@ -689,20 +703,6 @@
                     <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
 
                     <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
-
-                    {% if message.messageStatus and message.messageStatus.name != "Deleted" %}
-                        {#Are you sure you would like to delete entry 123 for patient FirstName LastName (MRN Type: MRN)?#}
-                        <li><a
-                               data-confirm="Are you sure you would like to delete entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
-                               href="{{ path('calllog_delete', {'messageId': message.id}) }}"
-                            >Delete Entry</a></li>
-                    {% endif %}
-                    {% if message.messageStatus and message.messageStatus.name == "Deleted" %}
-                        {#Are you sure you would like to undelete entry 123 for patient FirstName LastName (MRN Type: MRN)?#}
-                        <li><a
-                                data-confirm="Are you sure you would like to undelete entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
-                                href="{{ path('calllog_undelete', {'messageId': message.id}) }}">Undelete Entry</a></li>
-                    {% endif %}
 
                     <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Edit Patient Record</a></li>
 
@@ -721,6 +721,16 @@
                 {% if locationId %}
                     <li><a href="{{ path('employees_locations_pathaction_edit_standalone', { 'id': locationId}) }}" target="_blank">Edit Encounter Location</a></li>
                 {% endif %}
+
+                {#Edit Referring Provider Profile#}
+                {% for referringProvider in validEncounter.getReferringProviders %}
+                    {% if referringProvider.obtainLinkedUser and referringProvider.obtainLinkedUser.getId %}
+                        <li><a href="{{ path('calllog_user_edit', { 'id': referringProvider.obtainLinkedUser.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>
+                    {% else %}
+                        <li><a href="{{ path('userwrappers_edit', { 'id': referringProvider.getField.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>
+                    {% endif %}
+                {% endfor %}
+
             {% endif %}
 
 

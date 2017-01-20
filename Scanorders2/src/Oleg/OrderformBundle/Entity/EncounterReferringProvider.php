@@ -92,7 +92,13 @@ class EncounterReferringProvider extends EncounterArrayFieldAbstract
         $this->referringProviderEmail = $referringProviderEmail;
     }
 
-
+    public function obtainLinkedUser() {
+        $userWrapper = $this->getField();
+        if( $userWrapper->getUser() ) {
+            return $userWrapper->getUser();
+        }
+        return null;
+    }
 
 
 }

@@ -1001,6 +1001,7 @@ class Encounter extends ObjectAbstract
         return implode("; ",$infoArr);
     }
 
+
     public function obtainKeyField() {
         return $this->getNumber();
     }
