@@ -88,7 +88,57 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        exit('edit patient by mrn');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $userSecUtil = $this->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $extra = array();
+        $extra["keytype"] = $mrntype;
+        $validity = array('valid','reserved');
+        $single = false;
+
+        //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("All Institutions");
+        //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("Weill Cornell Medical College");
+        //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("New York-Presbyterian Hospital");
+        $institution = $userSecUtil->getCurrentUserInstitution($user);
+        $institutions = array();
+        $institutions[] = $institution->getId();
+
+        $patients = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
+        //echo "found patient=".$entity."<br>";
+        //exit("edit patient by mrn $mrn $mrntype");
+        $patients = $em->getRepository('OlegOrderformBundle:Patient')->findAll(); //testing
+
+        if( count($patients) > 1 ) {
+            $patient = null;
+            $patientArr = array();
+            foreach( $patients as $thisPatient ) {
+                if( $thisPatient->obtainValidKeyfield() ) {
+                    //we should return a single result, but we got multiple entity, so return the first valid key one.
+                    $patient = $thisPatient;
+                }
+                $patientArr[] = $patient->obtainPatientInfoSimple();
+            }
+            if( !$patient ) {
+                $patient = $patients[0];
+            }
+            $this->get('session')->getFlashBag()->add(
+                'pnotify-error',
+                'Multiple patients found with mrn ' . $mrn . ". Displayed is the first patient with a valid mrn. Found " . count($patients) . " patients: <hr>" . implode("<hr>",$patientArr)
+            );
+        }
+
+        if( count($patients) == 1 ) {
+            $patient = $patients[0];
+        }
+
+        if( !$patient || !$patient->getId() ) {
+            $this->get('session')->getFlashBag()->add(
+                'pnotify-error',
+                'No patient found with mrn ' . $mrn
+            );
+            return $this->redirect($this->generateUrl('calllog_home'));
+        }
 
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
@@ -98,7 +148,7 @@ class CallLogPatientController extends PatientController {
             'showPlus' => 'showPlus'
         );
 
-        return $this->editPatient($request,$id,$params);
+        return $this->editPatient($request,$patient->getId(),$params);
     }
 
     /**

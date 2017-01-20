@@ -1178,7 +1178,7 @@ function userPnotifyDisplay() {
             icon: false,
             //title: 'Regular Notice',
             text: text,
-            type: 'info'
+            type: type
         });
     }
 }
