@@ -5624,7 +5624,7 @@ class AdminController extends Controller
      * @Route("/list-manager-populate/", name="user_populate_platform_list_manager")
      * @Method("GET")
      */
-    public function generatePlatformListManagerList() {
+    public function generatePlatformListManagerList( Request $request=null ) {
 
         $username = $this->get('security.context')->getToken()->getUser();
 
@@ -5743,6 +5743,7 @@ class AdminController extends Controller
             "1020" => array('PathologyResultSignatoriesList','pathologyresultsignatories-list','Pathology Result Signatories List'),
             "1030" => array('ObjectTypeCheckbox','objecttypecheckboxs-list','Object Type Checkbox'),
             "1040" => array('ObjectTypeRadioButton','objecttyperadiobuttons-list','Object Type Radio Button'),
+            "1050" => array('Location','employees_locations_pathaction_list','Locations'),
             //"1050" => array('','-list'),
 
         );
@@ -5845,7 +5846,11 @@ class AdminController extends Controller
         );
 
         //exit($res);
-        //return $this->redirect($this->generateUrl('user_admin_index'));
+
+        //if( $request->get('_route') == "user_populate_platform_list_manager" ) {
+        if( $request ) {
+            return $this->redirect($this->generateUrl('user_admin_index'));
+        }
 
         return round($count/10);
     }

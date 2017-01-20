@@ -107,7 +107,7 @@ class CallLogPatientController extends PatientController {
         $patients = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
         //echo "found patient=".$entity."<br>";
         //exit("edit patient by mrn $mrn $mrntype");
-        $patients = $em->getRepository('OlegOrderformBundle:Patient')->findAll(); //testing
+        //$patients = $em->getRepository('OlegOrderformBundle:Patient')->findAll(); //testing
 
         if( count($patients) > 1 ) {
             $patient = null;
@@ -139,6 +139,11 @@ class CallLogPatientController extends PatientController {
             );
             return $this->redirect($this->generateUrl('calllog_home'));
         }
+
+//        $this->get('session')->getFlashBag()->add(
+//            'pnotify',
+//            'Ok!'
+//        );
 
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),

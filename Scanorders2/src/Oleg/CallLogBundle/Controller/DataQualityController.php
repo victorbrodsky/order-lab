@@ -2,7 +2,7 @@
 
 namespace Oleg\CallLogBundle\Controller;
 
-use Oleg\CallLogBundle\Form\PatientType;
+use Oleg\CallLogBundle\Form\CalllogPatientType;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
 use Oleg\OrderformBundle\Entity\EncounterPatlastname;
@@ -623,7 +623,7 @@ class DataQualityController extends CallEntryController
             'alias' => false
         );
 
-        $form = $this->createForm(new PatientType($params, $patient), $patient);
+        $form = $this->createForm(new CalllogPatientType($params, $patient), $patient);
 
         return $form;
     }

@@ -1168,17 +1168,20 @@ function userPnotifyDisplay() {
     //console.log("text="+text);
     if( text ) {
         var type = 'info';
+        var hide = true;
         if( $('#pnotify-notice').hasClass('pnotify-notice-success') ) {
             type = 'success';
         }
         if( $('#pnotify-notice').hasClass('pnotify-notice-error') ) {
             type = 'error';
+            hide = false;
         }
         new PNotify({
             icon: false,
             //title: 'Regular Notice',
             text: text,
-            type: type
+            type: type,
+            hide: hide
         });
     }
 }

@@ -923,6 +923,31 @@ class Encounter extends ObjectAbstract
 
         return implode("; ",$infoArr);
     }
+    public function obtainTrackerSpotsLocations() {
+        $locationArr = array();
+        //[tracker][spots][0][currentLocation][name]
+        if( !$this->getTracker() ) {
+            return $locationArr;
+        }
+        foreach( $this->getTracker()->getSpots() as $spot ) {
+            $location = $spot->getCurrentLocation();
+            if( $location ) {
+                $locationArr[] = $location;
+            }
+        }
+
+        return $locationArr;
+    }
+    public function obtainTrackerSpotsLocationId() {
+        $locations = $this->obtainTrackerSpotsLocations();
+        if( count($locations) > 0 ) {
+            $location = $locations[0];
+            if( $location->getId() ) {
+                return $location->getId();
+            }
+        }
+        return null;
+    }
 
     //[ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
     public function obtainReferringProviderInfo() {

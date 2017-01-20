@@ -5,7 +5,6 @@ namespace Oleg\CallLogBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\CallLogBundle\Form\CalllogFilterType;
 use Oleg\CallLogBundle\Form\CalllogMessageType;
-use Oleg\CallLogBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
@@ -333,7 +332,7 @@ class CallEntryController extends Controller
         $categoryStr = "Pathology Call Log Entry";
         $messageCategoryInfoNode = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         if( !$messageCategoryInfoNode ) {
-            throw new \Exception( "Location type is not found by name '".$categoryStr."'" );
+            throw new \Exception( "MessageCategory type is not found by name '".$categoryStr."'" );
         }
 
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");

@@ -706,9 +706,22 @@
 
                     <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Edit Patient Record</a></li>
 
+                    <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Merge Patient Record</a></li>
+
+                    {% if message.patient|first.obtainMergeMrnArr('valid')|length > 0 %}
+                        <li><a href="{{ path('calllog_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Un-merge Patient Record</a></li>
+                    {% endif %}
+
                 {% endif %}
             {% endif %}
 
+            {% set validEncounter = message.getValidEncounter %}
+            {% if validEncounter %}
+                {% set locationId = validEncounter.obtainTrackerSpotsLocationId %}
+                {% if locationId %}
+                    <li><a href="{{ path('employees_locations_pathaction_edit_standalone', { 'id': locationId}) }}" target="_blank">Edit Encounter Location</a></li>
+                {% endif %}
+            {% endif %}
 
 
             {#Same Encounter#}

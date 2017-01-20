@@ -147,6 +147,8 @@ class ListController extends Controller
         $pathbase = $pieces[0];
 
         $mapper = $this->classListMapper($pathbase,$request);
+        //echo "bundleName=".$mapper['bundleName']."<br>";
+        //echo "className=".$mapper['className']."<br>";
 
         $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
         $dql =  $repository->createQueryBuilder("ent");
@@ -1376,17 +1378,18 @@ class ListController extends Controller
 
         $bundleName = "UserdirectoryBundle";
 
-        if( strpos($route, "-") !== false ) {
+        //regular lists
+        if (strpos($route, "-") !== false) {
             //sites-list
             $pieces = explode("-", $route);
             $route = $pieces[0];
         }
-
-        if( strpos($route, "_") !== false ) {
+        if (strpos($route, "_") !== false) {
             //sites_show
             $pieces = explode("_", $route);
             $route = $pieces[0];
         }
+        //echo "route search=".$route."<br>";
 
         switch( $route ) {
 
@@ -1788,6 +1791,10 @@ class ListController extends Controller
                 $className = "ObjectTypeRadioButton";
                 $displayName = "Object Type Radio Button";
                 break;
+//            case "employees_locations":
+//                $className = "Location";
+//                $displayName = "Locations";
+//                break;
 
 //            case "messagetypeclassifiers":
 //                $className = "MessageTypeClassifiers";
@@ -2038,7 +2045,12 @@ class ListController extends Controller
 
             $request->attributes->set('_route',$listRootName);
 
-            return $this->forward('OlegUserdirectoryBundle:List:index', array('request' => $request));
+            if( strpos($listRootName, "_pathaction") === false ) {
+                return $this->forward('OlegUserdirectoryBundle:List:index', array('request' => $request));
+            } else {
+                return $this->forward('OlegUserdirectoryBundle:ComplexList:index', array('request' => $request));
+            }
+
         }
 
         return array(
