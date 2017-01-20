@@ -97,6 +97,24 @@ class CallEntryController extends Controller
         $filterform = $this->createForm(new CalllogFilterType($params), null);
         $filterform->bind($request);
 
+        //search in navbar
+        //$allgets = $request->query->all();
+        //print_r($allgets);
+        //exit();
+        $calllogsearchtype = null;
+        $calllogsearch = null;
+//        foreach( $allgets as $thiskey => $thisvalue ) {
+//            $calllogsearchtype = $thiskey;
+//            $calllogsearch = $thisvalue;
+//            break;
+//        }
+//        $calllogsearchtype = str_replace("_"," ",$calllogsearchtype);
+        //$searchtype = trim( $request->get('searchtype') );
+        //$search = trim( $request->get('search') );
+        //echo "searchtype=".$searchtype."<br>";
+//        echo "calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
+        //search in navbar
+
         $messageStatusFilter = $filterform['messageStatus']->getData();
         if( !$messageStatusFilter ) {
             return $this->redirect( $this->generateUrl('calllog_home',array('filter[messageStatus]'=>"All except deleted")) );
@@ -345,8 +363,10 @@ class CallEntryController extends Controller
             'route_path' => $route,
             'advancedFilter' => $advancedFilter,
             'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
-            'eventObjectTypeId' => $eventObjectType->getId()
+            'eventObjectTypeId' => $eventObjectType->getId(),
             //'sitename' => $this->container->getParameter('calllog.sitename')
+            //'calllogsearch' => $calllogsearch,
+            //'calllogsearchtype' => $calllogsearchtype,
         );
 
     }
@@ -1105,6 +1125,7 @@ class CallEntryController extends Controller
     }
 
     /**
+     * NOT USED (search is displayed in the home page)
      * Search Call Entry
      * @Route("/callentry/search", name="calllog_search_callentry")
      * @Method("GET")
@@ -1118,7 +1139,7 @@ class CallEntryController extends Controller
 
         $entities = null;
 
-        $allgets = $request->query->all();;
+        $allgets = $request->query->all();
         //$patientid = trim( $request->get('patientid') );
         //print_r($allgets);
         //echo "<br>";

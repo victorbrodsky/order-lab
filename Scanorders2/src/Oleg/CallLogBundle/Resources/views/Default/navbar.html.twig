@@ -110,35 +110,39 @@
                 {#Search in navbar#}
                 {% if is_granted('ROLE_CALLLOG_USER') %}
 
-                    <li id="nav-bar-ordersearch">
+                    <li id="nav-bar-calllogsearch">
                         {#Search for a name, service, division, etc#}
-                        {% if  patientsearch is not defined %}
-                            {% set  patientsearch = "" %}
+                        {% if  calllogsearch is not defined %}
+                            {% set  calllogsearch = "" %}
                         {% endif %}
-                        {% if  patientsearchtype is not defined %}
-                            {% set  patientsearchtype = 'MRN or Last Name' %}
+                        {% if  calllogsearchtype is not defined %}
+                            {% set  calllogsearchtype = 'MRN or Last Name' %}
                         {% endif %}
-                        <form class="navbar-form navbar-left" role="search" id="ordersearchform" name="ordersearchform" action="{{ path(scan_sitename~'_search_patients') }}" method="get">
-                            <input type="hidden" id="ordersearchform-searchtype" class="form-control" name="searchtype" value="{{ patientsearchtype }}">
+                        {#scan_sitename~'_search_patients#}
+                        <form class="navbar-form navbar-left" role="search" id="calllogsearchform" name="calllogsearchform" action="{{ path('calllog_home') }}" method="get">
+                            <input type="hidden" id="calllogsearchform-searchtype" class="form-control" name="searchtype" value="{{ calllogsearchtype }}">
                             <div class="form-group">
 
                                 <div class="input-group">
                                     <div class="input-group-btn">
-                                        <button id="ordersearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                            {{  patientsearchtype }} <span class="caret"></span>
+                                        <button id="calllogsearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            {{  calllogsearchtype }} <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu" role="menu">
                                             {{ navbarmacros.searchBoxContent('MRN or Last Name') }}
                                             {{ navbarmacros.searchBoxContent('MRN') }}
                                             {{ navbarmacros.searchBoxContent("Patient Last Name") }}
-                                            {{ navbarmacros.searchBoxContent('Service') }}
-                                            {{ navbarmacros.searchBoxContent('Issue Type') }}
+                                            {{ navbarmacros.searchBoxContent('Message Type') }}
+                                            {#{{ navbarmacros.searchBoxContent('Service') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Issue Type') }}#}
                                             {{ navbarmacros.searchBoxContent('Entry full text') }}
                                             {#<li class="divider"></li>#}
                                         </ul>
                                     </div><!-- /btn-group -->
                                     <div class="form-group has-feedback">
-                                        <input type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{  patientsearch }}" placeholder="">
+                                        <input type="text" id="calllogsearchform-search" class="form-control"
+                                               aria-label="" name="search"
+                                               value="{{  calllogsearch }}" placeholder="">
                                         <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>
                                     </div>
                                 </div><!-- /input-group -->
