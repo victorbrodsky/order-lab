@@ -2,6 +2,7 @@
 
 namespace Oleg\CallLogBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\CallLogBundle\Form\CalllogNavbarFilterType;
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\Encounter;
@@ -1138,5 +1139,31 @@ class CallLogUtil
         }
     }
 
+    public function getNavbarFilterForm($request) {
+        $navbarSearchTypes = array(
+            'MRN or Last Name' => 'MRN or Last Name',
+            'MRN' => 'MRN',
+            'Patient Last Name' => 'Patient Last Name',
+            'Message Type' => 'Message Type',
+            'Entry full text' => 'Entry full text'
+        );
+        $params['navbarSearchTypes'] = $navbarSearchTypes;
+        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
+        $navbarfilterform->bind($request);
+        $calllogsearchtype = $navbarfilterform['searchtype']->getData();
+        $calllogsearch = $navbarfilterform['search']->getData();
+
+        $params['calllogsearchtype'] = $calllogsearchtype;
+        $params['calllogsearch'] = $calllogsearch;
+
+        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
+
+        //echo "calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
+        return $navbarfilterform->createView();
+    }
+    public function createForm($type, $data = null, array $options = array())
+    {
+        return $this->container->get('form.factory')->create($type, $data, $options);
+    }
 
 }

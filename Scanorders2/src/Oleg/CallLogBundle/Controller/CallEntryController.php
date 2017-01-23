@@ -5,6 +5,7 @@ namespace Oleg\CallLogBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\CallLogBundle\Form\CalllogFilterType;
 use Oleg\CallLogBundle\Form\CalllogMessageType;
+use Oleg\CallLogBundle\Form\CalllogNavbarFilterType;
 use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
@@ -96,30 +97,44 @@ class CallEntryController extends Controller
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
         $filterform->bind($request);
-
-        //search in navbar
-        //$allgets = $request->query->all();
-        //print_r($allgets);
-        //exit();
-        $calllogsearchtype = null;
-        $calllogsearch = null;
-//        foreach( $allgets as $thiskey => $thisvalue ) {
-//            $calllogsearchtype = $thiskey;
-//            $calllogsearch = $thisvalue;
-//            break;
-//        }
-//        $calllogsearchtype = str_replace("_"," ",$calllogsearchtype);
-        //$searchtype = trim( $request->get('searchtype') );
-        //$search = trim( $request->get('search') );
-        //echo "searchtype=".$searchtype."<br>";
-//        echo "calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
-        //search in navbar
-
         $messageStatusFilter = $filterform['messageStatus']->getData();
-        if( !$messageStatusFilter ) {
+        $searchFilter = $filterform['search']->getData();
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $messageCategory = $filterform['messageCategory']->getData();
+        $authorFilter = $filterform['author']->getData();
+        $referringProviderFilter = $filterform['referringProvider']->getData();
+        $encounterLocationFilter = $filterform['encounterLocation']->getData();
+        $specialtyFilter = $filterform['referringProviderSpecialty']->getData();
+        $patientListTitleFilter = $filterform['patientListTitle']->getData();
+        $entryBodySearchFilter = $filterform['entryBodySearch']->getData();
+
+        ///////////////// search in navbar /////////////////
+        $navbarSearchTypes = array(
+            'MRN or Last Name' => 'MRN or Last Name',
+            'MRN' => 'MRN',
+            'Patient Last Name' => 'Patient Last Name',
+            'Message Type' => 'Message Type',
+            'Entry full text' => 'Entry full text'
+        );
+        $params['navbarSearchTypes'] = $navbarSearchTypes;
+        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
+        $navbarfilterform->bind($request);
+        $calllogsearchtype = $navbarfilterform['searchtype']->getData();
+        $calllogsearch = $navbarfilterform['search']->getData();
+        //echo "calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
+        //exit('0');
+        if( $calllogsearchtype == 'MRN or Last Name' ) {
+            $searchFilter = $calllogsearch;
+        }
+        if( $calllogsearchtype == 'Entry full text' ) {
+            $entryBodySearchFilter = $calllogsearch;
+        }
+        ///////////////// EOF search in navbar /////////////////
+
+        if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
             return $this->redirect( $this->generateUrl('calllog_home',array('filter[messageStatus]'=>"All except deleted")) );
         }
-
 
         //perform search
         $repository = $em->getRepository('OlegOrderformBundle:Message');
@@ -142,8 +157,6 @@ class CallEntryController extends Controller
         $dql->leftJoin("signeeInfo.modifiedBy","author");
         $dql->leftJoin("author.infos","authorInfos");
 
-
-
         $dql->leftJoin("message.messageCategory","messageCategory");
         //$dql->where("institution.id = ".$pathology->getId());
         $dql->orderBy("message.orderdate","DESC");
@@ -152,8 +165,7 @@ class CallEntryController extends Controller
         //filter
         $advancedFilter = false;
         $queryParameters = array();
-        $startDate = $filterform['startDate']->getData();
-        $endDate = $filterform['endDate']->getData();
+
         //use editorInfos or orderdate
 //        if( $startDate || $endDate ) {
 //            echo "startDate=" . $startDate->format('Y-m-d') . "<br>";
@@ -180,7 +192,6 @@ class CallEntryController extends Controller
             $queryParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
         }
 
-        $messageCategory = $filterform['messageCategory']->getData();
         if( $messageCategory ) {
             $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategory);
             if( $messageCategoryEntity ) {
@@ -189,15 +200,15 @@ class CallEntryController extends Controller
                 $dql->andWhere($nodeChildSelectStr);
             }
         }
-        $searchFilter = $filterform['search']->getData();
+
         if( $searchFilter ) {
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
-                //string
-                $dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
+                //echo "string $searchFilter<br>";
+                //$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
+                $dql->andWhere("lastname.field LIKE :search");
                 $queryParameters['search'] = "%".$searchFilter."%";
             } else {
-                //echo "integer <br>";
-                //integer
+                //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
                 $queryParameters['search'] = $searchFilter;
             }
@@ -209,30 +220,29 @@ class CallEntryController extends Controller
         //message-signeeInfo(ModifierInfo)-modifiedBy(User)
         //message-editorInfos(ModifierInfo)-modifiedBy(User)
         // (meaning if the selected user shows up in any of these three fields of the message/entry, show this message/entry.)
-        $authorFilter = $filterform['author']->getData();
         if( $authorFilter ) {
             $authorStr = "encounter.provider=:author OR signeeInfo.modifiedBy=:author OR editorInfos.modifiedBy=:author";
             $dql->andWhere($authorStr);
             $queryParameters['author'] = $authorFilter;
             $advancedFilter = true;
         }
-        $referringProviderFilter = $filterform['referringProvider']->getData();
+
         if( $referringProviderFilter ) {
             $referringProviderStr = "referringProviderWrapper.user=:referringProvider";
             $dql->andWhere($referringProviderStr);
             $queryParameters['referringProvider'] = $referringProviderFilter;
             $advancedFilter = true;
         }
+
         //encounter_1_referringProviders_0_referringProviderSpecialty
-        $specialtyFilter = $filterform['referringProviderSpecialty']->getData();
         if( $specialtyFilter ) {
             $specialtyStr = "referringProviders.referringProviderSpecialty=:referringProviderSpecialty";
             $dql->andWhere($specialtyStr);
             $queryParameters['referringProviderSpecialty'] = $specialtyFilter;
             $advancedFilter = true;
         }
+
         //encounter_1_tracker_spots_0_currentLocation
-        $encounterLocationFilter = $filterform['encounterLocation']->getData();
         if( $encounterLocationFilter ) {
             $encounterLocationStr = "currentLocation=:encounterLocation";
             $dql->andWhere($encounterLocationStr);
@@ -295,7 +305,6 @@ class CallEntryController extends Controller
         }
 
         //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
-        $patientListTitleFilter = $filterform['patientListTitle']->getData();
         if( $patientListTitleFilter ) {
             $patientListHierarchyNode = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListTitleFilter);
             if( $patientListHierarchyNode ) {
@@ -318,7 +327,6 @@ class CallEntryController extends Controller
 
         //"Entry Body": The value entered in this field should be searched for in the "History/Findings" and "Impression/Outcome" fields
         // (with an "OR" - a match in either one should list the entry).
-        $entryBodySearchFilter = $filterform['entryBodySearch']->getData();
         if( $entryBodySearchFilter ) {
             //find ObjectTypeText with value=$entryBodySearchFilter AND entityName="Message"
             $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE ".
@@ -327,6 +335,36 @@ class CallEntryController extends Controller
             $queryParameters['entryBodySearch'] = "%".$entryBodySearchFilter."%";
             $advancedFilter = true;
         }
+
+        ///////////////// search in navbar /////////////////
+        if( $calllogsearchtype && $calllogsearch ) {
+            if( $calllogsearchtype == 'MRN or Last Name' ) {
+                //use regular filter by replacing an appropriate filter string
+            }
+            if( $calllogsearchtype == 'MRN' ) {
+                $dql->andWhere("mrn.field = :search");
+                $queryParameters['search'] = $calllogsearch;
+            }
+            if( $calllogsearchtype == 'Patient Last Name' ) {
+                $dql->andWhere("lastname.field LIKE :search");
+                $queryParameters['search'] = "%".$calllogsearch."%";
+            }
+            if( $calllogsearchtype == 'Message Type' ) {
+                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($calllogsearch);
+                if( $messageCategoryEntity ) {
+                    $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
+                    $dql->andWhere($nodeChildSelectStr);
+                } else {
+                    $dql->andWhere("1=0");
+                }
+            }
+            if( $calllogsearchtype == 'Entry full text' ) {
+                //use regular filter by replacing an appropriate filter string
+            }
+            //exit("1 [$calllogsearchtype] : [$calllogsearch]");
+        }
+        //exit('2');
+        ///////////////// EOF search in navbar /////////////////
 
         //$query = $em->createQuery($dql);
         //$messages = $query->getResult();
@@ -364,13 +402,22 @@ class CallEntryController extends Controller
             'advancedFilter' => $advancedFilter,
             'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
             'eventObjectTypeId' => $eventObjectType->getId(),
+            //'navbarfilterform' => $navbarfilterform->createView()
             //'sitename' => $this->container->getParameter('calllog.sitename')
             //'calllogsearch' => $calllogsearch,
             //'calllogsearchtype' => $calllogsearchtype,
         );
 
     }
-
+    public function isFilterEmpty($filterform) {
+        //print_r($filterform->getData());
+        foreach( $filterform->getData() as $key=>$value ) {
+            if( $value ) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 
     /**

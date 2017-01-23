@@ -29,7 +29,7 @@ function ordersearchNavbarBoxInit() {
 
 function calllogsearchNavbarBoxInit() {
     console.log('calllogsearchNavbarBox Init');
-    $("#calllogsearchform-search").on( "keydown", function(event) {
+    $("#search_search").on( "keydown", function(event) {
         console.log('calllogsearchform event='+event.which);
         if(event.which == 13) {
             event.preventDefault();
