@@ -1010,6 +1010,11 @@ class CallEntryController extends Controller
                     }
                 }
 
+                if( !$testing ) {
+                    //send an email to the Preferred Email of the "Attending:"
+                    $calllogUtil->sendConfirmationEmail($message, $patient, $newEncounter);
+                }
+
             }//if $newEncounter
 
 
@@ -1021,9 +1026,6 @@ class CallEntryController extends Controller
                 'notice',
                 $msg
             );
-
-            //send an email to the Preferred Email of the "Attending:"
-            $calllogUtil->sendConfirmationEmail($message,$patient,$newEncounter);
 
             //echo "return messageId=".$message->getId()."<br>";
             //exit('1');

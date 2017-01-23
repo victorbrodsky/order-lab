@@ -973,6 +973,7 @@ class CallLogUtil
 
             // for [MessageType:Service] / [MessageType:Issue]
             $messageCategoryInfo = $this->getMessageCategoryString($message);
+            //echo "messageCategoryInfo=".$messageCategoryInfo."<br>";
 
             //if the Patient is not present / patient is not identified, but the Encounter Location is provided:
             $encounterLocation = $encounter->obtainLocationInfo();
@@ -985,7 +986,7 @@ class CallLogUtil
                 if( $messageCategoryInfo ) {
                     $event .= $referringProviderInfo . " from " . $encounterLocation . " reached out regarding " . $messageCategoryInfo . ".";
                 } else {
-                    $event .= $referringProviderInfo . " from " . $encounterLocation . ".";
+                    $event .= $referringProviderInfo . " from " . $encounterLocation . " reached out to the Pathology Department.";
                 }
 
             } else {
@@ -1024,6 +1025,7 @@ class CallLogUtil
                 //echo "node=".$node."<br>";
                 if( $node->getOrganizationalGroupType() ) {
                     $orgGroupName = $node->getOrganizationalGroupType()->getName() . "";
+                    //echo "orgGroupName=".$orgGroupName."<br>";
                     if ($orgGroupName == "Issue" || $orgGroupName == "Service") {
                         $infoArr[] = $node->getName() . "";
                     }
@@ -1213,10 +1215,17 @@ class CallLogUtil
             $body = $body . $break . $break . "The Pathology Call Log Book entry submitted on " . $message->getSubmitterInfo();
         }
 
+        //exit('body='.$body);
+
         $emailUtil = $this->container->get('user_mailer_utility');
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
 
+        //testing
+        $eventType = "New Call Log Book Entry Submitted";
+        $user = $this->sc->getToken()->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $body, $user, $message, null, $eventType);
     }
 
 }
