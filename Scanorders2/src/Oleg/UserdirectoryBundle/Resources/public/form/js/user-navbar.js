@@ -28,9 +28,9 @@ function ordersearchNavbarBoxInit() {
 }
 
 function calllogsearchNavbarBoxInit() {
-    console.log('calllogsearchNavbarBox Init');
+    //console.log('calllogsearchNavbarBox Init');
     $("#search_search").on( "keydown", function(event) {
-        console.log('calllogsearchform event='+event.which);
+        //console.log('calllogsearchform event='+event.which);
         if(event.which == 13) {
             event.preventDefault();
             $('#calllogsearchform').submit();
@@ -39,46 +39,10 @@ function calllogsearchNavbarBoxInit() {
 }
 
 //get search input field with id=calllogsearchform-search and redirect to path /patients/search?searchtype=search
-function setCallLogSearchtypeAction(searchType) {
-
+function setCallLogSearchtypeAction() {
     //console.log('searchtype='+key);
-
     $('#calllogsearchform').submit();
     return;
-
-    if( searchType == 'button ') {
-        $('#calllogsearchform').submit();
-    } else {
-        if(event.which == 13) {
-            event.preventDefault();
-            $('#calllogsearchform').submit();
-        }
-    }
-
-
-    //if( typeof searchType === 'undefined' || searchType == "" ) {
-    //    searchType = $('#ordersearchform-searchtype').val();
-    //}
-    //
-    ////override searchtype in dropdown menu
-    //var searchtypeButton = $('#ordersearch-searchtype-button');
-    //searchtypeButton.html(searchType+' <span class="caret"></span>');
-    //$('#ordersearchform-searchtype').val(searchType);
-    //
-    ////console.log('searchType='+searchType);
-    //
-    //var searchValue = $('#ordersearchform-search').val();
-    //
-    //if( searchValue == '' ) {
-    //    //alert('Please specify a search criterion');
-    //    return false;
-    //}
-    //
-    //$('#ordersearchform').submit();
-    //
-    //var searchUrl = getCommonBaseUrl("callentry/search?"+searchType+'='+searchValue);
-    //
-    //window.location = searchUrl;
 }
 
 //get search input field with id=ordersearchform-search and redirect to path /patients/search?searchtype=search

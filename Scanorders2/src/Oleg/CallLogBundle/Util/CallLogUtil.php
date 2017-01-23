@@ -12,6 +12,7 @@ use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\PatientMasterMergeRecord;
 use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\Procedure;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Created by PhpStorm.
@@ -1164,6 +1165,58 @@ class CallLogUtil
     public function createForm($type, $data = null, array $options = array())
     {
         return $this->container->get('form.factory')->create($type, $data, $options);
+    }
+
+    //Upon submission of a new entry on /entry/new , send an email to the Preferred Email of the "Attending:"
+    // with the following info
+    // (Patient Info like Name and/or MRN should never be sent via email, so even if the entry has patient info, treat it as if patient info is missing):
+    public function sendConfirmationEmail($message,$patient,$encounter) {
+        $attendings = $encounter->getAttendingPhysicians();
+        if( count($attendings) == 0 ) {
+            return;
+        }
+
+        $break = "\r\n";
+
+        $emails = array();
+        foreach( $attendings as $attending ) {
+            $emails[] = $attending->getSingleEmail();
+        }
+
+        $submitter = $message->getProvider();
+
+        $senderEmail = null;
+        if( $submitter ) {
+            $senderEmail = $submitter->getSingleEmail();
+        }
+
+        //Subject: [Call Log Book] <FirstNameOfSubmitter LastNameOfSubmitter> added a new entry
+        $subject = "[Call Log Book] ".$submitter->getUsernameOptimal()." added a new entry";
+
+        //use the "If the Patient is not present / patient is not identified" variation to avoid sending patient info by email
+        $body = $this->getEventLogDescription($message,null,$encounter);
+
+        if( $message->getId() ) {
+            //View the Pathology Call Log Book entry 12345 submitted by SubmitterFirstName SubmitterLastName at [submission timestamp] by visiting:
+            $body = $body . $break . $break . "View the Pathology Call Log Book entry " . $message->getId() . "submitted on " . $message->getSubmitterInfo() . " by visiting:";
+
+            // http://collage.med.cornell.edu/order/call-log-book/entry/view/XXXID
+            $messageUrl = $this->container->get('router')->generate(
+                'calllog_callentry_view',
+                array(
+                    'messageId' => $message->getId()
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $body = $body . $break . $messageUrl;
+        } else {
+            $body = $body . $break . $break . "The Pathology Call Log Book entry submitted on " . $message->getSubmitterInfo();
+        }
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+
     }
 
 }

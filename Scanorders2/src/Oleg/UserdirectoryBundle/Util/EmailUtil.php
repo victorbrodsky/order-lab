@@ -63,7 +63,7 @@ class EmailUtil {
         }
 
         $emails = $this->checkEmails($emails);
-        $ccs = $this->checkEmails($ccs);
+        //$ccs = $this->checkEmails($ccs);
 
         if( $this->em ) {
             $smtpServerAddress = $userutil->getSiteSetting($this->em,'smtpServerAddress');

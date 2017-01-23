@@ -1,15 +1,14 @@
 {#   navigation menu   #}
 
-{% import _self as navbarmacros %}
-
-{% macro searchBoxContent(  patientsearchtype ) %}
-    <li>
-        <a
+{#{% import _self as navbarmacros %}#}
+{#{% macro searchBoxContent(  patientsearchtype ) %}#}
+    {#<li>#}
+        {#<a#}
             {#href="{{ path(scan_sitename~'_home',{'searchtype':searchtype}) }}">{{ searchtype }}#}
-            href="#" onclick="setCallLogSearchtypeAction('{{ patientsearchtype}}');return false;">{{ patientsearchtype}}
-        </a>
-    </li>
-{% endmacro %}
+            {#href="#" onclick="setCallLogSearchtypeAction('{{ patientsearchtype}}');return false;">{{ patientsearchtype}}#}
+        {#</a>#}
+    {#</li>#}
+{#{% endmacro %}#}
 
 {% block navbar %}
 
@@ -152,27 +151,12 @@
                     {#</li>#}
                     <li id="nav-bar-calllogsearch">
                         {% set navbarfilterform = calllog_util.getNavbarFilterForm(app.request) %}
-                        {#<form action="{{ path(route_path) }}" method="get" {{ form_enctype(filterform) }} class="well form-search">#}
                         <form class="navbar-form navbar-left form-inline" role="search" id="calllogsearchform" name="calllogsearchform" method="get" {{ form_enctype(navbarfilterform) }} action="{{ path('calllog_home') }}">
-                            {#{{ form_widget(navbarfilterform.searchtype) }}#}
-                            {#{{ form_widget(navbarfilterform.search) }}#}
-                            {#<div class="form-group has-feedback">#}
-                                {#<input id="search_search" name="search[search]" class="form-control submit-on-enter-field" type="text">#}
-                                {#<span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>#}
-                            {#</div>#}
-
                             <div class="input-group">
-                                {#<select name="category">#}
-                                    {#<option>11111</option>#}
-                                    {#<option>22222</option>#}
-                                    {#<option>33333</option>#}
-                                {#</select>#}
                                 {{ form_widget(navbarfilterform.searchtype) }}
                                 <div class="form-group has-feedback">
-                                    {#<input id="search_search" name="search[search]" class="form-control submit-on-enter-field" type="text" style="height:30px; border-radius: 0 6px 6px 0">#}
                                     {{ form_widget(navbarfilterform.search) }}
                                     <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>
-                                    {#<button id="Search_button" type="submit" class="btn btn-default">Search</button>#}
                                 </div>
                             </div>
                             {#{{ form_rest(navbarfilterform) }}#}

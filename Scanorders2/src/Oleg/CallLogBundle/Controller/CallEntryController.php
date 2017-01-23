@@ -629,7 +629,6 @@ class CallEntryController extends Controller
         //$testing = true;
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -1000,27 +999,6 @@ class CallEntryController extends Controller
                 //log search action
                 if( $msg ) {
                     $eventType = "New Call Log Book Entry Submitted";
-//                    $event = "New Call Log with ID# ".$message->getId()." has been created by ".$user." ";
-//                    //$event = "";
-//                    //PatientLastName, Patient FirstName (DOB: MM/DD/YY, [Gender], [MRN Type(short name)]: [MRN])
-//                    if( $patient->getId() ) {
-//                        $event = $event . $patient->obtainPatientInfoSimple();
-//                    }
-//                    // at [EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
-//                    $encounterLocation = $newEncounter->obtainLocationInfo();
-//                    if( $encounterLocation ) {
-//                        $event = $event . " at " . $encounterLocation;
-//                    }
-//                    // referred by [ReferringProvider] ([Specialty], [Phone Number]/[ReferringProviderEmail])
-//                    $referringProviderInfo = $newEncounter->obtainReferringProviderInfo();
-//                    if( $referringProviderInfo ) {
-//                        $event = $event . " referred by " . $referringProviderInfo;
-//                    }
-//                    // for [MessageType:Service] / [MessageType:Issue]
-//                    $messageCategoryInfo = $message->getMessageCategoryString();
-//                    if( $messageCategoryInfo ) {
-//                        $event = $event . " for " . $messageCategoryInfo;
-//                    }
 
                     $event = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
                     //exit('event='.$event);
@@ -1043,6 +1021,9 @@ class CallEntryController extends Controller
                 'notice',
                 $msg
             );
+
+            //send an email to the Preferred Email of the "Attending:"
+            $calllogUtil->sendConfirmationEmail($message,$patient,$newEncounter);
 
             //echo "return messageId=".$message->getId()."<br>";
             //exit('1');
