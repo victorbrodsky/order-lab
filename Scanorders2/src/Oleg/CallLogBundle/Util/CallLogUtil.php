@@ -1222,10 +1222,10 @@ class CallLogUtil
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
 
         //testing
-        $eventType = "New Call Log Book Entry Submitted";
-        $user = $this->sc->getToken()->getUser();
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $body, $user, $message, null, $eventType);
+//        $eventType = "New Call Log Book Entry Submitted";
+//        $user = $this->sc->getToken()->getUser();
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $body, $user, $message, null, $eventType);
     }
 
 }
