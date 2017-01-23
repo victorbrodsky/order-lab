@@ -97,4 +97,24 @@ class EncounterAttendingPhysician extends EncounterArrayFieldAbstract
     }
 
 
+    public function getEmail() {
+        $email = null;
+        $userWrapper = $this->getField();
+        if( $userWrapper ) {
+            if( $userWrapper->getUser() ) {
+                $email = $userWrapper->getUser()->getSingleEmail();
+            }
+
+            if( !$email ) {
+                $email = $userWrapper->getUserWrapperEmail();
+            }
+        }
+
+        if( !$email ) {
+            $email = $this->getAttendingPhysicianEmail();
+        }
+
+        return $email;
+    }
+
 }

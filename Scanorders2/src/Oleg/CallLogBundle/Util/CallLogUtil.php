@@ -1180,7 +1180,7 @@ class CallLogUtil
 
         $emails = array();
         foreach( $attendings as $attending ) {
-            $emails[] = $attending->getSingleEmail();
+            $emails[] = $attending->getEmail();
         }
 
         $submitter = $message->getProvider();
