@@ -5,6 +5,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\CallLogBundle\Form\CalllogNavbarFilterType;
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\Block;
+use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Entity\Part;
@@ -1226,6 +1227,54 @@ class CallLogUtil
 //        $user = $this->sc->getToken()->getUser();
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $body, $user, $message, null, $eventType);
+    }
+
+
+    //create a new PatientListHierarchy node and add as a child to the $patientList
+    public function addToPatientList( $patient, $patientList, $message, $testing ) {
+
+        if( !$patient || !$patientList ) {
+            return null;
+        }
+
+        $userSecUtil = $this->get('user_security_utility');
+        $user = $this->sc->getToken()->getUser();
+
+        $class = new \ReflectionClass($patientList);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        $nodeClassName = $classNamespace . "\\" . $className;
+
+        //create a new record in the list (i.e. PathologyCallComplexPatients)
+        $newListElement = new $nodeClassName();
+
+        $patientDescription = "Patient ID# " . $patient->getId() . ": " . $patient->obtainPatientInfoTitle();
+        $patientName = "Patient ID# " . $patient->getId();
+        $count = null;
+        $userSecUtil->setDefaultList($newListElement, $count, $user, $patientName);
+        $newListElement->setPatient($patient);
+        $newListElement->setDescription($patientDescription);
+        $newListElement->setObject($message);
+
+        //tree variables
+        $levelPatient = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
+        $newListElement->setOrganizationalGroupType($levelPatient);
+
+        $this->em->persist($newListElement);
+
+        if( $message ) {
+            //record this to the CalllogEntryMessage (getCalllogEntryMessage)
+            $calllogEntryMessage = $message->getCalllogEntryMessage();
+            if (!$calllogEntryMessage) {
+                $calllogEntryMessage = new CalllogEntryMessage();
+                $message->setCalllogEntryMessage($calllogEntryMessage);
+            }
+            $calllogEntryMessage->setObject($newListElement);
+            $calllogEntryMessage->setAddPatientToList(true);
+        }
+
+        return $newListElement;
     }
 
 }

@@ -67,40 +67,16 @@ class PatientListHierarchy extends BaseCompositeNode {
      */
     private $organizationalGroupType;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="PatientList", mappedBy="patientListHierarchy", cascade={"persist","remove"})
-//     **/
-//    private $patientLists;
-//    /**
-//     * @ORM\ManyToMany(targetEntity="PatientList", mappedBy="patientListHierarchy")
-//     **/
-//    private $patientLists;
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\Patient", cascade={"persist"})
+     */
+    private $patient;
 
 
     public function __construct() {
         parent::__construct();
-
-        //$this->patientLists = new ArrayCollection();
     }
 
-
-
-//    public function getPatientLists()
-//    {
-//        return $this->patientLists;
-//    }
-//    public function addPatientList($item)
-//    {
-//        if( !$this->patientLists->contains($item) ) {
-//            $this->patientLists->add($item);
-//        }
-//
-//        return $this;
-//    }
-//    public function removePatientList($item)
-//    {
-//        $this->patientLists->removeElement($item);
-//    }
 
 
     /**
@@ -120,6 +96,25 @@ class PatientListHierarchy extends BaseCompositeNode {
     }
 
 
+    /**
+     * @return mixed
+     */
+    public function getPatient()
+    {
+        return $this->patient;
+    }
+
+    /**
+     * @param mixed $patient
+     */
+    public function setPatient($patient)
+    {
+        $this->patient = $patient;
+    }
+
+
+
+
 
     public function getClassName() {
         return "PatientListHierarchy";
@@ -133,7 +128,11 @@ class PatientListHierarchy extends BaseCompositeNode {
         if( $this->getParent() ) {
             $parentName = ", parent=".$this->getParent()->getName();
         }
-        return "Patient List: ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName;
+        $patientName = "";
+        if( $this->getPatient() ) {
+            $patientName = ", patient=".$this->getPatient()->obtainPatientInfoTitle();
+        }
+        return "Patient List: ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName.$patientName;
     }
 
 

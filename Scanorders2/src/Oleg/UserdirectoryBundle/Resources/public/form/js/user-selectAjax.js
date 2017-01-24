@@ -243,10 +243,16 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
             //console.log('userid='+userid);
         }
 
+        var types = thiselement.attr("data-compositetree-types"); //i.e. 'default,user-added'
+        if( !types || typeof types === 'undefined' ) {
+            types = 'default';
+        }
+        //console.log('types='+types);
+
         //employees_get_compositetree
         var treeUrl = Routing.generate('employees_get_composition_tree');
         //console.log('treeUrl='+treeUrl);
-        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&bundlename=' + bundleName + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid + '&type=default';
+        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&bundlename=' + bundleName + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid + '&type='+types;
         //console.log('user-selectAjax.js: final treeUrl='+treeUrl);
 
         if( typeof cycle === 'undefined' ) {

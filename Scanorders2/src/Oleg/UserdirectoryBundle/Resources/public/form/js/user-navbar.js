@@ -214,8 +214,8 @@ function setCallLogNavBar() {
         id = 'callentry';
     }
 
-    if( full.indexOf("/call-log-book/complex-patient-list/") !== -1 ) {
-        id = 'complexpatientlist';
+    if( full.indexOf("/call-log-book/patient-list/") !== -1 ) {
+        id = 'patientlist';
     }
 
     if( full.indexOf("/call-log-book/resources/") !== -1 ) {

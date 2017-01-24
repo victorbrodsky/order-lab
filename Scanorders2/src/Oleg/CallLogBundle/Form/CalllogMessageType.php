@@ -251,6 +251,7 @@ class CalllogMessageType extends AbstractType
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'PatientListHierarchy',
                     'data-label-prefix' => '',
+                    'data-compositetree-types' => 'default,user-added',
                 ),
                 'classtype' => 'patientListTitle'
             ));

@@ -20,6 +20,7 @@ use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\MessageStatusList;
 use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
 use Oleg\OrderformBundle\Entity\PatientListHierarchy;
+use Oleg\OrderformBundle\Entity\PatientListHierarchyGroupType;
 use Oleg\OrderformBundle\Entity\PatientRecordStatusList;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
 use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
@@ -166,6 +167,7 @@ class ScanAdminController extends AdminController
         $count_CourseGroupType = $this->generateCourseGroupType();
         $count_SystemAccountRequestType = $this->generateSystemAccountRequestType();
         $count_AmendmentReason = $this->generateAmendmentReason();
+        $count_PatientListHierarchyGroupType = $this->generatePatientListHierarchyGroupType();
         $count_PatientListHierarchy = $this->generatePatientListHierarchy();
         $count_generateEncounterStatus = $this->generateEncounterStatus();
         $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
@@ -202,6 +204,7 @@ class ScanAdminController extends AdminController
             'Educational Group Types='.$count_CourseGroupType.', '.
             'SystemAccountRequestTypes='.$count_SystemAccountRequestType.', '.
             'AmendmentReasons='.$count_AmendmentReason.', '.
+            'PatientListHierarchyGroupType='.$count_PatientListHierarchyGroupType.', '.
             'PatientListHierarchy='.$count_PatientListHierarchy.', '.
             'EncounterInfoType='.$count_EncounterInfoType.', '.
             'EncounterStatus='.$count_generateEncounterStatus.', '.
@@ -2109,41 +2112,63 @@ class ScanAdminController extends AdminController
 
     }
 
+    public function generatePatientListHierarchyGroupType() {
 
-    public function generatePatientListHierarchy() {
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            "Patient List" => 0,
+            "Patient" => 4,
+        );
 
         $username = $this->get('security.context')->getToken()->getUser();
 
+        $count = 10;
+        foreach( $elements as $name=>$level ) {
+
+            $entity = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new PatientListHierarchyGroupType();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $entity->setLevel($level);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generatePatientListHierarchy() {
+
+        $em = $this->getDoctrine()->getManager();
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $levelGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient List');
+
         $items = array(
-            array(
-                'name' => "Pathology Call Complex Patients",
-                'entityNamespace' => 'Oleg\CallLogBundle\Entity',
-                'entityName' => 'PathologyCallComplexPatients'
-            ),
+            "Patient Lists",                    //level 0
+            "Weill Cornell",                    //level 1
+            "Pathology Call Log Book Lists",    //level 2
+            "Pathology Call Complex Patients"   //level 3
         );
 
         $count = 10;
         $level = 0;
+        $parentItem = null;
 
-        $count = $this->addNestedsetPatientListHierarchy(null,$items,$level,$username,$count);
+        //$count = $this->addNestedsetPatientListHierarchy(null,$items,$level,$username,$count);
 
-        //exit('EOF message category');
+        foreach( $items as $name ) {
 
-        return round($count/10);
-    }
-    public function addNestedsetPatientListHierarchy($parentItem,$items,$level,$username,$count) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        foreach( $items as $category ) { //=>$subcategory
-
-            $name = $category['name'];
-
-//            if( $subcategory && !is_array($subcategory) ) {
-//                $name = $subcategory;
-//            }
-
-            //find by name and by parent ($parentItem) if exists
             if( $parentItem ) {
                 $mapper = array(
                     'prefix' => "Oleg",
@@ -2155,30 +2180,19 @@ class ScanAdminController extends AdminController
                 $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($name);
             }
 
-            if( !$item ) {
-                //make category
-                $item = new PatientListHierarchy();
-
-                $this->setDefaultList($item,$count,$username,$name);
-                $item->setLevel($level);
-
-                $count = $count + 10;
+            if( $item ) {
+                continue;
             }
 
-            if( !$item->getEntityNamespace() && !$item->getEntityName() ) {
-                if( $category['entityNamespace'] ) {
-                    $item->setEntityNamespace($category['entityNamespace']);
-                }
-                if( $category['entityName'] ) {
-                    $item->setEntityName($category['entityName']);
-                }
-            }
+            //make category
+            $item = new PatientListHierarchy();
 
-//            echo $level.": category=".$name.", count=".$count."<br>";
-//            echo "subcategory:<br>";
-//            print_r($subcategory);
-//            echo "<br><br>";
-//            echo "messageCategory=".$item->getName()."<br>";
+            $this->setDefaultList($item,$count,$username,$name);
+            $item->setLevel($level);
+            $item->setOrganizationalGroupType($levelGroup);
+
+            $level++;
+            $count = $count + 10;
 
             //add to parent
             if( $parentItem ) {
@@ -2186,19 +2200,85 @@ class ScanAdminController extends AdminController
                 $parentItem->addChild($item);
             }
 
+            $parentItem = $item;
+
             //$item->printTree();
 
-            //make children
-            //if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
-            //    $count = $this->addNestedsetPatientListHierarchy($item,$subcategory,$level+1,$username,$count);
-            //}
-
             $em->persist($item);
-            $em->flush();
+            //$em->flush();
         }
+        //exit('EOF message category');
 
-        return $count;
+        return round($count/10);
     }
+//    public function addNestedsetPatientListHierarchy($parentItem,$items,$level,$username,$count) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        foreach( $items as $category ) { //=>$subcategory
+//
+//            $name = $category['name'];
+//
+////            if( $subcategory && !is_array($subcategory) ) {
+////                $name = $subcategory;
+////            }
+//
+//            //find by name and by parent ($parentItem) if exists
+//            if( $parentItem ) {
+//                $mapper = array(
+//                    'prefix' => "Oleg",
+//                    'className' => "PatientListHierarchy",
+//                    'bundleName' => "OrderformBundle"
+//                );
+//                $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+//            } else {
+//                $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($name);
+//            }
+//
+//            if( !$item ) {
+//                //make category
+//                $item = new PatientListHierarchy();
+//
+//                $this->setDefaultList($item,$count,$username,$name);
+//                $item->setLevel($level);
+//
+//                $count = $count + 10;
+//            }
+//
+//            if( !$item->getEntityNamespace() && !$item->getEntityName() ) {
+//                if( $category['entityNamespace'] ) {
+//                    $item->setEntityNamespace($category['entityNamespace']);
+//                }
+//                if( $category['entityName'] ) {
+//                    $item->setEntityName($category['entityName']);
+//                }
+//            }
+//
+////            echo $level.": category=".$name.", count=".$count."<br>";
+////            echo "subcategory:<br>";
+////            print_r($subcategory);
+////            echo "<br><br>";
+////            echo "messageCategory=".$item->getName()."<br>";
+//
+//            //add to parent
+//            if( $parentItem ) {
+//                $em->persist($parentItem);
+//                $parentItem->addChild($item);
+//            }
+//
+//            //$item->printTree();
+//
+//            //make children
+//            //if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
+//            //    $count = $this->addNestedsetPatientListHierarchy($item,$subcategory,$level+1,$username,$count);
+//            //}
+//
+//            $em->persist($item);
+//            $em->flush();
+//        }
+//
+//        return $count;
+//    }
 
     ////////////////// Scan Tree Util //////////////////////
     /**

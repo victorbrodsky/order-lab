@@ -154,23 +154,29 @@ class TreeController extends Controller {
 
         //echo "type=".$type."<br>";
         if( $type ) {
+            //http://stackoverflow.com/questions/5929036/how-to-use-where-in-with-doctrine-2
+            //This works per default with ->setParameter('ids', $ids) but not with ->setParameters('ids' => $ids)
+            $typeArr = explode(",",$type);
+            $typesStr = '(list.type IN (:types))'; //'.implode(',',$typesArr).'
+            $params['types'] = $typeArr;
+
             if( $userid ) {
                 if ($thisid) {
-                    $where = $this->addToWhere($where, "(list.id=:thisid OR list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+                    $where = $this->addToWhere($where, "(list.id=:thisid OR $typesStr OR ( list.type = 'user-added' AND list.creator = :user))");
                     $params['thisid'] = $thisid;
                 } else {
-                    $where = $this->addToWhere($where, "(list.type=:type OR ( list.type = 'user-added' AND list.creator = :user))");
+                    $where = $this->addToWhere($where, "($typesStr OR ( list.type = 'user-added' AND list.creator = :user))");
                 }
                 $params['user'] = $userid;
-                $params['type'] = $type;
+                //$params['type'] = $type;
             } else {
                 if ($thisid) {
-                    $where = $this->addToWhere($where, "(list.id=:thisid OR list.type=:type)");
+                    $where = $this->addToWhere($where, "(list.id=:thisid OR $typesStr)");
                     $params['thisid'] = $thisid;
                 } else {
-                    $where = $this->addToWhere($where, "(list.type=:type)");
+                    $where = $this->addToWhere($where, "($typesStr)");
                 }
-                $params['type'] = $type;
+                //$params['type'] = $type;
             }
         }
 
@@ -178,14 +184,25 @@ class TreeController extends Controller {
         $dql->where($where);
 
         if( $typesFilter ) {
-            foreach( $typesFilter as $type ) {
-                $typesFilterArr[] = "'".$type."'";
-            }
-            $dql->andWhere('list.type IN ('.implode(',',$typesFilterArr).')');
+//            foreach( $typesFilter as $type ) {
+//                $typesFilterArr[] = "'".$type."'";
+//            }
+//            $dql->andWhere('list.type IN ('.implode(',',$typesFilterArr).')');
+            $dql->andWhere('list.type IN (:filterTypes)');
+            $params['filterTypes'] = $typesFilter;
         }
 
         $query = $em->createQuery($dql);
         $query->setParameters($params);
+        foreach( $params as $key=>$value) {
+            $query->setParameter($key, $value);
+            //if( $key == 'types' ) {
+            //    $query->setParameter($key, $value, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+            //} else {
+            //    $query->setParameter($key, $value);
+            //}
+        }
+
         //echo "dql=".$dql." <br>";
 
         $entities = $query->getResult();

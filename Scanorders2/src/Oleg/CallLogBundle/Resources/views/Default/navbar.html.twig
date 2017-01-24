@@ -69,9 +69,9 @@
 
                     <li id="nav-bar-myentrees"><a href="{{ path(calllog_sitename~'_my_generation_log') }}">My Entrees</a></li>
 
-                    {#<li id="nav-bar-complexpatientlist"><a href="{{ path(calllog_sitename~'_complex_patient_list') }}">Lists</a></li>#}
+                    {#<li id="nav-bar-patientlist"><a href="{{ path(calllog_sitename~'_complex_patient_list') }}">Lists</a></li>#}
                     {% set calllogLists = calllog_util.getPatientList() %}
-                    <li id="nav-bar-complexpatientlist" class="dropdown">
+                    <li id="nav-bar-patientlist" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lists<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             {% for list in calllogLists %}
