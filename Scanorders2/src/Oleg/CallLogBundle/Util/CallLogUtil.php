@@ -1256,6 +1256,9 @@ class CallLogUtil
         }
 
         //TODO?: add only if the patient does not exists in the list
+        if( $this->isPatientInList($patientList,$patient) ) {
+            return null;
+        }
 
         //create a new node in the list PatientListHierarchyand attach it as a child to the $patientList
         $newListElement = new PatientListHierarchy();
@@ -1312,6 +1315,26 @@ class CallLogUtil
 //        }
 
         return $newListElement;
+    }
+
+    public function isPatientInList( $patientList, $patient ) {
+        if( $patientList && $patientList->getId() && $patient && $patient->getId() ) {
+            //ok continue
+        } else {
+            return false;
+        }
+        $repository = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy');
+        $dql = $repository->createQueryBuilder("list");
+        $dql->where("list.parent = :parentId AND list.patient = :patientId");
+        $parameters['parentId'] = $patientList->getId();
+        $parameters['patientId'] = $patient->getId();
+        $query = $this->em->createQuery($dql);
+        $query->setParameters($parameters);
+        $patients = $query->getResult();
+        if( count($patients) > 0 ) {
+            return true;
+        }
+        return false;
     }
 
     public function getDefaultPatientList( $patientListName = "Pathology Call Complex Patients" ) {

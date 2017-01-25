@@ -210,7 +210,7 @@ function setCallLogNavBar() {
         id = 'alerts';
     }
 
-    if( full.indexOf("/call-log-book/entry/") !== -1 ) {
+    if( full.indexOf("/call-log-book/entry/new") !== -1 ) {
         id = 'callentry';
     }
 

@@ -196,6 +196,8 @@ class CallLogPatientController extends PatientController {
 
         $em = $this->getDoctrine()->getManager();
 
+        echo "list: name=$listname; id=$listid <br>";
+
         //get list name by $listname, convert it to the first char as Upper case and use it to find the list in DB
         //for now use the mock page complex-patient-list.html.twig
 
@@ -203,21 +205,27 @@ class CallLogPatientController extends PatientController {
         //$patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($listid);
         //$patients = $patientList->getChildren();
 
+        $patientGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
+
         $parameters = array();
 
         $repository = $em->getRepository('OlegOrderformBundle:PatientListHierarchy');
         $dql = $repository->createQueryBuilder("list");
 
-        //$dql->leftJoin("list.parent", "parent");
+        $dql->leftJoin("list.patient", "patient");
+        $dql->leftJoin("patient.lastname", "lastname");
+        $dql->leftJoin("patient.firstname", "firstname");
+        $dql->leftJoin("patient.mrn", "mrn");
 
-        $dql->where("list.parent = :parentId");
+        $dql->where("list.parent = :parentId AND list.organizationalGroupType = :patientGroup");
         $parameters['parentId'] = $listid;
+        $parameters['patientGroup'] = $patientGroup->getId();
 
         $query = $em->createQuery($dql);
         $query->setParameters($parameters);
         //echo "sql=".$query->getSql()."<br>";
 
-        $limit = 10;
+        $limit = 30;
         $paginator  = $this->get('knp_paginator');
         $patients = $paginator->paginate(
             $query,
@@ -231,9 +239,7 @@ class CallLogPatientController extends PatientController {
 
         //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
         return array(
-            'patients' => $patients,
-            //'form' => $form->createView(),
-            //'cycle' => $cycle,
+            'patientNodes' => $patients,
             'title' => $listname,   //"Complex Patient List",
         );
     }
