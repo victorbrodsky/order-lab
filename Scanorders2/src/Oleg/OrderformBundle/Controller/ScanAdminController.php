@@ -2116,8 +2116,16 @@ class ScanAdminController extends AdminController
 
         $em = $this->getDoctrine()->getManager();
 
+        $entities = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findAll();
+        if( $entities ) {
+            return -1;
+        }
+
         $elements = array(
             "Patient List" => 0,
+            "Patient List" => 1,
+            "Patient List" => 2,
+            "Patient List" => 3,
             "Patient" => 4,
         );
 
@@ -2126,10 +2134,10 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name=>$level ) {
 
-            $entity = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName($name);
-            if( $entity ) {
-                continue;
-            }
+//            $entity = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName($name);
+//            if( $entity ) {
+//                continue;
+//            }
 
             $entity = new PatientListHierarchyGroupType();
             $this->setDefaultList($entity,$count,$username,$name);
@@ -2152,7 +2160,7 @@ class ScanAdminController extends AdminController
         $em = $this->getDoctrine()->getManager();
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $levelGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient List');
+        //$levelGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient List');
 
         $items = array(
             "Patient Lists",                    //level 0
@@ -2189,6 +2197,13 @@ class ScanAdminController extends AdminController
 
             $this->setDefaultList($item,$count,$username,$name);
             $item->setLevel($level);
+
+            //find org group level
+            $levelGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByLevel($level);
+            if( !$levelGroup ) {
+                exit("PatientListHierarchyGroupType not found by level ".$level);
+            }
+
             $item->setOrganizationalGroupType($levelGroup);
 
             $level++;
@@ -2205,7 +2220,7 @@ class ScanAdminController extends AdminController
             //$item->printTree();
 
             $em->persist($item);
-            //$em->flush();
+            $em->flush();
         }
         //exit('EOF message category');
 

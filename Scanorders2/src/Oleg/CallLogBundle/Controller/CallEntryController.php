@@ -306,21 +306,27 @@ class CallEntryController extends Controller
 
         //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
         if( $patientListTitleFilter ) {
-            $patientListHierarchyNode = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListTitleFilter);
-            if( $patientListHierarchyNode ) {
-                $patientListEntityNamespace = $patientListHierarchyNode->getEntityNamespace();
-                $patientListEntityName = $patientListHierarchyNode->getEntityName();
-                //$patientListEntityId = $patientListHierarchyNode->getEntityId();
-                //echo "$patientListEntityNamespace $patientListEntityName<br>";
-                //message->calllogEntryMessage-> use entityNamespace,entityName,entityId
-                $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
-                $patientListEntityStr = "calllogEntryMessage.entityNamespace=:entityNamespace AND calllogEntryMessage.entityName=:entityName";
-                //echo "str=$patientListEntityStr<br>";
-                $dql->andWhere($patientListEntityStr);
-                $queryParameters['entityNamespace'] = $patientListEntityNamespace;
-                $queryParameters['entityName'] = $patientListEntityName;
-                //$queryParameters['entityId'] = $patientListEntityId;
-            }
+            $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+            $patientListEntityStr = "message.calllogEntryMessage=:patientList";
+            $dql->andWhere($patientListEntityStr);
+            $queryParameters['patientList'] = $patientListTitleFilter;
+
+//            $patientListHierarchyNode = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListTitleFilter);
+//            if( $patientListHierarchyNode ) {
+//                $patientListEntityNamespace = $patientListHierarchyNode->getEntityNamespace();
+//                $patientListEntityName = $patientListHierarchyNode->getEntityName();
+//                //$patientListEntityId = $patientListHierarchyNode->getEntityId();
+//                //echo "$patientListEntityNamespace $patientListEntityName<br>";
+//                //message->calllogEntryMessage-> use entityNamespace,entityName,entityId
+//                $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+//                $patientListEntityStr = "calllogEntryMessage.entityNamespace=:entityNamespace AND calllogEntryMessage.entityName=:entityName";
+//                //echo "str=$patientListEntityStr<br>";
+//                $dql->andWhere($patientListEntityStr);
+//                $queryParameters['entityNamespace'] = $patientListEntityNamespace;
+//                $queryParameters['entityName'] = $patientListEntityName;
+//                //$queryParameters['entityId'] = $patientListEntityId;
+//            }
+
             $advancedFilter = true;
         }
 
@@ -576,6 +582,14 @@ class CallEntryController extends Controller
         $patient->addEncounter($encounter2);
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageTypeId);
+
+        //set patient list
+        $patientListName = "Pathology Call Complex Patients";
+        $patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
+        if( !$patientList ) {
+            throw new \Exception( "Location type is not found by name '".$patientListName."'" );
+        }
+        $message->setMessageCategory($patientList);
 
         //add patient
         $message->addPatient($patient);
@@ -892,6 +906,7 @@ class CallEntryController extends Controller
                     }
 
                     //add patient to the complex patient list specified by patientListTitle if the option addPatientToList is checked.
+                    $calllogUtil->addToPatientList($patient,$message,$testing);
                     $addPatientToList = $form["addPatientToList"]->getData();
                     if( $addPatientToList ) {
                         $patientList = $form["patientListTitle"]->getData();

@@ -187,6 +187,7 @@
 {% endmacro %}
 
 {% macro fieldDateLabel( field, classname, attr, noerror ) %}
+    {% import _self as formmacros %}
     <p>
         {{ formmacros.fieldDateLabelNoP(field, classname, attr, noerror) }}
     </p>

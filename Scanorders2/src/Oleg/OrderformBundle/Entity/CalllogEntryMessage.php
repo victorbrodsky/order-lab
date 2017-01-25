@@ -28,22 +28,31 @@ class CalllogEntryMessage extends OrderBase {
     private $addPatientToList;
 
     /**
-     * Linked Object ID. Used to make a link to other lists in the list manager.
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $entityId;
-    /**
-     * Used to make a link to other lists in the list manager.
-     * i.e. "Oleg\OrderformBundle\Entity"
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $entityNamespace;
-    /**
-     * Used to make a link to other lists in the list manager.
-     * i.e. "Patient"
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $entityName;
+     * @ORM\ManyToOne(targetEntity="PatientListHierarchy")
+     **/
+    private $patientList;
+
+//    /**
+//     * Linked Object ID. Used to make a link to other lists in the list manager.
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $entityId;
+//    /**
+//     * Used to make a link to other lists in the list manager.
+//     * i.e. "Oleg\OrderformBundle\Entity"
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $entityNamespace;
+//    /**
+//     * Used to make a link to other lists in the list manager.
+//     * i.e. "Patient"
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $entityName;
+
+
+
+
 
     /**
      * @return mixed
@@ -61,79 +70,94 @@ class CalllogEntryMessage extends OrderBase {
         $this->addPatientToList = $addPatientToList;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEntityId()
-    {
-        return $this->entityId;
-    }
 
-    /**
-     * @param mixed $entityId
-     */
-    public function setEntityId($entityId)
-    {
-        $this->entityId = $entityId;
-    }
 
     /**
      * @return mixed
      */
-    public function getEntityNamespace()
+    public function getPatientList()
     {
-        return $this->entityNamespace;
+        return $this->patientList;
     }
 
     /**
-     * @param mixed $entityNamespace
+     * @param mixed $patientList
      */
-    public function setEntityNamespace($entityNamespace)
+    public function setPatientList($patientList)
     {
-        $this->entityNamespace = $entityNamespace;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntityName()
-    {
-        return $this->entityName;
-    }
-
-    /**
-     * @param mixed $entityName
-     */
-    public function setEntityName($entityName)
-    {
-        $this->entityName = $entityName;
+        $this->patientList = $patientList;
     }
 
 
 
 
-
-
-
-    public function setObject($object) {
-
-        $class = new \ReflectionClass($object);
-        $className = $class->getShortName();
-        $classNamespace = $class->getNamespaceName();
-
-        if( $className && !$this->getEntityName() ) {
-            $this->setEntityName($className);
-        }
-
-        if( $classNamespace && !$this->getEntityNamespace() ) {
-            $this->setEntityNamespace($classNamespace);
-        }
-
-        if( !$this->getEntityId() && $object->getId() ) {
-            //echo "setEntityId=".$object->getId()."<br>";
-            $this->setEntityId($object->getId());
-        }
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getEntityId()
+//    {
+//        return $this->entityId;
+//    }
+//
+//    /**
+//     * @param mixed $entityId
+//     */
+//    public function setEntityId($entityId)
+//    {
+//        $this->entityId = $entityId;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getEntityNamespace()
+//    {
+//        return $this->entityNamespace;
+//    }
+//
+//    /**
+//     * @param mixed $entityNamespace
+//     */
+//    public function setEntityNamespace($entityNamespace)
+//    {
+//        $this->entityNamespace = $entityNamespace;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getEntityName()
+//    {
+//        return $this->entityName;
+//    }
+//
+//    /**
+//     * @param mixed $entityName
+//     */
+//    public function setEntityName($entityName)
+//    {
+//        $this->entityName = $entityName;
+//    }
+//
+//    public function setObject($object) {
+//
+//        $class = new \ReflectionClass($object);
+//        $className = $class->getShortName();
+//        $classNamespace = $class->getNamespaceName();
+//
+//        if( $className && !$this->getEntityName() ) {
+//            $this->setEntityName($className);
+//        }
+//
+//        if( $classNamespace && !$this->getEntityNamespace() ) {
+//            $this->setEntityNamespace($classNamespace);
+//        }
+//
+//        if( !$this->getEntityId() && $object->getId() ) {
+//            //echo "setEntityId=".$object->getId()."<br>";
+//            $this->setEntityId($object->getId());
+//        }
+//    }
 
 
 

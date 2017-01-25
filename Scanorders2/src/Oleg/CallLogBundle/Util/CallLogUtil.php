@@ -1231,11 +1231,13 @@ class CallLogUtil
 
 
     //create a new PatientListHierarchy node and add as a child to the $patientList
-    public function addToPatientList( $patient, $patientList, $message, $testing ) {
+    public function addToPatientList( $patient, $message, $testing ) {
 
-        if( !$patient || !$patientList ) {
+        if( !$patient ) {
             return null;
         }
+
+        return;
 
         $userSecUtil = $this->get('user_security_utility');
         $user = $this->sc->getToken()->getUser();
@@ -1263,16 +1265,16 @@ class CallLogUtil
 
         $this->em->persist($newListElement);
 
-        if( $message ) {
-            //record this to the CalllogEntryMessage (getCalllogEntryMessage)
-            $calllogEntryMessage = $message->getCalllogEntryMessage();
-            if (!$calllogEntryMessage) {
-                $calllogEntryMessage = new CalllogEntryMessage();
-                $message->setCalllogEntryMessage($calllogEntryMessage);
-            }
-            $calllogEntryMessage->setObject($newListElement);
-            $calllogEntryMessage->setAddPatientToList(true);
-        }
+//        if( $message ) {
+//            //record this to the CalllogEntryMessage (getCalllogEntryMessage)
+//            $calllogEntryMessage = $message->getCalllogEntryMessage();
+//            if (!$calllogEntryMessage) {
+//                $calllogEntryMessage = new CalllogEntryMessage();
+//                $message->setCalllogEntryMessage($calllogEntryMessage);
+//            }
+//            $calllogEntryMessage->setObject($newListElement);
+//            $calllogEntryMessage->setAddPatientToList(true);
+//        }
 
         return $newListElement;
     }

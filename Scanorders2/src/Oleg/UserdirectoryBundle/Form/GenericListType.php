@@ -417,11 +417,13 @@ class GenericListType extends AbstractType
         }
 
         //level for OrganizationalGroupType
-        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ||
+        if(
+            strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ||
             strtolower($this->mapper['className']) == strtolower("MessageTypeClassifiers") ||
             strtolower($this->mapper['className']) == strtolower("CommentGroupType") ||
             strtolower($this->mapper['className']) == strtolower("ResearchGroupType") ||
-            strtolower($this->mapper['className']) == strtolower("CourseGroupType")
+            strtolower($this->mapper['className']) == strtolower("CourseGroupType") ||
+            strtolower($this->mapper['className']) == strtolower("PatientListHierarchyGroupType")
         ) {
 //        if( method_exists($this->params['entity'],'getLevel') ) {
             $builder->add('level',null,array(

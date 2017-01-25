@@ -177,13 +177,6 @@ class CalllogMessageType extends AbstractType
             'classtype' => 'amendmentReason'
         ));
 
-        $builder->add('addPatientToList', 'checkbox', array(
-            'label' => 'Add patient to the list:',
-            'mapped' => false,
-            'required' => false,
-            'attr' => array('class' => 'form-control')
-        ));
-
         if( $this->params['cycle'] != "new" ) {
             $builder->add('messageStatus', 'entity', array(
                 'class' => 'OlegOrderformBundle:MessageStatusList',
@@ -204,92 +197,87 @@ class CalllogMessageType extends AbstractType
             ));
         }
 
-//        $builder->add('patientListTitle', 'entity', array(
-//            'label' => 'List Title:',
+        ////////////////////////// Specific Orders //////////////////////////
+        $builder->add('calllogEntryMessage', new CalllogEntryMessageType($this->params), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\CalllogEntryMessage',
+            'label' => false,
+        ));
+        ////////////////////////// EOF Specific Orders //////////////////////////
+
+
+//        $builder->add('addPatientToList', 'checkbox', array(
+//            'label' => 'Add patient to the list:',
 //            'mapped' => false,
-//            'required' => true,
-//            'property' => 'name',
-//            //'data' => false,
-//            'class' => 'OlegOrderformBundle:PatientListHierarchy',
-//            'attr' => array('class' => 'combobox combobox-width')
+//            'required' => false,
+//            'attr' => array('class' => 'form-control')
 //        ));
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $message = $event->getData();
-            $form = $event->getForm();
-
-            $label = 'List Title:';
-
-            $patientLists = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findAll();
-            if( count($patientLists) > 0 ) {
-                $patientListId = $patientLists[0]->getId();
-            } else {
-                $patientListId = null;
-            }
-
-            if( $this->params['cycle'] != "new" && $message ) {
-                $calllogEntryMessage = $message->getCalllogEntryMessage();
-                if( $message->getId() && $message->getCalllogEntryMessage() ) {
-                    $patientListHierarchyNode = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array(
-                        'entityNamespace' => $calllogEntryMessage->getEntityNamespace(),
-                        'entityName' => $calllogEntryMessage->getEntityName(),
-                        'entityId' => $calllogEntryMessage->getEntityId(),
-                    ));
-                    if( $patientListHierarchyNode ) {
-                        $patientListId = $patientListHierarchyNode->getId();
-                    }
-                }
-            }
-
-            $form->add('patientListTitle', 'employees_custom_selector', array(
-                'label' => $label,
-                'mapped' => false,
-                'required' => true,
-                'data' => $patientListId,
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree ajax-combobox-patientListTitle',
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'OrderformBundle',
-                    'data-compositetree-classname' => 'PatientListHierarchy',
-                    'data-label-prefix' => '',
-                    'data-compositetree-types' => 'default,user-added',
-                ),
-                'classtype' => 'patientListTitle'
-            ));
-        });
+//
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $message = $event->getData();
+//            $form = $event->getForm();
+//
+//            $label = 'List Title:';
+//
+//            $patientLists = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findAll();
+//            if( count($patientLists) > 0 ) {
+//                $patientListId = $patientLists[0]->getId();
+//            } else {
+//                $patientListId = null;
+//            }
+//
+//            if( $this->params['cycle'] != "new" && $message ) {
+//                $calllogEntryMessage = $message->getCalllogEntryMessage();
+//                if( $message->getId() && $message->getCalllogEntryMessage() ) {
+//                    $patientListHierarchyNode = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array(
+//                        'entityNamespace' => $calllogEntryMessage->getEntityNamespace(),
+//                        'entityName' => $calllogEntryMessage->getEntityName(),
+//                        'entityId' => $calllogEntryMessage->getEntityId(),
+//                    ));
+//                    if( $patientListHierarchyNode ) {
+//                        $patientListId = $patientListHierarchyNode->getId();
+//                    }
+//                }
+//            }
+//
+//            $form->add('patientListTitle', 'employees_custom_selector', array(
+//                'label' => $label,
+//                'mapped' => false,
+//                'required' => true,
+//                'data' => $patientListId,
+//                'attr' => array(
+//                    'class' => 'ajax-combobox-compositetree show-as-single-node ajax-combobox-patientListTitle', //show-as-single-node data-compositetree-exclusion-all-others
+//                    'type' => 'hidden',
+//                    'data-compositetree-bundlename' => 'OrderformBundle',
+//                    'data-compositetree-classname' => 'PatientListHierarchy',
+//                    'data-label-prefix' => '',
+//                    'data-compositetree-types' => 'default,user-added',
+//                ),
+//                'classtype' => 'patientListTitle'
+//            ));
+//        });
 
 
         //Institutional PHI Scope
-        if( 0 ) {
-            if (array_key_exists('institutions', $this->params)) {
-                $institutions = $this->params['institutions'];
-            } else {
-                $institutions = null;
-            }
-            //foreach( $institutions as $inst ) {
-            //    echo "form inst=".$inst."<br>";
-            //}
-            $builder->add('institution', 'entity', array(
-                'label' => 'Order data visible to members of (Institutional PHI Scope):',
-                'property' => 'getNodeNameWithRoot',
-                'required' => true,
-                'multiple' => false,
-                'empty_value' => false,
-                'class' => 'OlegUserdirectoryBundle:Institution',
-                'choices' => $institutions,
-                'attr' => array('class' => 'combobox combobox-width combobox-institution')
-            ));
-        }
-
-
-        ////////////////////////// Specific Orders //////////////////////////
-
-
-//        $builder->add('laborder', new LabOrderType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
-//            'label' => false
-//        ));
-
-        ////////////////////////// EOF Specific Orders //////////////////////////
+//        if( 0 ) {
+//            if (array_key_exists('institutions', $this->params)) {
+//                $institutions = $this->params['institutions'];
+//            } else {
+//                $institutions = null;
+//            }
+//            //foreach( $institutions as $inst ) {
+//            //    echo "form inst=".$inst."<br>";
+//            //}
+//            $builder->add('institution', 'entity', array(
+//                'label' => 'Order data visible to members of (Institutional PHI Scope):',
+//                'property' => 'getNodeNameWithRoot',
+//                'required' => true,
+//                'multiple' => false,
+//                'empty_value' => false,
+//                'class' => 'OlegUserdirectoryBundle:Institution',
+//                'choices' => $institutions,
+//                'attr' => array('class' => 'combobox combobox-width combobox-institution')
+//            ));
+//        }
 
     }
 
