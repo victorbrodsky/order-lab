@@ -10,6 +10,7 @@ use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Entity\Part;
 use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\PatientListHierarchy;
 use Oleg\OrderformBundle\Entity\PatientMasterMergeRecord;
 use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\Procedure;
@@ -1055,7 +1056,10 @@ class CallLogUtil
         //PatientListHierarchy
         //OlegOrderformBundle
         $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(
-            array( 'type' => array('default','user-added') )
+            array(
+                'type' => array('default','user-added'),
+                'level' => 3
+            )
         );
 
         $request = $this->container->get('request');
@@ -1073,9 +1077,10 @@ class CallLogUtil
             $listNameUrl = strtolower($listNameUrl);
 
             //path(calllog_sitename~'_complex_patient_list')
-            $url = $this->container->get('router')->generate('calllog_complex_patient_list',array('listname'=>$listNameUrl));
+            $url = $this->container->get('router')->generate('calllog_complex_patient_list',array('listname'=>$listNameUrl,'listid'=>$list->getId()));
 
             $resList[] = array(
+                'listid' => $list->getId(),
                 'name' => $list->getName()."",
                 'url' => $url   //"order/call-log-book/patient-list/pathology-call-complex-patients"
             );
@@ -1237,19 +1242,23 @@ class CallLogUtil
             return null;
         }
 
-        return;
-
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->sc->getToken()->getUser();
 
-        $class = new \ReflectionClass($patientList);
-        $className = $class->getShortName();
-        $classNamespace = $class->getNamespaceName();
+        $calllogMessage = $message->getCalllogEntryMessage();
+        if( !$calllogMessage ) {
+            return null;
+        }
 
-        $nodeClassName = $classNamespace . "\\" . $className;
+        $patientList = $calllogMessage->getPatientList();
+        if( !$patientList ) {
+            return null;
+        }
 
-        //create a new record in the list (i.e. PathologyCallComplexPatients)
-        $newListElement = new $nodeClassName();
+        //TODO?: add only if the patient does not exists in the list
+
+        //create a new node in the list PatientListHierarchyand attach it as a child to the $patientList
+        $newListElement = new PatientListHierarchy();
 
         $patientDescription = "Patient ID# " . $patient->getId() . ": " . $patient->obtainPatientInfoTitle();
         $patientName = "Patient ID# " . $patient->getId();
@@ -1260,10 +1269,36 @@ class CallLogUtil
         $newListElement->setObject($message);
 
         //tree variables
-        $levelPatient = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
-        $newListElement->setOrganizationalGroupType($levelPatient);
+        //set level
+        $level = $patientList->getLevel();
+        if( !$level ) {
+            $defaultPatientList = $this->getDefaultPatientList();
+            if( $defaultPatientList ) {
+                //set level the same as default patient list
+                $level = $defaultPatientList->getLevel();
+                $patientList->setLevel($level);
+                //attach this new patient list to the parent of the default patient list
+                $defaultPatientListParent = $defaultPatientList->getParent();
+                if( $defaultPatientListParent ) {
+                    $defaultPatientListParent->addChild($patientList);
+                }
+            }
+        }
+        echo "level=$level ";
+        $level = $level + 1;
+        echo " (+1)=> $level <br>";
+        $newListElement->setLevel($level);
+        //set group
+        $group = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
+        $newListElement->setOrganizationalGroupType($group);
+
+        $patientList->addChild($newListElement);
 
         $this->em->persist($newListElement);
+
+        if( !$testing ) {
+            $this->em->flush();
+        }
 
 //        if( $message ) {
 //            //record this to the CalllogEntryMessage (getCalllogEntryMessage)
@@ -1277,6 +1312,14 @@ class CallLogUtil
 //        }
 
         return $newListElement;
+    }
+
+    public function getDefaultPatientList( $patientListName = "Pathology Call Complex Patients" ) {
+        $patientList = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
+        if( !$patientList ) {
+            throw new \Exception( "Location type is not found by name '".$patientListName."'" );
+        }
+        return $patientList;
     }
 
 }

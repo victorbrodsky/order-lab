@@ -584,12 +584,8 @@ class CallEntryController extends Controller
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageTypeId);
 
         //set patient list
-        $patientListName = "Pathology Call Complex Patients";
-        $patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
-        if( !$patientList ) {
-            throw new \Exception( "Location type is not found by name '".$patientListName."'" );
-        }
-        $message->setMessageCategory($patientList);
+        $patientList = $calllogUtil->getDefaultPatientList();
+        $message->getCalllogEntryMessage()->setPatientList($patientList);
 
         //add patient
         $message->addPatient($patient);
@@ -666,7 +662,6 @@ class CallEntryController extends Controller
         $cycle = 'new';
         $formtype = 'call-entry';
 
-        //$patient = new Patient();
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
 
         //add patient
@@ -905,55 +900,53 @@ class CallEntryController extends Controller
                         //echo "patient patientDob=" . $newPatientDob . "<br>";
                     }
 
-                    //add patient to the complex patient list specified by patientListTitle if the option addPatientToList is checked.
-                    $calllogUtil->addToPatientList($patient,$message,$testing);
-                    $addPatientToList = $form["addPatientToList"]->getData();
-                    if( $addPatientToList ) {
-                        $patientList = $form["patientListTitle"]->getData();
-                        echo "add patient to the patient list: ".$patientList->getName().": id=".$patientList->getId()."<br>";
-                        if( $patientList ) {
-
-                            $calllogUtil->addToPatientList($patient,$patientList,$message,$testing);
-
-                            if(0) {
-                                //Use linked list by $entityNamespace and $entityName
-                                $entityNamespace = $patientList->getEntityNamespace();
-                                $entityName = $patientList->getEntityName();
-                                if ($entityNamespace && $entityName) {
-                                    //check if the patient does not exists in this list
-                                    $entityNamespaceArr = explode("\\", $entityNamespace);
-                                    $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
-                                    //echo "bundleName=".$bundleName."; entityName=".$entityName."<br>";
-                                    $patientListDb = $em->getRepository($bundleName . ':' . $entityName)->findOneByPatient($patient);
-                                    if (!$patientListDb) {
-                                        //create a new record in the list (i.e. PathologyCallComplexPatients)
-                                        $listClassName = $entityNamespace . "\\" . $entityName;
-                                        $newListElement = new $listClassName();
-                                        $patientDescription = "Patient ID# " . $patient->getId() . ": " . $patient->obtainPatientInfoTitle();
-                                        $patientName = "Patient ID# " . $patient->getId();
-                                        $count = null;
-                                        $userSecUtil->setDefaultList($newListElement, $count, $user, $patientName);
-                                        $newListElement->setPatient($patient);
-                                        $newListElement->setDescription($patientDescription);
-                                        $newListElement->setObject($message);
-                                        $em->persist($newListElement);
-                                    } else {
-                                        //patient is already exists in the patient list added by another message
-                                    }
-                                    //record this to the CalllogEntryMessage (getCalllogEntryMessage)
-                                    $calllogEntryMessage = $message->getCalllogEntryMessage();
-                                    if (!$calllogEntryMessage) {
-                                        $calllogEntryMessage = new CalllogEntryMessage();
-                                        $message->setCalllogEntryMessage($calllogEntryMessage);
-                                    }
-                                    $calllogEntryMessage->setObject($patientListDb);
-                                    $calllogEntryMessage->setAddPatientToList(true);
-                                } else {
-                                    //exit("Not specified the patient list: bundleName=".$entityNamespace."; entityName=".$entityName."<br>");
-                                }
-                            }
-                        }
-                    }
+//                    $addPatientToList = $form["addPatientToList"]->getData();
+//                    if( $addPatientToList ) {
+//                        $patientList = $form["patientListTitle"]->getData();
+//                        echo "add patient to the patient list: ".$patientList->getName().": id=".$patientList->getId()."<br>";
+//                        if( $patientList ) {
+//
+//                            $calllogUtil->addToPatientList($patient,$patientList,$message,$testing);
+//
+//                            if(0) {
+//                                //Use linked list by $entityNamespace and $entityName
+//                                $entityNamespace = $patientList->getEntityNamespace();
+//                                $entityName = $patientList->getEntityName();
+//                                if ($entityNamespace && $entityName) {
+//                                    //check if the patient does not exists in this list
+//                                    $entityNamespaceArr = explode("\\", $entityNamespace);
+//                                    $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
+//                                    //echo "bundleName=".$bundleName."; entityName=".$entityName."<br>";
+//                                    $patientListDb = $em->getRepository($bundleName . ':' . $entityName)->findOneByPatient($patient);
+//                                    if (!$patientListDb) {
+//                                        //create a new record in the list (i.e. PathologyCallComplexPatients)
+//                                        $listClassName = $entityNamespace . "\\" . $entityName;
+//                                        $newListElement = new $listClassName();
+//                                        $patientDescription = "Patient ID# " . $patient->getId() . ": " . $patient->obtainPatientInfoTitle();
+//                                        $patientName = "Patient ID# " . $patient->getId();
+//                                        $count = null;
+//                                        $userSecUtil->setDefaultList($newListElement, $count, $user, $patientName);
+//                                        $newListElement->setPatient($patient);
+//                                        $newListElement->setDescription($patientDescription);
+//                                        $newListElement->setObject($message);
+//                                        $em->persist($newListElement);
+//                                    } else {
+//                                        //patient is already exists in the patient list added by another message
+//                                    }
+//                                    //record this to the CalllogEntryMessage (getCalllogEntryMessage)
+//                                    $calllogEntryMessage = $message->getCalllogEntryMessage();
+//                                    if (!$calllogEntryMessage) {
+//                                        $calllogEntryMessage = new CalllogEntryMessage();
+//                                        $message->setCalllogEntryMessage($calllogEntryMessage);
+//                                    }
+//                                    $calllogEntryMessage->setObject($patientListDb);
+//                                    $calllogEntryMessage->setAddPatientToList(true);
+//                                } else {
+//                                    //exit("Not specified the patient list: bundleName=".$entityNamespace."; entityName=".$entityName."<br>");
+//                                }
+//                            }
+//                        }
+//                    }
 
                     if(0) { //testing
                         echo "encounter count=" . count($patient->getEncounter()) . "<br>";
@@ -984,6 +977,11 @@ class CallEntryController extends Controller
                         $em->persist($message);
                         $em->flush(); //testing
                     }
+
+
+                    //add patient to the complex patient list specified by patientListTitle if the option addPatientToList is checked.
+                    //do it after message is in DB and has ID
+                    $calllogUtil->addToPatientList($patient,$message,$testing);
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
 
@@ -1170,6 +1168,12 @@ class CallEntryController extends Controller
         $messageStatus = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Draft");
         if( $messageStatus ) {
             $message->setMessageStatus($messageStatus);
+        }
+
+        $calllogEntryMessage = $message->getCalllogEntryMessage();
+        if (!$calllogEntryMessage) {
+            $calllogEntryMessage = new CalllogEntryMessage();
+            $message->setCalllogEntryMessage($calllogEntryMessage);
         }
 
         //add patient

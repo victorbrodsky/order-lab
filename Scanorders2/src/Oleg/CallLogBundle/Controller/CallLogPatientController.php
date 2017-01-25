@@ -185,18 +185,53 @@ class CallLogPatientController extends PatientController {
 
     /**
      * Complex Patient List
-     * @Route("/patient-list/{listname}", name="calllog_complex_patient_list")
+     * @Route("/patient-list/{listname}/{listid}", name="calllog_complex_patient_list")
      * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
      */
-    public function complexPatientListAction(Request $request, $listname)
+    public function complexPatientListAction(Request $request, $listname, $listid)
     {
+        if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
 
         //get list name by $listname, convert it to the first char as Upper case and use it to find the list in DB
         //for now use the mock page complex-patient-list.html.twig
 
+        //get list by id
+        //$patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($listid);
+        //$patients = $patientList->getChildren();
+
+        $parameters = array();
+
+        $repository = $em->getRepository('OlegOrderformBundle:PatientListHierarchy');
+        $dql = $repository->createQueryBuilder("list");
+
+        //$dql->leftJoin("list.parent", "parent");
+
+        $dql->where("list.parent = :parentId");
+        $parameters['parentId'] = $listid;
+
+        $query = $em->createQuery($dql);
+        $query->setParameters($parameters);
+        //echo "sql=".$query->getSql()."<br>";
+
+        $limit = 10;
+        $paginator  = $this->get('knp_paginator');
+        $patients = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            //$request->query->getInt('page', 1),
+            $limit      /*limit per page*/
+        );
+        //$patients = $query->getResult();
+
+        echo "patients=".count($patients)."<br>";
+
         //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
         return array(
-            //'entity' => $entity,
+            'patients' => $patients,
             //'form' => $form->createView(),
             //'cycle' => $cycle,
             'title' => $listname,   //"Complex Patient List",

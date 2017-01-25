@@ -359,6 +359,13 @@
 {#TODO: change "Location Name" to be a Select2 dropdown list of all locations filtered by Location type = "Encounter Location"#}
 {#Selecting the Encounter Location from the dropdown should load all of its corresponding values into the other fields of this accordion (phone number, etc) via AJAX.#}
 {% macro trackerContactinfoForm( entity, cycle, status ) %}
+
+    {% if entity.vars.value.id %}
+        {% set orderUniqueId = entity.vars.value.id %}
+    {% else %}
+        {% set orderUniqueId = 0 %}
+    {% endif %}
+
     {% if entity.tracker.spots is defined and entity.tracker.spots|length > 0 %}
         {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
         {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
@@ -371,12 +378,6 @@
             <div class="panel panel-default">
 
                 <div class="panel-heading">
-
-                    {% if entity.vars.value.id %}
-                        {% set orderUniqueId = entity.vars.value.id %}
-                    {% else %}
-                        {% set orderUniqueId = 0 %}
-                    {% endif %}
 
                     {% set uniqueId = orderUniqueId~"_"~counter %}
 
@@ -420,8 +421,9 @@
             <div class="panel-heading">
                 <h4 class="panel-title">Encounter's Location Not Provided</h4>
             </div>
-            <div id="form_body_entitycontactinfo_{{ uniqueId }}" class="panel-body collapse">
+            <div id="form_body_entitycontactinfo_{{ orderUniqueId }}" class="panel-body collapse">
             </div>
+        </div>
     {% endif %}
 {% endmacro %}
 

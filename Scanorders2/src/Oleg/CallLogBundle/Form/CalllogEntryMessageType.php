@@ -44,31 +44,31 @@ class CalllogEntryMessageType extends AbstractType
 
             $label = 'List Title:';
 
-            $patientLists = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findAll();
-            if( count($patientLists) > 0 ) {
-                $patientListId = $patientLists[0]->getId();
-            } else {
-                $patientListId = null;
-            }
-
-            if( $this->params['cycle'] != "new" && $message ) {
-                $calllogEntryMessage = $message->getCalllogEntryMessage();
-                if( $message->getId() && $message->getCalllogEntryMessage() ) {
-                    $patientListHierarchyNode = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array(
-                        'entityNamespace' => $calllogEntryMessage->getEntityNamespace(),
-                        'entityName' => $calllogEntryMessage->getEntityName(),
-                        'entityId' => $calllogEntryMessage->getEntityId(),
-                    ));
-                    if( $patientListHierarchyNode ) {
-                        $patientListId = $patientListHierarchyNode->getId();
-                    }
-                }
-            }
+//            $patientLists = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findAll();
+//            if( count($patientLists) > 0 ) {
+//                $patientListId = $patientLists[0]->getId();
+//            } else {
+//                $patientListId = null;
+//            }
+//
+//            if( $this->params['cycle'] != "new" && $message ) {
+//                $calllogEntryMessage = $message->getCalllogEntryMessage();
+//                if( $message->getId() && $message->getCalllogEntryMessage() ) {
+//                    $patientListHierarchyNode = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array(
+//                        'entityNamespace' => $calllogEntryMessage->getEntityNamespace(),
+//                        'entityName' => $calllogEntryMessage->getEntityName(),
+//                        'entityId' => $calllogEntryMessage->getEntityId(),
+//                    ));
+//                    if( $patientListHierarchyNode ) {
+//                        $patientListId = $patientListHierarchyNode->getId();
+//                    }
+//                }
+//            }
 
             $form->add('patientList', 'employees_custom_selector', array(
                 'label' => $label,
                 'required' => true,
-                'data' => $patientListId,
+                //'data' => $patientListId,
                 'attr' => array(
                     'class' => 'ajax-combobox-compositetree show-as-single-node ajax-combobox-patientList', //show-as-single-node data-compositetree-exclusion-all-others
                     'type' => 'hidden',
