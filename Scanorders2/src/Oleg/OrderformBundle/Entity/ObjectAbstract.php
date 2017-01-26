@@ -612,6 +612,16 @@ abstract class ObjectAbstract
         return $res;
     }
 
+    //get only one field
+    public function obtainStatusFieldArrayOrAll( $fieldname, $status, $orderid=null ) {
+        $resArr = $this->obtainStatusFieldArray($fieldname,$status,$orderid);
+        if( count($resArr) > 0 ) {
+            return $resArr;
+        } else {
+            return $this->obtainStatusFieldArray($fieldname,null,$orderid);
+        }
+    }
+
     //$fields: array of fields that should be filter out
     public function obtainOneValidObject($fields,$asarray=false) {
 
@@ -676,6 +686,15 @@ abstract class ObjectAbstract
         foreach( $fields as $field ) {
             $field->setStatus($status);
             //$field->setUpdateAuthor($user);
+        }
+    }
+
+    public function changeStatusAllFields($fields,$statusOld,$statusNew) {
+        foreach( $fields as $field ) {
+            if( $field->getStatus() == $statusOld ) {
+                $field->setStatus($statusNew);
+                //$field->setUpdateAuthor($user);
+            }
         }
     }
 

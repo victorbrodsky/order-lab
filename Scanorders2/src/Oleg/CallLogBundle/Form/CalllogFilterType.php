@@ -124,10 +124,11 @@ class CalllogFilterType extends AbstractType
             'class' => 'OlegOrderformBundle:PatientListHierarchy',
             'label' => false,
             'required' => false,
-            'property' => 'getNodeNameWithParent',
+            'property' => 'name',    //'getNodeNameWithParent',
             'attr' => array('class' => 'combobox', 'placeholder' => "Patient List"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
+                    ->where("u.level = 3")
                     ->orderBy("u.orderinlist","ASC");
             },
         ));

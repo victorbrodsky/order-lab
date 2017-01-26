@@ -614,56 +614,56 @@
 
 {% endmacro %}
 
-{% macro indexAction( message, eventObjectTypeId, cycle ) %}
+{% macro indexAction( message, eventObjectTypeId, patientListId, cycle ) %}
 
     <!-- Modal -->
-    <div class="modal fade" id="addComment_{{ message.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close comment_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title text-center" id="myModalLabel">Add Comment for Entry {{ message.id }}</h4>
-                </div>
-                <div class="modal-body">
+    {#<div class="modal fade" id="addComment_{{ message.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
+        {#<div class="modal-dialog">#}
+            {#<div class="modal-content">#}
+                {#<div class="modal-header">#}
+                    {#<button type="button" class="close comment_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
+                    {#<h4 class="modal-title text-center" id="myModalLabel">Add Comment for Entry {{ message.id }}</h4>#}
+                {#</div>#}
+                {#<div class="modal-body">#}
 
-                    <div id="modal_error_{{ message.id }}" class="modal_error_div"></div>
+                    {#<div id="modal_error_{{ message.id }}" class="modal_error_div"></div>#}
 
-                    <form id="addcomment_form">
-
-
-                        <select id="modal-processor-comment" class="combobox">
-                            <option></option>
-                            <option value="Let's Discuss this at signout">Let's Discuss this at signout</option>
-                            <option value="Relevant resources">Relevant resources</option>
-                            <option value="Please complete this entry">Please complete this entry</option>
-                        </select>
-
-                        <br>
-                        <br>
+                    {#<form id="addcomment_form">#}
 
 
-                        <div class="row">
-                            <div class="col-xs-12">
+                        {#<select id="modal-processor-comment" class="combobox">#}
+                            {#<option></option>#}
+                            {#<option value="Let's Discuss this at signout">Let's Discuss this at signout</option>#}
+                            {#<option value="Relevant resources">Relevant resources</option>#}
+                            {#<option value="Please complete this entry">Please complete this entry</option>#}
+                        {#</select>#}
 
-                                <p>
+                        {#<br>#}
+                        {#<br>#}
 
-                                    <input type="hidden" id="baseurl" value="c.med.cornell.edu/order" />
-                                    <textarea id="addcomment_text" name="addcomment" type="textarea" class="textarea form-control" maxlength="5000" required></textarea>
-                                </p>
 
-                            </div>
-                        </div>
+                        {#<div class="row">#}
+                            {#<div class="col-xs-12">#}
 
-                        <div class="center-block">
-                            <input id="AddNewComment" class="btn btn-primary center-block" type="button" value="Add Comment" onclick="submitNewComment({{ message.id }});" />
-                        </div>
+                                {#<p>#}
 
-                    </form>
+                                    {#<input type="hidden" id="baseurl" value="c.med.cornell.edu/order" />#}
+                                    {#<textarea id="addcomment_text" name="addcomment" type="textarea" class="textarea form-control" maxlength="5000" required></textarea>#}
+                                {#</p>#}
 
-                </div>
-            </div>
-        </div>
-    </div>
+                            {#</div>#}
+                        {#</div>#}
+
+                        {#<div class="center-block">#}
+                            {#<input id="AddNewComment" class="btn btn-primary center-block" type="button" value="Add Comment" onclick="submitNewComment({{ message.id }});" />#}
+                        {#</div>#}
+
+                    {#</form>#}
+
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
     <!-- EOF Modal -->
 
 
@@ -713,8 +713,12 @@
                     {% if message.patient|first.obtainMergeMrnArr('valid')|length > 0 %}
                         <li><a href="{{ path('calllog_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Un-merge Patient Record</a></li>
                     {% endif %}
-
                 {% endif %}
+
+                <li><a data-confirm="Are you sure you want to add this patient to Complex List?"
+                       href="{{ path('calllog_add_patient_to_list', { 'patientListId': patientListId, 'patientId': message.patient|first.id}) }}"
+                       target="_blank">Add to Complex List</a>
+                </li>
             {% endif %}
 
             {% set validEncounter = message.getValidEncounter %}
@@ -792,4 +796,51 @@
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-default -->
+{% endmacro %}
+
+
+{% macro patientListAction( patient, patientListId, cycle ) %}
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Action <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-right">
+
+            {% set mrn = patient.obtainValidField('mrn') %}
+            {% if mrn %}
+                {% set mrnNumber = mrn.field %}
+                {% set mrnTypeId = mrn.keytype.id %}
+
+                <li><a href="{{ path('calllog_home', { 'filter[search]': mrnNumber}) }}"
+                       target="_blank">Show all entries</a>
+                </li>
+
+                <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                       target="_blank">Edit Patient Record</a>
+                </li>
+
+                <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                       target="_blank">Merge Patient Record</a>
+                </li>
+
+                {% if patient.obtainMergeMrnArr('valid')|length > 0 %}
+                    <li><a href="{{ path('calllog_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                           target="_blank">Un-merge Patient Record</a>
+                    </li>
+                {% endif %}
+
+                <li><a data-confirm="Are you sure you want to remove this patient from this list?"
+                       href="{{ path('calllog_remove_patient_from_list', { 'patientId': patient.id, 'patientListId': patientListId }) }}"
+                       target="_blank">Remove patient from this list</a>
+                </li>
+
+
+            {% endif %}
+
+        </ul>
+
+    </div>
+
 {% endmacro %}

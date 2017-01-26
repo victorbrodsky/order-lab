@@ -101,15 +101,52 @@
 
                 {#Last Name#}
                 <td>
-                    {% for lastname in patient.lastname %}
-                        {{  lastname }}<br>
+                    {#{% for lastname in patient.lastname %}#}
+                        {#{{  lastname }} ({{ lastname.status }})<br>#}
+                    {#{% endfor %}#}
+
+                    {#{{ patient.obtainValidField('lastname') }}#}
+
+                    {#should we use obtainStatusFieldArray('lastname','valid') to show all valid fields?#}
+                    {% set displayLastnameStatus = false %}
+                    {% set patientLastnames = patient.obtainStatusFieldArrayOrAll('lastname','valid') %}
+                    {% if patientLastnames|length > 1 %}
+                        {% set displayLastnameStatus = false %}
+                    {% endif %}
+                    {% for lastname in patientLastnames %}
+                        {#{% if lastname.status != 'valid' %}#}
+                            {#{{  lastname }} ({{ lastname.status }})#}
+                        {#{% else %}#}
+                            {#{{  lastname }}#}
+                        {#{% endif %}#}
+                        {{  lastname }} {% if displayLastnameStatus %}({{ lastname.status }}){% endif %}
+                        <br>
                     {% endfor %}
                 </td>
 
                 {#First Name#}
                 <td>
-                    {% for firstname in patient.firstname %}
-                        {{  firstname }}<br>
+                    {#{% for firstname in patient.firstname %}#}
+                        {#{{  firstname }} ({{ firstname.status }})<br>#}
+                    {#{% endfor %}#}
+
+                    {#{{ patient.obtainValidField('firstname') }}#}
+
+                    {#should we use obtainStatusFieldArray('firstname','valid') to show all valid fields?#}
+                    {% set displayFirstnameStatus = false %}
+                    {% set patientFirstnames = patient.obtainStatusFieldArrayOrAll('firstname','valid') %}
+                    {% if patientFirstnames|length > 1 %}
+                        {% set displayFirstnameStatus = false %}
+                    {% endif %}
+                    {% for firstname in patientFirstnames %}
+                        {#firstname.status={{ firstname.status }}#}
+                        {#{% if firstname.status != 'valid' %}#}
+                            {#{{  firstname }} ({{ firstname.status }})#}
+                        {#{% else %}#}
+                            {#{{  firstname }}#}
+                        {#{% endif %}#}
+                        {{  firstname }} {% if displayFirstnameStatus %}({{ firstname.status }}){% endif %}
+                        <br>
                     {% endfor %}
                 </td>
 
@@ -122,7 +159,7 @@
                 </td>
 
                 <td class="rowlink-skip">
-                    {#{{ calllogmacros.indexAction(patient) }}#}
+                    {{ calllogmacros.patientListAction(patient,patientListId,cycle) }}
                 </td>
 
             </tr>
@@ -137,6 +174,17 @@
         {{ knp_pagination_render(patientNodes) }}
     </div>
 
+
+    {#TODO: create Patient chooser#}
+    {#<p>#}
+        {#<a href="{{ path('calllog_show_patient_chooser') }}" target="_blank">Add Patient</a>#}
+    {#</p>#}
+
+    {#Manage Patient Lists#}
+    <br>
+    <p>
+        <a href="{{ path('platform_list_manager', { 'listId': platformListManagerRootListId }) }}" target="_blank">Manage Patient Lists</a>
+    </p>
 
     {#Call Case List#}
     {#<table class="table table-hover table-condensed table-striped text-left">#}

@@ -58,6 +58,7 @@ class CallEntryController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $calllogUtil = $this->get('calllog_util');
         $route = $request->get('_route');
         $title = "Call Case List";
         $alerts = false;
@@ -307,25 +308,11 @@ class CallEntryController extends Controller
         //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
         if( $patientListTitleFilter ) {
             $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
-            $patientListEntityStr = "message.calllogEntryMessage=:patientList";
+            $dql->leftJoin("calllogEntryMessage.patientList","patientList");
+            //show message if the message's patient has been removed from the patient list (disabled)?
+            $patientListEntityStr = "patientList=:patientList";
             $dql->andWhere($patientListEntityStr);
             $queryParameters['patientList'] = $patientListTitleFilter;
-
-//            $patientListHierarchyNode = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListTitleFilter);
-//            if( $patientListHierarchyNode ) {
-//                $patientListEntityNamespace = $patientListHierarchyNode->getEntityNamespace();
-//                $patientListEntityName = $patientListHierarchyNode->getEntityName();
-//                //$patientListEntityId = $patientListHierarchyNode->getEntityId();
-//                //echo "$patientListEntityNamespace $patientListEntityName<br>";
-//                //message->calllogEntryMessage-> use entityNamespace,entityName,entityId
-//                $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
-//                $patientListEntityStr = "calllogEntryMessage.entityNamespace=:entityNamespace AND calllogEntryMessage.entityName=:entityName";
-//                //echo "str=$patientListEntityStr<br>";
-//                $dql->andWhere($patientListEntityStr);
-//                $queryParameters['entityNamespace'] = $patientListEntityNamespace;
-//                $queryParameters['entityName'] = $patientListEntityName;
-//                //$queryParameters['entityId'] = $patientListEntityId;
-//            }
 
             $advancedFilter = true;
         }
@@ -399,6 +386,12 @@ class CallEntryController extends Controller
 
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
 
+        $defaultPatientListId = null;
+        $defaultPatientList = $calllogUtil->getDefaultPatientList();
+        if( $defaultPatientList ) {
+            $defaultPatientListId = $defaultPatientList->getId();
+        }
+
         return array(
             'messages' => $messages,
             'alerts' => $alerts,
@@ -408,6 +401,7 @@ class CallEntryController extends Controller
             'advancedFilter' => $advancedFilter,
             'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
             'eventObjectTypeId' => $eventObjectType->getId(),
+            'patientListId' => $defaultPatientListId
             //'navbarfilterform' => $navbarfilterform->createView()
             //'sitename' => $this->container->getParameter('calllog.sitename')
             //'calllogsearch' => $calllogsearch,
@@ -885,68 +879,21 @@ class CallEntryController extends Controller
 
                     //add new DOB (if exists) to the Patient
                     //Use unmapped encounter's "patientDob" to update patient's DOB
-                    if( $newEncounter->getPatientDob() ) {
-                        //invalidate all other patient's DOB
-                        $validDOBs = $patient->obtainStatusFieldArray("dob","valid");
-                        foreach( $validDOBs as $validDOB) {
-                            $validDOB->setStatus("invalid");
-                        }
-
-                        $patientDob = $newEncounter->getPatientDob();
-                        //echo "encounter patientDob=" . $patientDob->format('Y-m-d') . "<br>";
-                        $newPatientDob = new PatientDob($status,$user,$system);
-                        $newPatientDob->setField($patientDob);
-                        $patient->addDob($newPatientDob);
-                        //echo "patient patientDob=" . $newPatientDob . "<br>";
-                    }
-
-//                    $addPatientToList = $form["addPatientToList"]->getData();
-//                    if( $addPatientToList ) {
-//                        $patientList = $form["patientListTitle"]->getData();
-//                        echo "add patient to the patient list: ".$patientList->getName().": id=".$patientList->getId()."<br>";
-//                        if( $patientList ) {
-//
-//                            $calllogUtil->addToPatientList($patient,$patientList,$message,$testing);
-//
-//                            if(0) {
-//                                //Use linked list by $entityNamespace and $entityName
-//                                $entityNamespace = $patientList->getEntityNamespace();
-//                                $entityName = $patientList->getEntityName();
-//                                if ($entityNamespace && $entityName) {
-//                                    //check if the patient does not exists in this list
-//                                    $entityNamespaceArr = explode("\\", $entityNamespace);
-//                                    $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
-//                                    //echo "bundleName=".$bundleName."; entityName=".$entityName."<br>";
-//                                    $patientListDb = $em->getRepository($bundleName . ':' . $entityName)->findOneByPatient($patient);
-//                                    if (!$patientListDb) {
-//                                        //create a new record in the list (i.e. PathologyCallComplexPatients)
-//                                        $listClassName = $entityNamespace . "\\" . $entityName;
-//                                        $newListElement = new $listClassName();
-//                                        $patientDescription = "Patient ID# " . $patient->getId() . ": " . $patient->obtainPatientInfoTitle();
-//                                        $patientName = "Patient ID# " . $patient->getId();
-//                                        $count = null;
-//                                        $userSecUtil->setDefaultList($newListElement, $count, $user, $patientName);
-//                                        $newListElement->setPatient($patient);
-//                                        $newListElement->setDescription($patientDescription);
-//                                        $newListElement->setObject($message);
-//                                        $em->persist($newListElement);
-//                                    } else {
-//                                        //patient is already exists in the patient list added by another message
-//                                    }
-//                                    //record this to the CalllogEntryMessage (getCalllogEntryMessage)
-//                                    $calllogEntryMessage = $message->getCalllogEntryMessage();
-//                                    if (!$calllogEntryMessage) {
-//                                        $calllogEntryMessage = new CalllogEntryMessage();
-//                                        $message->setCalllogEntryMessage($calllogEntryMessage);
-//                                    }
-//                                    $calllogEntryMessage->setObject($patientListDb);
-//                                    $calllogEntryMessage->setAddPatientToList(true);
-//                                } else {
-//                                    //exit("Not specified the patient list: bundleName=".$entityNamespace."; entityName=".$entityName."<br>");
-//                                }
-//                            }
+//                    if( $newEncounter->getPatientDob() ) {
+//                        //invalidate all other patient's DOB
+//                        $validDOBs = $patient->obtainStatusFieldArray("dob","valid");
+//                        foreach( $validDOBs as $validDOB) {
+//                            $validDOB->setStatus("invalid");
 //                        }
+//
+//                        $patientDob = $newEncounter->getPatientDob();
+//                        //echo "encounter patientDob=" . $patientDob->format('Y-m-d') . "<br>";
+//                        $newPatientDob = new PatientDob($status,$user,$system);
+//                        $newPatientDob->setField($patientDob);
+//                        $patient->addDob($newPatientDob);
+//                        //echo "patient patientDob=" . $newPatientDob . "<br>";
 //                    }
+                    $calllogUtil->updatePatientInfoFromEncounter($patient,$newEncounter,$user,$system );
 
                     if(0) { //testing
                         echo "encounter count=" . count($patient->getEncounter()) . "<br>";
@@ -2096,6 +2043,17 @@ class CallEntryController extends Controller
             throw new \Exception('Message has not found by ID ' . $messageId);
         }
 
+        //testing dob: dob before 1901 causes php error
+//        $testPatient = $message->getPatient()[0];
+//        foreach( $testPatient->getDob() as $dob ) {
+//            if( $dob ) {
+//                echo $dob->getId().": dob=" . $dob . "<br>";
+//                //echo "dob=" . $dob->format('m-d-Y') . "<br>";
+//            } else {
+//                echo "dob is null <br>";
+//            }
+//        }
+
         if (count($message->getPatient()) > 0 ) {
             $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
             $mrntype = $mrnRes->getKeytype()->getId();
@@ -2110,16 +2068,16 @@ class CallEntryController extends Controller
 
         $complexPatientStr = null;
         //find record in the "Pathology Call Complex Patients" list by message object entityName, entityId
-        $mapper = array(
-            'prefix' => "Oleg",
-            'bundleName' => "CallLogBundle",
-            'className' => "PathologyCallComplexPatients",
-        );
-        $listRecord = $userSecUtil->getListByNameAndObject( $message, $mapper );
-        if( $listRecord ) {
-            //Patient was added to the "xxxxxxxx" list via this entry.
-            $complexPatientStr = "Patient was added to the Pathology Call Complex Patients list ID# ".$listRecord->getId()." via this entry:<br>".$listRecord->getName()."";
-        }
+//        $mapper = array(
+//            'prefix' => "Oleg",
+//            'bundleName' => "CallLogBundle",
+//            'className' => "PathologyCallComplexPatients",
+//        );
+//        $listRecord = $userSecUtil->getListByNameAndObject( $message, $mapper );
+//        if( $listRecord ) {
+//            //Patient was added to the "xxxxxxxx" list via this entry.
+//            $complexPatientStr = "Patient was added to the Pathology Call Complex Patients list ID# ".$listRecord->getId()." via this entry:<br>".$listRecord->getName()."";
+//        }
         //echo "complexStr=".$complexPatientStr."<br>";
 
         $class = new \ReflectionClass($message);

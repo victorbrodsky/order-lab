@@ -185,10 +185,10 @@ class CallLogPatientController extends PatientController {
 
     /**
      * Complex Patient List
-     * @Route("/patient-list/{listname}/{listid}", name="calllog_complex_patient_list")
+     * @Route("/patient-list/{listid}/{listname}", name="calllog_complex_patient_list")
      * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
      */
-    public function complexPatientListAction(Request $request, $listname, $listid)
+    public function complexPatientListAction(Request $request, $listid, $listname)
     {
         if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -196,7 +196,11 @@ class CallLogPatientController extends PatientController {
 
         $em = $this->getDoctrine()->getManager();
 
-        echo "list: name=$listname; id=$listid <br>";
+        //$listname
+        $listnameArr = explode('-',$listname);
+        $listname = implode(' ',$listnameArr);
+        $listname = ucwords($listname);
+        //echo "list: name=$listname; id=$listid <br>";
 
         //get list name by $listname, convert it to the first char as Upper case and use it to find the list in DB
         //for now use the mock page complex-patient-list.html.twig
@@ -221,6 +225,8 @@ class CallLogPatientController extends PatientController {
         $parameters['parentId'] = $listid;
         $parameters['patientGroup'] = $patientGroup->getId();
 
+        $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
+
         $query = $em->createQuery($dql);
         $query->setParameters($parameters);
         //echo "sql=".$query->getSql()."<br>";
@@ -235,13 +241,111 @@ class CallLogPatientController extends PatientController {
         );
         //$patients = $query->getResult();
 
-        echo "patients=".count($patients)."<br>";
+        //echo "patients=".count($patients)."<br>";
+
+        $patientListHierarchyObject = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByName('Patient List Hierarchy');
 
         //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
         return array(
+            'patientListId' => $listid,
             'patientNodes' => $patients,
             'title' => $listname,   //"Complex Patient List",
+            'platformListManagerRootListId' => $patientListHierarchyObject->getId()
         );
     }
 
+    /**
+     * @Route("/remove-patient-from-list/{patientId}/{patientListId}", name="calllog_remove_patient_from_list")
+     */
+    public function removePatientFromListAction(Request $request, $patientId, $patientListId) {
+        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListId);
+        if( !$patientList ) {
+            throw new \Exception( "PatientListHierarchy not found by id $patientListId" );
+        }
+
+        //remove patient from the list
+        $repository = $em->getRepository('OlegOrderformBundle:PatientListHierarchy');
+        $dql = $repository->createQueryBuilder("list");
+
+        $dql->leftJoin("list.patient", "patient");
+
+        $dql->where("patient = :patientId");
+        $parameters['patientId'] = $patientId;
+
+        $query = $em->createQuery($dql);
+        $query->setParameters($parameters);
+        $patients = $query->getResult();
+
+        $msgArr = array();
+        foreach( $patients as $patientNode ) {
+            $patientNode->setType('disabled');
+            //TODO: remove this patient from all CalllogEntryMessage (addPatientToList, patientList): find all message with this patient where addPatientToList is true and set to false?
+            $msgArr[] = $patientNode->getPatient()->obtainPatientInfoTitle();
+        }
+        $em->flush();
+
+        $msg = implode('<br>',$msgArr);
+        if( $msg ) {
+            $msg = "Removed patient:<br>" . $msg;
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            'pnotify',
+            $msg
+        );
+
+        $listName = $patientList->getName()."";
+        $listNameLowerCase = str_replace(" ","-",$listName);
+        $listNameLowerCase = strtolower($listNameLowerCase);
+
+        return $this->redirect($this->generateUrl('calllog_complex_patient_list',array('listname'=>$listNameLowerCase,'listid'=>$patientListId)));
+    }
+
+
+
+    /**
+     * @Route("/add-patient-to-list/{patientListId}/{patientId}", name="calllog_add_patient_to_list")
+     * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
+     */
+    public function addPatientToListAction(Request $request, $patientListId, $patientId) {
+        if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $calllogUtil = $this->get('calllog_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListId);
+        if( !$patientList ) {
+            throw new \Exception( "PatientListHierarchy not found by id $patientListId" );
+        }
+
+        //add patient from the list
+        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+        if( !$patient ) {
+            throw new \Exception( "Patient not found by id $patientId" );
+        }
+
+        $newListElement = $calllogUtil->addPatientToPatientList($patient,$patientList);
+
+        //Patient added to the Pathology Call Complex Patients list
+        $msg = "Patient " . $newListElement->getPatient()->obtainPatientInfoTitle() . " added to the ".$patientList->getName()." list";
+
+        $this->get('session')->getFlashBag()->add(
+            'pnotify',
+            $msg
+        );
+
+        $listName = $patientList->getName()."";
+        $listNameLowerCase = str_replace(" ","-",$listName);
+        $listNameLowerCase = strtolower($listNameLowerCase);
+
+        return $this->redirect($this->generateUrl('calllog_complex_patient_list',array('listname'=>$listNameLowerCase,'listid'=>$patientListId)));
+    }
 }

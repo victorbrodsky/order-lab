@@ -10,9 +10,15 @@ use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Entity\Part;
 use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\PatientDob;
+use Oleg\OrderformBundle\Entity\PatientFirstName;
+use Oleg\OrderformBundle\Entity\PatientLastName;
 use Oleg\OrderformBundle\Entity\PatientListHierarchy;
 use Oleg\OrderformBundle\Entity\PatientMasterMergeRecord;
+use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientMrn;
+use Oleg\OrderformBundle\Entity\PatientSex;
+use Oleg\OrderformBundle\Entity\PatientSuffix;
 use Oleg\OrderformBundle\Entity\Procedure;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -1058,7 +1064,7 @@ class CallLogUtil
         $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(
             array(
                 'type' => array('default','user-added'),
-                'level' => 3
+                'level' => 3 //patient list currently is level=3
             )
         );
 
@@ -1242,9 +1248,6 @@ class CallLogUtil
             return null;
         }
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->sc->getToken()->getUser();
-
         $calllogMessage = $message->getCalllogEntryMessage();
         if( !$calllogMessage ) {
             return null;
@@ -1255,8 +1258,96 @@ class CallLogUtil
             return null;
         }
 
-        //TODO?: add only if the patient does not exists in the list
-        if( $this->isPatientInList($patientList,$patient) ) {
+        $newListElement = $this->addPatientToPatientList($patient,$patientList,$message,$testing);
+
+//        //TODO?: add only if the patient does not exists in the list
+//        if( $this->isPatientInList($patientList,$patient) ) {
+//            return null;
+//        }
+//
+//        //create a new node in the list PatientListHierarchyand attach it as a child to the $patientList
+//        $newListElement = new PatientListHierarchy();
+//
+//        $patientDescription = "Patient ID# " . $patient->getId() . ": " . $patient->obtainPatientInfoTitle();
+//        $patientName = "Patient ID# " . $patient->getId();
+//        $count = null;
+//        $userSecUtil->setDefaultList($newListElement, $count, $user, $patientName);
+//        $newListElement->setPatient($patient);
+//        $newListElement->setDescription($patientDescription);
+//        $newListElement->setObject($message);
+//
+//        //tree variables
+//        //set level
+//        $level = $patientList->getLevel();
+//        if( !$level ) {
+//            $defaultPatientList = $this->getDefaultPatientList();
+//            if( $defaultPatientList ) {
+//                //set level the same as default patient list
+//                $level = $defaultPatientList->getLevel();
+//                $patientList->setLevel($level);
+//                //attach this new patient list to the parent of the default patient list
+//                $defaultPatientListParent = $defaultPatientList->getParent();
+//                if( $defaultPatientListParent ) {
+//                    $defaultPatientListParent->addChild($patientList);
+//                }
+//            }
+//        }
+//        echo "level=$level ";
+//        $level = $level + 1;
+//        echo " (+1)=> $level <br>";
+//        $newListElement->setLevel($level);
+//        //set group
+//        $group = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
+//        $newListElement->setOrganizationalGroupType($group);
+//
+//        $patientList->addChild($newListElement);
+//
+//        $this->em->persist($newListElement);
+//
+//        if( !$testing ) {
+//            $this->em->flush();
+//        }
+
+//        if( $message ) {
+//            //record this to the CalllogEntryMessage (getCalllogEntryMessage)
+//            $calllogEntryMessage = $message->getCalllogEntryMessage();
+//            if (!$calllogEntryMessage) {
+//                $calllogEntryMessage = new CalllogEntryMessage();
+//                $message->setCalllogEntryMessage($calllogEntryMessage);
+//            }
+//            $calllogEntryMessage->setObject($newListElement);
+//            $calllogEntryMessage->setAddPatientToList(true);
+//        }
+
+        return $newListElement;
+    }
+
+    public function addPatientToPatientList( $patient, $patientList, $message=null, $testing=false ) {
+
+        if( !$patient ) {
+            return null;
+        }
+
+        if( !$patientList ) {
+            return null;
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->sc->getToken()->getUser();
+
+        //add only if the patient does not exists in the list
+        $similarPatients = $this->getSamePatientsInList($patientList,$patient);
+        if( $similarPatients && count($similarPatients) > 0 ) {
+            //check and set type to user-added if type is disabled
+            foreach( $similarPatients as $similarPatient ) {
+                if( $similarPatient->getType() == 'disabled' ) {
+                    $similarPatient->setType('user-added');
+                    if( !$testing ) {
+                        $this->em->flush();
+                    }
+                    return $similarPatient;
+                }
+            }
             return null;
         }
 
@@ -1269,7 +1360,10 @@ class CallLogUtil
         $userSecUtil->setDefaultList($newListElement, $count, $user, $patientName);
         $newListElement->setPatient($patient);
         $newListElement->setDescription($patientDescription);
-        $newListElement->setObject($message);
+
+        if( $message ) {
+            $newListElement->setObject($message);
+        }
 
         //tree variables
         //set level
@@ -1287,9 +1381,9 @@ class CallLogUtil
                 }
             }
         }
-        echo "level=$level ";
+        //echo "level=$level ";
         $level = $level + 1;
-        echo " (+1)=> $level <br>";
+        //echo " (+1)=> $level <br>";
         $newListElement->setLevel($level);
         //set group
         $group = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
@@ -1303,25 +1397,14 @@ class CallLogUtil
             $this->em->flush();
         }
 
-//        if( $message ) {
-//            //record this to the CalllogEntryMessage (getCalllogEntryMessage)
-//            $calllogEntryMessage = $message->getCalllogEntryMessage();
-//            if (!$calllogEntryMessage) {
-//                $calllogEntryMessage = new CalllogEntryMessage();
-//                $message->setCalllogEntryMessage($calllogEntryMessage);
-//            }
-//            $calllogEntryMessage->setObject($newListElement);
-//            $calllogEntryMessage->setAddPatientToList(true);
-//        }
-
         return $newListElement;
     }
 
-    public function isPatientInList( $patientList, $patient ) {
+    public function getSamePatientsInList( $patientList, $patient ) {
         if( $patientList && $patientList->getId() && $patient && $patient->getId() ) {
             //ok continue
         } else {
-            return false;
+            return null;
         }
         $repository = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy');
         $dql = $repository->createQueryBuilder("list");
@@ -1332,9 +1415,9 @@ class CallLogUtil
         $query->setParameters($parameters);
         $patients = $query->getResult();
         if( count($patients) > 0 ) {
-            return true;
+            return $patients;
         }
-        return false;
+        return null;
     }
 
     public function getDefaultPatientList( $patientListName = "Pathology Call Complex Patients" ) {
@@ -1343,6 +1426,83 @@ class CallLogUtil
             throw new \Exception( "Location type is not found by name '".$patientListName."'" );
         }
         return $patientList;
+    }
+
+    // If the user types in the Date of Birth, it should be added to the "Patient" hierarchy level
+    // of the selected patient as a "valid" value and the previous "valid" value should be marked "invalid" on the server side.
+    public function updatePatientInfoFromEncounter( $patient, $encounter, $user, $system ) {
+        //add new DOB (if exists) to the Patient
+        //Use unmapped encounter's "patientDob" to update patient's DOB
+        $patientDob = $encounter->getPatientDob();
+        if( $patientDob ) {
+            //invalidate all other patient's DOB
+//            $validDOBs = $patient->obtainStatusFieldArray("dob","valid");
+//            foreach( $validDOBs as $validDOB) {
+//                $validDOB->setStatus("invalid");
+//            }
+            //$patient->changeStatusAllFields('dob','valid','invalid');
+
+            //echo "encounter patientDob=" . $patientDob->format('Y-m-d') . "<br>";
+            $newPatientDob = new PatientDob("valid",$user,$system);
+            $newPatientDob->setField($patientDob);
+            $patient->addDob($newPatientDob);
+            //echo "patient patientDob=" . $newPatientDob . "<br>";
+        }
+
+        //lastname
+        $lastName = $encounter->obtainValidField('patlastname');
+        if( $lastName && !$lastName->getAlias() ) {
+            //invalidate all other patient's lastname
+            //$patient->changeStatusAllFields('lastname', 'valid', 'invalid');
+
+            $newPatientLastname = new PatientLastName("valid",$user,$system);
+            $newPatientLastname->setField($lastName->getField());
+            $patient->addLastname($newPatientLastname);
+        }
+
+        //firstname
+        $firstname = $encounter->obtainValidField('patfirstname');
+        if( $firstname && !$firstname->getAlias() ) {
+            //invalidate all other patient's firstname
+            //$patient->changeStatusAllFields('firstname','valid','invalid');
+
+            $newPatientFirstname = new PatientFirstName("valid",$user,$system);
+            $newPatientFirstname->setField($firstname->getField());
+            $patient->addFirstname($newPatientFirstname);
+        }
+
+        //middlename
+        $middlename = $encounter->obtainValidField('patmiddlename');
+        if( $middlename && !$middlename->getAlias() ) {
+            //invalidate all other patient's middlename
+            //$patient->changeStatusAllFields('middlename','valid','invalid');
+
+            $newPatientMiddlename = new PatientMiddleName("valid",$user,$system);
+            $newPatientMiddlename->setField($middlename->getField());
+            $patient->addMiddlename($newPatientMiddlename);
+        }
+
+        //suffix
+        $suffix = $encounter->obtainValidField('patsuffix');
+        if( $suffix && !$suffix->getAlias() ) {
+            //invalidate all other patient's suffix
+            //$patient->changeStatusAllFields('suffix','valid','invalid');
+
+            $newPatientsuffix = new PatientSuffix("valid",$user,$system);
+            $newPatientsuffix->setField($suffix->getField());
+            $patient->addSuffix($newPatientsuffix);
+        }
+
+        //sex
+        $sex = $encounter->obtainValidField('patsex');
+        if( $sex ) {
+            //invalidate all other patient's sex
+            //$patient->changeStatusAllFields('sex','valid','invalid');
+
+            $newPatientsex = new PatientSex("valid",$user,$system);
+            $newPatientsex->setField($sex->getField());
+            $patient->addSex($newPatientsex);
+        }
     }
 
 }
