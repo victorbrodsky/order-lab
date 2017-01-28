@@ -99,16 +99,22 @@
                         <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
                     </td>
 
+                    {#Encounter Date#}
                     <td>
                         {% for encounter in message.encounter %}
-                            {{ encounter.creationdate|date('m/d/Y H:i') }}<br>
+                            {% set encounterDate = encounter.obtainStatusField('date','valid') %}
+                            {{ encounterDate|date('m/d/Y H:i') }}<br>
                         {% endfor %}
                     </td>
 
                     {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
                     <td>
-                        {% if message.editorInfos|length > 0 %}
-                            {{  message.editorInfos|last.modifiedOn|date('m/d/Y H:i') }}
+                        {% if message.version > 1 %}
+                            {% if message.editorInfos|length > 0 %}
+                                {{  message.editorInfos|last.modifiedOn|date('m/d/Y H:i') }}
+                            {% else %}
+                                {{ message.orderdate|date('m/d/Y H:i') }}
+                            {% endif %}
                         {% else %}
                             {{ message.orderdate|date('m/d/Y H:i') }}
                         {% endif %}

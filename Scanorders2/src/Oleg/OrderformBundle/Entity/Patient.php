@@ -1554,7 +1554,7 @@ class Patient extends ObjectAbstract
         $dobRes = $this->obtainStatusField('dob', $status);
         if( $dobRes && $dobRes."" ) {
             //echo "dobRes=$dobRes <br>";
-            $patientInfoArr[] = $dobRes."";
+            $patientInfoArr[] = "DOB: ".$dobRes."";
         }
 
         $sexRes = $fieldnameResArr['patsex'];

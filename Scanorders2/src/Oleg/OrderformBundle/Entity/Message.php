@@ -1704,7 +1704,7 @@ class Message {
             $info = $this->getOrderdate()->format('m/d/Y h:i a');
         }
         if( $this->getProvider() ) {
-            $info = " by ".$this->getProvider()->getUsernameOptimal();
+            $info = $info . " by ".$this->getProvider()->getUsernameOptimal();
         }
         return $info;
     }
