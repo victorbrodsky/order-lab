@@ -103,7 +103,8 @@
                     <td>
                         {% for encounter in message.encounter %}
                             {% set encounterDate = encounter.obtainStatusField('date','valid') %}
-                            {{ encounterDate|date('m/d/Y H:i') }}<br>
+                            {{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i',encounterDate.timezone) }}
+                            <br>
                         {% endfor %}
                     </td>
 
