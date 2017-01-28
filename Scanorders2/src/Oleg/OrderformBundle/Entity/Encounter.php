@@ -1001,6 +1001,20 @@ class Encounter extends ObjectAbstract
         return implode("; ",$infoArr);
     }
 
+    public function hasPatientInfo() {
+        if( $this->getPatfirstname()->first()."" )
+            return true;
+        if( $this->getPatlastname()->first()."" )
+            return true;
+        if( $this->getPatmiddlename()->first()."" )
+            return true;
+        if( $this->getPatsuffix()->first()."" )
+            return true;
+        if( $this->getPatsex()->first()."" )
+            return true;
+
+        return false;
+    }
 
     public function obtainKeyField() {
         return $this->getNumber();

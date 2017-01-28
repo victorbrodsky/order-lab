@@ -188,15 +188,21 @@
                 </td>
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
-                <td data-toggle="tooltip"
-                    data-container="body"
-                    title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">
-                    {% if message.editorInfos|length > 0 %}
-                        {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
-                    {% else %}
+                {% if message.version > 1 %}
+                    <td data-toggle="tooltip"
+                        data-container="body"
+                        title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">
+                        {% if message.editorInfos|length > 0 %}
+                            {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
+                        {% else %}
+                            {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
                         {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}
-                    {% endif %}
-                </td>
+                    </td>
+                {% endif %}
 
                 {#Patient Name#}
                 <td>
@@ -253,7 +259,7 @@
                     <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
                 </td>
                 <td colspan="9">
-                    {{ message.getMessageTitleStr }}<br>
+                    {#{{ message.getMessageTitleStr }}<br>#}
                     {#<p>History/Findings: This is an example of a previously entered call.</p>#}
                     {#<p>Impression/Outcome: This is an example of an impression and outcome.</p>#}
                     {#<p>Laboratory Results: This is an example of an impression and outcome</p>#}

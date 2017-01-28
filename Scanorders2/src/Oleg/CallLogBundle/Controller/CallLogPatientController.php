@@ -436,6 +436,11 @@ class CallLogPatientController extends PatientController {
 
         //TODO: Show only the most recent version for each message (if a message has been edited/amended 5 times, show only the message with message version "6").
 
+        //TODO: 7- If the entered patient is linked to another AND is NOT the master patient record,
+        // change the title of the accordion to
+        // "Previous Entries for FirstNameOfMasterRecord LastNameOfMasterRecord (DOB: DateOfBirthOfMasterRecord, MRNTypeOfMasterRecord: MRNofMasterRecord).
+        // Clicking "Re-enter patient" in the Patient Info accordion should re-set the title of the accordion to "Previous Entries" (remove the patient name/info).
+
         $limit = 1000;
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
