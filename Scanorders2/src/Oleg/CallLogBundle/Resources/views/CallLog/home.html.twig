@@ -19,140 +19,136 @@
 
 
     {#Search Form#}
-
-    {#<form id="CallCaseSearchForm" class="form-vertical" role="form">#}
     <p>
     <form action="{{ path(route_path) }}" method="get" {{ form_enctype(filterform) }} class="well form-search">
 
-        <div class="well">
+        {#basic search#}
+        <div class="row">
 
-            {#basic search#}
-            <div class="row">
-
-                <div class="col-xs-2" align="left">
-                    {#{{ calllogmacros.singleDateField('','Start Date') }}#}
-                    {{ formmacros.fielddate(filterform.startDate,'regular-datepicker') }}
-                    {#{{ form_row(filterform.startDate, {'attr': {'placeholder': 'Start Date'}}) }}#}
-                </div>
-                <div class="col-xs-2" align="left">
-                    {#{{ calllogmacros.singleDateField('','End Date') }}#}
-                    {{ formmacros.fielddate(filterform.endDate,'regular-datepicker') }}
-                    {#{{ form_row(filterform.endDate, {'attr': {'placeholder': 'End Date'}}) }}#}
-                </div>
-                <div class="col-xs-3" align="left">
-                    {{ form_widget(filterform.messageCategory) }}
-                </div>
-                <div class="col-xs-3" align="left">
-                    {{ form_widget(filterform.search) }}
-                </div>
-
-                <div class="col-xs-1" align="left">
-                    <button id="Search_button" type="submit" class="btn btn-default">Filter</button>
-                </div>
-
-                {#<div class="col-xs-2" align="left">#}
-                    {#<select id="Export" name="Export" class="combobox" style="float:right;width: 70%">#}
-                        {#<option value="Export">Export</option>#}
-                        {#<option value="Excel">Excel</option>#}
-                        {#<option value="PDF">PDF</option>#}
-                        {#<option value="CSV">CSV</option>#}
-                    {#</select>#}
-                {#</div>#}
-
-                {#<div class="col-xs-2" align="left">#}
-                    {#<a data-toggle="collapse" href="#calllog-AdvancedSearch">Advanced Search</a>#}
-                {#</div>#}
-
+            <div class="col-xs-2" align="left">
+                {#{{ calllogmacros.singleDateField('','Start Date') }}#}
+                {{ formmacros.fielddate(filterform.startDate,'regular-datepicker') }}
+                {#{{ form_row(filterform.startDate, {'attr': {'placeholder': 'Start Date'}}) }}#}
+            </div>
+            <div class="col-xs-2" align="left">
+                {#{{ calllogmacros.singleDateField('','End Date') }}#}
+                {{ formmacros.fielddate(filterform.endDate,'regular-datepicker') }}
+                {#{{ form_row(filterform.endDate, {'attr': {'placeholder': 'End Date'}}) }}#}
+            </div>
+            <div class="col-xs-3" align="left">
+                {{ form_widget(filterform.messageCategory) }}
+            </div>
+            <div class="col-xs-4" align="left">
+                {{ form_widget(filterform.mrntype) }}
+            {#</div>#}
+            {#<div class="col-xs-2" align="left">#}
+                {{ form_widget(filterform.search) }}
             </div>
 
-
-            {#advanced search#}
-            {% if advancedFilter %}
-                {% set advacedCollapse = 'in' %}
-            {% else %}
-                {% set advacedCollapse = '' %}
-            {% endif %}
-            <br>
-            <div class="row">
-                <a data-toggle="collapse" href="#calllog-AdvancedSearch">Advanced Search</a>
+            <div class="col-xs-1" align="left">
+                <button id="Search_button" type="submit" class="btn btn-default">Filter</button>
             </div>
-            <div id="calllog-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
-                <div class="panel-body">
 
-                    <div class="row">
+            {#<div class="col-xs-2" align="left">#}
+                {#<select id="Export" name="Export" class="combobox" style="float:right;width: 70%">#}
+                    {#<option value="Export">Export</option>#}
+                    {#<option value="Excel">Excel</option>#}
+                    {#<option value="PDF">PDF</option>#}
+                    {#<option value="CSV">CSV</option>#}
+                {#</select>#}
+            {#</div>#}
 
-                        <div class="col-xs-2" align="left">
-                            {{ form_widget(filterform.author) }}
-                        </div>
-
-                        <div class="col-xs-2" align="left">
-                            {{ form_widget(filterform.referringProvider) }}
-                        </div>
-
-                        <div class="col-xs-2" align="left">
-                            {{ form_widget(filterform.referringProviderSpecialty) }}
-                        </div>
-
-                        <div class="col-xs-4" align="left">
-                            {{ form_widget(filterform.encounterLocation) }}
-                        </div>
-
-                        {#<div class="col-xs-5" align="left">#}
-                            {#<input class="form-control form-control-modif not-mapped-simplefield" type="text" value="" placeholder="Search free text">#}
-                        {#</div>#}
-
-                        {#<div class="col-xs-4" align="left" class="form_body_toggle_btn">#}
-                            {#<select id="Field" name="Field" class="combobox" style="float:right;width: 70%">#}
-                                {#<option value="All Fields">All Fields</option>#}
-                                {#<option value="MRN">MRN</option>#}
-                                {#<option value="Patient Info">Patient Info</option>#}
-                                {#<option value="Date">Date</option>#}
-                                {#<option value="Service">Service</option>#}
-                                {#<option value="Call Issue">Call Issue</option>#}
-                                {#<option value="Educational">Educational</option>#}
-                                {#<option value="Pending Signout">Pending Signout</option>#}
-                                {#<option value="Complex Patients">Complex Patients</option>#}
-                                {#<option value="Location">Location</option>#}
-                                {#<option value="Contact Information">Contact Information</option>#}
-                            {#</select>#}
-                        {#</div>#}
-
-                        {#<div class="col-xs-2" align="left" class="form_body_toggle_btn">#}
-                            {#<select id="Logic" name="Logic" class="combobox" style="float:right;width: 70%">#}
-                                {#<option value="And">And</option>#}
-                                {#<option value="Not">Not</option>#}
-                                {#<option value="Or">Or</option>#}
-                                {#<option value="Exact Match">Exact Match</option>#}
-                            {#</select>#}
-                        {#</div>#}
-
-                        {#<div class="col-xs-1" align="left">#}
-                            {#<button id="Search_button" type="button" class="btn btn-lg btn-info" align="center" style="float:left; width:100%">Search</button>#}
-                        {#</div>#}
-                        {#<div class="col-xs-1" align="left">#}
-                        {#</div>#}
-
-                    </div>
-
-                    <br>
-                    <div class="row">
-                        <div class="col-xs-2" align="left">
-                            {{ form_widget(filterform.messageStatus) }}
-                        </div>
-                        <div class="col-xs-2" align="left">
-                            {{ form_widget(filterform.patientListTitle) }}
-                        </div>
-                        <div class="col-xs-2" align="left">
-                            {{ form_widget(filterform.entryBodySearch) }}
-                        </div>
-                    </div>
-
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
+            {#<div class="col-xs-2" align="left">#}
+                {#<a data-toggle="collapse" href="#calllog-AdvancedSearch">Advanced Search</a>#}
+            {#</div>#}
 
         </div>
 
-    {#</form>#}
+
+        {#advanced search#}
+        {% if advancedFilter %}
+            {% set advacedCollapse = 'in' %}
+        {% else %}
+            {% set advacedCollapse = '' %}
+        {% endif %}
+        <br>
+        <div class="row">
+            <a data-toggle="collapse" href="#calllog-AdvancedSearch">Advanced Search</a>
+        </div>
+        <div id="calllog-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
+            <div class="panel-body">
+
+                <div class="row">
+
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.author) }}
+                    </div>
+
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.referringProvider) }}
+                    </div>
+
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.referringProviderSpecialty) }}
+                    </div>
+
+                    <div class="col-xs-4" align="left">
+                        {{ form_widget(filterform.encounterLocation) }}
+                    </div>
+
+                    {#<div class="col-xs-5" align="left">#}
+                        {#<input class="form-control form-control-modif not-mapped-simplefield" type="text" value="" placeholder="Search free text">#}
+                    {#</div>#}
+
+                    {#<div class="col-xs-4" align="left" class="form_body_toggle_btn">#}
+                        {#<select id="Field" name="Field" class="combobox" style="float:right;width: 70%">#}
+                            {#<option value="All Fields">All Fields</option>#}
+                            {#<option value="MRN">MRN</option>#}
+                            {#<option value="Patient Info">Patient Info</option>#}
+                            {#<option value="Date">Date</option>#}
+                            {#<option value="Service">Service</option>#}
+                            {#<option value="Call Issue">Call Issue</option>#}
+                            {#<option value="Educational">Educational</option>#}
+                            {#<option value="Pending Signout">Pending Signout</option>#}
+                            {#<option value="Complex Patients">Complex Patients</option>#}
+                            {#<option value="Location">Location</option>#}
+                            {#<option value="Contact Information">Contact Information</option>#}
+                        {#</select>#}
+                    {#</div>#}
+
+                    {#<div class="col-xs-2" align="left" class="form_body_toggle_btn">#}
+                        {#<select id="Logic" name="Logic" class="combobox" style="float:right;width: 70%">#}
+                            {#<option value="And">And</option>#}
+                            {#<option value="Not">Not</option>#}
+                            {#<option value="Or">Or</option>#}
+                            {#<option value="Exact Match">Exact Match</option>#}
+                        {#</select>#}
+                    {#</div>#}
+
+                    {#<div class="col-xs-1" align="left">#}
+                        {#<button id="Search_button" type="button" class="btn btn-lg btn-info" align="center" style="float:left; width:100%">Search</button>#}
+                    {#</div>#}
+                    {#<div class="col-xs-1" align="left">#}
+                    {#</div>#}
+
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.messageStatus) }}
+                    </div>
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.patientListTitle) }}
+                    </div>
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.entryBodySearch) }}
+                    </div>
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+
         {{ form_rest(filterform) }}
     </form>
     </p>
@@ -161,7 +157,7 @@
     {#Call Case List#}
     <br><br>
 
-    <table class="records_list table table-hover table-condensed text-left">
+    <table class="records_list table table-hover table-condensed table-striped text-left">
         <thead>
         <tr>
             <th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>

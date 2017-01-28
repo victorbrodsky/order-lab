@@ -9,6 +9,7 @@
 namespace Oleg\CallLogBundle\Controller;
 
 
+use Oleg\CallLogBundle\Form\CalllogListPreviousEntriesFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -16,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Controller\PatientController;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -347,5 +349,129 @@ class CallLogPatientController extends PatientController {
         $listNameLowerCase = strtolower($listNameLowerCase);
 
         return $this->redirect($this->generateUrl('calllog_complex_patient_list',array('listname'=>$listNameLowerCase,'listid'=>$patientListId)));
+    }
+
+
+    //calllog-list-previous-entries
+    /**
+     * @Route("/list-previous-entries/", name="calllog-list-previous-entries", options={"expose"=true})
+     * @Method({"GET", "POST"})
+     */
+    public function showOnlyAjaxUserAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $calllogUtil = $this->get('calllog_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $template = null;
+        $filterMessageCategory = null;
+
+        $patientid = $request->query->get('patientid');
+
+        $messageCategoryId = $request->query->get('type');
+        if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
+            //echo "Your variable is not an integer";
+            $messageCategoryId = null;
+        } else {
+            //$filterMessageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+            //echo "filter=".$filterMessageCategory."<br>";
+        }
+
+        //echo "patientid=".$patientid."<br>";
+        //echo "messageCategory=".$messageCategory."<br>";
+
+        $testing = $request->query->get('testing');
+
+        //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+        //$template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+
+        //child nodes of "Pathology Call Log Entry"
+        $messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        $messageCategories = array();
+        if( $messageCategoriePathCall ) {
+            $messageCategories = $messageCategoriePathCall->printTreeSelectList();
+        }
+        //print_r($messageCategories);
+
+        $params = array(
+            'messageCategory' => $messageCategoryId,
+            'messageCategories' => $messageCategories
+        );
+        $filterform = $this->createForm(new CalllogListPreviousEntriesFilterType($params), null);
+        $filterform->bind($request);
+
+        //////////////// find messages ////////////////
+        $queryParameters = array();
+        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder('message');
+
+        $dql->leftJoin("message.messageStatus","messageStatus");
+        $dql->leftJoin("message.messageCategory","messageCategory");
+        $dql->leftJoin("message.provider","provider");
+        $dql->leftJoin("message.patient","patient");
+        $dql->leftJoin("message.editorInfos","editorInfos");
+
+        $dql->leftJoin("message.signeeInfo","signeeInfo");
+        $dql->leftJoin("signeeInfo.modifiedBy","signee");
+
+        $dql->leftJoin("message.encounter","encounter");
+        $dql->leftJoin("encounter.referringProviders","referringProviders");
+        $dql->leftJoin("referringProviders.field","referringProviderWrapper");
+        $dql->leftJoin("encounter.attendingPhysicians","attendingPhysicians");
+        $dql->leftJoin("attendingPhysicians.field","attendingPhysicianWrapper");
+
+        $dql->orderBy("message.orderdate","DESC");
+        $dql->addOrderBy("editorInfos.modifiedOn","DESC");
+
+        $dql->where("patient=:patientId");
+        $queryParameters['patientId'] = $patientid;
+
+        if( $messageCategoryId ) {
+            $dql->andWhere("messageCategory=:messageCategoryId");
+            $queryParameters['messageCategoryId'] = $messageCategoryId;
+        }
+
+        //TODO: Show only the most recent version for each message (if a message has been edited/amended 5 times, show only the message with message version "6").
+
+        $limit = 1000;
+        $query = $em->createQuery($dql);
+        $query->setParameters($queryParameters);
+
+        //echo "query=".$query->getSql()."<br>";
+
+//        $paginator  = $this->get('knp_paginator');
+//        $messages = $paginator->paginate(
+//            $query,
+//            $this->get('request')->query->get('page', 1), /*page number*/
+//            //$request->query->getInt('page', 1),
+//            $limit      /*limit per page*/
+//        );
+
+        $messages = $query->getResult();
+        //////////////// find messages ////////////////
+
+        $params = array(
+            'filterform' => $filterform->createView(),
+            'route_path' => $request->get('_route'),
+            'messages' => $messages,
+            'title' => "Previous Entries"
+            //'testing' => true
+        );
+        $htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_entries.html.twig',$params);
+
+        //testing
+        if( $testing ) {
+            return $htmlPage;
+        }
+
+        $template = $htmlPage->getContent();
+
+        $json = json_encode($template);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 }

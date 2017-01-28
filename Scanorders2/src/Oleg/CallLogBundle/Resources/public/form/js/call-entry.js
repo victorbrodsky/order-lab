@@ -856,27 +856,6 @@ var matchingPatientBtnClick = function(holderId) {
     //console.log('holderId='+holderId);
     var holder = getHolder(holderId);
 
-    //var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
-    //console.log('id index='+index);
-    ////remove holderId from index
-    //index = index.replace("-"+holderId, "");
-    //console.log('index='+index);
-
-    //var patientToPopulate = _patients[index];
-    //console.log('patientToPopulate='+patientToPopulate.id);
-    //console.log(patientToPopulate);
-    //console.log('patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
-
-    //check for master patient
-    //if( patientToPopulate.masterPatientId ) {
-    //    //console.log('reset to patientToPopulate.masterPatientId='+patientToPopulate.masterPatientId);
-    //    //patientToPopulate = patientToPopulate.masterPatientId;
-    //    //find index by patient id
-    //    index = $('#calllog-patientid-'+patientToPopulate.masterPatientId).closest('tr').attr('id');
-    //    index = index.replace("-"+holderId, "");
-    //    //console.log('new index='+index);
-    //    patientToPopulate = _patients[index];
-    //}
     var patientToPopulate = getCalllogPatientToPopulate(holderId);
     //console.log('patientToPopulate='+patientToPopulate.id);
 
@@ -904,6 +883,7 @@ var matchingPatientBtnClick = function(holderId) {
     }
 
     calllogScrollToTop();
+
 }
 //
 var getCalllogPatientToPopulate = function(holderId) {
@@ -1084,6 +1064,9 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     if( patient ) {
         calllogSetPatientAccordionTitle(patient, holderId);
     }
+
+    calllogShowHideListPreviousEntriesBtn(patient);
+
     //console.log('populate PatientInfo: finished');
 }
 
@@ -1308,14 +1291,12 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
         //console.log("patientInfo="+patientInfo);
         if( patientInfo ) {
             holder.find('.calllog-patient-panel-title').html(patientInfo);
-            //holder.find('.calllog-patient-panel-title').collapse('hide');
             if( formtype == "call-entry" ) {
                 panelEl.collapse('hide');
             }
         }
     } else {
         holder.find('.calllog-patient-panel-title').html("Patient Info");
-        //holder.find('.calllog-patient-panel-title').collapse('show');
         //panelEl.show(_transTime);
         if( formtype == "call-entry" ) {
             panelEl.collapse('show');
@@ -1421,7 +1402,7 @@ function calllogToggleSingleEncounterPanel(btn,target) {
 //    //btnEl.click();
 //}
 
-//overwrite calllogSetPatientAccordionTitle
+//overwrite calllog SetPatientAccordionTitle
 function calllogUpdatePatientAgeListener(holderId) {
     $('input.encounter-date').on("input change", function (e) {
         calllogUpdatePatientAge($(this),holderId);
@@ -1771,4 +1752,66 @@ function calllogEncounterReferringProviderPopulate( holder, data ) {
 
         }
     }//for
+}
+
+function calllogShowHideListPreviousEntriesBtn(patient) {
+    if( patient ) {
+        $('#calllog-list-previous-entries-btn').show();
+        $('#calllog-list-previous-entries').html("");
+    } else {
+        $('#calllog-list-previous-entries-btn').hide();
+    }
+}
+function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
+
+    //patientId = patient['id'];
+    var holder = getHolder(holderId);
+    var patientId = holder.find("#calllog-patient-id-"+holderId).val();
+    if( !patientId ) {
+        return;
+    }
+
+    //reset: show button and clear entries list
+    //$('#calllog-list-previous-entries').html("");
+    calllogShowHideListPreviousEntriesBtn(true);
+
+    if( typeof messageCategoryId === 'undefined' ) {
+        messageCategoryId = null;
+    }
+    console.log("messageCategoryId="+messageCategoryId);
+
+    var btn = document.getElementById("calllog-list-previous-entries-btn");
+    var lbtn = Ladda.create(btn);
+    lbtn.start();
+
+    var url = Routing.generate('calllog-list-previous-entries');
+    url = url + "?patientid="+patientId+"&type="+messageCategoryId;
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        type: "GET",
+        //type: "POST",
+        //data: {id: userid },
+        dataType: 'json',
+        async: asyncflag
+    }).success(function(response) {
+        //console.log(response);
+        var template = response;
+        $('#calllog-list-previous-entries').html(template); //Change the html of the div with the id = "your_div"
+        calllogShowHideListPreviousEntriesBtn(null); //hide btn
+
+        var filterSelectBox = $('.filter-message-category');
+        //printF(filterSelectBox,"filterSelectBox:");
+        //console.log(filterSelectBox);
+        specificRegularCombobox(filterSelectBox);
+        if( messageCategoryId ) {
+            filterSelectBox.select2('val', messageCategoryId);
+        }
+
+    }).done(function() {
+        lbtn.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+    });
 }

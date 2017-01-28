@@ -92,13 +92,18 @@ class CallEntryController extends Controller
         //$node1 = array('id'=>1,'text'=>'node1');
         //$node2 = array('id'=>2,'text'=>'node2');
         //$messageCategories = array($node1,$node2);
+
+        $defaultMrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
-            'messageCategories' => $messageCategories
+            'messageCategories' => $messageCategories,
+            'mrntype' => $defaultMrnType->getId()
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
         $filterform->bind($request);
         $messageStatusFilter = $filterform['messageStatus']->getData();
+        $mrntypeFilter = $filterform['mrntype']->getData();
         $searchFilter = $filterform['search']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
@@ -212,8 +217,14 @@ class CallEntryController extends Controller
                 //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
                 $queryParameters['search'] = $searchFilter;
+
+                if( $mrntypeFilter ) {
+                    $dql->andWhere("mrn.keytype = :keytype");
+                    $queryParameters['keytype'] = $mrntypeFilter;
+                }
             }
         }
+
         //This single filter should work in the "OR" mode for these three fields: Submitter, Signee, Editor
         //Don't use: Referring Provider - encounter->referringProviders[]->field(userWrapper)->user(User)
         //encounter-provider (User)
@@ -607,17 +618,17 @@ class CallEntryController extends Controller
 
     /**
      * Save/Update Call Log Entry
-     * @Route("/patient/update", name="calllog_update_patient", options={"expose"=true})
+     * @Route("/entry/update", name="calllog_update_entry", options={"expose"=true})
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
      * @Method("POST")
      */
-    public function updatePatientAction(Request $request)
+    public function updateEntryAction(Request $request)
     {
         if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        //exit('update patient');
+        //exit('update entry');
         //case 1: patient exists: create a new encounter to DB and add it to the existing patient
         //add patient id field to the form (id="oleg_calllogbundle_patienttype_id") or use class="calllog-patient-id" input field.
         //case 2: patient does not exists: create a new encounter to DB

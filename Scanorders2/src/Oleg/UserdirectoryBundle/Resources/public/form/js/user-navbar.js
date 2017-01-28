@@ -214,7 +214,7 @@ function setCallLogNavBar() {
         id = 'callentry';
     }
 
-    if( full.indexOf("/call-log-book/patient-list/") !== -1 ) {
+    if( full.indexOf("/patient-list/") !== -1 ) {
         id = 'patientlist';
     }
 
@@ -222,17 +222,19 @@ function setCallLogNavBar() {
         id = 'resources';
     }
 
-    if( full.indexOf("/call-log-book/event-log/event-log-per-user-per-event-type/") !== -1 ) {
-        id = 'myentrees';
-    }
-
     if( full.indexOf("/call-log-book/merge-patient-records") !== -1 ||
-        full.indexOf("/call-log-book/un-merge-patient-records") !== -1
+        full.indexOf("/call-log-book/un-merge-patient-records") !== -1 ||
+        full.indexOf("/call-log-book/edit-patient-record") !== -1 ||
+        full.indexOf("/call-log-book/set-master-patient-record") !== -1
     ) {
         id = 'dataquality';
     }
 
     id = commonNavBar(full,id)
+
+    if( full.indexOf("/call-log-book/event-log/event-log-per-user-per-event-type/") !== -1 ) {
+        id = 'myentrees';
+    }
 
     //if( full.indexOf("/call-log-book/re-identify") !== -1 ) {
     //    id = null;

@@ -153,6 +153,28 @@ class MessageCategory extends BaseCompositeNode {
     }
 
 
+    //If Message Type is a child node of "Pathology Call Log Entry",
+    // show the child node of "Pathology Call Log Entry" followed by all children,
+    // for example: "Transfusion Medicine : First Dose Plasma";
+    // If Message Type is not a child node of "Pathology Call Log Entry",
+    // show the entire "linage", for example: "Note: Encounter Note: Whatever"
+    public function getNodeNameWithParent($separator=": ", $untilParentName="Pathology Call Log Entry") {
+        if( $this->getName()."" == $untilParentName ) {
+            return $this->getName()."";
+        }
+        $treeName = array();
+        $nodes = $this->getEntityBreadcrumbs(false); //bottom to top
+        foreach( $nodes as $node ) {
+            $treeName[] = $node->getName()."";
+            if( $node->getName()."" == $untilParentName ) {
+                break;
+            }
+            //$treeName[] = $node->getName().""; //do not show $untilParentName
+        }
+        $treeName = array_reverse($treeName);
+        return implode($separator,$treeName);
+    }
+
 
     public function getClassName() {
         return "MessageCategory";

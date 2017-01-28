@@ -23,7 +23,7 @@ class CalllogNavbarFilterType extends AbstractType
             'label' => false,
             'required' => true,
             'choices' => $this->params['navbarSearchTypes'],
-            'attr' => array('class' => 'combobox combobox-no-width submit-on-enter-field'),
+            'attr' => array('class' => 'combobox111 combobox-no-width submit-on-enter-field', 'style'=>'border: 1px solid #ccc; border-radius: 4px 0 0 4px; height: 29px;'),
         );
         if( $this->params['calllogsearchtype'] ) {
             $searchTypeArray['data'] = $this->params['calllogsearchtype'];

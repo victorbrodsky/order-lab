@@ -33,9 +33,7 @@
 
     {% set holderId = "patient-holder-1" %}
 
-    {#<form id="CallCaseForm" class="form-vertical" role="form">#}
-    {#{{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}#}
-    {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_update_patient')}) }}
+    {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_update_entry')}) }}
 
         <input type="hidden" id="messageStatusJs" name="messageStatusJs" value="" />
 
@@ -48,6 +46,13 @@
 
             {#{% set formtype = 'call-entry' %}#}
             {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Patient Info',formtype) }}
+
+            {#List previous entries#}
+            <button id="calllog-list-previous-entries-btn"
+                    class="btn btn-primary" type="button" style="display: none;"
+                    onclick="calllogListPreviousEntriesForPatient('{{ holderId }}')">Previous Entries</button>
+            <div id="calllog-list-previous-entries"></div>
+            <br>
 
             {#<a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">#}
             <a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">
@@ -70,12 +75,7 @@
                     </div>
                     <div id="calllog-EncounterInfo-{{ encounter.vars.value.id }}" class="panel-collapse collapse in">
                         <div class="panel-body">
-                            {#<div class="row">#}
-                                {#<div class="col-xs-12" align="left">#}
-                                {#</div>#}
-                            {#</div>#}
                             {% set status = 'Submitted' %}
-                            {#{% for encounter in patientForm.encounter if encounter.vars.value.status == 'valid' %}#}
                                 {{ form_row(encounter.id) }}
                                 {{ form_row(encounter.status) }}
                                 {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
@@ -96,47 +96,10 @@
                                     {{ formmacros.field(attendingPhysician.field) }}
                                 {% endfor %}
 
-                                {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
-                                {#{% for referringProvider in encounter.referringProviders %}#}
-                                    {#{{ formmacros.field_show_user( encounter, "referringProviders", cycle ) }}#}
-                                    {#{{ formmacros.field(referringProvider.field) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderSpecialty) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderPhone) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
-                                {#{% endfor %}#}
-
                                 {{ calllogmacros.trackerContactinfoForm(encounter,cycle,status) }}
-
-                                {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}
 
                                 {#Update Patient Info: encounter with status='valid'#}
                                 {{ calllogmacros.updatePatientInfoSection(encounter,cycle,status) }}
-                                {#{% if cycle != "show" %}#}
-                                    {#<div class="panel panel-default">#}
-                                        {#<div class="panel-heading">#}
-                                            {#<h4 class="panel-title">#}
-                                                {#<a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">#}
-                                                    {#Update Patient Info#}
-                                                {#</a>#}
-                                            {#</h4>#}
-                                        {#</div>#}
-                                        {#<div id="form_body_encounterInfo" class="panel-collapse collapse">#}
-                                            {#<div class="panel-body">#}
-                                                {#<div id="calllog-encounterInfo-holder">#}
-                                                {#{{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}#}
-                                                {#{{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}#}
-                                                {#{{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}#}
-                                                {#{{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}#}
-                                                {#{{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}#}
-                                                {#{{ formmacros.field(encounter.patientDob) }}#}
-                                                {#{{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}#}
-                                                {#</div>#}
-                                            {#</div> <!-- panel-body -->#}
-                                        {#</div> <!-- panel-collapse -->#}
-                                    {#</div> <!-- panel panel-default -->#}
-                                {#{% endif %}#}
-
-                            {#{% endfor %} #}{#encounter#}
 
                         </div> <!-- panel-body -->
                     </div> <!-- panel-collapse -->
@@ -158,37 +121,35 @@
             </div>
             <div id="calllog-Entry" class="panel-collapse collapse in">
                 <div class="panel-body">
-        {# Entry #}
 
-            {#Message Fields        #}
-            <p>
-                {#Message Type: Message->messageCategory#}
-                {% if form.messageCategory is defined %}
-                    {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
-                {% endif %}
-                {% if form.messageStatus is defined %}
-                    {{ formmacros.field(form.messageStatus) }}
-                {% endif %}
+                    {#Message Fields        #}
+                    <p>
+                        {#Message Type: Message->messageCategory#}
+                        {% if form.messageCategory is defined %}
+                            {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
+                        {% endif %}
+                        {% if form.messageStatus is defined %}
+                            {{ formmacros.field(form.messageStatus) }}
+                        {% endif %}
 
-                {% if cycle == "new" %}
-                    <div style="display: none;">
-                {% endif %}
-                {#Message Version#}
-                {{ formmacros.field(form.version) }}
-                {#Amendment Reason#}
-                {{ formmacros.field(form.amendmentReason) }}
-                {% if cycle == "new" %}
-                    </div>
-                {% endif %}
-            </p>
+                        {% if cycle == "new" %}
+                            <div style="display: none;">
+                        {% endif %}
+                        {#Message Version#}
+                        {{ formmacros.field(form.version) }}
+                        {#Amendment Reason#}
+                        {{ formmacros.field(form.amendmentReason) }}
+                        {% if cycle == "new" %}
+                            </div>
+                        {% endif %}
+                    </p>
 
+                    {#Patient List    #}
+                    {{ calllogmacros.calllogPatientList(form,cycle) }}
 
-            {#Patient List    #}
-            {{ calllogmacros.calllogPatientList(form,cycle,sitename) }}
+                    <div id="form-node-holder"></div>
+                    {# EOF Entry #}
 
-            <div id="form-node-holder"></div>
-
-        {# EOF Entry #}
             </div> <!-- panel-body -->
           </div> <!-- panel-collapse -->
         </div> <!-- panel panel-primary -->

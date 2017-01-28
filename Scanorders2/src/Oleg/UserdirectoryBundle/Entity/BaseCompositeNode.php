@@ -196,10 +196,12 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
 
-    public function getEntityBreadcrumbs() {
+    public function getEntityBreadcrumbs( $topToBottom=true ) {
         $breadcrumbsArr = array();
         $breadcrumbsArr = $this->getIdBreadcrumbsIter($this,$breadcrumbsArr,false);
-        $breadcrumbsArr = array_reverse($breadcrumbsArr);
+        if( $topToBottom ) {
+            $breadcrumbsArr = array_reverse($breadcrumbsArr);
+        }
         //print_r($breadcrumbsArr);
         return $breadcrumbsArr;
     }

@@ -1,0 +1,207 @@
+
+{#testing#}
+{#{% if testing is defined and testing %}#}
+    {#{% extends "OlegCallLogBundle::Default/base.html.twig" %}#}
+{#{% endif %}#}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{#{% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}#}
+{#{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
+{#{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}#}
+
+{#{% block header %}{% endblock %}#}
+
+{#{% block content %}#}
+
+{% set holderId = "patient-holder-1" %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#calllog-previous-entries">
+                {{ title }}
+            </a>
+        </h4>
+    </div>
+    <div id="calllog-previous-entries" class="panel-collapse collapse in">
+        <div class="panel-body">
+
+
+        <p>
+        {#<form action="{{ path(route_path) }}" method="get" {{ form_enctype(filterform) }} class="well form-search">#}
+            {#<div class="well">#}
+
+                {#basic search#}
+                <div class="row">
+
+                    <div class="col-xs-3"></div>
+
+                    <div class="col-xs-3" align="right">
+                        {{ form_widget(filterform.messageCategory) }}
+                    </div>
+
+                    <div class="col-xs-1" align="left">
+                        <button id="Search_button" type="button" class="btn btn-default"
+                                onclick="calllogListPreviousEntriesForPatient( '{{ holderId }}', $('#filter_messageCategory').val() )"
+                        >Filter</button>
+                    </div>
+
+                    <div class="col-xs-5"></div>
+
+                </div>
+
+                {#{{ form_rest(filterform) }}#}
+            {#</div>#}
+        {#</form>#}
+        </p>
+
+
+        {#Messages List#}
+
+        <table class="records_list table table-hover table-condensed table-striped text-left">
+            <thead>
+            <tr>
+                {% if 0 %}
+                    {#<th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>#}
+                    <th>{{ knp_pagination_sortable(messages, 'Encounter Date', 'encounter.creationdate') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Message Type', 'messageCategory.name') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Referring Provider', 'referringProviderWrapper.name') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Attending', 'attendingPhysicianWrapper.name') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Message Status', 'messageStatus.name') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Submitter', 'provider.displayName') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Signee', 'signee.displayName') }}</th>
+                {% else %}
+                    {#<th>ID</th>#}
+                    <th>Encounter Date</th>
+                    <th>Last Modified</th>
+                    <th>Message Type</th>
+                    <th>Referring Provider</th>
+                    <th>Attending</th>
+                    <th>Message Status</th>
+                    <th>Submitter</th>
+                    <th>Signee</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+
+            {% for message in messages %}
+
+                {% set trclassname = "" %}
+                {#{% if message.messageStatus.name == 'Deleted' %}#}
+                    {#{% set trclassname = "order-reject-status" %}#}
+                {#{% endif %}#}
+
+                <tr class="{{ trclassname }}">
+
+                    <td style="display: none;">
+                        <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
+                    </td>
+
+                    <td>
+                        {% for encounter in message.encounter %}
+                            {{ encounter.creationdate|date('m/d/Y H:i') }}<br>
+                        {% endfor %}
+                    </td>
+
+                    {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
+                    <td>
+                        {% if message.editorInfos|length > 0 %}
+                            {{  message.editorInfos|last.modifiedOn|date('m/d/Y H:i') }}
+                        {% else %}
+                            {{ message.orderdate|date('m/d/Y H:i') }}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{  message.messageCategory.getNodeNameWithParent }}
+                    </td>
+
+                    {#referringProviders#}
+                    <td>
+                        {% for encounter in message.encounter %}
+                            {% for referringProvider in encounter.referringProviders %}
+                                {{ referringProvider.field.getFullName }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                    </td>
+
+                    {#Attending#}
+                    <td>
+                        {% for encounter in message.encounter %}
+                            {% for attendingPhysician in encounter.attendingPhysicians %}
+                                {{ attendingPhysician.field.getFullName }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                    </td>
+
+                    <td>
+                        {% if message.messageStatus %}
+                            {{ message.messageStatus.name }}
+                        {% endif %}
+                    </td>
+
+                    {#Submitter#}
+                    <td>
+                        {{ message.provider.getUsernameOptimal }}
+                    </td>
+
+                    {#Signee#}
+                    <td>
+                        {% if message.signeeInfo and message.signeeInfo.modifiedBy %}
+                            {{ message.signeeInfo.modifiedBy.getUsernameOptimal }}
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {#<tr class="table-no-border {{ trclassname }}">#}
+                    {#<td style="display: none">#}
+                        {#<a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>#}
+                    {#</td>#}
+                    {#<td colspan="9">#}
+                        {#{{ message.getMessageTitleStr }}<br>#}
+                        {#<p>History/Findings: This is an example of a previously entered call.</p>#}
+                        {#<p>Impression/Outcome: This is an example of an impression and outcome.</p>#}
+                        {#<p>Laboratory Results: This is an example of an impression and outcome</p>#}
+                        {#{% if messageCategoryInfoNode is not defined %}#}
+                            {#{% set messageCategoryInfoNode = message.messageCategory %}#}
+                        {#{% endif %}#}
+                        {#{{ user_formnode_utility.getFormNodeHolderShortInfo(message,messageCategoryInfoNode)|raw }}#}
+                    {#</td>#}
+                {#</tr>#}
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        {# display navigation #}
+        {#<div class="navigation">#}
+            {#{{ knp_pagination_render(messages) }}#}
+        {#</div>#}
+
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+</div> <!-- panel panel-primary -->
+
+{#{% endblock %}#}
+
+{#{% block additionaljs %}#}
+    {#<script language="Javascript">#}
+
+        {#$(document).ready(function() {#}
+
+            {#//init#}
+            {#var filterSelectBox = $('.filter-message-category');#}
+            {#specificRegularCombobox(filterSelectBox);#}
+
+        {#});#}
+
+    {#</script>#}
+{#{% endblock %}#}
+
+ 
+    
+   
