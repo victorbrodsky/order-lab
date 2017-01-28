@@ -1534,7 +1534,7 @@ class Patient extends ObjectAbstract
     }
 
     //11/29/1980 | F | 36 y.o. | New York Hospital MRN: 1?
-    public function obtainPatientInfoTitle( $status='valid', $now=null ) {
+    public function obtainPatientInfoTitle( $status='valid', $now=null, $htmlTags=true ) {
 
         if( !$now ) {
             $now = new \DateTime();
@@ -1545,7 +1545,7 @@ class Patient extends ObjectAbstract
 
         $patientInfoArr = array();
 
-        $fullName = $this->getFullPatientName();
+        $fullName = $this->getFullPatientName($htmlTags);
         if( $fullName ) {
             //echo "fullName <br>";
             $patientInfoArr[] = $fullName;

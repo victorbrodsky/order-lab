@@ -2040,7 +2040,7 @@ class CallEntryController extends Controller
         $userSecUtil = $this->get('user_security_utility');
 
         $cycle = "show";
-        $title = "Call Log Entry";
+        //$title = "Call Log Entry";
         $formtype = "call-entry";
 
         //$patientId = trim($request->get('patientId'));
@@ -2065,13 +2065,22 @@ class CallEntryController extends Controller
 //            }
 //        }
 
+        $messageInfo = "Entry ID ".$message->getId()." submitted on ".$message->getSubmitterInfo() . " | Call Log Book";
         if (count($message->getPatient()) > 0 ) {
             $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
             $mrntype = $mrnRes->getKeytype()->getId();
             $mrn = $mrnRes->getField();
+
+            //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY |
+            // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
+            $title = $message->getPatient()->first()->obtainPatientInfoTitle('valid',null,false);
+            $title = $title . " | ".$messageInfo;
+
         } else {
             $mrntype = null;
             $mrn = null;
+
+            $title = $messageInfo;
         }
 
         //echo "patients=".count($message->getPatient())."<br>";
@@ -2099,7 +2108,7 @@ class CallEntryController extends Controller
             //'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => $title . " ID " . $message->getId(),
+            'title' => $title,
             'formtype' => $formtype,
             'triggerSearch' => 0,
             'mrn' => $mrn,

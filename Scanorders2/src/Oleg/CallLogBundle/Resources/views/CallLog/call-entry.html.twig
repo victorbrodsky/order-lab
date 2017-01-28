@@ -63,7 +63,7 @@
             {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
             {% for encounter in patientForm.encounter if encounter.vars.value.status == 'valid' %}
 
-                {{ calllogmacros.referingProviderObject(encounter) }}
+                {#{{ calllogmacros.referingProviderObject(encounter) }}#}
 
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -95,6 +95,8 @@
                                 {% for attendingPhysician in encounter.attendingPhysicians %}
                                     {{ formmacros.field(attendingPhysician.field) }}
                                 {% endfor %}
+
+                                {{ calllogmacros.referingProviderObject(encounter) }}
 
                                 {{ calllogmacros.trackerContactinfoForm(encounter,cycle,status) }}
 

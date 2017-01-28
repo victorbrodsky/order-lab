@@ -401,6 +401,9 @@ class PatientController extends Controller
 //            //'delete_form' => $deleteForm->createView(),
 //        );
 
+        //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY
+        $title = $entity->obtainPatientInfoTitle('valid',null,false);
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -411,7 +414,8 @@ class PatientController extends Controller
             'tracker' => $parameters['tracker'],
             'updatepath' => $parameters['updatepath'],
             'sitename' => $parameters['sitename'],
-            'showPlus' => $parameters['showPlus']
+            'showPlus' => $parameters['showPlus'],
+            'title' => $title //formtype
         );
     }
 

@@ -74,7 +74,11 @@ class CallLogPatientController extends PatientController {
             'showPlus' => 'showPlus'
         );
 
-        return $this->editPatient($request,$id,$params);
+        $formResArr = $this->editPatient($request,$id,$params);
+
+        $formResArr['title'] = $formResArr['title'] . " | Call Log Book";
+
+        return $formResArr;
     }
 
     /**

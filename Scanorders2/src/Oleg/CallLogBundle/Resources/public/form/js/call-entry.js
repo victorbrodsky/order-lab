@@ -359,6 +359,9 @@ function clearCalllogPatient(holderId) {
 
     //hide call entry form
     showCalllogCallentryForm(false);
+
+    //clear previous entries
+    calllogShowHideListPreviousEntriesBtn(true);
 }
 
 function findCalllogPatient(holderId,formtype,mrntype) {
@@ -1066,6 +1069,10 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     }
 
     calllogShowHideListPreviousEntriesBtn(patient);
+    if( patient ) {
+        //click btn
+        $('#calllog-list-previous-entries-btn').click();
+    }
 
     //console.log('populate PatientInfo: finished');
 }
@@ -1756,7 +1763,7 @@ function calllogEncounterReferringProviderPopulate( holder, data ) {
 
 function calllogShowHideListPreviousEntriesBtn(patient) {
     if( patient ) {
-        $('#calllog-list-previous-entries-btn').show();
+        //$('#calllog-list-previous-entries-btn').show();
         $('#calllog-list-previous-entries').html("");
     } else {
         $('#calllog-list-previous-entries-btn').hide();
