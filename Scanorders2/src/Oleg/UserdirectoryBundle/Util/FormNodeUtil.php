@@ -2195,7 +2195,7 @@ class FormNodeUtil
         //History/Findings Text
         $formParams = array(
             'parent' => $historySection,
-            'name' => "History/Findings Text",
+            'name' => "History/Findings",
             'objectType' => $objectTypeText,
             'showLabel' => false,
         );
@@ -2212,7 +2212,7 @@ class FormNodeUtil
         //Impression/Outcome Text
         $formParams = array(
             'parent' => $impressionSection,
-            'name' => "Impression/Outcome Text",
+            'name' => "Impression/Outcome",
             'objectType' => $objectTypeText,
             'showLabel' => false,
         );
@@ -2696,8 +2696,8 @@ class FormNodeUtil
         //History/Findings Text
         $formParams = array(
             'parent' => $historySection,
-            'name' => "History/Findings Text",
-            'placeholder' => "History/Findings Text",
+            'name' => "History/Findings",
+            'placeholder' => "History/Findings",
             'objectType' => $objectTypeText,
             'showLabel' => false,
             'visible' => true
@@ -2717,8 +2717,8 @@ class FormNodeUtil
         //Impression/Outcome Text
         $formParams = array(
             'parent' => $impressionSection,
-            'name' => "Impression/Outcome Text",
-            'placeholder' => "Impression/Outcome Text",
+            'name' => "Impression/Outcome",
+            'placeholder' => "Impression/Outcome",
             'objectType' => $objectTypeText,
             'showLabel' => false,
             'visible' => true

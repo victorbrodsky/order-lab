@@ -420,7 +420,8 @@ class CallEntryController extends Controller
             'advancedFilter' => $advancedFilter,
             'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
             'eventObjectTypeId' => $eventObjectType->getId(),
-            'patientListId' => $defaultPatientListId
+            'patientListId' => $defaultPatientListId,
+            'shownavbarfilter' => false
             //'navbarfilterform' => $navbarfilterform->createView()
             //'sitename' => $this->container->getParameter('calllog.sitename')
             //'calllogsearch' => $calllogsearch,

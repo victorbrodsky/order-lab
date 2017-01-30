@@ -149,19 +149,23 @@
                             {#</div>#}
                         {#</form>#}
                     {#</li>#}
-                    <li id="nav-bar-calllogsearch">
-                        {% set navbarfilterform = calllog_util.getNavbarFilterForm(app.request) %}
-                        <form class="navbar-form navbar-left form-inline" role="search" id="calllogsearchform" name="calllogsearchform" method="get" {{ form_enctype(navbarfilterform) }} action="{{ path('calllog_home') }}">
-                            <div class="input-group">
-                                {{ form_widget(navbarfilterform.searchtype) }}
-                                <div class="form-group has-feedback">
-                                    {{ form_widget(navbarfilterform.search) }}
-                                    <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>
+                    {% if shownavbarfilter is not defined or shownavbarfilter %}
+                        <li id="nav-bar-calllogsearch">
+                            {% set navbarfilterform = calllog_util.getNavbarFilterForm(app.request) %}
+                            <form class="navbar-form navbar-left form-inline" role="search" id="calllogsearchform"
+                                  name="calllogsearchform" method="get" {{ form_enctype(navbarfilterform) }} action="{{ path('calllog_home') }}">
+                                <div class="input-group">
+                                    {{ form_widget(navbarfilterform.searchtype) }}
+                                    <div class="form-group has-feedback">
+                                        {{ form_widget(navbarfilterform.search) }}
+                                        <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn"
+                                              onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            {#{{ form_rest(navbarfilterform) }}#}
-                        </form>
-                    </li>
+                                {#{{ form_rest(navbarfilterform) }}#}
+                            </form>
+                        </li>
+                    {% endif %}
 
                 {% endif %}
 
