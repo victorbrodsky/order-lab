@@ -158,7 +158,7 @@ class MessageCategory extends BaseCompositeNode {
     // for example: "Transfusion Medicine : First Dose Plasma";
     // If Message Type is not a child node of "Pathology Call Log Entry",
     // show the entire "linage", for example: "Note: Encounter Note: Whatever"
-    public function getNodeNameWithParent($separator=": ", $untilParentName="Pathology Call Log Entry") {
+    public function getNodeNameWithParents($separator=": ", $untilParentName="Pathology Call Log Entry") {
         //if( $this->getName()."" == $untilParentName ) {
         //    return $this->getName()."";
         //}
@@ -175,6 +175,18 @@ class MessageCategory extends BaseCompositeNode {
         return implode($separator,$treeName);
     }
 
+    //print this node and all children nodes
+    public function printTreeSelectListIncludingThis() {
+        return $this->printTreeSelectList(array(),"getNodeNameWithParentsUntilThisParent");
+    }
+    public function getNodeNameWithParentsUntilThisParent() {
+        return $this->getNodeNameWithParents(": ","Encounter Note");
+    }
+//    public function getNodeNameWithParentsUntilThisParent() {
+//        $parent = $this->getParent();
+//        echo "parent=".$parent->getName()."<br>";
+//        return $this->getNodeNameWithParents(": ",$parent->getName()."");
+//    }
 
     public function getClassName() {
         return "MessageCategory";

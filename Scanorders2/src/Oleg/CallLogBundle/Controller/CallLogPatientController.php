@@ -376,12 +376,15 @@ class CallLogPatientController extends PatientController {
         $patientid = $request->query->get('patientid');
 
         $messageCategoryId = $request->query->get('type');
-        if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
+        //if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
             //echo "Your variable is not an integer";
-            $messageCategoryId = null;
-        } else {
+            //$messageCategoryId = null;
+        //} else {
             //$filterMessageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
             //echo "filter=".$filterMessageCategory."<br>";
+        //}
+        if( !$messageCategoryId || $messageCategoryId == "null" || $messageCategoryId == "undefined" ) {
+            $messageCategoryId = null;
         }
 
         //echo "patientid=".$patientid."<br>";
@@ -434,7 +437,7 @@ class CallLogPatientController extends PatientController {
         $queryParameters['patientId'] = $patientid;
 
         if( $messageCategoryId ) {
-            $dql->andWhere("messageCategory=:messageCategoryId");
+            $dql->andWhere("messageCategory.name=:messageCategoryId");
             $queryParameters['messageCategoryId'] = $messageCategoryId;
         }
 

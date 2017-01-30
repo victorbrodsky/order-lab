@@ -257,19 +257,29 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 
     }
 
-    public function printTreeSelectList($nodes=array()) {
+    public function printTreeSelectList($nodes=array(),$nameMethod="getNodeNameWithParent") {
         //echo $this;
         //$nodes[] = $this->getListElement();
-        $nodes[$this->getId()] = $this->getNodeNameWithParent();
+        $name = $this->$nameMethod()."";
+        //echo "id=".$this->getId().": ".$name."<br>";
+        if( $name ) {
+            //echo "id=".$this->getId().": ".$name."<br>";
+            //$nodes[$this->getId()] = $name;
+            $nodes[$this->getName().""] = $name;
+        }
 
         foreach( $this->getChildren() as $subCategory ) {
 
+            //echo "id=".$subCategory->getId().": ".$subCategory->getName()."<br>";
             if( count($subCategory->getChildren()) > 0 ) {
-                $nodes = $subCategory->printTreeSelectList($nodes);
+                $nodes = $subCategory->printTreeSelectList($nodes,$nameMethod);
             } else {
-                //echo $subCategory;
                 //$nodes[] = $subCategory->getListElement();
-                $nodes[$subCategory->getId()] = $subCategory->getNodeNameWithParent();
+                $name = $subCategory->$nameMethod()."";
+                if( $name ) {
+                    //$nodes[$subCategory->getId()] = $name;
+                    $nodes[$subCategory->getName().""] = $name;
+                }
             }
 
         }
@@ -360,6 +370,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     public function getNodeNameWithParent($separator=": ") {
 
         $treeNameStr = $this->getName()."";
+        //echo "treeNameStr=".$treeNameStr."<br>";
 
         $parent = $this->getParent();
         //echo "parent=".$parent."<br>";

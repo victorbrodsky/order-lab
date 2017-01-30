@@ -84,11 +84,13 @@ class CallEntryController extends Controller
         $messageStatusesChoice["All post-signature drafts"] = "All post-signature drafts";
 
         //child nodes of "Pathology Call Log Entry"
+        //$messageCategoryParent = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
         $messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
-            $messageCategories = $messageCategoriePathCall->printTreeSelectList();
+            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis();
         }
+        //$messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         //$node1 = array('id'=>1,'text'=>'node1');
         //$node2 = array('id'=>2,'text'=>'node2');
         //$messageCategories = array($node1,$node2);
@@ -98,6 +100,7 @@ class CallEntryController extends Controller
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories,
+            //'messageCategoryDefault' => $messageCategoriePathCall->getId(),
             'mrntype' => $defaultMrnType->getId()
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
@@ -139,7 +142,12 @@ class CallEntryController extends Controller
         ///////////////// EOF search in navbar /////////////////
 
         if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
-            return $this->redirect( $this->generateUrl('calllog_home',array('filter[messageStatus]'=>"All except deleted")) );
+            return $this->redirect( $this->generateUrl('calllog_home',
+                array(
+                    'filter[messageStatus]'=>"All except deleted",
+                    'filter[messageCategory]'=>$messageCategoriePathCall->getName().""
+                )
+            ) );
         }
 
         //perform search
@@ -199,7 +207,7 @@ class CallEntryController extends Controller
         }
 
         if( $messageCategory ) {
-            $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategory);
+            $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
             if( $messageCategoryEntity ) {
                 $selectOrder = false;
                 $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
