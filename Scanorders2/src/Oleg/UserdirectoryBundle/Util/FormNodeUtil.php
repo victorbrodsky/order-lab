@@ -843,10 +843,29 @@ class FormNodeUtil
         return $index;
     }
 
+    //recursion all formnode from bottom to top
+    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $separator="<br>" ) {
+        if( !$holderEntity ) {
+            return null;
+        }
+
+        if( !$formNodeHolderEntity ) {
+            return null;
+        }
+
+        $resArr=array();
+
+        $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs();
+        foreach( $formNodes as $formNode ) {
+            $resArr = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$resArr);
+        }
+
+        return implode($separator,$resArr);
+    }
     //Simplifying version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
     //$holderEntity is the holder of the $formNodeHolderEntity, for example, Message entity
     //$formNodeHolderEntity is a form node holder, for example, MessageCategory entity
-    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $separator="<br>" ) {
+    public function getSingleFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $resArr=array() ) {
 
         if( !$holderEntity ) {
             return null;
@@ -869,11 +888,15 @@ class FormNodeUtil
 
         //$formNodeUtil = $this->container->get('user_formnode_utility');
         //$formNodeHolderId = $formNodeHolderEntity->getId();
-        $resArr = array();
+        //$resArr = array();
 
         //$formNodes = $formNodeHolderEntity->getFormNodes();
         //get only 'real' fields as $formNodes
         $formNodes = $this->getAllRealFormNodes($formNodeHolderEntity);
+
+        if( count($formNodes) > 0 ) {
+            $resArr[] = "<i>-".$formNodeHolderEntity->getName().":</i>";
+        }
 
         foreach( $formNodes as $formNode ) {
 
@@ -893,7 +916,7 @@ class FormNodeUtil
                 $complexRes = $this->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
                 $formNodeValue = $complexRes['formNodeValue'];
                 $receivingEntity = $complexRes['receivingEntity'];
-                $formNodeValue = $this->getValueStrFromValueId($formNode,$receivingEntity,$formNodeValue);
+                $formNodeValue = $this->getValueStrFromValueId($formNode,$formNodeValue);
             }
 
             //echo "formNodeValue for formNode=".$formNode->getId().":<br>";
@@ -909,13 +932,14 @@ class FormNodeUtil
             $resArr[] = $formNode->getName() . ": " . $formNodeValue;
         }
 
-        return implode($separator,$resArr);
+        return $resArr;
     }
 
-    public function getValueStrFromValueId( $formNode, $receivingEntity, $formNodeValueId ) {
+    public function getValueStrFromValueId( $formNode, $formNodeValueId ) {
+        //echo "formNodeValueId=".$formNodeValueId."<br>";
         $formNodeValueStr = $formNodeValueId;
 
-        $formNodeValueArr = $this->getDropdownValue($formNode,null,$formNode->getId());
+        $formNodeValueArr = $this->getDropdownValue($formNode,null,$formNodeValueId);
 
         if( count($formNodeValueArr) == 1 ) {
             $formNodeValueStr = $formNodeValueArr[0]['text'];
@@ -1350,6 +1374,7 @@ class FormNodeUtil
 
         $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
         $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
+        //echo "entityName=$entityName ($formNodeId)<br>";
 
         if( $entityNamespace && $entityName ) {
 
