@@ -169,6 +169,13 @@ function getComboboxSingleCompositetree(comboboxEl,bundleName,entityName) {
         return;
     }
 
+    //for cycle=show don't show empty children
+    console.log("_cycleShow="+_cycleShow);
+    if( _cycleShow ) {
+        console.log("don't populate children");
+        //return;
+    }
+
 
     getChildrenByParent(bundleName,entityName,comboboxEl,thisid,null).
     then(function (optionData) {
@@ -245,7 +252,8 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
 
         var types = thiselement.attr("data-compositetree-types"); //i.e. 'default,user-added'
         if( !types || typeof types === 'undefined' ) {
-            types = 'default';
+            //types = 'default';
+            types = 'default,user-added';
         }
         //console.log('types='+types);
 

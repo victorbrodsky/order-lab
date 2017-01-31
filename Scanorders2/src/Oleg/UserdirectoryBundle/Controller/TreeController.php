@@ -203,11 +203,11 @@ class TreeController extends Controller {
             //}
         }
 
-        //echo "dql=".$dql." <br>";
+        echo "dql=".$dql." <br>";
 
         $entities = $query->getResult();
-        //echo "count=".count($entities)."<br>";
-        //exit('1');
+        echo "count=".count($entities)."<br>";
+        exit('1');
 
         $levelTitles = null;
         if( count($entities) > 0 ) {

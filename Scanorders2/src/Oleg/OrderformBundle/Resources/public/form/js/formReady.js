@@ -14,7 +14,9 @@ $(document).ready(function() {
         //Dropzone.options.scanorderform = false;
         Dropzone.autoDiscover = false;
     }
-    
+
+    setCicleShow();
+
     //checkBrowserComptability();
 
     initFileUpload();
