@@ -925,13 +925,15 @@ class ScanUtilController extends UtilController {
 
             //default OR user-added user wrappers created by logged in user
             //$query->andWhere("list.type=:default");
-            $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameters(
-                array(
-                    'typedef' => 'default',
-                    'typeadd' => 'user-added',
-                    'loggedUser' => $loggedUser->getId()
-                )
-            );
+            if( $cycle != "show" && $cycle != "edit" ) {
+                $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameters(
+                    array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'loggedUser' => $loggedUser->getId()
+                    )
+                );
+            }
 
             if( $sourceSystem ) {
                 //echo "sourceSystem: id=".$sourceSystem->getId()."; ".$sourceSystem."<br>";
@@ -939,6 +941,7 @@ class ScanUtilController extends UtilController {
             }
 
             //echo "query=".$query." <br><br>";
+            //exit();
 
             $userWrappers = $query->getQuery()->getResult();
             foreach ($userWrappers as $userWrapper) {
