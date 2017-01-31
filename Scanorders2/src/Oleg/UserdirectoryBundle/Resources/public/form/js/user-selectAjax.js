@@ -165,22 +165,15 @@ function getComboboxSingleCompositetree(comboboxEl,bundleName,entityName) {
 
 
     if( _treenodedata[bundleName+entityName].hasOwnProperty(thisid) ) {
+        //console.log("populate this combobox for entityName="+entityName);
         populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,_treenodedata[bundleName+entityName][thisid]);
         return;
     }
 
-    //for cycle=show don't show empty children
-    console.log("_cycleShow="+_cycleShow);
-    if( _cycleShow ) {
-        console.log("don't populate children");
-        //return;
-    }
-
-
     getChildrenByParent(bundleName,entityName,comboboxEl,thisid,null).
     then(function (optionData) {
         //console.log("populate child combobox");
-        //printF(comboboxEl,"child comboboxEl=");
+        printF(comboboxEl,"child comboboxEl=");
 
         populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,optionData);
     });

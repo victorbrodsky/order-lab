@@ -874,7 +874,7 @@ class CallEntryController extends Controller
                     }
                 }
 
-                //message title setMessageTitle
+                //message title setMessageTitle: show the title of the form (not the message type) here, not just its ID
                 if( $message->getMessageCategory() ) {
                     $messageTitle = $message->getMessageTitleStr();
                     $message->setMessageTitle($messageTitle);

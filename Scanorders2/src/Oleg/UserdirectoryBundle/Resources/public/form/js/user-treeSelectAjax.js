@@ -90,6 +90,13 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
             return;
         }
 
+        //for cycle=show don't show empty children
+        //console.log("_cycleShow="+_cycleShow);
+        if( _cycleShow ) {
+            //console.log("don't populate children");
+            return;
+        }
+
         getChildrenByParent(bundleName,entityName,comboboxEl,null,thisData.id).
         then(function (treeArr) {
             //console.log( 'treeArr:' );
