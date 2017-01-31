@@ -263,10 +263,10 @@
                     {#<p>History/Findings: This is an example of a previously entered call.</p>#}
                     {#<p>Impression/Outcome: This is an example of an impression and outcome.</p>#}
                     {#<p>Laboratory Results: This is an example of an impression and outcome</p>#}
-                    {% if messageCategoryInfoNode is not defined %}
-                        {% set messageCategoryInfoNode = message.messageCategory %}
-                    {% endif %}
-                    {{ user_formnode_utility.getFormNodeHolderShortInfo(message,messageCategoryInfoNode)|raw }}
+                    {#{% if messageCategoryInfoNode is not defined %}#}
+                        {#{% set messageCategoryInfoNode = message.messageCategory %}#}
+                    {#{% endif %}#}
+                    {{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory)|raw }}
                 </td>
             </tr>
 

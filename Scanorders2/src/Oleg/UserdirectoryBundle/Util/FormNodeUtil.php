@@ -855,6 +855,7 @@ class FormNodeUtil
         if( !$formNodeHolderEntity ) {
             return null;
         }
+        //echo "formNodeHolderEntity=$formNodeHolderEntity <br>";
 
         $class = new \ReflectionClass($holderEntity);
         $className = $class->getShortName();
@@ -892,6 +893,7 @@ class FormNodeUtil
                 $complexRes = $this->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
                 $formNodeValue = $complexRes['formNodeValue'];
                 $receivingEntity = $complexRes['receivingEntity'];
+                $formNodeValue = $this->getValueStrFromValueId($formNode,$receivingEntity,$formNodeValue);
             }
 
             //echo "formNodeValue for formNode=".$formNode->getId().":<br>";
@@ -910,6 +912,24 @@ class FormNodeUtil
         return implode($separator,$resArr);
     }
 
+    public function getValueStrFromValueId( $formNode, $receivingEntity, $formNodeValueId ) {
+        $formNodeValueStr = $formNodeValueId;
+
+        $formNodeValueArr = $this->getDropdownValue($formNode,null,$formNode->getId());
+
+        if( count($formNodeValueArr) == 1 ) {
+            $formNodeValueStr = $formNodeValueArr[0]['text'];
+        } else {
+            //exit("Single values not found: count=".count($formNodeValueArr));
+        }
+
+        if( count($formNodeValueArr) > 0 ) {
+            $formNodeValueStr = $formNodeValueArr[0]['text'];
+        }
+        //echo "formNode id=".$formNode->getId()."; formNodeValueId=".$formNodeValueId." => ".$formNodeValueStr."<br>";
+
+        return $formNodeValueStr;
+    }
 
 //    public function getListByType( $formNode ) {
 //
@@ -1304,7 +1324,7 @@ class FormNodeUtil
         return $tzUtil->tz_list();
     }
 
-    public function getDropdownValue( $formNode, $outputType=null ) {
+    public function getDropdownValue( $formNode, $outputType=null, $formNodeId=null ) {
         $em = $this->em;
         $output = array();
 
@@ -1342,8 +1362,16 @@ class FormNodeUtil
                 ->orderBy("list.orderinlist","ASC");
 
             //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-            $query->where("list.type = :typedef OR list.type = :typeadd")->
-                    setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+            $query->where("list.type = :typedef OR list.type = :typeadd");
+            $parameters['typedef'] = 'default';
+            $parameters['typeadd'] = 'user-added';
+
+            if( $formNodeId ) {
+                $query->andWhere("list.id=:formNodeId");
+                $parameters['formNodeId'] = $formNodeId;
+            }
+
+            $query->setParameters($parameters);
 
             $output = $query->getQuery()->getResult();
 
@@ -1443,7 +1471,7 @@ class FormNodeUtil
         //echo "entityId=".$object->getId()."<br>";
         //print_r($mapper);
 
-        $treeRepository = $this->getFormNodeReceivedListRepository($formNode);
+        $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////Oleg\UserdirectoryBundle\Entity:ObjectTypeDropdown
         //$treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -1474,6 +1502,7 @@ class FormNodeUtil
         }
 
         if( count($results) == 1 ) {
+            //echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; result=".$results[0]->getId()."<br>";
             //return $results[0]->getValue();
             $formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
             $complexRes = array(
@@ -1484,6 +1513,7 @@ class FormNodeUtil
         }
 
         if( count($results) > 1 ) {
+            //echo "multiple results(".count(count($results))."): ".$formNode->getName()."<br>";
             $resArr = array();
             foreach( $results as $result ) {
                 //$resArr[] = $result->getValue();

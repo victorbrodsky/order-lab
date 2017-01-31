@@ -397,11 +397,11 @@ class CallEntryController extends Controller
         //echo "messages count=".count($messages)."<br>";
 
         //all messages will show only form fields for this message category node
-        $categoryStr = "Pathology Call Log Entry";
-        $messageCategoryInfoNode = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
-        if( !$messageCategoryInfoNode ) {
-            throw new \Exception( "MessageCategory type is not found by name '".$categoryStr."'" );
-        }
+//        $categoryStr = "Pathology Call Log Entry";
+//        $messageCategoryInfoNode = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+//        if( !$messageCategoryInfoNode ) {
+//            throw new \Exception( "MessageCategory type is not found by name '".$categoryStr."'" );
+//        }
 
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
 
@@ -418,7 +418,7 @@ class CallEntryController extends Controller
             'filterform' => $filterform->createView(),
             'route_path' => $route,
             'advancedFilter' => $advancedFilter,
-            'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
+            //'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
             'eventObjectTypeId' => $eventObjectType->getId(),
             'patientListId' => $defaultPatientListId,
             'shownavbarfilter' => false
