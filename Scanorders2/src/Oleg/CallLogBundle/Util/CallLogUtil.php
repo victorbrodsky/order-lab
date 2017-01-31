@@ -1505,4 +1505,61 @@ class CallLogUtil
         }
     }
 
+    //real users + EncounterReferringProvider's wrappers without linked users
+    public function getReferringProviders() {
+        $em = $this->em;
+
+        $output = array();
+
+        ///////////// 1) get all real users /////////////
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->select("list")
+            //->groupBy('list.id')
+            ->leftJoin("list.infos", "infos")
+            ->leftJoin("list.employmentStatus", "employmentStatus")
+            ->leftJoin("employmentStatus.employmentType", "employmentType")
+            ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+            ->andWhere("(list.testingAccount = 0 OR list.testingAccount IS NULL)")
+            ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
+            ->orderBy("infos.displayName", "ASC");
+
+        $users = $query->getQuery()->getResult();
+        //echo "users count=".count($users)."<br>";
+
+        foreach ($users as $user) {
+            $output[$user->getId()] = $user . "";
+        }
+        ///////////// EOF 1) get all real users /////////////
+
+
+        ///////////// 2) default user wrappers for this source ///////////////
+        ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+            ->select("list")
+            ->leftJoin("list.user", "user")
+            ->leftJoin("user.infos", "infos")
+            ->where("user IS NULL")
+            ->orderBy("infos.displayName", "ASC");
+
+        //echo "query=".$query." <br><br>";
+        //exit();
+
+        $userWrappers = $query->getQuery()->getResult();
+        foreach ($userWrappers as $userWrapper) {
+            $output[$userWrapper.""] = $userWrapper."";
+//                if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
+//                    $output[] = $element;
+//                }
+
+            //print_r($output);
+            //exit('1');
+        }
+        ///////////// EOF 2) 3) user wrappers for this source ///////////////
+
+        //$output = array_merge($users,$output);
+
+        return $output;
+    }
 }

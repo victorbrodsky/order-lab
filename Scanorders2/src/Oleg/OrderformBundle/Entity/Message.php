@@ -1703,7 +1703,7 @@ class Message {
     public function getSubmitterInfo() {
         $info = "";
         if( $this->getOrderdate() ) {
-            $info = $this->getOrderdate()->format('m/d/Y h:i a');
+            $info = $this->getOrderdate()->format('m/d/Y') . " at " . $this->getOrderdate()->format('h:i a');
         }
         if( $this->getProvider() ) {
             $info = $info . " by ".$this->getProvider()->getUsernameOptimal();

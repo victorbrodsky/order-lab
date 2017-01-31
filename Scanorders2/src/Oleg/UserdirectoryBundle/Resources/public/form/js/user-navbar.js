@@ -176,7 +176,7 @@ function setNavBar(sitename) {
         sitename = "directory";
     }
 
-    console.log('sitename='+sitename);
+    //console.log('sitename='+sitename);
 
     if( sitename == "scan" ) {
         setScanNavBar();

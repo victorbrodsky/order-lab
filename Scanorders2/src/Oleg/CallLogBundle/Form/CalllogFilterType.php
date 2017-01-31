@@ -89,24 +89,37 @@ class CalllogFilterType extends AbstractType
             },
         ));
 
-        $builder->add('referringProvider', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:User',
+//        $builder->add('referringProvider', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:User',
+//            'label' => false,
+//            'required' => false,
+//            'property' => 'getUsernameOptimal',
+//            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Referring Provider"),
+//            'query_builder' => function (EntityRepository $er) {
+//                return $er->createQueryBuilder('u')
+//                    ->leftJoin("u.infos", "infos")
+//                    ->leftJoin("u.employmentStatus", "employmentStatus")
+//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+//                    ->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
+//                    ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
+//                    ->orderBy("infos.displayName","ASC");
+//                //->where('u.roles LIKE :roles OR u=:user')
+//                //->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user']));
+//            },
+//        ));
+//        $builder->add('referringProvider', 'custom_selector', array(
+//            'label' => false,
+//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterReferringProvider', 'placeholder' => "Referring Provider"),
+//            'required' => false,
+//            'classtype' => 'singleUserWrapper'
+//            //'classtype' => 'userWrapper'
+//        ));
+        $builder->add('referringProvider', 'choice', array(
             'label' => false,
             'required' => false,
-            'property' => 'getUsernameOptimal',
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Referring Provider"),
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    ->leftJoin("u.infos", "infos")
-                    ->leftJoin("u.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                    ->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
-                    ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
-                    ->orderBy("infos.displayName","ASC");
-                //->where('u.roles LIKE :roles OR u=:user')
-                //->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user']));
-            },
+            'choices' => $this->params['referringProviders']
         ));
 
         $builder->add('referringProviderSpecialty', 'entity', array(

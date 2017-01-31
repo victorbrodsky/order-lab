@@ -97,11 +97,14 @@ class CallEntryController extends Controller
 
         $defaultMrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
 
+        $referringProviders = $calllogUtil->getReferringProviders();
+
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories,
             //'messageCategoryDefault' => $messageCategoriePathCall->getId(),
-            'mrntype' => $defaultMrnType->getId()
+            'mrntype' => $defaultMrnType->getId(),
+            'referringProviders' => $referringProviders
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
         $filterform->bind($request);
@@ -178,6 +181,7 @@ class CallEntryController extends Controller
 
         //filter
         $advancedFilter = false;
+        $defaultAdvancedFilter = false;
         $queryParameters = array();
 
         //use editorInfos or orderdate
@@ -212,6 +216,7 @@ class CallEntryController extends Controller
                 $selectOrder = false;
                 $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
                 $dql->andWhere($nodeChildSelectStr);
+                $advancedFilter = false;
             }
         }
 
@@ -248,9 +253,18 @@ class CallEntryController extends Controller
         }
 
         if( $referringProviderFilter ) {
-            $referringProviderStr = "referringProviderWrapper.user=:referringProvider";
-            $dql->andWhere($referringProviderStr);
-            $queryParameters['referringProvider'] = $referringProviderFilter;
+            if ( strval($referringProviderFilter) != strval(intval($referringProviderFilter)) ) {
+                //echo "string (wrapper name)=[$referringProviderFilter]<br>";
+                $referringProviderStr = "referringProviderWrapper.name=:referringProvider";
+                $dql->andWhere($referringProviderStr);
+                $queryParameters['referringProvider'] = $referringProviderFilter;
+            } else {
+                //echo "integer (user id)=[$referringProviderFilter]<br>";
+                $referringProviderStr = "referringProviderWrapper.user=:referringProvider";
+                $dql->andWhere($referringProviderStr);
+                $queryParameters['referringProvider'] = $referringProviderFilter;
+            }
+
             $advancedFilter = true;
         }
 
@@ -284,7 +298,10 @@ class CallEntryController extends Controller
                 if( $messageStatusFilter == "All except deleted" ) {
                     $messageStatusStr = "messageStatus.name != :deletedMessageStatus";
                     $queryParameters['deletedMessageStatus'] = "Deleted";
-                    $advancedFilter = false;
+                    //$defaultAdvancedFilter = true;
+                    //if( $advancedFilter === false ) {
+                        $advancedFilter = false;
+                    //}
                 }
                 // "All"
                 if( $messageStatusFilter == "All" ) {
@@ -377,6 +394,14 @@ class CallEntryController extends Controller
         }
         //exit('2');
         ///////////////// EOF search in navbar /////////////////
+
+        if( $defaultAdvancedFilter && $advancedFilter ) {
+            //$advancedFilter = true;
+        }
+
+        if( $defaultAdvancedFilter === false && $advancedFilter === false ) {
+            //$advancedFilter = false;
+        }
 
         //$query = $em->createQuery($dql);
         //$messages = $query->getResult();
@@ -2074,7 +2099,7 @@ class CallEntryController extends Controller
 //            }
 //        }
 
-        $messageInfo = "Entry ID ".$message->getId()." submitted on ".$message->getSubmitterInfo() . " | Call Log Book";
+        $messageInfo = "Entry ID ".$message->getId()." submitted on ".$message->getSubmitterInfo(); // . " | Call Log Book";
         if (count($message->getPatient()) > 0 ) {
             $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
             $mrntype = $mrnRes->getKeytype()->getId();

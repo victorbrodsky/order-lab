@@ -32,8 +32,8 @@ function prep()
     php $PROJECT_LOCAL_PATH/app/console assets:install
 
     echo "*** Clear cache ***"
-    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
-    php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
+    php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
+    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
 
     echo "*** Dump assets ***"
     php $PROJECT_LOCAL_PATH/app/console assetic:dump --env=prod --no-debug

@@ -173,7 +173,7 @@ function getComboboxSingleCompositetree(comboboxEl,bundleName,entityName) {
     getChildrenByParent(bundleName,entityName,comboboxEl,thisid,null).
     then(function (optionData) {
         //console.log("populate child combobox");
-        printF(comboboxEl,"child comboboxEl=");
+        //printF(comboboxEl,"child comboboxEl=");
 
         populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,optionData);
     });
