@@ -502,7 +502,11 @@ class FormNodeUtil
     //check if value is userWrapper case (object=PathologyResultSignatoriesList)
     public function processFormNodeValue( $formNode, $receivingEntity, $formNodeValue ) {
 
-        if( $receivingEntity && $formNode->getObjectType() && $formNode->getEntityName() == "PathologyResultSignatoriesList" ) {
+        if(
+            $receivingEntity && $formNode->getObjectType() &&
+            $formNode->getEntityName() == "PathologyResultSignatoriesList" &&
+            $formNode->getObjectTypeName() != "Form Field - Dropdown Menu"
+        ) {
 
             $creator = $this->sc->getToken()->getUser();
             $transformer = new GenericTreeTransformer($this->em, $creator, "PathologyResultSignatoriesList", "UserdirectoryBundle");
@@ -510,6 +514,8 @@ class FormNodeUtil
 
             //$value = vib9002,2,oli2002
             $valueArr = $receivingEntity->getIdValues();
+            //echo "valueArr=".count($valueArr)."<br>";
+
             //$valueArr = explode(",",$values);
 
             $resArr = array();
@@ -923,11 +929,13 @@ class FormNodeUtil
 
             if( is_array($formNodeValue) ) {
                 //not implemented
+                //exit("Not implemented array: $receivingEntity");
             } else {
                 //////////////// Regular form node /////////////////////
                 //process userWrapper case
                 $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
             }
+            //echo "res formNodeValue: $formNodeValue <br>";
 
             $resArr[] = $formNode->getName() . ": " . $formNodeValue;
         }
@@ -954,68 +962,6 @@ class FormNodeUtil
 
         return $formNodeValueStr;
     }
-
-//    public function getListByType( $formNode ) {
-//
-//        $list = null;
-//        $newListElement = null;
-//
-//        $formNodeType = $formNode->getObjectType();
-//        //echo "formNodeType=" . $formNodeType . "<br>";
-//
-//        if( $formNodeType->getName()."" == "Form Field - Free Text" ) {
-//            $list = $formNode->getObjectTypeText();
-//            $newListElement = new ObjectTypeText();
-//            $creator = $this->sc->getToken()->getUser();
-//            $name = "";
-//            $count = null;
-//            $entityFullName = "OlegUserdirectoryBundle:ObjectTypeText";
-//            $this->setDefaultList($newListElement,$count,$creator,$name,$entityFullName);
-//            $this->em->persist($newListElement);
-//        }
-//
-//        $res = array(
-//            'list' => $list,
-//            'newList' => $newListElement
-//        );
-//
-//        return $res;
-//    }
-
-//    public function setDefaultList( $entity, $count, $user, $name=null, $entityFullName ) {
-//
-//        if( !$count ) {
-//            $count = $this->getMaxId($entityFullName);
-//            //echo "count=".$count."<br>";
-//        }
-//
-//        $entity->setOrderinlist( $count );
-//        $entity->setCreator( $user );
-//        $entity->setCreatedate( new \DateTime() );
-//        $entity->setType('user-added');
-//        if( $name ) {
-//            $entity->setName( trim($name) );
-//        }
-//        return $entity;
-//    }
-//
-//    public function getMaxId( $entityFullName ) {
-//        //echo "entityFullName=" . $entityFullName . "<br>";
-//        $repository = $this->em->getRepository($entityFullName);
-//        $dql =  $repository->createQueryBuilder("u");
-//        $dql->select('MAX(u.id) as idMax');
-//        //$dql->setMaxResults(1);
-//        $res = $dql->getQuery()->getSingleResult();
-//        $maxId = $res['idMax'];
-//        if( !$maxId ) {
-//            $maxId = 0;
-//        }
-//
-//        return $maxId;
-//    }
-
-
-
 
 
 
