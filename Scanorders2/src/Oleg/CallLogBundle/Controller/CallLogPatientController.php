@@ -20,17 +20,17 @@ use Oleg\OrderformBundle\Controller\PatientController;
 use Symfony\Component\HttpFoundation\Response;
 
 
-/**
- * CallLog Patient controller.
- *
- * @Route("/patient")
- */
+///**
+// * CallLog Patient controller.
+// *
+// * @Route("/patient")
+// */
 class CallLogPatientController extends PatientController {
 
     /**
      * Finds and displays a Patient entity.
      *
-     * @Route("/info/{id}", name="calllog_patient_show", options={"expose"=true})
+     * @Route("/patient/info/{id}", name="calllog_patient_show", options={"expose"=true})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -55,7 +55,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Displays a form to edit an existing Patient entity.
      *
-     * @Route("/{id}/edit", name="calllog_patient_edit", options={"expose"=true})
+     * @Route("/patient/{id}/edit", name="calllog_patient_edit", options={"expose"=true})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -84,7 +84,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Displays a form to edit an existing Patient entity.
      *
-     * @Route("/edit-by-mrn/{mrn}/{mrntype}", name="calllog_patient_edit_by_mrn", options={"expose"=true})
+     * @Route("/patient/edit-by-mrn/{mrn}/{mrntype}", name="calllog_patient_edit_by_mrn", options={"expose"=true})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -165,7 +165,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Edits an existing Patient entity.
      *
-     * @Route("/{id}/edit", name="calllog_patient_update", options={"expose"=true})
+     * @Route("/patient/{id}/edit", name="calllog_patient_update", options={"expose"=true})
      * @Method("POST")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -261,7 +261,7 @@ class CallLogPatientController extends PatientController {
     }
 
     /**
-     * @Route("/remove-patient-from-list/{patientId}/{patientListId}", name="calllog_remove_patient_from_list")
+     * @Route("/patient/remove-patient-from-list/{patientId}/{patientListId}", name="calllog_remove_patient_from_list")
      */
     public function removePatientFromListAction(Request $request, $patientId, $patientListId) {
         if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
@@ -316,7 +316,7 @@ class CallLogPatientController extends PatientController {
 
 
     /**
-     * @Route("/add-patient-to-list/{patientListId}/{patientId}", name="calllog_add_patient_to_list")
+     * @Route("/patient/add-patient-to-list/{patientListId}/{patientId}", name="calllog_add_patient_to_list")
      * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
      */
     public function addPatientToListAction(Request $request, $patientListId, $patientId) {
@@ -358,7 +358,7 @@ class CallLogPatientController extends PatientController {
 
     //calllog-list-previous-entries
     /**
-     * @Route("/list-previous-entries/", name="calllog-list-previous-entries", options={"expose"=true})
+     * @Route("/patient/list-previous-entries/", name="calllog-list-previous-entries", options={"expose"=true})
      * @Method({"GET", "POST"})
      */
     public function showOnlyAjaxUserAction(Request $request)
