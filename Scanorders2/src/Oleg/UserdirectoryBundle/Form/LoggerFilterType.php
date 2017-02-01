@@ -190,7 +190,7 @@ class LoggerFilterType extends AbstractType
         ));
 
         //Capacity
-        if( $this->params['sitename'] == "calllog" ) {
+        if( 0 && $this->params['sitename'] == "calllog" ) {
             $capacities = array(
                 "Submitter" => "Submitter",
                 "Attending" => "Attending"

@@ -342,7 +342,8 @@ class LoggerController extends Controller
         $objectId = $filterform['objectId']->getData();
 
         //calllog
-        $capacity = $filterform['capacity']->getData();
+        //$capacity = $filterform['capacity']->getData();
+        $capacity = null;   //
 
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
@@ -459,8 +460,29 @@ class LoggerController extends Controller
             $filtered = true;
         }
 
+        //calllog:
+        //the "Capacity" column would show whether the logged in user is a "Submitter" or the "Attending" for this Entry in that row;
+        // by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"
         if( $capacity ) {
-            echo "capacity=".$capacity."<br>";
+            //echo "capacity=".$capacity."<br>";
+            if( $capacity == "Submitter" ) {
+                //show only logger records where user=$currentUser
+                $dql->andWhere("logger.user = :currentUser");
+                $dqlParameters['currentUser'] = $currentUser;
+            }
+            if( $capacity == "Attending" ) {
+                //encounter_1_attendingPhysicians_0_field
+                //1) create select Message with encounter->attendingPhysicians->field(Wrapper)->user == $currentUser
+                $entryBodySearchStr = "SELECT s FROM OlegOrderformBundle:Message message ".
+                    " LEFT JOIN scan_message_encounter encounter ON message.id = encounter.message_id ".
+                    " LEFT JOIN scan_encounterAttendingPhysician attendingPhysician ON encounter.id = attendingPhysician.encounter_id ".
+                    " LEFT JOIN user_userWrapper userWrapper ON attendingPhysician.id = userWrapper.user ".
+                    " WHERE ".
+                    "(message.id = objectEntity.entityId AND objectEntity.entityName='Message' AND objectEntity.value LIKE :entryBodySearch)";
+                $dql->andWhere("EXISTS (".$entryBodySearchStr.")");
+                $queryParameters['capacity'] = $capacity;
+            }
+
             //$dql->andWhere("logger.entityId = :objectId");
             //$dqlParameters['objectId'] = $objectId;
 

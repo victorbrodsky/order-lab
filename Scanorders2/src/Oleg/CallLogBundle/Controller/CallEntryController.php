@@ -120,6 +120,7 @@ class CallEntryController extends Controller
         $specialtyFilter = $filterform['referringProviderSpecialty']->getData();
         $patientListTitleFilter = $filterform['patientListTitle']->getData();
         $entryBodySearchFilter = $filterform['entryBodySearch']->getData();
+        $attendingFilter = $filterform['attending']->getData();
 
         ///////////////// search in navbar /////////////////
         $navbarSearchTypes = array(
@@ -251,6 +252,16 @@ class CallEntryController extends Controller
             $advancedFilter++;
         }
 
+        if( $attendingFilter ) {
+            //messagetype_patient_0_encounter_1_attendingPhysicians_0_field
+            $dql->leftJoin("encounter.attendingPhysicians","attendingPhysicians");
+            $dql->leftJoin("attendingPhysicians.field","attendingPhysicianWrapper");
+            $attendingStr = "attendingPhysicianWrapper.user=:attendingPhysician";
+            $dql->andWhere($attendingStr);
+            $queryParameters['attendingPhysician'] = $attendingFilter;
+            $advancedFilter++;
+        }
+
         if( $referringProviderFilter ) {
             if ( strval($referringProviderFilter) != strval(intval($referringProviderFilter)) ) {
                 //echo "string (wrapper name)=[$referringProviderFilter]<br>";
@@ -352,7 +363,6 @@ class CallEntryController extends Controller
 
             $advancedFilter++;
         }
-
 
         //"Entry Body": The value entered in this field should be searched for in the "History/Findings" and "Impression/Outcome" fields
         // (with an "OR" - a match in either one should list the entry).
