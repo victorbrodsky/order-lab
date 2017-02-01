@@ -166,8 +166,6 @@ function focusMaskField(field) {
 
 function setNavBar(sitename) {
 
-
-
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
     }
@@ -212,6 +210,10 @@ function setCallLogNavBar() {
 
     if( full.indexOf("/call-log-book/entry/new") !== -1 ) {
         id = 'callentry';
+    }
+
+    if( full.indexOf("/call-log-book/entry/view") !== -1 ) {
+        id = 'callentry-dummy';
     }
 
     if( full.indexOf("/patient-list/") !== -1 ) {

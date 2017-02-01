@@ -189,6 +189,21 @@ class LoggerFilterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
+        //Capacity
+        if( $this->params['sitename'] == "calllog" ) {
+            $capacities = array(
+                "Submitter" => "Submitter",
+                "Attending" => "Attending"
+            );
+            $builder->add('capacity', 'choice', array(
+                'label' => false,
+                'required'=> false,
+                //'multiple' => false,
+                'choices' => $capacities,
+                'attr' => array('class' => 'combobox', 'placeholder' => 'Capacity'),
+            ));
+        }
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

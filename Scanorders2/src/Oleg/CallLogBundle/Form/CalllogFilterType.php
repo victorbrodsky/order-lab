@@ -21,7 +21,7 @@ class CalllogFilterType extends AbstractType
     {
 
         $builder->add('startDate', 'datetime', array(
-            'label' => false, //'Start Date',
+            'label' => false,
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
@@ -29,7 +29,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         $builder->add('endDate', 'datetime', array(
-            'label' => false, //'Start Date',
+            'label' => false,
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',

@@ -84,6 +84,12 @@
                 {{ form_row(loggerfilter.objectId, {'attr': {'placeholder': 'Object ID'}}) }}
             </div>
 
+            {% if loggerfilter.capacity is defined %}
+                <div class="col-xs-3">
+                 {{ form_row(loggerfilter.capacity) }}
+                </div>
+            {% endif %}
+
             <div class="col-xs-1">
                 <button type="submit" class="btn btn-sm btn-default">Filter</button>
             </div>

@@ -157,7 +157,8 @@
     {#Call Case List#}
     <br><br>
 
-    <table class="records_list table table-hover table-condensed table-striped text-left">
+    {#table-striped #}
+    <table class="records_list table table-hover table-condensed text-left">
         <thead>
         <tr>
             <th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>
@@ -173,9 +174,16 @@
         </thead>
         <tbody data-link="row" class="rowlink">
 
+        {% set count = 0 %}
         {% for message in messages %}
 
-            {% set trclassname = "" %}
+            {% if count is odd %}
+                {% set trclassname = "" %}
+            {% else %}
+                {% set trclassname = "table-row-separator" %}
+            {% endif %}
+            {% set count = count + 1 %}
+
             {% if message.messageStatus.name == 'Deleted' %}
                 {% set trclassname = "order-reject-status" %}
             {% endif %}
@@ -258,7 +266,8 @@
                 <td style="display: none">
                     <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
                 </td>
-                <td colspan="9">
+
+                {#<td colspan=9>#}
                     {#{{ message.getMessageTitleStr }}<br>#}
                     {#<p>History/Findings: This is an example of a previously entered call.</p>#}
                     {#<p>Impression/Outcome: This is an example of an impression and outcome.</p>#}
@@ -266,8 +275,9 @@
                     {#{% if messageCategoryInfoNode is not defined %}#}
                         {#{% set messageCategoryInfoNode = message.messageCategory %}#}
                     {#{% endif %}#}
-                    {{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory)|raw }}
-                </td>
+                    {{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}
+                {#</td>#}
+
             </tr>
 
         {% endfor %}
@@ -289,9 +299,45 @@
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
 
-            //getComboboxGeneric(null,'encounterReferringProvider',_encounterReferringProvider,false,'','scan');
+            changeFilterColorButton("#Search_button");
         });
 
+        //I think the "Filter" button needs to turn green if any of the fields
+        // in the filter well are modified. When the "Filter" button is pressed
+        // it should become grey again.
+        function changeFilterColorButton( btnId ) {
+            var filterBtn = $(btnId);
+            var filterForm = filterBtn.closest('.form-search');
+
+            //datepicker
+            filterForm.find('.datepicker').on('change',function() {
+                chnageBtnColorGreen(filterBtn);
+            });
+
+            //combobox
+            filterForm.find('.combobox').on('change',function() {
+                chnageBtnColorGreen(filterBtn);
+            });
+
+            //text
+            filterForm.find('text').on('input',function() {
+                chnageBtnColorGreen(filterBtn);
+            });
+
+            //input
+            filterForm.find('input').on('input',function() {
+                chnageBtnColorGreen(filterBtn);
+            });
+
+            function chnageBtnColorGreen(filterBtn) {
+                filterBtn.removeClass('btn-default');
+                filterBtn.addClass('btn-success');
+            }
+
+        }
+
     </script>
+
+
 {% endblock %}
 

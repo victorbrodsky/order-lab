@@ -341,6 +341,9 @@ class LoggerController extends Controller
         $objectTypes = $filterform['objectType']->getData();
         $objectId = $filterform['objectId']->getData();
 
+        //calllog
+        $capacity = $filterform['capacity']->getData();
+
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
 //        foreach( $users as $user ) {
@@ -452,6 +455,14 @@ class LoggerController extends Controller
                 }
             }
             $dql->andWhere($where);
+
+            $filtered = true;
+        }
+
+        if( $capacity ) {
+            echo "capacity=".$capacity."<br>";
+            //$dql->andWhere("logger.entityId = :objectId");
+            //$dqlParameters['objectId'] = $objectId;
 
             $filtered = true;
         }

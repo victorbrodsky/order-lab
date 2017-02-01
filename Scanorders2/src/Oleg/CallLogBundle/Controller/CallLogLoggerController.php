@@ -146,7 +146,6 @@ class CallLogLoggerController extends LoggerController
             ));
         }
         ///////////// EOF make sure eventTypes and users are set /////////////
-
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             //'hideObjectType' => true,

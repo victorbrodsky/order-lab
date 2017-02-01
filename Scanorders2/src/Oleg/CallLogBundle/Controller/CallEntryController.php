@@ -180,8 +180,8 @@ class CallEntryController extends Controller
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
 
         //filter
-        $advancedFilter = false;
-        $defaultAdvancedFilter = false;
+        $advancedFilter = 0;
+        //$defaultAdvancedFilter = false;
         $queryParameters = array();
 
         //use editorInfos or orderdate
@@ -216,7 +216,6 @@ class CallEntryController extends Controller
                 $selectOrder = false;
                 $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
                 $dql->andWhere($nodeChildSelectStr);
-                $advancedFilter = false;
             }
         }
 
@@ -249,7 +248,7 @@ class CallEntryController extends Controller
             $authorStr = "encounter.provider=:author OR signeeInfo.modifiedBy=:author OR editorInfos.modifiedBy=:author";
             $dql->andWhere($authorStr);
             $queryParameters['author'] = $authorFilter;
-            $advancedFilter = true;
+            $advancedFilter++;
         }
 
         if( $referringProviderFilter ) {
@@ -265,7 +264,7 @@ class CallEntryController extends Controller
                 $queryParameters['referringProvider'] = $referringProviderFilter;
             }
 
-            $advancedFilter = true;
+            $advancedFilter++;
         }
 
         //encounter_1_referringProviders_0_referringProviderSpecialty
@@ -273,7 +272,7 @@ class CallEntryController extends Controller
             $specialtyStr = "referringProviders.referringProviderSpecialty=:referringProviderSpecialty";
             $dql->andWhere($specialtyStr);
             $queryParameters['referringProviderSpecialty'] = $specialtyFilter;
-            $advancedFilter = true;
+            $advancedFilter++;
         }
 
         //encounter_1_tracker_spots_0_currentLocation
@@ -281,7 +280,7 @@ class CallEntryController extends Controller
             $encounterLocationStr = "currentLocation=:encounterLocation";
             $dql->andWhere($encounterLocationStr);
             $queryParameters['encounterLocation'] = $encounterLocationFilter;
-            $advancedFilter = true;
+            $advancedFilter++;
         }
         //messageStatus
         //$messageStatusFilter = $filterform['messageStatus']->getData();
@@ -289,7 +288,7 @@ class CallEntryController extends Controller
 //            $messageStatusFilter = "All except deleted";
 //        }
         if( $messageStatusFilter ) {
-            $advancedFilter = true;
+            $advancedFilter++;
             if ( strval($messageStatusFilter) != strval(intval($messageStatusFilter)) ) {
                 //echo "string=[$messageStatusFilter]<br>";
                 $messageStatusStr = null;
@@ -300,8 +299,9 @@ class CallEntryController extends Controller
                     $queryParameters['deletedMessageStatus'] = "Deleted";
                     //$defaultAdvancedFilter = true;
                     //if( $advancedFilter === false ) {
-                        $advancedFilter = false;
+                        //$advancedFilter = false;
                     //}
+                    $advancedFilter--;
                 }
                 // "All"
                 if( $messageStatusFilter == "All" ) {
@@ -350,7 +350,7 @@ class CallEntryController extends Controller
             $dql->andWhere($patientListEntityStr);
             $queryParameters['patientList'] = $patientListTitleFilter;
 
-            $advancedFilter = true;
+            $advancedFilter++;
         }
 
 
@@ -362,7 +362,7 @@ class CallEntryController extends Controller
               "(message.id = s.entityId AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
             $dql->andWhere("EXISTS (".$entryBodySearchStr.")");
             $queryParameters['entryBodySearch'] = "%".$entryBodySearchFilter."%";
-            $advancedFilter = true;
+            $advancedFilter++;
         }
 
         ///////////////// search in navbar /////////////////
@@ -395,13 +395,6 @@ class CallEntryController extends Controller
         //exit('2');
         ///////////////// EOF search in navbar /////////////////
 
-        if( $defaultAdvancedFilter && $advancedFilter ) {
-            //$advancedFilter = true;
-        }
-
-        if( $defaultAdvancedFilter === false && $advancedFilter === false ) {
-            //$advancedFilter = false;
-        }
 
         //$query = $em->createQuery($dql);
         //$messages = $query->getResult();

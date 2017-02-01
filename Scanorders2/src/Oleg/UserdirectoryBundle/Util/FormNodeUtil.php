@@ -849,8 +849,8 @@ class FormNodeUtil
         return $index;
     }
 
-    //recursion all formnode from bottom to top
-    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $separator="<br>" ) {
+    //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
+    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname ) {
         if( !$holderEntity ) {
             return null;
         }
@@ -859,19 +859,34 @@ class FormNodeUtil
             return null;
         }
 
-        $resArr=array();
+        $separator="<br>";
+        //$table = false; //testing
+
+        if( $table ) {
+            $result = "";   //'<td colspan=9><table class = "table table-hover table-bordered table-condensed">';
+        } else {
+            $result = array();
+        }
 
         $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs();
         foreach( $formNodes as $formNode ) {
-            $resArr = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$resArr);
+            $result = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$result,$table,$trclassname);
         }
 
-        return implode($separator,$resArr);
+        if( $table ) {
+            //http://jsfiddle.net/dqq5B/524/
+            $result = '<td colspan=9><table class = "table table-hover table-bordered table-condensed">' . $result . '</table></td>';
+            //$result = '<td colspan=9>' . $result . '</td>';
+        } else {
+            $result = '<td colspan=9>'.implode($separator,$result).'</td>';
+        }
+
+        return $result;
     }
     //Simplifying version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
     //$holderEntity is the holder of the $formNodeHolderEntity, for example, Message entity
     //$formNodeHolderEntity is a form node holder, for example, MessageCategory entity
-    public function getSingleFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $resArr=array() ) {
+    public function getSingleFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $result, $table, $trclassname ) {
 
         if( !$holderEntity ) {
             return null;
@@ -892,29 +907,29 @@ class FormNodeUtil
         );
         $entityId = $holderEntity->getId(); //"Message ID";
 
-        //$formNodeUtil = $this->container->get('user_formnode_utility');
-        //$formNodeHolderId = $formNodeHolderEntity->getId();
-        //$resArr = array();
-
-        //$formNodes = $formNodeHolderEntity->getFormNodes();
         //get only 'real' fields as $formNodes
         $formNodes = $this->getAllRealFormNodes($formNodeHolderEntity);
 
+        if( $table ) {
+            //$result = "";
+        }
+
         if( count($formNodes) > 0 ) {
-            $resArr[] = "<i>-".$formNodeHolderEntity->getName().":</i>";
+            $header = "<i>".$formNodeHolderEntity->getName()."</i>";
+            if( $table ) {
+                $result = $result.'<tr class="'.$trclassname.'"><td colspan=9 class="rowlink-skip">'.$header.'</td></tr>'; //text-center
+            } else {
+                $result[] = $header;
+            }
         }
 
         foreach( $formNodes as $formNode ) {
 
             if( $formNode && $formNode->getId() ) {
-                $formNodeId = $formNode->getId();
+                //$formNodeId = $formNode->getId();
             } else {
                 continue;
             }
-
-//            if( $this->isFormNodeInArray($formNodeId,$resArr) ) {
-//                continue;
-//            }
 
             $formNodeValue = null;
             $receivingEntity = null;
@@ -937,10 +952,17 @@ class FormNodeUtil
             }
             //echo "res formNodeValue: $formNodeValue <br>";
 
-            $resArr[] = $formNode->getName() . ": " . $formNodeValue;
+            $elementName = $formNode->getName();
+            $elementValue = $formNodeValue;
+
+            if( $table ) {
+                $result = $result.'<tr class="'.$trclassname.'">'.'<td colspan=3 class="rowlink-skip">'.$elementName.'</td>'.'<td colspan=6 class="rowlink-skip">'.$elementValue.'</td>'.'</tr>';
+            } else {
+                $result[] = $elementName . ": " . $elementValue;
+            }
         }
 
-        return $resArr;
+        return $result;
     }
 
     public function getValueStrFromValueId( $formNode, $formNodeValueId ) {
