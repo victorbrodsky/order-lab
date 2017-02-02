@@ -82,7 +82,10 @@
     background: #ffffe6;
 }
 
-.table-row-separator {
-    background: linear-gradient(to bottom,#e8e8e8 0,#e8e8e8 100%);
+.table-row-separator-gray {
+    background: linear-gradient(to bottom,#FFFFFF 0,#FFFFFF 100%);
 }
 
+.table-row-separator-white {
+    background: linear-gradient(to bottom,#e8e8e8 0,#e8e8e8 100%);
+}

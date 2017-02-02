@@ -144,9 +144,9 @@
         {% for message in messages %}
 
             {% if count is odd %}
-                {% set trclassname = "" %}
+                {% set trclassname = "table-row-separator-gray" %}
             {% else %}
-                {% set trclassname = "table-row-separator" %}
+                {% set trclassname = "table-row-separator-white" %}
             {% endif %}
             {% set count = count + 1 %}
 

@@ -871,6 +871,7 @@ class FormNodeUtil
     }
 
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
+    //$holderEntity - message; $formNodeHolderEntity - message category
     public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname ) {
         if( !$holderEntity ) {
             return null;
@@ -889,7 +890,7 @@ class FormNodeUtil
             $result = array();
         }
 
-        $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs();
+        $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs(); //message category hierarchy
 
         foreach( $formNodes as $formNode ) {
             $result = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$result,$table,$trclassname);
@@ -906,6 +907,7 @@ class FormNodeUtil
         //exit('$result='.$result);
         return $result;
     }
+    //TODO: rewrite with section, subsection, array section structure
     //Simplifying version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
     //$holderEntity is the holder of the $formNodeHolderEntity, for example, Message entity
     //$formNodeHolderEntity is a form node holder, for example, MessageCategory entity
@@ -938,12 +940,16 @@ class FormNodeUtil
         //}
 
         if( count($formNodes) > 0 ) {
-            $header = "<i>".$formNodeHolderEntity->getName()."</i>";
-            //$header = "<i>".$formNodeHolderEntity->getName()." => ".$this->getParentFormNodeSection($holderEntity,$formNodeHolderEntity)."</i>";
-            if( $table ) {
-                $result = $result.'<tr class="'.$trclassname.'"><td colspan=9 class="rowlink-skip">'.$header.'</td></tr>'; //text-center
-            } else {
-                $result[] = $header;
+
+            $header = null;
+            //$header = "<i>".$formNodeHolderEntity->getName()."</i>";
+
+            if( $header ) {
+                if ($table) {
+                    $result = $result . '<tr class="' . $trclassname . '"><td colspan=9 class="rowlink-skip">' . $header . '</td></tr>'; //text-center
+                } else {
+                    $result[] = $header;
+                }
             }
         }
 
