@@ -956,7 +956,9 @@ class FormNodeUtil
             $elementValue = $formNodeValue;
 
             if( $table ) {
-                $result = $result.'<tr class="'.$trclassname.'">'.'<td colspan=3 class="rowlink-skip">'.$elementName.'</td>'.'<td colspan=6 class="rowlink-skip">'.$elementValue.'</td>'.'</tr>';
+                $result = $result.'<tr class="'.$trclassname.'">'.
+                    '<td colspan=3 class="rowlink-skip" style="width:20%">'.$elementName.'</td>'.
+                    '<td colspan=6 class="rowlink-skip" style="width:80%">'.$elementValue.'</td>'.'</tr>';
             } else {
                 $result[] = $elementName . ": " . $elementValue;
             }
