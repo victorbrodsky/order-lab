@@ -1199,16 +1199,18 @@ function userPlayroomHeaderInit() {
     //});
 
     var headerElem = document.getElementById("user-playroom-header");
-    var headroom = new Headroom(headerElem, {
-        "offset": 205,
-        "tolerance": 5,
-        "classes": {
-            "initial": "animated",
-            //"pinned": "slideDown",
-            //"unpinned": "slideUp"
-            "unpinned": "slideDown",
-            "pinned": "slideUp"
-        }
-    });
-    headroom.init();
+    if( headerElem ) {
+        var headroom = new Headroom(headerElem, {
+            "offset": 205,
+            "tolerance": 5,
+            "classes": {
+                "initial": "animated",
+                //"pinned": "slideDown",
+                //"unpinned": "slideUp"
+                "unpinned": "slideDown",
+                "pinned": "slideUp"
+            }
+        });
+        headroom.init();
+    }
 }
