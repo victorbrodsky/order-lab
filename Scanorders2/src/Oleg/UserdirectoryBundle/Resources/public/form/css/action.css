@@ -83,6 +83,6 @@
 }
 
 .table-row-separator {
-    background: #f9f9f9;
+    background: linear-gradient(to bottom,#e8e8e8 0,#e8e8e8 100%);
 }
 

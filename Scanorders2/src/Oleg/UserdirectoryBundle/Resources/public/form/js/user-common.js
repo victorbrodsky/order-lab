@@ -1226,7 +1226,10 @@ function userPlayroomHeaderInit() {
             if( cOst < ost ) {
                 headerEl.addClass('headroom-hidden').removeClass('headroom-shown');
             } else {
-                headerEl.addClass('headroom-shown').removeClass('headroom-hidden');
+                //show it only if title is not null
+                if( headerEl.text() ) {
+                    headerEl.addClass('headroom-shown').removeClass('headroom-hidden');
+                }
             }
 
             //ost = cOst;

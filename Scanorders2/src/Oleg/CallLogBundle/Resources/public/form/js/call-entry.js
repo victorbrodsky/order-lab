@@ -1298,12 +1298,14 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
         //console.log("patientInfo="+patientInfo);
         if( patientInfo ) {
             holder.find('.calllog-patient-panel-title').html(patientInfo);
+            $('#user-headroom-header').html(patientInfo);
             if( formtype == "call-entry" ) {
                 panelEl.collapse('hide');
             }
         }
     } else {
         holder.find('.calllog-patient-panel-title').html("Patient Info");
+        $('#user-headroom-header').html("Patient Info");
         //panelEl.show(_transTime);
         if( formtype == "call-entry" ) {
             panelEl.collapse('show');
@@ -1433,8 +1435,10 @@ function calllogUpdatePatientAge(fieldEl,holderId) {
         //console.log("output="+data);
         if( data != "ERROR" ) {
             holder.find('.calllog-patient-panel-title').html(data);
+            $('#user-headroom-header').html(data);
         } else {
             holder.find('.calllog-patient-panel-title').html("Patient Info");
+            $('#user-headroom-header').html("Patient Info");
         }
     }).done(function() {
         //console.log("update patient title done");

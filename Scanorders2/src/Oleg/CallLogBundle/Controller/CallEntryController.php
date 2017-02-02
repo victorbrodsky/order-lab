@@ -648,6 +648,7 @@ class CallEntryController extends Controller
             'triggerSearch' => 0,
             'mrn' => $mrn,
             'mrntype' => $mrntype,
+            'titleheadroom' => null
             //'readonlyEncounter' => $readonlyEncounters
             //'encounterid' => $encounterid
         );

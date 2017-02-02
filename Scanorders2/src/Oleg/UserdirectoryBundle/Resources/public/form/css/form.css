@@ -588,6 +588,8 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     -moz-transition: all 0.3s linear;
     -webkit-transition: all 0.3s linear;
     z-index:1000;
+    border-color: #ffffff;
+    background-image: linear-gradient(to bottom,#ffffff 0,#ffffff 100%);
 }
 .headroom-shown {
     top: 0;

@@ -875,7 +875,7 @@ class FormNodeUtil
 
         if( $table ) {
             //http://jsfiddle.net/dqq5B/524/
-            $result = '<td colspan=9><table class = "table table-hover table-bordered table-condensed">' . $result . '</table></td>';
+            $result = '<td colspan=9><table class = "table table-hover table-condensed">' . $result . '</table></td>';
             //$result = '<td colspan=9>' . $result . '</td>';
         } else {
             $result = '<td colspan=9>'.implode($separator,$result).'</td>';
