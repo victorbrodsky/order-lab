@@ -2156,7 +2156,8 @@ class CallEntryController extends Controller
             'entityNamespace' => $classNamespace,
             'entityName' => $className,
             'entityId' => $message->getId(),
-            'sitename' => $this->container->getParameter('calllog.sitename')
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'titleheadroom' => $title
         );
     }
 
