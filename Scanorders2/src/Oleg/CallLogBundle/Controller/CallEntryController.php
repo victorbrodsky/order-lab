@@ -2085,6 +2085,7 @@ class CallEntryController extends Controller
         //$nowStr = trim($request->get('nowStr'));
         //echo "patientId=".$patientId."<br>";
         //echo "nowStr=".$nowStr."<br>";
+        //$messageId = 152; //testing
 
         $em = $this->getDoctrine()->getManager();
         $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
@@ -2102,6 +2103,9 @@ class CallEntryController extends Controller
 //                echo "dob is null <br>";
 //            }
 //        }
+        //testing
+        //$mesInfo = $this->get('user_formnode_utility')->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
+        //echo "mesInfo=".$mesInfo."<br>";
 
         $messageInfo = "Entry ID ".$message->getId()." submitted on ".$message->getSubmitterInfo(); // . " | Call Log Book";
         if (count($message->getPatient()) > 0 ) {

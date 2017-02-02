@@ -459,22 +459,24 @@ class FormNodeController extends Controller {
     //check all parents if they have a similar Form Section (the same name) and return the one on the top
     public function getParentFormNodeSection( $formNodeHolderEntity, $formNode ) {
         $formNodeUtil = $this->get('user_formnode_utility');
-        $parentFormNode = $formNode->getParent();
+        return $formNodeUtil->getParentFormNodeSection($formNodeHolderEntity,$formNode);
 
-        if( $parentFormNode && $parentFormNode->getId() && $formNodeUtil->isValidFormSection($parentFormNode) ) {
-            $parentFormNodeName = $parentFormNode->getName();
-            $objectTypeName = $parentFormNode->getObjectTypeName();
-            $objectTypeId = $parentFormNode->getObjectTypeId();
-            $thisTesting = $this->testing;
-            $thisTesting = false;
-            $topParentFormSection = $formNodeUtil->getTopFormSectionByHolderTreeRecursion($formNodeHolderEntity, $parentFormNodeName, $objectTypeId, $thisTesting);
-            if ($topParentFormSection) {
-                if ($this->testing) {
-                    echo '### topParentFormSection=' . $topParentFormSection . "; formnode=" . $formNode->getName() . " ($parentFormNodeName, $objectTypeName:$objectTypeId)" . "<br>";
-                }
-                return $topParentFormSection;
-            }
-        }
+//        $parentFormNode = $formNode->getParent();
+//
+//        if( $parentFormNode && $parentFormNode->getId() && $formNodeUtil->isValidFormSection($parentFormNode) ) {
+//            $parentFormNodeName = $parentFormNode->getName();
+//            $objectTypeName = $parentFormNode->getObjectTypeName();
+//            $objectTypeId = $parentFormNode->getObjectTypeId();
+//            $thisTesting = $this->testing;
+//            $thisTesting = false;
+//            $topParentFormSection = $formNodeUtil->getTopFormSectionByHolderTreeRecursion($formNodeHolderEntity, $parentFormNodeName, $objectTypeId, $thisTesting);
+//            if ($topParentFormSection) {
+//                if ($this->testing) {
+//                    echo '### topParentFormSection=' . $topParentFormSection . "; formnode=" . $formNode->getName() . " ($parentFormNodeName, $objectTypeName:$objectTypeId)" . "<br>";
+//                }
+//                return $topParentFormSection;
+//            }
+//        }
 
 //        if( $parentFormNode && $parentFormNode->getId() && $formNodeUtil->isValidFormSection($parentFormNode) ) {
 //            //echo $formNodeHolderEntity->getId().":parentFormNode=".$parentFormNode."<br><br>";
