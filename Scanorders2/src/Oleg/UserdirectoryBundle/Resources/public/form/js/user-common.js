@@ -1198,19 +1198,38 @@ function userPlayroomHeaderInit() {
     //    }
     //});
 
-    var headerElem = document.getElementById("user-playroom-header");
-    if( headerElem ) {
-        var headroom = new Headroom(headerElem, {
-            "offset": 205,
-            "tolerance": 5,
-            "classes": {
-                "initial": "animated",
-                //"pinned": "slideDown",
-                //"unpinned": "slideUp"
-                "unpinned": "slideDown",
-                "pinned": "slideUp"
+    //var headerElem = document.getElementById("user-headroom-header");
+    //if( headerElem ) {
+    //    var headroom = new Headroom(headerElem, {
+    //        "offset": 10,
+    //        "tolerance": 5,
+    //        "classes": {
+    //            "initial": "animated",
+    //            //"pinned": "slideDown",
+    //            //"unpinned": "slideUp"
+    //            "unpinned": "slideDown",
+    //            "pinned": "slideUp"
+    //        }
+    //    });
+    //    headroom.init();
+    //}
+
+    //http://jsfiddle.net/wdDsk/100/
+    //show hidden header by id='user-headroom-header' when scroll down after 10 pixels
+    var headerEl = $('#user-headroom-header');
+    if( headerEl ) {
+        var ost = 10;
+        $(window).scroll(function () {
+            var cOst = $(this).scrollTop();
+            //console.log("cOst="+cOst);
+
+            if( cOst < ost ) {
+                headerEl.addClass('headroom-hidden').removeClass('headroom-shown');
+            } else {
+                headerEl.addClass('headroom-shown').removeClass('headroom-hidden');
             }
+
+            //ost = cOst;
         });
-        headroom.init();
     }
 }

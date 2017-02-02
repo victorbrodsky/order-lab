@@ -23,7 +23,6 @@
     '@OlegUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
     '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
     '@OlegUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/headroom/headroom.min.js'
 
     '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
     '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
@@ -69,36 +68,4 @@
 
 {% endblock %}
 
-{% block additionalcss %}
-    <style type="text/css">
-        .headroom {position: fixed;top: 0;left: 0;right: 0;transition: all .2s ease-in-out; z-index:1000}
-        .headroom--unpinned {top: -100px;}
-        .headroom--pinned {top: 0;}
-
-        /*.headroom {*/
-            /*will-change: transform;*/
-            /*transition: transform 200ms linear;*/
-        /*}*/
-        /*.headroom--pinned {*/
-            /*transform: translateY(0%);*/
-        /*}*/
-        /*.headroom--unpinned {*/
-            /*transform: translateY(-100%);*/
-        /*}*/
-
-    </style>
-
-    {#{% stylesheets#}
-        {#'bundles/oleguserdirectory/headroom/animate.min.css' filter='cssrewrite'#}
-    {#%}#}
-        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
-    {#{% stylesheets#}
-        {#'bundles/oleguserdirectory/headroom/slide.css' filter='cssrewrite'#}
-    {#%}#}
-        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
-{% endblock %}
 

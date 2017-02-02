@@ -15,7 +15,7 @@
     {#{% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}#}
 
     {% if titleheadroom is defined %}
-        <div id="user-playroom-header" class="alert alert-info text-center headroom">
+        <div id="user-headroom-header" class="alert alert-info text-center headroom headroom-hidden">
             {{ titleheadroom|raw }}
         </div>
     {% endif %}

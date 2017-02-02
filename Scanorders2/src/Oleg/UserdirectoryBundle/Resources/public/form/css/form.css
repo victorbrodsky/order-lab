@@ -574,3 +574,24 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     border-top: none !important;
 }
 
+/*header: show when scroll down*/
+/*body {*/
+    /*min-height: 1200px;*/
+/*}*/
+#user-headroom-header {
+    /*background: #444;*/
+    position: fixed;
+    left: 0;
+    width: 100%;
+    /*height: 80px;*/
+    transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
+    z-index:1000;
+}
+.headroom-shown {
+    top: 0;
+}
+.headroom-hidden {
+    top: -80px;
+}
