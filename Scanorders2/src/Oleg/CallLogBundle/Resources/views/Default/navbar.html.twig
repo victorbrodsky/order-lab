@@ -14,6 +14,12 @@
 
     {#{% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}#}
 
+    {% if title is defined %}
+        <div id="user-playroom-header" class="alert alert-info text-center headroom">
+            {{ title|raw }}
+        </div>
+    {% endif %}
+
     <nav class="navbar navbar-default" role="navigation">
 
     <div class="container-fluid">
