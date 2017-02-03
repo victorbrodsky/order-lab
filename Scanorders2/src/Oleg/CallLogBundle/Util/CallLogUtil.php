@@ -1016,6 +1016,14 @@ class CallLogUtil
                 }
             }
 
+        }//if
+
+        //add [Attending: Alain Borczuk - alb9003 (WCMC CWID)]
+        if( $encounter ) {
+            $attendingInfo = $encounter->obtainAttendingPhysicianInfo();
+            if( $attendingInfo ) {
+                $event = $event . " [Attending Physician: " . $attendingInfo . "]";
+            }
         }
 
         //exit('event='.$event);

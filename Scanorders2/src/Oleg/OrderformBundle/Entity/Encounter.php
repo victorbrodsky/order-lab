@@ -990,9 +990,27 @@ class Encounter extends ObjectAbstract
                 $addInfo = "(" . implode(", ",$addInfoArr) . ")";
             }
 
-            //Abha Goyal - abg9017 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+            //Oleg Ivanov - oli2222 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
             if( $addInfo ) {
                 $info = $info . " " . $addInfo;
+            }
+
+            $infoArr[] = $info;
+        }
+
+        return implode("; ",$infoArr);
+    }
+
+    //AttendingPhysician (i.e. Oleg Ivanov - oli2222 (WCMC CWID))
+    public function obtainAttendingPhysicianInfo() {
+        $infoArr = array();
+        //referringProviders_0_referringProviderSpecialty
+        foreach( $this->getAttendingPhysicians() as $physician ) {
+
+            $info = "";
+
+            if( $physician->getField() ) {
+                $info = $info . $physician->getField()->getFullName();
             }
 
             $infoArr[] = $info;
