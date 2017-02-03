@@ -135,6 +135,10 @@ abstract class ListAbstract
      */
     protected $entityName;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $version;
 
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
@@ -425,6 +429,23 @@ abstract class ListAbstract
     {
         $this->objectType = $objectType;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
 
 
     /////////////// Fields specifying a subject entity ///////////////

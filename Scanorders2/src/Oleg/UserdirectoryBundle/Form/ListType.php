@@ -180,6 +180,11 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('version',null,array(
+            'label' => 'Version:',
+            'attr' => array('class' => 'form-control')
+        ));
+
 
     }
 

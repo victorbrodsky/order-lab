@@ -443,6 +443,10 @@
         {{ formmacros.field(form.list.createdate) }}
     {% endif %}
 
+    {% if form.list.version is defined %}
+        {{ formmacros.field(form.list.version) }}
+    {% endif %}
+
     {{ formmacros.field(form.list.orderinlist) }}
 
     {{ formmacros.field(form.list.objectType) }}
@@ -568,6 +572,10 @@
 
     {% if edit_form.list.createdate is defined %}
         {{ formmacros.field(edit_form.list.createdate) }}
+    {% endif %}
+
+    {% if edit_form.list.version is defined %}
+        {{ formmacros.field(edit_form.list.version) }}
     {% endif %}
 
     {% if entity.updatedby %}
