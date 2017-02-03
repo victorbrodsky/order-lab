@@ -502,6 +502,8 @@ class FormNodeUtil
     //check if value is userWrapper case (object=PathologyResultSignatoriesList)
     public function processFormNodeValue( $formNode, $receivingEntity, $formNodeValue ) {
 
+        //echo "getObjectTypeName=".$formNode->getObjectTypeName()."<br>";
+
         if(
             $receivingEntity && $formNode->getObjectType() &&
             $formNode->getEntityName() == "PathologyResultSignatoriesList" &&
@@ -881,6 +883,8 @@ class FormNodeUtil
             return null;
         }
 
+        //return null; //testing
+
         $separator="<br>";
         //$table = false; //testing
 
@@ -978,8 +982,8 @@ class FormNodeUtil
 //                        print_r($formNodeValue);
 //                        echo "</pre>";
                         foreach( $formNodeValue as $valArr ) {
-                            //$formNodeValueArr[$valArr['arraySectionIndex']][$valArr['formNodeId']] = $this->getValueStrFromValueId($formNode, $valArr['formNodeValue']);
-                            $formNodeValueArr[$valArr['arraySectionIndex']] = $this->getValueStrFromValueId($formNode, $valArr['formNodeValue']);
+                            //$formNodeValueArr[$valArr['arraySectionIndex']][$valArr['formNodeId']] = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
+                            $formNodeValueArr[$valArr['arraySectionIndex']] = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
                         }
                         //$formNodeValue = implode("<br>",$formNodeValueArr);
                         ksort($formNodeValueArr);
@@ -1000,7 +1004,7 @@ class FormNodeUtil
                             $elementValue = $formNodeValueArr[$i];
 
                             //process userWrapper case
-                            $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+                            $elementValue = $this->processFormNodeValue($formNode,$receivingEntity,$elementValue);
 
                             if( $table ) {
                                 $result = $result.'<tr class="'.$trclassname.'">'.
@@ -1011,8 +1015,8 @@ class FormNodeUtil
                             }
 
 
-                            //echo "RESULT=".$result."<br>";
-                            //exit("1");
+                            echo "RESULT=".$result."<br>";
+                            exit("1");
                         }
 
 //                        foreach( $formNodeValueArr as $key=>$value ) {
@@ -1032,11 +1036,13 @@ class FormNodeUtil
 
                     } else {
                         //single
-                        $formNodeValue = $this->getValueStrFromValueId($formNode, $formNodeValue);
+                        $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
 
                         //////////////// Regular form node /////////////////////
                         //process userWrapper case
                         $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+
+                        //$formNodeValue = $this->getValueStrFromValueDatetime($formNode, $formNodeValue);
 
                         $elementName = $formNode->getName();
                         $elementValue = $formNodeValue;
@@ -1081,7 +1087,7 @@ class FormNodeUtil
         return $result;
     }
 
-    public function getValueStrFromValueId( $formNode, $formNodeValueId ) {
+    public function getValueStrFromValueId( $formNode, $receivingEntity, $formNodeValueId ) {
 
         if( !$formNode ) {
             return $formNodeValueId;
@@ -1090,6 +1096,13 @@ class FormNodeUtil
             return $formNodeValueId;
         }
 
+        $objectTypeName = $formNode->getObjectTypeName();
+        //echo "getObjectTypeName=".$objectTypeName."<br>";
+        //if( $formNodeValueId instanceof \DateTime ) {
+        if( $objectTypeName == "Form Field - Time" ) {
+            //$formNodeValueId = $receivingEntity->getTimeValue();
+            $formNodeValueId = $formNodeValueId->format("H:i");
+        }
         //echo "formNodeValueId=".$formNodeValueId."<br>";
 
         $formNodeValueStr = $formNodeValueId;

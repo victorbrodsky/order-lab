@@ -2085,7 +2085,7 @@ class CallEntryController extends Controller
         //$nowStr = trim($request->get('nowStr'));
         //echo "patientId=".$patientId."<br>";
         //echo "nowStr=".$nowStr."<br>";
-        //$messageId = 152; //testing
+        //$messageId = 142; //154; //testing
 
         $em = $this->getDoctrine()->getManager();
         $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
