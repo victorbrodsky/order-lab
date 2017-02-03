@@ -1115,7 +1115,9 @@ class CallEntryController extends Controller
             'complexLocation' => false,
             'alias' => true,
             'timezoneDefault' => $userTimeZone,
-            'readonlyEncounter' => $readonlyEncounter
+            'readonlyEncounter' => $readonlyEncounter,
+            'attendingPhysicians-readonly' => false,
+            'referringProviders-readonly' => false
         );
 
         $form = $this->createForm(

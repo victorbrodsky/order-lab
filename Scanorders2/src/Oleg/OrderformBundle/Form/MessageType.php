@@ -158,7 +158,7 @@ class MessageType extends AbstractType
         if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
             $builder->add('provider', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'label' => 'Submitter11:',
+                'label' => 'Submitter:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
@@ -166,9 +166,9 @@ class MessageType extends AbstractType
                         ->leftJoin("u.infos", "infos")
                         ->leftJoin("u.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        //->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                        //->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
-                        //->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
+                        ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        ->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
+                        ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
                         ->orderBy("infos.displayName","ASC");
 //                        return $er->createQueryBuilder('u')
 //                            ->where('u.roles LIKE :roles OR u=:user')

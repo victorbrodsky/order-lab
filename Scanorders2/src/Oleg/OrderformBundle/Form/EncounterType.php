@@ -2,8 +2,8 @@
 
 namespace Oleg\OrderformBundle\Form;
 
-use Oleg\CallLogBundle\Form\EncounterAttendingPhysicianType;
-use Oleg\CallLogBundle\Form\EncounterReferringProviderType;
+use Oleg\OrderformBundle\Form\EncounterAttendingPhysicianType;
+use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -22,6 +22,13 @@ class EncounterType extends AbstractType
 
         if( !array_key_exists('alias', $this->params) ) {
             $this->params['alias'] = true;
+        }
+
+        if( !array_key_exists('attendingPhysicians-readonly', $this->params) ) {
+            $this->params['attendingPhysicians-readonly'] = true;
+        }
+        if( !array_key_exists('referringProviders-readonly', $this->params) ) {
+            $this->params['referringProviders-readonly'] = true;
         }
     }
     

@@ -956,7 +956,7 @@ class ScanUtilController extends UtilController {
                     'text' => $userWrapper . ""
                 );
 
-                if( $cycle == "show" ) {
+                if( $cycle == "show" || $cycle == "edit" ) {
                     $output[] = $element;
                 } else {
                     if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {

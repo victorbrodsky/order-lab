@@ -2,6 +2,7 @@
 
 namespace Oleg\CallLogBundle\Form;
 
+use Oleg\OrderformBundle\Form\EncounterAttendingPhysicianType;
 use Oleg\OrderformBundle\Form\EncounterInfoTypeType;
 use Oleg\OrderformBundle\Form\EncounterLocationType;
 use Oleg\OrderformBundle\Form\EncounterPatfirstnameType;
@@ -9,6 +10,7 @@ use Oleg\OrderformBundle\Form\EncounterPatlastnameType;
 use Oleg\OrderformBundle\Form\EncounterPatmiddlenameType;
 use Oleg\OrderformBundle\Form\EncounterPatsexType;
 use Oleg\OrderformBundle\Form\EncounterPatsuffixType;
+use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
 use Oleg\OrderformBundle\Form\GenericFieldType;
 
 use Oleg\UserdirectoryBundle\Form\TrackerType;

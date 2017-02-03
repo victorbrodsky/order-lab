@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\CallLogBundle\Form;
+namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\ArrayFieldType;
 use Symfony\Component\Form\AbstractType;
@@ -17,6 +17,11 @@ class EncounterReferringProviderType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
+
+        if( !array_key_exists('referringProviders-readonly', $this->params) ) {
+            $this->params['referringProviders-readonly'] = true;
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -48,6 +53,7 @@ class EncounterReferringProviderType extends AbstractType
         $builder->add('field', 'custom_selector', array(
             'label' => 'Referring Provider Name:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterReferringProvider'),
+            'read_only' => $this->params['referringProviders-readonly'],
             'required' => false,
             'classtype' => 'singleUserWrapper'
             //'classtype' => 'userWrapper'
@@ -56,18 +62,21 @@ class EncounterReferringProviderType extends AbstractType
         $builder->add('referringProviderSpecialty', 'custom_selector', array(
             'label' => 'Referring Provider Specialty:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-referringProviderSpecialty'),
+            'read_only' => $this->params['referringProviders-readonly'],
             'required' => false,
             'classtype' => 'referringProviderSpecialty'
         ));
 
         $builder->add('referringProviderPhone', null, array(
             'label' => 'Referring Provider Phone Number:',
+            'read_only' => $this->params['referringProviders-readonly'],
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('referringProviderEmail', null, array(
             'label' => 'Referring Provider E-Mail:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control'),
+            'read_only' => $this->params['referringProviders-readonly'],
         ));
 
     }

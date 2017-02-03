@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\CallLogBundle\Form;
+namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\ArrayFieldType;
 use Symfony\Component\Form\AbstractType;
@@ -17,6 +17,10 @@ class EncounterAttendingPhysicianType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
+        if( !array_key_exists('attendingPhysicians-readonly', $this->params) ) {
+            $this->params['attendingPhysicians-readonly'] = true;
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -26,6 +30,7 @@ class EncounterAttendingPhysicianType extends AbstractType
             'label' => 'Attending Physician:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterAttendingPhysician'),
             'required' => false,
+            'read_only' => $this->params['attendingPhysicians-readonly'],
             'classtype' => 'singleUserWrapper'
             //'classtype' => 'userWrapper'
         ));
