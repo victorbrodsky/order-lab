@@ -326,24 +326,20 @@ class LoggerController extends Controller
         //////////////////// EOF get list of users with "unknown" user ////////////////////
 
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
-        $filterform = $this->createForm(new LoggerFilterType($params), null);
+        //$filterform = $this->createForm(new LoggerFilterType($params), null);
+        $filterform = $this->createLoggerFilter($params);
 
         $filterform->bind($request);
 
         $startdate = $filterform['startdate']->getData();
         $enddate = $filterform['enddate']->getData();
         $search = $filterform['search']->getData();
-        $users = $filterform['user']->getData();
         $eventTypes = $filterform['eventType']->getData();
 
         $ip = $filterform['ip']->getData();
         $roles = $filterform['roles']->getData();
         $objectTypes = $filterform['objectType']->getData();
         $objectId = $filterform['objectId']->getData();
-
-        //calllog
-        //$capacity = $filterform['capacity']->getData();
-        $capacity = null;   //
 
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
@@ -359,22 +355,24 @@ class LoggerController extends Controller
             $filtered = true;
         }
 
-        if( $users && count($users) > 0 ) {
-            $where = "";
-            foreach( $users as $user ) {
-                if( $where != "" ) {
-                    $where .= " OR ";
-                }
-                if( $user->getId() ) {
-                    $where .= "logger.user=".$user->getId();
-                } else {
-                    $where .= "logger.user.id IS NULL";
-                }
-            }
-            $dql->andWhere($where);
-
-            $filtered = true;
-        }
+//        $users = $filterform['user']->getData();
+//        if( $users && count($users) > 0 ) {
+//            $where = "";
+//            foreach( $users as $user ) {
+//                if( $where != "" ) {
+//                    $where .= " OR ";
+//                }
+//                if( $user->getId() ) {
+//                    $where .= "logger.user = :loggerUser";
+//                    $dqlParameters['loggerUser'] = $user->getId();
+//                } else {
+//                    $where .= "logger.user.id IS NULL";
+//                }
+//            }
+//            $dql->andWhere($where);
+//
+//            $filtered = true;
+//        }
 
         if( $eventTypes && count($eventTypes)>0 ) {
             //echo "eventTypes=".$eventTypes[0]."<br>";
@@ -460,34 +458,12 @@ class LoggerController extends Controller
             $filtered = true;
         }
 
-        //calllog:
-        //the "Capacity" column would show whether the logged in user is a "Submitter" or the "Attending" for this Entry in that row;
-        // by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"
-        if( $capacity ) {
-            //echo "capacity=".$capacity."<br>";
-            if( $capacity == "Submitter" ) {
-                //show only logger records where user=$currentUser
-                $dql->andWhere("logger.user = :currentUser");
-                $dqlParameters['currentUser'] = $currentUser;
-            }
-            if( $capacity == "Attending" ) {
-                //encounter_1_attendingPhysicians_0_field
-                //1) create select Message with encounter->attendingPhysicians->field(Wrapper)->user == $currentUser
-                $entryBodySearchStr = "SELECT s FROM OlegOrderformBundle:Message message ".
-                    " LEFT JOIN scan_message_encounter encounter ON message.id = encounter.message_id ".
-                    " LEFT JOIN scan_encounterAttendingPhysician attendingPhysician ON encounter.id = attendingPhysician.encounter_id ".
-                    " LEFT JOIN user_userWrapper userWrapper ON attendingPhysician.id = userWrapper.user ".
-                    " WHERE ".
-                    "(message.id = objectEntity.entityId AND objectEntity.entityName='Message' AND objectEntity.value LIKE :entryBodySearch)";
-                $dql->andWhere("EXISTS (".$entryBodySearchStr.")");
-                $queryParameters['capacity'] = $capacity;
-            }
+        //process optional fields by different bundles (i.e. calllog)
+        $filtered = $this->processOptionalFields($dql, $dqlParameters, $filterform,$filtered);
 
-            //$dql->andWhere("logger.entityId = :objectId");
-            //$dqlParameters['objectId'] = $objectId;
-
-            $filtered = true;
-        }
+//        echo "<pre>";
+//        print_r($dqlParameters);
+//        echo "</pre>";
 
         $filterRes['form'] = $filterform;
         $filterRes['dqlParameters'] = $dqlParameters;
@@ -495,6 +471,35 @@ class LoggerController extends Controller
 
         return $filterRes;
     }
+
+    public function createLoggerFilter($params) {
+        //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
+        return $this->createForm(new LoggerFilterType($params), null);
+    }
+    public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
+
+        $users = $filterform['user']->getData();
+        if( $users && count($users) > 0 ) {
+            $where = "";
+            foreach( $users as $user ) {
+                if( $where != "" ) {
+                    $where .= " OR ";
+                }
+                if( $user->getId() ) {
+                    $where .= "logger.user = :loggerUser";
+                    $dqlParameters['loggerUser'] = $user->getId();
+                } else {
+                    $where .= "logger.user.id IS NULL";
+                }
+            }
+            $dql->andWhere($where);
+
+            $filtered = true;
+        }
+
+        return $filtered;
+    }
+
 
     //convert given datetime from user's timezone to UTC. Use UTC in DB query. 12:00 => 17:00 +5
     public function convertFromUserTimezonetoUTC($datetime,$user) {

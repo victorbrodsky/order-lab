@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class LoggerFilterType extends AbstractType
 {
 
-    private $params;
+    protected $params;
 
 //    private $hideObjectType;
 //    private $hideObjectId;
@@ -189,20 +189,21 @@ class LoggerFilterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
-        //Capacity
-        if( 0 && $this->params['sitename'] == "calllog" ) {
-            $capacities = array(
-                "Submitter" => "Submitter",
-                "Attending" => "Attending"
-            );
-            $builder->add('capacity', 'choice', array(
-                'label' => false,
-                'required'=> false,
-                //'multiple' => false,
-                'choices' => $capacities,
-                'attr' => array('class' => 'combobox', 'placeholder' => 'Capacity'),
-            ));
-        }
+//        //Capacity
+//        if( $this->params['sitename'] == "calllog" ) {
+//            $capacities = array(
+//                "Submitter" => "Submitter",
+//                "Attending" => "Attending"
+//            );
+//            $builder->add('capacity', 'choice', array(
+//                'label' => false,
+//                'required'=> false,
+//                //'multiple' => false,
+//                'choices' => $capacities,
+//                'attr' => array('class' => 'combobox', 'placeholder' => 'Capacity'),
+//            ));
+//        }
+        $this->addOptionalFields($builder);
 
     }
 
@@ -216,5 +217,9 @@ class LoggerFilterType extends AbstractType
     public function getName()
     {
         return 'filter';
+    }
+
+    public function addOptionalFields( $builder ) {
+        return null;
     }
 }

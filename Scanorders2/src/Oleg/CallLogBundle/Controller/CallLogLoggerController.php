@@ -3,6 +3,7 @@
 namespace Oleg\CallLogBundle\Controller;
 
 
+use Oleg\CallLogBundle\Form\CalllogLoggerFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -191,6 +192,73 @@ class CallLogLoggerController extends LoggerController
         //exit('before return');
         return $loggerFormParams;
 
+    }
+
+    public function createLoggerFilter($params) {
+        //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
+        return $this->createForm(new CalllogLoggerFilterType($params), null);
+    }
+
+    public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
+        //echo "process Optional Fields <br>";
+        $currentUser = $this->get('security.context')->getToken()->getUser();
+        //search logger.event for [Attending Physician: Alain Borczuk - alb9003 (WCMC CWID)]
+        $currentUserName = "Attending Physician: ".$currentUser."";
+
+        //capacity:
+        $capacity = $filterform['capacity']->getData();
+        //echo "capacity=".$capacity."<br>";
+
+        //the "Capacity" column would show whether the logged in user is a "Submitter" or the "Attending" for this Entry in that row;
+        // by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"
+
+        if( $capacity == "Submitter" ) {
+            //echo "show only logger records where user=$currentUser <br>";
+            $dql->andWhere("logger.user = :currentUser");
+            $dqlParameters['currentUser'] = $currentUser->getId();
+            $filtered = true;
+        }
+        if( $capacity == "Attending" ) {
+            //encounter_1_attendingPhysicians_0_field
+            //OlegOrderformBundle:Message message
+
+            //1) create select Message with encounter->attendingPhysicians->field(Wrapper)->user == $currentUser
+//            $entryBodySearchStr =
+//                " SELECT message.id FROM OlegOrderformBundle:Message message ".
+//                " LEFT JOIN message.encounter encounter ON message.id = encounter.message_id ".
+//                " LEFT JOIN scan_encounterAttendingPhysician attendingPhysician ON encounter.id = attendingPhysician.encounter_id ".
+//                " LEFT JOIN user_userWrapper userWrapper ON attendingPhysician.id = userWrapper.user ".
+//                " WHERE ".
+//                "(message.id = objectEntity.entityId AND objectEntity.entityName='Message' AND objectEntity.value LIKE :entryBodySearch)";
+//            $dql->andWhere("EXISTS (".$entryBodySearchStr.")");
+
+            //echo "show only logger records where user=$currentUserName <br>";
+            $dql->andWhere("logger.event LIKE :currentUserName");
+            $dqlParameters['currentUserName'] = '%'.$currentUserName.'%';
+
+            //$dqlParameters['loggerUser'] = "IS NOT NULL";
+
+            $filtered = true;
+        }
+
+        if( !$capacity ) {
+            //by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"
+
+            $dql->andWhere("logger.user = :currentUser OR logger.event LIKE :currentUserName");
+            $dqlParameters['currentUser'] = $currentUser->getId();
+            $dqlParameters['currentUserName'] = '%'.$currentUserName.'%';
+
+            $filtered = true;
+        }
+
+        //$dql->andWhere("logger.entityId = :objectId");
+        //$dqlParameters['objectId'] = $objectId;
+
+//        echo "<pre>";
+//        print_r($dqlParameters);
+//        echo "</pre>";
+
+        return $filtered;
     }
 
     /**
