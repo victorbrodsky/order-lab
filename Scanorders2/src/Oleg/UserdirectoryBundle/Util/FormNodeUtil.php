@@ -975,6 +975,9 @@ class FormNodeUtil
                     $receivingEntity = $complexRes['receivingEntity'];
 
                     if( is_array($formNodeValue) ) {
+
+                        //////////// Case 1: array //////////////
+
                         //Array ( [0] => Array ( [formNodeValue] => 01/10/2017 8:8 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 1 )
                         // [1] => Array ( [formNodeValue] => 01/09/2017 7:7 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 0 ) )
                         $formNodeValueArr = array();
@@ -1019,23 +1022,9 @@ class FormNodeUtil
                             exit("1");
                         }
 
-//                        foreach( $formNodeValueArr as $key=>$value ) {
-//                            //process userWrapper case
-//                            $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
-//                            $elementName = $formNode->getName() . " ($key)";
-//                            $elementValue = $value;
-//
-//                            if( $table ) {
-//                                $result = $result.'<tr class="'.$trclassname.'">'.
-//                                    '<td colspan=3 class="rowlink-skip" style="width:20%">'.$elementName.'</td>'.
-//                                    '<td colspan=6 class="rowlink-skip" style="width:80%">'.$elementValue.'</td>'.'</tr>';
-//                            } else {
-//                                $result[] = $elementName . ": " . $elementValue;
-//                            }
-//                        }
-
                     } else {
-                        //single
+
+                        //////////// Case 2: single //////////////
                         $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
 
                         //////////////// Regular form node /////////////////////
@@ -1054,7 +1043,7 @@ class FormNodeUtil
                         } else {
                             $result[] = $elementName . ": " . $elementValue;
                         }
-                    }
+                    }//if array or single value
 
                     //echo "formNodeValue=".$formNodeValue.":<br>";
                 }

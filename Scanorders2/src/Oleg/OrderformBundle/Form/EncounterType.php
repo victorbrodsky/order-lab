@@ -214,9 +214,17 @@ class EncounterType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('u')
-                            ->where('u.roles LIKE :roles OR u=:user')
-                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                    return $er->createQueryBuilder('u')
+                        ->leftJoin("u.infos", "infos")
+                        ->leftJoin("u.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        ->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
+                        ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
+                        ->orderBy("infos.displayName","ASC");
+//                        return $er->createQueryBuilder('u')
+//                            ->where('u.roles LIKE :roles OR u=:user')
+//                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
                     },
             ));
 
@@ -235,8 +243,16 @@ class EncounterType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('u')
-                        ->where('u.roles LIKE :roles OR u=:user')
-                        ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                        ->leftJoin("u.infos", "infos")
+                        ->leftJoin("u.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        ->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
+                        ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
+                        ->orderBy("infos.displayName","ASC");
+//                    return $er->createQueryBuilder('u')
+//                        ->where('u.roles LIKE :roles OR u=:user')
+//                        ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
                 },
             ));
 
