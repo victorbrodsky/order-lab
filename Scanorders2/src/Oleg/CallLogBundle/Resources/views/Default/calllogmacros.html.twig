@@ -499,8 +499,7 @@
                 {{ formmacros.simplefield( "Submitter:", hreflink, "", "disabled" ) }}
 
                 {#Submitted on#}
-                {% set submittedDate = message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('h:i a (T)') %}
-                {{ formmacros.simplefield("Submitted on:", submittedDate, "", "disabled") }}
+                {{ formmacros.simplefield("Submitted on:", message.getOrderDateStr, "", "disabled") }}
 
                 {#Message Status#}
                 {{ formmacros.simplefield("Message Status:", message.messageStatus.name, "", "disabled") }}

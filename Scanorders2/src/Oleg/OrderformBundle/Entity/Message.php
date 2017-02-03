@@ -1701,17 +1701,20 @@ class Message {
 
     //[submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD
     public function getSubmitterInfo() {
-        $info = "";
-        if( $this->getOrderdate() ) {
-            $info = $this->getOrderdate()->format('m/d/Y') . " at " . $this->getOrderdate()->format('h:i a');
-        }
+        $info = $this->getOrderDateStr();
         if( $this->getProvider() ) {
             $info = $info . " by ".$this->getProvider()->getUsernameOptimal();
         }
         return $info;
     }
 
-
+    public function getOrderDateStr() {
+        $info = "";
+        if( $this->getOrderdate() ) {
+            $info = $this->getOrderdate()->format('m/d/Y') . " at " . $this->getOrderdate()->format('h:i a (T)');
+        }
+        return $info;
+    }
 
     /////////////////////// Getters and Setters of Specific Orders ///////////////////////
 
