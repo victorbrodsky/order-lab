@@ -399,7 +399,9 @@ class CallLogPatientController extends PatientController {
         $messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
-            $messageCategories = $messageCategoriePathCall->printTreeSelectList();
+            //$messageCategories = $messageCategoriePathCall->printTreeSelectList();
+            //#51: Show them in the same way as the "Message Type" dropdown menu on the homepage shows its values.
+            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis();
         }
         //print_r($messageCategories);
 

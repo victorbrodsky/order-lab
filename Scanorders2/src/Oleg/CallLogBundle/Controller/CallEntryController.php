@@ -413,7 +413,7 @@ class CallEntryController extends Controller
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginator  = $this->get('knp_paginator');
         $messages = $paginator->paginate(

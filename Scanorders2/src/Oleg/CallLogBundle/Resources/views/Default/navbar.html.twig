@@ -77,7 +77,7 @@
 
                     <li id="nav-bar-callentry"><a href="{{ path(calllog_sitename~'_callentry') }}">New Entry</a></li>
 
-                    <li id="nav-bar-myentrees"><a href="{{ path(calllog_sitename~'_my_generation_log') }}">My Entrees</a></li>
+                    <li id="nav-bar-mycalllogentrees"><a href="{{ path(calllog_sitename~'_my_generation_log') }}">My Entrees</a></li>
 
                     {#<li id="nav-bar-patientlist"><a href="{{ path(calllog_sitename~'_complex_patient_list') }}">Lists</a></li>#}
                     {% set calllogLists = calllog_util.getPatientList() %}
@@ -86,7 +86,7 @@
                         <ul class="dropdown-menu">
                             {% for list in calllogLists %}
                                 {#http://localhost/order/scan/admin/list/pathology-call-complex-patients/#}
-                                <li><a target="_blank" href="{{ list.url }}">{{list.name}}</a></li>
+                                <li><a href="{{ list.url }}">{{list.name}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>

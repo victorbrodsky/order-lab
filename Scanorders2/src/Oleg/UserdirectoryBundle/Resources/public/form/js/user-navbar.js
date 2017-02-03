@@ -162,6 +162,13 @@ function focusMaskField(field) {
 //    return searchType;
 //}
 
+function userAddActiveClass( id ) {
+    //remove active fromm all other li in .navbar
+    $('li.active').removeClass('active');
+
+    $('#nav-bar-'+id).addClass('active');
+
+}
 
 
 function setNavBar(sitename) {
@@ -232,17 +239,18 @@ function setCallLogNavBar() {
         id = 'dataquality';
     }
 
-    id = commonNavBar(full,id)
+    id = commonNavBar(full,id);
 
     if( full.indexOf("/call-log-book/event-log/event-log-per-user-per-event-type/") !== -1 ) {
-        id = 'myentrees';
+        id = 'mycalllogentrees';
     }
 
     //if( full.indexOf("/call-log-book/re-identify") !== -1 ) {
     //    id = null;
     //}
 
-    $('#nav-bar-'+id).addClass('active');
+    //$('#nav-bar-'+id).addClass('active');
+    userAddActiveClass(id);
 }
 
 function setVacReqNavBar() {
@@ -281,6 +289,7 @@ function setVacReqNavBar() {
     }
 
     $('#nav-bar-'+id).addClass('active');
+    //userAddActiveClass(id);
 }
 
 function setDeidentificatorNavBar() {
@@ -296,6 +305,7 @@ function setDeidentificatorNavBar() {
     }
 
     $('#nav-bar-'+id).addClass('active');
+    //userAddActiveClass(id);
 }
 
 function setFellappNavBar() {
@@ -329,6 +339,7 @@ function setFellappNavBar() {
 
 
     $('#nav-bar-'+id).addClass('active');
+    //userAddActiveClass(id);
 }
 
 function setScanNavBar() {
@@ -392,6 +403,7 @@ function setScanNavBar() {
     //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
 
     $('#nav-bar-'+id).addClass('active');
+    //userAddActiveClass(id);
 }
 
 
@@ -435,6 +447,7 @@ function setDirectoryNavBar() {
     //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
 
     $('#nav-bar-'+id).addClass('active');
+    //userAddActiveClass(id);
 }
 
 //common nav menues - mainly admin menue
