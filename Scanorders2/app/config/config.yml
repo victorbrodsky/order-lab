@@ -51,6 +51,8 @@ twig:
     globals:
         institution_url: %institution_url%
         institution_name: %institution_name%
+        subinstitution_url: %subinstitution_url%
+        subinstitution_name: %subinstitution_name%
         department_url: %department_url%
         department_name: %department_name%
         employees_sitename: %employees.sitename%
