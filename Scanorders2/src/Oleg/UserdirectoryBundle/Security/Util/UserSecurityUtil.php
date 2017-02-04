@@ -658,7 +658,7 @@ class UserSecurityUtil {
     }
 
 
-    //username - full username including user type ie svc_aperio_spectrum_@_wcmc-cwid
+    //username - full username including user type ie aperio_username_@_wcmc-cwid
     public function constractNewUser($username) {
 
         $serviceContainer = $this->container;
@@ -786,7 +786,7 @@ class UserSecurityUtil {
                         $strArr2 = explode(" ",trim($strArr[1]));
 
                         if( count($strArr2) > 0 ) {
-                            $cwid = $strArr2[0]; //alb9003
+                            $cwid = $strArr2[0];
                         }
 
                         //try first part cwid

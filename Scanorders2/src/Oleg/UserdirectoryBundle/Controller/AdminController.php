@@ -1145,35 +1145,35 @@ class AdminController extends Controller
         //Create organizational group "Committee" with default level -2, because all other levels are taken by regular tree elements
         //-2 is mirroring of the same level 2 - "Division". This solution should work and don not cause any errors.
         //Other solution is to remove restriction for level uniqueness in the organizational group object. But, how it will affect the logic?
-        //EXECUTIVE (Dr. Daniel Knowles): Executive Committee
-        $this->vacreqRoleSetSingleUserInstitution($entity,"EXECUTIVE",$wcmc,"Executive Committee","dknowles");
+        //EXECUTIVE: Executive Committee
+        $this->vacreqRoleSetSingleUserInstitution($entity,"EXECUTIVE",$wcmc,"Executive Committee","cwid");
 
-        //CLINICALPATHOLOGY (Dr. Jacob Rand): Laboratory Medicine
-        $this->vacreqRoleSetSingleUserInstitution($entity,"CLINICALPATHOLOGY",$wcmc,"Laboratory Medicine","jar9135");
+        //CLINICALPATHOLOGY: Laboratory Medicine
+        $this->vacreqRoleSetSingleUserInstitution($entity,"CLINICALPATHOLOGY",$wcmc,"Laboratory Medicine","cwid");
 
         //EXPERIMENTALPATHOLOGY (Barry Sleckman): Experimental Pathology (create new under WCMC => Pathology and Laboratory Medicine)
         //bas2022@med.cornell.edu
         // +1 212 746 4842
         //Pathology and Laboratory Medicine (WCMC)
-        $this->vacreqRoleSetSingleUserInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology","bas2022");
+        $this->vacreqRoleSetSingleUserInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology","cwid");
 
-        //VASCULARBIOLOGY (Dr. Timothy Hla): "Vascular Biology" (in NYP onlys. Create a new under WCMC => Pathology and Laboratory Medicine => Research)
-        $this->vacreqRoleSetSingleUserInstitution($entity,"VASCULARBIOLOGY",$wcmc,"Vascular Biology","tih2002");
+        //VASCULARBIOLOGY : "Vascular Biology" (in NYP onlys. Create a new under WCMC => Pathology and Laboratory Medicine => Research)
+        $this->vacreqRoleSetSingleUserInstitution($entity,"VASCULARBIOLOGY",$wcmc,"Vascular Biology","cwid");
 
-        //HEMATOPATHOLOGY (Dr. Attilio Orazi): "Hematopathology" - use division, not service
-        $this->vacreqRoleSetSingleUserInstitution($entity,"HEMATOPATHOLOGY",$wcmc,"Hematopathology","ato9002");
+        //HEMATOPATHOLOGY : "Hematopathology" - use division, not service
+        $this->vacreqRoleSetSingleUserInstitution($entity,"HEMATOPATHOLOGY",$wcmc,"Hematopathology","cwid");
 
-        //SURGICALPATHOLOGY (Dr. Alain Borczuk): Anatomic Pathology
-        $this->vacreqRoleSetSingleUserInstitution($entity,"SURGICALPATHOLOGY",$wcmc,"Anatomic Pathology","alb9003");
+        //SURGICALPATHOLOGY : Anatomic Pathology
+        $this->vacreqRoleSetSingleUserInstitution($entity,"SURGICALPATHOLOGY",$wcmc,"Anatomic Pathology","cwid");
 
-        //CYTOPATHOLOGY (Rana Shafiq-Hoda, MBBS): Cytopathology
-        $this->vacreqRoleSetSingleUserInstitution($entity,"CYTOPATHOLOGY",$wcmc,"Cytopathology","rhoda");
+        //CYTOPATHOLOGY : Cytopathology
+        $this->vacreqRoleSetSingleUserInstitution($entity,"CYTOPATHOLOGY",$wcmc,"Cytopathology","cwid");
 
-        //DERMATOPATHOLOGY (Dr. Cynthia Magro): Dermatopathology
-        $this->vacreqRoleSetSingleUserInstitution($entity,"DERMATOPATHOLOGY",$wcmc,"Dermatopathology","cym2003");
+        //DERMATOPATHOLOGY : Dermatopathology
+        $this->vacreqRoleSetSingleUserInstitution($entity,"DERMATOPATHOLOGY",$wcmc,"Dermatopathology","cwid");
 
-        //SUPERVISOR (Sara Lynch, sal2026@med.cornell.edu): Pathology and Laboratory Medicine
-        $this->vacreqRoleSetSingleUserInstitution($entity,"SUPERVISOR",$wcmc,"Pathology and Laboratory Medicine","sal2026");
+        //SUPERVISOR : Pathology and Laboratory Medicine
+        $this->vacreqRoleSetSingleUserInstitution($entity,"SUPERVISOR",$wcmc,"Pathology and Laboratory Medicine","cwid");
 
         return 0;
     }
