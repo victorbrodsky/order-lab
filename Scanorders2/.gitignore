@@ -10,8 +10,8 @@
 /app/logs/*
 /build/
 /vendor/*
-!/vendor/aperio
-!/vendor/olegutil
+/vendor/aperio
+/vendor/olegutil
 /bin/
 /composer.phar
 /src/Oleg/OrderformBundle/Entity/*.php~
