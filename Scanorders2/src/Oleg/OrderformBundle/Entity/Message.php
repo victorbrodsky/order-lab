@@ -1742,6 +1742,14 @@ class Message {
         return $info;
     }
 
+    public function getFormVersionsInfo() {
+        $infoArr = array();
+        foreach( $this->getFormVersions() as $formVersion ) {
+            $infoArr[] = $formVersion->printShort();
+        }
+        return implode("; ",$infoArr);
+    }
+
     /////////////////////// Getters and Setters of Specific Orders ///////////////////////
 
     /**

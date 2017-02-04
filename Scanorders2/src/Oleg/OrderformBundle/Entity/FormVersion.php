@@ -177,11 +177,11 @@ class FormVersion {
         }
 
         if( $this->getFormId() ) {
-            $str = $str . " " . $this->getFormId();
+            $str = $str . ", " . $this->getFormId();
         }
 
         if( $this->getFormVersion() ) {
-            $str = $str . " " . $this->getFormVersion();
+            $str = $str . ", " . $this->getFormVersion();
         }
 
         return $str;

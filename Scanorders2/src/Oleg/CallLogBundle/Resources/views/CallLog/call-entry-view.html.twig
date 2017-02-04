@@ -229,6 +229,10 @@
                             {#Message Version#}
                             {{ formmacros.field(form.version) }}
                             {{ formmacros.field(form.messageTitle) }}
+
+                            {#form version#}
+                            {{ formmacros.simplefield("Form(s):", message.getFormVersionsInfo, "", "disabled") }}
+
                             {#Amendment Reason#}
                             {% if message.version|number_format > 1 %}
                                 {{ formmacros.field(form.amendmentReason) }}
