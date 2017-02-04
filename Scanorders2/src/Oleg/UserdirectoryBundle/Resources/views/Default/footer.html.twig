@@ -3,11 +3,20 @@
 
     <div class="footer">
 
+        {#<a href="{{ path('main_common_home') }}" target="_blank">O R D E R</a>#}
+        {#&copy; {{ "now"|date('Y') }} by#}
+        {#<a href="{{ department_url }}" target="_blank">{{ department_name }}</a>#}
+        {#at#}
+        {#<a href="{{ institution_url }}" target="_blank">{{ institution_name }}</a>.#}
+
         <a href="{{ path('main_common_home') }}" target="_blank">O R D E R</a>
-        &copy; {{ "now"|date('Y') }} by
-        <a href="{{ department_url }}" target="_blank">{{ department_name }}</a>
-        at
+        &copy; {{ "now"|date('Y') }}
         <a href="{{ institution_url }}" target="_blank">{{ institution_name }}</a>.
+
+        <br><br>
+
+        Instance for <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
+        <a href="http://weill.cornell.edu" target="_blank">Weill Cornell Medicine</a>.
 
     </div>
 

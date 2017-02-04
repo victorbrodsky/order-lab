@@ -7,6 +7,7 @@ use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
 use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\FormVersion;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Entity\Part;
 use Oleg\OrderformBundle\Entity\Patient;
@@ -89,7 +90,7 @@ class CallLogUtil
     public function createPatientMergeMrn( $provider, $patient, $mrnId ) {
 
         //Source System: ORDER Call Log Book
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->container->get('order_security_utility');
         $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
@@ -120,7 +121,7 @@ class CallLogUtil
     public function createWithCheckPatientMergeMrn( $provider, $patient, $mrnId ) {
 
         //Source System: ORDER Call Log Book
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->container->get('order_security_utility');
         $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
@@ -385,7 +386,7 @@ class CallLogUtil
     //set master patient: create a new, valid masterMergeRecord and set all others to invalid
     public function setMasterPatientRecord( $patients, $masterMergeRecordId, $provider ) {
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->container->get('order_security_utility');
         $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
@@ -1570,4 +1571,36 @@ class CallLogUtil
 
         return $output;
     }
+
+
+    //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
+    public function setFormVersions( $message ) {
+
+        $targetMessageCategory = $message->getMessageCategory();
+        if( !$targetMessageCategory ) {
+            return null;
+        }
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+
+        $messageCategories = $targetMessageCategory->getEntityBreadcrumbs(); //message category hierarchy
+
+        foreach( $messageCategories as $messageCategory ) {
+
+            //get only 'real' fields as $formNodes
+            $formNodes = $formNodeUtil->getAllRealFormNodes($messageCategory);
+
+            foreach( $formNodes as $formNode ) {
+
+                $formVersion = new FormVersion();
+                $formVersion->setFormNode($formNode);
+                $message->addFormVersion($formVersion);
+                //echo "formVersionEntity: ".$formVersion."<br>";
+            }
+
+        }
+
+        //exit('form version');
+    }
+
 }

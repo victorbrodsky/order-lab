@@ -329,6 +329,7 @@ class AdminController extends Controller
         $count_generateLabResultUnitsMeasureList = $this->generateLabResultUnitsMeasureList();
         $count_generateLabResultFlagList = $this->generateLabResultFlagList();
         $count_generatePathologyResultSignatoriesList = $this->generatePathologyResultSignatoriesList();
+        $count_setFormNodeVersion = $this->setFormNodeVersion();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
@@ -421,6 +422,7 @@ class AdminController extends Controller
             'LabResultUnitsMeasures='.$count_generateLabResultUnitsMeasureList.', '.
             'LabResultFlagList='.$count_generateLabResultFlagList.', '.
             'PathologyResultSignatoriesList='.$count_generatePathologyResultSignatoriesList.', '.
+            'FormNodeVersion='.$count_setFormNodeVersion.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -7435,4 +7437,11 @@ class AdminController extends Controller
         return false;
     }
 
+
+    public function setFormNodeVersion() {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery("UPDATE OlegUserdirectoryBundle:FormNode node SET node.version = '1' WHERE node.version = 'NULL' OR node.version IS NULL");
+        $numUpdated = $query->execute();
+        return "set formnode versions count ".$numUpdated;
+    }
 }

@@ -166,6 +166,7 @@ abstract class ListAbstract
         $this->setType('user-added');
         $this->setCreatedate(new \DateTime());
         $this->setOrderinlist(-1);
+        $this->setVersion('1');
 
         if( $creator ) {
             $this->setCreator($creator);

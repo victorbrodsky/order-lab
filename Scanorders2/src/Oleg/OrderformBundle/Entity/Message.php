@@ -398,6 +398,10 @@ class Message {
      */
     private $amendmentReason;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
+     */
+    private $formVersions;
 
     ////////////////////////// Specific Messages //////////////////////////
 
@@ -490,6 +494,7 @@ class Message {
         $this->sources = new ArrayCollection();
         $this->destinations = new ArrayCollection();
         $this->externalIds = new ArrayCollection();
+        $this->formVersions = new ArrayCollection();
 
         //links
         //TODO: test cloning
@@ -544,6 +549,7 @@ class Message {
             $this->sources = new ArrayCollection();
             $this->destinations = new ArrayCollection();
             $this->externalIds = new ArrayCollection();
+            $this->formVersions = new ArrayCollection();
 
             //$this->editorInfos = new ArrayCollection();
 
@@ -960,7 +966,7 @@ class Message {
     }
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission
-    public function getMessageTitleStr( $siteName )
+    public function getMessageTitleStr()
     {
         $title = "";
         if( $this->getMessageCategory() ) {
@@ -1185,6 +1191,26 @@ class Message {
     public function getExternalIds()
     {
         return $this->externalIds;
+    }
+
+    public function addFormVersion($item)
+    {
+        if( $item && !$this->formVersions->contains($item) ) {
+            $this->formVersions->add($item);
+            $item->setMessage($this);
+        }
+        return $this;
+    }
+    public function removeFormVersion($item)
+    {
+        $this->formVersions->removeElement($item);
+    }
+    /**
+     * @return mixed
+     */
+    public function getFormVersions()
+    {
+        return $this->formVersions;
     }
 
     /**
@@ -1895,8 +1921,6 @@ class Message {
     {
         $this->calllogEntryMessage = $calllogEntryMessage;
     }
-
-
 
 
     /////////////////////// EOF Getters and Setters of Specific Orders ///////////////////////

@@ -903,11 +903,16 @@ class CallEntryController extends Controller
                     }
                 }
 
-                //message title setMessageTitle: show the title of the form (not the message type) here, not just its ID
+
                 if( $message->getMessageCategory() ) {
+
+                    //message title setMessageTitle: show the title of the form (not the message type) here, not just its ID
                     $messageTitle = $message->getMessageTitleStr();
                     $message->setMessageTitle($messageTitle);
                 }
+
+                //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
+                $calllogUtil->setFormVersions($message);
 
                 if( $patient->getId() ) {
                     //CASE 1
