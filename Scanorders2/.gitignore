@@ -2,8 +2,9 @@
 /web/css/
 /web/js/
 /web/log/
-/web/uploads/
+/web/test/
 /web/Uploaded/
+/web/uploads/
 /app/bootstrap.php.cache
 /app/cache/*
 /app/config/parameters.yml
