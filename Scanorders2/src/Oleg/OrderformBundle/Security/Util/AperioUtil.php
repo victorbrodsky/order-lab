@@ -111,8 +111,8 @@ class AperioUtil {
                 //set Roles: aperio users can submit order by default.
                 $user->addRole('ROLE_SCANORDER_SUBMITTER');
 
-                //TODO: remove this on production!
-                if( $user->getPrimaryPublicUserId() == "oli2002" || $user->getPrimaryPublicUserId() == "vib9020" ) {
+                //cwid is admin cwid
+                if( $user->getPrimaryPublicUserId() == "cwid" || $user->getPrimaryPublicUserId() == "cwid" ) {
                     $user->addRole('ROLE_PLATFORM_ADMIN');
                 }
                 if( $this->test ) {
@@ -120,7 +120,7 @@ class AperioUtil {
                     $user->removeRole('ROLE_SCANORDER_SUBMITTER');
                 }
 
-                //TODO: Remove: for testing at home;
+                //for testing without ldap
                 if( !$this->ldap ) {
                     echo "Aperio Auth Tesing: Remove it !!!";
                     $user->setPrimaryPublicUserId("testuser4");

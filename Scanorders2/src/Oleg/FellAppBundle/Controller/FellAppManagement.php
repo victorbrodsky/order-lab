@@ -248,129 +248,129 @@ class FellAppManagement extends Controller {
         //BREASTPATHOLOGY
         $BREASTPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
         $users = array(
-            'sjshin',
-            'tid9007',
-            'sahoda',
-            'min9031'
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid'
         );
         //interviewers
         $this->addUsersToFellowshipSubspecialty( $BREASTPATHOLOGY, $users, "BREASTPATHOLOGY", "INTERVIEWER" );
         //coordinators
-        $this->addUsersToFellowshipSubspecialty( $BREASTPATHOLOGY, array('jep2018'), "BREASTPATHOLOGY", "COORDINATOR" );
+        $this->addUsersToFellowshipSubspecialty( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "COORDINATOR" );
         //directors
-        $this->addUsersToFellowshipSubspecialty( $BREASTPATHOLOGY, array('sjshin'), "BREASTPATHOLOGY", "DIRECTOR" );
+        $this->addUsersToFellowshipSubspecialty( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "DIRECTOR" );
 
 
         //CYTOPATHOLOGY
         $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
         $users = array(
-            'rhoda',
-            'rer9052',
-            'jhkoizum',
-            'sua9036',
-            'tag9056',
-            'gry2001',
-            'asm9041'
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid'
         );
         //interviewers
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "CYTOPATHOLOGY", "INTERVIEWER" );
         //coordinators
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "CYTOPATHOLOGY", "COORDINATOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "COORDINATOR" );
         //directors
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('rhoda'), "CYTOPATHOLOGY", "DIRECTOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "DIRECTOR" );
 
         //GASTROINTESTINALPATHOLOGY
         $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
         $users = array(
-            'rhy2001',
-            'joj9034',
-            'dmb2007',
-            'ytchen',
-            'anr9142'
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid'
         );
         //interviewers
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "GASTROINTESTINALPATHOLOGY", "INTERVIEWER" );
         //coordinators
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "GASTROINTESTINALPATHOLOGY", "COORDINATOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "COORDINATOR" );
         //directors
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('rhy2001'), "GASTROINTESTINALPATHOLOGY", "DIRECTOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "DIRECTOR" );
 
 
         //GENITOURINARYPATHOLOGY
         $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
         $users = array(
-            'rubinma',
-            'jmm9018',
-            'brr2006',
-            'nan9030',
-            'ytchen',
-            'pet9017',
-            'frk9007' //new: Francesca Khani
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid'
         );
         //interviewers
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "GENITOURINARYPATHOLOGY", "INTERVIEWER" );
         //coordinators
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "GENITOURINARYPATHOLOGY", "COORDINATOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "COORDINATOR" );
         //directors
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('rubinma'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
 
         //GYNECOLOGICPATHOLOGY
         $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
         $users = array(
-            'lhellens',
-            'rbaergen',
-            'ecpirog',
-            'cam9118'
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid'
         );
         //interviewers
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "GYNECOLOGICPATHOLOGY", "INTERVIEWER" );
         //coordinators
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "GYNECOLOGICPATHOLOGY", "COORDINATOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "COORDINATOR" );
         //directors
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('lhellens'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
 
         //HEMATOPATHOLOGY
         $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
         $users = array(
-            'ato9002',
-            'sae2001',
-            'achadbur',
-            'ggi9001',
-            'jut9021',
-            'wtam',
-            'yel9011',
-            'ksp9004',
-            'emm9030'
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid'
         );
         //interviewers
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "HEMATOPATHOLOGY", "INTERVIEWER" );
         //coordinators
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "HEMATOPATHOLOGY", "COORDINATOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "COORDINATOR" );
         //directors
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('ato9002'), "HEMATOPATHOLOGY", "DIRECTOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "DIRECTOR" );
 
 
         //MOLECULARGENETICPATHOLOGY
         $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
         $users = array(
-            'mik9095',
-            'har2006',
-            'hef9020',
-            'ecesarm',
-            'wtam',
-            'ytchen',
-            'ans9112',
-            'jos9015', //new: John Sipley,
-            'pcr9004',
-            'sum2001',
-            'hmz9001'
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid',
+            'cwid'
         );
         //interviewers
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "MOLECULARGENETICPATHOLOGY", "INTERVIEWER" );
         //coordinators
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "MOLECULARGENETICPATHOLOGY", "COORDINATOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "COORDINATOR" );
         //directors
-        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('mik9095'), "MOLECULARGENETICPATHOLOGY", "DIRECTOR" );
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "DIRECTOR" );
 
 
         //get all fellowship types using institution

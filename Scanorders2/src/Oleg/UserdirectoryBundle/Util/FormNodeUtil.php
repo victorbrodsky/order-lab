@@ -514,7 +514,6 @@ class FormNodeUtil
             $transformer = new GenericTreeTransformer($this->em, $creator, "PathologyResultSignatoriesList", "UserdirectoryBundle");
             //$userWrapperTransformer = new SingleUserWrapperTransformer($this->em, $this->container, $creator, 'UserWrapper');
 
-            //$value = vib9002,2,oli2002
             $valueArr = $receivingEntity->getIdValues();
             //echo "valueArr=".count($valueArr)."<br>";
 

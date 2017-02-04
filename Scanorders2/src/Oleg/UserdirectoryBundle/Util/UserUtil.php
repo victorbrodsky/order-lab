@@ -151,11 +151,11 @@ class UserUtil {
 
             //add Platform Admin role and WCMC Institution for specific users
             //TODO: remove in prod
-            if( $user->getUsername() == "oli2002_@_wcmc-cwid" || $user->getUsername() == "vib9020_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid1_@_wcmc-cwid" || $user->getUsername() == "cwid2_@_wcmc-cwid" ) {
                 $user->addRole('ROLE_PLATFORM_ADMIN');
             }
 
-            if( $user->getUsername() == "jep2018_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
                 //$user->addRole('ROLE_FELLAPP_COORDINATOR');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');

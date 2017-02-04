@@ -219,8 +219,8 @@ class AuthUtil {
             $user->setPreferredPhone($searchRes['telephoneNumber']);
         }
 
-        //TODO: remove this on production!
-        if( $user->getUsername() == "oli2002_@_wcmc-cwid" || $user->getUsername() == "vib9020_@_wcmc-cwid" ) {
+        //cwid is admin cwid
+        if( $user->getUsername() == "cwid1_@_wcmc-cwid" || $user->getUsername() == "cwid2_@_wcmc-cwid" ) {
             $user->addRole('ROLE_PLATFORM_ADMIN');
         }
 
