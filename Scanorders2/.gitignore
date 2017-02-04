@@ -10,7 +10,7 @@
 /app/logs/*
 /build/
 /vendor/*
-/vendor/aperio
+!/vendor/aperio
 !/vendor/olegutil
 /bin/
 /composer.phar
