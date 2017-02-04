@@ -181,7 +181,7 @@ class CallLogLoggerController extends LoggerController
         $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($users[0]);
 
-        //Event Log showing 1 matching "New Call Log Book Entry Submitted" event(s) for user: Victor Brodsky - vib9020 (WCMC CWID)
+        //Event Log showing 1 matching "New Call Log Book Entry Submitted" event(s) for user:
         //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;
         $eventlogTitle = $this->container->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {
@@ -202,7 +202,7 @@ class CallLogLoggerController extends LoggerController
     public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
         //echo "process Optional Fields <br>";
         $currentUser = $this->get('security.context')->getToken()->getUser();
-        //search logger.event for [Attending Physician: Alain Borczuk - alb9003 (WCMC CWID)]
+        //search logger.event for [Attending Physician: firstname lastname - cwid (WCMC CWID)]
         $currentUserName = "Attending Physician: ".$currentUser."";
 
         //capacity:

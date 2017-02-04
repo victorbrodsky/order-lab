@@ -5,18 +5,20 @@ parameters:
   employees.avataruploadpath:
 
   default_time_zone: America/New_York
-  default_system_email:
-  institution_url:
-  institution_name:
-  department_url:
-  department_name:
+  default_system_email: your_value
+  institution_url: your_value
+  institution_name: your_value
+  subinstitution_url: your_value
+  subinstitution_name: your_value
+  department_url: your_value
+  department_name: your_value
 
   #ldap
-  ldaphost: a.wcmc-ad.net
-  ldapport: 389
-  ldapou: a.wcmc-ad.net
-  ldapusername: svc_aperio_spectrum
-  ldappassword: Aperi0,123
+  ldaphost: your_value
+  ldapport: your_value
+  ldapou: your_value
+  ldapusername: your_value
+  ldappassword: your_value
   ldapexepath: ../src/Oleg/UserdirectoryBundle/Util/
   ldapexefilename: LdapSaslCustom.exe
 
@@ -40,54 +42,6 @@ parameters:
 #    session:
 #        cookie_lifetime: 20
 #        gc_maxlifetime: 10
-
-
-#original
-#fr3d_ldap:
-#
-#    driver:
-#        host: a.wcmc-ad.net
-#        username: svc_aperio_spectrum@a.wcmc-ad.net
-#        password: Aperi0,123
-#        accountDomainName: a.wcmc-ad.net
-##       host:              a.wcmc-ad.net                            # Required
-##       username:          svc_aperio_spectrum@a.wcmc-ad.net        # Optional
-##       password:          Aperi0,123                               # Optional
-##       accountDomainName: a.wcmc-ad.net                            # Required
-#    user:
-#        baseDn: dc=a,dc=wcmc-ad,dc=net
-#        filter: (&(ObjectClass=Person)) #Person
-#        attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
-#                - { ldap_attr: cn,   user_method: setUsername }
-#                - { ldap_attr: mail,   user_method: setEmail }
-#                - { ldap_attr: sn,   user_method: setLastName }
-#                - { ldap_attr: title,   user_method: setTitle }
-#                - { ldap_attr: givenname,   user_method: setFirstName }
-#                - { ldap_attr: displayname,   user_method: setDisplayName }
-#    service:
-#        ldap_manager:  oleg.security.ldap_manager
-
-#experimental
-#fr3d_ldap:
-#    driver:
-#        host: cumcdcp02.a.wcmc-ad.net
-#        username: svc_aperio_spectrum
-#        password: Aperi0,123
-#        accountDomainName: a.wcmc-ad.net
-#        optReferrals: 0  # Optional
-#    user:
-#        baseDn: CN=Users,DC=a,DC=wcmc-ad,DC=net
-#        filter: (&(ObjectClass=user))
-#        #filter: (&(cn=%s))
-#        attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
-#                - { ldap_attr: cn,   user_method: setUsername }
-#                - { ldap_attr: mail,   user_method: setEmail }
-#                - { ldap_attr: title,   user_method: setTitle }
-#                - { ldap_attr: sn,   user_method: setLastName }
-#                - { ldap_attr: givenname,   user_method: setFirstName }
-#                - { ldap_attr: displayname,   user_method: setDisplayName }
-#    service:
-#        ldap_manager:  oleg.security.ldap_manager
 
 
 #fos user bundle

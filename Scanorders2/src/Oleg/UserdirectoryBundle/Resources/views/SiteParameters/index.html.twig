@@ -356,6 +356,16 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'institutionurl'}) }}">Edit</a></td>
             </tr>
             <tr>
+                <td>Sub Institution Name</td>
+                <td>{{ entity.subinstitutionname }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'subinstitutionname'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Sub Institution Url</td>
+                <td>{{ entity.subinstitutionurl }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'subinstitutionurl'}) }}">Edit</a></td>
+            </tr>
+            <tr>
                 <td>Department Name</td>
                 <td>{{ entity.departmentname }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'departmentname'}) }}">Edit</a></td>

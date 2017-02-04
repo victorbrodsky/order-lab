@@ -76,8 +76,8 @@ class LoginTest extends WebTestCase {
         //$form['_username'] = 'testprocessor';
         //$form['_password'] = 'testprocessor1';
 
-        $form['_username'] = 'svc_aperio_spectrum';
-        $form['_password'] = 'Aperi0,123';
+        $form['_username'] = '';
+        $form['_password'] = '';
 
         //$client->insulate();
 

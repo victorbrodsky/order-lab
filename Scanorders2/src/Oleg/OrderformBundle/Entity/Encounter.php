@@ -1001,7 +1001,7 @@ class Encounter extends ObjectAbstract
         return implode("; ",$infoArr);
     }
 
-    //AttendingPhysician (i.e. Oleg Ivanov - oli2222 (WCMC CWID))
+    //AttendingPhysician (i.e. firstname lastname - cwid (WCMC CWID))
     public function obtainAttendingPhysicianInfo() {
         $infoArr = array();
         //referringProviders_0_referringProviderSpecialty

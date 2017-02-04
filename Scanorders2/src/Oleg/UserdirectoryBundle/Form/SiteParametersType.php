@@ -187,6 +187,18 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'subinstitutionurl' )
+            $builder->add('subinstitutionurl',null,array(
+                'label'=>'Sub Institution URL:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'subinstitutionname' )
+            $builder->add('subinstitutionname',null,array(
+                'label'=>'Sub Institution Name:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'departmenturl' )
             $builder->add('departmenturl',null,array(
                 'label'=>'Department URL:',

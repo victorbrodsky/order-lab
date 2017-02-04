@@ -78,6 +78,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $defaultSiteEmail = null;
         $institution_url = null;
         $institution_name = null;
+        $subinstitution_url = null;
+        $subinstitution_name = null;
         $department_url = null;
         $department_name = null;
 
@@ -132,10 +134,18 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
             $defaultSiteEmail = $row['siteEmail'];
 
-            $institution_url = $row['institutionurl'];
-            $institution_name = $row['institutionname'];
-            $department_url = $row['departmenturl'];
-            $department_name = $row['departmentname'];
+            if( array_key_exists('institutionurl', $row) )
+                $institution_url = $row['institutionurl'];
+            if( array_key_exists('institutionname', $row) )
+                $institution_name = $row['institutionname'];
+            if( array_key_exists('subinstitutionurl', $row) )
+                $subinstitution_url = $row['subinstitutionurl'];
+            if( array_key_exists('subinstitutionname', $row) )
+                $subinstitution_name = $row['subinstitutionname'];
+            if( array_key_exists('departmenturl', $row) )
+                $department_url = $row['departmenturl'];
+            if( array_key_exists('departmentname', $row) )
+                $department_name = $row['departmentname'];
 
             //employees
             $employeesuploadpath = $row['employeesuploadpath'];
@@ -188,6 +198,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         //footer params
         $container->setParameter('institution_url',$institution_url);
         $container->setParameter('institution_name',$institution_name);
+        $container->setParameter('subinstitution_url',$subinstitution_url);
+        $container->setParameter('subinstitution_name',$subinstitution_name);
         $container->setParameter('department_url',$department_url);
         $container->setParameter('department_name',$department_name);
 

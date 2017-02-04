@@ -155,6 +155,16 @@ class SiteParameters {
      */
     private $departmentname;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $subinstitutionurl;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $subinstitutionname;
+
 
     //Maintanence mode
     /**
@@ -1127,6 +1137,38 @@ class SiteParameters {
     public function getInstitutionurl()
     {
         return $this->institutionurl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubinstitutionurl()
+    {
+        return $this->subinstitutionurl;
+    }
+
+    /**
+     * @param mixed $subinstitutionurl
+     */
+    public function setSubinstitutionurl($subinstitutionurl)
+    {
+        $this->subinstitutionurl = $subinstitutionurl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubinstitutionname()
+    {
+        return $this->subinstitutionname;
+    }
+
+    /**
+     * @param mixed $subinstitutionname
+     */
+    public function setSubinstitutionname($subinstitutionname)
+    {
+        $this->subinstitutionname = $subinstitutionname;
     }
 
     /**

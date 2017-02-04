@@ -990,7 +990,7 @@ class CallLogUtil
                 if( !$referringProviderInfo ) {
                     $referringProviderInfo = "Pathology Department was contacted";
                 }
-                //Abha Goyal - abg9017 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+                //firstname lastname - cwid (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
                 // from 5th floor / 12345 reached out regarding Transfusion Medicine / First dose plasma.
                 if( $messageCategoryInfo ) {
                     $event .= $referringProviderInfo . " from " . $encounterLocation . " reached out regarding " . $messageCategoryInfo . ".";
@@ -999,7 +999,7 @@ class CallLogUtil
                 }
 
             } else {
-                //Abha Goyal - abg9017 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+                //firstname lastname - cwid (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
                 // reached out regarding Transfusion Medicine / First dose plasma.
                 if( $messageCategoryInfo ) {
                     if( !$referringProviderInfo ) {
@@ -1019,7 +1019,7 @@ class CallLogUtil
 
         }//if
 
-        //add [Attending: Alain Borczuk - alb9003 (WCMC CWID)]
+        //add [Attending: firstname lastname - cwid (WCMC CWID)]
         if( $encounter ) {
             $attendingInfo = $encounter->obtainAttendingPhysicianInfo();
             if( $attendingInfo ) {

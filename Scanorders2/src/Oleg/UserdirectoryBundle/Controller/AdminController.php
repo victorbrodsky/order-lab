@@ -1238,50 +1238,52 @@ class AdminController extends Controller
         $types = array(
             "maxIdleTime" => "30",
             "environment" => "dev",
-            "siteEmail" => "oli2002@med.cornell.edu", //"slidescan@med.cornell.edu",
+            "siteEmail" => "", //"slidescan@med.cornell.edu",
 
-            "smtpServerAddress" => "smtp.med.cornell.edu",
+            "smtpServerAddress" => "",
 
-            "aDLDAPServerAddress" => "a.wcmc-ad.net",
-            "aDLDAPServerPort" => "389",
-            "aDLDAPServerOu" => "a.wcmc-ad.net",    //used for DC
-            "aDLDAPServerAccountUserName" => "svc_aperio_spectrum",
-            "aDLDAPServerAccountPassword" => "Aperi0,123",
+            "aDLDAPServerAddress" => "",
+            "aDLDAPServerPort" => "",
+            "aDLDAPServerOu" => "",    //used for DC
+            "aDLDAPServerAccountUserName" => "",
+            "aDLDAPServerAccountPassword" => "",
             "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",
             "ldapExeFilename" => "LdapSaslCustom.exe",
 
             "dbServerAddress" => "127.0.0.1",
             "dbServerPort" => "null",
-            "dbServerAccountUserName" => "symfony2",
-            "dbServerAccountPassword" => "Symfony!2",
-            "dbDatabaseName" => "ScanOrder",
+            "dbServerAccountUserName" => "",
+            "dbServerAccountPassword" => "",
+            "dbDatabaseName" => "",
 
             "aperioeSlideManagerDBServerAddress" => "127.0.0.1",
             "aperioeSlideManagerDBServerPort" => "null",
-            "aperioeSlideManagerDBUserName" => "symfony2",
-            "aperioeSlideManagerDBPassword" => "Symfony!2",
-            "aperioeSlideManagerDBName" => "Aperio",
+            "aperioeSlideManagerDBUserName" => "",
+            "aperioeSlideManagerDBPassword" => "",
+            "aperioeSlideManagerDBName" => "",
 
-            "institutionurl" => "http://weill.cornell.edu",
-            "institutionname" => "Weill Cornell Medical College",
+            "institutionurl" => "http://www.cornell.edu/",
+            "institutionname" => "Cornell University",
+            "subinstitutionurl" => "http://weill.cornell.edu",
+            "subinstitutionname" => "Weill Cornell Medicine",
             "departmenturl" => "http://www.cornellpathology.com",
             "departmentname" => "Pathology and Laboratory Medicine Department",
 
             ///////////////////// FELLAPP /////////////////////
-            "codeGoogleFormFellApp" => "https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit",
-            "confirmationEmailFellApp" => "jep2018@med.cornell.edu",
+            "codeGoogleFormFellApp" => "",
+            "confirmationEmailFellApp" => "",
             "confirmationSubjectFellApp" => "Your WCMC/NYP fellowship application has been succesfully received",
             "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
                                          "Once we receive the associated recommendation letters, your application will be reviewed and considered. ". 
                                          "If You have any questions, please do not hesitate to contact me by phone or via email. ".
                                          "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
-            "clientEmailFellApp" => '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com',
+            "clientEmailFellApp" => '',
             "p12KeyPathFellApp" => 'E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
             "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
             "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
-            "templateIdFellApp" => "1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48",
-            "backupFileIdFellApp" => "19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo",
-            "folderIdFellApp" => "0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E",
+            "templateIdFellApp" => "",
+            "backupFileIdFellApp" => "",
+            "folderIdFellApp" => "",
             "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",
             "deleteImportedAplicationsFellApp" => false,
             "deleteOldAplicationsFellApp" => false,

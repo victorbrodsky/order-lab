@@ -1081,13 +1081,12 @@ class ScanUtilController extends UtilController {
             }
 
         } else {
-            //echo "Case2: providerId is string=$providerId<br>"; //asb2018_@_wcmc-cwid or Adeline Berger - asb2018 (WCMC CWID)
+            //echo "Case2: providerId is string=$providerId<br>";
 
             if( strpos($providerId, '_@_') !== false ) {
                 //asb2018_@_wcmc-cwid
                 $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);
             } else {
-                //Adeline Berger - asb2018 (WCMC CWID)
                 //$user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);
                 $userSecUtil = $this->get('user_security_utility');
                 $user = $userSecUtil->getUserByUserstr($providerId);
