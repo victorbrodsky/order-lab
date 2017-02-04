@@ -4,7 +4,6 @@
 /web/log/
 /web/test/
 /web/Uploaded/
-/web/uploads/
 /app/bootstrap.php.cache
 /app/cache/*
 /app/config/parameters.yml
@@ -24,3 +23,6 @@
 /src/Oleg/FellAppBundle/Util/*.p12
 /src/Oleg/FellAppBundle/Util/*.xml
 Scanorders2/web/uploads/documents/*.txt
+/Scanorders2/web/uploads/documents/*.txt
+/web/uploads/
+/web/uploads/*
