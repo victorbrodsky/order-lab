@@ -17,8 +17,6 @@ use Oleg\UserdirectoryBundle\Controller\UploadController;
 use Symfony\Component\HttpFoundation\Response;
 
 //error_reporting(E_ALL);
-//include_once '\DatabaseRoutines.php';
-//include_once '\cImageFile.php';
 
 class ScanUploadController extends UploadController {
 

@@ -1,0 +1,1 @@
+The files in this directory are necessary for PDFTK Builder to function and do not normally need to be accessed directly.
