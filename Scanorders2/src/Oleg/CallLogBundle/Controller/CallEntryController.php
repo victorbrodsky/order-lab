@@ -679,7 +679,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -913,6 +913,53 @@ class CallEntryController extends Controller
 
                 //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
                 $calllogUtil->setFormVersions($message);
+
+
+                ///////// Issue 51(6): check if patient info is entered but Find Patient is not pressed ///////
+                if( $patient && !$patient->getId() ) {
+                    //$patient
+                    $patientParams = array();
+                    //oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]
+                    $data = $request->request->all();
+                    $mrn1 = $data['oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]'];
+                    $mrn2 = $request->query->get('oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]');
+                    echo "mrn1=".$mrn1."; mrn2=".$mrn2."<br>";
+                    //$mrntype = $data['oleg_calllogformbundle_messagetype[patient][0][mrn][0][keytype]'];
+                    //echo "mrn:".$mrn."; ".$mrntype."<br>";
+//                    $mrnObject = $patient->getMrn()->first();
+//                    echo "mrn count=".count($patient->getMrn())."<br>";
+//                    if( $mrn ) {
+//                        $mrntype = $mrnObject->getKeytype();
+//                        $mrn = $mrnObject->getField();
+//                        $params['mrntype'] = $mrntype;
+//                        $params['mrn'] = $mrn;
+//                        echo "mrn:".$mrn."; ".$mrntype."<br>";
+//                    }
+//                    $dob = $patient->getDob()->first();
+//                    $params['dob'] = $dob;
+                    //$patientInfoEncounter
+                    $lastname = $patientInfoEncounter->getPatlastname()->first();
+                    $firstname = $patientInfoEncounter->getPatfirstname()->first();
+                    $params['lastname'] = $lastname;
+                    $params['firstname'] = $firstname;
+
+                    $patientsData = $this->searchPatient($request, false, $patientParams); //submit new entry
+                    $patients = $patientsData['patients'];
+                    echo "found patients=".count($patients)."<br>";
+
+//                    return array(
+//                        //'entity' => $entity,
+//                        'form' => $form->createView(),
+//                        'cycle' => $cycle,
+//                        'title' => $title,
+//                        'formtype' => $formtype,
+//                        'triggerSearch' => 0,
+//                        'mrn' => $mrn,
+//                        'mrntype' => $mrntype
+//                    );
+                }
+                ///////// EOF Issue 51(6): check if patient info is entered but Find Patient is not pressed ///////
+
 
                 if( $patient->getId() ) {
                     //CASE 1

@@ -1179,8 +1179,8 @@ function userWrapperAjax( userid, btnTargetId, replaceTargetId, cycle ) {
         async: asyncflag
     }).success(function(response) {
         //console.log(response);
-        var template = response;
-        $('#'+replaceTargetId).html(template); //Change the html of the div with the id = "your_div"
+        //var template = response;
+        $('#'+replaceTargetId).html(response); //Change the html of the div with the id = "your_div"
         //specificRegularCombobox(replaceTargetId);
         regularCombobox( $('#'+replaceTargetId) );
     }).done(function() {
