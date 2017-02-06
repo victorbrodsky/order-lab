@@ -7,10 +7,16 @@
 
 {% block content %}
 
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
     {#User Wrapper#}
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4 class="panel-title">
+            <h4 class="panel-title text-left">
                 <a data-toggle="collapse" href="#userWrapper">
                     Associated Identities
                 </a>
@@ -19,23 +25,64 @@
         <div id="userWrapper" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                <select multiple class="combobox" name="userwrappers[]">
-                    {% for userWrapper in userWrappers %}
-                        {#<option value="volvo">Volvo</option>#}
-                        {#<a href="{{ path('userwrappers_edit',{'id':userWrapper.id}) }}" target="_blank">userWrapper.getFullNameWithDetails</a>#}
-                        <option value="{{ userWrapper.id }}" selected>
+                {% if showFlag %}
+
+                    <div class="well">
+                        Linked user ID wrappers:<br>
+                        {% for userWrapper in userWrappers %}
                             <a href="{{ path('userwrappers_edit',{'id':userWrapper.id}) }}" target="_blank">{{ userWrapper.getFullNameWithDetails }}</a>
-                        </option>
-                    {% endfor %}
-                </select>
+                            <br>
+                        {% endfor %}
+                    </div>
+
+                    <br>
+
+                    <div class="well">
+                        Linked Patient Records:<br>
+                        {% for patient in patients %}
+                            {#<a href="{{ path('calllog_patient_edit',{'id':patient.id}) }}" target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>#}
+                            {#<a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>#}
+
+                            {% set mrn = patient.obtainValidField('mrn') %}
+                            {% if mrn %}
+                                <a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrn.field, 'mrntype': mrn.keytype.id}) }}"
+                                  target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>
+                            {% else %}
+                                <a href="{{ path('calllog_patient_edit',{'id':patient.id}) }}"
+                                   target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>
+                            {% endif %}
+
+                            <br>
+                        {% endfor %}
+                    </div>
+
+                {% else %}
+
+                    Linked user ID wrappers:<br>
+                    <select multiple class="combobox" name="userwrappers[]">
+                        {% for userWrapper in userWrappers %}
+                            {#<option value="volvo">Volvo</option>#}
+                            {#<a href="{{ path('userwrappers_edit',{'id':userWrapper.id}) }}" target="_blank">userWrapper.getFullNameWithDetails</a>#}
+                            {% if userWrapper.user and userWrapper.user.id == userid %}
+                                {% set selected = "selected" %}
+                            {% else %}
+                                {% set selected = "" %}
+                            {% endif %}
+                            <option value="{{ userWrapper.id }}" {{ selected }}>
+                                <a href="{{ path('userwrappers_edit',{'id':userWrapper.id}) }}" target="_blank">{{ userWrapper.getFullNameWithDetails }}</a>
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                {% endif %}
 
                 <br>
 
                 {#Linked Patient Records:#}
                 {#{% if cycle == 'show' %}#}
-                    {% for patient in patients %}
-                        <a href="{{ path('calllog_patient_edit',{'id':patient.id}) }}" target="_blank">patient.obtainPatientInfoSimple</a>
-                    {% endfor %}
+                    {#{% for patient in patients %}#}
+                        {#<a href="{{ path('calllog_patient_edit',{'id':patient.id}) }}" target="_blank">patient.obtainPatientInfoSimple</a>#}
+                    {#{% endfor %}#}
                 {#{% endif %}#}
 
             </div>

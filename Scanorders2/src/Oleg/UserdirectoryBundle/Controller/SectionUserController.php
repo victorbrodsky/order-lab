@@ -79,17 +79,47 @@ class SectionUserController extends UserController
         $em = $this->getDoctrine()->getManager();
 
         $userid = $request->query->get('userid');
-        echo "userid=".$userid."<br>";
+        $cycle = $request->query->get('cycle');
+        //echo "userid=".$userid."<br>";
 
-        $userWrappers = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findByUser($userid);
+        if( strpos($cycle, 'show') !== false ) {
+            $userWrappers = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findByUser($userid);
 
-        $patients = array();
+            //find patients by patient's encounter's provider: patient->encounters->provider
+            $repository = $em->getRepository('OlegOrderformBundle:Patient');
+            $dql = $repository->createQueryBuilder("patient");
+            $dql->leftJoin("patient.encounter", "encounter");
+            $dql->where("encounter.provider = :userId");
+            $parameters['userId'] = $userid;
+            $dql->orderBy("patient.id","ASC"); //show latest first
+            $query = $em->createQuery($dql);
+            $query->setParameters($parameters);
+            //echo "sql=".$query->getSql()."<br>";
+            $patients = $query->getResult();
+
+            //$patients = array();
+        } else {
+            //show all wrappers where user is this user or null
+            //$userWrappers = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findAll();
+            $repository = $em->getRepository('OlegUserdirectoryBundle:UserWrapper');
+            $dql = $repository->createQueryBuilder("wrapper");
+            $dql->leftJoin("wrapper.user", "user");
+            $dql->where("user = :userId OR user.id IS NULL");
+            $parameters['userId'] = $userid;
+            $dql->orderBy("wrapper.id","ASC"); //show latest first
+            $query = $em->createQuery($dql);
+            $query->setParameters($parameters);
+            //echo "sql=".$query->getSql()."<br>";
+            $userWrappers = $query->getResult();
+        }
+
+
 
         return array(
             'userid' => $userid,
             'userWrappers' => $userWrappers,
             'patients' => $patients,
-            'cycle' => 'show_user',
+            'cycle' => $cycle,
             'sitename' => $this->container->getParameter('employees.sitename'),
         );
 

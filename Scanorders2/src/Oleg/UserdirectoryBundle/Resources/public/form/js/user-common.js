@@ -1160,7 +1160,7 @@ function userTeamTwigMacro(myteamurl,btnTargetId,replaceTargetId) {
     });
 }
 
-function userWrapperAjax( userid, btnTargetId, replaceTargetId ) {
+function userWrapperAjax( userid, btnTargetId, replaceTargetId, cycle ) {
     console.log("userid="+userid);
 
     var btn = document.getElementById(btnTargetId);
@@ -1174,7 +1174,7 @@ function userWrapperAjax( userid, btnTargetId, replaceTargetId ) {
         timeout: _ajaxTimeout,
         type: "GET",
         //type: "POST",
-        data: {userid: userid },
+        data: {userid: userid, cycle: cycle },
         //dataType: 'json',
         async: asyncflag
     }).success(function(response) {

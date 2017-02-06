@@ -2469,6 +2469,9 @@ class UserController extends Controller
             //process books
             //$this->processBooks($entity);
 
+            //process userWrappers
+            $this->processUserWrappers($entity,$request);
+
             //set update info for user
             $this->updateInfo($entity);
 
@@ -2857,6 +2860,54 @@ class UserController extends Controller
 //    public function processBooks($subjectUser) {
 //
 //    }
+
+    public function processUserWrappers( $user, $request ) {
+        //get userWrapper IDs
+
+        $em = $this->getDoctrine()->getManager();
+        $data = $request->request->all();
+        $userwrappers = $data['userwrappers'];
+
+//        print "<pre>";
+//        print_r($userwrappers);
+//        print "</pre>";
+
+        if( $userwrappers && count($userwrappers) > 0 ) {
+
+            //1) get all wrappers with this user
+            $userWrappers = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findByUser($user->getId());
+
+            //2) remove this user from all wrappers except in $userwrappers array.
+            foreach( $userWrappers as $userWrapper ) {
+                //echo $userWrapper->getId().": wrapper=".$userWrapper."<br>";
+                if( !in_array($userWrapper->getId(),$userwrappers) ) {
+                    //echo $userWrapper->getId().": remove user from this wrapper=".$userWrapper."<br>";
+                    //remove user from this wrapper
+                    $userWrapper->setUser(null);
+                    $em->persist($userWrapper);
+                    $em->flush($userWrapper);
+                } else {
+                    //echo $userWrapper->getId().": keep this wrapper=".$userWrapper."<br>";
+                }
+            }
+
+            //3) add user to the wrappers in array $userwrappers
+            foreach( $userwrappers as $userWrapperId ) {
+                $userWrapper = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->find($userWrapperId);
+                if( $userWrapper ) {
+                    if( !$userWrapper->getUser() ) {
+                        $userWrapper->setUser($user);
+                        $em->persist($userWrapper);
+                        $em->flush($userWrapper);
+                    } else {
+                        //wrapper already has a linked user
+                    }
+                }
+            }
+
+        }
+        //exit('exit wrapper');
+    }
 
     public function encryptPassword( $user, $originalPassword, $newUser=false ) {
         //return; //testing

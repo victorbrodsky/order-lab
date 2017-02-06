@@ -1717,17 +1717,17 @@
 {########################### EOF My Team #############################}
 
 
-{% macro userWrapperAjax( userid, sitename ) %}
+{% macro userWrapperAjax( userid, sitename, cycle ) %}
     {#userWrapper#}
     <div id="userWrapperAjaxDetails">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4 class="panel-title">
+                <h4 class="panel-title text-left">
                     <a
                         id="userWrapperAjaxBtn"
                         data-toggle="collapse"
                         href="#userWrapperAjax"
-                        onclick="userWrapperAjax({{ userid }},'userWrapperAjaxBtn', 'userWrapperAjaxDetails');"
+                        onclick="userWrapperAjax({{ userid }},'userWrapperAjaxBtn', 'userWrapperAjaxDetails', '{{ cycle }}');"
                     >
                         Associated Identities
                     </a>
