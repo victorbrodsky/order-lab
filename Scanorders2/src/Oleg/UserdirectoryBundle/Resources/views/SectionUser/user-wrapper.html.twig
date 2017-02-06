@@ -38,7 +38,7 @@
                     <br>
 
                     <div class="well">
-                        Linked Patient Records:<br>
+                        <b>Linked Patient Records:</b><br>
                         {% for patient in patients %}
                             {#<a href="{{ path('calllog_patient_edit',{'id':patient.id}) }}" target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>#}
                             {#<a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>#}
@@ -58,7 +58,7 @@
 
                 {% else %}
 
-                    Linked user ID wrappers:<br>
+                    <b>Linked user ID wrappers:</b><br>
                     <select multiple class="combobox" name="userwrappers[]">
                         {% for userWrapper in userWrappers %}
                             {#<option value="volvo">Volvo</option>#}
