@@ -1717,6 +1717,33 @@
 {########################### EOF My Team #############################}
 
 
+{% macro userWrapperAjax( userid, sitename ) %}
+    {#userWrapper#}
+    <div id="userWrapperAjaxDetails">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a
+                        id="userWrapperAjaxBtn"
+                        data-toggle="collapse"
+                        href="#userWrapperAjax"
+                        onclick="userWrapperAjax({{ userid }},'userWrapperAjaxBtn', 'userWrapperAjaxDetails');"
+                    >
+                        Associated Identities
+                    </a>
+
+                </h4>
+            </div>
+            <div id="userWrapper" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
 {% macro auditLog( user, type, sitename, postData, collapsein ) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}

@@ -64,4 +64,44 @@ class SectionUserController extends UserController
     }
 
 
+
+    /**
+     * @Route("/user-wrapper-ajax", name="employees_user_wrapper_ajax", options={"expose"=true})
+     * @Template("OlegUserdirectoryBundle:SectionUser:user-wrapper.html.twig")
+     * @Method({"GET", "POST"})
+     */
+    public function userWrapperAction( Request $request ) {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $userid = $request->query->get('userid');
+        echo "userid=".$userid."<br>";
+
+        $userWrappers = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findByUser($userid);
+
+        $patients = array();
+
+        return array(
+            'userid' => $userid,
+            'userWrappers' => $userWrappers,
+            'patients' => $patients,
+            'cycle' => 'show_user',
+            'sitename' => $this->container->getParameter('employees.sitename'),
+        );
+
+//        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+//
+//        $template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+//
+//        $json = json_encode($template);
+//        $response = new Response($json);
+//        $response->headers->set('Content-Type', 'application/json');
+//        return $response;
+    }
+
+
 }

@@ -205,6 +205,21 @@ class UserWrapper extends ListAbstract {
         return $fullName;
     }
 
+    public function getFullNameWithDetails() {
+        $fullName = $this->getFullName();
+
+        if( $this->getUserWrapperSource() ) {
+            if( $fullName ) {
+                $fullName = $fullName . " " .$this->getUserWrapperSource()."";
+            } else {
+                $fullName = $this->getUserWrapperSource()."";
+            }
+        }
+
+        //echo "fullName=".$fullName."<br>";
+        return $fullName;
+    }
+
     //get user id or user string
     //used for transformer
     public function getEntity() {

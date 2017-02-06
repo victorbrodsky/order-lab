@@ -524,7 +524,7 @@ class GenericListType extends AbstractType
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label'=>'Linked User:',
                 'required'=> false,
-                'multiple' => true,
+                'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')

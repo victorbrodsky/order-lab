@@ -1351,6 +1351,8 @@
             {{ usermacros.userTeamAjax( entity.getId, 'profile', 'Team', employees_sitename ) }}
         {% endif %}
 
+        {#userWrappers#}
+        {{ usermacros.userWrapperAjax( entity.getId, employees_sitename ) }}
 
         {#Audit Log#}
         {% if userEditor == true and cycle == "show_user" %}

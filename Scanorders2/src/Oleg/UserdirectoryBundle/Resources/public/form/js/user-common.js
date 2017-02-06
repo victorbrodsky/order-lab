@@ -1160,6 +1160,36 @@ function userTeamTwigMacro(myteamurl,btnTargetId,replaceTargetId) {
     });
 }
 
+function userWrapperAjax( userid, btnTargetId, replaceTargetId ) {
+    console.log("userid="+userid);
+
+    var btn = document.getElementById(btnTargetId);
+    var lbtn = Ladda.create(btn);
+    lbtn.start();
+
+    var url = Routing.generate('employees_user_wrapper_ajax');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        type: "GET",
+        //type: "POST",
+        data: {userid: userid },
+        //dataType: 'json',
+        async: asyncflag
+    }).success(function(response) {
+        //console.log(response);
+        var template = response;
+        $('#'+replaceTargetId).html(template); //Change the html of the div with the id = "your_div"
+        //specificRegularCombobox(replaceTargetId);
+        regularCombobox( $('#'+replaceTargetId) );
+    }).done(function() {
+        lbtn.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+    });
+}
+
 function userPnotifyDisplay() {
     if( !$('#pnotify-notice') ) {
         return;
