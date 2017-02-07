@@ -84,9 +84,21 @@ class FormNodeController extends Controller {
         $formNodeHolderId = $formNodeHolderEntity->getId();
         $resArr = array();
 
+        if( $testing ) {
+            echo "cycle=" . $cycle . "<br>";
+        }
+
         //$formNodes = $formNodeHolderEntity->getFormNodes();
         //get only 'real' fields as $formNodes
-        $formNodes = $formNodeUtil->getAllRealFormNodes($formNodeHolderEntity);
+        $formNodes = $formNodeUtil->getAllRealFormNodes($formNodeHolderEntity,$cycle);
+
+        //reverse array to show the fields backwards for show and edit
+        if( $cycle != "new" ) {
+            $formNodes = array_reverse($formNodes);
+        }
+//        echo "<pre>";
+//        print_r($formNodes);
+//        echo "</pre>";
 
         foreach( $formNodes as $formNode ) {
 
