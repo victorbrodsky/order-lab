@@ -117,6 +117,11 @@ class Patient extends ObjectAbstract
      */
     private $patientRecordStatus;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\LifeFormList")
+     **/
+    private $lifeForm;
+
 
     /**
      * Constructor
@@ -764,6 +769,21 @@ class Patient extends ObjectAbstract
         $this->patientRecordStatus = $patientRecordStatus;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLifeForm()
+    {
+        return $this->lifeForm;
+    }
+
+    /**
+     * @param mixed $lifeForm
+     */
+    public function setLifeForm($lifeForm)
+    {
+        $this->lifeForm = $lifeForm;
+    }
 
 
 

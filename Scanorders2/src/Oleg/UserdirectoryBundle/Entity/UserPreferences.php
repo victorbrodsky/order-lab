@@ -82,6 +82,11 @@ class UserPreferences {
      */
     private $noAttendingEmail;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="LifeFormList")
+     **/
+    private $lifeForm;
+
 //    /**
 //     * @ORM\Column(type="boolean", nullable=true)
 //     */
@@ -284,6 +289,22 @@ class UserPreferences {
     public function setNoAttendingEmail($noAttendingEmail)
     {
         $this->noAttendingEmail = $noAttendingEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLifeForm()
+    {
+        return $this->lifeForm;
+    }
+
+    /**
+     * @param mixed $lifeForm
+     */
+    public function setLifeForm($lifeForm)
+    {
+        $this->lifeForm = $lifeForm;
     }
 
 

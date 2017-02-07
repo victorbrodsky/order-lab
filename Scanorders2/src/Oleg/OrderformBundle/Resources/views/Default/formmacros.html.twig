@@ -2230,6 +2230,12 @@
             {{ formmacros.simplefield( "Gender:", patientSex, "", "disabled", patientGenderTooltip ) }}
         </div>
 
+        {% if flag and (flag == "datastructure" or flag == "datastructure-patient") %}
+            {% if patient.lifeForm is defined %}
+                {{ formmacros.field(patient.lifeForm) }}
+            {% endif %}
+        {% endif %}
+
         {% if dobHtml is not defined or dobHtml == "" %}
             {{ formmacros.inputArrayField(patient.dob,cycle,"patientdob","date","","","",status,showPlus) }}
         {% else  %}

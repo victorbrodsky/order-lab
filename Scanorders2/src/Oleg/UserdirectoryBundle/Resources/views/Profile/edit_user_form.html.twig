@@ -325,6 +325,8 @@
                         {{ formmacros.simplefield( "Current time in user's time zone:", "now"|date('Y-m-d H:i:s', entity.preferences.timezone), "", "disabled" ) }}
                     {% endif %}
 
+                    {{ formmacros.field(form.preferences.lifeForm) }}
+
                 </div>
             </div>
         </div>

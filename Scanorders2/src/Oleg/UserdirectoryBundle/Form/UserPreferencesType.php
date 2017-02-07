@@ -115,6 +115,24 @@ class UserPreferencesType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
         ));
 
+        $builder->add('lifeForm', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:LifeFormList',
+            'property' => 'name',
+            'label' => "Life Form:",
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added'
+                    ));
+            },
+        ));
+
         $builder->add('hide', 'checkbox', array(
             'required' => false,
             'label' => 'Hide this profile:',

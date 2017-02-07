@@ -24,6 +24,7 @@ use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\LabResultFlagList;
 use Oleg\UserdirectoryBundle\Entity\LabResultNameList;
 use Oleg\UserdirectoryBundle\Entity\LabResultUnitsMeasureList;
+use Oleg\UserdirectoryBundle\Entity\LifeFormList;
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
@@ -330,6 +331,7 @@ class AdminController extends Controller
         $count_generateLabResultFlagList = $this->generateLabResultFlagList();
         $count_generatePathologyResultSignatoriesList = $this->generatePathologyResultSignatoriesList();
         $count_setFormNodeVersion = $this->setFormNodeVersion();
+        $count_generateLifeForm = $this->generateLifeForm();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
@@ -423,6 +425,7 @@ class AdminController extends Controller
             'LabResultFlagList='.$count_generateLabResultFlagList.', '.
             'PathologyResultSignatoriesList='.$count_generatePathologyResultSignatoriesList.', '.
             'FormNodeVersion='.$count_setFormNodeVersion.', '.
+            'LifeForms='.$count_generateLifeForm.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -5749,6 +5752,7 @@ class AdminController extends Controller
             "1030" => array('ObjectTypeCheckbox','objecttypecheckboxs-list','Object Type Checkbox'),
             "1040" => array('ObjectTypeRadioButton','objecttyperadiobuttons-list','Object Type Radio Button'),
             "1050" => array('Location','employees_locations_pathaction_list','Locations'),
+            "1060" => array('LifeFormList','lifeforms-list','Life Form List'),
             //"1050" => array('','-list'),
 
         );
@@ -7288,6 +7292,37 @@ class AdminController extends Controller
             }
 
             $listEntity = new MonthsList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateLifeForm() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Homo Sapiens",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LifeFormList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new LifeFormList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

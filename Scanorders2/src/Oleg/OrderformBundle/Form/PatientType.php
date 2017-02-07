@@ -212,6 +212,25 @@ class PatientType extends AbstractType
 //                        ));
 //                },
 //            ));
+
+            $builder->add('lifeForm', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:LifeFormList',
+                'property' => 'name',
+                'label' => "Life Form:",
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added'
+                        ));
+                },
+            ));
+
             /////////////////////////////////////// patientRecordStatus ///////////////////////////////////////
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $patient = $event->getData();

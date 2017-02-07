@@ -126,6 +126,7 @@ class ListController extends Controller
      * @Route("/list/pathology-result-signatories/", name="pathologyresultsignatories-list")
      * @Route("/list/object-type-checkboxes/", name="objecttypecheckboxs-list")
      * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons-list")
+     * @Route("/list/life-forms/", name="lifeforms-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -403,6 +404,7 @@ class ListController extends Controller
      * @Route("/list/pathology-result-signatories/", name="pathologyresultsignatories_create")
      * @Route("/list/object-type-checkboxes/", name="objecttypecheckboxs_create")
      * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons_create")
+     * @Route("/list/life-forms/", name="lifeforms_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -586,6 +588,7 @@ class ListController extends Controller
      * @Route("/list/pathology-result-signatories/new", name="pathologyresultsignatories_new")
      * @Route("/list/object-type-checkboxes/new", name="objecttypecheckboxs_new")
      * @Route("/list/object-type-radio-buttons/new", name="objecttyperadiobuttons_new")
+     * @Route("/list/life-forms/new", name="lifeforms_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -740,6 +743,7 @@ class ListController extends Controller
      * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_show")
      * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_show")
      * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_show")
+     * @Route("/list/life-forms/{id}", name="lifeforms_show")
      *
      *
      * @Method("GET")
@@ -885,6 +889,7 @@ class ListController extends Controller
      * @Route("/list/pathology-result-signatories/{id}/edit", name="pathologyresultsignatories_edit")
      * @Route("/list/object-type-checkboxes/{id}/edit", name="objecttypecheckboxs_edit")
      * @Route("/list/object-type-radio-buttons/{id}/edit", name="objecttyperadiobuttons_edit")
+     * @Route("/list/life-forms/{id}/edit", name="lifeforms_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1075,6 +1080,7 @@ class ListController extends Controller
      * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_update")
      * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_update")
      * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_update")
+     * @Route("/list/life-forms/{id}", name="lifeforms_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1791,6 +1797,10 @@ class ListController extends Controller
                 $className = "ObjectTypeRadioButton";
                 $displayName = "Object Type Radio Button";
                 break;
+            case "lifeforms":
+                $className = "LifeFormList";
+                $displayName = "Life Form List";
+                break;
 //            case "employees_locations":
 //                $className = "Location";
 //                $displayName = "Locations";
@@ -1963,6 +1973,8 @@ class ListController extends Controller
      * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_delete")
      * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_delete")
      * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_delete")
+     * @Route("/list/life-forms/{id}", name="lifeforms_delete")
+     *
      *
      * @Method("DELETE")
      */
