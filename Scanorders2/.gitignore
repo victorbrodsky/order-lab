@@ -17,11 +17,11 @@
 /src/Oleg/OrderformBundle/Entity/*.php~
 /.idea/
 /nbproject/
-/src/Oleg/UserdirectoryBundle/Util/*.xlsx
-/src/Oleg/UserdirectoryBundle/Util/*.xls
-/src/Oleg/VacReqBundle/Util/*.xls
-/src/Oleg/FellAppBundle/Util/*.p12
-/src/Oleg/FellAppBundle/Util/*.xml
+#/src/Oleg/UserdirectoryBundle/Util/*.xlsx
+#/src/Oleg/UserdirectoryBundle/Util/*.xls
+#/src/Oleg/VacReqBundle/Util/*.xls
+#/src/Oleg/FellAppBundle/Util/*.p12
+#/src/Oleg/FellAppBundle/Util/*.xml
 Scanorders2/web/uploads/documents/*.txt
 /Scanorders2/web/uploads/documents/*.txt
 /web/uploads/
