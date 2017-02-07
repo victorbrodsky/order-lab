@@ -634,21 +634,11 @@ class FormNodeUtil
         if( $type == 'real' ) {
             if( $this->hasValue($formNode) ) {
                 $formNodes[] = $formNode;
-//                if( $cycle == "new" ) {
-//                    $formNodes[] = $formNode;
-//                } else {
-//                    array_push($formNodes, $formNode);
-//                }
             }
         }
         if( $type == 'section' ) {
             if( $this->isValidFormSection($formNode) ) {
                 $formNodes[] = $formNode;
-//                if( $cycle == "new" ) {
-//                    $formNodes[] = $formNode;
-//                } else {
-//                    array_push($formNodes, $formNode);
-//                }
             }
         }
         foreach( $children as $formNodeChild ) {

@@ -92,13 +92,10 @@ class FormNodeController extends Controller {
         //get only 'real' fields as $formNodes
         $formNodes = $formNodeUtil->getAllRealFormNodes($formNodeHolderEntity,$cycle);
 
-        //reverse array to show the fields backwards for show and edit
+        //reverse array to show the fields backwards for show and edit, otherwise the order of submitted form fields is reversed.
         if( $cycle != "new" ) {
             $formNodes = array_reverse($formNodes);
         }
-//        echo "<pre>";
-//        print_r($formNodes);
-//        echo "</pre>";
 
         foreach( $formNodes as $formNode ) {
 

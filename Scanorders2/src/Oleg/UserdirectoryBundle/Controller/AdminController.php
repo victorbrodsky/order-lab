@@ -3864,6 +3864,7 @@ class AdminController extends Controller
 
         $inputFileName = __DIR__ . '/../Util/Encounter Locations (Import Columns A through O)-2 - Fixed-Ready For Import.xlsx';
 
+        //TODO: check if file exists before opening (for all excel files)
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
