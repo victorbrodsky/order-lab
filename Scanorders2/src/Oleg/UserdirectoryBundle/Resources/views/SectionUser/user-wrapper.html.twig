@@ -28,7 +28,7 @@
                 {% if showFlag %}
 
                     <div class="well">
-                        Linked user ID wrappers:<br>
+                        <b>Linked user ID wrappers:</b><br>
                         {% for userWrapper in userWrappers %}
                             <a href="{{ path('userwrappers_edit',{'id':userWrapper.id}) }}" target="_blank">{{ userWrapper.getFullNameWithDetails }}</a>
                             <br>

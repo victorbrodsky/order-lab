@@ -109,6 +109,12 @@ class UserPreferencesType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
         ));
 
+        $builder->add('noAttendingEmail', 'checkbox', array(
+            'required' => false,
+            'label' => 'Do not send a notification email if listed as an "attending" in a Call Log Book Entry:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
         $builder->add('hide', 'checkbox', array(
             'required' => false,
             'label' => 'Hide this profile:',

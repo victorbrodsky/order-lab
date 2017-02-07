@@ -1464,6 +1464,65 @@ function calllogSubmitForm(btn,messageStatus) {
     var lbtn = Ladda.create( btn );
     lbtn.start();
 
+    //checks
+    var holder = $('.calllog-patient-holder');
+
+    //If the user enters patient info, does NOT press the "Find Patient" button
+    var mrn = holder.find(".patientmrn-mask").val();
+    var dob = holder.find(".patient-dob-date").val();
+    var lastname = holder.find(".encounter-lastName").val();
+    var firstname = holder.find(".encounter-firstName").val();
+    if( mrn || dob || lastname || firstname ) {
+        var confMsg = 'You have enterd patient information, but have not pressed "Find Patient" button.'+
+            ' The patient info will be discarded and call entry will not be attached to the patient.' +
+            ' Otherwise, press "Cancel" and then press "Find Patient" button.'+
+            ' Are you sure you want to proceed without patient?';
+        if( confirm(confMsg) == true ) {
+            //x = "You pressed OK!";
+        } else {
+            //x = "You pressed Cancel!";
+            lbtn.stop();
+            return false;
+        }
+    }
+
+    //B- Uniqueness of the Encounter Location Name. If the entered location name already exists in the database
+    // (but any associated entered (non-empty) field values such as phone number do not equal associated values in the DB),
+    // show a red well (dialog box? notification?) with:
+    //Encounter location named "XXX" already exits. Please select this encounter location or
+    // enter a different unique location name to create a new encounter location record.
+    //Location's fields are locked, so it is not possible to modify fields
+    if( 0 ) {
+        var locationPhone = $('.user-location-phone-field').val();
+        var locationRoom = $('.ajax-combobox-room').select2('val');
+        var locationSuite = $('.ajax-combobox-suite').select2('val');
+        if (locationPhone || locationRoom || locationSuite) {
+            var locationUrl = Routing.generate('calllog_check_encounter_location');
+            $.ajax({
+                url: locationUrl,
+                timeout: _ajaxTimeout,
+                type: "GET",
+                async: asyncflag,
+                data: {phone: locationPhone, room: locationRoom, suite: locationSuite},
+            }).success(function (data) {
+                //console.log("data="+data);
+                if (data == "Not Exists") {
+                    //ok
+                } else {
+
+                }
+            }).fail(function () {
+                //alert(error);
+            }).done(function () {
+                lbtn.stop();
+                //console.log("token ok");
+            });
+        }
+    }
+
+    //C- Uniqueness of the Referring Provider Name. Fields are locked and not possible to modify them.
+    //return; //testing
+
     if( messageStatus == "Draft" ) {
         $('.formnode-holder-disabled').remove();
         $('#messageStatusJs').val(messageStatus);

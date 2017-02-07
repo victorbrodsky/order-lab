@@ -76,6 +76,12 @@ class UserPreferences {
      */
     protected $showToRoles = array();
 
+    /**
+     * Do not send a notification email if listed as an "attending" in a Call Log Book Entry
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $noAttendingEmail;
+
 //    /**
 //     * @ORM\Column(type="boolean", nullable=true)
 //     */
@@ -263,6 +269,25 @@ class UserPreferences {
     {
         return $this->excludeFromSearch;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNoAttendingEmail()
+    {
+        return $this->noAttendingEmail;
+    }
+
+    /**
+     * @param mixed $noAttendingEmail
+     */
+    public function setNoAttendingEmail($noAttendingEmail)
+    {
+        $this->noAttendingEmail = $noAttendingEmail;
+    }
+
+
+
 
     public function __toString() {
         $res = "UserPreferences";

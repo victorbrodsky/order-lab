@@ -63,4 +63,15 @@ class DefaultController extends Controller
         );
     }
 
+
+//    /**
+//     * Resources
+//     * @Route("/check-encounter-location/", name="calllog_check_encounter_location", options={"expose"=true})
+//     * @Method("POST")
+//     */
+//    public function checkLocationAction(Request $request)
+//    {
+//        exit("Not used");
+//    }
+
 }

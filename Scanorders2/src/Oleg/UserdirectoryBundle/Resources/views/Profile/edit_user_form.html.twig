@@ -303,6 +303,9 @@
 
                     {#hiding options#}
                     {{ formmacros.checkbox(form.preferences.excludeFromSearch) }}
+
+                    {{ formmacros.checkbox(form.preferences.noAttendingEmail) }}
+
                     {#Clear and lock the three fields below if this field is checked.#}
                     {{ formmacros.checkbox(form.preferences.hide) }}
                     {{ formmacros.field(form.preferences.showToInstitutions) }}

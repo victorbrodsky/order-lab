@@ -58,7 +58,7 @@ class LocationType extends AbstractType
 
         $builder->add('phone', null, array(
             'label' => 'Phone Number:',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control user-location-phone-field')
         ));
 
         $builder->add('building', 'employees_custom_selector', array(

@@ -1194,6 +1194,17 @@ class CallLogUtil
     // with the following info
     // (Patient Info like Name and/or MRN should never be sent via email, so even if the entry has patient info, treat it as if patient info is missing):
     public function sendConfirmationEmail($message,$patient,$encounter) {
+
+        //only send the notification email if the box noAttendingEmail is not checked
+        $currentUser = $this->sc->getToken()->getUser();
+        if( $currentUser && $currentUser->getPreferences() ) {
+            $noAttendingEmail = $currentUser->getPreferences()->getNoAttendingEmail();
+            if( $noAttendingEmail ) {
+                //echo "Do not send a confirmation email to attendings <br>";
+                return;
+            }
+        }
+
         $attendings = $encounter->getAttendingPhysicians();
         if( count($attendings) == 0 ) {
             return;
@@ -1205,6 +1216,7 @@ class CallLogUtil
         foreach( $attendings as $attending ) {
             $emails[] = $attending->getEmail();
         }
+        //echo "Send a confirmation email to attendings: ".implode("; ",$emails)."<br>";
 
         $submitter = $message->getProvider();
 
