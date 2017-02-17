@@ -10,23 +10,28 @@
 /app/logs/*
 /build/
 /vendor/*
-#!/vendor/aperio
-#!/vendor/olegutil
-!/src/Oleg/OrderformBundle/Security/AperioLdap
 /bin/
 /composer.phar
 /src/Oleg/OrderformBundle/Entity/*.php~
 /.idea/
 /nbproject/
-*.xlsx
-*.xls
-*.p12
-#/src/Oleg/UserdirectoryBundle/Util/*.xlsx
-#/src/Oleg/UserdirectoryBundle/Util/*.xls
-#/src/Oleg/VacReqBundle/Util/*.xls
-#/src/Oleg/FellAppBundle/Util/*.p12
-#/src/Oleg/FellAppBundle/Util/*.xml
+###
 Scanorders2/web/uploads/documents/*.txt
 /Scanorders2/web/uploads/documents/*.txt
 /web/uploads/
 /web/uploads/*
+### add manually to the source code: xls files, p12 key file, /src/Oleg/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php
+###
+/src/Oleg/UserdirectoryBundle/Util/*.xlsx
+/src/Oleg/UserdirectoryBundle/Util/*.xls
+/src/Oleg/VacReqBundle/Util/*.xls
+/src/Oleg/FellAppBundle/Util/*.p12
+/src/Oleg/FellAppBundle/Util/*.xml
+/src/Oleg/OrderformBundle/Security/AperioLdap
+/src/Oleg/OrderformBundle/SDK
+### add manually to the source code: /vendor/aperio and /vendor/olegutil
+### ignore aperio and  olegutil for pdf processing (ghostscript, LibreOffice, PDFTK)
+#!/vendor/aperio
+#!/vendor/olegutil
+
+
