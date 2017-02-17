@@ -23,6 +23,8 @@ php app/console assets:install
 php app/console cache:clear --env=prod --no-debug or (php app/console cache:clear --env=prod --no-debug --no-warmup)
 php app/console assetic:dump --env=prod --no-debug
 
+#After modification of html, js or css files, run a single console scripts to clear chach and dump assets in /Scanorders2 folder:
+deploy_prod
 
 # run composer update or self-update
 composer.phar update
