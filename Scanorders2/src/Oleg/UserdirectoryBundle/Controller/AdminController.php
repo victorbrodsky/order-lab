@@ -1413,12 +1413,6 @@ class AdminController extends Controller
                     <br>
 
                     <li>
-                        <a href="http://phpexcel.codeplex.com/">PHP Excel</a>
-                    </li>
-
-                    <br>
-
-                    <li>
 
                         <a href="https://github.com/1up-lab/OneupUploaderBundle">OneupUploaderBundle</a>
                     </li>
@@ -1519,28 +1513,10 @@ class AdminController extends Controller
                         <a href="https://github.com/KnpLabs/KnpSnappyBundle">KnpSnappyBundle with wkhtmltopdf</a>
                     </li>
 
-                     <br>
-
-                    <li>
-                        <a href="https://www.libreoffice.org/">LibreOffice</a>
-                    </li>
-
                     <br>
 
                     <li>
                         <a href="https://github.com/myokyawhtun/PDFMerger">PDFMerger</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/">PDFTK</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.ghostscript.com/">Ghostscript</a>
                     </li>
 
                     <br>
@@ -1560,6 +1536,8 @@ class AdminController extends Controller
                     <li>
                         <a href="https://github.com/adesigns/calendar-bundle">jQuery FullCalendar bundle</a>
                     </li>
+
+                    <br>
 
                     <li>
                         <a href="https://sciactive.com/pnotify/">PNotify JavaScript notifications</a>
