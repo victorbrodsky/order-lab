@@ -12,6 +12,7 @@
 /vendor/*
 #!/vendor/aperio
 #!/vendor/olegutil
+!/src/Oleg/OrderformBundle/Security/AperioLdap
 /bin/
 /composer.phar
 /src/Oleg/OrderformBundle/Entity/*.php~
