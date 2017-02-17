@@ -478,6 +478,15 @@ class VacReqUtil
         $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
 
         $yearRange = $this->getCurrentAcademicYearRange();
+        
+        //testing
+//        $testingDates = $this->getCurrentAcademicYearStartEndDates();
+//        echo "<pre>";
+//        print_r($testingDates);
+//        echo "</pre>";
+//        echo "yearRange=".$yearRange."<br>";
+//        exit('1');
+
         $result = "During the current ".$yearRange." academic year, you have received ";
 
         $yearRangeArr = explode("-",$yearRange);
@@ -2052,17 +2061,42 @@ class VacReqUtil
         $startDateMD = $academicYearStart->format('m-d');
         $endDateMD = $academicYearEnd->format('m-d');
 
-        $currentYear = new \DateTime();
-        $currentYear = $currentYear->format('Y');
-        $previousYear = $currentYear - 1;
+        //$currentYear = new \DateTime();
+        $nowDate = new \DateTime(); //2016-07-15
+        //testing
+        if( 0 ) {
+            $nowDate = \DateTime::createFromFormat('Y-m-d', "2015-08-30"); //testing: expected 2015-2016
+            $nowDate = \DateTime::createFromFormat('Y-m-d', "2016-06-30"); //testing: expected 2015-2016
+            $nowDate = \DateTime::createFromFormat('Y-m-d', "2016-08-30"); //testing: expected 2016-2017
+            $nowDate = \DateTime::createFromFormat('Y-m-d', "2017-01-30"); //testing: expected 2016-2017
+            $nowDate = \DateTime::createFromFormat('Y-m-d', "2017-08-30"); //testing: expected 2017-2018
+        }
+
+        $currentYear = $nowDate->format('Y'); //endDate
+
+        //check if current date < academicYearStart date
+        $academicYearStartDateStr = $currentYear."-".$startDateMD;
+        $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
+        //echo "compare: current date ".$nowDate->format('Y-M-d')." < ".$academicYearStartDate->format('Y-M-d')."<br>";
+        if( $nowDate < $academicYearStartDate ) {
+            $currentYear = $currentYear - 1; //testing
+            //echo "adjust currentYear: $currentYear - 1<br>";
+        }
+        //echo "currentYear=".$currentYear."<br>";
+
+        $previousYear = $currentYear - 1; //startDate
 
         $startDate = $previousYear."-".$startDateMD;
         $currentYearStartDate = \DateTime::createFromFormat('Y-m-d', $startDate);
-        $nowDate = new \DateTime('now'); //2016-07-15
 
+        //echo "nowDate=".$nowDate->format('Y-M-d')."<br>";
+        //echo "currentYearStartDate=".$currentYearStartDate->format('Y-M-d')."<br>";
         if( $nowDate > $currentYearStartDate ) {
             $previousYear = $currentYear;
             $currentYear = $currentYear + 1;
+            //echo "nowDate>currentYearStartDate: "."previousYear=$previousYear"."; currentYear=$currentYear <br>";
+        } else {
+            //echo "else: previousYear=$previousYear"."; currentYear=$currentYear <br>";
         }
 
         if( $yearOffset ) {
@@ -2072,6 +2106,7 @@ class VacReqUtil
 
         $startDate = $previousYear."-".$startDateMD;
         $endDate = $currentYear."-".$endDateMD;
+        //exit('<br> exit: startDate='.$startDate.'; endDate='.$endDate); //testing
 
         if( $asDateTimeObject ) {
             $startDate = \DateTime::createFromFormat('Y-m-d', $startDate);
