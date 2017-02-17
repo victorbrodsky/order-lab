@@ -540,6 +540,13 @@ class AdminController extends Controller
             //"ROLE_BANNED" => "Banned user for all sites",                 //general super admin role for all sites
             //"ROLE_UNAPPROVED" => "Unapproved User",                       //general unapproved user
 
+            //ROLE_TESTER
+            "ROLE_TESTER" => array(
+                "Tester",
+                "Allow using testing server without redirection",
+                1
+            ),
+
             //////////// Scanorder roles ////////////
             "ROLE_SCANORDER_ADMIN" => array(
                 "ScanOrder Administrator",

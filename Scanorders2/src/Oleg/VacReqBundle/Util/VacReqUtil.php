@@ -478,7 +478,7 @@ class VacReqUtil
         $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
 
         $yearRange = $this->getCurrentAcademicYearRange();
-        
+
         //testing
 //        $testingDates = $this->getCurrentAcademicYearStartEndDates();
 //        echo "<pre>";
