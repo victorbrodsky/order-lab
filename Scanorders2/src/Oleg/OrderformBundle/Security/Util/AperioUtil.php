@@ -20,7 +20,8 @@ use Oleg\UserdirectoryBundle\Entity\User;
 
 //include_once '..\conf\Spectrum.ini';
 //include_once '\Skeleton.php';
-include_once '\DatabaseRoutines.php';
+//include_once '\DatabaseRoutines.php';
+include_once '..\DatabaseRoutines.php';
 
 class AperioUtil {
 
