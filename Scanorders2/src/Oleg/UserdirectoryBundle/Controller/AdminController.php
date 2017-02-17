@@ -1047,6 +1047,7 @@ class AdminController extends Controller
             $entity->setName( trim($role) );
             $entity->setAlias( trim($alias) );
             $entity->setDescription( trim($description) );
+            $entity->setLevel($level);
 
             $attrName = "Call Pager";
 
