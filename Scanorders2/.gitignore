@@ -23,9 +23,9 @@ Scanorders2/web/uploads/documents/*.txt
 ###
 ########### Add manually to the source code: ###########
 #1) UserdirectoryBundle/Util/Users*.xlsx (optional)
-#2a) FellAppBundle/Util/*.p12
+#2a) FellAppBundle/Util/*.p12 - required for google authentication
 #2b) FellAppBundle/Util/*.xml (optional)
-#3) /vendor/olegutil for fellapp pdf processing (ghostscript, LibreOffice, PDFTK)
+#3) /vendor/olegutil - required for fellapp pdf processing (ghostscript, LibreOffice, PDFTK)
 #4a) /vendor/aperio for aperio authentication (optional)
 #4b) /src/Oleg/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php (optional)
 ######################
