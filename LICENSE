@@ -203,6 +203,7 @@
 
 
    For Symfony http://symfony.com/
+   ===============================
 
    Copyright (c) 2004-2017 Fabien Potencier
 
@@ -213,6 +214,7 @@
    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
    For Doctrine http://doctrine-project.org/
+   =========================================
 
    Copyright (c) 2006-2015 Doctrine Project
 
@@ -235,6 +237,7 @@
    SOFTWARE.
 
    For SwiftmailerBundle https://github.com/symfony/SwiftmailerBundle
+   ==================================================================
 
    Copyright (c) 2004-2014 Fabien Potencier
 
@@ -256,7 +259,8 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
    THE SOFTWARE.
 
-   For AsseticBundle 
+   For AsseticBundle https://github.com/symfony/AsseticBundle
+   ==========================================================
 
    Copyright (c) 2004-2013 Fabien Potencier
 
@@ -279,6 +283,7 @@
    THE SOFTWARE.
 
    For FOSUserBundle https://github.com/FriendsOfSymfony/FOSUserBundle
+   ===================================================================
 
    Copyright (c) 2010-2016 FriendsOfSymfony
 
@@ -301,6 +306,7 @@
    THE SOFTWARE.
 
    For OneupUploaderBundle https://github.com/1up-lab/OneupUploaderBundle
+   ======================================================================
 
    Copyright (c) 2015 1up GmbH
 
@@ -323,6 +329,7 @@
    THE SOFTWARE.
 
    For Dropzone JS http://www.dropzonejs.com/
+   ==========================================
 
    License
 
@@ -338,6 +345,7 @@
    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
    For jsTree http://www.jstree.com/
+   =================================
 
    Copyright (c) 2014 Ivan Bozhanov
 
@@ -363,6 +371,7 @@
    OTHER DEALINGS IN THE SOFTWARE.
 
    For KnpPaginatorBundle https://github.com/KnpLabs/KnpPaginatorBundle
+   ====================================================================
 
    Copyright (c) 2011 Knplabs
 
@@ -385,6 +394,7 @@
    THE SOFTWARE.
 
    For Twig http://twig.sensiolabs.org/doc/advanced.html
+   =====================================================
 
    Copyright (c) 2009-2017 by the Twig Team, see AUTHORS for more details.
 
@@ -398,6 +408,7 @@
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
    For Bootstrap http://getbootstrap.com/
+   ======================================
 
    The MIT License (MIT)
 
@@ -422,6 +433,7 @@
    THE SOFTWARE.
 
    For JS promises Q https://github.com/kriskowal/q
+   ================================================
 
    Copyright 2009–2017 Kristopher Michael Kowal. All rights reserved.
    Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -443,6 +455,7 @@
    IN THE SOFTWARE.
 
    For jQuery http://jquery.com/
+   =============================
 
    Copyright JS Foundation and other contributors, https://js.foundation/
 
@@ -482,6 +495,7 @@
    the terms above.
 
    For jQuery UI http://jqueryui.com/
+   ==================================
 
    Copyright jQuery Foundation and other contributors, https://jquery.org/
 
@@ -528,6 +542,7 @@
    the terms above.
 
    For jQuery Inputmask https://github.com/RobinHerbots/jquery.inputmask
+   =====================================================================
 
    Copyright (c) 2010 Robin Herbots
 
@@ -538,6 +553,7 @@
    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
    For Select2 http://ivaynberg.github.io/select2/
+   ===============================================
 
    The MIT License (MIT)
 
@@ -550,6 +566,7 @@
    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
    For Bootstrap Datepicker http://www.eyecon.ro/bootstrap-datepicker/
+   ===================================================================
 
    /* =========================================================
     * bootstrap-datepicker.js 
@@ -571,6 +588,7 @@
     * ========================================================= */
 
    For Bootstrap DateTime Picker http://www.malot.fr/bootstrap-datetimepicker/demo.php
+   ===================================================================================
 
                                  Apache License
                            Version 2.0, January 2004
@@ -797,6 +815,7 @@
    THE SOFTWARE.
 
    For Image Cropper http://fengyuanchen.github.io/cropper/
+   ========================================================
 
    The MIT License (MIT)
 
@@ -821,6 +840,7 @@
    THE SOFTWARE.
 
    For Handsontable http://handsontable.com/
+   =========================================
 
    (The MIT License)
 
@@ -847,6 +867,7 @@
    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
    For KnpSnappyBundle with wkhtmltopdf https://github.com/KnpLabs/KnpSnappyBundle
+   ===============================================================================
 
    Copyright (c) 2010 Knp Labs
 
@@ -871,6 +892,7 @@
    THE SOFTWARE.
 
    For PDFMerger https://github.com/myokyawhtun/PDFMerger
+   ======================================================
 
    /**
     *  PDFMerger created by Jarrod Nettles December 2009
@@ -896,6 +918,7 @@
     */
 
    For FPDF_TPL
+   ============
 
    //    Copyright 2004-2009 Setasign - Jan Slabon
    //
@@ -913,6 +936,7 @@
    //
 
    For FPDI
+   ========
 
    //    Copyright 2004-2009 Setasign - Jan Slabon
    //
@@ -929,6 +953,7 @@
    //  limitations under the License.
 
    For Password Generator https://github.com/bermi/password-generator
+   ==================================================================
 
    Copyright (c) 2011 Bermi Ferrer
 
@@ -939,6 +964,7 @@
    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
    For Password Encoder https://github.com/andreausu/UsuScryptPasswordEncoderBundle
+   ================================================================================
 
    Copyright (c) 2014 Andrea Usuelli
 
@@ -961,6 +987,7 @@
    THE SOFTWARE.
 
    For jQuery FullCalendar bundle https://github.com/adesigns/calendar-bundle
+   ==========================================================================
 
    Copyright (c) 2014 Michael Yudin
 
@@ -983,6 +1010,7 @@
    SOFTWARE.
 
    For PNotify JavaScript notifications https://sciactive.com/pnotify/
+   ===================================================================
 
 
 
@@ -1188,3 +1216,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+   For CasperJS http://casperjs.org/
+   =================================
+   
+   Copyright (c) 2011-2017 Nicolas Perriault
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

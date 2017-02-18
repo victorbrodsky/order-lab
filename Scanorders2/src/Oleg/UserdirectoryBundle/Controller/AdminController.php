@@ -1543,6 +1543,12 @@ class AdminController extends Controller
                         <a href="https://sciactive.com/pnotify/">PNotify JavaScript notifications</a>
                     </li>
 
+                    <br>
+
+                    <li>
+                        <a href="http://casperjs.org/">CasperJS</a>
+                    </li>
+
                 </ul>
                 </p>
             '
