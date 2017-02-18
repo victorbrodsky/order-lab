@@ -20,13 +20,15 @@ Scanorders2/web/uploads/documents/*.txt
 /Scanorders2/web/uploads/documents/*.txt
 /web/uploads/
 /web/uploads/*
-### add manually to the source code:
+###
+########### Add manually to the source code: ###########
 #1) UserdirectoryBundle/Util/Users*.xlsx (optional)
 #2a) FellAppBundle/Util/*.p12
 #2b) FellAppBundle/Util/*.xml (optional)
 #3) /vendor/olegutil for fellapp pdf processing (ghostscript, LibreOffice, PDFTK)
-#optional: /src/Oleg/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php
-###
+#4a) /vendor/aperio for aperio authentication (optional)
+#4b) /src/Oleg/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php (optional)
+######################
 /src/Oleg/UserdirectoryBundle/Util/Users*.xlsx
 /src/Oleg/UserdirectoryBundle/Util/users.xlsx
 /src/Oleg/VacReqBundle/Util/*.xls
