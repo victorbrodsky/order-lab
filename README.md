@@ -8,6 +8,8 @@
 >
 > If you have any doubts about needing this software, you do not need it.
 
+##About
+
 O R D E R is a web-based software platform for development of clinical, administrative, research, and educational multi-user applications.
 
 It includes several functional examples:
@@ -50,28 +52,28 @@ Apache 2.0
 
 ## Important Commands for Development
 
-### Configuration info:
+### Configuration info (original Dev server on the intranet):
 
-http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php
+[http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php](http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php)
 
-### Development mode:
+### Development mode (original Dev server on the intranet):
 
-http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/
+[http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/](http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/)
 
-### Production mode:
+### Production mode (original Dev server on the intranet):
 
-http://collage.med.cornell.edu/order/
+[http://collage.med.cornell.edu/order/](http://collage.med.cornell.edu/order/)
 
-### Admin page (Requires admin role):
+### Admin page (Requires admin role; original Dev server on the intranet):
 
-http://collage.med.cornell.edu/order/admin
+[http://collage.med.cornell.edu/order/admin](http://collage.med.cornell.edu/order/admin)
 
 ### To include assets located in your bundles' Resources/public folder (target is by default "web"):
 
 	 php app/console assets:install
 
 ### Note: For production mode execute the following command to clean cache and fix assetic links to js and css
-(read: Dumping Asset Files in the dev environment http://symfony.com/doc/current/cookbook/assetic/asset_management.html):
+(read: Dumping Asset Files in the dev environment [http://symfony.com/doc/current/cookbook/assetic/asset_management.html](http://symfony.com/doc/current/cookbook/assetic/asset_management.html)):
 
 	 php app/console cache:clear --env=prod --no-debug or (php app/console cache:clear --env=prod --no-debug --no-warmup)
 	 php app/console assetic:dump --env=prod --no-debug
@@ -109,46 +111,59 @@ http://collage.med.cornell.edu/order/admin
 
 ### Create Symfony project (cd to htdocs/order)
 
-1) create git repository from remote server (bitbucket):
+1) create git repository from remote server (on Bitbucket for example):
+
 	 git clone https://yourusername@bitbucket.org/weillcornellpathology/scanorder.git 
 
 2) create symfony2 project: 
+
 	php "C:\Users\oli2002\Desktop\php\Composer\composer.phar" create-project symfony/framework-standard-edition Scanorders2
 
 3) create bundle: 
+
 	php app/console generate:bundle --namespace=Acme/HelloBundle --format=yml
 
 4) Run command:
+
 	 git add .
 
 5) Run command:
+
 	 git commit -m "adding initial"
 
 6) Run command:
+
 	 git push -u origin master
 
 7) repeat 3-5 for development
 
-# To get changes on your local machine:
+### To get changes on your local machine:
 
 1) cd to dir created by clone
 
 2) Run command:
+
 	 git remote update
 
 3) Run command:
+
 	 git pull
 
 ### If there are some local modified files, then will not allow to merge with local modifications. There are 3 options (option (b): git stash is enough):
 
 a) Run command:
+
 	 git commit -m "My message"
+
 b) Run command:
+
 	 git stash
+
 c) Run command:
+
 	 git reset --hard
 
-### Force Git to overwrite local files on pull; This will remove all the local files (http://stackoverflow.com/questions/1125968/force-git-to-overwrite-local-files-on-pull)
+### Force Git to overwrite local files on pull; This will remove all the local files ([http://stackoverflow.com/questions/1125968/force-git-to-overwrite-local-files-on-pull](http://stackoverflow.com/questions/1125968/force-git-to-overwrite-local-files-on-pull))
 
 	 git fetch --all
 	 git reset --hard origin/master
@@ -163,6 +178,7 @@ c) Run command:
 	 git checkout --track origin/iss51
 
 ### Or:
+
 	 git remote update (note: this is the same as git fetch --all)
 	 git pull
 
@@ -196,6 +212,6 @@ c) Run command:
 
 	 ./bin/phpunit -c app src/Oleg/OrderformBundle/Tests/LoginTest.php
 
-### Testing with casperjs: run   http://collage.med.cornell.edu/order/test/index.php
+### Testing with casperjs on the original Dev server on the intranet: run   [http://collage.med.cornell.edu/order/test/index.php](http://collage.med.cornell.edu/order/test/index.php)
 
 ### (The resulting log and screenshots are in order/test folder)
