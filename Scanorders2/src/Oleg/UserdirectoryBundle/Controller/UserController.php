@@ -3145,9 +3145,15 @@ class UserController extends Controller
         $userGenerator = $this->container->get('user_generator');
         $count_users = $userGenerator->generateUsersExcel();
 
+        if( $count_users > 0 ) {
+            $msg = 'Imported ' . $count_users . ' new users from Excel.';
+        } else {
+            $msg = 'Imported new users from Excel failed.';
+        }
+
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Imported ' . $count_users . ' new users from Excel.'
+            $msg
         );
 
         //exit();

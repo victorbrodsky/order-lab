@@ -55,7 +55,7 @@ class UserGenerator {
             //echo "The file $inputFileName exists";
         } else {
             echo "The file $inputFileName does not exist";
-            return;
+            return -1;
         }
 
         try {
