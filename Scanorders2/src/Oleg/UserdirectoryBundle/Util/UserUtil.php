@@ -35,208 +35,208 @@ class UserUtil {
 
 
     //TODO: rewrite using Aperio's DB not SOAP functions
-    public function generateUsersExcel_old( $em, $serviceContainer ) {
-        $inputFileName = __DIR__ . '/../Util/users.xlsx';
-
-        try {
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($inputFileName);
-        } catch(Exception $e) {
-            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
-        }
-
-        //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-        //var_dump($sheetData);
-
-        $count = 0;
-        //$serviceCount = 0;
-
-        $default_time_zone = $serviceContainer->getParameter('default_time_zone');
-
-        $userSecUtil = $serviceContainer->get('user_security_utility');
-        $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
-
-        ////////////// add system user /////////////////
-        $systemuser = $this->createSystemUser($em,$userkeytype,$default_time_zone);
-        ////////////// end of add system user /////////////////
-
-        $sheet = $objPHPExcel->getSheet(0);
-        $highestRow = $sheet->getHighestRow();
-        $highestColumn = $sheet->getHighestColumn();
-
-        //for each user in excel
-        for( $row = 2; $row <= $highestRow; $row++ ) {
-            //  Read a row of data into an array
-            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
-                NULL,
-                TRUE,
-                FALSE);
-
-            //  Insert row data array into the database
-//            echo $row.": ";
-//            var_dump($rowData);
-//            echo "<br>";
-
-            $email = $rowData[0][11];
-            list($username, $extra) = explode("@", $email);
-            $phone = $rowData[0][8];
-            $fax = $rowData[0][12];
-            $firstName = $rowData[0][6];
-            $lastName = $rowData[0][5];
-            $title = $rowData[0][7];
-            $office = $rowData[0][10];
-            $services = explode("/",$rowData[0][2]);
-
-            //echo "<br>divisions=".$rowData[0][2]." == ";
-            //print_r($services);
-
-            //username: oli2002_@_wcmc-cwid
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
-            echo "DB user=".$user."<br>";
-
-            if( !$user ) {
-                //create excel user
-                $user = new User();
-                $user->setKeytype($userkeytype);
-                $user->setPrimaryPublicUserId($username);
-
-                //set unique username
-                $usernameUnique = $user->createUniqueUsername();
-                $user->setUsername($usernameUnique);
-                //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
-                $user->setUsernameCanonical($usernameUnique);
-            }
-
-            $user->setEmail($email);
-            $user->setEmailCanonical($email);
-            $user->setFirstName($firstName);
-            $user->setLastName($lastName);
-            $user->setDisplayName($firstName." ".$lastName);
-            $user->setPassword("");
-            $user->setCreatedby('excel');
-            $user->getPreferences()->setTimezone($default_time_zone);
-
-            //add default locations
-            if( count($user->getLocations()) == 0 ) {
-                $user = $this->addDefaultLocations($user,$systemuser,$em,$serviceContainer);
-            }
-
-            //phone, fax, office are stored in Location object
-            $mainLocation = $user->getMainLocation();
-            $mainLocation->setPhone($phone);
-            $mainLocation->setFax($fax);
-
-            //set room object
-            $roomObj = $this->getObjectByNameTransformer($office,$systemuser,'RoomList',$em);
-            $mainLocation->setRoom($roomObj);
-
-            //title is stored in Administrative Title
-            if( count($user->getAdministrativeTitles()) == 0 ) {
-                $administrativeTitle = new AdministrativeTitle($systemuser);
-
-                //set title object
-                $titleObj = $this->getObjectByNameTransformer($title,$systemuser,'AdminTitleList',$em);
-                $administrativeTitle->setName($titleObj);
-
-                $user->addAdministrativeTitle($administrativeTitle);
-            }
-
-            if( count($user->getAdministrativeTitles()) > 0 ) {
-                $administrativeTitle = $user->getAdministrativeTitles()->first();
-            }
-
-            //add scanorder Roles
-            $user->addRole('ROLE_SCANORDER_SUBMITTER');
-
-            //add Platform Admin role and WCMC Institution for specific users
-            //TODO: remove in prod
-            if( $user->getUsername() == "cwid1_@_wcmc-cwid" || $user->getUsername() == "cwid2_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_PLATFORM_ADMIN');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_COORDINATOR');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY');
-            }
-
-            //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
-            //TODO: this should be located on scanorder site
-            $aperioUtil = new AperioUtil();
-            //echo "username=".$username."<br>";
-            $userid = $aperioUtil->getUserIdByUserName($username);
-            if( $userid ) {
-                //echo "userid=".$userid."<br>";
-                $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
-                $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
-            }
-            //************** end of  Aperio group roles **************//
-
-            //TODO: implement service!
-            foreach( $services as $service ) {
-
-                $service = trim($service);
-
-                if( $service != "" ) {
-                    //echo " (".$service.") ";
-                    $serviceEntity  = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($service);
-
-                    if( $serviceEntity ) {
-                        $administrativeTitle->setInstitution($serviceEntity);
-                    }
-                } //if
-
-            } //foreach
-
-            $user->setEnabled(true);
-            $user->setLocked(false);
-            $user->setExpired(false);
-
-//            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
-//            if( $found_user ) {
-//                //
-//            } else {
-                //echo $username." not found ";
-                $em->persist($user);
-                $em->flush();
-                $count++;
-
-
-                //**************** create PerSiteSettings for this user **************//
-                //TODO: this should be located on scanorder site
-                $securityUtil = $serviceContainer->get('order_security_utility');
-                $perSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-                if( !$perSiteSettings ) {
-                    $perSiteSettings = new PerSiteSettings($systemuser);
-                    $perSiteSettings->setUser($user);
-                }
-                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-                if( count($params) != 1 ) {
-                    throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-                }
-                $param = $params[0];
-                $institution = $param->getAutoAssignInstitution();
-                $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
-                $em->persist($perSiteSettings);
-                $em->flush();
-                //**************** EOF create PerSiteSettings for this user **************//
-
-                //record user log create
-                $event = "User ".$user." has been created by ".$systemuser."<br>";
-                $userSecUtil->createUserEditEvent($serviceContainer->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
+//    public function generateUsersExcel_old( $em, $serviceContainer ) {
+//        $inputFileName = __DIR__ . '/../Util/users.xlsx';
+//
+//        try {
+//            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+//            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+//            $objPHPExcel = $objReader->load($inputFileName);
+//        } catch(Exception $e) {
+//            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+//        }
+//
+//        //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+//        //var_dump($sheetData);
+//
+//        $count = 0;
+//        //$serviceCount = 0;
+//
+//        $default_time_zone = $serviceContainer->getParameter('default_time_zone');
+//
+//        $userSecUtil = $serviceContainer->get('user_security_utility');
+//        $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
+//
+//        ////////////// add system user /////////////////
+//        $systemuser = $this->createSystemUser($em,$userkeytype,$default_time_zone);
+//        ////////////// end of add system user /////////////////
+//
+//        $sheet = $objPHPExcel->getSheet(0);
+//        $highestRow = $sheet->getHighestRow();
+//        $highestColumn = $sheet->getHighestColumn();
+//
+//        //for each user in excel
+//        for( $row = 2; $row <= $highestRow; $row++ ) {
+//            //  Read a row of data into an array
+//            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+//                NULL,
+//                TRUE,
+//                FALSE);
+//
+//            //  Insert row data array into the database
+////            echo $row.": ";
+////            var_dump($rowData);
+////            echo "<br>";
+//
+//            $email = $rowData[0][11];
+//            list($username, $extra) = explode("@", $email);
+//            $phone = $rowData[0][8];
+//            $fax = $rowData[0][12];
+//            $firstName = $rowData[0][6];
+//            $lastName = $rowData[0][5];
+//            $title = $rowData[0][7];
+//            $office = $rowData[0][10];
+//            $services = explode("/",$rowData[0][2]);
+//
+//            //echo "<br>divisions=".$rowData[0][2]." == ";
+//            //print_r($services);
+//
+//            //username: oli2002_@_wcmc-cwid
+//            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
+//            echo "DB user=".$user."<br>";
+//
+//            if( !$user ) {
+//                //create excel user
+//                $user = new User();
+//                $user->setKeytype($userkeytype);
+//                $user->setPrimaryPublicUserId($username);
+//
+//                //set unique username
+//                $usernameUnique = $user->createUniqueUsername();
+//                $user->setUsername($usernameUnique);
+//                //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
+//                $user->setUsernameCanonical($usernameUnique);
 //            }
-
-        }//for each user
-
-        //exit();
-        return $count;
-    }
+//
+//            $user->setEmail($email);
+//            $user->setEmailCanonical($email);
+//            $user->setFirstName($firstName);
+//            $user->setLastName($lastName);
+//            $user->setDisplayName($firstName." ".$lastName);
+//            $user->setPassword("");
+//            $user->setCreatedby('excel');
+//            $user->getPreferences()->setTimezone($default_time_zone);
+//
+//            //add default locations
+//            if( count($user->getLocations()) == 0 ) {
+//                $user = $this->addDefaultLocations($user,$systemuser,$em,$serviceContainer);
+//            }
+//
+//            //phone, fax, office are stored in Location object
+//            $mainLocation = $user->getMainLocation();
+//            $mainLocation->setPhone($phone);
+//            $mainLocation->setFax($fax);
+//
+//            //set room object
+//            $roomObj = $this->getObjectByNameTransformer($office,$systemuser,'RoomList',$em);
+//            $mainLocation->setRoom($roomObj);
+//
+//            //title is stored in Administrative Title
+//            if( count($user->getAdministrativeTitles()) == 0 ) {
+//                $administrativeTitle = new AdministrativeTitle($systemuser);
+//
+//                //set title object
+//                $titleObj = $this->getObjectByNameTransformer($title,$systemuser,'AdminTitleList',$em);
+//                $administrativeTitle->setName($titleObj);
+//
+//                $user->addAdministrativeTitle($administrativeTitle);
+//            }
+//
+//            if( count($user->getAdministrativeTitles()) > 0 ) {
+//                $administrativeTitle = $user->getAdministrativeTitles()->first();
+//            }
+//
+//            //add scanorder Roles
+//            $user->addRole('ROLE_SCANORDER_SUBMITTER');
+//
+//            //add Platform Admin role and WCMC Institution for specific users
+//            //TODO: remove in prod
+//            if( $user->getUsername() == "cwid1_@_wcmc-cwid" || $user->getUsername() == "cwid2_@_wcmc-cwid" ) {
+//                $user->addRole('ROLE_PLATFORM_ADMIN');
+//            }
+//
+//            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+//                //$user->addRole('ROLE_FELLAPP_COORDINATOR');
+//                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
+//                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');
+//                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY');
+//                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY');
+//                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY');
+//                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY');
+//                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY');
+//            }
+//
+//            //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
+//            //TODO: this should be located on scanorder site
+//            $aperioUtil = new AperioUtil();
+//            //echo "username=".$username."<br>";
+//            $userid = $aperioUtil->getUserIdByUserName($username);
+//            if( $userid ) {
+//                //echo "userid=".$userid."<br>";
+//                $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
+//                $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+//            }
+//            //************** end of  Aperio group roles **************//
+//
+//            //TODO: implement service!
+//            foreach( $services as $service ) {
+//
+//                $service = trim($service);
+//
+//                if( $service != "" ) {
+//                    //echo " (".$service.") ";
+//                    $serviceEntity  = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($service);
+//
+//                    if( $serviceEntity ) {
+//                        $administrativeTitle->setInstitution($serviceEntity);
+//                    }
+//                } //if
+//
+//            } //foreach
+//
+//            $user->setEnabled(true);
+//            $user->setLocked(false);
+//            $user->setExpired(false);
+//
+////            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
+////            if( $found_user ) {
+////                //
+////            } else {
+//                //echo $username." not found ";
+//                $em->persist($user);
+//                $em->flush();
+//                $count++;
+//
+//
+//                //**************** create PerSiteSettings for this user **************//
+//                //TODO: this should be located on scanorder site
+//                $securityUtil = $serviceContainer->get('order_security_utility');
+//                $perSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+//                if( !$perSiteSettings ) {
+//                    $perSiteSettings = new PerSiteSettings($systemuser);
+//                    $perSiteSettings->setUser($user);
+//                }
+//                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//                if( count($params) != 1 ) {
+//                    throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//                }
+//                $param = $params[0];
+//                $institution = $param->getAutoAssignInstitution();
+//                $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
+//                $em->persist($perSiteSettings);
+//                $em->flush();
+//                //**************** EOF create PerSiteSettings for this user **************//
+//
+//                //record user log create
+//                $event = "User ".$user." has been created by ".$systemuser."<br>";
+//                $userSecUtil->createUserEditEvent($serviceContainer->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
+////            }
+//
+//        }//for each user
+//
+//        //exit();
+//        return $count;
+//    }
 
     public function setLoginAttempt( $request, $security_content, $em, $options ) {
 

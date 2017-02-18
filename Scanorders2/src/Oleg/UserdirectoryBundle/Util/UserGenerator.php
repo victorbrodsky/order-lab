@@ -51,6 +51,13 @@ class UserGenerator {
 
         $inputFileName = __DIR__ . '/../Util/UsersFullNew.xlsx';
 
+        if (file_exists($inputFileName)) {
+            //echo "The file $inputFileName exists";
+        } else {
+            echo "The file $inputFileName does not exist";
+            return;
+        }
+
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);

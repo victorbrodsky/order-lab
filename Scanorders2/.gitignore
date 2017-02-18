@@ -22,8 +22,8 @@ Scanorders2/web/uploads/documents/*.txt
 /web/uploads/*
 ### add manually to the source code: xls files, p12 key file, /src/Oleg/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php
 ###
-/src/Oleg/UserdirectoryBundle/Util/*.xlsx
-/src/Oleg/UserdirectoryBundle/Util/*.xls
+/src/Oleg/UserdirectoryBundle/Util/Users*.xlsx
+/src/Oleg/UserdirectoryBundle/Util/users.xlsx
 /src/Oleg/VacReqBundle/Util/*.xls
 /src/Oleg/FellAppBundle/Util/*.p12
 /src/Oleg/FellAppBundle/Util/*.xml
