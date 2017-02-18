@@ -20,7 +20,12 @@ Scanorders2/web/uploads/documents/*.txt
 /Scanorders2/web/uploads/documents/*.txt
 /web/uploads/
 /web/uploads/*
-### add manually to the source code: xls files, p12 key file, /src/Oleg/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php
+### add manually to the source code:
+#1) UserdirectoryBundle/Util/Users*.xlsx (optional)
+#2a) FellAppBundle/Util/*.p12
+#2b) FellAppBundle/Util/*.xml (optional)
+#3) /vendor/olegutil for fellapp pdf processing (ghostscript, LibreOffice, PDFTK)
+#optional: /src/Oleg/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php
 ###
 /src/Oleg/UserdirectoryBundle/Util/Users*.xlsx
 /src/Oleg/UserdirectoryBundle/Util/users.xlsx
