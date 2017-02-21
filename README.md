@@ -1,18 +1,17 @@
 # O R D E R
 
 >**Important note:** This is a software prototype. While it has been extensively tested, unresolved issues remain. This software should
-> not be used in a live environment unless you are fully prepared to continuously monitor for and deal with encountered issues.
+> not be used in a live production environment unless you are fully prepared to continuously monitor for and deal with encountered issues.
 > 
-> Specifically, the security, scalability, cross-browser compatibility, user interface responsiveness, performance, data safety,
-> multi-user concurrency, proper versioning, and platform independence have been left as exercises to the reader.
+> Specifically, the security, scalability, cross-browser compatibility, user interface responsiveness, performance, data consistency,
+> safe multi-user concurrency, proper versioning, and platform independence have been left as exercises to the reader.
 >
-> If you have any doubts about needing this software, you do not need it.
 
 ##About
 
 O R D E R is a web-based software platform for development of clinical, administrative, research, and educational multi-user applications.
 
-It includes several functional examples:
+It includes several functional example applications:
 
 - Glass Slide Scan Orders
 
@@ -47,26 +46,20 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 ## License
 
-Apache 2.0
+[Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 
-## Important Commands for Development
+## Developer Notes
 
-### Configuration info (original Dev server on the intranet):
+### Test server links (accessible on the intranet only):
 
-[http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php](http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php)
+[Configuration info](http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php)
 
-### Development mode (original Dev server on the intranet):
+[Development mode](http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/)
 
-[http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/](http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/)
+[Production mode](http://collage.med.cornell.edu/order/)
 
-### Production mode (original Dev server on the intranet):
-
-[http://collage.med.cornell.edu/order/](http://collage.med.cornell.edu/order/)
-
-### Admin page (Requires admin role; original Dev server on the intranet):
-
-[http://collage.med.cornell.edu/order/admin](http://collage.med.cornell.edu/order/admin)
+[Admin page](http://collage.med.cornell.edu/order/admin)
 
 ### To include assets located in your bundles' Resources/public folder (target is by default "web"):
 
@@ -78,11 +71,11 @@ Apache 2.0
 	 php app/console cache:clear --env=prod --no-debug or (php app/console cache:clear --env=prod --no-debug --no-warmup)
 	 php app/console assetic:dump --env=prod --no-debug
 
-### After modification of html, js or css files, run a single console script to clear cache and dump assets in /Scanorders2 folder:
+### After modification of html, js or css files, run this single console script to clear cache and dump assets in /Scanorders2 folder:
 
 	 deploy_prod
 
-### Run composer update or self-update
+### To run composer update or self-update
 
 	 composer.phar update
 
@@ -137,7 +130,7 @@ Apache 2.0
 
 7) repeat 3-5 for development
 
-### To get changes on your local machine:
+### To get changes onto your local machine:
 
 1) cd to dir created by clone
 
@@ -149,7 +142,7 @@ Apache 2.0
 
 	 git pull
 
-### If there are some local modified files, then will not allow to merge with local modifications. There are 3 options (option (b): git stash is enough):
+### If there are some local modified files, then git will not allow a merge with local modifications. There are 3 options (option (b): git stash is enough):
 
 a) Run command:
 
@@ -163,16 +156,16 @@ c) Run command:
 
 	 git reset --hard
 
-### Force Git to overwrite local files on pull; This will remove all the local files ([http://stackoverflow.com/questions/1125968/force-git-to-overwrite-local-files-on-pull](http://stackoverflow.com/questions/1125968/force-git-to-overwrite-local-files-on-pull))
+### To force Git to overwrite local files on pull; This will remove all the local files ([http://stackoverflow.com/questions/1125968/force-git-to-overwrite-local-files-on-pull](http://stackoverflow.com/questions/1125968/force-git-to-overwrite-local-files-on-pull))
 
 	 git fetch --all
 	 git reset --hard origin/master
 
-### To push changes from locally create branch (i.e. iss51) to remote repo
+### To push changes from a locally created branch (i.e. iss51) to a remote repo
 
 	 git push -u origin iss51
 
-### To create local branch from remote repo
+### To create a local branch from a remote repo
 
 	 git fetch origin
 	 git checkout --track origin/iss51
@@ -182,19 +175,21 @@ c) Run command:
 	 git remote update (note: this is the same as git fetch --all)
 	 git pull
 
-### To update whole tree, even from the subdirectory (including remove of deleted files)
+### To update the whole tree, even from a subdirectory (including removed of deleted files)
 
 	 git add -u .
 	 git commit -m "message"
 	 git push -u origin master
 
-### To remove already cashed files after changing .gitignore (First commit any outstanding code changes, and then, run this command)
+### To remove already cached files after changing .gitignore (First commit any outstanding code changes and then run this command)
 
 	 git rm -r --cached .
 	 git add .
 	 git commit -m ".gitignore is now working"
 
-### To check only a specific file from remote repository
+### To check only a specific file from a remote repository
+
+[http://stackoverflow.com/questions/2466735/how-to-checkout-only-one-file-from-git-repository](http://stackoverflow.com/questions/2466735/how-to-checkout-only-one-file-from-git-repository)
 
 ### To download all the recent changes (but not put it in your current checked out code (working area)):
 
@@ -212,6 +207,8 @@ c) Run command:
 
 	 ./bin/phpunit -c app src/Oleg/OrderformBundle/Tests/LoginTest.php
 
-### Testing with casperjs on the original Dev server on the intranet: run   [http://collage.med.cornell.edu/order/test/index.php](http://collage.med.cornell.edu/order/test/index.php)
+### Testing with casperjs on the original Dev server on the intranet: 
 
-### (The resulting log and screenshots are in order/test folder)
+1. run   [/order/test/index.php](http://collage.med.cornell.edu/order/test/index.php)
+
+2. The resulting log and screenshots are in order/test folder)
