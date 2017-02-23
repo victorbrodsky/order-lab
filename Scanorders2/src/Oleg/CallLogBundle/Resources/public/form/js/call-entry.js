@@ -436,14 +436,11 @@ function findCalllogPatient(holderId,formtype,mrntype) {
     // then resume normal search algorithm.
     if( !lastname && mrn ) {
         //check if mrn has no digits
-        if( !hasNumber(mrn) ) {
+        if( !callloghasNumber(mrn) ) {
             lastname = mrn;
             mrn = "";
             holder.find(".encounter-lastName").val(lastname);
             holder.find(".patientmrn-mask").val(mrn);
-        }
-        function hasNumber(myString) {
-            return (/\d/.test(myString));
         }
     }
 
@@ -523,6 +520,9 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         //datepickerDropdown.remove();
     });
 
+}
+function callloghasNumber(myString) {
+    return (/\d/.test(myString));
 }
 
 function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
