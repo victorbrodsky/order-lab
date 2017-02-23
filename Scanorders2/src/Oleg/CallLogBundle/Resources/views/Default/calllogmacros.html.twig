@@ -683,7 +683,7 @@
 {#{% if 0 %}#}
                 {#Edit Referring Provider Profile#}
                 {% for referringProvider in validEncounter.getReferringProviders %}
-                    {% if referringProvider %}
+                    {% if 0 and referringProvider %}
                         {% if referringProvider.obtainLinkedUser and referringProvider.obtainLinkedUser.getId %}
                             {#<li><a href="{{ path('calllog_user_edit', { 'id': referringProvider.obtainLinkedUser.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>#}
                         {% else %}
