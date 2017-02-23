@@ -218,7 +218,9 @@
                 <td>
                     {% for encounter in message.encounter %}
                         {% for referringProvider in encounter.referringProviders %}
-                            {{ referringProvider.field.getFullName }}<br>
+                            {% if referringProvider.field %}
+                                {{ referringProvider.field.getFullName }}<br>
+                            {% endif %}
                         {% endfor %}
                     {% endfor %}
                 </td>
