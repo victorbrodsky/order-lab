@@ -650,7 +650,7 @@
 
             {% if message.patient|length > 0 %}
                 {% set mrn = message.patient|first.obtainValidField('mrn') %}
-                {% if mrn %}
+                {% if mrn and mrn.field and mrn.keytype %}
                     {% set mrnNumber = mrn.field %}
                     {% set mrnTypeId = mrn.keytype.id %}
                     {% if mrnNumber and mrnTypeId %}
@@ -762,15 +762,14 @@
         <ul class="dropdown-menu dropdown-menu-right">
 
             {% set mrn = patient.obtainValidField('mrn') %}
-            {% if mrn %}
+            {% if mrn and mrn.field and mrn.keytype %}
                 {% set mrnNumber = mrn.field %}
                 {% set mrnTypeId = mrn.keytype.id %}
-
-                <li><a href="{{ path('calllog_home', { 'filter[search]': mrnNumber}) }}"
-                       target="_blank">Show all entries</a>
-                </li>
-
                 {% if mrnNumber and mrnTypeId %}
+                    <li><a href="{{ path('calllog_home', { 'filter[search]': mrnNumber}) }}"
+                           target="_blank">Show all entries</a>
+                    </li>
+
                     <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
                            target="_blank">Edit Patient Record</a>
                     </li>
