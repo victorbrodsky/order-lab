@@ -676,11 +676,12 @@
 
             {% set validEncounter = message.getValidEncounter %}
             {% if validEncounter %}
+
                 {% set locationId = validEncounter.obtainTrackerSpotsLocationId %}
                 {% if locationId %}
                     <li><a href="{{ path('employees_locations_pathaction_edit_standalone', { 'id': locationId}) }}" target="_blank">Edit Encounter Location</a></li>
                 {% endif %}
-{#{% if 0 %}#}
+
                 {#Edit Referring Provider Profile#}
                 {% for referringProvider in validEncounter.getReferringProviders %}
                     {% if referringProvider %}
@@ -690,15 +691,15 @@
                             {% set linkedUserId = linkedUser.getId() %}
                         {% endif %}
                         {% if linkedUserId %}
-                            {#<li><a href="{{ path('calllog_user_edit', { 'id': referringProvider.obtainLinkedUser.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>#}
+                            <li><a href="{{ path('calllog_user_edit', { 'id': referringProvider.obtainLinkedUser.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>
                         {% else %}
-                            {#{% if referringProvider.getField and referringProvider.getField.getId %}#}
-                                {#<li><a href="{{ path('userwrappers_edit', { 'id': referringProvider.getField.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>#}
-                            {#{% endif %}#}
+                            {% if referringProvider.getField and referringProvider.getField.getId %}
+                                <li><a href="{{ path('userwrappers_edit', { 'id': referringProvider.getField.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endfor %}
-{#{% endif %}#}
+
             {% endif %}
 
             {#TODO: Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}

@@ -109,7 +109,7 @@ class EncounterReferringProvider extends EncounterArrayFieldAbstract
 
     public function obtainLinkedUser() {
         $userWrapper = $this->getField();
-        if( $userWrapper->getUser() ) {
+        if( $userWrapper && $userWrapper->getUser() ) {
             return $userWrapper->getUser();
         }
         return null;
