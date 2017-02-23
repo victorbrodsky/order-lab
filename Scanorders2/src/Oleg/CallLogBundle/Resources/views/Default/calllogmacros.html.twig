@@ -673,14 +673,14 @@
                        target="_blank">Add to Complex List</a>
                 </li>
             {% endif %}
-{% if 0 %}
+
             {% set validEncounter = message.getValidEncounter %}
             {% if validEncounter %}
                 {% set locationId = validEncounter.obtainTrackerSpotsLocationId %}
                 {% if locationId %}
                     <li><a href="{{ path('employees_locations_pathaction_edit_standalone', { 'id': locationId}) }}" target="_blank">Edit Encounter Location</a></li>
                 {% endif %}
-
+{% if 0 %}
                 {#Edit Referring Provider Profile#}
                 {% for referringProvider in validEncounter.getReferringProviders %}
                     {% if referringProvider.obtainLinkedUser and referringProvider.obtainLinkedUser.getId %}
@@ -691,10 +691,8 @@
                         {% endif %}
                     {% endif %}
                 {% endfor %}
-
-            {% endif %}
-
 {% endif %}
+            {% endif %}
 
             {#TODO: Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
             {#Same Encounter#}
