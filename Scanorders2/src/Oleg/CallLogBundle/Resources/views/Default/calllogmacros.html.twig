@@ -684,9 +684,14 @@
                 {#Edit Referring Provider Profile#}
                 {% for referringProvider in validEncounter.getReferringProviders %}
                     {% if referringProvider %}
-                        {% if referringProvider.obtainLinkedUser and referringProvider.obtainLinkedUser.getId %}
+                        {% set linkedUser = referringProvider.obtainLinkedUser %}
+                        {% set linkedUserId = null %}
+                        {% if linkedUser %}
+                            {% set linkedUserId = linkedUser.getId() %}
+                        {% endif %}
+                        {% if linkedUserId %}
                             {#<li><a href="{{ path('calllog_user_edit', { 'id': referringProvider.obtainLinkedUser.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>#}
-                        {#{% else %}#}
+                        {% else %}
                             {#{% if referringProvider.getField and referringProvider.getField.getId %}#}
                                 {#<li><a href="{{ path('userwrappers_edit', { 'id': referringProvider.getField.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>#}
                             {#{% endif %}#}
