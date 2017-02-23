@@ -648,7 +648,7 @@
 
             <li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>
 {% if 0 %}
-            {% message.patient|length > 0 %}
+            {% if message.patient|length > 0 %}
                 {% set mrn = message.patient|first.obtainValidField('mrn') %}
                 {% if mrn and mrn.field and mrn.keytype %}
                     {% set mrnNumber = mrn.field %}
