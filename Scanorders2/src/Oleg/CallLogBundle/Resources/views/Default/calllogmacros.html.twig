@@ -653,16 +653,18 @@
                 {% if mrn %}
                     {% set mrnNumber = mrn.field %}
                     {% set mrnTypeId = mrn.keytype.id %}
-                    <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
+                    {% if mrnNumber and mrnTypeId %}
+                        <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
 
-                    <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
+                        <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
 
-                    <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Edit Patient Record</a></li>
+                        <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Edit Patient Record</a></li>
 
-                    <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Merge Patient Record</a></li>
+                        <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Merge Patient Record</a></li>
 
-                    {% if message.patient|first.obtainMergeMrnArr('valid')|length > 0 %}
-                        <li><a href="{{ path('calllog_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Un-merge Patient Record</a></li>
+                        {% if message.patient|first.obtainMergeMrnArr('valid')|length > 0 %}
+                            <li><a href="{{ path('calllog_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Un-merge Patient Record</a></li>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
 
@@ -768,18 +770,20 @@
                        target="_blank">Show all entries</a>
                 </li>
 
-                <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
-                       target="_blank">Edit Patient Record</a>
-                </li>
-
-                <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
-                       target="_blank">Merge Patient Record</a>
-                </li>
-
-                {% if patient.obtainMergeMrnArr('valid')|length > 0 %}
-                    <li><a href="{{ path('calllog_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
-                           target="_blank">Un-merge Patient Record</a>
+                {% if mrnNumber and mrnTypeId %}
+                    <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                           target="_blank">Edit Patient Record</a>
                     </li>
+
+                    <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                           target="_blank">Merge Patient Record</a>
+                    </li>
+
+                    {% if patient.obtainMergeMrnArr('valid')|length > 0 %}
+                        <li><a href="{{ path('calllog_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                               target="_blank">Un-merge Patient Record</a>
+                        </li>
+                    {% endif %}
                 {% endif %}
 
                 <li><a data-confirm="Are you sure you want to remove this patient from this list?"
