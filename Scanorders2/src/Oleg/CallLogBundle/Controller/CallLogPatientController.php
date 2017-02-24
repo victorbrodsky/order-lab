@@ -243,11 +243,11 @@ class CallLogPatientController extends PatientController {
         $dql->leftJoin("patient.firstname", "firstname");
         $dql->leftJoin("patient.mrn", "mrn");
 
-        $dql->where("list.parent = :parentId AND list.organizationalGroupType = :patientGroup");
-        $parameters['parentId'] = $listid;
-        $parameters['patientGroup'] = $patientGroup->getId();
+        //$dql->where("list.parent = :parentId AND list.organizationalGroupType = :patientGroup");
+        //$parameters['parentId'] = $listid;
+        //$parameters['patientGroup'] = $patientGroup->getId();
 
-        $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
+        //$dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
         $query = $em->createQuery($dql);
         $query->setParameters($parameters);
