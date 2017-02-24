@@ -1281,7 +1281,11 @@ class CallLogUtil
     public function addToPatientList( $patient, $message, $testing ) {
 
         //check if addPatientToList is checked
-        if( !$message->getAddPatientToList() ) {
+        if( $message->getCalllogEntryMessage() ) {
+            if( !$message->getCalllogEntryMessage()->getAddPatientToList() ) {
+                return null;
+            }
+        } else {
             return null;
         }
 
