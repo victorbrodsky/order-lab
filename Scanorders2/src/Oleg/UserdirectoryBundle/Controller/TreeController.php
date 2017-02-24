@@ -167,6 +167,7 @@ class TreeController extends Controller {
 //            $params = array('typedef' => 'default','typeadd' => 'user-added');
 //        }
 
+        //process ajax type
         //echo "type=".$type."<br>";
         if( $type ) {
             //http://stackoverflow.com/questions/5929036/how-to-use-where-in-with-doctrine-2

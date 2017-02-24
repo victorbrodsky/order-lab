@@ -1457,7 +1457,14 @@ class CallLogUtil
     }
 
     public function getDefaultPatientList( $patientListName = "Pathology Call Complex Patients" ) {
-        $patientList = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
+        //$patientList = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
+        $patientList = null;
+
+        $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array('name'=>$patientListName,'type'=>array('default','user-added')));
+        if( count($patientLists) > 0 ) {
+            $patientList = $patientLists[0];
+        }
+
         if( !$patientList ) {
             throw new \Exception( "Location type is not found by name '".$patientListName."'" );
         }

@@ -643,6 +643,7 @@ class CallEntryController extends Controller
 
         //set patient list
         $patientList = $calllogUtil->getDefaultPatientList();
+        echo "patientList ID=".$patientList->getId()."<br>";
         $message->getCalllogEntryMessage()->setPatientList($patientList);
 
         //add patient
