@@ -1483,13 +1483,14 @@ function calllogSubmitForm(btn,messageStatus) {
     //checks
     var holder = $('.calllog-patient-holder');
 
-    //If the user enters patient info, does NOT press the "Find Patient" button
+    /////// If the user enters patient info, does NOT press the "Find Patient" button (or presses it, but does not select a patient) ////////
     var mrn = holder.find(".patientmrn-mask").val();
     var dob = holder.find(".patient-dob-date").val();
     var lastname = holder.find(".encounter-lastName").val();
     var firstname = holder.find(".encounter-firstName").val();
-    if( mrn || dob || lastname || firstname ) {
-        var confMsg = 'You have enterd patient information, but have not pressed "Find Patient" button.'+
+    var patientId = holder.find(".patienttype-patient-id").val();
+    if( !patientId && (mrn || dob || lastname || firstname) ) {
+        var confMsg = 'You have entered patient information, but patient has not been found.'+
             ' The patient info will be discarded and call entry will not be attached to the patient.' +
             ' Otherwise, press "Cancel" and then press "Find Patient" button.'+
             ' Are you sure you want to proceed without patient?';
@@ -1501,6 +1502,7 @@ function calllogSubmitForm(btn,messageStatus) {
             return false;
         }
     }
+    /////// EOF If the user enters patient info, does NOT press the "Find Patient" button (or presses it, but does not select a patient) ////////
 
     //B- Uniqueness of the Encounter Location Name. If the entered location name already exists in the database
     // (but any associated entered (non-empty) field values such as phone number do not equal associated values in the DB),
