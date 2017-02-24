@@ -643,7 +643,7 @@ class CallEntryController extends Controller
 
         //set patient list
         $patientList = $calllogUtil->getDefaultPatientList();
-        echo "patientList ID=".$patientList->getId()."<br>";
+        //echo "patientList ID=".$patientList->getId()."<br>";
         $message->getCalllogEntryMessage()->setPatientList($patientList);
 
         //add patient
@@ -787,13 +787,13 @@ class CallEntryController extends Controller
                 throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
             }
             $patient = $patients->first();
-            echo "patient id=".$patient->getId()."<br>";
+            //echo "patient id=".$patient->getId()."<br>";
 
             $patientInfoEncounter = null;
             $newEncounter = null;
             //get a new encounter without id
             foreach( $patient->getEncounter() as $encounter ) {
-                echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
+                //echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
                 if( !$encounter->getId() ) {
                     if( $encounter->getStatus() == 'valid' ) {
                         $newEncounter = $encounter;
@@ -901,11 +901,11 @@ class CallEntryController extends Controller
                         //if "Signed" set signed User, datetime, roles by signeeInfo
                         if( $messageStatusObj->getName()."" == "Signed" ) {
                             if ($message->getSigneeInfo()) {
-                                echo "signee exist <br>";
+                                //echo "signee exist <br>";
                                 $signeeInfo = $message->getSigneeInfo();
                                 $signeeInfo->setInfo($user);
                             } else {
-                                echo "signee does exist <br>";
+                                //echo "signee does exist <br>";
                                 $message->setSigneeInfo(new ModifierInfo($user));
                             }
                         }

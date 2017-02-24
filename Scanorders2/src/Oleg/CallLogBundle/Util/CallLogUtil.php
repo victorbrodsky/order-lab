@@ -1280,6 +1280,11 @@ class CallLogUtil
     //create a new PatientListHierarchy node and add as a child to the $patientList
     public function addToPatientList( $patient, $message, $testing ) {
 
+        //check if addPatientToList is checked
+        if( !$message->getAddPatientToList() ) {
+            return null;
+        }
+
         if( !$patient ) {
             return null;
         }
@@ -1444,9 +1449,15 @@ class CallLogUtil
         }
         $repository = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy');
         $dql = $repository->createQueryBuilder("list");
+
         $dql->where("list.parent = :parentId AND list.patient = :patientId");
         $parameters['parentId'] = $patientList->getId();
         $parameters['patientId'] = $patient->getId();
+
+        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+        $parameters['typedef'] = 'default';
+        $parameters['typeadd'] = 'user-added';
+
         $query = $this->em->createQuery($dql);
         $query->setParameters($parameters);
         $patients = $query->getResult();
