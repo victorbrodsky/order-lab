@@ -250,7 +250,7 @@ class CallLogPatientController extends PatientController {
         //$dql->where("list.parent = :parentId");
         //$parameters['parentId'] = $listid;
 
-        //$dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
+        $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
         $query = $em->createQuery($dql);
         $query->setParameters($parameters);
