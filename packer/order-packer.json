@@ -6,7 +6,7 @@
 
   "builders": [{
     "type": "digitalocean",
-    "api_token": "e4561f1b44faa16c2b43e94c5685e5960e852326b921883765b3b0e11111f705",
+    "api_token": "",
     "region": "nyc3",
     "size": "512mb",
     "image": "ubuntu-16-04-x64",
