@@ -75,7 +75,8 @@
         "symfony-web-dir": "web",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+            "file": "app/config/parameters.yml",
+			"keep-outdated": true
         },
         "branch-alias": {
             "dev-master": "2.8-dev"
