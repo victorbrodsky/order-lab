@@ -153,7 +153,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             if( array_key_exists('smtpServerAddress', $row) )
                 $smtpServerAddress = $row['smtpServerAddress'];
 
-            $defaultSiteEmail = $row['siteEmail'];
+            if( array_key_exists('siteEmail', $row) )
+                $defaultSiteEmail = $row['siteEmail'];
 
             if( array_key_exists('institutionurl', $row) )
                 $institution_url = $row['institutionurl'];
