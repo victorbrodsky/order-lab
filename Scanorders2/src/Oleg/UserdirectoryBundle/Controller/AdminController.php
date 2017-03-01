@@ -144,8 +144,51 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $users = $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
         if( count($users) == 0 ) {
-            $msg = $this->generateAll();
-            exit($msg);
+
+            //1) get systemuser
+            $userSecUtil = new UserSecurityUtil($em,null,null);
+            $systemuser = $userSecUtil->findSystemUser();
+
+            //$this->generateSitenameList($systemuser);
+
+            if( !$systemuser ) {
+
+                $default_time_zone = null;
+                $usernamePrefix = "local-user";
+
+                $usetUtil = new UserUtil();
+                $usetUtil->generateUsernameTypes($em);
+                //$userkeytype = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
+
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+
+                $systemuser = $usetUtil->createSystemUser($em, $userkeytype, $default_time_zone);
+                $this->generateSitenameList($systemuser);
+
+                //set unique username
+                $usernameUnique = $systemuser->createUniqueUsername();
+                $systemuser->setUsername($usernameUnique);
+                $systemuser->setUsernameCanonical($usernameUnique);
+
+                //$systemuser->setUsername("system_@_local-user");
+                //$systemuser->setUsernameCanonical("system_@_local-user");
+
+                $encoder = $this->container->get('security.password_encoder');
+                $encoded = $encoder->encodePassword($systemuser, "systemuserpass");
+
+                $systemuser->setPassword($encoded);
+                $systemuser->setLocked(false);
+
+                $em->persist($systemuser);
+                $em->flush();
+
+                //exit("system user created");
+            }
+
+            $adminRes = $this->generateAdministratorAction(true);
+
+            exit($adminRes);
         }
         exit('users already exists');
     }
@@ -6470,10 +6513,12 @@ class AdminController extends Controller
         return $mapper;
     }
 
-    public function generateAdministratorAction() {
+    public function generateAdministratorAction($force=false) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        if( $force == false ) {
+            if (false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+                return $this->redirect($this->generateUrl('employees-nopermission'));
+            }
         }
 
         $em = $this->getDoctrine()->getManager();

@@ -107,12 +107,12 @@ class HomeController extends Controller {
 
         if( !$systemuser ) {
 
-            $userSecUtil = $this->container->get('user_security_utility');
-            $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
-
             $usetUtil = new UserUtil();
             $usetUtil->generateUsernameTypes($em);
             //$userkeytype = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
 
             $systemuser = $usetUtil->createSystemUser($em, $userkeytype, $default_time_zone);
             $this->generateSitenameList($systemuser);
