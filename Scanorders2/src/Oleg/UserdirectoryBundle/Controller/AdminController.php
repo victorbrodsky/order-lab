@@ -137,6 +137,7 @@ class AdminController extends Controller
 {
 
     /**
+     * run: http://localhost/order/directory/admin/first-time-login-generation-init/
      * @Route("/first-time-login-generation-init/", name="first-time-login-generation-init")
      */
     public function firstTimeLoginGenerationAction() {
