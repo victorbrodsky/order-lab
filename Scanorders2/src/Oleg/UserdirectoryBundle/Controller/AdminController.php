@@ -3999,6 +3999,7 @@ class AdminController extends Controller
             if( $locationTypeName ) {
                 $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName($locationTypeName);
                 if (!$locationType) {
+                    continue;
                     exit("No location found by name " . $locationTypeName);
                 }
                 $listEntity->addLocationType($locationType);

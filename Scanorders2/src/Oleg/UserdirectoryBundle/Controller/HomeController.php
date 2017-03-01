@@ -85,9 +85,11 @@ class HomeController extends Controller {
 
 
     /**
+     * Not used: use http://localhost/order/directory/admin/first-time-login-generation-init/ for the first time user generation login
      * @Route("/first-time-user-generation-init/", name="first-time-user-generation-init")
      */
     public function firstTimeUserGenerationAction() {
+        exit("not used");
 //        return $this->render('OlegUserdirectoryBundle:Default:under_construction.html.twig');
 
         //exit("firstTimeUserGenerationAction");
