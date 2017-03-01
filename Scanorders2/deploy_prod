@@ -52,6 +52,10 @@ function prep()
     echo "*** Dump assets ***"
     php $PROJECT_LOCAL_PATH/app/console assetic:dump --env=prod --no-debug
     #php $PROJECT_LOCAL_PATH/app/console assetic:watch
+
+    echo "*** Set permissions ***"
+    chown -R www-data:www-data app/cache
+    chown -R www-data:www-data app/logs
 }
 
 
