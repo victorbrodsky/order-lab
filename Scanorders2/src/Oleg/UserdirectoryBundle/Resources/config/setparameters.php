@@ -217,11 +217,16 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 $database_password = $row['dbServerAccountPassword'];
 
             //Aperio DB
-            $database_host_aperio = $row['aperioeSlideManagerDBServerAddress'];
-            $database_port_aperio = $row['aperioeSlideManagerDBServerPort'];
-            $database_name_aperio = $row['aperioeSlideManagerDBName'];
-            $database_user_aperio = $row['aperioeSlideManagerDBUserName'];
-            $database_password_aperio = $row['aperioeSlideManagerDBPassword'];
+            if( array_key_exists('aperioeSlideManagerDBServerAddress', $row) )
+                $database_host_aperio = $row['aperioeSlideManagerDBServerAddress'];
+            if( array_key_exists('aperioeSlideManagerDBServerPort', $row) )
+                $database_port_aperio = $row['aperioeSlideManagerDBServerPort'];
+            if( array_key_exists('aperioeSlideManagerDBName', $row) )
+                $database_name_aperio = $row['aperioeSlideManagerDBName'];
+            if( array_key_exists('aperioeSlideManagerDBUserName', $row) )
+                $database_user_aperio = $row['aperioeSlideManagerDBUserName'];
+            if( array_key_exists('aperioeSlideManagerDBPassword', $row) )
+                $database_password_aperio = $row['aperioeSlideManagerDBPassword'];
         }
 
         $container->setParameter('mailer_host',$smtpServerAddress);
