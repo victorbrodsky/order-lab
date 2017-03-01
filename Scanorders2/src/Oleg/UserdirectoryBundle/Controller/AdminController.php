@@ -161,11 +161,16 @@ class AdminController extends Controller
                 $usetUtil->generateUsernameTypes($em);
                 //$userkeytype = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
 
+                $this->generateSitenameList(null);
+
                 $userSecUtil = $this->container->get('user_security_utility');
                 $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
 
+                echo "userkeytype=".$userkeytype."<br>";
+
                 $systemuser = $usetUtil->createSystemUser($em, $userkeytype, $default_time_zone);
-                $this->generateSitenameList($systemuser);
+
+                exit("systemuser=".$systemuser."; ID=".$systemuser->getUsername());
 
                 //set unique username
                 $usernameUnique = $systemuser->createUniqueUsername();
@@ -303,7 +308,7 @@ class AdminController extends Controller
         //$this->generateLabResultNames();
         //$this->generateLocationsFromExcel();
 
-        $count_sitenameList = $this->generateSitenameList();
+        $count_sitenameList = $this->generateSitenameList($user);
 
         $count_institutiontypes = $this->generateInstitutionTypes();                                //must be first
         $count_OrganizationalGroupType = $this->generateOrganizationalGroupType();                  //must be first
@@ -1848,7 +1853,7 @@ class AdminController extends Controller
     }
 
 
-    public function generateSitenameList() {
+    public function generateSitenameList($user=null) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1861,9 +1866,6 @@ class AdminController extends Controller
             'call-log-book' => 'calllog'
         );
 
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {
 
@@ -1873,7 +1875,7 @@ class AdminController extends Controller
             }
 
             $entity = new SiteList();
-            $this->setDefaultList($entity,$count,$username,$name);
+            $this->setDefaultList($entity,$count,$user,$name);
 
             $entity->setAbbreviation($abbreviation);
 
