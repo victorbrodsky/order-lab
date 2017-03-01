@@ -72,6 +72,7 @@ use Oleg\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
 use Oleg\UserdirectoryBundle\Entity\WeekDaysList;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use Oleg\UserdirectoryBundle\Form\HierarchyFilterType;
+use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
