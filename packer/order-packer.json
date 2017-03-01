@@ -20,7 +20,7 @@
         "inline": [
            "sleep 30",
            "sudo apt-get update",
-           "sudo apt-get install -y apache2"
+           "sudo apt-get install -y apache2"          
          ]
      },
    
@@ -29,16 +29,33 @@
         "inline": [
            "sleep 30",	
 	   "sudo apt-add-repository -y ppa:ondrej/php",
-	   "sudo apt-get -y install php7.0 php5.6-mysql php5.6-cli php5.6-curl php5.6-json php5.6-sqlite3 php5.6-mcrypt php5.6-curl php-xdebug php5.6-mbstring libapache2-mod-php5.6 libapache2-mod-php7.0 mysql-server-5.7 apache2",	           
+           "sudo apt-get update",
+	   "sudo apt-get install -y php7.0 php5.6 php5.6-mysql php-gettext php5.6-mbstring php-mbstring php7.0-mbstring php-xdebug libapache2-mod-php5.6 libapache2-mod-php7.0",	
+           "sudo apt-get install -y php5.6-xml php5.6-cli php5.6-curl php5.6-json",   
+           "sudo apt-get install -y zip unzip php5.6-zip",                   
            "sudo a2dismod php7.0 ; sudo a2enmod php5.6 ; sudo service apache2 restart ; echo 1 | sudo update-alternatives --config php"
          ]     
       },
 
       {
         "type": "shell",
-        "inline": [
-           "sleep 30",	            
-           "sudo apt-get install -y postgresql postgresql-contrib"
+        "inline": [                      
+           "sudo apt-get install -y postgresql postgresql-contrib",
+           "sudo apt-get install -y php5.6-pgsql",
+           "sudo service apache2 restart"         
+         ]    
+      },
+
+      {
+        "type": "shell",
+        "inline": [                               
+           "sudo su postgres"
+           "psql",
+           "createdb scanorder",
+	   "CREATE USER symfony WITH PASSWORD 'symfony';",	   
+ 	   "GRANT ALL PRIVILEGES ON DATABASE scanorder to symfony;",
+           "\/q",
+           "exit"
          ]    
       },
 
@@ -48,18 +65,35 @@
            "sudo apt-get install -y git",
            "ssh-keyscan github.com >> ~/.ssh/known_hosts",
            "cd /usr/local/bin/",
-           "git clone https://github.com/victorbrodsky/order-lab.git",
+           "git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab",
            "sudo chmod a+x /usr/local/bin/order-lab",
            "chown -R www-data:www-data /usr/local/bin/order-lab",
-           "curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer",
-           "cd order-lab/Scanorders2/",
-           "composer update",
-           "deploy_prod"
+           "cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-available/",
+           "cp /usr/local/bin/order-lab/packer/php.ini /etc/php/5.6/apache2/",
+           "sudo service apache2 restart",
+           "curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer"                 
          ]    
-      } 	
+      },
+ 
+      {
+          "type": "file",
+          "source": "/home/oleg/packer/parameters.yml",
+          "destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters.yml"         
+       },
 
-     
-  ]
+      {
+        "type": "shell",
+        "inline": [             
+           "cd /usr/local/bin/order-lab/Scanorders2",
+           "composer install",
+	   "php app/console doctrine:schema:update --force",
+           "php app/console cache:clear --env=prod --no-debug",
+           "php app/console assetic:dump --env=prod --no-debug",
+           "chown -R www-data:www-data /usr/local/bin/order-lab/Scanorders2/app/cache",
+           "chown -R www-data:www-data /usr/local/bin/order-lab/Scanorders2/app/logs"                
+         ]    
+      }
+      
+   ]
 
 }
-
