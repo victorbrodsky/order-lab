@@ -45,7 +45,8 @@ twig:
         resources: ['form_div_layout.html.twig']
         #resources: ['bootstrap_3_horizontal_layout.html.twig']
     form_themes:
-        - 'form/form_errors.html.twig'
+        - 'form_div_layout.html.twig'
+        #- 'form/form_errors.html.twig'
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
     globals:
