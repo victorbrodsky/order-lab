@@ -501,6 +501,8 @@ class UserUtil {
 
         if( !$found_user ) {
 
+            echo "creating system user <br>";
+
             $adminemail = $this->getSiteSetting($em,'siteEmail');
             $systemuser = new User();
             $systemuser->setKeytype($userkeytype);
@@ -521,6 +523,7 @@ class UserUtil {
 
         } else {
 
+            echo "system user exists ".$found_user."<br>";
             $systemuser = $found_user;
 
         }
