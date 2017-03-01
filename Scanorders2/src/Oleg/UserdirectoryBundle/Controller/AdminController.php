@@ -158,7 +158,7 @@ class AdminController extends Controller
                 $usernamePrefix = "local-user";
 
                 $usetUtil = new UserUtil();
-                $usetUtil->generateUsernameTypes($em);
+                $usetUtil->generateUsernameTypes($em,null,false);
                 //$userkeytype = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
 
                 $this->generateSitenameList(null);

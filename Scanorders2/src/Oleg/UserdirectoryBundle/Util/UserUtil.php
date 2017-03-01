@@ -446,9 +446,9 @@ class UserUtil {
         return $res;
     }
 
-    public function generateUsernameTypes($em,$user=null) {
+    public function generateUsernameTypes($em,$user=null,$createSystemUser=true) {
 
-        if( $user == null ) {
+        if( $user == null && $createSystemUser ) {
             $user = $this->createSystemUser($em,null,null);
         }
 
@@ -502,6 +502,7 @@ class UserUtil {
         if( !$found_user ) {
 
             echo "creating system user <br>";
+            echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
 
             $adminemail = $this->getSiteSetting($em,'siteEmail');
             $systemuser = new User();
