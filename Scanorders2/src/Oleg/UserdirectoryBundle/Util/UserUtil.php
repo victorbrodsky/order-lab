@@ -501,8 +501,8 @@ class UserUtil {
 
         if( !$found_user ) {
 
-            echo "creating system user <br>";
-            echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
+            //echo "creating system user <br>";
+            //echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
 
             $adminemail = $this->getSiteSetting($em,'siteEmail');
             $systemuser = new User();
@@ -524,7 +524,7 @@ class UserUtil {
 
         } else {
 
-            echo "system user exists ".$found_user."<br>";
+            //echo "system user exists ".$found_user."<br>";
             $systemuser = $found_user;
 
         }

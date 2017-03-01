@@ -173,11 +173,11 @@ class AdminController extends Controller
                 echo "0 systemuser=".$systemuser."; username=".$systemuser->getUsername()."; ID=".$systemuser->getId()."<br>";
 
                 //set unique username
-                $usernameUnique = $systemuser->createUniqueUsername();
-                $systemuser->setUsername($usernameUnique);
-                $systemuser->setUsernameCanonical($usernameUnique);
+                //$usernameUnique = $systemuser->createUniqueUsername();
+                //$systemuser->setUsername($usernameUnique);
+                //$systemuser->setUsernameCanonical($usernameUnique);
 
-                exit("1 systemuser=".$systemuser."; username=".$systemuser->getUsername()."; ID=".$systemuser->getId()."<br>");
+                //exit("1 systemuser=".$systemuser."; username=".$systemuser->getUsername()."; ID=".$systemuser->getId()."<br>");
 
                 //$systemuser->setUsername("system_@_local-user");
                 //$systemuser->setUsernameCanonical("system_@_local-user");
