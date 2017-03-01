@@ -1753,9 +1753,13 @@ class UserSecurityUtil {
         // "A new entity was found through the relationship 'Oleg\UserdirectoryBundle\Entity\LabResultUnitsMeasureList#creator'
         // that was not configured to cascade persist operations for entity: firstname lastname - cwid (WCMC CWID).
         // To solve this issue: Either explicitly call EntityManager#persist() on this unknown entity or configure cascade persist
-        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
-        if( !$user ) {
-            exit("No user found by id ".$user->getId());
+        if( $user instanceof User ) {
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+            if (!$user) {
+                exit("No user found by id " . $user->getId());
+            }
+        } else {
+            $user = NULL;
         }
 
         $entity->setOrderinlist( $count );
