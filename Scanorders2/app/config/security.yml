@@ -235,6 +235,7 @@ security:
 
        ############################## local system user init ##############################
        - { path: ^/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/directory/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
        - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }

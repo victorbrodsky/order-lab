@@ -135,6 +135,22 @@ use Symfony\Component\Intl\Locale\Locale;
  */
 class AdminController extends Controller
 {
+
+    /**
+     * @Route("/first-time-login-generation-init/", name="first-time-login-generation-init")
+     */
+    public function firstTimeLoginGenerationAction() {
+        $em = $this->getDoctrine()->getManager();
+        $users = $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        if( count($users) == 0 ) {
+            $msg = $this->generateAll();
+            exit($msg);
+        }
+        exit('users already exists');
+    }
+
+
+
     /**
      * Admin Page
      *
@@ -213,6 +229,20 @@ class AdminController extends Controller
      */
     public function generateAllAction()
     {
+        $msg = $this->generateAll();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        //ini_set('max_execution_time', $max_exec_time); //set back to the original value
+
+        return $this->redirect($this->generateUrl('user_admin_index'));
+    }
+
+    public function generateAll() {
+
         $userutil = new UserUtil();
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -350,10 +380,7 @@ class AdminController extends Controller
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
-
-
-        $this->get('session')->getFlashBag()->add(
-            'notice',
+        $msg =
             'Generated Tables: '.
             'Sitenames='.$count_sitenameList.', '.
             'Source Systems='.$count_sourcesystems.', '.
@@ -443,12 +470,9 @@ class AdminController extends Controller
             'LifeForms='.$count_generateLifeForm.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
 
-            ' (Note: -1 means that this table is already exists)'
-        );
+            ' (Note: -1 means that this table is already exists)';
 
-        //ini_set('max_execution_time', $max_exec_time); //set back to the original value
-
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        return $msg;
     }
 
 
