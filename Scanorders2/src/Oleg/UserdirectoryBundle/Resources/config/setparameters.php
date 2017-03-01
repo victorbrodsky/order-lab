@@ -184,11 +184,16 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             }
 
             //titles
-            $mainhome_title = $row['mainHomeTitle'];
-            $listmanager_title = $row['listManagerTitle'];
-            $eventlog_title = $row['eventLogTitle'];
-            $sitesettings_title = $row['siteSettingsTitle'];
-            $contentabout_page = $row['contentAboutPage'];
+            if( array_key_exists('mainHomeTitle', $row) )
+                $mainhome_title = $row['mainHomeTitle'];
+            if( array_key_exists('listManagerTitle', $row) )
+                $listmanager_title = $row['listManagerTitle'];
+            if( array_key_exists('eventLogTitle', $row) )
+                $eventlog_title = $row['eventLogTitle'];
+            if( array_key_exists('siteSettingsTitle', $row) )
+                $sitesettings_title = $row['siteSettingsTitle'];
+            if( array_key_exists('contentAboutPage', $row) )
+                $contentabout_page = $row['contentAboutPage'];
             //$underlogin_msg_user = $row['underLoginMsgUser'];
             //$underlogin_msg_scan = $row['underLoginMsgScan'];
             //echo "mainhome_title=".$mainhome_title."<br>";
