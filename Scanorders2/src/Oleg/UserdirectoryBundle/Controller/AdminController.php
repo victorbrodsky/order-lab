@@ -3999,8 +3999,7 @@ class AdminController extends Controller
             if( $locationTypeName ) {
                 $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName($locationTypeName);
                 if (!$locationType) {
-                    continue;
-                    //exit("No location found by name " . $locationTypeName);
+                    exit("No location found by name " . $locationTypeName);
                 }
                 $listEntity->addLocationType($locationType);
             }
@@ -4050,6 +4049,7 @@ class AdminController extends Controller
                 }
                 $building = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findOneByName($locationBuildingName);
                 if (!$building) {
+                    continue;
                     exit("No building type found by name " . $locationBuildingName);
                 }
                 $listEntity->setBuilding($building);
