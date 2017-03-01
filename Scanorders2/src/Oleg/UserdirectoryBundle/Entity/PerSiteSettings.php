@@ -28,7 +28,7 @@ use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
  * @ORM\Table(
  *  name="scan_perSiteSettings",
  *  indexes={
- *      @ORM\Index( name="user_idx", columns={"fosuser"} ),
+ *      @ORM\Index( name="fosuser_idx", columns={"fosuser"} ),
  *  }
  * )
  */
