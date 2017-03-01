@@ -820,7 +820,7 @@ class Location extends ListAbstract
 
     //set suite, room, floor, building, institution relationship
     /**
-     * @ORM\preFlush
+     * @ORM\PreFlush
      */
     public function setRoomSuiteFloorBuilding()
     {
