@@ -1340,29 +1340,29 @@ class AdminController extends Controller
         $types = array(
             "maxIdleTime" => "30",
             "environment" => "dev",
-            "siteEmail" => "", //"slidescan@med.cornell.edu",
+            "siteEmail" => "email@email.com",
 
-            "smtpServerAddress" => "",
+            "smtpServerAddress" => "null",
 
-            "aDLDAPServerAddress" => "",
-            "aDLDAPServerPort" => "",
-            "aDLDAPServerOu" => "",    //used for DC
-            "aDLDAPServerAccountUserName" => "",
-            "aDLDAPServerAccountPassword" => "",
+            "aDLDAPServerAddress" => "null",
+            "aDLDAPServerPort" => "null",
+            "aDLDAPServerOu" => "null",    //used for DC
+            "aDLDAPServerAccountUserName" => "null",
+            "aDLDAPServerAccountPassword" => "null",
             "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",
             "ldapExeFilename" => "LdapSaslCustom.exe",
 
             "dbServerAddress" => "127.0.0.1",
             "dbServerPort" => "null",
-            "dbServerAccountUserName" => "",
-            "dbServerAccountPassword" => "",
-            "dbDatabaseName" => "",
+            "dbServerAccountUserName" => "null",
+            "dbServerAccountPassword" => "null",
+            "dbDatabaseName" => "null",
 
             "aperioeSlideManagerDBServerAddress" => "127.0.0.1",
             "aperioeSlideManagerDBServerPort" => "null",
-            "aperioeSlideManagerDBUserName" => "",
-            "aperioeSlideManagerDBPassword" => "",
-            "aperioeSlideManagerDBName" => "",
+            "aperioeSlideManagerDBUserName" => "null",
+            "aperioeSlideManagerDBPassword" => "null",
+            "aperioeSlideManagerDBName" => "null",
 
             "institutionurl" => "http://www.cornell.edu/",
             "institutionname" => "Cornell University",

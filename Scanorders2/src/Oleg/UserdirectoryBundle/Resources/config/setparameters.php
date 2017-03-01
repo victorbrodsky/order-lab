@@ -132,11 +132,16 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
         while( $row = $params->fetch() ) {
 
-            $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
-            $aDLDAPServerPort = $row['aDLDAPServerPort'];
-            $aDLDAPServerOu = $row['aDLDAPServerOu'];
-            $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
-            $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
+            if( array_key_exists('aDLDAPServerAddress', $row) )
+                $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
+            if( array_key_exists('aDLDAPServerPort', $row) )
+                $aDLDAPServerPort = $row['aDLDAPServerPort'];
+            if( array_key_exists('aDLDAPServerOu', $row) )
+                $aDLDAPServerOu = $row['aDLDAPServerOu'];
+            if( array_key_exists('aDLDAPServerAccountUserName', $row) )
+                $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
+            if( array_key_exists('aDLDAPServerAccountPassword', $row) )
+                $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
 
             if (array_key_exists('ldapExePath', $row)) {
                 $ldapExePath = $row['ldapExePath'];
@@ -145,7 +150,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 $ldapExeFilename = $row['ldapExeFilename'];
             }
 
-            $smtpServerAddress = $row['smtpServerAddress'];
+            if( array_key_exists('smtpServerAddress', $row) )
+                $smtpServerAddress = $row['smtpServerAddress'];
 
             $defaultSiteEmail = $row['siteEmail'];
 
