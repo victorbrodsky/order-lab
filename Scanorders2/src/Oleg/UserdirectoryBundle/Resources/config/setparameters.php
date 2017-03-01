@@ -205,11 +205,16 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             //echo "department_url=".$department_url."<br>";
 
             //Symfony DB
-            $database_host = $row['dbServerAddress'];
-            $database_port = $row['dbServerPort'];
-            $database_name = $row['dbDatabaseName'];
-            $database_user = $row['dbServerAccountUserName'];
-            $database_password = $row['dbServerAccountPassword'];
+            if( array_key_exists('dbServerAddress', $row) )
+                $database_host = $row['dbServerAddress'];
+            if( array_key_exists('dbServerPort', $row) )
+                $database_port = $row['dbServerPort'];
+            if( array_key_exists('dbDatabaseName', $row) )
+                $database_name = $row['dbDatabaseName'];
+            if( array_key_exists('dbServerAccountUserName', $row) )
+                $database_user = $row['dbServerAccountUserName'];
+            if( array_key_exists('dbServerAccountPassword', $row) )
+                $database_password = $row['dbServerAccountPassword'];
 
             //Aperio DB
             $database_host_aperio = $row['aperioeSlideManagerDBServerAddress'];
