@@ -196,9 +196,17 @@ class AdminController extends Controller
 
             $adminRes = $this->generateAdministratorAction(true);
 
-            exit($adminRes);
+            //exit($adminRes);
         }
-        exit('users already exists');
+        $adminRes = 'admin user already exists';
+        //exit('users already exists');
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $adminRes
+        );
+
+        return $this->redirect($this->generateUrl('employees_home'));
     }
 
 
