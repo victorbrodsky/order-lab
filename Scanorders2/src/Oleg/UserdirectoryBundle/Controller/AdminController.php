@@ -79,7 +79,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Intl\Intl;
 
@@ -198,11 +206,16 @@ class AdminController extends Controller
             $adminRes = $this->generateAdministratorAction(true);
             //exit($adminRes);
 
+            $updateres = $this->updateApplication();
+
+            $adminRes = $adminRes . " <br> " .$updateres;
+
         } else {
 
             $adminRes = 'Admin user already exists';
             //exit('users already exists');
         }
+
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -212,7 +225,124 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('employees_home'));
     }
 
+    /**
+     * @Route("/update-application/", name="user_update_system")
+     */
+    public function updateApplicationAction() {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
 
+        $updateres = $this->updateApplication();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $updateres
+        );
+
+        return $this->redirect($this->generateUrl('employees_home'));
+    }
+
+    public function clearCache() {
+
+        //$fs = new Filesystem();
+        //$fs->remove($this->container->getParameter('kernel.cache_dir'));
+        //return;
+
+        $command = $this->container->get('user_cache_clear');
+        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
+        $output = new ConsoleOutput();
+        $command->run($input, $output);
+        //exit($output);
+    }
+
+    public function installAssets() {
+        $command = $this->container->get('user_install_assets');
+        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
+        $output = new ConsoleOutput();
+        $command->run($input, $output);
+        //exit($output);
+    }
+
+    public function updateApplication() {
+
+        return;
+
+        $this->clearCache();
+        $this->installAssets();
+
+        return "cache cleared, assets installed";
+
+//        $logger = $this->get('logger');
+//
+//        //$msg = "updateApplication";
+//        //$cmd = 'swiftmailer:spool:send';
+//        $cmd = 'bash app/../../deploy_prod';
+//        $cmd = "assetic:dump";
+//        //$cmd = "cache:clear";
+//
+//        $command = $this->container->get('user_cache_clear');
+//        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
+//        $output = new ConsoleOutput();
+//        $command->run($input, $output);
+//        exit($output);
+//
+//        //$content = $this->runCommand($cmd);
+//        //exit($content);
+//
+//        //$last_line = system($cmd, $retval);
+//        //$msg = "Update tables, clear cache and dump assets:".$last_line."; Return value:".$retval;
+//        // Printing additional info
+////        echo '
+////        </pre>
+////        <hr />Last line of the output: ' . $last_line . '
+////        <hr />Return value: ' . $retval . '<br>';
+////
+////        echo exec($cmd);
+////
+////        exit('<br>exit');
+//
+//        $kernel = $this->get('kernel');
+//        $application = new Application($kernel);
+//
+//
+//        //$application->setAutoExit(false);
+//
+//        $input = new ArrayInput(array(
+//            'command' => $cmd,
+//            //'--message-limit' => $messages,
+//        ));
+//
+//        // You can use NullOutput() if you don't need the output
+//        //$output = new BufferedOutput();
+//        //$application->run($input, $output);
+//
+//        return $application->doRun($input, $input);
+//
+//        // return the output, don't use if you used NullOutput()
+//        $content = $output->fetch();
+//
+//        exit($content);
+//        $logger->notice($content);
+//        return $content;
+//
+//        // return new Response(""), if you used NullOutput()
+//        return new Response($content);
+    }
+
+
+    public function runCommand($command, $arguments = array())
+    {
+        $kernel = $this->container->get('kernel');
+        $app = new Application($kernel);
+
+        $args = array_merge(array('command' => $command), $arguments);
+
+        $input = new ArrayInput($args);
+        $output = new NullOutput();
+
+        return $app->doRun($input, $output);
+    }
 
     /**
      * Admin Page

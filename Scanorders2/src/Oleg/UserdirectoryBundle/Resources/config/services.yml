@@ -143,3 +143,13 @@ services:
     user_formnode_utility:
         class: Oleg\UserdirectoryBundle\Util\FormNodeUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
+    user_cache_clear:
+        class: Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand
+        calls:
+            - [setContainer, ["@service_container"] ]
+
+    user_install_assets:
+            class: Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand
+            calls:
+                - [setContainer, ["@service_container"] ]
