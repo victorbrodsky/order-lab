@@ -141,24 +141,25 @@ class AdminController extends Controller
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
      * @Route("/first-time-login-generation-init/", name="first-time-login-generation-init")
      */
-    public function firstTimeLoginGenerationAction() {
+    public function firstTimeLoginGenerationAction()
+    {
         $em = $this->getDoctrine()->getManager();
         $users = $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
-        if( count($users) == 0 ) {
+        if (count($users) == 0) {
 
             //1) get systemuser
-            $userSecUtil = new UserSecurityUtil($em,null,null);
+            $userSecUtil = new UserSecurityUtil($em, null, null);
             $systemuser = $userSecUtil->findSystemUser();
 
             //$this->generateSitenameList($systemuser);
 
-            if( !$systemuser ) {
+            if (!$systemuser) {
 
                 $default_time_zone = null;
                 $usernamePrefix = "local-user";
 
                 $usetUtil = new UserUtil();
-                $usetUtil->generateUsernameTypes($em,null,false);
+                $usetUtil->generateUsernameTypes($em, null, false);
                 //$userkeytype = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
 
                 $this->generateSitenameList(null);
@@ -195,11 +196,13 @@ class AdminController extends Controller
             }
 
             $adminRes = $this->generateAdministratorAction(true);
-
             //exit($adminRes);
+
+        } else {
+
+            $adminRes = 'Admin user already exists';
+            //exit('users already exists');
         }
-        $adminRes = 'admin user already exists';
-        //exit('users already exists');
 
         $this->get('session')->getFlashBag()->add(
             'notice',
