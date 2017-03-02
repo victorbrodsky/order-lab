@@ -166,11 +166,11 @@ class AdminController extends Controller
                 $userSecUtil = $this->container->get('user_security_utility');
                 $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
 
-                echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
+                //echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
 
                 $systemuser = $usetUtil->createSystemUser($em, $userkeytype, $default_time_zone);
 
-                echo "0 systemuser=".$systemuser."; username=".$systemuser->getUsername()."; ID=".$systemuser->getId()."<br>";
+                //echo "0 systemuser=".$systemuser."; username=".$systemuser->getUsername()."; ID=".$systemuser->getId()."<br>";
 
                 //set unique username
                 //$usernameUnique = $systemuser->createUniqueUsername();
