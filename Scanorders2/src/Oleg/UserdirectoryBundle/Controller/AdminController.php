@@ -263,10 +263,18 @@ class AdminController extends Controller
             exit('not dir:'.$cachePath);
         }
 
-        echo shell_exec("chmod -R 777 ".$cachePath)."<br>";
+        echo exec("chmod -R 777 ".$cachePath)."<br>";
 
-        //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
-        echo shell_exec("rmdir ".$cachePath." /S /Q")."<br>";
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            echo 'This is a server using Windows!';
+            //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
+            echo exec("rmdir ".$cachePath." /S /Q")."<br>";
+        } else {
+            echo 'This is a server not using Windows! Assume Linux';
+            echo exec("rm -r ".$cachePath)."<br>";
+        }
+
+
     }
     public function clearCacheByService() {
 
@@ -320,7 +328,7 @@ class AdminController extends Controller
             //echo "cachePath=".$cachePath."<br>";
 
 
-            echo shell_exec("chmod -R 777 " . $path) . "<br>";
+            echo exec("chmod -R 777 " . $path) . "<br>";
             echo exec("bash " . $path) . "<br>";
         }
 
