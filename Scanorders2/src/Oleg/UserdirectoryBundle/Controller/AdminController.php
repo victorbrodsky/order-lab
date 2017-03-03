@@ -1582,6 +1582,12 @@ class AdminController extends Controller
             "gsArgumentsFellApp"=>"-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###",
             ///////////////////// EOF FELLAPP /////////////////////
 
+            //VacReq
+            "vacationAccruedDaysPerMonth" => '2',
+            "academicYearStart" => new \DateTime('2017-07-01'),
+            "academicYearEnd" => new \DateTime('2017-06-30'),
+            "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
+
             "maintenance" => false,
             //"maintenanceenddate" => null,
             "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.

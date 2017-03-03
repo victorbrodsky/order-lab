@@ -3110,7 +3110,9 @@ class VacReqUtil
         $dql->where("request.status = 'pending' AND requestType.abbreviation = 'carryover'");
 
         $idsStr = implode(",", $idArr);
-        $dql->andWhere("institution.id IN (".$idsStr.") ");
+        if( $idsStr ) {
+            $dql->andWhere("institution.id IN (" . $idsStr . ") ");
+        }
 
         $query = $this->em->createQuery($dql);
 
