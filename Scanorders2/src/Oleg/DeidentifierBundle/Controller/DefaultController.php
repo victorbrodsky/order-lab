@@ -126,18 +126,23 @@ class DefaultController extends Controller
         //echo "user=".$user."<br>";
         $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
-        $orderUtil = $this->get('scanorder_utility');
-        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
+        if( $userSiteSettings ) {
+            $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+            $orderUtil = $this->get('scanorder_utility');
+            $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions, null);
 
-        //set default "WCMC-NYP Collaboration" as institution
-        $defaultInstitution = null;;
-        foreach( $permittedInstitutions as $permittedInstitution ) {
-            //echo "permittedInstitution=".$permittedInstitution."<br>";
-            if( $permittedInstitution->getName() == "WCMC-NYP Collaboration" ) {
-                $defaultInstitution = $permittedInstitution;
-                break;
+            //set default "WCMC-NYP Collaboration" as institution
+            $defaultInstitution = null;;
+            foreach ($permittedInstitutions as $permittedInstitution) {
+                //echo "permittedInstitution=".$permittedInstitution."<br>";
+                if ($permittedInstitution->getName() == "WCMC-NYP Collaboration") {
+                    $defaultInstitution = $permittedInstitution;
+                    break;
+                }
             }
+        } else {
+            $permittedInstitutions = array();
+            $defaultInstitution = null;
         }
 
         $params = array(
