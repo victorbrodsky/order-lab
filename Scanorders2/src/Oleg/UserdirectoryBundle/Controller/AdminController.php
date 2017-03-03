@@ -249,7 +249,9 @@ class AdminController extends Controller
         $appPath = $this->container->getParameter('kernel.root_dir');
         echo "appPath=".$appPath."<br>";
 
-        $cachePath = ''.$appPath.'\\'.'cache';
+        $dirSep = DIRECTORY_SEPARATOR;
+
+        $cachePath = ''.$appPath. $dirSep .'cache';
 
         //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
         echo "cachePath=".$cachePath."<br>";
@@ -280,27 +282,32 @@ class AdminController extends Controller
     }
 
     public function installAssets() {
+        $dirSep = DIRECTORY_SEPARATOR;
+
         $appPath = $this->container->getParameter('kernel.root_dir');
         echo "appPath=".$appPath."<br>";
-        $path = ''.$appPath.'\\..\\'.'deploy_prod';
+
+        //$path = ''.$appPath.'\\..\\'.'deploy_prod';
+        $path = ''.$appPath."$dirSep..$dirSep".'deploy_prod';
+
         echo "path=".$path."<br>";
         if( file_exists($path) ) {
             echo "path exists! <br>";
         } else {
-            echo "path not exists! <br>";
-            //exit('111');
+            echo "path not exists: $path <br>";
+            exit('error');
         }
 
         if( 1 ) {
             $webPath = getcwd();
             echo "webPath=$webPath<br>";
 
-            $console = $appPath . '\\console';
-            if (file_exists($console)) {
+            $console = $appPath . $dirSep . 'console';
+            if( file_exists($console) ) {
                 echo "console exists! <br>";
             } else {
-                echo "not console exists! <br>";
-                //exit('111');
+                echo "not console exists: $console <br>";
+                exit('error');
             }
 
             echo exec("php " . $console . " assetic:dump --env=prod --no-debug " . $webPath);
@@ -333,154 +340,12 @@ class AdminController extends Controller
     }
 
     public function updateApplication() {
-
-        //$res = $this->sendSpoolAction();
-        //exit($res);
-
         $this->clearCache();
         $this->installAssets();
         //exit('exit update application');
         return "Cache cleared, Assets dumped";
-
-//        $logger = $this->get('logger');
-//
-//        //$msg = "updateApplication";
-//        //$cmd = 'swiftmailer:spool:send';
-//        $cmd = 'bash app/../../deploy_prod';
-//        $cmd = "assetic:dump";
-//        $cmd = "cache:clear";
-//
-//        $command = $this->container->get('user_cache_clear');
-//        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
-//        $output = new ConsoleOutput();
-//        $command->run($input, $output);
-//        exit($output);
-//
-//        //$content = $this->runCommand($cmd);
-//        //exit($content);
-//
-//        //$last_line = system($cmd, $retval);
-//        //$msg = "Update tables, clear cache and dump assets:".$last_line."; Return value:".$retval;
-//        // Printing additional info
-////        echo '
-////        </pre>
-////        <hr />Last line of the output: ' . $last_line . '
-////        <hr />Return value: ' . $retval . '<br>';
-////
-////        echo exec($cmd);
-////
-////        exit('<br>exit');
-//
-//        $kernel = $this->get('kernel');
-//        $application = new Application($kernel);
-//
-//
-//        //$application->setAutoExit(false);
-//
-//        $input = new ArrayInput(array(
-//            'command' => $cmd,
-//            //'--message-limit' => $messages,
-//        ));
-//
-//        // You can use NullOutput() if you don't need the output
-//        //$output = new BufferedOutput();
-//        //$application->run($input, $output);
-//
-//        return $application->doRun($input, $input);
-//
-//        // return the output, don't use if you used NullOutput()
-//        $content = $output->fetch();
-//
-//        exit($content);
-//        $logger->notice($content);
-//        return $content;
-//
-//        // return new Response(""), if you used NullOutput()
-//        return new Response($content);
-
-        echo exec('whoami') . "<br>";
-
-        $appPath = $this->container->getParameter('kernel.root_dir');
-        echo "appPath=".$appPath."<br>";
-
-        $cachePath = ''.$appPath.'\\'.'cache';
-
-        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
-        echo "cachePath=".$cachePath."<br>";
-
-        if( is_dir($cachePath) ) {
-            echo "dir! <br>";
-        } else {
-            echo "not dir! <br>";
-            exit('111');
-        }
-
-        echo shell_exec("chmod -R 777 ".$cachePath)."<br>";
-
-        echo shell_exec("rmdir ".$cachePath." /S /Q")."<br>";
-        exit();
-
-        //echo exec("cd ..")."<br>";
-        //echo exec("./deploy_prod")."<br>";
-        //exit();
-
-        //$old_path = getcwd();
-        //echo "old path=<pre>$old_path</pre>";
-
-        //$fs = new Filesystem();
-        //$fs->remove($this->container->getParameter('kernel.cache_dir'));
-
-        $kernel = $this->get('kernel');
-        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
-        $application->setAutoExit(false);
-
-        $options = array('command' => "rmdir ".$cachePath." /S /Q");
-        $application->run(new \Symfony\Component\Console\Input\ArrayInput($options));
-
-        //$this->installAssets();
-        exit();
-
-        $this->clearCache();
-        exit();
-
-        $absPath = "'".$old_path."\\..\\deploy_prod'";
-
-        $command = "bash ".$absPath;
-        echo "<pre>$command</pre>";
-
-        chdir('/my/path/');
-        $output = shell_exec($command);
-        //chdir($old_path);
-        echo "<pre>$output</pre>";
-        exit();
-
-
-        $command = "bash ".$appPath."\\..\\deploy_prod";
-        //$command = "php ".$appPath."\\console assets:install";
-        //$commandParams = escapeshellcmd($command);
-        $command = "bash C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\deploy_prod";
-        //$command = "ls";
-
-        exec($command,$output,$return);
-        echo "Return=".$return."<br>";
-        echo "Output:<br>";
-        echo "<pre>";
-        print_r($output);
-        echo "</pre>";
-
-        $output = shell_exec('ls -lart');
-        echo "<pre>$output</pre>";
-
-        $output = exec('whoami');
-        //$output = exec('pwd');
-        $output = exec("bash ./deploy_prod");
-
-        echo "<pre>$output</pre>";
-
-        exit('111');
     }
-
-
+    //Testing method
     public function cccAction()
     {
         $kernel = $this->get('kernel');
@@ -491,29 +356,7 @@ class AdminController extends Controller
         echo "res=".$res."<br>";
         return new Response();
     }
-
-    public function sendSpoolAction($messages = 10)
-    {
-        $kernel = $this->get('kernel');
-        $application = new Application($kernel);
-        $application->setAutoExit(false);
-
-        $input = new ArrayInput(array(
-            'command' => 'cron:swift',
-            //'--message-limit' => $messages,
-        ));
-        // You can use NullOutput() if you don't need the output
-        $output = new BufferedOutput();
-        $application->run($input, $output);
-
-        // return the output, don't use if you used NullOutput()
-        $content = $output->fetch();
-
-        // return new Response(""), if you used NullOutput()
-        return new Response($content);
-    }
-
-
+    //Testing method
     public function runCommand($command, $arguments = array())
     {
         $kernel = $this->container->get('kernel');
@@ -526,6 +369,7 @@ class AdminController extends Controller
 
         return $app->doRun($input, $output);
     }
+
 
     /**
      * Admin Page
