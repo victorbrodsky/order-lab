@@ -244,7 +244,7 @@ class AdminController extends Controller
     }
 
     public function clearCache() {
-        echo exec('whoami') . "<br>";
+        //echo exec('whoami') . "<br>";
 
         $appPath = $this->container->getParameter('kernel.root_dir');
         echo "appPath=".$appPath."<br>";
@@ -258,7 +258,7 @@ class AdminController extends Controller
             echo "dir! <br>";
         } else {
             echo "not dir! <br>";
-            //exit('111');
+            exit('not dir:'.$cachePath);
         }
 
         echo shell_exec("chmod -R 777 ".$cachePath)."<br>";
@@ -283,26 +283,40 @@ class AdminController extends Controller
         $appPath = $this->container->getParameter('kernel.root_dir');
         echo "appPath=".$appPath."<br>";
         $path = ''.$appPath.'\\..\\'.'deploy_prod';
-
-        //$path = getcwd();
-        //echo "cwdPath=$path<br>";
-
-        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
-        //echo "cachePath=".$cachePath."<br>";
-
+        echo "path=".$path."<br>";
         if( file_exists($path) ) {
-            echo "exists! <br>";
+            echo "path exists! <br>";
         } else {
-            echo "not exists! <br>";
-            exit('111');
+            echo "path not exists! <br>";
+            //exit('111');
         }
 
-        echo shell_exec("chmod -R 777 ".$path)."<br>";
-        echo exec("bash ".$path)."<br>";
+        if( 1 ) {
+            $webPath = getcwd();
+            echo "webPath=$webPath<br>";
 
-        //$this->installAssetsByService();
+            $console = $appPath . '\\console';
+            if (file_exists($console)) {
+                echo "console exists! <br>";
+            } else {
+                echo "not console exists! <br>";
+                //exit('111');
+            }
 
-        exit('exit install assests');
+            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " . $webPath);
+        } else {
+
+            //echo shell_exec("chmod -R 777 ".$webPath)."<br>";
+
+            //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
+            //echo "cachePath=".$cachePath."<br>";
+
+
+            echo shell_exec("chmod -R 777 " . $path) . "<br>";
+            echo exec("bash " . $path) . "<br>";
+        }
+
+        //exit('exit install assests');
     }
     public function installAssetsByService() {
         $command = $this->container->get('user_install_assets');
@@ -323,10 +337,10 @@ class AdminController extends Controller
         //$res = $this->sendSpoolAction();
         //exit($res);
 
-        //$this->clearCache();
+        $this->clearCache();
         $this->installAssets();
-        exit('exit update application');
-        return "cache cleared, assets installed";
+        //exit('exit update application');
+        return "Cache cleared, Assets dumped";
 
 //        $logger = $this->get('logger');
 //

@@ -18,6 +18,7 @@
  * Created by Oleg Ivanov on 7/25/2016.
  */
 
+
 var _transTime = 500;
 var _patients = [];
 var _mrntype_original = null;
