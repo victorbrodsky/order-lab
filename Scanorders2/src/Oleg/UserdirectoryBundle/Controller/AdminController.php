@@ -226,9 +226,9 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/update-application/", name="user_update_system")
+     * @Route("/update-system-cache-assets/", name="user_update_system_cache_assets")
      */
-    public function updateApplicationAction() {
+    public function updateSystemAction() {
         if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -244,6 +244,29 @@ class AdminController extends Controller
     }
 
     public function clearCache() {
+        echo exec('whoami') . "<br>";
+
+        $appPath = $this->container->getParameter('kernel.root_dir');
+        echo "appPath=".$appPath."<br>";
+
+        $cachePath = ''.$appPath.'\\'.'cache';
+
+        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
+        echo "cachePath=".$cachePath."<br>";
+
+        if( is_dir($cachePath) ) {
+            echo "dir! <br>";
+        } else {
+            echo "not dir! <br>";
+            //exit('111');
+        }
+
+        echo shell_exec("chmod -R 777 ".$cachePath)."<br>";
+
+        //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
+        echo shell_exec("rmdir ".$cachePath." /S /Q")."<br>";
+    }
+    public function clearCacheByService() {
 
         //$fs = new Filesystem();
         //$fs->remove($this->container->getParameter('kernel.cache_dir'));
@@ -257,20 +280,52 @@ class AdminController extends Controller
     }
 
     public function installAssets() {
+        $appPath = $this->container->getParameter('kernel.root_dir');
+        echo "appPath=".$appPath."<br>";
+        $path = ''.$appPath.'\\..\\'.'deploy_prod';
+
+        //$path = getcwd();
+        //echo "cwdPath=$path<br>";
+
+        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
+        //echo "cachePath=".$cachePath."<br>";
+
+        if( file_exists($path) ) {
+            echo "exists! <br>";
+        } else {
+            echo "not exists! <br>";
+            exit('111');
+        }
+
+        echo shell_exec("chmod -R 777 ".$path)."<br>";
+        echo exec("bash ".$path)."<br>";
+
+        //$this->installAssetsByService();
+
+        exit('exit install assests');
+    }
+    public function installAssetsByService() {
         $command = $this->container->get('user_install_assets');
-        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
+        $input = new ArgvInput(
+            array(
+                '--env=' . $this->container->getParameter('kernel.environment'),
+                //'--symlink',
+                //'--relative'
+            )
+        );
         $output = new ConsoleOutput();
         $command->run($input, $output);
-        //exit($output);
+        exit($output);
     }
 
     public function updateApplication() {
 
-        return;
+        //$res = $this->sendSpoolAction();
+        //exit($res);
 
-        $this->clearCache();
+        //$this->clearCache();
         $this->installAssets();
-
+        exit('exit update application');
         return "cache cleared, assets installed";
 
 //        $logger = $this->get('logger');
@@ -279,7 +334,7 @@ class AdminController extends Controller
 //        //$cmd = 'swiftmailer:spool:send';
 //        $cmd = 'bash app/../../deploy_prod';
 //        $cmd = "assetic:dump";
-//        //$cmd = "cache:clear";
+//        $cmd = "cache:clear";
 //
 //        $command = $this->container->get('user_cache_clear');
 //        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
@@ -328,6 +383,120 @@ class AdminController extends Controller
 //
 //        // return new Response(""), if you used NullOutput()
 //        return new Response($content);
+
+        echo exec('whoami') . "<br>";
+
+        $appPath = $this->container->getParameter('kernel.root_dir');
+        echo "appPath=".$appPath."<br>";
+
+        $cachePath = ''.$appPath.'\\'.'cache';
+
+        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
+        echo "cachePath=".$cachePath."<br>";
+
+        if( is_dir($cachePath) ) {
+            echo "dir! <br>";
+        } else {
+            echo "not dir! <br>";
+            exit('111');
+        }
+
+        echo shell_exec("chmod -R 777 ".$cachePath)."<br>";
+
+        echo shell_exec("rmdir ".$cachePath." /S /Q")."<br>";
+        exit();
+
+        //echo exec("cd ..")."<br>";
+        //echo exec("./deploy_prod")."<br>";
+        //exit();
+
+        //$old_path = getcwd();
+        //echo "old path=<pre>$old_path</pre>";
+
+        //$fs = new Filesystem();
+        //$fs->remove($this->container->getParameter('kernel.cache_dir'));
+
+        $kernel = $this->get('kernel');
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+        $application->setAutoExit(false);
+
+        $options = array('command' => "rmdir ".$cachePath." /S /Q");
+        $application->run(new \Symfony\Component\Console\Input\ArrayInput($options));
+
+        //$this->installAssets();
+        exit();
+
+        $this->clearCache();
+        exit();
+
+        $absPath = "'".$old_path."\\..\\deploy_prod'";
+
+        $command = "bash ".$absPath;
+        echo "<pre>$command</pre>";
+
+        chdir('/my/path/');
+        $output = shell_exec($command);
+        //chdir($old_path);
+        echo "<pre>$output</pre>";
+        exit();
+
+
+        $command = "bash ".$appPath."\\..\\deploy_prod";
+        //$command = "php ".$appPath."\\console assets:install";
+        //$commandParams = escapeshellcmd($command);
+        $command = "bash C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\deploy_prod";
+        //$command = "ls";
+
+        exec($command,$output,$return);
+        echo "Return=".$return."<br>";
+        echo "Output:<br>";
+        echo "<pre>";
+        print_r($output);
+        echo "</pre>";
+
+        $output = shell_exec('ls -lart');
+        echo "<pre>$output</pre>";
+
+        $output = exec('whoami');
+        //$output = exec('pwd');
+        $output = exec("bash ./deploy_prod");
+
+        echo "<pre>$output</pre>";
+
+        exit('111');
+    }
+
+
+    public function cccAction()
+    {
+        $kernel = $this->get('kernel');
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+        $application->setAutoExit(false);
+        $options = array('command' => 'cache:clear',"--env" => 'prod', '--no-warmup' => true);
+        $res = $application->run(new \Symfony\Component\Console\Input\ArrayInput($options));
+        echo "res=".$res."<br>";
+        return new Response();
+    }
+
+    public function sendSpoolAction($messages = 10)
+    {
+        $kernel = $this->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'cron:swift',
+            //'--message-limit' => $messages,
+        ));
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        // return the output, don't use if you used NullOutput()
+        $content = $output->fetch();
+
+        // return new Response(""), if you used NullOutput()
+        return new Response($content);
     }
 
 
