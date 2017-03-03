@@ -295,20 +295,9 @@ class AdminController extends Controller
         $appPath = $this->container->getParameter('kernel.root_dir');
         echo "appPath=".$appPath."<br>";
 
-        //$path = ''.$appPath.'\\..\\'.'deploy_prod';
-        $path = ''.$appPath."$dirSep..$dirSep".'deploy_prod';
-
-        echo "path=".$path."<br>";
-        if( file_exists($path) ) {
-            echo "path exists! <br>";
-        } else {
-            echo "path not exists: $path <br>";
-            exit('error');
-        }
-
         if( 1 ) {
-            $webPath = getcwd();
-            echo "webPath=$webPath<br>";
+            //$webPath = getcwd();
+            //echo "webPath=$webPath<br>";
 
             $console = $appPath . $dirSep . 'console';
             if( file_exists($console) ) {
@@ -318,8 +307,9 @@ class AdminController extends Controller
                 exit('error');
             }
 
-            echo exec("php " . $console . " assetic:install --env=prod --no-debug " . $webPath);
-            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " . $webPath);
+            echo exec("php " . $console . " assetic:install --env=prod --no-debug " );
+            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
+
         } else {
 
             //echo shell_exec("chmod -R 777 ".$webPath)."<br>";
@@ -327,6 +317,16 @@ class AdminController extends Controller
             //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
             //echo "cachePath=".$cachePath."<br>";
 
+            //$path = ''.$appPath.'\\..\\'.'deploy_prod';
+            $path = ''.$appPath."$dirSep..$dirSep".'deploy_prod';
+
+            echo "path=".$path."<br>";
+            if( file_exists($path) ) {
+                echo "path exists! <br>";
+            } else {
+                echo "path not exists: $path <br>";
+                exit('error');
+            }
 
             echo exec("chmod -R 777 " . $path) . "<br>";
             echo exec("bash " . $path) . "<br>";
@@ -351,7 +351,7 @@ class AdminController extends Controller
     public function updateApplication() {
         $this->clearCache();
         $this->installAssets();
-        exit('<br>exit update application');
+        //exit('<br>exit update application');
         return "Cache cleared, Assets dumped";
     }
     //Testing method
