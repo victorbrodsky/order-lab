@@ -827,17 +827,18 @@ class UserController extends Controller
         }
 
         //As Faculty + Residents == Academic Appointment Title exists + position=Fellow
-        if( $filter && $filter == "WCMC Pathology Fellows" ) {           
-            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        if( $filter && $filter == "WCM or NYP Pathology Fellows" ) {
+            //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmc);
+            $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Fellow')";
         }
 
-        //Similar to "WCMC Pathology Fellows", except it should list all employees who have Academic Appointment Title > "Position Track Type(s):" dropdown set to
+        //Similar to "WCM or NYP Pathology Fellows", except it should list all employees who have Academic Appointment Title > "Position Track Type(s):" dropdown set to
         // "Postdoc" or "Research fellow" or "Research Associate"
         // AND associated institution for that Academic Appointment Title set to Weill Cornell Medical College ($wcmc).
-        if( $filter && $filter == "WCMC Pathology Non-academic Faculty" ) {
-            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        if( $filter && $filter == "WCM Non-academic Faculty" ) {
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmc);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Postdoc' OR appointmentTitlesPositions.name = 'Research Fellow' OR appointmentTitlesPositions.name = 'Research Associate')";
         }
