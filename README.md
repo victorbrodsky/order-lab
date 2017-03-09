@@ -94,13 +94,15 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	b) Enable the pdo extension
 
-	For PHP version 5.6 "[php_sqlsrv_56_ts.dll](http://www.microsoft.com/en-us/download/details.aspx?id=20098)" should be placed in PHP/ext folder, and the following line added to php.ini:
+	For PHP version 5.6 "[php_pdo_sqlsrv_56_ts.dll and php_sqlsrv_56_ts.dll](http://www.microsoft.com/en-us/download/details.aspx?id=20098)" should be placed in PHP/ext folder, and the following lines added to php.ini:
 
 	 	extension=php_sqlsrv_56_ts.dll
-
-	For the older PHP version 5.4 "[php_pdo_sqlsrv_54_ts.dll](http://www.microsoft.com/en-us/download/details.aspx?id=20098)" should be placed in PHP/ext folder, and the following line added to php.ini:
-
 	 	extension=php_pdo_sqlsrv_56_ts.dll
+
+	For the older PHP version 5.4 "[php_pdo_sqlsrv_54_ts.dll and php_sqlsrv_54_ts.dll](http://www.microsoft.com/en-us/download/details.aspx?id=20098)" should be placed in PHP/ext folder, and the following line added to php.ini:
+
+	 	extension=php_sqlsrv_54_ts.dll
+	 	extension=php_pdo_sqlsrv_54_ts.dll
 
 	c) Download the [Microsoft ODBC Driver 11 for PHP for SQL Server](https://www.microsoft.com/en-us/download/details.aspx?id=36434)
 
@@ -119,9 +121,9 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 		extension=php_fileinfo.dll
 
-	g) [Download opcache](http://windows.php.net/downloads/pecl/releases/opcache/7.0.3/php_opcache-7.0.3-5.4-ts-vc9-x86.zip) and [enable it](http://stackoverflow.com/questions/24155516/how-to-install-zend-opcache-extension-php-5-4-on-windows)
+	g) For PHP version 5.4 [download OPCache](http://windows.php.net/downloads/pecl/releases/opcache/7.0.3/php_opcache-7.0.3-5.4-ts-vc9-x86.zip) and [enable it](http://stackoverflow.com/questions/24155516/how-to-install-zend-opcache-extension-php-5-4-on-windows); for PHP version 5.6 just [enable OPCache](http://php.net/manual/en/opcache.setup.php).
 
-		zend_extension="C:\Program Files (x86)\Aperio\WebServer\PHP\Ext\php_opcache.dll"
+		zend_extension="PATH-TO-WEB-SERVER\WebServer\PHP\Ext\php_opcache.dll"
 
 	h) Make sure that Apache can find and load icu*.dll files from the PHP base folder. One possible solution is to copy these files to Apache's "bin" folder:
 

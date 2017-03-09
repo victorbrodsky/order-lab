@@ -260,6 +260,29 @@ class UserController extends Controller
         ){
             return $this->redirect( $this->generateUrl('login') );
         }
+
+        if( $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') ) {
+            echo "ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW <br>";
+        } else {
+            echo "Not ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW!!! <br>";
+        }
+
+        if( $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            echo "ROLE_USERDIRECTORY_EDITOR <br>";
+        } else {
+            echo "Not ROLE_USERDIRECTORY_EDITOR!!! <br>";
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        foreach( $user->getRoles() as $role ) {
+            echo "Role=".$role."<br>";
+        }
+        if( $user->hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') ) {
+            echo "user: ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW <br>";
+        } else {
+            echo "user: Not ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW!!! <br>";
+        }
+
         //$form = $this->createForm(new SearchType(),null);
 
         //$form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data

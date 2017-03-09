@@ -6031,6 +6031,7 @@ class AdminController extends Controller
             "1040" => array('ObjectTypeRadioButton','objecttyperadiobuttons-list','Object Type Radio Button'),
             "1050" => array('Location','employees_locations_pathaction_list','Locations'),
             "1060" => array('LifeFormList','lifeforms-list','Life Form List'),
+            "1070" => array('PositionTrackTypeList','positiontracktypes-list','Position Track Type List'),
             //"1050" => array('','-list'),
 
         );
