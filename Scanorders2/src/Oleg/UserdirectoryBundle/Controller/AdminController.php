@@ -920,6 +920,11 @@ class AdminController extends Controller
                 "Allow to edit all employees; Can not change roles for users, but can grant access via access requests",
                 50
             ),
+            "ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW" => array(
+                "EmployeeDirectory Editor with a Simplified View",
+                "Allow to edit all employees with a simplified view; Can not change roles for users, but can grant access via access requests.",
+                40
+            ),
             "ROLE_USERDIRECTORY_OBSERVER" => array(
                 "EmployeeDirectory Observer",
                 "Allow to view all employees",

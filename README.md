@@ -49,6 +49,167 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 
+## Installation instructions for Linux
+
+>**Warning:** This software was developed and tested in a Windows-based environment to accommodate existing servers. To ease further
+> development and testing, the [Packer](https://www.packer.io/)-based deployment script for a [Digital Ocean](https://www.digitalocean.com/)
+> virtual machine (VM) is provided. Additional extensive testing is necessary to discover and address unresolved issues associated with
+> cross-platform compatibility (and Linux specifically). The installation instructions assume the use of a Linux platform (such as 
+> [Ubuntu](https://www.ubuntu.com/)). The specific commercial hosting provider was chosen as an example for convenience.
+> 
+
+1. Sign up for [Digital Ocean](https://www.digitalocean.com/) and obtain an [API access key token](https://www.digitalocean.com/help/api/). It should look similar to this one: e4561f1b44faa16c2b43e94c5685e5960e852326b921883765b3b0e11111f705
+
+2. Download and uncompress or clone the source code from [github.com/victorbrodsky/order-lab](https://github.com/victorbrodsky/order-lab)
+
+3. Install [Packer](https://www.packer.io/)
+
+4. Install [doctl](https://github.com/digitalocean/doctl)
+
+5. Edit /packer/parameters.yml in this project's folder to set desired values (especially for passwords)
+
+6. Run /packer/deploy-order-digital-ocean.sh via (make sure to supply your API token):
+
+	 	bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
+
+7. Log into the resulting server's web page with the user name "Administrator" and the password "1234567890"
+
+8. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
+
+
+## Installation Instructions for Windows
+
+1. Install an Apache-PHP-MySQL stack of your choice (preferably with PHP version 5.6), such as those listed below. MS SQL Server has been tested as well.
+
+	* [AMPPS](http://www.ampps.com/)
+	* [WAMP](http://www.wampserver.com/en/)
+	* [XAMPP](https://www.apachefriends.org/index.html)
+
+2. Modify php.ini:
+
+
+	a) Enable the ldap extension
+
+	 	extension=php_ldap.dll
+
+	b) Enable the pdo extension
+
+	For PHP version 5.6 "[php_sqlsrv_56_ts.dll](http://www.microsoft.com/en-us/download/details.aspx?id=20098)" should be placed in PHP/ext folder, and the following line added to php.ini:
+
+	 	extension=php_sqlsrv_56_ts.dll
+
+	For the older PHP version 5.4 "[php_pdo_sqlsrv_54_ts.dll](http://www.microsoft.com/en-us/download/details.aspx?id=20098)" should be placed in PHP/ext folder, and the following line added to php.ini:
+
+	 	extension=php_pdo_sqlsrv_56_ts.dll
+
+	c) Download the [Microsoft ODBC Driver 11 for PHP for SQL Server](https://www.microsoft.com/en-us/download/details.aspx?id=36434)
+
+		* For 64 bit (x64) Operating Systems use the x64\msodbcsql.msi installation file
+		* For 32 bit (x86) Operating Systems use the x86\msodbcsql.msi installation file
+
+	d) Enable the GD library extension
+
+	 	extension=php_gd2.dll
+
+	e) Enable Internationalization support
+
+	 	extension=php_intl.dll
+
+	f) Enable the file info extension
+
+		extension=php_fileinfo.dll
+
+	g) [Download opcache](http://windows.php.net/downloads/pecl/releases/opcache/7.0.3/php_opcache-7.0.3-5.4-ts-vc9-x86.zip) and [enable it](http://stackoverflow.com/questions/24155516/how-to-install-zend-opcache-extension-php-5-4-on-windows)
+
+		zend_extension="C:\Program Files (x86)\Aperio\WebServer\PHP\Ext\php_opcache.dll"
+
+	h) Make sure that Apache can find and load icu*.dll files from the PHP base folder. One possible solution is to copy these files to Apache's "bin" folder:
+
+		* icudt49.dll
+		* icuin49.dll
+		* icuio49.dll
+		* icule49.dll
+		* iculx49.dll
+		* icutu49.dll
+		* icuuc49.dll
+
+
+3. Modify Apache's httpd.conf as specified in the [Symfony web server configuration](http://symfony.com/doc/current/setup/web_server_configuration.html):
+
+	<VirtualHost *:80>
+		<Directory "C:\path-to-lab-order\Scanorders2\web\"
+			Options +FollowSymLinks -Includes
+			AllowOverride All  
+			Require all granted
+		</Directory>
+		Alias /order "C:\path-to-lab-order\Scanorders2\web\"
+		Alias /ORDER "C:\path-to-lab-order\Scanorders2\web\"
+		RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
+		ErrorLog ${APACHE_LOG_DIR}/error.log
+		CustomLog ${APACHE_LOG_DIR}/access.log combined
+	</VirtualHost>
+
+4. [Download](https://getcomposer.org/download/) and [install](https://getcomposer.org/doc/00-intro.md) Composer. Make sure the ...\WebServer\PHP path and the composer's path are added to the system path.
+
+5. Edit Symfony's app/config/parameters.yml to set the desired values:
+
+    	database_driver: pdo_sqlsrv
+    	database_host: 127.0.0.1
+    	database_port: null
+    	database_name: ScanOrder
+    	database_user: symfony
+    	database_password: symfony
+    	mailer_transport: smtp
+    	mailer_host: 127.0.0.1
+    	mailer_user: null
+    	mailer_password: null
+    	locale: en   
+    	delivery_strategy: realtime
+
+6. Create the application's database and the associated database user:
+
+	a) create a database user name specified in the database_user line of parameters.yml file with "super user" permissions.
+
+	b) create a database with name specified in the database_name line of parameters.yml file
+
+	c) assign the user created in step a) to the Database created in step b) (symfony2->properties->User Mapping-> map ScanOrder with db_owner)
+	
+7. Update symfony vendors by running these console commands in path-to-lab-order/Scanorders2 folder:
+
+		composer.phar self-update
+
+	 	composer update
+
+8. Deployment
+	
+	a) Run the deployment script to clean the cache and install assets in path-to-lab-order/Scanorders2 folder: 
+	
+	 	deploy
+	
+	b) Create the Administrator account with password 1234567890 by opening the following URL in your browser (specify the server's IP or domain name):
+
+	[http://localhost/order/folder/admin/first-time-login-generation-init/](http://localhost/order/folder/admin/first-time-login-generation-init/)
+	
+	c) Generate default country and city lists by navigating to Employee Directory->Admin->List Manager and clicking "Populate Country and City Lists"
+	
+	d) Generate all other default parameters by navigating to Employee Directory->Admin->List Manager and clicking "Populate All Lists With Default Values"
+	
+	c) Generate default parameters for the "Glass Slide Scan Orders" site by navigating to Glass Slide Scan Orders->Scan Order List Manager->and clicking "Populate All Lists With Default Values".
+	
+	d) Run the deployment script again:
+
+	 	deploy
+
+9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
+
+10. Obtain and install these optional applications:
+
+	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion ( default path: C:\Program Files\wkhtmltopdf\ )
+	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path: C:\Program Files (x86)\LibreOffice 5\ )
+	* [GhostScript](https://www.ghostscript.com/) for PDF decryption
+	* [PDFtk Server](https://www.pdflabs.com/tools/pdftk-server/) for PDF merging
+	* [PHPExcel](https://github.com/PHPOffice/PHPExcel) for operating with Excel files
+
 ## Developer Notes
 
 ### Test server links (accessible on the intranet only):
@@ -132,7 +293,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 ### To get changes onto your local machine:
 
-1) cd to dir created by clone
+1) cd to folder created by clone
 
 2) Run command:
 
@@ -175,7 +336,7 @@ c) Run command:
 	 git remote update (note: this is the same as git fetch --all)
 	 git pull
 
-### To update the whole tree, even from a subdirectory (including removed of deleted files)
+### To update the whole tree, even from a subfolder (including removed of deleted files)
 
 	 git add -u .
 	 git commit -m "message"
