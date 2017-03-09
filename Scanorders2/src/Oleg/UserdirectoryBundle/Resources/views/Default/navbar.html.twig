@@ -16,10 +16,10 @@
 
 {#   navigation menu   #}
 
-{% macro listUsers( pathlink, pathlink_loc ) %}
+{% macro listUsers( pathlink, pathlink_loc, hasRoleSimpleView ) %}
     <ul class="dropdown-menu">
 
-        {% if pathlink_loc is defined and pathlink_loc and not is_granted('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+        {% if pathlink_loc is defined and pathlink_loc and not hasRoleSimpleView %}
             <li><a href="{{ path(pathlink_loc,{'filter': 'Common Locations'}) }}">Common Locations</a></li>
             {#<li><a href="{{ path(pathlink_loc,{'filter': 'Pathology Common Locations'}) }}">Pathology Common Locations</a></li>#}
             <li><a href="{{ path(pathlink_loc,{'filter': 'WCMC & NYP Pathology Common Locations'}) }}">WCMC & NYP Pathology Common Locations</a></li>
@@ -33,21 +33,27 @@
         <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Faculty'}) }}">WCMC Pathology Faculty</a></li>
         <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Clinical Faculty'}) }}">WCMC Pathology Clinical Faculty</a></li>
 
-        {% if not is_granted('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+        {% if not hasRoleSimpleView %}
             <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Physicians'}) }}">WCMC Pathology Physicians</a></li>
         {% endif %}
 
         <hr style="margin-bottom:0; margin-top:0;">
 
         <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Research Faculty'}) }}">WCMC Pathology Research Faculty</a></li>
-        <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Principal Investigators of Research Labs'}) }}"> - WCMC Pathology Principal Investigators of Research Labs</a></li>
-        <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Faculty in Research Labs'}) }}"> - WCMC Pathology Faculty in Research Labs</a></li>
+
+        {% if not hasRoleSimpleView %}
+            <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Principal Investigators of Research Labs'}) }}"> - WCMC Pathology Principal Investigators of Research Labs</a></li>
+            <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Faculty in Research Labs'}) }}"> - WCMC Pathology Faculty in Research Labs</a></li>
+        {% endif %}
 
         <hr style="margin-bottom:0; margin-top:0;">
 
         <li><a href="{{ path(pathlink,{'filter': 'WCMC Pathology Staff'}) }}">WCMC Pathology Staff</a></li>
         <li><a href="{{ path(pathlink,{'filter': 'NYP Pathology Staff'}) }}">NYP Pathology Staff</a></li>
-        <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP Pathology Staff in Research Labs'}) }}"> - WCMC or NYP Pathology Staff in Research Labs</a></li>
+
+        {% if not hasRoleSimpleView %}
+            <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP Pathology Staff in Research Labs'}) }}"> - WCMC or NYP Pathology Staff in Research Labs</a></li>
+        {% endif %}
 
         <hr style="margin-bottom:0; margin-top:0;">
 
@@ -59,11 +65,11 @@
         <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP Pathology Residents'}) }}">WCMC or NYP Pathology Residents</a></li>
         <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP AP/CP Residents'}) }}"> - WCMC or NYP AP/CP Residents</a></li>
 
-        {% if not is_granted('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+        {% if not hasRoleSimpleView %}
             <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP AP Residents'}) }}"> - WCMC or NYP AP Residents</a></li>
         {% endif %}
 
-        {% if not is_granted('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+        {% if not hasRoleSimpleView %}
             <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP AP Only Residents'}) }}"> - WCMC or NYP AP Only Residents</a></li>
             <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP CP Residents'}) }}"> - WCMC or NYP CP Residents</a></li>
             <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP CP Only Residents'}) }}"> - WCMC or NYP CP Only Residents</a></li>
@@ -79,6 +85,8 @@
 {% block navbar %}
 
     {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
+
+    {% set hasRoleSimpleView = app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
 
     <nav class="navbar navbar-default" role="navigation">
 
@@ -129,22 +137,14 @@
                             {% else %}
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a>
                             {% endif %}
-                            {{ usernavbar.listUsers(employees_sitename~'_listusers',employees_sitename~'_list_common_locations') }}
+                            {{ usernavbar.listUsers(employees_sitename~'_listusers',employees_sitename~'_list_common_locations',hasRoleSimpleView) }}
                         </li>
 
-                    {% if is_granted('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
-                        ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW
-                    {% else %}
-                        NOT ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW !!!
-                    {% endif %}
-
-                        {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
-                            {% if not is_granted('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+                        {% if is_granted('ROLE_USERDIRECTORY_EDITOR') and not hasRoleSimpleView %}
                             <li id="nav-bar-userlist-previous" class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Previous<b class="caret"></b></a>
-                                {{ usernavbar.listUsers(employees_sitename~'_listusers_previous',null) }}
+                                {{ usernavbar.listUsers(employees_sitename~'_listusers_previous',null,hasRoleSimpleView) }}
                             </li>
-                            {% endif %}
                         {% endif %}
 
                         {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
