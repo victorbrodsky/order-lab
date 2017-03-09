@@ -34,7 +34,7 @@
     {% set collapsein = "in" %}
 {% endif %}
 
-
+{% set hasRoleSimpleView = app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
 
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
@@ -312,10 +312,15 @@
                         {{ formmacros.field(form.roles) }}
                     {% endif %}
 
-                    {{ formmacros.field(form.preferences.timezone) }}
-
-                    {{ formmacros.field(form.preferences.languages) }}
-                    {{ formmacros.field(form.preferences.locale) }}
+                    {% if not hasRoleSimpleView %}
+                        {{ formmacros.field(form.preferences.timezone) }}
+                        {{ formmacros.field(form.preferences.languages) }}
+                        {{ formmacros.field(form.preferences.locale) }}
+                    {% else %}
+                        {% do form.preferences.timezone %}
+                        {% do form.preferences.languages %}
+                        {% do form.preferences.locale %}
+                    {% endif %}
 
                     {#hiding options#}
                     {{ formmacros.checkbox(form.preferences.excludeFromSearch) }}
@@ -324,13 +329,23 @@
 
                     {#Clear and lock the three fields below if this field is checked.#}
                     {{ formmacros.checkbox(form.preferences.hide) }}
-                    {{ formmacros.field(form.preferences.showToInstitutions) }}
-                    {{ formmacros.field(form.preferences.showToRoles) }}
+
+                    {% if not hasRoleSimpleView %}
+                        {{ formmacros.field(form.preferences.showToInstitutions) }}
+                        {{ formmacros.field(form.preferences.showToRoles) }}
+                    {% else %}
+                        {% do form.preferences.showToInstitutions.setRendered %}
+                        {% do form.preferences.showToRoles.setRendered %}
+                    {% endif %}
 
                     {% if form.locked is defined and userEditor == true %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}
                             {{ formmacros.checkbox(form.locked) }}
-                            {{ formmacros.checkbox(form.testingAccount) }}
+                            {% if not hasRoleSimpleView %}
+                                {{ formmacros.checkbox(form.testingAccount) }}
+                            {% else %}
+                                {% do form.testingAccount.setRendered %}
+                            {% endif %}
                         {% else %}
                             {% do form.locked.setRendered %}
                             {% do form.testingAccount.setRendered %}
@@ -349,13 +364,16 @@
 
 
         {#permissions#}
+    {% if not hasRoleSimpleView %}
         {% if form.permissions is defined %}
             {{ userform.permissionSection(form.permissions, cycle, sitename, collapsein, "User Permissions, modifiable by Administrator", false) }}
         {% endif %}
+    {% endif %}
 
 
         {#per site settings#}
         {#Per Site User Settings by User#}
+    {% if not hasRoleSimpleView %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title text-left">
@@ -378,7 +396,9 @@
                 </div>
             </div>
         </div>
+    {% endif %}
 
+    {% if not hasRoleSimpleView %}
         {% if   is_granted('ROLE_SCANORDER_ADMIN') or
                 is_granted('ROLE_USERDIRECTORY_ADMIN') or
                 is_granted('ROLE_DEIDENTIFICATOR_ADMIN')
@@ -414,6 +434,7 @@
             </div>
         {% endif %}
         {#EOF per site settings#}
+    {% endif %}
 
 
         {#{% block addcontent %}{% endblock %}#}
@@ -937,7 +958,9 @@
                                             {{ formmacros.field(form.credentials.sex) }}
                                             {{ formmacros.field_notempty(form.credentials.ssn,cycle) }}
                                             {{ formmacros.field(form.credentials.emergencyContactInfo) }}
-                                            {{ formmacros.field(form.credentials.hobby) }}
+                                            {% if not hasRoleSimpleView %}
+                                                {{ formmacros.field(form.credentials.hobby) }}
+                                            {% endif %}
 
                                         </div>
                                     </div>
