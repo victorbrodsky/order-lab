@@ -85,6 +85,7 @@
             {{ formmacros.field(formfield.positions) }}
         {% endif %}
 
+        {#residencyTrack, fellowshiptype, pgy fields are shown or hidden by JS positionTypeAction if "Position Track Type(s):" is Resident or Fellow#}
         {% if formfield.residencyTrack is defined %}
             <p>
             <div class="well appointmenttitle-residencytrack-field" style="display:none; margin-top: 20px;">

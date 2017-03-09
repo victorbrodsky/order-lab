@@ -449,7 +449,7 @@ class UserController extends Controller
         //$dql->leftJoin("user.institutions", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
 
-        if(0) { //TODO: this cause in php 5.4: "Notice: String offset cast occurred" in in vendor\doctrine\dbal\lib\Doctrine\DBAL\Platforms\SQLServerPlatform.php at line 1232:  if ($query[$currentPosition] === '(') {
+        if(1) { //TODO: this cause in php 5.4: "Notice: String offset cast occurred" in in vendor\doctrine\dbal\lib\Doctrine\DBAL\Platforms\SQLServerPlatform.php at line 1232:  if ($query[$currentPosition] === '(') {
             if ($sort == null) {
                 if ($time == 'current_only') {
                     $dql->orderBy("infos.lastName", "ASC");
@@ -845,12 +845,7 @@ class UserController extends Controller
         }
 
         //As Faculty + Residents == Academic Appointment Title exists + position=Resident
-        if( $filter && $filter == "WCMC or NYP Pathology Residents" ) {           
-//            $criteriastr .= " ( ";
-//            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology, true);
-//            $criteriastr .= " OR ";
-//            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$nyppathology, true);
-//            $criteriastr .= " ) ";
+        if( $filter && $filter == "WCMC or NYP Pathology Residents" ) {
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')"; //OR administrativeName.name = 'Resident' OR medicalName.name = 'Resident')";
@@ -858,7 +853,6 @@ class UserController extends Controller
 
         //the same as "WCMC Pathology Residents" except they have "AP/CP" in their "Residency Type" field.
         if( $filter && $filter == "WCMC or NYP AP/CP Residents" ) {           
-            //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";

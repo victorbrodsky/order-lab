@@ -63,13 +63,10 @@
         <hr style="margin-bottom:0; margin-top:0;">
 
         <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP Pathology Residents'}) }}">WCMC or NYP Pathology Residents</a></li>
-        <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP AP/CP Residents'}) }}"> - WCMC or NYP AP/CP Residents</a></li>
 
         {% if not hasRoleSimpleView %}
+            <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP AP/CP Residents'}) }}"> - WCMC or NYP AP/CP Residents</a></li>
             <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP AP Residents'}) }}"> - WCMC or NYP AP Residents</a></li>
-        {% endif %}
-
-        {% if not hasRoleSimpleView %}
             <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP AP Only Residents'}) }}"> - WCMC or NYP AP Only Residents</a></li>
             <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP CP Residents'}) }}"> - WCMC or NYP CP Residents</a></li>
             <li><a href="{{ path(pathlink,{'filter': 'WCMC or NYP CP Only Residents'}) }}"> - WCMC or NYP CP Only Residents</a></li>

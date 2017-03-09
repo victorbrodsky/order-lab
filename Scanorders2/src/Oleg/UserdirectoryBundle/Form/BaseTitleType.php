@@ -144,7 +144,6 @@ class BaseTitleType extends AbstractType
 
         //position, residencyTrack, fellowshipType, pgy for AppointmentTitle (Academic Appointment Title)
         if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle" ) {
-
 //            $builder->add('position', 'choice', array(
 //                'choices'   => array(
 //                    'Resident'   => 'Resident',
@@ -175,6 +174,7 @@ class BaseTitleType extends AbstractType
                     },
             ));
 
+            echo "residencyTrack OK!!! <br>";
             $builder->add( 'residencyTrack', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:ResidencyTrackList',
                 'property' => 'name',
