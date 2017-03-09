@@ -5065,17 +5065,20 @@ class AdminController extends Controller
     public function generateAppTitlePositions() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:PositionTrackTypeList')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+        //$entities = $em->getRepository('OlegUserdirectoryBundle:PositionTrackTypeList')->findAll();
+        //if( $entities ) {
+        //    return -1;
+        //}
 
         $elements = array(
             'Resident',
             'Fellow',
             'Clinical Faculty',
-            'Research Faculty'
+            'Research Faculty',
+            'Postdoc',
+            'Research Fellow',
+            'Research Associate'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -5083,8 +5086,13 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $name ) {
 
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PositionTrackTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
             $entity = new PositionTrackTypeList();
-            $this->setDefaultList($entity,$count,$username,$name);
+            $this->setDefaultList($entity,null,$username,$name);
 
             $em->persist($entity);
             $em->flush();

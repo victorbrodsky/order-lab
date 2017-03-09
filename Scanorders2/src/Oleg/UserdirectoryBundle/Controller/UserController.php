@@ -833,6 +833,15 @@ class UserController extends Controller
             $criteriastr .= "(appointmentTitlesPositions.name = 'Fellow')";
         }
 
+        //Similar to "WCMC Pathology Fellows", except it should list all employees who have Academic Appointment Title > "Position Track Type(s):" dropdown set to
+        // "Postdoc" or "Research fellow" or "Research Associate"
+        // AND associated institution for that Academic Appointment Title set to Weill Cornell Medical College ($wcmc).
+        if( $filter && $filter == "WCMC Pathology Non-academic Faculty" ) {
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Postdoc' OR appointmentTitlesPositions.name = 'Research Fellow' OR appointmentTitlesPositions.name = 'Research Associate')";
+        }
+
         //As Faculty + Residents == Academic Appointment Title exists + position=Resident
         if( $filter && $filter == "WCMC or NYP Pathology Residents" ) {           
 //            $criteriastr .= " ( ";

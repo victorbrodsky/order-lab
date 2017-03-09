@@ -1018,6 +1018,7 @@
 
                                                 {{ formmacros.field_notempty(form.credentials.numberCLIA,cycle) }}
                                                 {{ formmacros.fieldDateLabel_notempty(form.credentials.cliaExpirationDate,cycle,'allow-future-date') }}
+                                                {{ formmacros.field_notempty(form.credentials.numberPFI,cycle) }}
 
                                                 {% if form.credentials.cliaAttachmentContainer is defined %}
 
@@ -1038,39 +1039,9 @@
                             {% else %}
                                 {% do form.credentials.numberCLIA.setRendered %}
                                 {% do form.credentials.cliaExpirationDate.setRendered %}
+                                {% do form.credentials.numberPFI.setRendered %}
                                 {% do form.credentials.cliaAttachmentContainer.setRendered %}
                             {% endif %}
-
-
-                            {#NY Permanent Facility Identifier (PFI)#}
-                            {#HIDE ENTIRE SECTION NY Permanent Facility Identifier (PFI) if both fields are empty / no array members#}
-                            {% if form.credentials.numberPFI.vars.value or not (cycle == "show" or cycle == "show_user") %}
-                                {% set showPFI = true %}
-                            {% else %}
-                                {% set showPFI = false %}
-                            {% endif %}
-
-                            {% if showPFI %}
-                                <div class="panel panel-info">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title text-left">
-                                            <a data-toggle="collapse" href="#pfi">
-                                                NY Permanent Facility Identifier (PFI)
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="pfi" class="panel-collapse collapse in">
-                                        <div class="panel-body">
-                                            <div class="user-pfi-holder">
-                                                {{ formmacros.field_notempty(form.credentials.numberPFI,cycle) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% else %}
-                                {% do form.credentials.numberPFI.setRendered %}
-                            {% endif %}
-
 
                             {#Code NYPH#}
                             {#HIDE ENTIRE SECTION NYPH Code(s) if all three fields are empty / no array members#}
