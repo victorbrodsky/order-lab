@@ -33,8 +33,6 @@
         {% set wellclass = "" %}
     {% endif %}
 
-    {% set hasRoleSimpleView = app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
-
     {#hide the titles/objects that have a non-empty "Title End Date:"#}
     {% set endDateClass = '' %}
     {% set displayNone = '' %}
@@ -58,10 +56,8 @@
             {{ formmacros.field(formfield.orderinlist) }}
         {% endif %}
 
-        {% if not hasRoleSimpleView %}
+        {% if formfield.priority is defined %}
             {{ formmacros.field_notempty(formfield.priority,cycle) }}
-        {% else %}
-            {% do formfield.priority.setRendered %}
         {% endif %}
 
         {{ formmacros.field(formfield.name) }}
@@ -154,14 +150,12 @@
         {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date') }}
 
         {#On the user profile page, always hide "Percent Effort:" in both Academic and Administrative titles if they are empty#}
-        {% if cycle != 'show_user' or (formfield.vars.value and formfield.vars.value.effort) %}
-            {% if not hasRoleSimpleView %}
-                {{ formmacros.field(formfield.effort) }}
-            {% else %}
+        {% if formfield.effort is defined and (cycle != 'show_user' or (formfield.vars.value and formfield.vars.value.effort)) %}
+            {{ formmacros.field(formfield.effort) }}
+        {% else %}
+            {% if formfield.effort is defined %}
                 {% do formfield.effort.setRendered %}
             {% endif %}
-        {% else %}
-            {% do formfield.effort.setRendered %}
         {% endif %}
 
         {% if formfield.institution is defined %}

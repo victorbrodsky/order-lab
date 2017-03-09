@@ -40,6 +40,11 @@ class BaseTitleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $hasRoleSimpleView = false;
+        if( array_key_exists('sc', $this->params) ) {
+            $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
+        }
+
         $builder->add('id','hidden',array('label'=>false));
 
 //        $builder->add( 'name', 'text', array(
@@ -83,16 +88,17 @@ class BaseTitleType extends AbstractType
         ));
 
         //priority
-        $builder->add('priority', 'choice', array(
-            'choices'   => array(
-                '0'   => 'Primary',
-                '1' => 'Secondary'
-            ),
-            'label' => $this->params['label']." Title Type:",
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
-
+        if( !$hasRoleSimpleView ) {
+            $builder->add('priority', 'choice', array(
+                'choices' => array(
+                    '0' => 'Primary',
+                    '1' => 'Secondary'
+                ),
+                'label' => $this->params['label'] . " Title Type:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        }
 
         ///////////////////////// tree node /////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -126,12 +132,14 @@ class BaseTitleType extends AbstractType
         });
         ///////////////////////// EOF tree node /////////////////////////
 
-        $builder->add('effort', 'employees_custom_selector', array(
-            'label' => 'Percent Effort:',
-            'attr' => array('class' => 'ajax-combobox-effort', 'type' => 'hidden', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),
-            'required' => false,
-            'classtype' => 'effort'
-        ));
+        if( !$hasRoleSimpleView ) {
+            $builder->add('effort', 'employees_custom_selector', array(
+                'label' => 'Percent Effort:',
+                'attr' => array('class' => 'ajax-combobox-effort', 'type' => 'hidden', "data-inputmask" => "'mask': '[o]', 'repeat': 10, 'greedy' : false"),
+                'required' => false,
+                'classtype' => 'effort'
+            ));
+        }
 
 
         if( $this->params['cycle'] != "show" ) {

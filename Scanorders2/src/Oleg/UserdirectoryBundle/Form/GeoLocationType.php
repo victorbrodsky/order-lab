@@ -43,6 +43,10 @@ class GeoLocationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $hasRoleSimpleView = false;
+        if( array_key_exists('sc', $this->params) ) {
+            $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
+        }
 
         $builder->add('street1',null,array(
             'label'=>'Street Address [Line 1]:',
@@ -109,10 +113,12 @@ class GeoLocationType extends AbstractType
         }
         $builder->add( 'country', 'entity', $countryArray);
 
-        $builder->add('county',null,array(
-            'label'=>'County:',
-            'attr' => array('class'=>'form-control geo-field-county')
-        ));
+        if( !$hasRoleSimpleView ) {
+            $builder->add('county', null, array(
+                'label' => 'County:',
+                'attr' => array('class' => 'form-control geo-field-county')
+            ));
+        }
 
         $builder->add('zip',null,array(
             'label'=>'Zip Code:',

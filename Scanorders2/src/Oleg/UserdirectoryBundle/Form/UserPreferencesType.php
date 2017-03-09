@@ -52,62 +52,88 @@ class UserPreferencesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $hasRoleSimpleView = false;
+        if( array_key_exists('sc', $this->params) ) {
+            $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
+        }
+
         //timezone
         $tzUtil = new TimeZoneUtil();
 
-        $builder->add( 'timezone', 'choice', array(
-            'label' => 'Time Zone:',
-            //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
-            'choices' => $tzUtil->tz_list(),
-            'required' => true,
-            'preferred_choices' => array('America/New_York'),
-            'attr' => array('class' => 'combobox combobox-width')
-        ));
+        if( !$hasRoleSimpleView ) {
+            $builder->add('timezone', 'choice', array(
+                'label' => 'Time Zone:',
+                //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
+                'choices' => $tzUtil->tz_list(),
+                'required' => true,
+                'preferred_choices' => array('America/New_York'),
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
 
-//        $builder->add('tooltip', 'checkbox', array(
-//            'required' => false,
-//            'label' => 'Show tool tips for locked fields:',
-//            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-//        ));
-
-
-        $builder->add( 'languages', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:LanguageList',
-            'label'=> "Language(s):",
-            'required'=> false,
-            'multiple' => true,
-            'property' => 'fulltitle',
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
+            $builder->add('languages', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:LanguageList',
+                'label' => "Language(s):",
+                'required' => false,
+                'multiple' => true,
+                'property' => 'fulltitle',
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
                         ));
                 },
-        ));
+            ));
 
-
-        $builder->add( 'locale', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:LocaleList',
-            'label'=> "Locale:",
-            'required'=> false,
-            'multiple' => false,
-            'property' => 'fulltitle',
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
+            $builder->add('locale', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:LocaleList',
+                'label' => "Locale:",
+                'required' => false,
+                'multiple' => false,
+                'property' => 'fulltitle',
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
                         ));
                 },
-        ));
+            ));
 
+            $builder->add( 'showToInstitutions', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                //'property' => 'name',
+                'property' => 'getTreeName',
+                'label'=>'Only show this profile to members of the following institution(s):',
+                'required'=> false,
+                'multiple' => true,
+                //'empty_value' => false,
+                'attr' => array('class' => 'combobox combobox-width user-preferences-showToInstitutions'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                            'level' => 0
+                        ));
+                },
+            ));
+
+            $builder->add('showToRoles', 'choice', array(
+                'choices' => $this->roles,
+                'label' => 'Only show this profile to users with the following roles:',
+                'attr' => array('class' => 'combobox combobox-width user-preferences-showToRoles'),
+                'multiple' => true,
+            ));
+        }
 
 
         $builder->add('excludeFromSearch', 'checkbox', array(
@@ -146,33 +172,6 @@ class UserPreferencesType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif user-preferences-hide', 'style'=>'margin:0')
         ));
 
-        $builder->add( 'showToInstitutions', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            //'property' => 'name',
-            'property' => 'getTreeName',
-            'label'=>'Only show this profile to members of the following institution(s):',
-            'required'=> false,
-            'multiple' => true,
-            //'empty_value' => false,
-            'attr' => array('class' => 'combobox combobox-width user-preferences-showToInstitutions'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'level' => 0
-                        ));
-                },
-        ));
-
-        $builder->add('showToRoles', 'choice', array(
-            'choices' => $this->roles,
-            'label' => 'Only show this profile to users with the following roles:',
-            'attr' => array('class' => 'combobox combobox-width user-preferences-showToRoles'),
-            'multiple' => true,
-        ));
 
     }
 

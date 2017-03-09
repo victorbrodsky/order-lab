@@ -40,6 +40,7 @@ class UserType extends AbstractType
     protected $roles;
     protected $sc;
     protected $em;
+    protected $hasRoleSimpleView;
 
     public function __construct( $params )
     {
@@ -87,6 +88,10 @@ class UserType extends AbstractType
             $this->currentUser = true;
         }
 
+        $this->hasRoleSimpleView = false;
+        if( array_key_exists('sc', $this->params) ) {
+            $this->hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -330,11 +335,13 @@ class UserType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif')
             ));
 
-            $builder->add('testingAccount', null, array(
-                'required' => false,
-                'label' => 'This is an account for testing purposes (hide on live site):',
-                'attr' => array('class'=>'form-control form-control-modif')
-            ));
+            if( !$this->hasRoleSimpleView ) {
+                $builder->add('testingAccount', null, array(
+                    'required' => false,
+                    'label' => 'This is an account for testing purposes (hide on live site):',
+                    'attr' => array('class' => 'form-control form-control-modif')
+                ));
+            }
         }
 
         return $builder;
@@ -393,7 +400,7 @@ class UserType extends AbstractType
     }
 
     public function userTrainings($builder) {
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'sc'=>$this->sc);
         $builder->add('trainings', 'collection', array(
             'type' => new TrainingType($params),
             'label' => false,
@@ -409,7 +416,7 @@ class UserType extends AbstractType
     }
 
     public function userLocations($builder) {
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'sc'=>$this->sc);
         $builder->add('locations', 'collection', array(
             'type' => new LocationType($params),
             'label' => false,
@@ -446,7 +453,7 @@ class UserType extends AbstractType
         
 if(1){    
         //it takes 4 seconds to load
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
+        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em,'sc'=>$this->sc);
         $builder->add('researchLabs', 'collection', array(
             'type' => new ResearchLabType($params),
             'label' => false,

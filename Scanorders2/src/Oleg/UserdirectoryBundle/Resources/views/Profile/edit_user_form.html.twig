@@ -312,14 +312,14 @@
                         {{ formmacros.field(form.roles) }}
                     {% endif %}
 
-                    {% if not hasRoleSimpleView %}
+                    {% if form.preferences.timezone is defined %}
                         {{ formmacros.field(form.preferences.timezone) }}
+                    {% endif %}
+                    {% if form.preferences.languages is defined %}
                         {{ formmacros.field(form.preferences.languages) }}
+                    {% endif %}
+                    {% if form.preferences.locale is defined %}
                         {{ formmacros.field(form.preferences.locale) }}
-                    {% else %}
-                        {% do form.preferences.timezone %}
-                        {% do form.preferences.languages %}
-                        {% do form.preferences.locale %}
                     {% endif %}
 
                     {#hiding options#}
@@ -330,25 +330,24 @@
                     {#Clear and lock the three fields below if this field is checked.#}
                     {{ formmacros.checkbox(form.preferences.hide) }}
 
-                    {% if not hasRoleSimpleView %}
+                    {% if form.preferences.showToInstitutions is defined %}
                         {{ formmacros.field(form.preferences.showToInstitutions) }}
+                    {% endif %}
+                    {% if form.preferences.showToRoles is defined %}
                         {{ formmacros.field(form.preferences.showToRoles) }}
-                    {% else %}
-                        {% do form.preferences.showToInstitutions.setRendered %}
-                        {% do form.preferences.showToRoles.setRendered %}
                     {% endif %}
 
                     {% if form.locked is defined and userEditor == true %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}
                             {{ formmacros.checkbox(form.locked) }}
-                            {% if not hasRoleSimpleView %}
+                            {% if form.testingAccount is defined %}
                                 {{ formmacros.checkbox(form.testingAccount) }}
-                            {% else %}
-                                {% do form.testingAccount.setRendered %}
                             {% endif %}
                         {% else %}
                             {% do form.locked.setRendered %}
-                            {% do form.testingAccount.setRendered %}
+                            {% if form.testingAccount is defined %}
+                                {% do form.testingAccount.setRendered %}
+                            {% endif %}
                         {% endif %}
                     {% endif %}
 
@@ -364,16 +363,15 @@
 
 
         {#permissions#}
-    {% if not hasRoleSimpleView %}
+    {% if hasRoleSimpleView %}
+        <div style="display:none">
+    {% endif %}
         {% if form.permissions is defined %}
             {{ userform.permissionSection(form.permissions, cycle, sitename, collapsein, "User Permissions, modifiable by Administrator", false) }}
         {% endif %}
-    {% endif %}
-
 
         {#per site settings#}
         {#Per Site User Settings by User#}
-    {% if not hasRoleSimpleView %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title text-left">
@@ -396,9 +394,7 @@
                 </div>
             </div>
         </div>
-    {% endif %}
 
-    {% if not hasRoleSimpleView %}
         {% if   is_granted('ROLE_SCANORDER_ADMIN') or
                 is_granted('ROLE_USERDIRECTORY_ADMIN') or
                 is_granted('ROLE_DEIDENTIFICATOR_ADMIN')
@@ -434,8 +430,9 @@
             </div>
         {% endif %}
         {#EOF per site settings#}
+    {% if hasRoleSimpleView %}
+        </div>
     {% endif %}
-
 
         {#{% block addcontent %}{% endblock %}#}
         {% if addcontent is defined and addcontent %}
@@ -653,7 +650,7 @@
     {% if form.researchLabs is defined %}
         {% set showResearchLabs = false %}
         {% for researchLabs in form.researchLabs %}
-            {% if researchLabs.vars.value or researchLabs.weblink.vars.value or researchLabs.foundedDate.vars.value or cycle != 'show_user' %}
+            {% if researchLabs.vars.value or researchLabs.weblink.vars.value or cycle != 'show_user' %}
                 {% set showResearchLabs = true %}
             {% endif %}
         {% endfor %}
@@ -958,7 +955,7 @@
                                             {{ formmacros.field(form.credentials.sex) }}
                                             {{ formmacros.field_notempty(form.credentials.ssn,cycle) }}
                                             {{ formmacros.field(form.credentials.emergencyContactInfo) }}
-                                            {% if not hasRoleSimpleView %}
+                                            {% if form.credentials.hobby is defined %}
                                                 {{ formmacros.field(form.credentials.hobby) }}
                                             {% endif %}
 

@@ -50,6 +50,11 @@ class ResearchLabType extends AbstractType
             $standalone = true;
         }
 
+        $hasRoleSimpleView = false;
+        if( array_key_exists('sc', $this->params) ) {
+            $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
+        }
+
         //echo "cycle=".$this->params['cycle']."<br>";
 
         $builder->add( 'id', 'hidden', array(
@@ -57,23 +62,25 @@ class ResearchLabType extends AbstractType
             'attr' => array('class' => 'researchlab-id-field')
         ));
 
-        $builder->add('foundedDate','date',array(
-            'read_only' => $readonly,
-            'label'=>"Founded on:",
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control researchlab-foundedDate-field')
-        ));
+        if (!$hasRoleSimpleView) {
+            $builder->add('foundedDate', 'date', array(
+                'read_only' => $readonly,
+                'label' => "Founded on:",
+                'widget' => 'single_text',
+                'required' => false,
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control researchlab-foundedDate-field')
+            ));
 
-        $builder->add('dissolvedDate','date',array(
-            'read_only' => $readonly,
-            'label'=>"Dissolved on:",
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control user-expired-end-date researchlab-dissolvedDate-field')
-        ));
+            $builder->add('dissolvedDate', 'date', array(
+                'read_only' => $readonly,
+                'label' => "Dissolved on:",
+                'widget' => 'single_text',
+                'required' => false,
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control user-expired-end-date researchlab-dissolvedDate-field')
+            ));
+        }
 
         $builder->add('location', 'employees_custom_selector', array(
             'read_only' => $readonly,
@@ -148,17 +155,17 @@ class ResearchLabType extends AbstractType
 //                    'classtype' => 'researchlab'
 //                ));
 
-                if( $lab ) {
+                if ($lab) {
 
-                    foreach( $lab->getComments() as $comment ) {
-                        if( $comment->getAuthor() && $comment->getAuthor()->getId() == $this->params['subjectUser']->getId() ) {
+                    foreach ($lab->getComments() as $comment) {
+                        if ($comment->getAuthor() && $comment->getAuthor()->getId() == $this->params['subjectUser']->getId()) {
                             //preset comment dummy for current lab
                             $lab->setCommentDummy($comment->getComment());
                         }
                     }
 
-                    foreach( $lab->getPis() as $pi ) {
-                        if( $pi && $pi == true && $pi->getPi()->getId() == $this->params['subjectUser']->getId() ) {
+                    foreach ($lab->getPis() as $pi) {
+                        if ($pi && $pi == true && $pi->getPi()->getId() == $this->params['subjectUser']->getId()) {
                             //preset pi dummy for current lab
                             $lab->setPiDummy(true);
                         }
@@ -169,12 +176,14 @@ class ResearchLabType extends AbstractType
 
             });
 
-            $builder->add('commentDummy','textarea',array(
-                //'mapped' => false,
-                'required' => false,
-                'label'=>'Comment:',
-                'attr' => array('class'=>'textarea form-control researchlab-commentDummy-field')
-            ));
+            if (!$hasRoleSimpleView){
+                $builder->add('commentDummy', 'textarea', array(
+                    //'mapped' => false,
+                    'required' => false,
+                    'label' => 'Comment:',
+                    'attr' => array('class' => 'textarea form-control researchlab-commentDummy-field')
+                ));
+            }
 
             $builder->add('piDummy', 'checkbox', array(
                 //'mapped' => false,

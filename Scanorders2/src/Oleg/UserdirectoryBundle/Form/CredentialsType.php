@@ -38,6 +38,11 @@ class CredentialsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $hasRoleSimpleView = false;
+        if( array_key_exists('sc', $this->params) ) {
+            $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
+        }
+
         $builder->add('dob', 'date', array(
             'label' => 'Date of Birth:',
             'widget' => 'single_text',
@@ -132,10 +137,12 @@ class CredentialsType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('hobby', null, array(
-            'label' => 'Hobbies:',
-            'attr' => array('class'=>'textarea form-control')
-        ));
+        if( !$hasRoleSimpleView ) {
+            $builder->add('hobby', null, array(
+                'label' => 'Hobbies:',
+                'attr' => array('class' => 'textarea form-control')
+            ));
+        }
 
 
         $builder->add('codeNYPH', 'collection', array(

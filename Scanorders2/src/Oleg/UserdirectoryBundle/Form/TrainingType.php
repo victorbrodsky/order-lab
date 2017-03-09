@@ -33,11 +33,17 @@ class TrainingType extends AbstractType
     protected $params;
     protected $entity;
 
+    protected $hasRoleSimpleView;
+
     public function __construct( $params=null, $entity = null )
     {
         $this->params = $params;
         $this->entity = $entity;
 
+        $this->hasRoleSimpleView = false;
+        if( array_key_exists('sc', $this->params) ) {
+            $this->hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -104,10 +110,12 @@ class TrainingType extends AbstractType
                         'attr' => array('class' => 'datepicker form-control'),
                     ));
 
-                    $form->add('completionReason', null, array(
-                        'label' => 'Completion Reason:',
-                        'attr' => array('class'=>'combobox combobox-width')
-                    ));
+                    if( !$this->hasRoleSimpleView ) {
+                        $form->add('completionReason', null, array(
+                            'label' => 'Completion Reason:',
+                            'attr' => array('class' => 'combobox combobox-width')
+                        ));
+                    }
 
                 }
 
@@ -141,27 +149,29 @@ class TrainingType extends AbstractType
             'required'  => false,
         ));
 
-        $builder->add('majors', 'employees_custom_selector', array(
-            'label' => 'Major:',
-            'attr' => array('class' => 'ajax-combobox-trainingmajors', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'trainingmajors'
-        ));
+        if( !$this->hasRoleSimpleView ) {
+            $builder->add('majors', 'employees_custom_selector', array(
+                'label' => 'Major:',
+                'attr' => array('class' => 'ajax-combobox-trainingmajors', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'trainingmajors'
+            ));
 
-        $builder->add('minors', 'employees_custom_selector', array(
-            'label' => 'Minor:',
-            'attr' => array('class' => 'ajax-combobox-trainingminors', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'trainingminors'
-        ));
+            $builder->add('minors', 'employees_custom_selector', array(
+                'label' => 'Minor:',
+                'attr' => array('class' => 'ajax-combobox-trainingminors', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'trainingminors'
+            ));
 
-        $builder->add('honors', 'employees_custom_selector', array(
-            'label' => 'Honors:',
-            'attr' => array('class' => 'ajax-combobox-traininghonors', 'type' => 'hidden'),
-            'required' => false,
-            //'multiple' => true,
-            'classtype' => 'traininghonors'
-        ));
+            $builder->add('honors', 'employees_custom_selector', array(
+                'label' => 'Honors:',
+                'attr' => array('class' => 'ajax-combobox-traininghonors', 'type' => 'hidden'),
+                'required' => false,
+                //'multiple' => true,
+                'classtype' => 'traininghonors'
+            ));
+        }
 
         $builder->add('fellowshipTitle', 'employees_custom_selector', array(
             'label' => 'Professional Fellowship Title:',

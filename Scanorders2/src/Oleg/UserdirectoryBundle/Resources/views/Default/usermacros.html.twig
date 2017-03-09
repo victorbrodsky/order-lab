@@ -737,12 +737,9 @@
     {{ formmacros.field_notempty(formfield.state,cycle) }}
     {{ formmacros.field_notempty(formfield.zip,cycle) }}
 
-    {% if not app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+    {% if formfield.county is defined %}
         {{ formmacros.field_notempty(formfield.county,cycle) }}
-    {% else %}
-        {% do formfield.county.setRendered %}
     {% endif %}
-
 
     {{ formmacros.field_notempty(formfield.country,cycle) }}
 {% endmacro %}
@@ -1034,22 +1031,24 @@
             {#{% endfor %}#}
         {#{% endif %}#}
 
-        {% if not app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+        {% if formfield.foundedDate is defined %}
             {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date no-datepicker-events') }}
-            {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date no-datepicker-events') }}
-
-            {#comment#}
-            {% if formfield.piDummy is defined %}
-                {{ formmacros.field(formfield.commentDummy) }}
-            {% endif %}
-            {#{% if prototype == "prototype" %}#}
-                {#{{ formmacros.field(formfield.commentDummy) }}#}
-            {#{% else %}#}
-                {#{% for comment in formfield.comments %}#}
-                    {#{{ formmacros.field(comment.comment) }}#}
-                {#{% endfor %}#}
-            {#{% endif %}#}
         {% endif %}
+        {% if formfield.dissolvedDate is defined %}
+            {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date no-datepicker-events') }}
+        {% endif %}
+
+        {#comment#}
+        {% if formfield.commentDummy is defined %}
+            {{ formmacros.field(formfield.commentDummy) }}
+        {% endif %}
+        {#{% if prototype == "prototype" %}#}
+            {#{{ formmacros.field(formfield.commentDummy) }}#}
+        {#{% else %}#}
+            {#{% for comment in formfield.comments %}#}
+                {#{{ formmacros.field(comment.comment) }}#}
+            {#{% endfor %}#}
+        {#{% endif %}#}
 
         {{ formmacros.field(formfield.location) }}
         {{ usermacros.emailPhoneField_notempty(formfield.weblink,cycle,'link',"") }}
@@ -2040,15 +2039,19 @@
 
         {{ formmacros.fieldDateLabel(formfield.completionDate,'allow-future-date') }}
 
-        {% if not app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
-            {% if formfield.completionReason is defined %}
-                {{ formmacros.field_notempty(formfield.completionReason,cycle) }}
-            {% endif %}
+        {% if formfield.completionReason is defined %}
+            {{ formmacros.field_notempty(formfield.completionReason,cycle) }}
+        {% endif %}
 
+        {% if formfield.majors is defined %}
             {{ formmacros.field_notempty(formfield.majors,cycle) }}
+        {% endif %}
 
+        {% if formfield.minors is defined %}
             {{ formmacros.field_notempty(formfield.minors,cycle) }}
+        {% endif %}
 
+        {% if formfield.honors is defined %}
             {{ formmacros.field_notempty(formfield.honors,cycle) }}
         {% endif %}
 
