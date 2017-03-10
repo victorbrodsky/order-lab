@@ -723,8 +723,8 @@ class UserController extends Controller
             ")";
         }
 
-        //WCMC + Pathology
-        if( $filter && $filter == "WCMC Pathology Employees" ) {
+        //WCM + Pathology
+        if( $filter && $filter == "WCM Pathology Employees" ) {
 //            $criteriastr .= "(".
 //                "administrativeInstitution.name = 'Weill Cornell Medical College'".
 //                " OR appointmentInstitution.name = 'Weill Cornell Medical College'".
@@ -745,21 +745,21 @@ class UserController extends Controller
         }
 
         //Academic Appointment Title exists + Clinical Faculty + Research Faculty
-        if( $filter && $filter == "WCMC Pathology Faculty" ) {
+        if( $filter && $filter == "WCM Pathology Faculty" ) {
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
         }
 
         //Academic Appointment Title exists + Clinical Faculty
-        if( $filter && $filter == "WCMC Pathology Clinical Faculty" ) {
+        if( $filter && $filter == "WCM Pathology Clinical Faculty" ) {
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty')";
         }
 
         //list all people with MD, MBBS, and DO degrees (using all current synonym links) and only with Administrative or Academic title in institution "WCMC" and department of "Pathology"
-        if( $filter && $filter == "WCMC Pathology Physicians" ) {
+        if( $filter && $filter == "WCM Pathology Physicians" ) {
             $dql->leftJoin("user.trainings", "trainings");
             $dql->leftJoin("trainings.degree", "degree");
             $dql->leftJoin("degree.original", "original");
@@ -773,7 +773,7 @@ class UserController extends Controller
         }
 
         //Academic Appointment Title exists + Research Faculty
-        if( $filter && $filter == "WCMC Pathology Research Faculty" ) {
+        if( $filter && $filter == "WCM Pathology Research Faculty" ) {
 //            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
 //            $criteriastr .= " AND ";
 //            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
@@ -783,8 +783,8 @@ class UserController extends Controller
         }
 
         //Academic Appointment Title not exists + Admin Title exists
-        if( $filter && $filter == "WCMC Pathology Staff" ) {
-            //echo "wcmc filter=".$filter."<br>";
+        if( $filter && $filter == "WCM Pathology Staff" ) {
+            //echo "wcm filter=".$filter."<br>";
             $criteriastr .= "(appointmentInstitution.id IS NULL)";
             $criteriastr .= " AND ";
 //            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College')";
@@ -804,7 +804,7 @@ class UserController extends Controller
         }
 
         //Academic Appointment Title exists + division=Anatomic Pathology
-        if( $filter && $filter == "WCMC Anatomic Pathology Faculty" ) {
+        if( $filter && $filter == "WCM Anatomic Pathology Faculty" ) {
             $wcmcAnatomicPathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Anatomic Pathology",
                 $wcmcpathology,
@@ -816,7 +816,7 @@ class UserController extends Controller
         }
 
         //Academic Appointment Title exists + division=Laboratory Medicine
-        if( $filter && $filter == "WCMC Laboratory Medicine Faculty" ) {
+        if( $filter && $filter == "WCM Laboratory Medicine Faculty" ) {
             $wcmcLaboratoryMedicinePathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Laboratory Medicine",
                 $wcmcpathology,
@@ -845,14 +845,14 @@ class UserController extends Controller
         }
 
         //As Faculty + Residents == Academic Appointment Title exists + position=Resident
-        if( $filter && $filter == "WCMC or NYP Pathology Residents" ) {
+        if( $filter && $filter == "WCM or NYP Pathology Residents" ) {
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')"; //OR administrativeName.name = 'Resident' OR medicalName.name = 'Resident')";
         }
 
-        //the same as "WCMC Pathology Residents" except they have "AP/CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC or NYP AP/CP Residents" ) {           
+        //the same as "WCM Pathology Residents" except they have "AP/CP" in their "Residency Type" field.
+        if( $filter && $filter == "WCM or NYP AP/CP Residents" ) {
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
@@ -861,8 +861,8 @@ class UserController extends Controller
             $criteriastr .= "(residencyTrack.name = 'AP/CP')";
         }
 
-        //the same as "WCMC Pathology Residents" except they have "AP" or "AP/CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC or NYP AP Residents" ) {            
+        //the same as "WCM Pathology Residents" except they have "AP" or "AP/CP" in their "Residency Type" field.
+        if( $filter && $filter == "WCM or NYP AP Residents" ) {
             //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
@@ -872,8 +872,8 @@ class UserController extends Controller
             $criteriastr .= "(residencyTrack.name = 'AP' OR residencyTrack.name = 'AP/CP')";
         }
 
-        //the same as "WCMC Pathology Residents" except they have "AP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC or NYP AP Only Residents" ) {           
+        //the same as "WCM Pathology Residents" except they have "AP" in their "Residency Type" field.
+        if( $filter && $filter == "WCM or NYP AP Only Residents" ) {
             //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
@@ -883,8 +883,8 @@ class UserController extends Controller
             $criteriastr .= "(residencyTrack.name = 'AP')";
         }
 
-        //the same as "WCMC Pathology Residents" except they have "CP" or "AP/CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC or NYP CP Residents" ) {           
+        //the same as "WCM Pathology Residents" except they have "CP" or "AP/CP" in their "Residency Type" field.
+        if( $filter && $filter == "WCM or NYP CP Residents" ) {
             //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
@@ -894,8 +894,8 @@ class UserController extends Controller
             $criteriastr .= "(residencyTrack.name = 'CP' OR residencyTrack.name = 'AP/CP')";
         }
 
-        //the same as "WCMC Pathology Residents" except they have "CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC or NYP CP Only Residents" ) {                      
+        //the same as "WCM Pathology Residents" except they have "CP" in their "Residency Type" field.
+        if( $filter && $filter == "WCM or NYP CP Only Residents" ) {
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
@@ -904,9 +904,9 @@ class UserController extends Controller
             $criteriastr .= "(residencyTrack.name = 'CP')";
         }
 
-        // the same as "WCMC Pathology Faculty" except they have at least one non-empty "Research Lab Title:" + a checkmark in
+        // the same as "WCM Pathology Faculty" except they have at least one non-empty "Research Lab Title:" + a checkmark in
         //"Principal Investigator of this Lab:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
-        if( $filter && $filter == "WCMC Pathology Principal Investigators of Research Labs" ) {                     
+        if( $filter && $filter == "WCM Pathology Principal Investigators of Research Labs" ) {
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
@@ -920,9 +920,9 @@ class UserController extends Controller
             $criteriastr .= "(researchLabsPis.pi = user)";
         }
 
-        // "WCMC Pathology Faculty in Research Labs" - the same as "WCMC Pathology Faculty"
+        // "WCM Pathology Faculty in Research Labs" - the same as "WCM Pathology Faculty"
         //except they have at least one non-empty "Research Lab Title:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
-        if( $filter && $filter == "WCMC Pathology Faculty in Research Labs" ) {           
+        if( $filter && $filter == "WCM Pathology Faculty in Research Labs" ) {
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
@@ -933,10 +933,10 @@ class UserController extends Controller
         }
 
 
-        // "WCMC or NYP Pathology Staff in Research Labs" - the same as "WCMC Pathology Staff" OR "NYP Pathology Staff"
+        // "WCM or NYP Pathology Staff in Research Labs" - the same as "WCM Pathology Staff" OR "NYP Pathology Staff"
         //except they have at least one non-empty "Research Lab Title:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
-        if( $filter && $filter == "WCMC or NYP Pathology Staff in Research Labs" ) {
-            //echo "wcmc or nyp filter=".$filter."<br>";
+        if( $filter && $filter == "WCM or NYP Pathology Staff in Research Labs" ) {
+            //echo "wcm or nyp filter=".$filter."<br>";
             $criteriastr .= "(appointmentInstitution.id IS NULL)";
             $criteriastr .= " AND ";
             //$criteriastr .= "administrativeInstitution.name = 'Weill Cornell Medical College' AND administrativeInstitution.name = 'Pathology and Laboratory Medicine'";
