@@ -948,12 +948,21 @@ class Location extends ListAbstract
 
     public function isHomeAndEmpty() {
 
-        $empty = false;
+        $empty = true;
 
         if( $this->getName() == "Home" ) {
-            if( $this->isEmpty() ) {
-                $empty = true;
+            //if( $this->isEmpty() ) {
+            //    $empty = true;
+            //}
+            if( $this->getPhone() ) {
+                return false;
             }
+            if( $this->getGeoLocation() && $this->getGeoLocation()->getFullGeoLocation() ) {
+                return false;
+            }
+
+        } else {
+            $empty = false;
         }
 
         //echo $this->getName().": Location empty=".$empty."<br>";
