@@ -120,7 +120,6 @@ class CallLogLoggerController extends LoggerController
         }
 
         //$objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
-        //                          getObjectByNameTransformer($user,"Certificate of Qualification Document",'UserdirectoryBundle','DocumentTypeList');
         $objectType = $userSecUtil->getObjectByNameTransformer($user,"Message",'UserdirectoryBundle','EventObjectTypeList');
         if( !$objectType ) {
             throw $this->createNotFoundException('EventObjectTypeList is not found by name ' . "Message");
