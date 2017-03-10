@@ -624,7 +624,7 @@
                                     {#do not show empty home location on view page<br>#}
                                     <div style="display: none"></div>
                                 {% else %}
-                                    show this location<br>
+                                    {#show this location<br>#}
                                 {% endif %}
                                 {{ usermacros.locationObject(location,cycle,'user-locations','noprototype',sitename,entity) }}
                                 {% if showFlag and location.vars.value.isHomeAndEmpty() %}
