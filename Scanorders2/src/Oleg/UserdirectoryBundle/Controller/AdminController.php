@@ -3307,6 +3307,8 @@ class AdminController extends Controller
             'Generate Accession Deidentifier ID',
             'Search by Deidentifier ID conducted',
 
+            'New Call Log Book Entry Submitted',
+
             'Warning',
             'Error'
         );
