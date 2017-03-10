@@ -111,15 +111,19 @@ class CallLogLoggerController extends LoggerController
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $userSecUtil = $this->get('user_security_utility');
 
         $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("New Call Log Book Entry Submitted");
         if( !$eventType ) {
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "New Call Log Book Entry Submitted");
         }
 
-        $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        //$objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        //                          getObjectByNameTransformer($user,"Certificate of Qualification Document",'UserdirectoryBundle','DocumentTypeList');
+        $objectType = $userSecUtil->getObjectByNameTransformer($user,"Message",'EventObjectTypeList','UserdirectoryBundle');
         if( !$objectType ) {
-            //throw $this->createNotFoundException('EventObjectTypeList is not found by name ' . "Message");
+            throw $this->createNotFoundException('EventObjectTypeList is not found by name ' . "Message");
         }
         if( $objectType ) {
             $objectTypeId = $objectType->getId();
@@ -128,7 +132,6 @@ class CallLogLoggerController extends LoggerController
         }
 
         ///////////// make sure eventTypes and users are set /////////////
-        $user = $this->get('security.context')->getToken()->getUser();
 
         $objectTypes = array();
         $eventTypes = array();
