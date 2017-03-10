@@ -878,29 +878,35 @@ class Location extends ListAbstract
         return $this->getNameFull();
     }
 
-    public function isEmpty() {
+    public function isEmpty($withLocationType=true)
+    {
         $empty = true;
         //echo "isEmpty Location: ".$this."<br>";
         //echo "isEmpty Location ID=".$this->getId()."<br>";
         //echo "isEmpty Location Name=".$this->getName()."<br>";
 
-        if( $this->getId() ) {
+        if ($this->getId()) {
             return false;
         } else {
             //return true;
         }
 
-        if( $this->getName() ) {
+        if ($this->getName()) {
             return false;
         } else {
             //return true;
         }
 
         //be strict: location name must be set. If not then it's empty
-        if( $this->getName() == null ) {
+        if ($this->getName() == null) {
             return true;
         }
 
+        if( $withLocationType == true ) {
+            if( $this->getLocationTypes() ) {
+                return false;
+            }
+        }
 
         if( $this->getPhone() ) {
             return false;
@@ -920,9 +926,6 @@ class Location extends ListAbstract
         if( $this->getBuilding() ) {
             return false;
         }
-        if( $this->getLocationTypes() ) {
-            return false;
-        }
         if( $this->getRoom() ) {
             return false;
         }
@@ -939,7 +942,7 @@ class Location extends ListAbstract
             return false;
         }
 
-        if( $this->getGeoLocation()->getFullGeoLocation() ) {
+        if( $this->getGeoLocation() && $this->getGeoLocation()->getFullGeoLocation() ) {
             return false;
         }
 
@@ -948,15 +951,47 @@ class Location extends ListAbstract
 
     public function isHomeAndEmpty() {
 
-        $empty = true;
+        $empty = false;
 
         if( $this->getName() == "Home" ) {
-            //if( $this->isEmpty() ) {
-            //    $empty = true;
-            //}
+            $empty = true;
+//            if( $this->isEmpty(false) ) {
+//                $empty = true;
+//            }
             if( $this->getPhone() ) {
                 return false;
             }
+            if( $this->getFax() ) {
+                return false;
+            }
+            if( $this->getPager() ) {
+                return false;
+            }
+            if( $this->getMobile() ) {
+                return false;
+            }
+            if( $this->getEmail() ) {
+                return false;
+            }
+            if( $this->getBuilding() ) {
+                return false;
+            }
+            if( $this->getRoom() ) {
+                return false;
+            }
+            if( $this->getSuite() ) {
+                return false;
+            }
+            if( $this->getFloor() ) {
+                return false;
+            }
+            if( $this->getMailbox() ) {
+                return false;
+            }
+            if( $this->getComment() ) {
+                return false;
+            }
+
             if( $this->getGeoLocation() && $this->getGeoLocation()->getFullGeoLocation() ) {
                 return false;
             }
