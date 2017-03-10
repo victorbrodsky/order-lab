@@ -619,7 +619,18 @@
                     <div class="user-locations-holder">
                         {% if form.locations is defined %}
                             {% for location in form.locations %}
+                                {#this location: isHomeAndEmpty={{location.vars.value.isHomeAndEmpty()}}; showFlag={{ showFlag }} =>#}
+                                {% if showFlag and location.vars.value.isHomeAndEmpty() %}
+                                    {#do not show empty home location on view page<br>#}
+                                    <div style="display: none"></div>
+                                {% else %}
+                                    show this location<br>
+                                {% endif %}
                                 {{ usermacros.locationObject(location,cycle,'user-locations','noprototype',sitename,entity) }}
+                                {% if showFlag and location.vars.value.isHomeAndEmpty() %}
+                                    {#do not show empty home location on view page#}
+                                    </div>
+                                {% endif %}
                             {% endfor %}
                             {{ usermacros.addNewObjectBtn( cycle, 'user-locations', 'Add Location' ) }}
                         {% endif %}

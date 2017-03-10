@@ -946,4 +946,18 @@ class Location extends ListAbstract
         return $empty;
     }
 
+    public function isHomeAndEmpty() {
+
+        $empty = false;
+
+        if( $this->getName() == "Home" ) {
+            if( $this->isEmpty() ) {
+                $empty = true;
+            }
+        }
+
+        //echo $this->getName().": Location empty=".$empty."<br>";
+        return $empty;
+    }
+
 }
