@@ -448,6 +448,11 @@ class CallEntryController extends Controller
 //        }
 
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        if( $eventObjectType ) {
+            $eventObjectTypeId = $eventObjectType->getId();
+        } else {
+            $eventObjectTypeId = null;
+        }
 
         $defaultPatientListId = null;
         $defaultPatientList = $calllogUtil->getDefaultPatientList();
@@ -463,7 +468,7 @@ class CallEntryController extends Controller
             'route_path' => $route,
             'advancedFilter' => $advancedFilter,
             //'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
-            'eventObjectTypeId' => $eventObjectType->getId(),
+            'eventObjectTypeId' => $eventObjectTypeId,
             'patientListId' => $defaultPatientListId,
             'shownavbarfilter' => false
             //'navbarfilterform' => $navbarfilterform->createView()
