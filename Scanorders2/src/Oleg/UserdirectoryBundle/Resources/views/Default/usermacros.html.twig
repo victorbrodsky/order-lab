@@ -665,8 +665,9 @@
 
                 {% if homeLocation == false %}
 
+                    {#if the "Institution or Collaboration" field is empty, do not show this field/child fields on the View page to anyone#}
                     {% if formfield.institution is defined %}
-                        {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+                        {{ treemacros.compositeTreeNode_notempty(formfield.institution,cycle,prototype) }}
                     {% endif %}
 
                     {% if formfield.mailbox is defined %}

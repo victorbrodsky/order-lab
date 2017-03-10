@@ -57,10 +57,12 @@ class UserPreferencesType extends AbstractType
             $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
         }
 
-        //timezone
-        $tzUtil = new TimeZoneUtil();
 
         if( !$hasRoleSimpleView ) {
+
+            //timezone
+            $tzUtil = new TimeZoneUtil();
+
             $builder->add('timezone', 'choice', array(
                 'label' => 'Time Zone:',
                 //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
@@ -133,44 +135,43 @@ class UserPreferencesType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width user-preferences-showToRoles'),
                 'multiple' => true,
             ));
+
+            $builder->add('excludeFromSearch', 'checkbox', array(
+                'required' => false,
+                'label' => 'Exclude from Employee Directory search results:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+            $builder->add('noAttendingEmail', 'checkbox', array(
+                'required' => false,
+                'label' => 'Do not send a notification email if listed as an "attending" in a Call Log Book Entry:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+            $builder->add('lifeForm', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:LifeFormList',
+                'property' => 'name',
+                'label' => "Life Form:",
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added'
+                        ));
+                },
+            ));
+
+            $builder->add('hide', 'checkbox', array(
+                'required' => false,
+                'label' => 'Hide this profile:',
+                'attr' => array('class'=>'form-control form-control-modif user-preferences-hide', 'style'=>'margin:0')
+            ));
         }
-
-
-        $builder->add('excludeFromSearch', 'checkbox', array(
-            'required' => false,
-            'label' => 'Exclude from Employee Directory search results:',
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-        ));
-
-        $builder->add('noAttendingEmail', 'checkbox', array(
-            'required' => false,
-            'label' => 'Do not send a notification email if listed as an "attending" in a Call Log Book Entry:',
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-        ));
-
-        $builder->add('lifeForm', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:LifeFormList',
-            'property' => 'name',
-            'label' => "Life Form:",
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added'
-                    ));
-            },
-        ));
-
-        $builder->add('hide', 'checkbox', array(
-            'required' => false,
-            'label' => 'Hide this profile:',
-            'attr' => array('class'=>'form-control form-control-modif user-preferences-hide', 'style'=>'margin:0')
-        ));
 
 
     }

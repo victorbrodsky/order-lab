@@ -298,11 +298,13 @@ class UserType extends AbstractType
 
     public function globalUserPreferences($builder) {
 
-        $builder->add('preferences', new UserPreferencesType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
-            'label' => false,
-            'required' => false,
-        ));
+        if( !$this->hasRoleSimpleView ) {
+            $builder->add('preferences', new UserPreferencesType($this->params), array(
+                'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
+                'label' => false,
+                'required' => false,
+            ));
+        }
 
         //Roles
         if( $this->roles && ($this->cycle == "show" || $this->roleAdmin) ) {
@@ -329,13 +331,13 @@ class UserType extends AbstractType
 
 
         if( $this->roleAdmin ) {
-            $builder->add('locked', null, array(
-                'required' => false,
-                'label' => 'Prevent user from logging in (lock):',
-                'attr' => array('class'=>'form-control form-control-modif')
-            ));
-
             if( !$this->hasRoleSimpleView ) {
+                $builder->add('locked', null, array(
+                    'required' => false,
+                    'label' => 'Prevent user from logging in (lock):',
+                    'attr' => array('class'=>'form-control form-control-modif')
+                ));
+
                 $builder->add('testingAccount', null, array(
                     'required' => false,
                     'label' => 'This is an account for testing purposes (hide on live site):',

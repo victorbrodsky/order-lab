@@ -323,12 +323,18 @@
                     {% endif %}
 
                     {#hiding options#}
-                    {{ formmacros.checkbox(form.preferences.excludeFromSearch) }}
+                    {% if form.preferences.excludeFromSearch is defined %}
+                        {{ formmacros.checkbox(form.preferences.excludeFromSearch) }}
+                    {% endif %}
 
-                    {{ formmacros.checkbox(form.preferences.noAttendingEmail) }}
+                    {% if form.preferences.noAttendingEmail is defined %}
+                        {{ formmacros.checkbox(form.preferences.noAttendingEmail) }}
+                    {% endif %}
 
                     {#Clear and lock the three fields below if this field is checked.#}
-                    {{ formmacros.checkbox(form.preferences.hide) }}
+                    {% if form.preferences.hide is defined %}
+                        {{ formmacros.checkbox(form.preferences.hide) }}
+                    {% endif %}
 
                     {% if form.preferences.showToInstitutions is defined %}
                         {{ formmacros.field(form.preferences.showToInstitutions) }}
@@ -355,7 +361,9 @@
                         {{ formmacros.simplefield( "Current time in user's time zone:", "now"|date('Y-m-d H:i:s', entity.preferences.timezone), "", "disabled" ) }}
                     {% endif %}
 
-                    {{ formmacros.field(form.preferences.lifeForm) }}
+                    {% if form.preferences.lifeForm is defined %}
+                        {{ formmacros.field(form.preferences.lifeForm) }}
+                    {% endif %}
 
                 </div>
             </div>
@@ -952,7 +960,7 @@
                                         <div class="user-personalinfo-holder">
 
                                             {{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}
-                                            {{ formmacros.field(form.credentials.sex) }}
+                                            {{ formmacros.field_notempty(form.credentials.sex,cycle) }}
                                             {{ formmacros.field_notempty(form.credentials.ssn,cycle) }}
                                             {{ formmacros.field(form.credentials.emergencyContactInfo) }}
                                             {% if form.credentials.hobby is defined %}
@@ -1364,7 +1372,9 @@
         {% endif %}
 
         {#userWrappers#}
-        {{ usermacros.userWrapperAjax( entity.getId, employees_sitename, cycle ) }}
+        {% if not hasRoleSimpleView %}
+            {{ usermacros.userWrapperAjax( entity.getId, employees_sitename, cycle ) }}
+        {% endif %}
 
         {#Audit Log#}
         {% if userEditor == true and cycle == "show_user" %}

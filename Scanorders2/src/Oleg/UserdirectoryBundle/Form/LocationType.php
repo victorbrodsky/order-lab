@@ -36,6 +36,7 @@ class LocationType extends AbstractType
 
     protected $params;
     protected $entity;
+    protected $hasRoleSimpleView;
 
     public function __construct( $params=null, $entity = null )
     {
@@ -48,6 +49,11 @@ class LocationType extends AbstractType
 
         if( !array_key_exists('complexLocation', $this->params) ) {
             $this->params['complexLocation'] = true;
+        }
+
+        $this->hasRoleSimpleView = false;
+        if( array_key_exists('sc', $this->params) ) {
+            $this->hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
         }
 
     }
@@ -104,10 +110,12 @@ class LocationType extends AbstractType
             'classtype' => 'floor'
         ));
 
-        $builder->add('floorSide', null, array(
-            'label' => "Floor Side:",
-            'attr' => array('class' => 'form-control user-location-floorside-field')
-        ));
+        if( !$this->hasRoleSimpleView ) {
+            $builder->add('floorSide', null, array(
+                'label' => "Floor Side:",
+                'attr' => array('class' => 'form-control user-location-floorside-field')
+            ));
+        }
 
         $builder->add('comment', 'textarea', array(
             'max_length'=>5000,

@@ -85,5 +85,18 @@
     </p>
 {% endmacro %}
 
+{% macro compositeTreeNode_notempty( node, cycle, prototype ) %}
+    {% import _self as treemacros %}
 
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
 
+    {% if node.vars.value or not showFlag %}
+        {{ treemacros.compositeTreeNode(node,cycle,prototype) }}
+    {% else %}
+        {% do node.setRendered %}
+    {% endif %}
+{% endmacro %}
