@@ -119,7 +119,12 @@ class CallLogLoggerController extends LoggerController
 
         $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
         if( !$objectType ) {
-            throw $this->createNotFoundException('EventObjectTypeList is not found by name ' . "Message");
+            //throw $this->createNotFoundException('EventObjectTypeList is not found by name ' . "Message");
+        }
+        if( $objectType ) {
+            $objectTypeId = $objectType->getId();
+        } else {
+            $objectTypeId = null;
         }
 
         ///////////// make sure eventTypes and users are set /////////////
@@ -156,7 +161,7 @@ class CallLogLoggerController extends LoggerController
             return $this->redirect($this->generateUrl('calllog_my_generation_log',
                 array(
                     'filter[eventType][]' => $eventType->getId(),
-                    'filter[objectType][]' => $objectType->getId(),
+                    'filter[objectType][]' => $objectTypeId,
                     'filter[user][]' => $user->getId(),
                 )
             ));
