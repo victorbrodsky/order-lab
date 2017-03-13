@@ -647,8 +647,9 @@ class VacReqUtil
 
         $subjectUser = $entity->getUser();
 
-        //get userCarryOver
+        //get userCarryOver. TODO: This does not distinguish between approved, rejected or pending requests.
         $userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+        //echo "found userCarryOverID=".$userCarryOver->getId()."<br>";
 
         if( !$userCarryOver ) {
             $userCarryOver = new VacReqUserCarryOver($subjectUser);
@@ -659,6 +660,7 @@ class VacReqUtil
 
         $carryOver = null;
         foreach( $userCarryOver->getCarryOvers() as $carryOverThis ) {
+            //echo "carryOverThis ID=".$carryOverThis->getId().": year=".$carryOverYear." ?= ".$carryOverThis->getYear()."<br>";
             if( $carryOverThis->getYear() == $carryOverYear ) {
                 $carryOver = $carryOverThis;
                 break;
@@ -678,6 +680,7 @@ class VacReqUtil
             $carryOverDays = $carryOver->getDays();
         }
 
+        //echo "carryOverDays=".$carryOverDays."<br>";
         $res = array('userCarryOver'=>$userCarryOver);
 
         if( $carryOverDays ) {
