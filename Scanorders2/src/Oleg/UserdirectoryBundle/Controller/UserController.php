@@ -2439,22 +2439,23 @@ class UserController extends Controller
                 false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
             ) {
                 $currentInsts = $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope();
+                echo "compare:".count($currentInsts)." != ".count($originalInsts)."<br>";
                 if( count($currentInsts) != count($originalInsts) ) {
                     $this->setSessionForbiddenNote("Change Institutions");
-                    throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions");
+                    throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change institutions: original count=".count($originalInsts)."; new count=".count($currentInsts));
                     //return $this->redirect( $this->generateUrl('logout') );
                 }
                 foreach( $currentInsts as $inst ) {
                     if( !$originalInsts->contains($inst) ) {
                         $this->setSessionForbiddenNote("Change Institutions");
-                        throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions");
+                        throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions: removed=".$inst);
                         //return $this->redirect( $this->generateUrl('logout') );
                     }
                 }
             }
 
 
-            //exit('before processing');
+            exit('Testing: before processing');
 
             //set parents for institution tree for Administrative and Academical Titles
             //$this->setCompositeTreeNode($entity);
