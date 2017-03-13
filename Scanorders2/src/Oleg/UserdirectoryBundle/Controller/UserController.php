@@ -2176,12 +2176,16 @@ class UserController extends Controller
     public function updateUser(Request $request, $id, $sitename)
     {
         $em = $this->getDoctrine()->getManager();
+        $logger = $this->container->get('logger');
+        $loggedUser = $this->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
+
+        $logger->notice($loggedUser.": trying to update user (ID=".$entity->getId().") ".$entity);
 
         //$this->addHookFields($entity);
 
@@ -2322,6 +2326,7 @@ class UserController extends Controller
         if( $entity->getPerSiteSettings() ) {
             foreach ($entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope() as $item) {
                 $originalInsts->add($item);
+                $logger->notice("Added to original inst=".$item);
             }
             foreach ($entity->getPerSiteSettings()->getScanOrdersServicesScope() as $item) {
                 $originalScanOrdersServicesScope->add($item);
@@ -2439,23 +2444,26 @@ class UserController extends Controller
                 false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
             ) {
                 $currentInsts = $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope();
-                echo "compare:".count($currentInsts)." != ".count($originalInsts)."<br>";
+                $logger->notice("compare: currentInsts=".count($currentInsts)." != originalInsts=".count($originalInsts));
                 if( count($currentInsts) != count($originalInsts) ) {
                     $this->setSessionForbiddenNote("Change Institutions");
                     throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change institutions: original count=".count($originalInsts)."; new count=".count($currentInsts));
                     //return $this->redirect( $this->generateUrl('logout') );
                 }
                 foreach( $currentInsts as $inst ) {
+                    $logger->notice("Check inst=".$inst);
                     if( !$originalInsts->contains($inst) ) {
                         $this->setSessionForbiddenNote("Change Institutions");
                         throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions: removed=".$inst);
                         //return $this->redirect( $this->generateUrl('logout') );
                     }
                 }
+            } else {
+                $logger->notice("Logged in user is admin => don't check for institution change");
             }
 
 
-            exit('Testing: before processing');
+            //exit('Testing: before processing');
 
             //set parents for institution tree for Administrative and Academical Titles
             //$this->setCompositeTreeNode($entity);
