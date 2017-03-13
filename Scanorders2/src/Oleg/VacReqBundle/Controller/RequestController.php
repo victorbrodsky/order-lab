@@ -493,8 +493,10 @@ class RequestController extends Controller
 
             //exit('form is valid');
             if( $routName == 'vacreq_review' ) { //review
+                ///////////////// review //////////////////////////
 
                 if( $entity->getRequestType() && $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                    ///////////////// carryover //////////////////////
 
                     $action = "Undefined Action";
                     $changedStatusCount = 0;
@@ -520,6 +522,7 @@ class RequestController extends Controller
                         $withRedirect = false;
                         $update=true;
                         $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update );
+                        //exit("action=".$action);
 
                         if( $action == 'vacreq-nopermission' ) {
                             return $this->redirectToRoute('vacreq-nopermission');
@@ -534,6 +537,7 @@ class RequestController extends Controller
                     }
 
                 } else {
+                    ///////////////// business/vacation request //////////////////////
                     //set final (global) status according to sub-requests status:
                     //only two possible actions: reject or approved
                     $entity->setFinalStatus(); //vacreq_review
@@ -558,7 +562,8 @@ class RequestController extends Controller
                     $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $overallStatus );
                 }
 
-            } else { //update
+            } else {
+                ///////////////// update //////////////////////////
 
                 $entity->setUpdateUser($user);
 
@@ -1266,9 +1271,10 @@ class RequestController extends Controller
         //include this request institution to the $tentativeInstitutions array
         $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions );
 
-//        foreach( $organizationalInstitutions as $inst ) {
-//            echo "organizationalInstitution=".$inst."<br>";
-//        }
+        //foreach( $tentativeInstitutions as $tentativeInstitution ) {
+        //    echo "tentativeInstitution=".$tentativeInstitution."<br>";
+        //}
+        //exit('1');
 
         if( count($organizationalInstitutions) == 0 ) {
             $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN","infos.lastName",true);

@@ -343,22 +343,27 @@ class VacReqRequestType extends AbstractType
 
         //tentativeInstitution
         if( $this->params['tentativeInstitutions'] && count($this->params['tentativeInstitutions']) > 0 ) {
+
+            //$readonlyTentativeInstitution = ($this->params['review'] ? true : false);
+
             $requiredTentInst = false;
             if (count($this->params['tentativeInstitutions']) == 1) {
                 //echo "set org inst <br>";
                 $requiredTentInst = true;
+            } else {
+                //$readonlyTentativeInstitution = false;
             }
             //$requiredTentInst = true;
             $builder->add('tentativeInstitution', 'choice', array(
                 'label' => "Tentative Approval:",
                 'required' => $requiredTentInst,
-                'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
+                'attr' => array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['tentativeInstitutions'],
                 'read_only' => ($this->params['review'] ? true : false)
             ));
             $builder->get('tentativeInstitution')
                 ->addModelTransformer(new CallbackTransformer(
-                    //original from DB to form: institutionObject to institutionId
+                        //original from DB to form: institutionObject to institutionId
                         function ($originalInstitution) {
                             //echo "originalInstitution=".$originalInstitution."<br>";
                             if (is_object($originalInstitution) && $originalInstitution->getId()) { //object
