@@ -407,14 +407,14 @@ class RequestController extends Controller
 //        }
 
         //can't edit or review if request is not pending
-        if( $entity->getStatus() != "pending" && $entity->getOverallStatus() != "pending" ) {
-            //Flash
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                'This request can not be modified because it is not pending anymore.'
-            );
-            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
-        }
+//        if( $entity->getStatus() != "pending" && $entity->getOverallStatus() != "pending" ) {
+//            //Flash
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                'This request can not be modified because it is not pending anymore.'
+//            );
+//            return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+//        }
 
 
         //check permission
@@ -545,6 +545,7 @@ class RequestController extends Controller
                     } else {
                         $entity->setApprover($user);
                     }
+                    //exit('vacreq: overallStatus='.$overallStatus."; status=".$entity->getDetailedStatus());
 
                     $entity->setExtraStatus(NULL);
                     $em->persist($entity);

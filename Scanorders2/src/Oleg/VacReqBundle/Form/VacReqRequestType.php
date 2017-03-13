@@ -73,7 +73,7 @@ class VacReqRequestType extends AbstractType
                 'disabled' => $tentativereadOnly,    //($this->params['roleAdmin'] ? false : true),
                 //'read_only' => $tentativereadOnly,
                 'choices' => array(
-                    //'pending' => 'Pending',
+                    'pending' => 'Pending',
                     'approved' => 'Approved',
                     'rejected' => 'Rejected'
                 ),
@@ -96,7 +96,7 @@ class VacReqRequestType extends AbstractType
                 'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
                 //'read_only' => $readOnly,
                 'choices' => array(
-                    //'pending' => 'Pending',
+                    'pending' => 'Pending',
                     'approved' => 'Approved',
                     'rejected' => 'Rejected'
                 ),

@@ -1026,6 +1026,7 @@ class VacReqRequest
     }
 
     public function setEntireStatus( $status ) {
+        //echo "setEntireStatus status=".$status."<br>";
         if( $this->hasBusinessRequest() ) {
             $this->getRequestBusiness()->setStatus($status);
         }
