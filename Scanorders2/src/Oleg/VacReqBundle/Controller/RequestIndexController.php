@@ -591,44 +591,73 @@ class RequestIndexController extends Controller
 
         if( $completed || $pending || $rejected || $approved ) {
             $requestStatusCriterionArr = array();
-            if ($completed) {
-                //$dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'");
-                //$filtered = true;
-                $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'";
+            if( $requestTypeAbbreviation == "business-vacation" ) {
+                if ($completed) {
+                    //$dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'");
+                    //$filtered = true;
+                    $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'";
+                }
+                if ($pending) {
+                    //$dql->andWhere("requestBusiness.status='pending' OR requestVacation.status='pending'");
+                    //$filtered = true;
+                    $requestStatusCriterionArr[] = "requestBusiness.status='pending' OR requestVacation.status='pending'";
+                }
+                if ($rejected) {
+                    //$dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected'");
+                    //$filtered = true;
+                    $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected'";
+                }
+                if ($approved) {
+                    //$dql->andWhere("requestBusiness.status='approved' OR requestVacation.status='approved'");
+                    //$filtered = true;
+                    $requestStatusCriterionArr[] = "requestBusiness.status='approved' OR requestVacation.status='approved'";
+                }
+                if ($cancellationRequest) {
+                    $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Requested'";
+                }
+                if ($cancellationRequestApproved) {
+                    $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Approved (Canceled)'";
+                }
+                if ($cancellationRequestRejected) {
+                    $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Denied (Approved)'";
+                }
             }
-            if ($pending) {
-                //$dql->andWhere("requestBusiness.status='pending' OR requestVacation.status='pending'");
-                //$filtered = true;
-                $requestStatusCriterionArr[] = "requestBusiness.status='pending' OR requestVacation.status='pending'";
-            }
-            if ($rejected) {
-                //$dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected'");
-                //$filtered = true;
-                $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected'";
-            }
-            if ($approved) {
-                //$dql->andWhere("requestBusiness.status='approved' OR requestVacation.status='approved'");
-                //$filtered = true;
-                $requestStatusCriterionArr[] = "requestBusiness.status='approved' OR requestVacation.status='approved'";
+            if( $requestTypeAbbreviation == "carryover" ) {
+                if ($completed) {
+                    $requestStatusCriterionArr[] = "request.status='rejected' OR request.status='approved'";
+                }
+                if ($pending) {
+                    $requestStatusCriterionArr[] = "request.status='pending'";
+                }
+                if ($rejected) {
+                    $requestStatusCriterionArr[] = "request.status='rejected'";
+                }
+                if ($approved) {
+                    $requestStatusCriterionArr[] = "request.status='approved'";
+                }
+                if ($cancellationRequestApproved) {
+                    $requestStatusCriterionArr[] = "request.status='canceled'";
+                }
             }
             $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
             $filtered = true;
         }
 
-        if( $cancellationRequest || $cancellationRequestApproved || $cancellationRequestRejected ) {
-            $requestStatusCriterionArr = array();
-            if ($cancellationRequest) {
-                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Requested'";
-            }
-            if ($cancellationRequestApproved) {
-                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Approved (Canceled)'";
-            }
-            if ($cancellationRequestRejected) {
-                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Denied (Approved)'";
-            }
-            $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
-            $filtered = true;
-        }
+//        if( $cancellationRequest || $cancellationRequestApproved || $cancellationRequestRejected ) {
+//            $requestStatusCriterionArr = array();
+//            if ($cancellationRequest) {
+//                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Requested'";
+//            }
+//            if ($cancellationRequestApproved) {
+//                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Approved (Canceled)'";
+//            }
+//            if ($cancellationRequestRejected) {
+//                $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Denied (Approved)'";
+//            }
+//
+//            $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
+//            $filtered = true;
+//        }
 
         $filterRes['form'] = $filterform;
         $filterRes['dqlParameters'] = $dqlParameters;
