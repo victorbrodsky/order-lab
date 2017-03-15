@@ -166,6 +166,8 @@ class UserGenerator {
             }
             exit('###');
 
+            //TODO: create template processing of the main user's fields
+
             $email = $this->getValueByHeaderName('E-mail Address', $rowData, $headers);
             $user->setEmail($email);
             $user->setEmailCanonical($email);
