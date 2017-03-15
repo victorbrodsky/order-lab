@@ -17,6 +17,8 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -35,44 +37,7 @@ class StateLicenseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'state', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:States',
-            //'property' => 'name',
-            'label'=>'State:',
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-        ));
-
-        //country
-        $preferredCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
-        $builder->add( 'country', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Countries',
-            'property' => 'name',
-            'label'=>'Country:',
-            'required'=> false,
-            'multiple' => false,
-            'preferred_choices' => $preferredCountries,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-        ));
+        $this->processStateCountry($builder);
 
         $builder->add('licenseNumber', null, array(
             'label' => 'License Number:',
@@ -129,4 +94,81 @@ class StateLicenseType extends AbstractType
     {
         return 'oleg_userdirectorybundle_statelicense';
     }
+
+
+    public function processStateCountry( $builder ) {
+
+        //In your defaulting mechanism for "Add New Employee" page, in the Medical License section, set the defaults
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $stateLicense = $event->getData();
+            $form = $event->getForm();
+
+            $createCycle = false;
+            if (strpos($this->params['cycle'], 'create') !== false) {
+                $createCycle = true;
+            }
+
+            //state
+            $stateParams = array(
+                'class' => 'OlegUserdirectoryBundle:States',
+                //'property' => 'name',
+                'label'=>'State:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            );
+
+            if( $stateLicense && !$stateLicense->getState() ) {
+                if( $createCycle ) {
+                    $stateParams['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
+                }
+            }
+
+            $form->add('state','entity',$stateParams);
+
+            //country
+            //$preferredCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+            $defaultCountry = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
+            $preferredCountries = array($defaultCountry);
+
+            $countryParams = array(
+                'class' => 'OlegUserdirectoryBundle:Countries',
+                'property' => 'name',
+                'label'=>'Country:',
+                'required'=> false,
+                'multiple' => false,
+                'preferred_choices' => $preferredCountries,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            );
+
+            if( $stateLicense && !$stateLicense->getCountry() ) {
+                if( $createCycle ) {
+                    $countryParams['data'] = $defaultCountry;
+                }
+            }
+
+            $form->add('country','entity',$countryParams);
+
+        });
+
+    }
+
 }

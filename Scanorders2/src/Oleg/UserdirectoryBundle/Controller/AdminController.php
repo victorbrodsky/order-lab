@@ -529,11 +529,6 @@ class AdminController extends Controller
 
         $count_reslabs = $this->generateResLabs();
 
-        //TODO: rewrite using DB not Aperio's SOAP
-        $userGenerator = $this->container->get('user_generator');
-        //$count_users = $userGenerator->generateUsersExcel();
-        //$count_users = 0;
-
         $count_testusers = $this->generateTestUsers();
 
         $count_boardSpecialties = $this->generateBoardSpecialties();

@@ -3168,11 +3168,13 @@ class UserController extends Controller
         }
 
 
-        //$userutil = new UserUtil();
-        //$usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
-
         $userGenerator = $this->container->get('user_generator');
-        $count_users = $userGenerator->generateUsersExcel();
+
+        //list v1
+        $count_users = $userGenerator->generateUsersExcelV1();
+
+        //list v2 provided by Jessica
+        $count_users = $userGenerator->generateUsersExcelV2();
 
         if( $count_users > 0 ) {
             $msg = 'Imported ' . $count_users . ' new users from Excel.';
