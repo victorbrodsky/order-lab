@@ -64,10 +64,11 @@ class UserGenerator {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
-        $inputFileName = __DIR__ . '/../Util/UsersFullNew.xlsx';
+        $inputFileName = __DIR__ . '/../../../../../importLists/FacultyDatabase.xlsx';
+        //$inputFileName = __DIR__ . '/../../../../../importLists/UsersFull.xlsx';
 
         if (file_exists($inputFileName)) {
-            //echo "The file $inputFileName exists";
+            echo "The file $inputFileName exists";
         } else {
             echo "The file $inputFileName does not exist";
             return -1;
@@ -81,13 +82,8 @@ class UserGenerator {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
-        //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-        //var_dump($sheetData);
-
-        $assistantsArr = array();
 
         $count = 0;
-        //$serviceCount = 0;
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
@@ -110,7 +106,7 @@ class UserGenerator {
             TRUE,
             FALSE);
 
-
+        echo 'Start Foreach highestRow='.$highestRow."; highestColumn=".$highestColumn."<br>";
 
         //for each user in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
@@ -127,7 +123,11 @@ class UserGenerator {
 //            echo "<br>";
 
 
-            $cwid = $this->getValueByHeaderName('CWID', $rowData, $headers);
+            $email = $this->getValueByHeaderName('Email', $rowData, $headers);
+            //echo "email=".$email."<br>";
+
+            $emailArr = explode("@",$email);
+            $cwid = $emailArr[0];
             //echo "cwid=".$cwid."<br>";
 
             if( !$cwid ) {
@@ -144,17 +144,12 @@ class UserGenerator {
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
-
-                //Assistants : s2id_oleg_userdirectorybundle_user_locations_0_assistant
-                $assistants = $this->getValueByHeaderName('Assistants', $rowData, $headers);
-                if( $assistants ) {
-                    $assistantsArr[$user->getId()] = $assistants;
-                }
-
                 continue; //ignore existing users to prevent overwrite
             }
 
             if( !$user ) {
+                echo "Create a new user with CWID=".$cwid."<br>";
+                continue;
                 //create excel user
                 $user = new User();
                 $user->setKeytype($userkeytype);
@@ -166,6 +161,7 @@ class UserGenerator {
                 //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
                 $user->setUsernameCanonical($usernameUnique);
             }
+            exit('###');
 
             $email = $this->getValueByHeaderName('E-mail Address', $rowData, $headers);
             $user->setEmail($email);
@@ -808,7 +804,7 @@ class UserGenerator {
         } //if
 
 
-        //exit();
+        exit('exit import users V2');
         return $count;
     }
 

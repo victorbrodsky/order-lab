@@ -3171,7 +3171,7 @@ class UserController extends Controller
         $userGenerator = $this->container->get('user_generator');
 
         //list v1
-        $count_users = $userGenerator->generateUsersExcelV1();
+        //$count_users = $userGenerator->generateUsersExcelV1();
 
         //list v2 provided by Jessica
         $count_users = $userGenerator->generateUsersExcelV2();
