@@ -140,7 +140,10 @@ class UserGenerator {
             //print_r($services);
 
             //username: oli2002_@_wcmc-cwid
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
+            $fillUsername = $username."_@_". $this->usernamePrefix;
+            //echo "fillUsername=".$fillUsername."<br>";
+
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($fillUsername);
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
@@ -148,7 +151,7 @@ class UserGenerator {
             }
 
             if( !$user ) {
-                echo "Create a new user with CWID=".$cwid."<br>";
+                echo "Create a new user with CWID=".$cwid."; username=[".$fillUsername."]<br>";
                 continue;
                 //create excel user
                 $user = new User();
