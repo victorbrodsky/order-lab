@@ -316,17 +316,19 @@ class UserType extends AbstractType
                 'multiple' => true,
             ));
 
-            //permissions: show list of
-            $builder->add('permissions', 'collection', array(
-                'type' => new PermissionType($this->params),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__permissions__',
-            ));
+            if( !$this->hasRoleSimpleView ) {
+                //permissions: show list of
+                $builder->add('permissions', 'collection', array(
+                    'type' => new PermissionType($this->params),
+                    'label' => false,
+                    'required' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
+                    'prototype' => true,
+                    'prototype_name' => '__permissions__',
+                ));
+            }
         }
 
 
@@ -350,11 +352,13 @@ class UserType extends AbstractType
     }
 
     public function addPerSiteSettings($builder) {
-        $builder->add('perSiteSettings', new PerSiteSettingsType(null, $this->roleAdmin, $this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
-            'label' => false,
-            'required' => false,
-        ));
+        if( !$this->hasRoleSimpleView ) {
+            $builder->add('perSiteSettings', new PerSiteSettingsType(null, $this->roleAdmin, $this->params), array(
+                'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
+                'label' => false,
+                'required' => false,
+            ));
+        }
     }
 
     public function titlesSections($builder) {
@@ -467,58 +471,56 @@ if(1){
             'prototype_name' => '__researchlabs__',
         ));
 }
-if(1){ 
-        //it takes 7 seconds to load
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
-        $builder->add('grants', 'collection', array(
-            'type' => new GrantType($params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__grants__',
-        ));
-}
+        if( !$this->hasRoleSimpleView ) {
+            //it takes 7 seconds to load
+            $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
+            $builder->add('grants', 'collection', array(
+                'type' => new GrantType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__grants__',
+            ));
 
-if(1){        
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-        $builder->add('publications', 'collection', array(
-            'type' => new PublicationType($params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__publications__',
-        ));
+            $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+            $builder->add('publications', 'collection', array(
+                'type' => new PublicationType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__publications__',
+            ));
 
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-        $builder->add('books', 'collection', array(
-            'type' => new BookType($params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__books__',
-        ));
+            $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+            $builder->add('books', 'collection', array(
+                'type' => new BookType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__books__',
+            ));
 
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-        $builder->add('lectures', 'collection', array(
-            'type' => new LectureType($params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__lectures__',
-        ));
-}
+            $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+            $builder->add('lectures', 'collection', array(
+                'type' => new LectureType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__lectures__',
+            ));
+        }
 
         return $builder;
     }
