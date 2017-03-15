@@ -1598,6 +1598,7 @@ class UserGenerator {
 
         if( array_key_exists($key, $row[0]) ) {
             $res = $row[0][$key];
+            $res = trim($res);
         }
 
         //echo "res=".$res."<br>";
