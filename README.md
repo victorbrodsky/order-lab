@@ -135,9 +135,13 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 		* icutu49.dll
 		* icuuc49.dll
 
+	i) Set a system timezone:
+		date.timezone = 'America/New_York'	
 
 3. Modify Apache's httpd.conf as specified in the [Symfony web server configuration](http://symfony.com/doc/current/setup/web_server_configuration.html):
 
+	a) Set alias to the www folder:
+	
 	<VirtualHost *:80>
 		<Directory "C:\path-to-lab-order\Scanorders2\web\"
 			Options +FollowSymLinks -Includes
@@ -151,9 +155,22 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 		CustomLog ${APACHE_LOG_DIR}/access.log combined
 	</VirtualHost>
 
+	Note: Different Apache-PHP-MySQL stacks have different way to set alias to the www folder. 
+	For example, AMPPS does not require to change httpd.conf file; instead the alias to the www folder can be set in the "Alias Manager" from the AMPPS management panel. 
+		
+	b) Restart apache server and make sure apache and php are running without errors in the log file.	
+	
 4. [Download](https://getcomposer.org/download/) and [install](https://getcomposer.org/doc/00-intro.md) Composer. Make sure the ...\WebServer\PHP path and the composer's path are added to the system path.
 
-5. Edit Symfony's app/config/parameters.yml to set the desired values:
+5. Create the application's database and the associated database user:
+
+	a) create a database user name specified in the database_user line of parameters.yml file with "super user" permissions.
+
+	b) create a database with name specified in the database_name line of parameters.yml file
+
+	c) assign the user created in step a) to the Database created in step b) (symfony2->properties->User Mapping-> map ScanOrder with db_owner)
+
+6. Edit Symfony's app/config/parameters.yml to set the defined Database configuration values in the previous step 5:
 
     	database_driver: pdo_sqlsrv
     	database_host: 127.0.0.1
@@ -167,14 +184,6 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
     	mailer_password: null
     	locale: en   
     	delivery_strategy: realtime
-
-6. Create the application's database and the associated database user:
-
-	a) create a database user name specified in the database_user line of parameters.yml file with "super user" permissions.
-
-	b) create a database with name specified in the database_name line of parameters.yml file
-
-	c) assign the user created in step a) to the Database created in step b) (symfony2->properties->User Mapping-> map ScanOrder with db_owner)
 	
 7. Update symfony vendors by running these console commands in path-to-lab-order/Scanorders2 folder:
 
