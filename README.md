@@ -79,7 +79,14 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 ## Installation Instructions for Windows
 
-1. Install an Apache-PHP-MySQL stack of your choice (preferably with PHP version 5.6), such as those listed below. MS SQL Server has been tested as well.
+1. 
+
+	a) [Install](https://git-scm.com/) GIT version control.
+	
+	c) Clone order-lab source code from the remote repository to the server
+	   git clone https://github.com/remote-repository/project.git
+
+	b) Install an Apache-PHP-MySQL stack of your choice (preferably with PHP version 5.6), such as those listed below. MS SQL Server has been tested as well.
 
 	* [AMPPS](http://www.ampps.com/)
 	* [WAMP](http://www.wampserver.com/en/)
@@ -124,6 +131,8 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	g) For PHP version 5.4 [download OPCache](http://windows.php.net/downloads/pecl/releases/opcache/7.0.3/php_opcache-7.0.3-5.4-ts-vc9-x86.zip) and [enable it](http://stackoverflow.com/questions/24155516/how-to-install-zend-opcache-extension-php-5-4-on-windows); for PHP version 5.6 just [enable OPCache](http://php.net/manual/en/opcache.setup.php).
 
 		zend_extension="PATH-TO-WEB-SERVER\WebServer\PHP\Ext\php_opcache.dll"
+		
+		Note: this step is required if opcache is not running. Php configuration can be verified on the /order/info.php page after step 3.
 
 	h) Make sure that Apache can find and load icu*.dll files from the PHP base folder. One possible solution is to copy these files to Apache's "bin" folder:
 
@@ -140,7 +149,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 3. Modify Apache's httpd.conf as specified in the [Symfony web server configuration](http://symfony.com/doc/current/setup/web_server_configuration.html):
 
-	a) Set alias to the www folder:
+	a) Set alias to the order-lab www folder:
 	
 	```
 	<VirtualHost *:80>
