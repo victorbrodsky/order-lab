@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>PHP</ID>
+  <OriginalElement>\Oleg\OrderformBundle\Entity\Message</OriginalElement>
+  <nodes>
+    <node x="445.20125592917657" y="1823.6908762698522">\Oleg\OrderformBundle\Entity\Research</node>
+    <node x="1041.8948975476728" y="2410.6561941889267">\Oleg\OrderformBundle\Entity\Report</node>
+    <node x="-406.8796689263146" y="2375.5694889866145">\Oleg\OrderformBundle\Entity\LabOrder</node>
+    <node x="908.9958471760799" y="576.3787375415283">\Oleg\UserdirectoryBundle\Entity\BaseCompositeNode</node>
+    <node x="-634.7987440708234" y="1823.6908762698522">\Oleg\OrderformBundle\Entity\DataQualityMrnAcc</node>
+    <node x="-56.379668926314594" y="2140.5694889866145">\Oleg\OrderformBundle\Entity\OrderBase</node>
+    <node x="710.1203310736853" y="2360.5694889866145">\Oleg\OrderformBundle\Entity\ScanOrder</node>
+    <node x="412.1203310736853" y="2375.5694889866145">\Oleg\OrderformBundle\Entity\BlockOrder</node>
+    <node x="1250.0336258713721" y="2399.401858928811">\Oleg\OrderformBundle\Entity\ReportBlock</node>
+    <node x="182.1203310736854" y="2375.5694889866145">\Oleg\OrderformBundle\Entity\ImageAnalysisOrder</node>
+    <node x="1577.9958471760797" y="621.3787375415283">\Oleg\OrderformBundle\Entity\AmendmentReasonList</node>
+    <node x="1084.6029900332226" y="-113.62126245847173">\Oleg\UserdirectoryBundle\Entity\ListAbstract</node>
+    <node x="-203.8796689263146" y="2375.5694889866145">\Oleg\OrderformBundle\Entity\ProcedureOrder</node>
+    <node x="754.2012559291766" y="1823.6908762698522">\Oleg\OrderformBundle\Entity\FormVersion</node>
+    <node x="-646.8796689263146" y="2360.5694889866145">\Oleg\OrderformBundle\Entity\CalllogEntryMessage</node>
+    <node x="1145.99584717608" y="621.3787375415283">\Oleg\OrderformBundle\Entity\MessageStatusList</node>
+    <node x="1580.2012559291766" y="1823.6908762698522">\Oleg\UserdirectoryBundle\Entity\AttachmentContainer</node>
+    <node x="-0.8796689263145936" y="2390.5694889866145">\Oleg\OrderformBundle\Entity\StainOrder</node>
+    <node x="737.1029900332228" y="891.3787375415283">\Oleg\OrderformBundle\Entity\MessageCategory</node>
+    <node x="1358.99584717608" y="606.3787375415283">\Oleg\UserdirectoryBundle\Entity\Equipment</node>
+    <node x="738.6116605534535" y="1270.4827837843031">\Oleg\OrderformBundle\Entity\ExternalId</node>
+    <node x="-630.8970099667772" y="-113.62126245847173">\Oleg\OrderformBundle\Entity\Message</node>
+    <node x="1029.2012559291766" y="1823.6908762698522">\Oleg\UserdirectoryBundle\Entity\ModifierInfo</node>
+    <node x="1003.1029900332226" y="816.3787375415283">\Oleg\UserdirectoryBundle\Entity\Institution</node>
+    <node x="-229.79874407082343" y="1823.6908762698522">\Oleg\OrderformBundle\Entity\Educational</node>
+    <node x="122.20125592917657" y="1823.6908762698522">\Oleg\OrderformBundle\Entity\SlideReturnRequest</node>
+    <node x="1017.7157067962278" y="2113.257350258291">\Oleg\OrderformBundle\Entity\ReportBase</node>
+    <node x="1325.2012559291766" y="1823.6908762698522">\Oleg\OrderformBundle\Entity\Endpoint</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="\Oleg\OrderformBundle\Entity\ScanOrder" target="\Oleg\OrderformBundle\Entity\OrderBase">
+      <point x="0.0" y="-65.0" />
+      <point x="811.6203310736853" y="2320.5694889866145" />
+      <point x="198.04890250225674" y="2320.5694889866145" />
+      <point x="117.42857142857133" y="80.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\CalllogEntryMessage" target="\Oleg\OrderformBundle\Entity\OrderBase">
+      <point x="0.0" y="-65.0" />
+      <point x="-536.8796689263146" y="2320.5694889866145" />
+      <point x="-36.80824035488615" y="2320.5694889866145" />
+      <point x="-117.42857142857156" y="80.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\LabOrder" target="\Oleg\OrderformBundle\Entity\OrderBase">
+      <point x="0.0" y="-50.0" />
+      <point x="-315.3796689263146" y="2330.5694889866145" />
+      <point x="2.3346167879711857" y="2330.5694889866145" />
+      <point x="-78.28571428571422" y="80.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\Report" target="\Oleg\OrderformBundle\Entity\ReportBase">
+      <point x="0.0" y="-35.0" />
+      <point x="0.0" y="125.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\BlockOrder" target="\Oleg\OrderformBundle\Entity\OrderBase">
+      <point x="0.0" y="-50.0" />
+      <point x="551.1203310736853" y="2330.5694889866145" />
+      <point x="158.90604535939963" y="2330.5694889866145" />
+      <point x="78.28571428571422" y="80.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\ProcedureOrder" target="\Oleg\OrderformBundle\Entity\OrderBase">
+      <point x="0.0" y="-50.0" />
+      <point x="-112.3796689263146" y="2340.5694889866145" />
+      <point x="41.477473930828296" y="2340.5694889866145" />
+      <point x="-39.14285714285711" y="80.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\StainOrder" target="\Oleg\OrderformBundle\Entity\OrderBase">
+      <point x="0.0" y="-35.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\ReportBlock" target="\Oleg\OrderformBundle\Entity\ReportBase">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\AmendmentReasonList" target="\Oleg\UserdirectoryBundle\Entity\ListAbstract">
+      <point x="0.0" y="-50.0" />
+      <point x="1691.9958471760797" y="551.3787375415283" />
+      <point x="1550.9779900332228" y="551.3787375415283" />
+      <point x="199.87500000000023" y="320.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\ImageAnalysisOrder" target="\Oleg\OrderformBundle\Entity\OrderBase">
+      <point x="0.0" y="-50.0" />
+      <point x="287.1203310736854" y="2340.5694889866145" />
+      <point x="119.76318821654252" y="2340.5694889866145" />
+      <point x="39.14285714285711" y="80.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\MessageStatusList" target="\Oleg\UserdirectoryBundle\Entity\ListAbstract">
+      <point x="0.0" y="-50.0" />
+      <point x="1242.49584717608" y="551.3787375415283" />
+      <point x="1284.4779900332226" y="551.3787375415283" />
+      <point x="-66.625" y="320.0" />
+    </edge>
+    <edge source="\Oleg\UserdirectoryBundle\Entity\BaseCompositeNode" target="\Oleg\UserdirectoryBundle\Entity\ListAbstract">
+      <point x="0.0" y="-95.0" />
+      <point x="1017.4958471760799" y="551.3787375415283" />
+      <point x="1151.2279900332226" y="551.3787375415283" />
+      <point x="-199.875" y="320.0" />
+    </edge>
+    <edge source="\Oleg\UserdirectoryBundle\Entity\Institution" target="\Oleg\UserdirectoryBundle\Entity\BaseCompositeNode">
+      <point x="0.0" y="-185.0" />
+      <point x="1176.1029900332226" y="791.3787375415283" />
+      <point x="1071.74584717608" y="791.3787375415283" />
+      <point x="54.25" y="95.0" />
+    </edge>
+    <edge source="\Oleg\OrderformBundle\Entity\MessageCategory" target="\Oleg\UserdirectoryBundle\Entity\BaseCompositeNode">
+      <point x="0.0" y="-110.0" />
+      <point x="860.1029900332228" y="791.3787375415283" />
+      <point x="963.2458471760799" y="791.3787375415283" />
+      <point x="-54.25" y="95.0" />
+    </edge>
+    <edge source="\Oleg\UserdirectoryBundle\Entity\Equipment" target="\Oleg\UserdirectoryBundle\Entity\ListAbstract">
+      <point x="0.0" y="-65.0" />
+      <point x="1458.4958471760797" y="551.3787375415283" />
+      <point x="1417.7279900332228" y="551.3787375415283" />
+      <point x="66.62500000000023" y="320.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6688888888888891" x="1058.2691029900327" y="1164.6544850498335" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
