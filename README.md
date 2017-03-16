@@ -83,10 +83,10 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	a) [Install](https://git-scm.com/) GIT version control.
 	
-	c) Clone order-lab source code from the remote repository to the server
+	b) Clone order-lab source code from the remote repository to the server
 	   git clone https://github.com/remote-repository/project.git
 
-	b) Install an Apache-PHP-MySQL stack of your choice (preferably with PHP version 5.6), such as those listed below. MS SQL Server has been tested as well.
+	c) Install an Apache-PHP-MySQL stack of your choice (preferably with PHP version 5.6), such as those listed below. MS SQL Server has been tested as well.
 
 	* [AMPPS](http://www.ampps.com/)
 	* [WAMP](http://www.wampserver.com/en/)
