@@ -198,7 +198,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	
 7. Update symfony vendors by running these console commands in path-to-lab-order/Scanorders2 folder:
 
-		composer.phar self-update
+		composer self-update
 
 	 	composer update
 
@@ -206,7 +206,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	
 	a) Run the deployment script to clean the cache and install assets in path-to-lab-order/Scanorders2 folder: 
 	
-	 	deploy
+	 	deploy_prod
 	
 	b) Create the Administrator account with password 1234567890 by opening the following URL in your browser (specify the server's IP or domain name):
 
@@ -220,7 +220,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	
 	d) Run the deployment script again:
 
-	 	deploy
+	 	deploy_prod
 
 9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
