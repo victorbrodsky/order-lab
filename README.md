@@ -79,7 +79,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 ## Installation Instructions for Windows
 
-1. 
+1. Install git, source code and apache server:
 
 	a) [Install](https://git-scm.com/) GIT version control.
 	
