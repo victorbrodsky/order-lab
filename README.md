@@ -142,6 +142,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	a) Set alias to the www folder:
 	
+	```
 	<VirtualHost *:80>
 		<Directory "C:\path-to-lab-order\Scanorders2\web\"
 			Options +FollowSymLinks -Includes
@@ -154,11 +155,12 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 		ErrorLog ${APACHE_LOG_DIR}/error.log
 		CustomLog ${APACHE_LOG_DIR}/access.log combined
 	</VirtualHost>
+	```
 
 	Note: Different Apache-PHP-MySQL stacks have different way to set alias to the www folder. 
 	For example, AMPPS does not require to change httpd.conf file; instead the alias to the www folder can be set in the "Alias Manager" from the AMPPS management panel. 
 		
-	b) Restart apache server and make sure apache and php are running without errors in the log file.	
+	b) Restart the apache server and make sure apache and php are running without errors in the log file.	
 	
 4. [Download](https://getcomposer.org/download/) and [install](https://getcomposer.org/doc/00-intro.md) Composer. Make sure the ...\WebServer\PHP path and the composer's path are added to the system path.
 
