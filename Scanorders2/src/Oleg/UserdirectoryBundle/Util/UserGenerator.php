@@ -60,6 +60,7 @@ class UserGenerator {
     }
 
 
+    //create template processing of the main user's fields
     public function generateUsersExcelV2() {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
@@ -138,13 +139,13 @@ class UserGenerator {
             $sectionNameContactInfoRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
             echo "sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
 
-            $userType = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionRange);
+            $userType = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionNameContactInfoRange);
             echo "userType=".$userType."<br>";
 
-            $cwid = $this->getValueBySectionHeaderName("Primary Public User ID",$rowData,$headers,$sectionRange);
-            echo "cwid=".$cwid."<br>";
+            $username = $this->getValueBySectionHeaderName("Primary Public User ID",$rowData,$headers,$sectionNameContactInfoRange);
+            echo "username(cwid)=".$username."<br>";
 
-            if( !$cwid ) {
+            if( !$username ) {
                 continue; //ignore users without cwid
             }
 
@@ -164,7 +165,7 @@ class UserGenerator {
             }
 
             //username: oli2002_@_wcmc-cwid
-            $fillUsername = $cwid."_@_". $usernamePrefix;
+            $fillUsername = $username."_@_". $usernamePrefix;
             //echo "fillUsername=".$fillUsername."<br>";
 
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($fillUsername);
@@ -177,87 +178,57 @@ class UserGenerator {
             //create user
             echo "create a new user ".$fillUsername."<br>";
 
+            //create a new user from excel
+            $user = new User();
+            $user->setKeytype($userkeytype);
+            $user->setPrimaryPublicUserId($username);
 
-            exit('1');
-
+            //set unique username
+            $usernameUnique = $user->createUniqueUsername();
+            $user->setUsername($usernameUnique);
+            //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
+            $user->setUsernameCanonical($usernameUnique);
 
             ////////////// Section: Name and Preferred Contact Info ////////////////
-            $sectionNameContactInfo = "Name and Preferred Contact Info";
-
-            $sectionRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
-            echo "sectionRange=".$sectionRange."<br>";
-            //exit('1');
-
-            $userType = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionRange);
-            echo "userType=".$userType."<br>";
-
-            $cwid = $this->getValueBySectionHeaderName("Primary Public User ID",$rowData,$headers,$sectionRange);
-            echo "cwid=".$cwid."<br>";
-            exit('1');
-            ////////////// EOF Section: Name and Preferred Contact Info ////////////////
-
-            $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers,$sectionRange);
-            //echo "email=".$email."<br>";
-
-            $emailArr = explode("@",$email);
-            $cwid = $emailArr[0];
-            //echo "cwid=".$cwid."<br>";
-
-            if( !$cwid ) {
-                continue; //ignore users without cwid
-            }
-
-            $username = $cwid;
-
-            //echo "<br>divisions=".$rowData[0][2]." == ";
-            //print_r($services);
-
-            //username: oli2002_@_wcmc-cwid
-            $fillUsername = $username."_@_". $this->usernamePrefix;
-            //echo "fillUsername=".$fillUsername."<br>";
-
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($fillUsername);
-            //echo "DB user=".$user."<br>";
-
-            if( $user ) {
-                continue; //ignore existing users to prevent overwrite
-            }
-
-            if( !$user ) {
-                echo "Create a new user with CWID=".$cwid."; username=[".$fillUsername."]<br>";
-                continue;
-                //create excel user
-                $user = new User();
-                $user->setKeytype($userkeytype);
-                $user->setPrimaryPublicUserId($username);
-
-                //set unique username
-                $usernameUnique = $user->createUniqueUsername();
-                $user->setUsername($usernameUnique);
-                //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
-                $user->setUsernameCanonical($usernameUnique);
-            }
-            exit('###');
-
-            //TODO: create template processing of the main user's fields
-
-            $email = $this->getValueByHeaderName('E-mail Address', $rowData, $headers);
+            $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers,$sectionNameContactInfoRange);
+            echo "email=".$email."<br>";
             $user->setEmail($email);
             $user->setEmailCanonical($email);
 
-            $lastName = $this->getValueByHeaderName('Last Name', $rowData, $headers);
-            $firstName = $this->getValueByHeaderName('First Name', $rowData, $headers);
+            $preferredName = $this->getValueBySectionHeaderName("Preferred Full Name for Display",$rowData,$headers,$sectionNameContactInfoRange);
+            $firstName = $this->getValueBySectionHeaderName("First Name",$rowData,$headers,$sectionNameContactInfoRange);
+            $middleName = $this->getValueBySectionHeaderName("Middle Name",$rowData,$headers,$sectionNameContactInfoRange);
+            $lastName = $this->getValueBySectionHeaderName("Last Name",$rowData,$headers,$sectionNameContactInfoRange);
+            $salutation = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers,$sectionNameContactInfoRange);
+            $suffix = $this->getValueBySectionHeaderName("Suffix",$rowData,$headers,$sectionNameContactInfoRange);
+            $prefferedPhone = $this->getValueBySectionHeaderName("Preferred Phone Number",$rowData,$headers,$sectionNameContactInfoRange);
+            $abbreviationName = $this->getValueBySectionHeaderName("Abbreviated name",$rowData,$headers,$sectionNameContactInfoRange);
+
+            $user->setDisplayName($preferredName);
             $user->setFirstName($firstName);
+            $user->setMiddleName($middleName);
             $user->setLastName($lastName);
-            $user->setDisplayName($firstName." ".$lastName);
-            $user->setSalutation($this->getValueByHeaderName('Salut.', $rowData, $headers));
-            $user->setMiddleName($this->getValueByHeaderName('Middle Name', $rowData, $headers));
+            $user->setSalutation($salutation);
+            $user->setSuffix($suffix);
+            $user->setPreferredPhone($prefferedPhone);
+            $user->setInitials($abbreviationName);
 
             $user->setPassword("");
             $user->setCreatedby('excel');
             $user->getPreferences()->setTimezone($default_time_zone);
 
             echo "new user=".$user."<br>";
+            ////////////// EOF Section: Name and Preferred Contact Info ////////////////
+
+            ////////////// Section: Global User Preferences ////////////////
+            $sectionGlobal = "Global User Preferences";
+            $sectionGlobalRange = $this->getMergedRangeBySectionName($sectionGlobal,$sections,$sheet);
+            echo "sectionGlobalRange=".$sectionGlobalRange."<br>";
+
+            ////////////// EOF Section: Global User Preferences ////////////////
+
+
+            exit('1');
 
             //Degree: TrainingDegreeList - Multi
             $degreeStr = $this->getValueByHeaderName('Degree', $rowData, $headers);
@@ -956,14 +927,12 @@ class UserGenerator {
 //            echo "<br>";
 
 
-            $cwid = $this->getValueByHeaderName('CWID', $rowData, $headers);
-            //echo "cwid=".$cwid."<br>";
+            $username = $this->getValueByHeaderName('CWID', $rowData, $headers);
+            //echo "username(cwid)=".$username."<br>";
 
-            if( !$cwid ) {
+            if( !$username ) {
                 continue; //ignore users without cwid
             }
-
-            $username = $cwid;
 
             //echo "<br>divisions=".$rowData[0][2]." == ";
             //print_r($services);
