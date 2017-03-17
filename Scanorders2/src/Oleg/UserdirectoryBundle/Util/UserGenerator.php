@@ -64,7 +64,7 @@ class UserGenerator {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
-        $inputFileName = __DIR__ . '/../../../../../importLists/FacultyDatabase.xlsx';
+        $inputFileName = __DIR__ . '/../../../../../importLists/ImportUsersTemplate.xlsx';
         //$inputFileName = __DIR__ . '/../../../../../importLists/UsersFull.xlsx';
 
         if (file_exists($inputFileName)) {
@@ -81,7 +81,6 @@ class UserGenerator {
         } catch( Exception $e ) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
-
 
         $count = 0;
 
@@ -101,7 +100,12 @@ class UserGenerator {
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
-        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+        $sections = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+        $headers = $sheet->rangeToArray('A' . 2 . ':' . $highestColumn . 2,
             NULL,
             TRUE,
             FALSE);
@@ -109,7 +113,7 @@ class UserGenerator {
         echo 'Start Foreach highestRow='.$highestRow."; highestColumn=".$highestColumn."<br>";
 
         //for each user in excel (start at row 2)
-        for( $row = 2; $row <= $highestRow; $row++ ) {
+        for( $row = 3; $row <= $highestRow; $row++ ) {
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -122,8 +126,77 @@ class UserGenerator {
 //            var_dump($rowData);
 //            echo "<br>";
 
+            //testing
+//            $sectionName = "Location 1";
+//            $sectionRange = $this->getMergedRangeBySectionName($sectionName,$sections,$sheet);
+//            echo "sectionRange=".$sectionRange."<br>";
+//            $fieldValue = $this->getValueBySectionHeaderName("Name",$rowData,$headers,$sectionRange);
+//            echo "fieldValue=".$fieldValue."<br>";
+//            exit('1');
 
-            $email = $this->getValueByHeaderName('Email', $rowData, $headers);
+            $sectionNameContactInfo = "Name and Preferred Contact Info";
+            $sectionNameContactInfoRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
+            echo "sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
+
+            $userType = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionRange);
+            echo "userType=".$userType."<br>";
+
+            $cwid = $this->getValueBySectionHeaderName("Primary Public User ID",$rowData,$headers,$sectionRange);
+            echo "cwid=".$cwid."<br>";
+
+            if( !$cwid ) {
+                continue; //ignore users without cwid
+            }
+
+            $usernamePrefix = null;
+            if( $userType == "WCMC CWID" ) {
+                $usernamePrefix = $this->usernamePrefix;
+            }
+            if( $userType == "Local User" ) {
+                $usernamePrefix = "local-user";
+            }
+            if( $userType == "Aperio eSlide Manager" ) {
+                $usernamePrefix = "aperio";
+            }
+
+            if( !$usernamePrefix ) {
+                exit("usernamePrefix is not define for ".$userType);
+            }
+
+            //username: oli2002_@_wcmc-cwid
+            $fillUsername = $cwid."_@_". $usernamePrefix;
+            //echo "fillUsername=".$fillUsername."<br>";
+
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($fillUsername);
+            //echo "DB user=".$user."<br>";
+
+            if( $user ) {
+                continue; //ignore existing users to prevent overwrite
+            }
+
+            //create user
+            echo "create a new user ".$fillUsername."<br>";
+
+
+            exit('1');
+
+
+            ////////////// Section: Name and Preferred Contact Info ////////////////
+            $sectionNameContactInfo = "Name and Preferred Contact Info";
+
+            $sectionRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
+            echo "sectionRange=".$sectionRange."<br>";
+            //exit('1');
+
+            $userType = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionRange);
+            echo "userType=".$userType."<br>";
+
+            $cwid = $this->getValueBySectionHeaderName("Primary Public User ID",$rowData,$headers,$sectionRange);
+            echo "cwid=".$cwid."<br>";
+            exit('1');
+            ////////////// EOF Section: Name and Preferred Contact Info ////////////////
+
+            $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers,$sectionRange);
             //echo "email=".$email."<br>";
 
             $emailArr = explode("@",$email);
@@ -1570,11 +1643,85 @@ class UserGenerator {
 
 
 
+    public function getMergedRangeBySectionName($sectionName,$sections,$sheet) {
+        $mergeRange = null;
+        if( !$sectionName ) {
+            return $mergeRange;
+        }
+
+        $sectionKey = array_search($sectionName, $sections[0]);
+        //echo "<br>sectionKey=".$sectionKey."<br>";
+
+        $cell = $sheet->getCellByColumnAndRow($sectionKey, 1);
+
+        //$val = $cell->getValue();
+        //echo "val=".$val."<br>";
+
+        $mergeRange = $this->getMergeRange($cell,$sheet);
+        //echo "mergeRange=".$mergeRange."<br>";
+
+        return $mergeRange;
+    }
+    public function getMergeRange($cell,$sheet)
+    {
+        foreach ($sheet->getMergeCells() as $mergeRange) {
+            if ($cell->isInRange($mergeRange)) {
+                return $mergeRange;
+            }
+        }
+        return false;
+    }
 
 
+    //$sectionName - "Name and Preferred Contact Info"
+    //$header - "Primary Public User ID"
+    public function getValueBySectionHeaderName( $header, $row, $headers, $range=null ) {
+        $res = null;
+        if( !$header ) {
+            return $res;
+        }
 
+        if( !$range ) {
+            return $this->getValueByHeaderName($header,$row,$headers);
+        }
 
+        $rangeColumnArr = $columnIndex = \PHPExcel_Cell::rangeBoundaries($range);
+        $startColumn = $rangeColumnArr[0][0]; //52
+        $endColumn = $rangeColumnArr[1][0];   //79
+        //echo "startColumn=".$startColumn."; endColumn=".$endColumn."<br>";
 
+        //echo "header=".$header."<br>";
+        //echo "<pre>";
+        //print_r($headers);
+        //echo "</pre>";
+        //print_r($row[0]);
+
+        //1) find section cell range
+        //$sectionKey = array_search($header, $headers[0]);
+        //echo "<br>sectionKey=".$sectionKey."<br>";
+        $sectionKey = 1;
+        foreach( $headers[0] as $thisHeader ) {
+            if( $header == $thisHeader ) {
+                //echo "sectionKey=".$sectionKey."<br>"; //52, 80
+                if( $sectionKey >= $startColumn && $sectionKey <= $endColumn ) {
+                    //echo "InRange: sectionKey=".$sectionKey."<br>";
+                    break;
+                }
+            }
+            $sectionKey++;
+        }
+
+        //shift sectionKey to start from zero
+        $sectionKey = $sectionKey - 1;
+        //echo "sectionKey=".$sectionKey."<br>";
+
+        if( array_key_exists($sectionKey, $row[0]) ) {
+            $res = $row[0][$sectionKey];
+            $res = trim($res);
+        }
+
+        return $res;
+    }
 
     public function getValueByHeaderName($header, $row, $headers) {
 
