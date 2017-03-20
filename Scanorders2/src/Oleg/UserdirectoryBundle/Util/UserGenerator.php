@@ -274,9 +274,9 @@ class UserGenerator {
             echo "jobDescriptionOfficial=".$jobDescriptionOfficial."<br>";
 
             //Institution
-            $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionEmploymentRange);
+            $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionEmploymentRange);
             echo "institutionStr=".$institutionStr."<br>"; //TODO: variable not defined???
-            exit('111');
+            //exit('111');
 
             $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionEmploymentRange);
             $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionEmploymentRange);
@@ -1275,7 +1275,7 @@ class UserGenerator {
             $res = $row[0][$sectionKey];
             $res = trim($res);
         }
-        //echo $header.": res=[".$res."]<br>";
+        echo $header.": res=[".$res."]<br>";
         return $res;
     }
 
