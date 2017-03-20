@@ -43,6 +43,7 @@ use Oleg\UserdirectoryBundle\Entity\ResearchLab;
 use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
 class UserGenerator {
@@ -189,6 +190,10 @@ class UserGenerator {
             //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
             $user->setUsernameCanonical($usernameUnique);
 
+            $user->setEnabled(true);
+            $user->setLocked(false);
+            $user->setExpired(false);
+
             ////////////// Section: Name and Preferred Contact Info ////////////////
             $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers,$sectionNameContactInfoRange);
             echo "email=".$email."<br>";
@@ -220,33 +225,89 @@ class UserGenerator {
             echo "new user=".$user."<br>";
             ////////////// EOF Section: Name and Preferred Contact Info ////////////////
 
+
+
             ////////////// Section: Global User Preferences ////////////////
             $sectionGlobal = "Global User Preferences";
             $sectionGlobalRange = $this->getMergedRangeBySectionName($sectionGlobal,$sections,$sheet);
             echo "sectionGlobalRange=".$sectionGlobalRange."<br>";
 
+            $roles = $this->getValueBySectionHeaderName("Role",$rowData,$headers,$sectionGlobalRange);
+            $timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
+            $language = $this->getValueBySectionHeaderName("Language",$rowData,$headers,$sectionGlobalRange);
+            $locale = $this->getValueBySectionHeaderName("Locale",$rowData,$headers,$sectionGlobalRange);
+
+            //Roles
+            $rolesObjects = $this->processMultipleListObjects($roles,$systemuser,"Roles");
+            $user->setRoles($rolesObjects);
+
+            $user->getPreferences()->setTimezone($timeZone);
+            $user->getPreferences()->addLanguage($language);
+            $user->getPreferences()->setLocale($locale);
             ////////////// EOF Section: Global User Preferences ////////////////
 
 
+
+            ////////////// Section: Employment Period ////////////////
+            $sectionEmployment = "Employment Period";
+            $sectionEmploymentRange = $this->getMergedRangeBySectionName($sectionEmployment,$sections,$sheet);
+            echo "sectionEmploymentRange=".$sectionEmploymentRange."<br>";
+
+            //user_employmentStatus_0_hireDate
+            $dateHire = $this->getValueBySectionHeaderName("Date of Hire (MM/DD/YYYY)",$rowData,$headers,$sectionEmploymentRange);
+            //$dateHire = date("m/d/Y", \PHPExcel_Shared_Date::ExcelToPHP($dateHire));
+            //echo "dateHire=".$dateHire."<br>";
+            $dateHire = \PHPExcel_Shared_Date::ExcelToPHP($dateHire);
+            //$dateHire = new \DateTime(@$dateHire);
+            //echo "dateHire=".$dateHire."<br>";
+            $dateHire = new \DateTime("@$dateHire");
+            echo "dateHire=".$dateHire->format('m/d/Y')."<br>";
+
+            //Employee Type
+            $employeeType = $this->getValueBySectionHeaderName("Employee Type",$rowData,$headers,$sectionEmploymentRange);
+            echo "employeeType=".$employeeType."<br>";
+            $employeeTypeObject = $this->getObjectByNameTransformerWithoutCreating("EmploymentType",$employeeType,$systemuser);
+
+            $jobDescription = $this->getValueBySectionHeaderName("Job Description Summary",$rowData,$headers,$sectionEmploymentRange);
+            $jobDescriptionOfficial = $this->getValueBySectionHeaderName("Job Description (official, as posted)",$rowData,$headers,$sectionEmploymentRange);
+            echo "jobDescriptionOfficial=".$jobDescriptionOfficial."<br>";
+
+            //Institution
+            $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionEmploymentRange);
+            echo "institutionStr=".$institutionStr."<br>";
+
+            $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionEmploymentRange);
+            $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionEmploymentRange);
+            $serviceStr = $this->getValueBySectionHeaderName("Service",$rowData,$headers,$sectionEmploymentRange);
+            echo "inst=".$institutionStr."; $departmentStr; $divisionStr; $serviceStr"."<br>";
+            $institutionObject = $this->getEntityByInstitutionDepartmentDivisionService($institutionStr,$departmentStr,$divisionStr,$serviceStr);
+            echo "institutionObject=".$institutionObject."<br>";
+
+            //End of Employment Date (MM/DD/YYYY)
+            $endHire = $this->getValueBySectionHeaderName("End of Employment Date (MM/DD/YYYY)",$rowData,$headers,$sectionEmploymentRange);
+            $endHire = \PHPExcel_Shared_Date::ExcelToPHP($endHire);
+            $endHire = new \DateTime("@$endHire");
+            echo "endHire=".$endHire->format('m/d/Y')."<br>";
+
+            //Type of End of Employment
+            $employeeEndType = $this->getValueBySectionHeaderName("Type of End of Employment",$rowData,$headers,$sectionEmploymentRange);
+            $employeeEndTypeObject = $this->getObjectByNameTransformerWithoutCreating("EmploymentTerminationType",$employeeEndType,$systemuser);
+
+            $employeeEndReason = $this->getValueBySectionHeaderName("Reason for End of Employment",$rowData,$headers,$sectionEmploymentRange);
+
+            if(
+                $dateHire || $employeeTypeObject || $jobDescription ||
+                $jobDescriptionOfficial || $institutionObject || $endHire || $employeeEndTypeObject || $employeeEndReason
+            ) {
+
+            }
+
+            ////////////// EOF Section: Employment Period ////////////////
+
             exit('1');
 
-            //Degree: TrainingDegreeList - Multi
-            $degreeStr = $this->getValueByHeaderName('Degree', $rowData, $headers);
-            if( $degreeStr ) {
 
-                $degreeArr = explode(";",$degreeStr);
-                foreach( $degreeArr as $degree ) {
-                    $degree = trim($degree);
-                    if( $degree ) {
-                        $training = new Training($systemuser);
-                        $training->setStatus($training::STATUS_VERIFIED);
-                        $degreeObj = $this->getObjectByNameTransformer('TrainingDegreeList',$degree,$systemuser);
-                        $training->setDegree($degreeObj);
-                        $training->setAppendDegreeToName(true);
-                        $user->addTraining($training);
-                    }
-                }
-            }
+
 
             //Employee Type: user_employmentStatus_0_employmentType: EmploymentType
             $employmentType = $this->getValueByHeaderName('Employee Type', $rowData, $headers);
@@ -257,522 +318,6 @@ class UserGenerator {
                 $user->addEmploymentStatus($employmentStatus);
             }
 
-            //add default locations
-            if( count($user->getLocations()) == 0 ) {
-                $user = $this->addDefaultLocations($user,$systemuser);
-            }
-
-            //fax, office are stored in Location object
-            $mainLocation = $user->getMainLocation();
-            $mainLocation->setStatus($mainLocation::STATUS_VERIFIED);
-            $mainLocation->setFax($this->getValueByHeaderName('Fax Number', $rowData, $headers));
-            $mainLocation->setIc($this->getValueByHeaderName('Intercom', $rowData, $headers));
-            $mainLocation->setPager($this->getValueByHeaderName('Pager', $rowData, $headers));
-
-
-            //phone(s)
-            $BusinessPhones = $this->getValueByHeaderName('Business Phone', $rowData, $headers);
-            $BusinessPhonesArr = explode(";",$BusinessPhones);
-
-            if( count($BusinessPhonesArr) > 0 ) {
-                $BusinessPhone = array_shift($BusinessPhonesArr);
-                $mainLocation->setPhone($BusinessPhone);
-            }
-
-            foreach( $BusinessPhonesArr as $BusinessPhone ) {
-                $location = new Location();
-                $location->setStatus($location::STATUS_VERIFIED);
-                $location->setRemovable(true);
-                $location->setName('Other Location');
-                $otherLocType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
-                $location->addLocationType($otherLocType);
-                $location->setPhone($BusinessPhone);
-                $user->addLocation($location);
-            }
-
-
-            //set room object
-            $office = $this->getValueByHeaderName('Office Location', $rowData, $headers);
-            $roomObj = $this->getObjectByNameTransformer('RoomList',$office,$systemuser);
-            $mainLocation->setRoom($roomObj);
-
-
-            //title is stored in Administrative Title
-            $administrativeTitleStr = $this->getValueByHeaderName('Administrative Title', $rowData, $headers);
-            if( $administrativeTitleStr ) {
-                //Administrative - Institution
-                $Institution = $this->getValueByHeaderName('Administrative - Institution', $rowData, $headers);
-                $Department = $this->getValueByHeaderName('Administrative - Department', $rowData, $headers);
-                $Division = $this->getValueByHeaderName('Administrative - Division', $rowData, $headers);
-                $Service = $this->getValueByHeaderName('Administrative - Service', $rowData, $headers);
-                //Heads
-                $HeadDepartment = $this->getValueByHeaderName('Administrative - Head of this Department', $rowData, $headers);
-                $HeadDivision = $this->getValueByHeaderName('Administrative - Head of this Division', $rowData, $headers);
-                $HeadService = $this->getValueByHeaderName('Administrative - Head of this Service', $rowData, $headers);
-                //set institutional hierarchys
-                $administrativeTitles = $this->addInstitutinalTree('AdministrativeTitle',$user,$systemuser,$administrativeTitleStr,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
-
-//                if( count($administrativeTitles) == 0 ) {
-//                    $administrativeTitles[] = new AdministrativeTitle();
-//                }
-//
-//                foreach( $administrativeTitles as $administrativeTitle ) {
-//                    //set title object: Administrative Title
-//                    $titleObj = $this->getObjectByNameTransformer('AdminTitleList',$administrativeTitleStr,$systemuser);
-//                    $administrativeTitle->setName($titleObj);
-//
-//                    $user->addAdministrativeTitle($administrativeTitle);
-//                }
-                //echo "count admin titles=".count($administrativeTitles)."<br>";
-                //exit('admin title end');
-            }//if admin title
-
-            //Medical Staff Appointment (MSA) Title
-            $msaTitleStr = $this->getValueByHeaderName('Medical Staff Appointment (MSA) Title', $rowData, $headers);
-            if( $msaTitleStr ) {
-
-                //Administrative - Institution
-                $Institution = $this->getValueByHeaderName('MSA - Institution', $rowData, $headers);
-                $Department = $this->getValueByHeaderName('MSA - Department', $rowData, $headers);
-                $Division = $this->getValueByHeaderName('MSA - Division', $rowData, $headers);
-                $Service = $this->getValueByHeaderName('MSA - Service', $rowData, $headers);
-                //Heads
-                $HeadDepartment = $this->getValueByHeaderName('MSA - Head of Department', $rowData, $headers);
-                $HeadDivision = $this->getValueByHeaderName('MSA - Head of Division', $rowData, $headers);
-                $HeadService = $this->getValueByHeaderName('MSA - Head of Service', $rowData, $headers);
-                //set institutional hierarchys
-                $msaTitles = $this->addInstitutinalTree('MedicalTitle',$user,$systemuser,$msaTitleStr,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
-
-//                if( count($msaTitles) == 0 ) {
-//                    $msaTitles[] = new MedicalTitle();
-//                }
-//
-//                foreach( $msaTitles as $msaTitle ) {
-//                    $titleObj = $this->getObjectByNameTransformer('MedicalTitleList',$msaTitleStr,$systemuser);
-//                    $msaTitle->setName($titleObj);
-//
-//                    $user->addMedicalTitle($msaTitle);
-//                }
-
-            }
-
-            //Academic Title
-            $academicTitleStr = $this->getValueByHeaderName('Academic Title', $rowData, $headers);
-            if( $academicTitleStr ) {
-
-                //Administrative - Institution
-                $Institution = $this->getValueByHeaderName('Academic Appt - Institution', $rowData, $headers);
-                $Department = $this->getValueByHeaderName('Academic Appt - Department', $rowData, $headers);
-                $Division = $this->getValueByHeaderName('Academic Appt - Division', $rowData, $headers);
-                $Service = $this->getValueByHeaderName('Academic Appt - Service', $rowData, $headers);
-                //Heads
-                $HeadDepartment = $this->getValueByHeaderName('Academic Appt - Head of Department', $rowData, $headers);
-                $HeadDivision = $this->getValueByHeaderName('Academic Appt - Head of Division', $rowData, $headers);
-                $HeadService = $this->getValueByHeaderName('Academic Appt - Head of Service', $rowData, $headers);
-                //set institutional hierarchys
-                $academicTitles = $this->addInstitutinalTree('AppointmentTitle',$user,$systemuser,$academicTitleStr,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
-
-                //if( count($academicTitles) == 0 ) {
-                //    $academicTitles[] = new AppointmentTitle();
-                //}
-
-                //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_positions
-                //faculty Track can be multiple but the rest of title singular
-                $facultyTrackObjArr = array();
-                $facultyTrackStrMulti = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
-                $facultyTrackStrArr = explode(";",$facultyTrackStrMulti);
-                foreach( $facultyTrackStrArr as $facultyTrackStr ) {
-                    $facultyTrackStr = trim($facultyTrackStr);
-                    $facultyTrackObj = $this->getObjectByNameTransformer('PositionTrackTypeList',$facultyTrackStr,$systemuser);
-                    $facultyTrackObjArr[] = $facultyTrackObj;
-                }
-
-
-                foreach( $academicTitles as $academicTitle ) {
-
-                    foreach( $facultyTrackObjArr as $facultyTrackObj ) {
-                        $academicTitle->addPosition($facultyTrackObj);
-                    }
-
-                    //Academic Appointment start date
-                    $academicAppointmentStartDateStr = $this->getValueByHeaderName('Academic Appointment start date', $rowData, $headers);
-                    $academicAppointmentStartDate = $this->transformDatestrToDate($academicAppointmentStartDateStr);
-                    $academicTitle->setStartDate($academicAppointmentStartDate);
-                }
-
-            }
-
-            //Research Lab Title : s2id_oleg_userdirectorybundle_user_researchLabs_0_name
-            //TODO: not tested yet
-            $researchLabTitleStr = $this->getValueByHeaderName('Research Lab Title', $rowData, $headers);
-            if( $researchLabTitleStr ) {
-                $researchLab = $this->getObjectByNameTransformer('ResearchLab',$researchLabTitleStr,$systemuser);
-
-                //get or generate research lab's institution if does not exists
-                if( !$researchLab->getInstitution() ) {
-                    //$params = array('type'=>'Medical','organizationalGroupType'=>'Research Lab');
-                    //$researchLabInstitutionObj = $this->getObjectByNameTransformer('Institution',$researchLabTitleStr,$systemuser,$params);
-                    $researchWcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-                    $researchMapper = array(
-                        'prefix' => 'Oleg',
-                        'bundleName' => 'UserdirectoryBundle',
-                        'className' => 'Institution'
-                    );
-                    $researchPathology = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-                        "Pathology and Laboratory Medicine",
-                        $researchWcmc,
-                        $researchMapper
-                    );
-                    $researchInstitution = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-                        $researchLabTitleStr,
-                        $researchPathology,
-                        $researchMapper
-                    );
-                    if (!$researchInstitution) {
-                        $medicalType = $this->em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
-                        $researchLabOrgGroup = $this->em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
-                        $researchInstitution = new Institution();
-                        $userSecUtil->setDefaultList($researchInstitution, null, $user, $researchLabTitleStr);
-                        $researchInstitution->setOrganizationalGroupType($researchLabOrgGroup);
-                        $researchInstitution->addType($medicalType);
-                        $researchPathology->addChild($researchInstitution);
-                    }
-
-                    $researchLab->setInstitution($researchInstitution);
-                }
-
-                $user->addResearchLab($researchLab);
-
-                //Principle Investigator of this Lab
-                $piStr = $this->getValueByHeaderName('Principle Investigator of this Lab', $rowData, $headers);
-                if( strtolower($piStr) == 'yes' ) {
-                    $researchLab->setPiUser($user);
-                }
-
-            }//researchLabTitleStr
-
-            //credentials
-            $boardCertSpec = $this->getValueByHeaderName('Board Certification - Specialty', $rowData, $headers);
-            $nyphCodeStr = $this->getValueByHeaderName('NYPH Code', $rowData, $headers);
-            $licenseNumberStr = $this->getValueByHeaderName('License number', $rowData, $headers);
-            $PFI = $this->getValueByHeaderName('PFI', $rowData, $headers);
-            $CLIAStr = $this->getValueByHeaderName('CLIA - Number', $rowData, $headers);
-            $IdentifierNumberStr = $this->getValueByHeaderName('Identifier', $rowData, $headers);
-
-            if( $boardCertSpec || $nyphCodeStr || $licenseNumberStr || $PFI || $CLIAStr || $IdentifierNumberStr ) {
-                $addobjects = false;
-                $credentials = new Credentials($systemuser,$addobjects);
-                $user->setCredentials($credentials);
-            }
-
-            //Board Certification - Specialty : BoardCertifiedSpecialties
-            if( $boardCertSpec ) {
-                $this->processBoardCertification($credentials, $systemuser,$rowData, $headers, $boardCertSpec);
-            }
-
-            //NYPH Code: oleg_userdirectorybundle_user_credentials_codeNYPH_0_field
-            if( $nyphCodeStr ) {
-                $nyphCode = new CodeNYPH();
-                $nyphCode->setField($nyphCodeStr);
-                $credentials->addCodeNYPH($nyphCode);
-            }
-
-            //License number
-            if( $licenseNumberStr ) {
-                $licenseState = new StateLicense();
-
-                $licenseState->setLicenseNumber($licenseNumberStr);
-
-                $licenseStateStr = $this->getValueByHeaderName('License state', $rowData, $headers);
-                $licenseStateObj = $this->getObjectByNameTransformer('States',$licenseStateStr,$systemuser);
-                $licenseState->setState($licenseStateObj);
-
-                //License expiration
-                $expDateStr = $this->getValueByHeaderName('License expiration', $rowData, $headers);
-                $expDate = $this->transformDatestrToDate($expDateStr);
-                $licenseState->setLicenseExpirationDate($expDate);
-
-                $credentials->addStateLicense($licenseState);
-            }
-
-            //Administrative Comment - Category
-            $AdministrativeCommentCategory = $this->getValueByHeaderName('Administrative Comment - Category', $rowData, $headers);
-            if( $AdministrativeCommentCategory ) {
-
-                $AdministrativeCommentCategory = trim($AdministrativeCommentCategory);
-
-                $comment = new AdminComment($systemuser);
-
-                //Administrative Comment - Name
-                $AdministrativeCommentName = $this->getValueByHeaderName('Administrative Comment - Name', $rowData, $headers);
-
-                //Administrative Comment - Comment
-                $AdministrativeCommentComment = $this->getValueByHeaderName('Administrative Comment - Comment', $rowData, $headers);
-
-                //check if Category exists (root)
-                $transformer = new GenericTreeTransformer($this->em, $systemuser, 'CommentTypeList', 'UserdirectoryBundle');
-                $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'CommentTypeList','organizationalGroupType'=>'CommentGroupType');
-                $AdministrativeCommentCategoryObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentCategory,$systemuser);
-                //$AdministrativeCommentCategoryObj = $transformer->createNewEntity($AdministrativeCommentCategory,$mapper['className'],$systemuser);
-                $this->em->persist($AdministrativeCommentCategoryObj);
-
-                $AdministrativeCommentNameObj = null;
-                if( $AdministrativeCommentCategoryObj ) {
-                    $AdministrativeCommentNameObj = $this->em->getRepository('OlegUserdirectoryBundle:CommentTypeList')->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
-                }
-
-                if( !$AdministrativeCommentNameObj ) {
-                    $AdministrativeCommentNameObj = $transformer->createNewEntity($AdministrativeCommentName,'CommentTypeList',$systemuser);
-
-                    if( !$AdministrativeCommentNameObj->getParent() ) {
-                        $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
-                        $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
-                        $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
-                        $this->em->persist($AdministrativeCommentNameObj);
-                    } else {
-                        if( $AdministrativeCommentNameObj->getParent()->getId() != $AdministrativeCommentCategoryObj->getId() ) {
-                            throw new \Exception('Comment Name: Tree node object ' . $AdministrativeCommentNameObj . ' already has a parent, but it is different: existing pid=' . $AdministrativeCommentNameObj->getParent()->getId() . ', new pid='.$AdministrativeCommentCategoryObj->getId());
-                        }
-                    }
-
-//                    $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
-//                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
-//                    $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
-//                    $this->em->persist($AdministrativeCommentNameObj);
-                }
-
-                //set comment category tree node
-                if( $AdministrativeCommentCategoryObj ) {
-                    $comment->setCommentType($AdministrativeCommentCategoryObj);
-                }
-
-                //overwrite comment category tree node
-                if( $AdministrativeCommentNameObj ) {
-                    $comment->setCommentType($AdministrativeCommentNameObj);
-                }
-
-                $comment->setComment($AdministrativeCommentComment);
-
-                $user->addAdminComment($comment);
-            }
-
-
-            //Identifier: Multi
-            if( $IdentifierNumberStr ) {
-
-                $IdentifierNumberArr = explode(";", $IdentifierNumberStr);
-
-                $IdentifierTypeStr = $this->getValueByHeaderName('Identifier - Type', $rowData, $headers);
-                $IdentifierTypeArr = explode(";", $IdentifierTypeStr);
-
-                $IdentifierLinkStr = $this->getValueByHeaderName('Identifier - link', $rowData, $headers);
-                $IdentifierLinkArr = explode(";", $IdentifierLinkStr);
-
-
-                $index = 0;
-                foreach( $IdentifierNumberArr as $IdentifierStr ) {
-
-                    $IdentifierTypeStr = null;
-                    $IdentifierLinkStr = null;
-
-                    if( array_key_exists($index, $IdentifierTypeArr) ) {
-                        $IdentifierTypeStr = $IdentifierTypeArr[$index];
-                    }
-                    if( array_key_exists($index, $IdentifierLinkArr) ) {
-                        $IdentifierLinkStr = $IdentifierLinkArr[$index];
-                    }
-
-                    $Identifier = new Identifier();
-                    $Identifier->setStatus($Identifier::STATUS_VERIFIED);
-
-                    $IdentifierTypeStr = trim($IdentifierTypeStr);
-                    $IdentifierLinkStr = trim($IdentifierLinkStr);
-                    $IdentifierStr = trim($IdentifierStr);
-
-                    //Identifier
-                    $Identifier->setField($IdentifierStr);
-
-                    //Identifier - Type
-                    $IdentifierTypeStrObj = $this->getObjectByNameTransformer('IdentifierTypeList',$IdentifierTypeStr,$systemuser);
-                    $Identifier->setKeytype($IdentifierTypeStrObj);
-
-                    //Identifier - link
-                    $Identifier->setLink($IdentifierLinkStr);
-
-                    $credentials->addIdentifier($Identifier);
-
-                    $index++;
-                }
-            }
-
-            //Certificate of Qualification - Code
-            $CertificateCodeStr = $this->getValueByHeaderName('Certificate of Qualification - Code', $rowData, $headers);
-            if( $CertificateCodeStr ) {
-                $credentials->setCoqCode($CertificateCodeStr);
-            }
-
-            //Certificate of Qualification - Serial Number
-            $CertificateSerialNumberStr = $this->getValueByHeaderName('Certificate of Qualification - Serial Number', $rowData, $headers);
-            if( $CertificateSerialNumberStr ) {
-                $credentials->setNumberCOQ($CertificateSerialNumberStr);
-            }
-
-            //Certificate of Qualification - Expiration Date
-            $CertificateExpirationDateStr = $this->getValueByHeaderName('Certificate of Qualification - Expiration Date', $rowData, $headers);
-            if( $CertificateExpirationDateStr ) {
-                $CertificateExpirationDate = $this->transformDatestrToDate($CertificateExpirationDateStr);
-                $credentials->setCoqExpirationDate($CertificateExpirationDate);
-            }
-
-            //CLIA - Number
-            if( $CLIAStr ) {
-                $credentials->setNumberCLIA($CLIAStr);
-            }
-
-            //CLIA - Expiration Date
-            $CLIAExpDateStr = $this->getValueByHeaderName('CLIA - Expiration Date', $rowData, $headers);
-            if( $CLIAExpDateStr ) {
-                $CLIAExpDate = $this->transformDatestrToDate($CLIAExpDateStr);
-                $credentials->setCliaExpirationDate($CLIAExpDate);
-            }
-
-            //PFI
-            if( $PFI ) {
-                $credentials->setNumberPFI($PFI);
-            }
-
-            //POPS Link => Identifier Type:POPS, Identifier:link, Link:link
-            $POPS = $this->getValueByHeaderName('POPS Link', $rowData, $headers);
-            if( $POPS ) {
-                $popsIdentifier = new Identifier();
-                $popsIdentifier->setStatus($popsIdentifier::STATUS_VERIFIED);
-                $popsIdentifier->setPubliclyVisible(true);
-
-                $popsIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','POPS',$systemuser);
-                $popsIdentifier->setKeytype($popsIdentifierTypeObj);
-                $popsIdentifier->setLink($POPS);
-                $popsIdentifier->setField($POPS);
-
-                $credentials->addIdentifier($popsIdentifier);
-            }
-
-            //Pubmed Link
-            $Pubmed = $this->getValueByHeaderName('Pubmed Link', $rowData, $headers);
-            if( $Pubmed ) {
-                $PubmedIdentifier = new Identifier();
-                $PubmedIdentifier->setStatus($PubmedIdentifier::STATUS_VERIFIED);
-                $PubmedIdentifier->setPubliclyVisible(true);
-
-                $PubmedIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','Pubmed',$systemuser);
-                $PubmedIdentifier->setKeytype($PubmedIdentifierTypeObj);
-                $PubmedIdentifier->setLink($Pubmed);
-                $PubmedIdentifier->setField($Pubmed);
-
-                $credentials->addIdentifier($PubmedIdentifier);
-            }
-
-            //VIVO link
-            $VIVO = $this->getValueByHeaderName('VIVO link', $rowData, $headers);
-            if( $VIVO ) {
-                $VIVOIdentifier = new Identifier();
-                $VIVOIdentifier->setStatus($VIVOIdentifier::STATUS_VERIFIED);
-                $VIVOIdentifier->setPubliclyVisible(true);
-
-                $VIVOIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','VIVO',$systemuser);
-                $VIVOIdentifier->setKeytype($VIVOIdentifierTypeObj);
-                $VIVOIdentifier->setLink($VIVO);
-                $VIVOIdentifier->setField($VIVO);
-
-                $credentials->addIdentifier($VIVOIdentifier);
-            }
-
-
-
-            //add lowest roles for scanorder and userdirectory
-            $user->addRole('ROLE_SCANORDER_SUBMITTER');
-            $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
-
-            //add Platform Admin role and WCMC Institution for specific users
-            //TODO: remove in prod
-            if( $user->getUsername() == "cwid1_@_wcmc-cwid" || $user->getUsername() == "cwid2_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_PLATFORM_ADMIN');
-            }
-
-            //coordinator
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_USERDIRECTORY_EDITOR');
-                //$user->addRole('ROLE_FELLAPP_COORDINATOR');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY');
-            }
-
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_GASTROINTESTINALPATHOLOGY');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_GYNECOLOGICPATHOLOGY');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
-            }
-
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
-                //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
-            }
-
-            //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
-            //TODO: this should be located on scanorder site
-            //TODO: rewrite using Aperio's DB not SOAP functions
-            $aperioUtil = new AperioUtil();
-            echo "username=".$username."<br>";
-            $userid = $aperioUtil->getUserIdByUserName($username);
-            if( $userid ) {
-                echo "userid=".$userid."<br>";
-                $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
-                $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
-            }
-            //************** end of  Aperio group roles **************//
-
-            $user->setEnabled(true);
-            $user->setLocked(false);
-            $user->setExpired(false);
 
 //            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
 //            if( $found_user ) {
@@ -813,50 +358,75 @@ class UserGenerator {
             //record user log create
             $event = "User ".$user." has been created by ".$systemuser."<br>";
             $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
-//            }
 
             //exit('eof user');
 
         }//for each user
 
-
-        //process assistants
-        echo "count ass=".count($assistantsArr)."<br>";
-        if( count($assistantsArr) > 0 ) {
-            foreach( $assistantsArr as $userid => $assistants ) {
-
-                echo "userid=".$userid."assistants=".$assistants."<br>";
-                $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
-                $assistantsStrArr = explode(";",$assistants);
-
-                foreach( $assistantsStrArr as $assistantsStr ) {
-                    if( strtolower($assistantsStr) != 'null' ) {
-                        $assistant = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"AND");
-                        if( !$assistant ) {
-                            //try again with "last name OR first name"
-                            $assistant = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"OR");
-                        }
-                        echo "found assistant=".$assistant."<br>";
-                        if( $assistant ) {
-                            $mainLocation = $user->getMainLocation();
-                            $mainLocation->addAssistant($assistant);
-                        }
-
-                    }
-                } //foreach
-
-                if( count($assistantsStrArr) > 0 ) {
-                    $this->em->flush();
-                }
-
-            } //foreach
-        } //if
-
-
         exit('exit import users V2');
         return $count;
     }
 
+    //$string - , or ; separated string
+    public function processMultipleListObjects( $string, $systemuser, $className ) {
+        $objects = array();
+
+        $separator = null;
+        if( strpos($string,";") !== false ) {
+            $separator = ";";
+        }
+        if( strpos($string,",") !== false ) {
+            $separator = ",";
+        }
+        if( !$separator ) {
+            return $objects;
+        }
+
+        $stringArr = explode($separator,$string);
+        foreach( $stringArr as $nameStr ) {
+            //                                                              $className,$nameStr,$systemuser,$params=null
+            $stringObject = $this->getObjectByNameTransformerWithoutCreating($className,$nameStr,$systemuser);
+            if( $stringObject ) {
+                $objects[] = $stringObject;
+                //echo $stringObject->getId().": ".$stringObject."<br>";
+            }
+        }
+
+        return $objects;
+    }
+
+    public function getEntityByInstitutionDepartmentDivisionService( $institution, $department, $division, $service ) {
+        $mapper = array(
+            'prefix' => "Oleg",
+            'className' => "Institution",
+            'bundleName' => "UserdirectoryBundle"
+        );
+        $treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+
+        return $treeRepository->findEntityByInstitutionDepartmentDivisionService($institution,$department,$division,$service,$mapper);
+
+//        $institutionObject = $treeRepository->findNodeByName($institution,$mapper);
+//        if( !$institutionObject ) {
+//            return null;
+//        }
+//
+//        $departmentObject = findByChildnameAndParent($department,$institution,$mapper);
+//        if( !$departmentObject ) {
+//            return $institutionObject;
+//        }
+//
+//        $divisionObject = findByChildnameAndParent($division,$departmentObject,$mapper);
+//        if( !$divisionObject ) {
+//            return $departmentObject;
+//        }
+//
+//        $serviceObject = findByChildnameAndParent($service,$departmentObject,$mapper);
+//        if( !$serviceObject ) {
+//            return $divisionObject;
+//        }
+//
+//        return $serviceObject;
+    }
 
 
 
@@ -1763,6 +1333,13 @@ class UserGenerator {
     public function getObjectByNameTransformer($className,$nameStr,$systemuser,$params=null) {
         $bundleName = null;
         $transformer = new GenericTreeTransformer($this->em, $systemuser, $className, $bundleName, $params);
+        $nameStr = trim($nameStr);
+        return $transformer->reverseTransform($nameStr);
+    }
+
+    public function getObjectByNameTransformerWithoutCreating($className,$nameStr,$systemuser,$params=null) {
+        $bundleName = null;
+        $transformer = new GenericSelectTransformer($this->em, $systemuser, $className, $bundleName, $params);
         $nameStr = trim($nameStr);
         return $transformer->reverseTransform($nameStr);
     }

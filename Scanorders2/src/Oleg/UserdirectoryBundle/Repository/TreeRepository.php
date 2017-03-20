@@ -405,6 +405,38 @@ class TreeRepository extends NestedTreeRepository {
         return $foundChildEntity;
     }
 
+    public function findEntityByInstitutionDepartmentDivisionService( $institution, $department, $division, $service, $mapper=null ) {
+
+        if( !$mapper ) {
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "Institution",
+                'bundleName' => "UserdirectoryBundle"
+            );
+        }
+
+        $institutionObject = $this->findNodeByName($institution,$mapper);
+        if( !$institutionObject ) {
+            return null;
+        }
+
+        $departmentObject = $this->findByChildnameAndParent($department,$institution,$mapper);
+        if( !$departmentObject ) {
+            return $institutionObject;
+        }
+
+        $divisionObject = $this->findByChildnameAndParent($division,$departmentObject,$mapper);
+        if( !$divisionObject ) {
+            return $departmentObject;
+        }
+
+        $serviceObject = $this->findByChildnameAndParent($service,$departmentObject,$mapper);
+        if( !$serviceObject ) {
+            return $divisionObject;
+        }
+
+        return $serviceObject;
+    }
 
     public function findCategoryByChildAndParent($category,$parent) {
 

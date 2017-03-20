@@ -60,7 +60,6 @@ class GenericTreeTransformer implements DataTransformerInterface
         $this->em = $em;
         $this->user = $user;
         $this->className = $className;
-        $this->bundleName = $bundleName;
         $this->params = $params;
 
         if( $bundleName ) {
@@ -123,7 +122,7 @@ class GenericTreeTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException if object (stain) is not found.
      */
-    public function reverseTransform($text)
+    public function reverseTransform( $text )
     {
 
         //echo "data reverse transformer text=".$text."<br>";

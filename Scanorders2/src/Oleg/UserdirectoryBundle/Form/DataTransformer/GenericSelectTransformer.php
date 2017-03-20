@@ -36,19 +36,29 @@ class GenericSelectTransformer implements DataTransformerInterface
      */
     private $em;
     private $user;
+    protected $className;
+    protected $bundleName;
+    protected $params;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null, $className=null)
+    public function __construct(ObjectManager $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;
         $this->user = $user;
         $this->className = $className;
+        $this->params = $params;
+
+        if( $bundleName ) {
+            $this->bundleName = $bundleName;
+        } else {
+            $this->bundleName = "UserdirectoryBundle";
+        }
     }
 
     /**
-     * Transforms id or name to an object
+     * Transforms an object or name string to id.
      */
     public function transform($entity)
     {
@@ -61,12 +71,13 @@ class GenericSelectTransformer implements DataTransformerInterface
 
         if( is_int($entity) ) {
             //echo "transform by name=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->find($entity);
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($entity);
             //echo "findOneById entity=".$entity."<br>";
         }
         else {
             //echo "transform by name=".$entity." ????????????????<br>";
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($entity);
+            //$entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($entity);
+            $entity = $this->findEntityByString($entity);
         }
 
         if( null === $entity ) {
@@ -81,7 +92,7 @@ class GenericSelectTransformer implements DataTransformerInterface
     }
 
     /**
-     * Transforms a string (number) to an object (i.e. stain).
+     * Transforms a string (number) to an object.
      */
     public function reverseTransform($text)
     {
@@ -94,14 +105,29 @@ class GenericSelectTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
             //echo 'text is id <br>';
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($text);
 
             if( $entity ) {
-                return $entity->getName();
+                //return $entity->getName();
+                return $entity;
+            } else {
+                return $this->findEntityByString($text);
             }
+        } else {
+            return $this->findEntityByString($text);
         }
 
         return $text;
     }
 
+
+    public function findEntityByString($string) {
+        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+
+        if( null === $entity ) {
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+        }
+
+        return $entity;
+    }
 }
