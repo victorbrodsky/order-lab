@@ -267,6 +267,7 @@ class UserGenerator {
             $employeeType = $this->getValueBySectionHeaderName("Employee Type",$rowData,$headers,$sectionEmploymentRange);
             echo "employeeType=".$employeeType."<br>";
             $employeeTypeObject = $this->getObjectByNameTransformerWithoutCreating("EmploymentType",$employeeType,$systemuser);
+            echo "employeeTypeObject=".$employeeTypeObject."<br>";
 
             $jobDescription = $this->getValueBySectionHeaderName("Job Description Summary",$rowData,$headers,$sectionEmploymentRange);
             $jobDescriptionOfficial = $this->getValueBySectionHeaderName("Job Description (official, as posted)",$rowData,$headers,$sectionEmploymentRange);
@@ -274,7 +275,8 @@ class UserGenerator {
 
             //Institution
             $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionEmploymentRange);
-            echo "institutionStr=".$institutionStr."<br>";
+            echo "institutionStr=".$institutionStr."<br>"; //TODO: variable not defined???
+            exit('111');
 
             $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionEmploymentRange);
             $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionEmploymentRange);
@@ -299,6 +301,10 @@ class UserGenerator {
                 $dateHire || $employeeTypeObject || $jobDescription ||
                 $jobDescriptionOfficial || $institutionObject || $endHire || $employeeEndTypeObject || $employeeEndReason
             ) {
+                $employmentStatus = new EmploymentStatus($systemuser);
+                $user->addEmploymentStatus($employmentStatus);
+
+                $employmentStatus->setEmploymentType($employeeTypeObject);
 
             }
 
@@ -1220,6 +1226,8 @@ class UserGenerator {
             return $res;
         }
 
+        $header = trim($header);
+
         if( !$range ) {
             return $this->getValueByHeaderName($header,$row,$headers);
         }
@@ -1227,7 +1235,7 @@ class UserGenerator {
         $rangeColumnArr = $columnIndex = \PHPExcel_Cell::rangeBoundaries($range);
         $startColumn = $rangeColumnArr[0][0]; //52
         $endColumn = $rangeColumnArr[1][0];   //79
-        //echo "startColumn=".$startColumn."; endColumn=".$endColumn."<br>";
+        //echo "<br>".$header.": startColumn=".$startColumn."; endColumn=".$endColumn."<br>";
 
         //echo "header=".$header."<br>";
         //echo "<pre>";
@@ -1238,16 +1246,25 @@ class UserGenerator {
         //1) find section cell range
         //$sectionKey = array_search($header, $headers[0]);
         //echo "<br>sectionKey=".$sectionKey."<br>";
+        $found = false;
         $sectionKey = 1;
         foreach( $headers[0] as $thisHeader ) {
+            $thisHeader = trim($thisHeader);
+            $thisHeader = trim($thisHeader,chr(0xC2).chr(0xA0)); //remove non-breaking spaces
+            //echo "?match thisHeader=[".$thisHeader."]<br>";
             if( $header == $thisHeader ) {
-                //echo "sectionKey=".$sectionKey."<br>"; //52, 80
+                //echo "match sectionKey=".$sectionKey."<br>"; //52, 80
                 if( $sectionKey >= $startColumn && $sectionKey <= $endColumn ) {
                     //echo "InRange: sectionKey=".$sectionKey."<br>";
+                    $found = true;
                     break;
                 }
             }
             $sectionKey++;
+        }
+
+        if( !$found ) {
+            exit("[".$header."] not found");
         }
 
         //shift sectionKey to start from zero
@@ -1258,7 +1275,7 @@ class UserGenerator {
             $res = $row[0][$sectionKey];
             $res = trim($res);
         }
-
+        //echo $header.": res=[".$res."]<br>";
         return $res;
     }
 
