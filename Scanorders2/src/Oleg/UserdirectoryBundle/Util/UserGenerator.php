@@ -686,6 +686,28 @@ class UserGenerator {
         echo "countryObject=".$countryObject."<br>";
 
         //Associated NYPH Code
+        $nyph = $this->getValueBySectionHeaderName("Associated NYPH Code",$rowData,$headers,$sectionRange);
+        echo "nyph=".$nyph."<br>";
+        $cliaNumber = $this->getValueBySectionHeaderName("CLIA Number",$rowData,$headers,$sectionRange);
+
+        //CLIA Expiration Date (MM/DD/YYYY)
+        $cliaExpDate = $this->getValueBySectionHeaderName("CLIA Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionRange);
+        $cliaExpDate = \PHPExcel_Shared_Date::ExcelToPHP($cliaExpDate);
+        $cliaExpDate = new \DateTime("@$cliaExpDate");
+        echo "cliaExpDate=".$cliaExpDate->format('m/d/Y')."<br>";
+
+        //PFI Number
+        $pfiNumber = $this->getValueBySectionHeaderName("PFI Number",$rowData,$headers,$sectionRange);
+
+        //Comment
+        $comment = $this->getValueBySectionHeaderName("Comment",$rowData,$headers,$sectionRange);
+        echo "comment=".$comment."<br>";
+
+
+        $location = new Location($systemuser);
+        $user->addLocation($location);
+
+        
 
     }
 
