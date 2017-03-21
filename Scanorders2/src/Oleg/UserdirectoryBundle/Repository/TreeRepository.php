@@ -420,7 +420,7 @@ class TreeRepository extends NestedTreeRepository {
             return null;
         }
 
-        $departmentObject = $this->findByChildnameAndParent($department,$institution,$mapper);
+        $departmentObject = $this->findByChildnameAndParent($department,$institutionObject,$mapper);
         if( !$departmentObject ) {
             return $institutionObject;
         }

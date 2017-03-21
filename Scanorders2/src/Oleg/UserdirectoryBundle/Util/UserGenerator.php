@@ -138,7 +138,7 @@ class UserGenerator {
 
             $sectionNameContactInfo = "Name and Preferred Contact Info";
             $sectionNameContactInfoRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
-            echo "sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
+            echo "<br>sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
 
             $userType = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionNameContactInfoRange);
             echo "userType=".$userType."<br>";
@@ -230,7 +230,7 @@ class UserGenerator {
             ////////////// Section: Global User Preferences ////////////////
             $sectionGlobal = "Global User Preferences";
             $sectionGlobalRange = $this->getMergedRangeBySectionName($sectionGlobal,$sections,$sheet);
-            echo "sectionGlobalRange=".$sectionGlobalRange."<br>";
+            echo "<br>sectionGlobalRange=".$sectionGlobalRange."<br>";
 
             $roles = $this->getValueBySectionHeaderName("Role",$rowData,$headers,$sectionGlobalRange);
             $timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
@@ -251,7 +251,7 @@ class UserGenerator {
             ////////////// Section: Employment Period ////////////////
             $sectionEmployment = "Employment Period";
             $sectionEmploymentRange = $this->getMergedRangeBySectionName($sectionEmployment,$sections,$sheet);
-            echo "sectionEmploymentRange=".$sectionEmploymentRange."<br>";
+            echo "<br>sectionEmploymentRange=".$sectionEmploymentRange."<br>";
 
             //user_employmentStatus_0_hireDate
             $dateHire = $this->getValueBySectionHeaderName("Date of Hire (MM/DD/YYYY)",$rowData,$headers,$sectionEmploymentRange);
@@ -261,54 +261,241 @@ class UserGenerator {
             //$dateHire = new \DateTime(@$dateHire);
             //echo "dateHire=".$dateHire."<br>";
             $dateHire = new \DateTime("@$dateHire");
-            echo "dateHire=".$dateHire->format('m/d/Y')."<br>";
+            //echo "dateHire=".$dateHire->format('m/d/Y')."<br>";
 
             //Employee Type
             $employeeType = $this->getValueBySectionHeaderName("Employee Type",$rowData,$headers,$sectionEmploymentRange);
-            echo "employeeType=".$employeeType."<br>";
+            //echo "employeeType=".$employeeType."<br>";
             $employeeTypeObject = $this->getObjectByNameTransformerWithoutCreating("EmploymentType",$employeeType,$systemuser);
-            echo "employeeTypeObject=".$employeeTypeObject."<br>";
+            //echo "employeeTypeObject=".$employeeTypeObject."<br>";
 
-            $jobDescription = $this->getValueBySectionHeaderName("Job Description Summary",$rowData,$headers,$sectionEmploymentRange);
-            $jobDescriptionOfficial = $this->getValueBySectionHeaderName("Job Description (official, as posted)",$rowData,$headers,$sectionEmploymentRange);
-            echo "jobDescriptionOfficial=".$jobDescriptionOfficial."<br>";
+            $jobDescriptionSummary = $this->getValueBySectionHeaderName("Job Description Summary",$rowData,$headers,$sectionEmploymentRange);
+            $jobDescription = $this->getValueBySectionHeaderName("Job Description (official, as posted)",$rowData,$headers,$sectionEmploymentRange);
+            //echo "jobDescriptionSummary=".$jobDescriptionSummary."<br>";
 
             //Institution
             $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionEmploymentRange);
-            echo "institutionStr=".$institutionStr."<br>"; //TODO: variable not defined???
-            //exit('111');
-
-            $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionEmploymentRange);
-            $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionEmploymentRange);
-            $serviceStr = $this->getValueBySectionHeaderName("Service",$rowData,$headers,$sectionEmploymentRange);
-            echo "inst=".$institutionStr."; $departmentStr; $divisionStr; $serviceStr"."<br>";
+            $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionEmploymentRange);
+            $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionEmploymentRange);
+            $serviceStr = $this->getValueBySectionHeaderName("Service",$rowData,$headers,$sectionEmploymentRange);
+            //echo "inst=".$institutionStr."; $departmentStr; $divisionStr; $serviceStr"."<br>";
             $institutionObject = $this->getEntityByInstitutionDepartmentDivisionService($institutionStr,$departmentStr,$divisionStr,$serviceStr);
-            echo "institutionObject=".$institutionObject."<br>";
+            //echo "institutionObject=".$institutionObject."<br>";
 
             //End of Employment Date (MM/DD/YYYY)
             $endHire = $this->getValueBySectionHeaderName("End of Employment Date (MM/DD/YYYY)",$rowData,$headers,$sectionEmploymentRange);
             $endHire = \PHPExcel_Shared_Date::ExcelToPHP($endHire);
             $endHire = new \DateTime("@$endHire");
-            echo "endHire=".$endHire->format('m/d/Y')."<br>";
+            //echo "endHire=".$endHire->format('m/d/Y')."<br>";
 
             //Type of End of Employment
-            $employeeEndType = $this->getValueBySectionHeaderName("Type of End of Employment",$rowData,$headers,$sectionEmploymentRange);
+            $employeeEndType = $this->getValueBySectionHeaderName("Type of End of Employment",$rowData,$headers,$sectionEmploymentRange);
             $employeeEndTypeObject = $this->getObjectByNameTransformerWithoutCreating("EmploymentTerminationType",$employeeEndType,$systemuser);
 
-            $employeeEndReason = $this->getValueBySectionHeaderName("Reason for End of Employment",$rowData,$headers,$sectionEmploymentRange);
+            $employeeEndReason = $this->getValueBySectionHeaderName("Reason for End of Employment",$rowData,$headers,$sectionEmploymentRange);
 
             if(
-                $dateHire || $employeeTypeObject || $jobDescription ||
-                $jobDescriptionOfficial || $institutionObject || $endHire || $employeeEndTypeObject || $employeeEndReason
+                $dateHire || $employeeTypeObject || $jobDescriptionSummary || $jobDescription ||
+                $institutionObject || $endHire || $employeeEndTypeObject || $employeeEndReason
             ) {
                 $employmentStatus = new EmploymentStatus($systemuser);
                 $user->addEmploymentStatus($employmentStatus);
 
+                $employmentStatus->setHireDate($dateHire);
                 $employmentStatus->setEmploymentType($employeeTypeObject);
+                $employmentStatus->setJobDescriptionSummary($jobDescriptionSummary);
+                $employmentStatus->setJobDescription($jobDescription);
+                $employmentStatus->setInstitution($institutionObject);
 
+                $employmentStatus->setTerminationDate($endHire);
+                $employmentStatus->setTerminationType($employeeEndTypeObject);
+                $employmentStatus->setTerminationReason($employeeEndReason);
             }
-
             ////////////// EOF Section: Employment Period ////////////////
+
+
+
+            ////////////// Section: Administrative Title ////////////////
+            $sectionAdministrativeTitle = "Administrative Title";
+            $sectionAdministrativeTitleRange = $this->getMergedRangeBySectionName($sectionAdministrativeTitle,$sections,$sheet);
+            echo "<br>sectionAdministrativeTitleRange=".$sectionAdministrativeTitleRange."<br>";
+
+            //Title (AdminTitleList)
+            $administrativeTitle = $this->getValueBySectionHeaderName("Title",$rowData,$headers,$sectionAdministrativeTitleRange);
+            $administrativeTitleObject = $this->getObjectByNameTransformerWithoutCreating("AdminTitleList",$administrativeTitle,$systemuser);
+            echo "administrativeTitleObject=".$administrativeTitleObject."<br>";
+
+            $administrativeStart = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionAdministrativeTitleRange);
+            $administrativeStart = \PHPExcel_Shared_Date::ExcelToPHP($administrativeStart);
+            $administrativeStart = new \DateTime("@$administrativeStart");
+            //echo "administrativeStart=".$administrativeStart->format('m/d/Y')."<br>";
+
+            $administrativeEnd = $this->getValueBySectionHeaderName("End Date (MM/DD/YYYY)",$rowData,$headers,$sectionAdministrativeTitleRange);
+            $administrativeEnd = \PHPExcel_Shared_Date::ExcelToPHP($administrativeEnd);
+            $administrativeEnd = new \DateTime("@$administrativeEnd");
+            //echo "administrativeEnd=".$administrativeEnd->format('m/d/Y')."<br>";
+
+            //Institution
+            $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionAdministrativeTitleRange);
+            $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionAdministrativeTitleRange);
+            $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionAdministrativeTitleRange);
+            $serviceStr = $this->getValueBySectionHeaderName("Service",$rowData,$headers,$sectionAdministrativeTitleRange);
+            //echo "inst=".$institutionStr."; $departmentStr; $divisionStr; $serviceStr"."<br>";
+            $institutionObject = $this->getEntityByInstitutionDepartmentDivisionService($institutionStr,$departmentStr,$divisionStr,$serviceStr);
+            echo "institutionObject=".$institutionObject."<br>";
+
+            //Position Type (multiple PositionTypeList)
+            $administrativePositionType = $this->getValueBySectionHeaderName("Position Type",$rowData,$headers,$sectionAdministrativeTitleRange);
+            echo "multiple administrativePositionType=".$administrativePositionType."<br>";
+            $administrativePositionTypeObjects = $this->processMultipleListObjects($administrativePositionType,$systemuser,"PositionTypeList");
+
+            if(
+                $administrativeTitleObject || $administrativeStart ||
+                $administrativeEnd || $institutionObject || $administrativePositionTypeObjects
+            ) {
+                $administrativeTitle = new AdministrativeTitle($systemuser);
+                $user->addAdministrativeTitle($administrativeTitle);
+
+                $administrativeTitle->setName($administrativeTitleObject);
+                $administrativeTitle->setStartDate($administrativeStart);
+                $administrativeTitle->setEndDate($administrativeEnd);
+                $administrativeTitle->setInstitution($institutionObject);
+
+                //multiple
+                foreach( $administrativePositionTypeObjects as $administrativePositionTypeObject ) {
+                    $administrativeTitle->addUserPosition($administrativePositionTypeObject);
+                    echo "added $administrativePositionTypeObject<br>";
+                }
+
+                echo "administrativeTitle=".$administrativeTitle."<br>";
+            }
+            ////////////// EOF Section: Administrative Title ////////////////
+
+
+
+            ////////////// Section: Academic Appointment Title ////////////////
+            $sectionAcademicTitle = "Academic Appointment Title";
+            $sectionAcademicTitleRange = $this->getMergedRangeBySectionName($sectionAcademicTitle,$sections,$sheet);
+            echo "<br>sectionAcademicTitleRange=".$sectionAcademicTitleRange."<br>";
+
+            //Title (AppTitleList)
+            $academicTitle = $this->getValueBySectionHeaderName("Title",$rowData,$headers,$sectionAcademicTitleRange);
+            $academicTitleObject = $this->getObjectByNameTransformerWithoutCreating("AppTitleList",$academicTitle,$systemuser);
+            echo "academicTitleObject=".$academicTitleObject."<br>";
+
+            //Position Track Type (multiple PositionTrackTypeList)
+            $academicPositions = $this->getValueBySectionHeaderName("Position Track Type",$rowData,$headers,$sectionAcademicTitleRange);
+            //$academicTrackTypeObject = $this->getObjectByNameTransformerWithoutCreating("PositionTrackTypeList",$academicTrackType,$systemuser);
+            $academicPositionsObjects = $this->processMultipleListObjects($academicPositions,$systemuser,"PositionTrackTypeList");
+
+            $academicStart = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionAcademicTitleRange);
+            $academicStart = \PHPExcel_Shared_Date::ExcelToPHP($academicStart);
+            $academicStart = new \DateTime("@$academicStart");
+            //echo "academicStart=".$academicStart->format('m/d/Y')."<br>";
+
+            $academicEnd = $this->getValueBySectionHeaderName("End Date (MM/DD/YYYY)",$rowData,$headers,$sectionAcademicTitleRange);
+            $academicEnd = \PHPExcel_Shared_Date::ExcelToPHP($academicEnd);
+            $academicEnd = new \DateTime("@$academicEnd");
+            //echo "academicEnd=".$academicEnd->format('m/d/Y')."<br>";
+
+            //Institution
+            $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionAcademicTitleRange);
+            $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionAcademicTitleRange);
+            $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionAcademicTitleRange);
+            $serviceStr = $this->getValueBySectionHeaderName("Service",$rowData,$headers,$sectionAcademicTitleRange);
+            //echo "inst=".$institutionStr."; $departmentStr; $divisionStr; $serviceStr"."<br>";
+            $institutionObject = $this->getEntityByInstitutionDepartmentDivisionService($institutionStr,$departmentStr,$divisionStr,$serviceStr);
+            echo "institutionObject=".$institutionObject."<br>";
+
+            if(
+                $academicTitleObject || $academicPositionsObjects ||
+                $academicStart || $academicEnd || $institutionObject
+            ) {
+                $academicTitle = new AppointmentTitle($systemuser);
+                $user->addAppointmentTitle($academicTitle);
+
+                $academicTitle->setName($academicTitleObject);
+                $academicTitle->setStartDate($academicStart);
+                $academicTitle->setEndDate($academicEnd);
+                $academicTitle->setInstitution($institutionObject);
+
+                //multiple
+                foreach( $academicPositionsObjects as $academicPositionsObject ) {
+                    $academicTitle->addPosition($academicPositionsObject);
+                    echo "added $academicPositionsObject<br>";
+                }
+
+                echo "academicTitle=".$academicTitle."<br>";
+            }
+            ////////////// EOF Section: Academic Appointment Title ////////////////
+
+
+
+            ////////////// Section: Medical Appointment Title ////////////////
+            $sectionMedicalTitle = "Medical Appointment Title";
+            $sectionMedicalTitleRange = $this->getMergedRangeBySectionName($sectionMedicalTitle,$sections,$sheet);
+            echo "<br>sectionMedicalTitleRange=".$sectionMedicalTitleRange."<br>";
+
+            //Title (MedicalTitleList)
+            $medicalTitle = $this->getValueBySectionHeaderName("Title",$rowData,$headers,$sectionMedicalTitleRange);
+            $medicalTitleObject = $this->getObjectByNameTransformerWithoutCreating("MedicalTitleList",$medicalTitle,$systemuser);
+            echo "medicalTitleObject=".$medicalTitleObject."<br>";
+
+            //Specialty (multiple MedicalSpecialties)
+            $medicalSpecialties = $this->getValueBySectionHeaderName("MedicalSpecialties",$rowData,$headers,$sectionMedicalTitleRange);
+            //$medicalSpecialtyObject = $this->getObjectByNameTransformerWithoutCreating("MedicalTitleList",$medicalSpecialty,$systemuser);
+            $medicalSpecialtyObjects = $this->processMultipleListObjects($medicalSpecialties,$systemuser,"MedicalTitleList");
+
+            $medicalStart = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalTitleRange);
+            $medicalStart = \PHPExcel_Shared_Date::ExcelToPHP($medicalStart);
+            $medicalStart = new \DateTime("@$medicalStart");
+            //echo "medicalStart=".$medicalStart->format('m/d/Y')."<br>";
+
+            $medicalEnd = $this->getValueBySectionHeaderName("End Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalTitleRange);
+            $medicalEnd = \PHPExcel_Shared_Date::ExcelToPHP($medicalEnd);
+            $medicalEnd = new \DateTime("@$medicalEnd");
+            //echo "medicalEnd=".$medicalEnd->format('m/d/Y')."<br>";
+
+            //Institution
+            $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionMedicalTitleRange);
+            $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionMedicalTitleRange);
+            $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionMedicalTitleRange);
+            $serviceStr = $this->getValueBySectionHeaderName("Service",$rowData,$headers,$sectionMedicalTitleRange);
+            //echo "inst=".$institutionStr."; $departmentStr; $divisionStr; $serviceStr"."<br>";
+            $institutionObject = $this->getEntityByInstitutionDepartmentDivisionService($institutionStr,$departmentStr,$divisionStr,$serviceStr);
+            echo "institutionObject=".$institutionObject."<br>";
+
+            //Position Type (multiple PositionTypeList)
+            $medicalPositionTypes = $this->getValueBySectionHeaderName("Position Type",$rowData,$headers,$sectionMedicalTitleRange);
+            //$medicalPositionTypeObject = $this->getObjectByNameTransformerWithoutCreating("PositionTypeList",$medicalPositionType,$systemuser);
+            $medicalPositionTypeObjects = $this->processMultipleListObjects($medicalPositionTypes,$systemuser,"PositionTypeList");
+            //echo "medicalPositionTypeObject=".$medicalPositionTypeObject."<br>";
+
+            if(
+                $medicalTitleObject || $medicalSpecialtyObjects ||
+                $medicalStart || $medicalEnd || $institutionObject || $medicalPositionTypeObjects
+            ) {
+                $medicalTitle = new MedicalTitle($systemuser);
+                $user->addMedicalTitle($medicalTitle);
+
+                $medicalTitle->setName($academicTitleObject);
+                $medicalTitle->setStartDate($academicStart);
+                $medicalTitle->setEndDate($academicEnd);
+                $medicalTitle->setInstitution($institutionObject);
+
+                //multiple
+                foreach( $medicalSpecialtyObjects as $medicalSpecialtyObject ) {
+                    $medicalTitle->addSpecialty($medicalSpecialtyObject);
+                    echo "added $medicalSpecialtyObject<br>";
+                }
+                foreach( $medicalPositionTypeObjects as $medicalPositionTypeObject ) {
+                    $medicalTitle->addUserPosition($medicalPositionTypeObject);
+                    echo "added $medicalPositionTypeObject<br>";
+                }
+
+                echo "medicalTitle=".$medicalTitle."<br>";
+            }
+            ////////////// EOF Section: Medical Appointment Title ////////////////
 
             exit('1');
 
@@ -384,11 +571,13 @@ class UserGenerator {
         if( strpos($string,",") !== false ) {
             $separator = ",";
         }
-        if( !$separator ) {
-            return $objects;
+
+        if( $separator ) {
+            $stringArr = explode($separator,$string);
+        } else {
+            $stringArr = array($string);
         }
 
-        $stringArr = explode($separator,$string);
         foreach( $stringArr as $nameStr ) {
             //                                                              $className,$nameStr,$systemuser,$params=null
             $stringObject = $this->getObjectByNameTransformerWithoutCreating($className,$nameStr,$systemuser);
@@ -1275,7 +1464,7 @@ class UserGenerator {
             $res = $row[0][$sectionKey];
             $res = trim($res);
         }
-        echo $header.": res=[".$res."]<br>";
+        //echo $header.": res=[".$res."]<br>";
         return $res;
     }
 
@@ -1358,7 +1547,11 @@ class UserGenerator {
         $bundleName = null;
         $transformer = new GenericSelectTransformer($this->em, $systemuser, $className, $bundleName, $params);
         $nameStr = trim($nameStr);
-        return $transformer->reverseTransform($nameStr);
+        $object = $transformer->reverseTransform($nameStr);
+        if( !$object ) {
+            exit("Error: Not found object [$className] by [$nameStr].");
+        }
+        return $object;
     }
 
 
