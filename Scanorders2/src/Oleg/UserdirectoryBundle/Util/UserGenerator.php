@@ -442,9 +442,9 @@ class UserGenerator {
             echo "medicalTitleObject=".$medicalTitleObject."<br>";
 
             //Specialty (multiple MedicalSpecialties)
-            $medicalSpecialties = $this->getValueBySectionHeaderName("MedicalSpecialties",$rowData,$headers,$sectionMedicalTitleRange);
+            $medicalSpecialties = $this->getValueBySectionHeaderName("Specialty",$rowData,$headers,$sectionMedicalTitleRange);
             //$medicalSpecialtyObject = $this->getObjectByNameTransformerWithoutCreating("MedicalTitleList",$medicalSpecialty,$systemuser);
-            $medicalSpecialtyObjects = $this->processMultipleListObjects($medicalSpecialties,$systemuser,"MedicalTitleList");
+            $medicalSpecialtyObjects = $this->processMultipleListObjects($medicalSpecialties,$systemuser,"MedicalSpecialties");
 
             $medicalStart = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalTitleRange);
             $medicalStart = \PHPExcel_Shared_Date::ExcelToPHP($medicalStart);
@@ -486,16 +486,21 @@ class UserGenerator {
                 //multiple
                 foreach( $medicalSpecialtyObjects as $medicalSpecialtyObject ) {
                     $medicalTitle->addSpecialty($medicalSpecialtyObject);
-                    echo "added $medicalSpecialtyObject<br>";
+                    echo "addSpecialty: added $medicalSpecialtyObject<br>";
                 }
                 foreach( $medicalPositionTypeObjects as $medicalPositionTypeObject ) {
                     $medicalTitle->addUserPosition($medicalPositionTypeObject);
-                    echo "added $medicalPositionTypeObject<br>";
+                    echo "addUserPosition: added $medicalPositionTypeObject<br>";
                 }
 
                 echo "medicalTitle=".$medicalTitle."<br>";
             }
             ////////////// EOF Section: Medical Appointment Title ////////////////
+
+            ////////////// Section: Location 1 ////////////////
+            $this->processLocation("Location 1",$user,$systemuser,$sections,$sheet,$rowData,$headers);
+            //$this->processLocation("Location 2",$user,$systemuser,$sections,$sheet,$rowData,$headers);
+            ////////////// EOF Section: Location 1 ////////////////
 
             exit('1');
 
@@ -599,30 +604,90 @@ class UserGenerator {
         $treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
         return $treeRepository->findEntityByInstitutionDepartmentDivisionService($institution,$department,$division,$service,$mapper);
-
-//        $institutionObject = $treeRepository->findNodeByName($institution,$mapper);
-//        if( !$institutionObject ) {
-//            return null;
-//        }
-//
-//        $departmentObject = findByChildnameAndParent($department,$institution,$mapper);
-//        if( !$departmentObject ) {
-//            return $institutionObject;
-//        }
-//
-//        $divisionObject = findByChildnameAndParent($division,$departmentObject,$mapper);
-//        if( !$divisionObject ) {
-//            return $departmentObject;
-//        }
-//
-//        $serviceObject = findByChildnameAndParent($service,$departmentObject,$mapper);
-//        if( !$serviceObject ) {
-//            return $divisionObject;
-//        }
-//
-//        return $serviceObject;
     }
 
+    public function processLocation( $sectionTitle, $user, $systemuser, $sections, $sheet, $rowData, $headers ) {
+        $sectionRange = $this->getMergedRangeBySectionName($sectionTitle,$sections,$sheet);
+        echo "<br>$sectionTitle=$sectionRange<br>";
+
+        //Name
+        $name = $this->getValueBySectionHeaderName("Name",$rowData,$headers,$sectionRange);
+        echo "name=".$name."<br>";
+
+        //Type (multiple LocationTypeList)
+        $types = $this->getValueBySectionHeaderName("Type",$rowData,$headers,$sectionRange);
+        $typeObjects = $this->processMultipleListObjects($types,$systemuser,"LocationTypeList");
+
+        $phone = $this->getValueBySectionHeaderName("Phone Number",$rowData,$headers,$sectionRange);
+        $page = $this->getValueBySectionHeaderName("Pager Number",$rowData,$headers,$sectionRange);
+        $mobile = $this->getValueBySectionHeaderName("Mobile Number",$rowData,$headers,$sectionRange);
+        $intercom = $this->getValueBySectionHeaderName("Intercom",$rowData,$headers,$sectionRange);
+        $fax = $this->getValueBySectionHeaderName("Fax",$rowData,$headers,$sectionRange);
+        $email = $this->getValueBySectionHeaderName("E-Mail",$rowData,$headers,$sectionRange);
+
+        //Institution
+        $institutionStr = $this->getValueBySectionHeaderName("Institution",$rowData,$headers,$sectionRange);
+        $departmentStr = $this->getValueBySectionHeaderName("Department",$rowData,$headers,$sectionRange);
+        $divisionStr = $this->getValueBySectionHeaderName("Division",$rowData,$headers,$sectionRange);
+        $serviceStr = $this->getValueBySectionHeaderName("Service",$rowData,$headers,$sectionRange);
+        //echo "inst=".$institutionStr."; $departmentStr; $divisionStr; $serviceStr"."<br>";
+        $institutionObject = $this->getEntityByInstitutionDepartmentDivisionService($institutionStr,$departmentStr,$divisionStr,$serviceStr);
+        echo "institutionObject=".$institutionObject."<br>";
+
+        //Mailbox (MailboxList)
+        $mailbox = $this->getValueBySectionHeaderName("Mailbox",$rowData,$headers,$sectionRange);
+        $mailboxObject = $this->getObjectByNameTransformer("MailboxList",$mailbox,$systemuser);
+        echo "mailboxObject=".$mailboxObject."<br>";
+
+        //Room Number (RoomList)
+        $room = $this->getValueBySectionHeaderName("Room Number",$rowData,$headers,$sectionRange);
+        $roomObject = $this->getObjectByNameTransformerWithoutCreating("RoomList",$room,$systemuser);
+        echo "roomObject=".$roomObject."<br>";
+
+        //Suite (SuiteList)
+        $suite = $this->getValueBySectionHeaderName("Suite",$rowData,$headers,$sectionRange);
+        $suiteObject = $this->getObjectByNameTransformerWithoutCreating("SuiteList",$suite,$systemuser);
+        echo "suiteObject=".$suiteObject."<br>";
+
+        //Floor (FloorList)
+        $floor = $this->getValueBySectionHeaderName("Floor",$rowData,$headers,$sectionRange);
+        $floorObject = $this->getObjectByNameTransformerWithoutCreating("FloorList",$floor,$systemuser);
+        echo "floorObject=".$floorObject."<br>";
+
+        //Building (BuildingList)
+        $building = $this->getValueBySectionHeaderName("Building",$rowData,$headers,$sectionRange);
+        $buildingObject = $this->getObjectByNameTransformerWithoutCreating("BuildingList",$building,$systemuser);
+        echo "buildingObject=".$buildingObject."<br>";
+
+        //Street Address [Line 1] (GeoLocation->street1)
+        $street1 = $this->getValueBySectionHeaderName("Street Address [Line 1]",$rowData,$headers,$sectionRange);
+        echo "street1=".$street1."<br>";
+
+        //Street Address [Line 2] (GeoLocation->street2)
+        $street2 = $this->getValueBySectionHeaderName("Street Address [Line 2]",$rowData,$headers,$sectionRange);
+        echo "street2=".$street2."<br>";
+
+        //City (GeoLocation->CityList)
+        $city = $this->getValueBySectionHeaderName("City",$rowData,$headers,$sectionRange);
+        $cityObject = $this->getObjectByNameTransformerWithoutCreating("CityList",$city,$systemuser);
+        echo "cityObject=".$cityObject."<br>";
+
+        //State (GeoLocation->States)
+        $state = $this->getValueBySectionHeaderName("State",$rowData,$headers,$sectionRange);
+        $stateObject = $this->getObjectByNameTransformerWithoutCreating("States",$state,$systemuser);
+        echo "stateObject=".$stateObject."<br>";
+
+        $zip = $this->getValueBySectionHeaderName("Zip Code",$rowData,$headers,$sectionRange);
+        echo "zip=".$zip."<br>";
+
+        //Country (GeoLocation->Countries)
+        $country = $this->getValueBySectionHeaderName("Country",$rowData,$headers,$sectionRange);
+        $countryObject = $this->getObjectByNameTransformerWithoutCreating("Countries",$country,$systemuser);
+        echo "countryObject=".$countryObject."<br>";
+
+        //Associated NYPH Code
+
+    }
 
 
     public function generateUsersExcelV1() {
