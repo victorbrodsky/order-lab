@@ -377,6 +377,10 @@ class AdminController extends Controller
             } else {
                 echo 'This is a server not using Windows! Assume Linux';
 
+                echo exec("chown -R www-data:www-data web");
+                echo exec("chown -R www-data:www-data app/cache");
+                echo exec("chown -R www-data:www-data app/logs");
+
                 $script = "bash ".$script;
                 $process = new Process($script);
                 $process->setTimeout(1800); //sec; 1800 sec => 30 min
@@ -385,6 +389,10 @@ class AdminController extends Controller
                     throw new ProcessFailedException($process);
                 }
                 echo $process->getOutput();
+
+                echo exec("chown -R www-data:www-data web");
+                echo exec("chown -R www-data:www-data app/cache");
+                echo exec("chown -R www-data:www-data app/logs");
 
                 //echo exec("rm -r ".$cachePathOld)."<br>";
                 //echo exec("mv ".$cachePathNew." ".$cachePathOld)."<br>";
