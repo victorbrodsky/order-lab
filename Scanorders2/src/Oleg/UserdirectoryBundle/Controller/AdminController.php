@@ -261,6 +261,16 @@ class AdminController extends Controller
     public function runDeployScript() {
         $dirSep = DIRECTORY_SEPARATOR;
 
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            echo 'This is a server using Windows!';
+            $windows = true;
+            $linux = false;
+        } else {
+            echo 'This is a server not using Windows! Assume Linux';
+            $windows = false;
+            $linux = true;
+        }
+
         $path = getcwd();
         echo "webPath=$path<br>";
 
@@ -345,9 +355,21 @@ class AdminController extends Controller
 
         } else {
 
+            if( $linux ) {
+                echo exec("chown -R www-data:www-data web");
+                echo exec("chown -R www-data:www-data app/cache");
+                echo exec("chown -R www-data:www-data app/logs");
+            }
+
             echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
             echo "cache:clear=" . exec("php app".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
             echo "assetic:dump=" . exec("php app".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
+
+            if( $linux ) {
+                echo exec("chown -R www-data:www-data web");
+                echo exec("chown -R www-data:www-data app/cache");
+                echo exec("chown -R www-data:www-data app/logs");
+            }
 
             //remove app/cache/prod
             $cachePathOld = "app".$dirSep."cache".$dirSep."prod";
@@ -369,30 +391,28 @@ class AdminController extends Controller
 
             //replace app/cache/pro_ to prod
 
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            if( $windows ) {
                 echo 'This is a server using Windows!';
                 //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
                 echo exec("rmdir ".$cachePathOld." /S /Q")."<br>";
                 echo exec("rename ".$cachePathNew." ".$cachePathOld)."<br>";
-            } else {
+            }
+
+            if( $linux ){
                 echo 'This is a server not using Windows! Assume Linux';
 
-                echo exec("chown -R www-data:www-data web");
-                echo exec("chown -R www-data:www-data app/cache");
-                echo exec("chown -R www-data:www-data app/logs");
-
-                $script = "bash ".$script;
-                $process = new Process($script);
-                $process->setTimeout(1800); //sec; 1800 sec => 30 min
-                $process->run();
-                if (!$process->isSuccessful()) {
-                    throw new ProcessFailedException($process);
-                }
-                echo $process->getOutput();
-
-                echo exec("chown -R www-data:www-data web");
-                echo exec("chown -R www-data:www-data app/cache");
-                echo exec("chown -R www-data:www-data app/logs");
+//                $script = "bash ".$script;
+//                $process = new Process($script);
+//                $process->setTimeout(1800); //sec; 1800 sec => 30 min
+//                $process->run();
+//                if (!$process->isSuccessful()) {
+//                    throw new ProcessFailedException($process);
+//                }
+//                echo $process->getOutput();
+//
+//                echo exec("chown -R www-data:www-data web");
+//                echo exec("chown -R www-data:www-data app/cache");
+//                echo exec("chown -R www-data:www-data app/logs");
 
                 //echo exec("rm -r ".$cachePathOld)."<br>";
                 //echo exec("mv ".$cachePathNew." ".$cachePathOld)."<br>";
