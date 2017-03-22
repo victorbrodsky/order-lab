@@ -707,7 +707,7 @@ class UserGenerator {
         $location = new Location($systemuser);
         $user->addLocation($location);
 
-        
+
 
     }
 

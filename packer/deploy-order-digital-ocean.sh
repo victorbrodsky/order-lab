@@ -1,5 +1,4 @@
 #!/bin/bash
-# A sample Bash script, by Ryan
 
 apitoken=$1
 parameters=$2
@@ -7,7 +6,7 @@ dbuser=$3
 dbpass=$4
 
 if [ -z "$dbuser" ]
-  then 	
+  then
     dbuser='symfony'
 fi
 
@@ -66,9 +65,9 @@ echo "droplet IP=$DROPLETIP"
 
 sleep 10
 
-xdg-open "http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 
+echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
 
-
-
+xdg-open "$DROPLETIPWEB"
 

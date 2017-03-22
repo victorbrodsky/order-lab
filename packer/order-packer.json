@@ -28,9 +28,9 @@
         "type": "shell",
         "inline": [
            "sleep 30",	
-	   "sudo apt-add-repository -y ppa:ondrej/php",
+	       "sudo apt-add-repository -y ppa:ondrej/php",
            "sudo apt-get update",
-	   "sudo apt-get install -y php7.0 php5.6 php5.6-mysql php-gettext php5.6-mbstring php-mbstring php7.0-mbstring libapache2-mod-php5.6 libapache2-mod-php7.0",	
+	       "sudo apt-get install -y php7.0 php5.6 php5.6-mysql php-gettext php5.6-mbstring php-mbstring php7.0-mbstring libapache2-mod-php5.6 libapache2-mod-php7.0",	
            "sudo apt-get install -y php5.6-xml php5.6-cli php5.6-curl php5.6-json php5.6-intl php5.6-ldap php5.6-gd",   
            "sudo apt-get install -y zip unzip php5.6-zip",                   
            "sudo a2dismod php7.0 ; sudo a2enmod php5.6 ; sudo service apache2 restart ; echo 1 | sudo update-alternatives --config php"
@@ -84,8 +84,8 @@
         "inline": [             
            "cd /usr/local/bin/order-lab/Scanorders2",
            "composer install",
-	   "chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod",
-	   "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod"	                          
+	   "chmod +x /usr/local/bin/order-lab/Scanorders2/deploy",
+	   "bash /usr/local/bin/order-lab/Scanorders2/deploy"	                          
          ]    
       }      
       

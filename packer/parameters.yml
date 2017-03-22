@@ -1,4 +1,5 @@
 # DB and mailer parameters
+# swift_delivery_addresses is used by delivery_addresses: an array of email addresses where to send ALL emails
 parameters:
     database_driver: pdo_pgsql
     database_host: localhost
@@ -17,9 +18,7 @@ parameters:
     mailer_user: null
     mailer_password: null
     locale: en
-    secret: 563fd817cf2c4f1f692d90650b6fba50f782ccc9
-	
-#	swift_delivery_addresses is used by delivery_addresses: an array of email addresses where to send ALL emails
+    secret: 563fd817cf2c4f1f692d90650b6fba50f782ccc9	
     delivery_strategy: realtime
     swift_delivery_addresses:
         - oli2002@med.cornell.edu

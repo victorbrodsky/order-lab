@@ -307,8 +307,10 @@ class AdminController extends Controller
                 exit('error');
             }
 
-            echo exec("php " . $console . " assetic:install --env=prod --no-debug " );
-            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
+            //echo exec("php " . $console . " assetic:install --env=prod --no-debug " );
+            //echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
+            echo exec("php " . $console . " assetic:install " );
+            echo exec("php " . $console . " assetic:dump " );
 
         } else {
 
