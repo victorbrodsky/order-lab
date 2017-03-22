@@ -307,10 +307,10 @@ class AdminController extends Controller
                 exit('error');
             }
 
-            //echo exec("php " . $console . " assetic:install --env=prod --no-debug " );
-            //echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
-            echo exec("php " . $console . " assetic:install " );
-            echo exec("php " . $console . " assetic:dump " );
+            echo exec("php " . $console . " assets:install " );
+            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
+            //echo exec("php " . $console . " assetic:install " );
+            //echo exec("php " . $console . " assetic:dump " );
 
         } else {
 
@@ -352,7 +352,7 @@ class AdminController extends Controller
 
     public function updateApplication() {
         $this->clearCache();
-        //$this->installAssets();
+        $this->installAssets();
         //exit('<br>exit update application');
         return "Cache cleared, Assets dumped";
     }
