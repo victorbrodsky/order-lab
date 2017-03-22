@@ -278,6 +278,7 @@ class AdminController extends Controller
 
         //switch to deploy folder
         echo chdir($deploy_path);
+        echo "pwd=[".exec("pwd")."]<br>";
 
         $script = 'deploy_prod.sh';
         //$script = 'deploy.sh';
