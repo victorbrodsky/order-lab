@@ -289,6 +289,11 @@ class AdminController extends Controller
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             echo 'This is a server using Windows! <br>';
             //run without bash
+
+            echo exec("php app/console assets:install");
+            echo exec("php app/console cache:clear --env=prod --no-debug");
+            echo exec("php app/console assetic:dump --env=prod --no-debug");
+
         } else {
             echo 'This is a server not using Windows! Assume Linux <br>';
             $script = "bash ".$script;
@@ -299,17 +304,25 @@ class AdminController extends Controller
             //echo exec("chmod -R 777 /usr/local/bin/order-lab");
             echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
             echo exec("chown -R www-data:www-data web");
+
+            echo exec("php app/console assets:install");
+            echo exec("php app/console cache:clear --env=prod --no-debug");
+            echo exec("php app/console assetic:dump --env=prod --no-debug");
+
+            echo exec("chown -R www-data:www-data web");
+            echo exec("chown -R www-data:www-data app/cache");
+            echo exec("chown -R www-data:www-data app/logs");
         }
 
-        $process = new Process($script);
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+        if(0) {
+            $process = new Process($script);
+            $process->setTimeout(1800); //sec; 1800 sec => 30 min
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+            echo $process->getOutput();
         }
-
-        echo $process->getOutput();
 
 //        $response = new StreamedResponse();
 //        $response->setCallback(function() use ($process) {
