@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #    Copyright 2017 Cornell University
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +14,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-#!/bin/bash
 
 # Source: https://github.com/ZermattChris/Symfony2-SimpleDeployScripts
 # Docs: see the accompanying README.md file.
@@ -20,6 +21,9 @@
 # cd /path/to/simple
 # ./deploy1
 
+echo
+echo "************* Start deploy *************"
+echo
 
 ##### Constants #####
 

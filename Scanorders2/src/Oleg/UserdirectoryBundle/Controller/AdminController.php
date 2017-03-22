@@ -89,6 +89,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Intl\Intl;
 
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
@@ -134,6 +135,8 @@ use Oleg\UserdirectoryBundle\Entity\LocationPrivacyList;
 use Oleg\UserdirectoryBundle\Entity\RoleAttributeList;
 use Oleg\UserdirectoryBundle\Entity\LanguageList;
 use Symfony\Component\Intl\Locale\Locale;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 
 //Notes:
@@ -244,7 +247,102 @@ class AdminController extends Controller
     }
 
     public function runDeployScript() {
+        // If your script take a very long time:
+        // set_time_limit(0);
+
+        $appPath = $this->container->getParameter('kernel.root_dir');
+        $appPath = str_replace("app","",$appPath);
+        echo "appPath=".$appPath."<br>";
+        //$webPath = getcwd();
+        //echo "webPath=$webPath<br>";
+        $script = $appPath . 'deploy_prod';
+        echo "script=$script<br>";
+
+        if( file_exists($script) ) {
+            echo "deploy exists! <br>";
+        } else {
+            echo "not deploy exists: $script <br>";
+            exit('error');
+        }
+
+        //$script = 'bash '.$script . ' > deploylog.txt';
+        $script = "bash ".$script;
+
+        //$script='/path-script/.../loop.sh';
+        //$script = 'dir';
+
+        $process = new Process($script);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        echo $process->getOutput();
+
+//        $response = new StreamedResponse();
+//        $response->setCallback(function() use ($process) {
+//            $process->run(function ($type, $buffer) {
+//                if (Process::ERR === $type) {
+//                    echo 'ERR > '.$buffer;
+//                } else {
+//                    echo 'OUT > '.$buffer;
+//                    echo '<br>';
+//                }
+//            });
+//        });
+//        $response->setStatusCode(200);
+
+        exit('exit runDeployScript');
+        return $response;
+    }
+
+    public function runDeployScript_OLD() {
         $dirSep = DIRECTORY_SEPARATOR;
+
+        $webPath = getcwd();
+        echo "webPath=$webPath<br>";
+
+        $old_path = $webPath;
+
+        $deploy_path = str_replace("web","",$webPath);
+        echo "deploy_path=$deploy_path<br>";
+
+        if( is_dir($deploy_path) ) {
+            echo "deploy path exists! <br>";
+        } else {
+            echo "not deploy path exists: $deploy_path <br>";
+            exit('error');
+        }
+
+        echo chdir($deploy_path);
+        $ls = exec("ls");
+        echo "<pre>$ls</pre>";
+
+        $output = shell_exec('ls -lart');
+        echo "<pre>$output</pre>";
+
+        echo exec("chmod -R 777 deploy")."<br>";
+
+        if( file_exists('deploy') ) {
+            echo "deploy exists! <br>";
+        } else {
+            echo "not deploy exists <br>";
+            exit('error');
+        }
+
+        $cmd = "bash ./deploy > deploylog.txt";
+        echo "cmd=[".$cmd."]<br>";
+
+        echo exec($cmd);
+
+        //$output = shell_exec($cmd);
+
+        chdir($old_path);
+        echo "<pre>$output</pre>";
+
+        exit('exit runDeployScript');
+
 
         $appPath = $this->container->getParameter('kernel.root_dir');
 
