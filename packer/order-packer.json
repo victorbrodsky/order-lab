@@ -84,8 +84,8 @@
         "inline": [             
            "cd /usr/local/bin/order-lab/Scanorders2",
            "composer install",
-	   "chmod +x /usr/local/bin/order-lab/Scanorders2/deploy",
-	   "bash /usr/local/bin/order-lab/Scanorders2/deploy"	                          
+	   "chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	   "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh"	                          
          ]    
       }      
       

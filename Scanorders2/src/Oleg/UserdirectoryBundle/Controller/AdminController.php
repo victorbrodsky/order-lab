@@ -288,6 +288,9 @@ class AdminController extends Controller
         } else {
             echo 'This is a server not using Windows! Assume Linux';
             $script = "bash ".$script;
+
+            $cachePath = $this->getCachePath();
+            echo exec("chmod -R 777 ".$cachePath)."<br>";
         }
 
         $process = new Process($script);
@@ -351,6 +354,26 @@ class AdminController extends Controller
         }
 
 
+    }
+    public function getCachePath() {
+        $appPath = $this->container->getParameter('kernel.root_dir');
+        echo "appPath=".$appPath."<br>";
+
+        $dirSep = DIRECTORY_SEPARATOR;
+
+        $cachePath = ''.$appPath. $dirSep .'cache';
+
+        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
+        echo "cachePath=".$cachePath."<br>";
+
+        if( is_dir($cachePath) ) {
+            echo "dir! <br>";
+        } else {
+            echo "not dir! <br>";
+            exit('not dir:'.$cachePath);
+        }
+
+        return $cachePath;
     }
     public function clearCacheByService() {
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+# A sample Bash script, by Ryan
 
 apitoken=$1
 parameters=$2
@@ -6,7 +7,7 @@ dbuser=$3
 dbpass=$4
 
 if [ -z "$dbuser" ]
-  then
+  then 	
     dbuser='symfony'
 fi
 
@@ -23,6 +24,17 @@ echo "parameters=$parameters"
 echo "dbuser=$dbuser"
 echo "dbpass=$dbpass"
 
+if [ -z "$apitoken" ]
+  then 	
+    echo "Error: no token is provided"
+    exit 0
+fi
+
+if [ -z "$parameters" ]
+  then 	
+    echo "Error: no parameter file is provided"
+    exit 0
+fi
 
 echo "*** Pre processing json file ***"
 sed -i -e "s/api_token_bash_value/$apitoken/g" order-packer.json
