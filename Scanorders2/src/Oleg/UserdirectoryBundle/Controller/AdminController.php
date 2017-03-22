@@ -243,6 +243,43 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('employees_home'));
     }
 
+    public function runDeployScript() {
+        $dirSep = DIRECTORY_SEPARATOR;
+
+        $appPath = $this->container->getParameter('kernel.root_dir');
+
+        $appPath = str_replace("app","",$appPath);
+        echo "appPath=".$appPath."<br>";
+
+        //$webPath = getcwd();
+        //echo "webPath=$webPath<br>";
+
+        $deploy = $appPath . 'deploy_prod';
+        //$deploy = '"'.$deploy.'"';
+        echo "deploy=".$deploy."<br>";
+
+        if( file_exists($deploy) ) {
+            echo "deploy exists! <br>";
+        } else {
+            echo "not deploy exists: $deploy <br>";
+            exit('error');
+        }
+
+        //echo exec('chown -R www-data:www-data '.$deploy);
+        $message=shell_exec("chown -R www-data:www-data ".$deploy);
+        print_r($message);
+
+        //$deploy = '"'.$deploy.'"';
+
+        //$cmd = 'bash "' . $deploy . '"';
+        $cmd = 'bash ' . $deploy;
+
+        echo "cmd=[".$cmd."]<br>";
+
+        echo exec($cmd);
+
+        exit('exit runDeployScript');
+    }
     public function clearCache() {
         //echo exec('whoami') . "<br>";
 
@@ -351,8 +388,9 @@ class AdminController extends Controller
     }
 
     public function updateApplication() {
-        $this->clearCache();
-        $this->installAssets();
+        $this->runDeployScript();
+        //$this->clearCache();
+        //$this->installAssets();
         //exit('<br>exit update application');
         return "Cache cleared, Assets dumped";
     }
