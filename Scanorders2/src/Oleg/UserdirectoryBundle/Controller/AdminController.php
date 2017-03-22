@@ -359,7 +359,7 @@ class AdminController extends Controller
                 echo exec("chown -R www-data:www-data web");
                 echo exec("chown -R www-data:www-data app/cache");
                 echo exec("chown -R www-data:www-data app/logs");
-                echo exec("chmod -R 777 /usr/local/bin/order-lab");
+                echo exec("chmod -R 777 /usr/local/bin/order-lab/");
             }
 
             echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
@@ -370,7 +370,7 @@ class AdminController extends Controller
                 echo exec("chown -R www-data:www-data web");
                 echo exec("chown -R www-data:www-data app/cache");
                 echo exec("chown -R www-data:www-data app/logs");
-                echo exec("chmod -R 777 /usr/local/bin/order-lab");
+                echo exec("chmod -R 777 /usr/local/bin/order-lab/");
             }
 
             //remove app/cache/prod
@@ -403,15 +403,18 @@ class AdminController extends Controller
             if( $linux ){
                 echo 'This is a server not using Windows! Assume Linux';
 
+                $this->runProcess("chmod -R 777 /usr/local/bin/order-lab");
+
                 //$script = "bash ".$script;
                 $script = "php app/console cache:clear --env=prod --no-debug";
-                $process = new Process($script);
-                $process->setTimeout(1800); //sec; 1800 sec => 30 min
-                $process->run();
-                if (!$process->isSuccessful()) {
-                    throw new ProcessFailedException($process);
-                }
-                echo $process->getOutput();
+//                $process = new Process($script);
+//                $process->setTimeout(1800); //sec; 1800 sec => 30 min
+//                $process->run();
+//                if (!$process->isSuccessful()) {
+//                    throw new ProcessFailedException($process);
+//                }
+//                echo $process->getOutput();
+                $this->runProcess($script);
 
 //                echo exec("chown -R www-data:www-data web");
 //                echo exec("chown -R www-data:www-data app/cache");
@@ -442,6 +445,15 @@ class AdminController extends Controller
         echo "<pre>$output</pre>";
 
         exit('exit runDeployScript');
+    }
+    public function runProcess($script) {
+        $process = new Process($script);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        echo $process->getOutput();
     }
     public function clearCache() {
         //echo exec('whoami') . "<br>";
