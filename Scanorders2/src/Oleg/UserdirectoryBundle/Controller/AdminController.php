@@ -355,9 +355,38 @@ class AdminController extends Controller
 
         } else {
 
-            $this->runProcess("php app".$dirSep."console assets:install");
-            $this->runProcess("php app".$dirSep."console cache:clear --env=prod --no-debug");
-            $this->runProcess("php app".$dirSep."console assetic:dump --env=prod --no-debug");
+            if( $linux ) {
+                $this->runProcess("php app" . $dirSep . "console assets:install");
+                $this->runProcess("php app" . $dirSep . "console cache:clear --env=prod --no-debug");
+                $this->runProcess("php app" . $dirSep . "console assetic:dump --env=prod --no-debug");
+            }
+
+            if( $windows ) {
+                echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
+                echo "cache:clear=" . exec("php app".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
+                echo "assetic:dump=" . exec("php app".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
+
+                //remove app/cache/prod
+                $cachePathOld = "app".$dirSep."cache".$dirSep."prod";
+                $cachePathNew = "app".$dirSep."cache".$dirSep."pro_";
+                //echo "rm =" . exec("php app/console assets:install") . "<br>";
+
+                if( is_dir($cachePathOld) ) {
+                    echo "cachePathOld exists! <br>";
+                } else {
+                    echo "cachePathOld not exists: $cachePathOld <br>";
+                    exit('error');
+                }
+                if( is_dir($cachePathNew) ) {
+                    echo "cachePathNew exists! <br>";
+                } else {
+                    echo "cachePathNew not exists: $cachePathNew <br>";
+                    exit('error');
+                }
+
+                echo exec("rmdir ".$cachePathOld." /S /Q")."<br>";
+                echo exec("rename ".$cachePathNew." ".$cachePathOld)."<br>";
+            }
 
             //switch back to web folder
             $output = chdir($old_path);
