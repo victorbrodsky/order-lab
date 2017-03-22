@@ -283,16 +283,16 @@ class AdminController extends Controller
         }
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            echo 'This is a server using Windows!';
+            echo 'This is a server using Windows! <br>';
             //run without bash
         } else {
-            echo 'This is a server not using Windows! Assume Linux';
+            echo 'This is a server not using Windows! Assume Linux <br>';
             $script = "bash ".$script;
 
             //$cachePath = $this->getCachePath();
             //echo exec("chmod -R 777 ".$cachePath)."<br>";
 
-            echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
+            echo exec("chown -R 777 /usr/local/bin/order-lab/");
         }
 
         $process = new Process($script);
