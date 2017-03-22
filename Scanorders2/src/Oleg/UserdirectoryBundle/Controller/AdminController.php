@@ -403,17 +403,10 @@ class AdminController extends Controller
             if( $linux ){
                 echo 'This is a server not using Windows! Assume Linux';
 
-                $this->runProcess("sudo chown -R www-data:www-data /usr/local/bin/order-lab");
+                //$this->runProcess("sudo chown -R www-data:www-data /usr/local/bin/order-lab");
 
                 //$script = "bash ".$script;
                 $script = "php app/console cache:clear --env=prod --no-debug";
-//                $process = new Process($script);
-//                $process->setTimeout(1800); //sec; 1800 sec => 30 min
-//                $process->run();
-//                if (!$process->isSuccessful()) {
-//                    throw new ProcessFailedException($process);
-//                }
-//                echo $process->getOutput();
                 $this->runProcess($script);
 
 //                echo exec("chown -R www-data:www-data web");
