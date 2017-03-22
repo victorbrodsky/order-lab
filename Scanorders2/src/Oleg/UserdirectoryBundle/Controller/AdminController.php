@@ -247,7 +247,7 @@ class AdminController extends Controller
     }
 
     public function updateApplication() {
-        if( 0 ) {
+        if( 1 ) {
             $this->runDeployScript();
         } else {
             $this->clearCache();
@@ -410,11 +410,11 @@ class AdminController extends Controller
                 exit('error');
             }
 
-            //echo exec("php " . $console . " assets:install " );
-            //echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
+            echo exec("php " . $console . " assets:install " );
+            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
 
-            echo exec("php " . $console . " assets:install");
-            echo exec("php " . $console . " assetic:dump");
+            //echo exec("php " . $console . " assets:install");
+            //echo exec("php " . $console . " assetic:dump");
 
         } else {
 
