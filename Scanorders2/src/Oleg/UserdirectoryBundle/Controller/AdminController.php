@@ -286,8 +286,15 @@ class AdminController extends Controller
             exit('error');
         }
 
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            echo 'This is a server using Windows!';
+            //run without bash
+        } else {
+            echo 'This is a server not using Windows! Assume Linux';
+            $script = "bash ".$script;
+        }
+
         //$script = 'bash '.$script . ' > deploylog.txt';
-        //$script = "bash ".$script;
 
         //$script='/path-script/.../loop.sh';
         //$script = 'dir';
