@@ -376,6 +376,16 @@ class AdminController extends Controller
                 echo exec("rename ".$cachePathNew." ".$cachePathOld)."<br>";
             } else {
                 echo 'This is a server not using Windows! Assume Linux';
+
+//                $script = "bash ".$script;
+//                $process = new Process($script);
+//                $process->setTimeout(1800); //sec; 1800 sec => 30 min
+//                $process->run();
+//                if (!$process->isSuccessful()) {
+//                    throw new ProcessFailedException($process);
+//                }
+//                echo $process->getOutput();
+
                 echo exec("rm -r ".$cachePathOld)."<br>";
                 echo exec("mv ".$cachePathNew." ".$cachePathOld)."<br>";
             }
