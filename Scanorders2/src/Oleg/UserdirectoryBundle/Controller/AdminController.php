@@ -355,23 +355,23 @@ class AdminController extends Controller
 
         } else {
 
-            if( $linux ) {
-                echo exec("chown -R www-data:www-data web");
-                echo exec("chown -R www-data:www-data app/cache");
-                echo exec("chown -R www-data:www-data app/logs");
-                echo exec("chmod -R 777 /usr/local/bin/order-lab/");
-            }
+//            if( $linux ) {
+//                echo exec("chown -R www-data:www-data web");
+//                echo exec("chown -R www-data:www-data app/cache");
+//                echo exec("chown -R www-data:www-data app/logs");
+//                echo exec("chmod -R 777 /usr/local/bin/order-lab/");
+//            }
 
             echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
             echo "cache:clear=" . exec("php app".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
             echo "assetic:dump=" . exec("php app".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
 
-            if( $linux ) {
-                echo exec("chown -R www-data:www-data web");
-                echo exec("chown -R www-data:www-data app/cache");
-                echo exec("chown -R www-data:www-data app/logs");
-                echo exec("chmod -R 777 /usr/local/bin/order-lab/");
-            }
+//            if( $linux ) {
+//                echo exec("chown -R www-data:www-data web");
+//                echo exec("chown -R www-data:www-data app/cache");
+//                echo exec("chown -R www-data:www-data app/logs");
+//                echo exec("chmod -R 777 /usr/local/bin/order-lab/");
+//            }
 
             //remove app/cache/prod
             $cachePathOld = "app".$dirSep."cache".$dirSep."prod";
@@ -406,12 +406,8 @@ class AdminController extends Controller
                 //$this->runProcess("sudo chown -R www-data:www-data /usr/local/bin/order-lab");
 
                 //$script = "bash ".$script;
-                $script = "php app/console cache:clear --env=prod --no-debug";
-                $this->runProcess($script);
-
-//                echo exec("chown -R www-data:www-data web");
-//                echo exec("chown -R www-data:www-data app/cache");
-//                echo exec("chown -R www-data:www-data app/logs");
+                //$script = "php app/console cache:clear --env=prod --no-debug";
+                //$this->runProcess($script);
 
                 //echo exec("rm -r ".$cachePathOld)."<br>";
                 //echo exec("mv ".$cachePathNew." ".$cachePathOld)."<br>";
