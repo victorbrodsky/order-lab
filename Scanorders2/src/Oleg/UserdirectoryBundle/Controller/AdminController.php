@@ -355,6 +355,16 @@ class AdminController extends Controller
 
         } else {
 
+            $this->runProcess("php app".$dirSep."console assets:install");
+            $this->runProcess("php app".$dirSep."console cache:clear --env=prod --no-debug");
+            $this->runProcess("php app".$dirSep."console assetic:dump --env=prod --no-debug");
+
+            //switch back to web folder
+            $output = chdir($old_path);
+            echo "<pre>$output</pre>";
+
+            exit('exit runDeployScript');
+
 //            if( $linux ) {
 //                echo exec("chown -R www-data:www-data web");
 //                echo exec("chown -R www-data:www-data app/cache");
