@@ -2159,9 +2159,9 @@ class ScanAdminController extends AdminController
 
             $entity->setLevel($level);
 
-            echo "creating PatientListHierarchyGroupType: name=".$entity->getName()."; level=".$entity->getLevel()."<br>";
-            //$em->persist($entity);
-            //$em->flush();
+            //echo "creating PatientListHierarchyGroupType: name=".$entity->getName()."; level=".$entity->getLevel()."<br>";
+            $em->persist($entity);
+            $em->flush();
 
             $count = $count + 10;
 
