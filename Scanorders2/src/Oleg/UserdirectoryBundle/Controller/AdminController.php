@@ -309,12 +309,13 @@ class AdminController extends Controller
             echo "cache:clear=" . exec("php app/console cache:clear --env=prod --no-debug") . "<br>";
             echo "assetic:dump=" . exec("php app/console assetic:dump --env=prod --no-debug") . "<br>";
 
-            echo exec("chown -R www-data:www-data web");
-            echo exec("chown -R www-data:www-data app/cache");
-            echo exec("chown -R www-data:www-data app/logs");
+//            echo exec("chown -R www-data:www-data web");
+//            echo exec("chown -R www-data:www-data app/cache");
+//            echo exec("chown -R www-data:www-data app/logs");
         }
 
         if(0) {
+
             $process = new Process($script);
             $process->setTimeout(1800); //sec; 1800 sec => 30 min
             $process->run();
@@ -322,7 +323,33 @@ class AdminController extends Controller
                 throw new ProcessFailedException($process);
             }
             echo $process->getOutput();
+
+        } else {
+
+            echo "assets:install=" . exec("php app/console assets:install") . "<br>";
+            echo "cache:clear=" . exec("php app/console cache:clear --env=prod --no-debug") . "<br>";
+            echo "assetic:dump=" . exec("php app/console assetic:dump --env=prod --no-debug") . "<br>";
+
+            //remove app/cache/prod
+            $cachePathOld = "app/cache/prod";
+            $cachePathNew = "app/cache/pro_";
+            //echo "rm =" . exec("php app/console assets:install") . "<br>";
+
+            //replace app/cache/pro_ to prod
+
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                echo 'This is a server using Windows!';
+                //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
+                echo exec("rmdir ".$cachePathOld." /S /Q")."<br>";
+                echo exec("rename ".$cachePathNew." ".$cachePathOld)."<br>";
+            } else {
+                echo 'This is a server not using Windows! Assume Linux';
+                echo exec("rm -r ".$cachePathOld)."<br>";
+                echo exec("mv ".$cachePathNew." ".$cachePathOld)."<br>";
+            }
+
         }
+
 
 //        $response = new StreamedResponse();
 //        $response->setCallback(function() use ($process) {
