@@ -352,7 +352,7 @@ class AdminController extends Controller
 
     public function updateApplication() {
         $this->clearCache();
-        $this->installAssets();
+        //$this->installAssets();
         //exit('<br>exit update application');
         return "Cache cleared, Assets dumped";
     }
