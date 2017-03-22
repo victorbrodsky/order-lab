@@ -34,6 +34,9 @@ function prep()
 {
     echo "Preparing for Deploy..."
 
+    #try to set permission
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/web
+
     #for production: git remote update, git pull
     #echo "*** Pull code from git repository ***"
     #git remote update
@@ -66,6 +69,9 @@ function prep()
     echo "*** Dump assets for production***"
     php $PROJECT_LOCAL_PATH/app/console assetic:dump --env=prod --no-debug
 
+    echo "*** Set permissions ***"
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/app/cache
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/app/logs
 }
 
 
