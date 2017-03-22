@@ -289,8 +289,10 @@ class AdminController extends Controller
             echo 'This is a server not using Windows! Assume Linux';
             $script = "bash ".$script;
 
-            $cachePath = $this->getCachePath();
-            echo exec("chmod -R 777 ".$cachePath)."<br>";
+            //$cachePath = $this->getCachePath();
+            //echo exec("chmod -R 777 ".$cachePath)."<br>";
+
+            echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
         }
 
         $process = new Process($script);
