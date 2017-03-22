@@ -403,7 +403,7 @@ class AdminController extends Controller
             if( $linux ){
                 echo 'This is a server not using Windows! Assume Linux';
 
-                $this->runProcess("chown -R www-data:www-data /usr/local/bin/order-lab");
+                $this->runProcess("sudo chown -R www-data:www-data /usr/local/bin/order-lab");
 
                 //$script = "bash ".$script;
                 $script = "php app/console cache:clear --env=prod --no-debug";
