@@ -247,6 +247,8 @@ class AdminController extends Controller
     }
 
     public function updateApplication() {
+        set_time_limit(0);
+        ini_set('memory_limit', '512M');
         if( 1 ) {
             $this->runDeployScript();
         } else {
@@ -257,6 +259,8 @@ class AdminController extends Controller
         return "Deploy script run successfully: Cache cleared, Assets dumped";
     }
     public function runDeployScript() {
+        $dirSep = DIRECTORY_SEPARATOR;
+
         $path = getcwd();
         echo "webPath=$path<br>";
 
@@ -286,35 +290,49 @@ class AdminController extends Controller
             exit('error');
         }
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            echo 'This is a server using Windows! <br>';
-            //run without bash
-
-            echo exec("php app/console assets:install");
-            echo exec("php app/console cache:clear --env=prod --no-debug");
-            echo exec("php app/console assetic:dump --env=prod --no-debug");
-
-        } else {
-            echo 'This is a server not using Windows! Assume Linux <br>';
-            $script = "bash ".$script;
-
-            //$cachePath = $this->getCachePath();
-            //echo exec("chmod -R 777 ".$cachePath)."<br>";
-            echo "pwd=[".exec("pwd")."]<br>";
-            //echo exec("chmod -R 777 /usr/local/bin/order-lab");
-            echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
-            echo exec("chown -R www-data:www-data web");
-
-            echo "assets:install=" . exec("php app/console assets:install") . "<br>";
-            echo "cache:clear=" . exec("php app/console cache:clear --env=prod --no-debug") . "<br>";
-            echo "assetic:dump=" . exec("php app/console assetic:dump --env=prod --no-debug") . "<br>";
-
+//        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+//            echo 'This is a server using Windows! <br>';
+//            //run without bash
+//
+//        } else {
+//            echo 'This is a server not using Windows! Assume Linux <br>';
+//            $script = "bash ".$script;
+//
+//            //$cachePath = $this->getCachePath();
+//            //echo exec("chmod -R 777 ".$cachePath)."<br>";
+//            echo "pwd=[".exec("pwd")."]<br>";
+//            //echo exec("chmod -R 777 /usr/local/bin/order-lab");
+//            echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
 //            echo exec("chown -R www-data:www-data web");
-//            echo exec("chown -R www-data:www-data app/cache");
-//            echo exec("chown -R www-data:www-data app/logs");
-        }
+//
+//            echo "assets:install=" . exec("php app/console assets:install") . "<br>";
+//            echo "cache:clear=" . exec("php app/console cache:clear --env=prod --no-debug") . "<br>";
+//            echo "assetic:dump=" . exec("php app/console assetic:dump --env=prod --no-debug") . "<br>";
+//
+////            echo exec("chown -R www-data:www-data web");
+////            echo exec("chown -R www-data:www-data app/cache");
+////            echo exec("chown -R www-data:www-data app/logs");
+//        }
 
         if(0) {
+
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                echo 'This is a server using Windows! <br>';
+                //run without bash
+
+            } else {
+                echo 'This is a server not using Windows! Assume Linux <br>';
+                $script = "bash ".$script;
+
+                //$cachePath = $this->getCachePath();
+                //echo exec("chmod -R 777 ".$cachePath)."<br>";
+                echo "pwd=[".exec("pwd")."]<br>";
+                //echo exec("chmod -R 777 /usr/local/bin/order-lab");
+                //echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
+                echo exec("chown -R www-data:www-data web");
+                echo exec("chown -R www-data:www-data app/cache");
+                echo exec("chown -R www-data:www-data app/logs");
+            }
 
             $process = new Process($script);
             $process->setTimeout(1800); //sec; 1800 sec => 30 min
@@ -326,14 +344,27 @@ class AdminController extends Controller
 
         } else {
 
-            echo "assets:install=" . exec("php app/console assets:install") . "<br>";
-            echo "cache:clear=" . exec("php app/console cache:clear --env=prod --no-debug") . "<br>";
-            echo "assetic:dump=" . exec("php app/console assetic:dump --env=prod --no-debug") . "<br>";
+            echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
+            echo "cache:clear=" . exec("php app".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
+            echo "assetic:dump=" . exec("php app".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
 
             //remove app/cache/prod
-            $cachePathOld = "app/cache/prod";
-            $cachePathNew = "app/cache/pro_";
+            $cachePathOld = "app".$dirSep."cache".$dirSep."prod";
+            $cachePathNew = "app".$dirSep."cache".$dirSep."pro_";
             //echo "rm =" . exec("php app/console assets:install") . "<br>";
+
+            if( is_dir($cachePathOld) ) {
+                echo "cachePathOld exists! <br>";
+            } else {
+                echo "cachePathOld not exists: $cachePathOld <br>";
+                exit('error');
+            }
+            if( is_dir($cachePathNew) ) {
+                echo "cachePathNew exists! <br>";
+            } else {
+                echo "cachePathNew not exists: $cachePathNew <br>";
+                exit('error');
+            }
 
             //replace app/cache/pro_ to prod
 
