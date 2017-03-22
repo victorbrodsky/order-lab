@@ -297,6 +297,7 @@ class AdminController extends Controller
             echo "pwd=[".exec("pwd")."]<br>";
             //echo exec("chmod -R 777 /usr/local/bin/order-lab");
             echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
+            echo exec("chown -R www-data:www-data web");
         }
 
         $process = new Process($script);
