@@ -276,7 +276,7 @@ class AdminController extends Controller
         echo "<pre>$ls</pre>";
 
 
-        $script = 'deploy_prod';
+        $script = 'deploy_prod.sh';
         echo "script=$script<br>";
 
         if( file_exists($script) ) {
@@ -287,7 +287,7 @@ class AdminController extends Controller
         }
 
         //$script = 'bash '.$script . ' > deploylog.txt';
-        $script = "bash ".$script;
+        //$script = "bash ".$script;
 
         //$script='/path-script/.../loop.sh';
         //$script = 'dir';
@@ -296,6 +296,7 @@ class AdminController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
+            //exit($process);
             throw new ProcessFailedException($process);
         }
 

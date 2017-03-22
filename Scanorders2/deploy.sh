@@ -12,7 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-#!/bin/bash
+#!/bin/sh
 
 # Source: https://github.com/ZermattChris/Symfony2-SimpleDeployScripts
 # Docs: see the accompanying README.md file.
