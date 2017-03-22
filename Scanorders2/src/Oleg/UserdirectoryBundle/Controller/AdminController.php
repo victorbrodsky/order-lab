@@ -251,7 +251,7 @@ class AdminController extends Controller
         //$this->clearCache();
         //$this->installAssets();
         //exit('<br>exit update application');
-        return "Cache cleared, Assets dumped";
+        return "Deploy script run successfully: Cache cleared, Assets dumped";
     }
     public function runDeployScript() {
         $path = getcwd();
@@ -291,6 +291,7 @@ class AdminController extends Controller
         }
 
         $process = new Process($script);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
         $process->run();
 
         if (!$process->isSuccessful()) {
