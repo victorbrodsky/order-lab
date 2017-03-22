@@ -359,6 +359,7 @@ class AdminController extends Controller
                 echo exec("chown -R www-data:www-data web");
                 echo exec("chown -R www-data:www-data app/cache");
                 echo exec("chown -R www-data:www-data app/logs");
+                echo exec("chmod -R 777 /usr/local/bin/order-lab");
             }
 
             echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
@@ -369,6 +370,7 @@ class AdminController extends Controller
                 echo exec("chown -R www-data:www-data web");
                 echo exec("chown -R www-data:www-data app/cache");
                 echo exec("chown -R www-data:www-data app/logs");
+                echo exec("chmod -R 777 /usr/local/bin/order-lab");
             }
 
             //remove app/cache/prod
