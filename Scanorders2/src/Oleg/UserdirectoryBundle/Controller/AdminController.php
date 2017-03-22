@@ -328,7 +328,7 @@ class AdminController extends Controller
         $output = chdir($old_path);
         echo "<pre>$output</pre>";
 
-        //exit('exit runDeployScript');
+        exit('exit runDeployScript');
     }
     public function clearCache() {
         //echo exec('whoami') . "<br>";
