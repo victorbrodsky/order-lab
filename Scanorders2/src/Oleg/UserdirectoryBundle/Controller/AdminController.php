@@ -247,10 +247,13 @@ class AdminController extends Controller
     }
 
     public function updateApplication() {
-        $this->runDeployScript();
-        //$this->clearCache();
-        //$this->installAssets();
-        //exit('<br>exit update application');
+        if(0) {
+            $this->runDeployScript();
+        } else {
+            $this->clearCache();
+            $this->installAssets();
+            //exit('<br>exit update application');
+        }
         return "Deploy script run successfully: Cache cleared, Assets dumped";
     }
     public function runDeployScript() {
