@@ -250,12 +250,33 @@ class AdminController extends Controller
         // If your script take a very long time:
         // set_time_limit(0);
 
-        $appPath = $this->container->getParameter('kernel.root_dir');
-        $appPath = str_replace("app","",$appPath);
-        echo "appPath=".$appPath."<br>";
+        //$appPath = $this->container->getParameter('kernel.root_dir');
+        //$appPath = str_replace("app","",$appPath);
+        //echo "appPath=".$appPath."<br>";
         //$webPath = getcwd();
         //echo "webPath=$webPath<br>";
-        $script = $appPath . 'deploy_prod';
+
+        $path = getcwd();
+        echo "webPath=$path<br>";
+
+        $old_path = $path;
+
+        $deploy_path = str_replace("web","",$path);
+        echo "deploy_path=$deploy_path<br>";
+
+        if( is_dir($deploy_path) ) {
+            echo "deploy path exists! <br>";
+        } else {
+            echo "not deploy path exists: $deploy_path <br>";
+            exit('error');
+        }
+
+        echo chdir($deploy_path);
+        $ls = exec("ls");
+        echo "<pre>$ls</pre>";
+
+
+        $script = 'deploy_prod';
         echo "script=$script<br>";
 
         if( file_exists($script) ) {
@@ -279,6 +300,9 @@ class AdminController extends Controller
         }
 
         echo $process->getOutput();
+
+        $output = chdir($old_path);
+        echo "<pre>$output</pre>";
 
 //        $response = new StreamedResponse();
 //        $response->setCallback(function() use ($process) {
