@@ -43,6 +43,9 @@ function prep()
     #git remote update
     #git pull
 
+    #try to set permission
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/web
+
     echo "*** Update tables in Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/app/console doctrine:schema:update --force
 
