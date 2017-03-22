@@ -392,6 +392,7 @@ class AdminController extends Controller
             $output = chdir($old_path);
             echo "<pre>$output</pre>";
 
+            return;
             exit('exit runDeployScript');
 
 //            if( $linux ) {
