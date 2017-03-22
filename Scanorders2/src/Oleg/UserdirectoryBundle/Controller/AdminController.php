@@ -246,16 +246,14 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('employees_home'));
     }
 
+    public function updateApplication() {
+        $this->runDeployScript();
+        //$this->clearCache();
+        //$this->installAssets();
+        //exit('<br>exit update application');
+        return "Cache cleared, Assets dumped";
+    }
     public function runDeployScript() {
-        // If your script take a very long time:
-        // set_time_limit(0);
-
-        //$appPath = $this->container->getParameter('kernel.root_dir');
-        //$appPath = str_replace("app","",$appPath);
-        //echo "appPath=".$appPath."<br>";
-        //$webPath = getcwd();
-        //echo "webPath=$webPath<br>";
-
         $path = getcwd();
         echo "webPath=$path<br>";
 
@@ -271,10 +269,8 @@ class AdminController extends Controller
             exit('error');
         }
 
+        //switch to deploy folder
         echo chdir($deploy_path);
-        $ls = exec("ls");
-        echo "<pre>$ls</pre>";
-
 
         $script = 'deploy_prod.sh';
         echo "script=$script<br>";
@@ -294,23 +290,14 @@ class AdminController extends Controller
             $script = "bash ".$script;
         }
 
-        //$script = 'bash '.$script . ' > deploylog.txt';
-
-        //$script='/path-script/.../loop.sh';
-        //$script = 'dir';
-
         $process = new Process($script);
         $process->run();
 
         if (!$process->isSuccessful()) {
-            //exit($process);
             throw new ProcessFailedException($process);
         }
 
         echo $process->getOutput();
-
-        $output = chdir($old_path);
-        echo "<pre>$output</pre>";
 
 //        $response = new StreamedResponse();
 //        $response->setCallback(function() use ($process) {
@@ -325,90 +312,11 @@ class AdminController extends Controller
 //        });
 //        $response->setStatusCode(200);
 
-        exit('exit runDeployScript');
-        return $response;
-    }
-
-    public function runDeployScript_OLD() {
-        $dirSep = DIRECTORY_SEPARATOR;
-
-        $webPath = getcwd();
-        echo "webPath=$webPath<br>";
-
-        $old_path = $webPath;
-
-        $deploy_path = str_replace("web","",$webPath);
-        echo "deploy_path=$deploy_path<br>";
-
-        if( is_dir($deploy_path) ) {
-            echo "deploy path exists! <br>";
-        } else {
-            echo "not deploy path exists: $deploy_path <br>";
-            exit('error');
-        }
-
-        echo chdir($deploy_path);
-        $ls = exec("ls");
-        echo "<pre>$ls</pre>";
-
-        $output = shell_exec('ls -lart');
+        //switch back to web folder
+        $output = chdir($old_path);
         echo "<pre>$output</pre>";
 
-        echo exec("chmod -R 777 deploy")."<br>";
-
-        if( file_exists('deploy') ) {
-            echo "deploy exists! <br>";
-        } else {
-            echo "not deploy exists <br>";
-            exit('error');
-        }
-
-        $cmd = "bash ./deploy > deploylog.txt";
-        echo "cmd=[".$cmd."]<br>";
-
-        echo exec($cmd);
-
-        //$output = shell_exec($cmd);
-
-        chdir($old_path);
-        echo "<pre>$output</pre>";
-
-        exit('exit runDeployScript');
-
-
-        $appPath = $this->container->getParameter('kernel.root_dir');
-
-        $appPath = str_replace("app","",$appPath);
-        echo "appPath=".$appPath."<br>";
-
-        //$webPath = getcwd();
-        //echo "webPath=$webPath<br>";
-
-        $deploy = $appPath . 'deploy_prod';
-        //$deploy = '"'.$deploy.'"';
-        echo "deploy=".$deploy."<br>";
-
-        if( file_exists($deploy) ) {
-            echo "deploy exists! <br>";
-        } else {
-            echo "not deploy exists: $deploy <br>";
-            exit('error');
-        }
-
-        //echo exec('chown -R www-data:www-data '.$deploy);
-        $message=shell_exec("chown -R www-data:www-data ".$deploy);
-        print_r($message);
-
-        //$deploy = '"'.$deploy.'"';
-
-        //$cmd = 'bash "' . $deploy . '"';
-        $cmd = 'bash ' . $deploy;
-
-        echo "cmd=[".$cmd."]<br>";
-
-        echo exec($cmd);
-
-        exit('exit runDeployScript');
+        //exit('exit runDeployScript');
     }
     public function clearCache() {
         //echo exec('whoami') . "<br>";
@@ -455,7 +363,6 @@ class AdminController extends Controller
         $command->run($input, $output);
         //exit($output);
     }
-
     public function installAssets() {
         $dirSep = DIRECTORY_SEPARATOR;
 
@@ -515,14 +422,6 @@ class AdminController extends Controller
         $output = new ConsoleOutput();
         $command->run($input, $output);
         exit($output);
-    }
-
-    public function updateApplication() {
-        $this->runDeployScript();
-        //$this->clearCache();
-        //$this->installAssets();
-        //exit('<br>exit update application');
-        return "Cache cleared, Assets dumped";
     }
     //Testing method
     public function cccAction()
