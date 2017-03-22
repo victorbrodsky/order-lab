@@ -2137,17 +2137,17 @@ class ScanAdminController extends AdminController
         }
 
         $elements = array(
-            "Patient List" => 0,
-            "Patient List" => 1,
-            "Patient List" => 2,
-            "Patient List" => 3,
-            "Patient" => 4,
+            0 => "Patient List",
+            1 => "Patient List",
+            2 => "Patient List",
+            3 => "Patient List",
+            4 => "Patient",
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
 
         $count = 10;
-        foreach( $elements as $name=>$level ) {
+        foreach( $elements as $level=>$name ) {
 
 //            $entity = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName($name);
 //            if( $entity ) {
