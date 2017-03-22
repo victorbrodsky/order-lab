@@ -294,8 +294,8 @@ class AdminController extends Controller
 
             //$cachePath = $this->getCachePath();
             //echo exec("chmod -R 777 ".$cachePath)."<br>";
-
-            echo exec("chown -R 777 /usr/local/bin/order-lab/");
+            echo exec("pwd");
+            echo exec("chmod -R 777 /usr/local/bin/order-lab/");
         }
 
         $process = new Process($script);
