@@ -305,9 +305,9 @@ class AdminController extends Controller
             echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
             echo exec("chown -R www-data:www-data web");
 
-            echo exec("php app/console assets:install");
-            echo exec("php app/console cache:clear --env=prod --no-debug");
-            echo exec("php app/console assetic:dump --env=prod --no-debug");
+            echo "assets:install=" . exec("php app/console assets:install") . "<br>";
+            echo "cache:clear=" . exec("php app/console cache:clear --env=prod --no-debug") . "<br>";
+            echo "assetic:dump=" . exec("php app/console assetic:dump --env=prod --no-debug") . "<br>";
 
             echo exec("chown -R www-data:www-data web");
             echo exec("chown -R www-data:www-data app/cache");
