@@ -404,7 +404,7 @@ class AdminController extends Controller
                 echo 'This is a server not using Windows! Assume Linux';
 
                 //$script = "bash ".$script;
-                $script = "php app/console console cache:clear --env=prod --no-debug";
+                $script = "php app/console cache:clear --env=prod --no-debug";
                 $process = new Process($script);
                 $process->setTimeout(1800); //sec; 1800 sec => 30 min
                 $process->run();
