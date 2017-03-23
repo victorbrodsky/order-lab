@@ -118,7 +118,9 @@ class VacReqUtil
         if( !$institution ) {
             return null;
         }
-        //echo "institution=".$institution."<br>";
+
+        //echo "<br>institution=".$institution."<br>";
+        //echo "tentative institution=".$entity->getTentativeInstitution()."<br>";
 
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
 
@@ -134,11 +136,16 @@ class VacReqUtil
             $approverRole = "ROLE_VACREQ_APPROVER";
         }
 
+        //echo "approverRole=".$approverRole."<br>";
+        //echo "institution=".$institution."<br>";
+
         $approvers = array();
         $roleApprovers = $this->em->getRepository('OlegUserdirectoryBundle:User')->
             findRolesBySiteAndPartialRoleName( "vacreq", $approverRole, $institution->getId());
+        //echo "roleApprovers count=".count($roleApprovers)."<br>";
+
         $roleApprover = $roleApprovers[0];
-        //echo "roleApprover=".$roleApprover."<br>";
+
         if( $roleApprover ) {
             $approvers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
@@ -3583,6 +3590,9 @@ class VacReqUtil
     //$status - pre-approval or final status (the one has been changed)
     public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect=true, $update=true ) {
 
+        //echo "<br><br>Testing: processChangeStatusCarryOverRequest: request ID=".$entity->getId()."<br>";
+        //echo "Tentative inst=".$entity->getTentativeInstitution()."<br>";
+
         $logger = $this->container->get('logger');
         $session = $this->container->get('session');
 
@@ -3616,6 +3626,7 @@ class VacReqUtil
                     'notice',
                     "You can not review this request. This request can be approved or rejected by " . implode("; ", $approversName)
                 );
+                //exit("testing: no permission to approve this request.");
                 //return $this->redirect($this->generateUrl('vacreq-nopermission'));
                 return 'vacreq-nopermission';
             }
@@ -3812,22 +3823,33 @@ class VacReqUtil
     }
 
 
-    public function addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions ) {
+    public function addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions, $institutionType="institution" ) {
+        //echo "entity group=".$entity->getInstitution()."<br>";
 
-        if( $organizationalInstitutions && $entity->getInstitution() ) {
-            //add to $organizationalInstitutions
-            if( !array_key_exists($entity->getInstitution()->getId(), $organizationalInstitutions) ) {
+        if( $institutionType == "institution" ) {
+            $institution = $entity->getInstitution();
+            //echo "institution <br>";
+        }
+        if( $institutionType == "tentativeInstitution" ) {
+            $institution = $entity->getTentativeInstitution();
+            //echo "tentativeInstitution <br>";
+        }
+
+        //if( $organizationalInstitutions && $institution ) { //$organizationalInstitutions &&
+        if( $institution ) { //$organizationalInstitutions &&
+            //echo "add to organizationalInstitutions; count=".count($organizationalInstitutions)."<br>";
+            if( !array_key_exists($institution->getId(), $organizationalInstitutions) ) {
                 $thisApprovers = $this->getRequestApprovers( $entity );
                 $approversArr = array();
                 foreach( $thisApprovers as $thisApprover ) {
                     $approversArr[] = $thisApprover->getUsernameShortest();
                 }
                 if( count($approversArr) > 0 ) {
-                    $orgName = $entity->getInstitution() . " (for review by " . implode(", ",$approversArr) . ")";
+                    $orgName = $institution . " (for review by " . implode(", ",$approversArr) . ")";
                 } else {
-                    $orgName = $entity->getInstitution()."";
+                    $orgName = $institution."";
                 }
-                $organizationalInstitutions[$entity->getInstitution()->getId()] = $orgName;
+                $organizationalInstitutions[$institution->getId()] = $orgName;
             }
         }
 

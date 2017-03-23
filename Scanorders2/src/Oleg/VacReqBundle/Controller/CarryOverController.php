@@ -365,9 +365,14 @@ class CarryOverController extends Controller
         ) {
             //OK
         } else {
-            //exit('Status: no permission to approve/reject');
+            //exit('changestatus: no permission to approve/reject'); //testing
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "no permission to approve/reject this carry over request"
+            );
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
+        //exit('testing: email approval of carry over request OK'); //testing
 
 //        if( $entity->getTentativeStatus() == 'pending' ) {
 //            //first step: group approver

@@ -311,6 +311,11 @@ class VacReqRequestType extends AbstractType
             $requiredInst = true;
         }
 
+//        echo "organizationalInstitutions count=".count($this->params['organizationalInstitutions'])."<br>";
+//        foreach( $this->params['organizationalInstitutions'] as $tentativeInstitution ) {
+//            echo "tentativeInstitution=".$tentativeInstitution."<br>";
+//        }
+
         //$requiredInst = true;
         $builder->add('institution', 'choice', array(
             'label' => "Organizational Group:",

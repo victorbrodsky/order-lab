@@ -95,8 +95,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
     //status change: user can view and update the subject
     protected function canChangeStatus($subject, TokenInterface $token) {
-
-        //exit("canChangeStatus: not implemented yet");
+        //exit("canChangeStatus: ...");
 
         //ROLE_PLATFORM_DEPUTY_ADMIN can do anything
         if( $this->decisionManager->decide($token, array('ROLE_PLATFORM_DEPUTY_ADMIN')) ) {
@@ -106,6 +105,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
         // if they can edit, they can view
         if( $this->canEdit($subject, $token) ) {
+            //exit("canChangeStatus: can edit!");
 
             //add if user has appropriate admin role: overwrite in the particular permission voter
             //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
@@ -119,12 +119,23 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             if( $this->hasApproverRoleInstitution($subject,$token,$tentative) ) {
                 return true;
             }
+        } else {
+            //echo "can not edit <br>";
         }
 
+        //check for tentative pre-approval: use tentativeInstitution
+        $tentative = true;
+        if( $this->hasApproverRoleInstitution($subject,$token,$tentative) ) {
+            //exit("canChangeStatus: can change status!");
+            return true;
+        }
+
+        //exit("canChangeStatus: can not change status!");
         return false;
     }
 
     public function canChangeCarryoverStatus($subject, TokenInterface $token) {
+        //exit("canChangeCarryoverStatus: ...");
         if( $this->canChangeStatus($subject, $token) ) {
             $user = $token->getUser();
             //ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY

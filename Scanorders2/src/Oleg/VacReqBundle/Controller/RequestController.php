@@ -422,15 +422,25 @@ class RequestController extends Controller
         if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
             if ($routName == 'vacreq_review') {
                 if (false == $this->get('security.context')->isGranted("changestatus", $entity)) {
+                    //exit("vacreq_review: no permission to changestatus");
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        "no permission to review/change the status of this carry over request"
+                    );
                     return $this->redirect($this->generateUrl('vacreq-nopermission'));
                 }
             } else {
                 if (false == $this->get('security.context')->isGranted("update", $entity)) {
-                    exit('no permission');
+                    //exit('vacreq_edit: no permission to update');
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        "no permission to update this request"
+                    );
                     return $this->redirect($this->generateUrl('vacreq-nopermission'));
                 }
             }
         }
+        //exit('testing: approval of carry over request OK'); //testing
 
         $cycle = 'edit';
         if( $routName == 'vacreq_review' ) {
@@ -510,6 +520,7 @@ class RequestController extends Controller
                     }
                     //if two statuses are changed (only admin can do it), then use one step (as executive) approval with the final status
                     if( $changedStatusCount > 1 ) {
+                        //echo "########## set tentative to NULL <br>";
                         $entity->setTentativeStatus(NULL);
                         $entity->setTentativeInstitution(NULL);
                         $status = $entity->getStatus();
@@ -1269,11 +1280,12 @@ class RequestController extends Controller
         $organizationalInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions );
 
         //include this request institution to the $tentativeInstitutions array
-        $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions );
+        $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );
 
-        //foreach( $tentativeInstitutions as $tentativeInstitution ) {
-        //    echo "tentativeInstitution=".$tentativeInstitution."<br>";
-        //}
+        //TODO: test tentativeInstitutions
+//        foreach( $tentativeInstitutions as $tentativeInstitution ) {
+//            echo "tentativeInstitution=".$tentativeInstitution."<br>";
+//        }
         //exit('1');
 
         if( count($organizationalInstitutions) == 0 ) {
