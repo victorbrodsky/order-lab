@@ -72,15 +72,15 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	 	bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
-7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server, or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890Ó. To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
+7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server, or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890". To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
 
-8. To populate the default values for various tables, first use the 'AdminÓ dropdown menu after login in as an administrator. Select the 'List ManagerÓ. Near the bottom of the page under 'Populate ListsÓ, click 'Populate Country and City ListsÓ, and confirm. When complete, click 'Populate All Lists With Default ValuesÓ.  
+8. To populate the default values for various tables, first use the 'Admin' dropdown menu after login in as an administrator. Select the 'List Manager'. Near the bottom of the page under 'Populate Lists', click 'Populate Country and City Lists', and confirm. When complete, click 'Populate All Lists With Default Values'.  
 
 9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
 ## Installation instructions for MacOS X
 
->MacOS X instructions are similar to the Linux instructions, as both systems are Unix based. MacOS X instructions are tested on version 10.12.3 'SierraÓ.  
+>MacOS X instructions are similar to the Linux instructions, as both systems are Unix based. MacOS X instructions are tested on version 10.12.3 'Sierra'.  
 
 1. Sign up for [Digital Ocean](https://www.digitalocean.com/) and obtain an [API access key token](https://www.digitalocean.com/help/api/). It should look similar to this one: e4561f1b44faa16c2b43e94c5685e5960e852326b921883765b3b0e11111f705
 
@@ -88,11 +88,11 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	
 	a) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Move the double click the "order-lab-master" zip file extract the contents, then move the folder to '/ORDER_LOCATION/'.
 
-3. ['HomebrewÓ](https://brew.sh) can be used to install the necessary software, [Packer](https://www.packer.io/) and [doctl](https://github.com/digitalocean/doctl). This can be performed through the application Terminal.
+3. ['Homebrew'](https://brew.sh) can be used to install the necessary software, [Packer](https://www.packer.io/) and [doctl](https://github.com/digitalocean/doctl). This can be performed through the application Terminal.
 
 	a) Install Homebrew: Open Terminal and enter the following command followed by the return key. It will take several minutes to install.
 
-		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)Ó
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)'
 
 	b) Install Packer and Doctl with the following commands in Terminal, entered one at a time.
 
@@ -109,14 +109,14 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 		cd /ORDER_LOCATION/order-lab-master/packer/
 
-	b) Run the deployment script with the following command, replacing 'API-TOKEN-FROM-STEP-1Ó with your unique API token. The script will take several minutes to run.
+	b) Run the deployment script with the following command, replacing 'API-TOKEN-FROM-STEP-1' with your unique API token. The script will take several minutes to run.
 
 		bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
 
-7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server (provided in the last lines of the script that was run in terminal, in the format 'droplet IP=123.45.678.90.Ó), or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890Ó. To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
+7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server (provided in the last lines of the script that was run in terminal, in the format 'droplet IP=123.45.678.90.'), or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890'. To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
 
-8. To populate the default values for various tables, first use the 'AdminÓ dropdown menu after login in as an administrator. Select the 'List ManagerÓ. Near the bottom of the page under 'Populate ListsÓ, click 'Populate Country and City ListsÓ, and confirm. When complete, click 'Populate All Lists With Default ValuesÓ.  
+8. To populate the default values for various tables, first use the 'Admin' dropdown menu after login in as an administrator. Select the 'List Manager'. Near the bottom of the page under 'Populate Lists', click 'Populate Country and City Lists', and confirm. When complete, click 'Populate All Lists With Default Values'.  
 
 9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
@@ -243,9 +243,9 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	 	deploy_prod.sh
 
-6. Use the address http://localhost/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890Ó. To log in in the future, simply use the regular login page at http://localhost/order/.
+6. Use the address http://localhost/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890'. To log in in the future, simply use the regular login page at http://localhost/order/.
 
-7. To populate the default values for various tables, first use the 'Admin' dropdown menu after login in as an administrator. Select the 'List Manager'. Near the bottom of the page under 'Populate ListsÓ, click 'Populate Country and City ListsÓ, and confirm. When complete, click 'Populate All Lists With Default ValuesÓ.  
+7. To populate the default values for various tables, first use the 'Admin' dropdown menu after login in as an administrator. Select the 'List Manager'. Near the bottom of the page under 'Populate Lists', click 'Populate Country and City Lists', and confirm. When complete, click 'Populate All Lists With Default Values'.  
 
 8. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
