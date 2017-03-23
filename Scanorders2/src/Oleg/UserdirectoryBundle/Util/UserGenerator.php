@@ -507,8 +507,31 @@ class UserGenerator {
 
 
             ////////////// Section: Education ////////////////
+            $sectionEducation = "Education";
+            $sectionEducationRange = $this->getMergedRangeBySectionName($sectionEducation,$sections,$sheet);
+            echo "<br>sectionEducationRange=".$sectionEducationRange."<br>";
+
+            //Degree (TrainingDegreeList)
+            $degree = $this->getValueBySectionHeaderName("Degree",$rowData,$headers,$sectionEducationRange);
+            $degreeObjects = $this->processMultipleListObjects($degree,$systemuser,"TrainingDegreeList");
+
+            $appendDegree = $this->getValueBySectionHeaderName("Append degree to name",$rowData,$headers,$sectionEducationRange);
+
+            //Residency Specialty (ResidencySpecialty)
+            $residencySpecialty = $this->getValueBySectionHeaderName("Residency Specialty",$rowData,$headers,$sectionEducationRange);
+            $residencySpecialtyObjects = $this->processMultipleListObjects($residencySpecialty,$systemuser,"ResidencySpecialty");
+
+            //Fellowship Subspecialty (FellowshipSubspecialty)
+            $fellowshipSubspecialty = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers,$sectionEducationRange);
+            $fellowshipSubspecialtyObjects = $this->processMultipleListObjects($fellowshipSubspecialty,$systemuser,"FellowshipSubspecialty");
 
             ////////////// EOF Section: Education ////////////////
+
+
+
+            ////////////// Section: Research Lab ////////////////
+
+            ////////////// EOF Section: Research Lab ////////////////
 
             exit('1');
 
