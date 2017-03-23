@@ -74,21 +74,21 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server, or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890”. To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
 
-8. To populate the default values for various tables, first use the “Admin” dropdown menu after login in as an administrator. Select the “List Manager”. Near the bottom of the page under “Populate Lists”, click “Populate Country and City Lists”, and confirm. When complete, click “Populate All Lists With Default Values”.  
+8. To populate the default values for various tables, first use the 'Admin” dropdown menu after login in as an administrator. Select the 'List Manager”. Near the bottom of the page under 'Populate Lists”, click 'Populate Country and City Lists”, and confirm. When complete, click 'Populate All Lists With Default Values”.  
 
 9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
 ## Installation instructions for MacOS X
 
->MacOS X instructions are similar to the Linux instructions, as both systems are Unix based. MacOS X instructions are tested on version 10.12.3 “Sierra”.  
+>MacOS X instructions are similar to the Linux instructions, as both systems are Unix based. MacOS X instructions are tested on version 10.12.3 'Sierra”.  
 
 1. Sign up for [Digital Ocean](https://www.digitalocean.com/) and obtain an [API access key token](https://www.digitalocean.com/help/api/). It should look similar to this one: e4561f1b44faa16c2b43e94c5685e5960e852326b921883765b3b0e11111f705
 
-2. Choose a folder that will be used for installation of ORDER. This folder will be referred to as “/ORDER_LOCATION/“ in these instructions, which you will need to replace with the actual file path of the location you select.
+2. Choose a folder that will be used for installation of ORDER. This folder will be referred to as '/ORDER_LOCATION/' in these instructions, which you will need to replace with the actual file path of the location you select.
 	
-	a) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Move the double click the "order-lab-master" zip file extract the contents, then move the folder to “/ORDER_LOCATION/“.
+	a) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Move the double click the "order-lab-master" zip file extract the contents, then move the folder to '/ORDER_LOCATION/'.
 
-3. [“Homebrew”](https://brew.sh) can be used to install the necessary software, [Packer](https://www.packer.io/) and [doctl](https://github.com/digitalocean/doctl). This can be performed through the application Terminal.
+3. ['Homebrew”](https://brew.sh) can be used to install the necessary software, [Packer](https://www.packer.io/) and [doctl](https://github.com/digitalocean/doctl). This can be performed through the application Terminal.
 
 	a) Install Homebrew: Open Terminal and enter the following command followed by the return key. It will take several minutes to install.
 
@@ -109,14 +109,14 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 		cd /ORDER_LOCATION/order-lab-master/packer/
 
-	b) Run the deployment script with the following command, replacing “API-TOKEN-FROM-STEP-1” with your unique API token. The script will take several minutes to run.
+	b) Run the deployment script with the following command, replacing 'API-TOKEN-FROM-STEP-1” with your unique API token. The script will take several minutes to run.
 
 		bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
 
-7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server (provided in the last lines of the script that was run in terminal, in the format “droplet IP=123.45.678.90.”), or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890”. To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
+7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server (provided in the last lines of the script that was run in terminal, in the format 'droplet IP=123.45.678.90.”), or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890”. To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
 
-8. To populate the default values for various tables, first use the “Admin” dropdown menu after login in as an administrator. Select the “List Manager”. Near the bottom of the page under “Populate Lists”, click “Populate Country and City Lists”, and confirm. When complete, click “Populate All Lists With Default Values”.  
+8. To populate the default values for various tables, first use the 'Admin” dropdown menu after login in as an administrator. Select the 'List Manager”. Near the bottom of the page under 'Populate Lists”, click 'Populate Country and City Lists”, and confirm. When complete, click 'Populate All Lists With Default Values”.  
 
 9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
@@ -132,15 +132,15 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	c) Download the [installer for AMPPS](http://www.ampps.com/downloads) Apache-PHP-MySQL stack appropriate for your version of Windows. Run the installer with the standard installation options. After installation, open AMPPS, and when prompted to install "C++ Redistributable Visual Studio", select "Yes". (Tested with version 3.6.)
 
-	d) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Right click the "order-lab-master" zip file and select "Extract AllÖ". Select the folder you have chosen for installation ("C:\ORDER_LOCATION\") as the destination for the extracted files.
+	d) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Right click the "order-lab-master" zip file and select "Extract All...". Select the folder you have chosen for installation ("C:\ORDER_LOCATION\") as the destination for the extracted files.
 
-2. Configure AMPPS. At this point, AMPPS should be open, and Apache web server, Php, and MySQL should display as "Running". If Apache or MySQL is not running, turn it on by clicking the switch to the left of itís name in AMPPS.
+2. Configure AMPPS. At this point, AMPPS should be open, and Apache web server, Php, and MySQL should display as "Running". If Apache or MySQL is not running, turn it on by clicking the switch to the left of it's name in AMPPS.
 
 	a) Select PHP version 5.6. In AMPPS, select Options (an icon that appears as a grid of squares near the top of the AMPPS window) and select "Change PHP Version". Select "PHP 5.6". After restarting, Apache, Php, and MySQL should return to "Running".
 
 		
 	b) Configure the php.ini file. Click on the gear icon the right of "Php-!" in the AMPPS application window. Click the wrench icon ("Configuration") to the right of the gear icon. The php.ini file will open in a text editor. 
-		Find the line matching ";date.timezone = " and replace it with "date.timezone = ‘TIMEZONE’”, where TIMEZONE is replaced with one of the timezone options available [here](http://php.net/manual/en/timezones.php), such as “date.timezone = ‘America/New_York’”.
+		Find the line matching ";date.timezone = " and replace it with "date.timezone = 'TIMEZONE', where TIMEZONE is replaced with one of the timezone options available [here](http://php.net/manual/en/timezones.php), such as date.timezone = 'America/New_York'.
 
 		Enable the ldap extensions, international support, the GD library extension, and the file info extension by removing the semicolon at the beginning of the following lines (if a semicolon is present): 
 		;extension=php_ldap.dll
@@ -184,7 +184,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 		If you are not using AMPPS, different Apache-PHP-MySQL stacks may require modifying the httpd.conf file. If so, set alias to the order-lab www folder:
 
 			<VirtualHost *:80>
-				<Directory “C:\ORDER_LOCATION\Scanorders2\web\"
+				<Directory 'C:\ORDER_LOCATION\Scanorders2\web\"
 					Options +FollowSymLinks -Includes
 					AllowOverride All  
 					Require all granted
@@ -211,7 +211,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	c) Update symfony vendors by entering the command "composer self-update". When it is complete, enter the command "composer update". The update will take several minutes. It will run until it reached the point where it will prompt for missing parameters by displaying: "database_driver (pdo_sqlsrv): Some parameters are missing. Please provide them.". 
 
-	d) When prompted for the following values, return the value to the right and enter return. When prompted for other values, leave blank and enter return. These values are located in Symfony’s parameters file (app/config/parameters.yml) and set the defined Database configuration values.
+	d) When prompted for the following values, return the value to the right and enter return. When prompted for other values, leave blank and enter return. These values are located in Symfony's parameters file (app/config/parameters.yml) and set the defined Database configuration values.
 
 		database_host: 127.0.0.1
 		database_port: null
@@ -245,7 +245,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 6. Use the address http://localhost/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890”. To log in in the future, simply use the regular login page at http://localhost/order/.
 
-7. To populate the default values for various tables, first use the “Admin” dropdown menu after login in as an administrator. Select the “List Manager”. Near the bottom of the page under “Populate Lists”, click “Populate Country and City Lists”, and confirm. When complete, click “Populate All Lists With Default Values”.  
+7. To populate the default values for various tables, first use the 'Admin' dropdown menu after login in as an administrator. Select the 'List Manager'. Near the bottom of the page under 'Populate Lists”, click 'Populate Country and City Lists”, and confirm. When complete, click 'Populate All Lists With Default Values”.  
 
 8. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
