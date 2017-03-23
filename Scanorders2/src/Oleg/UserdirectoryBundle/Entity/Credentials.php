@@ -37,7 +37,6 @@ class Credentials extends BaseUserAttributes
     /**
      * @ORM\ManyToOne(targetEntity="SexList", cascade={"persist"})
      * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
-     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
      */
     protected $sex;
 

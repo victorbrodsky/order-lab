@@ -504,7 +504,7 @@ class UserGenerator {
 
             ////////////// Section: Location 1 ////////////////
             $this->processLocation("Location 1",$user,$systemuser,$sections,$sheet,$rowData,$headers);
-            //$this->processLocation("Location 2",$user,$systemuser,$sections,$sheet,$rowData,$headers);
+            $this->processLocation("Location 2",$user,$systemuser,$sections,$sheet,$rowData,$headers);
             ////////////// EOF Section: Location 1 ////////////////
 
 
@@ -584,8 +584,136 @@ class UserGenerator {
             $sectionResearchRange = $this->getMergedRangeBySectionName($sectionResearch,$sections,$sheet);
             echo "<br>sectionResearchRange=".$sectionResearchRange."<br>";
 
+            //Research Lab Title (Institution)
+            $researchLabTitle = $this->getValueBySectionHeaderName("Research Lab Title",$rowData,$headers,$sectionResearchRange);
+            $researchLabTitleObject = $this->getObjectByNameTransformerWithoutCreating("Institution",$researchLabTitle,$systemuser);
 
+            //Research Lab Other Title (Not Institution)
+            $researchLabOtherTitle = $this->getValueBySectionHeaderName("Research Lab Other Title (Not Institution)",$rowData,$headers,$sectionResearchRange);
+
+            //Founded on (MM/DD/YYYY)
+            $researchLabFounded = $this->getValueBySectionHeaderName("Founded on (MM/DD/YYYY)",$rowData,$headers,$sectionResearchRange);
+            $researchLabFounded = \PHPExcel_Shared_Date::ExcelToPHP($researchLabFounded);
+            $researchLabFounded = new \DateTime("@$researchLabFounded");
+            echo "researchLabFounded=".$researchLabFounded->format('m/d/Y')."<br>";
+
+            //Dissolved on (MM/DD/YYYY)
+            $researchLabDissolved = $this->getValueBySectionHeaderName("Dissolved on (MM/DD/YYYY)",$rowData,$headers,$sectionResearchRange);
+            $researchLabDissolved = \PHPExcel_Shared_Date::ExcelToPHP($researchLabDissolved);
+            $researchLabDissolved = new \DateTime("@$researchLabDissolved");
+            echo "researchLabDissolved=".$researchLabDissolved->format('m/d/Y')."<br>";
+
+            //Web page link
+            $webPagelink = $this->getValueBySectionHeaderName("Web page link",$rowData,$headers,$sectionResearchRange);
+
+            if(
+                $researchLabTitleObject || $researchLabOtherTitle ||
+                $researchLabFounded || $researchLabDissolved || $webPagelink
+            ) {
+                $researchLab = new ResearchLab($systemuser);
+                $user->addResearchLab($researchLab);
+
+                $researchLab->setInstitution($researchLabTitleObject);
+                $researchLab->setName($researchLabOtherTitle);
+                $researchLab->setFoundedDate($researchLabFounded);
+                $researchLab->setDissolvedDate($researchLabDissolved);
+                $researchLab->setWeblink($webPagelink);
+            }
             ////////////// EOF Section: Research Lab ////////////////
+
+
+            //check Credentials
+            $credentials = $user->getCredentials();
+            if( !$credentials ) {
+                exit("Credentails object does not exist in a user object");
+            }
+
+            ////////////// Section: Identifier ////////////////
+            $sectionIdentifier = "Identifier";
+            $sectionIdentifierRange = $this->getMergedRangeBySectionName($sectionIdentifier,$sections,$sheet);
+            echo "<br>sectionIdentifierRange=".$sectionIdentifierRange."<br>";
+
+            //Identifier Type (IdentifierTypeList)
+            $identifierType = $this->getValueBySectionHeaderName("Identifier Type",$rowData,$headers,$sectionIdentifierRange);
+            $identifierTypeObject = $this->getObjectByNameTransformerWithoutCreating("IdentifierTypeList",$identifierType,$systemuser);
+
+            $identifierNumber = $this->getValueBySectionHeaderName("Identifier",$rowData,$headers,$sectionIdentifierRange);
+            $identifierEnablesAccess = $this->getValueBySectionHeaderName("Identifier enables system/service access",$rowData,$headers,$sectionIdentifierRange);
+            $identifierLink = $this->getValueBySectionHeaderName("Link",$rowData,$headers,$sectionIdentifierRange);
+
+            $identifierObject = null;
+            if( $identifierTypeObject || $identifierNumber || $identifierEnablesAccess || $identifierLink ){
+                $identifierObject = new Identifier();
+                $identifierObject->setStatus($identifierObject::STATUS_VERIFIED);
+                $credentials->addIdentifier($identifierObject);
+
+                $identifierObject->setKeytype($identifierTypeObject);
+                $identifierObject->setField($identifierNumber);
+                $identifierObject->setEnableAccess($identifierEnablesAccess);
+                $identifierObject->setLink($identifierLink);
+            }
+            ////////////// EOF Section: Identifier ////////////////
+
+
+
+            ////////////// Section: Personal Information ////////////////
+            $sectionPersonalInformation = "Personal Information";
+            $sectionPersonalInformationRange = $this->getMergedRangeBySectionName($sectionPersonalInformation,$sections,$sheet);
+            echo "<br>sectionPersonalInformationRange=".$sectionPersonalInformationRange."<br>";
+
+            //Date of Birth (MM/DD/YYYY)
+            $dateOfBirth = $this->getValueBySectionHeaderName("Date of Birth (MM/DD/YYYY)",$rowData,$headers,$sectionPersonalInformationRange);
+            $dateOfBirth = \PHPExcel_Shared_Date::ExcelToPHP($dateOfBirth);
+            $dateOfBirth = new \DateTime("@$dateOfBirth");
+            echo "dateOfBirth=".$dateOfBirth->format('m/d/Y')."<br>";
+
+            //Gender (SexList)
+            $gender = $this->getValueBySectionHeaderName("Gender",$rowData,$headers,$sectionPersonalInformationRange);
+            $genderObject = $this->getObjectByNameTransformerWithoutCreating("SexList",$gender,$systemuser);
+
+            $socialSecurityNumber = $this->getValueBySectionHeaderName("Social Security Number",$rowData,$headers,$sectionPersonalInformationRange);
+            $emergencyContactInformation = $this->getValueBySectionHeaderName("Emergency Contact Information",$rowData,$headers,$sectionPersonalInformationRange);
+
+            $credentials->setDob($dateOfBirth);
+            $credentials->setSex($genderObject);
+            $credentials->setSsn($socialSecurityNumber);
+            $credentials->setEmergencyContactInfo($emergencyContactInformation);
+            ////////////// EOF Section: Personal Information ////////////////
+
+
+
+            ////////////// Section: Certificate of Qualification ////////////////
+            $sectionCertificate = "Certificate of Qualification";
+            $sectionCertificateRange = $this->getMergedRangeBySectionName($sectionCertificate,$sections,$sheet);
+            echo "<br>sectionCertificateRange=".$sectionCertificateRange."<br>";
+
+            //Certificate of Qualification (COQ) Code
+            $coq = $this->getValueBySectionHeaderName("Certificate of Qualification (COQ) Code",$rowData,$headers,$sectionCertificateRange);
+
+            //COQ Serial Number
+            $coqSerialNumber = $this->getValueBySectionHeaderName("COQ Serial Number",$rowData,$headers,$sectionCertificateRange);
+            echo "coqSerialNumber=".$coqSerialNumber."<br>";
+
+            //COQ Expiration Date (MM/DD/YYYY)
+            $coqExpirationDate = $this->getValueBySectionHeaderName("COQ Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionCertificateRange);
+            $coqExpirationDate = \PHPExcel_Shared_Date::ExcelToPHP($coqExpirationDate);
+            $coqExpirationDate = new \DateTime("@$coqExpirationDate");
+            echo "coqExpirationDate=".$coqExpirationDate->format('m/d/Y')."<br>";
+
+            $credentials->setCoqCode($coq);
+            $credentials->setNumberCOQ($coqSerialNumber);
+            $credentials->setCoqExpirationDate($coqExpirationDate);
+            ////////////// EOF Section: Certificate of Qualification ////////////////
+
+
+
+            ////////////// Section: Clinical Laboratory Improvement Amendments (CLIA) ////////////////
+            $sectionClia = "Clinical Laboratory Improvement Amendments (CLIA)";
+            $sectionCliaRange = $this->getMergedRangeBySectionName($sectionClia,$sections,$sheet);
+            echo "<br>sectionCliaRange=".$sectionCliaRange."<br>";
+
+
+            ////////////// EOF Section: Clinical Laboratory Improvement Amendments (CLIA) ////////////////
 
             exit('1');
 
