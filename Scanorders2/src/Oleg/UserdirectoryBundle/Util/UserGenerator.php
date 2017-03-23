@@ -497,10 +497,18 @@ class UserGenerator {
             }
             ////////////// EOF Section: Medical Appointment Title ////////////////
 
+
+
             ////////////// Section: Location 1 ////////////////
             $this->processLocation("Location 1",$user,$systemuser,$sections,$sheet,$rowData,$headers);
             //$this->processLocation("Location 2",$user,$systemuser,$sections,$sheet,$rowData,$headers);
             ////////////// EOF Section: Location 1 ////////////////
+
+
+
+            ////////////// Section: Education ////////////////
+
+            ////////////// EOF Section: Education ////////////////
 
             exit('1');
 
@@ -619,7 +627,7 @@ class UserGenerator {
         $typeObjects = $this->processMultipleListObjects($types,$systemuser,"LocationTypeList");
 
         $phone = $this->getValueBySectionHeaderName("Phone Number",$rowData,$headers,$sectionRange);
-        $page = $this->getValueBySectionHeaderName("Pager Number",$rowData,$headers,$sectionRange);
+        $pager = $this->getValueBySectionHeaderName("Pager Number",$rowData,$headers,$sectionRange);
         $mobile = $this->getValueBySectionHeaderName("Mobile Number",$rowData,$headers,$sectionRange);
         $intercom = $this->getValueBySectionHeaderName("Intercom",$rowData,$headers,$sectionRange);
         $fax = $this->getValueBySectionHeaderName("Fax",$rowData,$headers,$sectionRange);
@@ -703,10 +711,39 @@ class UserGenerator {
         $comment = $this->getValueBySectionHeaderName("Comment",$rowData,$headers,$sectionRange);
         echo "comment=".$comment."<br>";
 
+        if(
+            $name || $typeObjects || $phone || $pager || $mobile || $intercom || $fax || $email ||
+            $institutionObject || $mailboxObject || $roomObject || $suiteObject || $floorObject ||
+            $buildingObject || $street1 || $street2 || $cityObject || $stateObject || $zip || $countryObject ||
+            $nyph || $cliaNumber || $cliaExpDate || $pfiNumber
+            //|| $comment
+        ) {
+            $location = new Location($systemuser);
+            $user->addLocation($location);
 
-        $location = new Location($systemuser);
-        $user->addLocation($location);
+            $location->setName($name);
 
+            foreach( $typeObjects as $typeObject ) {
+                $location->addLocationType($typeObject) ;
+            }
+
+            $location->setPhone($phone);
+            $location->setPager($pager);
+            $location->setMobile($mobile);
+            $location->setIc($intercom);
+            $location->setFax($fax);
+            $location->setEmail($email);
+            $location->setInstitution($institutionObject);
+            $location->setMailbox($mailboxObject);
+            $location->setRoom($roomObject);
+            $location->setSuite($suiteObject);
+            $location->setFloor($floorObject);
+            $location->setAssociatedCode($nyph);
+            $location->setAssociatedClia($cliaNumber);
+            $location->setAssociatedCliaExpDate($cliaExpDate);
+            $location->setAssociatedPfi($pfiNumber);
+            $location->setComment($comment);
+        }
 
 
     }

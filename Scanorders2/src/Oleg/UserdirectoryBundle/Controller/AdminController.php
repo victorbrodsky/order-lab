@@ -237,8 +237,12 @@ class AdminController extends Controller
 
         $updateres = $this->updateApplication();
 
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $updateres
+//        );
         $this->get('session')->getFlashBag()->add(
-            'notice',
+            'pnotify',
             $updateres
         );
 
@@ -255,7 +259,10 @@ class AdminController extends Controller
             $this->installAssets();
             //exit('<br>exit update application');
         }
-        return "Deploy script run successfully: Cache cleared, Assets dumped";
+
+        $updateres = "Deploy script run successfully: Cache cleared, Assets dumped";
+
+        return $updateres;
     }
     public function runDeployScript() {
         $dirSep = DIRECTORY_SEPARATOR;

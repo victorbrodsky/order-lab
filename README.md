@@ -92,7 +92,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	a) Install Homebrew: Open Terminal and enter the following command followed by the return key. It will take several minutes to install.
 
-		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)'
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 	b) Install Packer and Doctl with the following commands in Terminal, entered one at a time.
 
