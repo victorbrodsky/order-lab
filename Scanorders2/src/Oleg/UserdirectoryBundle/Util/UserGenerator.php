@@ -354,6 +354,7 @@ class UserGenerator {
                 $administrativeEnd || $institutionObject || $administrativePositionTypeObjects
             ) {
                 $administrativeTitle = new AdministrativeTitle($systemuser);
+                $administrativeTitle->setStatus($administrativeTitle::STATUS_VERIFIED);
                 $user->addAdministrativeTitle($administrativeTitle);
 
                 $administrativeTitle->setName($administrativeTitleObject);
@@ -412,6 +413,7 @@ class UserGenerator {
                 $academicStart || $academicEnd || $institutionObject
             ) {
                 $academicTitle = new AppointmentTitle($systemuser);
+                $academicTitle->setStatus($academicTitle::STATUS_VERIFIED);
                 $user->addAppointmentTitle($academicTitle);
 
                 $academicTitle->setName($academicTitleObject);
@@ -476,6 +478,7 @@ class UserGenerator {
                 $medicalStart || $medicalEnd || $institutionObject || $medicalPositionTypeObjects
             ) {
                 $medicalTitle = new MedicalTitle($systemuser);
+                $medicalTitle->setStatus($medicalTitle::STATUS_VERIFIED);
                 $user->addMedicalTitle($medicalTitle);
 
                 $medicalTitle->setName($academicTitleObject);
@@ -513,23 +516,74 @@ class UserGenerator {
 
             //Degree (TrainingDegreeList)
             $degree = $this->getValueBySectionHeaderName("Degree",$rowData,$headers,$sectionEducationRange);
-            $degreeObjects = $this->processMultipleListObjects($degree,$systemuser,"TrainingDegreeList");
+            //                                                  $className,$nameStr,$systemuser
+            $degreeObjects = $this->getObjectByNameTransformer("TrainingDegreeList",$degree,$systemuser);
 
             $appendDegree = $this->getValueBySectionHeaderName("Append degree to name",$rowData,$headers,$sectionEducationRange);
 
             //Residency Specialty (ResidencySpecialty)
             $residencySpecialty = $this->getValueBySectionHeaderName("Residency Specialty",$rowData,$headers,$sectionEducationRange);
-            $residencySpecialtyObjects = $this->processMultipleListObjects($residencySpecialty,$systemuser,"ResidencySpecialty");
+            $residencySpecialtyObjects = $this->getObjectByNameTransformer("ResidencySpecialty",$residencySpecialty,$systemuser);
 
             //Fellowship Subspecialty (FellowshipSubspecialty)
             $fellowshipSubspecialty = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers,$sectionEducationRange);
-            $fellowshipSubspecialtyObjects = $this->processMultipleListObjects($fellowshipSubspecialty,$systemuser,"FellowshipSubspecialty");
+            $fellowshipSubspecialtyObjects = $this->getObjectByNameTransformer("FellowshipSubspecialty",$fellowshipSubspecialty,$systemuser);
 
+            //Educational Institution (Institution)
+            $educationalInstitution = $this->getValueBySectionHeaderName("Educational Institution",$rowData,$headers,$sectionEducationRange);
+            $educationalInstitutionObjects = $this->getObjectByNameTransformer("Institution",$educationalInstitution,$systemuser);
+
+            //Start Date (MM/DD/YYYY)
+            $educationStartEnd = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionEducationRange);
+            $educationStartEnd = \PHPExcel_Shared_Date::ExcelToPHP($educationStartEnd);
+            $educationStartEnd = new \DateTime("@$educationStartEnd");
+            echo "educationStartEnd=".$educationStartEnd->format('m/d/Y')."<br>";
+
+            //Completion Date (MM/DD/YYYY)
+            $educationCompletionEnd = $this->getValueBySectionHeaderName("Completion Date (MM/DD/YYYY)",$rowData,$headers,$sectionEducationRange);
+            $educationCompletionEnd = \PHPExcel_Shared_Date::ExcelToPHP($educationCompletionEnd);
+            $educationCompletionEnd = new \DateTime("@$educationCompletionEnd");
+            echo "educationCompletionEnd=".$educationCompletionEnd->format('m/d/Y')."<br>";
+
+            //Completion Reason (CompletionReasonList)
+            $completionReason = $this->getValueBySectionHeaderName("Completion Reason",$rowData,$headers,$sectionEducationRange);
+            $completionReasonObjects = $this->getObjectByNameTransformerWithoutCreating("CompletionReasonList",$completionReason,$systemuser);
+
+            //Professional Fellowship Title (FellowshipTitleList)
+            $professionalFellowshipTitle = $this->getValueBySectionHeaderName("Professional Fellowship Title",$rowData,$headers,$sectionEducationRange);
+            $professionalFellowshipTitleObjects = $this->getObjectByNameTransformerWithoutCreating("FellowshipTitleList",$professionalFellowshipTitle,$systemuser);
+
+            $appendProfessionalFellowshipToName = $this->getValueBySectionHeaderName("Append professional fellowship to name",$rowData,$headers,$sectionEducationRange);
+
+            if(
+                $degreeObjects || $appendDegree || $residencySpecialtyObjects || $fellowshipSubspecialtyObjects ||
+                $educationalInstitutionObjects || $educationStartEnd || $educationCompletionEnd || $completionReasonObjects ||
+                $professionalFellowshipTitleObjects || $appendProfessionalFellowshipToName
+            ) {
+                $training = new Training($systemuser);
+                $training->setStatus($training::STATUS_VERIFIED);
+                $user->addTraining($training);
+
+                $training->setDegree($degreeObjects);
+                $training->setAppendDegreeToName($appendDegree);
+                $training->setResidencySpecialty($residencySpecialtyObjects);
+                $training->setFellowshipSubspecialty($fellowshipSubspecialtyObjects);
+                $training->setInstitution($educationalInstitutionObjects);
+                $training->setStartDate($educationStartEnd);
+                $training->setCompletionDate($educationCompletionEnd);
+                $training->setCompletionReason($completionReasonObjects);
+                $training->setFellowshipTitle($professionalFellowshipTitleObjects);
+                $training->setAppendFellowshipTitleToName($appendProfessionalFellowshipToName);
+            }
             ////////////// EOF Section: Education ////////////////
 
 
 
             ////////////// Section: Research Lab ////////////////
+            $sectionResearch = "Research Lab";
+            $sectionResearchRange = $this->getMergedRangeBySectionName($sectionResearch,$sections,$sheet);
+            echo "<br>sectionResearchRange=".$sectionResearchRange."<br>";
+
 
             ////////////// EOF Section: Research Lab ////////////////
 
@@ -742,6 +796,7 @@ class UserGenerator {
             //|| $comment
         ) {
             $location = new Location($systemuser);
+            $location->setStatus($location::STATUS_VERIFIED);
             $user->addLocation($location);
 
             $location->setName($name);
