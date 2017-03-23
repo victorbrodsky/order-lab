@@ -72,159 +72,184 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	 	bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
-7. Log into the resulting server's web page with the user name "Administrator" and the password "1234567890"
+7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server, or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890”. To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
 
-8. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
+8. To populate the default values for various tables, first use the “Admin” dropdown menu after login in as an administrator. Select the “List Manager”. Near the bottom of the page under “Populate Lists”, click “Populate Country and City Lists”, and confirm. When complete, click “Populate All Lists With Default Values”.  
 
+9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
-## Installation Instructions for Windows
+## Installation instructions for MacOS X
 
-1. Install git, source code and apache server:
+>MacOS X instructions are similar to the Linux instructions, as both systems are Unix based. MacOS X instructions are tested on version 10.12.3 “Sierra”.  
 
-	a) [Install](https://git-scm.com/) GIT version control.
+1. Sign up for [Digital Ocean](https://www.digitalocean.com/) and obtain an [API access key token](https://www.digitalocean.com/help/api/). It should look similar to this one: e4561f1b44faa16c2b43e94c5685e5960e852326b921883765b3b0e11111f705
+
+2. Choose a folder that will be used for installation of ORDER. This folder will be referred to as “/ORDER_LOCATION/“ in these instructions, which you will need to replace with the actual file path of the location you select.
 	
-	b) Clone order-lab source code from the remote repository to the server
-	   git clone https://github.com/remote-repository/project.git
+	a) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Move the double click the "order-lab-master" zip file extract the contents, then move the folder to “/ORDER_LOCATION/“.
 
-	c) Install an Apache-PHP-MySQL stack of your choice (preferably with PHP version 5.6), such as those listed below. MS SQL Server has been tested as well.
+3. [“Homebrew”](https://brew.sh) can be used to install the necessary software, [Packer](https://www.packer.io/) and [doctl](https://github.com/digitalocean/doctl). This can be performed through the application Terminal.
 
-	* [AMPPS](http://www.ampps.com/)
-	* [WAMP](http://www.wampserver.com/en/)
-	* [XAMPP](https://www.apachefriends.org/index.html)
+	a) Install Homebrew: Open Terminal and enter the following command followed by the return key. It will take several minutes to install.
 
-2. Modify php.ini:
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)”
+
+	b) Install Packer and Doctl with the following commands in Terminal, entered one at a time.
+
+		brew install packer
+		brew install doctl
+
+4. Edit parameters.yml in this project's folder to set desired values (especially for passwords)
+
+	a) Edit /ORDER_LOCATION/order-lab-master/packer/parameters.yml in a text editor such as TextEdit and save.
+
+5. Deploy ORDER:
+
+	a) Change the working directory in Terminal by entering the following command:
+
+		cd /ORDER_LOCATION/order-lab-master/packer/
+
+	b) Run the deployment script with the following command, replacing “API-TOKEN-FROM-STEP-1” with your unique API token. The script will take several minutes to run.
+
+		bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
 
-	a) Enable the ldap extension
+7. Use the address http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login, where DOMAIN is either the IP address of the server (provided in the last lines of the script that was run in terminal, in the format “droplet IP=123.45.678.90.”), or the domain. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890”. To log in in the future, simply use the regular login page at http://IPADDRESS/order/.
 
-	 	extension=php_ldap.dll
+8. To populate the default values for various tables, first use the “Admin” dropdown menu after login in as an administrator. Select the “List Manager”. Near the bottom of the page under “Populate Lists”, click “Populate Country and City Lists”, and confirm. When complete, click “Populate All Lists With Default Values”.  
 
-	b) Enable the pdo extension
+9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
 
-	For PHP version 5.6 "[php_pdo_sqlsrv_56_ts.dll and php_sqlsrv_56_ts.dll](http://www.microsoft.com/en-us/download/details.aspx?id=20098)" should be placed in PHP/ext folder, and the following lines added to php.ini:
 
-	 	extension=php_sqlsrv_56_ts.dll
-	 	extension=php_pdo_sqlsrv_56_ts.dll
+## Installation Instructions for Windows 
+(Tested on Windows 10 and Windows 7)
 
-	For the older PHP version 5.4 "[php_pdo_sqlsrv_54_ts.dll and php_sqlsrv_54_ts.dll](http://www.microsoft.com/en-us/download/details.aspx?id=20098)" should be placed in PHP/ext folder, and the following line added to php.ini:
+1. Choose a folder that will be used for installation of ORDER. This folder will be referred to as "C:\ORDER_LOCATION\" in these instructions, which you will need to replace with the actual file path of the location you select. Several files will need to be downloaded and installed.
+	
+	a) Download the [installer for GIT version control](https://git-scm.com/download/win/) appropriate for your version of Windows. Run the installer with the standard installation options. (Tested with version 2.12.0.)
 
-	 	extension=php_sqlsrv_54_ts.dll
-	 	extension=php_pdo_sqlsrv_54_ts.dll
+	b) Install an Apache-PHP-MySQL stack of your choice (preferably with PHP version 5.6 such as AMPPS, WAMP, or XAMPP.  MS SQL Server has been tested as well). The following instructions will assume AMPPS has been chosen.
 
-	c) Download the [Microsoft ODBC Driver 11 for PHP for SQL Server](https://www.microsoft.com/en-us/download/details.aspx?id=36434)
+	c) Download the [installer for AMPPS](http://www.ampps.com/downloads) Apache-PHP-MySQL stack appropriate for your version of Windows. Run the installer with the standard installation options. After installation, open AMPPS, and when prompted to install "C++ Redistributable Visual Studio", select "Yes". (Tested with version 3.6.)
 
-		* For 64 bit (x64) Operating Systems use the x64\msodbcsql.msi installation file
-		* For 32 bit (x86) Operating Systems use the x86\msodbcsql.msi installation file
+	d) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Right click the "order-lab-master" zip file and select "Extract AllÖ". Select the folder you have chosen for installation ("C:\ORDER_LOCATION\") as the destination for the extracted files.
 
-	d) Enable the GD library extension
+2. Configure AMPPS. At this point, AMPPS should be open, and Apache web server, Php, and MySQL should display as "Running". If Apache or MySQL is not running, turn it on by clicking the switch to the left of itís name in AMPPS.
 
-	 	extension=php_gd2.dll
+	a) Select PHP version 5.6. In AMPPS, select Options (an icon that appears as a grid of squares near the top of the AMPPS window) and select "Change PHP Version". Select "PHP 5.6". After restarting, Apache, Php, and MySQL should return to "Running".
 
-	e) Enable Internationalization support
-
-	 	extension=php_intl.dll
-
-	f) Enable the file info extension
-
-		extension=php_fileinfo.dll
-
-	g) For PHP version 5.4 [download OPCache](http://windows.php.net/downloads/pecl/releases/opcache/7.0.3/php_opcache-7.0.3-5.4-ts-vc9-x86.zip) and [enable it](http://stackoverflow.com/questions/24155516/how-to-install-zend-opcache-extension-php-5-4-on-windows); for PHP version 5.6 just [enable OPCache](http://php.net/manual/en/opcache.setup.php).
-
-		zend_extension="PATH-TO-WEB-SERVER\WebServer\PHP\Ext\php_opcache.dll"
 		
-		Note: this step is required if opcache is not running. Php configuration can be verified on the /order/info.php page after step 3.
+	b) Configure the php.ini file. Click on the gear icon the right of "Php-!" in the AMPPS application window. Click the wrench icon ("Configuration") to the right of the gear icon. The php.ini file will open in a text editor. 
+		Find the line matching ";date.timezone = " and replace it with "date.timezone = ‘TIMEZONE’”, where TIMEZONE is replaced with one of the timezone options available [here](http://php.net/manual/en/timezones.php), such as “date.timezone = ‘America/New_York’”.
 
-	h) Make sure that Apache can find and load icu*.dll files from the PHP base folder. One possible solution is to copy these files to Apache's "bin" folder:
+		Enable the ldap extensions, international support, the GD library extension, and the file info extension by removing the semicolon at the beginning of the following lines (if a semicolon is present): 
+		;extension=php_ldap.dll
+		;extension=php_ldap.dll
+		;extension=php_gd2.dll
+		;extension=php_fileinfo.dll
 
-		* icudt49.dll
-		* icuin49.dll
-		* icuio49.dll
-		* icule49.dll
-		* iculx49.dll
-		* icutu49.dll
-		* icuuc49.dll
+	c) If an option other than AMPPS is being used, the following configurations may be necessary. If AMPPS is being used, skip this step.
 
-	i) Set a system timezone:
-		date.timezone = 'America/New_York'	
+		The pdo extension may need to be enabled. For PHP version 5.6 "php_pdo_sqlsrv_56_ts.dll and php_sqlsrv_56_ts.dll" should be placed in PHP/ext folder, and the following lines added to php.ini:
+			extension=php_sqlsrv_56_ts.dll
+			extension=php_pdo_sqlsrv_56_ts.dll
 
-3. Modify Apache's httpd.conf as specified in the [Symfony web server configuration](http://symfony.com/doc/current/setup/web_server_configuration.html):
+		For the older PHP version 5.4 "php_pdo_sqlsrv_54_ts.dll and php_sqlsrv_54_ts.dll" should be placed in PHP/ext folder, and the following line added to php.ini:
+ 			extension=php_sqlsrv_54_ts.dll
+			extension=php_pdo_sqlsrv_54_ts.dll
 
-	a) Set alias to the order-lab www folder:
-	
-	```
-	<VirtualHost *:80>
-		<Directory "C:\path-to-lab-order\Scanorders2\web\"
-			Options +FollowSymLinks -Includes
-			AllowOverride All  
-			Require all granted
-		</Directory>
-		Alias /order "C:\path-to-lab-order\Scanorders2\web\"
-		Alias /ORDER "C:\path-to-lab-order\Scanorders2\web\"
-		RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
-		ErrorLog ${APACHE_LOG_DIR}/error.log
-		CustomLog ${APACHE_LOG_DIR}/access.log combined
-	</VirtualHost>
-	```
+		If you are using MSSQL Server, you will need to download the Microsoft ODBC Driver 11 for PHP for SQL Server
+			For 64 bit (x64) Operating Systems use the x64\msodbcsql.msi installation file
+			For 32 bit (x86) Operating Systems use the x86\msodbcsql.msi installation file
 
-	Note: Different Apache-PHP-MySQL stacks have different way to set alias to the www folder. 
-	For example, AMPPS does not require to change httpd.conf file; instead the alias to the www folder can be set in the "Alias Manager" from the AMPPS management panel. 
+	d) You may need to download and enable OPCache if you are not using AMPPS (in which it is enabled by default). Note: this step is required if OPCache is not running. Php configuration can be verified on the /order/info.php page after step 3.
+
+
+		a) For PHP version 5.4 download OPCache and enable it; for PHP version 5.6 just enable OPCache.
+
+			zend_extension="PATH-TO-WEB-SERVER\WebServer\PHP\Ext\php_opcache.dll"
+
+
+		b) Make sure that Apache can find and load icu*.dll files from the PHP base folder. One possible solution is to copy these files to Apache's "bin" folder:
+			 * icudt49.dll
+			 * icuin49.dll
+			 * icuio49.dll
+			 * icule49.dll
+			 * iculx49.dll
+			 * icutu49.dll
+			 * icuuc49.dll
+
+	g) Set up an alias in the server directing to the order-lab-master files. In AMPPS, click the globe icon at the top of the window to open "http://localhost/AMPPS/" in a web browser (recent versions of Firefox or Chrome are preferred). From this [AMPPS Home page](http://localhost/AMPPS/), various server settings can be configured. Open "Alias Manager". "Click Add New". Enter "order" under "Alias Name", and "C:/ORDER_LOCATION/order-lab-master/Scanorder2/web" under "Path" (using backslashes in the file path, rather than forward slashes). Click "Create Alias". Now create a second alias with the name "ORDER" and the same path.
+
+		If you are not using AMPPS, different Apache-PHP-MySQL stacks may require modifying the httpd.conf file. If so, set alias to the order-lab www folder:
+
+			<VirtualHost *:80>
+				<Directory “C:\ORDER_LOCATION\Scanorders2\web\"
+					Options +FollowSymLinks -Includes
+					AllowOverride All  
+					Require all granted
+				</Directory>
+				Alias /order "C:\ORDER_LOCATION\Scanorders2\web\"
+				Alias /ORDER "C:\ORDER_LOCATION\Scanorders2\web\"
+				RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
+				ErrorLog ${APACHE_LOG_DIR}/error.log
+				CustomLog ${APACHE_LOG_DIR}/access.log combined
+			</VirtualHost>
 		
-	b) Restart the apache server and make sure apache and php are running without errors in the log file.	
+		
+	h) Restart the apache server and make sure Apache and php are running.	
+
+	i) Create a database and user. On the [AMPPS Home page](http://localhost/AMPPS/), open "Add Database". Enter the name "ScanOrder" for the database. Click "Create". Open the "Databases" tab. Click "Check Privileges" to the right of the newly created "ScanOrder" database. Click "Add user". Enter "symfony2" as the "User Name". Change the "Host" to "Local". Enter "symfony2" as the password, and confirm the password. Ensure the option "Grant all privileges on database "Scanorder"" is checked. Check the box for "Global Privileges" "Check Alll". Click "Go" at the bottom of the page to create the user.
 	
-4. [Download](https://getcomposer.org/download/) and [install](https://getcomposer.org/doc/00-intro.md) Composer. Make sure the ...\WebServer\PHP path and the composer's path are added to the system path.
+3. Download [Composer](https://getcomposer.org/download/) and [install](https://getcomposer.org/doc/00-intro.md). Run the installer (tested with version 1.4.1). When prompted to "Choose the command-line PHP you want to use", browse to the file location "C:\Program Files (x86)\AMPPS\php\php.exe". For other options, choose the default configuration.
 
-5. Create the application's database and the associated database user:
+4. Update and configure Symfony.
 
-	a) create a database user name specified in the database_user line of parameters.yml file with "super user" permissions.
+	a) AMPPS uses MySQL and not MSSQL, so this parameter must be changed: Open the file "C:\ORDER_LOCATION\order-lab-master\Scanorders2\app\config\parameters.yml" in a text editor. Replace the line "database_driver: pdo_sqlsrv" with "database_driver: pdo_mysql". Save and close the file.
 
-	b) create a database with name specified in the database_name line of parameters.yml file
+	b) Open a Windows Command Prompt. Change the directory to the Scanorders2 folder by entering the command "cd C:\ORDER_LOCATION\order-lab-master\Scanorders2\".
 
-	c) assign the user created in step a) to the Database created in step b) (symfony2->properties->User Mapping-> map ScanOrder with db_owner)
+	c) Update symfony vendors by entering the command "composer self-update". When it is complete, enter the command "composer update". The update will take several minutes. It will run until it reached the point where it will prompt for missing parameters by displaying: "database_driver (pdo_sqlsrv): Some parameters are missing. Please provide them.". 
 
-6. Edit Symfony's app/config/parameters.yml to set the defined Database configuration values in the previous step 5:
+	d) When prompted for the following values, return the value to the right and enter return. When prompted for other values, leave blank and enter return. These values are located in Symfony’s parameters file (app/config/parameters.yml) and set the defined Database configuration values.
 
-    	database_driver: pdo_sqlsrv
-    	database_host: 127.0.0.1
-    	database_port: null
-    	database_name: ScanOrder
-    	database_user: symfony
-    	database_password: symfony
-    	mailer_transport: smtp
-    	mailer_host: 127.0.0.1
-    	mailer_user: null
-    	mailer_password: null
-    	locale: en   
-    	delivery_strategy: realtime
+		database_host: 127.0.0.1
+		database_port: null
+		database_name: ScanOrder
+		database_user: symfony2
+		database_password: symfony2
+		mailer_transport: smtp
+		mailer_host: 127.0.0.1
+		mailer_user: null
+		mailer_password: null
+		locale: en   
+		delivery_strategy: realtime
 	
-7. Update symfony vendors by running these console commands in path-to-lab-order/Scanorders2 folder:
-
-		composer self-update
-
-	 	composer update
-
-8. Deployment
+5. Deployment
 	
-	a) Run the deployment script to clean the cache and install assets in path-to-lab-order/Scanorders2 folder: 
-	
-	 	deploy_prod
-	
+	a) Run the deployment script. Open a Windows File Explorer window and navigate to "C:\ORDER_LOCATION\order-lab-master\Scanorders2\". Right click in an empty space in the window, and select "Git Bash here". In the Git Bash window that opens, enter the command "./deploy_prod.sh". The script will take several minutes to run. "Deploy complete." will appear when finished.
+		
 	b) Create the Administrator account with password 1234567890 by opening the following URL in your browser (specify the server's IP or domain name):
 
-	[http://localhost/order/folder/admin/first-time-login-generation-init/](http://localhost/order/folder/admin/first-time-login-generation-init/)
+	[http://localhost/order/directory/admin/first-time-login-generation-init/](http://localhost/order/directory/admin/first-time-login-generation-init/)
 	
 	c) Generate default country and city lists by navigating to Employee Directory->Admin->List Manager and clicking "Populate Country and City Lists"
 	
 	d) Generate all other default parameters by navigating to Employee Directory->Admin->List Manager and clicking "Populate All Lists With Default Values"
 	
-	c) Generate default parameters for the "Glass Slide Scan Orders" site by navigating to Glass Slide Scan Orders->Scan Order List Manager->and clicking "Populate All Lists With Default Values".
+	e) Generate default parameters for the "Glass Slide Scan Orders" site by navigating to Glass Slide Scan Orders->Scan Order List Manager->and clicking "Populate All Lists With Default Values".
 	
-	d) Run the deployment script again:
+	f) Run the deployment script again:
 
-	 	deploy_prod
+	 	deploy_prod.sh
 
-9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
+6. Use the address http://localhost/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator login. Then, log into the server's web page at with the user name "Administrator" and the password "1234567890”. To log in in the future, simply use the regular login page at http://localhost/order/.
 
-10. Obtain and install these optional applications:
+7. To populate the default values for various tables, first use the “Admin” dropdown menu after login in as an administrator. Select the “List Manager”. Near the bottom of the page under “Populate Lists”, click “Populate Country and City Lists”, and confirm. When complete, click “Populate All Lists With Default Values”.  
+
+8. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
+
+9. Obtain and install these optional applications:
 
 	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion ( default path: C:\Program Files\wkhtmltopdf\ )
 	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path: C:\Program Files (x86)\LibreOffice 5\ )
@@ -256,7 +281,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 ### After modification of html, js or css files, run this single console script to clear cache and dump assets in /Scanorders2 folder:
 
-	 deploy_prod
+	 deploy_prod.sh
 
 ### To run composer update or self-update
 

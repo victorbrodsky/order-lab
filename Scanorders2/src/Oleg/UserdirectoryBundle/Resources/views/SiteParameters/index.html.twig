@@ -108,7 +108,44 @@
                 <td>{{ entity.liveSiteRootUrl }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'liveSiteRootUrl'}) }}">Edit</a></td>
             </tr>
-            
+
+
+            {#Maintenance#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Maintenance Mode:</h3>
+                    <p>
+                        Note: start maintenance after "Max Idle Time" minutes. This will insure that all users are logged out by JS.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>Maintenance</td>
+                <td>
+                    {% set maintenanceStr = 'No' %}
+                    {% if entity.maintenance == true %}
+                        {% set maintenanceStr = 'Yes' %}
+                    {% endif %}
+                    {{ maintenanceStr }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenance'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintenance Until</td>
+                {#<td>{{ entity.maintenanceenddate|date('m/d/Y H:i') }}</td>#}
+                <td>{{ entity.getMaintenanceenddateString }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceenddate'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintenance Message on Logout (use [[datetime]] string to use "Maintenance Until" field)</td>
+                <td>{{ entity.maintenancelogoutmsg }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenancelogoutmsg'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintenance Message on Login (use [[datetime]] string to use "Maintenance Until" field)</td>
+                <td>{{ entity.maintenanceloginmsg }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
+            </tr>
 
 
             {#ScanOrder DB#}
@@ -390,44 +427,6 @@
                 <td>Department URL</td>
                 <td>{{ entity.departmenturl }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'departmenturl'}) }}">Edit</a></td>
-            </tr>
-
-
-            {#Maintenance#}
-            <tr>
-                <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Maintenance Mode:</h3>
-                    <p>
-                        Note: start maintenance after "Max Idle Time" minutes. This will insure that all users are logged out by JS.
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>Maintenance</td>
-                <td>
-                    {% set maintenanceStr = 'No' %}
-                    {% if entity.maintenance == true %}
-                        {% set maintenanceStr = 'Yes' %}
-                    {% endif %}
-                    {{ maintenanceStr }}
-                </td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenance'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                <td>Maintenance Until</td>
-                {#<td>{{ entity.maintenanceenddate|date('m/d/Y H:i') }}</td>#}
-                <td>{{ entity.getMaintenanceenddateString }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceenddate'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                <td>Maintenance Message on Logout (use [[datetime]] string to use "Maintenance Until" field)</td>
-                <td>{{ entity.maintenancelogoutmsg }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenancelogoutmsg'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                <td>Maintenance Message on Login (use [[datetime]] string to use "Maintenance Until" field)</td>
-                <td>{{ entity.maintenanceloginmsg }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
             </tr>
 
 

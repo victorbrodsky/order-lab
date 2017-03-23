@@ -214,7 +214,6 @@ class AdminController extends Controller
             $adminRes = $adminRes . " <br> " .$updateres;
 
         } else {
-            //$updateres = $this->updateApplication();
             $adminRes = 'Admin user already exists';
             //exit('users already exists');
         }
@@ -271,12 +270,10 @@ class AdminController extends Controller
             $linux = true;
         }
 
-        $path = getcwd();
-        echo "webPath=$path<br>";
+        $old_path = getcwd();
+        echo "webPath=$old_path<br>";
 
-        $old_path = $path;
-
-        $deploy_path = str_replace("web","",$path);
+        $deploy_path = str_replace("web","",$old_path);
         echo "deploy_path=$deploy_path<br>";
 
         if( is_dir($deploy_path) ) {
@@ -290,128 +287,18 @@ class AdminController extends Controller
         echo chdir($deploy_path);
         echo "pwd=[".exec("pwd")."]<br>";
 
-        $script = 'deploy_prod.sh';
-        //$script = 'deploy.sh';
-        echo "script=$script<br>";
-
-        if( file_exists($script) ) {
-            echo "deploy exists! <br>";
-        } else {
-            echo "not deploy exists: $script <br>";
-            exit('error');
+        //$linux
+        if( $linux ) {
+            $this->runProcess("php app" . $dirSep . "console assets:install");
+            $this->runProcess("php app" . $dirSep . "console cache:clear --env=prod --no-debug");
+            $this->runProcess("php app" . $dirSep . "console assetic:dump --env=prod --no-debug");
         }
 
-//        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-//            echo 'This is a server using Windows! <br>';
-//            //run without bash
-//
-//        } else {
-//            echo 'This is a server not using Windows! Assume Linux <br>';
-//            $script = "bash ".$script;
-//
-//            //$cachePath = $this->getCachePath();
-//            //echo exec("chmod -R 777 ".$cachePath)."<br>";
-//            echo "pwd=[".exec("pwd")."]<br>";
-//            //echo exec("chmod -R 777 /usr/local/bin/order-lab");
-//            echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
-//            echo exec("chown -R www-data:www-data web");
-//
-//            echo "assets:install=" . exec("php app/console assets:install") . "<br>";
-//            echo "cache:clear=" . exec("php app/console cache:clear --env=prod --no-debug") . "<br>";
-//            echo "assetic:dump=" . exec("php app/console assetic:dump --env=prod --no-debug") . "<br>";
-//
-////            echo exec("chown -R www-data:www-data web");
-////            echo exec("chown -R www-data:www-data app/cache");
-////            echo exec("chown -R www-data:www-data app/logs");
-//        }
-
-        if(0) {
-
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                echo 'This is a server using Windows! <br>';
-                //run without bash
-
-            } else {
-                echo 'This is a server not using Windows! Assume Linux <br>';
-                $script = "bash ".$script;
-
-                //$cachePath = $this->getCachePath();
-                //echo exec("chmod -R 777 ".$cachePath)."<br>";
-                echo "pwd=[".exec("pwd")."]<br>";
-                //echo exec("chmod -R 777 /usr/local/bin/order-lab");
-                //echo exec("chown -R www-data:www-data /usr/local/bin/order-lab");
-                echo exec("chown -R www-data:www-data web");
-                echo exec("chown -R www-data:www-data app/cache");
-                echo exec("chown -R www-data:www-data app/logs");
-            }
-
-            $process = new Process($script);
-            $process->setTimeout(1800); //sec; 1800 sec => 30 min
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-            echo $process->getOutput();
-
-        } else {
-
-            if( $linux ) {
-                $this->runProcess("php app" . $dirSep . "console assets:install");
-                $this->runProcess("php app" . $dirSep . "console cache:clear --env=prod --no-debug");
-                $this->runProcess("php app" . $dirSep . "console assetic:dump --env=prod --no-debug");
-            }
-
-            if( $windows ) {
-                echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
-                echo "cache:clear=" . exec("php app".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
-                echo "assetic:dump=" . exec("php app".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
-
-                //remove app/cache/prod
-                $cachePathOld = "app".$dirSep."cache".$dirSep."prod";
-                $cachePathNew = "app".$dirSep."cache".$dirSep."pro_";
-                //echo "rm =" . exec("php app/console assets:install") . "<br>";
-
-                if( is_dir($cachePathOld) ) {
-                    echo "cachePathOld exists! <br>";
-                } else {
-                    echo "cachePathOld not exists: $cachePathOld <br>";
-                    exit('error');
-                }
-                if( is_dir($cachePathNew) ) {
-                    echo "cachePathNew exists! <br>";
-                } else {
-                    echo "cachePathNew not exists: $cachePathNew <br>";
-                    exit('error');
-                }
-
-                echo exec("rmdir ".$cachePathOld." /S /Q")."<br>";
-                echo exec("rename ".$cachePathNew." ".$cachePathOld)."<br>";
-            }
-
-            //switch back to web folder
-            $output = chdir($old_path);
-            echo "<pre>$output</pre>";
-
-            return;
-            exit('exit runDeployScript');
-
-//            if( $linux ) {
-//                echo exec("chown -R www-data:www-data web");
-//                echo exec("chown -R www-data:www-data app/cache");
-//                echo exec("chown -R www-data:www-data app/logs");
-//                echo exec("chmod -R 777 /usr/local/bin/order-lab/");
-//            }
-
+        //$windows
+        if( $windows ) {
             echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
             echo "cache:clear=" . exec("php app".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
             echo "assetic:dump=" . exec("php app".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
-
-//            if( $linux ) {
-//                echo exec("chown -R www-data:www-data web");
-//                echo exec("chown -R www-data:www-data app/cache");
-//                echo exec("chown -R www-data:www-data app/logs");
-//                echo exec("chmod -R 777 /usr/local/bin/order-lab/");
-//            }
 
             //remove app/cache/prod
             $cachePathOld = "app".$dirSep."cache".$dirSep."prod";
@@ -431,49 +318,19 @@ class AdminController extends Controller
                 exit('error');
             }
 
-            //replace app/cache/pro_ to prod
-
-            if( $windows ) {
-                echo 'This is a server using Windows!';
-                //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
-                echo exec("rmdir ".$cachePathOld." /S /Q")."<br>";
-                echo exec("rename ".$cachePathNew." ".$cachePathOld)."<br>";
+            echo exec("rmdir ".$cachePathOld." /S /Q")."<br>";
+            echo exec("rename ".$cachePathNew." ".$cachePathOld)."<br>";
+            if( is_dir($cachePathNew) ) {
+                echo exec("rmdir ".$cachePathNew." /S /Q")."<br>";
             }
-
-            if( $linux ){
-                echo 'This is a server not using Windows! Assume Linux';
-
-                //$this->runProcess("sudo chown -R www-data:www-data /usr/local/bin/order-lab");
-
-                //$script = "bash ".$script;
-                //$script = "php app/console cache:clear --env=prod --no-debug";
-                //$this->runProcess($script);
-
-                //echo exec("rm -r ".$cachePathOld)."<br>";
-                //echo exec("mv ".$cachePathNew." ".$cachePathOld)."<br>";
-            }
-
         }
-
-
-//        $response = new StreamedResponse();
-//        $response->setCallback(function() use ($process) {
-//            $process->run(function ($type, $buffer) {
-//                if (Process::ERR === $type) {
-//                    echo 'ERR > '.$buffer;
-//                } else {
-//                    echo 'OUT > '.$buffer;
-//                    echo '<br>';
-//                }
-//            });
-//        });
-//        $response->setStatusCode(200);
 
         //switch back to web folder
         $output = chdir($old_path);
         echo "<pre>$output</pre>";
 
-        exit('exit runDeployScript');
+        return;
+        //exit('exit runDeployScript');
     }
     public function runProcess($script) {
         $process = new Process($script);
@@ -484,157 +341,158 @@ class AdminController extends Controller
         }
         echo $process->getOutput();
     }
-    public function clearCache() {
-        //echo exec('whoami') . "<br>";
-
-        $appPath = $this->container->getParameter('kernel.root_dir');
-        echo "appPath=".$appPath."<br>";
-
-        $dirSep = DIRECTORY_SEPARATOR;
-
-        $cachePath = ''.$appPath. $dirSep .'cache';
-
-        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
-        echo "cachePath=".$cachePath."<br>";
-
-        if( is_dir($cachePath) ) {
-            echo "dir! <br>";
-        } else {
-            echo "not dir! <br>";
-            exit('not dir:'.$cachePath);
-        }
-
-        echo exec("chmod -R 777 ".$cachePath)."<br>";
-
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            echo 'This is a server using Windows!';
-            //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
-            echo exec("rmdir ".$cachePath." /S /Q")."<br>";
-        } else {
-            echo 'This is a server not using Windows! Assume Linux';
-            echo exec("rm -r ".$cachePath)."<br>";
-        }
-
-
-    }
-    public function getCachePath() {
-        $appPath = $this->container->getParameter('kernel.root_dir');
-        echo "appPath=".$appPath."<br>";
-
-        $dirSep = DIRECTORY_SEPARATOR;
-
-        $cachePath = ''.$appPath. $dirSep .'cache';
-
-        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
-        echo "cachePath=".$cachePath."<br>";
-
-        if( is_dir($cachePath) ) {
-            echo "dir! <br>";
-        } else {
-            echo "not dir! <br>";
-            exit('not dir:'.$cachePath);
-        }
-
-        return $cachePath;
-    }
-    public function clearCacheByService() {
-
-        //$fs = new Filesystem();
-        //$fs->remove($this->container->getParameter('kernel.cache_dir'));
-        //return;
-
-        $command = $this->container->get('user_cache_clear');
-        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
-        $output = new ConsoleOutput();
-        $command->run($input, $output);
-        //exit($output);
-    }
-    public function installAssets() {
-        $dirSep = DIRECTORY_SEPARATOR;
-
-        $appPath = $this->container->getParameter('kernel.root_dir');
-        echo "appPath=".$appPath."<br>";
-
-        if( 1 ) {
-            //$webPath = getcwd();
-            //echo "webPath=$webPath<br>";
-
-            $console = $appPath . $dirSep . 'console';
-            if( file_exists($console) ) {
-                echo "console exists! <br>";
-            } else {
-                echo "not console exists: $console <br>";
-                exit('error');
-            }
-
-            echo exec("php " . $console . " assets:install " );
-            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
-
-            //echo exec("php " . $console . " assets:install");
-            //echo exec("php " . $console . " assetic:dump");
-
-        } else {
-
-            //echo shell_exec("chmod -R 777 ".$webPath)."<br>";
-
-            //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
-            //echo "cachePath=".$cachePath."<br>";
-
-            //$path = ''.$appPath.'\\..\\'.'deploy_prod';
-            $path = ''.$appPath."$dirSep..$dirSep".'deploy_prod';
-
-            echo "path=".$path."<br>";
-            if( file_exists($path) ) {
-                echo "path exists! <br>";
-            } else {
-                echo "path not exists: $path <br>";
-                exit('error');
-            }
-
-            echo exec("chmod -R 777 " . $path) . "<br>";
-            echo exec("bash " . $path) . "<br>";
-        }
-
-        //exit('exit install assests');
-    }
-    public function installAssetsByService() {
-        $command = $this->container->get('user_install_assets');
-        $input = new ArgvInput(
-            array(
-                '--env=' . $this->container->getParameter('kernel.environment'),
-                //'--symlink',
-                //'--relative'
-            )
-        );
-        $output = new ConsoleOutput();
-        $command->run($input, $output);
-        exit($output);
-    }
-    //Testing method
-    public function cccAction()
-    {
-        $kernel = $this->get('kernel');
-        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
-        $application->setAutoExit(false);
-        $options = array('command' => 'cache:clear',"--env" => 'prod', '--no-warmup' => true);
-        $res = $application->run(new \Symfony\Component\Console\Input\ArrayInput($options));
-        echo "res=".$res."<br>";
-        return new Response();
-    }
-    //Testing method
-    public function runCommand($command, $arguments = array())
-    {
-        $kernel = $this->container->get('kernel');
-        $app = new Application($kernel);
-
-        $args = array_merge(array('command' => $command), $arguments);
-
-        $input = new ArrayInput($args);
-        $output = new NullOutput();
-
-        return $app->doRun($input, $output);
-    }
-
+/////////////////////  NOT USED FOR DEPLOY ////////////////////////
+//    public function clearCache() {
+//        //echo exec('whoami') . "<br>";
+//
+//        $appPath = $this->container->getParameter('kernel.root_dir');
+//        echo "appPath=".$appPath."<br>";
+//
+//        $dirSep = DIRECTORY_SEPARATOR;
+//
+//        $cachePath = ''.$appPath. $dirSep .'cache';
+//
+//        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
+//        echo "cachePath=".$cachePath."<br>";
+//
+//        if( is_dir($cachePath) ) {
+//            echo "dir! <br>";
+//        } else {
+//            echo "not dir! <br>";
+//            exit('not dir:'.$cachePath);
+//        }
+//
+//        echo exec("chmod -R 777 ".$cachePath)."<br>";
+//
+//        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+//            echo 'This is a server using Windows!';
+//            //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
+//            echo exec("rmdir ".$cachePath." /S /Q")."<br>";
+//        } else {
+//            echo 'This is a server not using Windows! Assume Linux';
+//            echo exec("rm -r ".$cachePath)."<br>";
+//        }
+//
+//
+//    }
+//    public function getCachePath() {
+//        $appPath = $this->container->getParameter('kernel.root_dir');
+//        echo "appPath=".$appPath."<br>";
+//
+//        $dirSep = DIRECTORY_SEPARATOR;
+//
+//        $cachePath = ''.$appPath. $dirSep .'cache';
+//
+//        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
+//        echo "cachePath=".$cachePath."<br>";
+//
+//        if( is_dir($cachePath) ) {
+//            echo "dir! <br>";
+//        } else {
+//            echo "not dir! <br>";
+//            exit('not dir:'.$cachePath);
+//        }
+//
+//        return $cachePath;
+//    }
+//    public function clearCacheByService() {
+//
+//        //$fs = new Filesystem();
+//        //$fs->remove($this->container->getParameter('kernel.cache_dir'));
+//        //return;
+//
+//        $command = $this->container->get('user_cache_clear');
+//        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
+//        $output = new ConsoleOutput();
+//        $command->run($input, $output);
+//        //exit($output);
+//    }
+//    public function installAssets() {
+//        $dirSep = DIRECTORY_SEPARATOR;
+//
+//        $appPath = $this->container->getParameter('kernel.root_dir');
+//        echo "appPath=".$appPath."<br>";
+//
+//        if( 1 ) {
+//            //$webPath = getcwd();
+//            //echo "webPath=$webPath<br>";
+//
+//            $console = $appPath . $dirSep . 'console';
+//            if( file_exists($console) ) {
+//                echo "console exists! <br>";
+//            } else {
+//                echo "not console exists: $console <br>";
+//                exit('error');
+//            }
+//
+//            echo exec("php " . $console . " assets:install " );
+//            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
+//
+//            //echo exec("php " . $console . " assets:install");
+//            //echo exec("php " . $console . " assetic:dump");
+//
+//        } else {
+//
+//            //echo shell_exec("chmod -R 777 ".$webPath)."<br>";
+//
+//            //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
+//            //echo "cachePath=".$cachePath."<br>";
+//
+//            //$path = ''.$appPath.'\\..\\'.'deploy_prod';
+//            $path = ''.$appPath."$dirSep..$dirSep".'deploy_prod';
+//
+//            echo "path=".$path."<br>";
+//            if( file_exists($path) ) {
+//                echo "path exists! <br>";
+//            } else {
+//                echo "path not exists: $path <br>";
+//                exit('error');
+//            }
+//
+//            echo exec("chmod -R 777 " . $path) . "<br>";
+//            echo exec("bash " . $path) . "<br>";
+//        }
+//
+//        //exit('exit install assests');
+//    }
+//    public function installAssetsByService() {
+//        $command = $this->container->get('user_install_assets');
+//        $input = new ArgvInput(
+//            array(
+//                '--env=' . $this->container->getParameter('kernel.environment'),
+//                //'--symlink',
+//                //'--relative'
+//            )
+//        );
+//        $output = new ConsoleOutput();
+//        $command->run($input, $output);
+//        exit($output);
+//    }
+//    //Testing method
+//    public function cccAction()
+//    {
+//        $kernel = $this->get('kernel');
+//        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+//        $application->setAutoExit(false);
+//        $options = array('command' => 'cache:clear',"--env" => 'prod', '--no-warmup' => true);
+//        $res = $application->run(new \Symfony\Component\Console\Input\ArrayInput($options));
+//        echo "res=".$res."<br>";
+//        return new Response();
+//    }
+//    //Testing method
+//    public function runCommand($command, $arguments = array())
+//    {
+//        $kernel = $this->container->get('kernel');
+//        $app = new Application($kernel);
+//
+//        $args = array_merge(array('command' => $command), $arguments);
+//
+//        $input = new ArrayInput($args);
+//        $output = new NullOutput();
+//
+//        return $app->doRun($input, $output);
+//    }
+/////////////////////  EOF NOT USED FOR DEPLOY ////////////////////////
 
     /**
      * Admin Page
