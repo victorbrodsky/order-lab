@@ -26,6 +26,7 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 
 use Oleg\OrderformBundle\Entity\Educational;
+use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
@@ -86,6 +87,7 @@ class UserGenerator {
 
         $count = 0;
 
+        $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
         $userUtil = new UserUtil();
@@ -147,6 +149,7 @@ class UserGenerator {
             echo "username(cwid)=".$username."<br>";
 
             if( !$username ) {
+                echo "User $username already exists ";
                 continue; //ignore users without cwid
             }
 
@@ -614,14 +617,20 @@ class UserGenerator {
                 $researchLabTitleObject || $researchLabOtherTitle ||
                 $researchLabFounded || $researchLabDissolved || $webPagelink
             ) {
-                $researchLab = new ResearchLab($systemuser);
-                $user->addResearchLab($researchLab);
 
-                $researchLab->setInstitution($researchLabTitleObject);
-                $researchLab->setName($researchLabOtherTitle);
-                $researchLab->setFoundedDate($researchLabFounded);
-                $researchLab->setDissolvedDate($researchLabDissolved);
-                $researchLab->setWeblink($webPagelink);
+                //find reseach lab by name $researchLabOtherTitle
+                $researchLab = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findOneByName($researchLabOtherTitle);
+                if( !$researchLab ) {
+                    $researchLab = new ResearchLab($systemuser);
+                    $user->addResearchLab($researchLab);
+
+                    $researchLab->setInstitution($researchLabTitleObject);
+                    $researchLab->setName($researchLabOtherTitle);
+                    $researchLab->setFoundedDate($researchLabFounded);
+                    $researchLab->setDissolvedDate($researchLabDissolved);
+                    $researchLab->setWeblink($webPagelink);
+                }
+                $user->addResearchLab($researchLab);
             }
             ////////////// EOF Section: Research Lab ////////////////
 
@@ -933,7 +942,7 @@ class UserGenerator {
 
         }//for each user
 
-        exit('exit import users V2');
+        //exit('exit import users V2');
         return $count;
     }
 
@@ -1082,6 +1091,10 @@ class UserGenerator {
             $nyph || $cliaNumber || $cliaExpDate || $pfiNumber
             //|| $comment
         ) {
+
+            //$locations = $user->getLocations();
+            //echo "loc count=".count($locations)."<br>";
+
             $location = new Location($systemuser);
             $location->setStatus($location::STATUS_VERIFIED);
             $user->addLocation($location);
@@ -1108,9 +1121,27 @@ class UserGenerator {
             $location->setAssociatedCliaExpDate($cliaExpDate);
             $location->setAssociatedPfi($pfiNumber);
             $location->setComment($comment);
+
+            $location->setBuilding($buildingObject);
+
+            $geo = $location->getGeoLocation();
+            if( $geo ) {
+                echo "geo exists <br>";
+            } else {
+                echo "geo does not exists <br>";
+                $geo = new GeoLocation();
+                $location->setGeoLocation($geo);
+            }
+
+            $geo->setStreet1($street1);
+            $geo->setStreet2($street2);
+            $geo->setCity($cityObject);
+            $geo->setState($stateObject);
+            $geo->setZip($zip);
+            $geo->setCountry($countryObject);
         }
 
-
+        //exit("testing");
     }
 
 
