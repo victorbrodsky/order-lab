@@ -112,9 +112,18 @@ class VacReqUtil
 
 
     //find role approvers by institution
-    public function getRequestApprovers( $entity ) {
+    public function getRequestApprovers( $entity, $institutionType="institution" ) {
 
         $institution = $entity->getInstitution();
+//        if( $institutionType == "institution" ) {
+//            $institution = $entity->getInstitution();
+//            //echo "institution <br>";
+//        }
+//        if( $institutionType == "tentativeInstitution" ) {
+//            $institution = $entity->getTentativeInstitution();
+//            //echo "tentativeInstitution <br>";
+//        }
+
         if( !$institution ) {
             return null;
         }
@@ -130,6 +139,12 @@ class VacReqUtil
                 $institution = $entity->getTentativeInstitution();
             } else {
                 $approverRole = "ROLE_VACREQ_SUPERVISOR";
+            }
+
+            //specifically asked for tentative approvers
+            if( $entity->getTentativeInstitution() && $institutionType == "tentativeInstitution" ) {
+                $approverRole = "ROLE_VACREQ_APPROVER";
+                $institution = $entity->getTentativeInstitution();
             }
 
         } else {
@@ -2349,7 +2364,7 @@ class VacReqUtil
             //second try to get group. This is the case for changestatus-carryover action
             if( count($roles)==0 && $actionStr == "changestatus-carryover" ) {
                 //echo "second try 4<br>";
-                //get all changestatus-carryover roles
+                //get all changestatus-carryover roles: changestatus-carryover and create
                 $childObjectStr = $objectStr;
                 $childActionStr = "create";
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
@@ -2370,6 +2385,7 @@ class VacReqUtil
 //                //echo "admin<br>";
 //                $adminRole = true;
 //            }
+            //echo "<br><br>";
 
             foreach( $roles as $role ) {
 
@@ -3839,7 +3855,7 @@ class VacReqUtil
         if( $institution ) { //$organizationalInstitutions &&
             //echo "add to organizationalInstitutions; count=".count($organizationalInstitutions)."<br>";
             if( !array_key_exists($institution->getId(), $organizationalInstitutions) ) {
-                $thisApprovers = $this->getRequestApprovers( $entity );
+                $thisApprovers = $this->getRequestApprovers( $entity, $institutionType );
                 $approversArr = array();
                 foreach( $thisApprovers as $thisApprover ) {
                     $approversArr[] = $thisApprover->getUsernameShortest();

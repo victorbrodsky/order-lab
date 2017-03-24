@@ -76,18 +76,39 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
 
     protected function canView($subject, TokenInterface $token) {
-
+        //echo "canView: ... <br>";
         if( parent::canView($subject, $token) ) {
+            //echo "canView: parent YES<br><br>";
+            return true;
+        } else {
+            //echo "canView: parent NO<br>";
+        }
+
+        if( $this->canChangeStatus($subject, $token) ) {
             return true;
         }
 
+        //author can view
+        if( $this->isAuthor($subject, $token) ) {
+            //echo "canView: author can view <br><br>";
+            return true;
+        }
+
+        //echo "canView: checkLocalPermission: <br>";
         return $this->checkLocalPermission($subject, $token);
     }
 
     protected function canEdit($subject, TokenInterface $token) {
-
+        //echo "canEdit: ... <br>";
         if( parent::canEdit($subject, $token) ) {
             return true;
+        } {
+            //echo "parent canEdit: NO <br>";
+        }
+
+        //author can not edit
+        if( $this->isAuthor($subject, $token) ) {
+            return false;
         }
 
         return $this->checkLocalPermission($subject, $token);
@@ -105,22 +126,32 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
         // if they can edit, they can view
         if( $this->canEdit($subject, $token) ) {
-            //exit("canChangeStatus: can edit!");
+            //echo "canChangeStatus: can edit! <br>";
 
             //add if user has appropriate admin role: overwrite in the particular permission voter
             //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
             //$user = $token->getUser();
+            //echo "canChangeStatus: has approver role? <br>";
             if( $this->hasApproverRoleInstitution($subject,$token) ) {
+                //exit("canChangeStatus: has approver role => ok");
                 return true;
             }
 
             //check for tentative pre-approval: use tentativeInstitution
+            //echo "canChangeStatus: has tentative approver role? <br>";
             $tentative = true;
             if( $this->hasApproverRoleInstitution($subject,$token,$tentative) ) {
+                //exit("canChangeStatus: has tentative approver role => ok");
                 return true;
             }
         } else {
             //echo "can not edit <br>";
+        }
+
+        //echo "canChangeStatus: check if author <br>";
+        //author can not change status
+        if( $this->isAuthor($subject,$token) ) {
+            return false;
         }
 
         //check for tentative pre-approval: use tentativeInstitution
@@ -168,18 +199,16 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
     }
 
     private function checkLocalPermission($subject, TokenInterface $token) {
-        //check if owner
-        $user = $token->getUser();
-        if( !$user instanceof User ) {
-            return false;
-        }
-
-        //author can see his request
-        if( is_object($subject) ) {
-            if( $subject->getUser()->getId() == $user->getId() ) {
-                return true;
-            }
-        }
+//        $user = $token->getUser();
+//        if( !$user instanceof User ) {
+//            return false;
+//        }
+//        //author can see his request
+//        if( is_object($subject) ) {
+//            if( $subject->getUser()->getId() == $user->getId() ) {
+//                return true;
+//            }
+//        }
 
         //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
         if( $this->hasApproverRoleInstitution($subject,$token) ) {
@@ -189,14 +218,19 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         return false;
     }
 
+    //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
     private function hasApproverRoleInstitution( $subject, TokenInterface $token, $tentative=false ) {
         $user = $token->getUser();
+        if( !$user instanceof User ) {
+            return false;
+        }
 
         if( $tentative ) {
             $subjectInst = $subject->getTentativeInstitution();
         } else {
             $subjectInst = $subject->getInstitution();
         }
+        //echo "subjectInst=".$subjectInst."<br>";
 
         //get approver role for subject institution
         if( $subjectInst ) {
@@ -223,8 +257,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
                 $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
             }
 
-            //check if subject has at least one of the $groupInstitutions
+            //check if subject entity has at least one of the $groupInstitutions
             foreach( $groupInstitutions as $inst ) {
+                //echo "inst=".$inst."<br>";
                 if( $inst->getId() == $subjectInst->getId() ) {
                     return true;
                 }

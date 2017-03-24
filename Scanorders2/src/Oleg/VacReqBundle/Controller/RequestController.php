@@ -348,7 +348,7 @@ class RequestController extends Controller
         }
 
         if( false == $this->get('security.context')->isGranted("read", $entity) ) {
-            //exit('show: no permission');
+            exit('show: no permission');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
         //exit('show: ok permission');
@@ -406,6 +406,9 @@ class RequestController extends Controller
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
 
+        //TODO: for simplicity and safety, does not allow to edit a submitted request if not admin.
+        //TODO: why? When request is submitted, email notification sent to the approver with request information.
+        //TODO: If a user will edit the request, the approver can click on the email link to approve/deny modified request considering outdated request information.
         //can't edit or review if request is not pending
 //        if( $entity->getStatus() != "pending" && $entity->getOverallStatus() != "pending" ) {
 //            //Flash
@@ -425,7 +428,7 @@ class RequestController extends Controller
                     //exit("vacreq_review: no permission to changestatus");
                     $this->get('session')->getFlashBag()->add(
                         'warning',
-                        "no permission to review/change the status of this carry over request"
+                        "no permission to review/change the status of this carry over request."
                     );
                     return $this->redirect($this->generateUrl('vacreq-nopermission'));
                 }
@@ -434,7 +437,7 @@ class RequestController extends Controller
                     //exit('vacreq_edit: no permission to update');
                     $this->get('session')->getFlashBag()->add(
                         'warning',
-                        "no permission to update this request"
+                        "no permission to update this request."
                     );
                     return $this->redirect($this->generateUrl('vacreq-nopermission'));
                 }

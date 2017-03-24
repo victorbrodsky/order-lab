@@ -416,18 +416,27 @@ class UserRepository extends EntityRepository {
 
         return $userRoles;
     }
-    //find user parent roles specified by sitename, objectStr, actionStr
-    public function findUserParentRolesBySitePermissionObjectAction( $user, $sitename, $parentObjectStr, $parentActionStr, $childObjectStr,$childActionStr ) {
+    //find user parent roles specified by sitename, objectStr, actionStr:
+    //ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY is a parent role for ROLE_VACREQ_SUBMITTER_CLINICALPATHOLOGY because CLINICALPATHOLOGY is under WCMC_PATHOLOGY
+    public function findUserParentRolesBySitePermissionObjectAction( $user, $sitename, $parentObjectStr, $parentActionStr, $childObjectStr, $childActionStr ) {
 
         $userParentRoles = new ArrayCollection();
 
         //find this user roles
+        //echo "testing: childActionStr=".$childActionStr."<br>";
         $userRoles = $this->findUserRolesBySitePermissionObjectAction($user,$sitename,$childObjectStr,$childActionStr);
         //echo "userRole count=".count($userRoles)."<br>";
+//        foreach( $userRoles as $userRole ) {
+//            echo "testing: userRole=".$userRole."<br>";
+//        }
 
         //find parent roles
+//        echo "testing: parentActionStr=".$parentActionStr."<br>";
         $parentRoles = $this->findRolesByObjectActionInstitutionSite($parentObjectStr,$parentActionStr,null,$sitename);
         //echo "parentRoles=".count($parentRoles)."<br>";
+//        foreach( $parentRoles as $parentRole ) {
+//            echo "testing: parentRoles=".$parentRole."<br>";
+//        }
 
         foreach( $parentRoles as $parentRole ) {
             //check if the $userRoles is under $parentRole
@@ -440,6 +449,10 @@ class UserRepository extends EntityRepository {
                 }
             }
         }
+
+//        foreach( $userParentRoles as $userParentRole ) {
+//            echo "testing: userParentRole=".$userParentRole."<br>";
+//        }
 
         return $userParentRoles;
     }

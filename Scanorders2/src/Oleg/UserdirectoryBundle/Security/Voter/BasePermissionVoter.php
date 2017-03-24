@@ -162,7 +162,7 @@ abstract class BasePermissionVoter extends Voter {
 
         // if they can edit, they can view
         if( $this->canEdit($subject, $token) ) {
-            //echo "user can edit <br>";
+            //echo "Base canView: user can edit <br>";
             return true;
         }
 
@@ -191,9 +191,11 @@ abstract class BasePermissionVoter extends Voter {
 //            //if subject is string, then it must be used only to show a list of entities =>
 //            //there is no institution info => skip the institution check
 //        }
+
+        //echo "Base: canView before checkPermittedInstitutions <br>";
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         if( $this->checkPermittedInstitutions( $subject, $user ) == false ) {
-            //exit('check Permitted Institutions: can not View exit');
+            //exit('check Permitted Institutions: can not View exxit');
             return false;
         }
 
@@ -201,21 +203,21 @@ abstract class BasePermissionVoter extends Voter {
 
         //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
         if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
-            //exit('can View! exit');
+            //exit('can View! exxit');
             //echo "isUserHasPermissionObjectAction!!! className=".$className."<br>";
             return true;
         } else {
             //echo "can not view ".$className."<br>";
         }
 
-        //exit('can not View exit');
+        //exit('can not View exxit');
         return false;
     }
 
     //$subject: string (i.e. "FellowshipApplication") or entity
     protected function canEdit($subject, TokenInterface $token)
     {
-        //echo "canEdit? <br>";
+        //echo "Base canEdit? <br>";
         //echo "subject=".$subject."<br>";
 
         $siteRoleBase = $this->getSiteRoleBase();
@@ -268,14 +270,14 @@ abstract class BasePermissionVoter extends Voter {
         //If Edit => can Read: check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
         $className = $this->getClassName($subject);
         if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "update" ) ) {
-            //exit('can View! exit');
+            //exit('can View! exxit');
             //echo "isUserHasPermissionObjectAction!!! className=".$className."<br>";
             return true;
         } else {
             //echo "can not view ".$className."<br>";
         }
 
-        //echo "can not Edit! <br>";
+        //echo "Base: can not Edit! <br>";
         return false;
     }
 
@@ -311,7 +313,7 @@ abstract class BasePermissionVoter extends Voter {
 
         //check if the user has role with a permission $subject class name (i.e. "Patient") and "create"
         if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "create" ) ) {
-            //exit('can View! exit');
+            //exit('can View! exxit');
             return true;
         } else {
             //echo "can not update ".$className."<br>";
@@ -360,6 +362,25 @@ abstract class BasePermissionVoter extends Voter {
         }
 
         return true;
+    }
+
+    protected function isAuthor( $subject, TokenInterface $token ) {
+        //echo "isAuthor: ...<br>";
+        $user = $token->getUser();
+        if( !$user instanceof User ) {
+            return false;
+        }
+
+        if( is_object($subject) ) {
+            //echo "isAuthor: compare: ".$subject->getUser()->getId() ."==". $user->getId()."<br>";
+            if( $subject->getUser()->getId() == $user->getId() ) {
+                return true;
+            }
+        } else {
+            //echo "isAuthor: subject is not object<br>";
+        }
+
+        return false;
     }
 
     protected function getClassName($subject) {
