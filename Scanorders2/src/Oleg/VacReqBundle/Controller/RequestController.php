@@ -1196,7 +1196,18 @@ class RequestController extends Controller
         }
 
         //check permissions
-        if( false == $this->get('security.context')->isGranted("update", $entity) && false === $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
+//        if( false == $this->get('security.context')->isGranted("update", $entity) && false === $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
+//            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//        }
+        if(
+            $this->get('security.context')->isGranted("read", $entity) ||
+            $this->get('security.context')->isGranted("update", $entity) ||
+            $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ||
+            $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR')
+        )
+        {
+            //OK send reminder email: read, supervisor
+        } else {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
