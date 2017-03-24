@@ -712,8 +712,68 @@ class UserGenerator {
             $sectionCliaRange = $this->getMergedRangeBySectionName($sectionClia,$sections,$sheet);
             echo "<br>sectionCliaRange=".$sectionCliaRange."<br>";
 
+            //Clinical Laboratory Improvement Amendments (CLIA) Number
+            $cliaNumber = $this->getValueBySectionHeaderName("Clinical Laboratory Improvement Amendments (CLIA) Number",$rowData,$headers,$sectionCliaRange);
+            echo "cliaNumber=".$cliaNumber."<br>";
 
+            //CLIA Expiration Date (MM/DD/YYYY)
+            $cliaExpDate = $this->getValueBySectionHeaderName("CLIA Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionCliaRange);
+            $cliaExpDate = \PHPExcel_Shared_Date::ExcelToPHP($cliaExpDate);
+            $cliaExpDate = new \DateTime("@$cliaExpDate");
+            echo "cliaExpDate=".$cliaExpDate->format('m/d/Y')."<br>";
+
+            //NY Permanent Facility Identifier (PFI) Number
+            $pfiNumber = $this->getValueBySectionHeaderName("NY Permanent Facility Identifier (PFI) Number",$rowData,$headers,$sectionCliaRange);
+            echo "pfiNumber=".$pfiNumber."<br>";
+
+            $credentials->setNumberCLIA($cliaNumber);
+            $credentials->setCliaExpirationDate($cliaExpDate);
+            $credentials->setNumberPFI($pfiNumber);
             ////////////// EOF Section: Clinical Laboratory Improvement Amendments (CLIA) ////////////////
+
+
+
+            ////////////// Section: NYPH Code ////////////////
+            $sectionNYPHCode = "NYPH Code";
+            $sectionNYPHCodeRange = $this->getMergedRangeBySectionName($sectionNYPHCode,$sections,$sheet);
+            echo "<br>sectionNYPHCodeRange=".$sectionNYPHCodeRange."<br>";
+
+            //NYPH Code
+            $nyphCode = $this->getValueBySectionHeaderName("NYPH Code",$rowData,$headers,$sectionNYPHCodeRange);
+            echo "nyphCode=".$nyphCode."<br>";
+
+            //NYPH Code Start Date (MM/DD/YYYY)
+            $nyphCodeStartDate = $this->getValueBySectionHeaderName("NYPH Code Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionNYPHCodeRange);
+            $nyphCodeStartDate = \PHPExcel_Shared_Date::ExcelToPHP($nyphCodeStartDate);
+            $nyphCodeStartDate = new \DateTime("@$nyphCodeStartDate");
+            echo "nyphCodeStartDate=".$nyphCodeStartDate->format('m/d/Y')."<br>";
+
+            //NYPH Code End Date (MM/DD/YYYY)
+            $nyphCodeEndDate = $this->getValueBySectionHeaderName("NYPH Code End Date (MM/DD/YYYY)",$rowData,$headers,$sectionNYPHCodeRange);
+            $nyphCodeEndDate = \PHPExcel_Shared_Date::ExcelToPHP($nyphCodeEndDate);
+            $nyphCodeEndDate = new \DateTime("@$nyphCodeEndDate");
+            echo "nyphCodeEndDate=".$nyphCodeEndDate->format('m/d/Y')."<br>";
+
+            if( $nyphCode || $nyphCodeStartDate || $nyphCodeEndDate ) {
+                $codeNyph = new CodeNYPH();
+                $credentials->addCodeNYPH($codeNyph);
+
+                $codeNyph->setField($nyphCode);
+                $codeNyph->setStartDate($nyphCodeStartDate);
+                $codeNyph->setEndDate($nyphCodeEndDate);
+            }
+            ////////////// EOF Section: NYPH Code ////////////////
+
+
+
+            ////////////// Section: Medical License ////////////////
+            $sectionMedicalLicense = "Medical License";
+            $sectionMedicalLicenseRange = $this->getMergedRangeBySectionName($sectionMedicalLicense,$sections,$sheet);
+            echo "<br>sectionMedicalLicenseRange=".$sectionMedicalLicenseRange."<br>";
+
+
+
+            ////////////// EOF Section: Medical License ////////////////
 
             exit('1');
 
