@@ -234,16 +234,20 @@ class UserGenerator {
 
             $roles = $this->getValueBySectionHeaderName("Role",$rowData,$headers,$sectionGlobalRange);
             $timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
+
             $language = $this->getValueBySectionHeaderName("Language",$rowData,$headers,$sectionGlobalRange);
+            $languageObject = $this->getObjectByNameTransformerWithoutCreating("LanguageList",$language,$systemuser);
+
             $locale = $this->getValueBySectionHeaderName("Locale",$rowData,$headers,$sectionGlobalRange);
+            $localeObject = $this->getObjectByNameTransformerWithoutCreating("LocaleList",$locale,$systemuser);
 
             //Roles
             $rolesObjects = $this->processMultipleListObjects($roles,$systemuser,"Roles");
             $user->setRoles($rolesObjects);
 
             $user->getPreferences()->setTimezone($timeZone);
-            $user->getPreferences()->addLanguage($language);
-            $user->getPreferences()->setLocale($locale);
+            $user->getPreferences()->addLanguage($languageObject);
+            $user->getPreferences()->setLocale($localeObject);
             ////////////// EOF Section: Global User Preferences ////////////////
 
 
@@ -481,9 +485,9 @@ class UserGenerator {
                 $medicalTitle->setStatus($medicalTitle::STATUS_VERIFIED);
                 $user->addMedicalTitle($medicalTitle);
 
-                $medicalTitle->setName($academicTitleObject);
-                $medicalTitle->setStartDate($academicStart);
-                $medicalTitle->setEndDate($academicEnd);
+                $medicalTitle->setName($medicalTitleObject);
+                $medicalTitle->setStartDate($medicalStart);
+                $medicalTitle->setEndDate($medicalEnd);
                 $medicalTitle->setInstitution($institutionObject);
 
                 //multiple
@@ -755,8 +759,16 @@ class UserGenerator {
             echo "nyphCodeEndDate=".$nyphCodeEndDate->format('m/d/Y')."<br>";
 
             if( $nyphCode || $nyphCodeStartDate || $nyphCodeEndDate ) {
-                $codeNyph = new CodeNYPH();
-                $credentials->addCodeNYPH($codeNyph);
+
+                $codeNyphs = $credentials->getCodeNyph();
+                if( count($codeNyphs) > 0 ) {
+                    $codeNyph = $codeNyphs[0];
+                    echo "existing codeNyph <br>";
+                } else {
+                    $codeNyph = new CodeNYPH();
+                    $credentials->addCodeNYPH($codeNyph);
+                    echo "new codeNyph <br>";
+                }
 
                 $codeNyph->setField($nyphCode);
                 $codeNyph->setStartDate($nyphCodeStartDate);
@@ -771,41 +783,128 @@ class UserGenerator {
             $sectionMedicalLicenseRange = $this->getMergedRangeBySectionName($sectionMedicalLicense,$sections,$sheet);
             echo "<br>sectionMedicalLicenseRange=".$sectionMedicalLicenseRange."<br>";
 
+            //Country (Countries)
+            $medicalLicenseCountry = $this->getValueBySectionHeaderName("Country",$rowData,$headers,$sectionMedicalLicenseRange);
+            $medicalLicenseCountryObject = $this->getObjectByNameTransformerWithoutCreating("Countries",$medicalLicenseCountry,$systemuser);
+            echo "medicalLicenseCountryObject=".$medicalLicenseCountryObject."<br>";
 
+            //State (States)
+            $medicalLicenseState = $this->getValueBySectionHeaderName("State",$rowData,$headers,$sectionMedicalLicenseRange);
+            $medicalLicenseStateObject = $this->getObjectByNameTransformerWithoutCreating("States",$medicalLicenseState,$systemuser);
+            echo "medicalLicenseStateObject=".$medicalLicenseStateObject."<br>";
 
+            //License Number
+            $medicalLicenseLicenseNumber = $this->getValueBySectionHeaderName("License Number",$rowData,$headers,$sectionMedicalLicenseRange);
+            echo "medicalLicenseLicenseNumber=".$medicalLicenseLicenseNumber."<br>";
+
+            //License Issued Date (MM/DD/YYYY)
+            $licenseIssuedDate = $this->getValueBySectionHeaderName("License Issued Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalLicenseRange);
+            $licenseIssuedDate = \PHPExcel_Shared_Date::ExcelToPHP($licenseIssuedDate);
+            $licenseIssuedDate = new \DateTime("@$licenseIssuedDate");
+            echo "licenseIssuedDate=".$licenseIssuedDate->format('m/d/Y')."<br>";
+
+            //License Expiration Date (MM/DD/YYYY)
+            $licenseExpirationDate = $this->getValueBySectionHeaderName("License Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalLicenseRange);
+            $licenseExpirationDate = \PHPExcel_Shared_Date::ExcelToPHP($licenseExpirationDate);
+            $licenseExpirationDate = new \DateTime("@$licenseExpirationDate");
+            echo "licenseExpirationDate=".$licenseExpirationDate->format('m/d/Y')."<br>";
+
+            //Active (MedicalLicenseStatus)
+            $licenseActive = $this->getValueBySectionHeaderName("Active",$rowData,$headers,$sectionMedicalLicenseRange);
+            $licenseActiveObject = $this->getObjectByNameTransformerWithoutCreating("MedicalLicenseStatus",$licenseActive,$systemuser);
+            echo "licenseActiveObject=".$licenseActiveObject."<br>";
+
+            if(
+                $medicalLicenseCountryObject || $medicalLicenseStateObject || $medicalLicenseLicenseNumber ||
+                $licenseIssuedDate || $licenseExpirationDate || $licenseActiveObject
+            ) {
+
+                $stateLicenses = $credentials->getStateLicense();
+                if( count($stateLicenses) > 0 ) {
+                    $stateLicense = $stateLicenses[0];
+                    echo "existing stateLicense <br>";
+                } else {
+                    $stateLicense = new StateLicense();
+                    $credentials->addStateLicense($stateLicense);
+                    echo "new stateLicense <br>";
+                }
+
+                $stateLicense->setCountry($medicalLicenseCountryObject);
+                $stateLicense->setState($medicalLicenseStateObject);
+                $stateLicense->setLicenseNumber($medicalLicenseLicenseNumber);
+                $stateLicense->setLicenseIssuedDate($licenseIssuedDate);
+                $stateLicense->setLicenseExpirationDate($licenseExpirationDate);
+                $stateLicense->setActive($licenseActiveObject);
+            }
             ////////////// EOF Section: Medical License ////////////////
 
-            exit('1');
 
 
+            ////////////// Section: Board Certification ////////////////
+            $sectionBoardCert = "Board Certification";
+            $sectionBoardCertRange = $this->getMergedRangeBySectionName($sectionBoardCert,$sections,$sheet);
+            echo "<br>sectionBoardCertRange=".$sectionBoardCertRange."<br>";
 
+            //Certifying Board Organization (CertifyingBoardOrganization)
+            $certifyingBoardOrganization = $this->getValueBySectionHeaderName("Certifying Board Organization",$rowData,$headers,$sectionBoardCertRange);
+            $certifyingBoardOrganizationObject = $this->getObjectByNameTransformerWithoutCreating("CertifyingBoardOrganization",$certifyingBoardOrganization,$systemuser);
+            echo "certifyingBoardOrganizationObject=".$certifyingBoardOrganizationObject."<br>";
 
-            //Employee Type: user_employmentStatus_0_employmentType: EmploymentType
-            $employmentType = $this->getValueByHeaderName('Employee Type', $rowData, $headers);
-            if( $employmentType ) {
-                $employmentStatus = new EmploymentStatus($systemuser);
-                $employmentTypeObj = $this->getObjectByNameTransformer('EmploymentType',$employmentType,$systemuser);
-                $employmentStatus->setEmploymentType($employmentTypeObj);
-                $user->addEmploymentStatus($employmentStatus);
+            //Specialty (BoardCertifiedSpecialties)
+            $boardCertSpecialty = $this->getValueBySectionHeaderName("Specialty",$rowData,$headers,$sectionBoardCertRange);
+            $boardCertSpecialtyObject = $this->getObjectByNameTransformerWithoutCreating("BoardCertifiedSpecialties",$boardCertSpecialty,$systemuser);
+            echo "boardCertSpecialtyObject=".$boardCertSpecialtyObject."<br>";
+
+            //Date Issued (MM/DD/YYYY)
+            $boardCertDateIssued = $this->getValueBySectionHeaderName("Date Issued (MM/DD/YYYY)",$rowData,$headers,$sectionBoardCertRange);
+            $boardCertDateIssued = \PHPExcel_Shared_Date::ExcelToPHP($boardCertDateIssued);
+            $boardCertDateIssued = new \DateTime("@$boardCertDateIssued");
+            echo "boardCertDateIssued=".$boardCertDateIssued->format('m/d/Y')."<br>";
+
+            //Expiration Date (MM/DD/YYYY)
+            $boardCertDateExpiration = $this->getValueBySectionHeaderName("Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionBoardCertRange);
+            $boardCertDateExpiration = \PHPExcel_Shared_Date::ExcelToPHP($boardCertDateExpiration);
+            $boardCertDateExpiration = new \DateTime("@$boardCertDateExpiration");
+            echo "boardCertDateExpiration=".$boardCertDateExpiration->format('m/d/Y')."<br>";
+
+            //Recertification Date (MM/DD/YYYY)
+            $boardCertDateRecertification = $this->getValueBySectionHeaderName("Recertification Date (MM/DD/YYYY)",$rowData,$headers,$sectionBoardCertRange);
+            $boardCertDateRecertification = \PHPExcel_Shared_Date::ExcelToPHP($boardCertDateRecertification);
+            $boardCertDateRecertification = new \DateTime("@$boardCertDateRecertification");
+            echo "boardCertDateRecertification=".$boardCertDateRecertification->format('m/d/Y')."<br>";
+
+            if(
+                $certifyingBoardOrganizationObject || $boardCertSpecialtyObject ||
+                $boardCertDateIssued || $boardCertDateExpiration || $boardCertDateRecertification
+            ) {
+
+                $boardCertifications = $credentials->getBoardCertification();
+                if( count($boardCertifications) > 0 ) {
+                    $boardCertification = $boardCertifications[0];
+                    echo "existing boardCertification <br>";
+                } else {
+                    $boardCertification = new BoardCertification();
+                    $credentials->addBoardCertification($boardCertification);
+                    echo "new boardCertification <br>";
+                }
+
+                $boardCertification->setCertifyingBoardOrganization($certifyingBoardOrganizationObject);
+                $boardCertification->setSpecialty($boardCertSpecialtyObject);
+                $boardCertification->setIssueDate($boardCertDateIssued);
+                $boardCertification->setExpirationDate($boardCertDateExpiration);
+                $boardCertification->setRecertificationDate($boardCertDateRecertification);
             }
 
+            ////////////// EOF Section: Board Certification ////////////////
 
-//            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
-//            if( $found_user ) {
-//                //
-//            } else {
+            //exit('1'); //testing
+
             //echo $username." not found ";
             $this->em->persist($user);
             $this->em->flush();
             $count++;
 
-
-            //Assistants : s2id_oleg_userdirectorybundle_user_locations_0_assistant
-            $assistants = $this->getValueByHeaderName('Assistants', $rowData, $headers);
-            if( $assistants ) {
-                $assistantsArr[$user->getId()] = $assistants;
-            }
-
+            echo $count.": added new user $user <br>";
 
             //**************** create PerSiteSettings for this user **************//
             //TODO: this should be located on scanorder site
