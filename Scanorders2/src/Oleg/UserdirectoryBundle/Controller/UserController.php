@@ -2441,7 +2441,8 @@ class UserController extends Controller
             if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
                 false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
                 false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') &&
-                false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
+                false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN') &&
+                false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')
             ) {
                 $currentInsts = $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope();
                 $logger->notice("compare: currentInsts=".count($currentInsts)." != originalInsts=".count($originalInsts));
