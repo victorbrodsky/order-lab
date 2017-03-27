@@ -85,11 +85,29 @@ class UserDownloadUtil {
                 continue;
             }
 
+            //Name
             $ews->setCellValue('A'.$row, $user->getUsernameOptimal());
-            //$ews->setCellValue('B'.$row, $user->getUsernameOptimal());
-            //$ews->setCellValue('C'.$row, $user->getAllPhones());
-            //$ews->setCellValue('B'.$row, $user->getUsernameOptimal());
-            //$ews->setCellValue('B'.$row, $user->getAllEmail());
+
+            //Title
+            $ews->setCellValue('B'.$row, $user->getId());
+
+            //Phone
+            $phoneStr = "";
+            $phoneArr = array();
+            foreach( $user->getAllPhones() as $phone ) {
+                $phoneArr[] = $phone['prefix'] . $phone['phone'];
+            }
+            if( count($phoneArr) > 0 ) {
+                $phoneStr = implode(" \n", $phoneArr);
+            }
+            $ews->setCellValue('C'.$row, $phoneStr);
+            $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
+
+            //Room
+            $ews->setCellValue('D'.$row, $user->getUsernameOptimal());
+
+            //Email
+            $ews->setCellValue('E'.$row, $user->getSingleEmail());
 
             $row = $row + 1;
         }
