@@ -156,8 +156,14 @@
                             </li>
                         {% endif %}
 
-                        <li id="nav-bar-userlist-download-excel"><a href="{{ path(employees_sitename~'_userlist_download_excel') }}">Download</a></li>
-
+                        <li id="nav-bar-add" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Download<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li id="nav-bar-userlist-download-excel">
+                                    <a href="{{ path(employees_sitename~'_userlist_download_excel') }}">WCM Pathology Directory</a>
+                                </li>
+                            </ul>
+                        </li>
                     {% endif %}
 
                 </ul>
