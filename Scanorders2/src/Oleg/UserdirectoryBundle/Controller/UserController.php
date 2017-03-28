@@ -2400,16 +2400,25 @@ class UserController extends Controller
             //check if changed roles are "Platform Administrator" or "Deputy Platform Administrator"
             $currRoles = $entity->getRoles();
             $resultRoles = $this->array_diff_assoc_true($currRoles,$originalRoles);
+            $msg = "Change Role(s):<br> diffRoles=".join(", ",$resultRoles).
+                ";<br> originalRoles=".join(", ",$originalRoles).
+                ";<br> currentRoles =".join(", ",$currRoles);
+            //testing
+            //$this->setSessionForbiddenNote($msg);
+            //echo "msg=".$msg."<br>";
+            //exit('testing');
 
             //check 1: if the roles are changed by non admin user
             if( count($resultRoles) > 0 ) {
                 if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
                     false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
                     false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') &&
-                    false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN') &&
-                    false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN')
+                    false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
+                    //&& false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')
                 ) {
-                    $this->setSessionForbiddenNote("Change Role(s) ".join(",",$resultRoles));
+                    $msg = "You do not have permission to perform this operation: ".$msg;
+                    $logger->notice($msg);
+                    $this->setSessionForbiddenNote($msg);
                     //throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Role ".$role);
                     return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
                 }
@@ -2441,8 +2450,8 @@ class UserController extends Controller
             if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
                 false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
                 false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') &&
-                false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN') &&
-                false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')
+                false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
+                //&& false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')
             ) {
                 $currentInsts = $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope();
                 $logger->notice("compare: currentInsts=".count($currentInsts)." != originalInsts=".count($originalInsts));
@@ -3168,6 +3177,7 @@ class UserController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        $inputFileName = __DIR__ . '/../../../../../importLists/ImportUsersTemplate.xlsx';
 
         $userGenerator = $this->container->get('user_generator');
 
@@ -3175,7 +3185,7 @@ class UserController extends Controller
         //$count_users = $userGenerator->generateUsersExcelV1();
 
         //list v2 provided by Jessica
-        $count_users = $userGenerator->generateUsersExcelV2();
+        $count_users = $userGenerator->generateUsersExcelV2($inputFileName);
 
         if( $count_users > 0 ) {
             $msg = 'Imported ' . $count_users . ' new users from Excel.';
@@ -3503,12 +3513,33 @@ class UserController extends Controller
             'notice',
             "You do not have permission to perform this operation: ".$msg
         );
+//        $this->get('session')->getFlashBag()->add(
+//            'pnotify-error',
+//            "You do not have permission to perform this operation: ".$msg
+//        );
     }
 
     function array_diff_assoc_true($array1, $array2)
     {
-        $res = array_merge( array_diff_assoc($array1,$array2), array_diff_assoc($array2,$array1) );
-        return array_unique($res);
+        //$diff1 = array_diff_assoc($array1,$array2);
+        //$diff2 = array_diff_assoc($array2,$array1);
+        $diff1 = array_diff($array1,$array2);
+        $diff2 = array_diff($array2,$array1);
+
+        //echo "diff1:<br>";
+        //print_r($diff1);
+        //echo "<br>diff2:<br>";
+        //print_r($diff2);
+        //echo "<br><br>";
+
+        $res = array_merge( $diff1, $diff2 );
+        $res = array_unique($res);
+
+        //echo "res:<br>";
+        //print_r($res);
+        //echo "<br><br>";
+
+        return $res;
     }
 
 

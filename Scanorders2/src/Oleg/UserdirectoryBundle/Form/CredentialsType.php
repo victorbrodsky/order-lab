@@ -69,11 +69,6 @@ class CredentialsType extends AbstractType
                 },
         ));
 
-        $builder->add('ssn', null, array(
-            'label' => 'Social Security Number:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
-
         $builder->add('numberCLIA', null, array(
             'label' => 'Clinical Laboratory Improvement Amendments (CLIA) Number:',
             'attr' => array('class'=>'form-control form-control-modif')
@@ -138,6 +133,11 @@ class CredentialsType extends AbstractType
         ));
 
         if( !$hasRoleSimpleView ) {
+            $builder->add('ssn', null, array(
+                'label' => 'Social Security Number:',
+                'attr' => array('class'=>'form-control form-control-modif')
+            ));
+
             $builder->add('hobby', null, array(
                 'label' => 'Hobbies:',
                 'attr' => array('class' => 'textarea form-control')

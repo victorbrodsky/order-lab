@@ -253,6 +253,8 @@
                                 {% endif %}
 
                                 {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                    <hr>
+                                    <li><a href="{{ path(employees_sitename~'_import_users_excel') }}">Import Users</a></li>
                                     <li><a href="{{ path(employees_sitename~'_siteparameters') }}">Site Settings</a></li>
                                     <li><a
                                             general-data-confirm="Are you sure you would like to cleare cahce and update assets? This action will logout all authenticated users."

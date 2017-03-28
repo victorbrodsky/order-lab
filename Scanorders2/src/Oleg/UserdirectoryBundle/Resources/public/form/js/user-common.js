@@ -1207,11 +1207,13 @@ function userWrapperAjax( userid, btnTargetId, replaceTargetId, cycle ) {
 }
 
 function userPnotifyDisplay() {
+    //console.log("user Pnotify Display");
     if( !$('#pnotify-notice') ) {
+        //console.log("user Pnotify Display: does not exists");
         return;
     }
     var text = $('#pnotify-notice').val();
-    //console.log("text="+text);
+    //console.log("user Pnotify Display: text="+text);
     if( text ) {
         var type = 'info';
         var hide = true;

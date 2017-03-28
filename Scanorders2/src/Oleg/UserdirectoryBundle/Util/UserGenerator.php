@@ -63,18 +63,18 @@ class UserGenerator {
 
 
     //create template processing of the main user's fields
-    public function generateUsersExcelV2() {
+    public function generateUsersExcelV2($inputFileName) {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
-        $inputFileName = __DIR__ . '/../../../../../importLists/ImportUsersTemplate.xlsx';
+        //$inputFileName = __DIR__ . '/../../../../../importLists/ImportUsersTemplate.xlsx';
         //$inputFileName = __DIR__ . '/../../../../../importLists/UsersFull.xlsx';
 
         if (file_exists($inputFileName)) {
-            echo "The file $inputFileName exists";
+            //echo "The file $inputFileName exists";
         } else {
-            echo "The file $inputFileName does not exist";
-            return -1;
+            //echo "The file $inputFileName does not exist";
+            return "The file $inputFileName does not exist";
         }
 
         try {
@@ -114,7 +114,15 @@ class UserGenerator {
             TRUE,
             FALSE);
 
-        echo 'Start Foreach highestRow='.$highestRow."; highestColumn=".$highestColumn."<br>";
+        //echo 'Start Foreach highestRow='.$highestRow."; highestColumn=".$highestColumn."<br>";
+
+        $sectionNameContactInfo = "Name and Preferred Contact Info";
+        $sectionNameContactInfoRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
+        //echo "<br>sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
+
+        if( !$sectionNameContactInfoRange ) {
+            return "Invalid source excel file: no 'Name and Preferred Contact Info' section has been found in the source file. ";
+        }
 
         //for each user in excel (start at row 2)
         for( $row = 3; $row <= $highestRow; $row++ ) {
@@ -138,18 +146,14 @@ class UserGenerator {
 //            echo "fieldValue=".$fieldValue."<br>";
 //            exit('1');
 
-            $sectionNameContactInfo = "Name and Preferred Contact Info";
-            $sectionNameContactInfoRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
-            echo "<br>sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
-
             $userType = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionNameContactInfoRange);
-            echo "userType=".$userType."<br>";
+            //echo "userType=".$userType."<br>";
 
             $username = $this->getValueBySectionHeaderName("Primary Public User ID",$rowData,$headers,$sectionNameContactInfoRange);
-            echo "username(cwid)=".$username."<br>";
+            //echo "username(cwid)=".$username."<br>";
 
             if( !$username ) {
-                echo "User $username already exists ";
+                echo "No Primary Public User ID (cwid) has been found in the source file";
                 continue; //ignore users without cwid
             }
 
@@ -943,7 +947,15 @@ class UserGenerator {
         }//for each user
 
         //exit('exit import users V2');
-        return $count;
+        //return $count;
+
+        if( $count > 0 ) {
+            $resmsg = 'Imported ' . $count . ' new users from Excel.';
+        } else {
+            $resmsg = 'No new users have been imported.';
+        }
+
+        return $resmsg;
     }
 
     //$string - , or ; separated string

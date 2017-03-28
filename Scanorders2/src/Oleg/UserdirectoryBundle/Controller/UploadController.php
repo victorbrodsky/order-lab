@@ -24,16 +24,15 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\UserdirectoryBundle\Entity\Examination;
-use Oleg\UserdirectoryBundle\Entity\User;
+
+use Oleg\UserdirectoryBundle\Form\ImportUsersType;
 use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 
 class UploadController extends Controller {
@@ -305,6 +304,66 @@ class UploadController extends Controller {
         } else {
             //$logger->notice("document event log not created!!!! : eventDescription=".$eventDescription);
         }
+    }
+
+
+    /**
+     * Upload "Import Users" excel file for processing
+     *
+     * @Route("/import-users/excel", name="employees_import_users_excel")
+     * @Method({"GET","POST"})
+     * @Template("OlegUserdirectoryBundle:Admin:import-users.html.twig")
+     */
+    public function importExcelUsersFileAction( Request $request )
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You do not have permission to import users.'
+            );
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $form = $this->createForm(new ImportUsersType(),null);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            $inputFileName = $form['file']->getData();
+
+            //$ext = $inputFileName->guessExtension();
+            //echo "ext=".$ext."<br>";
+            //exit('file');
+
+            //$inputFileName = __DIR__ . '/../../../../../importLists/ImportUsersTemplate.xlsx';
+
+            $userGenerator = $this->container->get('user_generator');
+
+            //list v1
+            //$count_users = $userGenerator->generateUsersExcelV1();
+
+            //list v2 provided by Jessica
+            $res = $userGenerator->generateUsersExcelV2($inputFileName);
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $res
+            );
+
+            //exit();
+            //return $this->redirect($this->generateUrl('employees_listusers'));
+        }
+
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        return array(
+            'form' => $form->createView(),
+            'sitename' => $this->container->getParameter('employees.sitename'),
+            'title' => 'Import Users'
+        );
     }
 
 

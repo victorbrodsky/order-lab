@@ -971,7 +971,9 @@
 
                                             {{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}
                                             {{ formmacros.field_notempty(form.credentials.sex,cycle) }}
-                                            {{ formmacros.field_notempty(form.credentials.ssn,cycle) }}
+                                            {% if form.credentials.ssn is defined %}
+                                                {{ formmacros.field_notempty(form.credentials.ssn,cycle) }}
+                                            {% endif %}
                                             {{ formmacros.field(form.credentials.emergencyContactInfo) }}
                                             {% if form.credentials.hobby is defined %}
                                                 {{ formmacros.field(form.credentials.hobby) }}
