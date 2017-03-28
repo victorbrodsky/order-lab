@@ -193,7 +193,7 @@ class HomeController extends Controller {
 
 
     /**
-     * @Route("/userlist-download-excel", name="employees_userlist_download_excel")
+     * @Route("/download/wcm-pathology-directory", name="employees_userlist_download_excel")
      */
     public function indexAction( Request $request )
     {
