@@ -41,7 +41,7 @@ class UserDownloadUtil {
         $this->container = $container;
     }
 
-    public function createUserListExcel() {
+    public function createUserListExcel( $users ) {
 
         $author = $this->sc->getToken()->getUser();
 
@@ -59,6 +59,7 @@ class UserDownloadUtil {
 
         $ews = $ea->getSheet(0);
         $ews->setTitle('Users');
+        $ews->getSheetView()->setZoomScale(150);
 
         //align all cells to left
         $style = array(
@@ -69,45 +70,42 @@ class UserDownloadUtil {
         //$ews->getDefaultStyle()->applyFromArray($style);
         $ews->getParent()->getDefaultStyle()->applyFromArray($style);
 
-        $ews->setCellValue('A1', 'Name'); // Sets cell 'a1' to value 'ID
-        $ews->setCellValue('B1', 'Title');
-        $ews->setCellValue('C1', 'Phone');
-        $ews->setCellValue('D1', 'Room');
-        $ews->setCellValue('E1', 'Email');
+        $size = 15;
 
-        $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        $nameHeader = $this->getBoldItalicText("Name",$size);
+        $ews->setCellValue('A1', $nameHeader); // Sets cell 'a1' to value 'ID
+
+        $titleHeader = $this->getBoldItalicText("Title",$size);
+        $ews->setCellValue('B1', $titleHeader);
+
+        $phoneHeader = $this->getBoldItalicText("Phone",$size);
+        $ews->setCellValue('C1', $phoneHeader);
+
+        $roomHeader = $this->getBoldItalicText("Room",$size);
+        $ews->setCellValue('D1', $roomHeader);
+
+        $emailHeader = $this->getBoldItalicText("Email",$size);
+        $ews->setCellValue('E1', $emailHeader);
+
         //echo "Users=".count($users)."<br>";
 
-        $row = 2;
+        $row = 3;
         foreach( $users as $user ) {
 
             if( !$user ) {
                 continue;
             }
 
-            //Name
-            $ews->setCellValue('A'.$row, $user->getUsernameOptimal());
+            $this->createRowUser($user,$ews,$row);
 
-            //Title
-            $ews->setCellValue('B'.$row, $user->getId());
-
-            //Phone
-            $phoneStr = "";
-            $phoneArr = array();
-            foreach( $user->getAllPhones() as $phone ) {
-                $phoneArr[] = $phone['prefix'] . $phone['phone'];
+            $assistantsRes = $user->getAssistants();
+            $assistants = $assistantsRes['entities'];
+            if( count($assistants) > 0 ) {
+                foreach( $assistants as $assistant ) {
+                    $row = $row + 1;
+                    $this->createRowUser($assistant,$ews,$row,"    ",false);
+                }
             }
-            if( count($phoneArr) > 0 ) {
-                $phoneStr = implode(" \n", $phoneArr);
-            }
-            $ews->setCellValue('C'.$row, $phoneStr);
-            $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
-
-            //Room
-            $ews->setCellValue('D'.$row, $user->getUsernameOptimal());
-
-            //Email
-            $ews->setCellValue('E'.$row, $user->getSingleEmail());
 
             $row = $row + 1;
         }
@@ -133,6 +131,86 @@ class UserDownloadUtil {
 
         return $ea;
 
+    }
+
+    public function createRowUser( $user, $ews, $row, $prefix="", $bold=true ) {
+        if( !$user ) {
+            return;
+        }
+
+        //Name
+        $userName = $user->getUsernameOptimal();
+
+        if( $bold ) {
+            //Oleg Ivanov, MD => <strong>Ivanov</strong> Oleg, MD
+            //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
+            $userName = str_replace(",", "", $userName); //Oleg Ivanov MD
+            $userNameArr = explode(" ", $userName);
+            if (count($userNameArr) >= 2) {
+                $userFirstname = $userNameArr[0];
+                $userFamilyname = $userNameArr[1];
+                $userDegree = null;
+                if (count($userNameArr) == 3) {
+                    $userDegree = $userNameArr[2];
+                }
+
+                $userName = $this->getBoldText($userFamilyname);
+
+                $userName->createText(" " . $userFirstname);
+
+                if ($userDegree) {
+                    $userName->createText(", " . $userDegree);
+                }
+
+            }
+        }
+        if( $prefix ) {
+            $userName = $prefix.$userName;
+        }
+
+        $ews->setCellValue('A'.$row, $userName);
+
+        //Title
+        $ews->setCellValue('B'.$row, $user->getId());
+
+        //Phone
+        $phoneStr = "";
+        $phoneArr = array();
+        foreach( $user->getAllPhones() as $phone ) {
+            $phoneArr[] = $phone['prefix'] . $phone['phone'];
+        }
+        if( count($phoneArr) > 0 ) {
+            $phoneStr = implode(" \n", $phoneArr);
+        }
+        $ews->setCellValue('C'.$row, $phoneStr);
+        $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
+
+        //Room
+        $ews->setCellValue('D'.$row, $user->getUsernameOptimal());
+
+        //Email
+        $ews->setCellValue('E'.$row, $user->getSingleEmail());
+    }
+
+    public function getBoldText( $text, $size=null ) {
+        $richText = new \PHPExcel_RichText();
+        $objBold = $richText->createTextRun($text);
+        $objBold->getFont()->setBold(true);
+        if( $size ) {
+            $objBold->getFont()->setSize($size);
+        }
+        return $richText;
+    }
+
+    public function getBoldItalicText( $text, $size=null ) {
+        $richText = new \PHPExcel_RichText();
+        $objBold = $richText->createTextRun($text);
+        $objBold->getFont()->setBold(true);
+        $objBold->getFont()->setItalic(true);
+        if( $size ) {
+            $objBold->getFont()->setSize($size);
+        }
+        return $richText;
     }
 
 }

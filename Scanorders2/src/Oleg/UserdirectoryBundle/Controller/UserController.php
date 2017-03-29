@@ -366,7 +366,6 @@ class UserController extends Controller
         }
 
         $res['filter'] = $filter;
-        $res['filter'] = $filter;
 
         return $res;
     }
@@ -3769,6 +3768,53 @@ class UserController extends Controller
 
         $sitename = "employees";
         return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
+    }
+
+
+    /**
+     * @Route("/download/wcm-pathology-directory", name="employees_userlist_download_excel")
+     */
+    public function downloadAction( Request $request )
+    {
+
+        if (
+            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        //$em = $this->getDoctrine()->getManager();
+
+        $currentDate = date('m-d-Y');
+        $fileName = "users_".$currentDate.".xlsx";
+        $fileName = str_replace("  ", " ", $fileName);
+        $fileName = str_replace(" ", "_", $fileName);
+
+        $userDownloadUtil = $this->container->get('user_download_utility');
+
+        //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+
+        $filter = "WCM Pathology Employees";
+        $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
+        $res = $this->indexUser($params);
+        $users = $res['entities'];
+
+        $excelBlob = $userDownloadUtil->createUserListExcel($users);
+
+        $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
+        //ob_end_clean();
+        //$writer->setIncludeCharts(true);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+        // Write file to the browser
+        $writer->save('php://output');
+
+        exit();
     }
 
 }

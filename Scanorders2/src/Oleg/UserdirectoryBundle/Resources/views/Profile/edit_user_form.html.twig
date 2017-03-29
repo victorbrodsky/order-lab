@@ -34,7 +34,7 @@
     {% set collapsein = "in" %}
 {% endif %}
 
-{% set hasRoleSimpleView = app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+{% set hasRoleSimpleView = app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
 
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>

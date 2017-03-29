@@ -45,7 +45,7 @@ class GeoLocationType extends AbstractType
 
         $hasRoleSimpleView = false;
         if( array_key_exists('sc', $this->params) ) {
-            $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW");
+            $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
 
         $builder->add('street1',null,array(

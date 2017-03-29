@@ -85,7 +85,7 @@
 
     {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
 
-    {% set hasRoleSimpleView = app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_EDITOR_SIMPLEVIEW') %}
+    {% set hasRoleSimpleView = app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
 
     <nav class="navbar navbar-default" role="navigation">
 
