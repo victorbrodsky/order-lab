@@ -782,6 +782,32 @@ class Location extends ListAbstract
         return $name;
     }
 
+    public function getLocationNameNoType() {
+        $detailsArr = array();
+
+        if( $this->getRoom() ) {
+            $detailsArr[] = $this->getRoom();
+        }
+
+        if( $this->getSuite() ) {
+            $detailsArr[] = $this->getSuite();
+        }
+
+//        if( $this->getBuilding() ) {
+//            $detailsArr[] = $this->getBuilding()."";
+//        }
+
+        if( $this->getInstitution() && $this->getBuilding() == null ) {
+            $detailsArr[] = $this->getInstitution()->getName()."";
+        }
+
+        if( $this->getMailbox() ) {
+            $detailsArr[] = $this->getMailbox();
+        }
+
+        return implode(", ",$detailsArr);
+    }
+
     public function hasLocationTypeName( $typeName ) {
         foreach( $this->getLocationTypes() as $loctype ) {
             if( $loctype->getName()."" == $typeName ) {

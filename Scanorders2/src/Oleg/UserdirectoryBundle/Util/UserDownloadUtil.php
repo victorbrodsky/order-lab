@@ -65,6 +65,7 @@ class UserDownloadUtil {
         $style = array(
             'alignment' => array(
                 'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP,
             )
         );
         //$ews->getDefaultStyle()->applyFromArray($style);
@@ -186,7 +187,11 @@ class UserDownloadUtil {
         $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
 
         //Room
-        $ews->setCellValue('D'.$row, $user->getUsernameOptimal());
+        $location = $user->getMainLocation();
+        if( $location ) {
+            $locationStr = $location->getLocationNameNoType();
+            $ews->setCellValue('D' . $row, $locationStr);
+        }
 
         //Email
         $ews->setCellValue('E'.$row, $user->getSingleEmail());
