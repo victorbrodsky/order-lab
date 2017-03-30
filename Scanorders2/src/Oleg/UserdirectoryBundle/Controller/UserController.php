@@ -3805,8 +3805,8 @@ class UserController extends Controller
         //$em = $this->getDoctrine()->getManager();
 
         $currentDate = date('m-d-Y');
-        $fileName = "users_".$currentDate.".xlsx";
-        //$fileName = "users_".$currentDate.".xls";
+        //$fileName = "users_".$currentDate.".xlsx";
+        $fileName = "users_".$currentDate.".xls";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "_", $fileName);
 
