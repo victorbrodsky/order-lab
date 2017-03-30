@@ -42,7 +42,7 @@ class UserDownloadUtil {
     }
 
 
-    public function getSections( $users ) {
+    public function getSections( $users, $administrativeUsers ) {
         $sections = array();
         foreach( $users as $user ) {
             $instResArr = $user->getDeduplicatedInstitutions();
@@ -56,12 +56,7 @@ class UserDownloadUtil {
 //                echo  '</pre>';
                 $instName = $instRes[0]['instNameWithRoot'];
                 //echo "instName=".$instName."<br>";
-                //echo "user=".$user->getUsernameOptimal()."<br>";
-//                if( is_array($sections[$instName]) ) {
-//                    //
-//                } else {
-//                    $sections[$instName] = array();
-//                }
+                //$sections[$instName][] = $user."";
                 $sections[$instName][] = $user;
             }
             //break;
@@ -71,8 +66,36 @@ class UserDownloadUtil {
 //        print_r($sections);
 //        echo  '</pre>';
 //        exit();
+    //add users with administrative Title to Administration (WCMC)
+    foreach ($sections as $sectionName => $sectionUsers) {
+        //exit();
+        //$sectionName = $section
+        if( $sectionName == "Administration (WCMC)" ) {
+//                echo "<br><br>$sectionName:<pre>";
+//                print_r($sectionUsers);
+//                echo  '</pre>';
+            foreach ($administrativeUsers as $administrativeUser) {
+                //echo "administrativeUser=".$administrativeUser."<br>";
+                if( !$this->hasUser($sectionUsers, $administrativeUser) ) {
+                    //echo "add administrativeUser=".$administrativeUser."<br>";
+                    //$sectionUsers[] = $administrativeUser;
+                    $sections[$sectionName][] = $administrativeUser;
+                }
+            }
+            //$sections[$sectionName] = $sectionUsers;
+        }
+    }
+        //exit();
 
         return $sections;
+    }
+    public function hasUser( $users, $subjectUser ) {
+        foreach( $users as $user ) {
+            if( $user->getId() === $subjectUser->getId() ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function createUserListExcel( $sections ) {
@@ -163,7 +186,7 @@ class UserDownloadUtil {
             }
         }
 
-
+        //exit("111");
         return $ea;
 
     }
@@ -223,7 +246,7 @@ class UserDownloadUtil {
 
         if( $bold ) {
             //$userName = $this->convertUsernameToBold($userName);
-            $userName = $this->getBoldText($userName);
+            //$userName = $this->getBoldText($userName);
         }
         if( $prefix ) {
             $userName = $prefix.$userName;

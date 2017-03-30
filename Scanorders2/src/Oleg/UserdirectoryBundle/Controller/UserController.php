@@ -729,6 +729,17 @@ class UserController extends Controller
             ")";
         }
 
+        //Pending Administrative Review
+        if( $filter && $filter == "With Administrative Title" ) {
+            $dql->leftJoin("administrativeTitles.userPositions", "administrativePositions");
+            $verifiedStatus = BaseUserAttributes::STATUS_VERIFIED;
+            $criteriastr .= "(".
+                "administrativeName IS NOT NULL".
+                " AND administrativeTitles.status = ".$verifiedStatus.
+                " AND administrativePositions.name LIKE 'Head%'".
+            ")";
+        }
+
         //WCM + Pathology
         if( $filter && $filter == "WCM Pathology Employees" ) {
 //            $criteriastr .= "(".
@@ -3801,6 +3812,17 @@ class UserController extends Controller
 
         $userDownloadUtil = $this->container->get('user_download_utility');
 
+        $filterAdmin = "With Administrative Title";
+        $adminParams = array('filter'=>$filterAdmin,'time'=>'current_only','limitFlag'=>null);
+        $resAdmin = $this->indexUser($adminParams);
+        $administrativeUsers = $resAdmin['entities'];
+//        $administrativeUserCount = 1;
+//        foreach( $administrativeUsers as $administrativeUser ) {
+//            echo $administrativeUserCount.": adminUser=".$administrativeUser."<br>";
+//            $administrativeUserCount++;
+//        }
+//        exit();
+
         //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
 
         $filter = "WCM Pathology Employees";
@@ -3809,7 +3831,7 @@ class UserController extends Controller
         $users = $res['entities'];
 
         //$sections = array("WCMC"=>$users,"NYP"=>$users);
-        $sections = $userDownloadUtil->getSections($users);
+        $sections = $userDownloadUtil->getSections($users,$administrativeUsers);
 
 //        echo '<br><br>sections:<pre>';
 //        print_r($sections);
