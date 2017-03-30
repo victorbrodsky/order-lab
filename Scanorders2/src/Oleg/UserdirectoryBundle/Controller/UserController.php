@@ -183,6 +183,8 @@ class UserController extends Controller
      */
     public function searchSameObjectAction(Request $request) {
 
+        $em = $this->getDoctrine()->getManager();
+
         $tablename = $request->get('tablename');
         $objectid = $request->get('id');
         $objectname = $request->get('name');
@@ -226,7 +228,12 @@ class UserController extends Controller
 //            $title = 'Current employees of the '.$objectname.' department';
 //        }
 
-
+        if( $tablename == "Institution" ) {
+            $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($objectid);
+            if( $node ) {
+                $title = $title . " (".$node->getRootName($node).")";
+            }
+        }
 
         return $this->render(
             'OlegUserdirectoryBundle:Default:home.html.twig',
@@ -3801,7 +3808,9 @@ class UserController extends Controller
         $res = $this->indexUser($params);
         $users = $res['entities'];
 
-        $excelBlob = $userDownloadUtil->createUserListExcel($users);
+        $sections = array("WCMC"=>$users,"NYP"=>$users);
+
+        $excelBlob = $userDownloadUtil->createUserListExcel($sections);
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="'.$fileName.'"');;

@@ -41,9 +41,14 @@ class UserDownloadUtil {
         $this->container = $container;
     }
 
-    public function createUserListExcel( $users ) {
+
+    public function createUserListExcel( $sections ) {
 
         $author = $this->sc->getToken()->getUser();
+
+        $row = 1;
+        $withheader = false;
+        $headerSize = 15;
 
         $ea = new \PHPExcel(); // ea is short for Excel Application
 
@@ -71,44 +76,32 @@ class UserDownloadUtil {
         //$ews->getDefaultStyle()->applyFromArray($style);
         $ews->getParent()->getDefaultStyle()->applyFromArray($style);
 
-        $size = 15;
+        if( $withheader ) {
 
-        $nameHeader = $this->getBoldItalicText("Name",$size);
-        $ews->setCellValue('A1', $nameHeader); // Sets cell 'a1' to value 'ID
+            $nameHeader = $this->getBoldItalicText("Name", $headerSize);
+            $ews->setCellValue('A1', $nameHeader); // Sets cell 'a1' to value 'ID
 
-        $titleHeader = $this->getBoldItalicText("Title",$size);
-        $ews->setCellValue('B1', $titleHeader);
+            $titleHeader = $this->getBoldItalicText("Title", $headerSize);
+            $ews->setCellValue('B1', $titleHeader);
 
-        $phoneHeader = $this->getBoldItalicText("Phone",$size);
-        $ews->setCellValue('C1', $phoneHeader);
+            $phoneHeader = $this->getBoldItalicText("Phone", $headerSize);
+            $ews->setCellValue('C1', $phoneHeader);
 
-        $roomHeader = $this->getBoldItalicText("Room",$size);
-        $ews->setCellValue('D1', $roomHeader);
+            $roomHeader = $this->getBoldItalicText("Room", $headerSize);
+            $ews->setCellValue('D1', $roomHeader);
 
-        $emailHeader = $this->getBoldItalicText("Email",$size);
-        $ews->setCellValue('E1', $emailHeader);
+            $emailHeader = $this->getBoldItalicText("Email", $headerSize);
+            $ews->setCellValue('E1', $emailHeader);
 
-        //echo "Users=".count($users)."<br>";
+            //echo "Users=".count($users)."<br>";
 
-        $row = 3;
-        foreach( $users as $user ) {
+            $row = 3;
+        }
 
-            if( !$user ) {
-                continue;
-            }
+        //$sections = array("WCMC"=>$users,"NYP"=>$users);
 
-            $this->createRowUser($user,$ews,$row);
-
-            $assistantsRes = $user->getAssistants();
-            $assistants = $assistantsRes['entities'];
-            if( count($assistants) > 0 ) {
-                foreach( $assistants as $assistant ) {
-                    $row = $row + 1;
-                    $this->createRowUser($assistant,$ews,$row,"    ",false);
-                }
-            }
-
-            $row = $row + 1;
+        foreach( $sections as $sectionName=>$sectionUsers ) {
+            $row = $this->addSectionUsersToListExcel($sectionName, $sectionUsers, $ews, $row);
         }
 
         //exit("ids=".$fellappids);
@@ -134,6 +127,45 @@ class UserDownloadUtil {
 
     }
 
+    public function addSectionUsersToListExcel( $section, $users, $ews, $row ) {
+
+        $ews->mergeCells('A'.$row.':'.'E'.$row);
+        $style = array(
+            'alignment' => array(
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            )
+        );
+        $ews->getStyle('A'.$row.':'.'E'.$row)->applyFromArray($style);
+
+        $sectionHeader = $this->getBoldItalicText($section,15);
+        $ews->setCellValue('A'.$row, $sectionHeader);
+        $row = $row + 1;
+
+        foreach( $users as $user ) {
+
+            if( !$user ) {
+                continue;
+            }
+
+            $this->createRowUser($user,$ews,$row);
+
+            $assistantsRes = $user->getAssistants();
+            $assistants = $assistantsRes['entities'];
+            if( count($assistants) > 0 ) {
+                foreach( $assistants as $assistant ) {
+                    $row = $row + 1;
+                    $this->createRowUser($assistant,$ews,$row,"    ",false);
+                }
+            }
+
+            $row = $row + 1;
+        }
+
+        //exit("ids=".$fellappids);
+
+        return $row;
+    }
+
     public function createRowUser( $user, $ews, $row, $prefix="", $bold=true ) {
         if( !$user ) {
             return;
@@ -143,27 +175,27 @@ class UserDownloadUtil {
         $userName = $user->getUsernameOptimal();
 
         if( $bold ) {
-            //Oleg Ivanov, MD => <strong>Ivanov</strong> Oleg, MD
-            //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
-            $userName = str_replace(",", "", $userName); //Oleg Ivanov MD
-            $userNameArr = explode(" ", $userName);
-            if (count($userNameArr) >= 2) {
-                $userFirstname = $userNameArr[0];
-                $userFamilyname = $userNameArr[1];
-                $userDegree = null;
-                if (count($userNameArr) == 3) {
-                    $userDegree = $userNameArr[2];
-                }
-
-                $userName = $this->getBoldText($userFamilyname);
-
-                $userName->createText(" " . $userFirstname);
-
-                if ($userDegree) {
-                    $userName->createText(", " . $userDegree);
-                }
-
-            }
+//            //Oleg Ivanov, MD => <strong>Ivanov</strong> Oleg, MD
+//            //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
+//            $userName = str_replace(",", "", $userName); //Oleg Ivanov MD
+//            $userNameArr = explode(" ", $userName);
+//            if (count($userNameArr) >= 2) {
+//                $userFirstname = $userNameArr[0];
+//                $userFamilyname = $userNameArr[1];
+//                $userDegree = null;
+//                if (count($userNameArr) == 3) {
+//                    $userDegree = $userNameArr[2];
+//                }
+//
+//                $userName = $this->getBoldText($userFamilyname);
+//
+//                $userName->createText(" " . $userFirstname);
+//
+//                if ($userDegree) {
+//                    $userName->createText(", " . $userDegree);
+//                }
+//            }
+            $userName = $this->convertUsernameToBold($userName);
         }
         if( $prefix ) {
             $userName = $prefix.$userName;
@@ -197,8 +229,41 @@ class UserDownloadUtil {
         $ews->setCellValue('E'.$row, $user->getSingleEmail());
     }
 
-    public function getBoldText( $text, $size=null ) {
-        $richText = new \PHPExcel_RichText();
+    //Oleg Ivanov, MD => <strong>Ivanov</strong> Oleg, MD
+    //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
+    public function convertUsernameToBold( $userName, $order="familyname" ) {
+        $userName = str_replace(",", "", $userName); //Oleg Ivanov MD
+        $userNameArr = explode(" ", $userName);
+        if (count($userNameArr) >= 2) {
+            $userFirstname = $userNameArr[0];
+            $userFamilyname = $userNameArr[1];
+            $userDegree = null;
+            if (count($userNameArr) == 3) {
+                $userDegree = $userNameArr[2];
+            }
+
+            if( $order == "familyname" ) {
+                $userName = $this->getBoldText($userFamilyname);
+                $userName->createText(" " . $userFirstname);
+            }
+
+            if( $order == "firstname" ) {
+                $userName = new \PHPExcel_RichText();
+                $userName->createTextRun($userFirstname);
+                $userName = $this->getBoldText(" " . $userFamilyname, null, $userName);
+            }
+
+            if ($userDegree) {
+                $userName->createText(", " . $userDegree);
+            }
+        }
+        return $userName;
+    }
+
+    public function getBoldText( $text, $size=null, $richText=null ) {
+        if( !$richText ) {
+            $richText = new \PHPExcel_RichText();
+        }
         $objBold = $richText->createTextRun($text);
         $objBold->getFont()->setBold(true);
         if( $size ) {
