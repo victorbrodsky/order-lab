@@ -3805,8 +3805,8 @@ class UserController extends Controller
         //$em = $this->getDoctrine()->getManager();
 
         $currentDate = date('m-d-Y');
-        //$fileName = "users_".$currentDate.".xlsx";
-        $fileName = "users_".$currentDate.".xls";
+        $fileName = "users_".$currentDate.".xlsx";
+        //$fileName = "users_".$currentDate.".xls";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "_", $fileName);
 
@@ -3815,8 +3815,10 @@ class UserController extends Controller
         $filterAdmin = "With Administrative Title";
         $adminParams = array('filter'=>$filterAdmin,'time'=>'current_only','limitFlag'=>null);
         $resAdmin = $this->indexUser($adminParams);
+
         $administrativeUsers = $resAdmin['entities'];
         //sort users: chairman first
+
         $administrativeUsers = $userDownloadUtil->sortUsers($administrativeUsers);
 //        $administrativeUserCount = 1;
 //        foreach( $administrativeUsers as $administrativeUser ) {
