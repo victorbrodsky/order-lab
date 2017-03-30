@@ -222,7 +222,8 @@ class UserDownloadUtil {
         $userName = $user->getUsernameOptimal();
 
         if( $bold ) {
-            $userName = $this->convertUsernameToBold($userName);
+            //$userName = $this->convertUsernameToBold($userName);
+            $userName = $this->getBoldText($userName);
         }
         if( $prefix ) {
             $userName = $prefix.$userName;
@@ -259,18 +260,30 @@ class UserDownloadUtil {
     //Oleg Ivanov, MD => <strong>Ivanov</strong> Oleg, MD
     //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
     public function convertUsernameToBold( $userName, $order="familyname" ) {
-        return $userName;
+        //return $userName;
         $userName = str_replace(",", "", $userName); //Oleg Ivanov MD
         $userNameArr = explode(" ", $userName);
         if (count($userNameArr) >= 2) {
+
             $userFirstname = $userNameArr[0];
             $userFamilyname = $userNameArr[1];
+
+//            $userNameCount = count($userNameArr);
+//            $userFirstnameArr[] = array();
+//            for( $i=0; $i<$userNameCount-2; $i++ ) {
+//                $userFirstnameArr[] = $userNameArr[$i];
+//            }
+//            $userFirstname = implode(" ",$userFirstnameArr);
+//            $userFamilyname = $userNameArr[$userNameCount-1];
+
             $userDegree = null;
             if (count($userNameArr) == 3) {
                 $userDegree = $userNameArr[2];
             }
 
             if( $order == "familyname" ) {
+                //$userFamilyname = null;
+                //echo "userFamilyname=$userFamilyname<br>";
                 $userName = $this->getBoldText($userFamilyname);
                 $userName->createText(" " . $userFirstname);
             }
@@ -282,13 +295,16 @@ class UserDownloadUtil {
             }
 
             if ($userDegree) {
-                $userName->createText(", " . $userDegree);
+                //$userName->createText(", " . $userDegree);
             }
         }
         return $userName;
     }
 
     public function getBoldText( $text, $size=null, $richText=null ) {
+        if( !$text ) {
+            return new \PHPExcel_RichText();
+        }
         if( !$richText ) {
             $richText = new \PHPExcel_RichText();
         }
