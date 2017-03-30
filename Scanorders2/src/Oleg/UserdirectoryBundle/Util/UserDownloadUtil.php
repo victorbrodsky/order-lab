@@ -257,13 +257,13 @@ class UserDownloadUtil {
         $userName = $user->getUsernameOptimal();
 
         if( $prefix ) {
-//            $userName = $prefix.$userName;
+            $userName = $prefix.$userName;
             //$userName = $this->getRichText($prefix.$userName);
         }
 
         if( $bold ) {
-            $userName = $this->convertUsernameToBold($userName);
-            //$userName = $this->getBoldText($userName);
+            //$userName = $this->convertUsernameToBold($userName);
+            $userName = $this->getBoldText($userName);
         }
 
         $ews->setCellValue('A'.$row, $userName);
