@@ -262,7 +262,7 @@ class UserDownloadUtil {
         }
 
         if( $bold ) {
-//            $userName = $this->convertUsernameToBold($userName);
+            $userName = $this->convertUsernameToBold($userName);
             //$userName = $this->getBoldText($userName);
         }
 
