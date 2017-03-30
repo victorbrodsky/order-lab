@@ -3816,12 +3816,14 @@ class UserController extends Controller
         $adminParams = array('filter'=>$filterAdmin,'time'=>'current_only','limitFlag'=>null);
         $resAdmin = $this->indexUser($adminParams);
         $administrativeUsers = $resAdmin['entities'];
+        //sort users: chairman first
+        $administrativeUsers = $userDownloadUtil->sortUsers($administrativeUsers);
 //        $administrativeUserCount = 1;
 //        foreach( $administrativeUsers as $administrativeUser ) {
 //            echo $administrativeUserCount.": adminUser=".$administrativeUser."<br>";
 //            $administrativeUserCount++;
 //        }
-//        exit();
+        //exit();
 
         //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
 

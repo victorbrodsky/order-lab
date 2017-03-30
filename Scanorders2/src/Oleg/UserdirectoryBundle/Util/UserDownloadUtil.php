@@ -82,7 +82,8 @@ class UserDownloadUtil {
                     //echo "administrativeUser=".$administrativeUser."<br>";
                     if( !$this->hasUser($sectionUsers, $administrativeUser) ) {
                         //echo "add administrativeUser=".$administrativeUser."<br>";
-                        $sectionUsers[] = $administrativeUser;
+                        //$sectionUsers[] = $administrativeUser;
+                        array_unshift($sectionUsers, $administrativeUser);
                         //$sections[$sectionName][] = $administrativeUser;
                     }
                 }
@@ -255,18 +256,28 @@ class UserDownloadUtil {
         //Name
         $userName = $user->getUsernameOptimal();
 
-        if( $bold ) {
-            //$userName = $this->convertUsernameToBold($userName);
-            //$userName = $this->getBoldText($userName);
-        }
         if( $prefix ) {
             $userName = $prefix.$userName;
+            //$userName = $this->getRichText($prefix.$userName);
+        }
+
+        if( $bold ) {
+            $userName = $this->convertUsernameToBold($userName);
+            //$userName = $this->getBoldText($userName);
         }
 
         $ews->setCellValue('A'.$row, $userName);
 
         //Title
-        $ews->setCellValue('B'.$row, $user->getId());
+//        $administrativeTitles = $user->getUniqueTitles($user->getAdministrativeTitles());
+//        $administrativeTitleNameArr = array();
+//        foreach( $administrativeTitles as $administrativeTitle ) {
+//            $administrativeTitleNameArr[] = $administrativeTitle->getName();
+//        }
+//        $administrativeTitleNameStr = implode(" \n",$administrativeTitleNameArr);
+        $administrativeTitleNameStr = $this->getUserTitleStr($user);
+        $ews->setCellValue('B'.$row, $administrativeTitleNameStr);
+        $ews->getStyle('B'.$row)->getAlignment()->setWrapText(true);
 
         //Phone
         $phoneStr = "";
@@ -329,10 +340,24 @@ class UserDownloadUtil {
             }
 
             if ($userDegree) {
-                //$userName->createText(", " . $userDegree);
+                $userName->createText(", " . $userDegree);
             }
         }
         return $userName;
+    }
+
+    public function getRichText( $text, $size=null, $richText=null ) {
+        if( !$text ) {
+            return new \PHPExcel_RichText();
+        }
+        if( !$richText ) {
+            $richText = new \PHPExcel_RichText();
+        }
+        $objBold = $richText->createTextRun($text);
+        if( $size ) {
+            $objBold->getFont()->setSize($size);
+        }
+        return $richText;
     }
 
     public function getBoldText( $text, $size=null, $richText=null ) {
@@ -359,6 +384,60 @@ class UserDownloadUtil {
             $objBold->getFont()->setSize($size);
         }
         return $richText;
+    }
+
+    public function getUserTitleStr($user) {
+        $administrativeTitles = $user->getUniqueTitles($user->getAdministrativeTitles());
+        $administrativeTitleNameArr = array();
+        foreach( $administrativeTitles as $administrativeTitle ) {
+            $administrativeTitleNameArr[] = $administrativeTitle->getName();
+        }
+        $administrativeTitleNameStr = implode(" \n",$administrativeTitleNameArr);
+        return $administrativeTitleNameStr;
+    }
+
+    public function sortUsers( $users ) {
+        $newUsers = array();
+        foreach( $users as $user ) {
+            $administrativeTitleNameStr = $this->getUserTitleStr($user);
+            $pos = strpos($administrativeTitleNameStr, "Chairman of ");
+            if( $pos !== false ) {
+                if( !$this->hasUser($newUsers, $user) ) {
+                    //echo "Chairman $user<br>";
+                    //$newUsers[] = $user;
+                    array_unshift($newUsers, $user);
+                }
+            }
+        }
+        foreach( $users as $user ) {
+            $administrativeTitleNameStr = $this->getUserTitleStr($user);
+            $pos = strpos($administrativeTitleNameStr, "Vice Chairman");
+            if( $pos !== false ) {
+                if( !$this->hasUser($newUsers, $user) ) {
+                    //echo "Vice Chairman $user<br>";
+                    //$newUsers[] = $user;
+                    array_unshift($newUsers, $user);
+                }
+            }
+        }
+
+        //all others
+        foreach( $users as $user ) {
+            $administrativeTitleNameStr = $this->getUserTitleStr($user);
+            $pos1 = strpos($administrativeTitleNameStr, "Chairman of ");
+            $pos2 = strpos($administrativeTitleNameStr, "Vice Chairman");
+            if( $pos1 === false && $pos2 === false ) {
+                if( !$this->hasUser($newUsers, $user) ) {
+                    //echo "other $user<br>";
+                    //$newUsers[] = $user;
+                    array_unshift($newUsers, $user);
+                }
+            }
+        }
+
+        //exit();
+
+        return $newUsers;
     }
 
 }
