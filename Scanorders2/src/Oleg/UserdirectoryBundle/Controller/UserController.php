@@ -3808,7 +3808,13 @@ class UserController extends Controller
         $res = $this->indexUser($params);
         $users = $res['entities'];
 
-        $sections = array("WCMC"=>$users,"NYP"=>$users);
+        //$sections = array("WCMC"=>$users,"NYP"=>$users);
+        $sections = $userDownloadUtil->getSections($users);
+
+//        echo '<br><br>sections:<pre>';
+//        print_r($sections);
+//        echo  '</pre>';
+//        exit();
 
         $excelBlob = $userDownloadUtil->createUserListExcel($sections);
 

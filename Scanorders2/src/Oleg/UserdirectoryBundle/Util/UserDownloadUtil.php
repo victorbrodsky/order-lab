@@ -42,6 +42,39 @@ class UserDownloadUtil {
     }
 
 
+    public function getSections( $users ) {
+        $sections = array();
+        foreach( $users as $user ) {
+            $instResArr = $user->getDeduplicatedInstitutions();
+//            echo '<pre>';
+//            print_r($instResArr);
+//            echo  '</pre>';
+
+            foreach( $instResArr as $instRes ) {
+//                echo 'instRes:<pre>';
+//                print_r($instRes);
+//                echo  '</pre>';
+                $instName = $instRes[0]['instNameWithRoot'];
+                //echo "instName=".$instName."<br>";
+                //echo "user=".$user->getUsernameOptimal()."<br>";
+//                if( is_array($sections[$instName]) ) {
+//                    //
+//                } else {
+//                    $sections[$instName] = array();
+//                }
+                $sections[$instName][] = $user;
+            }
+            //break;
+        }
+
+//        echo '<br><br>sections:<pre>';
+//        print_r($sections);
+//        echo  '</pre>';
+//        exit();
+
+        return $sections;
+    }
+
     public function createUserListExcel( $sections ) {
 
         $author = $this->sc->getToken()->getUser();
@@ -99,13 +132,21 @@ class UserDownloadUtil {
         }
 
         //$sections = array("WCMC"=>$users,"NYP"=>$users);
+//        foreach( $sections as $sectionName=>$sectionUsers ) {
+//            echo "<br>###### sectionName=".$sectionName."######<br>";
+//            $sectionUsersArr = array();
+//            foreach( $sectionUsers as $sectionUser ) {
+//                echo $sectionUser."<br>";
+//                //$sectionUsersArr[] = $sectionUser;
+//            }
+//        }
+//        exit("111");
 
         foreach( $sections as $sectionName=>$sectionUsers ) {
-            $row = $this->addSectionUsersToListExcel($sectionName, $sectionUsers, $ews, $row);
+            $row = $this->addSectionUsersToListExcel($sectionName."", $sectionUsers, $ews, $row);
         }
 
-        //exit("ids=".$fellappids);
-
+        //exit("222");
 
         // Auto size columns for each worksheet
         \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
@@ -129,17 +170,21 @@ class UserDownloadUtil {
 
     public function addSectionUsersToListExcel( $section, $users, $ews, $row ) {
 
-        $ews->mergeCells('A'.$row.':'.'E'.$row);
-        $style = array(
-            'alignment' => array(
-                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-            )
-        );
-        $ews->getStyle('A'.$row.':'.'E'.$row)->applyFromArray($style);
+        //section Header
+        if(1) {
+            $ews->mergeCells('A' . $row . ':' . 'E' . $row);
+            $style = array(
+                'alignment' => array(
+                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                )
+            );
+            $ews->getStyle('A' . $row . ':' . 'E' . $row)->applyFromArray($style);
 
-        $sectionHeader = $this->getBoldItalicText($section,15);
-        $ews->setCellValue('A'.$row, $sectionHeader);
-        $row = $row + 1;
+            $sectionHeader = $this->getBoldItalicText($section, 15);
+            $ews->setCellValue('A' . $row, $sectionHeader);
+            $row = $row + 1;
+        }
+        //return $row;
 
         foreach( $users as $user ) {
 
@@ -147,8 +192,10 @@ class UserDownloadUtil {
                 continue;
             }
 
+            //user
             $this->createRowUser($user,$ews,$row);
 
+            //assistants
             $assistantsRes = $user->getAssistants();
             $assistants = $assistantsRes['entities'];
             if( count($assistants) > 0 ) {
@@ -175,26 +222,6 @@ class UserDownloadUtil {
         $userName = $user->getUsernameOptimal();
 
         if( $bold ) {
-//            //Oleg Ivanov, MD => <strong>Ivanov</strong> Oleg, MD
-//            //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
-//            $userName = str_replace(",", "", $userName); //Oleg Ivanov MD
-//            $userNameArr = explode(" ", $userName);
-//            if (count($userNameArr) >= 2) {
-//                $userFirstname = $userNameArr[0];
-//                $userFamilyname = $userNameArr[1];
-//                $userDegree = null;
-//                if (count($userNameArr) == 3) {
-//                    $userDegree = $userNameArr[2];
-//                }
-//
-//                $userName = $this->getBoldText($userFamilyname);
-//
-//                $userName->createText(" " . $userFirstname);
-//
-//                if ($userDegree) {
-//                    $userName->createText(", " . $userDegree);
-//                }
-//            }
             $userName = $this->convertUsernameToBold($userName);
         }
         if( $prefix ) {
@@ -232,6 +259,7 @@ class UserDownloadUtil {
     //Oleg Ivanov, MD => <strong>Ivanov</strong> Oleg, MD
     //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
     public function convertUsernameToBold( $userName, $order="familyname" ) {
+        return $userName;
         $userName = str_replace(",", "", $userName); //Oleg Ivanov MD
         $userNameArr = explode(" ", $userName);
         if (count($userNameArr) >= 2) {
