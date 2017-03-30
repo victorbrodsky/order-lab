@@ -66,28 +66,39 @@ class UserDownloadUtil {
 //        print_r($sections);
 //        echo  '</pre>';
 //        exit();
-    //add users with administrative Title to Administration (WCMC)
-    foreach ($sections as $sectionName => $sectionUsers) {
-        //exit();
-        //$sectionName = $section
-        if( $sectionName == "Administration (WCMC)" ) {
-//                echo "<br><br>$sectionName:<pre>";
-//                print_r($sectionUsers);
-//                echo  '</pre>';
-            foreach ($administrativeUsers as $administrativeUser) {
-                //echo "administrativeUser=".$administrativeUser."<br>";
-                if( !$this->hasUser($sectionUsers, $administrativeUser) ) {
-                    //echo "add administrativeUser=".$administrativeUser."<br>";
-                    //$sectionUsers[] = $administrativeUser;
-                    $sections[$sectionName][] = $administrativeUser;
+
+        //////////////// reorganize sections ////////////////
+
+        //add users with administrative Title to Administration (WCMC)
+        $newSections = array();
+        foreach ($sections as $sectionName => $sectionUsers) {
+            //exit();
+            //$sectionName = $section
+            if( $sectionName == "Administration (WCMC)" ) {
+    //                echo "<br><br>$sectionName:<pre>";
+    //                print_r($sectionUsers);
+    //                echo  '</pre>';
+                foreach ($administrativeUsers as $administrativeUser) {
+                    //echo "administrativeUser=".$administrativeUser."<br>";
+                    if( !$this->hasUser($sectionUsers, $administrativeUser) ) {
+                        //echo "add administrativeUser=".$administrativeUser."<br>";
+                        $sectionUsers[] = $administrativeUser;
+                        //$sections[$sectionName][] = $administrativeUser;
+                    }
                 }
+                $newSections[$sectionName] = $sectionUsers;
+                //$sections[$sectionName] = $sectionUsers;
             }
-            //$sections[$sectionName] = $sectionUsers;
         }
-    }
+        foreach ($sections as $sectionName => $sectionUsers) {
+            if( $sectionName != "Administration (WCMC)" ) {
+                $newSections[$sectionName] = $sectionUsers;
+            }
+        }
+        //////////////// EOF reorganize sections ////////////////
         //exit();
 
-        return $sections;
+        return $newSections;
     }
     public function hasUser( $users, $subjectUser ) {
         foreach( $users as $user ) {
