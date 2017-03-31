@@ -266,12 +266,6 @@ class UserDownloadUtil {
         $ews->setCellValue('A'.$row, $userName);
 
         //Title
-//        $administrativeTitles = $user->getUniqueTitles($user->getAdministrativeTitles());
-//        $administrativeTitleNameArr = array();
-//        foreach( $administrativeTitles as $administrativeTitle ) {
-//            $administrativeTitleNameArr[] = $administrativeTitle->getName();
-//        }
-//        $administrativeTitleNameStr = implode(" \n",$administrativeTitleNameArr);
         $administrativeTitleNameStr = $this->getUserTitleStr($user);
         $ews->setCellValue('B'.$row, $administrativeTitleNameStr);
         $ews->getStyle('B'.$row)->getAlignment()->setWrapText(true);
@@ -377,14 +371,45 @@ class UserDownloadUtil {
     }
 
     public function getUserTitleStr($user) {
-        $administrativeTitles = $user->getUniqueTitles($user->getAdministrativeTitles());
-        $administrativeTitleNameArr = array();
-        foreach( $administrativeTitles as $administrativeTitle ) {
-            $administrativeTitleNameArr[] = $administrativeTitle->getName();
+        $titleNameStr = null;
+
+        //first priority is admin title
+        $titleNameStr = $user->getUniqueTitlesStr($user->getAdministrativeTitles()," \n");
+
+        if( !$titleNameStr ) {
+            //if admin title is empty, then add appointment and medical titles
+            $titleNameStrArr = array();
+            $titleNameStrArr[] = $user->getUniqueTitlesStr($user->getAppointmentTitles()," \n");
+            $titleNameStrArr[] = $user->getUniqueTitlesStr($user->getMedicalTitles()," \n");
+            $titleNameStr = implode(" \n",$titleNameStrArr);
         }
-        $administrativeTitleNameStr = implode(" \n",$administrativeTitleNameArr);
-        return $administrativeTitleNameStr;
+
+        if( !$titleNameStr ) {
+            //$titleNameStr = $this->getUserHeaderStr($user);
+        }
+
+        return $titleNameStr;
     }
+//    public function getUserHeaderStr($user) {
+//        $titleInfoArr = array();
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $headInfos = $userSecUtil->getHeadInfo($user);
+//        foreach( $headInfos as $headInfo ) {
+//
+//            echo '<br><br>headInfo:<pre>';
+//            print_r($headInfo);
+//            echo  '</pre>';
+//            exit();
+//
+//            //{% for titleInfo in headInfoArr.titleInfo if titleInfo.name is defined %}
+//            foreach( $headInfo['titleInfo'] as $titleInfo ) {
+//                if( is_array($titleInfo) && array_key_exists('name', $titleInfo) ) {
+//                    $titleInfoArr[] = $titleInfo['name'];
+//                }
+//            }
+//        }
+//        return implode(" \n",$titleInfoArr);
+//    }
 
     public function sortUsers( $users ) {
         $newUsers = array();

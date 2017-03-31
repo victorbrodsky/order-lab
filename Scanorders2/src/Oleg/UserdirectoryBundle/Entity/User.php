@@ -1624,7 +1624,7 @@ class User extends BaseUser {
 //                $res["institution"] = $title->getInstitution()."";
 //            }
 //        }
-        $adminTitles = $this->getAppointmentTitles();
+        $adminTitles = $this->getAdministrativeTitles();    //it was typo?: getAppointmentTitles();
         $res = $this->getDetailsArrFromTitles($adminTitles,$res);
 
         $appTitles = $this->getAppointmentTitles();
@@ -2007,6 +2007,14 @@ class User extends BaseUser {
             }
         }
         return $titlesArr;
+    }
+    public function getUniqueTitlesStr( $titles, $delimeter="; " ) {
+        $titlesArr = $this->getUniqueTitles($titles);
+        $titleNameArr = array();
+        foreach( $titlesArr as $title ) {
+            $titleNameArr[] = $title->getName();
+        }
+        return implode($delimeter,$titleNameArr);
     }
     /////////////////////// EOF Return: Chief, Eyebrow Pathology ///////////////////////
 
