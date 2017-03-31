@@ -89,8 +89,8 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 11. Obtain and install these optional applications to enable associated functionality on the server:
 
-	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion ( default path: C:\Program Files\wkhtmltopdf\ )
-	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path: C:\Program Files (x86)\LibreOffice 5\ )
+	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion (default path on Windows: C:\Program Files\wkhtmltopdf\ )
+	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path on Windows: C:\Program Files (x86)\LibreOffice 5\ )
 	* [GhostScript](https://www.ghostscript.com/) for PDF decryption
 	* [PDFtk Server](https://www.pdflabs.com/tools/pdftk-server/) for PDF merging
 	* [PHPExcel](https://github.com/PHPOffice/PHPExcel) for importing and exporting Excel files
@@ -142,8 +142,8 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 11. Obtain and install these optional applications to enable associated functionality on the server:
 
-	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion ( default path: C:\Program Files\wkhtmltopdf\ )
-	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path: C:\Program Files (x86)\LibreOffice 5\ )
+	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion (default path on Windows: C:\Program Files\wkhtmltopdf\ )
+	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path on Windows: C:\Program Files (x86)\LibreOffice 5\ )
 	* [GhostScript](https://www.ghostscript.com/) for PDF decryption
 	* [PDFtk Server](https://www.pdflabs.com/tools/pdftk-server/) for PDF merging
 	* [PHPExcel](https://github.com/PHPOffice/PHPExcel) for importing and exporting Excel files
