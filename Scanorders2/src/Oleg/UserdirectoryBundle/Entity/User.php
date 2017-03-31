@@ -1396,6 +1396,64 @@ class User extends BaseUser {
         return $this->getId();
     }
 
+    public function getSingleLastName() {
+        if( $this->getLastName() ) {
+            return $this->getLastName();
+        }
+
+        if( $this->getDisplayName() ) {
+            //Joe S. Doe => Doe
+            $userName = $this->getDisplayName();
+            $userNameArr = explode(" ", $userName);
+            $userNameCount = count($userNameArr);
+            $userFamilyname = $userNameArr[$userNameCount-1];
+            return $userFamilyname;
+        }
+
+        return null;
+    }
+    public function getSingleFirstName() {
+        if( $this->getFirstName() ) {
+            return $this->getFirstName();
+        }
+
+        if( $this->getDisplayName() ) {
+            //Joe S. Doe => Doe
+            $userName = $this->getDisplayName();
+            $userNameArr = explode(" ", $userName);
+            $userNameCount = count($userNameArr);
+            //$userFirstname = $userNameArr[$userNameCount-1];
+            $userFirstnameArr = array();
+            for( $i=0; $i<$userNameCount-2; $i++ ) {
+                $userFirstnameArr[] = $userNameArr[$i];
+            }
+            $userFirstname = implode(" ",$userFirstnameArr);
+
+            return $userFirstname;
+        }
+
+        return null;
+    }
+    public function getSingleSalutation() {
+        if( $this->getSalutation() ) {
+            return $this->getSalutation();
+        }
+
+        $degrees = array();
+        //get appended degrees
+        foreach( $this->getTrainings() as $training ) {
+            if( $training->getAppendDegreeToName() && $training->getDegree() ) {
+                $degrees[] = $training->getDegree();
+            }
+        }
+        if( count($degrees) > 0 ) {
+            $degreesStr = implode(", ", $degrees);
+            return $degreesStr;
+        }
+
+        return null;
+    }
+
 
     //get all institutions from administrative and appointment titles.
     //status: 0-unverified, 1-verified

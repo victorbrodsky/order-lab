@@ -3804,6 +3804,17 @@ class UserController extends Controller
 
         //$em = $this->getDoctrine()->getManager();
 
+        //testing
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find(250);//"David S. Rickman"
+//        if( $user ) {
+//            $lastname = $user->getSingleLastName();
+//            echo "lastname=[$lastname]<br>";
+//            $firstname = $user->getSingleFirstName();
+//            echo "firstname=[$firstname]<br>";
+//        }
+//        exit('testing');
+
         $currentDate = date('m-d-Y');
         $fileName = "users_".$currentDate.".xlsx";
         //$fileName = "users_".$currentDate.".xls";
@@ -3846,12 +3857,12 @@ class UserController extends Controller
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="'.$fileName.'"');;
-        //header('Cache-Control: max-age=0');
-        //header('Cache-Control: max-age=1');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
         //header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-        //header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-        //header ('Cache-Control: cache, must-revalidate');
-        //header ('Pragma: public');
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+        header ('Cache-Control: cache, must-revalidate');
+        header ('Pragma: public');
         $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel5');
         $writer->save('php://output');
         exit();

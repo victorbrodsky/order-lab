@@ -228,7 +228,7 @@ class UserDownloadUtil {
             }
 
             //user
-            $this->createRowUser($user,$ews,$row);
+            $this->createRowUser($user,$ews,$row,"regular");
 
             //assistants
             $assistantsRes = $user->getAssistants();
@@ -236,7 +236,7 @@ class UserDownloadUtil {
             if( count($assistants) > 0 ) {
                 foreach( $assistants as $assistant ) {
                     $row = $row + 1;
-                    $this->createRowUser($assistant,$ews,$row,"    ",false);
+                    $this->createRowUser($assistant,$ews,$row,"assistant");
                 }
             }
 
@@ -248,22 +248,19 @@ class UserDownloadUtil {
         return $row;
     }
 
-    public function createRowUser( $user, $ews, $row, $prefix="", $bold=true ) {
+    public function createRowUser( $user, $ews, $row, $type="regular" ) {
         if( !$user ) {
             return;
         }
 
         //Name
-        $userName = $user->getUsernameOptimal();
-
-        if( $prefix ) {
-            $userName = $prefix.$userName;
-            //$userName = $this->getRichText($prefix.$userName);
+        if( $type == "assistant" ) {
+            $userName = $user->getUsernameOptimal();
+            $userName = "     ".$userName;
         }
 
-        if( $bold ) {
-            //$userName = $this->convertUsernameToBold($userName);
-            $userName = $this->getBoldText($userName);
+        if( $type == "regular" ) {
+            $userName = $this->convertUsernameToBold($user);
         }
 
         $ews->setCellValue('A'.$row, $userName);
@@ -302,47 +299,40 @@ class UserDownloadUtil {
         $ews->setCellValue('E'.$row, $user->getSingleEmail());
     }
 
-    //Oleg Ivanov, MD => <strong>Ivanov</strong> Oleg, MD
     //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
-    public function convertUsernameToBold( $userName, $order="familyname" ) {
+    public function convertUsernameToBold( $user, $order="familyname" ) {
         //return $userName;
-        $userName = str_replace(",", "", $userName); //Oleg Ivanov MD
-        $userNameArr = explode(" ", $userName);
-        if (count($userNameArr) >= 2) {
 
-            $userFirstname = $userNameArr[0];
-            $userFamilyname = $userNameArr[1];
+        $userFirstname = $user->getSingleFirstName();
+        $userFamilyname = $user->getSingleLastName();
+        $userSalutation = $user->getSingleSalutation();;
 
-//            $userNameCount = count($userNameArr);
-//            $userFirstnameArr[] = array();
-//            for( $i=0; $i<$userNameCount-2; $i++ ) {
-//                $userFirstnameArr[] = $userNameArr[$i];
-//            }
-//            $userFirstname = implode(" ",$userFirstnameArr);
-//            $userFamilyname = $userNameArr[$userNameCount-1];
+        if( $order == "familyname" ) {
+            //echo "userFamilyname=$userFamilyname<br>";
+            $userName = $this->getBoldText($userFamilyname);
 
-            $userDegree = null;
-            if (count($userNameArr) == 3) {
-                $userDegree = $userNameArr[2];
+            if( $userSalutation && $userSalutation == "Dr." ) {
+                $userName->createText(", " . $userSalutation);
             }
 
-            if( $order == "familyname" ) {
-                //$userFamilyname = null;
-                //echo "userFamilyname=$userFamilyname<br>";
-                $userName = $this->getBoldText($userFamilyname);
-                $userName->createText(" " . $userFirstname);
+            $userName->createText(" " . $userFirstname);
+
+            if( $userSalutation && $userSalutation != "Dr." ) {
+                $userName->createText(", " . $userSalutation);
             }
 
-            if( $order == "firstname" ) {
-                $userName = new \PHPExcel_RichText();
-                $userName->createTextRun($userFirstname);
-                $userName = $this->getBoldText(" " . $userFamilyname, null, $userName);
-            }
+        }
 
-            if ($userDegree) {
-                $userName->createText(", " . $userDegree);
+        if( $order == "firstname" ) {
+            $userName = new \PHPExcel_RichText();
+            $userName->createTextRun($userFirstname);
+            $userName = $this->getBoldText(" " . $userFamilyname, null, $userName);
+
+            if ($userSalutation) {
+                $userName->createText(", " . $userSalutation);
             }
         }
+
         return $userName;
     }
 
