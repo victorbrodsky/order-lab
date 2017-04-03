@@ -213,7 +213,7 @@ class UserDownloadUtil {
             $sheet->getColumnDimension('E')->setWidth(24.64);   //21.64
 
             //set title
-            $sheet->setTitle($sheetTitle);
+            //$sheet->setTitle($sheetTitle);
 
             //set footer (The code for "left" is &L)
             $sheet->getHeaderFooter()->setOddFooter('&L'.$footer);
