@@ -217,7 +217,7 @@ class UserDownloadUtil {
 //            /** @var PHPExcel_Cell $cell */
 //            foreach ($cellIterator as $cell) {
 //                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
-//            }
+//            } 
         }
 
         //exit("111");
