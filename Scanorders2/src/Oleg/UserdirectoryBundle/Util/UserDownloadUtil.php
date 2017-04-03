@@ -87,6 +87,7 @@ class UserDownloadUtil {
                         //$sections[$sectionName][] = $administrativeUser;
                     }
                 }
+                $sectionUsers = $this->sortUsersByPosition($sectionUsers,false);
                 $newSections[$sectionName] = $sectionUsers;
                 //$sections[$sectionName] = $sectionUsers;
             }

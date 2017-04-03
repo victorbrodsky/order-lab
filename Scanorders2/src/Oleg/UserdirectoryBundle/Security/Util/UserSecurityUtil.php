@@ -1448,10 +1448,22 @@ class UserSecurityUtil {
                     }
                 }
 
+                //add missing "Position Type" values to user's profiles
+                $positionTypesStr = null;
+                if( method_exists($title,'getUserPositions') ) {
+                    $positionTypes = $title->getUserPositions();
+                    $positionTypesArr = array();
+                    foreach ($positionTypes as $positionType) {
+                        $positionTypesArr[] = $positionType->getName();
+                    }
+                    $positionTypesStr = implode("; ", $positionTypesArr);
+                }
+
                 $elementInfo = array(
                     'tablename'=>$tablename,
                     'id'=>$titleId,
                     'name'=>$name,
+                    'positiontypes'=>$positionTypesStr
                     //'headService'=>$headServiceId
                 );
                 //$elementInfo = $this->getSearchSameObjectUrl($elementInfo);
@@ -1482,6 +1494,12 @@ class UserSecurityUtil {
                 //echo "titleInfo titleId=".$elementInfo['id']."<br>";
                 $instArr[$instId]['titleInfo'][] = $elementInfo;
             }
+
+            //might add here the position types $instArr[$instId]['positiontypes'][]
+//            if( $elementInfo ) {
+//                $instArr[$instId]['positiontypes'][] = $elementInfo;
+//            }
+
         }//foreach titles
 
         return $instArr;
@@ -1615,10 +1633,16 @@ class UserSecurityUtil {
             //UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        //add missing "Position Type" values to user's profiles
+        $elementInfoName = $elementInfo['name'];
+        if( array_key_exists('positiontypes', $elementInfo) && $elementInfo['positiontypes'] ) {
+            $elementInfoName = $elementInfoName . ", " . $elementInfo['positiontypes'];
+        }
+
         if( $style ) {
-            $name = "<$style>".$elementInfo['name']."</$style>";
+            $name = "<$style>".$elementInfoName."</$style>";
         } else {
-            $name = $elementInfo['name'];
+            $name = $elementInfoName;
         }
 
         $elementInfo = '<a href="'.$url.'">'.$name.'</a>';

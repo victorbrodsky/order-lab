@@ -1868,11 +1868,24 @@ class User extends BaseUser {
             $elementInfo = null;
             if( $title->getName() ) {
                 $name = $title->getName()->getName()."";
+
+//                //add missing "Position Type" values to user's profiles
+//                $positionTypes = $title->getUserPositions();
+//                $positionTypesArr = array();
+//                foreach( $positionTypes as $positionType ) {
+//                    $positionTypesArr[] = $positionType->getName();
+//                }
+//                $positionTypesStr = implode("; ",$positionTypesArr);
+
                 $titleId = null;
                 if( $title->getName()->getId() ) {
                     $titleId = $title->getName()->getId();
                 }
-                $elementInfo = array('tablename'=>$tablename,'id'=>$titleId,'name'=>$name);
+                $elementInfo = array(
+                    'tablename'=>$tablename,
+                    'id'=>$titleId,'name'=>$name,
+                    //'positiontypes'=>$positionTypesStr
+                );
             }
 
             //$headInfo[] = 'break-br';

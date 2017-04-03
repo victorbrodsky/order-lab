@@ -3834,7 +3834,7 @@ class UserController extends Controller
 
         //sort users: chairman first
         //$administrativeUsers = $userDownloadUtil->sortUsersByTitle($administrativeUsers);
-        $administrativeUsers = $userDownloadUtil->sortUsersByPosition($administrativeUsers);
+        //$administrativeUsers = $userDownloadUtil->sortUsersByPosition($administrativeUsers);
 
 //        $administrativeUserCount = 1;
 //        foreach( $administrativeUsers as $administrativeUser ) {
