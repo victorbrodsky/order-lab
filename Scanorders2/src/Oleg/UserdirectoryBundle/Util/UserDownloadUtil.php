@@ -35,6 +35,11 @@ class UserDownloadUtil {
     protected $sc;
     protected $container;
 
+    private $cellSize = 10;
+    private $cellFont = "Calibri";
+    private $headerSize = 11;
+    private $headerFont = "Calibri";
+
     public function __construct( $em, $sc, $container ) {
         $this->em = $em;
         $this->sc = $sc;
@@ -51,6 +56,8 @@ class UserDownloadUtil {
                 //$instName = $instRes[0]['instNameWithRoot'];
                 //Do not show (WCM) or (NYP) at all after every section title.
                 $instName = $instRes[0]['instName'];
+                //Set all uppercase
+                $instName = strtoupper($instName);
                 //echo "instName=".$instName."<br>";
                 //$sections[$instName][] = $user."";
                 $sections[$instName][] = $user;
@@ -70,7 +77,7 @@ class UserDownloadUtil {
         foreach ($sections as $sectionName => $sectionUsers) {
             //exit();
             //$sectionName = $section
-            if( $sectionName == "Administration" ) {
+            if( $sectionName == "ADMINISTRATION" ) {
     //                echo "<br><br>$sectionName:<pre>";
     //                print_r($sectionUsers);
     //                echo  '</pre>';
@@ -94,7 +101,7 @@ class UserDownloadUtil {
             //echo "############ $sectionName #################<br>";
             //$this->printUsers($sectionUsers);
 
-            if( $sectionName != "Administration" ) {
+            if( $sectionName != "ADMINISTRATION" ) {
                 $sectionUsers = $this->sortUsersByPosition($sectionUsers,false);
                 $newSections[$sectionName] = $sectionUsers;
             }
@@ -119,7 +126,7 @@ class UserDownloadUtil {
 
         $row = 1;
         $withheader = false;
-        $headerSize = 15;
+        $headerSize = $this->headerSize;
 
         $ea = new \PHPExcel(); // ea is short for Excel Application
 
@@ -138,14 +145,19 @@ class UserDownloadUtil {
         $ews->getSheetView()->setZoomScale(150);
 
         //align all cells to left
-        $style = array(
+        $styleArray = array(
             'alignment' => array(
                 'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
                 'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP,
+            ),
+            'font'  => array(
+                //'bold'  => true,
+                //'color' => array('rgb' => 'FF0000'),
+                'size'  => $this->cellSize,
+                'name'  => $this->cellFont
             )
         );
-        //$ews->getDefaultStyle()->applyFromArray($style);
-        $ews->getParent()->getDefaultStyle()->applyFromArray($style);
+        $ews->getParent()->getDefaultStyle()->applyFromArray($styleArray);
 
         if( $withheader ) {
 
@@ -191,14 +203,21 @@ class UserDownloadUtil {
         foreach ($ea->getWorksheetIterator() as $worksheet) {
 
             $ea->setActiveSheetIndex($ea->getIndex($worksheet));
-
             $sheet = $ea->getActiveSheet();
-            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);
-            /** @var PHPExcel_Cell $cell */
-            foreach ($cellIterator as $cell) {
-                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
-            }
+
+            //set width (from original excel file to make printable)
+//            $sheet->getColumnDimension('A')->setWidth(22.18);
+//            $sheet->getColumnDimension('B')->setWidth(20.36);
+//            $sheet->getColumnDimension('C')->setWidth(18.36);
+//            $sheet->getColumnDimension('D')->setWidth(8.18);
+//            $sheet->getColumnDimension('E')->setWidth(21.64);
+
+//            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+//            $cellIterator->setIterateOnlyExistingCells(true);
+//            /** @var PHPExcel_Cell $cell */
+//            foreach ($cellIterator as $cell) {
+//                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+//            }
         }
 
         //exit("111");
@@ -214,11 +233,17 @@ class UserDownloadUtil {
             $style = array(
                 'alignment' => array(
                     'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                ),
+                'font'  => array(
+                    //'bold'  => true,
+                    //'color' => array('rgb' => 'FF0000'),
+                    'size'  => $this->headerSize,
+                    'name'  => $this->headerFont
                 )
             );
             $ews->getStyle('A' . $row . ':' . 'E' . $row)->applyFromArray($style);
 
-            $sectionHeader = $this->getBoldItalicText($section, 15);
+            $sectionHeader = $this->getBoldItalicText($section, $this->headerSize);
             $ews->setCellValue('A' . $row, $sectionHeader);
             $row = $row + 1;
         }

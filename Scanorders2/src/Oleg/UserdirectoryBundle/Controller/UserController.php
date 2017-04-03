@@ -3815,8 +3815,9 @@ class UserController extends Controller
 //        }
 //        exit('testing');
 
-        $currentDate = date('m-d-Y');
-        $fileName = "users_".$currentDate.".xlsx";
+        //$fileName = WCM-Pathology-Phone-List-MM-DD-YYYY-HH-MM.xlsx
+        $currentDate = date('m-d-Y-H-i');
+        $fileName = "WCM-Pathology-Phone-List-".$currentDate.".xlsx";
         //$fileName = "users_".$currentDate.".xls";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "_", $fileName);
