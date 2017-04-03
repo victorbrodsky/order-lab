@@ -1524,7 +1524,8 @@ class User extends BaseUser {
                 'uniqueName'=>$uniqueName,
                 'parentName'=>$institution->getParent()."",
                 'instId'=>$institution->getId(),
-                'instNameWithRoot'=>$institution->getNodeNameWithRoot()
+                'instNameWithRoot'=>$institution->getNodeNameWithRoot(),
+                'instName'=>$institution->getName().""
             );
 
             $instArr[$instName][] = $institution;

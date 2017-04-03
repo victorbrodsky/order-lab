@@ -46,15 +46,11 @@ class UserDownloadUtil {
         $sections = array();
         foreach( $users as $user ) {
             $instResArr = $user->getDeduplicatedInstitutions();
-//            echo '<pre>';
-//            print_r($instResArr);
-//            echo  '</pre>';
 
             foreach( $instResArr as $instRes ) {
-//                echo 'instRes:<pre>';
-//                print_r($instRes);
-//                echo  '</pre>';
-                $instName = $instRes[0]['instNameWithRoot'];
+                //$instName = $instRes[0]['instNameWithRoot'];
+                //Do not show (WCM) or (NYP) at all after every section title.
+                $instName = $instRes[0]['instName'];
                 //echo "instName=".$instName."<br>";
                 //$sections[$instName][] = $user."";
                 $sections[$instName][] = $user;
@@ -74,7 +70,7 @@ class UserDownloadUtil {
         foreach ($sections as $sectionName => $sectionUsers) {
             //exit();
             //$sectionName = $section
-            if( $sectionName == "Administration (WCMC)" ) {
+            if( $sectionName == "Administration" ) {
     //                echo "<br><br>$sectionName:<pre>";
     //                print_r($sectionUsers);
     //                echo  '</pre>';
@@ -98,7 +94,7 @@ class UserDownloadUtil {
             //echo "############ $sectionName #################<br>";
             //$this->printUsers($sectionUsers);
 
-            if( $sectionName != "Administration (WCMC)" ) {
+            if( $sectionName != "Administration" ) {
                 $sectionUsers = $this->sortUsersByPosition($sectionUsers,false);
                 $newSections[$sectionName] = $sectionUsers;
             }
@@ -538,8 +534,6 @@ class UserDownloadUtil {
 //            $administrativeUserCount++;
 //        }
         //exit();
-
-        //rsort($sortedUsers);
 
         return $sortedUsers;
     }
