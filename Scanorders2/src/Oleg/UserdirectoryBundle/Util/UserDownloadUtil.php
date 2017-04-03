@@ -120,7 +120,7 @@ class UserDownloadUtil {
         return false;
     }
 
-    public function createUserListExcel( $sections ) {
+    public function createUserListExcel( $sections, $sheetTitle, $footer ) {
 
         $author = $this->sc->getToken()->getUser();
 
@@ -212,12 +212,19 @@ class UserDownloadUtil {
             $sheet->getColumnDimension('D')->setWidth(10.18);   //8.18
             $sheet->getColumnDimension('E')->setWidth(24.64);   //21.64
 
+            //set title
+            $sheet->setTitle($sheetTitle);
+
+            //set footer (The code for "left" is &L)
+            $sheet->getHeaderFooter()->setOddFooter('&L'.$footer);
+            $sheet->getHeaderFooter()->setEvenFooter('&L'.$footer);
+
 //            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
 //            $cellIterator->setIterateOnlyExistingCells(true);
 //            /** @var PHPExcel_Cell $cell */
 //            foreach ($cellIterator as $cell) {
 //                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
-//            } 
+//            }
         }
 
         //exit("111");

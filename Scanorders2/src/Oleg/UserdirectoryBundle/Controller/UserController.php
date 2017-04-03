@@ -3822,6 +3822,13 @@ class UserController extends Controller
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "_", $fileName);
 
+        //$sheet title
+        //$sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE FACULTY AND KEY PERSONNEL FY".date('y');
+        $sheetTitle = "FACULTY AND KEY PERSONNEL";
+
+        //footer
+        $footer = "Rev ".date('m-d-Y')." at ".date('H:i');
+
         $userDownloadUtil = $this->container->get('user_download_utility');
 
         ////////////// With Administrative Title /////////////
@@ -3862,7 +3869,7 @@ class UserController extends Controller
 //        echo  '</pre>';
 //        exit();
 
-        $excelBlob = $userDownloadUtil->createUserListExcel($sections);
+        $excelBlob = $userDownloadUtil->createUserListExcel($sections,$sheetTitle,$footer);
 
         if(0) {
             header('Content-Type: application/vnd.ms-excel');
