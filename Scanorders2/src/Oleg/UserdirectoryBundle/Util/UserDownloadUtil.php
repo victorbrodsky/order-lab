@@ -206,11 +206,11 @@ class UserDownloadUtil {
             $sheet = $ea->getActiveSheet();
 
             //set width (from original excel file to make printable)
-//            $sheet->getColumnDimension('A')->setWidth(22.18);
-//            $sheet->getColumnDimension('B')->setWidth(20.36);
-//            $sheet->getColumnDimension('C')->setWidth(18.36);
-//            $sheet->getColumnDimension('D')->setWidth(8.18);
-//            $sheet->getColumnDimension('E')->setWidth(21.64);
+            $sheet->getColumnDimension('A')->setWidth(22.18);
+            $sheet->getColumnDimension('B')->setWidth(20.36);
+            $sheet->getColumnDimension('C')->setWidth(18.36);
+            $sheet->getColumnDimension('D')->setWidth(10.18);   //8.18
+            $sheet->getColumnDimension('E')->setWidth(24.64);   //21.64
 
 //            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
 //            $cellIterator->setIterateOnlyExistingCells(true);
@@ -292,6 +292,7 @@ class UserDownloadUtil {
         }
 
         $ews->setCellValue('A'.$row, $userName);
+        $ews->getStyle('A'.$row)->getAlignment()->setWrapText(true);
 
         //Title
         $administrativeTitleNameStr = $this->getUserTitleStr($user);
@@ -315,10 +316,12 @@ class UserDownloadUtil {
         if( $location ) {
             $locationStr = $location->getLocationNameNoType();
             $ews->setCellValue('D' . $row, $locationStr);
+            $ews->getStyle('D'.$row)->getAlignment()->setWrapText(true);
         }
 
         //Email
         $ews->setCellValue('E'.$row, $user->getSingleEmail());
+        $ews->getStyle('E'.$row)->getAlignment()->setWrapText(true);
     }
 
     //Oleg Ivanov, MD => <strong>Ivanov</strong>, Dr. Oleg
