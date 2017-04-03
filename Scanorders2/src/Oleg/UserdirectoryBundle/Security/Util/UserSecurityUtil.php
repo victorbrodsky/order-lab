@@ -1456,7 +1456,7 @@ class UserSecurityUtil {
                     foreach ($positionTypes as $positionType) {
                         $positionTypesArr[] = $positionType->getName();
                     }
-                    $positionTypesStr = implode("; ", $positionTypesArr);
+                    $positionTypesStr = implode(", ", $positionTypesArr);
                 }
 
                 $elementInfo = array(
@@ -1636,7 +1636,7 @@ class UserSecurityUtil {
         //add missing "Position Type" values to user's profiles
         $elementInfoName = $elementInfo['name'];
         if( array_key_exists('positiontypes', $elementInfo) && $elementInfo['positiontypes'] ) {
-            $elementInfoName = $elementInfoName . ", " . $elementInfo['positiontypes'];
+            $elementInfoName = $elementInfoName . " (" . $elementInfo['positiontypes'] . ")";
         }
 
         if( $style ) {
