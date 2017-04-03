@@ -91,8 +91,14 @@ class UserDownloadUtil {
                 //$sections[$sectionName] = $sectionUsers;
             }
         }
+
+        //echo "<br><br>############other sections:#################<br><br>";
         foreach ($sections as $sectionName => $sectionUsers) {
+            //echo "############ $sectionName #################<br>";
+            //$this->printUsers($sectionUsers);
+
             if( $sectionName != "Administration (WCMC)" ) {
+                $sectionUsers = $this->sortUsersByPosition($sectionUsers,false);
                 $newSections[$sectionName] = $sectionUsers;
             }
         }
@@ -411,7 +417,7 @@ class UserDownloadUtil {
 //        return implode(" \n",$titleInfoArr);
 //    }
 
-    public function sortUsers( $users ) {
+    public function sortUsersByTitle( $users ) {
         $newUsers = array();
         foreach( $users as $user ) {
             $administrativeTitleNameStr = $this->getUserTitleStr($user);
@@ -455,4 +461,133 @@ class UserDownloadUtil {
         return $newUsers;
     }
 
+    public function sortUsersByPosition( $users, $reverse=true ) {
+        //$leftOverUsers = array();
+        //$leftOverUsers = $users;
+        $sortedUsers = array();
+
+        foreach( $users as $user ) {
+            $leftOverUsers[$user->getId()] = $user;
+        }
+
+        //echo "original<br>";
+        //$this->printUsers($sortedUsers);
+
+        //"Chairman of "
+        foreach( $leftOverUsers as $user ) {
+            $administrativeTitleNameStr = $this->getUserTitleStr($user);
+            $pos = strpos($administrativeTitleNameStr, "Chairman of ");
+            if( $pos !== false ) {
+                if( !$this->hasUser($sortedUsers, $user) ) {
+                    //$sortedUsers[] = $user;
+                    //array_unshift($newUsers, $user);
+                    $this->addUserToArray($user,$sortedUsers,$reverse);
+                    unset($leftOverUsers[$user->getId()]);
+                }
+            }
+        }
+
+        //"Vice Chairman"
+        foreach( $leftOverUsers as $user ) {
+            $administrativeTitleNameStr = $this->getUserTitleStr($user);
+            $pos = strpos($administrativeTitleNameStr, "Vice Chairman");
+            if( $pos !== false ) {
+                if( !$this->hasUser($sortedUsers, $user) ) {
+                    //$sortedUsers[] = $user;
+                    //array_unshift($newUsers, $user);
+                    $this->addUserToArray($user,$sortedUsers,$reverse);
+                    unset($leftOverUsers[$user->getId()]);
+                }
+            }
+        }
+
+        $this->searchAndAddUserByPosition("Head of Institution", $sortedUsers, $leftOverUsers, $reverse);
+        //echo "Head of Institution<br>";
+        //$this->printUsers($sortedUsers);
+        //$this->printUsers($leftOverUsers);
+
+        $this->searchAndAddUserByPosition("Head of Department", $sortedUsers, $leftOverUsers, $reverse);
+        //echo "Head of Department<br>";
+        //$this->printUsers($sortedUsers);
+        //$this->printUsers($leftOverUsers);
+
+        $this->searchAndAddUserByPosition("Head of Division", $sortedUsers, $leftOverUsers, $reverse);
+        //echo "Head of Division<br>";
+        //$this->printUsers($sortedUsers);
+        //$this->printUsers($leftOverUsers);
+
+        $this->searchAndAddUserByPosition("Head of Service", $sortedUsers, $leftOverUsers, $reverse);
+        //echo "Head of Service<br>";
+        //$this->printUsers($sortedUsers);
+        //$this->printUsers($leftOverUsers);
+
+        //all others
+        foreach( $leftOverUsers as $user ) {
+            if( !$this->hasUser($sortedUsers, $user) ) {
+                //$sortedUsers[] = $user;
+                //array_unshift($sortedUsers, $user);
+                $this->addUserToArray($user,$sortedUsers,$reverse);
+            }
+        }
+
+//        echo "<br>final:<br>";
+//        $administrativeUserCount = 1;
+//        foreach( $sortedUsers as $administrativeUser ) {
+//            echo $administrativeUserCount.": adminUser=".$administrativeUser."<br>";
+//            $administrativeUserCount++;
+//        }
+        //exit();
+
+        //rsort($sortedUsers);
+
+        return $sortedUsers;
+    }
+    public function searchAndAddUserByPosition( $positionStr, &$sortedUsers, &$leftOverUsers, $reverse ) {
+        //echo "########### $positionStr ############<br>";
+        //$count = 0;
+        foreach( $leftOverUsers as $user ) {
+            $add = false;
+            if( $this->hasUserPosition($user,$positionStr) ) {
+                if( !$this->hasUser($sortedUsers, $user) ) {
+                    $add = true;
+                }
+            }
+            if( $add ) {
+                //echo $positionStr.": adding ".$user."<br>";
+                $this->addUserToArray($user,$sortedUsers,$reverse);
+                //$sortedUsers[] = $user;
+                //array_unshift($sortedUsers, $user); //Prepend one or more elements to the beginning of an array
+                //echo "=>: removing ".$leftOverUsers[$user->getId()]."<br>";
+                unset($leftOverUsers[$user->getId()]);
+            }
+            //$count++;
+        }
+    }
+    public function hasUserPosition( $user, $positionStr ) {
+        foreach( $user->getAdministrativeTitles() as $title ) {
+            $positions = $title->getUserPositions();
+            foreach( $positions as $position ) {
+                if( $position->getName()."" == $positionStr ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public function addUserToArray($user,&$users,$reverse){
+        if( $reverse ) {
+            array_unshift($users, $user); //Prepend one or more elements to the beginning of an array
+        } else {
+            $users[] = $user;
+        }
+    }
+    public function printUsers($users) {
+        echo "users:<br>";
+        $count = 1;
+        foreach( $users as $user ) {
+            echo $count.": ".$user."<br>";
+            $count++;
+        }
+        echo "<br>";
+    }
 }

@@ -3823,27 +3823,35 @@ class UserController extends Controller
 
         $userDownloadUtil = $this->container->get('user_download_utility');
 
+        ////////////// With Administrative Title /////////////
         $filterAdmin = "With Administrative Title";
         $adminParams = array('filter'=>$filterAdmin,'time'=>'current_only','limitFlag'=>null);
         $resAdmin = $this->indexUser($adminParams);
 
         $administrativeUsers = $resAdmin['entities'];
-        //sort users: chairman first
+        //echo "Original:<br>";
+        //$userDownloadUtil->printUsers($administrativeUsers);
 
-        $administrativeUsers = $userDownloadUtil->sortUsers($administrativeUsers);
+        //sort users: chairman first
+        //$administrativeUsers = $userDownloadUtil->sortUsersByTitle($administrativeUsers);
+        $administrativeUsers = $userDownloadUtil->sortUsersByPosition($administrativeUsers);
+
 //        $administrativeUserCount = 1;
 //        foreach( $administrativeUsers as $administrativeUser ) {
 //            echo $administrativeUserCount.": adminUser=".$administrativeUser."<br>";
 //            $administrativeUserCount++;
 //        }
         //exit();
+        ////////////// EOF With Administrative Title /////////////
 
         //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
 
+        ////////////// WCM Pathology Employees //////////////
         $filter = "WCM Pathology Employees";
         $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($params);
         $users = $res['entities'];
+        ////////////// EOF WCM Pathology Employees //////////////
 
         //$sections = array("WCMC"=>$users,"NYP"=>$users);
         $sections = $userDownloadUtil->getSections($users,$administrativeUsers);
