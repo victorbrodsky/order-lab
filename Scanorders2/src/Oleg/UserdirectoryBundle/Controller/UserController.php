@@ -3823,12 +3823,12 @@ class UserController extends Controller
         $fileName = str_replace(" ", "_", $fileName);
 
         //$sheet title
-        //$sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE FACULTY AND KEY PERSONNEL FY".date('y');
-        $sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE FACULTY AND KEY PERSONNEL";
+        $sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE FACULTY AND KEY PERSONNEL FY".date('y');
+        //$sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE FACULTY AND KEY PERSONNEL";
 
         //footer
         $footer = "Rev ".date('m-d-Y')." at ".date('H:i');
-        $footer = $sheetTitle . " " . $footer;
+        //$footer = $sheetTitle . " " . $footer;
 
         $userDownloadUtil = $this->container->get('user_download_utility');
 
