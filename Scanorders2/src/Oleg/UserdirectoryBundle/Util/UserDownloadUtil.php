@@ -128,9 +128,9 @@ class UserDownloadUtil {
             $locationsArr[] = array(
                'A' => $location->getName()."",
                'B'=>'',
-               'C'=> $location->getPhone(),
-               'D'=> $location->getRoom(),
-               'E'=> $location->getEmail()
+               'C'=> $location->getPhone()."",
+               'D'=> $location->getRoom()."",
+               'E'=> $location->getEmail().""
            );
         }
         $newSections["Common Locations"] = $locationsArr;
