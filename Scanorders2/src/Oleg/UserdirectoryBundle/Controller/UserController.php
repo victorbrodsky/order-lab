@@ -3895,7 +3895,8 @@ class UserController extends Controller
                 'sheetFont' => 'Times New Roman',   //'Times New Roman',  //'Colibri',
                 'sheetSize' => 10,
                 'sheetZoom' => 100,
-                'sheetHeaderSize' => 11
+                'sheetHeaderSize' => 11,
+                'withAssistants' => false
             );
             $excelBlob = $userDownloadUtil->createUserListExcel($facultySections, $sheetParams);
         }
@@ -3925,7 +3926,8 @@ class UserController extends Controller
             'sheetFont' => 'Colibri',   //'Times New Roman',  //'Colibri',
             'sheetSize' => 10,
             'sheetZoom' => 100,
-            'sheetHeaderSize' => 11
+            'sheetHeaderSize' => 11,
+            'withAssistants' => true
         );
         $excelBlob = $userDownloadUtil->createUserListExcel($departmentSections,$sheetParams);
         ///////////////////// EOF Department List /////////////////////

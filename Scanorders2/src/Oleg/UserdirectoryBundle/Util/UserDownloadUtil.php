@@ -161,6 +161,8 @@ class UserDownloadUtil {
         $sheetZoom = $sheetParams['sheetZoom'];
         $sheetHeaderSize = $sheetParams['sheetHeaderSize'];
 
+        $withAssistants = $sheetParams['withAssistants'];
+
         if( $sheetFont ) {
             $this->cellSize = $sheetFont;
         }
@@ -280,7 +282,7 @@ class UserDownloadUtil {
 //        exit("111");
 
         foreach( $sections as $sectionName=>$sectionUsers ) {
-            $row = $this->addSectionUsersToListExcel($sectionName."", $sectionUsers, $ews, $row);
+            $row = $this->addSectionUsersToListExcel($sectionName."", $sectionUsers, $ews, $row, $withAssistants);
         }
 
         //exit("222");
@@ -313,7 +315,7 @@ class UserDownloadUtil {
         return $ea;
     }
 
-    public function addSectionUsersToListExcel( $sectionName, $users, $ews, $row ) {
+    public function addSectionUsersToListExcel( $sectionName, $users, $ews, $row, $withAssistants=true ) {
 
         //section Header
         if(1) {
@@ -347,13 +349,15 @@ class UserDownloadUtil {
             if( $user instanceof User ) {
                 $this->createRowUser($user, $ews, $row, "regular");
 
-                //assistants
-                $assistantsRes = $user->getAssistants();
-                $assistants = $assistantsRes['entities'];
-                if (count($assistants) > 0) {
-                    foreach ($assistants as $assistant) {
-                        $row = $row + 1;
-                        $this->createRowUser($assistant, $ews, $row, "assistant");
+                if( $withAssistants ) {
+                    //assistants
+                    $assistantsRes = $user->getAssistants();
+                    $assistants = $assistantsRes['entities'];
+                    if (count($assistants) > 0) {
+                        foreach ($assistants as $assistant) {
+                            $row = $row + 1;
+                            $this->createRowUser($assistant, $ews, $row, "assistant");
+                        }
                     }
                 }
             } else {
