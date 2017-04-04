@@ -269,21 +269,22 @@ class ListController extends Controller
         //echo "search=".$search."<br>";
 
         if( $search ) {
-            $dql->andWhere("ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search");
+            $searchStr = "ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search";
 
             //search location: phone, building, room
             if( method_exists($entityClass,'getPhone') ) {
-                $dql->orWhere('ent.phone LIKE :search');
+                $searchStr = $searchStr . " OR ent.phone LIKE :search";
             }
             if( method_exists($entityClass,'getBuilding') ) {
                 $dql->leftJoin("ent.building", "building");
-                $dql->orWhere('building.name LIKE :search');
+                $searchStr = $searchStr . " OR building.name LIKE :search";
             }
             if( method_exists($entityClass,'getRoom') ) {
                 $dql->leftJoin("ent.room", "room");
-                $dql->orWhere('room.name LIKE :search');
+                $searchStr = $searchStr . " OR room.name LIKE :search";
             }
 
+            $dql->andWhere($searchStr);
             $dqlParameters['search'] = '%'.$search.'%';
         }
 
