@@ -131,7 +131,21 @@ class ComplexListController extends Controller
         //echo "search=".$search."<br>";
 
         if( $search ) {
-            $dql->andWhere("ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search");
+
+            $searchStr = "ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search";
+
+            //search location: phone, building, room
+            if( $mapper['pathname'] == 'locations' ) {
+                $searchStr = $searchStr . " OR ent.phone LIKE :search";
+
+                $dql->leftJoin("ent.building", "building");
+                $searchStr = $searchStr . " OR building.name LIKE :search";
+
+                $dql->leftJoin("ent.room", "room");
+                $searchStr = $searchStr . " OR room.name LIKE :search";
+            }
+
+            $dql->andWhere($searchStr);
             $dqlParameters['search'] = '%'.$search.'%';
         }
 
