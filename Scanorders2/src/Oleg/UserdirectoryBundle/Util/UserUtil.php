@@ -525,6 +525,11 @@ class UserUtil {
                 $criteriastr .= " AND ";
                 $criteriastr .= "institution.name LIKE 'New York Hospital'";
                 break;
+            case "WCM Pathology Department Common Location For Phone Directory":
+                $dql->leftJoin("location.locationTypes", "locationTypes");
+                $criteriastr .= " AND ";
+                $criteriastr .= "locationTypes.name = 'WCM Pathology Department Common Location For Phone Directory'";
+                break;
             default:
                 //search by name
                 $criteriastr .= " AND location.name LIKE '%".$search."%'";

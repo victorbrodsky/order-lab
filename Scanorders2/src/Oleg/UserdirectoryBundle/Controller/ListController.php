@@ -273,15 +273,15 @@ class ListController extends Controller
 
             //search location: phone, building, room
             if( method_exists($entityClass,'getPhone') ) {
-                $dql->orWhere('ent.phone = :search');
+                $dql->orWhere('ent.phone LIKE :search');
             }
             if( method_exists($entityClass,'getBuilding') ) {
                 $dql->leftJoin("ent.building", "building");
-                $dql->orWhere('building.name = :search');
+                $dql->orWhere('building.name LIKE :search');
             }
             if( method_exists($entityClass,'getRoom') ) {
                 $dql->leftJoin("ent.room", "room");
-                $dql->orWhere('room.name = :search');
+                $dql->orWhere('room.name LIKE :search');
             }
 
             $dqlParameters['search'] = '%'.$search.'%';

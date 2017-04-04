@@ -48,7 +48,7 @@ class UserDownloadUtil {
     }
 
 
-    public function getSections( $users, $administrativeUsers ) {
+    public function getSections( $users, $administrativeUsers, $locations ) {
         $sections = array();
         foreach( $users as $user ) {
             $instResArr = $user->getDeduplicatedInstitutions();
@@ -121,6 +121,19 @@ class UserDownloadUtil {
                 'E'=>''
             ),
         );
+
+        //add common $locations
+        $locationsArr = array();
+        foreach( $locations as $location ) {
+            $locationsArr[] = array(
+               'A' => $location->getName()."",
+               'B'=>'',
+               'C'=> $location->getPhone(),
+               'D'=> $location->getRoom(),
+               'E'=> $location->getEmail()
+           );
+        }
+        $newSections["Common Locations"] = $locationsArr;
         ///////////// EOF Add other section (* comment and common locations) as array //////////////
 
         return $newSections;

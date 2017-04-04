@@ -3695,7 +3695,8 @@ class AdminController extends Controller
             'Present Address',
             'Permanent Address',
             'Work Address',
-            'Encounter Location'
+            'Encounter Location',
+            'WCM Pathology Department Common Location For Phone Directory'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

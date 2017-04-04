@@ -3870,6 +3870,12 @@ class UserController extends Controller
         $administrationDivisionUsers = $resAdminDivision['entities'];
         ////////////// EOF Administrative /////////////
 
+        ////////////// Locations /////////////
+        $userUtil = new UserUtil();
+        $filter = "WCM Pathology Department Common Location For Phone Directory";
+        $locations = $userUtil->indexLocation($filter, $request, $this->container, $this->getDoctrine());
+        ////////////// EOF Locations /////////////
+
 
         $excelBlob = null;
 
@@ -3902,7 +3908,7 @@ class UserController extends Controller
 
         ///////////////////// Department List /////////////////////
         //$sections = array("WCMC"=>$users,"NYP"=>$users);
-        $departmentSections = $userDownloadUtil->getSections($users,$administrativeUsers);
+        $departmentSections = $userDownloadUtil->getSections($users,$administrativeUsers,$locations);
 
 //        echo '<br><br>sections:<pre>';
 //        print_r($sections);
