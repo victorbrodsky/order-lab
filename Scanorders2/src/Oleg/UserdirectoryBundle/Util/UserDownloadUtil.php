@@ -111,17 +111,6 @@ class UserDownloadUtil {
         //exit();
 
         ///////////// Add other section (* comment and common locations) as array //////////////
-        //$newSections["  "] = array('A'=>'','B'=>'','C'=>'','D'=>'','E'=>'');
-        $newSections["  "] = array(
-            array(
-                'A' => ' *Dial access code 6-6700, 5 digit ID #, call-back extension (must begin with 6-XXXX), pound (#).',
-                'B'=>'',
-                'C'=>'',
-                'D'=>'',
-                'E'=>''
-            ),
-        );
-
         //add common $locations
         $locationsArr = array();
         foreach( $locations as $location ) {
@@ -133,7 +122,18 @@ class UserDownloadUtil {
                'E'=> $location->getEmail().""
            );
         }
-        $newSections["Common Locations"] = $locationsArr;
+        $newSections["COMMON LOCATIONS"] = $locationsArr;
+
+
+        $newSections["  "] = array(
+            array(
+                'A' => ' *Dial access code 6-6700, 5 digit ID #, call-back extension (must begin with 6-XXXX), pound (#).',
+                'B'=>'',
+                'C'=>'',
+                'D'=>'',
+                'E'=>''
+            ),
+        );
         ///////////// EOF Add other section (* comment and common locations) as array //////////////
 
         return $newSections;
