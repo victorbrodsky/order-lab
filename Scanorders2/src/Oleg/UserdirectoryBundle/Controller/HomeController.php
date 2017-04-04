@@ -191,4 +191,42 @@ class HomeController extends Controller {
     }
 
 
+    /**
+     * @Route("/avery-5160/user/{id}", name="employees_user_avery_5160")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Labels:avery_5160.html.twig")
+     */
+    public function employmentTerminateAction(Request $request, $id) {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $userDownloadUtil = $this->container->get('user_download_utility');
+
+        //get username
+        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+        //Title
+        $administrativeTitleNameStr = $userDownloadUtil->getUserTitleStr($subjectUser);
+
+        //Room
+        $locationStr = null;
+        $location = $subjectUser->getMainLocation();
+        if( $location ) {
+            $locationStr = $location->getLocationNameNoType();
+        }
+
+        $userEl = array();
+        $userEl['name'] = $subjectUser->getUsernameOptimal();
+        $userEl['title'] = $administrativeTitleNameStr;
+        $userEl['room'] = $locationStr;
+
+        $usersArr = array($userEl);
+
+        return array(
+            'users' => $usersArr,
+        );
+    }
+
 }
