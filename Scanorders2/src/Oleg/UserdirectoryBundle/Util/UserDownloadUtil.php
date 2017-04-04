@@ -26,6 +26,7 @@
 namespace Oleg\UserdirectoryBundle\Util;
 
 
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -108,6 +109,19 @@ class UserDownloadUtil {
         }
         //////////////// EOF reorganize sections ////////////////
         //exit();
+
+        ///////////// Add other section (* comment and common locations) as array //////////////
+        //$newSections["  "] = array('A'=>'','B'=>'','C'=>'','D'=>'','E'=>'');
+        $newSections["  "] = array(
+            array(
+                'A' => ' *Dial access code 6-6700, 5 digit ID #, call-back extension (must begin with 6-XXXX), pound (#).',
+                'B'=>'',
+                'C'=>'',
+                'D'=>'',
+                'E'=>''
+            ),
+        );
+        ///////////// EOF Add other section (* comment and common locations) as array //////////////
 
         return $newSections;
     }
@@ -286,7 +300,7 @@ class UserDownloadUtil {
         return $ea;
     }
 
-    public function addSectionUsersToListExcel( $section, $users, $ews, $row ) {
+    public function addSectionUsersToListExcel( $sectionName, $users, $ews, $row ) {
 
         //section Header
         if(1) {
@@ -304,7 +318,7 @@ class UserDownloadUtil {
             );
             $ews->getStyle('A' . $row . ':' . 'E' . $row)->applyFromArray($style);
 
-            $sectionHeader = $this->getBoldItalicText($section, $this->headerSize);
+            $sectionHeader = $this->getBoldItalicText($sectionName, $this->headerSize);
             $ews->setCellValue('B' . $row, $sectionHeader);
             $row = $row + 1;
         }
@@ -317,16 +331,20 @@ class UserDownloadUtil {
             }
 
             //user
-            $this->createRowUser($user,$ews,$row,"regular");
+            if( $user instanceof User ) {
+                $this->createRowUser($user, $ews, $row, "regular");
 
-            //assistants
-            $assistantsRes = $user->getAssistants();
-            $assistants = $assistantsRes['entities'];
-            if( count($assistants) > 0 ) {
-                foreach( $assistants as $assistant ) {
-                    $row = $row + 1;
-                    $this->createRowUser($assistant,$ews,$row,"assistant");
+                //assistants
+                $assistantsRes = $user->getAssistants();
+                $assistants = $assistantsRes['entities'];
+                if (count($assistants) > 0) {
+                    foreach ($assistants as $assistant) {
+                        $row = $row + 1;
+                        $this->createRowUser($assistant, $ews, $row, "assistant");
+                    }
                 }
+            } else {
+                $this->createRowFromCellArray($user, $ews, $row);
             }
 
             $row = $row + 1;
@@ -337,6 +355,17 @@ class UserDownloadUtil {
         //exit("ids=".$fellappids);
 
         return $row;
+    }
+
+    public function createRowFromCellArray( $cellArr, $ews, $row ) {
+        if( !$cellArr ) {
+            return;
+        }
+
+        foreach( $cellArr as $cellColumn=>$cellValue ) {
+            $ews->setCellValue($cellColumn.$row, $cellValue);
+            $ews->getStyle($cellColumn.$row)->getAlignment()->setWrapText(true);
+        }
     }
 
     public function createRowUser( $user, $ews, $row, $type="regular" ) {
@@ -366,7 +395,11 @@ class UserDownloadUtil {
         $phoneStr = "";
         $phoneArr = array();
         foreach( $user->getAllPhones() as $phone ) {
-            $phoneArr[] = $phone['prefix'] . $phone['phone'];
+            $comment = "";
+            if( strpos($phone['prefix'], "Pager") !== false ) {
+                $comment = "*";
+            }
+            $phoneArr[] = $phone['prefix'] . $phone['phone'].$comment;
         }
         if( count($phoneArr) > 0 ) {
             $phoneStr = implode(" \n", $phoneArr);
