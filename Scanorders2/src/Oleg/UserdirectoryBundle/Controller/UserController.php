@@ -729,7 +729,7 @@ class UserController extends Controller
             ")";
         }
 
-        //Pending Administrative Review
+        //With Administrative Title
         if( $filter && $filter == "With Administrative Title" ) {
             $dql->leftJoin("administrativeTitles.userPositions", "administrativePositions");
             $verifiedStatus = BaseUserAttributes::STATUS_VERIFIED;
@@ -739,6 +739,17 @@ class UserController extends Controller
                 " AND administrativePositions.name LIKE 'Head%'".
             ")";
         }
+
+        //Administration Division
+        if( $filter && $filter == "Administration Division" ) {
+            $dql->leftJoin("administrativeTitles.userPositions", "administrativePositions");
+            $verifiedStatus = BaseUserAttributes::STATUS_VERIFIED;
+            $criteriastr .= "(".
+                "administrativeName IS NOT NULL".
+                " AND administrativeInstitution.name = "."'Administration'".
+                ")";
+        }
+
 
         //WCM + Pathology
         if( $filter && $filter == "WCM Pathology Employees" ) {
@@ -3823,37 +3834,14 @@ class UserController extends Controller
         $fileName = str_replace(" ", "_", $fileName);
 
         //$sheet title
-        $sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE FACULTY AND KEY PERSONNEL FY".date('y');
+        //$sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE FACULTY AND KEY PERSONNEL FY".date('y');
         //$sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE FACULTY AND KEY PERSONNEL";
 
         //footer
-        $footer = "Rev ".date('m-d-Y')." at ".date('H:i');
+        //$sheetFooter = "Rev ".date('m-d-Y')." at ".date('H:i');
         //$footer = $sheetTitle . " " . $footer;
 
         $userDownloadUtil = $this->container->get('user_download_utility');
-
-        ////////////// With Administrative Title /////////////
-        $filterAdmin = "With Administrative Title";
-        $adminParams = array('filter'=>$filterAdmin,'time'=>'current_only','limitFlag'=>null);
-        $resAdmin = $this->indexUser($adminParams);
-
-        $administrativeUsers = $resAdmin['entities'];
-        //echo "Original:<br>";
-        //$userDownloadUtil->printUsers($administrativeUsers);
-
-        //sort users: chairman first
-        //$administrativeUsers = $userDownloadUtil->sortUsersByTitle($administrativeUsers);
-        //$administrativeUsers = $userDownloadUtil->sortUsersByPosition($administrativeUsers);
-
-//        $administrativeUserCount = 1;
-//        foreach( $administrativeUsers as $administrativeUser ) {
-//            echo $administrativeUserCount.": adminUser=".$administrativeUser."<br>";
-//            $administrativeUserCount++;
-//        }
-        //exit();
-        ////////////// EOF With Administrative Title /////////////
-
-        //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
 
         ////////////// WCM Pathology Employees //////////////
         $filter = "WCM Pathology Employees";
@@ -3862,15 +3850,73 @@ class UserController extends Controller
         $users = $res['entities'];
         ////////////// EOF WCM Pathology Employees //////////////
 
+        ////////////// With Administrative Title /////////////
+        $filterAdmin = "With Administrative Title";
+        $adminParams = array('filter'=>$filterAdmin,'time'=>'current_only','limitFlag'=>null);
+        $resAdmin = $this->indexUser($adminParams);
+        $administrativeUsers = $resAdmin['entities'];
+        ////////////// EOF With Administrative Title /////////////
+
+        ////////////// Administrative /////////////
+        $filterAdminDivision = "Administration Division";
+        $adminDivisionParams = array('filter'=>$filterAdminDivision,'time'=>'current_only','limitFlag'=>null);
+        $resAdminDivision = $this->indexUser($adminDivisionParams);
+        $administrationDivisionUsers = $resAdminDivision['entities'];
+        ////////////// EOF Administrative /////////////
+
+
+        $excelBlob = null;
+
+        ///////////////////// Faculty List /////////////////////
+        $facultySections = array(
+            " " => $users,
+            "ADMINISTRATION" => $administrationDivisionUsers
+        );
+        if(1) {
+            $sheetParams = array(
+                'excelBlob' => $excelBlob,
+                'sheetTitle' => "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE \n FACULTY ADMINISTRATION TELEPHONE LIST \n FY" . date('y') . "\n\n",
+                'sheetFooter' => "Rev ".date('m-d-Y')." at ".date('H:i'),
+                'sheetName' => 'Faculty List',
+                'sheetIndex' => 0,
+                'sheetHeaders' => array('A1'=>'FACULTY','B1'=>'TITLE', 'C1'=>'EXTENSION', 'D1'=>'LOCATION','E1'=>'EMAIL'),
+                'sheetFont' => 'Times New Roman',   //'Times New Roman',  //'Colibri',
+                'sheetSize' => 10,
+                'sheetZoom' => 100,
+                'sheetHeaderSize' => 11
+            );
+            $excelBlob = $userDownloadUtil->createUserListExcel($facultySections, $sheetParams);
+        }
+        ///////////////////// EOF Faculty List /////////////////////
+
+
+
+        //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+
+
+        ///////////////////// Department List /////////////////////
         //$sections = array("WCMC"=>$users,"NYP"=>$users);
-        $sections = $userDownloadUtil->getSections($users,$administrativeUsers);
+        $departmentSections = $userDownloadUtil->getSections($users,$administrativeUsers);
 
 //        echo '<br><br>sections:<pre>';
 //        print_r($sections);
 //        echo  '</pre>';
 //        exit();
 
-        $excelBlob = $userDownloadUtil->createUserListExcel($sections,$sheetTitle,$footer);
+        $sheetParams = array(
+            'excelBlob' => $excelBlob,
+            'sheetTitle' => "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE \n FACULTY AND KEY PERSONNEL FY".date('y')."\n\n",
+            'sheetFooter' => "Rev ".date('m-d-Y')." at ".date('H:i'),
+            'sheetName' => 'Department List',
+            'sheetIndex' => 1,
+            'sheetHeaders' => null, //array('A1'=>'FACULTY','B1'=>'TITLE', 'C1'=>'EXTENSION', 'D1'=>'LOCATION','E1'=>'EMAIL'),
+            'sheetFont' => 'Colibri',   //'Times New Roman',  //'Colibri',
+            'sheetSize' => 10,
+            'sheetZoom' => 100,
+            'sheetHeaderSize' => 11
+        );
+        $excelBlob = $userDownloadUtil->createUserListExcel($departmentSections,$sheetParams);
+        ///////////////////// EOF Department List /////////////////////
 
         if(0) {
             header('Content-Type: application/vnd.ms-excel');

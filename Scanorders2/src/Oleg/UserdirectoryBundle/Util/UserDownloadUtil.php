@@ -120,29 +120,57 @@ class UserDownloadUtil {
         return false;
     }
 
-    public function createUserListExcel( $sections, $sheetTitle, $footer ) {
+    public function createUserListExcel( $sections, $sheetParams ) {
+
+        $ea = $sheetParams['excelBlob'];
+        $sheetTitle = $sheetParams['sheetTitle'];
+        $footer = $sheetParams['sheetFooter'];
+        $sheetName = $sheetParams['sheetName'];
+        $sheetIndex = $sheetParams['sheetIndex'];
+        $sheetHeaders = $sheetParams['sheetHeaders'];
+
+        $sheetFont = $sheetParams['sheetFont'];
+        $sheetSize = $sheetParams['sheetSize'];
+        $sheetZoom = $sheetParams['sheetZoom'];
+        $sheetHeaderSize = $sheetParams['sheetHeaderSize'];
+
+        if( $sheetFont ) {
+            $this->cellSize = $sheetFont;
+        }
+        if( $sheetSize ) {
+            $this->cellSize = $sheetSize;
+        }
+        if( $sheetHeaderSize ) {
+            $this->headerSize = $sheetSize;
+        }
 
         $author = $this->sc->getToken()->getUser();
 
         $row = 1;
-        $withheader = false;
-        $headerSize = $this->headerSize;
+        //$withheader = false;
+        //$headerSize = $this->headerSize;
 
-        $ea = new \PHPExcel(); // ea is short for Excel Application
+        if( !$ea ) {
+            $ea = new \PHPExcel(); // ea is short for Excel Application
 
-        $ea->getProperties()
-            ->setCreator($author."")
-            ->setTitle('User List')
-            ->setLastModifiedBy($author."")
-            ->setDescription('User list in Excel format')
-            ->setSubject('PHP Excel manipulation')
-            ->setKeywords('excel php office phpexcel wcmc')
-            ->setCategory('programming')
-        ;
+            $ea->getProperties()
+                ->setCreator($author . "")
+                ->setTitle('User List')
+                ->setLastModifiedBy($author . "")
+                ->setDescription('User list in Excel format')
+                ->setSubject('PHP Excel manipulation')
+                ->setKeywords('excel php office phpexcel wcmc')
+                ->setCategory('programming');
+        }
 
-        $ews = $ea->getSheet(0);
-        $ews->setTitle('Users');
-        $ews->getSheetView()->setZoomScale(150);
+        if( $sheetIndex == 0 ) {
+            $ews = $ea->getSheet($sheetIndex);
+        } else {
+            $ews = $ea->createSheet($sheetIndex);
+        }
+
+        $ews->setTitle($sheetName);
+        $ews->getSheetView()->setZoomScale($sheetZoom);
 
         //align all cells to left
         $styleArray = array(
@@ -159,26 +187,58 @@ class UserDownloadUtil {
         );
         $ews->getParent()->getDefaultStyle()->applyFromArray($styleArray);
 
-        if( $withheader ) {
+        //set width (from original excel file to make printable)
+        $ews->getColumnDimension('A')->setWidth(22.18);
+        $ews->getColumnDimension('B')->setWidth(24.36);   //20.36
+        $ews->getColumnDimension('C')->setWidth(24.36);   //18.36
+        $ews->getColumnDimension('D')->setWidth(14.18);   //8.18
+        $ews->getColumnDimension('E')->setWidth(24.64);   //21.64
 
-            $nameHeader = $this->getBoldItalicText("Name", $headerSize);
-            $ews->setCellValue('A1', $nameHeader); // Sets cell 'a1' to value 'ID
+        //marging
+        $ews->getPageMargins()->setTop(1);
+        $ews->getPageMargins()->setRight(0.25); //0.75
+        $ews->getPageMargins()->setLeft(0);
+        $ews->getPageMargins()->setBottom(1);
 
-            $titleHeader = $this->getBoldItalicText("Title", $headerSize);
-            $ews->setCellValue('B1', $titleHeader);
+        //set title
+        $ews->getHeaderFooter()->setOddHeader('&C&H'.$sheetTitle);
 
-            $phoneHeader = $this->getBoldItalicText("Phone", $headerSize);
-            $ews->setCellValue('C1', $phoneHeader);
+        //set footer (The code for "left" is &L)
+        $ews->getHeaderFooter()->setOddFooter('&L'.$footer);
+        $ews->getHeaderFooter()->setEvenFooter('&L'.$footer);
 
-            $roomHeader = $this->getBoldItalicText("Room", $headerSize);
-            $ews->setCellValue('D1', $roomHeader);
 
-            $emailHeader = $this->getBoldItalicText("Email", $headerSize);
-            $ews->setCellValue('E1', $emailHeader);
+        if( $sheetHeaders && count($sheetHeaders) > 0 ) {
+
+//            $nameHeader = $this->getBoldItalicText("Name", $headerSize);
+//            $ews->setCellValue('A1', $nameHeader); // Sets cell 'a1' to value 'ID
+//
+//            $titleHeader = $this->getBoldItalicText("Title", $headerSize);
+//            $ews->setCellValue('B1', $titleHeader);
+//
+//            $phoneHeader = $this->getBoldItalicText("Phone", $headerSize);
+//            $ews->setCellValue('C1', $phoneHeader);
+//
+//            $roomHeader = $this->getBoldItalicText("Room", $headerSize);
+//            $ews->setCellValue('D1', $roomHeader);
+//
+//            $emailHeader = $this->getBoldItalicText("Email", $headerSize);
+//            $ews->setCellValue('E1', $emailHeader);
 
             //echo "Users=".count($users)."<br>";
 
-            $row = 3;
+            foreach( $sheetHeaders as $sheetHeaderColumn=>$sheetHeaderName ) {
+//                $styleArray = array(
+//                    'font' => array(
+//                        'underline' => \PHPExcel_Style_Font::UNDERLINE_SINGLE
+//                    )
+//                );
+//                $ews->getStyle($sheetHeaderColumn)->applyFromArray($styleArray);
+                $nameHeader = $this->getBoldItalicText($sheetHeaderName, $sheetHeaderSize, true);
+                $ews->setCellValue($sheetHeaderColumn, $nameHeader);
+            }
+
+            $row = $row + 1;
         }
 
         //$sections = array("WCMC"=>$users,"NYP"=>$users);
@@ -198,48 +258,42 @@ class UserDownloadUtil {
 
         //exit("222");
 
-        // Auto size columns for each worksheet
-        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
-        foreach ($ea->getWorksheetIterator() as $worksheet) {
-
-            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
-            $sheet = $ea->getActiveSheet();
-
-            //set width (from original excel file to make printable)
-            $sheet->getColumnDimension('A')->setWidth(22.18);
-            $sheet->getColumnDimension('B')->setWidth(20.36);
-            $sheet->getColumnDimension('C')->setWidth(18.36);
-            $sheet->getColumnDimension('D')->setWidth(10.18);   //8.18
-            $sheet->getColumnDimension('E')->setWidth(24.64);   //21.64
-
-            //set title
-            $sheet->getHeaderFooter()->setOddHeader('&C&H'.$sheetTitle);
-
-            //set footer (The code for "left" is &L)
-            $sheet->getHeaderFooter()->setOddFooter('&L'.$footer);
-            $sheet->getHeaderFooter()->setEvenFooter('&L'.$footer);
-
+//        // Auto size columns for each worksheet
+//        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+//        foreach ($ea->getWorksheetIterator() as $worksheet) {
+//
+//            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
+//            $sheet = $ea->getActiveSheet();
+//
 //            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
 //            $cellIterator->setIterateOnlyExistingCells(true);
 //            /** @var PHPExcel_Cell $cell */
 //            foreach ($cellIterator as $cell) {
 //                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
 //            }
-        }
+//        }
+
+        //set sheet params
+//        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+//        $cellIterator = $ews->getRowIterator()->current()->getCellIterator();
+//        $cellIterator->setIterateOnlyExistingCells(true);
+//        /** @var PHPExcel_Cell $cell */
+//        foreach ($cellIterator as $cell) {
+//            $ews->getColumnDimension($cell->getColumn())->setAutoSize(true);
+//        }
 
         //exit("111");
         return $ea;
-
     }
 
     public function addSectionUsersToListExcel( $section, $users, $ews, $row ) {
 
         //section Header
         if(1) {
-            $ews->mergeCells('A' . $row . ':' . 'E' . $row);
+            //$ews->mergeCells('A' . $row . ':' . 'E' . $row);
             $style = array(
                 'alignment' => array(
-                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER, //HORIZONTAL_JUSTIFY   //HORIZONTAL_CENTER,
                 ),
                 'font'  => array(
                     //'bold'  => true,
@@ -251,7 +305,7 @@ class UserDownloadUtil {
             $ews->getStyle('A' . $row . ':' . 'E' . $row)->applyFromArray($style);
 
             $sectionHeader = $this->getBoldItalicText($section, $this->headerSize);
-            $ews->setCellValue('A' . $row, $sectionHeader);
+            $ews->setCellValue('B' . $row, $sectionHeader);
             $row = $row + 1;
         }
         //return $row;
@@ -277,6 +331,8 @@ class UserDownloadUtil {
 
             $row = $row + 1;
         }
+
+        $row = $row + 1;
 
         //exit("ids=".$fellappids);
 
@@ -341,7 +397,7 @@ class UserDownloadUtil {
 
         if( $order == "familyname" ) {
             //echo "userFamilyname=$userFamilyname<br>";
-            $userName = $this->getBoldText($userFamilyname);
+            $userName = $this->getBoldText($userFamilyname,$this->cellSize);
 
             if( $userSalutation && $userSalutation == "Dr." ) {
                 $userName->createText(", " . $userSalutation);
@@ -358,7 +414,7 @@ class UserDownloadUtil {
         if( $order == "firstname" ) {
             $userName = new \PHPExcel_RichText();
             $userName->createTextRun($userFirstname);
-            $userName = $this->getBoldText(" " . $userFamilyname, null, $userName);
+            $userName = $this->getBoldText(" " . $userFamilyname, $this->cellSize, $userName);
 
             if ($userSalutation) {
                 $userName->createText(", " . $userSalutation);
@@ -368,19 +424,19 @@ class UserDownloadUtil {
         return $userName;
     }
 
-    public function getRichText( $text, $size=null, $richText=null ) {
-        if( !$text ) {
-            return new \PHPExcel_RichText();
-        }
-        if( !$richText ) {
-            $richText = new \PHPExcel_RichText();
-        }
-        $objBold = $richText->createTextRun($text);
-        if( $size ) {
-            $objBold->getFont()->setSize($size);
-        }
-        return $richText;
-    }
+//    public function getRichText( $text, $size=null, $richText=null ) {
+//        if( !$text ) {
+//            return new \PHPExcel_RichText();
+//        }
+//        if( !$richText ) {
+//            $richText = new \PHPExcel_RichText();
+//        }
+//        $objBold = $richText->createTextRun($text);
+//        if( $size ) {
+//            $objBold->getFont()->setSize($size);
+//        }
+//        return $richText;
+//    }
 
     public function getBoldText( $text, $size=null, $richText=null ) {
         if( !$text ) {
@@ -397,11 +453,14 @@ class UserDownloadUtil {
         return $richText;
     }
 
-    public function getBoldItalicText( $text, $size=null ) {
+    public function getBoldItalicText( $text, $size=null, $underline=false ) {
         $richText = new \PHPExcel_RichText();
         $objBold = $richText->createTextRun($text);
         $objBold->getFont()->setBold(true);
         $objBold->getFont()->setItalic(true);
+        if( $underline ) {
+            $objBold->getFont()->setUnderline(true);
+        }
         if( $size ) {
             $objBold->getFont()->setSize($size);
         }
