@@ -756,6 +756,14 @@ class UserController extends Controller
                 ")";
         }
 
+        //WCM Pathology Employees Without Post Doc
+        if( $filter && $filter == "WCM Pathology Employees Without Post Doc" ) {
+            $criteriastr .= "(".$this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology).")";
+            //No "Postdoctoral Associate"
+            $criteriastr .= " AND ";
+            $criteriastr .= "(administrativeName != 'Postdoctoral Associate' OR appointmentName != 'Postdoctoral Associate' OR medicalName != 'Postdoctoral Associate')";
+        }
+
 
         //WCM + Pathology
         if( $filter && $filter == "WCM Pathology Employees" ) {
@@ -3850,7 +3858,7 @@ class UserController extends Controller
         $userDownloadUtil = $this->container->get('user_download_utility');
 
         ////////////// WCM Pathology Employees //////////////
-        $filter = "WCM Pathology Employees";
+        $filter = "WCM Pathology Employees Without Post Doc";
         $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($params);
         $users = $res['entities'];
