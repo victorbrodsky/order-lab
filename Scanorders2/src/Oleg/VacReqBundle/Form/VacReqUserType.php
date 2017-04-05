@@ -45,6 +45,7 @@ class VacReqUserType extends UserType
             'label' => 'Role(s):',
             'attr' => array('class' => 'combobox combobox-width vacreq-roles'),
             'multiple' => true,
+            'read_only' => true
         ));
 
     }

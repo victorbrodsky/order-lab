@@ -1024,20 +1024,26 @@ class UserSecurityUtil {
         return $this->getRolesBySite($sitename, true, 1);
     }
 
+    //Not used!
     public function addOnlySiteRoles( $subjectUser, $newUserSiteRoles, $sitename ) {
+
+        //TODO: this is not correct! We don't need to update the roles from the Group Management page. We need only add or remove user.
+        return null;
+
         $originalUserSiteRoles = $this->getUserRolesBySite( $subjectUser, $sitename, true );
 
         if( $originalUserSiteRoles == $newUserSiteRoles ) {
             return null;
         }
 
-        foreach( $originalUserSiteRoles as $originalUserSiteRole ) {
-            $subjectUser->removeRole($originalUserSiteRole);
-        }
-
-        foreach( $newUserSiteRoles as $newUserSiteRole ) {
-            $subjectUser->addRole($newUserSiteRole);
-        }
+        //TODO: this is not correct!
+//        foreach( $originalUserSiteRoles as $originalUserSiteRole ) {
+//            $subjectUser->removeRole($originalUserSiteRole);
+//        }
+//
+//        foreach( $newUserSiteRoles as $newUserSiteRole ) {
+//            $subjectUser->addRole($newUserSiteRole);
+//        }
 
         //$arrayDiff = array_diff($originalUserSiteRoles, $newUserSiteRoles);
         $res = array(

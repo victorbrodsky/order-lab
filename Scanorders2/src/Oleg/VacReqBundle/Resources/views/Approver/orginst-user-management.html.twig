@@ -24,9 +24,8 @@
 
     {{ formmacros.field(form.roles) }}
 
-
-    {#<button type='submit' class="btn btn-info btn-sm">Update</button>#}
-    <button type='button' class="btn btn-info btn-sm" onclick="updateVacReqGroupUser(this,{{ entity.id }},{{ institution.id }},{{ roleId }})">Update</button>
+    {#We don't need to update the roles from the Group Management page. We need only add or remove user.#}
+    {#<button type='button' class="btn btn-info btn-sm" onclick="updateVacReqGroupUser(this,{{ entity.id }},{{ institution.id }},{{ roleId }})">Update</button>#}
 
     <a
         general-data-confirm="Are you sure you want to change user's role?"

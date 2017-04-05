@@ -682,12 +682,14 @@ class AccessRequestController extends Controller
         }
 
         //set updated by and updated author roles
-        $user = $this->get('security.context')->getToken()->getUser();
-        $accReq->setUpdatedby($user);
-        $accReq->setUpdateAuthorRoles($user->getRoles());
+        if( $accReq ) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $accReq->setUpdatedby($user);
+            $accReq->setUpdateAuthorRoles($user->getRoles());
+            $em->persist($accReq);
+        }
 
         $em->persist($entity);
-        $em->persist($accReq);
         $em->flush();
 
         //////// When the user's Access Request has been approved, send an email to the user from the email address in Site Settings with... ////

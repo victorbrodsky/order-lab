@@ -359,6 +359,7 @@ class ApproverController extends Controller
 
     /**
      * Update for a userManagementAction page
+     * Don't use it: We don't need to update the roles from the Group Management page. We need only add or remove user.
      *
      * @Route("/organizational-institution-user-update/{userid}/{instid}/{roleIds}", name="vacreq_orginst_user_update", options={"expose"=true})
      * @Method({"GET", "POST"})
@@ -366,6 +367,7 @@ class ApproverController extends Controller
      */
     public function userManagementUpdateAction(Request $request, $userid, $instid, $roleIds )
     {
+        exit("We don't need to update the roles from the Group Management page. We need only add or remove user.");
 
         if(
             false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
@@ -413,12 +415,17 @@ class ApproverController extends Controller
             $originalUserSiteRoles = $res['originalUserSiteRoles'];
             $newUserSiteRoles = $res['newUserSiteRoles'];
 
+            //testing
+//            $event = $organizationalGroupInstitution.": Roles of ".$subjectUser . " has been changed. Original roles: ".implode(", ",$originalUserSiteRoles).";<br> New roles:".implode(", ",$newUserSiteRoles);
+//            echo "event=".$event."<br>";
+//            exit('update');
+
             $em->persist($subjectUser);
             $em->flush();
 
             //Event Log
             $eventType = "Business/Vacation Group Updated"; //"User record updated";
-            $event = $organizationalGroupInstitution.": Roles of ".$subjectUser . " has been changed. Original roles:".implode(",",$originalUserSiteRoles)."; New roles:".implode(",",$newUserSiteRoles);
+            $event = $organizationalGroupInstitution.": Roles of ".$subjectUser . " has been changed. Original roles: ".implode(", ",$originalUserSiteRoles).";<br> New roles:".implode(", ",$newUserSiteRoles);
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
 
