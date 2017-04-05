@@ -756,8 +756,8 @@ class UserController extends Controller
                 ")";
         }
 
-        //WCM Pathology Employees Download
-        if( $filter && $filter == "WCM Pathology Employees Download" ) {
+        //WCM Pathology Employees Download Faculty
+        if( $filter && $filter == "WCM Pathology Employees Download Faculty" ) {
             $criteriastr .= "(".$this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology).")";
             //No "Postdoctoral Associate"
             $criteriastr .= " AND ";
@@ -3858,11 +3858,18 @@ class UserController extends Controller
 
         $userDownloadUtil = $this->container->get('user_download_utility');
 
-        ////////////// WCM Pathology Employees Download //////////////
-        $filter = "WCM Pathology Employees Download";
+        ////////////// WCM Pathology Employees //////////////
+        $filter = "WCM Pathology Employees";
         $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($params);
         $users = $res['entities'];
+        ////////////// EOF WCM Pathology Employees //////////////
+
+        ////////////// WCM Pathology Employees Download Faculty //////////////
+        $filterFaculty = "WCM Pathology Employees Download Faculty";
+        $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
+        $res = $this->indexUser($paramsFaculty);
+        $usersFaculty = $res['entities'];
         ////////////// EOF WCM Pathology Employees //////////////
 
         ////////////// With Administrative Title /////////////
@@ -3890,7 +3897,7 @@ class UserController extends Controller
 
         ///////////////////// Faculty List /////////////////////
         $facultySections = array(
-            " " => $users,
+            " " => $usersFaculty,
             "ADMINISTRATION" => $administrationDivisionUsers
         );
         if(1) {
@@ -3912,12 +3919,7 @@ class UserController extends Controller
         ///////////////////// EOF Faculty List /////////////////////
 
 
-
-        //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
-
-
         ///////////////////// Department List /////////////////////
-        //$sections = array("WCMC"=>$users,"NYP"=>$users);
         $departmentSections = $userDownloadUtil->getSections($users,$administrativeUsers,$locations);
 
 //        echo '<br><br>sections:<pre>';
