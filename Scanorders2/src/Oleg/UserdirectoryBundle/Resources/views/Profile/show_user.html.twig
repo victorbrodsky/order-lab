@@ -88,10 +88,10 @@
 
     <button id="btnShowUserOnly" class="btn btn-primary" name="btnShowUserOnly" type="button" onclick="showUserDetailsAjax({{ user_id }})">View Details</button>
 
-    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
-        <br><br>
-        <a class="btn btn-info" href="{{ path('employees_user_avery_5160',{id:user_id}) }}" type='button'>Print Label</a>
-    {% endif %}
+    {#{% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}#}
+        {#<br><br>#}
+        {#<a class="btn btn-info" href="{{ path('employees_user_avery_5160',{id:user_id}) }}" type='button'>Print Label</a>#}
+    {#{% endif %}#}
 
     {#<a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>#}
 
