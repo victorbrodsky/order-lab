@@ -993,8 +993,8 @@ class ApproverController extends Controller
 
             //Event Log
             $event = "Email users has been updated for Business/Vacation Group " . $institution .
-                "; Original email users=".implode(",",$originalUsers).
-                "; New email users=".implode(",",$newUsers);
+                "; Original email users=".implode(", ",$originalUsers).
+                "; New email users=".implode(", ",$newUsers);
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
 
