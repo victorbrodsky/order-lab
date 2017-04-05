@@ -760,8 +760,9 @@ class UserController extends Controller
         if( $filter && $filter == "WCM Pathology Employees Without Post Doc" ) {
             $criteriastr .= "(".$this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology).")";
             //No "Postdoctoral Associate"
-            $criteriastr .= " AND ";
-            $criteriastr .= "(administrativeName != 'Postdoctoral Associate' OR appointmentName != 'Postdoctoral Associate' OR medicalName != 'Postdoctoral Associate')";
+            //$criteriastr .= " AND ";
+            //$criteriastr .= "(administrativeName != 'Postdoctoral Associate' OR appointmentName != 'Postdoctoral Associate' OR medicalName != 'Postdoctoral Associate')";
+            //$criteriastr .= "(medicalName != 'Postdoctoral Associate')";
         }
 
 
