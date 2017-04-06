@@ -817,12 +817,12 @@ class ApproverController extends Controller
 
         $removedRoles = array();
 
-        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_APPROVER_");
-        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_SUBMITTER_");
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_APPROVER_",$request);
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_SUBMITTER_",$request);
 
         if( count($removedRoles) > 0 ) {
             //Event Log
-            $event = "Business/Vacation Group " . $institution . " has been removed by removing roles:".implode(", ",$removedRoles);
+            $event = "Business/Vacation Group [" . $institution->getTreeName() . "] has been removed by removing roles: ".implode(", ",$removedRoles);
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Role Removed');
 
@@ -838,10 +838,11 @@ class ApproverController extends Controller
 
     //remove/strip all of THIS GROUP's roles from all users.
     //Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
-    public function removeVacReqGroupByInstitution($instid,$rolePartialName) {
+    public function removeVacReqGroupByInstitution($instid,$rolePartialName,$request=null) {
         $em = $this->getDoctrine()->getManager();
 
         $roleName = null;
+        $userNamesArr = array();
 
         //1) find approver roles with institution
         $role = null;
@@ -863,12 +864,26 @@ class ApproverController extends Controller
             $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleName,"infos.lastName",true);
             foreach( $users as $user ) {
                 $user->removeRole($roleName);
+                $userNamesArr[] = $user."";
             }
 
             //Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
             //$em->remove($role);
 
             $em->flush();
+        }
+
+        //Event Log
+        if( $role && count($userNamesArr) > 0 ) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+            $institutionTreeName = null;
+            if( $institution ) {
+                $institutionTreeName = $institution->getTreeName();
+            }
+            $eventType = "Business/Vacation Group Updated";
+            $event = $institutionTreeName.": The role " . $roleName . " has been removed from the users: " . implode(", ", $userNamesArr);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, $eventType);
         }
 
         return $roleName;
