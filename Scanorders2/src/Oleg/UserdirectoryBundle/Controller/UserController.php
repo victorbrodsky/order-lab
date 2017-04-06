@@ -537,6 +537,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
+        //$limitFlag = null;//testing
         if( $limitFlag ) {
             //echo "use paginator limitFlag=$limitFlag<br>";
             $limit = $limitFlag; //1000;
@@ -551,6 +552,8 @@ class UserController extends Controller
             //echo "dont use paginator <br>";
             $pagination = $query->getResult();
         }
+
+        //exit("count=".count($pagination));//testing
 
         return array(
             'entities' => $pagination,
@@ -1357,7 +1360,7 @@ class UserController extends Controller
             "administrativeTitles.status = ".$pendingStatus.
             " OR appointmentTitles.status = ".$pendingStatus.
             " OR medicalTitles.status = ".$pendingStatus.
-            " OR locations.status = ".$pendingStatus.
+            //" OR locations.status = ".$pendingStatus.
             ")";
         
         //current_only
@@ -1378,7 +1381,7 @@ class UserController extends Controller
             $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
         } 
         
-        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
+        //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
         
         $em = $this->getDoctrine()->getManager();  
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
