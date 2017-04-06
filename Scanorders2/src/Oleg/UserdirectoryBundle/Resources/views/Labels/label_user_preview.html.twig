@@ -57,6 +57,9 @@
 
         {{ form_errors(form) }}
 
+        {% if form.labelcount is defined %}
+            {{ formmacros.field(form.labelcount) }}
+        {% endif %}
         {% if form.startrow is defined %}
             {{ formmacros.field(form.startrow) }}
         {% endif %}

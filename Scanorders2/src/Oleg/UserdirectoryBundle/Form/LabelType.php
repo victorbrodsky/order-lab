@@ -61,12 +61,12 @@ class LabelType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('endrow', 'number', array(
-            'required' => true,
-            'label' => "End row index:",
-            'data' => 10,
-            'attr' => array('class' => 'form-control'),
-        ));
+//        $builder->add('endrow', 'number', array(
+//            'required' => true,
+//            'label' => "End row index:",
+//            'data' => 10,
+//            'attr' => array('class' => 'form-control'),
+//        ));
 
 
         $builder->add('print', SubmitType::class, array(

@@ -242,9 +242,9 @@ class HomeController extends Controller {
             $userlabel = $form['userlabel']->getData();
             //echo "userlabel=".$userlabel."<br>";
 
-            $labelcount = $form['labelcount']->getData();
+            $labelmax = $form['labelcount']->getData();
             $startrow = $form['startrow']->getData();
-            $endrow = $form['endrow']->getData();
+            //$endrow = $form['endrow']->getData();
 
             //return $this->redirect($this->generateUrl('employees_user_avery_5160', array('id'=>$id, 'userlabel'=>$userlabel)));
 
@@ -255,8 +255,14 @@ class HomeController extends Controller {
 
             $num = 30;//$endrow * 3; //30
 
+            $labelCount = 0;
             for( $i=$startIndex; $i<$num; $i++ ) {
-                $usersArr[] = $userlabel;   //$userEl;
+                if( $labelCount < $labelmax ) {
+                    $usersArr[] = $userlabel;   //$userEl;
+                    $labelCount++;
+                } else {
+                    $usersArr[] = null;
+                }
             }
 
             return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
