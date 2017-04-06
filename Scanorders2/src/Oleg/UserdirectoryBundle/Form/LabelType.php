@@ -42,21 +42,28 @@ class LabelType extends AbstractType
             //'placeholder' => 'Enter Label Text',
             //'max_length' => 200,
             'required' => false,
-            'label' => "Label Text (use <br> tag for a new line):",
+            'label' => "Label text (use <br> tag for a new line):",
             'data' => $this->params['label'],
             'attr' => array('class' => 'textarea form-control'),
         ));
 
+        $builder->add('labelcount', 'number', array(
+            'required' => true,
+            'label' => "Number of labels to print:",
+            'data' => 1,
+            'attr' => array('class' => 'form-control'),
+        ));
+
         $builder->add('startrow', 'number', array(
             'required' => true,
-            'label' => "Start Row Index:",
+            'label' => "Start row index:",
             'data' => 1,
             'attr' => array('class' => 'form-control'),
         ));
 
         $builder->add('endrow', 'number', array(
             'required' => true,
-            'label' => "End Row Index:",
+            'label' => "End row index:",
             'data' => 10,
             'attr' => array('class' => 'form-control'),
         ));

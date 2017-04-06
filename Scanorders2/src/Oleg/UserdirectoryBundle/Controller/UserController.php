@@ -725,7 +725,7 @@ class UserController extends Controller
                 "administrativeTitles.status = ".$pendingStatus.
                 " OR appointmentTitles.status = ".$pendingStatus.
                 " OR medicalTitles.status = ".$pendingStatus.
-                " OR locations.status = ".$pendingStatus.
+                //" OR locations.status = ".$pendingStatus.
             ")";
         }
 

@@ -242,6 +242,7 @@ class HomeController extends Controller {
             $userlabel = $form['userlabel']->getData();
             //echo "userlabel=".$userlabel."<br>";
 
+            $labelcount = $form['labelcount']->getData();
             $startrow = $form['startrow']->getData();
             $endrow = $form['endrow']->getData();
 
@@ -249,9 +250,10 @@ class HomeController extends Controller {
 
             $usersArr = array();
 
+            $startIndex = 0;
             //$num = 30; //3 x 10
 
-            $num = $endrow * 3; //30
+            $num = 30;//$endrow * 3; //30
 
             for( $i=$startIndex; $i<$num; $i++ ) {
                 $usersArr[] = $userlabel;   //$userEl;
