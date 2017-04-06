@@ -1009,7 +1009,10 @@
                         <p>
 
                         {% if userEditor == true %}
-                            <a data-toggle="tooltip" title="Print Internal Mailing Label" style="color:black;" href="{{ path('employees_user_avery_5160',{'id':user.id}) }}">
+                            <a data-toggle="tooltip" title="Print Preview Internal Mailing Label"
+                               style="color:black;" target="_blank"
+                               href="{{ path('employees_user_label_preview',{'id':user.id}) }}"
+                            >
                                 <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                             </a>
                         {% endif %}

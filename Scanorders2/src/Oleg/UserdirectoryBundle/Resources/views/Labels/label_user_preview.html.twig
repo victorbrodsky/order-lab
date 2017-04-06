@@ -1,0 +1,151 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% block header %}
+
+    {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
+
+{% endblock %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <h4 class="text-info" align="center">{{ title }}</h4>
+
+    {#<p>#}
+        {#<div id="label-preview" class="previewlabel"></div>#}
+    {#</p>#}
+
+    <br><br>
+
+    <p>
+    <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            <div style="float: left; padding-left: 15%;">Label Preview</div><br>
+            <div id="label-preview" class="previewlabel"></div>
+        </div>
+        <div class="col-xs-4"></div>
+    </div>
+    </p>
+
+    <br><br><br>
+
+    {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+        {% if form.startrow is defined %}
+            {{ formmacros.field(form.startrow) }}
+        {% endif %}
+        {% if form.endrow is defined %}
+            {{ formmacros.field(form.endrow) }}
+        {% endif %}
+
+        {#{{ formmacros.field(form.userlabel)|raw }}#}
+        {#<p>#}
+            {#<div class="row">#}
+                {#<div class="col-xs-4"></div>#}
+                {#<div class="col-xs-4">#}
+                    {#{{ form_widget(form.userlabel) }}#}
+                    {#{{ form_label(form.userlabel) }}#}
+                    {#{{ form_row(form.userlabel) }}#}
+                {#</div>#}
+                {#<div class="col-xs-4"></div>#}
+            {#</div>#}
+        {#</p>#}
+        {{ formmacros.field(form.userlabel) }}
+
+        <p>
+            <div class="row">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4">
+                    {{ form_widget(form.print) }}
+                </div>
+                <div class="col-xs-4"></div>
+            </div>
+        </p>
+
+        {#<br><br>#}
+        {#<p>#}
+            {#{{ form_widget(form.print) }}#}
+            {#{{ formmacros.field(form.print) }}#}
+        {#</p>#}
+
+    {{ form_end(form) }}
+
+    {#<br><br>#}
+
+    {#<a class="btn btn-info" target="_blank" href="{{ path('employees_user_avery_5160',{id:user_id}) }}" type='button'>Print Internal Mailing Label</a>#}
+
+    {#<p>#}
+        {#<button class="btn btn-success" name="btnSubmit" type="submit">Print Internal Mailing Label</button>#}
+    {#</p>#}
+
+
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script>
+        $(document).ready(function () {
+
+            var text = $(".textarea").val();
+            //console.log("text="+text);
+            $("#label-preview").html(text);
+
+            $(".textarea").on('input', function() {
+                var text = $(".textarea").val();
+                console.log("text="+text);
+                $("#label-preview").html(text);
+            });
+
+        });
+    </script>
+
+{% endblock %}
+
+{% block additionalcss %}
+    <link href="labels.css" rel="stylesheet" type="text/css" >
+    <style>
+        .previewlabel{
+            /* Avery 5160 labels -- CSS and HTML by MM at Boulder Information Services */
+            width: 2.625in; /* plus .6 inches from padding */
+            height: .995in; /* plus .125 inches from padding */
+            padding: .125in .3in 0;
+            margin-right: .125in; /* the gutter */
+
+            /*float: left;*/
+
+            text-align: center;
+            overflow: hidden;
+
+            outline: 1px dotted; /* outline doesn't occupy space like border does */
+        }
+    </style>
+{% endblock %}
+

@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\SiteList;
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Form\LabelType;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -192,11 +193,11 @@ class HomeController extends Controller {
 
 
     /**
-     * @Route("/avery-5160/user/{id}", name="employees_user_avery_5160")
-     * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Labels:avery_5160.html.twig")
+     * @Route("/label/user/preview/{id}", name="employees_user_label_preview")
+     * @Method({"GET","POST"})
+     * @Template("OlegUserdirectoryBundle:Labels:label_user_preview.html.twig")
      */
-    public function employmentTerminateAction(Request $request, $id) {
+    public function averyUserPrintAction(Request $request, $id) {
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -208,7 +209,7 @@ class HomeController extends Controller {
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
         //Title
-        $administrativeTitleNameStr = $userDownloadUtil->getUserTitleStr($subjectUser);
+        $administrativeTitleNameStr = $userDownloadUtil->getUniqueFirstTitleStr($subjectUser);
 
         //Room
         $locationStr = null;
@@ -217,15 +218,103 @@ class HomeController extends Controller {
             $locationStr = $location->getLocationNameNoType();
         }
 
-        $userEl = array();
-        $userEl['name'] = $subjectUser->getUsernameOptimal();
-        $userEl['title'] = $administrativeTitleNameStr;
-        $userEl['room'] = $locationStr;
+        //$nl = "&#13;&#10;";
+        //$nl = "\n";
+        $nl = "<br>\n";
 
-        $usersArr = array($userEl);
+//        $userEl = array();
+//        $userEl['name'] = $subjectUser->getUsernameOptimal();
+//        $userEl['title'] = $administrativeTitleNameStr;
+//        $userEl['room'] = $locationStr;
+//        $userElStr = implode("\n",$userEl);
+
+        $userElStr =    $subjectUser->getUsernameOptimal() . $nl .
+                        $administrativeTitleNameStr . $nl .
+                        $locationStr;
+
+        $params = array('label'=>$userElStr);
+
+        $form = $this->createForm(new LabelType($params),null);
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() ) {
+            $userlabel = $form['userlabel']->getData();
+            //echo "userlabel=".$userlabel."<br>";
+
+            $startrow = $form['startrow']->getData();
+            $endrow = $form['endrow']->getData();
+
+            //return $this->redirect($this->generateUrl('employees_user_avery_5160', array('id'=>$id, 'userlabel'=>$userlabel)));
+
+            $usersArr = array();
+
+            //$num = 30; //3 x 10
+
+            $num = $endrow * 3; //30
+
+            for( $i=$startIndex; $i<$num; $i++ ) {
+                $usersArr[] = $userlabel;   //$userEl;
+            }
+
+            return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
+                'userlabels' => $usersArr,
+                'labelperpage' => 30    //30
+            ));
+        }
 
         return array(
-            'users' => $usersArr,
+            'form' => $form->createView(),
+            //'userEl' => $userEl,
+            'title' => "User Label Print Management and Preview"
+        );
+    }
+    /**
+     * @Route("/label/avery-5160/user/{id}", name="employees_user_avery_5160")
+     * @Method({"GET","POST"})
+     * @Template("OlegUserdirectoryBundle:Labels:avery_5160.html.twig")
+     */
+    public function averySingleUserPrintAction( Request $request, $id ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userlabel = $request->request->get('userlabel');
+        exit('userlabel='.$userlabel);
+
+        if(0) {
+            $em = $this->getDoctrine()->getManager();
+            $userDownloadUtil = $this->container->get('user_download_utility');
+
+            //get username
+            $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+            //Title
+            $administrativeTitleNameStr = $userDownloadUtil->getUserTitleStr($subjectUser);
+
+            //Room
+            $locationStr = null;
+            $location = $subjectUser->getMainLocation();
+            if ($location) {
+                $locationStr = $location->getLocationNameNoType();
+            }
+
+            $userEl = array();
+            $userEl['name'] = $subjectUser->getUsernameOptimal();
+            $userEl['title'] = $administrativeTitleNameStr;
+            $userEl['room'] = $locationStr;
+        }
+
+        $usersArr = array();
+
+        $num = 30; //3 x 10
+
+        for( $i=0; $i<$num; $i++ ) {
+            $usersArr[] = $userlabel;   //$userEl;
+        }
+
+        return array(
+            'userlabels' => $usersArr,
         );
     }
 

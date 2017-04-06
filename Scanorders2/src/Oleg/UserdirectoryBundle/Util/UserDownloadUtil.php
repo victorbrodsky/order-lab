@@ -537,6 +537,31 @@ class UserDownloadUtil {
 
         return $titleNameStr;
     }
+
+    public function getUniqueFirstTitleStr( $user, $delimeter="; " ) {
+        $titleStr = null;
+        $titlesArr = $user->getUniqueTitles($user->getAdministrativeTitles());
+        $title = null;
+        if( count($titlesArr) > 0 ) {
+            $title = $titlesArr[0];
+        }
+        if( $title ) {
+            $titleStr = $title->getInstitution()."";
+        }
+
+        if( !$titleStr ) {
+            $titleStr = $this->getUserTitleStr($user);
+        }
+
+        //Director, Transfusion Medicine and the Cellular Therapy Service
+        if( strlen($titleStr) > 50 ) {
+            $titleStr = substr($titleStr, 0, 50);
+            $titleStr = $titleStr . "...";
+        }
+
+        return $titleStr;
+    }
+
 //    public function getUserHeaderStr($user) {
 //        $titleInfoArr = array();
 //        $userSecUtil = $this->container->get('user_security_utility');

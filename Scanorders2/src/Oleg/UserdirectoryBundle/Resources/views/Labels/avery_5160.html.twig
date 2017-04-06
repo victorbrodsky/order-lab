@@ -19,7 +19,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>HTML & CSS Avery Labels (5160) by MM at Boulder Information Services</title>
+    <title>Avery Labels (5160)</title>
     <link href="labels.css" rel="stylesheet" type="text/css" >
     <style>
         body {
@@ -48,29 +48,63 @@
     </style>
 
 </head>
-<body>
+<body onload="printLabelPage()">
 
 {#<div class="label"><img src="https://boulderinformationservices.files.wordpress.com/2011/08/barcode_sample.png" /><br>Human readable</div>#}
 {#<div class="label"><img src="https://boulderinformationservices.files.wordpress.com/2011/08/barcode_sample.png" /><br>Human readable</div>#}
 {#<div class="label"><img src="https://boulderinformationservices.files.wordpress.com/2011/08/barcode_sample.png" /><br>Human readable</div>#}
 {#<div class="label"><img src="https://boulderinformationservices.files.wordpress.com/2011/08/barcode_sample.png" /><br>Human readable</div>#}
 {#<div class="label">(Repeat 30 times)</div>#}
+{#<div class="page-break"></div>#}
+
 
 {#Dr. FirstName LastName#}
 {#Cytogenetics#}
 {#F-503#}
 
-    {% for user in users %}
-        <div class="label">
+    {#{% for user in users %}#}
+        {#<div class="label">#}
             {#user.getUsernameOptimal<br>#}
             {#{{ user_download_utility.getUserTitleStr(user) }}<br>#}
-            {{ user['name'] }}<br>
-            {{ user['title'] }}<br>
-            {{ user['room'] }}
+            {#{{ user['name'] }}<br>#}
+            {#{{ user['title'] }}<br>#}
+            {#{{ user['room'] }}#}
+        {#</div>#}
+    {#{% endfor %}#}
+
+
+    {% for userlabel in userlabels %}
+        <div class="label">
+            {#{{ user['name'] }}<br>#}
+            {#{{ user['title'] }}<br>#}
+            {#{{ user['room'] }}#}
+            {{ userlabel|raw }}
         </div>
+
+        {% if loop.index % labelperpage == 0 %}
+            {#new line!#}
+            <div class="page-break"></div>
+        {% endif %}
+
     {% endfor %}
 
-<div class="page-break"></div>
+
+
+<script>
+    // self executing function here
+//    (function() {
+//        //window.print();
+//        printLabelPage();
+//    })();
+    function printLabelPage() {
+        console.log('print page');
+        window.print();
+    }
+</script>
+
 
 </body>
 </html>
+
+
+
