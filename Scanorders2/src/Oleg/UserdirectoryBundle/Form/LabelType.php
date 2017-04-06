@@ -47,14 +47,14 @@ class LabelType extends AbstractType
             'attr' => array('class' => 'textarea form-control'),
         ));
 
-        $builder->add('labelcount', 'number', array(
+        $builder->add('labelcount', 'integer', array(
             'required' => true,
-            'label' => "Number of labels to print:",
+            'label' => "Number of labels to print (0 - for a whole page):",
             'data' => 1,
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('startrow', 'number', array(
+        $builder->add('startrow', 'integer', array(
             'required' => true,
             'label' => "Start row index:",
             'data' => 1,

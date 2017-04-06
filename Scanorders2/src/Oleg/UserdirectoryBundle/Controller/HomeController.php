@@ -255,14 +255,26 @@ class HomeController extends Controller {
 
             $num = 30;//$endrow * 3; //30
 
+            if( $labelmax == 0 ) {
+                $labelmax = 30;
+            }
+
+            //$startrow
+            //$startrow=1 => $currentLabelCount=0 (1-1)*3 = 0
+            //$startrow=2 => $currentLabelCount=3 (2-1)*3 = 3
+            //$startrow=3 => $currentLabelCount=6 (3-1)*3 = 6
+            $currentLabelCount = ($startrow-1)*3;
+
             $labelCount = 0;
+            $labelUserCount = 0;
             for( $i=$startIndex; $i<$num; $i++ ) {
-                if( $labelCount < $labelmax ) {
+                if( $labelUserCount < $labelmax && $labelCount >= $currentLabelCount ) {
                     $usersArr[] = $userlabel;   //$userEl;
-                    $labelCount++;
+                    $labelUserCount++;
                 } else {
                     $usersArr[] = null;
                 }
+                $labelCount++;
             }
 
             return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
