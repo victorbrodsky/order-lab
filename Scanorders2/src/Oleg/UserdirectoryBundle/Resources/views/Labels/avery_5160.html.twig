@@ -20,12 +20,15 @@
 <head>
     <meta charset="utf-8">
     <title>Avery Labels (5160)</title>
-    <link href="labels.css" rel="stylesheet" type="text/css" >
     <style>
         body {
             width: 8.5in;
             margin: 0in .1875in;
         }
+        /*@page{*/
+            /*margin: 0.50in 0px 0px 0px;*/
+            /*margin: 1in 0px 0px 0px;*/
+        /*}*/
         .label{
             /* Avery 5160 labels -- CSS and HTML by MM at Boulder Information Services */
             width: 2.025in; /* plus .6 inches from padding */
@@ -38,7 +41,7 @@
             text-align: center;
             overflow: hidden;
 
-            outline: 1px dotted; /* outline doesn't occupy space like border does */
+            /*outline: 1px dotted; !* outline doesn't occupy space like border does *!*/
         }
         .page-break  {
             clear: left;
