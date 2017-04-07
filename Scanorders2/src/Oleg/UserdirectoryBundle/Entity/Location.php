@@ -797,9 +797,9 @@ class Location extends ListAbstract
 //            $detailsArr[] = $this->getBuilding()."";
 //        }
 
-        if( $this->getInstitution() && $this->getBuilding() == null ) {
-            $detailsArr[] = $this->getInstitution()->getName()."";
-        }
+//        if( $this->getInstitution() && $this->getBuilding() == null ) {
+//            $detailsArr[] = $this->getInstitution()->getName()."";
+//        }
 
         if( $this->getMailbox() ) {
             $detailsArr[] = $this->getMailbox();

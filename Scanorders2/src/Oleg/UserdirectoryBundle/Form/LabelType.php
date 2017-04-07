@@ -63,13 +63,27 @@ class LabelType extends AbstractType
 //                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Users'),
 //                'choices' => $this->params['users']
 //            ));
+
+            //echo "user count=".count($this->params['users'])."<br>";
+
             $builder->add('users', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Users:",
+                'property' => "getUsernameOptimal",
                 'multiple' => true,
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Users'),
-                'choices' => $this->params['users']
+                'required' => true,
+                'attr' => array('class' => 'combobox combobox-width users', 'placeholder' => 'Users'),
+                'choices' => $this->params['allusers'],
+                'data' => $this->params['users']
             ));
+
+            $builder->add('clearall', 'checkbox', array(
+                'required' => false,
+                'label' => "Clear all users:",
+                'data' => false,
+                'attr' => array('class' => 'form-control clearall'),
+            ));
+
         }
 
         $builder->add('startrow', 'integer', array(

@@ -539,6 +539,9 @@ class UserDownloadUtil {
     }
 
     public function getUniqueFirstTitleStr( $user, $delimeter="; " ) {
+        if( !$user ) {
+            return null;
+        }
         $titleStr = null;
         $titlesArr = $user->getUniqueTitles($user->getAdministrativeTitles());
         $title = null;
@@ -554,8 +557,9 @@ class UserDownloadUtil {
         }
 
         //Director, Transfusion Medicine and the Cellular Therapy Service
-        if( strlen($titleStr) > 50 ) {
-            $titleStr = substr($titleStr, 0, 50);
+        $maxlen = 45; //53
+        if( strlen($titleStr) > $maxlen ) {
+            $titleStr = substr($titleStr, 0, $maxlen);
             $titleStr = $titleStr . "...";
         }
 
@@ -757,9 +761,14 @@ class UserDownloadUtil {
 
 
     public function getLabelSingleUser( $subjectUser ) {
-        $userDownloadUtil = $this->container->get('user_download_utility');
+
+        //echo "subjectUser=".$subjectUser."<br>";
+        if( !$subjectUser ) {
+            return null;
+        }
+
         //Title
-        $administrativeTitleNameStr = $userDownloadUtil->getUniqueFirstTitleStr($subjectUser);
+        $administrativeTitleNameStr = $this->getUniqueFirstTitleStr($subjectUser);
 
         //Room
         $locationStr = null;
@@ -767,6 +776,7 @@ class UserDownloadUtil {
         if( $location ) {
             $locationStr = $location->getLocationNameNoType();
         }
+        //echo "locationStr=[$locationStr]<br>";
 
         //$nl = "&#13;&#10;";
         //$nl = "\n";
@@ -778,9 +788,11 @@ class UserDownloadUtil {
 //        $userEl['room'] = $locationStr;
 //        $userElStr = implode("\n",$userEl);
 
-        $userElStr =    $subjectUser->getUsernameOptimal() . $nl .
+        $userElStr = $subjectUser->getUsernameOptimal() . $nl .
             $administrativeTitleNameStr . $nl .
             $locationStr;
+
+        //echo "userElStr=[$userElStr]<br>";
 
         return $userElStr;
     }

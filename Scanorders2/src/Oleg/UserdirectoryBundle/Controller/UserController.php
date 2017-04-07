@@ -3976,7 +3976,7 @@ class UserController extends Controller
             exit();
         }
     }
-    
+
     /**
      * @Route("/label/user/preview/{id}", name="employees_user_label_preview")
      * @Method({"GET","POST"})
@@ -3990,33 +3990,8 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $userDownloadUtil = $this->container->get('user_download_utility');
 
-        //get username
+        //get user label
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-
-//        //Title
-//        $administrativeTitleNameStr = $userDownloadUtil->getUniqueFirstTitleStr($subjectUser);
-//
-//        //Room
-//        $locationStr = null;
-//        $location = $subjectUser->getMainLocation();
-//        if( $location ) {
-//            $locationStr = $location->getLocationNameNoType();
-//        }
-//
-//        //$nl = "&#13;&#10;";
-//        //$nl = "\n";
-//        $nl = "<br>\n";
-//
-////        $userEl = array();
-////        $userEl['name'] = $subjectUser->getUsernameOptimal();
-////        $userEl['title'] = $administrativeTitleNameStr;
-////        $userEl['room'] = $locationStr;
-////        $userElStr = implode("\n",$userEl);
-//
-//        $userElStr =    $subjectUser->getUsernameOptimal() . $nl .
-//                        $administrativeTitleNameStr . $nl .
-//                        $locationStr;
-
         $userElStr = $userDownloadUtil->getLabelSingleUser($subjectUser);
 
         $params = array('label'=>$userElStr,'singleUser'=>true);
@@ -4097,17 +4072,30 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $userDownloadUtil = $this->container->get('user_download_utility');
 
-        //get username
+        //get users
         //$users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        ////////////// WCM Pathology Employees Download Faculty //////////////
+        $filterFaculty = "WCM Pathology Employees Download Faculty";
+        $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
+        $res = $this->indexUser($paramsFaculty);
+        $facultyUsers = $res['entities'];
+        ////////////// EOF WCM Pathology Employees //////////////
+
         ////////////// WCM Pathology Employees //////////////
         $filter = "WCM Pathology Employees";
         $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($params);
         $users = $res['entities'];
         ////////////// EOF WCM Pathology Employees //////////////
-        echo "user count=".count($users)."<br>";
 
-        $params = array('singleUser'=>false,'users'=>$users);
+        $allusers = array_unique (array_merge ($facultyUsers, $users));
+
+//        foreach( $users as $user ) {
+//            echo $user->getId().": ".$user->getUsernameOptimal()."<br>";
+//            break;
+//        }
+
+        $params = array('singleUser'=>false,'allusers'=>$allusers,'users'=>$facultyUsers);
         $form = $this->createForm(new LabelType($params),null);
 
         $form->handleRequest($request);
@@ -4122,7 +4110,15 @@ class UserController extends Controller
             $startrow = $form['startrow']->getData();
             //$endrow = $form['endrow']->getData();
 
-            $users = $form['users']->getData();
+            $selectUsers = $form['users']->getData();
+
+            //re-save selected users as array
+            $users = array();
+            foreach( $selectUsers as $user ) {
+                //echo $user->getId().": ".$user->getUsernameOptimal()."<br>";
+                $users[] = $user;
+            }
+            //echo "#########<br>";
 
             //return $this->redirect($this->generateUrl('employees_user_avery_5160', array('id'=>$id, 'userlabel'=>$userlabel)));
 
@@ -4132,11 +4128,15 @@ class UserController extends Controller
             $emptyLabelCount = ($startrow-1)*3 + ($startcolumn-1);
             $num = $num + $emptyLabelCount;
 
+            $usersArr = array();
             $labelCount = 0;
             $labelUserCount = 0;
             for( $i=0; $i<$num; $i++ ) {
                 if( $labelCount >= $emptyLabelCount ) {
-                    $userlabel = $userDownloadUtil->getLabelSingleUser($users[$labelUserCount]);
+                    //echo "labelUserCount=".$labelUserCount."<br>";
+                    $user = $users[$labelUserCount];
+                    //echo $user->getId().":: ".$user->getUsernameOptimal()."<br>";
+                    $userlabel = $userDownloadUtil->getLabelSingleUser($user);
                     $usersArr[] = $userlabel;
                     $labelUserCount++;
                 } else {
