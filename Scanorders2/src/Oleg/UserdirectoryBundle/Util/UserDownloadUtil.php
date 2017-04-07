@@ -50,8 +50,9 @@ class UserDownloadUtil {
 
     public function getSections( $users, $administrativeUsers, $locations ) {
         $sections = array();
+        $priority = 0; //"Primary"
         foreach( $users as $user ) {
-            $instResArr = $user->getDeduplicatedInstitutions();
+            $instResArr = $user->getDeduplicatedInstitutions($priority);
 
             foreach( $instResArr as $instRes ) {
                 //$instName = $instRes[0]['instNameWithRoot'];
@@ -59,7 +60,7 @@ class UserDownloadUtil {
                 $instName = $instRes[0]['instName'];
                 //Set all uppercase
                 $instName = strtoupper($instName);
-                //echo "instName=".$instName."<br>";
+                //echo "add instName=".$instName."<br>";
                 //$sections[$instName][] = $user."";
                 $sections[$instName][] = $user;
             }
@@ -69,7 +70,7 @@ class UserDownloadUtil {
 //        echo '<br><br>sections:<pre>';
 //        print_r($sections);
 //        echo  '</pre>';
-//        exit();
+        //exit();
 
         //////////////// reorganize sections ////////////////
 

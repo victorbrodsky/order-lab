@@ -1457,14 +1457,24 @@ class User extends BaseUser {
 
     //get all institutions from administrative and appointment titles.
     //status: 0-unverified, 1-verified
-    public function getInstitutions($type=null,$status=null) {
+    public function getInstitutions($type=null,$status=null,$priority=null) {
         $institutions = new ArrayCollection();
         if( $type == null || $type == "AdministrativeTitle" ) {
             foreach( $this->getAdministrativeTitles() as $adminTitles ) {
                 if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
                     if( !$institutions->contains($adminTitles->getInstitution()) ) {
                         if( $status == null || $adminTitles->getStatus() == $status ) {
-                            $institutions->add($adminTitles->getInstitution());
+                            //echo "priority=[".$priority ."]=?[". $adminTitles->getPriority()."]<br>";
+                            if( $priority === NULL || $priority."" === $adminTitles->getPriority()."" ) {
+//                                if( $priority === NULL ) {
+//                                    echo "priority is NULL <br>";
+//                                } else {
+//                                    echo "priority is not NULL <br>";
+//                                }
+                                //echo $this.": !!!add inst=".$adminTitles->getInstitution()."<br>";
+                                //exit();
+                                $institutions->add($adminTitles->getInstitution());
+                            }
                         }
                     }
             }
@@ -1474,7 +1484,9 @@ class User extends BaseUser {
                 if( $appTitles->getInstitution() && $appTitles->getInstitution()->getId() && $appTitles->getInstitution()->getName() != "" )
                     if( !$institutions->contains($appTitles->getInstitution()) ) {
                         if( $status == null || $appTitles->getStatus() == $status ) {
-                            $institutions->add($appTitles->getInstitution());
+                            if( $priority === null || $priority."" === $appTitles->getPriority()."" ) {
+                                $institutions->add($appTitles->getInstitution());
+                            }
                         }
                     }
             }
@@ -1484,7 +1496,9 @@ class User extends BaseUser {
                 if( $medicalTitles->getInstitution() && $medicalTitles->getInstitution()->getId() && $medicalTitles->getInstitution()->getName() != "" )
                     if( !$institutions->contains($medicalTitles->getInstitution()) ) {
                         if( $status == null || $medicalTitles->getStatus() == $status ) {
-                            $institutions->add($medicalTitles->getInstitution());
+                            if( $priority === null || $priority."" === $medicalTitles->getPriority()."" ) {
+                                $institutions->add($medicalTitles->getInstitution());
+                            }
                         }
                     }
             }
@@ -1503,11 +1517,16 @@ class User extends BaseUser {
     // Software Development (WCMC)
     // Pathology Informatics (NYP, WCMC)
     //Molecular Hematopathology (Hematopathology-WCMC, Molecular and Genomic Pathology-WCMC, Hematopathology-NYP, Molecular and Genomic Pathology-NYP)"
-    public function getDeduplicatedInstitutions() {
+    public function getDeduplicatedInstitutions($priority=null) {
 
         $instArr = array();
 
-        foreach( $this->getInstitutions() as $institution ) {
+        $institutions = $this->getInstitutions(null,null,$priority);
+        if( count($institutions) == 0 ) {
+            $institutions = $this->getInstitutions();
+        }
+
+        foreach( $institutions as $institution ) {
             $instName = $institution->getName()."";
             //echo "instName=".$instName."<br>";
 
