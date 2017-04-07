@@ -70,6 +70,11 @@ class LoggerController extends Controller
         //echo "postData=<br>";
         //print_r($postData);
 
+        $eventStr = null;
+        if( $userid ) {
+            $eventStr = $this->getEventStrByUserid($userid);
+        }
+
         $entityName = 'User';
 
         $params = array(
@@ -77,6 +82,7 @@ class LoggerController extends Controller
             'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
+            'eventStr'=>$eventStr,
             'postData'=>$postData,
             'onlyheader'=>true
         );
@@ -100,6 +106,12 @@ class LoggerController extends Controller
         //echo "postData=<br>";
         //print_r($postData);
 
+
+        $eventStr = null;
+        if( $userid ) {
+            $eventStr = $this->getEventStrByUserid($userid);
+        }
+
         $entityName = 'User';
 
         $params = array(
@@ -107,6 +119,7 @@ class LoggerController extends Controller
             'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
+            'eventStr'=>$eventStr,
             'postData'=>$postData,
             'onlyheader'=>false,
             'allsites'=>true
@@ -117,6 +130,16 @@ class LoggerController extends Controller
         return $logger;
     }
 
+    public function getEventStrByUserid( $userid ) {
+        $em = $this->getDoctrine()->getManager();
+        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        if( $subjectUser ) {
+            $cwid = $subjectUser->getPrimaryPublicUserId();
+            return $cwid;
+        }
+        return null;
+    }
+
     protected function listLogger( $params, $request ) {
 
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
@@ -124,6 +147,7 @@ class LoggerController extends Controller
         $entityNamespace = ( array_key_exists('entityNamespace', $params) ? $params['entityNamespace'] : null);
         $entityName = ( array_key_exists('entityName', $params) ? $params['entityName'] : null);
         $entityId = ( array_key_exists('entityId', $params) ? $params['entityId'] : null);
+        $eventStr = ( array_key_exists('eventStr', $params) ? $params['eventStr'] : null);
         $postData = ( array_key_exists('postData', $params) ? $params['postData'] : null);
         $onlyheader = ( array_key_exists('onlyheader', $params) ? $params['onlyheader'] : null);
 
@@ -226,6 +250,12 @@ class LoggerController extends Controller
             } //if onlyheader
 
         } //if entityNamespace entityName entityId
+
+        //add OR to get records with this eventStr in the event title (field "event")
+        if( $eventStr ) {
+            $dql->orWhere("logger.event LIKE :eventStr");
+            $queryParameters['eventStr'] = '%'.$eventStr.'%';
+        }
 
         if( $postData == null ) {
 //            if( $request == null ) {

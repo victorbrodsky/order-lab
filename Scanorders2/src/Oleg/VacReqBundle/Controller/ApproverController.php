@@ -883,6 +883,7 @@ class ApproverController extends Controller
             $eventType = "Business/Vacation Group Updated";
             $event = $institutionTreeName.": The role " . $roleName . " has been removed from the users: " . implode(", ", $userNamesArr);
             $userSecUtil = $this->container->get('user_security_utility');
+            $user = $this->get('security.context')->getToken()->getUser();
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, $eventType);
         }
 
