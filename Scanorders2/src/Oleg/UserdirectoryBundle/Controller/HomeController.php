@@ -242,7 +242,9 @@ class HomeController extends Controller {
             $userlabel = $form['userlabel']->getData();
             //echo "userlabel=".$userlabel."<br>";
 
+            $dotborders = $form['dotborders']->getData();
             $labelmax = $form['labelcount']->getData();
+            $startcolumn = $form['startcolumn']->getData();
             $startrow = $form['startrow']->getData();
             //$endrow = $form['endrow']->getData();
 
@@ -265,10 +267,13 @@ class HomeController extends Controller {
             //$startrow=3 => $currentLabelCount=6 (3-1)*3 = 6
             $currentLabelCount = ($startrow-1)*3;
 
+            $emptyLabelCount = ($startrow-1)*3 + ($startcolumn-1);
+
             $labelCount = 0;
             $labelUserCount = 0;
             for( $i=$startIndex; $i<$num; $i++ ) {
-                if( $labelUserCount < $labelmax && $labelCount >= $currentLabelCount ) {
+                //if( $labelUserCount < $labelmax && $labelCount >= $currentLabelCount ) {
+                if( $labelUserCount < $labelmax && $labelCount >= $emptyLabelCount ) {
                     $usersArr[] = $userlabel;   //$userEl;
                     $labelUserCount++;
                 } else {
@@ -279,7 +284,8 @@ class HomeController extends Controller {
 
             return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
                 'userlabels' => $usersArr,
-                'labelperpage' => 30    //30
+                'labelperpage' => 30,    //30
+                'dotborders' => $dotborders
             ));
         }
 

@@ -43,6 +43,9 @@
 
             /*outline: 1px dotted; !* outline doesn't occupy space like border does *!*/
         }
+        .label-dotborders{
+            outline: 1px dotted; /* outline doesn't occupy space like border does */
+        }
         .page-break  {
             clear: left;
             display:block;
@@ -75,9 +78,13 @@
         {#</div>#}
     {#{% endfor %}#}
 
+    {% set labelClass = "label" %}
+    {% if dotborders is defined and dotborders %}
+        {% set labelClass = "label label-dotborders" %}
+    {% endif %}
 
     {% for userlabel in userlabels %}
-        <div class="label">
+        <div class="{{ labelClass }}">
             {#{{ user['name'] }}<br>#}
             {#{{ user['title'] }}<br>#}
             {#{{ user['room'] }}#}

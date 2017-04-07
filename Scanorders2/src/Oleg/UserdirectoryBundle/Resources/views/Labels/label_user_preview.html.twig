@@ -64,6 +64,9 @@
 
         {{ form_errors(form) }}
 
+        {% if form.dotborders is defined %}
+            {{ formmacros.checkbox(form.dotborders) }}
+        {% endif %}
         {% if form.labelcount is defined %}
             {{ formmacros.field(form.labelcount) }}
         {% endif %}
@@ -72,6 +75,9 @@
         {% endif %}
         {% if form.endrow is defined %}
             {{ formmacros.field(form.endrow) }}
+        {% endif %}
+        {% if form.startcolumn is defined %}
+            {{ formmacros.field(form.startcolumn) }}
         {% endif %}
 
         {#{{ formmacros.field(form.userlabel)|raw }}#}

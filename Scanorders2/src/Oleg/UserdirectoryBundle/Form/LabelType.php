@@ -56,7 +56,14 @@ class LabelType extends AbstractType
 
         $builder->add('startrow', 'integer', array(
             'required' => true,
-            'label' => "Start row index:",
+            'label' => "Start row index (from 1 to 10):",
+            'data' => 1,
+            'attr' => array('class' => 'form-control'),
+        ));
+
+        $builder->add('startcolumn', 'integer', array(
+            'required' => true,
+            'label' => "Start column index (from 1 to 3):",
             'data' => 1,
             'attr' => array('class' => 'form-control'),
         ));
@@ -72,6 +79,13 @@ class LabelType extends AbstractType
         $builder->add('print', SubmitType::class, array(
             'label' => 'Print Internal Mailing Label',
             'attr' => array('class' => 'btn btn-success'),
+        ));
+
+        $builder->add('dotborders', 'checkbox', array(
+            'required' => false,
+            'label' => "Include dot borders (use it for a full page preview):",
+            'data' => false,
+            'attr' => array('class' => 'form-control'),
         ));
 
     }
