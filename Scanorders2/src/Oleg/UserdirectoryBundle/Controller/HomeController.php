@@ -192,156 +192,268 @@ class HomeController extends Controller {
     }
 
 
-    /**
-     * @Route("/label/user/preview/{id}", name="employees_user_label_preview")
-     * @Method({"GET","POST"})
-     * @Template("OlegUserdirectoryBundle:Labels:label_user_preview.html.twig")
-     */
-    public function averyUserPrintAction(Request $request, $id) {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
+//    /**
+//     * @Route("/label/user/preview/{id}", name="employees_user_label_preview")
+//     * @Method({"GET","POST"})
+//     * @Template("OlegUserdirectoryBundle:Labels:label_user_preview.html.twig")
+//     */
+//    public function averySingleUserPrintAction(Request $request, $id) {
+//        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $userDownloadUtil = $this->container->get('user_download_utility');
+//
+//        //get username
+//        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+//
+////        //Title
+////        $administrativeTitleNameStr = $userDownloadUtil->getUniqueFirstTitleStr($subjectUser);
+////
+////        //Room
+////        $locationStr = null;
+////        $location = $subjectUser->getMainLocation();
+////        if( $location ) {
+////            $locationStr = $location->getLocationNameNoType();
+////        }
+////
+////        //$nl = "&#13;&#10;";
+////        //$nl = "\n";
+////        $nl = "<br>\n";
+////
+//////        $userEl = array();
+//////        $userEl['name'] = $subjectUser->getUsernameOptimal();
+//////        $userEl['title'] = $administrativeTitleNameStr;
+//////        $userEl['room'] = $locationStr;
+//////        $userElStr = implode("\n",$userEl);
+////
+////        $userElStr =    $subjectUser->getUsernameOptimal() . $nl .
+////                        $administrativeTitleNameStr . $nl .
+////                        $locationStr;
+//
+//        $userElStr = $userDownloadUtil->getLabelSingleUser($subjectUser);
+//
+//        $params = array('label'=>$userElStr,'singleUser'=>true);
+//
+//        $form = $this->createForm(new LabelType($params),null);
+//
+//        $form->handleRequest($request);
+//
+//        if( $form->isSubmitted() ) {
+//            $userlabel = $form['userlabel']->getData();
+//            //echo "userlabel=".$userlabel."<br>";
+//
+//            $dotborders = $form['dotborders']->getData();
+//            $labelmax = $form['labelcount']->getData();
+//            $startcolumn = $form['startcolumn']->getData();
+//            $startrow = $form['startrow']->getData();
+//            //$endrow = $form['endrow']->getData();
+//
+//            //return $this->redirect($this->generateUrl('employees_user_avery_5160', array('id'=>$id, 'userlabel'=>$userlabel)));
+//
+//            $usersArr = array();
+//
+//            $startIndex = 0;
+//            //$num = 30; //3 x 10
+//
+//            $num = 30;//$endrow * 3; //30
+//
+//            if( $labelmax == 0 ) {
+//                $labelmax = 30;
+//            }
+//
+//            //$startrow
+//            //$startrow=1 => $currentLabelCount=0 (1-1)*3 = 0
+//            //$startrow=2 => $currentLabelCount=3 (2-1)*3 = 3
+//            //$startrow=3 => $currentLabelCount=6 (3-1)*3 = 6
+//            //$currentLabelCount = ($startrow-1)*3;
+//
+//            //4 row; 2 column => (4-1)*3 + (2-1) = 10 empty labels in front
+//            $emptyLabelCount = ($startrow-1)*3 + ($startcolumn-1);
+//
+//            $labelCount = 0;
+//            $labelUserCount = 0;
+//            for( $i=$startIndex; $i<$num; $i++ ) {
+//                //if( $labelUserCount < $labelmax && $labelCount >= $currentLabelCount ) {
+//                if( $labelUserCount < $labelmax && $labelCount >= $emptyLabelCount ) {
+//                    $usersArr[] = $userlabel;   //$userEl;
+//                    $labelUserCount++;
+//                } else {
+//                    $usersArr[] = null;
+//                }
+//                $labelCount++;
+//            }
+//
+//            return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
+//                'userlabels' => $usersArr,
+//                'labelperpage' => 30,    //30
+//                'dotborders' => $dotborders,
+//                'pagemargin' => ""   //"margin: 0.50in 0px 0px 0px;"
+//            ));
+//        }
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'labelpreview' => true,
+//            //'userEl' => $userEl,
+//            'title' => "User Label Print Management and Preview"
+//        );
+//    }
+//    /**
+//     * @Route("/label/users/preview/", name="employees_users_label_preview")
+//     * @Method({"GET","POST"})
+//     * @Template("OlegUserdirectoryBundle:Labels:label_user_preview.html.twig")
+//     */
+//    public function averyMultipleUsersPrintAction(Request $request) {
+//        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $userDownloadUtil = $this->container->get('user_download_utility');
+//
+//        //get username
+//        //$users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+//        ////////////// WCM Pathology Employees //////////////
+//        $filter = "WCM Pathology Employees";
+//        $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
+//        $res = $this->indexUser($params);
+//        $users = $res['entities'];
+//        ////////////// EOF WCM Pathology Employees //////////////
+//        echo "user count=".count($users)."<br>";
+//
+//        $params = array('singleUser'=>false,'users'=>$users);
+//
+//        $form = $this->createForm(new LabelType($params),null);
+//
+//        $form->handleRequest($request);
+//
+//        if( $form->isSubmitted() ) {
+//            //$userlabel = $form['userlabel']->getData();
+//            //echo "userlabel=".$userlabel."<br>";
+//
+//            $dotborders = $form['dotborders']->getData();
+//            //$labelmax = $form['labelcount']->getData();
+//            $startcolumn = $form['startcolumn']->getData();
+//            $startrow = $form['startrow']->getData();
+//            //$endrow = $form['endrow']->getData();
+//
+//            $users = $form['users']->getData();
+//
+//            //return $this->redirect($this->generateUrl('employees_user_avery_5160', array('id'=>$id, 'userlabel'=>$userlabel)));
+//
+//            $num = count($users);
+//
+//            //4 row; 2 column => (4-1)*3 + (2-1) = 10 empty labels in front
+//            $emptyLabelCount = ($startrow-1)*3 + ($startcolumn-1);
+//            $num = $num + $emptyLabelCount;
+//
+//            $labelCount = 0;
+//            $labelUserCount = 0;
+//            for( $i=0; $i<$num; $i++ ) {
+//                if( $labelCount >= $emptyLabelCount ) {
+//                    $userlabel = $userDownloadUtil->getLabelSingleUser($users[$labelUserCount]);
+//                    $usersArr[] = $userlabel;
+//                    $labelUserCount++;
+//                } else {
+//                    $usersArr[] = null;
+//                }
+//                $labelCount++;
+//            }
+//
+//            return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
+//                'userlabels' => $usersArr,
+//                'labelperpage' => 30,    //30
+//                'dotborders' => $dotborders,
+//                'pagemargin' => ""   //"margin: 0.50in 0px 0px 0px;"
+//            ));
+//        }
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'labelpreview' => false,
+//            //'userEl' => $userEl,
+//            'title' => "User Label Print Management and Preview"
+//        );
+//    }
 
-        $em = $this->getDoctrine()->getManager();
-        $userDownloadUtil = $this->container->get('user_download_utility');
+//    public function getLabelSingleUser( $subjectUser ) {
+//        $userDownloadUtil = $this->container->get('user_download_utility');
+//        //Title
+//        $administrativeTitleNameStr = $userDownloadUtil->getUniqueFirstTitleStr($subjectUser);
+//
+//        //Room
+//        $locationStr = null;
+//        $location = $subjectUser->getMainLocation();
+//        if( $location ) {
+//            $locationStr = $location->getLocationNameNoType();
+//        }
+//
+//        //$nl = "&#13;&#10;";
+//        //$nl = "\n";
+//        $nl = "<br>\n";
+//
+////        $userEl = array();
+////        $userEl['name'] = $subjectUser->getUsernameOptimal();
+////        $userEl['title'] = $administrativeTitleNameStr;
+////        $userEl['room'] = $locationStr;
+////        $userElStr = implode("\n",$userEl);
+//
+//        $userElStr =    $subjectUser->getUsernameOptimal() . $nl .
+//            $administrativeTitleNameStr . $nl .
+//            $locationStr;
+//
+//        return $userElStr;
+//    }
 
-        //get username
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-
-        //Title
-        $administrativeTitleNameStr = $userDownloadUtil->getUniqueFirstTitleStr($subjectUser);
-
-        //Room
-        $locationStr = null;
-        $location = $subjectUser->getMainLocation();
-        if( $location ) {
-            $locationStr = $location->getLocationNameNoType();
-        }
-
-        //$nl = "&#13;&#10;";
-        //$nl = "\n";
-        $nl = "<br>\n";
-
-//        $userEl = array();
-//        $userEl['name'] = $subjectUser->getUsernameOptimal();
-//        $userEl['title'] = $administrativeTitleNameStr;
-//        $userEl['room'] = $locationStr;
-//        $userElStr = implode("\n",$userEl);
-
-        $userElStr =    $subjectUser->getUsernameOptimal() . $nl .
-                        $administrativeTitleNameStr . $nl .
-                        $locationStr;
-
-        $params = array('label'=>$userElStr);
-
-        $form = $this->createForm(new LabelType($params),null);
-
-        $form->handleRequest($request);
-
-        if( $form->isSubmitted() ) {
-            $userlabel = $form['userlabel']->getData();
-            //echo "userlabel=".$userlabel."<br>";
-
-            $dotborders = $form['dotborders']->getData();
-            $labelmax = $form['labelcount']->getData();
-            $startcolumn = $form['startcolumn']->getData();
-            $startrow = $form['startrow']->getData();
-            //$endrow = $form['endrow']->getData();
-
-            //return $this->redirect($this->generateUrl('employees_user_avery_5160', array('id'=>$id, 'userlabel'=>$userlabel)));
-
-            $usersArr = array();
-
-            $startIndex = 0;
-            //$num = 30; //3 x 10
-
-            $num = 30;//$endrow * 3; //30
-
-            if( $labelmax == 0 ) {
-                $labelmax = 30;
-            }
-
-            //$startrow
-            //$startrow=1 => $currentLabelCount=0 (1-1)*3 = 0
-            //$startrow=2 => $currentLabelCount=3 (2-1)*3 = 3
-            //$startrow=3 => $currentLabelCount=6 (3-1)*3 = 6
-            $currentLabelCount = ($startrow-1)*3;
-
-            $emptyLabelCount = ($startrow-1)*3 + ($startcolumn-1);
-
-            $labelCount = 0;
-            $labelUserCount = 0;
-            for( $i=$startIndex; $i<$num; $i++ ) {
-                //if( $labelUserCount < $labelmax && $labelCount >= $currentLabelCount ) {
-                if( $labelUserCount < $labelmax && $labelCount >= $emptyLabelCount ) {
-                    $usersArr[] = $userlabel;   //$userEl;
-                    $labelUserCount++;
-                } else {
-                    $usersArr[] = null;
-                }
-                $labelCount++;
-            }
-
-            return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
-                'userlabels' => $usersArr,
-                'labelperpage' => 30,    //30
-                'dotborders' => $dotborders
-            ));
-        }
-
-        return array(
-            'form' => $form->createView(),
-            //'userEl' => $userEl,
-            'title' => "User Label Print Management and Preview"
-        );
-    }
-    /**
-     * @Route("/label/avery-5160/user/{id}", name="employees_user_avery_5160")
-     * @Method({"GET","POST"})
-     * @Template("OlegUserdirectoryBundle:Labels:avery_5160.html.twig")
-     */
-    public function averySingleUserPrintAction( Request $request, $id ) {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
-
-        $userlabel = $request->request->get('userlabel');
-        exit('userlabel='.$userlabel);
-
-        if(0) {
-            $em = $this->getDoctrine()->getManager();
-            $userDownloadUtil = $this->container->get('user_download_utility');
-
-            //get username
-            $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-
-            //Title
-            $administrativeTitleNameStr = $userDownloadUtil->getUserTitleStr($subjectUser);
-
-            //Room
-            $locationStr = null;
-            $location = $subjectUser->getMainLocation();
-            if ($location) {
-                $locationStr = $location->getLocationNameNoType();
-            }
-
-            $userEl = array();
-            $userEl['name'] = $subjectUser->getUsernameOptimal();
-            $userEl['title'] = $administrativeTitleNameStr;
-            $userEl['room'] = $locationStr;
-        }
-
-        $usersArr = array();
-
-        $num = 30; //3 x 10
-
-        for( $i=0; $i<$num; $i++ ) {
-            $usersArr[] = $userlabel;   //$userEl;
-        }
-
-        return array(
-            'userlabels' => $usersArr,
-        );
-    }
+//    /**
+//     * @Route("/label/avery-5160/user/{id}", name="employees_user_avery_5160")
+//     * @Method({"GET","POST"})
+//     * @Template("OlegUserdirectoryBundle:Labels:avery_5160.html.twig")
+//     */
+//    public function averySingleUserPrintAction_NotUsed( Request $request, $id ) {
+//        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+//
+//        $userlabel = $request->request->get('userlabel');
+//        exit('userlabel='.$userlabel);
+//
+//        if(0) {
+//            $em = $this->getDoctrine()->getManager();
+//            $userDownloadUtil = $this->container->get('user_download_utility');
+//
+//            //get username
+//            $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+//
+//            //Title
+//            $administrativeTitleNameStr = $userDownloadUtil->getUserTitleStr($subjectUser);
+//
+//            //Room
+//            $locationStr = null;
+//            $location = $subjectUser->getMainLocation();
+//            if ($location) {
+//                $locationStr = $location->getLocationNameNoType();
+//            }
+//
+//            $userEl = array();
+//            $userEl['name'] = $subjectUser->getUsernameOptimal();
+//            $userEl['title'] = $administrativeTitleNameStr;
+//            $userEl['room'] = $locationStr;
+//        }
+//
+//        $usersArr = array();
+//
+//        $num = 30; //3 x 10
+//
+//        for( $i=0; $i<$num; $i++ ) {
+//            $usersArr[] = $userlabel;   //$userEl;
+//        }
+//
+//        return array(
+//            'userlabels' => $usersArr,
+//        );
+//    }
 
 }

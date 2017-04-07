@@ -47,16 +47,18 @@
 
     <br><br>
 
-    <p>
-    <div class="row">
-        <div class="col-xs-6" align="right"><strong>Single Label Preview:</strong></div>
-        <div class="col-xs-6">
-            {#<div style="float: left; padding-left: 15%;">Label Preview</div><br>#}
-            <div id="label-preview" class="previewlabel"></div>
+    {% if labelpreview is defined and labelpreview %}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right"><strong>Single Label Preview:</strong></div>
+            <div class="col-xs-6">
+                {#<div style="float: left; padding-left: 15%;">Label Preview</div><br>#}
+                <div id="label-preview" class="previewlabel"></div>
+            </div>
+            {#<div class="col-xs-4"></div>#}
         </div>
-        {#<div class="col-xs-4"></div>#}
-    </div>
-    </p>
+        </p>
+    {% endif %}
 
     <br><br>
 
@@ -92,7 +94,14 @@
                 {#<div class="col-xs-4"></div>#}
             {#</div>#}
         {#</p>#}
-        {{ formmacros.field(form.userlabel) }}
+
+        {% if form.userlabel is defined %}
+            {{ formmacros.field(form.userlabel) }}
+        {% endif %}
+
+        {% if form.users is defined %}
+            {{ formmacros.field(form.users) }}
+        {% endif %}
 
         <p>
             <div class="row">
@@ -130,15 +139,17 @@
     <script>
         $(document).ready(function () {
 
-            var text = $(".textarea").val();
-            //console.log("text="+text);
-            $("#label-preview").html(text);
-
-            $(".textarea").on('input', function() {
+            if( $("#label-preview") ) {
                 var text = $(".textarea").val();
-                console.log("text="+text);
+                //console.log("text="+text);
                 $("#label-preview").html(text);
-            });
+
+                $(".textarea").on('input', function () {
+                    var text = $(".textarea").val();
+                    console.log("text=" + text);
+                    $("#label-preview").html(text);
+                });
+            }
 
         });
     </script>

@@ -754,4 +754,35 @@ class UserDownloadUtil {
         }
         echo "<br>";
     }
+
+
+    public function getLabelSingleUser( $subjectUser ) {
+        $userDownloadUtil = $this->container->get('user_download_utility');
+        //Title
+        $administrativeTitleNameStr = $userDownloadUtil->getUniqueFirstTitleStr($subjectUser);
+
+        //Room
+        $locationStr = null;
+        $location = $subjectUser->getMainLocation();
+        if( $location ) {
+            $locationStr = $location->getLocationNameNoType();
+        }
+
+        //$nl = "&#13;&#10;";
+        //$nl = "\n";
+        $nl = "<br>\n";
+
+//        $userEl = array();
+//        $userEl['name'] = $subjectUser->getUsernameOptimal();
+//        $userEl['title'] = $administrativeTitleNameStr;
+//        $userEl['room'] = $locationStr;
+//        $userElStr = implode("\n",$userEl);
+
+        $userElStr =    $subjectUser->getUsernameOptimal() . $nl .
+            $administrativeTitleNameStr . $nl .
+            $locationStr;
+
+        return $userElStr;
+    }
+
 }

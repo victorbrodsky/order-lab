@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,21 +39,38 @@ class LabelType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('userlabel', 'textarea', array(
-            //'placeholder' => 'Enter Label Text',
-            //'max_length' => 200,
-            'required' => false,
-            'label' => "Label text (use <br> tag for a new line):",
-            'data' => $this->params['label'],
-            'attr' => array('class' => 'textarea form-control'),
-        ));
+        if( $this->params['singleUser'] ) {
+            $builder->add('userlabel', 'textarea', array(
+                //'placeholder' => 'Enter Label Text',
+                //'max_length' => 200,
+                'required' => false,
+                'label' => "Label text (use <br> tag for a new line):",
+                'data' => $this->params['label'],
+                'attr' => array('class' => 'textarea form-control'),
+            ));
 
-        $builder->add('labelcount', 'integer', array(
-            'required' => true,
-            'label' => "Number of labels to print (0 - for a whole page):",
-            'data' => 1,
-            'attr' => array('class' => 'form-control'),
-        ));
+            $builder->add('labelcount', 'integer', array(
+                'required' => true,
+                'label' => "Number of labels to print (0 - for a whole page):",
+                'data' => 1,
+                'attr' => array('class' => 'form-control'),
+            ));
+        } else {
+//            $builder->add('users', 'choice', array(
+//                //'required' => true,
+//                'label' => "Users:",
+//                'multiple' => true,
+//                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Users'),
+//                'choices' => $this->params['users']
+//            ));
+            $builder->add('users', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Users:",
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Users'),
+                'choices' => $this->params['users']
+            ));
+        }
 
         $builder->add('startrow', 'integer', array(
             'required' => true,
@@ -74,7 +92,6 @@ class LabelType extends AbstractType
 //            'data' => 10,
 //            'attr' => array('class' => 'form-control'),
 //        ));
-
 
         $builder->add('print', SubmitType::class, array(
             'label' => 'Print Internal Mailing Label',

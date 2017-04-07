@@ -25,10 +25,10 @@
             width: 8.5in;
             margin: 0in .1875in;
         }
-        /*@page{*/
+        @page{
             /*margin: 0.50in 0px 0px 0px;*/
-            /*margin: 1in 0px 0px 0px;*/
-        /*}*/
+            {{ pagemargin }}
+        }
         .label{
             /* Avery 5160 labels -- CSS and HTML by MM at Boulder Information Services */
             width: 2.025in; /* plus .6 inches from padding */
@@ -83,7 +83,9 @@
         {% set labelClass = "label label-dotborders" %}
     {% endif %}
 
+
     {% for userlabel in userlabels %}
+
         <div class="{{ labelClass }}">
             {#{{ user['name'] }}<br>#}
             {#{{ user['title'] }}<br>#}
