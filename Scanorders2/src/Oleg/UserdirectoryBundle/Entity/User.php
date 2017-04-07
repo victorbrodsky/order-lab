@@ -1464,15 +1464,7 @@ class User extends BaseUser {
                 if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
                     if( !$institutions->contains($adminTitles->getInstitution()) ) {
                         if( $status == null || $adminTitles->getStatus() == $status ) {
-                            //echo "priority=[".$priority ."]=?[". $adminTitles->getPriority()."]<br>";
                             if( $priority === NULL || $priority."" === $adminTitles->getPriority()."" ) {
-//                                if( $priority === NULL ) {
-//                                    echo "priority is NULL <br>";
-//                                } else {
-//                                    echo "priority is not NULL <br>";
-//                                }
-                                //echo $this.": !!!add inst=".$adminTitles->getInstitution()."<br>";
-                                //exit();
                                 $institutions->add($adminTitles->getInstitution());
                             }
                         }
