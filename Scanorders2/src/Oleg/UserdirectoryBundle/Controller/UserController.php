@@ -4157,7 +4157,7 @@ class UserController extends Controller
             'form' => $form->createView(),
             'labelpreview' => false,
             //'userEl' => $userEl,
-            'title' => "User Label Print Management and Preview"
+            'title' => "Users Label Print Management and Preview"
         );
     }
 

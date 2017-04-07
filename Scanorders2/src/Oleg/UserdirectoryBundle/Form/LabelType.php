@@ -44,7 +44,7 @@ class LabelType extends AbstractType
                 //'placeholder' => 'Enter Label Text',
                 //'max_length' => 200,
                 'required' => false,
-                'label' => "Label text (use <br> tag for a new line):",
+                'label' => "Label text (use '<br>' tag for a new line):",
                 'data' => $this->params['label'],
                 'attr' => array('class' => 'textarea form-control'),
             ));
@@ -75,13 +75,6 @@ class LabelType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width users', 'placeholder' => 'Users'),
                 'choices' => $this->params['allusers'],
                 'data' => $this->params['users']
-            ));
-
-            $builder->add('clearall', 'checkbox', array(
-                'required' => false,
-                'label' => "Clear all users:",
-                'data' => false,
-                'attr' => array('class' => 'form-control clearall'),
             ));
 
         }

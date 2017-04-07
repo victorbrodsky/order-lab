@@ -34,20 +34,12 @@
 
     <h4 class="text-info" align="center">{{ title }}</h4>
 
-    {#<blockquote>#}
     <div class="well">
     <p>
         Before printing labels, use your browser’s print preview options to set the top print margin to 1/2 inch and all other print margins to 0 (zero).<br>
         Try printing a test page on plain paper first. Hold it up to the light behind a sheet of labels to make sure the label's text line up with the stickers.
     </p>
     </div>
-    {#</blockquote>#}
-
-    {#<p>#}
-        {#<div id="label-preview" class="previewlabel"></div>#}
-    {#</p>#}
-
-    <br><br>
 
     {% if labelpreview is defined and labelpreview %}
         <p>
@@ -62,7 +54,6 @@
         </p>
     {% endif %}
 
-    <br><br>
 
     {{ form_start(form) }}
 
@@ -84,27 +75,21 @@
             {{ formmacros.field(form.startcolumn) }}
         {% endif %}
 
-        {#{{ formmacros.field(form.userlabel)|raw }}#}
-        {#<p>#}
-            {#<div class="row">#}
-                {#<div class="col-xs-4"></div>#}
-                {#<div class="col-xs-4">#}
-                    {#{{ form_widget(form.userlabel) }}#}
-                    {#{{ form_label(form.userlabel) }}#}
-                    {#{{ form_row(form.userlabel) }}#}
-                {#</div>#}
-                {#<div class="col-xs-4"></div>#}
-            {#</div>#}
-        {#</p>#}
-
         {% if form.userlabel is defined %}
             {{ formmacros.field(form.userlabel) }}
         {% endif %}
 
-        <br><br>
-        {% if form.clearall is defined %}
-            {{ formmacros.checkbox(form.clearall) }}
+        {% if labelpreview is not defined or not labelpreview %}
+            <p>
+            <div class="row">
+                <div class="col-xs-6"></div>
+                <div class="col-xs-6" align="left">
+                    <button class="btn btn-sm" name="btnClearall" type="button" onclick="clearUsers();">Clear all users</button>
+                </div>
+            </div>
+            </p>
         {% endif %}
+
         {% if form.users is defined %}
             {{ formmacros.field(form.users) }}
         {% endif %}
@@ -157,16 +142,24 @@
                 });
             }
 
-            if( $(".clearall") ) {
-                $(".clearall").on('input', function () {
-                    if ($(this).is(':checked')) {
-                        //$(".users").empty();
-                        $(".users").select2('data', null);
-                    }
-                });
-            }
+//            if( $(".clearall") ) {
+//                $(".clearall").on('input', function () {
+//                    if ($(this).is(':checked')) {
+//                        //$(".users").empty();
+//                        $(".users").select2('data', null);
+//                    }
+//                });
+//            }
 
         });
+
+        function clearUsers() {
+            if( $(".users") ) {
+                console.log('clearUsers');
+                //$(".users").empty();
+                $(".users").select2('data', null);
+            }
+        }
     </script>
 
 {% endblock %}
