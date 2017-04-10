@@ -283,7 +283,7 @@ class LoggerController extends Controller
         $query = $em->createQuery($dql);
 
         //echo "dql=".$dql."<br>";
-        echo "dql=".$query->getSql()."<br>";
+        //echo "dql=".$query->getSql()."<br>";
 
         if( $entityNamespace && $entityName && $entityId ) {
             //$query->setParameters( $queryParameters );

@@ -226,16 +226,6 @@ class CallLogLoggerController extends LoggerController
     //otherwise, use parent method and filter by $filterform['user']
     public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
 
-//        if( $filterform->has('capacity') && $capacity = $filterform['capacity']->getData() ) {
-//            //overwrite parent method below
-//        } else {
-//            //echo "use parent method<br>";
-//            return parent::processOptionalFields($dql,$dqlParameters,$filterform,$filtered);
-//        }
-
-        //overwrite parent method: add AND capacity
-        //$filtered = parent::processOptionalFields($dql,$dqlParameters,$filterform,$filtered);
-
         //capacity:
         //$capacity = $filterform['capacity']->getData();
         if( $filterform->has('capacity') ) {
