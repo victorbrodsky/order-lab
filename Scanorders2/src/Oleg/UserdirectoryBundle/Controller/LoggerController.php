@@ -523,11 +523,11 @@ class LoggerController extends Controller
     }
     public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
         $users = $filterform['user']->getData();
-        echo "LoggerController: user count=".count($users)."<br>";
+        //echo "LoggerController: user count=".count($users)."<br>";
         if( $users && count($users) > 0 ) {
             $where = "";
             foreach( $users as $user ) {
-                echo "user id=".$user->getId()."<br>";
+                //echo "user id=".$user->getId()."<br>";
                 if( $where != "" ) {
                     $where .= " OR ";
                 }
