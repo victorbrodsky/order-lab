@@ -171,6 +171,7 @@ class CallLogLoggerController extends LoggerController
         ///////////// EOF make sure eventTypes and users are set /////////////
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
+            'showCapacity' => true
             //'hideObjectType' => true,
             //'hideObjectId' => true,
             //'hideUser' => true,
@@ -228,7 +229,12 @@ class CallLogLoggerController extends LoggerController
         $currentUserName = "Attending Physician: ".$currentUser."";
 
         //capacity:
-        $capacity = $filterform['capacity']->getData();
+        //$capacity = $filterform['capacity']->getData();
+        if( $filterform->has('capacity') ) {
+            $capacity = $filterform['capacity']->getData();
+        } else {
+            $capacity = null;
+        }
         //echo "capacity=".$capacity."<br>";
 
         //the "Capacity" column would show whether the logged in user is a "Submitter" or the "Attending" for this Entry in that row;

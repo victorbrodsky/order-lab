@@ -29,8 +29,15 @@ class CalllogLoggerFilterType extends LoggerFilterType
 
     public function addOptionalFields( $builder ) {
 
+        //$showCapacity = false;
+        if( array_key_exists('showCapacity', $this->params) ) {
+            $showCapacity = $this->params['showCapacity'];
+        } else {
+            $showCapacity = false;
+        }
+
         //Capacity
-        if( $this->params['sitename'] == "calllog" ) {
+        if( $this->params['sitename'] == "calllog" && $showCapacity ) {
             $capacities = array(
                 "Submitter" => "Submitter",
                 "Attending" => "Attending"

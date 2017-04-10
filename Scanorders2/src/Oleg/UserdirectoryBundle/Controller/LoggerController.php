@@ -504,7 +504,7 @@ class LoggerController extends Controller
         }
 
         //process optional fields by different bundles (i.e. calllog)
-        $filtered = $this->processOptionalFields($dql, $dqlParameters, $filterform,$filtered);
+        $filtered = $this->processOptionalFields($dql,$dqlParameters,$filterform,$filtered);
 
 //        echo "<pre>";
 //        print_r($dqlParameters);
