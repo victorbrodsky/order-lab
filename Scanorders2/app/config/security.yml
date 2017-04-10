@@ -247,6 +247,8 @@ security:
        ################################# common download file ####################################
        - { path: ^/directory/file-download/, role: ROLE_USER }
        - { path: ^/directory/file-delete/, role: ROLE_USER }
+       - { path: ^/directory/user/only-ajax/, role: ROLE_USER }
+       - { path: ^/directory/formnode-fields/, role: ROLE_USER }
 
        ############################## EMPLOYEES SITE SETTINGS ##############################
        - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -288,7 +290,8 @@ security:
        - { path: ^/scan/event-log, role: ROLE_SCANORDER_PROCESSOR }
        - { path: ^/scan/incoming-slide-return-requests, role: [ROLE_SCANORDER_PROCESSOR]}
 
-       - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
+#       - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
+       - { path: ^/scan/util/, role: [ROLE_USER] }
        - { path: ^/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
 
        - { path: ^/scan/scan-order, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
