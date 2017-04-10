@@ -222,11 +222,19 @@ class CallLogLoggerController extends LoggerController
         return $this->createForm(new CalllogLoggerFilterType($params), null);
     }
 
+    //For calllog, for "My Entrees" page when $filterform has $capacity: add AND filter by $capacity (Submitter or Attending)
+    //otherwise, use parent method and filter by $filterform['user']
     public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
-        //echo "process Optional Fields <br>";
-        $currentUser = $this->get('security.context')->getToken()->getUser();
-        //search logger.event for [Attending Physician: firstname lastname - cwid (WCMC CWID)]
-        $currentUserName = "Attending Physician: ".$currentUser."";
+
+//        if( $filterform->has('capacity') && $capacity = $filterform['capacity']->getData() ) {
+//            //overwrite parent method below
+//        } else {
+//            //echo "use parent method<br>";
+//            return parent::processOptionalFields($dql,$dqlParameters,$filterform,$filtered);
+//        }
+
+        //overwrite parent method: add AND capacity
+        //$filtered = parent::processOptionalFields($dql,$dqlParameters,$filterform,$filtered);
 
         //capacity:
         //$capacity = $filterform['capacity']->getData();
@@ -236,6 +244,14 @@ class CallLogLoggerController extends LoggerController
             $capacity = null;
         }
         //echo "capacity=".$capacity."<br>";
+
+        //echo "CallLogLoggerController: capacity=".$capacity."<br>";
+        //echo "process Optional Fields <br>";
+        $currentUser = $this->get('security.context')->getToken()->getUser();
+        //search logger.event for [Attending Physician: firstname lastname - cwid (WCMC CWID)]
+        $currentUserName = "Attending Physician: ".$currentUser."";
+        //$currentUserName = $currentUser->getPrimaryPublicUserId()."";
+        //echo "CallLogLoggerController: currentUserName=".$currentUserName."<br>";
 
         //the "Capacity" column would show whether the logged in user is a "Submitter" or the "Attending" for this Entry in that row;
         // by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"

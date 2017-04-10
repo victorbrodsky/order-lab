@@ -283,7 +283,7 @@ class LoggerController extends Controller
         $query = $em->createQuery($dql);
 
         //echo "dql=".$dql."<br>";
-        //echo "dql=".$query->getSql()."<br>";
+        echo "dql=".$query->getSql()."<br>";
 
         if( $entityNamespace && $entityName && $entityId ) {
             //$query->setParameters( $queryParameters );
@@ -391,7 +391,7 @@ class LoggerController extends Controller
 //        foreach( $users as $user ) {
 //            echo "user=".$user."<br>";
 //        }
-        //exit();
+//        exit("process loger filter");
 
         if( $search ) {
             $dql->andWhere("logger.event LIKE :searchEvent");
@@ -522,11 +522,12 @@ class LoggerController extends Controller
         return $this->createForm(new LoggerFilterType($params), null);
     }
     public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
-
         $users = $filterform['user']->getData();
+        echo "LoggerController: user count=".count($users)."<br>";
         if( $users && count($users) > 0 ) {
             $where = "";
             foreach( $users as $user ) {
+                echo "user id=".$user->getId()."<br>";
                 if( $where != "" ) {
                     $where .= " OR ";
                 }
