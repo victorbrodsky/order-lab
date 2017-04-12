@@ -2152,7 +2152,8 @@ class CallEntryController extends Controller
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        $userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->get('user_security_utility');
+        $userServiceUtil = $this->get('user_service_utility');
 
         $cycle = "show";
         //$title = "Call Log Entry";
@@ -2184,7 +2185,9 @@ class CallEntryController extends Controller
         //$mesInfo = $this->get('user_formnode_utility')->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
         //echo "mesInfo=".$mesInfo."<br>";
 
-        $messageInfo = "Entry ID ".$message->getId()." submitted on ".$message->getSubmitterInfo(); // . " | Call Log Book";
+        $messageInfo = "Entry ID ".$message->getId()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
+        //echo "messageInfo=".$messageInfo."<br>";
+        //exit('1');
         if (count($message->getPatient()) > 0 ) {
             $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
             $mrntype = $mrnRes->getKeytype()->getId();

@@ -40,6 +40,8 @@ class CallLogEditController extends Controller
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        $userServiceUtil = $this->get('user_service_utility');
+
         $user = $this->get('security.context')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');
@@ -71,7 +73,7 @@ class CallLogEditController extends Controller
         if( $patientInfoStr ) {
             $patientInfoStr = "for ".$patientInfoStr;
         }
-        $msg = "Entry $messageId $patientInfoStr submitted on ".$message->getSubmitterInfo()." successfully deleted";
+        $msg = "Entry $messageId $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted";
 //        $this->get('session')->getFlashBag()->add(
 //            'notice',
 //            $msg
@@ -99,6 +101,7 @@ class CallLogEditController extends Controller
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        $userServiceUtil = $this->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
@@ -129,7 +132,7 @@ class CallLogEditController extends Controller
         if( $patientInfoStr ) {
             $patientInfoStr = "for ".$patientInfoStr;
         }
-        $msg = "Entry $messageId $patientInfoStr submitted on ".$message->getSubmitterInfo()." successfully un-deleted and status set to ".$messageStatusPrior;
+        $msg = "Entry $messageId $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully un-deleted and status set to ".$messageStatusPrior;
 //        $this->get('session')->getFlashBag()->add(
 //            'notice',
 //            $msg

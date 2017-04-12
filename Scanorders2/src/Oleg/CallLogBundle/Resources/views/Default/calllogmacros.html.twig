@@ -515,7 +515,7 @@
                 {{ formmacros.simplefield( "Submitter:", hreflink, "", "disabled" ) }}
 
                 {#Submitted on#}
-                {{ formmacros.simplefield("Submitted on:", message.getOrderDateStr, "", "disabled") }}
+                {{ formmacros.simplefield("Submitted on:", user_service_utility.getOrderDateStr(message), "", "disabled") }}
 
                 {#Message Status#}
                 {{ formmacros.simplefield("Message Status:", message.messageStatus.name, "", "disabled") }}

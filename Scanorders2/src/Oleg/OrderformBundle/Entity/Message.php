@@ -1741,15 +1741,14 @@ class Message {
     }
 
     //[submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD
-    public function getSubmitterInfo() {
-        $info = $this->getOrderDateStr();
+    public function getSubmitterInfoSimpleDate() {
+        $info = $this->getOrderSimpleDateStr();
         if( $this->getProvider() ) {
             $info = $info . " by ".$this->getProvider()->getUsernameOptimal();
         }
         return $info;
     }
-
-    public function getOrderDateStr() {
+    public function getOrderSimpleDateStr() {
         $info = "";
         if( $this->getOrderdate() ) {
             $info = $this->getOrderdate()->format('m/d/Y') . " at " . $this->getOrderdate()->format('h:i a (T)');

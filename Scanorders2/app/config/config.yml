@@ -77,6 +77,7 @@ twig:
         #service
         user_security_utility: "@user_security_utility"
         user_formnode_utility: "@user_formnode_utility"
+        user_service_utility: "@user_service_utility"
 
 #    form:
 #      resources: ['form_table_layout.html.twig']

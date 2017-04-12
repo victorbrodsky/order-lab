@@ -1209,6 +1209,7 @@ class CallLogUtil
     // with the following info
     // (Patient Info like Name and/or MRN should never be sent via email, so even if the entry has patient info, treat it as if patient info is missing):
     public function sendConfirmationEmail($message,$patient,$encounter) {
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         //only send the notification email if the box noAttendingEmail is not checked
         $currentUser = $this->sc->getToken()->getUser();
@@ -1248,7 +1249,7 @@ class CallLogUtil
 
         if( $message->getId() ) {
             //View the Pathology Call Log Book entry 12345 submitted by SubmitterFirstName SubmitterLastName at [submission timestamp] by visiting:
-            $body = $body . $break . $break . "View the Pathology Call Log Book entry " . $message->getId() . " submitted on " . $message->getSubmitterInfo() . " by visiting:";
+            $body = $body . $break . $break . "View the Pathology Call Log Book entry " . $message->getId() . " submitted on " . $userServiceUtil->getSubmitterInfo() . " by visiting:";
 
             // http://collage.med.cornell.edu/order/call-log-book/entry/view/XXXID
             $messageUrl = $this->container->get('router')->generate(
@@ -1260,7 +1261,7 @@ class CallLogUtil
             );
             $body = $body . $break . $messageUrl;
         } else {
-            $body = $body . $break . $break . "The Pathology Call Log Book entry submitted on " . $message->getSubmitterInfo();
+            $body = $body . $break . $break . "The Pathology Call Log Book entry submitted on " . $userServiceUtil->getSubmitterInfo($message);
         }
 
         //exit('body='.$body);
