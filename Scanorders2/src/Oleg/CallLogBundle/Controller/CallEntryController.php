@@ -2184,6 +2184,9 @@ class CallEntryController extends Controller
         //testing
         //$mesInfo = $this->get('user_formnode_utility')->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
         //echo "mesInfo=".$mesInfo."<br>";
+        $tz = $message->getOrderdate()->getTimezone();
+        echo "tz=".$tz->getName()."<br>";
+        //exit('1');
 
         $messageInfo = "Entry ID ".$message->getId()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
         //echo "messageInfo=".$messageInfo."<br>";
