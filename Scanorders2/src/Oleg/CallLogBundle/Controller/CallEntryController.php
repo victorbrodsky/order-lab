@@ -115,18 +115,52 @@ class CallEntryController extends Controller
 
         $referringProviders = $calllogUtil->getReferringProviders();
 
+        $searchFilter = null;
+        $entryBodySearchFilter = null;
+
+        ///////////////// search in navbar /////////////////
+//        $navbarSearchTypes = array(
+//            'MRN or Last Name' => 'MRN or Last Name',
+//            'NYH MRN' => 'NYH MRN',
+//            'Patient Last Name' => 'Patient Last Name',
+//            'Message Type' => 'Message Type',
+//            'Entry full text' => 'Entry full text'
+//        );
+//        $params['navbarSearchTypes'] = $navbarSearchTypes;
+        $navbarParams = array();
+        $navbarParams['navbarSearchTypes'] = $calllogUtil->getNavbarSearchTypes();
+        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($navbarParams), null);
+        $navbarfilterform->bind($request);
+        $calllogsearchtype = $navbarfilterform['searchtype']->getData();
+        $calllogsearch = $navbarfilterform['search']->getData();
+        //echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
+        if( $calllogsearchtype == 'MRN or Last Name' ) {
+            $searchFilter = $calllogsearch;
+        }
+        if( $calllogsearchtype == 'NYH MRN' ) {
+            $searchFilter = $calllogsearch;
+        }
+        if( $calllogsearchtype == 'Entry full text' ) {
+            $entryBodySearchFilter = $calllogsearch;
+        }
+        //echo "navbar: searchFilter=".$searchFilter."; entryBodySearchFilter=".$entryBodySearchFilter."<br>";
+        ///////////////// EOF search in navbar /////////////////
+
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories,
             //'messageCategoryDefault' => $messageCategoriePathCall->getId(),
             'mrntype' => $defaultMrnType->getId(),
-            'referringProviders' => $referringProviders
+            'referringProviders' => $referringProviders,
+            'search' => $searchFilter,
+            'entryBodySearch' => $entryBodySearchFilter
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
+
         $filterform->bind($request);
+
         $messageStatusFilter = $filterform['messageStatus']->getData();
         $mrntypeFilter = $filterform['mrntype']->getData();
-        $searchFilter = $filterform['search']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         $messageCategory = $filterform['messageCategory']->getData();
@@ -135,31 +169,42 @@ class CallEntryController extends Controller
         $encounterLocationFilter = $filterform['encounterLocation']->getData();
         $specialtyFilter = $filterform['referringProviderSpecialty']->getData();
         $patientListTitleFilter = $filterform['patientListTitle']->getData();
-        $entryBodySearchFilter = $filterform['entryBodySearch']->getData();
         $attendingFilter = $filterform['attending']->getData();
 
-        ///////////////// search in navbar /////////////////
-        $navbarSearchTypes = array(
-            'MRN or Last Name' => 'MRN or Last Name',
-            'MRN' => 'MRN',
-            'Patient Last Name' => 'Patient Last Name',
-            'Message Type' => 'Message Type',
-            'Entry full text' => 'Entry full text'
-        );
-        $params['navbarSearchTypes'] = $navbarSearchTypes;
-        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
-        $navbarfilterform->bind($request);
-        $calllogsearchtype = $navbarfilterform['searchtype']->getData();
-        $calllogsearch = $navbarfilterform['search']->getData();
-        //echo "calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
-        //exit('0');
-        if( $calllogsearchtype == 'MRN or Last Name' ) {
-            $searchFilter = $calllogsearch;
+        if( !$searchFilter ) {
+            $searchFilter = $filterform['search']->getData();
         }
-        if( $calllogsearchtype == 'Entry full text' ) {
-            $entryBodySearchFilter = $calllogsearch;
+        if( !$entryBodySearchFilter ) {
+            $entryBodySearchFilter = $filterform['entryBodySearch']->getData();
         }
-        ///////////////// EOF search in navbar /////////////////
+
+//        ///////////////// search in navbar /////////////////
+//        $navbarSearchTypes = array(
+//            'MRN or Last Name' => 'MRN or Last Name',
+//            'MRN' => 'MRN',
+//            'Patient Last Name' => 'Patient Last Name',
+//            'Message Type' => 'Message Type',
+//            'Entry full text' => 'Entry full text'
+//        );
+//        $params['navbarSearchTypes'] = $navbarSearchTypes;
+//        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
+//        $navbarfilterform->bind($request);
+//        $calllogsearchtype = $navbarfilterform['searchtype']->getData();
+//        $calllogsearch = $navbarfilterform['search']->getData();
+//        echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
+//        //exit('0');
+//        if( $calllogsearchtype == 'MRN or Last Name' ) {
+//            $searchFilter = $calllogsearch;
+//            //$filterform['search']->setData($calllogsearch);
+//        }
+//        if( $calllogsearchtype == 'Entry full text' ) {
+//            $entryBodySearchFilter = $calllogsearch;
+//            //$filterform['entryBodySearch']->setData($calllogsearch);
+//        }
+////        if( $calllogsearch ) {
+////            $filterform['search']->setData($calllogsearch);
+////        }
+//        ///////////////// EOF search in navbar /////////////////
 
         if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
             return $this->redirect( $this->generateUrl('calllog_home',
@@ -396,9 +441,10 @@ class CallEntryController extends Controller
             if( $calllogsearchtype == 'MRN or Last Name' ) {
                 //use regular filter by replacing an appropriate filter string
             }
-            if( $calllogsearchtype == 'MRN' ) {
+            if( $calllogsearchtype == 'NYH MRN' ) {
                 $dql->andWhere("mrn.field = :search");
                 $queryParameters['search'] = $calllogsearch;
+                //TODO: add AND type MRN Type="NYH MRN"
             }
             if( $calllogsearchtype == 'Patient Last Name' ) {
                 $dql->andWhere("lastname.field LIKE :search");

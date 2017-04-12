@@ -1179,14 +1179,16 @@ class CallLogUtil
     }
 
     public function getNavbarFilterForm($request) {
-        $navbarSearchTypes = array(
-            'MRN or Last Name' => 'MRN or Last Name',
-            'MRN' => 'MRN',
-            'Patient Last Name' => 'Patient Last Name',
-            'Message Type' => 'Message Type',
-            'Entry full text' => 'Entry full text'
-        );
-        $params['navbarSearchTypes'] = $navbarSearchTypes;
+//        $navbarSearchTypes = array(
+//            'MRN or Last Name' => 'MRN or Last Name',
+//            'NYH MRN' => 'NYH MRN',
+//            'Patient Last Name' => 'Patient Last Name',
+//            'Message Type' => 'Message Type',
+//            'Entry full text' => 'Entry full text'
+//        );
+//        $params['navbarSearchTypes'] = $navbarSearchTypes;
+        $params = array();
+        $params['navbarSearchTypes'] = $this->getNavbarSearchTypes();
         $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
         $navbarfilterform->bind($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
@@ -1199,6 +1201,28 @@ class CallLogUtil
 
         //echo "calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
         return $navbarfilterform->createView();
+    }
+//    public function getNavbarFilterPlainForm($request=null) {
+//        $navbarSearchTypes = array(
+//            'MRN or Last Name' => 'MRN or Last Name',
+//            'NYH MRN' => 'NYH MRN',
+//            'Patient Last Name' => 'Patient Last Name',
+//            'Message Type' => 'Message Type',
+//            'Entry full text' => 'Entry full text'
+//        );
+//        $params['navbarSearchTypes'] = $navbarSearchTypes;
+//        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
+//        return $navbarfilterform;
+//    }
+    public function getNavbarSearchTypes() {
+        $navbarSearchTypes = array(
+            'MRN or Last Name' => 'MRN or Last Name',
+            'NYH MRN' => 'NYH MRN',
+            'Patient Last Name' => 'Patient Last Name',
+            'Message Type' => 'Message Type',
+            'Entry full text' => 'Entry full text'
+        );
+        return $navbarSearchTypes;
     }
     public function createForm($type, $data = null, array $options = array())
     {

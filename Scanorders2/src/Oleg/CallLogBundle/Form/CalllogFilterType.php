@@ -77,10 +77,14 @@ class CalllogFilterType extends AbstractType
             'data' => $this->params['mrntype'],
             'attr' => array('class' => 'combobox combobox-no-width', 'placeholder' => "MRN Type", 'style'=>'width:50%;'),
         ));
+
+        //echo "formtype: search=".$this->params['search']."<br>";
         $builder->add('search', 'text', array(
             //'max_length'=>200,
             'required'=>false,
             'label' => false,
+            //'data' => $this->params['search'],
+            'empty_data' => $this->params['search'],
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "MRN or Last Name", 'style'=>'width:50%; float:right; height:28px;'),
         ));
 
@@ -186,6 +190,7 @@ class CalllogFilterType extends AbstractType
         $builder->add('entryBodySearch', 'text', array(
             'required'=>false,
             'label' => false,
+            'empty_data' => $this->params['entryBodySearch'],
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Entry Body"),
         ));
 
