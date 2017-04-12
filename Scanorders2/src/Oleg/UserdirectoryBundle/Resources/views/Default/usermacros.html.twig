@@ -2034,11 +2034,15 @@
 
         {{ formmacros.field_notempty(formfield.fellowshipSubspecialty,cycle) }}
 
-        {{ formmacros.field(formfield.institution) }}
+        {% if formfield.institution is defined %}
+            {{ formmacros.field(formfield.institution) }}
+        {% endif %}
 
         {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cycle,'allow-future-date') }}
 
-        {{ formmacros.fieldDateLabel(formfield.completionDate,'allow-future-date') }}
+        {% if formfield.completionDate is defined %}
+            {{ formmacros.fieldDateLabel(formfield.completionDate,'allow-future-date') }}
+        {% endif %}
 
         {% if formfield.completionReason is defined %}
             {{ formmacros.field_notempty(formfield.completionReason,cycle) }}
@@ -2056,7 +2060,9 @@
             {{ formmacros.field_notempty(formfield.honors,cycle) }}
         {% endif %}
 
-        {{ formmacros.field(formfield.fellowshipTitle) }}
+        {% if formfield.fellowshipTitle is defined %}
+            {{ formmacros.field(formfield.fellowshipTitle) }}
+        {% endif %}
 
         {#do not hide if itself is empty/unchecked, however hide on the profile view page if the Professional Fellowship field is empty#}
         {#{% if formfield.appendFellowshipTitleToName is defined %}#}
@@ -2067,7 +2073,7 @@
             {#{% endif %}#}
             {#{{ usermacros.checkbox_notempty(formfield.appendFellowshipTitleToName,value,cycle) }}#}
         {#{% endif %}#}
-        {% if not showFlag %}
+        {% if not showFlag and formfield.appendFellowshipTitleToName is defined %}
             {{ formmacros.field(formfield.appendFellowshipTitleToName) }}
         {% endif %}
 

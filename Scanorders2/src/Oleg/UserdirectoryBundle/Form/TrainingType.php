@@ -92,25 +92,27 @@ class TrainingType extends AbstractType
 
                 if( $completionReason == "Graduated" ) {
 
-                    $form->add('completionDate', 'date', array(
-                        'label' => 'Graduation Date:',
-                        'widget' => 'single_text',
-                        'required' => false,
-                        'format' => 'MM/dd/yyyy',
-                        'attr' => array('class' => 'datepicker form-control'),
-                    ));
+                    if( !$this->hasRoleSimpleView ) {
+                        $form->add('completionDate', 'date', array(
+                            'label' => 'Graduation Date:',
+                            'widget' => 'single_text',
+                            'required' => false,
+                            'format' => 'MM/dd/yyyy',
+                            'attr' => array('class' => 'datepicker form-control'),
+                        ));
+                    }
 
                 } else {
 
-                    $form->add('completionDate', 'date', array(
-                        'label' => 'Completion Date:',
-                        'widget' => 'single_text',
-                        'required' => false,
-                        'format' => 'MM/dd/yyyy',
-                        'attr' => array('class' => 'datepicker form-control'),
-                    ));
-
                     if( !$this->hasRoleSimpleView ) {
+                        $form->add('completionDate', 'date', array(
+                            'label' => 'Completion Date:',
+                            'widget' => 'single_text',
+                            'required' => false,
+                            'format' => 'MM/dd/yyyy',
+                            'attr' => array('class' => 'datepicker form-control'),
+                        ));
+
                         $form->add('completionReason', null, array(
                             'label' => 'Completion Reason:',
                             'attr' => array('class' => 'combobox combobox-width')
@@ -123,18 +125,20 @@ class TrainingType extends AbstractType
 
         } else {
 
-            $builder->add('completionDate', 'date', array(
-                'label' => 'Completion Date:',
-                'widget' => 'single_text',
-                'required' => false,
-                'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control'),
-            ));
+            if( !$this->hasRoleSimpleView ) {
+                $builder->add('completionDate', 'date', array(
+                    'label' => 'Completion Date:',
+                    'widget' => 'single_text',
+                    'required' => false,
+                    'format' => 'MM/dd/yyyy',
+                    'attr' => array('class' => 'datepicker form-control'),
+                ));
 
-            $builder->add('completionReason', null, array(
-                'label' => 'Completion Reason:',
-                'attr' => array('class'=>'combobox combobox-width')
-            ));
+                $builder->add('completionReason', null, array(
+                    'label' => 'Completion Reason:',
+                    'attr' => array('class' => 'combobox combobox-width')
+                ));
+            }
 
         }
 
@@ -171,26 +175,25 @@ class TrainingType extends AbstractType
                 //'multiple' => true,
                 'classtype' => 'traininghonors'
             ));
+
+            $builder->add('institution', 'employees_custom_selector', array(
+                'label' => 'Educational Institution:',
+                'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'traininginstitution'
+            ));
+
+            $builder->add('fellowshipTitle', 'employees_custom_selector', array(
+                'label' => 'Professional Fellowship Title:',
+                'attr' => array('class' => 'ajax-combobox-trainingfellowshiptitle', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'trainingfellowshiptitle'
+            ));
+            $builder->add('appendFellowshipTitleToName', 'checkbox', array(
+                'label'     => 'Append professional fellowship to name:',
+                'required'  => false,
+            ));
         }
-
-        $builder->add('fellowshipTitle', 'employees_custom_selector', array(
-            'label' => 'Professional Fellowship Title:',
-            'attr' => array('class' => 'ajax-combobox-trainingfellowshiptitle', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'trainingfellowshiptitle'
-        ));
-
-        $builder->add('appendFellowshipTitleToName', 'checkbox', array(
-            'label'     => 'Append professional fellowship to name:',
-            'required'  => false,
-        ));
-
-        $builder->add('institution', 'employees_custom_selector', array(
-            'label' => 'Educational Institution:',
-            'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'traininginstitution'
-        ));
 
         //residencySpecialty
         $builder->add('residencySpecialty', 'employees_custom_selector', array(
