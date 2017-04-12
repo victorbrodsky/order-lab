@@ -145,7 +145,8 @@
                                 {% if cycle == 'show' %}
                                     {% for encounterDate in encounterPatientInfo.vars.value.date %}
                                         {#encounterDate.field|date('(T)')#}
-                                        {% set encounterDateStr = encounterDate.field|date('m/d/Y',encounterDate.timezone) ~ " at " ~ encounterDate.time|date('h:i a',encounterDate.timezone)~" ("~encounterDate.timezone~")" %}
+                                        {#{% set encounterDateStr = encounterDate.field|date('m/d/Y',encounterDate.timezone) ~ " at " ~ encounterDate.time|date('h:i a',encounterDate.timezone)~" ("~encounterDate.timezone~")" %}#}
+                                        {% set encounterDateStr = user_service_utility.getSeparateDateTimeTzStr(encounterDate.field,encounterDate.time,encounterDate.timezone,true,false) %}
                                         {{ formmacros.simplefield("Encounter Date:", encounterDateStr, "", "disabled") }}
                                     {% endfor %}
                                 {% else %}

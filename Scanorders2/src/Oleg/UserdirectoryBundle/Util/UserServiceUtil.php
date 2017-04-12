@@ -90,6 +90,15 @@ class UserServiceUtil {
         return $datetimeUserTz;
     }
 
+    public function convertToTimezone($datetime,$tz) {
+        //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
+        //$datetimeUTC = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
+        $datetimeTz = $datetime->setTimeZone(new \DateTimeZone($tz));
+        //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";
+
+        return $datetimeTz;
+    }
+
     //user1 - submitter, user2 - viewing user
     public function convertFromUserTzToUserTz($datetime,$user1,$user2) {
 
@@ -132,6 +141,54 @@ class UserServiceUtil {
             $viewingUserTz = $user->getPreferences()->getTimezone();
             $info = $orderDateUserTz->format('m/d/Y') . " at " . $orderDateUserTz->format('h:i a') . " (" . $viewingUserTz . ")";
         }
+        return $info;
+    }
+    public function getOrderDateTzStr( $message, $tz=null ) {
+        //echo "getOrderDateStr <br>";
+        $info = "";
+        if( $message->getOrderdate() ) {
+            $orderDate = $message->getOrderdate();
+            //$orderDateTz = $this->convertToTimezone($orderDate,$tz);
+            //$info = $orderDateTz->format('m/d/Y') . " at " . $orderDateTz->format('h:i a') . " (" . $tz . ")";
+            $info = $this->getDatetimeTzStr($orderDate,$tz);
+        }
+        return $info;
+    }
+    // 05/25/2017 at 3:25pm (Americas/New_York)
+    public function getDatetimeTzStr( $datetime, $tz ) {
+        //echo "getOrderDateStr <br>";
+        //echo "input datetime=".$datetime->format('m/d/Y') . " at " . $datetime->format('h:i a') . " (" . $tz . ")"."<br>";
+        $info = "";
+        if( $datetime ) {
+            $datetimeTz = $this->convertToTimezone($datetime,$tz);
+            $info = $datetimeTz->format('m/d/Y') . " at " . $datetimeTz->format('h:i a') . " (" . $tz . ")";
+        }
+        //echo "output datetime=".$info."<br>";
+        //exit('1');
+
+        return $info;
+    }
+
+    // 05/25/2017 at 3:25pm (Americas/New_York)
+    public function getSeparateDateTimeTzStr( $date, $time, $tz, $convertDate=true, $convertTime=true ) {
+        //echo "getOrderDateStr <br>";
+        //echo "input datetime=".$date->format('m/d/Y') . " at " . $time->format('h:i a') . " (" . $tz . ")"."<br>";
+        //echo "date tz=".$date->getTimezone()->getName()."<br>";
+        //echo "time tz=".$time->getTimezone()->getName()."<br>";
+
+        $dateTz = $date;
+        $timeTz = $time;
+        if( $date && $convertDate ) {
+            $dateTz = $this->convertToTimezone($date,$tz);
+        }
+        if( $time && $convertTime ) {
+            $timeTz = $this->convertToTimezone($time,$tz);
+        }
+        $info = $dateTz->format('m/d/Y') . " at " . $timeTz->format('h:i a') . " (" . $tz . ")";
+
+        //echo "output datetime=".$info."<br>";
+        //exit('1');
+
         return $info;
     }
 
