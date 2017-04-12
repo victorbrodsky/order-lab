@@ -76,6 +76,20 @@ class UserServiceUtil {
         return $datetimeTz;
     }
 
+    public function convertToUserTimezone($datetime,$user) {
+
+        //$user_tz = 'America/New_York';
+        $user_tz = $user->getPreferences()->getTimezone();
+
+        //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
+        //$datetimeUTC = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
+        $datetimeUserTz = $datetime->setTimeZone(new \DateTimeZone($user_tz));
+
+        //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";
+
+        return $datetimeUserTz;
+    }
+
     //user1 - submitter, user2 - viewing user
     public function convertFromUserTzToUserTz($datetime,$user1,$user2) {
 
@@ -103,6 +117,7 @@ class UserServiceUtil {
         }
         return $info;
     }
+    //DB datetime is UTC. Convert to the user's timezone.
     public function getOrderDateStr( $message, $user=null ) {
         //echo "getOrderDateStr <br>";
         $info = "";
@@ -111,10 +126,11 @@ class UserServiceUtil {
                 $user = $this->sc->getToken()->getUser();
             }
             $orderDate = $message->getOrderdate();
-            $orderDate = $this->convertFromUserTzToUserTz($orderDate,$message->getProvider(),$user);
+            //$orderDate = $this->convertFromUserTzToUserTz($orderDate,$message->getProvider(),$user);
             //$info = $message->getOrderdate()->format('m/d/Y') . " at " . $message->getOrderdate()->format('h:i a (T)');
+            $orderDateUserTz = $this->convertToUserTimezone($orderDate,$user);
             $viewingUserTz = $user->getPreferences()->getTimezone();
-            $info = $orderDate->format('m/d/Y') . " at " . $orderDate->format('h:i a') . " (" . $viewingUserTz . ")";
+            $info = $orderDateUserTz->format('m/d/Y') . " at " . $orderDateUserTz->format('h:i a') . " (" . $viewingUserTz . ")";
         }
         return $info;
     }
