@@ -105,6 +105,14 @@ class CallEntryController extends Controller
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
             $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis();
+
+            /////////// sort alphabetically //////////////
+            $messageCategoriesValue = array();
+            foreach( $messageCategories as $key => $row ) {
+                $messageCategoriesValue[$key] = $row;
+            }
+            array_multisort($messageCategoriesValue, SORT_ASC, $messageCategories);
+            /////////// EOF sort alphabetically //////////////
         }
         //$messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         //$node1 = array('id'=>1,'text'=>'node1');
