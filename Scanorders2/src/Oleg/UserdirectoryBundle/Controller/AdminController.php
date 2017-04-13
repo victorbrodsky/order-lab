@@ -6705,10 +6705,12 @@ class AdminController extends Controller
 
 
     ////////////////// Employee Tree Util //////////////////////
+    //to initialize JS, add "getJstree('OrderformBundle','MessageCategory');" to user-formReady.js
     /**
      * @Route("/list/institutional-tree/", name="employees_tree_institutiontree_list")
      * @Route("/list/comment-tree/", name="employees_tree_commenttree_list")
      * @Route("/list/form-tree/", name="employees_tree_formnode_list")
+     * @Route("/list/message-categories-tree/", name="employees_tree_messagecategories_list")
      *
      * @Method("GET")
      */
@@ -6822,6 +6824,13 @@ class AdminController extends Controller
             $className = "FormNode";
             $title = "Form Tree Management";
             $nodeshowpath = "formnodes_show";
+        }
+
+        if( $routeName == "employees_tree_messagecategories_list" ) {
+            $bundleName = "OrderformBundle";
+            $className = "MessageCategory";
+            $title = "Message Categories Tree Management";
+            $nodeshowpath = "messagecategorys_show";
         }
 
         $mapper = array(

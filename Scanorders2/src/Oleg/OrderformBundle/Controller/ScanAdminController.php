@@ -2312,6 +2312,7 @@ class ScanAdminController extends AdminController
 //    }
 
     ////////////////// Scan Tree Util //////////////////////
+    //to initialize JS, add "getJstree('OrderformBundle','MessageCategory');" to formReady.js
     /**
      * @Route("/list/research-project-titles-tree/", name="scan_tree_researchprojecttitles_list")
      * @Route("/list/educational-course-titles-tree/", name="scan_tree_educationalcoursetitles_list")
@@ -2356,6 +2357,13 @@ class ScanAdminController extends AdminController
             $className = "MessageCategory";
             $title = "Message Categories Tree Management";
             $nodeshowpath = "messagecategorys_show";
+        }
+
+        if( $routeName == "scan_tree_patientlisthierarchy_list" ) {
+            $bundleName = "OrderformBundle";
+            $className = "PatientListHierarchy";
+            $title = "Patient Lists Hierarchy Management";
+            $nodeshowpath = "patientlisthierarchys_show";
         }
 
         if( $routeName == "scan_tree_patientlisthierarchy_list" ) {

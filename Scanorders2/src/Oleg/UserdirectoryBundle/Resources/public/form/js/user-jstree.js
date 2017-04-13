@@ -23,7 +23,7 @@
 //used by admin page
 function getJstree(bundleName,entityName,menu,search,closeall,type) {
 
-    //console.log('cycle='+cycle);
+    //console.log('getJstree: cycle='+cycle);
 
     if( typeof cycle === 'undefined' ) {
         var cycle = 'edit';
@@ -50,7 +50,7 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
             filterStr = filterStr.replace("?", '');
             filterStr = "&"+filterStr;
         }
-        console.log('filterStr='+filterStr);
+        //console.log('filterStr='+filterStr);
 
 
         var withsearch = "search";
