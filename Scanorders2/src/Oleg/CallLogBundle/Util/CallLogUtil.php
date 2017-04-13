@@ -1657,4 +1657,31 @@ class CallLogUtil
         //exit('form version');
     }
 
+
+    //If more than one is found, pick the message type where the search string is
+    // found earlier in the message type name (for example, if the user searches
+    // for "transfusion", you would find both "Payson transfusion" and
+    // "Transfusion medicine" message types, but in "Transfusion medicine"
+    // the search string starts at character 1, so it should be selected.
+    // If there is still more than one matching message type
+    // (for example "Transfusion medicine" and "Transfusion reaction"),
+    // pick the one that is closer to the root of the hierarchy ("Transfusion medicine").
+    // If there is still more than one matching message type, ("Other"),
+    // then pick the one with the lowest ID.
+    //<option value="Incompatible crossmatch">Pathology Call Log Entry: Transfusion Medicine: Incompatible crossmatch</option>
+    public function getMessageTypeByString( $string, $messageCategories ) {
+        $messageCategoryTypeId = "Pathology Call Log Entry";
+        //$messageCategoryTypeId = "Incompatible crossmatch";
+
+        //$messageCategories is array: "Incompatible crossmatch" => "Pathology Call Log Entry: Transfusion Medicine: Incompatible crossmatch"
+        foreach( $messageCategories as $name=>$fullname ) {
+            //echo $name." ?= ".$fullname."<br>";
+            if( stripos ($fullname, $string) !== false ) {
+                return $name;
+            }
+        }
+
+        return $messageCategoryTypeId;
+    }
+
 }

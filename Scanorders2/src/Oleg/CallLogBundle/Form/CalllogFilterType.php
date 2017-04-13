@@ -58,6 +58,7 @@ class CalllogFilterType extends AbstractType
             'required' => false,
             'choices' => $this->params['messageCategories'],
             //'data' => $this->params['messageCategoryDefault'],
+            'empty_data' => $this->params['messageCategoryType'],
             'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder' => "Message Type"),
         ));
 

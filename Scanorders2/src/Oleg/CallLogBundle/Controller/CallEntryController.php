@@ -117,6 +117,7 @@ class CallEntryController extends Controller
 
         $searchFilter = null;
         $entryBodySearchFilter = null;
+        $messageCategoryTypeId = null;
 
         ///////////////// search in navbar /////////////////
         $navbarParams = array();
@@ -135,6 +136,13 @@ class CallEntryController extends Controller
         if( $calllogsearchtype == 'Entry full text' ) {
             $entryBodySearchFilter = $calllogsearch;
         }
+        if( $calllogsearchtype == 'Patient Last Name' ) {
+            $searchFilter = $calllogsearch;
+        }
+        if( $calllogsearchtype == 'Message Type' ) {
+            $messageCategoryTypeId = $calllogUtil->getMessageTypeByString($calllogsearch,$messageCategories);
+            $messageCategory = $messageCategoryTypeId;
+        }
         //echo "navbar: searchFilter=".$searchFilter."; entryBodySearchFilter=".$entryBodySearchFilter."<br>";
         ///////////////// EOF search in navbar /////////////////
 
@@ -145,7 +153,8 @@ class CallEntryController extends Controller
             'mrntype' => $defaultMrnType->getId(),
             'referringProviders' => $referringProviders,
             'search' => $searchFilter,
-            'entryBodySearch' => $entryBodySearchFilter
+            'entryBodySearch' => $entryBodySearchFilter,
+            'messageCategoryType' => $messageCategoryTypeId,
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
 
@@ -155,7 +164,6 @@ class CallEntryController extends Controller
         $mrntypeFilter = $filterform['mrntype']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
-        $messageCategory = $filterform['messageCategory']->getData();
         $authorFilter = $filterform['author']->getData();
         $referringProviderFilter = $filterform['referringProvider']->getData();
         $encounterLocationFilter = $filterform['encounterLocation']->getData();
@@ -168,6 +176,9 @@ class CallEntryController extends Controller
         }
         if( !$entryBodySearchFilter ) {
             $entryBodySearchFilter = $filterform['entryBodySearch']->getData();
+        }
+        if( !$messageCategory ) {
+            $messageCategory = $filterform['messageCategory']->getData();
         }
 
         if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
@@ -237,8 +248,10 @@ class CallEntryController extends Controller
         }
 
         if( $messageCategory ) {
+            //echo "search messageCategory=".$messageCategory."<br>";
             $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
             if( $messageCategoryEntity ) {
+                //echo "search under messageCategoryEntity=".$messageCategoryEntity."<br>";
                 $selectOrder = false;
                 $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
                 $dql->andWhere($nodeChildSelectStr);
@@ -416,15 +429,15 @@ class CallEntryController extends Controller
                 $dql->andWhere("lastname.field LIKE :search");
                 $queryParameters['search'] = "%".$calllogsearch."%";
             }
-            if( $calllogsearchtype == 'Message Type' ) {
-                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($calllogsearch);
-                if( $messageCategoryEntity ) {
-                    $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
-                    $dql->andWhere($nodeChildSelectStr);
-                } else {
-                    $dql->andWhere("1=0");
-                }
-            }
+//            if( $calllogsearchtype == 'Message Type' ) {
+//                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($calllogsearch);
+//                if( $messageCategoryEntity ) {
+//                    $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
+//                    $dql->andWhere($nodeChildSelectStr);
+//                } else {
+//                    $dql->andWhere("1=0");
+//                }
+//            }
             if( $calllogsearchtype == 'Entry full text' ) {
                 //use regular filter by replacing an appropriate filter string
             }

@@ -1032,9 +1032,8 @@ class FormNodeUtil
                                 $result[] = $elementName . ": " . $elementValue;
                             }
 
-
-                            echo "RESULT=".$result."<br>";
-                            exit("1");
+                            //echo "RESULT=".$result."<br>";
+                            //exit("1");
                         }
 
                     } else {
