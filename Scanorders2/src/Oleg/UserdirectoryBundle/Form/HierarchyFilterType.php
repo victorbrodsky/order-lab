@@ -37,11 +37,18 @@ class HierarchyFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+//        $types = array(
+//            "default"=>"default",
+//            "user-added"=>"user-added",
+//            "disabled"=>"disabled",
+//            "draft"=>"draft"
+//        );
+        //sort the choices alphabetically
         $types = array(
             "default"=>"default",
-            "user-added"=>"user-added",
             "disabled"=>"disabled",
-            "draft"=>"draft"
+            "draft"=>"draft",
+            "user-added"=>"user-added",
         );
 
         $params = array(

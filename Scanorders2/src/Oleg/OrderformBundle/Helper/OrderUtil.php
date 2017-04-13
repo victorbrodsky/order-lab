@@ -705,7 +705,7 @@ class OrderUtil {
         if( $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ) {
 
             $webUserUrl = "<a href=".$userUrl.">profile</a>";
-            $msg =  "Please add at least one institution to your ".$webUserUrl." in order to be able to place orders.";
+            $msg =  "Please add at least one institution to your ".$webUserUrl." (field 'Order data visible to members of (Institutional PHI Scope)') in order to be able to place orders.";
 
         } else {
 

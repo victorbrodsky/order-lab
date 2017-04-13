@@ -2268,7 +2268,7 @@ class FormNodeUtil
             //Other [Message Category]
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $this->createLabValuesSection($parent,"Other","Pathology Call Log Entry");
+            $this->createLabValuesSection($parent,"Other","Pathology Call Log Entry",false);
         }
 
 
@@ -2390,7 +2390,7 @@ class FormNodeUtil
     //"Relevant Lab Values" of type "From Section Array"
     //https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/36/next-steps
     //$holderName: i.e. "Complex factor summary"
-    public function createLabValuesSection($parent,$holderName,$parentMessageCategoryName=null) {
+    public function createLabValuesSection($parent,$holderName,$parentMessageCategoryName=null,$withMiscellaneous=true) {
         $sections = array(
             array(
                 'sectionName' => "Relevant Laboratory Values",
@@ -2406,14 +2406,25 @@ class FormNodeUtil
                     'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
                 )
             ),
-            array(
+//            array(
+//                'sectionName' => "Miscellaneous",
+//                'fields' => array(
+//                    'Product receiving'=>'Form Field - Free Text, Single Line',
+//                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+//                )
+//            ),
+        );
+
+        if( $withMiscellaneous ) {
+            $sections[] = array(
                 'sectionName' => "Miscellaneous",
                 'fields' => array(
                     'Product receiving'=>'Form Field - Free Text, Single Line',
                     'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
                 )
-            ),
-        );
+            );
+        }
+
         $this->addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName);
     }
 
