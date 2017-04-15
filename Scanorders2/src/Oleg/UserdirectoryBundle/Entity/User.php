@@ -294,6 +294,10 @@ class User extends BaseUser {
         //create credentials
         $this->setCredentials(new Credentials($this,$addobjects));
 
+        //create PerSiteSettings
+        $perSiteSettings = new PerSiteSettings();
+        $this->setPerSiteSettings($perSiteSettings);
+
         //set unlocked, enabled
         $this->setLocked(false);
         $this->setEnabled(true);

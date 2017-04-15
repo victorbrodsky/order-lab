@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\Book;
 use Oleg\UserdirectoryBundle\Entity\Lecture;
+use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Translator;
 //use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -1619,6 +1620,12 @@ class UserController extends Controller
 
         if( $form->isValid() ) {
 
+            //make sure perSiteSetting exists (if user created by simplyfy view users, persitesettings is NULL)
+            if( !$user->getPerSiteSettings() ) {
+                $perSiteSettings = new PerSiteSettings();
+                $user->setPerSiteSettings($perSiteSettings);
+            }
+
             $user->setEnabled(true);
             $user->setCreatedby('manual');
 
@@ -2443,6 +2450,12 @@ class UserController extends Controller
 
             //echo "form is valid<br>";
             //exit();
+
+            //make sure perSiteSetting exists (if user created by simplyfy view users, persitesettings is NULL)
+            if( !$entity->getPerSiteSettings() ) {
+                $perSiteSettings = new PerSiteSettings();
+                $entity->setPerSiteSettings($perSiteSettings);
+            }
 
             //check if changed roles are "Platform Administrator" or "Deputy Platform Administrator"
             $currRoles = $entity->getRoles();
