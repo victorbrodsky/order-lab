@@ -107,13 +107,21 @@ class CallEntryController extends Controller
             $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis();
 
             /////////// sort alphabetically //////////////
-            $messageCategoriesValue = array();
-            foreach( $messageCategories as $key => $row ) {
-                $messageCategoriesValue[$key] = $row;
+            $sort = true;
+            $sort = false;
+            if( $sort ) {
+                $messageCategoriesValue = array();
+                foreach ($messageCategories as $key => $row) {
+                    //echo "row:".$row."<br>";
+                    $messageCategoriesValue[$key] = $row;
+                }
+                array_multisort($messageCategoriesValue, SORT_ASC, $messageCategories);
             }
-            array_multisort($messageCategoriesValue, SORT_ASC, $messageCategories);
             /////////// EOF sort alphabetically //////////////
         }
+        //testing
+        //print_r($messageCategories);
+
         //$messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         //$node1 = array('id'=>1,'text'=>'node1');
         //$node2 = array('id'=>2,'text'=>'node2');
@@ -126,6 +134,7 @@ class CallEntryController extends Controller
         $searchFilter = null;
         $entryBodySearchFilter = null;
         $messageCategoryTypeId = null;
+        $messageCategoryEntity = null;
 
         ///////////////// search in navbar /////////////////
         $navbarParams = array();
@@ -149,7 +158,7 @@ class CallEntryController extends Controller
         }
         if( $calllogsearchtype == 'Message Type' ) {
             $messageCategoryTypeId = $calllogUtil->getMessageTypeByString($calllogsearch,$messageCategories);
-            $messageCategory = $messageCategoryTypeId;
+            $messageCategory = $messageCategoryTypeId; //Other_59 => Other: Chemistry: Pathology Call Log Entry
         }
         //echo "navbar: searchFilter=".$searchFilter."; entryBodySearchFilter=".$entryBodySearchFilter."<br>";
         ///////////////// EOF search in navbar /////////////////
@@ -187,6 +196,13 @@ class CallEntryController extends Controller
         }
         if( !$messageCategory ) {
             $messageCategory = $filterform['messageCategory']->getData();
+            //$messageCategory: Other_59
+            if( strpos($messageCategory, '_') !== false ) {
+                list($messageCategoryStr, $messageCategoryId) = explode('_', $messageCategory);
+                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+            } else {
+                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
+            }
         }
 
         if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
@@ -257,7 +273,6 @@ class CallEntryController extends Controller
 
         if( $messageCategory ) {
             //echo "search messageCategory=".$messageCategory."<br>";
-            $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
             if( $messageCategoryEntity ) {
                 //echo "search under messageCategoryEntity=".$messageCategoryEntity."<br>";
                 $selectOrder = false;
