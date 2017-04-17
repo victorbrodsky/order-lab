@@ -1669,9 +1669,7 @@ class CallLogUtil
     // If there is still more than one matching message type, ("Other"),
     // then pick the one with the lowest ID.
     //<option value="Incompatible crossmatch">Pathology Call Log Entry: Transfusion Medicine: Incompatible crossmatch</option>
-    public function getMessageTypeByString( $string, $messageCategories ) {
-        $messageCategoryTypeId = "Pathology Call Log Entry";
-        //$messageCategoryTypeId = "Incompatible crossmatch";
+    public function getMessageTypeByString( $string, $messageCategories, $messageCategorieDefaultIdStr ) {
 
         //$messageCategories is array: "Incompatible crossmatch" => "Pathology Call Log Entry: Transfusion Medicine: Incompatible crossmatch"
         foreach( $messageCategories as $name=>$fullname ) {
@@ -1681,7 +1679,25 @@ class CallLogUtil
             }
         }
 
-        return $messageCategoryTypeId;
+        return $messageCategorieDefaultIdStr;
     }
 
+    //$messageCategoryIdStr: Microbiology_48
+    public function getMessageCategoryEntityByIdStr( $messageCategoryIdStr ) {
+        if( strpos($messageCategoryIdStr, '_') !== false ) {
+            list($messageCategoryStr, $messageCategoryId) = explode('_', $messageCategoryIdStr);
+            //echo "search messageCategoryId=".$messageCategoryId."<br>";
+            $messageCategoryEntity = $this->em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+        } else {
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "MessageCategory",
+                'bundleName' => "OrderformBundle"
+            );
+            //$messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
+            $messageCategoryEntity = $this->em->getRepository('OlegOrderformBundle:MessageCategory')->findNodeByPartialName($messageCategoryIdStr,$mapper);
+        }
+
+        return $messageCategoryEntity;
+    }
 }

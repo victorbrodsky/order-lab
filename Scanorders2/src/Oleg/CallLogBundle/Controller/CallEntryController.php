@@ -99,11 +99,20 @@ class CallEntryController extends Controller
         $messageStatusesChoice["All Drafts"] = "All Drafts";
         $messageStatusesChoice["All post-signature drafts"] = "All post-signature drafts";
 
+        $searchFilter = null;
+        $entryBodySearchFilter = null;
+        $messageCategoryTypeId = null;
+        $messageCategoryEntity = null;
+        $messageCategorieDefaultIdStr = null;
+
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoryParent = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
         $messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
+            $messageCategorieDefaultIdStr = $messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId();
+
             $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis();
 
             /////////// sort alphabetically //////////////
@@ -131,11 +140,6 @@ class CallEntryController extends Controller
 
         $referringProviders = $calllogUtil->getReferringProviders();
 
-        $searchFilter = null;
-        $entryBodySearchFilter = null;
-        $messageCategoryTypeId = null;
-        $messageCategoryEntity = null;
-
         ///////////////// search in navbar /////////////////
         $navbarParams = array();
         $navbarParams['navbarSearchTypes'] = $calllogUtil->getNavbarSearchTypes();
@@ -157,7 +161,8 @@ class CallEntryController extends Controller
             $searchFilter = $calllogsearch;
         }
         if( $calllogsearchtype == 'Message Type' ) {
-            $messageCategoryTypeId = $calllogUtil->getMessageTypeByString($calllogsearch,$messageCategories);
+            $messageCategoryTypeId = $calllogUtil->getMessageTypeByString($calllogsearch,$messageCategories,$messageCategorieDefaultIdStr);
+            //echo "navbar messageCategoryTypeId=".$messageCategoryTypeId."<br>";
             $messageCategory = $messageCategoryTypeId; //Other_59 => Other: Chemistry: Pathology Call Log Entry
         }
         //echo "navbar: searchFilter=".$searchFilter."; entryBodySearchFilter=".$entryBodySearchFilter."<br>";
@@ -196,20 +201,31 @@ class CallEntryController extends Controller
         }
         if( !$messageCategory ) {
             $messageCategory = $filterform['messageCategory']->getData();
-            //$messageCategory: Other_59
-            if( strpos($messageCategory, '_') !== false ) {
-                list($messageCategoryStr, $messageCategoryId) = explode('_', $messageCategory);
-                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
-            } else {
-                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
-            }
+//            //$messageCategory: Other_59
+//            if( strpos($messageCategory, '_') !== false ) {
+//                list($messageCategoryStr, $messageCategoryId) = explode('_', $messageCategory);
+//                //echo "search messageCategoryId=".$messageCategoryId."<br>";
+//                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+//            } else {
+//                $mapper = array(
+//                    'prefix' => "Oleg",
+//                    'className' => "MessageCategory",
+//                    'bundleName' => "OrderformBundle"
+//                );
+//                //$messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
+//                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findNodeByPartialName($messageCategory,$mapper);
+//            }
+            $messageCategoryEntity = $calllogUtil->getMessageCategoryEntityByIdStr($messageCategory);
+        }
+        if( $messageCategory ) {
+            $messageCategoryEntity = $calllogUtil->getMessageCategoryEntityByIdStr($messageCategory);
         }
 
         if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
             return $this->redirect( $this->generateUrl('calllog_home',
                 array(
                     'filter[messageStatus]'=>"All except deleted",
-                    'filter[messageCategory]'=>$messageCategoriePathCall->getName().""
+                    'filter[messageCategory]'=>$messageCategorieDefaultIdStr    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
                 )
             ) );
         }
@@ -271,14 +287,12 @@ class CallEntryController extends Controller
             $queryParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
         }
 
-        if( $messageCategory ) {
+        if( $messageCategoryEntity ) {
             //echo "search messageCategory=".$messageCategory."<br>";
-            if( $messageCategoryEntity ) {
-                //echo "search under messageCategoryEntity=".$messageCategoryEntity."<br>";
-                $selectOrder = false;
-                $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
-                $dql->andWhere($nodeChildSelectStr);
-            }
+            //echo "search under messageCategoryEntity=".$messageCategoryEntity."<br>";
+            $selectOrder = false;
+            $nodeChildSelectStr = $messageCategoryEntity->selectNodesUnderParentNode($messageCategoryEntity, "messageCategory",$selectOrder);
+            $dql->andWhere($nodeChildSelectStr);
         }
 
         if( $searchFilter ) {

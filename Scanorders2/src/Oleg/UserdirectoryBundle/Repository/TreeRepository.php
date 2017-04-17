@@ -312,6 +312,35 @@ class TreeRepository extends NestedTreeRepository {
         return $foundChildEntity;
     }
 
+    public function findNodeByPartialName( $nameStr, $mapper=null ) {
+
+        if( !$nameStr ) {
+            throw new \Exception('Logical Error: nameStr is null');
+        }
+        //echo "search nameStr=".$nameStr."<br>";
+
+        $foundEntity = null;
+
+        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where('list.name LIKE :name');
+
+        $params = array('name' => '%"' . $nameStr . '"%');
+
+        $query = $this->_em->createQuery($dql);
+
+        $query->setParameters($params);
+
+        $results = $query->getResult();
+
+        if( count($results) > 0 ) {
+            $foundEntity = $results[0];
+        }
+
+        return $foundEntity;
+    }
+
     public function findNodeByNameAndRoot($rootNodeId,$nameStr,$mapper=null) {
 
         $node = null;
