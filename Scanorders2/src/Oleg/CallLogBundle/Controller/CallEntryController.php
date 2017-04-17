@@ -117,7 +117,7 @@ class CallEntryController extends Controller
 
             /////////// sort alphabetically //////////////
             $sort = true;
-            $sort = false;
+            //$sort = false;
             if( $sort ) {
                 $messageCategoriesValue = array();
                 foreach ($messageCategories as $key => $row) {
@@ -201,21 +201,6 @@ class CallEntryController extends Controller
         }
         if( !$messageCategory ) {
             $messageCategory = $filterform['messageCategory']->getData();
-//            //$messageCategory: Other_59
-//            if( strpos($messageCategory, '_') !== false ) {
-//                list($messageCategoryStr, $messageCategoryId) = explode('_', $messageCategory);
-//                //echo "search messageCategoryId=".$messageCategoryId."<br>";
-//                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
-//            } else {
-//                $mapper = array(
-//                    'prefix' => "Oleg",
-//                    'className' => "MessageCategory",
-//                    'bundleName' => "OrderformBundle"
-//                );
-//                //$messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
-//                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findNodeByPartialName($messageCategory,$mapper);
-//            }
-            $messageCategoryEntity = $calllogUtil->getMessageCategoryEntityByIdStr($messageCategory);
         }
         if( $messageCategory ) {
             $messageCategoryEntity = $calllogUtil->getMessageCategoryEntityByIdStr($messageCategory);

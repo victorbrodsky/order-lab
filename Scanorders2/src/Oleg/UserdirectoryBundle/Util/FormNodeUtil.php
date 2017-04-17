@@ -1192,7 +1192,8 @@ class FormNodeUtil
 
         if( $node ) {
             if( $node->getType() == 'disabled' || $node->getType() == 'draft' ) {
-                exit("The node $name already exists, but it has ".$node->getType()." type.");
+                //exit("The node $name already exists, but it has ".$node->getType()." type.");
+                return $node;
             }
         }
 
@@ -2421,6 +2422,22 @@ class FormNodeUtil
                 'fields' => array(
                     'Product receiving'=>'Form Field - Free Text, Single Line',
                     'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+                )
+            );
+        } else {
+            //Add add a "Form Section" titled "Issue Category" in the "Other [Form]".
+            // Within this "Issue Category" form section, add a single form field titled
+            // "What would you call this issue category?" of type "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries".
+            // Create this list and call it "Suggested Message Categories"
+            $sections[] = array(
+                'sectionName' => "Issue Category",
+                'fields' => array(
+                    //'What would you call this issue category?'=>'Form Field - Free Text',
+                    'What would you call this issue category?'=>array(
+                        'Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',
+                        "Oleg\\OrderformBundle\\Entity",
+                        "SuggestedMessageCategoriesList"
+                    ),
                 )
             );
         }
