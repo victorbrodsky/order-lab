@@ -259,14 +259,49 @@ class FormNodeUtil
             $noflush = true; //don't flush because setValues must be set after
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValue,$holderEntity,$noflush,$params);
 
-            //$formValue is an array: newvalue1,newvalue2,newvalue3
+            //$formValue is an array (string or ids): 1,23,newvalue1,newvalue2,newvalue3
             if( is_array($formValue) ) {
                 $formValueArr = $formValue;
             } else {
                 $formValueArr = explode(",",$formValue);
             }
             if( count($formValueArr) > 0 ) {
-                $newListElement->setIdValues($formValueArr);
+                $formValueArrIDs = array();
+                //convert possible value string to id
+                foreach( $formValueArr as $thisFormValue ) {
+                    if ( strval($thisFormValue) != strval(intval($thisFormValue)) ) {
+//                        //string: find id of the corresponding entity
+//                        $className = $formNode->getEntityName();
+//                        $classNamespace = $formNode->getEntityNamespace();
+//                        //echo "@@@ thisFormValue:".$thisFormValue."; className:".$className."; classNamespace:".$classNamespace."<br>";
+//                        if( $className && $classNamespace ) {
+//
+//                            //$classNamespace: Oleg\UserdirectoryBundle\Entity => UserdirectoryBundle
+//                            $bundleNameArr = explode("\\", $classNamespace);
+//                            $bundleName = null;
+//                            if (count($bundleNameArr) > 2) {
+//                                $bundleName = $bundleNameArr[1];
+//                            }
+//                            if( $bundleName ) {
+//                                $creator = $this->sc->getToken()->getUser();
+//                                $transformer = new GenericTreeTransformer($this->em, $creator, $className, $bundleName);
+//                                $dropdownObject = $transformer->reverseTransform($thisFormValue);
+//                                if( $dropdownObject ) {
+//                                    //echo "found: id=".$dropdownObject->getId()."; name=".$dropdownObject->getName()."<br>";
+//                                    $formValueArrIDs[] = $dropdownObject->getId();
+//                                }
+//                            }
+//                        }
+                        $dropdownObject = $this->getReceivingObject($formNode,$thisFormValue);
+                        if( $dropdownObject ) {
+                            //echo "found: id=".$dropdownObject->getId()."; name=".$dropdownObject->getName()."<br>";
+                            $formValueArrIDs[] = $dropdownObject->getId();
+                        }
+                    } else {
+                        $formValueArrIDs[] = $thisFormValue;
+                    }
+                }
+                $newListElement->setIdValues($formValueArrIDs);
             }
 
             if( !$testing ) {
@@ -516,9 +551,9 @@ class FormNodeUtil
     }
 
     //check if value is userWrapper case (object=PathologyResultSignatoriesList)
-    public function processFormNodeValue( $formNode, $receivingEntity, $formNodeValue ) {
+    public function processFormNodeValue( $formNode, $receivingEntity, $formNodeValue, $asString=false ) {
 
-        //echo "getObjectTypeName=".$formNode->getObjectTypeName()."<br>";
+        //echo "!!! getObjectTypeName=".$formNode->getObjectTypeName()."<br>";
 
         if(
             $receivingEntity && $formNode->getObjectType() &&
@@ -562,13 +597,61 @@ class FormNodeUtil
                 $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow New Entries"
             ) {
                 $valueArr = $receivingEntity->getIdValues();
-                return implode(',',$valueArr);
+                //echo "!!! Dropdown Menu=".$formNode->getObjectTypeName().": ".implode(',',$valueArr)."<br>";
+                if( $asString ) {
+                    $valueArrStr = array();
+                    foreach( $valueArr as $thisValue ) {
+                        if ( strval($thisValue) != strval(intval($thisValue)) ) {
+                            //string
+                            $valueArrStr[] = $thisValue;
+                        } else {
+                            //int => id
+                            $dropdownObject = $this->getReceivingObject($formNode,$thisValue);
+                            if( $dropdownObject ) {
+                                //echo "found: id=".$dropdownObject->getId()."; name=".$dropdownObject->getName()."<br>";
+                                $valueArrStr[] = $dropdownObject->getName()."";
+                            }
+                        }
+                    }
+                    return implode(', ',$valueArrStr);
+                } else {
+                    return implode(',',$valueArr);
+                }
                 //return $valueArr;
             }
         }
 
 
         return $formNodeValue;
+    }
+
+    public function getReceivingObject( $formNode, $thisValue ) {
+        $entity = null;
+        //string: find id of the corresponding entity
+        $className = $formNode->getEntityName();
+        $classNamespace = $formNode->getEntityNamespace();
+        //echo "@@@ thisFormValue:".$thisValue."; className:".$className."; classNamespace:".$classNamespace."<br>";
+        if( $className && $classNamespace ) {
+            //$classNamespace: Oleg\UserdirectoryBundle\Entity => UserdirectoryBundle
+            $bundleNameArr = explode("\\", $classNamespace);
+            $bundleName = null;
+            if (count($bundleNameArr) > 2) {
+                $bundleName = $bundleNameArr[1];
+            }
+            if( $bundleName ) {
+                $creator = $this->sc->getToken()->getUser();
+                $transformer = new GenericTreeTransformer($this->em, $creator, $className, $bundleName);
+                //echo "thisValue=".$thisValue."<br>";
+                if ( strval($thisValue) != strval(intval($thisValue)) ) {
+                    //string
+                    $entity = $transformer->reverseTransform($thisValue);
+                } else {
+                    //integer
+                    $entity = $transformer->findEntityById($thisValue);
+                }
+            }
+        }
+        return $entity;
     }
 
     public function hasValue( $formNode ) {
@@ -1022,7 +1105,7 @@ class FormNodeUtil
                             $elementValue = $formNodeValueArr[$i];
 
                             //process userWrapper case
-                            $elementValue = $this->processFormNodeValue($formNode,$receivingEntity,$elementValue);
+                            $elementValue = $this->processFormNodeValue($formNode,$receivingEntity,$elementValue,true);
 
                             if( $table ) {
                                 $result = $result.'<tr class="'.$trclassname.'">'.
@@ -1043,7 +1126,7 @@ class FormNodeUtil
 
                         //////////////// Regular form node /////////////////////
                         //process userWrapper case
-                        $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+                        $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue,true);
 
                         //$formNodeValue = $this->getValueStrFromValueDatetime($formNode, $formNodeValue);
 

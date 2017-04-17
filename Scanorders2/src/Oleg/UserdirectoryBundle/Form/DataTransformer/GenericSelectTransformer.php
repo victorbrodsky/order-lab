@@ -130,4 +130,8 @@ class GenericSelectTransformer implements DataTransformerInterface
 
         return $entity;
     }
+    public function findEntityById($id) {
+        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->find($id);
+        return $entity;
+    }
 }

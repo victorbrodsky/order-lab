@@ -337,4 +337,17 @@ class GenericTreeTransformer implements DataTransformerInterface
     }
 
 
+    public function findEntityByString($string) {
+        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+
+        if( null === $entity ) {
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+        }
+
+        return $entity;
+    }
+    public function findEntityById($id) {
+        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->find($id);
+        return $entity;
+    }
 }
