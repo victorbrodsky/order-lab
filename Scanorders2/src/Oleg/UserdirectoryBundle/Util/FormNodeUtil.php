@@ -1526,6 +1526,7 @@ class FormNodeUtil
 
         if( $formNode ) {
             $messageCategory->addFormNode($formNode);
+            echo "Message category [$messageCategory] is linked with form node [$formNode]<br>";
         }
 
         $em->persist($messageCategory);
@@ -1823,11 +1824,19 @@ class FormNodeUtil
         $this->createAfterFirstdoseplasma($parentNode);
         $count++;
 
+        // Other Issue node for all "Other"
+        $this->createandLinkOtherIssueSection($parentNode);
+        $count++;
+
         //exit('EOF message category');
 
         return round($count);
     }
 
+    // $parent - parent form node
+    // $holderName - Message Category name
+    // $sections - form sections to link with given $holderName
+    // $parentMessageCategoryName - parent message category of the $holderName
     public function addFormToHolder( $parent, $holderName, $sections, $parentMessageCategoryName=null ) {
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeFormSection = $this->getObjectTypeByName('Form Section');
@@ -2335,6 +2344,7 @@ class FormNodeUtil
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
             $this->createLabValuesSection($parent,"Hematology");
+            //$this->createOtherSection($parent,"Other","Hematology","Issue Category","What would you call this issue?");
 
             //Chemistry [Message Category]
             //Laboratory Values [Form Section]
@@ -2355,7 +2365,7 @@ class FormNodeUtil
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
             $this->createLabValuesSection($parent,"Other","Pathology Call Log Entry",false);
-            //$this->createOtherSection($parent,"Other","Pathology Call Log Entry","Service Category","What would you call this service?");
+            $this->createOtherSection($parent,"Other","Pathology Call Log Entry","Service Category","What would you call this service?");
         }
 
 
@@ -2531,9 +2541,10 @@ class FormNodeUtil
 //            );
 //        }
 
-        $this->addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName);
+        return $this->addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName);
     }
-    public function createOtherSection($parent,$holderName,$parentMessageCategoryName=null,$sectionName,$fieldName) {
+    //$parent,"Other","Pathology Call Log Entry","Service Category","What would you call this service?"
+    public function createOtherSection( $parent, $holderName, $parentMessageCategoryName=null, $sectionName, $fieldName ) {
         $sections = array();
 
         //Add add a "Form Section" titled "Issue Category" in the "Other [Form]".
@@ -2551,8 +2562,59 @@ class FormNodeUtil
             )
         );
 
-        $this->addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName);
+        //                            $parent,"Other",    $sections,"Pathology Call Log Entry"
+        return $this->addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName);
     }
+
+    public function createandLinkOtherIssueSection( $parentNode ) {
+        $username = $this->container->get('security.context')->getToken()->getUser();
+        $em = $this->em;
+        $count = null;
+
+        //Create "Other Issue" form node for all "Other"
+        $objectTypeForm = $this->getObjectTypeByName('Form');
+        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+
+        //First dose plasma [Form Section]
+        $formParams = array(
+            'parent' => $parentNode,
+            'name' => "Other Issue",
+            'objectType' => $objectTypeForm,
+        );
+        $otherIssueFormNode = $this->createV2FormNode($formParams);
+
+        //Add field "What would you call this issue?" to $otherIssueNode section
+        $sections[] = array(
+            'sectionName' => "Issue Category",
+            'fields' => array(
+                "What would you call this issue?"=>array(
+                    'Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',
+                    "Oleg\\OrderformBundle\\Entity",
+                    "SuggestedMessageCategoriesList"
+                ),
+            )
+        );
+        // $parent - parent form node
+        // $holderName - Message Category name
+        // $sections - form sections to link with given $holderName
+        // $parentMessageCategoryName - parent message category of the $holderName
+        $otherIssueFormNode = $this->addFormToHolder($otherIssueFormNode,null,$sections);
+
+        //Link all "Other" to $otherIssueNode
+        if(1) {
+            echo "<br>Processing 'Other Issue':<br>";
+            $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Microbiology");
+            $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Coagulation");
+            $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Hematology");
+            $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Chemistry");
+            $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Cytogenetics");
+            $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Molecular");
+        }
+
+        return $count;
+    }
+
+
 
 
     //run by: /list/generate-test-form-node-tree/
