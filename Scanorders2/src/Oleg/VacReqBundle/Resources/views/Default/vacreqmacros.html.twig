@@ -259,11 +259,15 @@
         <ul class="dropdown-menu dropdown-menu-right">
 
             <li>
-                <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">View User Details</a>
+                <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}" target="_blank">View User Details</a>
             </li>
 
             <li>
-                <a href="{{ path(vacreq_sitename~'_review', { 'id': entity.id }) }}">Review</a>
+                <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}" target="_blank">View/Edit</a>
+            </li>
+
+            <li>
+                <a href="{{ path(vacreq_sitename~'_review', { 'id': entity.id }) }}" target="_blank">Review</a>
             </li>
 
             {#<li class="divider"></li>#}

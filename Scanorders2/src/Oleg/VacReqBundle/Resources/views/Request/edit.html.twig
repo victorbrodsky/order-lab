@@ -460,7 +460,8 @@
         </p>
     {% endif %}
 
-    {% if cycle == "show" and statusPending %}
+    {#{% if cycle == "show" and statusPending %}#}
+    {% if cycle == "show" %}
         <p>
             <a class="btn btn_margin_top btn-primary" href="{{ path(vacreq_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
         </p>
@@ -650,14 +651,17 @@
 
         function setVacReqDates(holder,diffWorkingDays,nextWorkingDay) {
 
+            //var forceSet = false; //This is an initial requirement. However, this causes errors if a submitter change the dates without clicking "Calculate" button.
+            var forceSet = true;
+
             var numberOfDaysField = holder.find('.vacreq-numberOfDays');
-            if( !numberOfDaysField.val() ) {
+            if( !numberOfDaysField.val() || forceSet ) {
                 numberOfDaysField.val(diffWorkingDays);
                 numberOfDaysField.removeClass('alert-danger');
             }
 
             var firstDayBackInOffice = $('.vacreq-firstDayBackInOffice');
-            if( !firstDayBackInOffice.val() ) {
+            if( !firstDayBackInOffice.val() || forceSet ) {
                 firstDayBackInOffice.datepicker('setDate', nextWorkingDay);
             }
         }
