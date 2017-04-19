@@ -4093,10 +4093,7 @@ class UserController extends Controller
         $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($paramsFaculty);
         $facultyUsers = $res['entities'];
-        echo "facultyUsers count=".count($facultyUsers)."<br>";
-//        foreach( $facultyUsers as $facultyUser ) {
-//            echo "facultyUser=".$facultyUser."<br>";
-//        }
+        //echo "facultyUsers count=".count($facultyUsers)."<br>";
         ////////////// EOF WCM Pathology Employees //////////////
 
         ////////////// WCM Pathology Employees //////////////
