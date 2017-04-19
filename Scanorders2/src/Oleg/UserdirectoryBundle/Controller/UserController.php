@@ -767,7 +767,8 @@ class UserController extends Controller
             //No "Postdoctoral Associate"
             $criteriastr .= " AND ";
             //$criteriastr .= "(administrativeName.name != 'Postdoctoral Associate' AND appointmentName.name != 'Postdoctoral Associate' AND medicalName.name != 'Postdoctoral Associate')";
-            $criteriastr .= "(medicalName.name != 'Postdoctoral Associate')";
+            //$criteriastr .= "(medicalName.name != 'Postdoctoral Associate')";
+            $criteriastr .= "(medicalName.name IS NULL OR medicalName.name != 'Postdoctoral Associate')";
         }
 
 
@@ -4092,6 +4093,10 @@ class UserController extends Controller
         $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($paramsFaculty);
         $facultyUsers = $res['entities'];
+        echo "facultyUsers count=".count($facultyUsers)."<br>";
+//        foreach( $facultyUsers as $facultyUser ) {
+//            echo "facultyUser=".$facultyUser."<br>";
+//        }
         ////////////// EOF WCM Pathology Employees //////////////
 
         ////////////// WCM Pathology Employees //////////////
