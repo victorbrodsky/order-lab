@@ -1835,7 +1835,7 @@ class ListController extends Controller
                 break;
             case "lifeforms":
                 $className = "LifeFormList";
-                $displayName = "Life Form List";
+                $displayName = "Life Form";
                 break;
             case "positiontracktypes":
                 $className = "PositionTrackTypeList";

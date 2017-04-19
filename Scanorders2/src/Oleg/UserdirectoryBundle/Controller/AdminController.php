@@ -6149,7 +6149,7 @@ class AdminController extends Controller
             "1030" => array('ObjectTypeCheckbox','objecttypecheckboxs-list','Object Type Checkbox'),
             "1040" => array('ObjectTypeRadioButton','objecttyperadiobuttons-list','Object Type Radio Button'),
             "1050" => array('Location','employees_locations_pathaction_list','Locations'),
-            "1060" => array('LifeFormList','lifeforms-list','Life Form List'),
+            "1060" => array('LifeFormList','lifeforms-list','Life Form'),
             "1070" => array('PositionTrackTypeList','positiontracktypes-list','Position Track Type List'),
             "1080" => array('SuggestedMessageCategoriesList','suggestedmessagecategorys-list','Suggested Message Categories List'),
             //"1050" => array('','-list'),
