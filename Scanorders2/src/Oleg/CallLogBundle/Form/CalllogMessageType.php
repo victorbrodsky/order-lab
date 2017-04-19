@@ -108,15 +108,6 @@ class CalllogMessageType extends AbstractType
             ));
         }
 
-//        $builder->add('messageCategory', 'entity', array(
-//            'label' => 'Message Type:',
-//            //'property' => 'getNodeNameWithRoot',
-//            'required' => true,
-//            'multiple' => false,
-//            'empty_value' => false,
-//            'class' => 'OlegOrderformBundle:MessageCategory',
-//            'attr' => array('class' => 'combobox combobox-width combobox-messageCategory')
-//        ));
         /////////////////////////////////////// messageCategory ///////////////////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $message = $event->getData();
@@ -137,7 +128,11 @@ class CalllogMessageType extends AbstractType
                 }
             }
             if (!$label) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper) . ":";
+                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+            }
+
+            if( $label ) {
+                $label = $label . ":";
             }
 
             //echo "show defaultInstitution label=".$label."<br>";
@@ -147,13 +142,15 @@ class CalllogMessageType extends AbstractType
                 'required' => false,
                 'read_only' => true,
                 'attr' => array(
-                    'class' => 'ajax-combobox-compositetree combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
+                    'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'MessageCategory',
                     'data-label-prefix' => '',
                     //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
                     'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
+                    'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
+                    'data-label-postfix-level' => '4', //postfix after level "Issue"
                 ),
                 'classtype' => 'messageCategory'
             ));
@@ -163,11 +160,6 @@ class CalllogMessageType extends AbstractType
             //$form = $this->addFormNodes($form,$messageCategory,$this->params);
 
         });
-
-//        $builder->add('messageCategory', new MessageCategoryFormNodeType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\MessageCategory',
-//            'label' => false
-//        ));
         /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
 
 

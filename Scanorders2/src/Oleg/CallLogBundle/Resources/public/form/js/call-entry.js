@@ -1505,6 +1505,57 @@ function calllogSubmitForm(btn,messageStatus) {
     }
     /////// EOF If the user enters patient info, does NOT press the "Find Patient" button (or presses it, but does not select a patient) ////////
 
+    ///////////// if issue is not selected => "Please select the appropriate issue to save your entry" ///////////////
+    var messageCategoryError = null;
+    var messageHolder = $('.ajax-combobox-messageCategory').closest('.composite-tree-holder');
+    var messageCategories = messageHolder.find('.treenode');
+    if( messageCategories ) {
+
+        var firstMessageCategory = messageCategories.first().find('input.ajax-combobox-messageCategory');
+        //console.log(firstMessageCategory);
+
+        if( firstMessageCategory.hasClass('combobox-compositetree-postfix-level') ) {
+
+            var postfixMinLevel = firstMessageCategory.data("label-postfix-level");
+            postfixMinLevel = parseInt(postfixMinLevel);
+            postfixMinLevel = postfixMinLevel + 1;
+            //console.log("postfixMinLevel=" + postfixMinLevel);
+            //var treeNodes = $('.composite-tree-holder').find('.treenode');
+
+            var messageCategoriesLength = messageCategories.length;
+            //console.log("messageCategoriesLength=" + messageCategoriesLength);
+
+            //console.log(parseInt(messageCategoriesLength) + " < " + parseInt(postfixMinLevel));
+            if( parseInt(messageCategoriesLength) < parseInt(postfixMinLevel) ) {
+                messageCategoryError = "Please select the appropriate service and issue to save your entry.";// + " [Service is not selected]";
+            } else {
+                //console.log(messageCategories.last().find('.ajax-combobox-messageCategory'));
+                var messageCategoryData = messageCategories.last().find('.ajax-combobox-messageCategory').select2('data'); //'data'
+                if( messageCategoryData ) {
+                    //console.log("messageCategory text=" + messageCategoryData.text);
+                    if( !messageCategoryData.text ) {
+                        messageCategoryError = "Please select the appropriate issue to save your entry.";// + " [Issue is not selected]";
+                        //console.log("messageCategoryData.text=" + messageCategoryData.text);
+                    }
+                } else {
+                    //console.log("messageCategoryData is null");
+                    messageCategoryError = "Please select the appropriate issue to save your entry.";
+                }
+            }
+
+            if( messageCategoryError ) {
+                $('#calllog-msg-danger-box').html(messageCategoryError);
+                $('#calllog-msg-danger-box').show();
+                lbtn.stop();
+                return false;
+            }
+        }
+    }
+    //console.log("exit");
+    //lbtn.stop();
+    //return false;
+    ///////////// EOF if issue is not selected => "Please select the appropriate issue to save your entry" ///////////////
+
     //B- Uniqueness of the Encounter Location Name. If the entered location name already exists in the database
     // (but any associated entered (non-empty) field values such as phone number do not equal associated values in the DB),
     // show a red well (dialog box? notification?) with:

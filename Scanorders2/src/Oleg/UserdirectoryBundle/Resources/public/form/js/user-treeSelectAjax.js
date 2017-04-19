@@ -166,7 +166,7 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
 
 
 function getComboboxNodeLabel(comboboxEl) {
-    var label = comboboxEl.closest('.treenode').find('label').text();
+    var label = comboboxEl.closest('.treenode').find('label').html();
     label = label.replace(':','');
     label = trimWithCheck(label);
 //    var prefixData = comboboxEl.data("label-prefix");
@@ -228,6 +228,18 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
             }
         }
 
+        //attach data-label-postfix-value-level after level data-specified label-postfix-level
+        if( comboboxEl.hasClass('combobox-compositetree-postfix-level') ) {
+            //console.log('rowElHtml='+rowElHtml);
+            var level = treeArr[0].level;
+            var readonlyExclusionAfterLevel = comboboxEl.data("label-postfix-level");
+            //console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
+            if( parseInt(level) >= parseInt(readonlyExclusionAfterLevel) ) {
+                var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
+                label = label + "" + postfixValueLevel;
+            }
+        }
+
         var comboboxHtml = rowElHtml;
 
         //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-compositetree" type="text"/>';
@@ -246,7 +258,7 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
         }
 
         //change label
-        newElementsAppendedRaw.find('label').text(label+":");
+        newElementsAppendedRaw.find('label').html(label+":");
 
         ///////////// initialize the node
         var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-compositetree');
