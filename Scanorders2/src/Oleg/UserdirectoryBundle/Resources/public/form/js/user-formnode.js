@@ -34,8 +34,11 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         return;
     }
 
+    var messageCategoryId = null;
     var thisData = comboboxEl.select2('data');
-    var messageCategoryId = thisData.id;
+    if( thisData ) {
+        messageCategoryId = thisData.id;
+    }
     //console.log("treeSelect AdditionalJsAction: messageCategoryId="+messageCategoryId);
 
     if( typeof messageCategoryId === 'undefined' || !messageCategoryId ) {

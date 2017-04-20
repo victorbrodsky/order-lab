@@ -708,6 +708,11 @@ class CallEntryController extends Controller
 
         //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
+        $formnodetrigger = 1;
+        if( $messageTypeId ) {
+            $formnodetrigger = 0; //build formnodes from top to bottom
+        }
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -717,7 +722,8 @@ class CallEntryController extends Controller
             'triggerSearch' => 0,
             'mrn' => $mrn,
             'mrntype' => $mrntype,
-            'titleheadroom' => null
+            'titleheadroom' => null,
+            'formnodetrigger' => $formnodetrigger
             //'readonlyEncounter' => $readonlyEncounters
             //'encounterid' => $encounterid
         );

@@ -36,7 +36,9 @@
 
     <br>
 
-    {% set formnodetrigger = 1 %}
+    {% if formnodetrigger is not defined %}
+        {% set formnodetrigger = 1 %}
+    {% endif %}
 
     <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
     <input type="hidden" id="formcycle" value="{{ cycle }}" />

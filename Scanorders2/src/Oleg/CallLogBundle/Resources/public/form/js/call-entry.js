@@ -1918,7 +1918,7 @@ function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
     if( typeof messageCategoryId === 'undefined' ) {
         messageCategoryId = null;
     }
-    console.log("messageCategoryId="+messageCategoryId);
+    //console.log("messageCategoryId="+messageCategoryId);
 
     var btn = document.getElementById("calllog-list-previous-entries-btn");
     var lbtn = Ladda.create(btn);
