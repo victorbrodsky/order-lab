@@ -23,8 +23,11 @@ var _holderName = "MessageCategory";
 var _formnode = [];
 var _saprefix = "fffsa"; //section array prefix flag. Must be the same as in getArraySectionPrefix()
 
+var _formnodeProcessing = false;
+var _TIMEOUT = 50; // waitfor test rate [msec]
+
 function treeSelectAdditionalJsAction(comboboxEl) {
-    //printF( comboboxEl, "treeSelectAdditionalJsAction: combobox on change:" );
+    //printF( comboboxEl, "treeSelect AdditionalJsAction: combobox on change:" );
 
     if( !comboboxEl.hasClass("ajax-combobox-messageCategory") ) {
         //console.log('this combobox is not message category');
@@ -33,11 +36,27 @@ function treeSelectAdditionalJsAction(comboboxEl) {
 
     var thisData = comboboxEl.select2('data');
     var messageCategoryId = thisData.id;
-    //console.log("treeSelectAdditionalJsAction: messageCategoryId="+messageCategoryId);
+    //console.log("treeSelect AdditionalJsAction: messageCategoryId="+messageCategoryId);
 
     if( typeof messageCategoryId === 'undefined' || !messageCategoryId ) {
         //console.log("return: messageCategoryId does not exists: "+messageCategoryId);
         return;
+    }
+
+    //don't run this function if formnodetrigger is 0
+    //console.log('formnodetrigger='+thisData.text+" ("+messageCategoryId+")");
+    if( $('#formnodetrigger') ) {
+        if( $('#formnodetrigger').val() == '0' || $('#formnodetrigger').val() == 0 ) {
+            //console.log('formnodetrigger is false=' + $('#formnodetrigger').val());
+            //console.log('formnodetrigger='+thisData.text+" ("+messageCategoryId+")");
+            if( messageCategoryId == 31 || messageCategoryId == '31' ) {
+                //if messageCategory is a top one "Encounter Note (31)", then trigger a top to bottom combobox processing
+                $('#formnodetrigger').val(1);
+                //process comboboxEls with associated formnodes from top to bottom
+                processFormNodeHoldersTopToBottom();
+            }
+            return;
+        }
     }
 
     //testing: do nothing if the fields were populated by controller
@@ -85,6 +104,8 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     };
 
     var url = Routing.generate('employees_formnode_fields');
+    _formnodeProcessing = true;
+
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
@@ -121,7 +142,41 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         alert("Error getting field(s) for "+_holderName+" "+messageCategoryId);
     }).done(function() {
         //console.log("update patient title done");
+        _formnodeProcessing = false;
     });
+}
+
+//process comboboxEl from top to bottom
+function processFormNodeHoldersTopToBottom() {
+    var messageHolder = $('.ajax-combobox-messageCategory').closest('.composite-tree-holder');
+    var messageCategories = messageHolder.find('.treenode');
+    //console.log('messageCategories len='+messageCategories.length);
+    messageCategories.each( function(e){
+
+        var comboboxEl =$(this).find('input.ajax-combobox-messageCategory');
+        var comboboxText = null;
+        if( comboboxEl && comboboxEl.select2('data') ) {
+            comboboxText = comboboxEl.select2('data').text;
+            //console.log('comboboxEl=' + comboboxText);
+        } else {
+            //console.log('comboboxEl is NULL');
+        }
+
+        //treeSelectAdditionalJsAction(comboboxEl);
+
+        //wait until _formnodeProcessing is false
+        // Wait until idle (busy must be false)
+        //var sourceStr = null;
+        var sourceStr = 'continue next: '+comboboxText;
+        waitfor(_isFormnodeProcessing, false, _TIMEOUT, 0, sourceStr, function() {
+            treeSelectAdditionalJsAction(comboboxEl);
+        });
+
+    });
+}
+// Test a flag
+function _isFormnodeProcessing() {
+    return _formnodeProcessing;
 }
 
 function calllogAppendFormNodes( data ) {
@@ -277,10 +332,11 @@ function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, f
     //console.log(appendEl);
     //appendEl.append(formNodeHtml);
     var attachType = 'append';
-    var formcycle = $('#formcycle').val();
-    if( formcycle == 'show' ) {
-        var attachType = 'prepend';
-    }
+    //for show use reverse array (don't use it for top to bottom combobox  processing)
+    //var formcycle = $('#formcycle').val();
+    //if( formcycle == 'show' ) {
+    //    var attachType = 'prepend';
+    //}
     calllogAttachHtml(appendEl,formNodeHtml,attachType);
     return appendEl;
 }
@@ -344,7 +400,7 @@ function calllogAttachHtml(element,html,type) {
 //}
 
 function treeSelectAdditionalJsActionRemove(comboboxEl,comboboxId) {
-    //console.log("treeSelectAdditionalJsActionRemove: comboboxId="+comboboxId);
+    //console.log("treeSelect AdditionalJsActionRemove: comboboxId="+comboboxId);
     //calllogTreeSelectRemove(comboboxEl,comboboxId);
 
     //1) check all comboboxId sinblings: find if any '.formnode-holder' visible data-formnodeholderid > comboboxId

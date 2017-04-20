@@ -1284,3 +1284,39 @@ function userPlayroomHeaderInit() {
         });
     }
 }
+
+//**********************************************************************
+// function waitfor - Wait until a condition is met
+//
+// Needed parameters:
+//    test: function that returns a value
+//    expectedValue: the value of the test function we are waiting for
+//    msec: delay between the calls to test
+//    callback: function to execute when the condition is met
+// Parameters for debugging:
+//    count: used to count the loops
+//    source: a string to specify an ID, a message, etc
+// The same function existed in slide-return-request-table.js, handsontable_scanorder.js
+//**********************************************************************
+function waitfor(test, expectedValue, msec, count, source, callback) {
+    //console.log('waitfor, count='+count);
+
+    //if( count > 200 ) {
+    //    //console.log('waitfor, exit on count');
+    //    return;
+    //}
+
+    // Check if condition met. If not, re-check later (msec).
+    while( test() !== expectedValue ) {
+        count++;
+        setTimeout(function() {
+            waitfor(test, expectedValue, msec, count, source, callback);
+        }, msec);
+        return;
+    }
+    // Condition finally met. callback() can be executed.
+    if(source) {
+        console.log(source + ': ' + test() + ', expected: ' + expectedValue + ', ' + count + ' loops.');
+    }
+    callback();
+}

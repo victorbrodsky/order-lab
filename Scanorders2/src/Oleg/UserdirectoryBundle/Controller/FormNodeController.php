@@ -109,12 +109,13 @@ class FormNodeController extends Controller {
         $formNodes = $formNodeUtil->getAllRealFormNodes($formNodeHolderEntity,$cycle);
 
         //reverse array to show the fields backwards for show and edit, otherwise the order of submitted form fields is reversed.
-        if( $cycle != "new" ) {
+        //if( $cycle != "new" ) {
             //test by link (Test: MessageCategory&holderId=70):
             // http://localhost/order/directory/formnode-fields/?holderNamespace=Oleg\OrderformBundle\Entity&holderName=MessageCategory&holderId=70&entityNamespace=Oleg\OrderformBundle\Entity&entityName=Message&entityId=222&cycle=show&testing=true
             //One way to solve it: for show and edit - start calling "formnode-fields" from top to bottom. On show page, this done in opposite way - from bottom to top.
-            $formNodes = array_reverse($formNodes);
-        }
+            //for show use reverse array (don't use it for top to bottom combobox  processing)
+            //$formNodes = array_reverse($formNodes);
+        //}
 
         foreach( $formNodes as $formNode ) {
 

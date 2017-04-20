@@ -768,7 +768,9 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             //$criteriastr .= "(administrativeName.name != 'Postdoctoral Associate' AND appointmentName.name != 'Postdoctoral Associate' AND medicalName.name != 'Postdoctoral Associate')";
             //$criteriastr .= "(medicalName.name != 'Postdoctoral Associate')";
-            $criteriastr .= "(medicalName.name IS NULL OR medicalName.name != 'Postdoctoral Associate')";
+            //$criteriastr .= "(medicalName.name IS NULL OR medicalName.name != 'Postdoctoral Associate')";
+            $criteriastr .= "(appointmentName.name IS NOT NULL OR (medicalName.name IS NOT NULL AND medicalName.name != 'Postdoctoral Associate'))";
+            //$criteriastr .= "(medicalName.name IS NOT NULL AND medicalName.name != 'Postdoctoral Associate')";
         }
 
 
