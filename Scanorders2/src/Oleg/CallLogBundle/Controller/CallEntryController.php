@@ -713,6 +713,14 @@ class CallEntryController extends Controller
             $formnodetrigger = 0; //build formnodes from top to bottom
         }
 
+        //top message category id
+        $formnodeTopHolderId = null;
+        $categoryStr = "Pathology Call Log Entry";
+        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        if( $messageCategory ) {
+            $formnodeTopHolderId = $messageCategory->getId();
+        }
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -723,7 +731,8 @@ class CallEntryController extends Controller
             'mrn' => $mrn,
             'mrntype' => $mrntype,
             'titleheadroom' => null,
-            'formnodetrigger' => $formnodetrigger
+            'formnodetrigger' => $formnodetrigger,
+            'formnodeTopHolderId' => $formnodeTopHolderId
             //'readonlyEncounter' => $readonlyEncounters
             //'encounterid' => $encounterid
         );
@@ -2282,6 +2291,14 @@ class CallEntryController extends Controller
         $className = $class->getShortName();          //ObjectTypeText
         $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
 
+        //top message category id
+        $formnodeTopHolderId = null;
+        $categoryStr = "Pathology Call Log Entry";
+        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        if( $messageCategory ) {
+            $formnodeTopHolderId = $messageCategory->getId();
+        }
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -2298,7 +2315,8 @@ class CallEntryController extends Controller
             'entityName' => $className,
             'entityId' => $message->getId(),
             'sitename' => $this->container->getParameter('calllog.sitename'),
-            'titleheadroom' => $title
+            'titleheadroom' => $title,
+            'formnodeTopHolderId' => $formnodeTopHolderId
         );
     }
 

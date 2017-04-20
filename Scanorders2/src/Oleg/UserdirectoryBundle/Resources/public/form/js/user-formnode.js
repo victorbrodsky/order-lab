@@ -25,6 +25,8 @@ var _saprefix = "fffsa"; //section array prefix flag. Must be the same as in get
 
 var _formnodeProcessing = false;
 var _TIMEOUT = 50; // waitfor test rate [msec]
+//var _holderLevel = 0; //MessageCategory level
+//var _maxHolderLevel = 4; //max MessageCategory level
 
 function treeSelectAdditionalJsAction(comboboxEl) {
     //printF( comboboxEl, "treeSelect AdditionalJsAction: combobox on change:" );
@@ -46,13 +48,17 @@ function treeSelectAdditionalJsAction(comboboxEl) {
         return;
     }
 
+    var formnodeTopHolderId = $('#formnodeTopHolderId').val();
+    //console.log('formnodeTopHolderId='+formnodeTopHolderId);
+
     //don't run this function if formnodetrigger is 0
     //console.log('formnodetrigger='+thisData.text+" ("+messageCategoryId+")");
     if( $('#formnodetrigger') ) {
         if( $('#formnodetrigger').val() == '0' || $('#formnodetrigger').val() == 0 ) {
             //console.log('formnodetrigger is false=' + $('#formnodetrigger').val());
             //console.log('formnodetrigger='+thisData.text+" ("+messageCategoryId+")");
-            if( messageCategoryId == 31 || messageCategoryId == '31' ) {
+            //if( messageCategoryId == 31 || messageCategoryId == '31' ) {
+            if( messageCategoryId == formnodeTopHolderId ) {
                 //if messageCategory is a top one "Encounter Note (31)", then trigger a top to bottom combobox processing
                 $('#formnodetrigger').val(1);
                 //process comboboxEls with associated formnodes from top to bottom
@@ -892,4 +898,11 @@ function formNodeProcessRemoveSectionBtn( formNodeId ) {
     }
 }
 
+//https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/17/create-a-function-to-calculate-cci
+//CCI = ((postPlateletCount - prePlateletCount ) * BodySurfaceArea) / number_of_Platelets_in_Unit
+function formNodeCCICalculation() {
+    //add classes and listener for each variable in the equation to calculate CCI
+    //http://localhost/order/directory/formnode-fields/?holderNamespace=Oleg\OrderformBundle\Entity&holderName=MessageCategory&holderId=43&cycle=new&testing=true
+    //add class in formnodemacros in stringField by if formNode.name == "Pre-transfusion Platelet Count" etc...
+}
 

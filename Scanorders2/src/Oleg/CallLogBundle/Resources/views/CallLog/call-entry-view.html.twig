@@ -44,7 +44,6 @@
 
     {% set formnodetrigger = 0 %}
 
-    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="orderformtype" value="calllog" />
     <input type="hidden" id="formtype" value="{{ formtype }}" />
@@ -56,6 +55,9 @@
     <input type="hidden" id="entityName" value="{{ entityName }}" />
     <input type="hidden" id="entityId" value="{{ entityId }}" />
     {#<input type="hidden" id="encounterid" value="{{ encounterid }}" />#}
+
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
 
     <div id="calllog-patient-list">
