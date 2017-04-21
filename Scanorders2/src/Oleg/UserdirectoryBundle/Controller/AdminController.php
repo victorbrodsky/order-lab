@@ -1373,7 +1373,7 @@ class AdminController extends Controller
 
             //////////// CALLLOG roles ////////////
             "ROLE_CALLLOG_ADMIN" => array(
-                "Call Logbook Administrator",
+                "Call Log Book Administrator",
                 "Full access for  Call Logbook site",
                 90
             ),
@@ -1401,7 +1401,7 @@ class AdminController extends Controller
             ),
 
             "ROLE_CALLLOG_USER" => array(
-                "Call Logbook User",
+                "Call Log Book User",
                 "Can create, edit and read call book entries",
                 30
             ),
@@ -6552,6 +6552,8 @@ class AdminController extends Controller
             $resCount = $resCount + $this->addSites( $role, '_SCANORDER_', 'scan' );
 
             $resCount = $resCount + $this->addSites( $role, '_USERDIRECTORY_', 'directory' );
+
+            $resCount = $resCount + $this->addSites( $role, '_CALLLOG_', 'call-log-book' );
 
 
             $resCount = $resCount + $this->addFellAppPermission( $role );

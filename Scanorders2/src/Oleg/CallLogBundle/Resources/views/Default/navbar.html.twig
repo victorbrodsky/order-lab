@@ -113,12 +113,15 @@
                     {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
 
                         <li id="nav-bar-dataquality" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data Quality<b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ path(calllog_sitename~'_edit_patient_record') }}">Edit Patient Info</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_merge_patient_records') }}">Merge Patient Records</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_unmerge_patient_records') }}">Un-merge Patient Records</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_set_master_patient_record') }}">Set master record</a></li>
+                                {% if shownavbarfilter is defined and shownavbarfilter == false %}
+                                    <li><a href="{{ path(calllog_sitename~'_export_csv',{'':app.request.query.all}) }}">Export in .CSV</a></li>
+                                {% endif %}
                             </ul>
                         </li>
 

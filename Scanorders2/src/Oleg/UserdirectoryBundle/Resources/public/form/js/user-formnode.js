@@ -700,6 +700,13 @@ function formNodeAddSameSection( btn, formNodeCleanId, formNodeId ) {
         //} else {
         //    attachEl.find('.formnode-remove-section').hide();
         //}
+
+        //CCI
+        //if( appendedEl ) {
+            formNodeCCICalculationListener(appendedEl, '.cci-pre-transfusion-platelet-count');
+            formNodeCCICalculationListener(appendedEl, '.cci-post-transfusion-platelet-count');
+        //}
+
     }
 
 }
@@ -908,30 +915,33 @@ function formNodeProcessRemoveSectionBtn( formNodeId ) {
 
 function formNodeCCICalculationListener(appendedEl,targetName){
     var targetEl = appendedEl.find(targetName);
-    //console.log("len="+targetEl.length);
+    console.log("######### len="+targetEl.length);
+    //console.log(appendedEl);
     //console.log(targetEl);
+    //console.log("#########");
     if( targetEl.length > 0 ) {
+        console.log(appendedEl);
         //console.log(targetEl);
-        //console.log("appendedElVal has class "+targetName);
+        console.log("appendedElVal has class "+targetName);
         targetEl.on('input', function () {
             //var appendedElVal = $(this).val() // get the current value of the input field.
             //console.log("appendedElVal=" + appendedElVal);
-            formNodeCCICalculation();
+            formNodeCCICalculation(appendedEl);
         });
     }
 }
 //https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/17/create-a-function-to-calculate-cci
 //CCI = ((postPlateletCount - prePlateletCount ) * BodySurfaceArea) / number_of_Platelets_in_Unit
-function formNodeCCICalculation() {
+function formNodeCCICalculation(appendedEl) {
     //console.log('cci input changed');
-    var result = $(".cci-result");
+    var result = appendedEl.find(".cci-result");
     if( result ) {
-        var pre = $(".cci-pre-transfusion-platelet-count").val();
-        var post = $(".cci-post-transfusion-platelet-count").val();
+        var pre = appendedEl.find(".cci-pre-transfusion-platelet-count").val();
+        var post = appendedEl.find(".cci-post-transfusion-platelet-count").val();
         var bsa = $(".cci-bsa").val();
         var count = $(".cci-unit-platelet-count").val();
         if( pre && post && bsa && count ) {
-            //console.log('cci calculating...:' + pre + "; " + post + "; " + bsa + "; " + count);
+            console.log('cci calculating...:' + pre + "; " + post + "; " + bsa + "; " + count);
             var resultValue = ((post - pre) * bsa) / count;
             //console.log('resultValue=' + resultValue);
             result.val(resultValue);

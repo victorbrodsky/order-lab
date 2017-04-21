@@ -2320,4 +2320,22 @@ class CallEntryController extends Controller
         );
     }
 
+
+    /**
+     * @Route("/export_csv/", name="calllog_export_csv")
+     */
+    public function exportCsvAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //$patientId = trim($request->get('patientId'));
+        //$mrn = trim($request->get('mrn'));
+
+        $all = $request->get('all');
+        echo "all=".$all."<br>";
+
+
+        exit();
+    }
 }
