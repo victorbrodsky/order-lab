@@ -197,7 +197,7 @@ function calllogAppendFormNodes( data ) {
         var formNodeHtml = data[index]['formNodeHtml'];
         var arraySectionCount = data[index]['arraySectionCount'];
 
-        calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml,arraySectionCount);
+        var appendedEl = calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml,arraySectionCount);
 
         if(
             data[index]['formNodeObjectType'] == "Form Field - Dropdown Menu" ||
@@ -278,7 +278,14 @@ function calllogAppendFormNodes( data ) {
             $('#formnode-'+formNodeId).find('input').inputmask("Regex", {regex: "[+-]?([0-9]*[.])?[0-9]{0,30}"});
         }
 
-    }
+        if( appendedEl ) {
+            formNodeCCICalculationListener(appendedEl,'.cci-pre-transfusion-platelet-count');
+            formNodeCCICalculationListener(appendedEl,'.cci-post-transfusion-platelet-count');
+            formNodeCCICalculationListener(appendedEl,'.cci-bsa');
+            formNodeCCICalculationListener(appendedEl,'.cci-unit-platelet-count');
+        }
+
+    }//for
 }
 //find the latest parent formnode holder element by parentFormNodeId id
 function calllogAppendElement( formNodeHolderId, parentFormNodeId, formNodeId, formNodeHtml, arraySectionCount ) {
@@ -898,11 +905,36 @@ function formNodeProcessRemoveSectionBtn( formNodeId ) {
     }
 }
 
+
+function formNodeCCICalculationListener(appendedEl,targetName){
+    var targetEl = appendedEl.find(targetName);
+    //console.log("len="+targetEl.length);
+    //console.log(targetEl);
+    if( targetEl.length > 0 ) {
+        //console.log(targetEl);
+        //console.log("appendedElVal has class "+targetName);
+        targetEl.on('input', function () {
+            //var appendedElVal = $(this).val() // get the current value of the input field.
+            //console.log("appendedElVal=" + appendedElVal);
+            formNodeCCICalculation();
+        });
+    }
+}
 //https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/17/create-a-function-to-calculate-cci
 //CCI = ((postPlateletCount - prePlateletCount ) * BodySurfaceArea) / number_of_Platelets_in_Unit
 function formNodeCCICalculation() {
-    //add classes and listener for each variable in the equation to calculate CCI
-    //http://localhost/order/directory/formnode-fields/?holderNamespace=Oleg\OrderformBundle\Entity&holderName=MessageCategory&holderId=43&cycle=new&testing=true
-    //add class in formnodemacros in stringField by if formNode.name == "Pre-transfusion Platelet Count" etc...
+    //console.log('cci input changed');
+    var result = $(".cci-result");
+    if( result ) {
+        var pre = $(".cci-pre-transfusion-platelet-count").val();
+        var post = $(".cci-post-transfusion-platelet-count").val();
+        var bsa = $(".cci-bsa").val();
+        var count = $(".cci-unit-platelet-count").val();
+        if( pre && post && bsa && count ) {
+            //console.log('cci calculating...:' + pre + "; " + post + "; " + bsa + "; " + count);
+            var resultValue = ((post - pre) * bsa) / count;
+            //console.log('resultValue=' + resultValue);
+            result.val(resultValue);
+        }
+    }
 }
-

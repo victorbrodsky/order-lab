@@ -521,10 +521,30 @@
         {% endif %}
     {% endif %}
 
+    {#CCI classes for new and edit#}
+    {% set addCalss = "" %}
+    {% if cycle != 'show' %}
+        {% if formNode.name == "CCI" %}
+            {% set addCalss = "cci-result" %}
+        {% endif %}
+        {% if formNode.name == "Pre-transfusion Platelet Count" %}
+            {% set addCalss = "cci-pre-transfusion-platelet-count" %}
+        {% endif %}
+        {% if formNode.name == "Post-transfusion Platelet Count" %}
+            {% set addCalss = "cci-post-transfusion-platelet-count" %}
+        {% endif %}
+        {% if formNode.name == "BSA" %}
+            {% set addCalss = "cci-bsa" %}
+        {% endif %}
+        {% if formNode.name == "Unit Platelet Count" %}
+            {% set addCalss = "cci-unit-platelet-count" %}
+        {% endif %}
+    {% endif %}
+
     <input
         id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
         name="{{ fieldname }}"
-        class="form-control"
+        class="form-control {{ addCalss }}"
         value="{{ fieldValue }}"
         placeholder="{{ placeholder }}"
         {{ disabled }}

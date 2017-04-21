@@ -36,6 +36,8 @@ function initCallLogPage() {
     calllogLocationNameListener('patient-holder-1');
 
     calllogEncounterReferringProviderListener('patient-holder-1');
+
+    //formNodeCCICalculation_OLD();
 }
 
 //prevent exit modified form
