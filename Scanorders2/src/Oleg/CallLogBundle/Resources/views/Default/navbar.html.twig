@@ -120,7 +120,7 @@
                                 <li><a href="{{ path(calllog_sitename~'_unmerge_patient_records') }}">Un-merge Patient Records</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_set_master_patient_record') }}">Set master record</a></li>
                                 {% if shownavbarfilter is defined and shownavbarfilter == false %}
-                                    <li><a href="{{ path(calllog_sitename~'_export_csv',{'':app.request.query.all}) }}">Export in .CSV</a></li>
+                                    <li><a href="{{ path(calllog_sitename~'_export_csv',app.request.query.all) }}">Export in .CSV</a></li>
                                 {% endif %}
                             </ul>
                         </li>

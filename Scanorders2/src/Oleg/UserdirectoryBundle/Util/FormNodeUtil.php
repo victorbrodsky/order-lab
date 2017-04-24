@@ -1003,7 +1003,7 @@ class FormNodeUtil
             $result = '<td colspan=9><table class = "table table-hover table-condensed">' . $result . '</table></td>';
             //$result = '<td colspan=9>' . $result . '</td>';
         } else {
-            $result = '<td colspan=9>'.implode($separator,$result).'</td>';
+            //$result = '<td colspan=9>'.implode($separator,$result).'</td>';
         }
 
         //exit('$result='.$result);
@@ -1113,6 +1113,7 @@ class FormNodeUtil
                                     '<td colspan=6 class="rowlink-skip" style="width:80%">'.$elementValue.'</td>'.'</tr>';
                             } else {
                                 $result[] = $elementName . ": " . $elementValue;
+                                //$result[$elementName] = $elementValue;
                             }
 
                             //echo "RESULT=".$result."<br>";
@@ -1139,6 +1140,7 @@ class FormNodeUtil
                                 '<td colspan=6 class="rowlink-skip" style="width:80%">'.$elementValue.'</td>'.'</tr>';
                         } else {
                             $result[] = $elementName . ": " . $elementValue;
+                            //$result[$elementName] = $elementValue;
                         }
                     }//if array or single value
 

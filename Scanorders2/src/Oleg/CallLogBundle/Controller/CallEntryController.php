@@ -78,11 +78,84 @@ class CallEntryController extends Controller
         $route = $request->get('_route');
         $title = "Call Case List";
         $alerts = false;
+        $limit = 10;
 
-        if( $request->get('_route') == "calllog_alerts" ) {
+        if( $route == "calllog_alerts" ) {
             $alerts = true;
             $title = $title . " (Alerts)";
         }
+
+        $res = $this->getCalllogEntryFilter($request);
+
+        if( $res['redirect'] ) {
+            return $res['redirect'];
+        }
+
+        $query = $res['query'];
+        $filterform = $res['filterform'];
+        $advancedFilter = $res['advancedFilter'];
+
+        $paginator  = $this->get('knp_paginator');
+        $messages = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            //$request->query->getInt('page', 1),
+            $limit      /*limit per page*/
+        );
+        //echo "messages count=".count($messages)."<br>";
+
+        //all messages will show only form fields for this message category node
+//        $categoryStr = "Pathology Call Log Entry";
+//        $messageCategoryInfoNode = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+//        if( !$messageCategoryInfoNode ) {
+//            throw new \Exception( "MessageCategory type is not found by name '".$categoryStr."'" );
+//        }
+
+        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        if( $eventObjectType ) {
+            $eventObjectTypeId = $eventObjectType->getId();
+        } else {
+            $eventObjectTypeId = null;
+        }
+
+        $defaultPatientListId = null;
+        $defaultPatientList = $calllogUtil->getDefaultPatientList();
+        if( $defaultPatientList ) {
+            $defaultPatientListId = $defaultPatientList->getId();
+        }
+
+        return array(
+            'messages' => $messages,
+            'alerts' => $alerts,
+            'title' => $title,
+            'filterform' => $filterform->createView(),
+            'route_path' => $route,
+            'advancedFilter' => $advancedFilter,
+            //'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
+            'eventObjectTypeId' => $eventObjectTypeId,
+            'patientListId' => $defaultPatientListId,
+            'shownavbarfilter' => false
+            //'navbarfilterform' => $navbarfilterform->createView()
+            //'sitename' => $this->container->getParameter('calllog.sitename')
+            //'calllogsearch' => $calllogsearch,
+            //'calllogsearchtype' => $calllogsearchtype,
+        );
+    }
+
+    public function getCalllogEntryFilter(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $calllogUtil = $this->get('calllog_util');
+
+        //$route = $request->get('_route');
+        //$title = "Call Case List";
+
+        //$alerts = false;
+        //if( $route == "calllog_alerts" ) {
+        //    $alerts = true;
+        //    $title = $title . " (Alerts)";
+        //}
 
         //$messageStatuses
         $messageStatuses = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findBy(array('type'=>array('default','user-added')));
@@ -206,13 +279,15 @@ class CallEntryController extends Controller
             $messageCategoryEntity = $calllogUtil->getMessageCategoryEntityByIdStr($messageCategory);
         }
 
+        //redirect if filter is empty
         if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
-            return $this->redirect( $this->generateUrl('calllog_home',
+            $redirect = $this->redirect( $this->generateUrl('calllog_home',
                 array(
                     'filter[messageStatus]'=>"All except deleted",
                     'filter[messageCategory]'=>$messageCategorieDefaultIdStr    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
                 )
             ) );
+            return array('redirect' => $redirect);
         }
 
         //perform search
@@ -472,57 +547,66 @@ class CallEntryController extends Controller
         //$query = $em->createQuery($dql);
         //$messages = $query->getResult();
 
-        $limit = 10;
+        //$limit = 10;
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
         //echo "query=".$query->getSql()."<br>";
 
-        $paginator  = $this->get('knp_paginator');
-        $messages = $paginator->paginate(
-            $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
-            //$request->query->getInt('page', 1),
-            $limit      /*limit per page*/
-        );
-        //echo "messages count=".count($messages)."<br>";
-
-        //all messages will show only form fields for this message category node
-//        $categoryStr = "Pathology Call Log Entry";
-//        $messageCategoryInfoNode = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
-//        if( !$messageCategoryInfoNode ) {
-//            throw new \Exception( "MessageCategory type is not found by name '".$categoryStr."'" );
-//        }
-
-        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
-        if( $eventObjectType ) {
-            $eventObjectTypeId = $eventObjectType->getId();
-        } else {
-            $eventObjectTypeId = null;
-        }
-
-        $defaultPatientListId = null;
-        $defaultPatientList = $calllogUtil->getDefaultPatientList();
-        if( $defaultPatientList ) {
-            $defaultPatientListId = $defaultPatientList->getId();
-        }
-
-        return array(
-            'messages' => $messages,
-            'alerts' => $alerts,
-            'title' => $title,
-            'filterform' => $filterform->createView(),
-            'route_path' => $route,
+        $res = array(
+            'query' => $query,
+            'filterform' => $filterform,
             'advancedFilter' => $advancedFilter,
-            //'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
-            'eventObjectTypeId' => $eventObjectTypeId,
-            'patientListId' => $defaultPatientListId,
-            'shownavbarfilter' => false
-            //'navbarfilterform' => $navbarfilterform->createView()
-            //'sitename' => $this->container->getParameter('calllog.sitename')
-            //'calllogsearch' => $calllogsearch,
-            //'calllogsearchtype' => $calllogsearchtype,
+            'redirect' => null
         );
+
+        return $res;
+
+//        $paginator  = $this->get('knp_paginator');
+//        $messages = $paginator->paginate(
+//            $query,
+//            $this->get('request')->query->get('page', 1), /*page number*/
+//            //$request->query->getInt('page', 1),
+//            $limit      /*limit per page*/
+//        );
+//        //echo "messages count=".count($messages)."<br>";
+//
+//        //all messages will show only form fields for this message category node
+////        $categoryStr = "Pathology Call Log Entry";
+////        $messageCategoryInfoNode = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+////        if( !$messageCategoryInfoNode ) {
+////            throw new \Exception( "MessageCategory type is not found by name '".$categoryStr."'" );
+////        }
+//
+//        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+//        if( $eventObjectType ) {
+//            $eventObjectTypeId = $eventObjectType->getId();
+//        } else {
+//            $eventObjectTypeId = null;
+//        }
+//
+//        $defaultPatientListId = null;
+//        $defaultPatientList = $calllogUtil->getDefaultPatientList();
+//        if( $defaultPatientList ) {
+//            $defaultPatientListId = $defaultPatientList->getId();
+//        }
+//
+//        return array(
+//            'messages' => $messages,
+//            'alerts' => $alerts,
+//            'title' => $title,
+//            'filterform' => $filterform->createView(),
+//            'route_path' => $route,
+//            'advancedFilter' => $advancedFilter,
+//            //'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
+//            'eventObjectTypeId' => $eventObjectTypeId,
+//            'patientListId' => $defaultPatientListId,
+//            'shownavbarfilter' => false
+//            //'navbarfilterform' => $navbarfilterform->createView()
+//            //'sitename' => $this->container->getParameter('calllog.sitename')
+//            //'calllogsearch' => $calllogsearch,
+//            //'calllogsearchtype' => $calllogsearchtype,
+//        );
 
     }
     public function isFilterEmpty($filterform) {
@@ -2323,19 +2407,274 @@ class CallEntryController extends Controller
 
     /**
      * @Route("/export_csv/", name="calllog_export_csv")
+     * @Template("OlegCallLogBundle:Export:call-entry-export-csv.html.twig")
      */
     public function exportCsvAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
         $user = $this->get('security.context')->getToken()->getUser();
+        $userSecUtil = $this->get('user_security_utility');
 
-        //$patientId = trim($request->get('patientId'));
-        //$mrn = trim($request->get('mrn'));
+        //$all = $request->get('all');
+        //echo "all=".$all."<br>";
 
-        $all = $request->get('all');
-        echo "all=".$all."<br>";
+        $res = $this->getCalllogEntryFilter($request);
 
+        if( $res['redirect'] ) {
+            exit('redirect to home page');
+            return $res['redirect'];
+        }
+
+        $query = $res['query'];
+        //$filterform = $res['filterform'];
+        //$advancedFilter = $res['advancedFilter'];
+
+        $entries = $query->getResult();
+        //echo "number of entries=".count($entries)."<br>";
+
+        if( count($entries) == 0 ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "No entries found for exporting."
+            );
+            return $this->redirect( $this->generateUrl('calllog_home') );
+        }
+
+        //An entry should be added to the Event Log, Titled "Call Log Book data exported".
+        $eventType = "Call Log Book data exported";
+        $eventDesc = "Call Log Book data exported on ".date('m/d/Y H:i')." by ".$user.". Exported entries count is ".count($entries);
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventDesc, $user, $entries, $request, $eventType);
+
+        //filename: The title of the file should be "Call-Log-Book-Entries-exported-on-[Timestamp]-by-[Logged-In-User-FirstName-LastName-(cwid)].csv .
+        $userName = $user."";//->getUsernameOptimal();
+        $userName = str_replace(",", "-", $userName);
+        //$userName = str_replace("--", "-", $userName);
+        //exit("userName=".$userName);
+
+        $fileName = "Call-Log-Book-Entries-exported-on-".date('m/d/Y')."-".date('H:i')."-by-".$userName.".xlsx";
+        $fileName = str_replace("  ", " ", $fileName);
+        $fileName = str_replace(" ", "-", $fileName);
+        $fileName = str_replace("--", "-", $fileName);
+        $fileName = str_replace("--", "-", $fileName);
+        //exit($fileName);
+
+        //testing: render in html with excel header
+        if(0) {
+            return $this->render('OlegCallLogBundle:Export:call-entry-export-csv.html.twig', array(
+                'messages' => $entries,
+                'title' => "Call Log Book data",
+                'filename' => $fileName
+            ));
+        }
+
+        $excelBlob = $this->createCalllogListExcel($entries,$user);
+
+        $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
+        //ob_end_clean();
+        //$writer->setIncludeCharts(true);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+        // Write file to the browser
+        $writer->save('php://output');
 
         exit();
+    }
+
+    public function createCalllogListExcel($entries,$author) {
+
+        $formNodeUtil = $this->get('user_formnode_utility');
+
+        $ea = new \PHPExcel(); // ea is short for Excel Application
+
+        $ea->getProperties()
+            ->setCreator($author."")
+            ->setTitle('Call Log Book data')
+            ->setLastModifiedBy($author."")
+            ->setDescription('Call Log Book data list in Excel format')
+            ->setSubject('PHP Excel manipulation')
+            ->setKeywords('excel php office phpexcel lakers')
+            ->setCategory('programming')
+        ;
+
+        $title = 'Call Log Book data';
+        $ews = $ea->getSheet(0);
+        $ews->setTitle($title);
+
+        //align all cells to left
+//        $style = array(
+//            'alignment' => array(
+//                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+//            )
+//        );
+        $style = array(
+            'alignment' => array(
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP,
+            ),
+            'font'  => array(
+                'size'  => 10,
+                'name'  => 'Calibri'
+            )
+        );
+        //$ews->getDefaultStyle()->applyFromArray($style);
+        $ews->getParent()->getDefaultStyle()->applyFromArray($style);
+
+//        //set width (from original excel file to make printable)
+//        $ews->getColumnDimension('A')->setWidth(22.18);
+//        $ews->getColumnDimension('B')->setWidth(24.36);   //20.36
+//        $ews->getColumnDimension('C')->setWidth(24.36);   //18.36
+//        $ews->getColumnDimension('D')->setWidth(14.18);   //8.18
+//        $ews->getColumnDimension('E')->setWidth(24.64);   //21.64
+//        $ews->getColumnDimension('F')->setWidth(24.64);   //21.64
+//        $ews->getColumnDimension('G')->setWidth(24.64);   //21.64
+//        $ews->getColumnDimension('H')->setWidth(24.64);   //21.64
+
+//        //marging
+//        $ews->getPageMargins()->setTop(1);
+//        $ews->getPageMargins()->setRight(0.25); //0.75
+//        $ews->getPageMargins()->setLeft(0);
+//        $ews->getPageMargins()->setBottom(1);
+
+        //set title
+        $ews->getHeaderFooter()->setOddHeader('&C&H'.$title);
+
+//        //set footer (The code for "left" is &L)
+//        $ews->getHeaderFooter()->setOddFooter('&L'.$footer);
+//        $ews->getHeaderFooter()->setEvenFooter('&L'.$footer);
+
+        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
+        $ews->setCellValue('B1', 'Last Modified');
+        $ews->setCellValue('C1', 'Patient Name');
+        $ews->setCellValue('D1', 'MRN');
+        $ews->setCellValue('E1', 'Location');
+        $ews->setCellValue('F1', 'Referring Provider');
+        $ews->setCellValue('G1', 'Call Issue');
+        $ews->setCellValue('H1', 'Author');
+
+        //set bold
+        $ews->getStyle("A1:H1")->getFont()->setBold(true);
+
+        $row = 2;
+        foreach( $entries as $message ) {
+
+            //ID
+            $ews->setCellValue('A'.$row, $message->getId());
+
+            //Last Modified
+            $lastModified = null;
+            if( $message->getVersion() > 1 ) {
+                if (count($message->getEditorInfos()) > 0) {
+                    $modifiedOnDate = $message->getEditorInfos()[0]->getModifiedOn();
+                    $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+                } else {
+                    $modifiedOnDate = $message->getOrderdate();
+                    $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+                }
+            } else {
+                $modifiedOnDate = $message->getOrderdate();
+                $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+            }
+            $ews->setCellValue('B'.$row, $lastModified);
+
+            //Patient
+            $patientNames = array();
+            $mrns = array();
+            foreach( $message->getPatient() as $patient ) {
+                $patientNames[] = $patient->getFullPatientName(false);
+                $mrns[] = $patient->obtainFullValidKeyName();
+            }
+
+            //Patient Name
+            $patientNameStr = implode("\n",$patientNames);
+            $ews->setCellValue('C'.$row, $patientNameStr);
+
+            //MRN
+            $mrnsStr = implode("\n",$mrns);
+            $ews->setCellValue('D'.$row, $mrnsStr);
+
+
+            //Location and Referring Provider
+            $locationArr = array();
+            $refProviderArr = array();
+            foreach( $message->getEncounter() as $encounter ) {
+                $locationArr[] = $encounter->obtainLocationInfo();
+                foreach( $encounter->getReferringProviders() as $refProvider ) {
+                    if( $refProvider->getField() ) {
+                        $refProviderArr[] = $refProvider->getField()->getFullName();
+                    }
+                }
+            }
+
+            //Location
+            $locationStr = implode("\n",$locationArr);
+            $ews->setCellValue('E'.$row, $locationStr);
+
+            //Referring Provider
+            $refProviderStr = implode("\n",$refProviderArr);
+            $ews->setCellValue('F'.$row, $refProviderStr);
+
+            //Call Issue
+            $callIssue = $message->getMessageCategory()->getNodeNameWithParents();
+            $ews->setCellValue('G'.$row, $callIssue);
+
+            //Author
+            $author = null;
+            if( $message->getMessageStatus() && $message->getMessageStatus()->getName() == "Draft" ) {
+                $provider = $message->getProvider();
+                if( $provider ) {
+                    $author = $provider->getUsernameOptimal();
+                }
+            } else {
+                $signeeInfo = $message->getSigneeInfo();
+                if( $signeeInfo && $signeeInfo->getModifiedBy() ) {
+                    $author = $signeeInfo->getModifiedBy()->getUsernameOptimal();
+                }
+            }
+            $ews->setCellValue('H'.$row, $author);
+
+            //subsection with message snapshot info
+            $row = $row + 1;
+            $trclassname = "";
+            $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,$trclassname);
+
+            $snapshot = implode("\n ",$snapshotArr);
+            //exit('$snapshot='.$snapshotArr);
+            $aRow = 'A' . $row;
+            //$aRowMerged = 'A' . $row . ':' . 'H' . $row;
+            //$ews->mergeCells($aRowMerged);
+            $ews->setCellValue($aRow, " ".$snapshot);
+            $ews->getStyle($aRow)->getAlignment()->setWrapText(true);
+
+            //increment row index
+            $row = $row + 1;
+
+        }//foreach
+
+
+
+        // Auto size columns for each worksheet
+        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        foreach ($ea->getWorksheetIterator() as $worksheet) {
+
+            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
+
+            $sheet = $ea->getActiveSheet();
+            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
+            /** @var PHPExcel_Cell $cell */
+            foreach ($cellIterator as $cell) {
+                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+            }
+        }
+
+
+        return $ea;
     }
 }

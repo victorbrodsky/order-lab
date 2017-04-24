@@ -138,116 +138,116 @@
     <br><br>
 
     {#table-striped #}
-    <table class="records_list table table-hover table-condensed text-left">
-        <thead>
-        <tr>
-            <th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>
-            <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
-            <th>{{ knp_pagination_sortable(messages, 'Patient Name', 'lastname.field') }}</th>
-            <th>{{ knp_pagination_sortable(messages, 'MRN', 'mrn.field') }}</th>
-            <th>{{ knp_pagination_sortable(messages, 'Location', 'currentLocation.name') }}
-            <th>{{ knp_pagination_sortable(messages, 'Referring Provider', 'referringProviderWrapper.name') }}</th>
-            <th>{{ knp_pagination_sortable(messages, 'Call Issue', 'messageCategory.name') }}</th>
-            <th>{{ knp_pagination_sortable(messages, 'Author', 'authorInfos.displayName') }}</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody data-link="row" class="rowlink">
+    {#<table class="records_list table table-hover table-condensed text-left">#}
+        {#<thead>#}
+        {#<tr>#}
+            {#<th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(messages, 'Patient Name', 'lastname.field') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(messages, 'MRN', 'mrn.field') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(messages, 'Location', 'currentLocation.name') }}#}
+            {#<th>{{ knp_pagination_sortable(messages, 'Referring Provider', 'referringProviderWrapper.name') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(messages, 'Call Issue', 'messageCategory.name') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(messages, 'Author', 'authorInfos.displayName') }}</th>#}
+            {#<th>Actions</th>#}
+        {#</tr>#}
+        {#</thead>#}
+        {#<tbody data-link="row" class="rowlink">#}
 
-        {% set count = 0 %}
-        {% for message in messages %}
+        {#{% set count = 0 %}#}
+        {#{% for message in messages %}#}
 
-            {% if count is odd %}
-                {% set trclassname = "table-row-separator-gray" %}
-            {% else %}
-                {% set trclassname = "table-row-separator-white" %}
-            {% endif %}
-            {% set count = count + 1 %}
+            {#{% if count is odd %}#}
+                {#{% set trclassname = "table-row-separator-gray" %}#}
+            {#{% else %}#}
+                {#{% set trclassname = "table-row-separator-white" %}#}
+            {#{% endif %}#}
+            {#{% set count = count + 1 %}#}
 
-            {% if message.messageStatus.name == 'Deleted' %}
-                {% set trclassname = "order-reject-status" %}
-            {% endif %}
+            {#{% if message.messageStatus.name == 'Deleted' %}#}
+                {#{% set trclassname = "order-reject-status" %}#}
+            {#{% endif %}#}
 
-            <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
+            {#<tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">#}
 
-                <td>
+                {#<td>#}
                     {#{{  message.id }}#}
-                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
-                </td>
+                    {#<a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>#}
+                {#</td>#}
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
-                {% if message.version > 1 %}
-                    <td data-toggle="tooltip"
-                        data-container="body"
-                        title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">
-                        {% if message.editorInfos|length > 0 %}
-                            {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
-                        {% else %}
-                            {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}
-                        {% endif %}
-                    </td>
-                {% else %}
-                    <td>
-                        {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}
-                    </td>
-                {% endif %}
+                {#{% if message.version > 1 %}#}
+                    {#<td data-toggle="tooltip"#}
+                        {#data-container="body"#}
+                        {#title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">#}
+                        {#{% if message.editorInfos|length > 0 %}#}
+                            {#{{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}#}
+                        {#{% else %}#}
+                            {#{{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}#}
+                        {#{% endif %}#}
+                    {#</td>#}
+                {#{% else %}#}
+                    {#<td>#}
+                        {#{{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}#}
+                    {#</td>#}
+                {#{% endif %}#}
 
                 {#Patient Name#}
-                <td>
-                    {% for thisPatient in message.patient %}
-                        {{  thisPatient.getFullPatientName|raw }}<br>
-                    {% endfor %}
-                </td>
+                {#<td>#}
+                    {#{% for thisPatient in message.patient %}#}
+                        {#{{  thisPatient.getFullPatientName|raw }}<br>#}
+                    {#{% endfor %}#}
+                {#</td>#}
 
                 {#MRN#}
-                <td>
-                    {% for thisPatient in message.patient %}
-                        {{  thisPatient.obtainFullValidKeyName }}<br>
-                    {% endfor %}
-                </td>
+                {#<td>#}
+                    {#{% for thisPatient in message.patient %}#}
+                        {#{{  thisPatient.obtainFullValidKeyName }}<br>#}
+                    {#{% endfor %}#}
+                {#</td>#}
 
-                <td>
-                    {% for encounter in message.encounter %}
-                        {{ encounter.obtainLocationInfo }}<br>
-                    {% endfor %}
-                </td>
+                {#<td>#}
+                    {#{% for encounter in message.encounter %}#}
+                        {#{{ encounter.obtainLocationInfo }}<br>#}
+                    {#{% endfor %}#}
+                {#</td>#}
 
                 {#referringProviders#}
-                <td>
-                    {% for encounter in message.encounter %}
-                        {% for referringProvider in encounter.referringProviders %}
-                            {% if referringProvider.field %}
-                                {{ referringProvider.field.getFullName }}<br>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                </td>
+                {#<td>#}
+                    {#{% for encounter in message.encounter %}#}
+                        {#{% for referringProvider in encounter.referringProviders %}#}
+                            {#{% if referringProvider.field %}#}
+                                {#{{ referringProvider.field.getFullName }}<br>#}
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+                    {#{% endfor %}#}
+                {#</td>#}
 
-                <td>
-                    {{  message.messageCategory.getNodeNameWithParents }}
-                </td>
+                {#<td>#}
+                    {#{{  message.messageCategory.getNodeNameWithParents }}#}
+                {#</td>#}
 
-                <td>
-                    {% if message.messageStatus and message.messageStatus.name == "Draft" %}
-                        {% if message.provider %}
-                            {{ message.provider.getUsernameOptimal }}<br>
-                        {% endif %}
-                    {% else %}
-                        {% if message.signeeInfo and message.signeeInfo.modifiedBy %}
-                            {{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>
-                        {% endif %}
-                    {% endif %}
-                </td>
+                {#<td>#}
+                    {#{% if message.messageStatus and message.messageStatus.name == "Draft" %}#}
+                        {#{% if message.provider %}#}
+                            {#{{ message.provider.getUsernameOptimal }}<br>#}
+                        {#{% endif %}#}
+                    {#{% else %}#}
+                        {#{% if message.signeeInfo and message.signeeInfo.modifiedBy %}#}
+                            {#{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>#}
+                        {#{% endif %}#}
+                    {#{% endif %}#}
+                {#</td>#}
 
-                <td class="rowlink-skip">
-                    {{ calllogmacros.indexAction(message,eventObjectTypeId,patientListId) }}
-                </td>
+                {#<td class="rowlink-skip">#}
+                    {#{{ calllogmacros.indexAction(message,eventObjectTypeId,patientListId) }}#}
+                {#</td>#}
 
-            </tr>
-            <tr class="table-no-border {{ trclassname }}">
-                <td style="display: none">
-                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
-                </td>
+            {#</tr>#}
+            {#<tr class="table-no-border {{ trclassname }}">#}
+                {#<td style="display: none">#}
+                    {#<a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>#}
+                {#</td>#}
 
                 {#<td colspan=9>#}
                     {#{{ message.getMessageTitleStr }}<br>#}
@@ -257,15 +257,16 @@
                     {#{% if messageCategoryInfoNode is not defined %}#}
                         {#{% set messageCategoryInfoNode = message.messageCategory %}#}
                     {#{% endif %}#}
-                    {{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}
+                    {#{{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}#}
                 {#</td>#}
 
-            </tr>
+            {#</tr>#}
 
-        {% endfor %}
+        {#{% endfor %}#}
 
-        </tbody>
-    </table>
+        {#</tbody>#}
+    {#</table>#}
+    {{ calllogmacros.calllogEntriesTable(messages) }}
 
     {# display navigation #}
     <div class="navigation">
