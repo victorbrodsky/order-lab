@@ -657,6 +657,7 @@ function formNodeAddSameSection( btn, formNodeCleanId, formNodeId ) {
 
         //fffsa_0_1_fffsa => 317_fffsa_0_1_fffsa
         var newFormNodeId = formNodeCleanId + '_' + newArrSecIndex;
+        //console.log('newFormNodeId='+newFormNodeId);
 
         sectionHtml = '<div id="formnode-arraysection-holder-' + newFormNodeId + '"'
             + ' class="formnode-arraysection-holder formnode-arraysection-holder-' + newFormNodeId + ' formnode-arraysection-holder-id-' + formNodeCleanId + '"'
@@ -672,10 +673,14 @@ function formNodeAddSameSection( btn, formNodeCleanId, formNodeId ) {
         //pressing [+] should insert the empty section immediately below the section whose [+] was pressed (not "always as the last new section")
         //var thisSection = $(btn).closest('.formnode-arraysection-holder');
         //console.log(thisSection);
-        targetSection.after(sectionHtml);
+        //targetSection.after(sectionHtml);
+        var appendedEl = $(sectionHtml).insertAfter(targetSection);
 
         //init appended element
-        var appendedEl = attachEl.find("[data-sectionid='" + newArrSecIndex + "']");
+        //var appendedEl = attachEl.find("[data-sectionid='" + newArrSecIndex + "']");
+        //var appendedEl = attachEl.find("#formnode-arraysection-holder-"+newFormNodeId);
+
+        //console.log("appendedEl:");
         //console.log(appendedEl);
         regularCombobox(appendedEl);
         initDatepicker(appendedEl);
@@ -702,10 +707,10 @@ function formNodeAddSameSection( btn, formNodeCleanId, formNodeId ) {
         //}
 
         //CCI
-        //if( appendedEl ) {
+        if( appendedEl ) {
             formNodeCCICalculationListener(appendedEl, '.cci-pre-transfusion-platelet-count');
             formNodeCCICalculationListener(appendedEl, '.cci-post-transfusion-platelet-count');
-        //}
+        }
 
     }
 
@@ -915,18 +920,19 @@ function formNodeProcessRemoveSectionBtn( formNodeId ) {
 
 function formNodeCCICalculationListener(appendedEl,targetName){
     var targetEl = appendedEl.find(targetName);
-    console.log("######### len="+targetEl.length);
+    //console.log("######### formNode CCICalculation Listener: len="+targetEl.length+" for target "+targetName);
     //console.log(appendedEl);
     //console.log(targetEl);
     //console.log("#########");
     if( targetEl.length > 0 ) {
-        console.log(appendedEl);
+        //console.log(appendedEl);
         //console.log(targetEl);
-        console.log("appendedElVal has class "+targetName);
+        //console.log("appendedElVal has class "+targetName);
         targetEl.on('input', function () {
             //var appendedElVal = $(this).val() // get the current value of the input field.
             //console.log("appendedElVal=" + appendedElVal);
-            formNodeCCICalculation(appendedEl);
+            var thisFormNodesHolder= $(this).closest('.form-nodes-holder');
+            formNodeCCICalculation(thisFormNodesHolder);
         });
     }
 }
@@ -941,7 +947,7 @@ function formNodeCCICalculation(appendedEl) {
         var bsa = $(".cci-bsa").val();
         var count = $(".cci-unit-platelet-count").val();
         if( pre && post && bsa && count ) {
-            console.log('cci calculating...:' + pre + "; " + post + "; " + bsa + "; " + count);
+            //console.log('cci calculating...:' + pre + "; " + post + "; " + bsa + "; " + count);
             var resultValue = ((post - pre) * bsa) / count;
             //console.log('resultValue=' + resultValue);
             result.val(resultValue);
