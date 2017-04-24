@@ -1934,6 +1934,9 @@ class UserController extends Controller
     }
     public function showUser($id, $sitename=null, $fulluser=true) {
 
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('memory_limit', '1024M');
+
         $request = $this->container->get('request');
         $em = $this->getDoctrine()->getManager();
 
@@ -2023,6 +2026,9 @@ class UserController extends Controller
     }
 
     public function editUser($id,$sitename=null) {
+
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('memory_limit', '1024M');
 
         $request = $this->container->get('request');
 
@@ -2232,6 +2238,10 @@ class UserController extends Controller
     }
     public function updateUser(Request $request, $id, $sitename)
     {
+
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('memory_limit', '1024M');
+
         $em = $this->getDoctrine()->getManager();
         $logger = $this->container->get('logger');
         $loggedUser = $this->get('security.context')->getToken()->getUser();
