@@ -1223,8 +1223,11 @@ class AccessRequestController extends Controller
         $keytype = $request->query->get('keytype');
         $keytype = trim($keytype);
 
-        $primaryPublicUserId = $request->query->get('primaryPublicUserId');
-        $primaryPublicUserId = trim($primaryPublicUserId);
+        $primaryPublicUserIdStr = $request->query->get('primaryPublicUserId');
+        $primaryPublicUserIdStr = trim($primaryPublicUserIdStr);
+
+        //the string should be silently cut at the @ character to get cwid in case email was entered with @
+        list($primaryPublicUserId,$email) = explode('@', $primaryPublicUserIdStr);
 
         //echo "sitename=".$this->siteName."<br>";
         //echo "usertype=(".$keytype.")<br>";

@@ -2454,7 +2454,7 @@ class CallEntryController extends Controller
         //$userName = str_replace("--", "-", $userName);
         //exit("userName=".$userName);
 
-        $fileName = "Call-Log-Book-Entries-exported-on-".date('m/d/Y')."-".date('H:i')."-by-".$userName.".xlsx";
+        $fileName = "Call-Log-Book-Entries-exported-on-".date('m/d/Y')."-".date('H:i')."-by-".$userName.".csv";//".xlsx";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
         $fileName = str_replace("--", "-", $fileName);
@@ -2477,9 +2477,7 @@ class CallEntryController extends Controller
         //$writer->setIncludeCharts(true);
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
         header('Content-Disposition: attachment;filename="'.$fileName.'"');
-        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
 
         // Write file to the browser
         $writer->save('php://output');

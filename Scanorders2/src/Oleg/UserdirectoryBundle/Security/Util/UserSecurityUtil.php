@@ -934,6 +934,10 @@ class UserSecurityUtil {
         }
 
         $dql->where($where);
+
+        //Sort listed users on all /authorized-users/ pages for other sites alphabetically by last name.
+        $dql->orderBy('infos.lastName', 'ASC');
+
         //echo "dql=".$dql."<br>";
 
         return $dql;
