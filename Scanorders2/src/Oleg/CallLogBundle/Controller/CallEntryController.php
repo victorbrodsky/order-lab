@@ -1737,56 +1737,91 @@ class CallEntryController extends Controller
 //            $where = true;
 //        }
 
-        //Last Name AND DOB
+        //$lastname = null;
+        //$firstname = null;
+        //Last Name AND First Name
         if( ($lastname || $firstname) && ($where == false || $matchAnd == true) ) {
-
             //$lastname = "Doe";
             //echo "1 lastname=".$lastname."<br>";
             //echo "1 firstname=".$firstname."<br>";
 
             $searchCriterionArr = array();
 
-            if( $lastname ) {
+            //only last name
+            if( $lastname && !$firstname ) {
                 $searchArr[] = "Last Name: " . $lastname;
 
                 $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
                 $statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
 
                 $searchCriterionArr[] = "(lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr)";
-
                 $parameters['lastname'] = $lastname;
 
                 //status
-                $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
-                $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
+                //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
+                //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
                 $parameters['statusValid'] = 'valid';
                 $parameters['statusAlias'] = 'alias';
 
                 $where = true;
             }
 
-            if( $firstname ) {
+            //only first name
+            if( $firstname && !$lastname ) {
                 $searchArr[] = "First Name: " . $firstname;
 
                 $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
                 $statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
 
                 $searchCriterionArr[] = "(firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr)";
-
                 $parameters['firstname'] = $firstname;
 
                 //status
-                $dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
-                $dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
+                //$dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
+                //$dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
                 $parameters['statusValid'] = 'valid';
                 $parameters['statusAlias'] = 'alias';
 
                 $where = true;
             }
 
-            //" OR " or " AND "
-            $searchCriterionStr = implode(" AND ",$searchCriterionArr);
-            $dql->andWhere($searchCriterionStr);
+            if( $firstname && $lastname ) {
+                $searchArr[] = "Last Name: " . $lastname;
+                $searchArr[] = "First Name: " . $firstname;
+
+                //last name: status
+                $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
+                $statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
+                //last name: name
+                $searchCriterionArr[] = "((lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr))";
+                $parameters['lastname'] = $lastname;
+
+                //status
+                //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
+                //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
+
+                //first name: status
+                $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
+                $statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
+                //first name: name
+                $searchCriterionArr[] = "((firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr))";
+                $parameters['firstname'] = $firstname;
+
+                //status
+                //$dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
+                //$dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
+
+                $parameters['statusValid'] = 'valid';
+                $parameters['statusAlias'] = 'alias';
+
+                $where = true;
+            }
+
+            if( count($searchCriterionArr) > 0 ) {
+                //" OR " or " AND "
+                $searchCriterionStr = implode(" AND ", $searchCriterionArr);
+                $dql->andWhere($searchCriterionStr);
+            }
         }
 
 //        //Last Name AND DOB
@@ -1879,13 +1914,17 @@ class CallEntryController extends Controller
 
             $query = $em->createQuery($dql);
             $query->setParameters($parameters);
-            //echo "sql=".$query->getSql()."<br>";
             $patients = $query->getResult();
 
             //testing
+            //echo "sql=".$query->getSql()."<br>";
+            //echo "parameters:"."<br><pre>";
+            //print_r($query->getParameters());
+            //echo "</pre>";
 //            echo "<br>";
 //            foreach( $patients as $patient ) {
 //                echo "ID=".$patient->getId().": ".$patient->getFullPatientName()."<br>";
+//                echo "patient=".$patient."<br>";
 //            }
 //            exit('patients count='.count($patients));
 
@@ -2320,6 +2359,10 @@ class CallEntryController extends Controller
 
         //testing dob: dob before 1901 causes php error
 //        $testPatient = $message->getPatient()[0];
+//        echo "patientName=".implode(",",$testPatient->patientName("valid"))."<br>";
+//        echo "getFullPatientName=".$testPatient->getFullPatientName()."<br>";
+//        echo "obtainPatientInfoTitle=".$testPatient->obtainPatientInfoTitle()."<br>";
+//        echo "obtainPatientInfoShort=".$testPatient->obtainPatientInfoShort()."<br>";
 //        foreach( $testPatient->getDob() as $dob ) {
 //            if( $dob ) {
 //                echo $dob->getId().": dob=" . $dob . "<br>";

@@ -380,4 +380,17 @@ abstract class ArrayFieldAbstract {
         return $this->field."";
     }
 
+    //convert "all lower case" or "ALL UPPERCASE".
+    // If either condition is met, convert the string to "Sentence Case".
+    // This way "john" and "JOHN" become "John", but "McMaster" stays "McMaster".
+    function capitalizeIfNotAllCapital($s) {
+        if( !$s ) {
+            return $s;
+        }
+        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
+            $s = ucfirst(strtolower($s));
+        }
+        return ucwords($s);
+    }
+
 }

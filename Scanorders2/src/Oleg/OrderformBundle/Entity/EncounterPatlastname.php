@@ -66,6 +66,13 @@ class EncounterPatlastname extends EncounterArrayFieldAbstract
         return $this->alias;
     }
 
-
+    /**
+     * convert the string to "Sentence Case"
+     * @return mixed
+     */
+    public function getField()
+    {
+        return $this->capitalizeIfNotAllCapital($this->field);
+    }
 
 }

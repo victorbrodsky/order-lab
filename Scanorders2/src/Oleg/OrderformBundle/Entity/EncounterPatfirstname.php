@@ -65,7 +65,14 @@ class EncounterPatfirstname extends EncounterArrayFieldAbstract
     }
 
 
-
+    /**
+     * convert the string to "Sentence Case"
+     * @return mixed
+     */
+    public function getField()
+    {
+        return $this->capitalizeIfNotAllCapital($this->field);
+    }
 
 
 

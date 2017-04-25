@@ -46,5 +46,12 @@ class PatientMiddleName extends PatientArrayFieldAbstract
      */
     protected $field;
 
-
+    /**
+     * convert the string to "Sentence Case"
+     * @return mixed
+     */
+    public function getField()
+    {
+        return $this->capitalizeIfNotAllCapital($this->field);
+    }
 }
