@@ -109,6 +109,18 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
     {
         //echo "hour=".$hour."; minute=".$minute."<br>";
         $datetimeValue = new \DateTime();
+
+        $zero = 0; //"00"
+        if( !$hour ) {
+            $hour = $zero;
+        }
+        if( !$minute ) {
+            $minute = $zero;
+        }
+        if( !$second ) {
+            $second = $zero;
+        }
+
         $datetimeValue->setTime($hour, $minute, $second);
         $this->setTimeValue($datetimeValue);
         //echo "time=".$this->getTimeValue()->format('h:i:s')."<br>";
@@ -126,6 +138,17 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
 
         if( $timezone ) {
             $datetimeValue->setTimezone(new \DateTimeZone($timezone)); //$timezone='Pacific/Chatham'
+        }
+
+        $zero = 0; //"00"
+        if( !$hour ) {
+            $hour = $zero;
+        }
+        if( !$minute ) {
+            $minute = $zero;
+        }
+        if( !$second ) {
+            $second = $zero;
         }
 
         $datetimeValue->setTime($hour, $minute, $second);

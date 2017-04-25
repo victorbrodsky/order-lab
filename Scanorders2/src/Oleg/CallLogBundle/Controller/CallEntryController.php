@@ -1784,7 +1784,8 @@ class CallEntryController extends Controller
                 $where = true;
             }
 
-            $searchCriterionStr = implode(" OR ",$searchCriterionArr);
+            //" OR " or " AND "
+            $searchCriterionStr = implode(" AND ",$searchCriterionArr);
             $dql->andWhere($searchCriterionStr);
         }
 
@@ -1884,9 +1885,9 @@ class CallEntryController extends Controller
             //testing
 //            echo "<br>";
 //            foreach( $patients as $patient ) {
-//                echo "ID=".$patient->getId()."<br>";
+//                echo "ID=".$patient->getId().": ".$patient->getFullPatientName()."<br>";
 //            }
-//            //exit('patients count='.count($patients));
+//            exit('patients count='.count($patients));
 
             //log search action
             if( $evenlog ) {

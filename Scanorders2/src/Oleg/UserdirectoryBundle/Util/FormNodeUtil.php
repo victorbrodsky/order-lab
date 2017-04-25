@@ -415,7 +415,15 @@ class FormNodeUtil
             $formValueHour = $formValue['hour'];
             $formValueMinute = $formValue['minute'];
 
-            if( $formValueHour || $formValueHour ) {
+            $zero = 0; //"00"
+            if( !$formValueHour ) {
+                $formValueHour = $zero;
+            }
+            if( !$formValueMinute ) {
+                $formValueMinute = $zero;
+            }
+
+            if( $formValueHour || $formValueMinute ) {
                 $formValueStr = $formValueHour . ":" . $formValueMinute;
             }
 
