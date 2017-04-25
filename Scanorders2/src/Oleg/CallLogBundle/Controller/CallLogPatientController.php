@@ -26,6 +26,9 @@ namespace Oleg\CallLogBundle\Controller;
 
 
 use Oleg\CallLogBundle\Form\CalllogListPreviousEntriesFilterType;
+use Oleg\CallLogBundle\Form\CalllogPatientType;
+use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\Patient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -217,6 +220,8 @@ class CallLogPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
+        $securityUtil = $this->get('order_security_utility');
+        $user = $this->get('security.context')->getToken()->getUser();
 
         //$listname
         $listnameArr = explode('-',$listname);
@@ -267,12 +272,25 @@ class CallLogPatientController extends PatientController {
 
         $patientListHierarchyObject = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByName('Patient List Hierarchy');
 
+        //create patient form for "Add Patient" section
+        $status = 'invalid';
+        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $newPatient = new Patient(true,$status,$user,$system);
+        $newEncounter = new Encounter(true,$status,$user,$system);
+        $newPatient->addEncounter($newEncounter);
+        $patientForm = $this->createPatientForm($newPatient);
+
         //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
         return array(
             'patientListId' => $listid,
             'patientNodes' => $patients,
             'title' => $listname,   //"Complex Patient List",
-            'platformListManagerRootListId' => $patientListHierarchyObject->getId()
+            'platformListManagerRootListId' => $patientListHierarchyObject->getId(),
+            'patientForm' => $patientForm->createView(),
+            'cycle' => 'new',
+            'formtype' => 'add-patient-to-list',
+            'mrn' => null,
+            'mrntype' => null
         );
     }
 
@@ -503,5 +521,33 @@ class CallLogPatientController extends PatientController {
         $response = new Response($json);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+
+
+    public function createPatientForm($patient, $mrntype=null, $mrn=null) {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        if( !$mrntype ) {
+            $mrntype = 1;
+        }
+
+        $params = array(
+            'cycle' => 'new',
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+            //'alias' => true
+            'type' => null,
+            'mrntype' => intval($mrntype),
+            'mrn' => $mrn,
+            'formtype' => 'call-entry',
+            'complexLocation' => false,
+            'alias' => false
+        );
+
+        $form = $this->createForm(new CalllogPatientType($params, $patient), $patient);
+
+        return $form;
     }
 }

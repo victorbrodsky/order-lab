@@ -588,9 +588,6 @@ class DataQualityController extends CallEntryController
         echo "patientId=".$patientId."; mrn=".$mrn."<br>";
 
 
-
-
-
         $result['error'] = true;
         $result['msg'] = "Under construction.";
 
@@ -598,6 +595,58 @@ class DataQualityController extends CallEntryController
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($result));
         return $response;
+    }
+
+    /**
+     * @Route("/merge-patient-records-todel", name="calllog_merge_patient_records_todel", options={"expose"=true})
+     * @Template("OlegCallLogBundle:DataQuality:merge-records.html.twig")
+     */
+    public function addNewPatientToListAction_TODEL(Request $request)
+    {
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $title = "Merge Patient Records";
+
+        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $status = 'valid';
+        $cycle = 'show';
+
+        $patient1 = new Patient(true,$status,$user,$system);
+
+        $triggerSearch = 0;
+        $mrntype = trim($request->get('mrn-type'));
+        $mrnid = trim($request->get('mrn'));
+        if( $mrntype && $mrnid ) {
+            $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
+            $mrnPatient1->setKeytype($mrntype);
+            $mrnPatient1->setField($mrnid);
+            $triggerSearch = 1;
+        }
+        //echo "triggerSearch=".$triggerSearch."<br>";
+
+        $encounter1 = new Encounter(true,$status,$user,$system);
+        $patient1->addEncounter($encounter1);
+        $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid);
+
+
+        $patient2 = new Patient(true,$status,$user,$system);
+        $encounter2 = new Encounter(true,$status,$user,$system);
+        $patient2->addEncounter($encounter2);
+        $form2 = $this->createPatientForm($patient2,$mrntype,$mrnid);
+
+
+        return array(
+            //'entity' => $entity,
+            'form1' => $form1->createView(),
+            'form2' => $form2->createView(),
+            'cycle' => $cycle,
+            'title' => $title,
+            'triggerSearch' => $triggerSearch,
+            'mrntype' => $mrntype
+        );
     }
 
 
