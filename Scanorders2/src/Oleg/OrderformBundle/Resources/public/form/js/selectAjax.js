@@ -114,7 +114,7 @@ function customCombobox() {
     //console.log("urlBase="+urlBase);
 
     if( cycle && urlBase && cycle != 'edit_user' && cycle != 'accountreq' ) {
-        console.log("custom Combobox: urlBase="+urlBase+"; cycle="+cycle);
+        //console.log("custom Combobox: urlBase="+urlBase+"; cycle="+cycle);
         getComboboxMrnType();
         getComboboxAccessionType();
         getComboboxPartname();

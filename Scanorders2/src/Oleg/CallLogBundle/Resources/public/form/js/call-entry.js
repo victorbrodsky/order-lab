@@ -41,7 +41,7 @@ function initCallLogPage() {
     var formtype = $('#formtype').val();
     //console.log("init formtype="+formtype);
     if( formtype != "add-patient-to-list" ) {
-        console.log("init calllog Window CloseAlert for formtype="+formtype);
+        //console.log("init calllog Window CloseAlert for formtype="+formtype);
         calllogWindowCloseAlert();
     }
 
