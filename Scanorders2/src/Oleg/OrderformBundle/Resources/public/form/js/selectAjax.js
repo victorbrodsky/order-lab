@@ -71,6 +71,7 @@ var _cities = [];
 var _rooms = [];
 var _suites = [];
 
+var _patientLists = [];
 
 
 //function regularCombobox() {
@@ -154,7 +155,7 @@ function customCombobox() {
     getComboboxGeneric(null,'city',_cities,false);
 
 
-
+    getComboboxGeneric(null,'patientlists',_patientLists,true,'');
 }
 
 //function initDefaultServiceManually() {

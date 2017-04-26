@@ -490,7 +490,7 @@ class CallEntryController extends Controller
         //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
         if( $patientListTitleFilter ) {
             $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
-            $dql->leftJoin("calllogEntryMessage.patientList","patientList");
+            $dql->leftJoin("calllogEntryMessage.patientLists","patientList");
             //show message if the message's patient has been removed from the patient list (disabled)?
             $patientListEntityStr = "patientList=:patientList";
             $dql->andWhere($patientListEntityStr);
@@ -780,7 +780,7 @@ class CallEntryController extends Controller
         //set patient list
         $patientList = $calllogUtil->getDefaultPatientList();
         //echo "patientList ID=".$patientList->getId()."<br>";
-        $message->getCalllogEntryMessage()->setPatientList($patientList);
+        $message->getCalllogEntryMessage()->addPatientList($patientList);
 
         //add patient
         $message->addPatient($patient);

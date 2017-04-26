@@ -42,10 +42,16 @@ class CalllogEntryMessage extends OrderBase {
      */
     private $addPatientToList;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="PatientListHierarchy")
+//     **/
+//    private $patientList;
     /**
-     * @ORM\ManyToOne(targetEntity="PatientListHierarchy")
+     * @ORM\ManyToMany(targetEntity="PatientListHierarchy", inversedBy="calllogEntryMessages" )
+     * @ORM\JoinTable(name="scan_calllogEntryMessage_patientList")
      **/
-    private $patientList;
+    private $patientLists;
+
 
 //    /**
 //     * Linked Object ID. Used to make a link to other lists in the list manager.
@@ -68,6 +74,12 @@ class CalllogEntryMessage extends OrderBase {
 
 
 
+    public function __construct() {
+
+        $this->patientLists = new ArrayCollection();
+
+    }
+
 
     /**
      * @return mixed
@@ -87,22 +99,21 @@ class CalllogEntryMessage extends OrderBase {
 
 
 
-    /**
-     * @return mixed
-     */
-    public function getPatientList()
+    public function addPatientList($item)
     {
-        return $this->patientList;
+        if( $item && !$this->patientLists->contains($item) ) {
+            $this->patientLists->add($item);
+        }
+        return $this;
     }
-
-    /**
-     * @param mixed $patientList
-     */
-    public function setPatientList($patientList)
+    public function removePatientList($item)
     {
-        $this->patientList = $patientList;
+        $this->patientLists->removeElement($item);
     }
-
+    public function getPatientLists()
+    {
+        return $this->patientLists;
+    }
 
 
 

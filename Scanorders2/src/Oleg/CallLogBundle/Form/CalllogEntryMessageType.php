@@ -80,20 +80,29 @@ class CalllogEntryMessageType extends AbstractType
 //                }
 //            }
 
-            $form->add('patientList', 'employees_custom_selector', array(
+//            $form->add('patientLists', 'employees_custom_selector', array(
+//                'label' => $label,
+//                'required' => true,
+//                //'data' => $patientListId,
+//                'attr' => array(
+//                    'class' => 'ajax-combobox-compositetree show-as-single-node ajax-combobox-patientList', //show-as-single-node data-compositetree-exclusion-all-others
+//                    'type' => 'hidden',
+//                    'data-compositetree-bundlename' => 'OrderformBundle',
+//                    'data-compositetree-classname' => 'PatientListHierarchy',
+//                    'data-label-prefix' => '',
+//                    'data-compositetree-types' => 'default,user-added',
+//                ),
+//                'classtype' => 'patientList'
+//            ));
+
+            $form->add('patientLists', 'employees_custom_selector', array(
                 'label' => $label,
                 'required' => true,
-                //'data' => $patientListId,
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree show-as-single-node ajax-combobox-patientList', //show-as-single-node data-compositetree-exclusion-all-others
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'OrderformBundle',
-                    'data-compositetree-classname' => 'PatientListHierarchy',
-                    'data-label-prefix' => '',
-                    'data-compositetree-types' => 'default,user-added',
-                ),
-                'classtype' => 'patientList'
+                'attr' => array('class' => 'ajax-combobox-patientlists', 'type' => 'hidden'),
+                //'multiple' => true,
+                'classtype' => 'patientLists'
             ));
+
         });
 
 

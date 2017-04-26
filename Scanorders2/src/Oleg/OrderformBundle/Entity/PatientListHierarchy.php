@@ -83,13 +83,21 @@ class PatientListHierarchy extends BaseCompositeNode {
     private $organizationalGroupType;
 
     /**
+     * @ORM\ManyToMany(targetEntity="CalllogEntryMessage", mappedBy="patientLists", cascade={"persist"})
+     **/
+    private $calllogEntryMessages;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\Patient", cascade={"persist"})
      */
     private $patient;
 
 
+
     public function __construct() {
         parent::__construct();
+
+        $this->calllogEntryMessages = new ArrayCollection();
     }
 
 
@@ -128,6 +136,21 @@ class PatientListHierarchy extends BaseCompositeNode {
     }
 
 
+    public function addCalllogEntryMessage($item)
+    {
+        if( $item && !$this->calllogEntryMessages->contains($item) ) {
+            $this->calllogEntryMessages->add($item);
+        }
+        return $this;
+    }
+    public function removeCalllogEntryMessage($item)
+    {
+        $this->calllogEntryMessages->removeElement($item);
+    }
+    public function getCalllogEntryMessages()
+    {
+        return $this->calllogEntryMessages;
+    }
 
 
 

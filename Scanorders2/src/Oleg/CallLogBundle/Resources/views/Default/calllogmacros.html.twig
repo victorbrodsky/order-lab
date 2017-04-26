@@ -764,7 +764,8 @@
 
                 {#List Title:#}
                 {#{% if message.calllogEntryMessage.patientList is defined %}#}
-                    {{ treemacros.compositeTreeNode(message.calllogEntryMessage.patientList,cycle,"noprototype") }}
+                    {#{{ treemacros.compositeTreeNode(message.calllogEntryMessage.patientLists,cycle,"noprototype") }}#}
+                    {{ formmacros.field(message.calllogEntryMessage.patientLists) }}
                 {#{% endif %}#}
 
             </div> <!-- panel-body -->
