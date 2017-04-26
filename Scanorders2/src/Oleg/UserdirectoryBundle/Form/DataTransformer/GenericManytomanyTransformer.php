@@ -40,16 +40,18 @@ class GenericManytomanyTransformer implements DataTransformerInterface
      */
     protected $em;
     protected $user;
+    protected $bundleName;
     protected $className;
     protected $params;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null, $className=null, $params=null)
+    public function __construct(ObjectManager $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->bundleName = $bundleName;
         $this->className = $className;
         $this->params = $params;
     }
@@ -139,7 +141,7 @@ class GenericManytomanyTransformer implements DataTransformerInterface
 
             //echo "principal=".$username." => numeric => most probably it is id<br>";
 
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($entity);
 
             if( null === $entity ) {
 
@@ -185,7 +187,7 @@ class GenericManytomanyTransformer implements DataTransformerInterface
         }
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name."");
+        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name."");
         
         if( null === $entity ) {
 
@@ -226,7 +228,7 @@ class GenericManytomanyTransformer implements DataTransformerInterface
             return null;
         }
 
-        $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
+        $fullClassName = "Oleg\\".$this->bundleName."\\Entity\\".$className;
         $newEntity = new $fullClassName();
 
         //add default type
@@ -251,7 +253,7 @@ class GenericManytomanyTransformer implements DataTransformerInterface
         $className = $fullClassName->getShortName();
 
         //get max orderinlist
-        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:'.$className.' c');
+        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM Oleg'.$this->bundleName.':'.$className.' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
 

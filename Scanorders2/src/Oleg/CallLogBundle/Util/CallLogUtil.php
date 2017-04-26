@@ -1283,7 +1283,7 @@ class CallLogUtil
 
 
     //create a new PatientListHierarchy node and add as a child to the $patientList
-    public function addToPatientList( $patient, $message, $testing ) {
+    public function addToPatientLists( $patient, $message, $testing ) {
 
         //check if addPatientToList is checked
         if( $message->getCalllogEntryMessage() ) {
@@ -1303,75 +1303,35 @@ class CallLogUtil
             return null;
         }
 
-        $patientList = $calllogMessage->getPatientList();
-        if( !$patientList ) {
+        $patientLists = $calllogMessage->getPatientLists();
+        if( count($patientLists) == 0 ) {
             return null;
         }
 
-        $newListElement = $this->addPatientToPatientList($patient,$patientList,$message,$testing);
+        $newListElements = $this->addPatientToPatientLists($patient,$patientLists,$message,$testing);
 
-//        //TODO?: add only if the patient does not exists in the list
-//        if( $this->isPatientInList($patientList,$patient) ) {
-//            return null;
-//        }
-//
-//        //create a new node in the list PatientListHierarchyand attach it as a child to the $patientList
-//        $newListElement = new PatientListHierarchy();
-//
-//        $patientDescription = "Patient ID# " . $patient->getId() . ": " . $patient->obtainPatientInfoTitle();
-//        $patientName = "Patient ID# " . $patient->getId();
-//        $count = null;
-//        $userSecUtil->setDefaultList($newListElement, $count, $user, $patientName);
-//        $newListElement->setPatient($patient);
-//        $newListElement->setDescription($patientDescription);
-//        $newListElement->setObject($message);
-//
-//        //tree variables
-//        //set level
-//        $level = $patientList->getLevel();
-//        if( !$level ) {
-//            $defaultPatientList = $this->getDefaultPatientList();
-//            if( $defaultPatientList ) {
-//                //set level the same as default patient list
-//                $level = $defaultPatientList->getLevel();
-//                $patientList->setLevel($level);
-//                //attach this new patient list to the parent of the default patient list
-//                $defaultPatientListParent = $defaultPatientList->getParent();
-//                if( $defaultPatientListParent ) {
-//                    $defaultPatientListParent->addChild($patientList);
-//                }
-//            }
-//        }
-//        echo "level=$level ";
-//        $level = $level + 1;
-//        echo " (+1)=> $level <br>";
-//        $newListElement->setLevel($level);
-//        //set group
-//        $group = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
-//        $newListElement->setOrganizationalGroupType($group);
-//
-//        $patientList->addChild($newListElement);
-//
-//        $this->em->persist($newListElement);
-//
-//        if( !$testing ) {
-//            $this->em->flush();
-//        }
-
-//        if( $message ) {
-//            //record this to the CalllogEntryMessage (getCalllogEntryMessage)
-//            $calllogEntryMessage = $message->getCalllogEntryMessage();
-//            if (!$calllogEntryMessage) {
-//                $calllogEntryMessage = new CalllogEntryMessage();
-//                $message->setCalllogEntryMessage($calllogEntryMessage);
-//            }
-//            $calllogEntryMessage->setObject($newListElement);
-//            $calllogEntryMessage->setAddPatientToList(true);
-//        }
-
-        return $newListElement;
+        return $newListElements;
     }
 
+    public function addPatientToPatientLists( $patient, $patientLists, $message=null, $testing=false ) {
+        if( !$patient ) {
+            return null;
+        }
+        if( count($patientLists) == 0 ) {
+            return null;
+        }
+
+        $newListElementArr = array();
+
+        foreach( $patientLists as $patientList ) {
+            $newListElement = $this->addPatientToPatientList( $patient,$patientList,$message,$testing);
+            if( $newListElement ) {
+                $newListElementArr[] = $newListElement;
+            }
+        }
+
+        return $newListElementArr;
+    }
     public function addPatientToPatientList( $patient, $patientList, $message=null, $testing=false ) {
 
         if( !$patient ) {

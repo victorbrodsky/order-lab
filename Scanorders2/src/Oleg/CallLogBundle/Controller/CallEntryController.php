@@ -1198,7 +1198,7 @@ class CallEntryController extends Controller
 
                     //add patient to the complex patient list specified by patientListTitle if the option addPatientToList is checked.
                     //do it after message is in DB and has ID
-                    $calllogUtil->addToPatientList($patient,$message,$testing);
+                    $calllogUtil->addToPatientLists($patient,$message,$testing);
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
 
