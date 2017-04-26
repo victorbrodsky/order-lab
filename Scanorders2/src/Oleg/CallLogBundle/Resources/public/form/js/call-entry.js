@@ -28,7 +28,6 @@ function initCallLogPage() {
     calllogInputListenerErrorWellRemove('patient-holder-1');
     calllogPressEnterOnKeyboardAction('patient-holder-1');
 
-    calllogWindowCloseAlert();
     calllogUpdatePatientAgeListener('patient-holder-1');
 
     //calllogEnableMessageCategoryService('patient-holder-1');
@@ -38,6 +37,14 @@ function initCallLogPage() {
     calllogEncounterReferringProviderListener('patient-holder-1');
 
     //formNodeCCICalculation_OLD();
+
+    var formtype = $('#formtype').val();
+    //console.log("init formtype="+formtype);
+    if( formtype != "add-patient-to-list" ) {
+        console.log("init calllog Window CloseAlert for formtype="+formtype);
+        calllogWindowCloseAlert();
+    }
+
 }
 
 //prevent exit modified form
@@ -192,6 +199,8 @@ function addnewCalllogPatient(holderId) {
             //show edit patient info button
             holder.find('#edit_patient_button').show(_transTime);
 
+            holder.find('#add_patient_to_list_button').show(_transTime);
+
             //showCalllogCallentryForm(true);
             //hide "No single patient is referenced by this entry or I'll add the patient info later" link and all sections below
             //$('#callentry-nosinglepatient-link').hide(_transTime);
@@ -211,6 +220,71 @@ function addnewCalllogPatient(holderId) {
     }).done(function() {
         //console.log("add new CalllogPatient done");
         lbtn.stop();
+    });
+
+
+}
+
+function addCalllogPatientToList(holderId) {
+
+    var holder = getHolder(holderId);
+
+    var addBtn = holder.find("#add_patient_to_list_button").get(0);
+    var lbtn = Ladda.create( addBtn );
+    lbtn.start();
+
+    var patientListId = $('#patientListId').val();
+
+    var patientId = holder.find('.patienttype-patient-id').val();
+    patientId = trimWithCheck(patientId);
+
+    //console.log("patientListId="+patientListId+"; patientId="+patientId);
+
+    if(0) {
+        var confirmMsg = "Are you sure you would like to add this patient to this patient list?";
+        confirmMsg = confirmMsg;
+        //console.log("lock all fields");
+        disableAllFields(true, holderId);
+        if (confirm(confirmMsg) == true) {
+            //x = "You pressed OK!";
+        } else {
+            //x = "You pressed Cancel!";
+            disableAllFields(false, holderId);
+            lbtn.stop();
+            return false;
+        }
+    }
+
+    //ajax
+    var url = Routing.generate('calllog_add_patient_to_list_ajax');
+
+    url = url + "/" + patientListId + "/" + patientId;
+    //console.log("url="+url);
+    //return;
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: true,
+        //data: {patientListId: patientListId, patientId: patientId},
+    }).success(function(data) {
+        //console.log("data="+data);
+
+        if( data == "OK" ) {
+            //Cancel onbeforeunload event handler
+            window.onbeforeunload = null;
+
+            //reload this page
+            location.reload();
+        } else {
+            //console.log("Patient has not been created not OK: data="+data);
+            holder.find('#calllog-danger-box').html(data);
+            holder.find('#calllog-danger-box').show(_transTime);
+        }
+    }).done(function() {
+        //console.log("add new CalllogPatient done");
+        lbtn.stop();
+
     });
 
 
@@ -372,6 +446,8 @@ function clearCalllogPatient(holderId) {
 
     //edit_patient_button
     holder.find('#edit_patient_button').hide(_transTime);
+
+    holder.find('#add_patient_to_list_button').hide(_transTime);
 
     //change the accordion title back to "Patient Info"
     calllogSetPatientAccordionTitle(null,holderId);
@@ -546,6 +622,9 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
 
     //hide edit patient info button
     holder.find('#edit_patient_button').hide(_transTime);
+
+    holder.find('#add_patient_to_list_button').hide(_transTime);
+
     //hide "No single patient is referenced by this entry or I'll add the patient info later" link
     showCalllogCallentryForm(false);
 
@@ -574,6 +653,9 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
 
             //show edit patient info button
             holder.find('#edit_patient_button').show(_transTime);
+
+            holder.find('#add_patient_to_list_button').show(_transTime);
+
             //hide "No single patient is referenced by this entry or I'll add the patient info later" link
 
             //change the "Find or Add Patient" button title to "Re-enter Patient"
@@ -603,6 +685,14 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
                 //console.log('callentry-nosinglepatient-link show');
                 showCalllogCallentryForm(true);
             }
+
+            //if( formtype == "add-patient-to-list" ) {
+            //    var listid = $('#patientListId').val();
+            //    console.log("patient.id="+patient.id+"; listid="+listid);
+            //    var url = Routing.generate('calllog_patient_edit',{'id':patient.id, 'listid':listid});
+            //    alert("url="+url);
+            //    window.location.href = url;
+            //}
 
             processed = true;
             //console.log("single patient populate: finished");
@@ -874,6 +964,7 @@ function getFirstPatient(patients) {
     return null;
 }
 
+//"Select Patient" button clicked.
 var matchingPatientBtnClick = function(holderId) {
     //console.log('holderId='+holderId);
     var holder = getHolder(holderId);
@@ -886,6 +977,8 @@ var matchingPatientBtnClick = function(holderId) {
 
     //show edit patient info button
     holder.find('#edit_patient_button').show(_transTime);
+
+    holder.find('#add_patient_to_list_button').show(_transTime);
 
     //change the "Find or Add Patient" button title to "Re-enter Patient"
     holder.find('#reenter_patient_button').show(_transTime);
@@ -904,8 +997,11 @@ var matchingPatientBtnClick = function(holderId) {
         showCalllogCallentryForm(true);
     }
 
-    calllogScrollToTop();
+    if( formtype == "add-patient-to-list" ) {
+        return;
+    }
 
+    calllogScrollToTop();
 }
 //
 var getCalllogPatientToPopulate = function(holderId) {
@@ -1236,13 +1332,13 @@ function editPatientBtn(holderId) {
     //disableAllFields(false,holderId);
     //calllogHideAllAlias(false,false,holderId);
 
-    var r = confirm("Are you sure you would like to navigate away from this page? Text you may have entered has not been saved yet.");
-    if (r == true) {
-        //x = "You pressed OK!";
-    } else {
-        //x = "You pressed Cancel!";
-        return;
-    }
+    //var r = confirm("Are you sure you would like to navigate away from this page? Text you may have entered has not been saved yet.");
+    //if (r == true) {
+    //    //x = "You pressed OK!";
+    //} else {
+    //    //x = "You pressed Cancel!";
+    //    return;
+    //}
 
     var holder = getHolder(holderId);
     //calllog-patient-id-patient-holder-1
@@ -1339,7 +1435,7 @@ function calllogPressEnterOnKeyboardAction( holderId ) {
     //console.log("calllog Press EnterOnKeyboardAction");
     var formtype = $('#formtype').val();
     //console.log("formtype=" + formtype);
-    if( formtype == 'call-entry' ) {
+    if( formtype == 'call-entry' || formtype == 'add-patient-to-list' ) {
         var holder = getHolder(holderId);
 
         holder.find('.patientmrn-mask, .patient-dob-date, .encounter-lastName, .encounter-firstName').on('keydown', function (event) {

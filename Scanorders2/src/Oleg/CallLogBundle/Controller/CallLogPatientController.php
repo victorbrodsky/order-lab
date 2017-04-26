@@ -351,6 +351,8 @@ class CallLogPatientController extends PatientController {
 
     /**
      * @Route("/patient/add-patient-to-list/{patientListId}/{patientId}", name="calllog_add_patient_to_list")
+     * @Route("/patient/add-patient-to-list-ajax/{patientListId}/{patientId}", name="calllog_add_patient_to_list_ajax", options={"expose"=true})
+     *
      * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
      */
     public function addPatientToListAction(Request $request, $patientListId, $patientId) {
@@ -372,15 +374,31 @@ class CallLogPatientController extends PatientController {
             throw new \Exception( "Patient not found by id $patientId" );
         }
 
+        //exit("before adding patient");
         $newListElement = $calllogUtil->addPatientToPatientList($patient,$patientList);
 
-        //Patient added to the Pathology Call Complex Patients list
-        $msg = "Patient " . $newListElement->getPatient()->obtainPatientInfoTitle() . " added to the ".$patientList->getName()." list";
+        if( $newListElement ) {
+            //Patient added to the Pathology Call Complex Patients list
+            $msg = "Patient " . $newListElement->getPatient()->obtainPatientInfoTitle() . " has been added to the " . $patientList->getName() . " list";
+            $pnotify = 'pnotify';
+        } else {
+            $msg = "Patient " . $patient->obtainPatientInfoTitle() . " HAS NOT BEEN ADDED to the " . $patientList->getName() . " list. Probably, this patient already exists in this list.";
+            $pnotify = 'pnotify-error';
+        }
 
         $this->get('session')->getFlashBag()->add(
-            'pnotify',
+            $pnotify,
             $msg
         );
+
+        //return OK
+        if( $request->get('_route') == "calllog_add_patient_to_list_ajax" ) {
+            $res = "OK";
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
+        }
 
         $listName = $patientList->getName()."";
         $listNameLowerCase = str_replace(" ","-",$listName);

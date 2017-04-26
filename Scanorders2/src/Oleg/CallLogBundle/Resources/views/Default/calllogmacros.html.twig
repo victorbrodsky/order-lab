@@ -270,6 +270,17 @@
                                 onclick="clearCalllogPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                         >Re-enter Patient</button>
                     </div>
+
+                    {% if formtype == 'add-patient-to-list' %}
+                        <div class="col-xs-2">
+                            <button
+                                    id="add_patient_to_list_button" type="button"
+                                    class="btn btn-lg btn-success span4" align="center"
+                                    onclick="addCalllogPatientToList('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                            >Add Patient to List</button>
+                        </div>
+                    {% endif %}
+
                     {% if formtype == 'call-entry' %}
                         <div class="col-xs-3">
                             <button
@@ -286,6 +297,7 @@
                             >Edit Patient Info</button>
                         </div>
                     {% endif %}
+
                     <div class="col-xs-5"></div>
                 </div>
 
