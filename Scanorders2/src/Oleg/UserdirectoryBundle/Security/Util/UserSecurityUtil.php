@@ -472,7 +472,7 @@ class UserSecurityUtil {
         return $systemuser;
     }
 
-    //$nameStr: Unknown Event
+    //$nameStr: example string "Unknown Event"
     //$bundleName: UserdirectoryBundle
     //$className: EventTypeList
     //$params: array('type'=>'Medical')

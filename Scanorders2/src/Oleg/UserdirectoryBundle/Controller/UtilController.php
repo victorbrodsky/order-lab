@@ -289,37 +289,50 @@ class UtilController extends Controller {
      */
     public function getPatientListsAction(Request $request) {
 
-        //exit("getPatientListsAction");
-        $em = $this->getDoctrine()->getManager();
+//        //exit("getPatientListsAction");
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $level = 3;
+//
+////        $levelGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByLevel($level);
+////        if( !$levelGroup ) {
+////            exit("PatientListHierarchyGroupType not found by level ".$level);
+////        }
+//
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:PatientListHierarchy', 'list')
+//            ->leftJoin("list.organizationalGroupType", "organizationalGroupType")
+//            ->select("list.id as id, list.name as text")
+//            ->orderBy("list.orderinlist","ASC");
+//
+//        //$query->where("list.level = :level AND organizationalGroupType.id = :organizationalGroupTypeId");
+//        $query->where("list.level = :level");
+//        //$query->andWhere("organizationalGroupType.id = :organizationalGroupTypeId");
+//        $query->andWhere("list.type = :typedef OR list.type = :typeadd");
+//        $query->setParameters(
+//            array(
+//                'typedef' => 'default',
+//                'typeadd' => 'user-added',
+//                'level' => $level,
+//                //'organizationalGroupTypeId' => $levelGroup->getId()
+//            ));
+//
+//        $output = $query->getQuery()->getResult();
+//        //echo "output count=".count($output)."<br>";
+//        //exit();
 
-        $level = 3;
+        $calllogUtil = $this->get('calllog_util');
+        $patientLists = $calllogUtil->getDefaultPatientLists();
 
-//        $levelGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByLevel($level);
-//        if( !$levelGroup ) {
-//            exit("PatientListHierarchyGroupType not found by level ".$level);
-//        }
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:PatientListHierarchy', 'list')
-            ->leftJoin("list.organizationalGroupType", "organizationalGroupType")
-            ->select("list.id as id, list.name as text")
-            ->orderBy("list.orderinlist","ASC");
-
-        //$query->where("list.level = :level AND organizationalGroupType.id = :organizationalGroupTypeId");
-        $query->where("list.level = :level");
-        //$query->andWhere("organizationalGroupType.id = :organizationalGroupTypeId");
-        $query->andWhere("list.type = :typedef OR list.type = :typeadd");
-        $query->setParameters(
-            array(
-                'typedef' => 'default',
-                'typeadd' => 'user-added',
-                'level' => $level,
-                //'organizationalGroupTypeId' => $levelGroup->getId()
-            ));
-
-        $output = $query->getQuery()->getResult();
-        //echo "output count=".count($output)."<br>";
-        //exit();
+        if(1) {
+            $output = array();
+            foreach ($patientLists as $patientList) {
+                $output[] = array(
+                    'id' => $patientList->getId(),
+                    'text' => $patientList->getName()
+                );
+            }
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

@@ -59,27 +59,6 @@ class CalllogEntryMessageType extends AbstractType
 
             $label = 'List Title:';
 
-//            $patientLists = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findAll();
-//            if( count($patientLists) > 0 ) {
-//                $patientListId = $patientLists[0]->getId();
-//            } else {
-//                $patientListId = null;
-//            }
-//
-//            if( $this->params['cycle'] != "new" && $message ) {
-//                $calllogEntryMessage = $message->getCalllogEntryMessage();
-//                if( $message->getId() && $message->getCalllogEntryMessage() ) {
-//                    $patientListHierarchyNode = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array(
-//                        'entityNamespace' => $calllogEntryMessage->getEntityNamespace(),
-//                        'entityName' => $calllogEntryMessage->getEntityName(),
-//                        'entityId' => $calllogEntryMessage->getEntityId(),
-//                    ));
-//                    if( $patientListHierarchyNode ) {
-//                        $patientListId = $patientListHierarchyNode->getId();
-//                    }
-//                }
-//            }
-
 //            $form->add('patientLists', 'employees_custom_selector', array(
 //                'label' => $label,
 //                'required' => true,
@@ -105,6 +84,43 @@ class CalllogEntryMessageType extends AbstractType
 
         });
 
+        //Pre Submit hierarchy tree processing for newly added element
+        if(0) {
+            $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData();
+                //echo "1 addPatientToList=".$data['addPatientToList']."<br>";
+
+                $event->setData($data);
+
+                $patientLists = $data['patientLists'];
+                //echo "patientLists=".$patientLists."<br>";
+                $patientListsArr = explode(",", $patientLists);
+                $newPatientListsIds = $this->processPatientList_PRE_SUBMIT($patientListsArr);
+
+                // this one-liner might also work in place of the 3 lines above
+                $event->setData('patientLists', $newPatientListsIds);
+
+                //echo "1 addPatientToList=".$data['addPatientToList']."<br>";
+                //exit();
+            });
+        }
+
+        if(1) {
+            //POST_SUBMIT hierarchy tree processing for newly added element
+            $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData(); //CalllogEntryMessage
+                //echo "1 addPatientToList=".$data['addPatientToList']."<br>";
+
+                //$event->setData($data);
+
+                $patientLists = $data->getPatientLists();
+                //echo "patientLists=".$patientLists."<br>";
+                //$patientListsArr = explode(",", $patientLists);
+                $this->processPatientList($patientLists);
+
+                //exit();
+            });
+        }
 
     }
 
@@ -188,6 +204,104 @@ class CalllogEntryMessageType extends AbstractType
             ));
         }
 
+    }
+
+    public function processPatientList( $patientLists ) {
+
+        //get level, org group, parent from the first element
+        $level = null;
+        $orgGroupType = null;
+        $parent = null;
+        foreach( $patientLists as $patientList ) {
+            if( $patientList && $patientList->getLevel() && $patientList->getParent() ) {
+                $level = $patientList->getLevel();
+                $parent = $patientList->getParent();
+                $orgGroupType = $patientList->getOrganizationalGroupType();
+                break;
+            }
+        }
+
+        //echo "level=$level; orgGroupType=$orgGroupType; parent=$parent<br>";
+        if( $level || $orgGroupType || $parent ) {
+
+            foreach( $patientLists as $patientList ) {
+                if ($patientList) {
+                    if ($level) {
+                        $patientList->setLevel($level);
+                    }
+                    if ($orgGroupType) {
+                        $patientList->setOrganizationalGroupType($orgGroupType);
+                    }
+                    if ($parent) {
+                        $parent->addChild($patientList);
+                    }
+
+                    $this->params['em']->persist($patientList);
+                    //$this->params['em']->flush($patientList);
+                }
+            }//foreach
+
+        }//if
+
+        return $patientLists;
+    }
+
+    //DO NOT USED
+    public function processPatientList_PRE_SUBMIT( $patientListsArr ) {
+
+        $newPatientListsIds = array();
+        $newPatientListsStr = array();
+        foreach( $patientListsArr as $patientList ) {
+            //echo "ID=".$patientList->getId().": patientList=".$patientList."<br>";
+            if (strval($patientList) != strval(intval($patientList))) {
+                //echo "string <br>";
+                $newPatientListsStr[] = $patientList;
+            } else {
+                //echo "integer <br>";
+                $newPatientListsIds[] = $patientList;
+            }
+        }
+
+        //get level, org group, parent from the first element
+        $level = null;
+        $orgGroupType = null;
+        $parent = null;
+        if (count($newPatientListsIds) > 0) {
+            $firstPatientListId = $newPatientListsIds[0];
+            $firstPatientList = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($firstPatientListId);
+            if ($firstPatientList) {
+                $level = $firstPatientList->getLevel();
+                $orgGroupType = $firstPatientList->getOrganizationalGroupType();
+                $parent = $firstPatientList->getParent();
+            }
+        }
+
+        if ($level || $orgGroupType || $parent) {
+            $userSecUtil = $this->params['container']->get('user_security_utility');
+            foreach ($newPatientListsStr as $newPatientListStr) {
+                $newPatientList = $userSecUtil->getObjectByNameTransformer($this->params['user'], $newPatientListStr, 'OrderformBundle', 'PatientListHierarchy');
+                if ($newPatientList) {
+                    if ($level) {
+                        $newPatientList->setLevel($level);
+                    }
+                    if ($orgGroupType) {
+                        $newPatientList->setOrganizationalGroupType($orgGroupType);
+                    }
+                    if ($parent) {
+                        $parent->addChild($newPatientList);
+                    }
+
+                    $this->params['em']->persist($newPatientList);
+                    $this->params['em']->flush($newPatientList);
+
+                    if ($newPatientList->getId()) {
+                        $newPatientListsIds[] = $newPatientList->getId();
+                    }
+                }
+            }
+        }
+
+        return $newPatientListsIds;
     }
 
 }

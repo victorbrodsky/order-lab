@@ -25,7 +25,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManytomanyTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
@@ -73,7 +73,7 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', null, $params);
                 break;
             case "institution-many":
-                $transformer = new GenericManytomanyTransformer($this->om, $username, 'Institution');
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'Institution');
                 break;
             case "commenttype":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'CommentTypeList');
@@ -82,7 +82,7 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericTreeTransformer($this->om, $username, 'MessageCategory', 'OrderformBundle');
                 break;
             case "patientLists":
-                $transformer = new GenericManytomanyTransformer($this->om, $username, 'PatientListHierarchy', 'OrderformBundle');
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'PatientListHierarchy', 'OrderformBundle');
                 break;
 //            case "institution_id":
 //                $params = array('field'=>'id');
@@ -149,13 +149,13 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', null, $params);
                 break;
             case "trainingmajors":
-                $transformer = new GenericManytomanyTransformer($this->om, $username, 'MajorTrainingList');
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
                 break;
             case "trainingminors":
-                $transformer = new GenericManytomanyTransformer($this->om, $username, 'MinorTrainingList');
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'MinorTrainingList');
                 break;
             case "traininghonors":
-                $transformer = new GenericManytomanyTransformer($this->om, $username, 'HonorTrainingList');
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'HonorTrainingList');
                 break;
             case "trainingfellowshiptitle":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipTitleList');

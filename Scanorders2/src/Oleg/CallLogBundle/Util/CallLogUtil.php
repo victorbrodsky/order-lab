@@ -1079,21 +1079,14 @@ class CallLogUtil
 
     public function getPatientList() {
 
+        $patientLists = $this->getDefaultPatientLists();
+
+        //$request = $this->container->get('request');
+        //$siteName = 'call-log-book';
+
         //list.name = "Pathology Call Complex Patients"
         //list.url = "http://collage.med.cornell.edu/order/call-log-book/patient-list/pathology-call-complex-patients"
         $resList = array();
-
-        //PatientListHierarchy
-        //OlegOrderformBundle
-        $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(
-            array(
-                'type' => array('default','user-added'),
-                'level' => 3 //patient list currently is level=3
-            )
-        );
-
-        $request = $this->container->get('request');
-        $siteName = 'call-log-book';
 
         foreach( $patientLists as $list ) {
 
@@ -1117,6 +1110,22 @@ class CallLogUtil
         }
 
         return $resList;
+    }
+
+    public function getDefaultPatientLists() {
+        //patient list currently is level=3
+        $level = 3;
+
+        //PatientListHierarchy
+        //OlegOrderformBundle
+        $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(
+            array(
+                'type' => array('default','user-added'),
+                'level' => $level
+            )
+        );
+
+        return $patientLists;
     }
 
     //if the location id is provided, then find this location in DB by id and replace it.
@@ -1285,14 +1294,19 @@ class CallLogUtil
     //create a new PatientListHierarchy node and add as a child to the $patientList
     public function addToPatientLists( $patient, $message, $testing ) {
 
+        //echo "patientList count=".count($calllogMessage = $message->getCalllogEntryMessage()->getPatientLists())."<br>";
+
         //check if addPatientToList is checked
         if( $message->getCalllogEntryMessage() ) {
             if( !$message->getCalllogEntryMessage()->getAddPatientToList() ) {
+                echo "AddPatientToList is NULL <br>";
                 return null;
             }
         } else {
             return null;
         }
+        echo "continue addToPatientLists<br>";
+        //exit('1');
 
         if( !$patient ) {
             return null;
@@ -1324,6 +1338,7 @@ class CallLogUtil
         $newListElementArr = array();
 
         foreach( $patientLists as $patientList ) {
+            echo "patientList=".$patientList."<br>";
             $newListElement = $this->addPatientToPatientList( $patient,$patientList,$message,$testing);
             if( $newListElement ) {
                 $newListElementArr[] = $newListElement;
