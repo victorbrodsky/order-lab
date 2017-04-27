@@ -978,6 +978,7 @@ class FormNodeUtil
         return $index;
     }
 
+
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
     public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname ) {
@@ -1001,6 +1002,7 @@ class FormNodeUtil
         }
 
         $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs(); //message category hierarchy
+        //echo "formNode count=".count($formNodes)."<br>";
 
         foreach( $formNodes as $formNode ) {
             $result = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$result,$table,$trclassname);
@@ -1018,10 +1020,183 @@ class FormNodeUtil
         return $result;
     }
     //TODO: rewrite with section, subsection, array section structure
-    //Simplifying version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
+    //version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
     //$holderEntity is the holder of the $formNodeHolderEntity, for example, Message entity
     //$formNodeHolderEntity is a form node holder, for example, MessageCategory entity
     public function getSingleFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $result, $table, $trclassname ) {
+
+        if( !$holderEntity ) {
+            return $result;
+        }
+
+        if( !$formNodeHolderEntity ) {
+            return $result;
+        }
+
+        $class = new \ReflectionClass($holderEntity);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+        $mapper = array(
+            'entityNamespace' => $classNamespace,   //"Oleg\\OrderformBundle\\Entity",
+            'entityName' => $className, //"Message",
+            'entityId' => $holderEntity->getId(),
+        );
+        $entityId = $holderEntity->getId(); //"Message ID";
+        if( !$entityId ) {
+                return $result;
+        }
+
+        //get only 'real' fields as $formNodes
+        $formNodes = $this->getAllRealFormNodes($formNodeHolderEntity);
+        //echo "real formNode count=".count($formNodes)."<br>";
+
+        //prepend 3 spaces in the front of the form node name in table
+        $space = "&nbsp;";
+
+        //group form nodes by sections
+        $formSectionNodeArr = array();
+
+        foreach( $formNodes as $formNode ) {
+
+            if( $formNode && $formNode->getId() ) {
+                //$formNodeId = $formNode->getId();
+            } else {
+                continue;
+            }
+            //echo "formNode=".$formNode."<br>";
+
+            $formNodeValue = null;
+            $receivingEntity = null;
+
+            $complexRes = $this->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
+            //echo $formNode->getName().": complexRes count=" . count($complexRes) . "<br>";
+            if( $complexRes ) {
+                $formNodeValue = $complexRes['formNodeValue'];
+                $receivingEntity = $complexRes['receivingEntity'];
+
+                if( is_array($formNodeValue) ) {
+
+                    //////////// Case 1: array //////////////
+
+                    //Array ( [0] => Array ( [formNodeValue] => 01/10/2017 8:8 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 1 )
+                    // [1] => Array ( [formNodeValue] => 01/09/2017 7:7 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 0 ) )
+                    $formNodeValueArr = array();
+                    foreach( $formNodeValue as $valArr ) {
+                        //$formNodeValueArr[$valArr['arraySectionIndex']][$valArr['formNodeId']] = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
+                        $formNodeValueArr[$valArr['arraySectionIndex']] = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
+                    }
+                    ksort($formNodeValueArr);
+
+                    $keyCount = count($formNodeValueArr);
+                    //echo "keyCount=".$keyCount."<br>";
+
+                    for( $i=0; $i < $keyCount; ++$i ) {
+                        //echo $keys[$i] . ' ' . $formNodeValueArr[$keys[$i]] . "\n";
+                        //echo "$i ";
+                        //$elementName = $formNode->getName() . " (section $i)";
+                        $elementName = $formNode->getName();
+                        $elementValue = $formNodeValueArr[$i];
+
+                        if( $space ) {
+                            $elementName = $space.$space.$space . $elementName;
+                        }
+
+                        //process userWrapper case
+                        $elementValue = $this->processFormNodeValue($formNode,$receivingEntity,$elementValue,true);
+
+                        $parentFormNode = $formNode->getParent();
+                        if( $parentFormNode ) {
+                            $parentFormNodeName = $parentFormNode->getName() . " (section $i)";
+                        } else {
+                            $parentFormNodeName = "(section $i)";
+                        }
+                        $formSectionNodeArr[$parentFormNodeName][] = array('name'=>$elementName,'value'=>$elementValue);
+
+//                        if( $table ) {
+//                            //$result = $result.'<tr class="'.$trclassname.'">'.
+//                            //    '<td colspan=3 class="rowlink-skip" style="width:20%">'.$elementName.'</td>'.
+//                            //    '<td colspan=6 class="rowlink-skip" style="width:80%">'.$elementValue.'</td>'.'</tr>';
+//                            $parentFormNode = $formNode->getParent();
+//                            if( $parentFormNode ) {
+//                                $parentFormNodeName = $parentFormNode->getName() . " (section $i)";
+//                            } else {
+//                                $parentFormNodeName = "(section $i)";
+//                            }
+//                            $formSectionNodeArr[$parentFormNodeName] = array('name'=>$elementName,'value'=>$elementValue);
+//                        } else {
+//                            $result[] = $elementName . ": " . $elementValue;
+//                            //$result[$elementName] = $elementValue;
+//                        }
+
+                        //echo "RESULT=".$result."<br>";
+                        //exit("1");
+                    }
+
+                } else {
+
+                    //////////// Case 2: single //////////////
+                    $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
+
+                    //////////////// Regular form node /////////////////////
+                    //process userWrapper case
+                    $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue,true);
+
+                    //$formNodeValue = $this->getValueStrFromValueDatetime($formNode, $formNodeValue);
+
+                    $elementName = $formNode->getName();
+                    $elementValue = $formNodeValue;
+
+                    if( $space ) {
+                        $elementName = $space.$space.$space . $elementName;
+                    }
+
+                    $parentFormNode = $formNode->getParent();
+                    if( $parentFormNode && $parentFormNode->getShowLabel() ) {
+                        $parentFormNodeName = $parentFormNode->getName();
+                        //testing
+                        $parentFormNodeObjectType = $parentFormNode->getObjectType();
+                        if( $parentFormNodeObjectType ) {
+                            $parentFormNodeName = $parentFormNodeName . "[" . $parentFormNodeObjectType . "]";
+                        }
+                    } else {
+                        $parentFormNodeName = " ";
+                    }
+                    $formSectionNodeArr[$parentFormNodeName][] = array('name'=>$elementName,'value'=>$elementValue);
+                    //echo $parentFormNodeName.": name=".$elementName."; value=".$elementValue."<br>";
+                }//if array or single value
+
+                //echo "formNodeValue=".$formNodeValue.":<br>";
+            }//if $complexRes
+
+        }//foreach
+
+        foreach( $formSectionNodeArr as $sectionName => $nameValueArrs ) {
+            if( $table ) {
+                if( $sectionName ) {
+                    $result = $result.
+                        '<tr class="'.$trclassname.'">'.
+                            '<td colspan=9 class="rowlink-skip">'.$sectionName.'</td>'.
+                        '</tr>';
+                }
+                foreach( $nameValueArrs as $nameValueArr ) {
+                    $formNodeName = $space . $space . $space . $nameValueArr['name'];
+                    $result = $result .
+                        '<tr class="' . $trclassname . '">' .
+                        '<td colspan=3 class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
+                        '<td colspan=6 class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
+                        '</tr>';
+                }
+            } else {
+                $result[] = $elementName . ": " . $elementValue;
+            }
+        }
+
+        return $result;
+    }
+    //Simplifying version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
+    //$holderEntity is the holder of the $formNodeHolderEntity, for example, Message entity
+    //$formNodeHolderEntity is a form node holder, for example, MessageCategory entity
+    public function getSingleFormNodeHolderShortInfo_ORIG( $holderEntity, $formNodeHolderEntity, $result, $table, $trclassname ) {
 
         if( !$holderEntity ) {
             return $result;
@@ -1045,17 +1220,21 @@ class FormNodeUtil
         //get only 'real' fields as $formNodes
         $formNodes = $this->getAllRealFormNodes($formNodeHolderEntity);
 
-        //if( $table ) {
-            //$result = "";
-        //}
+        $space = null; //prepend 3 spaces in the front of the form node name in table
 
         if( count($formNodes) > 0 ) {
 
+            $header = "<i>".$formNodeHolderEntity->getName()."</i>";
             $header = null;
-            //$header = "<i>".$formNodeHolderEntity->getName()."</i>";
+
+            //if not table => excel => overwrite $header to null;
+            if( !$table ) {
+                $header = null;
+            }
 
             if( $header ) {
                 if ($table) {
+                    $space = "&nbsp;";
                     $result = $result . '<tr class="' . $trclassname . '"><td colspan=9 class="rowlink-skip">' . $header . '</td></tr>'; //text-center
                 } else {
                     $result[] = $header;
@@ -1063,12 +1242,36 @@ class FormNodeUtil
             }
         }
 
+        //group form nodes by sections
+        $formSectionNodeArr = array();
+        foreach( $formNodes as $formNode ) {
+            if( $formNode && $formNode->getId() ) {
+            } else {
+                continue;
+            }
+
+            $parentFormNode = $formNode->getParent();
+            //$parentFormNodeName =
+            //$formSectionNodeArr[$parentFormNodeName] = $formNode;
+        }//foreach
+
         foreach( $formNodes as $formNode ) {
 
             if( $formNode && $formNode->getId() ) {
                 //$formNodeId = $formNode->getId();
             } else {
                 continue;
+            }
+
+            if( $table ) {
+                $parentFormNode = $formNode->getParent();
+                if( $parentFormNode ) {
+                    $space = "&nbsp;";
+                    $result = $result .
+                        '<tr class="' . $trclassname . '">' .
+                        '<td colspan=9 class="rowlink-skip">' . $parentFormNode->getName() . '</td>' .
+                        '</tr>';
+                }
             }
 
             $formNodeValue = null;
@@ -1112,6 +1315,10 @@ class FormNodeUtil
                             $elementName = $formNode->getName() . " (section $i)";
                             $elementValue = $formNodeValueArr[$i];
 
+                            if( $space ) {
+                                $elementName = $space.$space.$space . $elementName;
+                            }
+
                             //process userWrapper case
                             $elementValue = $this->processFormNodeValue($formNode,$receivingEntity,$elementValue,true);
 
@@ -1142,6 +1349,10 @@ class FormNodeUtil
                         $elementName = $formNode->getName();
                         $elementValue = $formNodeValue;
 
+                        if( $space ) {
+                            $elementName = $space.$space.$space . $elementName;
+                        }
+
                         if( $table ) {
                             $result = $result.'<tr class="'.$trclassname.'">'.
                                 '<td colspan=3 class="rowlink-skip" style="width:20%">'.$elementName.'</td>'.
@@ -1156,32 +1367,11 @@ class FormNodeUtil
                 }
             }
 
-//            //echo "formNodeValue=".$formNodeValue.":<br>";
-//
-//            if( is_array($formNodeValue) ) {
-//                //not implemented
-//                //exit("Not implemented array: $receivingEntity");
-//            } else {
-//                //////////////// Regular form node /////////////////////
-//                //process userWrapper case
-//                $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
-//            }
-//            //echo "res formNodeValue: $formNodeValue <br>";
-//
-//            $elementName = $formNode->getName();
-//            $elementValue = $formNodeValue;
-//
-//            if( $table ) {
-//                $result = $result.'<tr class="'.$trclassname.'">'.
-//                    '<td colspan=3 class="rowlink-skip" style="width:20%">'.$elementName.'</td>'.
-//                    '<td colspan=6 class="rowlink-skip" style="width:80%">'.$elementValue.'</td>'.'</tr>';
-//            } else {
-//                $result[] = $elementName . ": " . $elementValue;
-//            }
-        }
+        }//foreach
 
         return $result;
     }
+
 
     public function getValueStrFromValueId( $formNode, $receivingEntity, $formNodeValueId ) {
 

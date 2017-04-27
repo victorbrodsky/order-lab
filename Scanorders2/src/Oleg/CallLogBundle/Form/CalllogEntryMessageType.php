@@ -84,43 +84,17 @@ class CalllogEntryMessageType extends AbstractType
 
         });
 
-        //Pre Submit hierarchy tree processing for newly added element
-        if(0) {
-            $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-                $data = $event->getData();
-                //echo "1 addPatientToList=".$data['addPatientToList']."<br>";
+        //POST_SUBMIT hierarchy tree processing for newly added element
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData(); //CalllogEntryMessage
 
-                $event->setData($data);
+            //$event->setData($data);
 
-                $patientLists = $data['patientLists'];
-                //echo "patientLists=".$patientLists."<br>";
-                $patientListsArr = explode(",", $patientLists);
-                $newPatientListsIds = $this->processPatientList_PRE_SUBMIT($patientListsArr);
+            $patientLists = $data->getPatientLists();
+            $this->processPatientList($patientLists);
 
-                // this one-liner might also work in place of the 3 lines above
-                $event->setData('patientLists', $newPatientListsIds);
-
-                //echo "1 addPatientToList=".$data['addPatientToList']."<br>";
-                //exit();
-            });
-        }
-
-        if(1) {
-            //POST_SUBMIT hierarchy tree processing for newly added element
-            $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-                $data = $event->getData(); //CalllogEntryMessage
-                //echo "1 addPatientToList=".$data['addPatientToList']."<br>";
-
-                //$event->setData($data);
-
-                $patientLists = $data->getPatientLists();
-                //echo "patientLists=".$patientLists."<br>";
-                //$patientListsArr = explode(",", $patientLists);
-                $this->processPatientList($patientLists);
-
-                //exit();
-            });
-        }
+            //exit();
+        });
 
     }
 
@@ -135,6 +109,51 @@ class CalllogEntryMessageType extends AbstractType
     {
         return 'oleg_calllogformbundle_calllogentrymessagetype';
     }
+
+
+    public function processPatientList( $patientLists ) {
+
+        $calllogUtil = $this->params['container']->get('calllog_util');
+        $defaultPatientLists = $calllogUtil->getDefaultPatientLists();
+
+        //get level, org group, parent from the first element
+        $level = null;
+        $orgGroupType = null;
+        $parent = null;
+        foreach( $defaultPatientLists as $patientList ) {
+            if( $patientList && $patientList->getLevel() && $patientList->getParent() ) {
+                $level = $patientList->getLevel();
+                $parent = $patientList->getParent();
+                $orgGroupType = $patientList->getOrganizationalGroupType();
+                break;
+            }
+        }
+
+        //echo "level=$level; orgGroupType=$orgGroupType; parent=$parent<br>";
+        //if( $level || $orgGroupType || $parent ) { //if these parameters are not set, then still create a new node in the PatientList hierarchy. Then manually set the tree.
+
+        foreach( $patientLists as $patientList ) {
+            if ($patientList) {
+                if ($level) {
+                    $patientList->setLevel($level);
+                }
+                if ($orgGroupType) {
+                    $patientList->setOrganizationalGroupType($orgGroupType);
+                }
+                if ($parent) {
+                    $parent->addChild($patientList);
+                }
+
+                $this->params['em']->persist($patientList);
+                //$this->params['em']->flush($patientList);
+            }
+        }//foreach
+
+        //}//if
+
+        return $patientLists;
+    }
+
 
 
 
@@ -204,49 +223,6 @@ class CalllogEntryMessageType extends AbstractType
             ));
         }
 
-    }
-
-    public function processPatientList( $patientLists ) {
-
-        $calllogUtil = $this->params['container']->get('calllog_util');
-        $defaultPatientLists = $calllogUtil->getDefaultPatientLists();
-
-        //get level, org group, parent from the first element
-        $level = null;
-        $orgGroupType = null;
-        $parent = null;
-        foreach( $defaultPatientLists as $patientList ) {
-            if( $patientList && $patientList->getLevel() && $patientList->getParent() ) {
-                $level = $patientList->getLevel();
-                $parent = $patientList->getParent();
-                $orgGroupType = $patientList->getOrganizationalGroupType();
-                break;
-            }
-        }
-
-        //echo "level=$level; orgGroupType=$orgGroupType; parent=$parent<br>";
-        //if( $level || $orgGroupType || $parent ) { //if these parameters are not set, then still create a new node in the PatientList hierarchy. Then manually set the tree.
-
-            foreach( $patientLists as $patientList ) {
-                if ($patientList) {
-                    if ($level) {
-                        $patientList->setLevel($level);
-                    }
-                    if ($orgGroupType) {
-                        $patientList->setOrganizationalGroupType($orgGroupType);
-                    }
-                    if ($parent) {
-                        $parent->addChild($patientList);
-                    }
-
-                    $this->params['em']->persist($patientList);
-                    //$this->params['em']->flush($patientList);
-                }
-            }//foreach
-
-        //}//if
-
-        return $patientLists;
     }
 
     //DO NOT USED
