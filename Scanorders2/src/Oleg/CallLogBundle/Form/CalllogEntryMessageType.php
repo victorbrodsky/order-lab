@@ -208,11 +208,14 @@ class CalllogEntryMessageType extends AbstractType
 
     public function processPatientList( $patientLists ) {
 
+        $calllogUtil = $this->params['container']->get('calllog_util');
+        $defaultPatientLists = $calllogUtil->getDefaultPatientLists();
+
         //get level, org group, parent from the first element
         $level = null;
         $orgGroupType = null;
         $parent = null;
-        foreach( $patientLists as $patientList ) {
+        foreach( $defaultPatientLists as $patientList ) {
             if( $patientList && $patientList->getLevel() && $patientList->getParent() ) {
                 $level = $patientList->getLevel();
                 $parent = $patientList->getParent();
@@ -222,7 +225,7 @@ class CalllogEntryMessageType extends AbstractType
         }
 
         //echo "level=$level; orgGroupType=$orgGroupType; parent=$parent<br>";
-        if( $level || $orgGroupType || $parent ) {
+        //if( $level || $orgGroupType || $parent ) { //if these parameters are not set, then still create a new node in the PatientList hierarchy. Then manually set the tree.
 
             foreach( $patientLists as $patientList ) {
                 if ($patientList) {
@@ -241,7 +244,7 @@ class CalllogEntryMessageType extends AbstractType
                 }
             }//foreach
 
-        }//if
+        //}//if
 
         return $patientLists;
     }

@@ -1112,6 +1112,7 @@ class CallLogUtil
         return $resList;
     }
 
+    //get default patient list objects
     public function getDefaultPatientLists() {
         //patient list currently is level=3
         $level = 3;
@@ -1299,13 +1300,13 @@ class CallLogUtil
         //check if addPatientToList is checked
         if( $message->getCalllogEntryMessage() ) {
             if( !$message->getCalllogEntryMessage()->getAddPatientToList() ) {
-                echo "AddPatientToList is NULL <br>";
+                //echo "AddPatientToList is NULL <br>";
                 return null;
             }
         } else {
             return null;
         }
-        echo "continue addToPatientLists<br>";
+        //echo "continue addToPatientLists<br>";
         //exit('1');
 
         if( !$patient ) {
@@ -1338,7 +1339,7 @@ class CallLogUtil
         $newListElementArr = array();
 
         foreach( $patientLists as $patientList ) {
-            echo "patientList=".$patientList."<br>";
+            //echo "patientList=".$patientList."<br>";
             $newListElement = $this->addPatientToPatientList( $patient,$patientList,$message,$testing);
             if( $newListElement ) {
                 $newListElementArr[] = $newListElement;
