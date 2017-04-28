@@ -449,7 +449,7 @@
     {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
-    {% if formNodeValue %}
+    {% if formNodeValue is not empty %}
         {% set fieldValue = formNodeValue %}
     {% else %}
         {% set fieldValue = '' %}
@@ -500,7 +500,7 @@
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
-    {% if formNodeValue %}
+    {% if formNodeValue is not empty %}
         {% set fieldValue = formNodeValue %}
     {% else %}
         {% set fieldValue = user_formnode_utility.getDefaultValue(formNode) %}

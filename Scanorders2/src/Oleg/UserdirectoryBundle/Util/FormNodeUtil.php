@@ -139,10 +139,15 @@ class FormNodeUtil
 
         //$key = $formNode->getId();
         //$formValue = $data['formnode'][$key];
-        //echo $formNode->getId().": formValue=" . $formValue . "<br>";
+        //echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
 
-        if( !$formValue ) {
+//        if( $formValue === 0 ) {
+//            exit("value is zero");
+//        }
+
+        if( !isset($formValue) ) {
             //exit("No Value=".$formValue."<br>");
+            //echo "No Value=".$formValue."<br>";
             return;
         }
         //exit("Value=[".$formValue."]<br>");
@@ -187,7 +192,7 @@ class FormNodeUtil
         //All others
         if( is_array($formValue) ) {
             //$formValue is array
-            //echo $formNodeObjectName.": formValue is array:";
+//            echo $formNodeObjectName.": formValue is array:";
 //            print "<pre>";
 //            print_r($formValue);
 //            print "</pre>";
@@ -270,28 +275,6 @@ class FormNodeUtil
                 //convert possible value string to id
                 foreach( $formValueArr as $thisFormValue ) {
                     if ( strval($thisFormValue) != strval(intval($thisFormValue)) ) {
-//                        //string: find id of the corresponding entity
-//                        $className = $formNode->getEntityName();
-//                        $classNamespace = $formNode->getEntityNamespace();
-//                        //echo "@@@ thisFormValue:".$thisFormValue."; className:".$className."; classNamespace:".$classNamespace."<br>";
-//                        if( $className && $classNamespace ) {
-//
-//                            //$classNamespace: Oleg\UserdirectoryBundle\Entity => UserdirectoryBundle
-//                            $bundleNameArr = explode("\\", $classNamespace);
-//                            $bundleName = null;
-//                            if (count($bundleNameArr) > 2) {
-//                                $bundleName = $bundleNameArr[1];
-//                            }
-//                            if( $bundleName ) {
-//                                $creator = $this->sc->getToken()->getUser();
-//                                $transformer = new GenericTreeTransformer($this->em, $creator, $className, $bundleName);
-//                                $dropdownObject = $transformer->reverseTransform($thisFormValue);
-//                                if( $dropdownObject ) {
-//                                    //echo "found: id=".$dropdownObject->getId()."; name=".$dropdownObject->getName()."<br>";
-//                                    $formValueArrIDs[] = $dropdownObject->getId();
-//                                }
-//                            }
-//                        }
                         $dropdownObject = $this->getReceivingObject($formNode,$thisFormValue);
                         if( $dropdownObject ) {
                             //echo "found: id=".$dropdownObject->getId()."; name=".$dropdownObject->getName()."<br>";
@@ -423,7 +406,7 @@ class FormNodeUtil
                 $formValueMinute = $zero;
             }
 
-            if( $formValueHour || $formValueMinute ) {
+            if( isset($formValueHour) || isset($formValueMinute) ) {
                 $formValueStr = $formValueHour . ":" . $formValueMinute;
             }
 
@@ -444,7 +427,7 @@ class FormNodeUtil
             }
 
             //echo "0 datetime: date=$formValueDate hour=$formValueHour minute=$formValueMinute<br>";
-            if( !$formValueDate && !$formValueHour && !$formValueMinute ) {
+            if( !isset($formValueDate) && !isset($formValueHour) && !isset($formValueMinute) ) {
                 return;
             }
             //echo $formNode->getId().": datetime: formValueStr=$formValueStr<br>";
@@ -467,7 +450,7 @@ class FormNodeUtil
             return;
         }
 
-        //exception: time [date] [hour] [minute]
+        //exception: checkboxes
         if(
             $formNodeObjectName == "Form Field - Checkboxes"
         ) {
@@ -515,7 +498,8 @@ class FormNodeUtil
         }
 
         //2) add value to the created list
-        if( $formValue ) {
+        //if( $formValue != null && $formValue != "" ) {
+        if( isset($formValue) ) {
             $newListElement->setValue($formValue);
         }
 
@@ -629,6 +613,10 @@ class FormNodeUtil
             }
         }
 
+//        if( $formNode->getObjectTypeName() == "Form Field - Full Date and Time" ) {
+//            exit("formNodeValue=".$formNodeValue);
+//            $formNodeValue = $formNodeValue->format("m/d/Y H:i");
+//        }
 
         return $formNodeValue;
     }
@@ -1052,6 +1040,9 @@ class FormNodeUtil
 
         //prepend 3 spaces in the front of the form node name in table
         $space = "&nbsp;";
+        if( !$table ) {
+            $space = "";
+        }
 
         //group form nodes by sections
         $formSectionNodeArr = array();
@@ -1077,18 +1068,21 @@ class FormNodeUtil
                 if( is_array($formNodeValue) ) {
 
                     //////////// Case 1: array //////////////
+                    //echo "Case 1: array: ".$formNode->getName().":<br>";
+                    //print "<pre>";
+                    //print_r($formNodeValue);
+                    //print "</pre><br>";
 
                     //Array ( [0] => Array ( [formNodeValue] => 01/10/2017 8:8 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 1 )
                     // [1] => Array ( [formNodeValue] => 01/09/2017 7:7 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 0 ) )
                     $formNodeValueArr = array();
                     foreach( $formNodeValue as $valArr ) {
-                        //$formNodeValueArr[$valArr['arraySectionIndex']][$valArr['formNodeId']] = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
                         $formNodeValueArr[$valArr['arraySectionIndex']] = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
                     }
                     ksort($formNodeValueArr);
 
                     $keyCount = count($formNodeValueArr);
-                    //echo "keyCount=".$keyCount."<br>";
+                    //echo "array: keyCount=".$keyCount."<br>";
 
                     for( $i=0; $i < $keyCount; ++$i ) {
                         //echo $keys[$i] . ' ' . $formNodeValueArr[$keys[$i]] . "\n";
@@ -1097,36 +1091,32 @@ class FormNodeUtil
                         $elementName = $formNode->getName();
                         $elementValue = $formNodeValueArr[$i];
 
+                        //testing
+                        //$elementName = $elementName." [ID# ".$formNode->getId().": ".$receivingEntity."]";
+
                         if( $space ) {
                             $elementName = $space.$space.$space . $elementName;
                         }
 
-                        //process userWrapper case
+                        //process special cases (i.e. userWrapper, checkbox etc.)
                         $elementValue = $this->processFormNodeValue($formNode,$receivingEntity,$elementValue,true);
 
                         $parentFormNode = $formNode->getParent();
                         if( $parentFormNode ) {
-                            $parentFormNodeName = $parentFormNode->getName() . " (section $i)";
+                            $parentFormNodeObjectType = $parentFormNode->getObjectType();
+                            if( $parentFormNodeObjectType ) {
+                                if( $parentFormNodeObjectType == "Form Section Array" ) {
+                                    $parentFormNodeObjectType = "Form Section";
+                                }
+                                $parentFormNodeName = $parentFormNode->getName() . " [" . $parentFormNodeObjectType . " ". $i . "]";
+                            } else {
+                                $parentFormNodeName = $parentFormNode->getName() . " [section $i]";
+                            }
+                            //$parentFormNodeName = $parentFormNode->getName() . " [Form Section $i]";
                         } else {
-                            $parentFormNodeName = "(section $i)";
+                            $parentFormNodeName = "[Form Section $i]";
                         }
                         $formSectionNodeArr[$parentFormNodeName][] = array('name'=>$elementName,'value'=>$elementValue);
-
-//                        if( $table ) {
-//                            //$result = $result.'<tr class="'.$trclassname.'">'.
-//                            //    '<td colspan=3 class="rowlink-skip" style="width:20%">'.$elementName.'</td>'.
-//                            //    '<td colspan=6 class="rowlink-skip" style="width:80%">'.$elementValue.'</td>'.'</tr>';
-//                            $parentFormNode = $formNode->getParent();
-//                            if( $parentFormNode ) {
-//                                $parentFormNodeName = $parentFormNode->getName() . " (section $i)";
-//                            } else {
-//                                $parentFormNodeName = "(section $i)";
-//                            }
-//                            $formSectionNodeArr[$parentFormNodeName] = array('name'=>$elementName,'value'=>$elementValue);
-//                        } else {
-//                            $result[] = $elementName . ": " . $elementValue;
-//                            //$result[$elementName] = $elementValue;
-//                        }
 
                         //echo "RESULT=".$result."<br>";
                         //exit("1");
@@ -1135,6 +1125,8 @@ class FormNodeUtil
                 } else {
 
                     //////////// Case 2: single //////////////
+                    //echo "Case 2: single: ".$formNode->getName().": ".$formNodeValue."<br>";
+
                     $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
 
                     //////////////// Regular form node /////////////////////
@@ -1156,10 +1148,10 @@ class FormNodeUtil
                         //testing
                         $parentFormNodeObjectType = $parentFormNode->getObjectType();
                         if( $parentFormNodeObjectType ) {
-                            $parentFormNodeName = $parentFormNodeName . "[" . $parentFormNodeObjectType . "]";
+                            $parentFormNodeName = $parentFormNodeName . " [" . $parentFormNodeObjectType . "]";
                         }
                     } else {
-                        $parentFormNodeName = " ";
+                        $parentFormNodeName = "";
                     }
                     $formSectionNodeArr[$parentFormNodeName][] = array('name'=>$elementName,'value'=>$elementValue);
                     //echo $parentFormNodeName.": name=".$elementName."; value=".$elementValue."<br>";
@@ -1269,7 +1261,7 @@ class FormNodeUtil
                     $space = "&nbsp;";
                     $result = $result .
                         '<tr class="' . $trclassname . '">' .
-                        '<td colspan=9 class="rowlink-skip">' . $parentFormNode->getName() . '</td>' .
+                        '<td colspan=9 class="rowlink-skip">' . $parentFormNode->getName() . " [".$parentFormNode->getObjectType()."]" . '</td>' .
                         '</tr>';
                 }
             }
@@ -1364,7 +1356,7 @@ class FormNodeUtil
                     }//if array or single value
 
                     //echo "formNodeValue=".$formNodeValue.":<br>";
-                }
+                }//if $complexRes
             }
 
         }//foreach
@@ -1378,17 +1370,21 @@ class FormNodeUtil
         if( !$formNode ) {
             return $formNodeValueId;
         }
-        if( !$formNodeValueId ) {
+        if( !isset($formNodeValueId) ) {
             return $formNodeValueId;
         }
 
         $objectTypeName = $formNode->getObjectTypeName();
         //echo "getObjectTypeName=".$objectTypeName."<br>";
         //if( $formNodeValueId instanceof \DateTime ) {
-        if( $objectTypeName == "Form Field - Time" ) {
-            //$formNodeValueId = $receivingEntity->getTimeValue();
-            $formNodeValueId = $formNodeValueId->format("H:i");
-        }
+//        if( $objectTypeName == "Form Field - Time" ) {
+//            //$formNodeValueId = $receivingEntity->getTimeValue();
+//            $formNodeValueId = $formNodeValueId->format("H:i");
+//        }
+//        if( $objectTypeName == "Form Field - Full Date and Time" ) {
+//            //$formNodeValueId = $receivingEntity->getTimeValue();
+//            $formNodeValueId = $formNodeValueId->format("m/d/Y H:i");
+//        }
         //echo "formNodeValueId=".$formNodeValueId."<br>";
 
         $formNodeValueStr = $formNodeValueId;
@@ -1726,7 +1722,7 @@ class FormNodeUtil
 
         if( $formNode ) {
             $messageCategory->addFormNode($formNode);
-            echo "Message category [$messageCategory] is linked with form node [$formNode]<br>";
+            //echo "Message category [$messageCategory] is linked with form node [$formNode]<br>";
         }
 
         $em->persist($messageCategory);
@@ -1875,10 +1871,12 @@ class FormNodeUtil
     public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper, $asObject=false ) {
 
         if( !$formNode ) {
+            //echo "formNode is null<br>";
             return null;
         }
 
         if( !$mapper || count($mapper) == 0 ) {
+            //echo "no mapper<br>";
             return null;
         }
 
@@ -1918,13 +1916,24 @@ class FormNodeUtil
         //echo "count=".count($results)."<br>";
 
         if( $asObject ) {
+            //echo "return as object<br>";
             return $results;
         }
 
+        if( count($results) == 0 ) {
+            //echo "no value were added to receiving object: ".$formNode->getName()."; entityName=".$mapper['entityName']."<br>";
+            $complexRes = array(
+                'formNodeValue' => null,
+                'receivingEntity' => null
+            );
+            return $complexRes;
+        }
+
         if( count($results) == 1 ) {
-            //echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; result=".$results[0]->getId()."<br>";
+            //echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
             //return $results[0]->getValue();
             $formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
+            //echo "formNodeValue=".$formNodeValue."<br>";
             $complexRes = array(
                 'formNodeValue' => $formNodeValue,
                 'receivingEntity' => $results[0]
@@ -1939,6 +1948,7 @@ class FormNodeUtil
                 //$resArr[] = $result->getValue();
                 //$resArr[] = $this->getFormNodeValueByType($formNode,$result);
                 //$resArr['formNodeValue'] = $this->getFormNodeValueByType($formNode,$result);
+                //echo "value=".$this->getFormNodeValueByType($formNode,$result)."<br>";
                 $res = array(
                     'formNodeValue' => $this->getFormNodeValueByType($formNode,$result),
                     'formNodeId' => $formNode->getId(),
@@ -1963,7 +1973,16 @@ class FormNodeUtil
             $formNodeTypeName = $formNodeType->getName()."";
             //echo "############type=[".$formNodeTypeName."]###############<br>";
             if( $formNodeTypeName == "Form Field - Time" ) {
-                return $list->getTimeValue();
+                $value = $list->getTimeValue();
+                if( $value ) {
+                    return $value->format('H:i');
+                }
+            }
+            if( $formNodeTypeName == "Form Field - Full Date and Time" ) {
+                $value = $list->getDateTimeValue();
+                if( $value ) {
+                    return $value->format('m/d/Y H:i');
+                }
             }
         }
         return $list->getValue();

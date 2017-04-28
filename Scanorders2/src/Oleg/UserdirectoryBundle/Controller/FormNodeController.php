@@ -178,8 +178,10 @@ class FormNodeController extends Controller {
                     'entityId' => $entityId,
                 );
                 $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
-                $formNodeValue = $complexRes['formNodeValue'];
-                $receivingEntity = $complexRes['receivingEntity'];
+                if( $complexRes ) {
+                    $formNodeValue = $complexRes['formNodeValue'];
+                    $receivingEntity = $complexRes['receivingEntity'];
+                }
             }
             //echo "formNode=".$formNode->getId()."<br>";
             //echo "formNodeValue=".$formNodeValue."<br>";
