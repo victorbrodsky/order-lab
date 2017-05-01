@@ -225,9 +225,10 @@ class UserServiceUtil {
                 if( $i > 1 ) {
                     $searchStr = "(" . $searchStr . ")";
                 }
-                echo "searchStr=".$searchStr."<br>";
-                print_r($queryParameters);
                 $dql->andWhere($searchStr);
+                //testing
+                //echo "searchStr=".$searchStr."<br>";
+                //print_r($queryParameters);
             }
 
         } else {

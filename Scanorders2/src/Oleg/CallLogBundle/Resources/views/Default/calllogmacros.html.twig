@@ -577,7 +577,7 @@
 
 {% endmacro %}
 
-{% macro indexAction( message, eventObjectTypeId, patientListId, cycle ) %}
+{% macro indexAction( message, eventObjectTypeId, patientListId ) %}
 
     <!-- Modal -->
     {#<div class="modal fade" id="addComment_{{ message.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
@@ -658,7 +658,9 @@
                     href="{{ path('calllog_undelete', {'messageId': message.id}) }}">Undelete Entry</a></li>
             {% endif %}
 
-            <li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>
+            {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                <li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>
+            {% endif %}
 
             {% if message.patient|length > 0 %}
                 {% set mrn = message.patient|first.obtainValidField('mrn') %}
@@ -821,7 +823,7 @@
 
 {% endmacro %}
 
-{% macro calllogEntriesTable( messages, headFlag ) %}
+{% macro calllogEntriesTable( messages, eventObjectTypeId, patientListId, headFlag ) %}
     {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 
     {% if headFlag is not defined or not headFlag %}
@@ -947,9 +949,9 @@
                 </td>
 
                 {% if headFlag == "sortable" %}
-                <td class="rowlink-skip">
-                    {{ calllogmacros.indexAction(message,eventObjectTypeId,patientListId) }}
-                </td>
+                    <td class="rowlink-skip">
+                        {{ calllogmacros.indexAction(message,eventObjectTypeId,patientListId) }}
+                    </td>
                 {% endif %}
 
             </tr>

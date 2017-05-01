@@ -33,7 +33,8 @@
 <body>
 
     {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
-    {{ calllogmacros.calllogEntriesTable(messages,"simple") }}
+
+    {{ calllogmacros.calllogEntriesTable(messages,null,null,"simple") }}
 
 </body>
 </html>
