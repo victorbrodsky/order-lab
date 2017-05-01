@@ -672,13 +672,17 @@
     {% endif %}
     </p>
 {% endmacro %}
-{% macro dateField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat, fieldNamePostfix ) %}
+{% macro dateField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat, fieldNamePostfix, timezone ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {% if formNodeValue %}
         {% if dateFormat is defined and dateFormat %}
-            {% set fieldValue = formNodeValue|date(dateFormat) %}
+            {% if timezone is defined and timezone %}
+                {% set fieldValue = formNodeValue|date(dateFormat,false) %}
+            {% else %}
+                {% set fieldValue = formNodeValue|date(dateFormat) %}
+            {% endif %}
         {% else %}
             {% set fieldValue = formNodeValue %}
         {% endif %}
@@ -708,7 +712,6 @@
                 id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
                 name="{{ fieldname }}{{ fieldNamePostfix }}"
                 class="datepicker form-control"
-                {#value="{{ fieldValue|date(dateFormat) }}"#}
                 value="{{ fieldValue }}"
                 placeholder="{{ placeholder }}"
                 {{ disabled }}
@@ -904,9 +907,15 @@
     {% set hour = null %}
     {% set minute = null %}
     {% if formNodeValue %}
-        {% set hour = formNodeValue|date('H') %}
-        {% set minute = formNodeValue|date('i') %}
+        {% if timezone is defined and timezone %}
+            {% set hour = formNodeValue|date('H',false) %}
+            {% set minute = formNodeValue|date('i',false) %}
+        {% else %}
+            {% set hour = formNodeValue|date('H') %}
+            {% set minute = formNodeValue|date('i') %}
+        {% endif %}
     {% endif %}
+    {#hour={{ hour }} : minute={{ minute }}<br>#}
 
     <div>
         <select
@@ -1053,12 +1062,12 @@
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
-                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat,'[time][date]') }}
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat,'[time][date]',timezone) }}
                 {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
             </div>
         </div>
     {% else %}
-        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat,'[time][date]') }}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat,'[time][date]',timezone) }}
         {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
     {% endif %}
     </p>

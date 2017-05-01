@@ -547,6 +547,7 @@ class FormNodeUtil
     public function processFormNodeValue( $formNode, $receivingEntity, $formNodeValue, $asString=false ) {
 
         //echo "!!! getObjectTypeName=".$formNode->getObjectTypeName()."<br>";
+        //echo "formNodeValue=".$formNodeValue."<br>";
 
         if(
             $receivingEntity && $formNode->getObjectType() &&
