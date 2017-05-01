@@ -225,8 +225,8 @@ class UserServiceUtil {
                 if( $i > 1 ) {
                     $searchStr = "(" . $searchStr . ")";
                 }
-                //echo "searchStr=".$searchStr."<br>";
-                //print_r($queryParameters);
+                echo "searchStr=".$searchStr."<br>";
+                print_r($queryParameters);
                 $dql->andWhere($searchStr);
             }
 
@@ -237,6 +237,10 @@ class UserServiceUtil {
             //echo "dql=".$dql->getSql()."<br>";
         }
     }
+
+    //Assistance => ASSTN
+    //Assistants => ASSTN
+    //Therefore: DB must have ASSTN in order to find Assistance
     public function getMetaphoneStrArr( $word ) {
         $outputArr = array();
         $outputArr[] = $word;
@@ -257,7 +261,7 @@ class UserServiceUtil {
         $m3 = new \Metaphone3();
 
         $m3->SetEncodeVowels(TRUE);
-        //$m3->SetEncodeExact(TRUE);
+        $m3->SetEncodeExact(TRUE);
 
         //test_word($m3, 'iron', 'ARN', '');
         $m3->SetWord($word);
