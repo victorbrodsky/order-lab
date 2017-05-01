@@ -192,5 +192,81 @@ class UserServiceUtil {
         return $info;
     }
 
+    public function getMetaphoneLike( $field, $search, &$dql, &$queryParameters ) {
+
+        if( !($field && $search) ) {
+            return null;
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $enableMetaphone = $userSecUtil->getSiteSettingParameter('enableMetaphone');
+        //$enableMetaphone = false;
+        $pathMetaphone = $userSecUtil->getSiteSettingParameter('pathMetaphone');
+        if( $enableMetaphone && $pathMetaphone ) {
+            $outputArr = $this->getMetaphoneStrArr($search);
+
+            $searchStr = "";
+            $i = 0;
+            foreach( $outputArr as $output ) {
+                if( $output ) {
+                    if ($searchStr) {
+                        $searchStr = $searchStr . " OR ";
+                    }
+                    $searchStr = $searchStr . $field . " LIKE :search" . $i;
+
+                    $queryParameters["search" . $i] = "%" . $output . "%";
+
+                    $i++;
+                }
+            }
+
+            if( $searchStr ) {
+                if( $i > 1 ) {
+                    $searchStr = "(" . $searchStr . ")";
+                }
+                //echo "searchStr=".$searchStr."<br>";
+                //print_r($queryParameters);
+                $dql->andWhere($searchStr);
+            }
+
+        } else {
+            $dql->andWhere($field." LIKE :search");
+            $queryParameters['search'] = "%".$search."%";
+
+            //echo "dql=".$dql->getSql()."<br>";
+        }
+    }
+    public function getMetaphoneStrArr( $word ) {
+        $outputArr = array();
+        $outputArr[] = $word;
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $enableMetaphone = $userSecUtil->getSiteSettingParameter('enableMetaphone');
+        $pathMetaphone = $userSecUtil->getSiteSettingParameter('pathMetaphone');
+
+        if( !($enableMetaphone && $pathMetaphone) ) {
+            return $outputArr;
+        }
+
+        //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\vendor\olegutil\Metaphone3\metaphone3.php
+        //require_once('"'.$pathMetaphone.'"');
+        //$pathMetaphone = "'".$pathMetaphone."'";
+        require_once($pathMetaphone);
+
+        $m3 = new \Metaphone3();
+
+        $m3->SetEncodeVowels(TRUE);
+        //$m3->SetEncodeExact(TRUE);
+
+        //test_word($m3, 'iron', 'ARN', '');
+        $m3->SetWord($word);
+        //Encodes input string to one or two key values according to Metaphone 3 rules.
+        $m3->Encode();
+
+        $outputArr[] = $m3->m_primary;
+        $outputArr[] = $m3->m_secondary;
+        return $outputArr;
+    }
 
 }

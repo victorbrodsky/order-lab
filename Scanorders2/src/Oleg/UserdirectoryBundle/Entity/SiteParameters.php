@@ -621,6 +621,16 @@ class SiteParameters {
      */
     private $organizationalGroupDefaults;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableMetaphone;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $pathMetaphone;
+
 
 
     function __construct( $addobjects=true )
@@ -2280,6 +2290,38 @@ class SiteParameters {
     public function setLiveSiteRootUrl($liveSiteRootUrl)
     {
         $this->liveSiteRootUrl = $liveSiteRootUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableMetaphone()
+    {
+        return $this->enableMetaphone;
+    }
+
+    /**
+     * @param mixed $enableMetaphone
+     */
+    public function setEnableMetaphone($enableMetaphone)
+    {
+        $this->enableMetaphone = $enableMetaphone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPathMetaphone()
+    {
+        return $this->pathMetaphone;
+    }
+
+    /**
+     * @param mixed $pathMetaphone
+     */
+    public function setPathMetaphone($pathMetaphone)
+    {
+        $this->pathMetaphone = $pathMetaphone;
     }
 
 

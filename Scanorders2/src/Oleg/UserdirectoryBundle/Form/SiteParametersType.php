@@ -534,6 +534,18 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'enableMetaphone' )
+            $builder->add('enableMetaphone',null,array(
+                'label'=>'Enable use of Metaphone:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pathMetaphone' )
+            $builder->add('pathMetaphone',null,array(
+                'label'=>'Path to Metaphone:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
         $this->addCoPath($builder);
 
         if( !array_key_exists('singleField', $this->params) ) {

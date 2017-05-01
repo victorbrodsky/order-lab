@@ -91,6 +91,30 @@
                     </tr>
 
 
+                    <tr>
+                        <td class="rowlink-skip" colspan="3" align="center">
+                            <h3>Metaphone:</h3>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Enable use of Metaphone:</td>
+                        <td>
+                            {% set enableMetaphoneStr = 'No' %}
+                            {% if entity.enableMetaphone == true %}
+                                {% set enableMetaphoneStr = 'Yes' %}
+                            {% endif %}
+                            {{ enableMetaphoneStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'enableMetaphone'}) }}">Edit</a></td>
+                    </tr>
+                    <tr>
+                        <td>Path to Metaphone:</td>
+                        <td>{{ entity.pathMetaphone }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pathMetaphone'}) }}">Edit</a></td>
+                    </tr>
+
+
                 </tbody>
             </table>
 

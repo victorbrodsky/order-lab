@@ -147,6 +147,7 @@ class CallEntryController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
+        $userServiceUtil = $this->get('user_service_utility');
 
         //$route = $request->get('_route');
         //$title = "Call Case List";
@@ -357,10 +358,11 @@ class CallEntryController extends Controller
 
         if( $searchFilter ) {
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
-                //echo "string $searchFilter<br>";
+                //echo "lastname.field string: $searchFilter<br>";
                 //$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
-                $dql->andWhere("lastname.field LIKE :search");
-                $queryParameters['search'] = "%".$searchFilter."%";
+                //$dql->andWhere("lastname.field LIKE :search");
+                //$queryParameters['search'] = "%".$searchFilter."%";
+                $userServiceUtil->getMetaphoneLike("lastname.field",$searchFilter,$dql,$queryParameters);
             } else {
                 //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
@@ -523,8 +525,9 @@ class CallEntryController extends Controller
                 $queryParameters['keytype'] = $defaultMrnType->getId();
             }
             if( $calllogsearchtype == 'Patient Last Name' ) {
-                $dql->andWhere("lastname.field LIKE :search");
-                $queryParameters['search'] = "%".$calllogsearch."%";
+                //$dql->andWhere("lastname.field LIKE :search");
+                //$queryParameters['search'] = "%".$calllogsearch."%";
+                $userServiceUtil->getMetaphoneLike("lastname.field",$calllogsearch,$dql,$queryParameters);
             }
 //            if( $calllogsearchtype == 'Message Type' ) {
 //                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($calllogsearch);
@@ -1589,6 +1592,8 @@ class CallEntryController extends Controller
 
     public function searchPatient( $request, $evenlog=false, $params=null ) {
 
+        $userServiceUtil = $this->get('user_service_utility');
+
         $mrntype = trim($request->get('mrntype'));
         $mrn = trim($request->get('mrn'));
         $dob = trim($request->get('dob'));
@@ -1607,6 +1612,10 @@ class CallEntryController extends Controller
             $lastname = ( array_key_exists('lastname', $params) ? $params['lastname'] : null);
             $firstname = ( array_key_exists('firstname', $params) ? $params['firstname'] : null);
         }
+
+        //metaphone (if enabled)
+        //$outputArr = $userServiceUtil->getMetaphoneStrArr($lastname);
+        //$outputArr = $userServiceUtil->getMetaphoneStrArr($firstname);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1744,6 +1753,7 @@ class CallEntryController extends Controller
             //$lastname = "Doe";
             //echo "1 lastname=".$lastname."<br>";
             //echo "1 firstname=".$firstname."<br>";
+            //TODO: convert it to metaphone search
 
             $searchCriterionArr = array();
 
