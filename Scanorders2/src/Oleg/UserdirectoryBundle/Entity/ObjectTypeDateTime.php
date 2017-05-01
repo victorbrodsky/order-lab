@@ -137,7 +137,8 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
         }
 
         if( $timezone ) {
-            $datetimeValue->setTimezone(new \DateTimeZone($timezone)); //$timezone='Pacific/Chatham'
+            //$datetimeValue->setTimezone(new \DateTimeZone($timezone)); //$timezone='Pacific/Chatham'
+            $this->setTimezone($timezone);
         }
 
         $zero = 0; //"00"

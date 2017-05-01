@@ -419,6 +419,7 @@ class FormNodeUtil
             }
 
             $formValueTimezone = null;
+            //TODO: set $formValueTimezone to timezone field. Then in view, get this value from timezone field.
             if( $formValue && array_key_exists('timezone', $formValue) ) {
                 $formValueTimezone = $formValue['timezone'];
                 if( $formValueTimezone ) {
