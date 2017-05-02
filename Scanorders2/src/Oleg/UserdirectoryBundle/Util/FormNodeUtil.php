@@ -1183,21 +1183,24 @@ class FormNodeUtil
                 }
             } else {
                 //row height can not exceed 409
-                $info = "";
+                //$info = "";
                 if( $sectionName ) {
-                    $info = $sectionName . "\n";
+                    //$info = $sectionName . "\n";
+                    $result[] = $sectionName;// . "\n";
                 }
-                $numItems = count($nameValueArrs);
-                $i = 0;
-                //$spacePrefix = "   ";
-                $spacePrefix = "";
+                //$numItems = count($nameValueArrs);
+                //$i = 0;
+                $spacePrefix = "   ";
+                //$spacePrefix = "";
                 foreach( $nameValueArrs as $nameValueArr ) {
-                    $info = $info . $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
-                    if( ++$i < $numItems ) {
-                        $info = $info . "\n";
-                    }
+                    $thisInfo = $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
+                    //$info = $info . $thisInfo;
+                    //if( ++$i < $numItems ) {
+                    //    $info = $info . "\n";
+                    //}
+                    $result[] = $thisInfo;// . "\n";
                 }
-                $result[] = $info;
+                //$result[] = $info;
             }
         }
 

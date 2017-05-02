@@ -2696,18 +2696,40 @@ class CallEntryController extends Controller
             $row = $row + 1;
             $trclassname = "";
             $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,$trclassname);
+//            echo "snapshotArr count=".count($snapshotArr)."<br>";
+//            print "<pre>";
+//            print_r($snapshotArr);
+//            print "</pre><br>";
+            $snapshotArrChunks = array_chunk($snapshotArr, 21);
+//            echo "snapshotArrChunks count=".count($snapshotArrChunks)."<br>";
 
-            $snapshot = implode("\n",$snapshotArr);
-            //exit('$snapshot='.$snapshotArr);
-            $aRow = 'A' . $row;
+            $originalRow = $row;
+            $numItems = count($snapshotArrChunks);
+            $i = 0;
+            foreach( $snapshotArrChunks as $snapshotArrChunk ) {
+                $snapshot = implode("\n",$snapshotArrChunk);
+                //exit('$snapshot='.$snapshotArr);
+                $aRow = 'A' . $row;
+                $ews->setCellValue($aRow, "".$snapshot);
+                if( ++$i < $numItems ) {
+                    $row = $row + 1;
+                }
+            }
+            //$aRowMerged = 'A' . $originalRow . ':' . 'A' . $row; //merge is not working
+            //$ews->mergeCells($aRowMerged);
+//            exit('1');
 
-            //$aRowMerged = 'A' . $row . ':' . 'B' . $row;
-            $nrow = $row + 1;
-            $aRowMerged = 'A' . $row . ':' . 'A' . $nrow;
-            $row = $row + 1;
-            $ews->mergeCells($aRowMerged);
-
-            $ews->setCellValue($aRow, "".$snapshot."\n");
+//            $snapshot = implode("\n",$snapshotArr);
+//            //exit('$snapshot='.$snapshotArr);
+//            $aRow = 'A' . $row;
+//
+//            //$aRowMerged = 'A' . $row . ':' . 'B' . $row;
+//            $nrow = $row + 1;
+//            $aRowMerged = 'A' . $row . ':' . 'A' . $nrow;
+//            $row = $row + 1;
+//            $ews->mergeCells($aRowMerged);
+//
+//            $ews->setCellValue($aRow, "".$snapshot."\n");
             //$ews->getStyle($aRow)->getAlignment()->setWrapText(true);
             //////// EOF subsection with message snapshot info ////////
 
@@ -2731,8 +2753,8 @@ class CallEntryController extends Controller
             foreach ($cellIterator as $cell) {
                 $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
             }
-            $sheet->getDefaultRowDimension()->setRowHeight(-1);
-            $sheet->getStyle('A')->getAlignment()->setWrapText(true);
+            //$sheet->getDefaultRowDimension()->setRowHeight(-1);
+            //$sheet->getStyle('A')->getAlignment()->setWrapText(true);
         }
 
 
