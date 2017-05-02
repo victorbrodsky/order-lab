@@ -153,6 +153,9 @@ doctrine:
                 dql:
                      string_functions:
                         CAST: Oleg\UserdirectoryBundle\Query\CastFunction
+                     numeric_functions:
+                        levenshtein: Jrk\LevenshteinBundle\ORM\Doctrine\DQL\LevenshteinFunction
+                        levenshtein_ratio: Jrk\LevenshteinBundle\ORM\Doctrine\DQL\LevenshteinRatioFunction
             aperio:
                 connection: aperio
 #                mappings:

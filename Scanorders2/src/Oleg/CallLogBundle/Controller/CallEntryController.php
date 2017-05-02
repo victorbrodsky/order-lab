@@ -362,7 +362,7 @@ class CallEntryController extends Controller
                 //$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
                 //$dql->andWhere("lastname.field LIKE :search");
                 //$queryParameters['search'] = "%".$searchFilter."%";
-                $userServiceUtil->getMetaphoneLike("lastname.field",$searchFilter,$dql,$queryParameters);
+                $userServiceUtil->getFuzzyLike("lastname.field",$searchFilter,$dql,$queryParameters);
             } else {
                 //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
@@ -527,7 +527,7 @@ class CallEntryController extends Controller
             if( $calllogsearchtype == 'Patient Last Name' ) {
                 //$dql->andWhere("lastname.field LIKE :search");
                 //$queryParameters['search'] = "%".$calllogsearch."%";
-                $userServiceUtil->getMetaphoneLike("lastname.field",$calllogsearch,$dql,$queryParameters);
+                $userServiceUtil->getFuzzyLike("lastname.field",$calllogsearch,$dql,$queryParameters);
             }
 //            if( $calllogsearchtype == 'Message Type' ) {
 //                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($calllogsearch);

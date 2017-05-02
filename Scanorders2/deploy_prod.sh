@@ -49,6 +49,9 @@ function prep()
     echo "*** Update tables in Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/app/console doctrine:schema:update --force
 
+    echo "*** Create LEVENSHTEIN functions for fuzzy search ***"
+    php $PROJECT_LOCAL_PATH/app/console jrk:levenshtein:install
+
     echo "*** Install assets ***"
     php $PROJECT_LOCAL_PATH/app/console assets:install
 

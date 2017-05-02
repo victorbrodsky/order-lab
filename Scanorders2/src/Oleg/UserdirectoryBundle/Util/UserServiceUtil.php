@@ -192,6 +192,17 @@ class UserServiceUtil {
         return $info;
     }
 
+    //TODO: try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle
+    //TODO: or https://packagist.org/packages/glanchow/doctrine-fuzzy
+    public function getFuzzyLike( $field, $search, &$dql, &$queryParameters ) {
+        if( !($field && $search) ) {
+            return null;
+        }
+        $tolerance = 4;
+        $dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
+        $queryParameters['search'] = "%".$search."%";
+        $queryParameters['tolerance'] = $tolerance;
+    }
     public function getMetaphoneLike( $field, $search, &$dql, &$queryParameters ) {
 
         if( !($field && $search) ) {
@@ -227,8 +238,8 @@ class UserServiceUtil {
                 }
                 $dql->andWhere($searchStr);
                 //testing
-                //echo "searchStr=".$searchStr."<br>";
-                //print_r($queryParameters);
+                echo "searchStr=".$searchStr."<br>";
+                print_r($queryParameters);
             }
 
         } else {
