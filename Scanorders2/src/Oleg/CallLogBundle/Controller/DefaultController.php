@@ -64,10 +64,10 @@ class DefaultController extends Controller
         //metaphone (if enabled)
         //$outputArr = $userServiceUtil->getMetaphoneStrArr($lastname);
         //$outputArr = $userServiceUtil->getMetaphoneStrArr($firstname);
-        $w1 = "MAKMASTA";
-        $w2 = "MKMAST";
-        $d = levenshtein($w1,$w2);
-        echo "d=".$d."<br>";
+        //$w1 = "MAKMASTA";
+        //$w2 = "MKMAST";
+        //$d = levenshtein($w1,$w2);
+        //echo "d=".$d."<br>";
 
 //        $msg = "Notify Test!!!";
 //        $this->get('session')->getFlashBag()->add(
