@@ -2478,7 +2478,7 @@ class CallEntryController extends Controller
         $res = $this->getCalllogEntryFilter($request);
 
         if( $res['redirect'] ) {
-            exit('redirect to home page');
+            //exit('redirect to home page');
             return $res['redirect'];
         }
 
@@ -2551,7 +2551,7 @@ class CallEntryController extends Controller
             ->setLastModifiedBy($author."")
             ->setDescription('Call Log Book data list in Excel format')
             ->setSubject('PHP Excel manipulation')
-            ->setKeywords('excel php office phpexcel lakers')
+            ->setKeywords('excel php office phpexcel')
             ->setCategory('programming')
         ;
 
@@ -2569,6 +2569,7 @@ class CallEntryController extends Controller
             'alignment' => array(
                 'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
                 'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP,
+                'wrap' => true
             ),
             'font'  => array(
                 'size'  => 10,
@@ -2691,18 +2692,24 @@ class CallEntryController extends Controller
             }
             $ews->setCellValue('H'.$row, $author);
 
-            //subsection with message snapshot info
+            //////// subsection with message snapshot info ////////
             $row = $row + 1;
             $trclassname = "";
             $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,$trclassname);
 
-            $snapshot = implode("\n ",$snapshotArr);
+            $snapshot = implode("\n",$snapshotArr);
             //exit('$snapshot='.$snapshotArr);
             $aRow = 'A' . $row;
-            //$aRowMerged = 'A' . $row . ':' . 'H' . $row;
-            //$ews->mergeCells($aRowMerged);
-            $ews->setCellValue($aRow, " ".$snapshot);
-            $ews->getStyle($aRow)->getAlignment()->setWrapText(true);
+
+            //$aRowMerged = 'A' . $row . ':' . 'B' . $row;
+            $nrow = $row + 1;
+            $aRowMerged = 'A' . $row . ':' . 'A' . $nrow;
+            $row = $row + 1;
+            $ews->mergeCells($aRowMerged);
+
+            $ews->setCellValue($aRow, "".$snapshot."\n");
+            //$ews->getStyle($aRow)->getAlignment()->setWrapText(true);
+            //////// EOF subsection with message snapshot info ////////
 
             //increment row index
             $row = $row + 1;
@@ -2724,6 +2731,8 @@ class CallEntryController extends Controller
             foreach ($cellIterator as $cell) {
                 $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
             }
+            $sheet->getDefaultRowDimension()->setRowHeight(-1);
+            $sheet->getStyle('A')->getAlignment()->setWrapText(true);
         }
 
 

@@ -1041,8 +1041,9 @@ class FormNodeUtil
         //echo "real formNode count=".count($formNodes)."<br>";
 
         //prepend 3 spaces in the front of the form node name in table
-        $space = "&nbsp;";
-        if( !$table ) {
+        if( $table ) {
+            $space = "&nbsp;";
+        } else {
             $space = "";
         }
 
@@ -1181,7 +1182,22 @@ class FormNodeUtil
                         '</tr>';
                 }
             } else {
-                $result[] = $elementName . ": " . $elementValue;
+                //row height can not exceed 409
+                $info = "";
+                if( $sectionName ) {
+                    $info = $sectionName . "\n";
+                }
+                $numItems = count($nameValueArrs);
+                $i = 0;
+                //$spacePrefix = "   ";
+                $spacePrefix = "";
+                foreach( $nameValueArrs as $nameValueArr ) {
+                    $info = $info . $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
+                    if( ++$i < $numItems ) {
+                        $info = $info . "\n";
+                    }
+                }
+                $result[] = $info;
             }
         }
 
