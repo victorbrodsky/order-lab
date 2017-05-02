@@ -194,12 +194,14 @@ class UserServiceUtil {
 
     //TODO: try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle
     //TODO: or https://packagist.org/packages/glanchow/doctrine-fuzzy
+    //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name
+    //try: http://stackoverflow.com/questions/41218952/is-not-a-recognized-built-in-function-name
     public function getFuzzyLike( $field, $search, &$dql, &$queryParameters ) {
         if( !($field && $search) ) {
             return null;
         }
         $tolerance = 4;
-        $dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
+        $dql->andWhere("dbo.LEVENSHTEIN(lastname.field,:search) <= :tolerance");
         $queryParameters['search'] = "%".$search."%";
         $queryParameters['tolerance'] = $tolerance;
     }
