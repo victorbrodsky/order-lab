@@ -201,7 +201,7 @@ class UserServiceUtil {
             return null;
         }
         $tolerance = 4;
-        $dql->andWhere("dbo.LEVENSHTEIN(lastname.field,:search) <= :tolerance");
+        $dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
         $queryParameters['search'] = "%".$search."%";
         $queryParameters['tolerance'] = $tolerance;
     }
