@@ -219,8 +219,42 @@ class UserServiceUtil {
             echo "res=".$result['id'].": ".$result['field']."<br>";
         }
 
+        if(1) {
+            $repository = $em->getRepository('OlegOrderformBundle:PatientLastName');
+            $dql = $repository->createQueryBuilder("list");
+            $dql->select("list.id as id, LEVENSHTEIN(list.field, '".$search."') AS d");
+            $dql->orderBy("d","ASC");
+            $query = $em->createQuery($dql);
+
+            //$query = $em
+                //->createQueryBuilder('list')
+                //->select('id, LEVENSHTEIN(list.field, :q) AS d')
+                //->from($this->_entityName, 'g')
+                //->orderby('d', 'ASC')
+                //->setFirstResult($offset)
+                //->setMaxResults($limit)
+                //->setParameter('q', $search)
+                //->getQuery();
+
+            $results = $query->getResult();
+
+            echo "<br>";
+            foreach( $results as $result ) {
+                echo "res=".$result['id'].": ".$result['d']."<br>";
+            }
+
+//            $repository = $this->em->getRepository('OlegUserdirectoryBundle:PermissionObjectList');
+//            $dql =  $repository->createQueryBuilder("list");
+//            $dql->select('list');
+//            $dql->leftJoin('list.sites','sites');
+//            $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
+//            $query = $this->em->createQuery($dql);
+
+            //return $query->getResult();
+        }
+
         //2)
-        if(1){
+        if(0){
             $sql = "SELECT id, field FROM scan_patientlastname WHERE ( LEVENSHTEIN(field,'".$search."') <= 4 )";
             echo "sql=$sql<br>";
 
