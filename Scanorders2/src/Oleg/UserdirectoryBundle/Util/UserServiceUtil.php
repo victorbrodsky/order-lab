@@ -221,7 +221,7 @@ class UserServiceUtil {
         $sql = "
           SELECT id, field
           FROM scan_patientlastname
-          WHERE LEVENSHTEIN(field,'ma') <= 4
+          WHERE [dbo].[LEVENSHTEIN](field,'ma') <= 4
         ";
         echo "sql=$sql<br>";
 

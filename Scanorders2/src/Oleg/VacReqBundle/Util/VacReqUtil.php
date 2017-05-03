@@ -1095,7 +1095,7 @@ class VacReqUtil
             $startYear = $yearsArr[0];
             $academicYearStartStr = $startYear."-".$academicYearStartStr;
         } else {
-            throw new \InvalidArgumentException("Request's academic start year is not defined.");
+            throw new \InvalidArgumentException("Request's academic start year is not defined in request ID#".$request->getId());
         }
         //echo "academicYearStartStr=".$academicYearStartStr."<br>";
 
