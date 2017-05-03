@@ -39,8 +39,6 @@ class AppKernel extends Kernel
             new Usu\ScryptPasswordEncoderBundle\UsuScryptPasswordEncoderBundle(),
             new Oleg\VacReqBundle\OlegVacReqBundle(),
             new Oleg\CallLogBundle\OlegCallLogBundle(),
-
-            new Jrk\LevenshteinBundle\JrkLevenshteinBundle(),
         );
 
 //		echo "environment:<br>";

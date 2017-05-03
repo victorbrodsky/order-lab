@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "204a061e00de627f4d332ed79bf6a6a1",
+    "content-hash": "2f0da321c508ec957ce067ff37261646",
     "packages": [
         {
             "name": "adesigns/calendar-bundle",
@@ -1628,53 +1628,6 @@
                 "sql"
             ],
             "time": "2014-01-12T16:20:24+00:00"
-        },
-        {
-            "name": "jrk/levenshtein-bundle",
-            "version": "dev-master",
-            "target-dir": "Jrk/LevenshteinBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jreziga/JrkLevenshteinBundle.git",
-                "reference": "0bb7592ef8a75b6c5ba5fb8033a0ef7496c0fa97"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jreziga/JrkLevenshteinBundle/zipball/0bb7592ef8a75b6c5ba5fb8033a0ef7496c0fa97",
-                "reference": "0bb7592ef8a75b6c5ba5fb8033a0ef7496c0fa97",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "*",
-                "doctrine/orm": "*",
-                "php": ">=5.3.2",
-                "symfony/framework-bundle": "*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "Jrk\\LevenshteinBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GNU GPL v2"
-            ],
-            "authors": [
-                {
-                    "name": "Jessym Reziga",
-                    "homepage": "http://github.com/jreziga"
-                }
-            ],
-            "description": "Levenshtein function bundle for symfony2 and doctrine",
-            "homepage": "http://github.com/jreziga/JrkLevenshteinBundle",
-            "keywords": [
-                "doctrine",
-                "levenshtein",
-                "search",
-                "soundex"
-            ],
-            "time": "2016-09-21 14:58:16"
         },
         {
             "name": "knplabs/knp-components",
@@ -4680,7 +4633,6 @@
         "google/apiclient": 10,
         "itbz/fpdi": 20,
         "clegginabox/pdf-merger": 20,
-        "jrk/levenshtein-bundle": 20,
         "glanchow/doctrine-fuzzy": 20
     },
     "prefer-stable": false,
