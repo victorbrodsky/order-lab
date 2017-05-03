@@ -194,6 +194,47 @@ class UserServiceUtil {
 
     //TODO: try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle
     //TODO: or https://packagist.org/packages/glanchow/doctrine-fuzzy
+    public function getFuzzyTest() {
+        $em = $this->em;
+        $tolerance = 4;
+        //$dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
+        //$queryParameters['search'] = "%".$search."%";
+        //$queryParameters['tolerance'] = $tolerance;
+
+        //1)
+        $sql = "
+          SELECT id, field
+          FROM scan_patientlastname
+          WHERE field LIKE '%ma%'
+        ";
+        echo "sql=$sql<br>";
+
+        $stmt = $em->getConnection()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        foreach( $results as $result ) {
+            echo "res=".$result['id'].": ".$result['field']."<br>";
+        }
+
+        //2)
+        $sql = "
+          SELECT id, field
+          FROM scan_patientlastname
+          WHERE LEVENSHTEIN(field,'ma') <= 4
+        ";
+        echo "sql=$sql<br>";
+
+        $stmt = $em->getConnection()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        foreach( $results as $result ) {
+            echo "res=".$result['id'].": ".$result['field']."<br>";
+        }
+
+        return $results;
+    }
     //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name
     //try: http://stackoverflow.com/questions/41218952/is-not-a-recognized-built-in-function-name
     public function getFuzzyLike( $field, $search, &$dql, &$queryParameters ) {

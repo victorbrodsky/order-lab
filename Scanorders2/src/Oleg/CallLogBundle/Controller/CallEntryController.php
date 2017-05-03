@@ -73,6 +73,12 @@ class CallEntryController extends Controller
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        //testing
+        $userServiceUtil = $this->get('user_service_utility');
+        $results = $userServiceUtil->getFuzzyTest();
+        exit("<br>exit");
+
+
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
         $route = $request->get('_route');
