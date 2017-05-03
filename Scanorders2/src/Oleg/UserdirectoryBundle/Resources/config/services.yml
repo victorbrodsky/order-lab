@@ -119,7 +119,7 @@ services:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
 #            - { name: kernel.event_listener, event: oneup_uploader.pre_upload, method: preUpload }
 
-    #Doctrine listenere for postPersist
+    #Doctrine listener for postPersist
     doctrine.listener:
         class: Oleg\UserdirectoryBundle\Services\DoctrineListener
         arguments: [@service_container]

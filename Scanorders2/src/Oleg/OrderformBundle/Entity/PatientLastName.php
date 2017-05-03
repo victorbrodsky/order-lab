@@ -46,6 +46,12 @@ class PatientLastName extends PatientArrayFieldAbstract
      */
     protected $field;
 
+    /**
+     * Metaphone key string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $fieldMetaphone;
+
 
     /**
      * convert the string to "Sentence Case"
@@ -55,5 +61,27 @@ class PatientLastName extends PatientArrayFieldAbstract
     {
         return $this->capitalizeIfNotAllCapital($this->field);
     }
+
+    //TODO: on setField() update $fieldMetaphone using getMetaphoneKey method
+    //http://stackoverflow.com/questions/10330704/symfony-2-0-getting-service-inside-entity
+    //http://stackoverflow.com/questions/25515452/sf2-using-a-service-inside-an-entity
+    //Or use DoctrineListener with postPersist
+
+    /**
+     * @return mixed
+     */
+    public function getFieldMetaphone()
+    {
+        return $this->fieldMetaphone;
+    }
+
+    /**
+     * @param mixed $fieldMetaphone
+     */
+    public function setFieldMetaphone($fieldMetaphone)
+    {
+        $this->fieldMetaphone = $fieldMetaphone;
+    }
+
 
 }

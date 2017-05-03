@@ -74,9 +74,9 @@ class CallEntryController extends Controller
         }
 
         //testing
-        $userServiceUtil = $this->get('user_service_utility');
-        $results = $userServiceUtil->getFuzzyTest();
-        exit("<br>exit");
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$results = $userServiceUtil->getFuzzyTest();
+        //exit("<br>exit");
 
 
         $em = $this->getDoctrine()->getManager();

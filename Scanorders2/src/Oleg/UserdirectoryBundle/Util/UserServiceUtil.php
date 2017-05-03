@@ -42,11 +42,14 @@ class UserServiceUtil {
     protected $em;
     protected $sc;
     protected $container;
+    protected $m3;
 
     public function __construct( $em, $sc, $container ) {
         $this->em = $em;
         $this->sc = $sc;
         $this->container = $container;
+
+        $this->m3 = $this->initMetaphone();
     }
 
     public function convertFromUserTimezonetoUTC($datetime,$user) {
@@ -192,82 +195,6 @@ class UserServiceUtil {
         return $info;
     }
 
-    //TODO: try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle
-    //TODO: or https://packagist.org/packages/glanchow/doctrine-fuzzy
-    public function getFuzzyTest() {
-        $em = $this->em;
-        $tolerance = 4;
-        //$dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
-        //$queryParameters['search'] = "%".$search."%";
-        //$queryParameters['tolerance'] = $tolerance;
-
-        $search = "last";
-
-        //1)
-        $sql = "
-          SELECT id, field
-          FROM scan_patientlastname
-          WHERE field LIKE '%".$search."%'
-        ";
-        echo "sql=$sql<br>";
-
-        $stmt = $em->getConnection()->prepare($sql);
-        $stmt->execute();
-        $results = $stmt->fetchAll();
-
-        foreach( $results as $result ) {
-            echo "res=".$result['id'].": ".$result['field']."<br>";
-        }
-
-        if(1) {
-            $repository = $em->getRepository('OlegOrderformBundle:PatientLastName');
-            $dql = $repository->createQueryBuilder("list");
-            $dql->select("list.id as id, LEVENSHTEIN(list.field, '".$search."') AS d");
-            $dql->orderBy("d","ASC");
-            $query = $em->createQuery($dql);
-
-            //$query = $em
-                //->createQueryBuilder('list')
-                //->select('id, LEVENSHTEIN(list.field, :q) AS d')
-                //->from($this->_entityName, 'g')
-                //->orderby('d', 'ASC')
-                //->setFirstResult($offset)
-                //->setMaxResults($limit)
-                //->setParameter('q', $search)
-                //->getQuery();
-
-            $results = $query->getResult();
-
-            echo "<br>";
-            foreach( $results as $result ) {
-                echo "res=".$result['id'].": ".$result['d']."<br>";
-            }
-
-//            $repository = $this->em->getRepository('OlegUserdirectoryBundle:PermissionObjectList');
-//            $dql =  $repository->createQueryBuilder("list");
-//            $dql->select('list');
-//            $dql->leftJoin('list.sites','sites');
-//            $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
-//            $query = $this->em->createQuery($dql);
-
-            //return $query->getResult();
-        }
-
-        //2)
-        if(0){
-            $sql = "SELECT id, field FROM scan_patientlastname WHERE ( LEVENSHTEIN(field,'".$search."') <= 4 )";
-            echo "sql=$sql<br>";
-
-            $stmt = $em->getConnection()->prepare($sql);
-            $stmt->execute();
-            $results = $stmt->fetchAll();
-
-            foreach( $results as $result ) {
-                echo "res=".$result['id'].": ".$result['field']."<br>";
-            }
-        }
-        return $results;
-    }
     //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name
     //try: http://stackoverflow.com/questions/41218952/is-not-a-recognized-built-in-function-name
     public function getFuzzyLike( $field, $search, &$dql, &$queryParameters ) {
@@ -333,7 +260,132 @@ class UserServiceUtil {
     //Assistance => ASSTN
     //Assistants => ASSTN
     //Therefore: DB must have ASSTN in order to find Assistance
-    public function getMetaphoneStrArr( $word ) {
+    public function getMetaphoneKey( $word ) {
+
+        if( !$this->m3 ) {
+            return $word;
+        }
+
+        //test_word($m3, 'iron', 'ARN', '');
+        $this->m3->SetWord($word);
+        //Encodes input string to one or two key values according to Metaphone 3 rules.
+        $this->m3->Encode();
+
+        if( $this->m3->m_primary ) {
+            return $this->m3->m_primary;
+        }
+
+        if( $this->m3->m_secondary ) {
+            return $this->m3->m_secondary;
+        }
+
+        return $word;
+    }
+
+    public function initMetaphone() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $enableMetaphone = $userSecUtil->getSiteSettingParameter('enableMetaphone');
+        $pathMetaphone = $userSecUtil->getSiteSettingParameter('pathMetaphone');
+
+        if( !($enableMetaphone && $pathMetaphone) ) {
+            return null;
+        }
+
+        //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\vendor\olegutil\Metaphone3\metaphone3.php
+        //require_once('"'.$pathMetaphone.'"');
+        //$pathMetaphone = "'".$pathMetaphone."'";
+        require_once($pathMetaphone);
+
+        $m3 = new \Metaphone3();
+
+        $m3->SetEncodeVowels(TRUE);
+        $m3->SetEncodeExact(TRUE);
+
+        return $m3;
+    }
+
+
+    /////////////// NOT USED ///////////////////
+    //TODO: try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle
+    //TODO: or https://packagist.org/packages/glanchow/doctrine-fuzzy
+    public function getFuzzyTest() {
+        $em = $this->em;
+        $tolerance = 4;
+        //$dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
+        //$queryParameters['search'] = "%".$search."%";
+        //$queryParameters['tolerance'] = $tolerance;
+
+        $search = "last";
+
+        //1)
+        $sql = "
+          SELECT id, field
+          FROM scan_patientlastname
+          WHERE field LIKE '%".$search."%'
+        ";
+        echo "sql=$sql<br>";
+
+        $stmt = $em->getConnection()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        foreach( $results as $result ) {
+            echo "res=".$result['id'].": ".$result['field']."<br>";
+        }
+
+        if(1) {
+            $repository = $em->getRepository('OlegOrderformBundle:PatientLastName');
+            $dql = $repository->createQueryBuilder("list");
+            $dql->select("list.id as id, LEVENSHTEIN(list.field, '".$search."') AS d");
+            $dql->orderBy("d","ASC");
+            $query = $em->createQuery($dql);
+
+            //$query = $em
+            //->createQueryBuilder('list')
+            //->select('id, LEVENSHTEIN(list.field, :q) AS d')
+            //->from($this->_entityName, 'g')
+            //->orderby('d', 'ASC')
+            //->setFirstResult($offset)
+            //->setMaxResults($limit)
+            //->setParameter('q', $search)
+            //->getQuery();
+
+            $results = $query->getResult();
+
+            echo "<br>";
+            foreach( $results as $result ) {
+                echo "res=".$result['id'].": ".$result['d']."<br>";
+            }
+
+//            $repository = $this->em->getRepository('OlegUserdirectoryBundle:PermissionObjectList');
+//            $dql =  $repository->createQueryBuilder("list");
+//            $dql->select('list');
+//            $dql->leftJoin('list.sites','sites');
+//            $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
+//            $query = $this->em->createQuery($dql);
+
+            //return $query->getResult();
+        }
+
+        //2)
+        if(0){
+            $sql = "SELECT id, field FROM scan_patientlastname WHERE ( LEVENSHTEIN(field,'".$search."') <= 4 )";
+            echo "sql=$sql<br>";
+
+            $stmt = $em->getConnection()->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            foreach( $results as $result ) {
+                echo "res=".$result['id'].": ".$result['field']."<br>";
+            }
+        }
+        return $results;
+    }
+    //Assistance => ASSTN
+    //Assistants => ASSTN
+    //Therefore: DB must have ASSTN in order to find Assistance
+    public function getMetaphoneStrArr( $word, $primary=true ) {
         $outputArr = array();
         $outputArr[] = $word;
 
@@ -360,9 +412,14 @@ class UserServiceUtil {
         //Encodes input string to one or two key values according to Metaphone 3 rules.
         $m3->Encode();
 
+        if( $primary ) {
+            return $m3->m_primary;
+        }
+
         $outputArr[] = $m3->m_primary;
         $outputArr[] = $m3->m_secondary;
         return $outputArr;
     }
+    /////////////// EOF NOT USED ///////////////////
 
 }
