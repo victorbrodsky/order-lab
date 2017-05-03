@@ -62,7 +62,23 @@ class DefaultController extends Controller
 
         //testing
         //metaphone (if enabled)
-        //$outputArr = $userServiceUtil->getMetaphoneStrArr($lastname);
+//        $userServiceUtil = $this->get('user_service_utility');
+//        $outputArr = $userServiceUtil->getMetaphoneStrArr("Jackson");
+//        foreach( $outputArr as $out ){
+//            echo "1out=".$out."<br>";
+//        }
+//        $outputArr = $userServiceUtil->getMetaphoneStrArr("Jacksa");
+//        foreach( $outputArr as $out ){
+//            echo "2out=".$out."<br>";
+//        }
+//        $outputArr = $userServiceUtil->getMetaphoneStrArr("Jaksa");
+//        foreach( $outputArr as $out ){
+//            echo "3out=".$out."<br>";
+//        }
+//
+//        $output = metaphone("Jacksa",5);
+//        echo "output=".$output."<br>";
+
         //$outputArr = $userServiceUtil->getMetaphoneStrArr($firstname);
         //$w1 = "MAKMASTA";
         //$w2 = "MKMAST";

@@ -154,8 +154,10 @@ doctrine:
                      string_functions:
                         CAST: Oleg\UserdirectoryBundle\Query\CastFunction
                      numeric_functions:
-                        levenshtein: Jrk\LevenshteinBundle\ORM\Doctrine\DQL\LevenshteinFunction
-                        levenshtein_ratio: Jrk\LevenshteinBundle\ORM\Doctrine\DQL\LevenshteinRatioFunction
+                        #levenshtein: Jrk\LevenshteinBundle\ORM\Doctrine\DQL\LevenshteinFunction
+                        #levenshtein_ratio: Jrk\LevenshteinBundle\ORM\Doctrine\DQL\LevenshteinRatioFunction
+                        LEVENSHTEIN: WOK\Doctrine\Query\LevenshteinFunction
+                        LEVENSHTEIN_RATIO: WOK\Doctrine\Query\LevenshteinRatioFunction
             aperio:
                 connection: aperio
 #                mappings:

@@ -201,11 +201,13 @@ class UserServiceUtil {
         //$queryParameters['search'] = "%".$search."%";
         //$queryParameters['tolerance'] = $tolerance;
 
+        $search = "last";
+
         //1)
         $sql = "
           SELECT id, field
           FROM scan_patientlastname
-          WHERE field LIKE '%ma%'
+          WHERE field LIKE '%".$search."%'
         ";
         echo "sql=$sql<br>";
 
@@ -218,21 +220,18 @@ class UserServiceUtil {
         }
 
         //2)
-        $sql = "
-          SELECT id, field
-          FROM scan_patientlastname
-          WHERE [dbo].[LEVENSHTEIN](field,'ma') <= 4
-        ";
-        echo "sql=$sql<br>";
+        if(1){
+            $sql = "SELECT id, field FROM scan_patientlastname WHERE ( LEVENSHTEIN(field,'".$search."') <= 4 )";
+            echo "sql=$sql<br>";
 
-        $stmt = $em->getConnection()->prepare($sql);
-        $stmt->execute();
-        $results = $stmt->fetchAll();
+            $stmt = $em->getConnection()->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
 
-        foreach( $results as $result ) {
-            echo "res=".$result['id'].": ".$result['field']."<br>";
+            foreach( $results as $result ) {
+                echo "res=".$result['id'].": ".$result['field']."<br>";
+            }
         }
-
         return $results;
     }
     //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name
@@ -241,6 +240,10 @@ class UserServiceUtil {
         if( !($field && $search) ) {
             return null;
         }
+
+//        $dql->andWhere($field." LIKE :search");
+//        $queryParameters['search'] = "%".$search."%";
+
         $tolerance = 4;
         $dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
         $queryParameters['search'] = "%".$search."%";
