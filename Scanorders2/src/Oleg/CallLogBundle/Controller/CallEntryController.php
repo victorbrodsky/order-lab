@@ -175,6 +175,7 @@ class CallEntryController extends Controller
 
         $searchFilter = null;
         $entryBodySearchFilter = null;
+        $messageCategory = null;
         $messageCategoryTypeId = null;
         $messageCategoryEntity = null;
         $messageCategorieDefaultIdStr = null;
