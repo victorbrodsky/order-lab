@@ -366,10 +366,10 @@ class CallEntryController extends Controller
         if( $searchFilter ) {
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
-                //$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
-                $dql->andWhere("lastname.field LIKE :search");
-                $queryParameters['search'] = "%".$searchFilter."%";
-                //$userServiceUtil->getFuzzyLike("lastname.field",$searchFilter,$dql,$queryParameters);
+                ////$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
+                //$dql->andWhere("lastname.field LIKE :search");
+                //$queryParameters['search'] = "%".$searchFilter."%";
+                $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$searchFilter,$dql,$queryParameters);
             } else {
                 //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
@@ -532,9 +532,9 @@ class CallEntryController extends Controller
                 $queryParameters['keytype'] = $defaultMrnType->getId();
             }
             if( $calllogsearchtype == 'Patient Last Name' ) {
-                $dql->andWhere("lastname.field LIKE :search");
-                $queryParameters['search'] = "%".$calllogsearch."%";
-                //$userServiceUtil->getFuzzyLike("lastname.field",$calllogsearch,$dql,$queryParameters);
+                //$dql->andWhere("lastname.field LIKE :search");
+                //$queryParameters['search'] = "%".$calllogsearch."%";
+                $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$calllogsearch,$dql,$queryParameters);
             }
 //            if( $calllogsearchtype == 'Message Type' ) {
 //                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($calllogsearch);
@@ -1122,7 +1122,7 @@ class CallEntryController extends Controller
 //                    $params['lastname'] = $lastname;
 //                    $params['firstname'] = $firstname;
 //
-//                    $patientsData = $this->searchPatient($request, false, $patientParams); //submit new entry
+//                    $patientsData = $this->search_Patient($request, false, $patientParams); //submit new entry
 //                    $patients = $patientsData['patients'];
 //                    echo "found patients=".count($patients)."<br>";
 //
@@ -1494,6 +1494,7 @@ class CallEntryController extends Controller
         //echo "patients=".count($patients)."<br>";
 
         if( count($patients) == 0 ) {
+            //search again, but only by mrn
             $params = array();
             $mrntype = trim($request->get('mrntype'));
             $mrn = trim($request->get('mrn'));
@@ -1597,6 +1598,9 @@ class CallEntryController extends Controller
         return $response;
     }
 
+    //search patients: used by JS when search for patient in the new entry page (calllog_search_patient)
+    // and to verify before creating patient if already exists (calllog_create_patient)
+    //TODO: use $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$searchFilter,$dql,$queryParameters);
     public function searchPatient( $request, $evenlog=false, $params=null ) {
 
         $userServiceUtil = $this->get('user_service_utility');
@@ -2067,10 +2071,6 @@ class CallEntryController extends Controller
         }
 
         //first check if the patient already exists
-//        $params = array();
-//        $params['mrntype'] = $mrntype;
-//        $params['mrn'] = $mrn;
-//        $patientsData = $this->searchPatient( $request, false, $params );
         $patientsData = $this->searchPatient( $request );
         $patients = $patientsData['patients'];
 

@@ -7894,6 +7894,64 @@ class AdminController extends Controller
         return "set formnode versions count ".$numUpdated;
     }
 
+    /**
+     * Generate metaphone key for th epatient last, first, middle names
+     * run: http://localhost/order/directory/admin/generate-patient-metaphone-name/
+     * @Route("/generate-patient-metaphone-name/", name="user_generate-patient-metaphone-name")
+     */
+    public function generatePatientMetaphoneNameKeyAction() {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $userServiceUtil = $this->get('user_service_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegOrderformBundle:Patient');
+        $dql = $repository->createQueryBuilder("patient");
+        $dql->select("patient");
+        $dql->leftJoin('patient.lastname','lastname');
+        $dql->leftJoin('patient.firstname','firstname');
+        $dql->leftJoin('patient.middlename','middlename');
+        $dql->where("lastname.fieldMetaphone IS NULL OR firstname.fieldMetaphone IS NULL OR middlename.fieldMetaphone IS NULL");
+        $query = $em->createQuery($dql);
+        $patients = $query->getResult();
+        echo "processing patients=".count($patients)."<br>";
+
+        foreach( $patients as $patient ) {
+            //patient last name
+            foreach( $patient->getLastname() as $name ) {
+                if( !$name->getFieldMetaphone() ) {
+                    $metaphoneKey = $userServiceUtil->getMetaphoneKey($name->getField());
+                    $name->setFieldMetaphone($metaphoneKey);
+                    echo "Last Name: set metaphone key: ".$name->getField()."=>".$metaphoneKey."<br>";
+                }
+            }
+
+            //patient first name
+            foreach( $patient->getFirstname() as $name ) {
+                if( !$name->getFieldMetaphone() ) {
+                    $metaphoneKey = $userServiceUtil->getMetaphoneKey($name->getField());
+                    $name->setFieldMetaphone($metaphoneKey);
+                    echo "First Name: set metaphone key: ".$name->getField()."=>".$metaphoneKey."<br>";
+                }
+            }
+
+            //patient middle name
+            foreach( $patient->getMiddlename() as $name ) {
+                if( !$name->getFieldMetaphone() ) {
+                    $metaphoneKey = $userServiceUtil->getMetaphoneKey($name->getField());
+                    $name->setFieldMetaphone($metaphoneKey);
+                    echo "Middle Name: set metaphone key: ".$name->getField()."=>".$metaphoneKey."<br>";
+                }
+            }
+
+            $em->flush();
+        }
+
+        exit();
+    }
+
 
 //    /**
 //     * TODO: NOT USED: Instead of this, try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle

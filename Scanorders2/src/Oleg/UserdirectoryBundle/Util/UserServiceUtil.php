@@ -48,8 +48,6 @@ class UserServiceUtil {
         $this->em = $em;
         $this->sc = $sc;
         $this->container = $container;
-
-        $this->initMetaphone();
     }
 
     public function convertFromUserTimezonetoUTC($datetime,$user) {
@@ -210,49 +208,28 @@ class UserServiceUtil {
         $queryParameters['search'] = "%".$search."%";
         $queryParameters['tolerance'] = $tolerance;
     }
-    public function getMetaphoneLike( $field, $search, &$dql, &$queryParameters ) {
+
+    //$field - field with the raw string (i.e. "lastname.field")
+    //$fieldMetaphone - field with the metaphone key string (i.e. "lastname.fieldMetaphone")
+    //$search - search string (i.e "McMastar")
+    //$dql - pointer to the $dql object to modify
+    //$queryParameters - pointer to $queryParameters array to modify
+    public function getMetaphoneLike( $field, $fieldMetaphone, $search, &$dql, &$queryParameters ) {
 
         if( !($field && $search) ) {
             return null;
         }
 
-        $userSecUtil = $this->container->get('user_security_utility');
+        $metaphoneKey = $this->getMetaphoneKey($search);
+        echo "metaphoneKey:".$search."=>".$metaphoneKey."<br>";
 
-        $enableMetaphone = $userSecUtil->getSiteSettingParameter('enableMetaphone');
-        //$enableMetaphone = false;
-        $pathMetaphone = $userSecUtil->getSiteSettingParameter('pathMetaphone');
-        if( $enableMetaphone && $pathMetaphone ) {
-            $outputArr = $this->getMetaphoneStrArr($search);
-
-            $searchStr = "";
-            $i = 0;
-            foreach( $outputArr as $output ) {
-                if( $output ) {
-                    if ($searchStr) {
-                        $searchStr = $searchStr . " OR ";
-                    }
-                    $searchStr = $searchStr . $field . " LIKE :search" . $i;
-
-                    $queryParameters["search" . $i] = "%" . $output . "%";
-
-                    $i++;
-                }
-            }
-
-            if( $searchStr ) {
-                if( $i > 1 ) {
-                    $searchStr = "(" . $searchStr . ")";
-                }
-                $dql->andWhere($searchStr);
-                //testing
-                echo "searchStr=".$searchStr."<br>";
-                print_r($queryParameters);
-            }
-
+        if( $metaphoneKey ) {
+            $dql->andWhere("(".$field." LIKE :search"." OR ".$fieldMetaphone." LIKE :metaphoneKey".")");
+            $queryParameters['search'] = "%".$search."%";
+            $queryParameters['metaphoneKey'] = "%".$metaphoneKey."%";
         } else {
             $dql->andWhere($field." LIKE :search");
             $queryParameters['search'] = "%".$search."%";
-
             //echo "dql=".$dql->getSql()."<br>";
         }
     }
@@ -262,7 +239,7 @@ class UserServiceUtil {
     //Therefore: DB must have ASSTN in order to find Assistance
     public function getMetaphoneKey( $word ) {
 
-        //$this->initMetaphone();
+        $this->initMetaphone();
 
         if( !$this->m3 ) {
             $logger = $this->container->get('logger');
@@ -270,8 +247,8 @@ class UserServiceUtil {
             return null;
         }
 
-        //test_word($m3, 'iron', 'ARN', '');
         $this->m3->SetWord($word);
+
         //Encodes input string to one or two key values according to Metaphone 3 rules.
         $this->m3->Encode();
 
@@ -291,12 +268,8 @@ class UserServiceUtil {
         $logger = $this->container->get('logger');
 
         if( $this->m3 ) {
-            $logger->notice("Metaphone already initialized => return m3");
+            //$logger->notice("Metaphone already initialized => return m3");
             return $this->m3;
-//            $this->m3 = $this->initMetaphone();
-//            if( !$this->m3 ) {
-//                return null;
-//            }
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -304,7 +277,8 @@ class UserServiceUtil {
         $pathMetaphone = $userSecUtil->getSiteSettingParameter('pathMetaphone');
 
         if( !($enableMetaphone && $pathMetaphone) ) {
-            $logger->notice("Metaphone enable or path are null => return null");
+            //$logger->notice("Metaphone enable or path are null => return null");
+            $this->m3 = null;
             return null;
         }
 
@@ -326,6 +300,27 @@ class UserServiceUtil {
         return $m3;
     }
 
+    public function metaphoneTest() {
+        $this->metaphoneSingleTest("Jackson");
+        $this->metaphoneSingleTest("Jacksa");
+        $this->metaphoneSingleTest("Jaksa");
+
+        $this->metaphoneSingleTest("mcmaster");
+        $this->metaphoneSingleTest("macmaste");
+        $this->metaphoneSingleTest("master");
+
+        $this->metaphonePhpSingleTest("mcmaster");
+        $this->metaphonePhpSingleTest("macmaste");
+        $this->metaphonePhpSingleTest("master");
+    }
+    public function metaphoneSingleTest($input) {
+        $output = $this->getMetaphoneKey($input);
+        echo $input."=>".$output."<br>";
+    }
+    public function metaphonePhpSingleTest($input) {
+        $output = metaphone($input);
+        echo $input."=>".$output." (php)<br>";
+    }
 
     /////////////// NOT USED ///////////////////
     //TODO: try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle

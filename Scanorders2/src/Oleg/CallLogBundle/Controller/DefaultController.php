@@ -62,24 +62,8 @@ class DefaultController extends Controller
 
         //testing
         //metaphone (if enabled)
-        $userServiceUtil = $this->get('user_service_utility');
-        $output = $userServiceUtil->getMetaphoneKey("Jackson");
-        echo "1output=".$output."<br>";
-
-        $output = $userServiceUtil->getMetaphoneKey("Jacksa");
-        echo "2output=".$output."<br>";
-
-        $output = $userServiceUtil->getMetaphoneKey("Jaksa");
-        echo "3output=".$output."<br>";
-
-        $output = metaphone("Jacksa",5);
-        echo "php output=".$output."<br>";
-
-        //$outputArr = $userServiceUtil->getMetaphoneStrArr($firstname);
-        //$w1 = "MAKMASTA";
-        //$w2 = "MKMAST";
-        //$d = levenshtein($w1,$w2);
-        //echo "d=".$d."<br>";
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil->metaphoneTest();
 
 //        $msg = "Notify Test!!!";
 //        $this->get('session')->getFlashBag()->add(
