@@ -561,7 +561,7 @@ class CallEntryController extends Controller
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $res = array(
             'query' => $query,
@@ -1624,10 +1624,6 @@ class CallEntryController extends Controller
             $firstname = ( array_key_exists('firstname', $params) ? $params['firstname'] : null);
         }
 
-        //metaphone (if enabled)
-        //$outputArr = $userServiceUtil->getMetaphoneStrArr($lastname);
-        //$outputArr = $userServiceUtil->getMetaphoneStrArr($firstname);
-
         $em = $this->getDoctrine()->getManager();
 
         $parameters = array();
@@ -1773,18 +1769,30 @@ class CallEntryController extends Controller
                 $searchArr[] = "Last Name: " . $lastname;
 
                 $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                $statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
+                ////$statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
+                ////$searchCriterionArr[] = "(lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr)";
 
-                $searchCriterionArr[] = "(lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr)";
-                $parameters['lastname'] = $lastname;
+                //$searchCriterionArr[] = "lastname.field = :lastname AND $statusStr";
+                //$parameters['lastname'] = $lastname;
+                //$searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
+                //$parameters['lastname'] = '%'.$lastname.'%';
+
+                $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters);
+                if( $lastnameCriterion ) {
+                    $searchCriterionArr[] = $lastnameCriterion . " AND " . $statusStr;
+
+                    $parameters['statusValid'] = 'valid';
+                    $parameters['statusAlias'] = 'alias';
+
+                    $where = true;
+                }
 
                 //status
                 //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
                 //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
-                $parameters['statusValid'] = 'valid';
-                $parameters['statusAlias'] = 'alias';
-
-                $where = true;
+                //$parameters['statusValid'] = 'valid';
+                //$parameters['statusAlias'] = 'alias';
+                //$where = true;
             }
 
             //only first name
@@ -1792,50 +1800,88 @@ class CallEntryController extends Controller
                 $searchArr[] = "First Name: " . $firstname;
 
                 $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                $statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
+                ////$statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
+                ////$searchCriterionArr[] = "(firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr)";
+                //$searchCriterionArr[] = "firstname.field = :firstname AND $statusStr";
+                //$parameters['firstname'] = $firstname;
 
-                $searchCriterionArr[] = "(firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr)";
-                $parameters['firstname'] = $firstname;
+                $firstnameCriterion = $userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters);
+                if( $firstnameCriterion ) {
+                    $searchCriterionArr[] = $firstnameCriterion . " AND " . $statusStr;
+
+                    $parameters['statusValid'] = 'valid';
+                    $parameters['statusAlias'] = 'alias';
+
+                    $where = true;
+                }
 
                 //status
                 //$dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
                 //$dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
-                $parameters['statusValid'] = 'valid';
-                $parameters['statusAlias'] = 'alias';
-
-                $where = true;
+                //$parameters['statusValid'] = 'valid';
+                //$parameters['statusAlias'] = 'alias';
+                //$where = true;
             }
 
             if( $firstname && $lastname ) {
                 $searchArr[] = "Last Name: " . $lastname;
                 $searchArr[] = "First Name: " . $firstname;
 
-                //last name: status
-                $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                $statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
-                //last name: name
-                $searchCriterionArr[] = "((lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr))";
-                $parameters['lastname'] = $lastname;
+                if(0) {
+                    //last name: status
+                    $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
+                    //$statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
+                    //last name: name
+                    //$searchCriterionArr[] = "((lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr))";
+                    $searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
+                    $parameters['lastname'] = '%'.$lastname.'%';;
 
-                //status
-                //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
-                //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
+                    //status
+                    //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
+                    //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
 
-                //first name: status
-                $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                $statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
-                //first name: name
-                $searchCriterionArr[] = "((firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr))";
-                $parameters['firstname'] = $firstname;
+                    //first name: status
+                    $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
+                    //$statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
+                    //first name: name
+                    //$searchCriterionArr[] = "((firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr))";
+                    $searchCriterionArr[] = "firstname.field LIKE :firstname AND $statusStr";
+                    $parameters['firstname'] = '%'.$firstname.'%';
 
-                //status
-                //$dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
-                //$dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
+                    //status
+                    //$dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
+                    //$dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
 
-                $parameters['statusValid'] = 'valid';
-                $parameters['statusAlias'] = 'alias';
+                    $parameters['statusValid'] = 'valid';
+                    $parameters['statusAlias'] = 'alias';
+                    $where = true;
 
-                $where = true;
+                } else {
+
+                    $lastnameStatusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
+                    $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field", "lastname.fieldMetaphone", $lastname, $parameters);
+                    if ($lastnameCriterion) {
+                        $searchCriterionArr[] = $lastnameCriterion . " AND " . $lastnameStatusStr;
+
+                        $parameters['statusValid'] = 'valid';
+                        $parameters['statusAlias'] = 'alias';
+
+                        $where = true;
+                    }
+
+                    $firstnameStatusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
+                    $firstnameCriterion = $userServiceUtil->getMetaphoneStrLike("firstname.field", "firstname.fieldMetaphone", $firstname, $parameters);
+                    if ($firstnameCriterion) {
+                        $searchCriterionArr[] = $firstnameCriterion . " AND " . $firstnameStatusStr;
+
+                        $parameters['statusValid'] = 'valid';
+                        $parameters['statusAlias'] = 'alias';
+
+                        $where = true;
+                    }
+
+                }//if
+
             }
 
             if( count($searchCriterionArr) > 0 ) {

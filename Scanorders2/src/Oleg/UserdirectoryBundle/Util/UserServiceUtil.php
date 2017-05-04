@@ -205,18 +205,45 @@ class UserServiceUtil {
             return null;
         }
 
+//        $metaphoneKey = $this->getMetaphoneKey($search);
+//        //echo "metaphoneKey:".$search."=>".$metaphoneKey."<br>";
+//
+//        if( $metaphoneKey ) {
+//            $dql->andWhere("(".$field." LIKE :search"." OR ".$fieldMetaphone." LIKE :metaphoneKey".")");
+//            $queryParameters['search'] = "%".$search."%";
+//            $queryParameters['metaphoneKey'] = "%".$metaphoneKey."%";
+//        } else {
+//            $dql->andWhere($field." LIKE :search");
+//            $queryParameters['search'] = "%".$search."%";
+//            //echo "dql=".$dql->getSql()."<br>";
+//        }
+
+        $criterionStr = $this->getMetaphoneStrLike($field,$fieldMetaphone,$search,$queryParameters);
+        if( $criterionStr ) {
+            $dql->andWhere($criterionStr);
+        }
+    }
+
+    public function getMetaphoneStrLike( $field, $fieldMetaphone, $search, &$queryParameters ) {
+        $criterionStr = null;
+
+        if( !($field && $search) ) {
+            return null;
+        }
+
         $metaphoneKey = $this->getMetaphoneKey($search);
         //echo "metaphoneKey:".$search."=>".$metaphoneKey."<br>";
 
         if( $metaphoneKey ) {
-            $dql->andWhere("(".$field." LIKE :search"." OR ".$fieldMetaphone." LIKE :metaphoneKey".")");
+            $criterionStr = "(".$field." LIKE :search"." OR ".$fieldMetaphone." LIKE :metaphoneKey".")";
             $queryParameters['search'] = "%".$search."%";
             $queryParameters['metaphoneKey'] = "%".$metaphoneKey."%";
         } else {
-            $dql->andWhere($field." LIKE :search");
+            $criterionStr = $field." LIKE :search";
             $queryParameters['search'] = "%".$search."%";
-            //echo "dql=".$dql->getSql()."<br>";
         }
+
+        return $criterionStr;
     }
 
     //Assistance => ASSTN
