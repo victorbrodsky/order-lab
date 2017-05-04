@@ -47,6 +47,13 @@ class PatientFirstName extends PatientArrayFieldAbstract
     protected $field;
 
     /**
+     * Metaphone key string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $fieldMetaphone;
+
+
+    /**
      * convert the string to "Sentence Case"
      * @return mixed
      */
@@ -54,5 +61,23 @@ class PatientFirstName extends PatientArrayFieldAbstract
     {
         return $this->capitalizeIfNotAllCapital($this->field);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFieldMetaphone()
+    {
+        return $this->fieldMetaphone;
+    }
+
+    /**
+     * @param mixed $fieldMetaphone
+     */
+    public function setFieldMetaphone($fieldMetaphone)
+    {
+        $this->fieldMetaphone = $fieldMetaphone;
+    }
+
+
 
 }

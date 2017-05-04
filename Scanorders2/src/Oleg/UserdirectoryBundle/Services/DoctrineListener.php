@@ -29,6 +29,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\OrderformBundle\Entity\Message;
+use Oleg\OrderformBundle\Entity\PatientLastName;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 
@@ -47,6 +48,8 @@ class DoctrineListener {
     {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $logger = $this->container->get('logger');
 
         if( $entity instanceof Message ) {
 
@@ -61,6 +64,14 @@ class DoctrineListener {
                 $em->flush();
             }
 
+        }
+
+        //if( $entity instanceof PatientLastName ) {
+        //}
+        if( 0 && method_exists($entity, 'setFieldMetaphone') ) {
+            $metaphone = $userServiceUtil->getMetaphoneKey($entity->getField());
+            $entity->setFieldMetaphone(  );
+            $logger->notice("setFieldMetaphone [ID# ".$entity->getId()."]:".$entity->getField()."=>".$metaphone);
         }
 
 

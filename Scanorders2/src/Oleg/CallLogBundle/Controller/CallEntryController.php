@@ -367,9 +367,9 @@ class CallEntryController extends Controller
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
                 //$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
-                //$dql->andWhere("lastname.field LIKE :search");
-                //$queryParameters['search'] = "%".$searchFilter."%";
-                $userServiceUtil->getFuzzyLike("lastname.field",$searchFilter,$dql,$queryParameters);
+                $dql->andWhere("lastname.field LIKE :search");
+                $queryParameters['search'] = "%".$searchFilter."%";
+                //$userServiceUtil->getFuzzyLike("lastname.field",$searchFilter,$dql,$queryParameters);
             } else {
                 //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
@@ -532,9 +532,9 @@ class CallEntryController extends Controller
                 $queryParameters['keytype'] = $defaultMrnType->getId();
             }
             if( $calllogsearchtype == 'Patient Last Name' ) {
-                //$dql->andWhere("lastname.field LIKE :search");
-                //$queryParameters['search'] = "%".$calllogsearch."%";
-                $userServiceUtil->getFuzzyLike("lastname.field",$calllogsearch,$dql,$queryParameters);
+                $dql->andWhere("lastname.field LIKE :search");
+                $queryParameters['search'] = "%".$calllogsearch."%";
+                //$userServiceUtil->getFuzzyLike("lastname.field",$calllogsearch,$dql,$queryParameters);
             }
 //            if( $calllogsearchtype == 'Message Type' ) {
 //                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($calllogsearch);
