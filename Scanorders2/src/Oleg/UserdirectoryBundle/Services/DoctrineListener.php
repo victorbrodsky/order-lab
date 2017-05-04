@@ -27,6 +27,7 @@ namespace Oleg\UserdirectoryBundle\Services;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\OrderformBundle\Entity\Message;
 use Oleg\OrderformBundle\Entity\PatientLastName;
@@ -44,12 +45,13 @@ class DoctrineListener {
     }
 
 
+    //create new entity
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
+        //$logger->notice("doctrine listener postPersist: ".get_class($entity));
 
         if( $entity instanceof Message ) {
 
@@ -68,12 +70,7 @@ class DoctrineListener {
 
         //if( $entity instanceof PatientLastName ) {
         //}
-        if( 0 && method_exists($entity, 'setFieldMetaphone') ) {
-            $metaphone = $userServiceUtil->getMetaphoneKey($entity->getField());
-            $entity->setFieldMetaphone(  );
-            $logger->notice("setFieldMetaphone [ID# ".$entity->getId()."]:".$entity->getField()."=>".$metaphone);
-        }
-
+        $this->setMetaphoneField($entity);
 
 //        if( $entity instanceof FellowshipApplication ) {
 //            //update report
@@ -85,21 +82,28 @@ class DoctrineListener {
     }
 
 
-//    public function postUpdate(LifecycleEventArgs $args)
-//    {
-//
-//        //$em = $args->getEntityManager();
-//        $entity = $args->getEntity();
-//
-//        if( $entity instanceof FellowshipApplication ) {
-//            //update report
-//            $fellappUtil = $this->container->get('fellapp_util');
-//            $fellappUtil->addFellAppReportToQueue( $entity->getId() );
-//        }
-//
-//    }
-//
-//
+    public function preUpdate( PreUpdateEventArgs $args )
+    {
+        $entity = $args->getEntity();
+
+        //$logger = $this->container->get('logger');
+        //$logger->notice("doctrine listener preUpdate: ".get_class($entity));
+
+        $this->setMetaphoneField($entity);
+
+    }
+
+    public function setMetaphoneField( $entity ) {
+        $logger = $this->container->get('logger');
+        //if( $entity instanceof PatientLastName ) {
+        if( method_exists($entity, 'setFieldMetaphone') ) {
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $metaphone = $userServiceUtil->getMetaphoneKey($entity->getField());
+            $entity->setFieldMetaphone($metaphone);
+            $logger->notice("setFieldMetaphone [ID# " . $entity->getId() . "]:" . $entity->getField() . "=>" . $metaphone);
+        }
+    }
+
 //    public function onFlush(OnFlushEventArgs $args)
 //    {
 //

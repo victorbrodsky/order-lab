@@ -125,6 +125,7 @@ services:
         arguments: [@service_container]
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
+            - { name: doctrine.event_listener, event: preUpdate, connection: default }
 
     #user mailer util
     user_mailer_utility:

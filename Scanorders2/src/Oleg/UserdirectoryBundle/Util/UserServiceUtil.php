@@ -49,7 +49,7 @@ class UserServiceUtil {
         $this->sc = $sc;
         $this->container = $container;
 
-        $this->m3 = $this->initMetaphone();
+        $this->initMetaphone();
     }
 
     public function convertFromUserTimezonetoUTC($datetime,$user) {
@@ -262,8 +262,12 @@ class UserServiceUtil {
     //Therefore: DB must have ASSTN in order to find Assistance
     public function getMetaphoneKey( $word ) {
 
+        //$this->initMetaphone();
+
         if( !$this->m3 ) {
-            return $word;
+            $logger = $this->container->get('logger');
+            $logger->notice("m3 is null => return null");
+            return null;
         }
 
         //test_word($m3, 'iron', 'ARN', '');
@@ -279,17 +283,33 @@ class UserServiceUtil {
             return $this->m3->m_secondary;
         }
 
-        return $word;
+        return null;
     }
 
     public function initMetaphone() {
+
+        $logger = $this->container->get('logger');
+
+        if( $this->m3 ) {
+            $logger->notice("Metaphone already initialized => return m3");
+            return $this->m3;
+//            $this->m3 = $this->initMetaphone();
+//            if( !$this->m3 ) {
+//                return null;
+//            }
+        }
+
         $userSecUtil = $this->container->get('user_security_utility');
         $enableMetaphone = $userSecUtil->getSiteSettingParameter('enableMetaphone');
         $pathMetaphone = $userSecUtil->getSiteSettingParameter('pathMetaphone');
 
         if( !($enableMetaphone && $pathMetaphone) ) {
+            $logger->notice("Metaphone enable or path are null => return null");
             return null;
         }
+
+        //testing
+        $logger->notice("init Metaphone");
 
         //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\vendor\olegutil\Metaphone3\metaphone3.php
         //require_once('"'.$pathMetaphone.'"');
@@ -300,6 +320,8 @@ class UserServiceUtil {
 
         $m3->SetEncodeVowels(TRUE);
         $m3->SetEncodeExact(TRUE);
+
+        $this->m3 = $m3;
 
         return $m3;
     }

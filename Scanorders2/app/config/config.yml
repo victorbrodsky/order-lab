@@ -153,11 +153,11 @@ doctrine:
                 dql:
                      string_functions:
                         CAST: Oleg\UserdirectoryBundle\Query\CastFunction
-                        MATCH: WOK\Doctrine\Query\MatchAgainstFunction
-                        SOUNDEX: WOK\Doctrine\Query\SoundexFunction
+#                        MATCH: WOK\Doctrine\Query\MatchAgainstFunction
+#                        SOUNDEX: WOK\Doctrine\Query\SoundexFunction
                      numeric_functions:
-                        LEVENSHTEIN: WOK\Doctrine\Query\LevenshteinFunction
-                        LEVENSHTEIN_RATIO: WOK\Doctrine\Query\LevenshteinRatioFunction
+#                        LEVENSHTEIN: WOK\Doctrine\Query\LevenshteinFunction
+#                        LEVENSHTEIN_RATIO: WOK\Doctrine\Query\LevenshteinRatioFunction
             aperio:
                 connection: aperio
 #                mappings:

@@ -359,6 +359,9 @@ class PatientController extends Controller
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('memory_limit', '3072M');
+
         //add tracker if does not exists
         if( !$entity->getTracker() ) {
             $system = $securityUtil->getDefaultSourceSystem();
@@ -474,6 +477,9 @@ class PatientController extends Controller
         if ($entity && !$securityUtil->hasUserPermission($entity, $user, array("Union"), array("edit"))) {
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
+
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('memory_limit', '3072M');
 
         //assign temp source and user for updated array fields
         $tempSource = $securityUtil->getDefaultSourceSystem($parameters['sitename']);
