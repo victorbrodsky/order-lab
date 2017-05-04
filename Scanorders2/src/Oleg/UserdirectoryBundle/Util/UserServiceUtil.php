@@ -301,7 +301,7 @@ class UserServiceUtil {
         //require_once('"'.$pathMetaphone.'"');
         //$pathMetaphone = "'".$pathMetaphone."'";
         //$pathMetaphone = '"'.$pathMetaphone.'"';
-        $pathMetaphone = str_replace(" ", "\\ ", $pathMetaphone);
+        //$pathMetaphone = str_replace(" ", "\\ ", $pathMetaphone);
         require_once($pathMetaphone);
 
         $m3 = new \Metaphone3();
