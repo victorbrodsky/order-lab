@@ -94,13 +94,13 @@ class DoctrineListener {
     }
 
     public function setMetaphoneField( $entity ) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         //if( $entity instanceof PatientLastName ) {
         if( method_exists($entity, 'setFieldMetaphone') ) {
             $userServiceUtil = $this->container->get('user_service_utility');
             $metaphone = $userServiceUtil->getMetaphoneKey($entity->getField());
             $entity->setFieldMetaphone($metaphone);
-            $logger->notice("setFieldMetaphone [ID# " . $entity->getId() . "]:" . $entity->getField() . "=>" . $metaphone);
+            //$logger->notice("setFieldMetaphone [ID# " . $entity->getId() . "]:" . $entity->getField() . "=>" . $metaphone);
         }
     }
 

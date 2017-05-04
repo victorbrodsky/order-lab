@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f0da321c508ec957ce067ff37261646",
+    "content-hash": "637f02f1eb5494231863c9b796036918",
     "packages": [
         {
             "name": "adesigns/calendar-bundle",
@@ -1330,44 +1330,6 @@
                 "uploadable"
             ],
             "time": "2017-04-23T08:59:41+00:00"
-        },
-        {
-            "name": "glanchow/doctrine-fuzzy",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/glanchow/doctrine-fuzzy.git",
-                "reference": "b093f6b3cf258abab3f98976bf728bd210fe1845"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/glanchow/doctrine-fuzzy/zipball/b093f6b3cf258abab3f98976bf728bd210fe1845",
-                "reference": "b093f6b3cf258abab3f98976bf728bd210fe1845",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/orm": ">=2.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "WOK": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Doctrine2 DQL fuzzy functions",
-            "keywords": [
-                "Match",
-                "against",
-                "doctrine",
-                "levenshtein",
-                "soundex",
-                "symfony"
-            ],
-            "time": "2014-11-08 12:07:09"
         },
         {
             "name": "google/apiclient",
@@ -4632,8 +4594,7 @@
         "phpexcel/phpexcel": 20,
         "google/apiclient": 10,
         "itbz/fpdi": 20,
-        "clegginabox/pdf-merger": 20,
-        "glanchow/doctrine-fuzzy": 20
+        "clegginabox/pdf-merger": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

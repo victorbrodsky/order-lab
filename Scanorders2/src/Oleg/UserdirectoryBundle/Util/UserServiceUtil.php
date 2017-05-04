@@ -193,21 +193,6 @@ class UserServiceUtil {
         return $info;
     }
 
-    //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name
-    //try: http://stackoverflow.com/questions/41218952/is-not-a-recognized-built-in-function-name
-    public function getFuzzyLike( $field, $search, &$dql, &$queryParameters ) {
-        if( !($field && $search) ) {
-            return null;
-        }
-
-//        $dql->andWhere($field." LIKE :search");
-//        $queryParameters['search'] = "%".$search."%";
-
-        $tolerance = 4;
-        $dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
-        $queryParameters['search'] = "%".$search."%";
-        $queryParameters['tolerance'] = $tolerance;
-    }
 
     //$field - field with the raw string (i.e. "lastname.field")
     //$fieldMetaphone - field with the metaphone key string (i.e. "lastname.fieldMetaphone")
@@ -221,7 +206,7 @@ class UserServiceUtil {
         }
 
         $metaphoneKey = $this->getMetaphoneKey($search);
-        echo "metaphoneKey:".$search."=>".$metaphoneKey."<br>";
+        //echo "metaphoneKey:".$search."=>".$metaphoneKey."<br>";
 
         if( $metaphoneKey ) {
             $dql->andWhere("(".$field." LIKE :search"." OR ".$fieldMetaphone." LIKE :metaphoneKey".")");
@@ -242,8 +227,8 @@ class UserServiceUtil {
         $this->initMetaphone();
 
         if( !$this->m3 ) {
-            $logger = $this->container->get('logger');
-            $logger->notice("m3 is null => return null");
+            //$logger = $this->container->get('logger');
+            //$logger->notice("m3 is null => return null");
             return null;
         }
 
@@ -265,7 +250,7 @@ class UserServiceUtil {
 
     public function initMetaphone() {
 
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         if( $this->m3 ) {
             //$logger->notice("Metaphone already initialized => return m3");
@@ -283,7 +268,7 @@ class UserServiceUtil {
         }
 
         //testing
-        $logger->notice("init Metaphone");
+        //$logger->notice("init Metaphone");
 
         //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\vendor\olegutil\Metaphone3\metaphone3.php
         //require_once('"'.$pathMetaphone.'"');
@@ -323,8 +308,24 @@ class UserServiceUtil {
     }
 
     /////////////// NOT USED ///////////////////
-    //TODO: try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle
-    //TODO: or https://packagist.org/packages/glanchow/doctrine-fuzzy
+    //NOT USED
+    //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name
+    //try: http://stackoverflow.com/questions/41218952/is-not-a-recognized-built-in-function-name
+    public function getFuzzyLike( $field, $search, &$dql, &$queryParameters ) {
+        if( !($field && $search) ) {
+            return null;
+        }
+
+//        $dql->andWhere($field." LIKE :search");
+//        $queryParameters['search'] = "%".$search."%";
+
+        $tolerance = 4;
+        $dql->andWhere("LEVENSHTEIN(lastname.field,:search) <= :tolerance");
+        $queryParameters['search'] = "%".$search."%";
+        $queryParameters['tolerance'] = $tolerance;
+    }
+
+    //TODO: or https://packagist.org/packages/glanchow/doctrine-fuzzy (cons: different DB requires different implementation of LEVENSHTEIN function)
     public function getFuzzyTest() {
         $em = $this->em;
         $tolerance = 4;

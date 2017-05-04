@@ -43,8 +43,7 @@
         "clegginabox/pdf-merger": "dev-master",
         "bmatzner/fontawesome-bundle": "~4.4",
         "usu/scrypt-password-encoder-bundle": "v1.0.0",
-        "adesigns/calendar-bundle": "^1.1",
-        "glanchow/doctrine-fuzzy": "dev-master"
+        "adesigns/calendar-bundle": "^1.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
