@@ -300,6 +300,8 @@ class UserServiceUtil {
         //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\vendor\olegutil\Metaphone3\metaphone3.php
         //require_once('"'.$pathMetaphone.'"');
         //$pathMetaphone = "'".$pathMetaphone."'";
+        //$pathMetaphone = '"'.$pathMetaphone.'"';
+        $pathMetaphone = str_replace(" ", "\\ ", $pathMetaphone);
         require_once($pathMetaphone);
 
         $m3 = new \Metaphone3();
