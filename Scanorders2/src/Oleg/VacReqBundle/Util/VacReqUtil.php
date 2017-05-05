@@ -2877,6 +2877,7 @@ class VacReqUtil
 
         foreach( $approvers as $approver ) {
 
+            //echo "approver=".$approver."<br>";
             $approverSingleEmail = $approver->getSingleEmail();
 
             if( $approverSingleEmail ) {
@@ -2899,14 +2900,18 @@ class VacReqUtil
         }
 
         //send email to email users
+        //echo "sendCopy=".$sendCopy."<br>";
         if( $sendCopy ) {
+            $emailUserEmailArr = array();
             $subject = "Copy of the email: " . $subject;
             $addText = "### This is a copy of the email sent to the approvers " . implode("; ", $approversNameArr) . "###";
             $message = $addText . $break . $break . $message;
+            //echo "settings for institution=".$institution."<br>";
             $settings = $this->getSettingsByInstitution($institution->getId());
             if ($settings) {
-                $emailUserEmailArr = array();
+                //echo "settings OK<br>";
                 foreach ($settings->getEmailUsers() as $emailUser) {
+                    //echo "emailUser=".$emailUser."<br>";
                     $emailUserEmail = $emailUser->getSingleEmail();
                     if ($emailUserEmail) {
                         //$message = $this->createCancelEmailBody($entity, $emailUser, $addText);
@@ -2914,11 +2919,28 @@ class VacReqUtil
                         $emailUserEmailArr[] = $emailUserEmail;
                     }
                 }
-                //$logger->notice("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
-                if (count($emailUserEmailArr) > 0) {
-                    $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send a copy of the confirmation emails to email users=" . implode("; ", $emailUserEmailArr) . "; subject=" . $subject . "; message=" . $message);
-                    $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
+
+            }
+
+            //Add approvers for a notification email for carry over request (if copy user is not in $approverEmailArr)
+            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                //echo "getting carry over request approvers<br>";
+                $supervisors = $this->getUsersByGroupId($institution,"ROLE_VACREQ_SUPERVISOR");
+                foreach( $supervisors as $supervisor ) {
+                    $supervisorEmail = $supervisor->getSingleEmail();
+                    //echo "supervisor=".$supervisor.", email=".$supervisorEmail."<br>";
+                    if( $supervisorEmail && !in_array($supervisorEmail, $approverEmailArr) ) {
+                        $emailUserEmailArr[] = $supervisorEmail;
+                    }
                 }
+            }
+
+
+            //$logger->notice("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
+            if (count($emailUserEmailArr) > 0) {
+                //print_r($emailUserEmailArr);
+                $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send a copy of the confirmation emails to email users and supervisors=" . implode("; ", $emailUserEmailArr) . "; subject=" . $subject . "; message=" . $message);
+                $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
             }
         }
 

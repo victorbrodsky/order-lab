@@ -219,8 +219,12 @@ class RequestController extends Controller
             //echo "sourceYear=".$entity->getSourceYear()."<br>";
             //exit('1');
 
-            $em->persist($entity);
-            $em->flush();
+            $testing = false;
+            //$testing = true;
+            if( !$testing ) {
+                $em->persist($entity);
+                $em->flush();
+            }
 
             $requestName = $entity->getRequestName();
             $emailUtil = $this->get('user_mailer_utility');
@@ -276,6 +280,10 @@ class RequestController extends Controller
                 $carryOverWarningMessageLog = $resCarryOverRequest['carryOverWarningMessageLog'];
                 $eventType = "Existing Days Carry Over Request Created";
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
+            }
+
+            if( $testing ) {
+                exit("Request submitted: ".$entity);
             }
 
             return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
