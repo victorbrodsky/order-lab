@@ -193,7 +193,7 @@ class VacReqUtil
         $message = $this->createEmailBody($entity);
         return $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message,$sendCopy);
     }
-    public function createEmailBody($entity,$emailToUser=null,$addText=null) {
+    public function createEmailBody( $entity, $emailToUser=null, $addText=null, $withLinks=true ) {
 
         $break = "\r\n";
 
@@ -332,57 +332,59 @@ class VacReqUtil
             //subject + SubmitterFirstName SubmitterLastName has M approved vacation days during [CURRENT 20XX-20YY] year.
             $message .= $entity->getUser()->getUsernameOptimal()." has ".$approvedVacationDays." approved vacation days during ".$yearRange." year.";
 
-            $prefix = " ";
-            if( $entity->getTentativeStatus() == 'pending' ) {
-                $prefix = " tentatively ";
-            }
+            if( $withLinks ) {
+                $prefix = " ";
+                if ($entity->getTentativeStatus() == 'pending') {
+                    $prefix = " tentatively ";
+                }
 
-            if( $entity->getTentativeStatus() == 'approved' && $entity->getTentativeApprovedRejectDate() && $entity->getTentativeApprover() ) {
-                //This request has been tentatively approved by [VacationApproverFirstName, VacationApproverLastName] on
-                // DateOfStatusChange at TimeOfStatusChange.
-                $tentativeApprovedRejectDate = $entity->getTentativeApprovedRejectDate()->setTimezone(new \DateTimeZone('America/New_York'));
-                $message .= $break.$break."This request has been tentatively approved by ".$entity->getTentativeApprover().
-                    " on ".$tentativeApprovedRejectDate->format("M d Y h:i A T").".";
-                $prefix = " final ";
-            }
+                if ($entity->getTentativeStatus() == 'approved' && $entity->getTentativeApprovedRejectDate() && $entity->getTentativeApprover()) {
+                    //This request has been tentatively approved by [VacationApproverFirstName, VacationApproverLastName] on
+                    // DateOfStatusChange at TimeOfStatusChange.
+                    $tentativeApprovedRejectDate = $entity->getTentativeApprovedRejectDate()->setTimezone(new \DateTimeZone('America/New_York'));
+                    $message .= $break . $break . "This request has been tentatively approved by " . $entity->getTentativeApprover() .
+                        " on " . $tentativeApprovedRejectDate->format("M d Y h:i A T") . ".";
+                    $prefix = " final ";
+                }
 
-            $actionRequestApproveUrl = $this->container->get('router')->generate(
-                'vacreq_status_email_change_carryover',
-                array(
-                    'id' => $entity->getId(),
-                    'requestName' => 'entire',
-                    'status' => 'approved'
-                ),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $message .= $break . $break . "To".$prefix."approve this request, please follow this link:" . $break;
-            $message .= $actionRequestApproveUrl;
+                $actionRequestApproveUrl = $this->container->get('router')->generate(
+                    'vacreq_status_email_change_carryover',
+                    array(
+                        'id' => $entity->getId(),
+                        'requestName' => 'entire',
+                        'status' => 'approved'
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $message .= $break . $break . "To" . $prefix . "approve this request, please follow this link:" . $break;
+                $message .= $actionRequestApproveUrl;
 
-            //rejected
-            $actionRequestRejectUrl = $this->container->get('router')->generate(
-                'vacreq_status_email_change_carryover',
-                array(
-                    'id' => $entity->getId(),
-                    'requestName' => 'entire',
-                    'status' => 'rejected'
-                ),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $message .= $break . $break . "To deny this request, please follow this link:" . $break;
-            $message .= $actionRequestRejectUrl;
+                //rejected
+                $actionRequestRejectUrl = $this->container->get('router')->generate(
+                    'vacreq_status_email_change_carryover',
+                    array(
+                        'id' => $entity->getId(),
+                        'requestName' => 'entire',
+                        'status' => 'rejected'
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $message .= $break . $break . "To deny this request, please follow this link:" . $break;
+                $message .= $actionRequestRejectUrl;
 
-            //To review SubmitterFirstName SubmitterLastName's past requests, please follow this link:
-            //[link to incoming requests filtered by person away = submitter]
-            $reviewUrl = $this->container->get('router')->generate(
-                'vacreq_incomingrequests',
-                array(
-                    'filter[requestType]' => $entity->getRequestType()->getId(),
-                    'filter[user]' => $submitter->getId()
-                ),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $message .= $break . $break . "To review " . $submitter->getUsernameShortest() . "'s past requests, please follow this link:".$break;
-            $message .= $reviewUrl;
+                //To review SubmitterFirstName SubmitterLastName's past requests, please follow this link:
+                //[link to incoming requests filtered by person away = submitter]
+                $reviewUrl = $this->container->get('router')->generate(
+                    'vacreq_incomingrequests',
+                    array(
+                        'filter[requestType]' => $entity->getRequestType()->getId(),
+                        'filter[user]' => $submitter->getId()
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $message .= $break . $break . "To review " . $submitter->getUsernameShortest() . "'s past requests, please follow this link:" . $break;
+                $message .= $reviewUrl;
+            }//$withLinks
         }
 
         $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site.";
@@ -2933,6 +2935,11 @@ class VacReqUtil
                         $emailUserEmailArr[] = $supervisorEmail;
                     }
                 }
+
+                //overwrite message without links
+                //$entity, $emailToUser=null, $addText=null, $withLinks=true
+                $message = $this->createEmailBody($entity,null,null,false);
+                $message = str_replace("###emailuser###",implode("; ",$approversShortNameArr),$message);
             }
 
 
