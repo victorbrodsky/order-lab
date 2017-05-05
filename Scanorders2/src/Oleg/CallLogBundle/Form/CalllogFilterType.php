@@ -216,6 +216,15 @@ class CalllogFilterType extends AbstractType
             },
         ));
 
+        $mateaphoneArr = array(
+            'label' => "Sound alike:",
+            'required' => false,
+            //'empty_data' => $this->params['metaphone'],
+            //'data' => $this->params['metaphone'],
+            'attr' => array('class'=>'', 'style'=>'margin:0; width: 20px;')
+        );
+        $builder->add('metaphone', 'checkbox', $mateaphoneArr);
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

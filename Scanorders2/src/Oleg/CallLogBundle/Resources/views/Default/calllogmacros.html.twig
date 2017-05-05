@@ -236,6 +236,10 @@
 
                 </div>
 
+                {#{% if formMetaphone is defined %}#}
+                    {#{{ formmacros.checkbox(formMetaphone) }}#}
+                {#{% endif %}#}
+
                 {#<a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>#}
                 <div id="encounter-info" class="panel-collapse collapse">
                     {% if encounterPatientInfo is defined and encounterPatientInfo %}

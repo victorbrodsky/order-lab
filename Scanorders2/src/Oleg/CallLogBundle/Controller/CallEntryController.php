@@ -185,6 +185,9 @@ class CallEntryController extends Controller
         $messageCategoryTypeId = null;
         $messageCategoryEntity = null;
         $messageCategorieDefaultIdStr = null;
+        //$metaphone = true;
+        //$metaphone = true;
+        //$metaphone = false;
 
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoryParent = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
@@ -258,6 +261,7 @@ class CallEntryController extends Controller
             'search' => $searchFilter,
             'entryBodySearch' => $entryBodySearchFilter,
             'messageCategoryType' => $messageCategoryTypeId,
+            //'metaphone' => $metaphone
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
 
@@ -287,16 +291,27 @@ class CallEntryController extends Controller
             $messageCategoryEntity = $calllogUtil->getMessageCategoryEntityByIdStr($messageCategory);
         }
 
+        if( $filterform->has('metaphone') ) {
+            $metaphone = $filterform['metaphone']->getData();
+            //echo "has metaphone<br>";
+        } else {
+            $metaphone = false;
+            //echo "no metaphone<br>";
+        }
+        //echo "metaphone=".$metaphone."<br>";
+
         //redirect if filter is empty
         if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
             $redirect = $this->redirect( $this->generateUrl('calllog_home',
                 array(
                     'filter[messageStatus]'=>"All except deleted",
-                    'filter[messageCategory]'=>$messageCategorieDefaultIdStr    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
+                    'filter[messageCategory]'=>$messageCategorieDefaultIdStr,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
+                    'filter[metaphone]'=>true
                 )
             ) );
             return array('redirect' => $redirect);
         }
+
 
         //perform search
         $repository = $em->getRepository('OlegOrderformBundle:Message');
@@ -367,9 +382,12 @@ class CallEntryController extends Controller
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
                 ////$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
-                //$dql->andWhere("lastname.field LIKE :search");
-                //$queryParameters['search'] = "%".$searchFilter."%";
-                $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$searchFilter,$dql,$queryParameters);
+                if( $metaphone ) {
+                    $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$searchFilter,$dql,$queryParameters);
+                } else {
+                    $dql->andWhere("lastname.field LIKE :search");
+                    $queryParameters['search'] = "%".$searchFilter."%";
+                }
             } else {
                 //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
@@ -532,9 +550,12 @@ class CallEntryController extends Controller
                 $queryParameters['keytype'] = $defaultMrnType->getId();
             }
             if( $calllogsearchtype == 'Patient Last Name' ) {
-                //$dql->andWhere("lastname.field LIKE :search");
-                //$queryParameters['search'] = "%".$calllogsearch."%";
-                $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$calllogsearch,$dql,$queryParameters);
+                if( $metaphone ) {
+                    $userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
+                } else {
+                    $dql->andWhere("lastname.field LIKE :search");
+                    $queryParameters['search'] = "%".$calllogsearch."%";
+                }
             }
 //            if( $calllogsearchtype == 'Message Type' ) {
 //                $messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($calllogsearch);
@@ -1487,7 +1508,9 @@ class CallEntryController extends Controller
 
         $formtype = trim($request->get('formtype'));
 
-        $patientsData = $this->searchPatient( $request, true );
+        //$patientsData = $this->searchPatient( $request, true, null, false ); //testing
+        $patientsData = $this->searchPatient( $request, true);
+
         $patients = $patientsData['patients'];
         $searchedStr = $patientsData['searchStr'];
         $searchedArr[] = "(Searched for ".$searchedStr.")";
@@ -1600,8 +1623,7 @@ class CallEntryController extends Controller
 
     //search patients: used by JS when search for patient in the new entry page (calllog_search_patient)
     // and to verify before creating patient if already exists (calllog_create_patient)
-    //TODO: use $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$searchFilter,$dql,$queryParameters);
-    public function searchPatient( $request, $evenlog=false, $params=null ) {
+    public function searchPatient( $request, $evenlog=false, $params=null, $metaphone=true ) {
 
         $userServiceUtil = $this->get('user_service_utility');
 
@@ -1760,7 +1782,6 @@ class CallEntryController extends Controller
             //$lastname = "Doe";
             //echo "1 lastname=".$lastname."<br>";
             //echo "1 firstname=".$firstname."<br>";
-            //TODO: convert it to metaphone search
 
             $searchCriterionArr = array();
 
@@ -1769,6 +1790,26 @@ class CallEntryController extends Controller
                 $searchArr[] = "Last Name: " . $lastname;
 
                 $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
+
+                if( $metaphone ) {
+                    $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters);
+                    if( $lastnameCriterion ) {
+                        $searchCriterionArr[] = $lastnameCriterion . " AND " . $statusStr;
+
+                        $parameters['statusValid'] = 'valid';
+                        $parameters['statusAlias'] = 'alias';
+
+                        $where = true;
+                    }
+                } else {
+                    //exact search
+                    $searchCriterionArr[] = "lastname.field = :lastname AND $statusStr";
+                    $parameters['lastname'] = $lastname;
+                    $parameters['statusValid'] = 'valid';
+                    $parameters['statusAlias'] = 'alias';
+                    $where = true;
+                }
+                //$statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
                 ////$statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
                 ////$searchCriterionArr[] = "(lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr)";
 
@@ -1776,16 +1817,6 @@ class CallEntryController extends Controller
                 //$parameters['lastname'] = $lastname;
                 //$searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
                 //$parameters['lastname'] = '%'.$lastname.'%';
-
-                $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters);
-                if( $lastnameCriterion ) {
-                    $searchCriterionArr[] = $lastnameCriterion . " AND " . $statusStr;
-
-                    $parameters['statusValid'] = 'valid';
-                    $parameters['statusAlias'] = 'alias';
-
-                    $where = true;
-                }
 
                 //status
                 //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
@@ -1800,20 +1831,31 @@ class CallEntryController extends Controller
                 $searchArr[] = "First Name: " . $firstname;
 
                 $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
+
+                if( $metaphone ) {
+                    $firstnameCriterion = $userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters);
+                    if( $firstnameCriterion ) {
+                        $searchCriterionArr[] = $firstnameCriterion . " AND " . $statusStr;
+
+                        $parameters['statusValid'] = 'valid';
+                        $parameters['statusAlias'] = 'alias';
+
+                        $where = true;
+                    }
+                } else {
+                    //exact search
+                    $searchCriterionArr[] = "firstname.field = :firstname AND $statusStr";
+                    $parameters['firstname'] = $firstname;
+                    $parameters['statusValid'] = 'valid';
+                    $parameters['statusAlias'] = 'alias';
+                    $where = true;
+                }
+
+                //$statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
                 ////$statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
                 ////$searchCriterionArr[] = "(firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr)";
                 //$searchCriterionArr[] = "firstname.field = :firstname AND $statusStr";
                 //$parameters['firstname'] = $firstname;
-
-                $firstnameCriterion = $userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters);
-                if( $firstnameCriterion ) {
-                    $searchCriterionArr[] = $firstnameCriterion . " AND " . $statusStr;
-
-                    $parameters['statusValid'] = 'valid';
-                    $parameters['statusAlias'] = 'alias';
-
-                    $where = true;
-                }
 
                 //status
                 //$dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
@@ -1827,22 +1869,7 @@ class CallEntryController extends Controller
                 $searchArr[] = "Last Name: " . $lastname;
                 $searchArr[] = "First Name: " . $firstname;
 
-                if(0) {
-                    //last name: status
-                    $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                    $searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
-                    $parameters['lastname'] = '%'.$lastname.'%';;
-
-                    //first name: status
-                    $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                    $searchCriterionArr[] = "firstname.field LIKE :firstname AND $statusStr";
-                    $parameters['firstname'] = '%'.$firstname.'%';
-
-                    $parameters['statusValid'] = 'valid';
-                    $parameters['statusAlias'] = 'alias';
-                    $where = true;
-
-                } else {
+                if( $metaphone ) {
 
                     $lastnameStatusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
                     $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters,"lastname");
@@ -1868,10 +1895,32 @@ class CallEntryController extends Controller
                         $where = true;
                     }
 
+                } else {
+
+                    //exact search
+                    //last name: status
+                    $statusStrLastname = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
+                    //$searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
+                    //$parameters['lastname'] = '%'.$lastname.'%';
+                    $searchCriterionArr[] = "lastname.field = :lastname AND $statusStrLastname";
+                    $parameters['lastname'] = $lastname;
+
+                    //first name: status
+                    $statusStrFirstname = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
+                    //$searchCriterionArr[] = "firstname.field LIKE :firstname AND $statusStr";
+                    //$parameters['firstname'] = '%'.$firstname.'%';
+                    $searchCriterionArr[] = "firstname.field = :firstname AND $statusStrFirstname";
+                    $parameters['firstname'] = $firstname;
+
+                    $parameters['statusValid'] = 'valid';
+                    $parameters['statusAlias'] = 'alias';
+                    $where = true;
+
                 }//if
 
                 //testing
                 if(0) {
+                    echo "metaphone=".$metaphone."<br>";
                     echo "<pre>";
                     print_r($searchCriterionArr);
                     echo "</pre>";
@@ -2016,6 +2065,7 @@ class CallEntryController extends Controller
         //search for merged
         //$calllogUtil = $this->get('calllog_util');
         //$patients = $calllogUtil->getAllMergedPatients( $patients );
+        //exit('Finished.');
 
         $res = array();
         $res['patients'] = $patients;
@@ -2116,23 +2166,23 @@ class CallEntryController extends Controller
         }
 
         //first check if the patient already exists
-        $patientsData = $this->searchPatient( $request );
+        $patientsData = $this->searchPatient($request,false,null,false);
         $patients = $patientsData['patients'];
 
         if( count($patients) > 0 ) {
             $output = "Can not create a new Patient. The patient with specified parameters already exists:<br>";
 
             if( $mrntype ) {
-                $output .= "MRN Type:".$keytypeEntity."<br>";
+                $output .= "MRN Type: ".$keytypeEntity."<br>";
             }
             if( $mrn )
-                $output .= "MRN:".$mrn."<br>";
+                $output .= "MRN: ".$mrn."<br>";
             if( $lastname )
-                $output .= "Last Name:".$lastname."<br>";
+                $output .= "Last Name: ".$lastname."<br>";
             if( $firstname )
-                $output .= "First Name:".$firstname."<br>";
+                $output .= "First Name: ".$firstname."<br>";
             if( $dob )
-                $output .= "DOB:".$dob."<br>";
+                $output .= "DOB: ".$dob."<br>";
 
             $res['patients'] = null;
             $res['output'] = $output;

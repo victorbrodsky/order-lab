@@ -479,7 +479,7 @@ function findCalllogPatient(holderId,formtype,mrntype) {
     holder.find('#calllog-matching-patients').hide(_transTime);
     holder.find('#calllog-matching-patients').html('');
 
-    //addnew_patient_button
+    //addnew patient button
     holder.find('#addnew_patient_button').hide(_transTime);
 
     var searchedStr = "";
@@ -719,6 +719,9 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
         //show table with found patients
         populatePatientInfo(null,false,false,holderId); //multiple patients found
         disableAllFields(false,holderId);
+
+        //un-hide/show a button called "Add New Patient Registration" because no unique patient has been found
+        holder.find('#addnew_patient_button').show(_transTime);
 
         createPatientsTableCalllog(patients,holderId);
         processed = true;

@@ -61,6 +61,10 @@
 
         {{ form_errors(form) }}
 
+        {#{% if form.metaphone is defined %}#}
+            {#{{ formmacros.checkbox(form.metaphone) }}#}
+        {#{% endif %}#}
+
         {% for patientForm in form.patient %}
 
             {#patient.id:{{ patient.vars.value.id }}#}
