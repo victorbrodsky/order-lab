@@ -70,7 +70,9 @@ class DoctrineListener {
 
         //if( $entity instanceof PatientLastName ) {
         //}
-        $this->setMetaphoneField($entity);
+        if( $this->setMetaphoneField($entity,true) ) {
+            $em->flush();
+        }
 
 //        if( $entity instanceof FellowshipApplication ) {
 //            //update report
@@ -101,7 +103,9 @@ class DoctrineListener {
             $metaphone = $userServiceUtil->getMetaphoneKey($entity->getField());
             $entity->setFieldMetaphone($metaphone);
             //$logger->notice("setFieldMetaphone [ID# " . $entity->getId() . "]:" . $entity->getField() . "=>" . $metaphone);
+            return $metaphone;
         }
+        return false;
     }
 
 //    public function onFlush(OnFlushEventArgs $args)

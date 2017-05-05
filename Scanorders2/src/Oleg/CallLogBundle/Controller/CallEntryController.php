@@ -1830,27 +1830,13 @@ class CallEntryController extends Controller
                 if(0) {
                     //last name: status
                     $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                    //$statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
-                    //last name: name
-                    //$searchCriterionArr[] = "((lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr))";
                     $searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
                     $parameters['lastname'] = '%'.$lastname.'%';;
 
-                    //status
-                    //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
-                    //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
-
                     //first name: status
                     $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                    //$statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
-                    //first name: name
-                    //$searchCriterionArr[] = "((firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr))";
                     $searchCriterionArr[] = "firstname.field LIKE :firstname AND $statusStr";
                     $parameters['firstname'] = '%'.$firstname.'%';
-
-                    //status
-                    //$dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
-                    //$dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
 
                     $parameters['statusValid'] = 'valid';
                     $parameters['statusAlias'] = 'alias';
@@ -1859,9 +1845,10 @@ class CallEntryController extends Controller
                 } else {
 
                     $lastnameStatusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                    $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field", "lastname.fieldMetaphone", $lastname, $parameters);
+                    $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters,"lastname");
                     if ($lastnameCriterion) {
                         $searchCriterionArr[] = $lastnameCriterion . " AND " . $lastnameStatusStr;
+                        //$searchCriterionArr[] = $lastnameCriterion;
 
                         $parameters['statusValid'] = 'valid';
                         $parameters['statusAlias'] = 'alias';
@@ -1870,9 +1857,10 @@ class CallEntryController extends Controller
                     }
 
                     $firstnameStatusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                    $firstnameCriterion = $userServiceUtil->getMetaphoneStrLike("firstname.field", "firstname.fieldMetaphone", $firstname, $parameters);
+                    $firstnameCriterion = $userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters,"firstname");
                     if ($firstnameCriterion) {
                         $searchCriterionArr[] = $firstnameCriterion . " AND " . $firstnameStatusStr;
+                        //$searchCriterionArr[] = $firstnameCriterion;
 
                         $parameters['statusValid'] = 'valid';
                         $parameters['statusAlias'] = 'alias';
@@ -1882,6 +1870,16 @@ class CallEntryController extends Controller
 
                 }//if
 
+                //testing
+                if(0) {
+                    echo "<pre>";
+                    print_r($searchCriterionArr);
+                    echo "</pre>";
+                    echo "parameters:"."<br><pre>";
+                    print_r($parameters);
+                    echo "</pre>";
+                    exit();
+                }
             }
 
             if( count($searchCriterionArr) > 0 ) {
@@ -1987,6 +1985,7 @@ class CallEntryController extends Controller
             //echo "sql=".$query->getSql()."<br>";
             //echo "parameters:"."<br><pre>";
             //print_r($query->getParameters());
+            //exit();
             //echo "</pre>";
 //            echo "<br>";
 //            foreach( $patients as $patient ) {

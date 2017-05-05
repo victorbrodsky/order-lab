@@ -7913,12 +7913,17 @@ class AdminController extends Controller
         $dql->leftJoin('patient.lastname','lastname');
         $dql->leftJoin('patient.firstname','firstname');
         $dql->leftJoin('patient.middlename','middlename');
-        $dql->where("lastname.fieldMetaphone IS NULL OR firstname.fieldMetaphone IS NULL OR middlename.fieldMetaphone IS NULL");
+        $criterion = "(lastname IS NOT NULL AND lastname.fieldMetaphone IS NULL)";
+        $criterion = $criterion . " OR (firstname IS NOT NULL AND firstname.fieldMetaphone IS NULL)";
+        $criterion = $criterion . " OR (middlename IS NOT NULL AND middlename.fieldMetaphone IS NULL)";
+
+        $dql->where($criterion);
         $query = $em->createQuery($dql);
         $patients = $query->getResult();
-        echo "processing patients=".count($patients)."<br>";
+        echo "Number of patients without metaphone key: ".count($patients)."<br>";
 
         foreach( $patients as $patient ) {
+            echo "patient ".$patient->getId().": ".$patient->obtainFullObjectName()."<br>";
             //patient last name
             foreach( $patient->getLastname() as $name ) {
                 if( !$name->getFieldMetaphone() ) {
@@ -7949,7 +7954,7 @@ class AdminController extends Controller
             $em->flush();
         }
 
-        exit();
+        exit("Finished.");
     }
 
 

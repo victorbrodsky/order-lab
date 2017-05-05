@@ -224,7 +224,7 @@ class UserServiceUtil {
         }
     }
 
-    public function getMetaphoneStrLike( $field, $fieldMetaphone, $search, &$queryParameters ) {
+    public function getMetaphoneStrLike( $field, $fieldMetaphone, $search, &$queryParameters, $fieldIndex=null ) {
         $criterionStr = null;
 
         if( !($field && $search) ) {
@@ -234,13 +234,17 @@ class UserServiceUtil {
         $metaphoneKey = $this->getMetaphoneKey($search);
         //echo "metaphoneKey:".$search."=>".$metaphoneKey."<br>";
 
+        if( !$fieldIndex ) {
+            $fieldIndex = "metaphoneKey";
+        }
+
         if( $metaphoneKey ) {
-            $criterionStr = "(".$field." LIKE :search"." OR ".$fieldMetaphone." LIKE :metaphoneKey".")";
-            $queryParameters['search'] = "%".$search."%";
-            $queryParameters['metaphoneKey'] = "%".$metaphoneKey."%";
+            $criterionStr = "(".$field." LIKE :search".$fieldIndex." OR ".$fieldMetaphone." LIKE :".$fieldIndex.")";
+            $queryParameters['search'.$fieldIndex] = "%".$search."%";
+            $queryParameters[$fieldIndex] = "%".$metaphoneKey."%";
         } else {
-            $criterionStr = $field." LIKE :search";
-            $queryParameters['search'] = "%".$search."%";
+            $criterionStr = $field." LIKE :search".$fieldIndex;
+            $queryParameters['search'.$fieldIndex] = "%".$search."%";
         }
 
         return $criterionStr;
@@ -275,6 +279,9 @@ class UserServiceUtil {
         return null;
     }
 
+    //1) copy metaphone to the folder (i.e. "my folder")
+    //2 enable metaphone in site setting
+    //3) set the path to metaphone php file: i.e. "C:/my folder/metaphone3.php"
     public function initMetaphone() {
 
         //$logger = $this->container->get('logger');
@@ -322,6 +329,8 @@ class UserServiceUtil {
         $this->metaphoneSingleTest("mcmaster");
         $this->metaphoneSingleTest("macmaste");
         $this->metaphoneSingleTest("master");
+
+        $this->metaphoneSingleTest("Michael Jackson");
 
         $this->metaphonePhpSingleTest("mcmaster");
         $this->metaphonePhpSingleTest("macmaste");
