@@ -59,7 +59,7 @@ class CalllogNavbarFilterType extends AbstractType
 
         //metaphone
         $mateaphoneArr = array(
-            'label' => "Search similar-sounding names in the whole page:",
+            'label' => "Search similar-sounding names on the whole page:",
             'required' => false,
             //'empty_data' => $this->params['metaphone'],
             //'data' => $this->params['metaphone'],
