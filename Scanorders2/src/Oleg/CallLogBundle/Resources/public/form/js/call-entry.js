@@ -164,6 +164,7 @@ function addnewCalllogPatient(holderId) {
         return false;
     }
 
+    var metaphone = calllogGetMetaphoneValue();
 
     //Clicking "Ok" in the Dialog confirmation box should use the variables
     // to create a create the new patient on the server via AJAX/Promise,
@@ -174,7 +175,7 @@ function addnewCalllogPatient(holderId) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex  },
+        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex, metaphone:metaphone  },
     }).success(function(data) {
         //console.log("output="+data);
 
@@ -371,6 +372,8 @@ function submitPatientBtn(holderId) {
         return false;
     }
 
+    var metaphone = calllogGetMetaphoneValue();
+
     //Clicking "Ok" in the Dialog confirmation box should use the variables
     // to create a create the new patient on the server via AJAX/Promise,
     // then lock the Patient Info fields, and change the title of the "Find Patient" button to "Re-enter Patient"
@@ -380,7 +383,7 @@ function submitPatientBtn(holderId) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {patientId: patientId, mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex  },
+        data: {patientId: patientId, mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex, metaphone:metaphone},
     }).success(function(data) {
         //console.log("output="+data);
         if( data == "OK" ) {
@@ -555,6 +558,9 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         singleMatch = true;
     }
 
+    var metaphone = calllogGetMetaphoneValue();
+    //console.log('metaphone='+metaphone);
+
     //var currentUrl = window.location.href;
 
     //ajax
@@ -563,7 +569,7 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, formtype: formtype },
+        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, formtype: formtype, metaphone: metaphone },
     }).success(function(resData) {
         var dataOk = false;
         var data = resData.patients;
@@ -2055,4 +2061,15 @@ function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
     }).error(function(jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
     });
+}
+
+function calllogGetMetaphoneValue() {
+    var metaphoneRes = null;
+    var metaphone = $('#search_metaphone:checked').val();
+    //console.log('metaphone='+metaphone);
+    if( metaphone ) {
+        metaphoneRes = true;
+    }
+    //console.log('metaphoneRes='+metaphoneRes);
+    return metaphoneRes;
 }

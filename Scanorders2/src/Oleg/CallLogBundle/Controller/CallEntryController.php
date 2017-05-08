@@ -1627,7 +1627,7 @@ class CallEntryController extends Controller
 
     //search patients: used by JS when search for patient in the new entry page (calllog_search_patient)
     // and to verify before creating patient if already exists (calllog_create_patient)
-    public function searchPatient( $request, $evenlog=false, $params=null, $metaphone=false ) {
+    public function searchPatient( $request, $evenlog=false, $params=null, $turnOffMetaphone=false ) {
 
         $userServiceUtil = $this->get('user_service_utility');
 
@@ -1636,8 +1636,10 @@ class CallEntryController extends Controller
         $dob = trim($request->get('dob'));
         $lastname = trim($request->get('lastname'));
         $firstname = trim($request->get('firstname'));
+        $metaphone = trim($request->get('metaphone'));
         //print_r($allgets);
-        //echo "mrn=".$mrn."<br>";
+        //echo "metaphone=".$metaphone."<br>";
+        //exit('1');
 
         $exactMatch = true;
         $matchAnd = true;
@@ -1648,6 +1650,11 @@ class CallEntryController extends Controller
             $dob = ( array_key_exists('dob', $params) ? $params['dob'] : null);
             $lastname = ( array_key_exists('lastname', $params) ? $params['lastname'] : null);
             $firstname = ( array_key_exists('firstname', $params) ? $params['firstname'] : null);
+            $metaphone = ( array_key_exists('metaphone', $params) ? $params['metaphone'] : null);
+        }
+
+        if( $turnOffMetaphone ) {
+            $metaphone = null;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -2170,7 +2177,8 @@ class CallEntryController extends Controller
         }
 
         //first check if the patient already exists
-        $patientsData = $this->searchPatient($request,false,null,false);
+        $turnOffMetaphone = true;
+        $patientsData = $this->searchPatient($request,false,null,$turnOffMetaphone);
         $patients = $patientsData['patients'];
 
         if( count($patients) > 0 ) {
