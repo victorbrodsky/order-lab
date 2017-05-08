@@ -643,9 +643,15 @@
         <ul class="dropdown-menu dropdown-menu-right">
 
             {% if message.messageStatus and message.messageStatus.name == "Draft" %}
-                <li><a href="#">Edit Entry</a></li>
+                <li><a
+                    data-confirm="Are you sure you would like to edit entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('calllog_callentry_edit', {'messageId': message.id}) }}"
+                    >Edit Entry</a></li>
             {% else %}
-                <li><a href="#">Amend</a></li>
+                <li><a
+                    data-confirm="Are you sure you would like to amend entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('calllog_callentry_amend', {'messageId': message.id}) }}"
+                    >Amend Entry</a></li>
             {% endif %}
 
             {% if message.messageStatus and message.messageStatus.name != "Deleted" %}

@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class CallLogEditController extends Controller
+class CallLogEditController extends CallEntryController
 {
 
     /**
@@ -146,6 +146,119 @@ class CallLogEditController extends Controller
         $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
 
         return $this->redirect($this->generateUrl('calllog_home'));
+    }
+
+
+
+
+    /**
+     * Get Call Log Entry Message Edit page
+     * @Route("/entry/edit/{messageId}", name="calllog_callentry_edit")
+     * @Route("/entry/amend/{messageId}", name="calllog_callentry_amend")
+     * @Method("GET")
+     * @Template("OlegCallLogBundle:CallLog:call-entry-edit.html.twig")
+     */
+    public function getCallLogEntryAction(Request $request, $messageId)
+    {
+
+        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        //$userSecUtil = $this->get('user_security_utility');
+        $userServiceUtil = $this->get('user_service_utility');
+
+        //$title = "Call Log Entry";
+        $formtype = "call-entry";
+
+        //$patientId = trim($request->get('patientId'));
+        //$nowStr = trim($request->get('nowStr'));
+        //echo "patientId=".$patientId."<br>";
+        //echo "nowStr=".$nowStr."<br>";
+        //$messageId = 142; //154; //testing
+
+        $em = $this->getDoctrine()->getManager();
+        $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
+        if (!$message) {
+            throw new \Exception('Message has not found by ID ' . $messageId);
+        }
+
+        $route = $request->get('_route');
+        if( $route == "calllog_callentry_edit" ) {
+            $cycle = "edit";
+        }
+        if( $route == "calllog_callentry_amend" ) {
+            $cycle = "amend";
+        }
+
+        $messageInfo = "Entry ID ".$message->getId()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
+        //echo "messageInfo=".$messageInfo."<br>";
+        //exit('1');
+        if (count($message->getPatient()) > 0 ) {
+            $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
+            $mrntype = $mrnRes->getKeytype()->getId();
+            $mrn = $mrnRes->getField();
+
+            //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY |
+            // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
+            $title = $message->getPatient()->first()->obtainPatientInfoTitle('valid',null,false);
+            $title = $title . " | ".$messageInfo;
+
+        } else {
+            $mrntype = null;
+            $mrn = null;
+
+            $title = $messageInfo;
+        }
+
+        //echo "patients=".count($message->getPatient())."<br>";
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
+
+        $complexPatientStr = null;
+        //find record in the "Pathology Call Complex Patients" list by message object entityName, entityId
+//        $mapper = array(
+//            'prefix' => "Oleg",
+//            'bundleName' => "CallLogBundle",
+//            'className' => "PathologyCallComplexPatients",
+//        );
+//        $listRecord = $userSecUtil->getListByNameAndObject( $message, $mapper );
+//        if( $listRecord ) {
+//            //Patient was added to the "xxxxxxxx" list via this entry.
+//            $complexPatientStr = "Patient was added to the Pathology Call Complex Patients list ID# ".$listRecord->getId()." via this entry:<br>".$listRecord->getName()."";
+//        }
+        //echo "complexStr=".$complexPatientStr."<br>";
+
+        $class = new \ReflectionClass($message);
+        $className = $class->getShortName();          //ObjectTypeText
+        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+
+        //top message category id
+        $formnodeTopHolderId = null;
+        $categoryStr = "Pathology Call Log Entry";
+        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        if( $messageCategory ) {
+            $formnodeTopHolderId = $messageCategory->getId();
+        }
+
+        return array(
+            //'entity' => $entity,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => $title,
+            'formtype' => $formtype,
+            'triggerSearch' => 0,
+            'mrn' => $mrn,
+            'mrntype' => $mrntype,
+            'message' => $message,
+            'complexPatientStr' => $complexPatientStr,
+            //'encounterid' => $encounterid
+            'entityNamespace' => $classNamespace,
+            'entityName' => $className,
+            'entityId' => $message->getId(),
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'titleheadroom' => $title,
+            'formnodeTopHolderId' => $formnodeTopHolderId
+        );
     }
 
 }
