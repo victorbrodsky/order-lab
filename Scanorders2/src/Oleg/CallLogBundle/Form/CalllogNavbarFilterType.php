@@ -59,11 +59,12 @@ class CalllogNavbarFilterType extends AbstractType
 
         //metaphone
         $mateaphoneArr = array(
-            'label' => "Search similar-sounding names:",
+            'label' => "Search similar-sounding names in the whole page:",
             'required' => false,
             //'empty_data' => $this->params['metaphone'],
             //'data' => $this->params['metaphone'],
-            'attr' => array('class'=>'navbar-search-metaphone', 'style'=>'margin:0; width: 20px; display: none;')
+            //'attr' => array('class'=>'navbar-search-metaphone', 'style'=>'margin:0; width: 20px; display: none;')
+            'attr' => array('class'=>'navbar-search-metaphone', 'style'=>'margin:0; width: 20px;')
         );
         $builder->add('metaphone', 'checkbox', $mateaphoneArr);
     }

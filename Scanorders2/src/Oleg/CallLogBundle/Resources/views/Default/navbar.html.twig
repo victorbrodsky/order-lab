@@ -179,11 +179,11 @@
                         {#</form>#}
                     {#</li>#}
                     {% if shownavbarfilter is not defined or shownavbarfilter %}
-                        <li id="nav-bar-metaphone">
-                            <div class="nav-bar-checkbox">
-                                Search similar-sounding names:<input id="search_metaphone" name="search_metaphone" class="" style="margin:0; width: 20px;" type="checkbox">
-                            </div>
-                        </li>
+                        {#<li id="nav-bar-metaphone">#}
+                            {#<div class="nav-bar-checkbox">#}
+                                {#Search similar-sounding names:<input id="search_metaphone" name="search_metaphone" class="" style="margin:0; width: 20px;" type="checkbox">#}
+                            {#</div>#}
+                        {#</li>#}
                         <li id="nav-bar-calllogsearch">
                             {% set navbarfilterform = calllog_util.getNavbarFilterForm(app.request) %}
                             <form class="navbar-form navbar-left form-inline" role="search" id="calllogsearchform"
@@ -195,10 +195,12 @@
                                         <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn"
                                               onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>
                                     </div>
-                                    {{ form_widget(navbarfilterform.metaphone) }}
-                                    {#<div data-toggle="tooltip" title="Search similar-sounding names">#}
-                                        {#{{ form_label(navbarfilterform.metaphone) }}{{ form_widget(navbarfilterform.metaphone) }}#}
-                                    {#</div>#}
+                                    {#{{ form_widget(navbarfilterform.metaphone) }}#}
+                                    <div
+                                        {#data-toggle="tooltip" title="Search similar-sounding names in the whole page"#}
+                                    >
+                                        {{ form_label(navbarfilterform.metaphone) }}{{ form_widget(navbarfilterform.metaphone) }}
+                                    </div>
                                 </div>
                                 {#{{ form_rest(navbarfilterform) }}#}
                             </form>
