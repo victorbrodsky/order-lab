@@ -306,7 +306,7 @@ class CallEntryController extends Controller
                 array(
                     'filter[messageStatus]'=>"All except deleted",
                     'filter[messageCategory]'=>$messageCategorieDefaultIdStr,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
-                    'filter[metaphone]'=>true
+                    //'filter[metaphone]'=>false
                 )
             ) );
             return array('redirect' => $redirect);
@@ -343,6 +343,10 @@ class CallEntryController extends Controller
         $advancedFilter = 0;
         //$defaultAdvancedFilter = false;
         $queryParameters = array();
+
+        if( $metaphone ) {
+            $advancedFilter++;
+        }
 
         //use editorInfos or orderdate
 //        if( $startDate || $endDate ) {
@@ -1623,7 +1627,7 @@ class CallEntryController extends Controller
 
     //search patients: used by JS when search for patient in the new entry page (calllog_search_patient)
     // and to verify before creating patient if already exists (calllog_create_patient)
-    public function searchPatient( $request, $evenlog=false, $params=null, $metaphone=true ) {
+    public function searchPatient( $request, $evenlog=false, $params=null, $metaphone=false ) {
 
         $userServiceUtil = $this->get('user_service_utility');
 

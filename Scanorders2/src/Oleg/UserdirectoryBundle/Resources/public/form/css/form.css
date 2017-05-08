@@ -613,3 +613,12 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
 .headroom-hidden {
     top: -80px;
 }
+
+.nav-bar-checkbox {
+    position: relative;
+    display: block;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
+}

@@ -34,6 +34,7 @@ class CalllogNavbarFilterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //searchtype
         $searchTypeArray = array(
             'label' => false,
             'required' => true,
@@ -45,6 +46,7 @@ class CalllogNavbarFilterType extends AbstractType
         }
         $builder->add('searchtype', 'choice', $searchTypeArray);
 
+        //search
         $searchArray = array(
             'required'=>false,
             'label' => false,
@@ -54,6 +56,16 @@ class CalllogNavbarFilterType extends AbstractType
             $searchArray['data'] = $this->params['calllogsearch'];
         }
         $builder->add('search', 'text', $searchArray);
+
+        //metaphone
+//        $mateaphoneArr = array(
+//            'label' => "Search similar-sounding names:",
+//            'required' => false,
+//            //'empty_data' => $this->params['metaphone'],
+//            //'data' => $this->params['metaphone'],
+//            'attr' => array('class'=>'', 'style'=>'margin:0; width: 20px;')
+//        );
+//        $builder->add('metaphone', 'checkbox', $mateaphoneArr);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

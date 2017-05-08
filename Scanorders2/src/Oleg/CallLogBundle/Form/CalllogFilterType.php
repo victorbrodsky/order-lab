@@ -217,7 +217,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         $mateaphoneArr = array(
-            'label' => "Sound alike:",
+            'label' => "Search similar-sounding names:",
             'required' => false,
             //'empty_data' => $this->params['metaphone'],
             //'data' => $this->params['metaphone'],
