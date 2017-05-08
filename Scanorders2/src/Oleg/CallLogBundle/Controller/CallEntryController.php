@@ -231,6 +231,7 @@ class CallEntryController extends Controller
         $navbarfilterform->bind($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
         $calllogsearch = $navbarfilterform['search']->getData();
+        $metaphone = $navbarfilterform['metaphone']->getData();
         //echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
         if( $calllogsearchtype == 'MRN or Last Name' ) {
             $searchFilter = $calllogsearch;
@@ -261,7 +262,7 @@ class CallEntryController extends Controller
             'search' => $searchFilter,
             'entryBodySearch' => $entryBodySearchFilter,
             'messageCategoryType' => $messageCategoryTypeId,
-            //'metaphone' => $metaphone
+            'metaphone' => $metaphone
         );
         $filterform = $this->createForm(new CalllogFilterType($params), null);
 
@@ -291,12 +292,10 @@ class CallEntryController extends Controller
             $messageCategoryEntity = $calllogUtil->getMessageCategoryEntityByIdStr($messageCategory);
         }
 
-        if( $filterform->has('metaphone') ) {
+        //if( $filterform->has('metaphone') ) {
+        if( !$metaphone ) {
             $metaphone = $filterform['metaphone']->getData();
             //echo "has metaphone<br>";
-        } else {
-            $metaphone = false;
-            //echo "no metaphone<br>";
         }
         //echo "metaphone=".$metaphone."<br>";
 

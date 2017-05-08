@@ -58,13 +58,10 @@ function calllogsearchNavbarBoxInit() {
 function setCallLogSearchtypeAction() {
     //console.log('searchtype='+key);
 
-     //metaphone
-     //var metaphoneRes = null;
-    var metaphone = $('#search_metaphone:checked');
+    //set metaphone
+    var metaphone = $('#search_metaphone:checked').val();
     //console.log('metaphone='+metaphone);
     if( metaphone ) {
-        //metaphoneRes = true;
-        //$(".navbar-search-metaphone").val('1');
         $('.navbar-search-metaphone').prop('checked', true);
     }
 

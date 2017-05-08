@@ -223,6 +223,9 @@ class CalllogFilterType extends AbstractType
             //'data' => $this->params['metaphone'],
             'attr' => array('class'=>'', 'style'=>'margin:0; width: 20px;')
         );
+        if( $this->params['metaphone'] ) {
+            $mateaphoneArr['empty_data'] = $this->params['metaphone'];
+        }
         $builder->add('metaphone', 'checkbox', $mateaphoneArr);
 
     }
