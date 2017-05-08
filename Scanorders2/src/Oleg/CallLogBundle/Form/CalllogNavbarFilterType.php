@@ -58,14 +58,14 @@ class CalllogNavbarFilterType extends AbstractType
         $builder->add('search', 'text', $searchArray);
 
         //metaphone
-//        $mateaphoneArr = array(
-//            'label' => "Search similar-sounding names:",
-//            'required' => false,
-//            //'empty_data' => $this->params['metaphone'],
-//            //'data' => $this->params['metaphone'],
-//            'attr' => array('class'=>'', 'style'=>'margin:0; width: 20px;')
-//        );
-//        $builder->add('metaphone', 'checkbox', $mateaphoneArr);
+        $mateaphoneArr = array(
+            'label' => "Search similar-sounding names:",
+            'required' => false,
+            //'empty_data' => $this->params['metaphone'],
+            //'data' => $this->params['metaphone'],
+            'attr' => array('class'=>'navbar-search-metaphone', 'style'=>'margin:0; width: 20px; display: none;')
+        );
+        $builder->add('metaphone', 'checkbox', $mateaphoneArr);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

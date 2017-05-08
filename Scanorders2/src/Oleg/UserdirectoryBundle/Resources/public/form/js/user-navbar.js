@@ -57,6 +57,17 @@ function calllogsearchNavbarBoxInit() {
 //get search input field with id=calllogsearchform-search and redirect to path /patients/search?searchtype=search
 function setCallLogSearchtypeAction() {
     //console.log('searchtype='+key);
+
+     //metaphone
+     //var metaphoneRes = null;
+    var metaphone = $('#search_metaphone:checked');
+    //console.log('metaphone='+metaphone);
+    if( metaphone ) {
+        //metaphoneRes = true;
+        //$(".navbar-search-metaphone").val('1');
+        $('.navbar-search-metaphone').prop('checked', true);
+    }
+
     $('#calllogsearchform').submit();
     return;
 }
