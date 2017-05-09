@@ -54,7 +54,7 @@ class UserDownloadUtil {
         $priority = null;
         foreach( $users as $user ) {
             echo "<br>user=".$user.":<br>";
-            $instResArr = $user->getDeduplicatedInstitutions($priority);
+            $instResArr = $user->getDeduplicatedInstitutions(); //$priority
 
             foreach( $instResArr as $instRes ) {
                 //$instName = $instRes[0]['instNameWithRoot'];
