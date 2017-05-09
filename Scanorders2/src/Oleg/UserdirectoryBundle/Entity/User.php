@@ -1466,7 +1466,7 @@ class User extends BaseUser {
         if( $type == null || $type == "AdministrativeTitle" ) {
             foreach( $this->getAdministrativeTitles() as $adminTitles ) {
                 if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
-                    echo "AdministrativeTitle inst=".$adminTitles->getInstitution()."<br>";
+                    //echo "AdministrativeTitle inst=".$adminTitles->getInstitution()."<br>";
                     if( !$institutions->contains($adminTitles->getInstitution()) ) {
                         if( $status == null || $adminTitles->getStatus() == $status ) {
                             if( $priority === null || $priority."" === $adminTitles->getPriority()."" ) {
@@ -1479,14 +1479,14 @@ class User extends BaseUser {
         if( $type == null || $type == "AppointmentTitle" ) {
             foreach( $this->getAppointmentTitles() as $appTitles ) {
                 if( $appTitles->getInstitution() && $appTitles->getInstitution()->getId() && $appTitles->getInstitution()->getName() != "" )
-                    echo "1 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
+                    //echo "1 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                     if( !$institutions->contains($appTitles->getInstitution()) ) {
-                        echo "2 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
+                        //echo "2 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                         if( $status == null || $appTitles->getStatus() == $status ) {
-                            echo "3 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
-                            echo "priority: ".$priority."" ."===". $appTitles->getPriority()."<br>";
+                            //echo "3 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
+                            //echo "priority: ".$priority."" ."===". $appTitles->getPriority()."<br>";
                             if( $priority === null || $priority."" === $appTitles->getPriority()."" ) {
-                                echo "4 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
+                                //echo "4 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                                 $institutions->add($appTitles->getInstitution());
                             }
                         }
@@ -1496,7 +1496,7 @@ class User extends BaseUser {
         if( $type == null || $type == "MedicalTitle" ) {
             foreach( $this->getMedicalTitles() as $medicalTitles ) {
                 if( $medicalTitles->getInstitution() && $medicalTitles->getInstitution()->getId() && $medicalTitles->getInstitution()->getName() != "" )
-                    echo "MedicalTitle inst=".$medicalTitles->getInstitution()."<br>";
+                    //echo "MedicalTitle inst=".$medicalTitles->getInstitution()."<br>";
                     if( !$institutions->contains($medicalTitles->getInstitution()) ) {
                         if( $status == null || $medicalTitles->getStatus() == $status ) {
                             if( $priority === null || $priority."" === $medicalTitles->getPriority()."" ) {
@@ -1525,15 +1525,15 @@ class User extends BaseUser {
         $instArr = array();
 
         $institutions = $this->getInstitutions(null,null,$priority);
-        echo "1 inst count=".count($institutions)."<br>";
+        //echo "1 inst count=".count($institutions)."<br>";
         if( count($institutions) == 0 ) {
             $institutions = $this->getInstitutions();
-            echo "2 inst count=".count($institutions)."<br>";
+            //echo "2 inst count=".count($institutions)."<br>";
         }
 
         foreach( $institutions as $institution ) {
             $instName = $institution->getName()."";
-            echo "instName=".$instName."<br>";
+            //echo "instName=".$instName."<br>";
 
             //default uniqueName = "WCMC"
             $uniqueName = $institution->getRootName($institution)."";

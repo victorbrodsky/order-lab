@@ -54,7 +54,7 @@ class UserDownloadUtil {
         $priority = null;
         foreach( $users as $user ) {
             echo "<br>user=".$user.":<br>";
-            $instResArr = $user->getDeduplicatedInstitutions(); //$priority
+            $instResArr = $user->getDeduplicatedInstitutions($priority);
 
             foreach( $instResArr as $instRes ) {
                 //$instName = $instRes[0]['instNameWithRoot'];
@@ -81,7 +81,7 @@ class UserDownloadUtil {
             //print_r($sectionUsers);
             //echo  '</pre>';
         }
-        exit();
+        exit("testing");
 
         //////////////// reorganize sections ////////////////
 
