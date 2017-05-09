@@ -410,17 +410,23 @@ class UserDownloadUtil {
         $ews->getStyle('B'.$row)->getAlignment()->setWrapText(true);
 
         //Phone
-        $phoneStr = "";
-        $phoneArr = array();
-        foreach( $user->getAllPhones() as $phone ) {
-            $comment = "";
-            if( strpos($phone['prefix'], "Pager") !== false ) {
-                $comment = "*";
-            }
-            $phoneArr[] = $phone['prefix'] . $phone['phone'].$comment;
-        }
-        if( count($phoneArr) > 0 ) {
-            $phoneStr = implode(" \n", $phoneArr);
+//        $phoneStr = "";
+//        $phoneArr = array();
+//        foreach( $user->getAllPhones() as $phone ) {
+//            $comment = "";
+//            if( strpos($phone['prefix'], "Pager") !== false ) {
+//                $comment = "*";
+//            }
+//            $phoneArr[] = $phone['prefix'] . $phone['phone'].$comment;
+//        }
+//        if( count($phoneArr) > 0 ) {
+//            $phoneStr = implode(" \n", $phoneArr);
+//        }
+        $phoneArr = $user->getSinglePhoneAndPager();
+        $phoneStr = $phoneArr['phone'];
+        $pagerStr = $phoneArr['pager'];
+        if( $pagerStr ) {
+            $phoneStr = $phoneStr . " / " . $pagerStr . "*";
         }
         $ews->setCellValue('C'.$row, $phoneStr);
         $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);

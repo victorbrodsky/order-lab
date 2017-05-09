@@ -1767,6 +1767,39 @@ class User extends BaseUser {
         return $phonesArr;
     }
 
+    public function getSinglePhoneAndPager() {
+        $phone = $this->getPreferredPhone();
+        $pager = null;
+        foreach( $this->getLocations() as $location ) {
+            if( count($location->getLocationTypes()) == 0 || !$location->hasLocationTypeName("Employee Home") ) {
+                if( !$phone && $location->getPhone() ) {
+                    $phone = $location->getPhone();
+                }
+                if( !$pager && $location->getPager() ) {
+                    $pager = $location->getPager();
+                }
+                if( $phone && $pager ) {
+                    break;
+                }
+            }
+        }
+        $phoneArr = array(
+            'phone' => $phone,
+            'pager' => $pager
+        );
+        return $phoneArr;
+    }
+//    public function getSinglePager() {
+//        foreach( $this->getLocations() as $location ) {
+//            if( count($location->getLocationTypes()) == 0 || !$location->hasLocationTypeName("Employee Home") ) {
+//                if( $location->getPager() ) {
+//                    return $location->getPager();
+//                }
+//            }
+//        }
+//        return null;
+//    }
+
     public function getAllEmail() {
         $emailArr = array();
         //echo "count loc=".count($this->getLocations())."<br>";

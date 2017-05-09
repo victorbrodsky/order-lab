@@ -743,9 +743,11 @@ class UserController extends Controller
                 " AND administrativeTitles.status = ".$verifiedStatus.
                 //only "Head of Institution", "Head of Department", "Head of Division"
                 " AND (".
-                    "administrativePositions.name = 'Head of Institution' OR ".
-                    "administrativePositions.name = 'Head of Department' OR ".
-                    "administrativePositions.name = 'Head of Division'".
+                    "administrativePositions.name = 'Head of Institution'".
+                    " OR ".
+                    "administrativeName.name LIKE '%Chairman%'".
+                    //"administrativePositions.name = 'Head of Department' OR ".
+                    //"administrativePositions.name = 'Head of Division'".
                 ")".
             ")";
         }
@@ -3910,10 +3912,10 @@ class UserController extends Controller
         ////////////// EOF With Administrative Title /////////////
 
         ////////////// Administrative /////////////
-        $filterAdminDivision = "Administration Division";
-        $adminDivisionParams = array('filter'=>$filterAdminDivision,'time'=>'current_only','limitFlag'=>null);
-        $resAdminDivision = $this->indexUser($adminDivisionParams);
-        $administrationDivisionUsers = $resAdminDivision['entities'];
+//        $filterAdminDivision = "Administration Division";
+//        $adminDivisionParams = array('filter'=>$filterAdminDivision,'time'=>'current_only','limitFlag'=>null);
+//        $resAdminDivision = $this->indexUser($adminDivisionParams);
+//        $administrationDivisionUsers = $resAdminDivision['entities'];
         ////////////// EOF Administrative /////////////
 
         ////////////// Locations /////////////
@@ -3928,7 +3930,7 @@ class UserController extends Controller
         ///////////////////// Faculty List /////////////////////
         $facultySections = array(
             " " => $usersFaculty,
-            "ADMINISTRATION" => $administrationDivisionUsers
+            //"ADMINISTRATION" => $administrationDivisionUsers
         );
         if(1) {
             $sheetParams = array(
