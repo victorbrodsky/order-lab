@@ -52,6 +52,7 @@ class UserDownloadUtil {
         $sections = array();
         $priority = 0; //"Primary"
         foreach( $users as $user ) {
+            echo "<br>user=".$user.":<br>";
             $instResArr = $user->getDeduplicatedInstitutions($priority);
 
             foreach( $instResArr as $instRes ) {
@@ -60,7 +61,7 @@ class UserDownloadUtil {
                 $instName = $instRes[0]['instName'];
                 //Set all uppercase
                 $instName = strtoupper($instName);
-                //echo "add instName=".$instName."<br>";
+                echo "add instName=".$instName."<br>";
                 //$sections[$instName][] = $user."";
                 $sections[$instName][] = $user;
             }
