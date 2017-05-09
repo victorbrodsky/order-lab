@@ -1466,6 +1466,7 @@ class User extends BaseUser {
         if( $type == null || $type == "AdministrativeTitle" ) {
             foreach( $this->getAdministrativeTitles() as $adminTitles ) {
                 if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
+                    echo "AdministrativeTitle inst=".$adminTitles->getInstitution()."<br>";
                     if( !$institutions->contains($adminTitles->getInstitution()) ) {
                         if( $status == null || $adminTitles->getStatus() == $status ) {
                             if( $priority === null || $priority."" === $adminTitles->getPriority()."" ) {
@@ -1478,6 +1479,7 @@ class User extends BaseUser {
         if( $type == null || $type == "AppointmentTitle" ) {
             foreach( $this->getAppointmentTitles() as $appTitles ) {
                 if( $appTitles->getInstitution() && $appTitles->getInstitution()->getId() && $appTitles->getInstitution()->getName() != "" )
+                    echo "AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                     if( !$institutions->contains($appTitles->getInstitution()) ) {
                         if( $status == null || $appTitles->getStatus() == $status ) {
                             if( $priority === null || $priority."" === $appTitles->getPriority()."" ) {
@@ -1490,6 +1492,7 @@ class User extends BaseUser {
         if( $type == null || $type == "MedicalTitle" ) {
             foreach( $this->getMedicalTitles() as $medicalTitles ) {
                 if( $medicalTitles->getInstitution() && $medicalTitles->getInstitution()->getId() && $medicalTitles->getInstitution()->getName() != "" )
+                    echo "MedicalTitle inst=".$medicalTitles->getInstitution()."<br>";
                     if( !$institutions->contains($medicalTitles->getInstitution()) ) {
                         if( $status == null || $medicalTitles->getStatus() == $status ) {
                             if( $priority === null || $priority."" === $medicalTitles->getPriority()."" ) {
