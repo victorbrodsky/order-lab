@@ -80,6 +80,15 @@ class CalllogMessageType extends AbstractType
             ));
         }
 
+//        if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'amend' ) {
+//            $builder->add('id', null, array( //'hidden'
+//                'label' => 'Message ID:',
+//                'read_only' => true,
+//                'required' => true,
+//                'attr' => array('class' => 'form-control')
+//            ));
+//        }
+
         $patient = $this->entity->getPatient()->first();
         //echo "calllog patient id=".$patient->getId()."<br>";
 

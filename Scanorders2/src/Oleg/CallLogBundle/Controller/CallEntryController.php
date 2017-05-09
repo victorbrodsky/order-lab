@@ -857,18 +857,18 @@ class CallEntryController extends Controller
     }
 
     /**
-     * Save/Update Call Log Entry
-     * @Route("/entry/update", name="calllog_update_entry", options={"expose"=true})
+     * Save Call Log Entry
+     * @Route("/entry/save", name="calllog_save_entry", options={"expose"=true})
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
      * @Method("POST")
      */
-    public function updateEntryAction(Request $request)
+    public function saveEntryAction(Request $request)
     {
         if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        //exit('update entry');
+        //exit('save entry');
         //case 1: patient exists: create a new encounter to DB and add it to the existing patient
         //add patient id field to the form (id="oleg_calllogbundle_patienttype_id") or use class="calllog-patient-id" input field.
         //case 2: patient does not exists: create a new encounter to DB
@@ -900,7 +900,7 @@ class CallEntryController extends Controller
         $mrn = null;
         $mrntype = null;
 
-        $title = "Update Entry";
+        $title = "Save Entry";
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
@@ -972,6 +972,7 @@ class CallEntryController extends Controller
                 throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
             }
             $patient = $patients->first();
+            //echo "message id=".$message->getId()."<br>";
             //echo "patient id=".$patient->getId()."<br>";
 
             $patientInfoEncounter = null;
@@ -1004,20 +1005,22 @@ class CallEntryController extends Controller
 
                 //Remove tracker if spots/location is empty
                 $tracker = $newEncounter->getTracker();
-                $tracker->removeEmptySpots();
-                if ($tracker->isEmpty()) {
-                    //echo "Tracker is empty! <br>";
-                    $newEncounter->setTracker(null);
-                } else {
-                    //echo "Tracker is not empty! <br>";
-                    //check if location name is not empty
-                    if ($newEncounter->getTracker()) {
-                        $currentLocation = $newEncounter->getTracker()->getSpots()->first()->getCurrentLocation();
-                        if (!$currentLocation->getName()) {
-                            $currentLocation->setName('');
-                        }
-                        if (!$currentLocation->getCreator()) {
-                            $currentLocation->setCreator($user);
+                if( $tracker ) {
+                    $tracker->removeEmptySpots();
+                    if ($tracker->isEmpty()) {
+                        //echo "Tracker is empty! <br>";
+                        $newEncounter->setTracker(null);
+                    } else {
+                        //echo "Tracker is not empty! <br>";
+                        //check if location name is not empty
+                        if ($newEncounter->getTracker()) {
+                            $currentLocation = $newEncounter->getTracker()->getSpots()->first()->getCurrentLocation();
+                            if (!$currentLocation->getName()) {
+                                $currentLocation->setName('');
+                            }
+                            if (!$currentLocation->getCreator()) {
+                                $currentLocation->setCreator($user);
+                            }
                         }
                     }
                 }
@@ -1290,8 +1293,15 @@ class CallEntryController extends Controller
 
             }//if $newEncounter
 
-
             if( $testing ) {
+                echo "<br><br>message id=" . $message->getId() . "<br>";
+                foreach ($message->getPatient() as $patient) {
+                    echo "patient id=" . $patient->getId() . "<br>";
+                }
+                foreach ($message->getEncounter() as $encounter) {
+                    echo "encounter id=" . $encounter->getId() . "<br>";
+                }
+
                 exit('form is submitted and finished, msg='.$msg);
             }
 
@@ -1322,7 +1332,7 @@ class CallEntryController extends Controller
             'mrn' => $mrn,
             'mrntype' => $mrntype
         );
-    }
+    }//save
 
     public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false) {
         $user = $this->get('security.context')->getToken()->getUser();

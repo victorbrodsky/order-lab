@@ -55,7 +55,7 @@
 
     {% set holderId = "patient-holder-1" %}
 
-    {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_update_entry')}) }}
+    {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_save_entry')}) }}
 
         <input type="hidden" id="messageStatusJs" name="messageStatusJs" value="" />
 
