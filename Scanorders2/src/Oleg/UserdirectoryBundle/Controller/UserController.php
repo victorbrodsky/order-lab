@@ -3866,7 +3866,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find(158);//"Melissa"
         echo "<br>live user=".$user.":<br>";
-        $instResArr = $user->getDeduplicatedInstitutions(0);
+        $instResArr = $user->getDeduplicatedInstitutions();
         foreach( $instResArr as $instRes ) {
             $instName = $instRes[0]['instName'];
             $instName = strtoupper($instName);
@@ -3874,7 +3874,7 @@ class UserController extends Controller
         }
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find(71);//"Melissa"
         echo "<br>test user=".$user.":<br>";
-        $instResArr = $user->getDeduplicatedInstitutions(0);
+        $instResArr = $user->getDeduplicatedInstitutions();
         foreach( $instResArr as $instRes ) {
             $instName = $instRes[0]['instName'];
             $instName = strtoupper($instName);
