@@ -112,29 +112,31 @@ class UserDownloadUtil {
         //exit();
 
         ///////////// Add other section (* comment and common locations) as array //////////////
-        //add common $locations
-        $locationsArr = array();
-        foreach( $locations as $location ) {
-            $locationsArr[] = array(
-               'A' => $location->getName()."",
-               'B'=>'',
-               'C'=> $location->getPhone()."",
-               'D'=> $location->getRoom()."",
-               'E'=> $location->getEmail().""
-           );
+        if(0) { //removed by J.M. request
+            //add common $locations
+            $locationsArr = array();
+            foreach ($locations as $location) {
+                $locationsArr[] = array(
+                    'A' => $location->getName() . "",
+                    'B' => '',
+                    'C' => $location->getPhone() . "",
+                    'D' => $location->getRoom() . "",
+                    'E' => $location->getEmail() . ""
+                );
+            }
+            $newSections["COMMON LOCATIONS"] = $locationsArr;
+
+
+            $newSections["  "] = array(
+                array(
+                    'A' => ' *Dial access code 6-6700, 5 digit ID #, call-back extension (must begin with 6-XXXX), pound (#).',
+                    'B' => '',
+                    'C' => '',
+                    'D' => '',
+                    'E' => ''
+                ),
+            );
         }
-        $newSections["COMMON LOCATIONS"] = $locationsArr;
-
-
-        $newSections["  "] = array(
-            array(
-                'A' => ' *Dial access code 6-6700, 5 digit ID #, call-back extension (must begin with 6-XXXX), pound (#).',
-                'B'=>'',
-                'C'=>'',
-                'D'=>'',
-                'E'=>''
-            ),
-        );
         ///////////// EOF Add other section (* comment and common locations) as array //////////////
 
         return $newSections;
