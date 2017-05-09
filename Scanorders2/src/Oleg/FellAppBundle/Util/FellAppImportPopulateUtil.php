@@ -550,7 +550,7 @@ class FellAppImportPopulateUtil {
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
 
         ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', '512M');
 
         $service = $googlesheetmanagement->getGoogleService();
         if( !$service ) {

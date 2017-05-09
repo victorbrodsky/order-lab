@@ -67,10 +67,19 @@ class UserDownloadUtil {
             //break;
         }
 
-//        echo '<br><br>sections:<pre>';
-//        print_r($sections);
-//        echo  '</pre>';
-        //exit();
+        //testing
+        //echo '<br><br>sections:<pre>';
+        //print_r($sections);
+        //echo  '</pre>';
+        foreach ($sections as $sectionName => $sectionUsers) {
+            echo "<br><br>$sectionName:<br>";
+            foreach( $sectionUsers as $user ) {
+                echo "user=".$user."<br>";
+            }
+            //print_r($sectionUsers);
+            //echo  '</pre>';
+        }
+        exit();
 
         //////////////// reorganize sections ////////////////
 
