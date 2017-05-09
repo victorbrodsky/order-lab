@@ -1484,6 +1484,7 @@ class User extends BaseUser {
                         echo "2 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                         if( $status == null || $appTitles->getStatus() == $status ) {
                             echo "3 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
+                            echo "priority: ".$priority."" ."===". $appTitles->getPriority()."<br>";
                             if( $priority === null || $priority."" === $appTitles->getPriority()."" ) {
                                 echo "4 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                                 $institutions->add($appTitles->getInstitution());
@@ -1524,8 +1525,10 @@ class User extends BaseUser {
         $instArr = array();
 
         $institutions = $this->getInstitutions(null,null,$priority);
+        echo "1 inst count=".count($institutions)."<br>";
         if( count($institutions) == 0 ) {
             $institutions = $this->getInstitutions();
+            echo "2 inst count=".count($institutions)."<br>";
         }
 
         foreach( $institutions as $institution ) {

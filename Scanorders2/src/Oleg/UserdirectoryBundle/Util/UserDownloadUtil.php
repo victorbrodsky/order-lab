@@ -50,7 +50,8 @@ class UserDownloadUtil {
 
     public function getSections( $users, $administrativeUsers, $locations ) {
         $sections = array();
-        $priority = 0; //"Primary"
+        //$priority = 0; //"Primary"
+        $priority = null;
         foreach( $users as $user ) {
             echo "<br>user=".$user.":<br>";
             $instResArr = $user->getDeduplicatedInstitutions($priority);
