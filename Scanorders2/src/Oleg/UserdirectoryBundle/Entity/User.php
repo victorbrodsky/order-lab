@@ -1468,7 +1468,7 @@ class User extends BaseUser {
                 if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
                     if( !$institutions->contains($adminTitles->getInstitution()) ) {
                         if( $status == null || $adminTitles->getStatus() == $status ) {
-                            if( $priority === NULL || $priority."" === $adminTitles->getPriority()."" ) {
+                            if( $priority === null || $priority."" === $adminTitles->getPriority()."" ) {
                                 $institutions->add($adminTitles->getInstitution());
                             }
                         }
@@ -1524,7 +1524,7 @@ class User extends BaseUser {
 
         foreach( $institutions as $institution ) {
             $instName = $institution->getName()."";
-            //echo "instName=".$instName."<br>";
+            echo "instName=".$instName."<br>";
 
             //default uniqueName = "WCMC"
             $uniqueName = $institution->getRootName($institution)."";

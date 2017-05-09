@@ -3863,15 +3863,22 @@ class UserController extends Controller
         //$em = $this->getDoctrine()->getManager();
 
         //testing
-//        $em = $this->getDoctrine()->getManager();
-//        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find(250);//"David S. Rickman"
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find(158);//"Melissa"
+        echo "<br>user=".$user.":<br>";
+        $instResArr = $user->getDeduplicatedInstitutions(0);
+        foreach( $instResArr as $instRes ) {
+            $instName = $instRes[0]['instName'];
+            $instName = strtoupper($instName);
+            echo "add instName=".$instName."<br>";
+        }
 //        if( $user ) {
 //            $lastname = $user->getSingleLastName();
 //            echo "lastname=[$lastname]<br>";
 //            $firstname = $user->getSingleFirstName();
 //            echo "firstname=[$firstname]<br>";
 //        }
-//        exit('testing');
+        exit('testing');
 
         //$fileName = WCM-Pathology-Phone-List-MM-DD-YYYY-HH-MM.xlsx
         $currentDate = date('m-d-Y-H-i');
