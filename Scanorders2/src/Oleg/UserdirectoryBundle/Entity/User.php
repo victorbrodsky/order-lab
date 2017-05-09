@@ -1479,10 +1479,13 @@ class User extends BaseUser {
         if( $type == null || $type == "AppointmentTitle" ) {
             foreach( $this->getAppointmentTitles() as $appTitles ) {
                 if( $appTitles->getInstitution() && $appTitles->getInstitution()->getId() && $appTitles->getInstitution()->getName() != "" )
-                    echo "AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
+                    echo "1 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                     if( !$institutions->contains($appTitles->getInstitution()) ) {
+                        echo "2 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                         if( $status == null || $appTitles->getStatus() == $status ) {
+                            echo "3 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                             if( $priority === null || $priority."" === $appTitles->getPriority()."" ) {
+                                echo "4 AppointmentTitle inst=".$appTitles->getInstitution()."<br>";
                                 $institutions->add($appTitles->getInstitution());
                             }
                         }
