@@ -53,7 +53,7 @@ class UserDownloadUtil {
         //$priority = 0; //"Primary"
         $priority = null;
         foreach( $users as $user ) {
-            echo "<br>user=".$user.":<br>";
+            //echo "<br>user=".$user.":<br>";
             $instResArr = $user->getDeduplicatedInstitutions($priority);
 
             foreach( $instResArr as $instRes ) {
@@ -62,7 +62,7 @@ class UserDownloadUtil {
                 $instName = $instRes[0]['instName'];
                 //Set all uppercase
                 $instName = strtoupper($instName);
-                echo "add instName=".$instName."<br>";
+                //echo "add instName=".$instName."<br>";
                 //$sections[$instName][] = $user."";
                 $sections[$instName][] = $user;
             }
@@ -73,15 +73,13 @@ class UserDownloadUtil {
         //echo '<br><br>sections:<pre>';
         //print_r($sections);
         //echo  '</pre>';
-        foreach ($sections as $sectionName => $sectionUsers) {
-            echo "<br><br>$sectionName:<br>";
-            foreach( $sectionUsers as $user ) {
-                echo "user=".$user."<br>";
-            }
-            //print_r($sectionUsers);
-            //echo  '</pre>';
-        }
-        exit("testing");
+//        foreach ($sections as $sectionName => $sectionUsers) {
+//            echo "<br><br>$sectionName:<br>";
+//            foreach( $sectionUsers as $user ) {
+//                echo "user=".$user."<br>";
+//            }
+//        }
+//        exit("testing");
 
         //////////////// reorganize sections ////////////////
 
