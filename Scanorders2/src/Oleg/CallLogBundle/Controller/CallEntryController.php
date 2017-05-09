@@ -881,7 +881,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -908,9 +908,6 @@ class CallEntryController extends Controller
         $formtype = 'call-entry';
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
-
-        //add patient
-        //$message->addPatient($patient);
 
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
 
@@ -972,8 +969,8 @@ class CallEntryController extends Controller
                 throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
             }
             $patient = $patients->first();
-            //echo "message id=".$message->getId()."<br>";
-            //echo "patient id=".$patient->getId()."<br>";
+            echo "message id=".$message->getId()."<br>";
+            echo "patient id=".$patient->getId()."<br>";
 
             $patientInfoEncounter = null;
             $newEncounter = null;
@@ -986,7 +983,6 @@ class CallEntryController extends Controller
                     }
                     if( $encounter->getStatus() == 'invalid' ) {
                         //this encounter is served only to find the patient:
-                        //copy all non-empty values from the $patientInfoEncounter to the $newEncounter
                         //it must be removed from the patient
                         $patientInfoEncounter = $encounter;
                     }

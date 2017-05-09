@@ -66,18 +66,24 @@
 
         {#<form id="CallCaseForm" class="form-vertical" role="form">#}
         {#{{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}#}
-        {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_update_entry',{'messageId':entityId})}) }}
+        {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_update_entry',{'messageId':entityId,'cycle':cycle})}) }}
 
         {{ form_errors(form) }}
 
-        {#{{ form_row(form.id) }}#}
+        {% if form.patient|length > 1 %}
+            <div class="alert alert-danger">
+            <p>WARNING: Message must have no more than one Patient! Patients found: {{ form.patient|length }} </p>
+            </div>
+            <br>
+        {% endif %}
 
         {% set encounterPatientInfo = null %}
 
-        {% for patient in form.patient %}
+        {% for patientForm in form.patient %}
 
-            {#patient.id:{{ patient.vars.value.id }}#}
-            {% set patientForm = patient %}
+            {#render hidden patient id#}
+            patient.id:{{ patientForm.vars.value.id }}
+            {{ form_row(patientForm.id) }}
 
             {% for encounter in patientForm.encounter %}
                 {#encounter.vars.value.status={{ encounter.vars.value.status }}; form.vars.value.id={{ form.vars.value.id }}<br>#}

@@ -54,37 +54,39 @@ class CallLogEditController extends CallEntryController
             throw new \Exception( "Message is not found by id ".$messageId );
         }
 
-        if( $message->getMessageStatus() != "Deleted" ) {
-            $message->setMessageStatusPrior($message->getMessageStatus());
-        }
+//        if( $message->getMessageStatus() != "Deleted" ) {
+//            $message->setMessageStatusPrior($message->getMessageStatus());
+//        }
+//
+//        $messageStatus = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Deleted");
+//        if( !$messageStatus ) {
+//            throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
+//        }
+//
+//        $message->setMessageStatus($messageStatus);
+//
+//        $em->flush($message);
+//
+//        //"Entry 123 for PatientFirstName PatientLastName (DOB: MM/DD/YYYY) submitted on
+//        // [submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD successfully deleted
+//        $patientInfoStr = $message->getPatientNameMrnInfo();
+//        if( $patientInfoStr ) {
+//            $patientInfoStr = "for ".$patientInfoStr;
+//        }
+//        $msg = "Entry $messageId $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted";
+////        $this->get('session')->getFlashBag()->add(
+////            'notice',
+////            $msg
+////        );
+//
+//        $eventType = "Call Log Book Entry Deleted";
+//        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
+        $msg = $this->deleteMessage( $message, "delete link" );
 
-        $messageStatus = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Deleted");
-        if( !$messageStatus ) {
-            throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
-        }
-
-        $message->setMessageStatus($messageStatus);
-
-        $em->flush($message);
-
-        //"Entry 123 for PatientFirstName PatientLastName (DOB: MM/DD/YYYY) submitted on
-        // [submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD successfully deleted
-        $patientInfoStr = $message->getPatientNameMrnInfo();
-        if( $patientInfoStr ) {
-            $patientInfoStr = "for ".$patientInfoStr;
-        }
-        $msg = "Entry $messageId $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted";
-//        $this->get('session')->getFlashBag()->add(
-//            'notice',
-//            $msg
-//        );
         $this->get('session')->getFlashBag()->add(
             'pnotify',
             $msg
         );
-
-        $eventType = "Call Log Book Entry Deleted";
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
 
         return $this->redirect($this->generateUrl('calllog_home'));
     }
@@ -132,7 +134,8 @@ class CallLogEditController extends CallEntryController
         if( $patientInfoStr ) {
             $patientInfoStr = "for ".$patientInfoStr;
         }
-        $msg = "Entry $messageId $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully un-deleted and status set to ".$messageStatusPrior;
+        $msg = "Entry $messageId $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message).
+            " successfully un-deleted and status set to ".$messageStatusPrior;
 //        $this->get('session')->getFlashBag()->add(
 //            'notice',
 //            $msg
@@ -148,7 +151,33 @@ class CallLogEditController extends CallEntryController
         return $this->redirect($this->generateUrl('calllog_home'));
     }
 
+    public function deleteMessage( $message, $actionStr ) {
+        $em = $this->getDoctrine()->getManager();
+        $userServiceUtil = $this->get('user_service_utility');
 
+        if( $message->getMessageStatus() != "Deleted" ) {
+            $message->setMessageStatusPrior($message->getMessageStatus());
+        }
+
+        $messageStatus = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Deleted");
+        if( !$messageStatus ) {
+            throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
+        }
+
+        $message->setMessageStatus($messageStatus);
+
+        $em->flush($message);
+
+        //"Entry 123 for PatientFirstName PatientLastName (DOB: MM/DD/YYYY) submitted on
+        // [submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD successfully deleted
+        $patientInfoStr = $message->getPatientNameMrnInfo();
+        if( $patientInfoStr ) {
+            $patientInfoStr = "for ".$patientInfoStr;
+        }
+        $msg = "Message Entry ".$message->getMessageIdStr()." $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted by ".$actionStr;
+
+        return $msg;
+    }
 
 
     /**
@@ -265,11 +294,11 @@ class CallLogEditController extends CallEntryController
 
     /**
      * Save/Update Call Log Entry
-     * @Route("/entry/update/{messageId}", name="calllog_update_entry", options={"expose"=true})
+     * @Route("/entry/update/{messageId}/{cycle}", name="calllog_update_entry", options={"expose"=true})
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
      * @Method("POST")
      */
-    public function updateEntryAction(Request $request, $messageId)
+    public function updateEntryAction(Request $request, $messageId, $cycle)
     {
         if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -285,7 +314,7 @@ class CallLogEditController extends CallEntryController
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -304,8 +333,6 @@ class CallLogEditController extends CallEntryController
             throw new \Exception('Original Message not found by ID ' . $messageId);
         }
 
-//        $mrn = trim($request->get('mrn'));
-//        $mrntype = trim($request->get('mrn-type'));
         $mrn = null;
         $mrntype = null;
 
@@ -386,49 +413,16 @@ class CallLogEditController extends CallEntryController
                 }
                 //exit();
 
-                //TODO: just keep timezone as DB field and show it in the encounter Date
-                //re-set encounter date according to the unmapped timezone
-//                $encounterDateObject = $newEncounter->getDate()->first();
-//                $encounterDate = $encounterDateObject->getField();
-//                echo "date1=".$encounterDate->format('Y-m-d H:i')."<br>";
-//                $encounterDateTimezone = $encounterDateObject->getTimezone();
-//                echo "encounterDateTimezone=$encounterDateTimezone <br>";
-//                $encounterDate = $encounterDate->setTimezone(new \DateTimeZone($encounterDateTimezone));
-//                echo "date2=".$encounterDate->format('Y-m-d H:i')."<br>";
-//                $encounterDateObject->setField($encounterDate);
-//                //exit('1');
-
-                //TODO: Update Patient Info from $newEncounter (?):
-                // The values typed into these fields should be recorded as "valid".
-                // If the user types in the Date of Birth, it should be added to the "Patient" hierarchy level
-                // of the selected patient as a "valid" value and the previous "valid" value should be marked "invalid" on the server side.
-                //Use unmapped encounter's "patientDob" to update patient's DOB
-
                 if( $patientInfoEncounter ) {
-                    //TODO: copy all non-empty values from the $patientInfoEncounter to the $newEncounter ?
-
-                    //If the user types in the Date of Birth, it should be added to
-                    // the "Patient" hierarchy level of the selected patient as a "valid" value
-                    // and the previous "valid" value should be marked "invalid" on the server side.
-                    //Use unmapped encounter's "patientDob" to update patient's DOB
-                    //$patientDob = $form['patientDob']->getData();
-                    //echo "patientDob=$patientDob <br>";
-
                     //$patientInfoEncounter must be removed from the patient
                     $patient->removeEncounter($patientInfoEncounter);
                 }
 
                 //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
                 $calllogUtil->processTrackerLocation($newEncounter);
-                //exit('after location');
 
-                //TODO: process EncounterReferringProvider: set Specialty, Phone and Email for a new userWrapper (getReferringProviders)
+                //process EncounterReferringProvider: set Specialty, Phone and Email for a new userWrapper (getReferringProviders)
                 $calllogUtil->processReferringProviders($newEncounter,$system);
-
-                //testing: process form nodes
-                //$formNodeUtil = $this->get('user_formnode_utility');
-                //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
-                //exit('after formnode');
 
 
                 //clear encounter
@@ -479,54 +473,6 @@ class CallLogEditController extends CallEntryController
                 //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
                 $calllogUtil->setFormVersions($message);
 
-
-                ///////// Issue 51(6): check if patient info is entered but Find Patient is not pressed  ///////
-                //Don't use since it's not possible to restore original entry
-//                if( $patient && !$patient->getId() ) {
-//                    //$patient
-//                    $patientParams = array();
-//                    //oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]
-//                    $data = $request->request->all();
-//                    $mrn1 = $data['oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]'];
-//                    $mrn2 = $request->query->get('oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]');
-//                    echo "mrn1=".$mrn1."; mrn2=".$mrn2."<br>";
-//                    //$mrntype = $data['oleg_calllogformbundle_messagetype[patient][0][mrn][0][keytype]'];
-//                    //echo "mrn:".$mrn."; ".$mrntype."<br>";
-////                    $mrnObject = $patient->getMrn()->first();
-////                    echo "mrn count=".count($patient->getMrn())."<br>";
-////                    if( $mrn ) {
-////                        $mrntype = $mrnObject->getKeytype();
-////                        $mrn = $mrnObject->getField();
-////                        $params['mrntype'] = $mrntype;
-////                        $params['mrn'] = $mrn;
-////                        echo "mrn:".$mrn."; ".$mrntype."<br>";
-////                    }
-////                    $dob = $patient->getDob()->first();
-////                    $params['dob'] = $dob;
-//                    //$patientInfoEncounter
-//                    $lastname = $patientInfoEncounter->getPatlastname()->first();
-//                    $firstname = $patientInfoEncounter->getPatfirstname()->first();
-//                    $params['lastname'] = $lastname;
-//                    $params['firstname'] = $firstname;
-//
-//                    $patientsData = $this->search_Patient($request, false, $patientParams); //submit new entry
-//                    $patients = $patientsData['patients'];
-//                    echo "found patients=".count($patients)."<br>";
-//
-////                    return array(
-////                        //'entity' => $entity,
-////                        'form' => $form->createView(),
-////                        'cycle' => $cycle,
-////                        'title' => $title,
-////                        'formtype' => $formtype,
-////                        'triggerSearch' => 0,
-////                        'mrn' => $mrn,
-////                        'mrntype' => $mrntype
-////                    );
-//                }
-                ///////// EOF Issue 51(6): check if patient info is entered but Find Patient is not pressed ///////
-
-
                 if( $patient->getId() ) {
                     //CASE 1
                     echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
@@ -544,54 +490,13 @@ class CallLogEditController extends CallEntryController
 
                     $patient->addEncounter($newEncounter);
 
-                    //add new DOB (if exists) to the Patient
-                    //Use unmapped encounter's "patientDob" to update patient's DOB
-//                    if( $newEncounter->getPatientDob() ) {
-//                        //invalidate all other patient's DOB
-//                        $validDOBs = $patient->obtainStatusFieldArray("dob","valid");
-//                        foreach( $validDOBs as $validDOB) {
-//                            $validDOB->setStatus("invalid");
-//                        }
-//
-//                        $patientDob = $newEncounter->getPatientDob();
-//                        //echo "encounter patientDob=" . $patientDob->format('Y-m-d') . "<br>";
-//                        $newPatientDob = new PatientDob($status,$user,$system);
-//                        $newPatientDob->setField($patientDob);
-//                        $patient->addDob($newPatientDob);
-//                        //echo "patient patientDob=" . $newPatientDob . "<br>";
-//                    }
                     $calllogUtil->updatePatientInfoFromEncounter($patient,$newEncounter,$user,$system );
 
-                    if(0) { //testing
-                        echo "encounter count=" . count($patient->getEncounter()) . "<br>";
-                        foreach ($patient->getEncounter() as $encounter) {
-                            echo "<br>encounter ID=" . $encounter->getId() . "<br>";
-                            echo "encounter Date=" . $encounter->getDate()->first() . "<br>";
-                            echo "encounter Last Name=" . $encounter->getPatlastname()->first() . "<br>";
-                            echo "encounter First Name=" . $encounter->getPatfirstname()->first() . "<br>";
-                            echo "encounter Middle Name=" . $encounter->getPatmiddlename()->first() . "<br>";
-                            echo "encounter Suffix=" . $encounter->getPatsuffix()->first() . "<br>";
-                            echo "encounter Gender=" . $encounter->getPatsex()->first() . "<br>";
-
-                            if( $encounter->getTracker() ) {
-                                echo "encounter Location=" . $encounter->getTracker()->getSpots()->first()->getCurrentLocation()->getName() . "<br>";
-                            }
-                        }
-                    }
-
-                    //echo "patient count=".count($message->getPatient())."<br>";
-                    //echo "patient=".$message->getPatient()->first()->obtainPatientInfoTitle()."<br>";
-                    //echo $name."<br>";
-                    //exit('1');
-
-                    //exit('Exit Case 1');
-                    //$em->persist($patient);
                     if( !$testing ) {
                         $em->persist($newEncounter);
                         $em->persist($message);
-                        $em->flush(); //testing
+                        $em->flush();
                     }
-
 
                     //add patient to the complex patient list specified by patientListTitle if the option addPatientToList is checked.
                     //do it after message is in DB and has ID
@@ -631,10 +536,32 @@ class CallLogEditController extends CallEntryController
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 
+                /////////////////////// Set edited message info /////////////////////
+                //set OID from original message
+                $message->setOid($originalMessage->getOid());
+                //increment version
+                $incrementedVersion = intval($originalMessage->getVersion()) + 1;
+                echo "incrementedVersion=".$incrementedVersion."<br>";
+                $message->setVersion($incrementedVersion);
+                if( !$testing ) {
+                    $em->persist($message);
+                    $em->flush($message);
+                }
+                //delete original message
+                $this->deleteMessage( $originalMessage, $cycle." action" );
+                /////////////////////// EOF Set edited message info /////////////////////
 
                 //log search action
                 if( $msg ) {
-                    $eventType = "New Call Log Book Entry Submitted";
+
+                    if( $cycle == "edit" ) {
+                        $msg = "Updated Message with ID# ".$originalMessage->getMessageIdStr() . " (version " . $incrementedVersion ."): ". $msg;
+                        $eventType = "Call Log Book Entry Edited";
+                    }
+                    if( $cycle == "amend" ) {
+                        $msg = "Amended Message with ID# ".$originalMessage->getMessageIdStr() . " (version " . $incrementedVersion ."): ". $msg;
+                        $eventType = "Call Log Book Entry Amended";
+                    }
 
                     $event = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
                     //exit('event='.$event);
@@ -654,7 +581,7 @@ class CallLogEditController extends CallEntryController
             }//if $newEncounter
 
             if( $testing ) {
-                echo "<br><br>message id=" . $message->getId() . "<br>";
+                echo "<br><br>message ID=" . $message->getId() . "; OID=". $message->getOid() . "<br>";
                 foreach ($message->getPatient() as $patient) {
                     echo "patient id=" . $patient->getId() . "<br>";
                 }

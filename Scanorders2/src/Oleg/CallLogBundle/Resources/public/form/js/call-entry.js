@@ -727,7 +727,9 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
         disableAllFields(false,holderId);
 
         //un-hide/show a button called "Add New Patient Registration" because no unique patient has been found
-        holder.find('#addnew_patient_button').show(_transTime);
+        if( patLen > 1 ) {
+            holder.find('#addnew_patient_button').show(_transTime);
+        }
 
         createPatientsTableCalllog(patients,holderId);
         processed = true;
@@ -1174,6 +1176,7 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     if( patient && patient.id || showinfo ) {
         //console.log('show encounter info');
         holder.find('#encounter-info').show(_transTime);  //collapse("show");
+        holder.find('#addnew_patient_button').hide(_transTime);
     } else {
         //console.log('hide  encounter info');
         holder.find('#encounter-info').hide(_transTime);  //collapse("hide");

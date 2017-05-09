@@ -1659,6 +1659,14 @@ class Message {
         return $fullName;
     }
 
+    public function getMessageIdStr(){
+        if( $this->getId() == $this->getOid() ) {
+            return $this->getOid();
+        } else {
+            return $this->getOid()." (DB ID ".$this->getId().")";
+        }
+    }
+
     public function getUrl($generator,$urlname,$oid) {
         $url = null;
         if( $generator && $oid && $urlname ) {
