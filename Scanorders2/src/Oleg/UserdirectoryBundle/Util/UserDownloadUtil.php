@@ -121,7 +121,7 @@ class UserDownloadUtil {
         //exit();
 
         ///////////// Add other section (* comment and common locations) as array //////////////
-        if(0) { //removed by J.M. request
+        if( $locations && count($locations)>0 ) { //removed by J.M. request
             //add common $locations
             $locationsArr = array();
             foreach ($locations as $location) {
@@ -147,6 +147,26 @@ class UserDownloadUtil {
             );
         }
         ///////////// EOF Add other section (* comment and common locations) as array //////////////
+
+
+
+        /////////// ADD section $housestaffResidents ///////////////
+//        foreach( $housestaffResidents as $housestaffResident ) {
+//            //echo "<br>user=".$user.":<br>";
+//
+//            foreach( $instResArr as $instRes ) {
+//                //$instName = $instRes[0]['instNameWithRoot'];
+//                //Do not show (WCM) or (NYP) at all after every section title.
+//                $instName = $instRes[0]['instName'];
+//                //Set all uppercase
+//                $instName = strtoupper($instName);
+//                //echo "add instName=".$instName."<br>";
+//                //$sections[$instName][] = $user."";
+//                $sections[$instName][] = $user;
+//            }
+//            $newSections["COMMON LOCATIONS"] = $locationsArr;
+//        }
+        /////////// EOF ADD section $housestaffResidents ///////////////
 
         return $newSections;
     }

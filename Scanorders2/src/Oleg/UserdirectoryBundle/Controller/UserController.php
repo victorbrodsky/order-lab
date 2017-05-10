@@ -3934,9 +3934,10 @@ class UserController extends Controller
         ////////////// EOF Administrative /////////////
 
         ////////////// Locations /////////////
-        $userUtil = new UserUtil();
-        $filter = "WCM Pathology Department Common Location For Phone Directory";
-        $locations = $userUtil->indexLocation($filter, $request, $this->container, $this->getDoctrine());
+        //$userUtil = new UserUtil();
+        //$filter = "WCM Pathology Department Common Location For Phone Directory";
+        //$locations = $userUtil->indexLocation($filter, $request, $this->container, $this->getDoctrine());
+        $locations = null;
         ////////////// EOF Locations /////////////
 
 
@@ -3966,8 +3967,33 @@ class UserController extends Controller
         ///////////////////// EOF Faculty List /////////////////////
 
 
+
+//        ///////////////////// Housestaff - Residents //////////////////////////
+//        $filterHousestaffResidents = "WCM or NYP Pathology Residents";
+//        $housestaffResidentsParams = array('filter'=>$filterHousestaffResidents,'time'=>'current_only','limitFlag'=>null);
+//        $resHousestaffResidents = $this->indexUser($housestaffResidentsParams);
+//        $housestaffResidents = $resHousestaffResidents['entities'];
+//        ///////////////////// EOF Housestaff //////////////////////////
+
+
         ///////////////////// Department List /////////////////////
         $departmentSections = $userDownloadUtil->getSections($users,$administrativeUsers,$locations);
+
+        ///////////////////// Housestaff - Residents //////////////////////////
+        $filterHousestaffResidents = "WCM or NYP Pathology Residents";
+        $housestaffResidentsParams = array('filter'=>$filterHousestaffResidents,'time'=>'current_only','limitFlag'=>null);
+        $resHousestaffResidents = $this->indexUser($housestaffResidentsParams);
+        $housestaffResidents = $resHousestaffResidents['entities'];
+        $departmentSections["HOUSESTAFF - RESIDENTS"] = $housestaffResidents;
+        ///////////////////// EOF Housestaff //////////////////////////
+
+        ///////////////////// Housestaff - Fellows //////////////////////////
+        $filterHousestaffFellows = "WCM or NYP Pathology Fellows";
+        $housestaffFellowsParams = array('filter'=>$filterHousestaffFellows,'time'=>'current_only','limitFlag'=>null);
+        $resHousestaffFellows = $this->indexUser($housestaffFellowsParams);
+        $housestaffFellows = $resHousestaffFellows['entities'];
+        $departmentSections["HOUSESTAFF - FELLOWS"] = $housestaffFellows;
+        ///////////////////// EOF Housestaff //////////////////////////
 
 //        echo '<br><br>sections:<pre>';
 //        print_r($sections);
