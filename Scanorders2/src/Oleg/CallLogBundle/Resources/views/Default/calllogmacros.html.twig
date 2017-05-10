@@ -644,31 +644,32 @@
 
             {% if message.messageStatus and message.messageStatus.name == "Draft" %}
                 <li><a
-                    data-confirm="Are you sure you would like to edit entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
-                    href="{{ path('calllog_callentry_edit', {'messageId': message.id}) }}"
+                    data-confirm="Are you sure you would like to edit entry {{message.oid}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('calllog_callentry_edit', {'messageId': message.id, 'messageOid': message.oid}) }}"
                     >Edit Entry</a></li>
             {% else %}
                 <li><a
-                    data-confirm="Are you sure you would like to amend entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
-                    href="{{ path('calllog_callentry_amend', {'messageId': message.id}) }}"
+                    data-confirm="Are you sure you would like to amend entry {{message.oid}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('calllog_callentry_amend', {'messageId': message.id, 'messageOid': message.oid}) }}"
                     >Amend Entry</a></li>
             {% endif %}
 
             {% if message.messageStatus and message.messageStatus.name != "Deleted" %}
                 {#Are you sure you would like to delete entry 123 for patient FirstName LastName (MRN Type: MRN)?#}
                 <li><a
-                    data-confirm="Are you sure you would like to delete entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
-                    href="{{ path('calllog_delete', {'messageId': message.id}) }}"
+                    data-confirm="Are you sure you would like to delete entry {{message.oid}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('calllog_delete', {'messageId': message.id, 'messageOid': message.oid}) }}"
                     >Delete Entry</a></li>
             {% endif %}
             {% if message.messageStatus and message.messageStatus.name == "Deleted" %}
                 {#Are you sure you would like to undelete entry 123 for patient FirstName LastName (MRN Type: MRN)?#}
                 <li><a
-                    data-confirm="Are you sure you would like to undelete entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
-                    href="{{ path('calllog_undelete', {'messageId': message.id}) }}">Undelete Entry</a></li>
+                    data-confirm="Are you sure you would like to undelete entry {{message.oid}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('calllog_undelete', {'messageId': message.id, 'messageOid': message.oid}) }}">Undelete Entry</a></li>
             {% endif %}
 
             {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                {#eventlog DB id#}
                 <li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>
             {% endif %}
 
@@ -846,7 +847,7 @@
         <tr>
 
             {% if headFlag == "sortable" %}
-                <th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>
+                <th>{{ knp_pagination_sortable(messages, 'ID', 'message.oid') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Patient Name', 'lastname.field') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'MRN', 'mrn.field') }}</th>
@@ -889,8 +890,8 @@
             <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
 
                 <td>
-                    {#{{  message.id }}#}
-                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
+                    {#{{  message.oid }}#}
+                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.oid }) }}" target="_blank">{{ message.oid ~"(v."~message.version~")" }}</a>
                 </td>
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
@@ -967,7 +968,7 @@
             </tr>
             <tr class="table-no-border {{ trclassname }}">
                 <td style="display: none">
-                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
+                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.oid }) }}" target="_blank">{{ message.oid }}</a>
                 </td>
 
                 {{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}
