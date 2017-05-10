@@ -30,11 +30,11 @@ class CallLogEditController extends CallEntryController
 {
 
     /**
-     * @Route("/delete/{messageId}", name="calllog_delete")
+     * @Route("/delete/{messageOid}/{messageVersion}", name="calllog_delete")
      * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
      * @Method("GET")
      */
-    public function deleteMessageAction(Request $request, $messageId)
+    public function deleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
         if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -49,9 +49,9 @@ class CallLogEditController extends CallEntryController
         //$calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
-            throw new \Exception( "Message is not found by id ".$messageId );
+            throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
 
         $msg = $this->deleteMessage( $message, "delete link", $request );
@@ -66,11 +66,11 @@ class CallLogEditController extends CallEntryController
 
 
     /**
-     * @Route("/un-delete/{messageId}", name="calllog_undelete")
+     * @Route("/un-delete/{messageOid}/{messageVersion}", name="calllog_undelete")
      * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
      * @Method("GET")
      */
-    public function unDeleteMessageAction(Request $request, $messageId)
+    public function unDeleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
         if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -81,9 +81,9 @@ class CallLogEditController extends CallEntryController
         $user = $this->get('security.context')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
-            throw new \Exception( "Message is not found by id ".$messageId );
+            throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
 
         $messageStatusPrior = $message->getMessageStatusPrior();
@@ -161,12 +161,12 @@ class CallLogEditController extends CallEntryController
 
     /**
      * Get Call Log Entry Message Edit page
-     * @Route("/entry/edit/{messageId}", name="calllog_callentry_edit")
-     * @Route("/entry/amend/{messageId}", name="calllog_callentry_amend")
+     * @Route("/entry/edit/{messageOid}/{messageVersion}", name="calllog_callentry_edit")
+     * @Route("/entry/amend/{messageOid}/{messageVersion}", name="calllog_callentry_amend")
      * @Method("GET")
      * @Template("OlegCallLogBundle:CallLog:call-entry-edit.html.twig")
      */
-    public function getCallLogEntryAction(Request $request, $messageId)
+    public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion)
     {
 
         if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
@@ -186,9 +186,9 @@ class CallLogEditController extends CallEntryController
         //$messageId = 142; //154; //testing
 
         $em = $this->getDoctrine()->getManager();
-        $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
-        if (!$message) {
-            throw new \Exception('Message has not found by ID ' . $messageId);
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        if( !$message ) {
+            throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
 
         $route = $request->get('_route');
@@ -587,7 +587,7 @@ class CallLogEditController extends CallEntryController
 
             //return $this->redirect( $this->generateUrl('calllog_callentry') );
             if( $message->getId() ) {
-                return $this->redirect($this->generateUrl('calllog_callentry_view', array('messageId' => $message->getId())));
+                return $this->redirect($this->generateUrl('calllog_callentry_view', array('messageOid'=>$message->getOid(),'messageVersion'=>$message->getVersion())));
             } else {
                 return $this->redirect($this->generateUrl('calllog_home'));
             }

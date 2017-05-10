@@ -62,13 +62,13 @@
     <div class="well">
         {% if message.messageStatus and message.messageStatus.name == "Draft" %}
             <a  class="btn btn-warning"
-                data-confirm="Are you sure you would like to edit entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
-                href="{{ path('calllog_callentry_edit', {'messageId': message.id}) }}"
+                data-confirm="Are you sure you would like to edit entry {{message.getMessageOidVersion}} for patient {{message.getPatientNameMrnInfo}}?"
+                href="{{ path('calllog_callentry_edit', {'messageOid': message.oid, 'messageVersion':message.version}) }}"
                 >Edit Entry</a>
         {% else %}
             <a  class="btn btn-warning"
-                data-confirm="Are you sure you would like to amend entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
-                href="{{ path('calllog_callentry_amend', {'messageId': message.id}) }}"
+                data-confirm="Are you sure you would like to amend entry {{message.getMessageOidVersion}} for patient {{message.getPatientNameMrnInfo}}?"
+                href="{{ path('calllog_callentry_amend', {'messageOid': message.oid, 'messageVersion':message.version}) }}"
                 >Amend Entry</a>
         {% endif %}
 
@@ -101,7 +101,6 @@
                 {#encounter.vars.value.status={{ encounter.vars.value.status }}; form.vars.value.id={{ form.vars.value.id }}<br>#}
                 {% set encounterHasMessage = false %}
                 {% for encounterMessage in encounter.vars.value.message %}
-                    {#encounterMessage.id={{ encounterMessage.id }}<br>#}
                     {% if encounterMessage.id == form.vars.value.id %}
                         {% set encounterHasMessage = true %}
                     {% endif %}

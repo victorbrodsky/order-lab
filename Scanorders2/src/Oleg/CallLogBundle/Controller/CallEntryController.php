@@ -1311,7 +1311,7 @@ class CallEntryController extends Controller
 
             //return $this->redirect( $this->generateUrl('calllog_callentry') );
             if( $message->getId() ) {
-                return $this->redirect($this->generateUrl('calllog_callentry_view', array('messageId' => $message->getId())));
+                return $this->redirect($this->generateUrl('calllog_callentry_view', array('messageOid'=>$message->getOid(),'messageVersion'=>$message->getVersion())));
             } else {
                 return $this->redirect($this->generateUrl('calllog_home'));
             }
@@ -2456,11 +2456,12 @@ class CallEntryController extends Controller
 
     /**
      * Get Call Log Entry Message
-     * @Route("/entry/view/{messageId}", name="calllog_callentry_view")
+     * TODO: make messageVersion can be null and find by messageOid only by the most recent version
+     * @Route("/entry/view/{messageOid}/{messageVersion}", name="calllog_callentry_view")
      * @Method("GET")
      * @Template("OlegCallLogBundle:CallLog:call-entry-view.html.twig")
      */
-    public function getCallLogEntryAction(Request $request, $messageId)
+    public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
         if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
@@ -2481,9 +2482,9 @@ class CallEntryController extends Controller
         //$messageId = 142; //154; //testing
 
         $em = $this->getDoctrine()->getManager();
-        $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
-        if (!$message) {
-            throw new \Exception('Message has not found by ID ' . $messageId);
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        if( !$message ) {
+            throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
 
         //testing dob: dob before 1901 causes php error
