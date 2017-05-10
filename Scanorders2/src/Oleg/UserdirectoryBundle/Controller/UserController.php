@@ -3967,24 +3967,11 @@ class UserController extends Controller
         ///////////////////// EOF Faculty List /////////////////////
 
 
-
-//        ///////////////////// Housestaff - Residents //////////////////////////
-//        $filterHousestaffResidents = "WCM or NYP Pathology Residents";
-//        $housestaffResidentsParams = array('filter'=>$filterHousestaffResidents,'time'=>'current_only','limitFlag'=>null);
-//        $resHousestaffResidents = $this->indexUser($housestaffResidentsParams);
-//        $housestaffResidents = $resHousestaffResidents['entities'];
-//        ///////////////////// EOF Housestaff //////////////////////////
-
-
-        ///////////////////// Department List /////////////////////
-        $departmentSections = $userDownloadUtil->getSections($users,$administrativeUsers,$locations);
-
         ///////////////////// Housestaff - Residents //////////////////////////
         $filterHousestaffResidents = "WCM or NYP Pathology Residents";
         $housestaffResidentsParams = array('filter'=>$filterHousestaffResidents,'time'=>'current_only','limitFlag'=>null);
         $resHousestaffResidents = $this->indexUser($housestaffResidentsParams);
         $housestaffResidents = $resHousestaffResidents['entities'];
-        $departmentSections["HOUSESTAFF - RESIDENTS"] = $housestaffResidents;
         ///////////////////// EOF Housestaff //////////////////////////
 
         ///////////////////// Housestaff - Fellows //////////////////////////
@@ -3992,8 +3979,14 @@ class UserController extends Controller
         $housestaffFellowsParams = array('filter'=>$filterHousestaffFellows,'time'=>'current_only','limitFlag'=>null);
         $resHousestaffFellows = $this->indexUser($housestaffFellowsParams);
         $housestaffFellows = $resHousestaffFellows['entities'];
-        $departmentSections["HOUSESTAFF - FELLOWS"] = $housestaffFellows;
         ///////////////////// EOF Housestaff //////////////////////////
+
+
+        ///////////////////// Department List /////////////////////
+        $departmentSections = $userDownloadUtil->getSections($users,$administrativeUsers,$locations);
+
+        $departmentSections["HOUSESTAFF - RESIDENTS"] = $housestaffResidents;
+        $departmentSections["HOUSESTAFF - FELLOWS"] = $housestaffFellows;
 
 //        echo '<br><br>sections:<pre>';
 //        print_r($sections);
