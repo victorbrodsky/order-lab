@@ -3985,8 +3985,12 @@ class UserController extends Controller
         ///////////////////// Department List /////////////////////
         $departmentSections = $userDownloadUtil->getSections($users,$administrativeUsers,$locations);
 
-        $departmentSections["HOUSESTAFF - RESIDENTS"] = $housestaffResidents;
-        $departmentSections["HOUSESTAFF - FELLOWS"] = $housestaffFellows;
+        if( count($housestaffResidents) > 0 ) {
+            $departmentSections["HOUSESTAFF - RESIDENTS"] = $housestaffResidents;
+        }
+        if( count($housestaffFellows) > 0 ) {
+            $departmentSections["HOUSESTAFF - FELLOWS"] = $housestaffFellows;
+        }
 
 //        echo '<br><br>sections:<pre>';
 //        print_r($sections);
