@@ -2556,6 +2556,13 @@ class CallEntryController extends Controller
             $formnodeTopHolderId = $messageCategory->getId();
         }
 
+        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        if( $eventObjectType ) {
+            $eventObjectTypeId = $eventObjectType->getId();
+        } else {
+            $eventObjectTypeId = null;
+        }
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -2573,7 +2580,8 @@ class CallEntryController extends Controller
             'entityId' => $message->getId(),
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'titleheadroom' => $title,
-            'formnodeTopHolderId' => $formnodeTopHolderId
+            'formnodeTopHolderId' => $formnodeTopHolderId,
+            'eventObjectTypeId' => $eventObjectTypeId
         );
     }
 

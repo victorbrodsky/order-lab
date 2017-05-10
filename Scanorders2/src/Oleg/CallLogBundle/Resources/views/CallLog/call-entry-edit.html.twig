@@ -82,7 +82,7 @@
         {% for patientForm in form.patient %}
 
             {#render hidden patient id#}
-            patient.id:{{ patientForm.vars.value.id }}
+            {#patient.id:{{ patientForm.vars.value.id }}#}
             {{ form_row(patientForm.id) }}
 
             {% for encounter in patientForm.encounter %}

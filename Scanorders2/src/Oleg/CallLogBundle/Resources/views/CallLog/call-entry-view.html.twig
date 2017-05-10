@@ -59,6 +59,25 @@
     <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
+    <div class="well">
+        {% if message.messageStatus and message.messageStatus.name == "Draft" %}
+            <a  class="btn btn-warning"
+                data-confirm="Are you sure you would like to edit entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
+                href="{{ path('calllog_callentry_edit', {'messageId': message.id}) }}"
+                >Edit Entry</a>
+        {% else %}
+            <a  class="btn btn-warning"
+                data-confirm="Are you sure you would like to amend entry {{message.id}} for patient {{message.getPatientNameMrnInfo}}?"
+                href="{{ path('calllog_callentry_amend', {'messageId': message.id}) }}"
+                >Amend Entry</a>
+        {% endif %}
+
+        {% if eventObjectTypeId is defined and eventObjectTypeId %}
+            <a  class="btn btn-info"
+                href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}"
+               target="_blank">View Event Log</a>
+        {% endif %}
+    </div>
 
     <div id="calllog-patient-list">
 

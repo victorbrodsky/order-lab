@@ -336,4 +336,33 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         return $message;
     }
 
+    //if version is null => find by latest version
+    public function findByOidAndVersion( $oid, $version=null ) {
+        $message = null;
+        $parameters = array();
+
+        $repository = $this->_em->getRepository('OlegOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder("message");
+
+        $dql->where("message.oid = :oid");
+        $parameters['oid'] = $oid;
+
+        if( $version ) {
+            $dql->andWhere("message.version = :version");
+            $parameters['version'] = $version;
+        }
+
+        $dql->orderBy('version','ASC');
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($parameters);
+        $messages = $query->getResult();
+
+        if( count($messages) > 0 ) {
+            $message = $messages[0];
+        }
+
+        return $message;
+    }
+
 }

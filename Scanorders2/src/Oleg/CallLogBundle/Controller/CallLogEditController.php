@@ -54,34 +54,7 @@ class CallLogEditController extends CallEntryController
             throw new \Exception( "Message is not found by id ".$messageId );
         }
 
-//        if( $message->getMessageStatus() != "Deleted" ) {
-//            $message->setMessageStatusPrior($message->getMessageStatus());
-//        }
-//
-//        $messageStatus = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Deleted");
-//        if( !$messageStatus ) {
-//            throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
-//        }
-//
-//        $message->setMessageStatus($messageStatus);
-//
-//        $em->flush($message);
-//
-//        //"Entry 123 for PatientFirstName PatientLastName (DOB: MM/DD/YYYY) submitted on
-//        // [submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD successfully deleted
-//        $patientInfoStr = $message->getPatientNameMrnInfo();
-//        if( $patientInfoStr ) {
-//            $patientInfoStr = "for ".$patientInfoStr;
-//        }
-//        $msg = "Entry $messageId $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted";
-////        $this->get('session')->getFlashBag()->add(
-////            'notice',
-////            $msg
-////        );
-//
-//        $eventType = "Call Log Book Entry Deleted";
-//        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
-        $msg = $this->deleteMessage( $message, "delete link" );
+        $msg = $this->deleteMessage( $message, "delete link", $request );
 
         $this->get('session')->getFlashBag()->add(
             'pnotify',
@@ -151,9 +124,11 @@ class CallLogEditController extends CallEntryController
         return $this->redirect($this->generateUrl('calllog_home'));
     }
 
-    public function deleteMessage( $message, $actionStr ) {
+    public function deleteMessage( $message, $actionStr, $request ) {
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
+        $userSecUtil = $this->get('user_security_utility');
+        $user = $this->get('security.context')->getToken()->getUser();
 
         if( $message->getMessageStatus() != "Deleted" ) {
             $message->setMessageStatusPrior($message->getMessageStatus());
@@ -175,6 +150,10 @@ class CallLogEditController extends CallEntryController
             $patientInfoStr = "for ".$patientInfoStr;
         }
         $msg = "Message Entry ".$message->getMessageIdStr()." $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted by ".$actionStr;
+
+        //Event Log
+        $eventType = "Call Log Book Entry Deleted";
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
 
         return $msg;
     }
@@ -340,12 +319,12 @@ class CallLogEditController extends CallEntryController
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
-        $cycle = 'new';
+        $cycleForm = 'new';
         $formtype = 'call-entry';
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycleForm);
 
         $form->handleRequest($request);
 
@@ -548,10 +527,12 @@ class CallLogEditController extends CallEntryController
                     $em->flush($message);
                 }
                 //delete original message
-                $this->deleteMessage( $originalMessage, $cycle." action" );
+                $this->deleteMessage( $originalMessage, $cycle." action", $request );
                 /////////////////////// EOF Set edited message info /////////////////////
 
                 //log search action
+                $logger = $this->container->get('logger');
+                $logger->notice("before check msg=".$msg);
                 if( $msg ) {
 
                     if( $cycle == "edit" ) {
@@ -570,12 +551,14 @@ class CallLogEditController extends CallEntryController
 
                     if( !$testing ) {
                         $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $message, $request, $eventType);
+                        $logger->notice("createUserEditEvent=".$msg);
                     }
                 }
 
                 if( !$testing ) {
                     //send an email to the Preferred Email of the "Attending:"
                     $calllogUtil->sendConfirmationEmail($message, $patient, $newEncounter);
+                    $logger->notice("sendConfirmationEmail");
                 }
 
             }//if $newEncounter
