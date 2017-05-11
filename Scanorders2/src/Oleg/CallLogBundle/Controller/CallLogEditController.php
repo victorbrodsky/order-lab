@@ -19,6 +19,7 @@ namespace Oleg\CallLogBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
 use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
+use Oleg\UserdirectoryBundle\Entity\ModifierInfo;
 use Oleg\UserdirectoryBundle\Entity\Spot;
 use Oleg\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -205,7 +206,7 @@ class CallLogEditController extends CallEntryController
             $cycle = "amend";
         }
 
-        $messageInfo = "Entry ID ".$message->getId()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
+        $messageInfo = "Entry ID ".$message->getMessageOidVersion()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
         //echo "messageInfo=".$messageInfo."<br>";
         //exit('1');
         if (count($message->getPatient()) > 0 ) {
@@ -382,21 +383,26 @@ class CallLogEditController extends CallEntryController
 
         if( $form->isSubmitted() ) {
 
+            echo "message id=".$message->getId()."<br>";
+
             $msg = "No Case found. No action has been performed.";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
 
+            $patient = null;
+            $encounterHolder = null;
             $patients = $message->getPatient();
-            if( count($patients) != 1 ) {
-                throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
+            if( count($patients) > 0 ) {
+                $patient = $patients->first();
+                $encounterHolder = $patient;
+                echo "patient id=".$patient->getId()."<br>";
+            } else {
+                $encounterHolder = $message;
             }
-            $patient = $patients->first();
-            echo "message id=".$message->getId()."<br>";
-            echo "patient id=".$patient->getId()."<br>";
 
-            $patientInfoEncounter = null;
+            $dummyEncounter = null;
             $newEncounter = null;
             //get a new encounter without id
-            foreach( $patient->getEncounter() as $encounter ) {
+            foreach( $encounterHolder->getEncounter() as $encounter ) {
                 echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
                 if( !$encounter->getId() ) {
                     if( $encounter->getStatus() == 'valid' ) {
@@ -404,9 +410,9 @@ class CallLogEditController extends CallEntryController
                     }
                     if( $encounter->getStatus() == 'invalid' ) {
                         //this encounter is served only to find the patient:
-                        //copy all non-empty values from the $patientInfoEncounter to the $newEncounter
+                        //copy all non-empty values from the $dummyEncounter to the $newEncounter
                         //it must be removed from the patient
-                        $patientInfoEncounter = $encounter;
+                        $dummyEncounter = $encounter;
                     }
                 }
             }
@@ -444,9 +450,9 @@ class CallLogEditController extends CallEntryController
                 }
                 //exit();
 
-                if( $patientInfoEncounter ) {
-                    //$patientInfoEncounter must be removed from the patient
-                    $patient->removeEncounter($patientInfoEncounter);
+                if( $patient && $dummyEncounter ) {
+                    //$dummyEncounter must be removed from the patient
+                    $patient->removeEncounter($dummyEncounter);
                 }
 
                 //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
@@ -464,11 +470,11 @@ class CallLogEditController extends CallEntryController
                 //set message status from the form's name="messageStatus" field
                 $data = $request->request->all();
                 $messageStatusForm = $data['messageStatusJs'];
-                //echo "messageStatusForm=".$messageStatusForm."<br>";
+                echo "messageStatusForm=".$messageStatusForm."<br>";
                 if( $messageStatusForm ) {
                     $messageStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
                     if( $messageStatusObj ) {
-                        //echo "set message status to ".$messageStatusObj."<br>";
+                        echo "set message status to ".$messageStatusObj."<br>";
                         $message->setMessageStatus($messageStatusObj);
 
                         //if "Signed" set signed User, datetime, roles by signeeInfo
@@ -490,6 +496,12 @@ class CallLogEditController extends CallEntryController
                             $message->addEditorInfo($editorInfo);
                         }
 
+                        if( $messageStatusObj->getName()."" == "Draft" ) {
+                            echo "add editor: draft <br>";
+                            $editorInfo = new ModifierInfo($user);
+                            $message->addEditorInfo($editorInfo);
+                        }
+
                     }
                 }
 
@@ -504,7 +516,7 @@ class CallLogEditController extends CallEntryController
                 //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
                 $calllogUtil->setFormVersions($message);
 
-                if( $patient->getId() ) {
+                if( $patient && $patient->getId() ) {
                     //CASE 1
                     echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
                     //get a new encounter without id $newEncounter
@@ -543,7 +555,9 @@ class CallLogEditController extends CallEntryController
                     $newEncounter->setPatient(null);
 
                     //remove empty patient from message
-                    $message->removePatient($patient);
+                    if( $patient ) {
+                        $message->removePatient($patient);
+                    }
 
                     //exit('Exit Case 2');
                     if( !$testing ) {

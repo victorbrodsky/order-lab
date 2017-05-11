@@ -1667,7 +1667,7 @@ class Message {
         }
     }
     public function getMessageOidVersion(){
-        return $this->getOid()." (v".$this->getVersion().")";
+        return $this->getOid()." (v.".$this->getVersion().")";
     }
 
     public function getUrl($generator,$urlname,$oid) {

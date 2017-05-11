@@ -535,6 +535,17 @@
                 {#Submitted on#}
                 {{ formmacros.simplefield("Submitted on:", user_service_utility.getOrderDateStr(message), "", "disabled") }}
 
+                {#Submitter role(s) at submission time:#}
+                {% set firstEditorInfo = message.getEditorInfos()|first %}
+                {% if firstEditorInfo %}
+                    {% if firstEditorInfo.modifierRoles|length > 0 %}
+                        {% set editorRoles = user_security_utility.getRolesByRoleNames(firstEditorInfo.modifierRoles) %}
+                        {{ formmacros.simplefield("Submitter role(s) at submission time:", editorRoles, "", "disabled") }}
+                    {% else %}
+                        {{ formmacros.simplefield("Submitter role(s) at submission time:", "No roles", "", "disabled") }}
+                    {% endif %}
+                {% endif %}
+
                 {#Message Status#}
                 {{ formmacros.simplefield("Message Status:", message.messageStatus.name, "", "disabled") }}
                 {% if message.messageStatus.name == "Signed" and message.signeeInfo %}
@@ -556,9 +567,7 @@
                 {% endif %}
 
                 {#IF "Message Version">1 (2 or more), display the following three fields:#}
-                message.version|number_format={{ message.version|number_format }}<br>
                 {% if message.version|number_format > 1 %}
-                    message.version is more than 1<br>
                     {% set lastEditorInfo = message.getEditorInfos()|last %}
                     {% if lastEditorInfo %}
                         {% if lastEditorInfo.modifiedBy %}

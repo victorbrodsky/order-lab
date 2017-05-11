@@ -881,7 +881,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -969,8 +969,8 @@ class CallEntryController extends Controller
                 throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
             }
             $patient = $patients->first();
-            echo "message id=".$message->getId()."<br>";
-            echo "patient id=".$patient->getId()."<br>";
+            //echo "message id=".$message->getId()."<br>";
+            //echo "patient id=".$patient->getId()."<br>";
 
             $patientInfoEncounter = null;
             $newEncounter = null;
@@ -1097,6 +1097,12 @@ class CallEntryController extends Controller
                         //if "Deleted" set signed User, datetime, roles by signeeInfo
                         if( $messageStatusObj->getName()."" == "Deleted" ) {
                             //echo "deleted <br>";
+                            $editorInfo = new ModifierInfo($user);
+                            $message->addEditorInfo($editorInfo);
+                        }
+
+                        if( $messageStatusObj->getName()."" == "Draft" ) {
+                            //echo "add editor: draft <br>";
                             $editorInfo = new ModifierInfo($user);
                             $message->addEditorInfo($editorInfo);
                         }
@@ -2508,7 +2514,7 @@ class CallEntryController extends Controller
         //echo "tz=".$tz->getName()."<br>";
         //exit('1');
 
-        $messageInfo = "Entry ID ".$message->getId()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
+        $messageInfo = "Entry ID ".$message->getMessageOidVersion()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
         //echo "messageInfo=".$messageInfo."<br>";
         //exit('1');
         if (count($message->getPatient()) > 0 ) {
@@ -2564,6 +2570,12 @@ class CallEntryController extends Controller
             $eventObjectTypeId = null;
         }
 
+        //View Previous Version(s)
+        $previousMessages = null;
+        if( intval($messageVersion) > 1 ) {
+            $previousMessages = $em->getRepository('OlegOrderformBundle:Message')->findPreviousByOid($messageOid, $messageVersion);
+        }
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -2582,7 +2594,8 @@ class CallEntryController extends Controller
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'titleheadroom' => $title,
             'formnodeTopHolderId' => $formnodeTopHolderId,
-            'eventObjectTypeId' => $eventObjectTypeId
+            'eventObjectTypeId' => $eventObjectTypeId,
+            'previousMessages' => $previousMessages
         );
     }
 

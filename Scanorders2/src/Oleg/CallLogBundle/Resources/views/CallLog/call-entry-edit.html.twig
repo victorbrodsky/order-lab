@@ -68,6 +68,8 @@
         {#{{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}#}
         {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_update_entry',{'messageId':entityId,'cycle':cycle})}) }}
 
+        <input type="hidden" id="messageStatusJs" name="messageStatusJs" value="" />
+
         {{ form_errors(form) }}
 
         {% if form.patient|length > 1 %}

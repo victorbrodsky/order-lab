@@ -365,4 +365,28 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         return $message;
     }
 
+    public function findPreviousByOid( $oid, $version=null ) {
+        $message = null;
+        $parameters = array();
+
+        $repository = $this->_em->getRepository('OlegOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder("message");
+
+        $dql->where("message.oid = :oid");
+        $parameters['oid'] = $oid;
+
+        if( $version ) {
+            $dql->andWhere("message.version != :version");
+            $parameters['version'] = $version;
+        }
+
+        $dql->orderBy('message.version','DESC');
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($parameters);
+        $messages = $query->getResult();
+
+        return $messages;
+    }
+
 }

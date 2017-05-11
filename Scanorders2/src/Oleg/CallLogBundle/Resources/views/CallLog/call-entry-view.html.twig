@@ -79,6 +79,39 @@
         {% endif %}
     </div>
 
+    {% if previousMessages and previousMessages|length > 0 %}
+        {#<div class="well">#}
+            {#<p>View Previous Version(s):</p>#}
+            {#{% for previousMessage in previousMessages %}#}
+                {#{% set previousMessageInfo = "ID "~previousMessage.getMessageOidVersion ~ " " ~ previousMessage.getSubmitterInfoSimpleDate %}#}
+                {#<p>#}
+                    {#<a href="{{ path('calllog_callentry_view', {'messageOid': previousMessage.oid, 'messageVersion':previousMessage.version}) }}">{{ previousMessageInfo }}</a>#}
+                {#</p>#}
+            {#{% endfor %}#}
+        {#</div>#}
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#previousMessages" aria-expanded="true" aria-controls="collapseOne">
+                        View Previous Version(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="previousMessages" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                    {% for previousMessage in previousMessages %}
+                        {% set previousMessageInfo = "ID "~previousMessage.getMessageOidVersion ~ " " ~ previousMessage.getSubmitterInfoSimpleDate %}
+                        <p>
+                            <a href="{{ path('calllog_callentry_view', {'messageOid': previousMessage.oid, 'messageVersion':previousMessage.version}) }}">{{ previousMessageInfo }}</a>
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
     <div id="calllog-patient-list">
 
         {% set holderId = "patient-holder-1" %}
