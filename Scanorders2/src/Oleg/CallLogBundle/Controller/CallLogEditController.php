@@ -17,6 +17,10 @@
 
 namespace Oleg\CallLogBundle\Controller;
 
+use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
+use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
+use Oleg\UserdirectoryBundle\Entity\Spot;
+use Oleg\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -174,7 +178,10 @@ class CallLogEditController extends CallEntryController
         }
 
         //$userSecUtil = $this->get('user_security_utility');
+        $securityUtil = $this->get('order_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
 
         //$title = "Call Log Entry";
         $formtype = "call-entry";
@@ -185,7 +192,6 @@ class CallLogEditController extends CallEntryController
         //echo "nowStr=".$nowStr."<br>";
         //$messageId = 142; //154; //testing
 
-        $em = $this->getDoctrine()->getManager();
         $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
@@ -218,6 +224,52 @@ class CallLogEditController extends CallEntryController
 
             $title = $messageInfo;
         }
+
+        ////////////////// add missing encounter fields //////////////////
+        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $existingEncounter = null;
+        foreach( $message->getEncounter() as $encounter ) {
+            //echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
+            //if( !$encounter->getId() ) {
+                if( $encounter->getStatus() == 'valid' ) {
+                    $existingEncounter = $encounter;
+                    break;
+                }
+            //}
+        }
+
+        //ReferringProvider
+        if( count($existingEncounter->getReferringProviders()) == 0 ) {
+            $encounterReferringProvider = new EncounterReferringProvider('valid', $user, $system);
+            $existingEncounter->addReferringProvider($encounterReferringProvider);
+        }
+        //AttendingPhysician
+        if( count($existingEncounter->getAttendingPhysicians()) == 0 ) {
+            $encounterAttendingPhysician = new EncounterAttendingPhysician('valid', $user, $system);
+            $existingEncounter->addAttendingPhysician($encounterAttendingPhysician);
+        }
+        //Location: entity.tracker.spots
+//        if( !$existingEncounter->getTracker() ) {
+//            $tracker = new Tracker();
+//            $existingEncounter->setTracker($tracker);
+//        }
+//        if( count($existingEncounter->getTracker()->getSpots()) == 0 ) {
+//            $spotEntity = new Spot($user,$system);
+//            $existingEncounter->getTracker()->addSpot($spotEntity);
+//        }
+        if( !$existingEncounter->getTracker() ) {
+            $withdummyfields = true;
+            //$locationTypePrimary = null;
+            $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+            if (!$encounterLocationType) {
+                throw new \Exception('Location type is not found by name Encounter Location');
+            }
+            $locationName = null;   //""; //"Encounter's Location";
+            $spotEntity = null;
+            $removable = 0;
+            $existingEncounter->addContactinfoByTypeAndName($user, $system, $encounterLocationType, $locationName, $spotEntity, $withdummyfields, $em, $removable);
+        }
+        ////////////////// EOF add missing encounter fields //////////////////
 
         //echo "patients=".count($message->getPatient())."<br>";
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);

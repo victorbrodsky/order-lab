@@ -392,7 +392,9 @@
 {% endmacro %}
 
 {% macro updatePatientInfoSection( encounter, cycle, status ) %}
-    {% if cycle != "show" and not encounter.vars.value.id %}
+    {#encounter.vars.value.id={{ encounter.vars.value.id }}<br>#}
+    {#{% if cycle != "show" and not encounter.vars.value.id %}#}
+    {% if cycle != "show" %}
         {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -554,7 +556,9 @@
                 {% endif %}
 
                 {#IF "Message Version">1 (2 or more), display the following three fields:#}
+                message.version|number_format={{ message.version|number_format }}<br>
                 {% if message.version|number_format > 1 %}
+                    message.version is more than 1<br>
                     {% set lastEditorInfo = message.getEditorInfos()|last %}
                     {% if lastEditorInfo %}
                         {% if lastEditorInfo.modifiedBy %}

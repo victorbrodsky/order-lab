@@ -176,54 +176,34 @@
 
                                 {{ calllogmacros.referingProviderObject(encounterPatientInfo) }}
 
-                                {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
-                                {#{% for referringProvider in encounterPatientInfo.referringProviders %}#}
-                                    {#{{ formmacros.field_show_user( encounterPatientInfo, "referringProviders", cycle ) }}#}
-                                    {#{{ formmacros.field(referringProvider.field) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderSpecialty) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderPhone) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
-                                {#{% endfor %}#}
-
                                 {{ calllogmacros.trackerContactinfoForm(encounterPatientInfo,cycle,status) }}
 
-                                {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}
+                                {{ calllogmacros.updatePatientInfoSection(encounterPatientInfo,cycle,status) }}
 
-                                {#Update Patient Info: encounter with status='valid'#}
-                                {#{% set showUpdatePatientInfo = false %}#}
-                                {#{% if   encounterPatientInfo.patlastname.first.vars.value or#}
-                                        {#encounterPatientInfo.patfirstname.first.vars.value or#}
-                                        {#encounterPatientInfo.patmiddlename.first.vars.value or#}
-                                        {#encounterPatientInfo.patsuffix.first.vars.value or#}
-                                        {#encounterPatientInfo.patsex.first.vars.value#}
-                                {#%}#}
-                                {#{% if encounterPatientInfo. %}#}
-                                    {#{% set showUpdatePatientInfo = true %}#}
-                                {#{% endif %}#}
-                                {% if encounterPatientInfo.vars.value.hasPatientInfo %}
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
-                                                    Update Patient Info
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="form_body_encounterInfo" class="panel-collapse collapse in">
-                                            <div class="panel-body">
-                                                <div id="calllog-encounterInfo-holder">
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}
+                                {#{% if encounterPatientInfo.vars.value.hasPatientInfo %}#}
+                                    {#<div class="panel panel-default">#}
+                                        {#<div class="panel-heading">#}
+                                            {#<h4 class="panel-title">#}
+                                                {#<a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">#}
+                                                    {#Update Patient Info#}
+                                                {#</a>#}
+                                            {#</h4>#}
+                                        {#</div>#}
+                                        {#<div id="form_body_encounterInfo" class="panel-collapse collapse in">#}
+                                            {#<div class="panel-body">#}
+                                                {#<div id="calllog-encounterInfo-holder">#}
+                                                    {#{{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}#}
+                                                    {#{{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}#}
+                                                    {#{{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}#}
+                                                    {#{{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}#}
+                                                    {#{{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}#}
                                                     {#{{ formmacros.field(encounterPatientInfo.patientDob) }}#}
                                                     {#{{ formmacros.fieldDateLabel(encounterPatientInfo.patientDob,'regular-datepicker') }}#}
-                                                </div>
-                                            </div> <!-- panel-body -->
-                                        </div> <!-- panel-collapse -->
-                                    </div> <!-- panel panel-default -->
-                                {% endif %}
+                                                {#</div>#}
+                                            {#</div> <!-- panel-body -->#}
+                                        {#</div> <!-- panel-collapse -->#}
+                                    {#</div> <!-- panel panel-default -->#}
+                                {#{% endif %}#}
 
                             {% endif %} {#encounterPatientInfo#}
 
@@ -256,22 +236,24 @@
                             {% endif %}
                             {{ formmacros.field(form.messageStatus) }}
                             {#Message Version#}
-                            {{ formmacros.field(form.version) }}
+                            {#{{ formmacros.field(form.version) }}#}
+                            {% set newVesrion = form.vars.value.version|number_format + 1 %}
+                            {{ formmacros.simplefield("Message Version:",newVesrion,"","disabled") }}
                             {{ formmacros.field(form.messageTitle) }}
 
                             {#form version#}
                             {#{{ formmacros.simplefield("Form(s):", message.getFormVersionsInfo, "", "disabled") }}#}
 
                             {#Amendment Reason#}
-                            {% if message.version|number_format > 1 %}
+                            {#{% if message.version|number_format > 1 %}#}
                                 {{ formmacros.field(form.amendmentReason) }}
-                            {% endif %}
+                            {#{% endif %}#}
                         </p>
 
                         {#Patient List#}
-                        {% if message.calllogEntryMessage and message.calllogEntryMessage.addPatientToList %}
+                        {#{% if message.calllogEntryMessage and message.calllogEntryMessage.addPatientToList %}#}
                             {{ calllogmacros.calllogPatientList(form,cycle,sitename) }}
-                        {% endif %}
+                        {#{% endif %}#}
 
                         <div id="form-node-holder"></div>
 
@@ -339,10 +321,7 @@
 
         $(document).ready(function() {
             //init
-            //initCallLogPage();
-            //preset mrn and mrn-type
-            //calllogPresetMrnMrntype('patient-holder-1');
-
+            initCallLogPage();
         });
 
     </script>
