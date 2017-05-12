@@ -1042,6 +1042,9 @@ class CallLogUtil
             }
         }
 
+        //add message info: ID and status
+        $event = $event . " [Message Entry ID#" . $message->getMessageOidVersion() . "; Status: " . $message->getMessageStatus()->getName() . "]";
+
         //exit('event='.$event);
         return $event;
     }
@@ -1675,5 +1678,97 @@ class CallLogUtil
         }
 
         return $messageCategoryEntity;
+    }
+
+    //determine the new message status based on the current (latest) message version and clicked button.
+    //$currentStatusObj
+    //$buttonStatusObj - "Draft", "Signed"
+    public function getNewMessageStatus( $currentStatusObj, $buttonStatusObj ) {
+        $newMessageStatusObj = $buttonStatusObj;
+
+        if( !$currentStatusObj ) {
+            return $newMessageStatusObj;
+        }
+
+        $newStatusStr = null;
+        $currentStatusStr = $currentStatusObj->getName() . "";
+
+        if( $buttonStatusObj->getName() . "" == "Draft" ) {
+            switch ($currentStatusStr) {
+                case "Draft":
+                    //If current message status = "Draft", and the user clicks "save draft",
+                    // save the new copy/version of the message with message status = "Draft".
+                    $newStatusStr = "Draft";
+                    break;
+                case "Deleted":
+                    //If current message status = "Deleted", and the user clicks "save draft",
+                    // save the new copy/version of the message with message status = "Post-deletion Draft".
+                    $newStatusStr = "Post-deletion Draft";
+                    break;
+                case "Signed":
+                    //If current message status = "Signed" and the user clicks "save draft",
+                    // save the new copy/version of the message with message status = "Post-signature Draft".
+                    $newStatusStr = "Post-signature Draft";
+                    break;
+                case "Signed, Amended":
+                    //If current message status = "Signed, Amended" and the user clicks "save draft",
+                    // save the new copy/version of the message with message status = "Post-amendment Draft".
+                    $newStatusStr = "Post-amendment Draft";
+                    break;
+                case "Post-signature Draft":
+                    //If current message status = "Post-signature Draft" and the user clicks "save draft",
+                    // save the new copy/version of the message with message status = "Post-signature Draft".
+                    $newStatusStr = "Post-signature Draft";
+                    break;
+                case "Post-amendment Draft":
+                    //If current message status = "Post-amendment Draft" and the user clicks "save draft",
+                    // save the new copy/version of the message with message status = "Post-amendment Draft".
+                    $newStatusStr = "Post-amendment Draft";
+                    break;
+                case "Post-deletion Draft":
+                    //If current message status = "Post-deletion Draft", and the user clicks "save draft",
+                    // save the new copy/version of the message with message status = "Post-deletion Draft".
+                    $newStatusStr = "Post-deletion Draft";
+                    break;
+            }
+        }
+
+        if( $buttonStatusObj->getName() . "" == "Signed" ) {
+            switch ($currentStatusStr) {
+                case "Draft":
+                    $newStatusStr = "Signed";
+                    break;
+                case "Deleted":
+                    //the message status of the submitted message should be set to "Post-deletion Draft"
+                    // no matter what the value of the message status is in the received message.
+                    $newStatusStr = "Post-deletion Draft";
+                    break;
+                case "Signed":
+                    $newStatusStr = "Signed, Amended";
+                    break;
+                case "Signed, Amended":
+                    $newStatusStr = "Signed, Amended";
+                    break;
+                case "Post-signature Draft":
+                    $newStatusStr = "Signed, Amended";
+                    break;
+                case "Post-amendment Draft":
+                    $newStatusStr = "Signed, Amended";
+                    break;
+                case "Post-deletion Draft":
+                    //If current message status = "Post-deletion Draft",
+                    // and the user clicks "Finalize & Sign", check in the Event Log if this message ever had a status of "Signed",
+                    // if yes - save the new copy/version of the message with message status = "Signed, Amended",
+                    // if not - save the new copy/version of the message with message status = "Signed".
+                    $newStatusStr = "Signed, Amended";
+                    break;
+            }
+        }
+
+        if( $newStatusStr ) {
+            $newMessageStatusObj = $this->em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($newStatusStr);
+        }
+
+        return $newMessageStatusObj;
     }
 }

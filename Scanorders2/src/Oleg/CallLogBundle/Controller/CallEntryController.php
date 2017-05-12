@@ -1278,13 +1278,13 @@ class CallEntryController extends Controller
                 if( $msg ) {
                     $eventType = "New Call Log Book Entry Submitted";
 
-                    $event = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
-                    //exit('event='.$event);
+                    $eventStr = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
+                    //exit('eventStr='.$eventStr);
 
-                    //$event = $event . " submitted by " . $user;
+                    //$eventStr = $eventStr . " submitted by " . $user;
 
                     if( !$testing ) {
-                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $message, $request, $eventType);
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);
                     }
                 }
 
@@ -2585,10 +2585,7 @@ class CallEntryController extends Controller
         }
 
         //View Previous Version(s)
-        $previousMessages = null;
-        if( intval($messageVersion) > 1 ) {
-            $previousMessages = $em->getRepository('OlegOrderformBundle:Message')->findPreviousByOid($messageOid); //$messageVersion
-        }
+        $allMessages = $em->getRepository('OlegOrderformBundle:Message')->findAllMessagesByOid($messageOid);
 
         return array(
             //'entity' => $entity,
@@ -2609,7 +2606,7 @@ class CallEntryController extends Controller
             'titleheadroom' => $title,
             'formnodeTopHolderId' => $formnodeTopHolderId,
             'eventObjectTypeId' => $eventObjectTypeId,
-            'previousMessages' => $previousMessages
+            'allMessages' => $allMessages
         );
     }
 

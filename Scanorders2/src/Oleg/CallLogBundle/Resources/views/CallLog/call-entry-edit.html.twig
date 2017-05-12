@@ -60,6 +60,19 @@
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
 
+    {% set mainPanelClass = "panel-primary" %}
+
+    {% if allMessages and allMessages|length > 1 and allMessages|first.version != message.version %}
+        {% set mainPanelClass = "panel-danger" %}
+        <div class="alert alert-danger" role="alert">
+            {#"This is an older version of the entry. View the current version"#}
+            This is an older version of the entry.
+            <a href="{{ path('calllog_callentry_view', {'messageOid': message.oid, 'messageVersion': 'latest'}) }}"
+            >View the current version</a>
+        </div>
+    {% endif %}
+
+
     <div id="calllog-patient-list">
 
         {% set holderId = "patient-holder-1" %}
@@ -289,15 +302,17 @@
                             style="min-width: 100%"
                     >Save Draft</button>
                 </div>
-                <div class="col-lg-3" align="left">
-                    <div class="input-group">
-                        <input type="password" id="calllog-user-password" class="form-control" placeholder="Enter password" style="min-width: 100%">
-                        <span class="input-group-btn">
-                            <button id="signed-btn" class="btn btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm(this,'Signed');">Finalize and Sign</button>
-                        </span>
-                    </div><!-- /input-group -->
-                </div>
-                <div class="col-lg-3"></div>
+                {% if currentMessageStatus != "Deleted" %}
+                    <div class="col-lg-3" align="left">
+                        <div class="input-group">
+                            <input type="password" id="calllog-user-password" class="form-control" placeholder="Enter password" style="min-width: 100%">
+                            <span class="input-group-btn">
+                                <button id="signed-btn" class="btn btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm(this,'Signed');">Finalize and Sign</button>
+                            </span>
+                        </div><!-- /input-group -->
+                    </div>
+                    <div class="col-lg-3"></div>
+                {% endif %}
             </div><!-- /.row -->
             </p>
 
@@ -313,7 +328,7 @@
 
         <br><br>
         <p>
-            {{ calllogmacros.calllogAuthors(message,cycle,sitename) }}
+            {{ calllogmacros.calllogAuthors(message,cycle,sitename,mainPanelClass) }}
         </p>
 
     </div>

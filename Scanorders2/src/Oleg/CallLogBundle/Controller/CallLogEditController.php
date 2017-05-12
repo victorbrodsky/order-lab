@@ -112,7 +112,7 @@ class CallLogEditController extends CallEntryController
         if( $patientInfoStr ) {
             $patientInfoStr = "for ".$patientInfoStr;
         }
-        $msg = "Entry $messageId $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message).
+        $msg = "Message Entry ID#".$message->getMessageOidVersion()." $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message).
             " successfully un-deleted and status set to ".$messageStatusPrior;
 //        $this->get('session')->getFlashBag()->add(
 //            'notice',
@@ -154,7 +154,7 @@ class CallLogEditController extends CallEntryController
         if( $patientInfoStr ) {
             $patientInfoStr = "for ".$patientInfoStr;
         }
-        $msg = "Message Entry ".$message->getMessageIdStr()." $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted by ".$actionStr;
+        $msg = "Message Entry ID#".$message->getMessageOidVersion()." $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted by ".$actionStr;
 
         //Event Log
         $eventType = "Call Log Book Entry Deleted";
@@ -301,14 +301,17 @@ class CallLogEditController extends CallEntryController
             $formnodeTopHolderId = $messageCategory->getId();
         }
 
+        //View Previous Version(s)
+        $allMessages = $em->getRepository('OlegOrderformBundle:Message')->findAllMessagesByOid($messageOid); //$messageVersion=null => all messages ordered by latest version first
+
         //find current (latest) message status
-        $currentMessageStatus = null;
-        $currentMessageLabel = null;
-        $currentMessage = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid);
-        if( $currentMessage && intval($messageVersion) != intval($currentMessage->getVersion()) ) {
-            $currentMessageStatus = $currentMessage->getMessageStatus()->getName()."";
+        $latestMessageStatus = null;
+        $latestMessageLabel = null;
+        $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid(null,$allMessages);
+        if( $latestMessage && intval($messageVersion) != intval($latestMessage->getVersion()) ) {
+            $latestMessageStatus = $latestMessage->getMessageStatus()->getName()."";
             //"Current Status of the Current Version of this message (Current Version is X, Displaying Version Y):"
-            $currentMessageLabel = "Current Status of the Current Version of this message (Current Version is $messageVersion, Displaying Version ".$currentMessage->getVersion()."):";
+            $latestMessageLabel = "Current Status of the Current Version of this message (Current Version is $messageVersion, Displaying Version ".$latestMessage->getVersion()."):";
         }
 
         return array(
@@ -329,8 +332,9 @@ class CallLogEditController extends CallEntryController
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'titleheadroom' => $title,
             'formnodeTopHolderId' => $formnodeTopHolderId,
-            'currentMessageStatus' => $currentMessageStatus,
-            'currentMessageLabel' => $currentMessageLabel
+            'currentMessageStatus' => $latestMessageStatus,
+            'currentMessageLabel' => $latestMessageLabel,
+            'allMessages' => $allMessages
         );
     }
 
@@ -481,16 +485,15 @@ class CallLogEditController extends CallEntryController
 
                 //set message status from the form's name="messageStatus" field
                 $data = $request->request->all();
-                $messageStatusForm = $data['messageStatusJs'];
-                echo "messageStatusForm=".$messageStatusForm."<br>";
-                if( $messageStatusForm ) {
-                    $messageStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
-                    if( $messageStatusObj ) {
-                        echo "set message status to ".$messageStatusObj."<br>";
-                        $message->setMessageStatus($messageStatusObj);
+                $buttonStatusObj = null;
+                $buttonStatusForm = $data['messageStatusJs'];
+                //echo "buttonStatusForm=".$buttonStatusForm."<br>";
+                if( $buttonStatusForm ) {
+                    $buttonStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($buttonStatusForm);
+                    if( $buttonStatusObj ) {
 
                         //if "Signed" set signed User, datetime, roles by signeeInfo
-                        if( $messageStatusObj->getName()."" == "Signed" ) {
+                        if( $buttonStatusObj->getName()."" == "Signed" ) {
                             if ($message->getSigneeInfo()) {
                                 //echo "signee exist <br>";
                                 $signeeInfo = $message->getSigneeInfo();
@@ -502,13 +505,13 @@ class CallLogEditController extends CallEntryController
                         }
 
                         //if "Deleted" set signed User, datetime, roles by signeeInfo
-                        if( $messageStatusObj->getName()."" == "Deleted" ) {
+                        if( $buttonStatusObj->getName()."" == "Deleted" ) {
                             //echo "deleted <br>";
                             $editorInfo = new ModifierInfo($user);
                             $message->addEditorInfo($editorInfo);
                         }
 
-                        if( $messageStatusObj->getName()."" == "Draft" ) {
+                        if( $buttonStatusObj->getName()."" == "Draft" ) {
                             echo "add editor: draft <br>";
                             $editorInfo = new ModifierInfo($user);
                             $message->addEditorInfo($editorInfo);
@@ -516,7 +519,6 @@ class CallLogEditController extends CallEntryController
 
                     }
                 }
-
 
                 if( $message->getMessageCategory() ) {
 
@@ -527,6 +529,26 @@ class CallLogEditController extends CallEntryController
 
                 //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
                 $calllogUtil->setFormVersions($message);
+
+                /////////////////////// Set edited message info /////////////////////
+                //set OID from original message
+                $message->setOid($originalMessage->getOid());
+                //increment version: latest message + 1
+                $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid($originalMessage->getOid());
+                $incrementedVersion = intval($latestMessage->getVersion()) + 1;
+                echo "incrementedVersion=".$incrementedVersion."<br>";
+                $message->setVersion($incrementedVersion);
+
+                if( $buttonStatusObj ) {
+                    echo "set message status to " . $buttonStatusObj . "<br>";
+                    //determine the new message status
+                    $newMessageStatusObj = $calllogUtil->getNewMessageStatus($latestMessage->getMessageStatus(), $buttonStatusObj);
+                    $message->setMessageStatus($newMessageStatusObj);
+                }
+
+                //delete original message
+                //$this->deleteMessage( $originalMessage, $cycle." action", $request );
+                /////////////////////// EOF Set edited message info /////////////////////
 
                 if( $patient && $patient->getId() ) {
                     //CASE 1
@@ -557,7 +579,8 @@ class CallLogEditController extends CallEntryController
                     //do it after message is in DB and has ID
                     $calllogUtil->addToPatientLists($patient,$message,$testing);
 
-                    $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
+                    //New Encounter (ID#" . $newEncounter->getId() . ")
+                    $msg = " is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
 
                 } else {
                     //CASE 2
@@ -580,7 +603,8 @@ class CallLogEditController extends CallEntryController
                         $em->flush($message); //testing
                     }
 
-                    $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
+                    //New Encounter (ID#" . $newEncounter->getId() . ")
+                    $msg = " is created with number " . $newEncounter->obtainEncounterNumber();
                 }
 
                 //set encounter as message's input
@@ -593,20 +617,22 @@ class CallLogEditController extends CallEntryController
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 
-                /////////////////////// Set edited message info /////////////////////
-                //set OID from original message
-                $message->setOid($originalMessage->getOid());
-                //increment version
-                $incrementedVersion = intval($originalMessage->getVersion()) + 1;
-                echo "incrementedVersion=".$incrementedVersion."<br>";
-                $message->setVersion($incrementedVersion);
-                if( !$testing ) {
-                    $em->persist($message);
-                    $em->flush($message);
-                }
-                //delete original message
-                $this->deleteMessage( $originalMessage, $cycle." action", $request );
-                /////////////////////// EOF Set edited message info /////////////////////
+//                /////////////////////// Set edited message info /////////////////////
+//                //set OID from original message
+//                $message->setOid($originalMessage->getOid());
+//                //increment version: latest message + 1
+//                $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid($messageId);
+//                $incrementedVersion = intval($latestMessage->getVersion()) + 1;
+//                echo "incrementedVersion=".$incrementedVersion."<br>";
+//                $message->setVersion($incrementedVersion);
+//
+//                if( !$testing ) {
+//                    $em->persist($message);
+//                    $em->flush($message);
+//                }
+//                //delete original message
+//                //$this->deleteMessage( $originalMessage, $cycle." action", $request );
+//                /////////////////////// EOF Set edited message info /////////////////////
 
                 //log search action
                 $logger = $this->container->get('logger');
@@ -614,21 +640,19 @@ class CallLogEditController extends CallEntryController
                 if( $msg ) {
 
                     if( $cycle == "edit" ) {
-                        $msg = "Updated Message with ID# ".$originalMessage->getMessageIdStr() . " (version " . $incrementedVersion ."): ". $msg;
+                        $msg = "Updated Message Entry ID#".$originalMessage->getMessageOidVersion() . " (new version " . $incrementedVersion ."): ". $msg;
                         $eventType = "Call Log Book Entry Edited";
                     }
                     if( $cycle == "amend" ) {
-                        $msg = "Amended Message with ID# ".$originalMessage->getMessageIdStr() . " (version " . $incrementedVersion ."): ". $msg;
+                        $msg = "Amended Message Entry ID#".$originalMessage->getMessageOidVersion() . " (new version " . $incrementedVersion ."): ". $msg;
                         $eventType = "Call Log Book Entry Amended";
                     }
 
-                    $event = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
-                    //exit('event='.$event);
-
-                    //$event = $event . " submitted by " . $user;
+                    $eventStr = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
+                    //exit('eventStr='.$eventStr);
 
                     if( !$testing ) {
-                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $message, $request, $eventType);
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);
                         $logger->notice("createUserEditEvent=".$msg);
                     }
                 }

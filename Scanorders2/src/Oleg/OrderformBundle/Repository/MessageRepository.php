@@ -365,7 +365,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         return $message;
     }
 
-    public function findPreviousByOid( $oid, $version=null ) {
+    public function findAllMessagesByOid( $oid, $exceptVersion=null ) {
         $message = null;
         $parameters = array();
 
@@ -375,9 +375,9 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $dql->where("message.oid = :oid");
         $parameters['oid'] = $oid;
 
-        if( $version ) {
-            $dql->andWhere("message.version != :version");
-            $parameters['version'] = $version;
+        if( $exceptVersion ) {
+            $dql->andWhere("message.version != :exceptVersion");
+            $parameters['exceptVersion'] = $exceptVersion;
         }
 
         $dql->orderBy('message.version','DESC');
@@ -387,6 +387,20 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $messages = $query->getResult();
 
         return $messages;
+    }
+
+    public function findLatestMessageByOid( $oid, $messages=null ) {
+        $message = null;
+
+        if( !$messages ) {
+            $messages = $this->findAllMessagesByOid($oid);
+        }
+
+        if( count($messages) > 0 ) {
+            $message = $messages[0];
+        }
+
+        return $message;
     }
 
 }
