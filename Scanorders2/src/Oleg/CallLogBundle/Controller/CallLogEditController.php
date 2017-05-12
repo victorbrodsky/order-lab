@@ -301,6 +301,16 @@ class CallLogEditController extends CallEntryController
             $formnodeTopHolderId = $messageCategory->getId();
         }
 
+        //find current (latest) message status
+        $currentMessageStatus = null;
+        $currentMessageLabel = null;
+        $currentMessage = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid);
+        if( $currentMessage && intval($messageVersion) != intval($currentMessage->getVersion()) ) {
+            $currentMessageStatus = $currentMessage->getMessageStatus()->getName()."";
+            //"Current Status of the Current Version of this message (Current Version is X, Displaying Version Y):"
+            $currentMessageLabel = "Current Status of the Current Version of this message (Current Version is $messageVersion, Displaying Version ".$currentMessage->getVersion()."):";
+        }
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -318,7 +328,9 @@ class CallLogEditController extends CallEntryController
             'entityId' => $message->getId(),
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'titleheadroom' => $title,
-            'formnodeTopHolderId' => $formnodeTopHolderId
+            'formnodeTopHolderId' => $formnodeTopHolderId,
+            'currentMessageStatus' => $currentMessageStatus,
+            'currentMessageLabel' => $currentMessageLabel
         );
     }
 

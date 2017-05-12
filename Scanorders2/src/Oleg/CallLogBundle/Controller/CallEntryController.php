@@ -2476,6 +2476,7 @@ class CallEntryController extends Controller
 
         //$userSecUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
+        $route = $request->get('_route');
 
         $cycle = "show";
         //$title = "Call Log Entry";
@@ -2488,6 +2489,19 @@ class CallEntryController extends Controller
         //$messageId = 142; //154; //testing
 
         $em = $this->getDoctrine()->getManager();
+
+        if( !is_numeric($messageVersion) || !$messageVersion ) {
+            $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid);
+            if( $messageLatest ) {
+                return $this->redirect($this->generateUrl('calllog_callentry_view', array(
+                    'messageOid' => $messageLatest->getOid(),
+                    'messageVersion' => $messageLatest->getVersion()
+                )));
+            }
+
+            throw new \Exception( "Latest Message is not found by oid ".$messageOid );
+        }
+
         $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
@@ -2573,7 +2587,7 @@ class CallEntryController extends Controller
         //View Previous Version(s)
         $previousMessages = null;
         if( intval($messageVersion) > 1 ) {
-            $previousMessages = $em->getRepository('OlegOrderformBundle:Message')->findPreviousByOid($messageOid, $messageVersion);
+            $previousMessages = $em->getRepository('OlegOrderformBundle:Message')->findPreviousByOid($messageOid); //$messageVersion
         }
 
         return array(

@@ -352,7 +352,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             $parameters['version'] = $version;
         }
 
-        $dql->orderBy('message.version','ASC');
+        $dql->orderBy('message.version','DESC');
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters($parameters);

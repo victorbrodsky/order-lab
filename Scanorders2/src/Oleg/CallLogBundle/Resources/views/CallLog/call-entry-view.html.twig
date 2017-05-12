@@ -59,6 +59,18 @@
     <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
+    {% set mainPanelClass = "panel-primary" %}
+
+    {% if previousMessages and previousMessages|length > 0 and previousMessages|first.version != message.version %}
+        {% set mainPanelClass = "panel-danger" %}
+        <div class="alert alert-danger" role="alert">
+            {#"This is an older version of the entry. View the current version"#}
+            This is an older version of the entry.
+            <a href="{{ path('calllog_callentry_view', {'messageOid': message.oid, 'messageVersion': 'latest'}) }}"
+            >View the current version</a>
+        </div>
+    {% endif %}
+
     <div class="well">
         {% if message.messageStatus and message.messageStatus.name == "Draft" %}
             <a  class="btn btn-warning"
@@ -94,7 +106,7 @@
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#previousMessages" aria-expanded="true" aria-controls="collapseOne">
-                        View Previous Version(s)
+                        All Version(s)
                     </a>
                 </h4>
             </div>
@@ -168,7 +180,7 @@
             {#{{ calllogmacros.referingProviderObject(encounterPatientInfo) }}#}
 
             {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
-            <div class="panel panel-primary">
+            <div class="panel {{ mainPanelClass }}">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" href="#calllog-EncounterInfo-{{ encounterPatientInfo.vars.value.id }}">
@@ -280,7 +292,7 @@
 
 
             {# Entry #}
-            <div class="panel panel-primary">
+            <div class="panel {{ mainPanelClass }}">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" href="#calllog-Entry">
@@ -339,7 +351,7 @@
 
 
         <p>
-            {{ calllogmacros.calllogAuthors(message,cycle,sitename) }}
+            {{ calllogmacros.calllogAuthors(message,cycle,sitename,mainPanelClass) }}
         </p>
 
     </div>

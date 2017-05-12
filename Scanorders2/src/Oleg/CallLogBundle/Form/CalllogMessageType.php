@@ -199,6 +199,7 @@ class CalllogMessageType extends AbstractType
                 //'property' => 'name',
                 'label' => 'Message Status:',
                 'required' => false,
+                'read_only' => true,
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {

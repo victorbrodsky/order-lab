@@ -236,7 +236,13 @@
                             {% if form.messageCategory is defined %}
                                 {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
                             {% endif %}
+
                             {{ formmacros.field(form.messageStatus) }}
+                            {% if currentMessageStatus and currentMessageLabel %}
+                                {#"Current Status of the Current Version of this message (Current Version is X, Displaying Version Y):"#}
+                                {{ formmacros.simplefield(currentMessageLabel, currentMessageStatus, "", "disabled") }}
+                            {% endif %}
+
                             {#Message Version#}
                             {#{{ formmacros.field(form.version) }}#}
                             {% set newVesrion = form.vars.value.version|number_format + 1 %}
