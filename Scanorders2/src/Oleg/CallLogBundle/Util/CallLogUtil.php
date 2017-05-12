@@ -1683,7 +1683,7 @@ class CallLogUtil
     //determine the new message status based on the current (latest) message version and clicked button.
     //$currentStatusObj
     //$buttonStatusObj - "Draft", "Signed"
-    public function getNewMessageStatus( $currentStatusObj, $buttonStatusObj ) {
+    public function getNewMessageStatus( $currentStatusObj, $buttonStatusObj, $oid ) {
         $newMessageStatusObj = $buttonStatusObj;
 
         if( !$currentStatusObj ) {
@@ -1692,6 +1692,8 @@ class CallLogUtil
 
         $newStatusStr = null;
         $currentStatusStr = $currentStatusObj->getName() . "";
+        //echo "currentStatusStr=".$currentStatusStr."<br>";
+        //echo "buttonStatus=".$buttonStatusObj->getName()."<br>";
 
         if( $buttonStatusObj->getName() . "" == "Draft" ) {
             switch ($currentStatusStr) {
@@ -1758,10 +1760,16 @@ class CallLogUtil
                 case "Post-deletion Draft":
                     //If current message status = "Post-deletion Draft",
                     // and the user clicks "Finalize & Sign", check in the Event Log if this message ever had a status of "Signed",
-                    // if yes - save the new copy/version of the message with message status = "Signed, Amended",
-                    // if not - save the new copy/version of the message with message status = "Signed".
-                    //TODO: test event log for [Message Entry ID#:252 (v.10); Status:Signed]
-                    $newStatusStr = "Signed, Amended";
+
+                    //$signedMessages = $this->em->getRepository('OlegOrderformBundle:Message')->findByOidAndStatus($oid,"Signed");
+                    //if( count($signedMessages) > 0 ) {
+                    if( $this->hadMessageStatus($oid,"Signed") ) {
+                        // if yes - save the new copy/version of the message with message status = "Signed, Amended",
+                        $newStatusStr = "Signed, Amended";
+                    } else {
+                        // if not - save the new copy/version of the message with message status = "Signed".
+                        $newStatusStr = "Signed";
+                    }
                     break;
             }
         }
@@ -1769,7 +1777,45 @@ class CallLogUtil
         if( $newStatusStr ) {
             $newMessageStatusObj = $this->em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($newStatusStr);
         }
+        //exit("newMessageStatusObj=".$newMessageStatusObj);
 
         return $newMessageStatusObj;
+    }
+    //check in the Event Log if this message ever had a status of "Signed"
+    //test event log for [Message Entry ID#:252 (v.10); Status:Signed]
+    public function hadMessageStatus( $oid, $statusName="Signed" ) {
+        $sitename = "calllog";
+
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->innerJoin('logger.eventType', 'eventType');
+        $dql->leftJoin('logger.objectType', 'objectType');
+        $dql->leftJoin('logger.site', 'site');
+
+        $dql->andWhere("logger.entityNamespace = 'Oleg\OrderformBundle\Entity'");
+        $dql->andWhere("logger.entityName = 'Message'");
+        $dql->andWhere("site.abbreviation = '".$sitename."'");
+
+        //Message Entry ID#:
+        $eventStr1 = "Message Entry ID#:".$oid;
+        $dql->andWhere("logger.event LIKE :eventStr1");
+        $queryParameters['eventStr1'] = '%'.$eventStr1.'%';
+
+        //Message Entry ID#:
+        $eventStr2 = "Status:".$statusName;
+        $dql->andWhere("logger.event LIKE :eventStr2");
+        $queryParameters['eventStr2'] = '%'.$eventStr2.'%';
+
+        $query = $this->em->createQuery($dql);
+        $query->setParameters( $queryParameters );
+        $logs = $query->getResult();
+        //echo "logs count=".count($logs)."<br>";
+
+        if( count($logs) > 0 ) {
+            return true;
+        }
+
+        return false;
     }
 }

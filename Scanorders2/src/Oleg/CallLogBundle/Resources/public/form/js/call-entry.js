@@ -1666,6 +1666,24 @@ function calllogSubmitForm(btn,messageStatus) {
     //return false;
     ///////////// EOF if issue is not selected => "Please select the appropriate issue to save your entry" ///////////////
 
+    ///////////// Please provide the amendment reason. ///////////////
+    var amendmentReason = $(".ajax-combobox-amendmentReason");
+    if( amendmentReason ) {
+        var amendmentReasonData = amendmentReason.select2('data');
+        if( amendmentReasonData && amendmentReasonData.id ) {
+            //ok
+        } else {
+            $('#calllog-msg-danger-box').html("Please provide the amendment reason.");
+            $('#calllog-msg-danger-box').show();
+            lbtn.stop();
+            return false;
+        }
+    }
+
+    ///////////// EOF Please provide the amendment reason. ///////////////
+
+
+
     //B- Uniqueness of the Encounter Location Name. If the entered location name already exists in the database
     // (but any associated entered (non-empty) field values such as phone number do not equal associated values in the DB),
     // show a red well (dialog box? notification?) with:

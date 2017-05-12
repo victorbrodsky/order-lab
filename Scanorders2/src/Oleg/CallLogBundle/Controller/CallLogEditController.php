@@ -45,11 +45,10 @@ class CallLogEditController extends CallEntryController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
-
-        $user = $this->get('security.context')->getToken()->getUser();
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$user = $this->get('security.context')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->get('user_security_utility');
         //$orderUtil = $this->get('scanorder_utility');
         //$calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
@@ -155,6 +154,9 @@ class CallLogEditController extends CallEntryController
             $patientInfoStr = "for ".$patientInfoStr;
         }
         $msg = "Message Entry ID#".$message->getMessageOidVersion()." $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message)." successfully deleted by ".$actionStr;
+
+        //testing
+        //$msg = $msg . " DB ID#".$message->getID();
 
         //Event Log
         $eventType = "Call Log Book Entry Deleted";
@@ -542,12 +544,12 @@ class CallLogEditController extends CallEntryController
                 if( $buttonStatusObj ) {
                     echo "set message status to " . $buttonStatusObj . "<br>";
                     //determine the new message status
-                    $newMessageStatusObj = $calllogUtil->getNewMessageStatus($latestMessage->getMessageStatus(), $buttonStatusObj);
+                    $newMessageStatusObj = $calllogUtil->getNewMessageStatus($latestMessage->getMessageStatus(), $buttonStatusObj, $originalMessage->getOid());
                     $message->setMessageStatus($newMessageStatusObj);
                 }
 
                 //delete original message
-                //$this->deleteMessage( $originalMessage, $cycle." action", $request );
+                $this->deleteMessage( $originalMessage, $cycle." action", $request );
                 /////////////////////// EOF Set edited message info /////////////////////
 
                 if( $patient && $patient->getId() ) {
@@ -640,11 +642,11 @@ class CallLogEditController extends CallEntryController
                 if( $msg ) {
 
                     if( $cycle == "edit" ) {
-                        $msg = "Updated Message Entry ID#".$originalMessage->getMessageOidVersion() . " (new version " . $incrementedVersion ."): ". $msg;
+                        $msg = "Updated Message Entry ID#".$originalMessage->getMessageOidVersion() . " (new version " . $incrementedVersion .") ". $msg;
                         $eventType = "Call Log Book Entry Edited";
                     }
                     if( $cycle == "amend" ) {
-                        $msg = "Amended Message Entry ID#".$originalMessage->getMessageOidVersion() . " (new version " . $incrementedVersion ."): ". $msg;
+                        $msg = "Amended Message Entry ID#".$originalMessage->getMessageOidVersion() . " (new version " . $incrementedVersion .") ". $msg;
                         $eventType = "Call Log Book Entry Amended";
                     }
 

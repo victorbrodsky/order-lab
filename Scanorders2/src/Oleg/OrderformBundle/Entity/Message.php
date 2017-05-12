@@ -404,7 +404,7 @@ class Message {
     private $externalIds;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $version;
 
@@ -1667,7 +1667,9 @@ class Message {
         }
     }
     public function getMessageOidVersion(){
-        return $this->getOid()." (v.".$this->getVersion().")";
+        $idStr = $this->getOid()." (v.".$this->getVersion().")";
+        //$idStr = $idStr . "[DB ID#".$this->getId()."]"; //testing
+        return $idStr;
     }
 
     public function getUrl($generator,$urlname,$oid) {

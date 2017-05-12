@@ -403,4 +403,27 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         return $message;
     }
 
+    public function findByOidAndStatus( $oid, $statusName="Signed" ) {
+        $parameters = array();
+
+        $repository = $this->_em->getRepository('OlegOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder("message");
+
+        $dql->where("message.oid = :oid");
+        $parameters['oid'] = $oid;
+
+        //if( $statusName ) {
+            $dql->andWhere("message.messageStatus = :messageStatus");
+            $parameters['messageStatus'] = $statusName;
+        //}
+
+        $dql->orderBy('message.version','DESC');
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($parameters);
+        $messages = $query->getResult();
+
+        return $messages;
+    }
+
 }
