@@ -1667,19 +1667,21 @@ function calllogSubmitForm(btn,messageStatus) {
     ///////////// EOF if issue is not selected => "Please select the appropriate issue to save your entry" ///////////////
 
     ///////////// Please provide the amendment reason. ///////////////
-    var amendmentReason = $(".ajax-combobox-amendmentReason");
-    if( amendmentReason ) {
-        var amendmentReasonData = amendmentReason.select2('data');
-        if( amendmentReasonData && amendmentReasonData.id ) {
-            //ok
-        } else {
-            $('#calllog-msg-danger-box').html("Please provide the amendment reason.");
-            $('#calllog-msg-danger-box').show();
-            lbtn.stop();
-            return false;
+    var formcycle = $('#formcycle').val();
+    if( formcycle == 'edit' || formcycle == 'amend' ) {
+        var amendmentReason = $(".ajax-combobox-amendmentReason");
+        if (amendmentReason) {
+            var amendmentReasonData = amendmentReason.select2('data');
+            if (amendmentReasonData && amendmentReasonData.id) {
+                //ok
+            } else {
+                $('#calllog-msg-danger-box').html("Please provide the amendment reason.");
+                $('#calllog-msg-danger-box').show();
+                lbtn.stop();
+                return false;
+            }
         }
     }
-
     ///////////// EOF Please provide the amendment reason. ///////////////
 
 
