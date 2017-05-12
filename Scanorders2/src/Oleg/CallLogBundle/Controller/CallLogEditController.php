@@ -582,7 +582,7 @@ class CallLogEditController extends CallEntryController
                     $calllogUtil->addToPatientLists($patient,$message,$testing);
 
                     //New Encounter (ID#" . $newEncounter->getId() . ")
-                    $msg = " is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
+                    $msg = " is created with a new Encounter number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
 
                 } else {
                     //CASE 2
@@ -606,7 +606,7 @@ class CallLogEditController extends CallEntryController
                     }
 
                     //New Encounter (ID#" . $newEncounter->getId() . ")
-                    $msg = " is created with number " . $newEncounter->obtainEncounterNumber();
+                    $msg = " is created with a new Encounter number " . $newEncounter->obtainEncounterNumber();
                 }
 
                 //set encounter as message's input
