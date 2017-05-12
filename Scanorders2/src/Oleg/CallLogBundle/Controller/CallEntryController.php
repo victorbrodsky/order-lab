@@ -2492,6 +2492,12 @@ class CallEntryController extends Controller
 
         if( !is_numeric($messageVersion) || !$messageVersion ) {
             $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid);
+
+            if( !$messageLatest && !$messageVersion ) {
+                //handle case with th real DB id: http://localhost/order/call-log-book/entry/view/267
+                $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->find($messageOid);
+            }
+
             if( $messageLatest ) {
                 return $this->redirect($this->generateUrl('calllog_callentry_view', array(
                     'messageOid' => $messageLatest->getOid(),

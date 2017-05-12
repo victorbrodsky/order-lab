@@ -1760,6 +1760,7 @@ class CallLogUtil
                     // and the user clicks "Finalize & Sign", check in the Event Log if this message ever had a status of "Signed",
                     // if yes - save the new copy/version of the message with message status = "Signed, Amended",
                     // if not - save the new copy/version of the message with message status = "Signed".
+                    //TODO: test event log for [Message Entry ID#:252 (v.10); Status:Signed]
                     $newStatusStr = "Signed, Amended";
                     break;
             }
