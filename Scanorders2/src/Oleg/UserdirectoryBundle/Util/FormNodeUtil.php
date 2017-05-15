@@ -1111,13 +1111,22 @@ class FormNodeUtil
                                 if( $parentFormNodeObjectType == "Form Section Array" ) {
                                     $parentFormNodeObjectType = "Form Section";
                                 }
-                                $parentFormNodeName = $parentFormNode->getName() . " [" . $parentFormNodeObjectType . " ". $i . "]";
+                                if( $table ) {
+                                    //html
+                                    $parentFormNodeName = "<i>" . $parentFormNode->getName() . " [section $i]" . "</i>";
+                                } else {
+                                    //excel
+                                    //$parentFormNodeName = $parentFormNode->getName() . " [" . $parentFormNodeObjectType . " ". $i . "]";
+                                    $parentFormNodeName = $parentFormNode->getName() . " [section $i]" . "[###excel_section_flag###]";
+                                }
+
                             } else {
                                 $parentFormNodeName = $parentFormNode->getName() . " [section $i]";
                             }
                             //$parentFormNodeName = $parentFormNode->getName() . " [Form Section $i]";
                         } else {
-                            $parentFormNodeName = "[Form Section $i]";
+                            //$parentFormNodeName = "[Form Section $i]";
+                            $parentFormNodeName = "[section $i]";
                         }
                         $formSectionNodeArr[$parentFormNodeName][] = array('name'=>$elementName,'value'=>$elementValue);
 
@@ -1151,7 +1160,12 @@ class FormNodeUtil
                         //testing
                         $parentFormNodeObjectType = $parentFormNode->getObjectType();
                         if( $parentFormNodeObjectType ) {
-                            $parentFormNodeName = $parentFormNodeName . " [" . $parentFormNodeObjectType . "]";
+                            if( $table ) {
+                                $parentFormNodeName = "<i>" . $parentFormNodeName . "</i>";
+                            } else {
+                                //$parentFormNodeName = $parentFormNodeName . " [" . $parentFormNodeObjectType . "]" . "[###excel_section_flag###]";
+                                $parentFormNodeName = $parentFormNodeName . "[###excel_section_flag###]";
+                            }
                         }
                     } else {
                         $parentFormNodeName = "";

@@ -1782,7 +1782,7 @@ class CallLogUtil
         return $newMessageStatusObj;
     }
     //check in the Event Log if this message ever had a status of "Signed"
-    //test event log for [Message Entry ID#:252 (v.10); Status:Signed]
+    //test event log for [Message Entry ID#:252 .1; Status:Signed]
     public function hadMessageStatus( $oid, $statusName="Signed" ) {
         $sitename = "calllog";
 
@@ -1793,7 +1793,7 @@ class CallLogUtil
         $dql->leftJoin('logger.objectType', 'objectType');
         $dql->leftJoin('logger.site', 'site');
 
-        $dql->andWhere("logger.entityNamespace = 'Oleg\OrderformBundle\Entity'");
+        //$dql->andWhere("logger.entityNamespace = 'Oleg\OrderformBundle\Entity'");
         $dql->andWhere("logger.entityName = 'Message'");
         $dql->andWhere("site.abbreviation = '".$sitename."'");
 
@@ -1810,7 +1810,7 @@ class CallLogUtil
         $query = $this->em->createQuery($dql);
         $query->setParameters( $queryParameters );
         $logs = $query->getResult();
-        //echo "logs count=".count($logs)."<br>";
+        //echo $oid."[".$statusName."]: logs count=".count($logs)."<br>";
 
         if( count($logs) > 0 ) {
             return true;

@@ -104,6 +104,7 @@
                 <div class="panel-body">
                     {% for thisMessage in allMessages %}
                         {% set thisMessageInfo = "ID "~thisMessage.getMessageOidVersion ~ " " ~ thisMessage.getSubmitterInfoSimpleDate %}
+                        {% set thisMessageInfo = thisMessageInfo ~ " [" ~ thisMessage.getMessageStatus ~ "]" %}
                         <p>
                             <a href="{{ path('calllog_callentry_view', {'messageOid': thisMessage.oid, 'messageVersion':thisMessage.version}) }}">{{ thisMessageInfo }}</a>
                         </p>

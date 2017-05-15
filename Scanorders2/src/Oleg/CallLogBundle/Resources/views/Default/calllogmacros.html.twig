@@ -904,7 +904,7 @@
 
                 <td>
                     {#{{ 'messageOid': message.oid, 'messageVersion':message.version }}#}
-                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.oid ~"(v."~message.version~")" }}</a>
+                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
                 </td>
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}

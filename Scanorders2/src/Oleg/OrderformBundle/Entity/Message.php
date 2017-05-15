@@ -1667,7 +1667,7 @@ class Message {
         }
     }
     public function getMessageOidVersion(){
-        $idStr = $this->getOid()." (v.".$this->getVersion().")";
+        $idStr = $this->getOid().".".$this->getVersion();
         //$idStr = $idStr . "[DB ID#".$this->getId()."]"; //testing
         return $idStr;
     }

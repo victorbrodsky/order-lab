@@ -86,6 +86,21 @@ class CallEntryController extends Controller
         $alerts = false;
         $limit = 10;
 
+        //testing
+//        $toid = 272;
+//        if( $calllogUtil->hadMessageStatus($toid) ) {
+//            echo $toid.": signed<br>";
+//        } else {
+//            echo $toid.":unsigned<br>";
+//        }
+//        $toid = 252;
+//        if( $calllogUtil->hadMessageStatus($toid) ) {
+//            echo $toid.": signed<br>";
+//        } else {
+//            echo $toid.":unsigned<br>";
+//        }
+        //exit();
+
         if( $route == "calllog_alerts" ) {
             $alerts = true;
             $title = $title . " (Alerts)";
@@ -2865,10 +2880,27 @@ class CallEntryController extends Controller
             $numItems = count($snapshotArrChunks);
             $i = 0;
             foreach( $snapshotArrChunks as $snapshotArrChunk ) {
-                $snapshot = implode("\n",$snapshotArrChunk);
+
+                //$snapshot = implode("\n",$snapshotArrChunk);
+                $objRichText = new \PHPExcel_RichText();
+                foreach( $snapshotArrChunk as $snapshotRow ) {
+                    if( strpos($snapshotRow, "[###excel_section_flag###]") === false ) {
+                        $objRichText->createText($snapshotRow."\n");
+                    } else {
+                        $snapshotRow = str_replace("[###excel_section_flag###]","",$snapshotRow);
+                        $objItalic = $objRichText->createTextRun($snapshotRow."\n");
+                        $objItalic->getFont()->setItalic(true);
+                    }
+                }
                 //exit('$snapshot='.$snapshotArr);
                 $aRow = 'A' . $row;
-                $ews->setCellValue($aRow, "".$snapshot);
+                //$ews->setCellValue($aRow, "".$snapshot);
+                $ews->setCellValue($aRow, $objRichText);
+
+//                if( strpos($snapshot, '[Form Section]') !== false ) {
+//                    $ews->getStyle($aRow)->getFont()->setItalic(true);
+//                }
+
                 if( ++$i < $numItems ) {
                     $row = $row + 1;
                 }
