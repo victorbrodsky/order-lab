@@ -631,6 +631,11 @@ class SiteParameters {
      */
     private $pathMetaphone;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $calllogResources;
+
 
 
     function __construct( $addobjects=true )
@@ -2322,6 +2327,22 @@ class SiteParameters {
     public function setPathMetaphone($pathMetaphone)
     {
         $this->pathMetaphone = $pathMetaphone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCalllogResources()
+    {
+        return $this->calllogResources;
+    }
+
+    /**
+     * @param mixed $calllogResources
+     */
+    public function setCalllogResources($calllogResources)
+    {
+        $this->calllogResources = $calllogResources;
     }
 
 

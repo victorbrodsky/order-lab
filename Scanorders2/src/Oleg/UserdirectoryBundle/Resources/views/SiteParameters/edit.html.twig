@@ -15,11 +15,22 @@
 #}
 
 
-{% if sitename == 'employees' %}
-    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
-{% else %}
+{% if sitename == 'scan' %}
     {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
 {% endif %}
+
+{% if sitename == 'deidentifier' %}
+    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% if sitename == 'vacreq' %}
+    {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% if sitename == 'calllog' %}
+    {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
+{% endif %}
+
 {% extends extendStr%}
 
 

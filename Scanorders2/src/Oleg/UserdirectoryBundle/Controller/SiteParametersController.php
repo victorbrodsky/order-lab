@@ -134,17 +134,24 @@ class SiteParametersController extends Controller
         return $this->editParameters($request,$id);
     }
 
-    public function editParameters( Request $request, $id )
+    public function editParameters( Request $request, $id, $role=null )
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
-
         $param = trim( $request->get('param') );
 
         $routeName = $request->get('_route');
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
+        //exit('role='.$role."; sitename=".$sitename);
+
+        if( $role ) {
+            if( false === $this->get('security.context')->isGranted($role) ) {
+                return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
+            }
+        } else {
+            if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
+            }
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -179,11 +186,24 @@ class SiteParametersController extends Controller
         return $this->updateParameters($request, $id);
     }
 
-    public function updateParameters(Request $request, $id)
+    public function updateParameters(Request $request, $id, $role=null)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        $param = trim( $request->get('param') );
+        //echo "param=".$param."<br>";
+
+        $routeName = $request->get('_route');
+        $routeArr = explode("_", $routeName);
+        $sitename = $routeArr[0];
+
+        if( $role ) {
+            if( false === $this->get('security.context')->isGranted($role) ) {
+                return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
+            }
+        } else {
+            if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
+            }
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -194,13 +214,6 @@ class SiteParametersController extends Controller
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
         }
 
-        $param = trim( $request->get('param') );
-        //echo "param=".$param."<br>";
-
-        $routeName = $request->get('_route');
-        $routeArr = explode("_", $routeName);
-        $sitename = $routeArr[0];
-
         $editForm = $this->createEditForm($sitename,$entity,$param,false);
 
         $editForm->handleRequest($request);
@@ -208,7 +221,15 @@ class SiteParametersController extends Controller
         if( $editForm->isValid() ) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl($sitename.'_siteparameters'));
+            $redirectPathPostfix = '_siteparameters';
+
+            //Exception: edit "calllogResources" param can be invoked from a specific controller "calllog_siteparameters_resources_edit" by non-admin user =>
+            //redirect to another page, in this case 'calllog_resources' instead of the _siteparameters page which is accessible only by admin.
+            if( $param == 'calllogResources' ) {
+                $redirectPathPostfix = '_resources';
+            }
+
+            return $this->redirect($this->generateUrl($sitename.$redirectPathPostfix)); //'_siteparameters'
         }
 
         return array(

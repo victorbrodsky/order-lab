@@ -110,22 +110,30 @@
                     <li id="nav-bar-resources"><a href="{{ path(calllog_sitename~'_resources') }}">Resources</a></li>
 
 
-                    {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
+                    {#{% if is_granted('ROLE_CALLLOG_DATA_QUALITY') || is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}#}
 
-                        <li id="nav-bar-dataquality" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
+                    <li id="nav-bar-dataquality" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
                                 <li><a href="{{ path(calllog_sitename~'_edit_patient_record') }}">Edit Patient Info</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_merge_patient_records') }}">Merge Patient Records</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_unmerge_patient_records') }}">Un-merge Patient Records</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_set_master_patient_record') }}">Set master record</a></li>
-                                {% if shownavbarfilter is defined and shownavbarfilter == false %}
-                                    <li><a href="{{ path(calllog_sitename~'_export_csv',app.request.query.all) }}">Export in .CSV</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
+                            {% endif %}
+                            {% if shownavbarfilter is defined and shownavbarfilter == false %}
+                                <li><a href="{{ path(calllog_sitename~'_export_csv',app.request.query.all) }}">Export in .CSV</a></li>
+                            {% endif %}
+                            {% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}
+                                <li>
+                                    {#<a href="{{ path(calllog_sitename~'_edit_patient_record') }}">Call Log Book Resources</a>#}
+                                    <a href="{{ path(calllog_sitename~'_siteparameters_resources_edit') }}">Edit Call Log Book Resources</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
 
-                    {% endif %}
+                    {#{% endif %}#}
 
                 </ul>
 

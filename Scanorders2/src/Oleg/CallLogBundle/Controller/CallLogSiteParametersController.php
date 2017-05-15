@@ -57,7 +57,7 @@ class CallLogSiteParametersController extends SiteParametersController
      */
     public function editAction(Request $request,$id)
     {
-        return $this->editParameters($request,$id);
+        return $this->editParameters($request,$id,'ROLE_CALLLOG_PATHOLOGY_ATTENDING');
     }
 
     /**
@@ -69,9 +69,35 @@ class CallLogSiteParametersController extends SiteParametersController
      */
     public function updateAction(Request $request, $id)
     {
-        return $this->updateParameters($request, $id);
+        return $this->updateParameters($request,$id,'ROLE_CALLLOG_PATHOLOGY_ATTENDING');
     }
 
 
+    /**
+     * Resources page
+     *
+     * @Route("/edit-resources/", name="calllog_siteparameters_resources_edit")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     */
+    public function editResourcesAction( Request $request )
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+
+        $entity = $entities[0];
+
+        return $this->redirect($this->generateUrl('calllog_siteparameters_edit', array('id'=>$entity->getId(),'param'=>'calllogResources')));
+    }
 
 }

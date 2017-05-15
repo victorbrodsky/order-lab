@@ -565,6 +565,12 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'calllogResources' )
+            $builder->add('calllogResources',null,array(
+                'label'=>'Call Log Book Resources:',
+                'attr' => array('class'=>'form-control')
+            ));
+
     }
     
     /**

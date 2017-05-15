@@ -58,6 +58,10 @@ class DefaultController extends Controller
      */
     public function resourcesAction(Request $request)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
         //return $this->redirectToRoute('user_admin_index');
 
         //testing
@@ -75,11 +79,23 @@ class DefaultController extends Controller
 //                $msg
 //            );
 
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+
+        $entity = $entities[0];
+
+        $resourcesText = $entity->getCalllogResources();
+
         return array(
             //'entity' => $entity,
             //'form' => $form->createView(),
             //'cycle' => $cycle,
             'title' => "Resources",
+            'resourcesText' => $resourcesText
         );
     }
 
