@@ -214,6 +214,10 @@ class SiteParametersController extends Controller
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
         }
 
+        //get method
+        $getMethod = "get".$param;
+        $originalParam = $entity->$getMethod();
+
         $editForm = $this->createEditForm($sitename,$entity,$param,false);
 
         $editForm->handleRequest($request);
@@ -228,6 +232,15 @@ class SiteParametersController extends Controller
             if( $param == 'calllogResources' ) {
                 $redirectPathPostfix = '_resources';
             }
+
+            //add a new eventlog record for an updated parameter
+            $user = $this->get('security.context')->getToken()->getUser();
+            $userSecUtil = $this->get('user_security_utility');
+            $eventType = "Site Settings Parameter Updated";
+            $eventStr = "Site Settings parameter [$param] has been updated by ".$user;
+            $eventStr = $eventStr . "<br>original value:<br>".$originalParam;
+            $eventStr = $eventStr . "<br>updated value:<br>".$entity->$getMethod();
+            $userSecUtil->createUserEditEvent($sitename, $eventStr, $user, $entity, $request, $eventType);
 
             return $this->redirect($this->generateUrl($sitename.$redirectPathPostfix)); //'_siteparameters'
         }
