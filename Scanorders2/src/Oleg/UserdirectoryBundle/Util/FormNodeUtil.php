@@ -1094,6 +1094,11 @@ class FormNodeUtil
                         $elementName = $formNode->getName();
                         $elementValue = $formNodeValueArr[$i];
 
+                        //hide message fields that are empty/have no value
+                        if( !$elementValue ) {
+                            continue;
+                        }
+
                         //testing
                         //$elementName = $elementName." [ID# ".$formNode->getId().": ".$receivingEntity."]";
 
@@ -1108,9 +1113,9 @@ class FormNodeUtil
                         if( $parentFormNode ) {
                             $parentFormNodeObjectType = $parentFormNode->getObjectType();
                             if( $parentFormNodeObjectType ) {
-                                if( $parentFormNodeObjectType == "Form Section Array" ) {
-                                    $parentFormNodeObjectType = "Form Section";
-                                }
+                                //if( $parentFormNodeObjectType == "Form Section Array" ) {
+                                //    $parentFormNodeObjectType = "Form Section";
+                                //}
                                 if( $table ) {
                                     //html
                                     $parentFormNodeName = "<i>" . $parentFormNode->getName() . " [section $i]" . "</i>";
@@ -1140,6 +1145,11 @@ class FormNodeUtil
                     //echo "Case 2: single: ".$formNode->getName().": ".$formNodeValue."<br>";
 
                     $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
+
+                    //hide message fields that are empty/have no value
+                    if( !$formNodeValue ) {
+                        continue;
+                    }
 
                     //////////////// Regular form node /////////////////////
                     //process userWrapper case
