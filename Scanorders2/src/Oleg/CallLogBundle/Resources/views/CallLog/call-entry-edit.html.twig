@@ -167,7 +167,10 @@
 
                             {% if encounterPatientInfo %}
 
+                                encounterPatientInfo.id={{ encounterPatientInfo.vars.value.id }}<br>
+                                {{ form_row(encounterPatientInfo.id) }}
                                 {{ form_row(encounterPatientInfo.status) }}
+
                                 {{ formmacros.inputArrayField(encounterPatientInfo.number,"new","encounternumber","key","","","",status) }}
 
                                 {% if cycle == 'show' %}

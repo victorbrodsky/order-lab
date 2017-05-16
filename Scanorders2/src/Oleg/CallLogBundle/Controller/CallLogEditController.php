@@ -422,7 +422,7 @@ class CallLogEditController extends CallEntryController
             //get a new encounter without id
             foreach( $encounterHolder->getEncounter() as $encounter ) {
                 echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
-                if( !$encounter->getId() ) {
+                //if( !$encounter->getId() ) {
                     if( $encounter->getStatus() == 'valid' ) {
                         $newEncounter = $encounter;
                     }
@@ -432,7 +432,7 @@ class CallLogEditController extends CallEntryController
                         //it must be removed from the patient
                         $dummyEncounter = $encounter;
                     }
-                }
+                //}
             }
 
             //set system source and user's default institution
@@ -442,8 +442,9 @@ class CallLogEditController extends CallEntryController
                 $newEncounter->setInstitution($institution);
 
                 //assign generated encounter number ID
-                $key = $newEncounter->obtainAllKeyfield()->first();
-                $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+                //$key = $newEncounter->obtainAllKeyfield()->first();
+                //echo $newEncounter->getId().": key=".$key."<br>";
+                //$em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
                 //Remove tracker if spots/location is empty
                 $tracker = $newEncounter->getTracker();
