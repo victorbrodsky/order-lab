@@ -230,16 +230,23 @@ class CallLogEditController extends CallEntryController
 
         ////////////////// add missing encounter fields //////////////////
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
-        $existingEncounter = null;
-        foreach( $message->getEncounter() as $encounter ) {
-            //echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
-            //if( !$encounter->getId() ) {
-                if( $encounter->getStatus() == 'valid' ) {
-                    $existingEncounter = $encounter;
-                    break;
-                }
-            //}
+
+//        $existingEncounter = null;
+//        foreach( $message->getEncounter() as $encounter ) {
+//            //echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
+//            //if( !$encounter->getId() ) {
+//                if( $encounter->getStatus() == 'valid' ) {
+//                    $existingEncounter = $encounter;
+//                    break;
+//                }
+//            //}
+//        }
+
+        //message should have only one attached encounter
+        if( count($message->getEncounter()) > 1 ) {
+            throw new \Exception('Message must have only one attached encounter. Number of attached encounters '.count($message->getEncounter()));
         }
+        $existingEncounter = $message->getEncounter()->first();
 
         //ReferringProvider
         if( count($existingEncounter->getReferringProviders()) == 0 ) {
@@ -310,11 +317,14 @@ class CallLogEditController extends CallEntryController
         $latestMessageStatus = null;
         $latestMessageLabel = null;
         $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid(null,$allMessages);
+        $latestMessageVersion = intval($latestMessage->getVersion()) + 1;
         if( $latestMessage && intval($messageVersion) != intval($latestMessage->getVersion()) ) {
             $latestMessageStatus = $latestMessage->getMessageStatus()->getName()."";
+//            $latestMessageVersion = intval($latestMessage->getVersion()) + 1;
             //"Current Status of the Current Version of this message (Current Version is X, Displaying Version Y):"
-            $latestMessageLabel = "Current Status of the Current Version of this message (Current Version is $messageVersion, Displaying Version ".$latestMessage->getVersion()."):";
+            $latestMessageLabel = "Current Status of the Current Version of this message (Current Version is $messageVersion, New Displaying Version ".$latestMessageVersion."):";
         }
+        //echo "messageLabel=".$latestMessageLabel."<br>";
 
         return array(
             //'entity' => $entity,
@@ -336,7 +346,8 @@ class CallLogEditController extends CallEntryController
             'formnodeTopHolderId' => $formnodeTopHolderId,
             'currentMessageStatus' => $latestMessageStatus,
             'currentMessageLabel' => $latestMessageLabel,
-            'allMessages' => $allMessages
+            'allMessages' => $allMessages,
+            'currentMessageVersion' => $latestMessageVersion
         );
     }
 
@@ -446,6 +457,10 @@ class CallLogEditController extends CallEntryController
                 //echo $newEncounter->getId().": key=".$key."<br>";
                 //$em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
+                //set encounter status invalid for all other encounter objects found by encounter number and type
+                // and increment encounter version for current encounter
+                $calllogUtil->processEncounterFamily($newEncounter);
+
                 //Remove tracker if spots/location is empty
                 $tracker = $newEncounter->getTracker();
                 if( $tracker ) {
@@ -539,7 +554,7 @@ class CallLogEditController extends CallEntryController
                 //increment version: latest message + 1
                 $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid($originalMessage->getOid());
                 $incrementedVersion = intval($latestMessage->getVersion()) + 1;
-                echo "incrementedVersion=".$incrementedVersion."<br>";
+                //echo "incrementedVersion=".$incrementedVersion."<br>";
                 $message->setVersion($incrementedVersion);
 
                 if( $buttonStatusObj ) {
@@ -583,7 +598,7 @@ class CallLogEditController extends CallEntryController
                     $calllogUtil->addToPatientLists($patient,$message,$testing);
 
                     //New Encounter (ID#" . $newEncounter->getId() . ")
-                    $msg = " is created with a new Encounter number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
+                    $msg = " is created with Encounter number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
 
                 } else {
                     //CASE 2
@@ -600,14 +615,15 @@ class CallLogEditController extends CallEntryController
                     //exit('Exit Case 2');
                     if( !$testing ) {
                         $em->persist($newEncounter);
-                        $em->flush($newEncounter); //testing
+                        //$em->flush($newEncounter); //testing
 
                         $em->persist($message);
-                        $em->flush($message); //testing
+                        //$em->flush($message); //testing
+                        $em->flush();
                     }
 
                     //New Encounter (ID#" . $newEncounter->getId() . ")
-                    $msg = " is created with a new Encounter number " . $newEncounter->obtainEncounterNumber();
+                    $msg = " is created with Encounter number " . $newEncounter->obtainEncounterNumber();
                 }
 
                 //set encounter as message's input

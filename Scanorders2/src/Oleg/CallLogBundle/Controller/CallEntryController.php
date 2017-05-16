@@ -762,6 +762,7 @@ class CallEntryController extends Controller
             //echo "Create new encounter <br>";
             //create encounter #2 to display in "Encounter Info" -> "Update Patient Info"
             $encounter2 = new Encounter(true, 'valid', $user, $system);
+            $encounter2->setVersion(1);
             $encounter2->setInstitution($institution);
             //ReferringProvider
             $encounterReferringProvider = new EncounterReferringProvider('valid', $user, $system);
@@ -1420,7 +1421,7 @@ class CallEntryController extends Controller
         $message = new Message();
         $message->setPurpose("For Internal Use by WCMC Department of Pathology for Call Log Book");
         $message->setProvider($user);
-        $message->setVersion('1');
+        $message->setVersion(1);
 
         //set Source object
         $source = new Endpoint();

@@ -1818,4 +1818,29 @@ class CallLogUtil
 
         return false;
     }
+
+    //set encounter status invalid for all other encounter objects found by encounter number and type
+    //and increment encounter version for current encounter
+    public function processEncounterFamily( $encounter ) {
+        $maxVersion = 0;
+        $otherEncounters = $this->em->getRepository('OlegOrderformBundle:Encounter')->findAllEncountersByEncounter($encounter);
+        foreach( $otherEncounters as $otherEncounter ) {
+            $otherEncounter->setStatus('invalid');
+
+            $thisVersion = intval($otherEncounter->getVersion());
+            if( $thisVersion && $thisVersion > $maxVersion ) {
+                $maxVersion = $thisVersion;
+            }
+        }
+
+        //set status valid for current encounter
+        $encounter->setStatus('valid');
+
+        //increment encounter version for current encounter
+        $incrementedVersion = $maxVersion + 1;
+        //echo "incrementedVersion=".$incrementedVersion."<br>";
+        $encounter->setVersion($incrementedVersion);
+
+        return $otherEncounters;
+    }
 }

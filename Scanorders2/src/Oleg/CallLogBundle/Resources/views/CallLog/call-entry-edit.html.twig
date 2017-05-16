@@ -167,7 +167,7 @@
 
                             {% if encounterPatientInfo %}
 
-                                encounterPatientInfo.id={{ encounterPatientInfo.vars.value.id }}<br>
+                                {#encounterPatientInfo.id={{ encounterPatientInfo.vars.value.id }}<br>#}
                                 {{ form_row(encounterPatientInfo.id) }}
                                 {{ form_row(encounterPatientInfo.status) }}
 
@@ -261,8 +261,8 @@
 
                             {#Message Version#}
                             {#{{ formmacros.field(form.version) }}#}
-                            {% set newVesrion = form.vars.value.version|number_format + 1 %}
-                            {{ formmacros.simplefield("Message Version:",newVesrion,"","disabled") }}
+                            {#{% set newVesrion = form.vars.value.version|number_format + 1 %}#}
+                            {{ formmacros.simplefield("New Message Version:",currentMessageVersion,"","disabled") }}
                             {{ formmacros.field(form.messageTitle) }}
 
                             {#form version#}

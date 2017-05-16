@@ -444,11 +444,39 @@ class EncounterRepository extends ArrayFieldAbstractRepository
     //used for call log entry
     public function findOneEncounterByNumberAndType( $encounterTypeId, $encounterNumber ) {
 
+//        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
+//        $dql = $repository->createQueryBuilder("encounter");
+//        $dql->leftJoin("encounter.number", "number");
+//
+//        $dql->andWhere("number.field = :number AND number.keytype = :keytype AND encounter.status = 'valid'");
+//
+//        $parameters['number'] = $encounterNumber;
+//        $parameters['keytype'] = $encounterTypeId;
+//
+//        $query = $this->_em->createQuery($dql);
+//        $query->setParameters($parameters);
+//        $encounters = $query->getResult();
+
+        $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber);
+
+        if( count($encounters) > 0 ) {
+            return $encounters[0];
+        }
+
+        return null;
+    }
+
+    public function findEncountersByNumberAndType( $encounterTypeId, $encounterNumber, $status='valid' ) {
+
         $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
         $dql = $repository->createQueryBuilder("encounter");
         $dql->leftJoin("encounter.number", "number");
 
-        $dql->andWhere("number.field = :number AND number.keytype = :keytype AND encounter.status = 'valid'");
+        if( $status ) {
+            $dql->andWhere("number.field = :number AND number.keytype = :keytype AND encounter.status = '".$status."'");
+        } else {
+            $dql->andWhere("number.field = :number AND number.keytype = :keytype");
+        }
 
         $parameters['number'] = $encounterNumber;
         $parameters['keytype'] = $encounterTypeId;
@@ -457,11 +485,18 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $query->setParameters($parameters);
         $encounters = $query->getResult();
 
-        if( count($encounters) > 0 ) {
-            return $encounters[0];
-        }
+        return $encounters;
+    }
 
-        return null;
+    public function findAllEncountersByEncounter( $encounter ) {
+
+        $key = $encounter->obtainValidField('number');
+        $encounterNumber = $key->getField();
+        $encounterTypeId = $key->getKeytype();
+
+        $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber);
+
+        return $encounters;
     }
 
     //used for call log entry

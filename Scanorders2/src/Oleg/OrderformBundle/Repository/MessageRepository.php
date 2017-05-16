@@ -396,6 +396,11 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             $messages = $this->findAllMessagesByOid($oid);
         }
 
+//        testing
+//        foreach( $messages as $thisMessage ) {
+//            echo $thisMessage->getId().": version=".$thisMessage->getVersion()."<br>";
+//        }
+
         if( count($messages) > 0 ) {
             $message = $messages[0];
         }

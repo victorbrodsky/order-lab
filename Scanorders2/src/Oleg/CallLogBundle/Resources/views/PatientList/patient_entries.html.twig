@@ -111,7 +111,7 @@
                 <tr class="{{ trclassname }}">
 
                     <td style="display: none;">
-                        <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>
+                        <a href="{{ path(calllog_sitename~'_callentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
                     </td>
 
                     {#Encounter Date#}

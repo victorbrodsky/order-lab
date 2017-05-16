@@ -138,13 +138,17 @@ class Encounter extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="EncounterInpatientinfo", mappedBy="encounter", cascade={"persist"})
      */
     private $inpatientinfo;
-    ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
     /**
      * @ORM\ManyToOne(targetEntity="EncounterStatusList")
      */
     private $encounterStatus;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $version;
+    ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
@@ -736,6 +740,23 @@ class Encounter extends ObjectAbstract
     {
         $this->encounterStatus = $encounterStatus;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
 
 
 
