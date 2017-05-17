@@ -488,12 +488,14 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         return $encounters;
     }
 
+    //return encounters found by provided encounter's key (keytype and number)
     public function findAllEncountersByEncounter( $encounter ) {
 
         $key = $encounter->obtainValidField('number');
         $encounterNumber = $key->getField();
         $encounterTypeId = $key->getKeytype();
 
+        //find valid encounters with the same key
         $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber);
 
         return $encounters;
@@ -511,5 +513,44 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         }
 
         return false;
+    }
+
+    public function getMaxEncounterVersion( $encounter ) {
+
+        if( !$encounter ) {
+            return null;
+        }
+
+        $key = $encounter->obtainValidField('number');
+        $encounterNumber = $key->getField();
+        $encounterTypeId = $key->getKeytype();
+
+        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
+        $dql = $repository->createQueryBuilder("encounter");
+        $dql->select("MAX(encounter.version) as maxVersion");
+
+        $dql->leftJoin("encounter.number", "number");
+
+        $dql->andWhere("number.field = :number AND number.keytype = :keytype");
+
+        $parameters['number'] = $encounterNumber;
+        $parameters['keytype'] = $encounterTypeId;
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($parameters);
+
+        $maxVersions = $query->getResult();
+        //echo "maxVersions count=".count($maxVersions)."<br>";
+        //print_r($maxVersions);
+
+        if( count($maxVersions) > 0 ) {
+            $maxVersion = $maxVersions[0]['maxVersion'];
+            $maxVersion = intval($maxVersion);
+        } else {
+            $maxVersion = 0;
+        }
+        //echo "maxVersion=".$maxVersion."<br>";
+
+        return $maxVersion;
     }
 }

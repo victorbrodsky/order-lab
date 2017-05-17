@@ -29,6 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class CallLogEditController extends CallEntryController
@@ -128,7 +129,7 @@ class CallLogEditController extends CallEntryController
         return $this->redirect($this->generateUrl('calllog_home'));
     }
 
-    public function deleteMessage( $message, $actionStr, $request ) {
+    public function deleteMessage( $message, $actionStr, $request, $testing=false ) {
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
         $userSecUtil = $this->get('user_security_utility');
@@ -145,7 +146,9 @@ class CallLogEditController extends CallEntryController
 
         $message->setMessageStatus($messageStatus);
 
-        $em->flush($message);
+        if( !$testing ) {
+            $em->flush($message);
+        }
 
         //"Entry 123 for PatientFirstName PatientLastName (DOB: MM/DD/YYYY) submitted on
         // [submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD successfully deleted
@@ -173,7 +176,7 @@ class CallLogEditController extends CallEntryController
      * @Method("GET")
      * @Template("OlegCallLogBundle:CallLog:call-entry-edit.html.twig")
      */
-    public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion)
+    public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
         if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
@@ -189,23 +192,41 @@ class CallLogEditController extends CallEntryController
         //$title = "Call Log Entry";
         $formtype = "call-entry";
 
-        //$patientId = trim($request->get('patientId'));
-        //$nowStr = trim($request->get('nowStr'));
-        //echo "patientId=".$patientId."<br>";
-        //echo "nowStr=".$nowStr."<br>";
-        //$messageId = 142; //154; //testing
-
-        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
-        if( !$message ) {
-            throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
-        }
-
         $route = $request->get('_route');
         if( $route == "calllog_callentry_edit" ) {
             $cycle = "edit";
         }
         if( $route == "calllog_callentry_amend" ) {
             $cycle = "amend";
+        }
+
+        //$patientId = trim($request->get('patientId'));
+        //$nowStr = trim($request->get('nowStr'));
+        //echo "patientId=".$patientId."<br>";
+        //echo "nowStr=".$nowStr."<br>";
+        //$messageId = 142; //154; //testing
+
+        if( !is_numeric($messageVersion) || !$messageVersion ) {
+            $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid);
+
+            if( !$messageLatest && !$messageVersion ) {
+                //handle case with th real DB id: http://localhost/order/call-log-book/entry/view/267
+                $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->find($messageOid);
+            }
+
+            if( $messageLatest ) {
+                return $this->redirect($this->generateUrl($route, array(
+                    'messageOid' => $messageLatest->getOid(),
+                    'messageVersion' => $messageLatest->getVersion()
+                )));
+            }
+
+            throw new \Exception( "Latest Message is not found by oid ".$messageOid );
+        }
+
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        if( !$message ) {
+            throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
 
         $messageInfo = "Entry ID ".$message->getMessageOidVersion()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
@@ -326,6 +347,15 @@ class CallLogEditController extends CallEntryController
         }
         //echo "messageLabel=".$latestMessageLabel."<br>";
 
+        $latestEntryUrl = $this->generateUrl(
+            $route,
+            array('messageOid'=>$message->getOid(), 'messageVersion'=>'latest'),
+            UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
+        );
+
+        $maxEncounterVersion = $em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($existingEncounter);
+        $latestNextEncounterVersion = intval($maxEncounterVersion) + 1;
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -347,7 +377,9 @@ class CallLogEditController extends CallEntryController
             'currentMessageStatus' => $latestMessageStatus,
             'currentMessageLabel' => $latestMessageLabel,
             'allMessages' => $allMessages,
-            'currentMessageVersion' => $latestMessageVersion
+            'currentMessageVersion' => $latestMessageVersion,
+            'currentEncounterVersion' => $latestNextEncounterVersion,
+            'latestEntryUrl' => $latestEntryUrl
         );
     }
 
@@ -375,7 +407,7 @@ class CallLogEditController extends CallEntryController
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -428,23 +460,47 @@ class CallLogEditController extends CallEntryController
                 $encounterHolder = $message;
             }
 
-            $dummyEncounter = null;
-            $newEncounter = null;
-            //get a new encounter without id
-            foreach( $encounterHolder->getEncounter() as $encounter ) {
-                echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
-                //if( !$encounter->getId() ) {
-                    if( $encounter->getStatus() == 'valid' ) {
-                        $newEncounter = $encounter;
-                    }
-                    if( $encounter->getStatus() == 'invalid' ) {
-                        //this encounter is served only to find the patient:
-                        //copy all non-empty values from the $dummyEncounter to the $newEncounter
-                        //it must be removed from the patient
-                        $dummyEncounter = $encounter;
-                    }
-                //}
+//            $dummyEncounter = null;
+//            $newEncounter = null;
+//            //get an encounter
+//            echo "encounter count=".count($encounterHolder->getEncounter())."<br>";
+//            foreach( $encounterHolder->getEncounter() as $encounter ) {
+//                echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."; key=".$encounter->obtainValidField('number')."<br>";
+//                //if( !$encounter->getId() ) {
+//                    if( $encounter->getStatus() == 'valid' ) {
+//                        $newEncounter = $encounter;
+//                    }
+//                    if( $encounter->getStatus() == 'invalid' ) {
+//                        //this encounter is served only to find the patient:
+//                        //copy all non-empty values from the $dummyEncounter to the $newEncounter
+//                        //it must be removed from the patient
+//                        $dummyEncounter = $encounter;
+//                    }
+//                //}
+//            }
+
+            //Use patient (if exists) or message to get edited encounter. On this stage, if patient exists, message does not have yet encounter =>
+            // therefore, we can't use only message to get encounter. Use $encounterHolder.
+            //For edit page we have only one encounter with patient info => use first encounter.
+            // Another dummy encounter used to search patient does not exists on the edit page.
+            if( $encounterHolder->getEncounter() == 1 ) {
+                $newEncounter = $encounterHolder->getEncounter()->first();
+            } else {
+                throw new \Exception('Edit/Amend must contain only one encounter. Encounters count=' . count($encounterHolder->getEncounter()));
             }
+
+//            //testing
+//            if( $patient ) {
+//                echo "###patient encounter counter=".count($patient->getEncounter())."<br>";
+//                $patientEncounter = $patient->getEncounter()->first();
+//                echo "### patient encounter ID=" . $patientEncounter->getId() . "<br>";
+//                echo "### encounter message count=" . count($patientEncounter->getMessage()) . "<br>";
+//            }
+//            echo "###message encounter counter=".count($message->getEncounter())."<br>";
+//            if( count($message->getEncounter()) > 0 ) {
+//                $messageEncounter = $message->getEncounter()->first();
+//                echo "### message encounter ID=" . $messageEncounter->getId() . "<br>";
+//            }
 
             //set system source and user's default institution
             if( $newEncounter ) {
@@ -457,9 +513,8 @@ class CallLogEditController extends CallEntryController
                 //echo $newEncounter->getId().": key=".$key."<br>";
                 //$em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
-                //set encounter status invalid for all other encounter objects found by encounter number and type
-                // and increment encounter version for current encounter
-                $calllogUtil->processEncounterFamily($newEncounter);
+                //increment encounter version for current encounter (keep status valid for all encounters, use version instead of status)
+                $calllogUtil->incrementVersionEncounterFamily($newEncounter);
 
                 //Remove tracker if spots/location is empty
                 $tracker = $newEncounter->getTracker();
@@ -484,10 +539,10 @@ class CallLogEditController extends CallEntryController
                 }
                 //exit();
 
-                if( $patient && $dummyEncounter ) {
-                    //$dummyEncounter must be removed from the patient
-                    $patient->removeEncounter($dummyEncounter);
-                }
+//                if( $patient && $dummyEncounter ) {
+//                    //$dummyEncounter must be removed from the patient
+//                    $patient->removeEncounter($dummyEncounter);
+//                }
 
                 //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
                 $calllogUtil->processTrackerLocation($newEncounter);
@@ -565,7 +620,7 @@ class CallLogEditController extends CallEntryController
                 }
 
                 //delete original message
-                $this->deleteMessage( $originalMessage, $cycle." action", $request );
+                $this->deleteMessage( $originalMessage, $cycle." action", $request, $testing );
                 /////////////////////// EOF Set edited message info /////////////////////
 
                 if( $patient && $patient->getId() ) {
@@ -725,6 +780,61 @@ class CallLogEditController extends CallEntryController
             'mrn' => $mrn,
             'mrntype' => $mrntype
         );
+    }
+
+    /**
+     * Check if a new message/encounter version already exists for provided message/entry family.
+     * @Route("/entry/check-message-version", name="calllog-check-message-version", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function checkMessageVersionAction(Request $request)
+    {
+        if (false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER")) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $calllogUtil = $this->get('calllog_util');
+
+        $messageId = trim($request->get('messageId'));
+        $latestNextMessageVersion = trim($request->get('latestNextMessageVersion')); //next message version, that message will have after submit
+        $latestNextEncounterVersion = trim($request->get('latestNextEncounterVersion'));
+        //echo "latestNextMessageVersion=$latestNextMessageVersion<br>";
+
+        $encounter = null;
+        $encounterVersionOk = true;
+        $result = "Not OK";
+
+        $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
+        if( !$message ) {
+            throw new \Exception( "Message is not found by id ".$messageId );
+        }
+
+        $messageVersionOk = $calllogUtil->isMessageVersionMatch($message,$latestNextMessageVersion);
+        //echo "messageVersionOk=$messageVersionOk<br>";
+
+        if( count($message->getEncounter()) > 0 ) {
+            $encounter = $message->getEncounter()->first();
+        }
+
+        if( $encounter ) {
+            //echo "encounter exists: id=".$encounter->getId()."<br>";
+            $encounterVersionOk = $calllogUtil->isEncounterVersionMatch($encounter,$latestNextEncounterVersion);
+        }
+        //echo "encounterVersionOk=$encounterVersionOk<br>";
+
+        if( $messageVersionOk && $encounterVersionOk ) {
+            $result = "OK";
+            //echo "result OK!";
+        } else {
+            //not ok
+        }
+        //exit("res=".$result);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
     }
 
 }

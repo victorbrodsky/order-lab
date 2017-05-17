@@ -431,4 +431,32 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         return $messages;
     }
 
+    //get max message version using oid
+    public function getMaxMessageVersion( $message ) {
+
+        $repository = $this->_em->getRepository('OlegOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder("message");
+        $dql->select("MAX(message.version) as maxVersion");
+
+        $dql->andWhere("message.oid = :messageOid");
+
+        $parameters['messageOid'] = $message->getOid();
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($parameters);
+
+        $maxVersions = $query->getResult();
+        //echo "maxVersions count=".count($maxVersions)."<br>";
+        //print_r($maxVersions);
+
+        if( count($maxVersions) > 0 ) {
+            $maxVersion = $maxVersions[0]['maxVersion'];
+            $maxVersion = intval($maxVersion);
+        } else {
+            $maxVersion = 0;
+        }
+        //echo "maxVersion=".$maxVersion."<br>";
+
+        return $maxVersion;
+    }
 }

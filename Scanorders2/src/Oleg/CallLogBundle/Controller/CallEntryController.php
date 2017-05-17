@@ -1010,6 +1010,7 @@ class CallEntryController extends Controller
 
                 $newEncounter->setSource($system);
                 $newEncounter->setInstitution($institution);
+                $newEncounter->setVersion(1);
 
                 //assign generated encounter number ID
                 $key = $newEncounter->obtainAllKeyfield()->first();

@@ -165,6 +165,15 @@
             {% set encounterPatientInfo = form.encounter|first %}
         {% endif %}
 
+        {#latest encounter info#}
+        {#{% set editPageWithLatestEncounterUrl = calllog_util.getUrlWithLatestEncounterIfDifferent(encounterPatientInfo) %}#}
+        {#{% if editPageWithLatestEncounterUrl %}#}
+            {#<div class="alert alert-danger" role="alert">#}
+                {#{{ editPageWithLatestEncounterUrl|raw }}#}
+            {#</div>#}
+        {#{% endif %}#}
+        {{ calllogmacros.calllogWarningMessageWithLatestEncounter(form,encounterPatientInfo) }}
+
         {# Encounter Info #}
         {#<a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">#}
         {#<a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">#}

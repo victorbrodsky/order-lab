@@ -1591,6 +1591,9 @@ function calllogSubmitForm(btn,messageStatus) {
     var lbtn = Ladda.create( btn );
     lbtn.start();
 
+    $('#calllog-msg-danger-box').html("");
+    $('#calllog-msg-danger-box').hide();
+
     //checks
     var holder = $('.calllog-patient-holder');
 
@@ -1666,9 +1669,11 @@ function calllogSubmitForm(btn,messageStatus) {
     //return false;
     ///////////// EOF if issue is not selected => "Please select the appropriate issue to save your entry" ///////////////
 
-    ///////////// Please provide the amendment reason. ///////////////
+    ///////////// Edit/Amend: Please provide the amendment reason; Check message and encounter version if outdated ///////////////
     var formcycle = $('#formcycle').val();
     if( formcycle == 'edit' || formcycle == 'amend' ) {
+
+        //Please provide the amendment reason
         var amendmentReason = $(".ajax-combobox-amendmentReason");
         if (amendmentReason) {
             var amendmentReasonData = amendmentReason.select2('data');
@@ -1676,6 +1681,27 @@ function calllogSubmitForm(btn,messageStatus) {
                 //ok
             } else {
                 $('#calllog-msg-danger-box').html("Please provide the amendment reason.");
+                $('#calllog-msg-danger-box').show();
+                lbtn.stop();
+                return false;
+            }
+        }
+
+        //Check message and encounter version if outdated
+        if( $('#entityId') ) {
+            var entityId = $('#entityId').val();
+            var latestNextMessageVersion = $('#currentMessageVersion').val();
+            var latestNextEncounterVersion = $('#currentEncounterVersion').val();
+            var versionValid = calllogIsMessageVersionValid(entityId,latestNextEncounterVersion,latestNextEncounterVersion);
+            console.log("versionValid="+versionValid);
+            if( versionValid === true ) {
+                //ok
+            } else {
+                var newEntryUrl = $('#latestEntryUrl').val();
+                var newEntryUrl = '<a href="'+newEntryUrl+'" target="_blank">HERE</a>';
+                var versionErrorMsg = "The entry you are editing has been already updated with a new information. " +
+                    "Please click "+newEntryUrl+" to see the latest updated entry on a new page.";
+                $('#calllog-msg-danger-box').html(versionErrorMsg);
                 $('#calllog-msg-danger-box').show();
                 lbtn.stop();
                 return false;
@@ -2095,4 +2121,39 @@ function calllogGetMetaphoneValue() {
     }
     //console.log('metaphoneRes='+metaphoneRes);
     return metaphoneRes;
+}
+
+function calllogIsMessageVersionValid( messageId, latestNextMessageVersion, latestNextEncounterVersion ) {
+
+    if( !messageId || !latestNextMessageVersion || !latestNextEncounterVersion ) {
+        return false;
+    }
+
+    var result = false;
+    var url = Routing.generate('calllog-check-message-version');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        type: "GET",
+        //type: "POST",
+        data: {messageId:messageId, latestNextMessageVersion:latestNextMessageVersion, latestNextEncounterVersion:latestNextEncounterVersion },
+        dataType: 'json',
+        async: false //use synchronous => wait for response.
+    }).success(function(response) {
+        console.log('response='+response);
+        if( response == 'OK' ) {
+            console.log('response OK!');
+            result = true;
+        } else {
+            console.log('response not OK');
+            result = false;
+        }
+    }).done(function() {
+        //
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+    });
+
+    return result;
 }

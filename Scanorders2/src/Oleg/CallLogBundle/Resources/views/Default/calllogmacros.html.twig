@@ -993,3 +993,12 @@
         </tbody>
     </table>
 {% endmacro %}
+
+{% macro calllogWarningMessageWithLatestEncounter( message, encounter ) %}
+    {% set editPageWithLatestEncounterUrl = calllog_util.getUrlWithLatestEncounterIfDifferent(message.vars.value,encounter.vars.value) %}
+    {% if editPageWithLatestEncounterUrl %}
+        <div class="alert alert-danger" role="alert">
+            {{ editPageWithLatestEncounterUrl|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}

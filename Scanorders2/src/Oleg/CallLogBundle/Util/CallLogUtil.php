@@ -1272,7 +1272,8 @@ class CallLogUtil
             $messageUrl = $this->container->get('router')->generate(
                 'calllog_callentry_view',
                 array(
-                    'messageId' => $message->getId()
+                    'messageOid' => $message->getOid(),
+                    'messageVersion' => $message->getVersion()
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
@@ -1820,10 +1821,13 @@ class CallLogUtil
     }
 
     //set encounter status invalid for all other encounter objects found by encounter number and type
-    //and increment encounter version for current encounter
+    //increment encounter version for current encounter
     public function processEncounterFamily( $encounter ) {
         $maxVersion = 0;
+
+        //get encounters found by provided encounter's key (keytype and number)
         $otherEncounters = $this->em->getRepository('OlegOrderformBundle:Encounter')->findAllEncountersByEncounter($encounter);
+
         foreach( $otherEncounters as $otherEncounter ) {
             $otherEncounter->setStatus('invalid');
 
@@ -1842,5 +1846,76 @@ class CallLogUtil
         $encounter->setVersion($incrementedVersion);
 
         return $otherEncounters;
+    }
+
+    public function incrementVersionEncounterFamily( $encounter ) {
+        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        //increment encounter version for current encounter
+        $encounterIncrementedVersion = $maxVersion + 1;
+        //echo "encounterIncrementedVersion=".$encounterIncrementedVersion."<br>";
+        $encounter->setVersion($encounterIncrementedVersion);
+    }
+
+    public function isMessageVersionMatch( $message, $latestNextMessageVersion ) {
+        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Message')->getMaxMessageVersion($message);
+
+        //$maxVersion = $maxVersion + 1; //test
+        //echo "$maxVersion < $latestNextMessageVersion<br>";
+        if( $maxVersion < $latestNextMessageVersion ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isEncounterVersionMatch( $encounter, $latestNextEncounterVersion ) {
+        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+
+        //echo "$maxVersion < $latestNextEncounterVersion<br>";
+        if( $maxVersion < $latestNextEncounterVersion ) {
+            return true;
+        }
+
+        return false;
+    }
+
+//    public function isLatestEncounterVersion( $encounter ) {
+//        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+//
+//        //echo "$maxVersion < $latestNextEncounterVersion<br>";
+//        if( $maxVersion == $encounter->getVersion() ) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
+    public function getUrlWithLatestEncounterIfDifferent( $message, $encounter ) {
+        $url = null;    //"test";
+
+        if( !$encounter ) {
+            echo "encounter is null <br>";
+            return $url;
+        }
+        echo "encounter=".$encounter->getId()."<br>";
+
+        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+
+        echo "$maxVersion == ".$encounter->getVersion()."<br>";
+        if( $maxVersion != $encounter->getVersion() ) {
+            // TODO: Create path that will show message with the latest encounter.
+            // This will be relevant only for messages with shared encounter object (case: Create a new Message with the Same Encounter)
+            $url = $this->container->get('router')->generate(
+                'calllog_callentry_view',
+                array(
+                    'messageOid' => $message->getOid(),
+                    'messageVersion' => 'latest' //$message->getVersion()
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $url = 'Please click <a href="' . $url . '" target="_blank">HERE</a> to see the latest updated encounter information on a new page.';
+        }
+
+        return $url;
     }
 }
