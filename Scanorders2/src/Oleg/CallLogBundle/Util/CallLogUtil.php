@@ -1879,16 +1879,16 @@ class CallLogUtil
         return false;
     }
 
-//    public function isLatestEncounterVersion( $encounter ) {
-//        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
-//
-//        //echo "$maxVersion < $latestNextEncounterVersion<br>";
-//        if( $maxVersion == $encounter->getVersion() ) {
-//            return true;
-//        }
-//
-//        return false;
-//    }
+    public function isLatestEncounterVersion( $encounter ) {
+        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+
+        //echo "$maxVersion < $latestNextEncounterVersion<br>";
+        if( $maxVersion == $encounter->getVersion() ) {
+            return true;
+        }
+
+        return false;
+    }
 
     public function getUrlWithLatestEncounterIfDifferent( $message, $encounter ) {
         $url = null;    //"test";
@@ -1906,10 +1906,11 @@ class CallLogUtil
             // TODO: Create path that will show message with the latest encounter.
             // This will be relevant only for messages with shared encounter object (case: Create a new Message with the Same Encounter)
             $url = $this->container->get('router')->generate(
-                'calllog_callentry_view',
+                'calllog_callentry_view_latest_encounter',
                 array(
                     'messageOid' => $message->getOid(),
-                    'messageVersion' => 'latest' //$message->getVersion()
+                    'messageVersion' => $message->getVersion(),
+                    'encounterVersion' => 'latest'
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );

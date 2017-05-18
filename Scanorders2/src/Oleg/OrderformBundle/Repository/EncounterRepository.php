@@ -553,4 +553,49 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         return $maxVersion;
     }
+
+    public function findLatestVersionEncounter( $encounter ) {
+        if( !$encounter ) {
+            return null;
+        }
+
+        $latestEncounter = null;
+
+        $key = $encounter->obtainValidField('number');
+        $encounterNumber = $key->getField();
+        $encounterTypeId = $key->getKeytype();
+
+        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
+        $dql = $repository->createQueryBuilder("encounter");
+        $dql->select("encounter");
+
+        $dql->leftJoin("encounter.number", "number");
+
+        $dql->andWhere("number.field = :number AND number.keytype = :keytype");
+        $dql->orderBy("encounter.version","DESC");
+        $dql->setMaxResults(1);
+
+        $parameters['number'] = $encounterNumber;
+        $parameters['keytype'] = $encounterTypeId;
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($parameters);
+
+        $encounters = $query->getResult();
+        echo "encounters count=".count($encounters)."<br>";
+        //print_r($maxVersions);
+
+        if( count($encounters) > 0 ) {
+            //$maxVersion = $maxVersions[0]['maxVersion'];
+            //echo "maxVersion=".$maxVersion."<br>";
+
+            $latestEncounter = $encounters[0];
+            echo "id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
+        } else {
+            //$maxVersion = 0;
+        }
+        //echo "maxVersion=".$maxVersion."<br>";
+
+        return $latestEncounter;
+    }
 }

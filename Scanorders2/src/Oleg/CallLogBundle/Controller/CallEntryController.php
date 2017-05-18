@@ -2481,6 +2481,7 @@ class CallEntryController extends Controller
      * Get Call Log Entry Message
      * TODO: make messageVersion can be null and find by messageOid only by the most recent version
      * @Route("/entry/view/{messageOid}/{messageVersion}", name="calllog_callentry_view")
+     * @Route("/entry/view-latest-encounter/{messageOid}/{messageVersion}/{encounterVersion}", name="calllog_callentry_view_latest_encounter")
      * @Method("GET")
      * @Template("OlegCallLogBundle:CallLog:call-entry-view.html.twig")
      */
@@ -2493,6 +2494,7 @@ class CallEntryController extends Controller
 
         //$userSecUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
+        $calllogUtil = $this->get('calllog_util');
         $route = $request->get('_route');
 
         $cycle = "show";
@@ -2551,6 +2553,21 @@ class CallEntryController extends Controller
         //echo "tz=".$tz->getName()."<br>";
         //exit('1');
 
+        //replace encounter with the latest encounter
+        if( $route == "calllog_callentry_view_latest_encounter" ) {
+            $encounter = $message->getEncounter()->first();
+            if( !$calllogUtil->isLatestEncounterVersion($encounter) ) {
+                $latestEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
+                if( $latestEncounter ) {
+                    echo "latestEncounter ID=" . $latestEncounter->getId() . "<br>";
+                    //clear encounter
+                    $message->clearEncounter();
+                    //add encounter to the message
+                    $message->addEncounter($latestEncounter);
+                }
+            }
+        }
+
         $messageInfo = "Entry ID ".$message->getMessageOidVersion()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
         //echo "messageInfo=".$messageInfo."<br>";
         //exit('1');
@@ -2571,8 +2588,13 @@ class CallEntryController extends Controller
             $title = $messageInfo;
         }
 
+        //testing
+        foreach( $message->getEncounter() as $thisEncounter ) {
+            echo "thisEncounter: id=".$thisEncounter->getId()."; version=".$thisEncounter->getVersion()."<br>";
+        }
+
         //echo "patients=".count($message->getPatient())."<br>";
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle); //view
 
         $complexPatientStr = null;
         //find record in the "Pathology Call Complex Patients" list by message object entityName, entityId

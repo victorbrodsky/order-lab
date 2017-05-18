@@ -130,30 +130,36 @@
 
         {{ form_errors(form) }}
 
-        {% set encounterPatientInfo = null %}
+        {#{% set encounterPatientInfo = null %}#}
+        {#get encounter from the message#}
+        form.encounter|length = {{ form.encounter|length }}<br>
+        {% for thisEncounter in form.encounter %}
+            thisEncounter={{ thisEncounter.vars.value.id }}; version={{ thisEncounter.vars.value.version }}<br>
+        {% endfor %}
+        {% set encounterPatientInfo = form.encounter|first %}
 
-        {% for patient in form.patient %}
+        {#{% for patient in form.patient %}#}
 
             {#patient.id:{{ patient.vars.value.id }}#}
-            {% set patientForm = patient %}
+            {#{% set patientForm = patient %}#}
 
-            {% for encounter in patientForm.encounter %}
+            {#{% for encounter in patientForm.encounter %}#}
                 {#encounter.vars.value.status={{ encounter.vars.value.status }}; form.vars.value.id={{ form.vars.value.id }}<br>#}
-                {% set encounterHasMessage = false %}
-                {% for encounterMessage in encounter.vars.value.message %}
-                    {% if encounterMessage.id == form.vars.value.id %}
-                        {% set encounterHasMessage = true %}
-                    {% endif %}
-                {% endfor %}
-                {% if encounter.vars.value.status == 'valid' and encounterHasMessage  %}
-                    {% set encounterPatientInfo = encounter %}
-                {% endif %}
-            {% endfor %}
+                {#{% set encounterHasMessage = false %}#}
+                {#{% for encounterMessage in encounter.vars.value.message %}#}
+                    {#{% if encounterMessage.id == form.vars.value.id %}#}
+                        {#{% set encounterHasMessage = true %}#}
+                    {#{% endif %}#}
+                {#{% endfor %}#}
+                {#{% if encounter.vars.value.status == 'valid' and encounterHasMessage  %}#}
+                    {#{% set encounterPatientInfo = encounter %}#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
 
             {#{% set formtype = 'call-entry' %}#}
             {#{{ calllogmacros.patientInfoSectionView(patientForm,encounterPatientInfo,cycle,holderId,'Patient Info',formtype) }}#}
 
-        {% endfor %} {#end of patient#}
+        {#{% endfor %} #}{#end of patient#}
 
         {% if form.patient|length == 0 %}
             <p>No single patient is referenced by this entry</p>
@@ -161,17 +167,11 @@
         {% endif %}
 
         {#view might not have patient in the message#}
-        {% if form.patient|length == 0 and form.encounter and form.encounter|length > 0 %}
-            {% set encounterPatientInfo = form.encounter|first %}
-        {% endif %}
+        {#{% if form.patient|length == 0 and form.encounter and form.encounter|length > 0 %}#}
+            {#{% set encounterPatientInfo = form.encounter|first %}#}
+        {#{% endif %}#}
 
         {#latest encounter info#}
-        {#{% set editPageWithLatestEncounterUrl = calllog_util.getUrlWithLatestEncounterIfDifferent(encounterPatientInfo) %}#}
-        {#{% if editPageWithLatestEncounterUrl %}#}
-            {#<div class="alert alert-danger" role="alert">#}
-                {#{{ editPageWithLatestEncounterUrl|raw }}#}
-            {#</div>#}
-        {#{% endif %}#}
         {{ calllogmacros.calllogWarningMessageWithLatestEncounter(form,encounterPatientInfo) }}
 
         {# Encounter Info #}
@@ -194,100 +194,85 @@
                 </div>
                 <div id="calllog-EncounterInfo-{{ encounterPatientInfo.vars.value.id }}" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        {#<div class="row">#}
-                        {#<div class="col-xs-12" align="left">#}
-                        {#</div>#}
-                        {#</div>#}
+
                         {% set status = 'Submitted' %}
-                        {#{% for encounter in patientForm.encounter if (encounter.vars.value.status == 'valid' and encounter.vars.value.message.id == form.vars.value.id ) %}#}
-                        {#{% for encounter in patientForm.encounter %}#}
-                            {#{% set encounterHasMessage = false %}#}
-                            {#{% for encounterMessage in encounter.vars.value.message %}#}
-                                {#encounterMessage.id={{ encounterMessage.id }}#}
-                                {#{% if encounterMessage.id == form.vars.value.id %}#}
-                                    {#{% set encounterHasMessage = true %}#}
-                                {#{% endif %}#}
-                            {#{% endfor %}#}
-                            {#{% if encounter.vars.value.status == 'valid' and encounterHasMessage  %}#}
 
-                            {% if encounterPatientInfo %}
+                        {% if encounterPatientInfo %}
 
-                                {{ form_row(encounterPatientInfo.status) }}
-                                {{ formmacros.inputArrayField(encounterPatientInfo.number,"new","encounternumber","key","","","",status) }}
+                            {{ form_row(encounterPatientInfo.status) }}
+                            {{ formmacros.inputArrayField(encounterPatientInfo.number,"new","encounternumber","key","","","",status) }}
 
-                                {% if cycle == 'show' %}
-                                    {% for encounterDate in encounterPatientInfo.vars.value.date %}
-                                        {#encounterDate.field|date('(T)')#}
-                                        {#{% set encounterDateStr = encounterDate.field|date('m/d/Y',encounterDate.timezone) ~ " at " ~ encounterDate.time|date('h:i a',encounterDate.timezone)~" ("~encounterDate.timezone~")" %}#}
-                                        {% set encounterDateStr = user_service_utility.getSeparateDateTimeTzStr(encounterDate.field,encounterDate.time,encounterDate.timezone,true,false) %}
-                                        {{ formmacros.simplefield("Encounter Date:", encounterDateStr, "", "disabled") }}
-                                    {% endfor %}
-                                {% else %}
-                                    {{ formmacros.inputArrayField(encounterPatientInfo.date,cycle,"encounterdate","date","","","",status) }}
-                                {% endif %}
-
-                                {{ formmacros.field(encounterPatientInfo.encounterStatus) }}
-                                {{ formmacros.inputArrayField(encounterPatientInfo.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
-                                {{ formmacros.field(encounterPatientInfo.provider) }}
-
-                                {% for attendingPhysician in encounterPatientInfo.attendingPhysicians %}
-                                    {{ formmacros.field(attendingPhysician.field) }}
+                            {% if cycle == 'show' %}
+                                {% for encounterDate in encounterPatientInfo.vars.value.date %}
+                                    {#encounterDate.field|date('(T)')#}
+                                    {#{% set encounterDateStr = encounterDate.field|date('m/d/Y',encounterDate.timezone) ~ " at " ~ encounterDate.time|date('h:i a',encounterDate.timezone)~" ("~encounterDate.timezone~")" %}#}
+                                    {% set encounterDateStr = user_service_utility.getSeparateDateTimeTzStr(encounterDate.field,encounterDate.time,encounterDate.timezone,true,false) %}
+                                    {{ formmacros.simplefield("Encounter Date:", encounterDateStr, "", "disabled") }}
                                 {% endfor %}
+                            {% else %}
+                                {{ formmacros.inputArrayField(encounterPatientInfo.date,cycle,"encounterdate","date","","","",status) }}
+                            {% endif %}
 
-                                {{ calllogmacros.referingProviderObject(encounterPatientInfo) }}
+                            {{ formmacros.field(encounterPatientInfo.encounterStatus) }}
+                            {{ formmacros.inputArrayField(encounterPatientInfo.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
+                            {{ formmacros.field(encounterPatientInfo.provider) }}
 
-                                {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
-                                {#{% for referringProvider in encounterPatientInfo.referringProviders %}#}
-                                    {#{{ formmacros.field_show_user( encounterPatientInfo, "referringProviders", cycle ) }}#}
-                                    {#{{ formmacros.field(referringProvider.field) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderSpecialty) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderPhone) }}#}
-                                    {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
-                                {#{% endfor %}#}
+                            {% for attendingPhysician in encounterPatientInfo.attendingPhysicians %}
+                                {{ formmacros.field(attendingPhysician.field) }}
+                            {% endfor %}
 
-                                {{ calllogmacros.trackerContactinfoForm(encounterPatientInfo,cycle,status) }}
+                            {{ calllogmacros.referingProviderObject(encounterPatientInfo) }}
 
-                                {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}
+                            {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
+                            {#{% for referringProvider in encounterPatientInfo.referringProviders %}#}
+                                {#{{ formmacros.field_show_user( encounterPatientInfo, "referringProviders", cycle ) }}#}
+                                {#{{ formmacros.field(referringProvider.field) }}#}
+                                {#{{ formmacros.field(referringProvider.referringProviderSpecialty) }}#}
+                                {#{{ formmacros.field(referringProvider.referringProviderPhone) }}#}
+                                {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
+                            {#{% endfor %}#}
 
-                                {#Update Patient Info: encounter with status='valid'#}
-                                {#{% set showUpdatePatientInfo = false %}#}
-                                {#{% if   encounterPatientInfo.patlastname.first.vars.value or#}
-                                        {#encounterPatientInfo.patfirstname.first.vars.value or#}
-                                        {#encounterPatientInfo.patmiddlename.first.vars.value or#}
-                                        {#encounterPatientInfo.patsuffix.first.vars.value or#}
-                                        {#encounterPatientInfo.patsex.first.vars.value#}
-                                {#%}#}
-                                {#{% if encounterPatientInfo. %}#}
-                                    {#{% set showUpdatePatientInfo = true %}#}
-                                {#{% endif %}#}
-                                {% if encounterPatientInfo.vars.value.hasPatientInfo %}
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
-                                                    Update Patient Info
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="form_body_encounterInfo" class="panel-collapse collapse in">
-                                            <div class="panel-body">
-                                                <div id="calllog-encounterInfo-holder">
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
-                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}
-                                                    {#{{ formmacros.field(encounterPatientInfo.patientDob) }}#}
-                                                    {#{{ formmacros.fieldDateLabel(encounterPatientInfo.patientDob,'regular-datepicker') }}#}
-                                                </div>
-                                            </div> <!-- panel-body -->
-                                        </div> <!-- panel-collapse -->
-                                    </div> <!-- panel panel-default -->
-                                {% endif %}
+                            {{ calllogmacros.trackerContactinfoForm(encounterPatientInfo,cycle,status) }}
 
-                            {% endif %} {#encounterPatientInfo#}
+                            {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}
 
-                        {#{% endfor %} #}{#encounter loop#}
+                            {#Update Patient Info: encounter with status='valid'#}
+                            {#{% set showUpdatePatientInfo = false %}#}
+                            {#{% if   encounterPatientInfo.patlastname.first.vars.value or#}
+                                    {#encounterPatientInfo.patfirstname.first.vars.value or#}
+                                    {#encounterPatientInfo.patmiddlename.first.vars.value or#}
+                                    {#encounterPatientInfo.patsuffix.first.vars.value or#}
+                                    {#encounterPatientInfo.patsex.first.vars.value#}
+                            {#%}#}
+                            {#{% if encounterPatientInfo. %}#}
+                                {#{% set showUpdatePatientInfo = true %}#}
+                            {#{% endif %}#}
+                            {% if encounterPatientInfo.vars.value.hasPatientInfo %}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
+                                                Update Patient Info
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="form_body_encounterInfo" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div id="calllog-encounterInfo-holder">
+                                                {{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                                                {{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                                                {{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
+                                                {{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                                                {{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}
+                                                {#{{ formmacros.field(encounterPatientInfo.patientDob) }}#}
+                                                {#{{ formmacros.fieldDateLabel(encounterPatientInfo.patientDob,'regular-datepicker') }}#}
+                                            </div>
+                                        </div> <!-- panel-body -->
+                                    </div> <!-- panel-collapse -->
+                                </div> <!-- panel panel-default -->
+                            {% endif %}
+
+                        {% endif %} {#encounterPatientInfo#}
 
                     </div> <!-- panel-body -->
                 </div> <!-- panel-collapse -->

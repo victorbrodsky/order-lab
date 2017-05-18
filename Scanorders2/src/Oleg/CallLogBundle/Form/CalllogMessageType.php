@@ -104,7 +104,7 @@ class CalllogMessageType extends AbstractType
             'prototype_name' => '__patient__',
         ));
 
-        if (count($this->entity->getPatient()) == 0) {
+        //if (count($this->entity->getPatient()) == 0) {
             $builder->add('encounter', 'collection', array(
                 'type' => new CalllogEncounterType($this->params, $this->entity),
                 'required' => false,
@@ -115,7 +115,7 @@ class CalllogMessageType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__encounter__',
             ));
-        }
+        //}
 
         /////////////////////////////////////// messageCategory ///////////////////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
