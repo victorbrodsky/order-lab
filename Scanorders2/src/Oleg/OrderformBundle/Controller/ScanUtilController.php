@@ -940,7 +940,8 @@ class ScanUtilController extends UtilController {
 
             //default OR user-added user wrappers created by logged in user
             //$query->andWhere("list.type=:default");
-            if( $cycle != "show" && $cycle != "edit" ) {
+            //echo "cycle=".$cycle."<br>";
+            if( $cycle != "show" && $cycle != "edit" && $cycle != "amend" ) {
                 $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameters(
                     array(
                         'typedef' => 'default',
@@ -967,11 +968,12 @@ class ScanUtilController extends UtilController {
 //                }
                 $thisId = $userWrapper->getId();
                 $element = array(
-                    'id' => $thisId,    //$userWrapper->getId(),
-                    'text' => $userWrapper . ""
+                    'id' => $thisId,
+                    //'text' => $userWrapper . ""
+                    'text' => $userWrapper . "" . " [wrapper ID#".$thisId."]" //testing //TODO: fix user wrapper for edit/amend
                 );
 
-                if( $cycle == "show" || $cycle == "edit" ) {
+                if( $cycle == "show" || $cycle == "edit" || $cycle == "amend" ) {
                     $output[] = $element;
                 } else {
                     if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
