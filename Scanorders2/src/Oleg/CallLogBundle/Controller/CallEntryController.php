@@ -2554,7 +2554,8 @@ class CallEntryController extends Controller
         //echo "tz=".$tz->getName()."<br>";
         //exit('1');
 
-        //replace encounter with the latest encounter
+        //Replace encounter with the latest encounter.
+        //Used replaced encounter for latest url only to show message's encounter, not patient's encounter!.
         if( $route == "calllog_callentry_view_latest_encounter" ) {
             $pathPostfix = "_latest_encounter";
             $encounter = $message->getEncounter()->first();

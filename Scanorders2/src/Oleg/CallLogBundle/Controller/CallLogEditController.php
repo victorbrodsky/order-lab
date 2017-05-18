@@ -232,7 +232,8 @@ class CallLogEditController extends CallEntryController
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
 
-        //replace encounter with the latest encounter
+        //Replace encounter with the latest encounter.
+        //Used replaced encounter for latest url only to show message's encounter, not patient's encounter!.
         if( strpos($route, "_latest_encounter") !== false ) {
             $encounter = $message->getEncounter()->first();
             if( !$calllogUtil->isLatestEncounterVersion($encounter) ) {
