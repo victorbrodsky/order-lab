@@ -173,6 +173,8 @@ class CallLogEditController extends CallEntryController
      * Get Call Log Entry Message Edit page
      * @Route("/entry/edit/{messageOid}/{messageVersion}", name="calllog_callentry_edit")
      * @Route("/entry/amend/{messageOid}/{messageVersion}", name="calllog_callentry_amend")
+     * @Route("/entry/edit-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_edit_latest_encounter")
+     * @Route("/entry/amend-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_amend_latest_encounter")
      * @Method("GET")
      * @Template("OlegCallLogBundle:CallLog:call-entry-edit.html.twig")
      */
@@ -184,6 +186,7 @@ class CallLogEditController extends CallEntryController
         }
 
         //$userSecUtil = $this->get('user_security_utility');
+        $calllogUtil = $this->get('calllog_util');
         $securityUtil = $this->get('order_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -193,10 +196,10 @@ class CallLogEditController extends CallEntryController
         $formtype = "call-entry";
 
         $route = $request->get('_route');
-        if( $route == "calllog_callentry_edit" ) {
+        if( strpos($route, "calllog_callentry_edit") !== false ) {
             $cycle = "edit";
         }
-        if( $route == "calllog_callentry_amend" ) {
+        if( strpos($route, "calllog_callentry_amend") !== false ) {
             $cycle = "amend";
         }
 
@@ -227,6 +230,21 @@ class CallLogEditController extends CallEntryController
         $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
+        }
+
+        //replace encounter with the latest encounter
+        if( strpos($route, "_latest_encounter") !== false ) {
+            $encounter = $message->getEncounter()->first();
+            if( !$calllogUtil->isLatestEncounterVersion($encounter) ) {
+                $latestEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
+                if( $latestEncounter ) {
+                    echo "Original id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
+                    //clear encounter
+                    $message->clearEncounter();
+                    //add encounter to the message
+                    $message->addEncounter($latestEncounter);
+                }
+            }
         }
 
         $messageInfo = "Entry ID ".$message->getMessageOidVersion()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
@@ -268,6 +286,7 @@ class CallLogEditController extends CallEntryController
             throw new \Exception('Message must have only one attached encounter. Number of attached encounters '.count($message->getEncounter()));
         }
         $existingEncounter = $message->getEncounter()->first();
+        //echo "existingEncounter=".$existingEncounter->getId()."<br>";
 
         //ReferringProvider
         if( count($existingEncounter->getReferringProviders()) == 0 ) {
@@ -407,7 +426,7 @@ class CallLogEditController extends CallEntryController
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -454,11 +473,12 @@ class CallLogEditController extends CallEntryController
             $patients = $message->getPatient();
             if( count($patients) > 0 ) {
                 $patient = $patients->first();
-                $encounterHolder = $patient;
+                //$encounterHolder = $patient;
                 echo "patient id=".$patient->getId()."<br>";
             } else {
-                $encounterHolder = $message;
+                //$encounterHolder = $message;
             }
+            $encounterHolder = $message;
 
 //            $dummyEncounter = null;
 //            $newEncounter = null;

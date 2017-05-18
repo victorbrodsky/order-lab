@@ -93,45 +93,21 @@
             <br>
         {% endif %}
 
-        {% set encounterPatientInfo = null %}
+        {#render hidden patient id#}
+        {% if form.patient|length > 0 %}
+            {{ form_row(form.patient|first.id) }}
+        {% endif %}
 
-        {% for patientForm in form.patient %}
-
-            {#render hidden patient id#}
-            {{ form_row(patientForm.id) }}
-
-            {% for encounter in patientForm.encounter %}
-                {#encounter.vars.value.status={{ encounter.vars.value.status }}; form.vars.value.id={{ form.vars.value.id }}<br>#}
-                {% set encounterHasMessage = false %}
-                {% for encounterMessage in encounter.vars.value.message %}
-                    {% if encounterMessage.id == form.vars.value.id %}
-                        {% set encounterHasMessage = true %}
-                    {% endif %}
-                {% endfor %}
-                {% if encounter.vars.value.status == 'valid' and encounterHasMessage  %}
-                    {% set encounterPatientInfo = encounter %}
-                {% endif %}
-            {% endfor %}
-
-        {% endfor %} {#end of patient#}
+        {#get encounter from the message#}
+        {% set encounterPatientInfo = form.encounter|first %}
+        {#encounterPatientInfo={{ encounterPatientInfo.vars.value.id }}; version={{ encounterPatientInfo.vars.value.version }}<br>#}
 
         {% if form.patient|length == 0 %}
             <p>No single patient is referenced by this entry</p>
             <br>
         {% endif %}
 
-        {#view might not have patient in the message#}
-        {% if form.patient|length == 0 and form.encounter and form.encounter|length > 0 %}
-            {% set encounterPatientInfo = form.encounter|first %}
-        {% endif %}
-
         {#latest encounter info#}
-        {#{% set editPageWithLatestEncounterUrl = calllog_util.getUrlWithLatestEncounterIfDifferent(encounterPatientInfo) %}#}
-        {#{% if editPageWithLatestEncounterUrl %}#}
-            {#<div class="alert alert-danger" role="alert">#}
-                {#{{ editPageWithLatestEncounterUrl|raw }}#}
-            {#</div>#}
-        {#{% endif %}#}
         {{ calllogmacros.calllogWarningMessageWithLatestEncounter(form,encounterPatientInfo) }}
 
         {# Encounter Info #}

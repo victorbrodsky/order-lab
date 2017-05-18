@@ -79,12 +79,12 @@
         {% if message.messageStatus and message.messageStatus.name == "Draft" %}
             <a  class="btn btn-warning"
                 data-confirm="Are you sure you would like to edit entry {{message.getMessageOidVersion}}{{patientNameMrnInfo}}?"
-                href="{{ path('calllog_callentry_edit', {'messageOid': message.oid, 'messageVersion':message.version}) }}"
+                href="{{ path('calllog_callentry_edit'~pathPostfix, {'messageOid': message.oid, 'messageVersion':message.version}) }}"
                 >Edit Entry</a>
         {% else %}
             <a  class="btn btn-warning"
                 data-confirm="Are you sure you would like to amend entry {{message.getMessageOidVersion}}{{patientNameMrnInfo}}?"
-                href="{{ path('calllog_callentry_amend', {'messageOid': message.oid, 'messageVersion':message.version}) }}"
+                href="{{ path('calllog_callentry_amend'~pathPostfix, {'messageOid': message.oid, 'messageVersion':message.version}) }}"
                 >Amend Entry</a>
         {% endif %}
 
@@ -132,10 +132,6 @@
 
         {#{% set encounterPatientInfo = null %}#}
         {#get encounter from the message#}
-        form.encounter|length = {{ form.encounter|length }}<br>
-        {% for thisEncounter in form.encounter %}
-            thisEncounter={{ thisEncounter.vars.value.id }}; version={{ thisEncounter.vars.value.version }}<br>
-        {% endfor %}
         {% set encounterPatientInfo = form.encounter|first %}
 
         {#{% for patient in form.patient %}#}

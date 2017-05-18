@@ -2481,7 +2481,7 @@ class CallEntryController extends Controller
      * Get Call Log Entry Message
      * TODO: make messageVersion can be null and find by messageOid only by the most recent version
      * @Route("/entry/view/{messageOid}/{messageVersion}", name="calllog_callentry_view")
-     * @Route("/entry/view-latest-encounter/{messageOid}/{messageVersion}/{encounterVersion}", name="calllog_callentry_view_latest_encounter")
+     * @Route("/entry/view-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_view_latest_encounter")
      * @Method("GET")
      * @Template("OlegCallLogBundle:CallLog:call-entry-view.html.twig")
      */
@@ -2497,6 +2497,7 @@ class CallEntryController extends Controller
         $calllogUtil = $this->get('calllog_util');
         $route = $request->get('_route');
 
+        $pathPostfix = "";
         $cycle = "show";
         //$title = "Call Log Entry";
         $formtype = "call-entry";
@@ -2555,11 +2556,12 @@ class CallEntryController extends Controller
 
         //replace encounter with the latest encounter
         if( $route == "calllog_callentry_view_latest_encounter" ) {
+            $pathPostfix = "_latest_encounter";
             $encounter = $message->getEncounter()->first();
             if( !$calllogUtil->isLatestEncounterVersion($encounter) ) {
                 $latestEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
                 if( $latestEncounter ) {
-                    echo "latestEncounter ID=" . $latestEncounter->getId() . "<br>";
+                    echo "Original id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
                     //clear encounter
                     $message->clearEncounter();
                     //add encounter to the message
@@ -2589,9 +2591,9 @@ class CallEntryController extends Controller
         }
 
         //testing
-        foreach( $message->getEncounter() as $thisEncounter ) {
-            echo "thisEncounter: id=".$thisEncounter->getId()."; version=".$thisEncounter->getVersion()."<br>";
-        }
+//        foreach( $message->getEncounter() as $thisEncounter ) {
+//            echo "thisEncounter: id=".$thisEncounter->getId()."; version=".$thisEncounter->getVersion()."<br>";
+//        }
 
         //echo "patients=".count($message->getPatient())."<br>";
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle); //view
@@ -2651,7 +2653,8 @@ class CallEntryController extends Controller
             'titleheadroom' => $title,
             'formnodeTopHolderId' => $formnodeTopHolderId,
             'eventObjectTypeId' => $eventObjectTypeId,
-            'allMessages' => $allMessages
+            'allMessages' => $allMessages,
+            'pathPostfix' => $pathPostfix
         );
     }
 

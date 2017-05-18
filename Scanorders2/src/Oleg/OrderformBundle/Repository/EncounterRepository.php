@@ -573,24 +573,23 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         $dql->andWhere("number.field = :number AND number.keytype = :keytype");
         $dql->orderBy("encounter.version","DESC");
-        $dql->setMaxResults(1);
 
         $parameters['number'] = $encounterNumber;
         $parameters['keytype'] = $encounterTypeId;
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters($parameters);
+        $query->setMaxResults(1);
 
         $encounters = $query->getResult();
-        echo "encounters count=".count($encounters)."<br>";
-        //print_r($maxVersions);
+        //echo "encounters count=".count($encounters)."<br>";
 
         if( count($encounters) > 0 ) {
             //$maxVersion = $maxVersions[0]['maxVersion'];
             //echo "maxVersion=".$maxVersion."<br>";
 
             $latestEncounter = $encounters[0];
-            echo "id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
+            //echo "Original id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
         } else {
             //$maxVersion = 0;
         }

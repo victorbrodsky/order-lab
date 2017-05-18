@@ -1894,14 +1894,14 @@ class CallLogUtil
         $url = null;    //"test";
 
         if( !$encounter ) {
-            echo "encounter is null <br>";
+            //echo "encounter is null <br>";
             return $url;
         }
-        echo "encounter=".$encounter->getId()."<br>";
+        //echo "encounter=".$encounter->getId()."<br>";
 
         $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
 
-        echo "$maxVersion == ".$encounter->getVersion()."<br>";
+        //echo "$maxVersion == ".$encounter->getVersion()."<br>";
         if( $maxVersion != $encounter->getVersion() ) {
             // TODO: Create path that will show message with the latest encounter.
             // This will be relevant only for messages with shared encounter object (case: Create a new Message with the Same Encounter)
@@ -1909,8 +1909,7 @@ class CallLogUtil
                 'calllog_callentry_view_latest_encounter',
                 array(
                     'messageOid' => $message->getOid(),
-                    'messageVersion' => $message->getVersion(),
-                    'encounterVersion' => 'latest'
+                    'messageVersion' => $message->getVersion()
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
