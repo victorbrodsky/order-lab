@@ -2819,7 +2819,7 @@ class CallEntryController extends Controller
         foreach( $entries as $message ) {
 
             //ID
-            $ews->setCellValue('A'.$row, $message->getId());
+            $ews->setCellValue('A'.$row, $message->getMessageOidVersion());
 
             //Last Modified
             $lastModified = null;

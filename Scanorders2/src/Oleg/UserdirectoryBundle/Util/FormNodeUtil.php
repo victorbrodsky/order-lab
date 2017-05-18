@@ -1142,14 +1142,14 @@ class FormNodeUtil
                 } else {
 
                     //////////// Case 2: single //////////////
-                    //echo "Case 2: single: ".$formNode->getName().": ".$formNodeValue."<br>";
-
-                    $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
+                    //echo "<br>Case 2: single: ".$formNode->getName().": ".$formNodeValue."<br>";
 
                     //hide message fields that are empty/have no value
                     if( !$formNodeValue ) {
                         continue;
                     }
+
+                    $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
 
                     //////////////// Regular form node /////////////////////
                     //process userWrapper case
@@ -1415,7 +1415,7 @@ class FormNodeUtil
         if( !$formNode ) {
             return $formNodeValueId;
         }
-        if( !isset($formNodeValueId) ) {
+        if( !isset($formNodeValueId) || $formNodeValueId == null || $formNodeValueId == "" ) {
             return $formNodeValueId;
         }
 

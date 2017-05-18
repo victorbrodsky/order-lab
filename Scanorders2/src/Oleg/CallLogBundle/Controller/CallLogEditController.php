@@ -470,44 +470,18 @@ class CallLogEditController extends CallEntryController
             $institution = $userSecUtil->getCurrentUserInstitution($user);
 
             $patient = null;
-            $encounterHolder = null;
             $patients = $message->getPatient();
             if( count($patients) > 0 ) {
                 $patient = $patients->first();
-                //$encounterHolder = $patient;
                 echo "patient id=".$patient->getId()."<br>";
-            } else {
-                //$encounterHolder = $message;
             }
-            $encounterHolder = $message;
 
-//            $dummyEncounter = null;
-//            $newEncounter = null;
-//            //get an encounter
-//            echo "encounter count=".count($encounterHolder->getEncounter())."<br>";
-//            foreach( $encounterHolder->getEncounter() as $encounter ) {
-//                echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."; key=".$encounter->obtainValidField('number')."<br>";
-//                //if( !$encounter->getId() ) {
-//                    if( $encounter->getStatus() == 'valid' ) {
-//                        $newEncounter = $encounter;
-//                    }
-//                    if( $encounter->getStatus() == 'invalid' ) {
-//                        //this encounter is served only to find the patient:
-//                        //copy all non-empty values from the $dummyEncounter to the $newEncounter
-//                        //it must be removed from the patient
-//                        $dummyEncounter = $encounter;
-//                    }
-//                //}
-//            }
-
-            //Use patient (if exists) or message to get edited encounter. On this stage, if patient exists, message does not have yet encounter =>
-            // therefore, we can't use only message to get encounter. Use $encounterHolder.
             //For edit page we have only one encounter with patient info => use first encounter.
-            // Another dummy encounter used to search patient does not exists on the edit page.
-            if( $encounterHolder->getEncounter() == 1 ) {
-                $newEncounter = $encounterHolder->getEncounter()->first();
+            //Another dummy encounter used to search patient does not exists on the edit page.
+            if( $message->getEncounter() == 1 ) {
+                $newEncounter = $message->getEncounter()->first();
             } else {
-                throw new \Exception('Edit/Amend must contain only one encounter. Encounters count=' . count($encounterHolder->getEncounter()));
+                throw new \Exception('Edit/Amend message must contain only one encounter. Encounters count=' . count($message->getEncounter()));
             }
 
 //            //testing

@@ -123,58 +123,23 @@
 
         {% set holderId = "patient-holder-1" %}
 
-        {#<form id="CallCaseForm" class="form-vertical" role="form">#}
-        {#{{ form_start(form,{'attr': {'id': 'calllog-entry-form'}}) }}#}
-        {#{{ form_start(form,{'attr': {'id': 'calllog-view-entry-form'}, 'method': 'POST', 'action': path('calllog_update_entry')}) }}#}
         {{ form_start(form) }}
 
         {{ form_errors(form) }}
 
-        {#{% set encounterPatientInfo = null %}#}
         {#get encounter from the message#}
         {% set encounterPatientInfo = form.encounter|first %}
 
-        {#{% for patient in form.patient %}#}
-
-            {#patient.id:{{ patient.vars.value.id }}#}
-            {#{% set patientForm = patient %}#}
-
-            {#{% for encounter in patientForm.encounter %}#}
-                {#encounter.vars.value.status={{ encounter.vars.value.status }}; form.vars.value.id={{ form.vars.value.id }}<br>#}
-                {#{% set encounterHasMessage = false %}#}
-                {#{% for encounterMessage in encounter.vars.value.message %}#}
-                    {#{% if encounterMessage.id == form.vars.value.id %}#}
-                        {#{% set encounterHasMessage = true %}#}
-                    {#{% endif %}#}
-                {#{% endfor %}#}
-                {#{% if encounter.vars.value.status == 'valid' and encounterHasMessage  %}#}
-                    {#{% set encounterPatientInfo = encounter %}#}
-                {#{% endif %}#}
-            {#{% endfor %}#}
-
-            {#{% set formtype = 'call-entry' %}#}
-            {#{{ calllogmacros.patientInfoSectionView(patientForm,encounterPatientInfo,cycle,holderId,'Patient Info',formtype) }}#}
-
-        {#{% endfor %} #}{#end of patient#}
 
         {% if form.patient|length == 0 %}
             <p>No single patient is referenced by this entry</p>
             <br>
         {% endif %}
 
-        {#view might not have patient in the message#}
-        {#{% if form.patient|length == 0 and form.encounter and form.encounter|length > 0 %}#}
-            {#{% set encounterPatientInfo = form.encounter|first %}#}
-        {#{% endif %}#}
-
         {#latest encounter info#}
         {{ calllogmacros.calllogWarningMessageWithLatestEncounter(form,encounterPatientInfo) }}
 
         {# Encounter Info #}
-        {#<a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">#}
-        {#<a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">#}
-            {#No single patient is referenced by this entry or I'll add the patient info later#}
-        {#</a>#}
         <div id="callentry-form" class="panel-collapse collapse in">{#testing in#}
 
             {#{{ calllogmacros.referingProviderObject(encounterPatientInfo) }}#}
@@ -219,30 +184,8 @@
 
                             {{ calllogmacros.referingProviderObject(encounterPatientInfo) }}
 
-                            {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
-                            {#{% for referringProvider in encounterPatientInfo.referringProviders %}#}
-                                {#{{ formmacros.field_show_user( encounterPatientInfo, "referringProviders", cycle ) }}#}
-                                {#{{ formmacros.field(referringProvider.field) }}#}
-                                {#{{ formmacros.field(referringProvider.referringProviderSpecialty) }}#}
-                                {#{{ formmacros.field(referringProvider.referringProviderPhone) }}#}
-                                {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
-                            {#{% endfor %}#}
-
                             {{ calllogmacros.trackerContactinfoForm(encounterPatientInfo,cycle,status) }}
 
-                            {#{{ formmacros.fielddate(fieldThis,'regular-datepicker') }}#}
-
-                            {#Update Patient Info: encounter with status='valid'#}
-                            {#{% set showUpdatePatientInfo = false %}#}
-                            {#{% if   encounterPatientInfo.patlastname.first.vars.value or#}
-                                    {#encounterPatientInfo.patfirstname.first.vars.value or#}
-                                    {#encounterPatientInfo.patmiddlename.first.vars.value or#}
-                                    {#encounterPatientInfo.patsuffix.first.vars.value or#}
-                                    {#encounterPatientInfo.patsex.first.vars.value#}
-                            {#%}#}
-                            {#{% if encounterPatientInfo. %}#}
-                                {#{% set showUpdatePatientInfo = true %}#}
-                            {#{% endif %}#}
                             {% if encounterPatientInfo.vars.value.hasPatientInfo %}
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -322,16 +265,11 @@
             </div> <!-- panel panel-primary -->
             {# EOF Entry #}
 
-            {#<p>#}
-                {#<button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="button" onclick="calllogSubmitForm();">Submit</button>#}
-            {#</p>#}
-
         </div> {#callentry-form#}
 
         {#{{ form_row(form._token) }}#}
         {#{{ form_rest(form) }}#}
 
-        {#</form>#}
         {{ form_end(form,{'render_rest': false}) }}
 
 
