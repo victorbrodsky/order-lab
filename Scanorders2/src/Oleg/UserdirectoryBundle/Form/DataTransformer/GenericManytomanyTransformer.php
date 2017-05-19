@@ -30,11 +30,11 @@ class GenericManyToManyTransformer implements DataTransformerInterface
     /**
      * @var ObjectManager
      */
-    protected $em;
-    protected $user;
-    protected $bundleName;
-    protected $className;
-    protected $params;
+    private $em;
+    private $user;
+    private $bundleName;
+    private $className;
+    private $params;
 
 
     public function __construct(ObjectManager $em=null, $user=null, $className=null, $bundleName=null, $params=null)
