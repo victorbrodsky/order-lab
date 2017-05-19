@@ -69,7 +69,7 @@ class CustomSelectorType extends AbstractType {
         //testing
         echo "create transformer $username <br>";
         $transformer = new StringTransformer($this->om,$username);
-        $transformer = new GenericManyToManyTransformer($this->om,$username,'MajorTrainingList',null,null);
+        $transformer = new GenericManyToManyTransformer();
         
         $classtype = $options['classtype'];
 
