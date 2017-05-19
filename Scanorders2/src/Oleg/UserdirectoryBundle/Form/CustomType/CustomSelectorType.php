@@ -63,8 +63,12 @@ class CustomSelectorType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
+
         $username = $this->sc->getToken()->getUser();
+
+        //testing
+        $transformer = new StringTransformer($this->om, $username);
+        $transformer = new GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
         
         $classtype = $options['classtype'];
 
@@ -151,7 +155,7 @@ class CustomSelectorType extends AbstractType {
                 break;
             case "trainingmajors":
                 $transformer = new StringTransformer($this->om, $username);
-                //$transformer = new GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
                 break;
             case "trainingminors":
                 $transformer = new GenericManyToManyTransformer($this->om, $username, 'MinorTrainingList');
