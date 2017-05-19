@@ -30,14 +30,14 @@ class GenericManyToManyTransformer implements DataTransformerInterface
     /**
      * @var ObjectManager
      */
-    private $em;
-    private $user;
-    private $bundleName;
-    private $className;
-    private $params;
+    protected $em;
+    protected $user;
+    protected $bundleName;
+    protected $className;
+    protected $params;
 
 
-    public function __construct( $em=null, $user=null, $className=null, $bundleName=null, $params=null )
+    public function __construct(ObjectManager $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;
         $this->user = $user;
@@ -49,6 +49,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
     public function getThisEm() {
         return $this->em;
     }
+
 
     /**
      * Transforms an array of objects or name strings to ids.
