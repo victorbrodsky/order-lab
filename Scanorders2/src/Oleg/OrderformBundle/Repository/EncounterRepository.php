@@ -478,6 +478,11 @@ class EncounterRepository extends ArrayFieldAbstractRepository
             $dql->andWhere("number.field = :number AND number.keytype = :keytype");
         }
 
+        //convert "" to null
+        if( !$encounterTypeId ) {
+            $encounterTypeId = null;
+        }
+
         $parameters['number'] = $encounterNumber;
         $parameters['keytype'] = $encounterTypeId;
 
