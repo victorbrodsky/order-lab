@@ -65,11 +65,6 @@ class CustomSelectorType extends AbstractType {
     {
 
         $username = $this->sc->getToken()->getUser();
-
-        //testing
-        echo "create transformer $username <br>";
-        $transformer1 = new StringTransformer($this->om,$username);
-        $transformer2 = new GenericManyToManyTransformer();
         
         $classtype = $options['classtype'];
 
@@ -155,7 +150,6 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', null, $params);
                 break;
             case "trainingmajors":
-                $transformer = new StringTransformer($this->om, $username);
                 $transformer = new GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
                 break;
             case "trainingminors":
