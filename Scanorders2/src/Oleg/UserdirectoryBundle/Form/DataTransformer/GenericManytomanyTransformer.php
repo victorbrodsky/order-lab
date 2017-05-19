@@ -15,14 +15,6 @@
  *  limitations under the License.
  */
 
-/**
- * Created by JetBrains PhpStorm.
- * User: oli2002
- * Date: 9/12/13
- * Time: 3:47 PM
- * To change this template use File | Settings | File Templates.
- */
-
 namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
@@ -31,7 +23,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
-class GenericManyToManyTransformer implements DataTransformerInterface {
+
+class GenericManyToManyTransformer implements DataTransformerInterface
+{
 
     /**
      * @var ObjectManager
