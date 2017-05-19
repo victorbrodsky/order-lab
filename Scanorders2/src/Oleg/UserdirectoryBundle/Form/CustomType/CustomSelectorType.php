@@ -26,17 +26,16 @@
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContext;
-
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
