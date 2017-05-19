@@ -4397,6 +4397,8 @@ class AdminController extends Controller
         $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->get('security.context')->getToken()->getUser();
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
+        echo "systemuser ".$systemuser.", id=".$systemuser->getId()."<br>";
+
 //        $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findAll();
 //
@@ -4467,7 +4469,7 @@ class AdminController extends Controller
 
             //**************** create PerSiteSettings for this user **************//
             //TODO: ideally, this should be located on scanorder site
-            echo "create new PerSiteSettings for user ".$user."<br>";
+            echo "create new PerSiteSettings for user ".$user.", id=".$user->getId()."<br>";
             $perSiteSettings = new PerSiteSettings($systemuser);
             $perSiteSettings->setUser($user);
             $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
