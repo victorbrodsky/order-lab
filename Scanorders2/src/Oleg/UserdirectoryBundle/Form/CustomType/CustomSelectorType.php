@@ -149,9 +149,10 @@ class CustomSelectorType extends AbstractType {
                 $params = array('type'=>'Educational');
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', null, $params);
                 break;
-            //case "trainingmajors":
+            case "trainingmajors":
+                $transformer = new StringTransformer($this->om, $username);
                 //$transformer = new GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
-                //break;
+                break;
             case "trainingminors":
                 $transformer = new GenericManyToManyTransformer($this->om, $username, 'MinorTrainingList');
                 break;
