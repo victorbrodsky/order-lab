@@ -4469,6 +4469,8 @@ class AdminController extends Controller
 
             //**************** create PerSiteSettings for this user **************//
             //TODO: ideally, this should be located on scanorder site
+            //get user from DB to avoid An exception occurred while executing 'INSERT INTO scan_perSiteSettings ... Key (fosuser)=(8) already exists
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find( $user->getId() );
             echo "create new PerSiteSettings for user ".$user.", id=".$user->getId()."<br>";
             $perSiteSettings = new PerSiteSettings($systemuser);
             $perSiteSettings->setUser($user);
