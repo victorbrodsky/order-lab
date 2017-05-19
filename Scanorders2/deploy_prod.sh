@@ -34,8 +34,7 @@ PROJECT_LOCAL_PATH=.
 
 
 ##### Functions #####
-function prep()
-{
+function prep(){
     echo "Preparing for Deploy..."
 
     #for production: git remote update, git pull
