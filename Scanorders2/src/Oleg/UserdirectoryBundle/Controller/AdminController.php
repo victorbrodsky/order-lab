@@ -4467,6 +4467,7 @@ class AdminController extends Controller
 
             //**************** create PerSiteSettings for this user **************//
             //TODO: ideally, this should be located on scanorder site
+            echo "create new PerSiteSettings for user ".$user."<br>";
             $perSiteSettings = new PerSiteSettings($systemuser);
             $perSiteSettings->setUser($user);
             $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
