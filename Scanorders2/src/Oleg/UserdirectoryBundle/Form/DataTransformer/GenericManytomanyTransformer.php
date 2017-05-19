@@ -33,8 +33,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
-class GenericManyToManyTransformer implements DataTransformerInterface
-{
+class GenericManyToManyTransformer implements DataTransformerInterface {
+
     /**
      * @var ObjectManager
      */
