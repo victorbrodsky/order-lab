@@ -26,7 +26,6 @@
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -39,6 +38,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
 
 class CustomSelectorType extends AbstractType {
 
@@ -67,6 +67,7 @@ class CustomSelectorType extends AbstractType {
         $username = $this->sc->getToken()->getUser();
 
         //testing
+        echo "create transformer $username <br>";
         $transformer = new StringTransformer($this->om, $username);
         $transformer = new GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
         
