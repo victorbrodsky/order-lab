@@ -4396,8 +4396,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->get('security.context')->getToken()->getUser();
         $default_time_zone = $this->container->getParameter('default_time_zone');
-
-        echo "systemuser ".$systemuser.", id=".$systemuser->getId()."<br>";
+        //echo "systemuser ".$systemuser.", id=".$systemuser->getId()."<br>";
 
 //        $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findAll();
@@ -4475,7 +4474,7 @@ class AdminController extends Controller
                 //TODO: ideally, this should be located on scanorder site
                 //get user from DB to avoid An exception occurred while executing 'INSERT INTO scan_perSiteSettings ... Key (fosuser)=(8) already exists
                 $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
-                echo "create new PerSiteSettings for user " . $user . ", id=" . $user->getId() . "<br>";
+                //echo "create new PerSiteSettings for user " . $user . ", id=" . $user->getId() . "<br>";
                 $perSiteSettings = new PerSiteSettings($systemuser);
                 $perSiteSettings->setUser($user);
                 $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
