@@ -38,7 +38,7 @@ class StringTransformer implements DataTransformerInterface
     private $user;
 
     /**
-     * @param ObjectManager $om
+     * @param ObjectManager $em
      */
     public function __construct(ObjectManager $em=null, $user=null)
     {
