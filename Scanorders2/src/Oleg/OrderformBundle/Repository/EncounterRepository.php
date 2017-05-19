@@ -478,7 +478,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
             $dql->andWhere("number.field = :number AND number.keytype = :keytype");
         }
 
-        //convert "" to null
+        //convert "" to null for postgres
         if( !$encounterTypeId ) {
             $encounterTypeId = null;
         }
