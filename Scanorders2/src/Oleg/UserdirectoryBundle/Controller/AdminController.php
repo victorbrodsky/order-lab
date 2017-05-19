@@ -4467,22 +4467,27 @@ class AdminController extends Controller
             $em->persist($user);
             $em->flush();
 
+            $userId = $user->getId();
+
             //**************** create PerSiteSettings for this user **************//
-            //TODO: ideally, this should be located on scanorder site
-            //get user from DB to avoid An exception occurred while executing 'INSERT INTO scan_perSiteSettings ... Key (fosuser)=(8) already exists
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find( $user->getId() );
-            echo "create new PerSiteSettings for user ".$user.", id=".$user->getId()."<br>";
-            $perSiteSettings = new PerSiteSettings($systemuser);
-            $perSiteSettings->setUser($user);
-            $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-            if( count($params) != 1 ) {
-                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+            $userSettings = $user->getPerSiteSettings();
+            if( !$userSettings ) {
+                //TODO: ideally, this should be located on scanorder site
+                //get user from DB to avoid An exception occurred while executing 'INSERT INTO scan_perSiteSettings ... Key (fosuser)=(8) already exists
+                $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+                echo "create new PerSiteSettings for user " . $user . ", id=" . $user->getId() . "<br>";
+                $perSiteSettings = new PerSiteSettings($systemuser);
+                $perSiteSettings->setUser($user);
+                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+                if (count($params) != 1) {
+                    throw new \Exception('Must have only one parameter object. Found ' . count($params) . ' object(s)');
+                }
+                $param = $params[0];
+                $institution = $param->getAutoAssignInstitution();
+                $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
+                $em->persist($perSiteSettings);
+                $em->flush();
             }
-            $param = $params[0];
-            $institution = $param->getAutoAssignInstitution();
-            $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
-            $em->persist($perSiteSettings);
-            $em->flush();
             //**************** EOF create PerSiteSettings for this user **************//
 
             $count++;
