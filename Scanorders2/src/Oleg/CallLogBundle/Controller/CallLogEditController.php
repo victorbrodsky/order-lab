@@ -358,12 +358,12 @@ class CallLogEditController extends CallEntryController
         $latestMessageStatus = null;
         $latestMessageLabel = null;
         $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid(null,$allMessages);
-        $latestMessageVersion = intval($latestMessage->getVersion()) + 1;
+        $latestNextMessageVersion = intval($latestMessage->getVersion()) + 1;
+        //echo "latestNextMessageVersion=".$latestNextMessageVersion."<br>";
         if( $latestMessage && intval($messageVersion) != intval($latestMessage->getVersion()) ) {
             $latestMessageStatus = $latestMessage->getMessageStatus()->getName()."";
-//            $latestMessageVersion = intval($latestMessage->getVersion()) + 1;
             //"Current Status of the Current Version of this message (Current Version is X, Displaying Version Y):"
-            $latestMessageLabel = "Current Status of the Current Version of this message (Current Version is $messageVersion, New Displaying Version ".$latestMessageVersion."):";
+            $latestMessageLabel = "Current Status of the Current Version of this message (Current Version is $messageVersion, New Displaying Version ".$latestNextMessageVersion."):";
         }
         //echo "messageLabel=".$latestMessageLabel."<br>";
 
@@ -397,7 +397,7 @@ class CallLogEditController extends CallEntryController
             'currentMessageStatus' => $latestMessageStatus,
             'currentMessageLabel' => $latestMessageLabel,
             'allMessages' => $allMessages,
-            'currentMessageVersion' => $latestMessageVersion,
+            'currentMessageVersion' => $latestNextMessageVersion,
             'currentEncounterVersion' => $latestNextEncounterVersion,
             'latestEntryUrl' => $latestEntryUrl
         );

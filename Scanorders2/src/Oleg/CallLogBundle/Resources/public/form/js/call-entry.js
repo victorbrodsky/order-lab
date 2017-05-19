@@ -1692,7 +1692,7 @@ function calllogSubmitForm(btn,messageStatus) {
             var entityId = $('#entityId').val();
             var latestNextMessageVersion = $('#currentMessageVersion').val();
             var latestNextEncounterVersion = $('#currentEncounterVersion').val();
-            var versionValid = calllogIsMessageVersionValid(entityId,latestNextEncounterVersion,latestNextEncounterVersion);
+            var versionValid = calllogIsMessageVersionValid(entityId,latestNextMessageVersion,latestNextEncounterVersion);
             console.log("versionValid="+versionValid);
             if( versionValid === true ) {
                 //ok

@@ -45,12 +45,10 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
      */
     public function transform( $entity )
     {
-        //echo "first entity=".$entities->first()."<br>";
         //echo "transform: entity=".$entity."<br>";
-        //echo $this->className.": transform: count=".count($entities)."<br>";
-        //var_dump($entities);
-
-        //$array = new \Doctrine\Common\Collections\ArrayCollection();
+        //if( $entity ) {
+        //    echo "transform: entity=".$entity->getId()."<br>";
+        //}
 
         if( !$entity ) {
             //echo "return empty <br>";
@@ -58,6 +56,8 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
         }
 
         //echo "return ".$entities->first()->getId()."<br>";
+
+        //return User entity (if exists in UserWrapper), UserWrapper id (if id exists) or user string (UserWrapper->getFullName)
         return $entity->getEntity();
     }
 

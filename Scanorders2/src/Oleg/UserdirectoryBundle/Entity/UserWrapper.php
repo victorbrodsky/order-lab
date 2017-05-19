@@ -241,9 +241,14 @@ class UserWrapper extends ListAbstract {
         return implode("; ",$fullNameArr);
     }
 
-    //get user id or user string
+    //get user id, wrapper id or user string
     //used for transformer
     public function getEntity() {
+
+        $user = $this->getUser();
+        if( $user ) {
+            return $user;
+        }
 
         if( $this->getId() ) {
             return $this->getId();

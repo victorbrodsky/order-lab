@@ -969,16 +969,20 @@ class ScanUtilController extends UtilController {
                 $thisId = $userWrapper->getId();
                 $element = array(
                     'id' => $thisId,
-                    //'text' => $userWrapper . ""
-                    'text' => $userWrapper . "" . " [wrapper ID#".$thisId."]" //testing //TODO: fix user wrapper for edit/amend
+                    'text' => $userWrapper . ""
+                    //'text' => $userWrapper . "" . " [wrapper ID#".$thisId."]" //testing //TODO: fix user wrapper for edit/amend
                 );
 
-                if( $cycle == "show" || $cycle == "edit" || $cycle == "amend" ) {
+//                if( $cycle == "show" || $cycle == "edit" || $cycle == "amend" ) {
+//                    $output[] = $element;
+//                } else {
+//                    if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
+//                        $output[] = $element;
+//                    }
+//                }
+
+                if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
                     $output[] = $element;
-                } else {
-                    if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
-                        $output[] = $element;
-                    }
                 }
 
             }
