@@ -493,7 +493,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         $key = $encounter->obtainValidField('number');
         $encounterNumber = $key->getField();
-        $encounterTypeId = $key->getKeytype();
+        $encounterTypeId = $key->getKeytype()->getId();
 
         //find valid encounters with the same key
         $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber);
