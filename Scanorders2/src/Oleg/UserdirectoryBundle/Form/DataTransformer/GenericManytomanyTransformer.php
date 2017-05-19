@@ -25,11 +25,9 @@
 
 namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
-
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
@@ -44,9 +42,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface {
     protected $className;
     protected $params;
 
-    /**
-     * @param ObjectManager $om
-     */
+
     public function __construct(ObjectManager $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;
