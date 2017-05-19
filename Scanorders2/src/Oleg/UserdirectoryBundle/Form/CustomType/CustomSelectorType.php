@@ -25,6 +25,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
+
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
