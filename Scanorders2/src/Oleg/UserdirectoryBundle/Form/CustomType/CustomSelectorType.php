@@ -150,7 +150,7 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', null, $params);
                 break;
             case "trainingmajors":
-                $transformer = new \Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
+                //$transformer = new GenericManyToManyTransformer($this->om, $username, 'MajorTrainingList');
                 break;
             case "trainingminors":
                 $transformer = new GenericManyToManyTransformer($this->om, $username, 'MinorTrainingList');
