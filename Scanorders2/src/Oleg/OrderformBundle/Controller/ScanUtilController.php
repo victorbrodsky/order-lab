@@ -905,7 +905,7 @@ class ScanUtilController extends UtilController {
                 ->leftJoin("list.employmentStatus", "employmentStatus")
                 ->leftJoin("employmentStatus.employmentType", "employmentType")
                 ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                ->andWhere("(list.testingAccount = 0 OR list.testingAccount IS NULL)")
+                ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
                 ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
                 ->orderBy("infos.displayName", "ASC");
 

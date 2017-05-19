@@ -160,7 +160,7 @@ class MessageObjectType extends AbstractType
                         ->leftJoin("u.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
                         ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                        ->andWhere("(u.testingAccount = 0 OR u.testingAccount IS NULL)")
+                        ->andWhere("(u.testingAccount = false OR u.testingAccount IS NULL)")
                         ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
                         ->orderBy("infos.displayName","ASC");
 //                        ->where('u.roles LIKE :roles OR u=:user')
