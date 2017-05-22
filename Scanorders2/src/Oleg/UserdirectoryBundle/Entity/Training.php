@@ -110,7 +110,7 @@ class Training extends BaseUserAttributes
      */
     private $trainingType;
 
-    /***
+    /**
      * @ORM\ManyToOne(targetEntity="JobTitleList", cascade={"persist","remove"})
      */
     private $jobTitle;
