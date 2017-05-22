@@ -733,6 +733,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'loginInstruction' )
+            $builder->add('loginInstruction',null,array(
+                'label'=>'Log in instruction (Please use your CWID to log in.):',
+                'attr' => array('class'=>'form-control')
+            ));
+
     }
 
 }

@@ -636,6 +636,11 @@ class SiteParameters {
      */
     private $calllogResources;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $loginInstruction;
+
 
 
     function __construct( $addobjects=true )
@@ -2343,6 +2348,22 @@ class SiteParameters {
     public function setCalllogResources($calllogResources)
     {
         $this->calllogResources = $calllogResources;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLoginInstruction()
+    {
+        return $this->loginInstruction;
+    }
+
+    /**
+     * @param mixed $loginInstruction
+     */
+    public function setLoginInstruction($loginInstruction)
+    {
+        $this->loginInstruction = $loginInstruction;
     }
 
 

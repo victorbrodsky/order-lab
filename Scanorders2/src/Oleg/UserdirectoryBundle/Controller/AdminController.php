@@ -1639,6 +1639,7 @@ class AdminController extends Controller
             "maxIdleTime" => "30",
             "environment" => "dev",
             "siteEmail" => "email@email.com",
+            "loginInstruction" => 'Please use your <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> to log in.',
 
             "smtpServerAddress" => "null",
 

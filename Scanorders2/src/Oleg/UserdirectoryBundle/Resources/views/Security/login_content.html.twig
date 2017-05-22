@@ -83,16 +83,23 @@
 
 </form>
 
+
 <div class="text-center">
+
     <br><br>
     <p>
-        Please use your
-        <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>
-        {% if title == "Scan Orders" %}
-            or your
-            <a href="http://c.med.cornell.edu/">Aperio eSlide Manager</a> account
+        {% set loginInstruction = user_security_utility.getSiteSettingParameter('loginInstruction') %}
+        {% if loginInstruction %}
+            {{ loginInstruction|raw }}
+        {% else %}
+            Please use your
+            <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>
+            {% if title == "Scan Orders" %}
+                or your
+                <a href="http://c.med.cornell.edu/">Aperio eSlide Manager</a> account
+            {% endif %}
+            to log in.
         {% endif %}
-        to log in.
     </p>
 
     {% if title == "Scan Orders" %}
@@ -100,7 +107,6 @@
             <a href="{{ path('accountrequest_new') }}">Request an Aperio eSlide Manager account</a> if you can't log in.
         </p>
     {% endif %}
-
 
 </div>
 

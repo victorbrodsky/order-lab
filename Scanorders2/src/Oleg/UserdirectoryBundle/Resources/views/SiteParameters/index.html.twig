@@ -109,6 +109,11 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'liveSiteRootUrl'}) }}">Edit</a></td>
             </tr>
 
+            <tr>
+                <td>Log in instruction (Please use your CWID to log in.)</td>
+                <td>{{ entity.loginInstruction }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'loginInstruction'}) }}">Edit</a></td>
+            </tr>
 
             {#Maintenance#}
             <tr>
