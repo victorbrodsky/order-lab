@@ -15,19 +15,17 @@
 #}
 
 
-{% if sitename == 'scan' %}
-    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
-{% endif %}
-
-{% if sitename == 'deidentifier' %}
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% elseif sitename == 'fellapp' %}
+    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+{% elseif sitename == 'deidentifier' %}
     {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
-{% endif %}
-
-{% if sitename == 'vacreq' %}
+{% elseif sitename == 'scan' %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% elseif sitename == 'vacreq' %}
     {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
-{% endif %}
-
-{% if sitename == 'calllog' %}
+{% elseif sitename == 'calllog' %}
     {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
 {% endif %}
 
