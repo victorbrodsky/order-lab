@@ -742,20 +742,29 @@
 
             {#TODO: Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
             {#Same Encounter#}
-            {#{% if message.patient|length > 0 %}#}
+            {% if message.encounter|length > 0 %}
+
+                {% set validEncounter = message.getValidEncounter() %}
+                {% set validEncounterNumber = validEncounter.obtainValidField('number') %}
+                {% set encounterNumber = validEncounterNumber.field %}
+                {% set encounterTypeId = validEncounterNumber.keytype.id %}
+                {% set encounterVersion = validEncounter.version %}
+
+                {#requirement: http://collage.med.cornell.edu/order/call-log-book/entry/new?mrn-type=1&mrn=1&encounter-type=1&encounter-number=1#}
+                {#but message can have an encounter without patient, so: /call-log-book/entry/new?encounter-type=1&encounter-number=1#}
+                <li><a
+                    href="{{ path('calllog_callentry', {'encounter-number':encounterNumber,'encounter-type':encounterTypeId,'encounter-version':encounterVersion}) }}"
+                    target="_blank">Add Entry (Same Encounter)</a></li>
+
+
                 {#{% set mrn = message.patient|first.obtainValidField('mrn') %}#}
                 {#{% if mrn %}#}
                     {#{% set mrnNumber = mrn.field %}#}
                     {#{% set mrnTypeId = mrn.keytype.id %}#}
 
-                    {#{% set validEncounter = message.getValidEncounter() %}#}
-                    {#{% set validEncounterNumber = validEncounter.obtainValidField('number') %}#}
-                    {#{% set encounterNumber = validEncounterNumber.field %}#}
-                    {#{% set encounterTypeId = validEncounterNumber.keytype.id %}#}
-
-                    {#<li><a href="{{ path('calllog_callentry', { 'mrn':mrnNumber, 'mrn-type':mrnTypeId, 'encounter':encounterNumber, 'encounter-type':encounterTypeId}) }}" target="_blank">Add Entry (Same Encounter)</a></li>#}
+                    {#<li><a href="{{ path('calllog_callentry', { 'encounter':encounterNumber, 'encounter-type':encounterTypeId}) }}" target="_blank">Add Entry (Same Encounter)</a></li>#}
                 {#{% endif %}#}
-            {#{% endif %}#}
+            {% endif %}
 
             {#<li><a href="#">View Entry History & Comments</a></li>#}
             {#<li>#}

@@ -442,7 +442,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
     }
 
     //used for call log entry
-    public function findOneEncounterByNumberAndType( $encounterTypeId, $encounterNumber ) {
+    public function findOneEncounterByNumberAndType( $encounterTypeId, $encounterNumber, $encounterVersion=null ) {
 
 //        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
 //        $dql = $repository->createQueryBuilder("encounter");
@@ -457,7 +457,11 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 //        $query->setParameters($parameters);
 //        $encounters = $query->getResult();
 
-        $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber);
+        $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber,null,$encounterVersion);
+
+//        foreach( $encounters as $encounter ){
+//            echo "encounter=".$encounter->getId()."<br>";
+//        }
 
         if( count($encounters) > 0 ) {
             return $encounters[0];
@@ -466,16 +470,26 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         return null;
     }
 
-    public function findEncountersByNumberAndType( $encounterTypeId, $encounterNumber, $status='valid' ) {
+    public function findEncountersByNumberAndType( $encounterTypeId, $encounterNumber, $status='valid', $encounterVersion=null ) {
 
         $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
         $dql = $repository->createQueryBuilder("encounter");
         $dql->leftJoin("encounter.number", "number");
 
+        $parameters = array();
+
+        $dql->andWhere("number.field = :number AND number.keytype = :keytype");
+        $parameters['number'] = $encounterNumber;
+        $parameters['keytype'] = $encounterTypeId;
+
         if( $status ) {
-            $dql->andWhere("number.field = :number AND number.keytype = :keytype AND encounter.status = '".$status."'");
-        } else {
-            $dql->andWhere("number.field = :number AND number.keytype = :keytype");
+            $dql->andWhere("encounter.status = :status");
+            $parameters['status'] = $status;
+        }
+
+        if( $encounterVersion ) {
+            $dql->andWhere("encounter.version = :encounterVersion");
+            $parameters['encounterVersion'] = $encounterVersion;
         }
 
         //convert "" to null for postgres
@@ -483,12 +497,13 @@ class EncounterRepository extends ArrayFieldAbstractRepository
             $encounterTypeId = null;
         }
 
-        $parameters['number'] = $encounterNumber;
-        $parameters['keytype'] = $encounterTypeId;
+        $dql->orderBy("encounter.version","ASC"); //show latest first
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters($parameters);
+
         $encounters = $query->getResult();
+        //echo "encounters count=".count($encounters)."<br>";
 
         return $encounters;
     }
@@ -501,7 +516,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $encounterTypeId = $key->getKeytype()->getId();
 
         //find valid encounters with the same key
-        $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber);
+        $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber,'valid');
 
         return $encounters;
     }

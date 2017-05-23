@@ -692,8 +692,9 @@ class CallEntryController extends Controller
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrn-type'));
-        $encounterNumber = trim($request->get('encounter'));
+        $encounterNumber = trim($request->get('encounter-number'));
         $encounterTypeId = trim($request->get('encounter-type'));
+        $encounterVersion = trim($request->get('encounter-version'));
         $messageTypeId = trim($request->get('message-type'));
 
         //check if user has at least one institution
@@ -733,8 +734,10 @@ class CallEntryController extends Controller
         $patient->addEncounter($encounter1); //add new encounter to patient
 
         $readonlyEncounter = true;
-        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
-        //echo "Found encounter=".$encounter2."<br>";
+        $encounterVersion = null;
+        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber,$encounterVersion);
+        echo "Found encounter=".$encounter2->getId()."; version=".$encounter2->getVersion()."<br>";
+        //exit();
 
         //check whether patient MRN supplied in the URL corresponds to the supplied encounter number.
         // If it does not, show the normal /entry/new page but with the notification "
