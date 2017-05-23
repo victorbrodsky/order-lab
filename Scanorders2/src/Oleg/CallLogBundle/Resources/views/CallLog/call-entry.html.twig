@@ -51,6 +51,9 @@
     <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
+    <input type="hidden" id="readonlyPatient" value="{{ readonlyPatient }}" />
+    <input type="hidden" id="readonlyEncounter" value="{{ readonlyEncounter }}" />
+
     <div id="calllog-patient-list">
 
     {% set holderId = "patient-holder-1" %}
@@ -70,15 +73,25 @@
             {#patient.id:{{ patient.vars.value.id }}#}
             {#{% set patientForm = patient %}#}
 
-            {#{% set formtype = 'call-entry' %}#}
-            {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Patient Info',formtype) }}
+            {% if readonlyPatient %}
 
-            {#List previous entries#}
-            <button id="calllog-list-previous-entries-btn"
-                    class="btn btn-primary" type="button" style="display: none;"
-                    onclick="calllogListPreviousEntriesForPatient('{{ holderId }}')">Previous Entries</button>
-            <div id="calllog-list-previous-entries"></div>
-            <br>
+                {#render hidden patient id#}
+                {% if form.patient|length > 0 %}
+                    {{ form_row(form.patient|first.id) }}
+                {% endif %}
+
+            {% else %}
+
+                {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Patient Info',formtype) }}
+
+                {#List previous entries#}
+                <button id="calllog-list-previous-entries-btn"
+                        class="btn btn-primary" type="button" style="display: none;"
+                        onclick="calllogListPreviousEntriesForPatient('{{ holderId }}')">Previous Entries</button>
+                <div id="calllog-list-previous-entries"></div>
+                <br>
+
+            {% endif %}
 
             {#<a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">#}
             <a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">
@@ -101,33 +114,34 @@
                     </div>
                     <div id="calllog-EncounterInfo-{{ encounter.vars.value.id }}" class="panel-collapse collapse in">
                         <div class="panel-body">
+
                             {% set status = 'Submitted' %}
-                                {{ form_row(encounter.id) }}
-                                {{ form_row(encounter.status) }}
-                                {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
-                                {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
+                            {{ form_row(encounter.id) }}
+                            {{ form_row(encounter.status) }}
+                            {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
+                            {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
 
-                                {% if cycle == "new" %}
-                                    <div style="display: none;">
-                                {% endif %}
-                                {{ formmacros.field(encounter.encounterStatus) }}
-                                {{ formmacros.inputArrayField(encounter.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
-                                {% if cycle == "new" %}
-                                    </div>
-                                {% endif %}
+                            {% if cycle == "new" %}
+                                <div style="display: none;">
+                            {% endif %}
+                            {{ formmacros.field(encounter.encounterStatus) }}
+                            {{ formmacros.inputArrayField(encounter.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
+                            {% if cycle == "new" %}
+                                </div>
+                            {% endif %}
 
-                                {{ formmacros.field(encounter.provider) }}
+                            {{ formmacros.field(encounter.provider) }}
 
-                                {% for attendingPhysician in encounter.attendingPhysicians %}
-                                    {{ formmacros.field(attendingPhysician.field) }}
-                                {% endfor %}
+                            {% for attendingPhysician in encounter.attendingPhysicians %}
+                                {{ formmacros.field(attendingPhysician.field) }}
+                            {% endfor %}
 
-                                {{ calllogmacros.referingProviderObject(encounter) }}
+                            {{ calllogmacros.referingProviderObject(encounter) }}
 
-                                {{ calllogmacros.trackerContactinfoForm(encounter,cycle,status) }}
+                            {{ calllogmacros.trackerContactinfoForm(encounter,cycle,status) }}
 
-                                {#Update Patient Info: encounter with status='valid'#}
-                                {{ calllogmacros.updatePatientInfoSection(encounter,cycle,status) }}
+                            {#Update Patient Info: encounter with status='valid'#}
+                            {{ calllogmacros.updatePatientInfoSection(encounter,cycle,status) }}
 
                         </div> <!-- panel-body -->
                     </div> <!-- panel-collapse -->
@@ -241,6 +255,13 @@
 
         //preset mrn and mrn-type
         calllogPresetMrnMrntype('patient-holder-1');
+
+        //show entry form for "Add Entry (New Encounter)" and "Add Entry (Same Encounter)"
+        var readonlyPatient = $('#readonlyPatient').val();
+        var readonlyEncounter = $('#readonlyEncounter').val();
+        if( readonlyPatient == true || readonlyEncounter == true ) {
+            showCalllogCallentryForm(true);
+        }
 
     });
 

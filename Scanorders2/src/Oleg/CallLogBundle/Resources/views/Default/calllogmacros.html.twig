@@ -692,6 +692,37 @@
                     {% set mrnNumber = mrn.field %}
                     {% set mrnTypeId = mrn.keytype.id %}
                     {% if mrnNumber and mrnTypeId %}
+
+                        {#Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
+                        {% set validEncounter = message.getValidEncounter() %}
+                        {% set validEncounterNumber = validEncounter.obtainValidField('number') %}
+                        {% set encounterNumber = validEncounterNumber.field %}
+                        {% set encounterTypeId = validEncounterNumber.keytype.id %}
+                        {% set encounterVersion = validEncounter.version %}
+
+                        {#http://collage.med.cornell.edu/order/call-log-book/entry/new?mrn-type=1&mrn=1&encounter-type=1&encounter-number=1#}
+                        {#without version 'encounter-version':encounterVersion => use latest version#}
+                        <li><a
+                                    href="{{ path('calllog_callentry', {
+                                        'mrn-type':mrnTypeId,
+                                        'mrn':mrnNumber,
+                                        'encounter-type':encounterTypeId,
+                                        'encounter-number':encounterNumber
+                                    }) }}"
+                                    target="_blank">Add Entry (Same Encounter)</a>
+                        </li>
+
+                        <li><a
+                                    href="{{ path('calllog_callentry', {
+                                        'mrn-type':mrnTypeId,
+                                        'mrn':mrnNumber,
+                                        'encounter-type':encounterTypeId,
+                                        'encounter-number':encounterNumber,
+                                        'message-type':message.messageCategory.id
+                                    }) }}"
+                                    target="_blank">Add Entry (Same Encounter & Type)</a>
+                        </li>
+
                         <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
 
                         <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
@@ -742,29 +773,45 @@
 
             {#TODO: Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
             {#Same Encounter#}
-            {% if message.encounter|length > 0 %}
-
-                {% set validEncounter = message.getValidEncounter() %}
-                {% set validEncounterNumber = validEncounter.obtainValidField('number') %}
-                {% set encounterNumber = validEncounterNumber.field %}
-                {% set encounterTypeId = validEncounterNumber.keytype.id %}
-                {% set encounterVersion = validEncounter.version %}
-
-                {#requirement: http://collage.med.cornell.edu/order/call-log-book/entry/new?mrn-type=1&mrn=1&encounter-type=1&encounter-number=1#}
-                {#but message can have an encounter without patient, so: /call-log-book/entry/new?encounter-type=1&encounter-number=1#}
-                <li><a
-                    href="{{ path('calllog_callentry', {'encounter-number':encounterNumber,'encounter-type':encounterTypeId,'encounter-version':encounterVersion}) }}"
-                    target="_blank">Add Entry (Same Encounter)</a></li>
-
+            {#{% if message.patient|length > 0 %}#}
 
                 {#{% set mrn = message.patient|first.obtainValidField('mrn') %}#}
                 {#{% if mrn %}#}
+
                     {#{% set mrnNumber = mrn.field %}#}
                     {#{% set mrnTypeId = mrn.keytype.id %}#}
 
-                    {#<li><a href="{{ path('calllog_callentry', { 'encounter':encounterNumber, 'encounter-type':encounterTypeId}) }}" target="_blank">Add Entry (Same Encounter)</a></li>#}
+                    {#{% set validEncounter = message.getValidEncounter() %}#}
+                    {#{% set validEncounterNumber = validEncounter.obtainValidField('number') %}#}
+                    {#{% set encounterNumber = validEncounterNumber.field %}#}
+                    {#{% set encounterTypeId = validEncounterNumber.keytype.id %}#}
+                    {#{% set encounterVersion = validEncounter.version %}#}
+
+                    {#http://collage.med.cornell.edu/order/call-log-book/entry/new?mrn-type=1&mrn=1&encounter-type=1&encounter-number=1#}
+                    {#without version 'encounter-version':encounterVersion => use latest version#}
+                    {#<li><a#}
+                            {#href="{{ path('calllog_callentry', {#}
+                                {#'mrn-type':mrnTypeId,#}
+                                {#'mrn':mrnNumber,#}
+                                {#'encounter-type':encounterTypeId,#}
+                                {#'encounter-number':encounterNumber#}
+                            {#}) }}"#}
+                            {#target="_blank">Add Entry (Same Encounter)</a>#}
+                    {#</li>#}
+
+                    {#<li><a#}
+                            {#href="{{ path('calllog_callentry', {#}
+                                {#'mrn-type':mrnTypeId,#}
+                                {#'mrn':mrnNumber,#}
+                                {#'encounter-type':encounterTypeId,#}
+                                {#'encounter-number':encounterNumber,#}
+                                {#'message-type':message.messageCategory.id#}
+                            {#}) }}"#}
+                            {#target="_blank">Add Entry (Same Encounter & Type)</a>#}
+                    {#</li>#}
+
                 {#{% endif %}#}
-            {% endif %}
+            {#{% endif %}#}
 
             {#<li><a href="#">View Entry History & Comments</a></li>#}
             {#<li>#}

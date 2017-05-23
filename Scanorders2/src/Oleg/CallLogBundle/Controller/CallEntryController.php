@@ -694,7 +694,7 @@ class CallEntryController extends Controller
         $mrntype = trim($request->get('mrn-type'));
         $encounterNumber = trim($request->get('encounter-number'));
         $encounterTypeId = trim($request->get('encounter-type'));
-        $encounterVersion = trim($request->get('encounter-version'));
+        //$encounterVersion = trim($request->get('encounter-version'));
         $messageTypeId = trim($request->get('message-type'));
 
         //check if user has at least one institution
@@ -715,12 +715,53 @@ class CallEntryController extends Controller
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $cycle = 'new';
         $formtype = 'call-entry';
+        $readonlyPatient = false;
+        $readonlyEncounter = false; //Same Encounter
+        //$patient = null;
+
+        //convert "Auto-generated MRN" to "Existing Auto-generated MRN"
+//        if( $mrntype ) {
+//            $mrntypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
+//            if ($mrntypeEntity->getName() == "Auto-generated MRN") {
+//                $mrntypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
+//                $mrntype = $mrntypeEntity->getId();
+//            }
+//        }
 
         $institution = $userSecUtil->getCurrentUserInstitution($user);
 
-        //create patient
-        $patient = new Patient(true,'valid',$user,$system);
-        $patient->setInstitution($institution);
+        if( $mrntype && $mrn ) {
+            $extra = array();
+            $extra["keytype"] = $mrntype;
+
+            $thisPatient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(
+                $institution,
+                'valid',            //status
+                $user,              //provider
+                "Patient",          //$className
+                "mrn",              //$fieldName
+                null,               //$parent
+                $mrn,        //$fieldValue
+                $extra,             //$extra
+                false               //$withfields
+            );
+            $thisPatientTitle = $thisPatient->obtainPatientInfoTitle('valid',null,false);
+            $titleheadroom = $thisPatientTitle;
+
+            if( $messageTypeId ) {
+                $title = "Add Entry (New Encounter, Same Type) to " . $thisPatientTitle;
+            } else {
+                $title = "Add Entry (New Encounter) to " . $thisPatientTitle;
+            }
+
+            $readonlyPatient = true;
+        }
+
+        //if( !$patient ) {
+            //create patient
+            $patient = new Patient(true, 'valid', $user, $system);
+            $patient->setInstitution($institution);
+        //}
 
         //set patient record status "Active"
         $patientActiveStatus = $em->getRepository('OlegOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
@@ -733,16 +774,15 @@ class CallEntryController extends Controller
         $encounter1->setProvider($user);
         $patient->addEncounter($encounter1); //add new encounter to patient
 
-        $readonlyEncounter = true;
-        $encounterVersion = null;
-        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber,$encounterVersion);
-        echo "Found encounter=".$encounter2->getId()."; version=".$encounter2->getVersion()."<br>";
+        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
+        //echo "Found encounter=".$encounter2->getId()."; version=".$encounter2->getVersion()."<br>";
         //exit();
 
         //check whether patient MRN supplied in the URL corresponds to the supplied encounter number.
         // If it does not, show the normal /entry/new page but with the notification "
         // Encounter "1111" of type "blah" is not with patient whose MRN of type "whatever" is "1111"
         if( $mrn && $mrntype && $encounter2 ) {
+
             if( !$em->getRepository('OlegOrderformBundle:Encounter')->isPatientEncounterMatch($mrn,$mrntype,$encounter2) ) {
 
                 $mrntypeStr = "";
@@ -758,6 +798,14 @@ class CallEntryController extends Controller
                 );
 
                 $encounter2 = null;
+            } else {
+                if( $messageTypeId ) {
+                    $title = "Add Entry (Same Encounter & Type) to " . $thisPatientTitle;
+                } else {
+                    $title = "Add Entry (Same Encounter) to " . $thisPatientTitle;
+                }
+
+                $readonlyEncounter = true;
             }
         }
 
@@ -822,8 +870,7 @@ class CallEntryController extends Controller
             $spotEntity = null;
             $removable = 0;
             $encounter2->addContactinfoByTypeAndName($user, $system, $encounterLocationType, $locationName, $spotEntity, $withdummyfields, $em, $removable);
-            $readonlyEncounter = false;
-        }
+        }//!$encounter2
 
         //add new encounter to patient
         $patient->addEncounter($encounter2);
@@ -841,7 +888,7 @@ class CallEntryController extends Controller
         $message->addEncounter($encounter2);
         ///////////// EOF Message //////////////
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter);
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter); //entry/new
 
         //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
@@ -867,10 +914,11 @@ class CallEntryController extends Controller
             'triggerSearch' => 0,
             'mrn' => $mrn,
             'mrntype' => $mrntype,
-            'titleheadroom' => null,
+            'titleheadroom' => $titleheadroom,
             'formnodetrigger' => $formnodetrigger,
-            'formnodeTopHolderId' => $formnodeTopHolderId
-            //'readonlyEncounter' => $readonlyEncounters
+            'formnodeTopHolderId' => $formnodeTopHolderId,
+            'readonlyPatient' => $readonlyPatient,
+            'readonlyEncounter' => $readonlyEncounter
             //'encounterid' => $encounterid
         );
     }
@@ -928,7 +976,7 @@ class CallEntryController extends Controller
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle);
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle); ///entry/save
 
         $form->handleRequest($request);
 

@@ -444,23 +444,17 @@ class EncounterRepository extends ArrayFieldAbstractRepository
     //used for call log entry
     public function findOneEncounterByNumberAndType( $encounterTypeId, $encounterNumber, $encounterVersion=null ) {
 
-//        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
-//        $dql = $repository->createQueryBuilder("encounter");
-//        $dql->leftJoin("encounter.number", "number");
-//
-//        $dql->andWhere("number.field = :number AND number.keytype = :keytype AND encounter.status = 'valid'");
-//
-//        $parameters['number'] = $encounterNumber;
-//        $parameters['keytype'] = $encounterTypeId;
-//
-//        $query = $this->_em->createQuery($dql);
-//        $query->setParameters($parameters);
-//        $encounters = $query->getResult();
+        if( $encounterTypeId && $encounterNumber ) {
+            //ok
+        } else {
+            return null;
+        }
 
         $encounters = $this->findEncountersByNumberAndType($encounterTypeId,$encounterNumber,null,$encounterVersion);
 
+        //testing
 //        foreach( $encounters as $encounter ){
-//            echo "encounter=".$encounter->getId()."<br>";
+//            echo "encounter=".$encounter->getId()."; version=".$encounter->getVersion()."<br>";
 //        }
 
         if( count($encounters) > 0 ) {
@@ -497,7 +491,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
             $encounterTypeId = null;
         }
 
-        $dql->orderBy("encounter.version","ASC"); //show latest first
+        $dql->orderBy("encounter.version","DESC"); //show latest first
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters($parameters);

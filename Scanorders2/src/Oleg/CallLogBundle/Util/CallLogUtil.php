@@ -1918,4 +1918,5 @@ class CallLogUtil
 
         return $url;
     }
+
 }
