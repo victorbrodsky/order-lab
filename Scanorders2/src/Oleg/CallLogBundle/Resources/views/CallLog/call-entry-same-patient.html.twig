@@ -66,14 +66,14 @@
 
         {% set patientForm = form.patient|first %}
 
-        patientForm.id:{{ patientForm.vars.value.id }}<br>
+        {#patientForm.id:{{ patientForm.vars.value.id }}<br>#}
         {{ form_row(patientForm.id) }}
 
 
         {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
         {% for encounter in form.encounter if encounter.vars.value.status == 'valid' %}
 
-            encounter.vars.value.id={{ encounter.vars.value.id }}
+            {#encounter.vars.value.id={{ encounter.vars.value.id }}#}
 
             <div class="panel panel-primary">
                 <div class="panel-heading">
